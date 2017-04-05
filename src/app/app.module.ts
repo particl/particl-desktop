@@ -5,19 +5,23 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { TransactionsComponent } from './wallet/transactions/transactions.component';
-import { SendComponent } from './wallet/send/send.component';
-import { AddressComponent } from './wallet/address/address.component';
+import { SendComponent } from './wallet/transactions/send.component';
 import { AddressesComponent } from './wallet/addresses/addresses.component';
-import { OverviewComponent } from './overview/overview.component';
+import { OverviewComponent } from './core/overview/overview.component';
+import { MenuComponent } from './core/menu/menu.component';
+import { HeaderComponent } from './core/header/header.component';
+import { StatusComponent } from './core/status/status.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TransactionsComponent,
     SendComponent,
-    AddressComponent,
     AddressesComponent,
-    OverviewComponent
+    OverviewComponent,
+    MenuComponent,
+    HeaderComponent,
+    StatusComponent,
   ],
   imports: [
     BrowserModule,
