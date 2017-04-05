@@ -1,7 +1,15 @@
 {
   "name": "partgui",
-  "version": "0.0.0",
-  "license": "MIT",
+  "version": "0.0.1",
+  "license": "GPL-2.0",
+  "description": "Particl Angular2 GUI - The source for the Particl GUI.",
+  "keywords": [
+    "particl",
+    "angular2",
+    "angular-cli",
+    "webpack",
+    "typescript"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
