@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { TransactionsComponent } from './wallet/transactions/transactions.component';
-import { SendComponent } from './wallet/transactions/send.component';
-import { AddressesComponent } from './wallet/addresses/addresses.component';
-import { OverviewComponent } from './core/overview/overview.component';
 import { MenuComponent } from './core/menu/menu.component';
+import { MenuitemComponent } from './core/menu/menuitem.component';
 import { HeaderComponent } from './core/header/header.component';
 import { StatusComponent } from './core/status/status.component';
+import { OverviewComponent } from './overview/overview.component';
+import { AddressesComponent } from './wallet/addresses/addresses.component';
+import { SendComponent } from './wallet/transactions/send.component';
+import { TransactionsComponent } from './wallet/transactions/transactions.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { StatusComponent } from './core/status/status.component';
     MenuComponent,
     HeaderComponent,
     StatusComponent,
+    MenuitemComponent,
   ],
   imports: [
     BrowserModule,
