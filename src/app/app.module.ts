@@ -14,6 +14,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { AddressesComponent } from './wallet/addresses/addresses.component';
 import { SendComponent } from './wallet/transactions/send.component';
 import { TransactionsComponent } from './wallet/transactions/transactions.component';
+import { BalanceComponent } from './wallet/balances/balance.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { TransactionsComponent } from './wallet/transactions/transactions.compon
     HeaderComponent,
     StatusComponent,
     MenuitemComponent,
+    BalanceComponent,
   ],
   imports: [
     AlertModule.forRoot(),

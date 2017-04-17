@@ -58,9 +58,9 @@ export class TransactionService {
 
 		this.deleteTransactions();
 
-		//page = 0 (first page) => loadTransactionsRPC(MAX_TXS_PER_PAGE, 0) => (0,10)
-		//page = 1 (second page) => loadTransactionsRPC(MAX_TXS_PER_PAGE, 1 * MAX_TXS_PER_PAGE) (10, 20)
-		this.loadTransactionsRPC(page * this.MAX_TXS_PER_PAGE);
+		//page = 0 (first page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 0) => (0,10)
+		//page = 1 (second page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 1 * MAX_TXS_PER_PAGE) (10, 20)
+		this.rpc_loadTransactions(page * this.MAX_TXS_PER_PAGE);
 	}
 
 	updatePageCount() : number{
@@ -104,14 +104,14 @@ export class TransactionService {
 
 */
 
-  loadTransactionsRPC(index_start : number) : void{
+  rpc_loadTransactions(index_start : number) : void{
 
   	this.loadTestTransaction(index_start);
   	//loadTransactionsRPC should call listtransaction amount index_start.
   	//return this.txs;
   }
 
-  loadTransactionCountRPC() : void{
+  rpc_loadTransactionCount() : void{
   	//call getwalletinfo txcount
   	this.tx_count = TEST_TXS_JSON.length-1;
   }
@@ -139,6 +139,13 @@ export class TransactionService {
                                            
 
 */
+
+  register_newTxService(/* RPC-service */) : void {
+    /*
+      This function registers this transaction service instance with the CENTRALIZED RPC-service which in turn will call all the signals when it receives updates.
+      A central RPC-service is required for a good design, we want to maintain one connection to the RPC and not spawn a new one for each TxService.
+    */
+  }
   signal_newTransaction() : void {
   	/*
   		When bitcoind finds a new transaction, it must signal it to the GUI.
@@ -160,7 +167,6 @@ export class TransactionService {
   				loadTransactionOverRPC(0,1); //load latest record.
   			else
 				doNothing();
-		signal_updateBalance();
 
   		
 
@@ -168,10 +174,5 @@ export class TransactionService {
   	*/
   }
 
-  signal_updateBalance() : void {
-  	/* 
-  		When a new transaction arrives, we must update the balance. Might be worth ignoring this on IBD.
-  	*/
-  }
 
 }

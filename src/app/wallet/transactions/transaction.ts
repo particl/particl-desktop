@@ -83,7 +83,7 @@ export var TEST_TXS_JSON : Object[] = [
     ],
     time: 1491758368,
     timereceived: 1491758368,
-    bip125replaceable: "unknown",
+    bip125_replaceable: "unknown",
     abandoned: true
   }, 
   {
@@ -99,7 +99,7 @@ export var TEST_TXS_JSON : Object[] = [
     ],
     time: 1491758464,
     timereceived: 1491758464,
-    bip125replaceable: "unknown",
+    bip125_replaceable: "unknown",
     abandoned: true
   }, 
   {
@@ -115,7 +115,7 @@ export var TEST_TXS_JSON : Object[] = [
     ],
     time: 1491758848,
     timereceived: 1491758848,
-    bip125replaceable: "unknown",
+    bip125_replaceable: "unknown",
     abandoned: true
   }, 
   {
@@ -131,7 +131,7 @@ export var TEST_TXS_JSON : Object[] = [
     ],
     time: 1491759008,
     timereceived: 1491759008,
-    bip125replaceable: "unknown",
+    bip125_replaceable: "unknown",
     abandoned: true
   }, 
   {
@@ -147,7 +147,7 @@ export var TEST_TXS_JSON : Object[] = [
     ],
     time: 1491759184,
     timereceived: 1491759184,
-    bip125replaceable: "unknown",
+    bip125_replaceable: "unknown",
     abandoned: true
   }, 
   {
@@ -163,7 +163,7 @@ export var TEST_TXS_JSON : Object[] = [
     ],
     time: 1491759200,
     timereceived: 1491759205,
-    bip125replaceable: "unknown",
+    bip125_replaceable: "unknown",
     abandoned: true
   }, 
   {
@@ -179,7 +179,7 @@ export var TEST_TXS_JSON : Object[] = [
     ],
     time: 1491760320,
     timereceived: 1491760320,
-    bip125replaceable: "unknown",
+    bip125_replaceable: "unknown",
     abandoned: true
   }, 
   {
@@ -195,7 +195,7 @@ export var TEST_TXS_JSON : Object[] = [
     ],
     time: 1491760480,
     timereceived: 1491760480,
-    bip125replaceable: "unknown",
+    bip125_replaceable: "unknown",
     abandoned: true
   }
 ];

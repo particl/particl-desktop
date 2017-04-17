@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Transaction } from './transaction';
 import { TransactionService } from './transaction-service.service';
 
@@ -11,12 +11,12 @@ import { TransactionService } from './transaction-service.service';
 })
 export class TransactionsComponent implements OnInit {
 
-	s;
-
+	tx_service;
+  @Input() display_pagination: boolean;
 
   constructor(private transactionService: TransactionService) {
   	//make life easy in component html
-  	this.s = this.transactionService;
+  	this.tx_service = transactionService; //this.transactionService ?
   }
 
   ngOnInit() {
@@ -25,6 +25,6 @@ export class TransactionsComponent implements OnInit {
 
   switchPage(page : number) {
     console.log("Moving to page " + (page + 1));
-    this.s.changePage(page);
+    this.tx_service.changePage(page);
   }
 }
