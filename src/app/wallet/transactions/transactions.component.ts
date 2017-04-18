@@ -11,12 +11,12 @@ import { TransactionService } from './transaction-service.service';
 })
 export class TransactionsComponent implements OnInit {
 
-	tx_service;
-  @Input() display_pagination: boolean;
+	txService;
+  @Input() displayPagination: boolean;
 
   constructor(private transactionService: TransactionService) {
   	//make life easy in component html
-  	this.tx_service = transactionService; //this.transactionService ?
+  	this.txService = transactionService; //this.transactionService ?
   }
 
   ngOnInit() {
@@ -25,6 +25,6 @@ export class TransactionsComponent implements OnInit {
 
   switchPage(page : number) {
     console.log("Moving to page " + (page + 1));
-    this.tx_service.changePage(page);
+    this.txService.changePage(page);
   }
 }

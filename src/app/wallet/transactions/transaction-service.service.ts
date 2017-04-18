@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Transaction, deserialize, TEST_TXS_JSON } from './transaction';
+import { Observable } from 
 
 @Injectable()
 export class TransactionService {
@@ -8,12 +9,14 @@ export class TransactionService {
 		Stores transactions objects.
 	*/
 	txs : Transaction[] = [];
-	tx_count : number = 0;
-	page : number = 0;
-	total_page_count : number = 0;
+	txCount : number = 0;
+	currentPage : number = 0;
+	totalPageCount : number = 0;
+
+  testVal$: Observable<Boolean> = false.AsObservable();
 
 	//This is crappy but ngFor is a dick
-	page_array : number[] = [0];
+	arrayOfPages : number[] = [0];
 
 	/* 
 		How many transactions do we display per page and keep in memory at all times. When loading more transactions they are fetched JIT and added to txs.
@@ -31,7 +34,7 @@ export class TransactionService {
    //Pull test data and populate array of txs.
    initializeTestData() : void {
   	this.loadTestTransaction(0);
-  	this.tx_count = TEST_TXS_JSON.length;
+  	this.txCount = TEST_TXS_JSON.length;
    }
 
    loadTestTransaction(index_start : number) : void {
@@ -54,7 +57,7 @@ export class TransactionService {
 */
 
 	changePage(page : number){
-		this.page = page;
+		this.currentPage = page;
 
 		this.deleteTransactions();
 
@@ -64,22 +67,22 @@ export class TransactionService {
 	}
 
 	updatePageCount() : number{
-		this.total_page_count = Math.ceil(this.tx_count/this.MAX_TXS_PER_PAGE);
+		this.totalPageCount = Math.ceil(this.txCount/this.MAX_TXS_PER_PAGE);
 
 		this.crappyPaginationHack();
 		
-  		if(this.page != 0){
-  			let residual = this.tx_count % this.MAX_TXS_PER_PAGE; 
+  		if(this.currentPage != 0){
+  			let residual = this.txCount % this.MAX_TXS_PER_PAGE; 
   			if(residual == 0) //new page
-  				this.page++; 
+  				this.currentPage++; 
 
 		}
-		return this.total_page_count;
+		return this.totalPageCount;
   	}
 
   	crappyPaginationHack(){
-  		for(var i = 0; i < this.total_page_count; i++){
-  			this.page_array[i] = i;
+  		for(var i = 0; i < this.totalPageCount; i++){
+  			this.arrayOfPages[i] = i;
 		}
   	}
 
@@ -113,7 +116,7 @@ export class TransactionService {
 
   rpc_loadTransactionCount() : void{
   	//call getwalletinfo txcount
-  	this.tx_count = TEST_TXS_JSON.length-1;
+  	this.txCount = TEST_TXS_JSON.length-1;
   }
 
   //Deserializes JSON objects to Transaction classes. 
