@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class BalanceService {
   balance : number = 123.4586649;
-  balance_type : string;
+  typeOfBalance : string;
   
   constructor() { }
 

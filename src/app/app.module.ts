@@ -13,13 +13,13 @@ import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
 import { AddressesComponent } from './wallet/addresses/addresses.component';
 import { SendComponent } from './wallet/transactions/send.component';
-import { TransactionsComponent } from './wallet/transactions/transactions.component';
+import { TransactionsTableComponent } from './wallet/transactions/transaction-table/transaction.table.component';
 import { BalanceComponent } from './wallet/balances/balance.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TransactionsComponent,
+    TransactionsTableComponent,
     SendComponent,
     AddressesComponent,
     OverviewComponent,

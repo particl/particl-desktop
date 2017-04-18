@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Transaction, deserialize, TEST_TXS_JSON } from './transaction';
-import { Observable } from 
+
 
 @Injectable()
-export class TransactionService {
+export class TransactionsTableService {
 
 	/* 
 		Stores transactions objects.
@@ -13,7 +13,7 @@ export class TransactionService {
 	currentPage : number = 0;
 	totalPageCount : number = 0;
 
-  testVal$: Observable<Boolean> = false.AsObservable();
+  //testVal$: Observable<Boolean> = false.AsObservable();
 
 	//This is crappy but ngFor is a dick
 	arrayOfPages : number[] = [0];
