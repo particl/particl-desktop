@@ -3,7 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
+/* BootStrap */
+import { AlertModule } from 'ng2-bootstrap';
+import { PaginationModule } from 'ng2-bootstrap/pagination';
+
 import { AppComponent } from './app.component';
 
 import { MenuComponent } from './core/menu/menu.component';
@@ -33,7 +36,8 @@ import { BalanceComponent } from './wallet/balances/balance.component';
     AlertModule.forRoot(),
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    PaginationModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

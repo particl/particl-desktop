@@ -19,13 +19,6 @@
   </tr>
 </table>
 <br />
-<table *ngIf="displayPagination">
-  <tr >
-  	<th *ngFor="let i of txService.arrayOfPages" 
-  		[ngStyle]="{'background-color': (txService.currentPage == +i)? 'green' : 'red'}"
-  		(click) = "switchPage(i)">
-  		{{ +i + 1 }}
-  	</th>
-  </tr>
-</table>
 
+<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="txService.txCount" [(ngModel)]="txService.currentPage" class="pagination-sm"
+            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" itemsPerPage="3" ></pagination>

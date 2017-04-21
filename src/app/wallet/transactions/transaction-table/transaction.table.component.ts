@@ -23,8 +23,10 @@ export class TransactionsTableComponent implements OnInit {
 
   }
 
-  switchPage(page : number) {
-    console.log("Moving to page " + (page + 1));
-    this.txService.changePage(page);
+
+  public pageChanged(event:any):void {
+    this.txService.changePage(event.page);
+    console.log('Page changed to: ' + event.page);
+    console.log('Number items per page: ' + event.itemsPerPage);
   }
 }

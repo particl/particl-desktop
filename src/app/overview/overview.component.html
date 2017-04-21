@@ -1,8 +1,21 @@
 <h1>
   overview
 </h1>
-<app-balance typeOfBalance="ALL"></app-balance>
-<app-balance typeOfBalance="PRIVATE"></app-balance>
-<app-balance typeOfBalance="PUBLIC"></app-balance>
-<app-balance typeOfBalance="STAKE"></app-balance>
-<app-transaction-table [displayPagination]=false></app-transaction-table>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+    	<app-balance typeOfBalance="ALL"></app-balance>
+    </div>
+    <div class="col-md-3">
+    	<app-balance typeOfBalance="PRIVATE"></app-balance>
+    </div>
+    <div class="col-md-3">
+    	<app-balance typeOfBalance="PUBLIC"></app-balance>
+    </div>
+    <div class="col-md-3">
+    	<app-balance typeOfBalance="STAKE"></app-balance>
+    </div>
+  </div>
+ </div>
+
+<app-transaction-table [displayPagination]=true></app-transaction-table>

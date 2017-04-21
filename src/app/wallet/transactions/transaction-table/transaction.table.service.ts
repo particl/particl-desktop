@@ -15,8 +15,6 @@ export class TransactionsTableService {
 
   //testVal$: Observable<Boolean> = false.AsObservable();
 
-	//This is crappy but ngFor is a dick
-	arrayOfPages : number[] = [0];
 
 	/* 
 		How many transactions do we display per page and keep in memory at all times. When loading more transactions they are fetched JIT and added to txs.
@@ -57,6 +55,11 @@ export class TransactionsTableService {
 */
 
 	changePage(page : number){
+    if(page <= 0)
+      return;
+
+    page--;
+
 		this.currentPage = page;
 
 		this.deleteTransactions();
@@ -69,7 +72,6 @@ export class TransactionsTableService {
 	updatePageCount() : number{
 		this.totalPageCount = Math.ceil(this.txCount/this.MAX_TXS_PER_PAGE);
 
-		this.crappyPaginationHack();
 		
   		if(this.currentPage != 0){
   			let residual = this.txCount % this.MAX_TXS_PER_PAGE; 
@@ -80,11 +82,6 @@ export class TransactionsTableService {
 		return this.totalPageCount;
   	}
 
-  	crappyPaginationHack(){
-  		for(var i = 0; i < this.totalPageCount; i++){
-  			this.arrayOfPages[i] = i;
-		}
-  	}
 
   	deleteTransactions(){
   		this.txs = [];
