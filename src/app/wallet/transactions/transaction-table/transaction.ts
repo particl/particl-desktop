@@ -38,8 +38,21 @@ export class Transaction implements Deserializable{
         return {};
     }
 
-    getDate() : Date{
-        return new Date(this.time * 1000);
+    getDate() : string{
+
+        return this.dateFormatter(new Date(this.time * 1000));
+    }
+
+    private dateFormatter(d : Date){
+        
+        
+        return (d.getDate() < 10 ? "0" + d.getDate() : d.getDate()) + "-" +
+               ((d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1)) + "-" +
+               (d.getFullYear() < 10 ? "0" + d.getFullYear() : d.getFullYear()) + " " + 
+               (d.getHours() < 10 ? "0" + d.getHours() : d.getHours()) + ":" +
+               (d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes()) + ":" +
+               (d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds())
+               ;
     }
 }
 

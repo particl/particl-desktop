@@ -12,7 +12,23 @@ import { TransactionsTableService } from './transaction.table.service';
 export class TransactionsTableComponent implements OnInit {
 
 	txService;
-  @Input() displayPagination: boolean;
+
+  /* Determines what fields are displayed in the Transaction Table. */
+    /* header and utils */
+  @Input() displayHeader: boolean = true;
+  @Input() displayPagination: boolean = false;
+
+    /* actual fields */
+  @Input() displayCategory: boolean = true;
+  @Input() displayDate: boolean = true;
+  @Input() displayAmount: boolean = true;
+  @Input() displayConfirmations: boolean = false;
+  @Input() displayTxId: boolean = false;
+  @Input() displaySenderAddress: boolean = false;
+  @Input() displayReceiverAddress: boolean = false;
+  @Input() displayComment: boolean = false;
+  @Input() displayBlockHash: boolean = false;
+  @Input() displayBlockIndex: boolean = false;
 
   constructor(private _transactionService: TransactionsTableService) {
   	//make life easy in component html

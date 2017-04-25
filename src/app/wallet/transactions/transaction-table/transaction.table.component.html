@@ -1,21 +1,21 @@
 <table>
-  <tr>
-    <th>time</th>
-    <th>address</th>
-    <th>txid</th>
-    <th>amount</th>
-     <th>blockindex</th>
-    <th>confirmations</th>
-    <th>category</th>
+  <tr *ngIf="displayHeader">
+    <th *ngIf="displayCategory">category</th>
+    <th *ngIf="displayDate">date</th>
+    <th *ngIf="displaySenderAddress">address</th>
+    <th *ngIf="displayTxId">txid</th>
+    <th *ngIf="displayAmount">amount</th>
+    <th *ngIf="displayBlockIndex">blockindex</th>
+    <th *ngIf="displayConfirmations">confirmations</th>
   </tr>
   <tr *ngFor="let tx of txService.txs">
-  	<td>{{ tx.getDate() }}</td>
-    <td>{{ tx.address }}</td>
-    <td>{{ tx.txid }}</td>
-    <td>{{ tx.amount }}</td>
-    <td>{{ tx.blockindex }}</td>
-    <td>{{ tx.confirmations }}</td>
-    <td>{{ tx.category }}</td>
+    <td *ngIf="displayCategory">{{ tx.category }}</td>
+  	<td *ngIf="displayDate">{{ tx.getDate() }}</td>
+    <td *ngIf="displaySenderAddress">{{ tx.address }}</td>
+    <td *ngIf="displayTxId">{{ tx.txid }}</td>
+    <td *ngIf="displayAmount">{{ tx.amount }}</td>
+    <td *ngIf="displayBlockIndex">{{ tx.blockindex }}</td>
+    <td *ngIf="displayConfirmations">{{ tx.confirmations }}</td>
   </tr>
 </table>
 <br />

@@ -1,21 +1,25 @@
 <h1>
-  overview
+  OVERVIEW
 </h1>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-3">
-    	<app-balance typeOfBalance="ALL"></app-balance>
+    <div class="col-md-2">
+    	<app-balance typeOfBalance="TOTAL BALANCE"></app-balance>
     </div>
-    <div class="col-md-3">
-    	<app-balance typeOfBalance="PRIVATE"></app-balance>
+    <div class="col-md-2">
+    	<app-balance typeOfBalance="PUBLIC BALANCE"></app-balance>
     </div>
-    <div class="col-md-3">
-    	<app-balance typeOfBalance="PUBLIC"></app-balance>
+    <div class="col-md-2">
+    	<app-balance typeOfBalance="PRIVATE BALANCE"></app-balance>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
     	<app-balance typeOfBalance="STAKE"></app-balance>
     </div>
   </div>
  </div>
 
-<app-transaction-table [displayPagination]=true></app-transaction-table>
+<br />
+
+<div class="col-md-6">
+	<app-transaction-table [displayHeader]=false [displayPagination]=false></app-transaction-table>
+</div>

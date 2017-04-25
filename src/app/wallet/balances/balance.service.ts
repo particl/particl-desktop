@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class BalanceService {
-  balance : number = 123.4586649;
+
+  balanceBeforePoint : number = 123000;
+  balanceAfterPoint : number = 4586649;
+
+
   typeOfBalance : string;
   
   constructor() { }
