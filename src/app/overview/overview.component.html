@@ -1,25 +1,32 @@
 <h1>
   OVERVIEW
 </h1>
+<div class="overview"> 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-2 balance">
     	<app-balance typeOfBalance="TOTAL BALANCE"></app-balance>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 balance">
     	<app-balance typeOfBalance="PUBLIC BALANCE"></app-balance>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 balance">
     	<app-balance typeOfBalance="PRIVATE BALANCE"></app-balance>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 balance">
     	<app-balance typeOfBalance="STAKE"></app-balance>
     </div>
   </div>
  </div>
-
 <br />
-
+<hr />
+<br />
 <div class="col-md-6">
-	<app-transaction-table [displayHeader]=false [displayPagination]=false></app-transaction-table>
+    <div class="transactionHeader">
+        <span>RECENT TRANSACTIONS</span>
+        <span class="icon glyphicon glyphicon-cog headerMenu green"></span>
+        <hr />
+    </div>
+	<app-transaction-table [displayHeader]=true [displayPagination]=false></app-transaction-table>
+</div>
 </div>

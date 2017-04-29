@@ -1,3 +1,4 @@
+<div class="tx-table table-responsive">
 <table>
   <tr *ngIf="displayHeader">
     <th *ngIf="displayCategory">category</th>
@@ -9,7 +10,33 @@
     <th *ngIf="displayConfirmations">confirmations</th>
   </tr>
   <tr *ngFor="let tx of txService.txs">
-    <td *ngIf="displayCategory">{{ tx.category }}</td>
+    <td *ngIf="displayCategory">
+
+      <!-- if stake -->
+      <button *ngIf="tx.category == 'stake'" type="button" class="btn btn-default btn-round category-button">
+        STAKE
+        <span class="icon glyphicon glyphicon-money green icon-sign"></span>
+      </button>
+
+      <!-- if orphaned stake -->
+      <button *ngIf="tx.category == 'orphaned_stake'" type="button" class="btn btn-default btn-round category-button">
+        ORPHAN
+        <span class="icon glyphicon glyphicon-remove red icon-sign"></span>
+      </button>
+
+      <!-- if send -->
+      <button *ngIf="tx.category == 'send'" type="button" class="btn btn-default btn-round category-button">
+        SEND
+        <span class="icon glyphicon glyphicon-arrow-right red icon-sign"></span>
+      </button>
+
+      <!-- if received -->
+      <button *ngIf="tx.category == 'received'" type="button" class="btn btn-default btn-round category-button">
+        RECEIVED
+        <span class="icon glyphicon glyphicon-arrow-left green icon-sign"></span>
+      </button>
+
+    </td>
   	<td *ngIf="displayDate">{{ tx.getDate() }}</td>
     <td *ngIf="displaySenderAddress">{{ tx.address }}</td>
     <td *ngIf="displayTxId">{{ tx.txid }}</td>
@@ -18,6 +45,7 @@
     <td *ngIf="displayConfirmations">{{ tx.confirmations }}</td>
   </tr>
 </table>
+</div>
 <br />
 
 <pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="txService.txCount" [(ngModel)]="txService.currentPage" class="pagination-sm"

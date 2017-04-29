@@ -85,7 +85,7 @@ export function deserialize(json, type) {
 export var TEST_TXS_JSON : Object[] = [
   {
     address: "pknZoCR9qdB2T4D4KpujHHoRLkwH5RX9rq",
-    category: "orphaned_stake",
+    category: "stake",
     amount: 10000.29073177,
     vout: 1,
     reward: 0.58146354,
@@ -101,7 +101,7 @@ export var TEST_TXS_JSON : Object[] = [
   }, 
   {
     address: "piNdRiuL2BqUA8hh2A6AtEbBkKqKxK13LT",
-    category: "orphaned_stake",
+    category: "send",
     amount: 10858.44777276,
     vout: 1,
     reward: 0.58146362,
@@ -117,7 +117,7 @@ export var TEST_TXS_JSON : Object[] = [
   }, 
   {
     address: "pfzBLHLt4beAbYkEXmAeyURuK3NT7nec6j",
-    category: "orphaned_stake",
+    category: "received",
     amount: 3750.29073184,
     vout: 1,
     reward: 0.58146369,

@@ -19,7 +19,7 @@ export class TransactionsTableService {
 	/* 
 		How many transactions do we display per page and keep in memory at all times. When loading more transactions they are fetched JIT and added to txs.
 	*/
-	MAX_TXS_PER_PAGE : number = 3;
+	MAX_TXS_PER_PAGE : number = 8;
 
 
 
