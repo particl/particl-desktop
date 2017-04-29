@@ -15,7 +15,7 @@
       <!-- if stake -->
       <button *ngIf="tx.category == 'stake'" type="button" class="btn btn-default btn-round category-button">
         STAKE
-        <span class="icon glyphicon glyphicon-money green icon-sign"></span>
+        <span class="icon glyphicon glyphicon-plus-sign green icon-sign"></span>
       </button>
 
       <!-- if orphaned stake -->
@@ -40,7 +40,7 @@
   	<td *ngIf="displayDate">{{ tx.getDate() }}</td>
     <td *ngIf="displaySenderAddress">{{ tx.address }}</td>
     <td *ngIf="displayTxId">{{ tx.txid }}</td>
-    <td *ngIf="displayAmount">{{ tx.amount }}</td>
+    <td *ngIf="displayAmount">{{ tx.amount }} PART</td>
     <td *ngIf="displayBlockIndex">{{ tx.blockindex }}</td>
     <td *ngIf="displayConfirmations">{{ tx.confirmations }}</td>
   </tr>
