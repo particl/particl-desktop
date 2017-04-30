@@ -1,0 +1,16 @@
+.addressHeader {
+	margin-left: 2%;
+	font-size: 17px;
+	color: #B5BAC0;
+	font-weight: 400;
+}
+
+.headerMenu {
+	float: right;
+	margin-right: 30px;
+
+}
+
+.green {
+	color: #02E8B0;
+}

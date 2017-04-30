@@ -18,6 +18,7 @@ import { AddressesComponent } from './wallet/addresses/addresses.component';
 import { SendComponent } from './wallet/transactions/send.component';
 import { TransactionsTableComponent } from './wallet/transactions/transaction-table/transaction.table.component';
 import { BalanceComponent } from './wallet/balances/balance.component';
+import { AddressTableComponent } from './wallet/addresses/address-table/address.table.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { BalanceComponent } from './wallet/balances/balance.component';
     StatusComponent,
     MenuitemComponent,
     BalanceComponent,
+    AddressTableComponent,
   ],
   imports: [
     AlertModule.forRoot(),
