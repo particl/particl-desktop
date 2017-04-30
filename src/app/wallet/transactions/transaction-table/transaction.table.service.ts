@@ -9,6 +9,8 @@ export class TransactionsTableService {
 		Stores transactions objects.
 	*/
 	txs : Transaction[] = [];
+
+  /* Pagination stuff */
 	txCount : number = 0;
 	currentPage : number = 0;
 	totalPageCount : number = 0;
@@ -19,7 +21,7 @@ export class TransactionsTableService {
 	/* 
 		How many transactions do we display per page and keep in memory at all times. When loading more transactions they are fetched JIT and added to txs.
 	*/
-	MAX_TXS_PER_PAGE : number = 1;
+	MAX_TXS_PER_PAGE : number = 4;
 
 
 

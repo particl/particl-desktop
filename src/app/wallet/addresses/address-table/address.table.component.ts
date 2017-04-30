@@ -10,6 +10,7 @@ import { AddressTableService } from './address.table.service';
 export class AddressTableComponent implements OnInit {
 
 
+  addressService;
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
   @Input() displayHeader: boolean = true;
@@ -17,14 +18,19 @@ export class AddressTableComponent implements OnInit {
 
     /* actual fields */
   @Input() displayLabel: boolean = true;
-  @Input() displayType: boolean = true;
+  @Input() displayType: boolean = false;
   @Input() displayAddress: boolean = true;
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
 
-  constructor() { }
+  constructor(private _addressService: AddressTableService) {
+  	this.addressService = _addressService; 
+  }
 
   ngOnInit() {
   }
 
+  public pageChanged(event:any):void {
+    this.addressService.changePage(event.page);
+  }
 }

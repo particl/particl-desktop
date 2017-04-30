@@ -6,16 +6,16 @@
     <th *ngIf="displayAddress">address</th>
     <th *ngIf="displayPurpose">purpose</th>
   </tr>
-  <tr >
-    <td *ngIf="displayLabel">label</td>
-    <td *ngIf="displayType">type</td>
-    <td *ngIf="displayAddress">address</td>
-    <td *ngIf="displayPurpose">purpose</td>
+  <tr *ngFor="let address of addressService.addresses">
+    <td *ngIf="displayLabel">{{address.label}}</td>
+    <td *ngIf="displayType">{{address.type}}</td>
+    <td *ngIf="displayAddress">{{address.address}}</td>
+    <td *ngIf="displayPurpose">{{address.purpose}}</td>
   </tr>
 </table>
 </div>
 
-<!--
-<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="txService.txCount" [maxSize]="5" [rotate]="false" [(ngModel)]="txService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" itemsPerPage="{{txService.MAX_TXS_PER_PAGE}}" ></pagination> -->
+
+<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
+            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" itemsPerPage="{{addressService.MAX_ADDRESSES_PER_PAGE}}" ></pagination>
         
