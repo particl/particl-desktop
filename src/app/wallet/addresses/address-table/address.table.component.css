@@ -1,3 +1,13 @@
+@media screen and (min-width: 1920px) {
+	.internalHeaderResponsive {
+		display: inline!important;
+	}
+}
+
+.internalHeaderResponsive {
+	display: none;
+}
+
 .address-table {
 	margin-left: 2%;
 }
@@ -21,6 +31,7 @@
 .qrMenu {
 	width: 90px;
 }
+
 /* 
 	General items 
 	TODO: these are also duplicated in other classes; better put all of these in one.
