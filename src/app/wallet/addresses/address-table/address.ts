@@ -57,14 +57,14 @@ export function deserialize(json, type) {
 */
 export var TEST_ADDRESSES_JSON : Object[] = [
     {
-        "address": "PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY",
-        "label": "Default",
+        "address": "PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY",
+        "label": "Exchange",
         "root": "AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh",
         "path": "m/0/5"
     },
     {
-        "address": "PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY",
-        "label": "Exchange",
+        "address": "PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY",
+        "label": "Default",
         "root": "AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh",
         "path": "m/0/5"
     }

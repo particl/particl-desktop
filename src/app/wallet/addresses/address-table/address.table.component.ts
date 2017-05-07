@@ -23,6 +23,7 @@ export class AddressTableComponent implements OnInit {
   @Input() displayLabel: boolean = true;
   @Input() displayType: boolean = false;
   @Input() displayAddress: boolean = true;
+  @Input() displayPublicKey: boolean = false;
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
 

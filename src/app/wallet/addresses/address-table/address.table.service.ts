@@ -114,6 +114,9 @@ export class AddressTableService {
   		this.addresses.splice(0,0,instance);
   	}
 
+  deleteAddress(address: string){
+    console.log("delete " + address);
+  }
 
 
 
