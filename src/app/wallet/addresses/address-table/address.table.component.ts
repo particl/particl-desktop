@@ -14,6 +14,9 @@ export class AddressTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
   @Input() displayHeader: boolean = true;
+  @Input() displayInternalHeader: boolean = false;
+  @Input() displayToolsMenu: boolean = true;
+  @Input() displayQrMenu: boolean = true;
   @Input() displayPagination: boolean = false;
 
     /* actual fields */

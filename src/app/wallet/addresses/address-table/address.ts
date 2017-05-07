@@ -5,13 +5,15 @@ interface Deserializable {
 
 export class Address implements Deserializable{
 	address: string;
+    publicKey: string;
 	label: string;
 	purpose: string;
 	rootId: string;
 	path: string;
 
-    constructor( address: string, label: string, purpose: string, rootId: string, path: string) { 
+    constructor( address: string, publicKey: string, label: string, purpose: string, rootId: string, path: string) { 
     	this.address = address; 
+        this.publicKey = publicKey; 
     	this.label = label;
     	this.purpose = purpose;
     	this.rootId = rootId;

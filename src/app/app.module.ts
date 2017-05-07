@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 /* BootStrap */
 import { AlertModule } from 'ng2-bootstrap';
 import { PaginationModule } from 'ng2-bootstrap/pagination';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { AppComponent } from './app.component';
 
@@ -39,7 +40,8 @@ import { AddressTableComponent } from './wallet/addresses/address-table/address.
     BrowserModule,
     FormsModule,
     HttpModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    ClipboardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

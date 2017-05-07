@@ -6,7 +6,7 @@ export class AddressTableService {
 
 
 	/* 
-		Stores transactions objects.
+		Stores address objects.
 	*/
 	addresses : Address[] = [];
 
@@ -104,7 +104,7 @@ export class AddressTableService {
   	this.addressCount = TEST_ADDRESSES_JSON.length-1;
   }
 
-  //Deserializes JSON objects to Address classes. 
+  //Adds an address to array from JSON object. 
 	addAddress(json: Object) : void {
   		let instance = deserialize(json, Address);
   		

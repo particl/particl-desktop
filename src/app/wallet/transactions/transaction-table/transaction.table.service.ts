@@ -27,19 +27,29 @@ export class TransactionsTableService {
 
   constructor() { 
   	this.initializeTestData();
-  	console.log("page count" + this.updatePageCount());
    }
 
 
    //Pull test data and populate array of txs.
    initializeTestData() : void {
+    this.txCount = TEST_TXS_JSON.length;
   	this.loadTestTransaction(0);
-  	this.txCount = TEST_TXS_JSON.length;
+  	
    }
 
    loadTestTransaction(index_start : number) : void {
-   	for(var i = 0; i < this.MAX_TXS_PER_PAGE; i++){
-  		let json = TEST_TXS_JSON[index_start + i];
+
+    /*
+      The oldest transactions are the first ones to be displayed, so we must reverse the order and calculate the real index first.
+    */
+    let real_index_start : number;
+    if(this.txCount > this.MAX_TXS_PER_PAGE)
+      real_index_start = this.txCount - (index_start + 1) * this.MAX_TXS_PER_PAGE;
+    else 
+      real_index_start = 0;
+
+    for(var i = 0; i < this.MAX_TXS_PER_PAGE; i++){ 
+  		let json = TEST_TXS_JSON[real_index_start + i];
     	this.addTransaction(json);
   	}
    }
@@ -63,14 +73,11 @@ export class TransactionsTableService {
     page--;
 
 		this.currentPage = page;
-
 		this.deleteTransactions();
-
-		//page = 0 (first page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 0) => (0,10)
-		//page = 1 (second page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 1 * MAX_TXS_PER_PAGE) (10, 20)
-		this.rpc_loadTransactions(page * this.MAX_TXS_PER_PAGE);
+		this.rpc_loadTransactions(page);
 	}
 
+  /*not needed probably
 	updatePageCount() : number{
 		this.totalPageCount = Math.ceil(this.txCount/this.MAX_TXS_PER_PAGE);
 
@@ -83,7 +90,7 @@ export class TransactionsTableService {
 		}
 		return this.totalPageCount;
   	}
-
+ */
 
   	deleteTransactions(){
   		this.txs = [];
@@ -125,6 +132,7 @@ export class TransactionsTableService {
   	if(typeof instance.txid == "undefined")
   		return;
 
+    //this.txs.push(instance);
   	this.txs.splice(0,0,instance);
   }
 

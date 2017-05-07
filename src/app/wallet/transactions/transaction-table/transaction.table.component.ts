@@ -16,6 +16,7 @@ export class TransactionsTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
   @Input() displayHeader: boolean = true;
+  @Input() displayInternalHeader: boolean = false;
   @Input() displayPagination: boolean = false;
 
     /* actual fields */

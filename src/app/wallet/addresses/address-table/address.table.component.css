@@ -1,10 +1,50 @@
-.tx-table {
+.address-table {
 	margin-left: 2%;
 }
 
+.headerDivider {
+	border-left:1.9px solid #9D9FA4; 
+}
+
+.marginMenu{
+	margin-left: 25px;
+}
+
+.addressMenu {
+	width: 100px;
+}
+
+.qrMenu {
+	width: 90px;
+}
+/* 
+	General items 
+	TODO: these are also duplicated in other classes; better put all of these in one.
+
+*/
+.red {
+	color: red;
+}
+
+
+.green {
+	color: green;
+}
+
+.center {
+	margin: 0px auto;
+	display: table;
+}
+
+
 table {
 
-    border-collapse: collapse;
+    /* border-collapse: collapse; */
+
+    /* Space between rows */
+    border-collapse: separate;
+	border-spacing: 0px 0.5em;
+
     width: 100%;
 }
 
@@ -23,20 +63,18 @@ tr {
 }
 td {
 	text-align: center;
-	padding: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	background-color: white;
+
 	border-bottom-style: solid;
-	border-top-style: solid;
-	border-top: 1px solid #b6b6bc;
     border-bottom: 2px solid #e3e3e3;
+	/*
+    border-top-style: solid;
+	border-top: 1px solid #b6b6bc;
+	*/
 }
 
-
-.green {
-	color: green;
-}
-
-.center {
-	margin: 0px auto;
-	display: table;
+.bold{
+	font-weight: 700;
 }

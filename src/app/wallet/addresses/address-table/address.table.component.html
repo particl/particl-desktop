@@ -7,10 +7,33 @@
     <th *ngIf="displayPurpose">purpose</th>
   </tr>
   <tr *ngFor="let address of addressService.addresses">
-    <td *ngIf="displayLabel">{{address.label}}</td>
-    <td *ngIf="displayType">{{address.type}}</td>
-    <td *ngIf="displayAddress">{{address.address}}</td>
-    <td *ngIf="displayPurpose">{{address.purpose}}</td>
+    <td *ngIf="displayLabel"> {{address.label}}</td>
+    <td *ngIf="displayType">
+      <span *ngIf="displayInternalHeader" class="bold">TYPE</span> {{address.type}}
+    </td>
+    <td *ngIf="displayAddress">
+      <span *ngIf="displayInternalHeader" class="bold">ADDRESS</span> {{address.address}}
+    </td>
+    <td *ngIf="displayPurpose">
+      <span *ngIf="displayInternalHeader" class="bold">PURPOSE</span>{{address.purpose}}
+    </td>
+    <td *ngIf="displayToolsMenu" class="addressMenu">
+      <span class="bold headerDivider center">
+        <span class="marginMenu">
+        <!-- we can use ngx-clipboard -->
+          <span class="icon glyphicon glyphicon-copy" ngxClipboard [cbContent]="address.address"></span>
+          <span class="icon glyphicon glyphicon-lock "></span>
+          <span class="icon glyphicon glyphicon-trash red"></span>
+        </span>
+      </span>
+    </td>
+    <td *ngIf="displayQrMenu" class="qrMenu">
+      <span class="bold headerDivider center">
+        <span class="marginMenu">
+          <span class="icon glyphicon glyphicon-qrcode"></span>
+        </span>
+      </span>
+    </td>
   </tr>
 </table>
 </div>

@@ -37,12 +37,24 @@
       </button>
 
     </td>
-  	<td *ngIf="displayDate">{{ tx.getDate() }}</td>
-    <td *ngIf="displaySenderAddress">{{ tx.address }}</td>
-    <td *ngIf="displayTxId">{{ tx.txid }}</td>
-    <td *ngIf="displayAmount">{{ tx.amount }} PART</td>
-    <td *ngIf="displayBlockIndex">{{ tx.blockindex }}</td>
-    <td *ngIf="displayConfirmations">{{ tx.confirmations }}</td>
+  	<td *ngIf="displayDate">
+      <span *ngIf="displayInternalHeader" class="bold">DATE</span> {{ tx.getDate() }}
+    </td>
+    <td *ngIf="displaySenderAddress">
+      <span *ngIf="displayInternalHeader" class="bold">ADDRESS</span> {{ tx.address }}
+    </td>
+    <td *ngIf="displayTxId">
+      <span *ngIf="displayInternalHeader" class="bold">TXID</span> {{ tx.txid }}
+    </td>
+    <td *ngIf="displayAmount">
+      <span *ngIf="displayInternalHeader" class="bold">AMOUNT </span> {{ tx.amount }} PART
+    </td>
+    <td *ngIf="displayBlockIndex">
+      <span *ngIf="displayInternalHeader" class="bold">BLOCKINDEX</span> {{ tx.blockindex }}
+    </td>
+    <td *ngIf="displayConfirmations">
+      <span *ngIf="displayInternalHeader" class="bold">CONFIRMATIONS</span> {{ tx.confirmations }}
+    </td>
   </tr>
 </table>
 </div>
