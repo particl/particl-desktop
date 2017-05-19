@@ -1,6 +1,6 @@
 <sidebar-container>
 
-  <sidebar position="left" [isDocked]="true" [isPinned]="true" [isOpen]="true"
+  <sidebar position="left" [isDocked]="true" [isPinned]="true" [isOpen]="false"
     (mouseenter)="!window.isXS && !sidebarLeft.isOpen && sidebarLeft.toggleOpen(true)"
     (mouseleave)="!window.isXS && !sidebarLeft.isPinned && sidebarLeft.toggleOpen(false)"
     #sidebarLeft>
@@ -22,7 +22,7 @@
       </accordion-group>
       <accordion-group #walletGroup [isCollapsed]="false">
         <accordion-heading>
-          <a class="category" routerLink="#" (click)="walletGroup.toggleCollapse()">
+          <a class="category" href="javascript:void(0)" (click)="walletGroup.toggleCollapse()">
             Wallet
             <span class="icon fa" [ngClass]="{'fa-chevron-left': walletGroup.isCollapsed, 'fa-chevron-down': !walletGroup.isCollapsed}"></span>
           </a>
@@ -32,22 +32,22 @@
           <span class="icon fa fa-arrow-left"></span>
           Receive
         </a>
-        <a class="item" routerLinkActive="active" routerLink="/send">
+        <a class="item" routerLinkActive="active" routerLink="/wallet/send">
           <span class="icon fa fa-arrow-right"></span>
           Send
         </a>
-        <a class="item" routerLink="#">
+        <a class="item" routerLinkActive="active" routerLink="/wallet/history">
           <span class="icon fa fa-history"></span>
           History
         </a>
-        <a class="item" routerLinkActive="active" routerLink="#">
+        <a class="item" routerLinkActive="active" routerLink="/wallet/address-book">
           <span class="icon fa fa-address-book"></span>
           Address Book
         </a>
       </accordion-group>
       <accordion-group #settingsGroup [isCollapsed]="false">
         <accordion-heading>
-          <a class="category" routerLink="#" (click)="settingsGroup.toggleCollapse()">
+          <a class="category" href="javascript:void(0)" (click)="settingsGroup.toggleCollapse()">
             Settings
             <span class="icon fa" [ngClass]="{'fa-chevron-left': settingsGroup.isCollapsed, 'fa-chevron-down': !settingsGroup.isCollapsed}"></span>
           </a>

@@ -1,7 +1,3 @@
-.tx-table {
-	margin-left: 2%;
-}
-
 .btn-round-lg{
 	border-radius: 22.5px;
 }
@@ -26,8 +22,8 @@
 }
 
 
-/* 
-	General items 
+/*
+	General items
 	TODO: these are also duplicated in other classes; better put all of these in one.
 
 */
@@ -45,16 +41,17 @@
 	display: table;
 }
 
+.table-container {
+	overflow-x: auto;
+	overflow-y: hidden;
+}
 
 table {
-
-    /* border-collapse: collapse; */
-
-    /* Space between rows */
-    border-collapse: separate;
-	border-spacing: 0px 0.5em;
-
-    width: 100%;
+  /* Space between rows */
+	border-collapse: separate;
+	border-spacing: 0 20px;
+	margin: -20px 0;
+  width: 100%;
 }
 
 th {
@@ -71,7 +68,7 @@ tr {
 	padding-bottom: 25px;
 }
 td {
-	text-align: center;
+	text-align: left;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-color: white;
