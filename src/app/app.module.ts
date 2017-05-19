@@ -2,16 +2,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule, Routes } from '@angular/router';
 
-/* BootStrap */
-import { AlertModule } from 'ng2-bootstrap';
-import { PaginationModule } from 'ng2-bootstrap/pagination';
+import { BsDropdownModule, CollapseModule, PaginationModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
+
+import { SidebarModule } from './core/sidebar/sidebar.module';
+import { AccordionModule } from './core/accordion/accordion.module';
 
 import { AppComponent } from './app.component';
 
-import { MenuComponent } from './core/menu/menu.component';
-import { MenuitemComponent } from './core/menu/menuitem.component';
+import { WindowService } from './core/window.service';
+
 import { HeaderComponent } from './core/header/header.component';
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
@@ -21,6 +23,12 @@ import { TransactionsTableComponent } from './wallet/transactions/transaction-ta
 import { BalanceComponent } from './wallet/balances/balance.component';
 import { AddressTableComponent } from './wallet/addresses/address-table/address.table.component';
 
+const routes: Routes = [
+  { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
+  { path: 'send', component: SendComponent, data: { title: 'Send' } },
+  { path: '**', redirectTo: 'overview', pathMatch: 'full' } // Catch all route
+];
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,22 +36,26 @@ import { AddressTableComponent } from './wallet/addresses/address-table/address.
     SendComponent,
     AddressesComponent,
     OverviewComponent,
-    MenuComponent,
     HeaderComponent,
     StatusComponent,
-    MenuitemComponent,
     BalanceComponent,
-    AddressTableComponent,
+    AddressTableComponent
   ],
   imports: [
-    AlertModule.forRoot(),
+    BsDropdownModule.forRoot(),
+    CollapseModule.forRoot(),
+    PaginationModule.forRoot(),
+    ClipboardModule,
     BrowserModule,
     FormsModule,
     HttpModule,
-    PaginationModule.forRoot(),
-    ClipboardModule
+    RouterModule.forRoot(routes),
+    SidebarModule.forRoot(),
+    AccordionModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    WindowService
+  ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

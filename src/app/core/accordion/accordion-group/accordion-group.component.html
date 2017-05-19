@@ -1,0 +1,4 @@
+<ng-content select="accordion-heading"></ng-content>
+<div class="accordion-content" [ngClass]="{'collapsed': isCollapsed}">
+  <ng-content></ng-content>
+</div>

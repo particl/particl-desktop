@@ -1,0 +1,201 @@
+
+$docked-width: 70px;
+$docked-height: 60px;
+
+$width-xs: 100% / 12 * 9;
+$width-sm: 100% / 12 * 3;
+$width-md: 100% / 12 * 2;
+$width-lg: 100% / 12 * 2;
+
+:host {
+  & {
+    display: block;
+  }
+  // Sidebar left
+  &[position="left"] {
+    position: fixed;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: inherit;
+    right: 100%;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 99999;
+  }
+  @media (min-width: 768px) {
+    &[position="left"].docked {
+      left: inherit;
+      right: calc(100% - #{$docked-width});
+    }
+  }
+  &[position="left"].open {
+    left: 0;
+    right: inherit;
+  }
+
+  // Sidebar right
+  &[position="right"] {
+    position: fixed;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 100%;
+    right: inherit;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 99999;
+  }
+  @media (min-width: 768px) {
+    &[position="right"].docked {
+      left: calc(100% - #{$docked-width});
+      right: inherit;
+    }
+  }
+  &[position="right"].open {
+    left: inherit;
+    right: 0;
+  }
+
+  // Sidebar left/right width
+  &[position="left"], &[position="right"] {
+    width: $width-xs;
+  }
+  @media (min-width: 768px) {
+    &[position="left"], &[position="right"] {
+      width: $width-sm;
+    }
+  }
+  @media (min-width: 992px) {
+    &[position="left"], &[position="right"] {
+      width: $width-md;
+    }
+  }
+  @media (min-width: 1200px) {
+    &[position="left"], &[position="right"] {
+      width: $width-lg;
+    }
+  }
+
+  // Sidebar top
+  &[position="top"] {
+    position: fixed;
+    padding: 0;
+    top: inherit;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    z-index: 99999;
+  }
+  &[position="top"].docked {
+    top: inherit;
+    bottom: calc(100% - #{$docked-height});
+  }
+
+  // Sidebar bottom
+  &[position="bottom"] {
+    position: fixed;
+    padding: 0;
+    top: 100%;
+    bottom: inherit;
+    left: 0;
+    right: 0;
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    z-index: 99999;
+  }
+  &[position="bottom"].docked {
+    top: calc(100% - #{$docked-height});
+    bottom: inherit;
+  }
+
+  // Sidebar top/bottom width/height
+  &[position="top"], &[position="bottom"] {
+    width: 768px;
+    height: $docked-height;
+  }
+  @media (min-width: 768px) {
+    &[position="top"], &[position="bottom"] {
+      width: auto;
+    }
+  }
+
+  // Sidebar center
+  &[position="center"] {
+    padding: 0;
+    width: auto;
+    height: auto;
+  }
+  &[position="center"].docked-top {
+    margin-top: $docked-height;
+  }
+  &[position="center"].docked-bottom {
+    margin-bottom: $docked-height;
+  }
+
+  // Sidebar top/bottom/center docked left/right
+  @media (min-width: 768px) {
+    &[position="top"].docked-left,
+    &[position="bottom"].docked-left,
+    &[position="center"].docked-left {
+      margin-left: $docked-width;
+    }
+    &[position="top"].docked-right,
+    &[position="bottom"].docked-right,
+    &[position="center"].docked-right {
+      margin-right: $docked-width;
+    }
+  }
+
+  // Sidebar top/bottom/center pinned left/right
+  &[position="top"].pinned-left,
+  &[position="bottom"].pinned-left {
+    margin-left: $width-xs;
+  }
+  &[position="top"].pinned-right,
+  &[position="bottom"].pinned-right {
+    margin-right: $width-xs;
+  }
+  @media (min-width: 768px) {
+    &[position="top"].pinned-left,
+    &[position="bottom"].pinned-left,
+    &[position="center"].pinned-left {
+      margin-left: $width-sm;
+    }
+    &[position="top"].pinned-right,
+    &[position="bottom"].pinned-right,
+    &[position="center"].pinned-right {
+      margin-right: $width-sm;
+    }
+  }
+  @media (min-width: 992px) {
+    &[position="top"].pinned-left,
+    &[position="bottom"].pinned-left,
+    &[position="center"].pinned-left {
+      margin-left: $width-md;
+    }
+    &[position="top"].pinned-right,
+    &[position="bottom"].pinned-right,
+    &[position="center"].pinned-right {
+      margin-right: $width-md;
+    }
+  }
+  @media (min-width: 1200px) {
+    &[position="top"].pinned-left,
+    &[position="bottom"].pinned-left,
+    &[position="center"].pinned-left {
+      margin-left: $width-lg;
+    }
+    &[position="top"].pinned-right,
+    &[position="bottom"].pinned-right,
+    &[position="center"].pinned-right {
+      margin-right: $width-lg;
+    }
+  }
+}

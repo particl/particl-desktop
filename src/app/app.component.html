@@ -1,3 +1,87 @@
-<app-overview></app-overview>
+<sidebar-container>
 
-<app-addresses></app-addresses>
+  <sidebar position="left" [isDocked]="true" [isPinned]="true" [isOpen]="true"
+    (mouseenter)="!window.isXS && !sidebarLeft.isOpen && sidebarLeft.toggleOpen(true)"
+    (mouseleave)="!window.isXS && !sidebarLeft.isPinned && sidebarLeft.toggleOpen(false)"
+    #sidebarLeft>
+
+    <div class="header">
+      <span *ngIf="!window.isXS" class="toggle-pinned fa"
+        [ngClass]="{'fa-dot-circle-o': sidebarLeft.isPinned, 'fa-circle': !sidebarLeft.isPinned}"
+        (click)="sidebarLeft.togglePinned()">
+      </span>
+      <span class="logo"></span>
+    </div>
+    <hr>
+    <accordion class="menu">
+      <accordion-group [isCollapsed]="false">
+        <a class="item" routerLinkActive="active" routerLink="/overview">
+          <span class="icon fa fa-th"></span>
+          Overview
+        </a>
+      </accordion-group>
+      <accordion-group #walletGroup [isCollapsed]="false">
+        <accordion-heading>
+          <a class="category" routerLink="#" (click)="walletGroup.toggleCollapse()">
+            Wallet
+            <span class="icon fa" [ngClass]="{'fa-chevron-left': walletGroup.isCollapsed, 'fa-chevron-down': !walletGroup.isCollapsed}"></span>
+          </a>
+        </accordion-heading>
+        <hr>
+        <a class="item" routerLinkActive="active" routerLink="#">
+          <span class="icon fa fa-arrow-left"></span>
+          Receive
+        </a>
+        <a class="item" routerLinkActive="active" routerLink="/send">
+          <span class="icon fa fa-arrow-right"></span>
+          Send
+        </a>
+        <a class="item" routerLink="#">
+          <span class="icon fa fa-history"></span>
+          History
+        </a>
+        <a class="item" routerLinkActive="active" routerLink="#">
+          <span class="icon fa fa-address-book"></span>
+          Address Book
+        </a>
+      </accordion-group>
+      <accordion-group #settingsGroup [isCollapsed]="false">
+        <accordion-heading>
+          <a class="category" routerLink="#" (click)="settingsGroup.toggleCollapse()">
+            Settings
+            <span class="icon fa" [ngClass]="{'fa-chevron-left': settingsGroup.isCollapsed, 'fa-chevron-down': !settingsGroup.isCollapsed}"></span>
+          </a>
+        </accordion-heading>
+        <hr>
+        <a class="item" routerLinkActive="active" routerLink="#">
+          <span class="icon fa fa-cog"></span>
+          Settings
+        </a>
+      </accordion-group>
+    </accordion>
+
+  </sidebar>
+
+  <sidebar position="right" [isPinned]="true" #sidebarRight></sidebar>
+
+  <sidebar position="top" [isDocked]="true" #sidebarTop>
+    <div class="header pull-left">
+      <span *ngIf="window.isXS" class="toggle-menu icon fa fa-bars fa-2x"
+        (click)="sidebarLeft.toggleOpen(); sidebarLeft.togglePinned(sidebarLeft.isOpen)">
+      </span>
+      <strong>{{ title }}</strong>
+    </div>
+    <div class="header pull-right">
+      <span class="icon fa fa-signal"></span>
+      <span class="icon fa fa-lock"></span>
+    </div>
+  </sidebar>
+
+  <sidebar position="bottom" #sidebarBottom></sidebar>
+
+  <router-outlet></router-outlet>
+
+  <!-- <app-overview></app-overview> -->
+  <!-- <app-addresses></app-addresses> -->
+
+</sidebar-container>

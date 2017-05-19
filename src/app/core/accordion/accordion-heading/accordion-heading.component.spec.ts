@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MenuitemComponent } from './menuitem.component';
+import { AccordionHeadingComponent } from './accordion-heading.component';
 
-describe('MenuitemComponent', () => {
-  let component: MenuitemComponent;
-  let fixture: ComponentFixture<MenuitemComponent>;
+describe('AccordionHeadingComponent', () => {
+  let component: AccordionHeadingComponent;
+  let fixture: ComponentFixture<AccordionHeadingComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MenuitemComponent ]
+      declarations: [ AccordionHeadingComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MenuitemComponent);
+    fixture = TestBed.createComponent(AccordionHeadingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
