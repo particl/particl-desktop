@@ -1,0 +1,79 @@
+/*:host {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1050;
+}*/
+
+.modal {
+    display: block;
+}
+
+.modal-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.9;
+    z-index: 1040;
+    background: #fff;
+}
+
+.modal-close-bg {
+    position: fixed;
+    top:0;
+    right:0;
+    height:50px;
+    width: 250px;
+    background: #fff;
+}
+
+.close {
+    padding: 15px;
+}
+
+.modal-container {
+    position: static;
+    z-index: 1050;
+    margin-bottom: 45px;
+}
+
+.modal-container .logo {
+    width: 45%;
+    margin: auto;
+    margin: 100px auto 100px;
+}
+
+.modal-footer-info {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: #212121;
+    font-weight: bold;
+}
+
+.modal-footer-info > span {
+    padding-top: 5px;
+    position: absolute;
+}
+
+.modal-footer-info.synced {
+    background: #03e8b0;
+}
+
+.modal-footer-info #bar {
+    background: #03e8b0;
+    width: 78%;
+    height: 30px;
+}
+
+.scrollY {
+    right: 1em;
+}

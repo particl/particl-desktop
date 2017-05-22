@@ -1,0 +1,27 @@
+<div *ngIf="isOpen">
+  <div class="modal-bg"></div>
+
+  <div #modal class="modal">
+  <div class="modal-close-bg" [ngClass]="{'scrollY': hasScrollY}"></div>
+
+
+
+    <div class="modal-container">
+      <button *ngIf="showCloseButton" class="close" type="button" aria-label="Close" (click)="isOpen = false"><span aria-hidden="true">×</span></button>
+
+        <div class="row">
+          <img class="logo img-responsive" src="assets/particl-logo-white-bg.svg">
+        </div>
+        <div class="row">
+          <ng-content></ng-content>
+        </div>
+    </div>
+
+    <div class="modal-footer-info text-center" [ngClass]="{'scrollY': hasScrollY, 'synced': synced}">
+      <span *ngIf="synced">BLOCKCHAIN FULLY SYNCED</span>
+      <span *ngIf="!synced">SYNCING PROGRESS 78.7%</span>
+      <div id="bar"></div>
+    </div>
+
+  </div>
+</div>
