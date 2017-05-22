@@ -108,6 +108,126 @@
   </fullmodal>
 </template>
 
+
+<!--RECOVERY MODAL -->
+<template [ngIf]="true"><!-- TODO: Only write modal if required... -->
+  <fullmodal #testModal1 [showCloseButton]="true"
+              [isOpen]="false"
+              [closeOnEscape]="true">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          <h4>Please enter your <b>24 word recovery phrase</b> and <b>password</b> below.</h4>
+        </div>
+      </div>
+    </div>
+
+    <hr style="margin-top: 100px;">
+
+    <div class="container">
+      <div class="col-md-3 text-right">
+        <label>YOUR 24 WORD RECOVERY PHRASE</label>
+      </div>
+      <div class="col-md-9">
+        <div class="col-md-2">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+        </div>
+        <div class="col-md-2">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+        </div>
+        <div class="col-md-2">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+        </div>
+        <div class="col-md-2">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+        </div>
+        <div class="col-md-2">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+        </div>
+        <div class="col-md-2">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+          <input type="text" name="recovery" class="recovery-word form-control">
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="container">
+      <div class="col-md-3 text-right">
+        <label>YOUR WALLET PASSWORD</label>
+      </div>
+      <div class="col-md-7">
+        <div class="col-md-12">
+          <input type="password" name="password" class="form-control" style="width: 100%;"/>
+          <br>
+          <input type="checkbox" name="showpass" value="password" id="wallet-password"/>
+          <label for="wallet-password">SHOW PASSWORD</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+          <button type="button" class="control">RESTORE WALLET</button>
+      </div>
+    </div>
+    <hr>
+  </fullmodal>
+  <button (click)="testModal1.open()">Open Recovery</button>
+</template>
+
+<!-- PASSWORD MODAL -->
+<template [ngIf]="true"><!-- TODO: Only write modal if required... -->
+  <fullmodal #testModal2 [showCloseButton]="true"
+              [isOpen]="false"
+              [closeOnEscape]="true">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          <h4>Please enter <b>your password</b> to unlock your wallet.</h4>
+        </div>
+      </div>
+    </div>
+
+    <hr style="margin-top: 100px;">
+
+    <div class="container">
+      <div class="col-md-3 text-right">
+        <label>YOUR WALLET PASSWORD</label>
+      </div>
+      <div class="col-md-7">
+        <div class="col-md-12">
+          <input type="password" name="password" class="form-control" style="width: 100%;"/>
+          <br>
+          <input type="checkbox" name="showpass" value="password" id="wallet-password"/>
+          <label for="wallet-password">SHOW PASSWORD</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+          <button type="button" class="control">UNLOCK WALLET</button>
+      </div>
+    </div>
+    <hr>
+  </fullmodal>
+  <button (click)="testModal2.open()">Open Pass</button>
+</template>
+
+
 <template [ngIf]="true"><!-- TODO: Only write modal if required... -->
   <fullmodal  [showCloseButton]="true"
               [isOpen]="true"
@@ -149,123 +269,4 @@
       </div>
     </div>
   </fullmodal>
-</template>
-
-
-<!--RECOVERY MODAL -->
-<template [ngIf]="true"><!-- TODO: Only write modal if required... -->
-  <fullmodal #testModal1 [showCloseButton]="true"
-              [isOpen]="false"
-              [closeOnEscape]="true">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12 text-center">
-          <h4>Please enter your <b>24 word recovery phrase</b> and <b>password</b> below.</h4>
-        </div>
-      </div>
-    </div>
-
-    <hr style="margin-top: 100px;">
-
-    <div class="container">
-      <div class="col-md-3 text-right">
-        <label>YOUR 24 WORD RECOVERY PHRASE</label>
-      </div>
-      <div class="col-md-9">
-        <div class="col-md-2">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-        </div>
-        <div class="col-md-2">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-        </div>
-        <div class="col-md-2">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-        </div>
-        <div class="col-md-2">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-        </div>
-        <div class="col-md-2">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-        </div>
-        <div class="col-md-2">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-          <input type="text" name="recovery" class="recovery-word">
-        </div>
-      </div>
-    </div>
-
-    <hr>
-
-    <div class="container">
-      <div class="col-md-3 text-right">
-        <label>YOUR WALLET PASSWORD</label>
-      </div>
-      <div class="col-md-7">
-        <div class="col-md-12">
-          <input type="password" name="password" style="width: 100%;"/>
-          <br>
-          <input type="checkbox" name="showpass" value="password" id="wallet-password"/>
-          <label for="wallet-password">SHOW PASSWORD</label>
-        </div>
-      </div>
-      <div class="col-md-2">
-          <button type="button" class="control">RESTORE WALLET</button>
-      </div>
-    </div>
-    <hr>
-  </fullmodal>
-  <button (click)="testModal1.open()">Open Recovery</button>
-</template>
-
-<!-- PASSWORD MODAL -->
-<template [ngIf]="true"><!-- TODO: Only write modal if required... -->
-  <fullmodal #testModal2 [showCloseButton]="true"
-              [isOpen]="false"
-              [closeOnEscape]="true">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12 text-center">
-          <h4>Please enter <b>your password</b> to unlock your wallet.</h4>
-        </div>
-      </div>
-    </div>
-
-    <hr style="margin-top: 100px;">
-
-    <div class="container">
-      <div class="col-md-3 text-right">
-        <label>YOUR WALLET PASSWORD</label>
-      </div>
-      <div class="col-md-7">
-        <div class="col-md-12">
-          <input type="password" name="password" style="width: 100%;"/>
-          <br>
-          <input type="checkbox" name="showpass" value="password" id="wallet-password"/>
-          <label for="wallet-password">SHOW PASSWORD</label>
-        </div>
-      </div>
-      <div class="col-md-2">
-          <button type="button" class="control">UNLOCK WALLET</button>
-      </div>
-    </div>
-    <hr>
-  </fullmodal>
-  <button (click)="testModal2.open()">Open Pass</button>
 </template>
