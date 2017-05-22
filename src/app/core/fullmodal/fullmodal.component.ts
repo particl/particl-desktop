@@ -40,6 +40,14 @@ export class FullmodalComponent implements OnDestroy {
     this.ngDoCheck()
   }
 
+  open() {
+    this.isOpen = true;
+  }
+
+  close() {
+    this.isOpen = false;
+  }
+
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: any) {
     if(this.closeOnEscape && event.code.toLowerCase()=="escape")
