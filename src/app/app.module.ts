@@ -10,6 +10,8 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { SidebarModule } from './core/sidebar/sidebar.module';
 import { AccordionModule } from './core/accordion/accordion.module';
 
+import { ModalModule } from "@herbis/ngx-modal";
+
 import { AppComponent } from './app.component';
 
 import { WindowService } from './core/window.service';
@@ -22,6 +24,7 @@ import { SendComponent } from './wallet/transactions/send.component';
 import { TransactionsTableComponent } from './wallet/transactions/transaction-table/transaction.table.component';
 import { BalanceComponent } from './wallet/balances/balance.component';
 import { AddressTableComponent } from './wallet/addresses/address-table/address.table.component';
+import { FullmodalComponent } from './core/fullmodal/fullmodal.component';
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -39,7 +42,8 @@ const routes: Routes = [
     HeaderComponent,
     StatusComponent,
     BalanceComponent,
-    AddressTableComponent
+    AddressTableComponent,
+    FullmodalComponent
   ],
   imports: [
     BsDropdownModule.forRoot(),
@@ -51,7 +55,8 @@ const routes: Routes = [
     HttpModule,
     RouterModule.forRoot(routes),
     SidebarModule.forRoot(),
-    AccordionModule
+    AccordionModule,
+    ModalModule
   ],
   providers: [
     WindowService
