@@ -1,0 +1,194 @@
+:host /deep/ {
+  button.control {
+    background: #03e8b0;
+    border: 0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 12px 20px;
+  }
+
+  /* TODO: Once we've structured the modals correctly, we'll move this there.
+    This is still discussion on terminology (Passphrase vs password, etc) too */
+  .recovery-word {
+    width: 120px;
+    margin-bottom: 25px;
+  }
+
+
+  /* Checkboxes and Radio buttons
+  --------------------------------------------------
+  */
+  input[type=radio],
+  input[type=checkbox] {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-left: 0px;
+  }
+  radio label,
+  checkbox label {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    padding-left: 25px !important;
+    margin-right: 15px;
+    font-size: 13px;
+  }
+  radio label:before,
+  checkbox label:before {
+    content: "";
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    margin-right: 10px;
+    position: absolute;
+    left: 0px;
+    background-color: #F0F1F3;
+    border: 1px solid #F0F1F3
+  }
+  radio label {
+    margin-bottom: 6px;
+  }
+  radio label:before {
+    bottom: 2.5px;
+    border-radius: 99px;
+    -webkit-transition: border 0.3s 0s cubic-bezier(0.455, 0.03, 0.215, 1.33);
+    transition: border 0.3s 0s cubic-bezier(0.455, 0.03, 0.215, 1.33);
+  }
+  radio input[type=radio]:checked + label:before {
+    border-width: 5px;
+  }
+  .radio input[type="radio"]:focus + label {
+    color: #2c2c2c;
+  }
+  .radio input[type="radio"]:focus + label:before {
+    background-color: #e6e6e6;
+  }
+  .radio input[type=radio] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .radio input[type=radio][disabled] + label {
+    opacity: 0.65;
+  }
+  .radio.radio-success input[type=radio]:checked + label:before {
+    border-color: #03e8b0;
+  }
+  .radio.radio-primary input[type=radio]:checked + label:before {
+    border-color: #03e8b0;
+  }
+  .radio.radio-info input[type=radio]:checked + label:before {
+    border-color: #212121;
+  }
+  .radio.radio-warning input[type=radio]:checked + label:before {
+    border-color: #f8d053;
+  }
+  .radio.radio-danger input[type=radio]:checked + label:before {
+    border-color: #14f9c1;
+  }
+  .radio.radio-complete input[type=radio]:checked + label:before {
+    border-color: #03e8b0;
+  }
+  .checkbox input[type=radio][disabled] + label:after {
+    background-color: #e6e6e6;
+  }
+  .checkbox label {
+    transition: border 0.2s linear 0s, color 0.2s linear 0s;
+    white-space: nowrap;
+  }
+  .checkbox label:before {
+    top: 1.4px;
+    border-radius: 3px;
+    transition: border 0.2s linear 0s, color 0.2s linear 0s;
+  }
+  .checkbox label::after {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    left: 3.2px;
+    top: 0px;
+    font-size: 11px;
+    transition: border 0.2s linear 0s, color 0.2s linear 0s;
+  }
+  .checkbox label:after {
+    border-radius: 3px;
+  }
+  .checkbox input[type=checkbox] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .checkbox.checkbox-circle label:after {
+    border-radius: 99px;
+  }
+  .checkbox.checkbox-circle label:before {
+    border-radius: 99px;
+  }
+  .checkbox input[type=checkbox]:checked + label:before {
+    border-width: 8.5px;
+  }
+  .checkbox input[type=checkbox]:checked + label::after {
+    font-family: 'FontAwesome';
+    content: "\F00C";
+    color: #fff;
+  }
+  .checkbox input[type="checkbox"]:focus + label {
+    color: #212121;
+  }
+  .checkbox input[type="checkbox"]:focus + label:before {
+    background-color: #e6e6e6;
+  }
+  .checkbox input[type=checkbox][disabled] + label {
+    opacity: 0.65;
+  }
+  .checkbox input[type=checkbox][disabled] + label:before {
+    background-color: #eceff3;
+  }
+  .checkbox.right label {
+    margin-right: 35px;
+    padding-left: 0 !important;
+  }
+  .checkbox.right label:before {
+    right: -35px;
+    left: auto;
+  }
+  .checkbox.right input[type=checkbox]:checked + label {
+    position: relative;
+  }
+  .checkbox.right input[type=checkbox]:checked + label::after {
+    font-family: 'FontAwesome';
+    content: "\F00C";
+    position: absolute;
+    right: -27px;
+    left: auto;
+  }
+  .checkbox.check-success input[type=checkbox]:checked + label:before {
+    border-color: #03e8b0;
+  }
+  .checkbox.check-primary input[type=checkbox]:checked + label:before {
+    border-color: #03e8b0;
+  }
+  .checkbox.check-complete input[type=checkbox]:checked + label:before {
+    border-color: #03e8b0;
+  }
+  .checkbox.check-warning input[type=checkbox]:checked + label:before {
+    border-color: #f8d053;
+  }
+  .checkbox.check-danger input[type=checkbox]:checked + label:before {
+    border-color: #14f9c1;
+  }
+  .checkbox.check-info input[type=checkbox]:checked + label:before {
+    border-color: #3b4752;
+  }
+  .checkbox.check-success input[type=checkbox]:checked + label::after,
+  .checkbox.check-primary input[type=checkbox]:checked + label::after,
+  .checkbox.check-complete input[type=checkbox]:checked + label::after,
+  .checkbox.check-warning input[type=checkbox]:checked + label::after,
+  .checkbox.check-danger input[type=checkbox]:checked + label::after,
+  .checkbox.check-info input[type=checkbox]:checked + label::after {
+    color: #ffffff;
+  }
+}
