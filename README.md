@@ -7,7 +7,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 * Download + Install [git](https://git-scm.com/)
 *
 ```
-git clone https://github.com/particl/partgui`
+git clone https://github.com/particl/partgui
 cd partgui
 npm install
 ```
