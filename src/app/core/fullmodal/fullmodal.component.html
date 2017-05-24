@@ -19,8 +19,8 @@
 
     <div class="modal-footer-info text-center" [ngClass]="{'scrollY': hasScrollY, 'synced': synced}">
       <span *ngIf="synced">BLOCKCHAIN FULLY SYNCED</span>
-      <span *ngIf="!synced">SYNCING PROGRESS 78.7%</span>
-      <div id="bar"></div>
+      <span *ngIf="!synced">{{ syncPercentage.toFixed(1) }}%</span>
+      <div #percentageBar class="percentage-bar"></div>
     </div>
 
   </div>
