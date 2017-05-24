@@ -1,21 +1,28 @@
 :host /deep/ {
   button.control {
-     background: #03e8b0;
-     border: 0;
-     color: #fff;
-     font-weight: 700;
-     font-size: 12px;
-     text-transform: uppercase;
-     padding: 8px 20px;
-     vertical-align: middle;
-     position: center;
+    background: #03e8b0;
+    border: 0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    vertical-align: middle;
   }
 
   /* TODO: Once we've structured the modals correctly, we'll move this there.
     This is still discussion on terminology (Passphrase vs password, etc) too */
   .recovery-word {
-     width: 120px;
-     margin-bottom: 25px;
+    width: 120px;
+    margin-bottom: 25px;
+  }
+
+  .password {
+    width: 100%;
+  }
+
+  .password-label {
+    top: 20;
   }
 
   input[type=checkbox] {

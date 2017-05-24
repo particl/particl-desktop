@@ -134,26 +134,3 @@ sidebar[position="top"] {
     }
   }
 }
-
-:host /deep/ button.control {
-  background: #03e8b0;
-  border: 0;
-  color: #fff;
-  font-weight: 700;
-  font-size: 12px;
-  text-transform: uppercase;
-  padding: 12px 20px;
-}
-
-.recovery-word {
-  width: 120px;
-  margin-bottom: 25px;
-}
-
-.password-size {
-  width: 100%;
-}
-
-.label-position {
-  top: 20;
-}
