@@ -14,17 +14,15 @@ export class FullmodalComponent implements OnDestroy {
   @Input() closeOnEscape: boolean = true;
 
   private hasScrollY: boolean = false;
-  public syncPercentage: number = 0.00;
+  public syncPercentage: number = 20.00;
   private synced: boolean = false;
 
   constructor(private elementRef: ElementRef,
               private renderer: Renderer) {
-    this.renderer.setElementClass(document.body, 'modal-open', true);
   }
 
   open() {
     this.isOpen = true;
-    this.ngDoCheck();
   }
 
   close() {
@@ -42,9 +40,10 @@ export class FullmodalComponent implements OnDestroy {
   }
 
   ngDoCheck() {
-    this.renderer.setElementClass(document.body, 'modal-open', this.isOpen);
-
-    <span *ngIf="!synced" [style.width]="syncPercentage + '%'">SYNCING PROGRESS {{ syncPercentage }}%</span>
+    if (this.renderer)
+       this.renderer.setElementClass(document.body, 'modal-open', this.isOpen);
+    else
+      return true;
 
     if (this.isOpen && this.modal) {
       let element = this.modal.nativeElement;

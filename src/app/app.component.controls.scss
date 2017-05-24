@@ -1,74 +1,66 @@
 :host /deep/ {
   button.control {
-    background: #03e8b0;
-    border: 0;
-    color: #fff;
-    font-weight: 700;
-    font-size: 12px;
-    text-transform: uppercase;
-    padding: 8px 20px;
-    vertical-align: middle;
-    position: center-vertical;
+     background: #03e8b0;
+     border: 0;
+     color: #fff;
+     font-weight: 700;
+     font-size: 12px;
+     text-transform: uppercase;
+     padding: 8px 20px;
+     vertical-align: middle;
+     position: center;
   }
 
   /* TODO: Once we've structured the modals correctly, we'll move this there.
     This is still discussion on terminology (Passphrase vs password, etc) too */
   .recovery-word {
-    width: 120px;
-    margin-bottom: 25px;
+     width: 120px;
+     margin-bottom: 25px;
   }
 
   input[type=checkbox] {
-      -webkit-appearance: none;
-      appearance: none;
-      vertical-align: middle;
-      padding: 12px;
-      color:#212121;
-      font-weight:200;
-      border-radius: 0;
-      background-color: #fbfbfb;
-
-      margin: 15px auto;
-      position: center;
-      border: 1px solid #ccc;
-      box-shadow: none;
-      background: #fff;
-      border-radius: 4px;
-  }
-
-  input[type=checkbox] + label {
-      vertical-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+    vertical-align: middle;
+    padding: 12px;
+    color:#212121;
+    font-weight:200;
+    border-radius: 0;
+    background-color: #fbfbfb;
+    margin: 15px auto;
+    position: center;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    background: #fff;
+    border-radius: 4px;
   }
 
   input[type=checkbox]:checked {
-      background: #03e8b0;
+    background: #03e8b0;
   }
 
-
   input[disabled] {
-      background-color: #efefef;
+    background-color: #efefef;
   }
 
   input[type=checkbox][disabled] + label,
   label.disabled {
-      color: #777;
+    color: #777;
   }
 
   input[type=checkbox] + label:before {
     content: '\2713';
     display: inline-block;
-
     font-size: 19px;
     position: relative;
     right: 24px;
-    bottom: 0px;
+    bottom: 0;
     top: 3px;
-    color: #ffffff;
+    color: #fff;
     border-radius: 10px;
   }
 
   input[type=checkbox]:checked + label:before {
     content: '\2713';
-    display: inline-block;
   }
 }
