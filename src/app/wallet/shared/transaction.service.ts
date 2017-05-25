@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Transaction, deserialize, TEST_TXS_JSON } from './transaction';
+import { Transaction, deserialize, TEST_TXS_JSON } from './transaction.model';
 
 
 @Injectable()
-export class TransactionsTableService {
+export class TransactionService {
 
-	/* 
+	/*
 		Stores transactions objects.
 	*/
 	txs : Transaction[] = [];
@@ -18,14 +18,14 @@ export class TransactionsTableService {
   //testVal$: Observable<Boolean> = false.AsObservable();
 
 
-	/* 
+	/*
 		How many transactions do we display per page and keep in memory at all times. When loading more transactions they are fetched JIT and added to txs.
 	*/
 	MAX_TXS_PER_PAGE : number = 4;
 
 
 
-  constructor() { 
+  constructor() {
   	this.initializeTestData();
    }
 
@@ -34,7 +34,7 @@ export class TransactionsTableService {
    initializeTestData() : void {
     this.txCount = TEST_TXS_JSON.length;
   	this.loadTestTransaction(0);
-  	
+
    }
 
    loadTestTransaction(index_start : number) : void {
@@ -45,10 +45,10 @@ export class TransactionsTableService {
     let real_index_start : number;
     if(this.txCount > this.MAX_TXS_PER_PAGE)
       real_index_start = this.txCount - (index_start + 1) * this.MAX_TXS_PER_PAGE;
-    else 
+    else
       real_index_start = 0;
 
-    for(var i = 0; i < this.MAX_TXS_PER_PAGE; i++){ 
+    for(var i = 0; i < this.MAX_TXS_PER_PAGE; i++){
   		let json = TEST_TXS_JSON[real_index_start + i];
     	this.addTransaction(json);
   	}
@@ -56,14 +56,14 @@ export class TransactionsTableService {
 /*
 
 
-  _    _ _______ _____ _      
- | |  | |__   __|_   _| |     
- | |  | |  | |    | | | |     
- | |  | |  | |    | | | |     
- | |__| |  | |   _| |_| |____ 
+  _    _ _______ _____ _
+ | |  | |__   __|_   _| |
+ | |  | |  | |    | | | |
+ | |  | |  | |    | | | |
+ | |__| |  | |   _| |_| |____
   \____/   |_|  |_____|______|
-                              
-                              
+
+
 */
 
 	changePage(page : number){
@@ -81,11 +81,11 @@ export class TransactionsTableService {
 	updatePageCount() : number{
 		this.totalPageCount = Math.ceil(this.txCount/this.MAX_TXS_PER_PAGE);
 
-		
+
   		if(this.currentPage != 0){
-  			let residual = this.txCount % this.MAX_TXS_PER_PAGE; 
+  			let residual = this.txCount % this.MAX_TXS_PER_PAGE;
   			if(residual == 0) //new page
-  				this.currentPage++; 
+  				this.currentPage++;
 
 		}
 		return this.totalPageCount;
@@ -95,16 +95,16 @@ export class TransactionsTableService {
   	deleteTransactions(){
   		this.txs = [];
   	}
-/* 
+/*
 
 
-  _____  _____   _____ 
+  _____  _____   _____
  |  __ \|  __ \ / ____|
- | |__) | |__) | |     
- |  _  /|  ___/| |     
- | | \ \| |    | |____ 
+ | |__) | |__) | |
+ |  _  /|  ___/| |
+ | | \ \| |    | |____
  |_|  \_\_|     \_____|
-                         
+
 
 */
 
@@ -125,7 +125,7 @@ export class TransactionsTableService {
   	this.txCount = TEST_TXS_JSON.length-1;
   }
 
-  //Deserializes JSON objects to Transaction classes. 
+  //Deserializes JSON objects to Transaction classes.
   //This does not enforce statically typed stuff at runtime tho, there is one lib called TypedJSON that does.
   addTransaction(json: Object) : void {
   	let instance = deserialize(json, Transaction);
@@ -139,14 +139,14 @@ export class TransactionsTableService {
 /*
 
 
-   _____ _____ _____ _   _          _      
-  / ____|_   _/ ____| \ | |   /\   | |     
- | (___   | || |  __|  \| |  /  \  | |     
-  \___ \  | || | |_ | . ` | / /\ \ | |     
-  ____) |_| || |__| | |\  |/ ____ \| |____ 
+   _____ _____ _____ _   _          _
+  / ____|_   _/ ____| \ | |   /\   | |
+ | (___   | || |  __|  \| |  /  \  | |
+  \___ \  | || | |_ | . ` | / /\ \ | |
+  ____) |_| || |__| | |\  |/ ____ \| |____
  |_____/|_____\_____|_| \_/_/    \_\______|
-                                           
-                                           
+
+
 
 */
 
@@ -159,26 +159,26 @@ export class TransactionsTableService {
   signal_newTransaction() : void {
   	/*
   		When bitcoind finds a new transaction, it must signal it to the GUI.
-  		We constantly need to be aware of the latest transactions for a good UX, 
-  		another good reason is that the RPC call listtransactions uses indexes to track the transactions. 
+  		We constantly need to be aware of the latest transactions for a good UX,
+  		another good reason is that the RPC call listtransactions uses indexes to track the transactions.
   		So if we're not aware of the latest transaction, some shitty stuff may happen when loading more transactions.
   		example: (tx_NEW0, tx_old1, tx_old2, tx_old3, tx_old4)
   		If the GUI is not aware tx_NEW0 and assumes that tx_old1 has index 0 (in reality it would be 1) then it could break pagination.
   		Assume each page displays 2 transactions, if we were not aware of the new transaction then every index is shifted by one and we would load a duplicate.
   		tx_old2 would be retrieved again, while already being displayed. This can serve as a failsafe to check if our signalling still works timely and properly.
 
-  		Note: when opening a transaction we must 
+  		Note: when opening a transaction we must
 
   		Pseudo code
   		//only delete transaction records when we are on the first page. If you're on page five and the tx records start shifting due to new transactions, you might get annoyed as it goes out of focus.
   		updateTxCount();
-  			if(onFirstPageOfTransactions) 
+  			if(onFirstPageOfTransactions)
   				deleteExcessTransactionsFromTxs(); //to keep GUI lightweight
   				loadTransactionOverRPC(0,1); //load latest record.
   			else
 				doNothing();
 
-  		
+
 
 
   	*/

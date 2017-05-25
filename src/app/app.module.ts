@@ -41,7 +41,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     SidebarModule.forRoot(),
     AccordionModule,
-    WalletModule
+    WalletModule.forRoot()
   ],
   providers: [
     WindowService

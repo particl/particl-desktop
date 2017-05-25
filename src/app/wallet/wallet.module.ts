@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -6,9 +6,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { PaginationModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 
+import { TransactionService } from './shared/transaction.service';
+
+import { TransactionTableComponent } from './shared/transaction-table/transaction-table.component';
 import { AddressesComponent } from './addresses/addresses.component';
-import { SendComponent } from './transactions/send.component';
-import { TransactionsTableComponent } from './transactions/transaction-table/transaction.table.component';
+import { SendComponent } from './send/send.component';
 import { BalanceComponent } from './balances/balance.component';
 import { AddressTableComponent } from './addresses/address-table/address.table.component';
 import { HistoryComponent } from './history/history.component';
@@ -33,7 +35,7 @@ const routes: Routes = [
     ClipboardModule
   ],
   declarations: [
-    TransactionsTableComponent,
+    TransactionTableComponent,
     SendComponent,
     AddressesComponent,
     BalanceComponent,
@@ -41,12 +43,20 @@ const routes: Routes = [
     HistoryComponent
   ],
   exports: [
-    TransactionsTableComponent,
-    SendComponent,
+    TransactionTableComponent,
     AddressesComponent,
     BalanceComponent,
     AddressTableComponent
   ],
   providers: []
 })
-export class WalletModule { }
+export class WalletModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: WalletModule,
+      providers: [
+        TransactionService
+      ]
+    };
+  }
+}

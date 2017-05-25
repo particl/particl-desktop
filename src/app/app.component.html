@@ -1,6 +1,6 @@
 <sidebar-container>
 
-  <sidebar position="left" [isDocked]="true" [isPinned]="true" [isOpen]="false"
+  <sidebar position="left" [isDocked]="true" [isPinned]="false" [isOpen]="false"
     (mouseenter)="!window.isXS && !sidebarLeft.isOpen && sidebarLeft.toggleOpen(true)"
     (mouseleave)="!window.isXS && !sidebarLeft.isPinned && sidebarLeft.toggleOpen(false)"
     #sidebarLeft>

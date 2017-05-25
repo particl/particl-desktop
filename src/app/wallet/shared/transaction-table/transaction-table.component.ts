@@ -1,15 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Transaction } from './transaction';
-import { TransactionsTableService } from './transaction.table.service';
+
+import { TransactionService } from '../transaction.service';
 
 
 @Component({
-  selector: 'app-transaction-table',
-  templateUrl: './transaction.table.component.html',
-  styleUrls: ['./transaction.table.component.css'],
-  providers: [TransactionsTableService]
+  selector: 'transaction-table',
+  templateUrl: './transaction-table.component.html',
+  styleUrls: ['./transaction-table.component.css']
 })
-export class TransactionsTableComponent implements OnInit {
+export class TransactionTableComponent implements OnInit {
 
 	txService;
 
@@ -31,9 +30,9 @@ export class TransactionsTableComponent implements OnInit {
   @Input() displayBlockHash: boolean = false;
   @Input() displayBlockIndex: boolean = false;
 
-  constructor(private _transactionService: TransactionsTableService) {
+  constructor(private _transactionService: TransactionService) {
   	//make life easy in component html
-  	this.txService = _transactionService; 
+  	this.txService = _transactionService;
   }
 
   ngOnInit() {
