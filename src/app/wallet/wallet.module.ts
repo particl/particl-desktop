@@ -8,6 +8,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 
 import { TransactionService } from './shared/transaction.service';
 
+import { HeaderComponent } from './shared/header/header.component';
 import { TransactionTableComponent } from './shared/transaction-table/transaction-table.component';
 import { AddressesComponent } from './addresses/addresses.component';
 import { SendComponent } from './send/send.component';
@@ -35,6 +36,7 @@ const routes: Routes = [
     ClipboardModule
   ],
   declarations: [
+    HeaderComponent,
     TransactionTableComponent,
     SendComponent,
     AddressesComponent,
@@ -43,6 +45,7 @@ const routes: Routes = [
     HistoryComponent
   ],
   exports: [
+    HeaderComponent,
     TransactionTableComponent,
     AddressesComponent,
     BalanceComponent,

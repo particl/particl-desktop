@@ -8,16 +8,13 @@ import { BsDropdownModule, CollapseModule, PaginationModule } from 'ngx-bootstra
 
 import { SidebarModule } from './core/sidebar/sidebar.module';
 import { AccordionModule } from './core/accordion/accordion.module';
-
-import { AppComponent } from './app.component';
+import { WalletModule } from './wallet/wallet.module';
 
 import { WindowService } from './core/window.service';
 
-import { HeaderComponent } from './core/header/header.component';
+import { AppComponent } from './app.component';
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
-
-import { WalletModule } from './wallet/wallet.module';
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -28,7 +25,6 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     OverviewComponent,
-    HeaderComponent,
     StatusComponent
   ],
   imports: [

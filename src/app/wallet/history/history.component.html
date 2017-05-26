@@ -1,19 +1,20 @@
-<div class="header">
-  <div class="container-fluid verical-align">
-    <ul>
-      <li>All
-      <li class="active">Send
-      <li>Receive
-      <li>Stake
+<header>
+  <div class="container-fluid">
+    <ul class="header-nav">
+      <li (click)="filterByCategory('all')" [ngClass]="{'active': category == 'all'}">All
+      <li (click)="filterByCategory('send')" [ngClass]="{'active': category == 'send'}">Send
+      <li (click)="filterByCategory('receive')" [ngClass]="{'active': category == 'receive'}">Receive
+      <li (click)="filterByCategory('stake')" [ngClass]="{'active': category == 'stake'}">Stake
+      <li (click)="filterByCategory('orphaned_stake')" [ngClass]="{'active': category == 'orphaned_stake'}">Orphane
     </ul>
-    <form class="pull-right">
+    <form class="header-form pull-right">
       <input type="text" placeholder="Search history">
       <button class="btn" type="submit" name="button">
         <span class="fa fa-search"></span>
       </button>
     </form>
   </div>
-</div>
+</header>
 <div class="container-fluid">
   <transaction-table
     [displayHeader]="false"
@@ -25,28 +26,4 @@
     [displayConfirmations]="true"
     [displayAmount]="true">
   </transaction-table>
-  <!-- <table class="transaction-table">
-    <tr *ngFor="let num of [0, 1, 2, 3, 4]">
-      <td>
-        <button class="btn btn-default text-uppercase">Send <span class="fa fa-arrow-right"></span></button>
-      </td>
-      <td>
-        <strong class="text-uppercase">Address</strong> {{ num }}
-      </td>
-      <td>
-        <span class="fa fa-clock-o"></span> {{ num }}
-      </td>
-      <td>
-        <strong class="text-uppercase">Confirmations</strong> {{ num }} <span class="fa fa-clock-o"></span>
-      </td>
-      <td>
-        <strong class="text-uppercase">Amount</strong> {{ num }} PART
-      </td>
-    </tr>
-  </table> -->
-  <!-- <div class="transaction-list">
-    <div *ngFor="let num of [0, 1, 2, 3, 4]" class="transaction-item">
-      {{ num }}
-    </div>
-  </div> -->
 </div>

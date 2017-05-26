@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { TransactionCategory } from '../shared/transaction.model';
+
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HistoryComponent implements OnInit {
 
+  category: TransactionCategory = "all";
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  filterByCategory(category: TransactionCategory) {
+    console.log(`filter by: ${category}`);
+    this.category = category;
   }
 
 }
