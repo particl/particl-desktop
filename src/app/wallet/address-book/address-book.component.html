@@ -1,0 +1,27 @@
+<header>
+  <div class="container-fluid">
+    <ul class="header-nav">
+			<li class="active">All
+      <li>New Address
+    </ul>
+    <form class="header-form pull-right">
+      <input type="text" placeholder="Search address book">
+      <button class="btn" type="submit" name="button">
+        <span class="fa fa-search"></span>
+      </button>
+    </form>
+  </div>
+</header>
+<div class="container-fluid">
+  <address-table
+    [displayHeader]="false"
+		[displayInternalHeader]="true"
+    [displayPagination]="false"
+		[displayLabel]="true"
+		[displayAddress]="true"
+		[displayPublicKey]="true"
+		[displayType]="true"
+		[displayToolsMenu]="true"
+		[displayQrMenu]="true">
+  </address-table>
+</div>

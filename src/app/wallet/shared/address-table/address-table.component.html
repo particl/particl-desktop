@@ -8,14 +8,14 @@
   </tr>
   <tr *ngFor="let address of addressService.addresses">
     <td *ngIf="displayLabel" class="bold paddingLeft10"> {{address.label}}</td>
-    <td *ngIf="displayType">
-      <span *ngIf="displayInternalHeader" class="bold">TYPE</span> {{address.type}}
-    </td>
     <td *ngIf="displayAddress">
       <span *ngIf="displayInternalHeader" class="bold internalHeaderResponsive">ADDRESS</span> {{address.address}}
     </td>
     <td *ngIf="displayPublicKey">
       <span *ngIf="displayInternalHeader" class="bold internalHeaderResponsive">PUBLIC KEY</span> {{address.publicKey}}
+    </td>
+    <td *ngIf="displayType">
+      <span *ngIf="displayInternalHeader" class="bold">TYPE</span> {{address.type}}
     </td>
     <td *ngIf="displayPurpose">
       <span *ngIf="displayInternalHeader" class="bold">PURPOSE</span> {{address.purpose}}
@@ -51,4 +51,3 @@
 
 <pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
             previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" itemsPerPage="{{addressService.MAX_ADDRESSES_PER_PAGE}}" ></pagination>
-        

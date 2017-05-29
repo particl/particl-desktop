@@ -1,11 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AddressTableService } from './address.table.service';
+import { AddressService } from '../address.service';
 
 @Component({
-  selector: 'app-address-table',
-  templateUrl: './address.table.component.html',
-  styleUrls: ['./address.table.component.css'],
-  providers: [AddressTableService]
+  selector: 'address-table',
+  templateUrl: './address-table.component.html',
+  styleUrls: ['./address-table.component.scss']
 })
 export class AddressTableComponent implements OnInit {
 
@@ -27,8 +26,8 @@ export class AddressTableComponent implements OnInit {
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
 
-  constructor(private _addressService: AddressTableService) {
-  	this.addressService = _addressService; 
+  constructor(private _addressService: AddressService) {
+  	this.addressService = _addressService;
   }
 
   ngOnInit() {

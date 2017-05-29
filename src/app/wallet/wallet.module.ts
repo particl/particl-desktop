@@ -7,13 +7,15 @@ import { PaginationModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { TransactionService } from './shared/transaction.service';
+import { AddressService } from './shared/address.service';
 
 import { HeaderComponent } from './shared/header/header.component';
 import { TransactionTableComponent } from './shared/transaction-table/transaction-table.component';
-import { AddressesComponent } from './addresses/addresses.component';
+import { AddressTableComponent } from './shared/address-table/address-table.component';
+
+import { AddressBookComponent } from './address-book/address-book.component';
 import { SendComponent } from './send/send.component';
 import { BalanceComponent } from './balances/balance.component';
-import { AddressTableComponent } from './addresses/address-table/address.table.component';
 import { HistoryComponent } from './history/history.component';
 
 const routes: Routes = [
@@ -22,7 +24,7 @@ const routes: Routes = [
     children: [
       { path: 'history', component: HistoryComponent, data: { title: 'History' } },
       { path: 'send', component: SendComponent, data: { title: 'Send' } },
-      { path: 'address-book', component: AddressesComponent, data: { title: 'Address Book' } }
+      { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } }
     ]
   }
 ];
@@ -38,18 +40,17 @@ const routes: Routes = [
   declarations: [
     HeaderComponent,
     TransactionTableComponent,
-    SendComponent,
-    AddressesComponent,
-    BalanceComponent,
     AddressTableComponent,
+    AddressBookComponent,
+    SendComponent,
+    BalanceComponent,
     HistoryComponent
   ],
   exports: [
     HeaderComponent,
     TransactionTableComponent,
-    AddressesComponent,
-    BalanceComponent,
-    AddressTableComponent
+    AddressTableComponent,
+    BalanceComponent
   ],
   providers: []
 })
@@ -58,7 +59,8 @@ export class WalletModule {
     return {
       ngModule: WalletModule,
       providers: [
-        TransactionService
+        TransactionService,
+        AddressService
       ]
     };
   }
