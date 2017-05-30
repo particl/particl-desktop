@@ -1,0 +1,29 @@
+<header>
+  <div class="container-fluid">
+    <ul class="header-nav">
+      <li (click)="filterByCategory('all')" [ngClass]="{'active': category == 'all'}">All
+      <li (click)="filterByCategory('send')" [ngClass]="{'active': category == 'send'}">Send
+      <li (click)="filterByCategory('receive')" [ngClass]="{'active': category == 'receive'}">Receive
+      <li (click)="filterByCategory('stake')" [ngClass]="{'active': category == 'stake'}">Stake
+      <li (click)="filterByCategory('orphaned_stake')" [ngClass]="{'active': category == 'orphaned_stake'}">Orphan
+    </ul>
+    <form class="header-form pull-right">
+      <input type="text" placeholder="Search history">
+      <button class="btn" type="submit" name="button">
+        <span class="fa fa-search"></span>
+      </button>
+    </form>
+  </div>
+</header>
+<div class="container-fluid">
+  <transaction-table
+    [displayHeader]="false"
+    [displayInternalHeader]="true"
+    [displayPagination]="false"
+    [displayCategory]="true"
+    [displaySenderAddress]="true"
+    [displayDate]="true"
+    [displayConfirmations]="true"
+    [displayAmount]="true">
+  </transaction-table>
+</div>

@@ -3,57 +3,56 @@ interface Deserializable {
     getTypes(): Object;
 }
 
-export class Transaction implements Deserializable{
-    txid: string;
-	address: string;
-	category: string;
-	amount: number;
-	blockhash: string;
-	blockindex: number;
-	confirmations: number;
-	time: number;
-	comment: string;
-	vout: number;
-    walletconflicts: Object[];
+export type TransactionCategory = "all" | "stake" | "send" | "receive" | "orphaned_stake";
+
+export class Transaction implements Deserializable {
+  txid: string;
+  address: string;
+  category: string;
+  amount: number;
+  blockhash: string;
+  blockindex: number;
+  confirmations: number;
+  time: number;
+  comment: string;
+  vout: number;
+  walletconflicts: Object[];
+
+  constructor( txid: string, address: string, category: string, amount: number, blockhash: string, blockindex: number, confirmations: number, time: number, comment: string, vout: number) {
+    this.txid = txid;
+    //Note: only one address,
+    this.address = address;
+    this.category = category;
+    this.amount = amount;
+    this.blockhash = blockhash;
+    this.blockindex = blockindex;
+    this.confirmations = confirmations;
+    this.time = time;
+    this.comment = comment;
+    this.vout = vout;
+  }
 
 
-    constructor( txid: string, address: string, category: string, amount: number, blockhash: string, blockindex: number, confirmations: number, time: number, comment: string, vout: number) { 
-    	this.txid = txid; 
-    	//Note: only one address, 
-    	this.address = address; 
-    	this.category = category;
-    	this.amount = amount;
-    	this.blockhash = blockhash;
-    	this.blockindex = blockindex;
-    	this.confirmations = confirmations;
-    	this.time = time; 
-    	this.comment = comment; 
-    	this.vout = vout;
-    }
-    
+  getTypes() {
+    // since everything is primitive, we don't need to
+    // return anything here
+    return {};
+  }
 
-    getTypes() {
-        // since everything is primitive, we don't need to
-        // return anything here
-        return {};
-    }
+  getDate(): string {
+    return this.dateFormatter(new Date(this.time * 1000));
+  }
 
-    getDate() : string{
-
-        return this.dateFormatter(new Date(this.time * 1000));
-    }
-
-    private dateFormatter(d : Date){
-        
-        
-        return (d.getDate() < 10 ? "0" + d.getDate() : d.getDate()) + "-" +
-               ((d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1)) + "-" +
-               (d.getFullYear() < 10 ? "0" + d.getFullYear() : d.getFullYear()) + " " + 
-               (d.getHours() < 10 ? "0" + d.getHours() : d.getHours()) + ":" +
-               (d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes()) + ":" +
-               (d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds())
-               ;
-    }
+  private dateFormatter(d : Date) {
+    return (
+      d.getDate() < 10 ? "0" + d.getDate() : d.getDate()) + "-" +
+      ((d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1)) + "-" +
+      (d.getFullYear() < 10 ? "0" + d.getFullYear() : d.getFullYear()) + " " +
+      (d.getHours() < 10 ? "0" + d.getHours() : d.getHours()) + ":" +
+      (d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes()) + ":" +
+      (d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds()
+    );
+  }
 }
 
 /*
@@ -61,28 +60,27 @@ export class Transaction implements Deserializable{
 */
 
 export function deserialize(json, type) {
-    var instance = new type(),
-        types = instance.getTypes();
+  var instance = new type(), types = instance.getTypes();
 
-    for(var prop in json) {
-        if(!json.hasOwnProperty(prop)) {
-            continue;
-        }
-        //Note: disabled for walletconflicts, which is an empty array.
-        if(typeof json[prop] === 'object' && prop != "walletconflicts") {
-            instance[prop] = deserialize(json[prop], types[prop]);
-        } else {
-            instance[prop] = json[prop];
-        }
+  for (var prop in json) {
+    if (!json.hasOwnProperty(prop)) {
+      continue;
     }
+    //Note: disabled for walletconflicts, which is an empty array.
+    if (typeof json[prop] === 'object' && prop != "walletconflicts") {
+      instance[prop] = deserialize(json[prop], types[prop]);
+    } else {
+      instance[prop] = json[prop];
+    }
+  }
 
-    return instance;
+  return instance;
 }
 
 /*
     TEST DATA
 */
-export var TEST_TXS_JSON : Object[] = [
+export var TEST_TXS_JSON: Object[] = [
   {
     address: "pknZoCR9qdB2T4D4KpujHHoRLkwH5RX9rq",
     category: "stake",
@@ -98,7 +96,7 @@ export var TEST_TXS_JSON : Object[] = [
     timereceived: 1491758368,
     bip125_replaceable: "unknown",
     abandoned: true
-  }, 
+  },
   {
     address: "piNdRiuL2BqUA8hh2A6AtEbBkKqKxK13LT",
     category: "send",
@@ -114,7 +112,7 @@ export var TEST_TXS_JSON : Object[] = [
     timereceived: 1491758464,
     bip125_replaceable: "unknown",
     abandoned: true
-  }, 
+  },
   {
     address: "pfzBLHLt4beAbYkEXmAeyURuK3NT7nec6j",
     category: "received",
@@ -130,7 +128,7 @@ export var TEST_TXS_JSON : Object[] = [
     timereceived: 1491758848,
     bip125_replaceable: "unknown",
     abandoned: true
-  }, 
+  },
   {
     address: "pcsGDDTiuE9BueN8AnN9sExPKET27bZ6es",
     category: "orphaned_stake",
@@ -146,7 +144,7 @@ export var TEST_TXS_JSON : Object[] = [
     timereceived: 1491759008,
     bip125_replaceable: "unknown",
     abandoned: true
-  }, 
+  },
   {
     address: "pfHdjPtAVadD8ENasJANQxFvbR2y9d23M2",
     category: "orphaned_stake",
@@ -162,7 +160,7 @@ export var TEST_TXS_JSON : Object[] = [
     timereceived: 1491759184,
     bip125_replaceable: "unknown",
     abandoned: true
-  }, 
+  },
   {
     address: "pazQ5mmf65qLpBAgpBMZaJHW9ZLEbVVaFp",
     category: "orphaned_stake",
@@ -178,7 +176,7 @@ export var TEST_TXS_JSON : Object[] = [
     timereceived: 1491759205,
     bip125_replaceable: "unknown",
     abandoned: true
-  }, 
+  },
   {
     address: "prPbxhtc2zSPy3nYF7BF9a3BZ9YfVMdB6t",
     category: "orphaned_stake",
@@ -194,7 +192,7 @@ export var TEST_TXS_JSON : Object[] = [
     timereceived: 1491760320,
     bip125_replaceable: "unknown",
     abandoned: true
-  }, 
+  },
   {
     address: "pY53sfAEJC7KU7wczRoB71J8F9woTQDzdD",
     category: "orphaned_stake",
