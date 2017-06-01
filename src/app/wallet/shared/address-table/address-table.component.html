@@ -1,53 +1,45 @@
-<div class="address-table table-responsive">
-<table>
+<app-table>
   <tr *ngIf="displayHeader">
-    <th *ngIf="displayLabel">label</th>
-    <th *ngIf="displayType">type</th>
-    <th *ngIf="displayAddress">address</th>
-    <th *ngIf="displayPurpose">purpose</th>
+    <th *ngIf="displayLabel">Label</th>
+    <th *ngIf="displayAddress">Address</th>
+    <th *ngIf="displayPublicKey">Public Key</th>
+    <th *ngIf="displayType">Type</th>
+    <th *ngIf="displayPurpose">Purpose</th>
+    <th *ngIf="displayToolsMenu">Tools</th>
+    <th *ngIf="displayQrMenu">QR Code</th>
   </tr>
   <tr *ngFor="let address of addressService.addresses">
-    <td *ngIf="displayLabel" class="bold paddingLeft10"> {{address.label}}</td>
-    <td *ngIf="displayAddress">
-      <span *ngIf="displayInternalHeader" class="bold internalHeaderResponsive">ADDRESS</span> {{address.address}}
+    <td *ngIf="displayLabel" class="text-left">
+      <span class="inline-header">{{ address.label }}</span>
+    </td>
+    <td *ngIf="displayAddress" class="text-left">
+      <span class="inline-header">Address</span>
+      <span>{{ address.address }}</span>
     </td>
     <td *ngIf="displayPublicKey">
-      <span *ngIf="displayInternalHeader" class="bold internalHeaderResponsive">PUBLIC KEY</span> {{address.publicKey}}
+      <span class="inline-header">Public Key</span>
+      <span>{{ address.publicKey }}</span>
     </td>
     <td *ngIf="displayType">
-      <span *ngIf="displayInternalHeader" class="bold">TYPE</span> {{address.type}}
+      <span class="inline-header">Type</span>
+      <span class="text-uppercase">{{ address.type }}</span>
     </td>
-    <td *ngIf="displayPurpose">
-      <span *ngIf="displayInternalHeader" class="bold">PURPOSE</span> {{address.purpose}}
-    </td>
-    <td *ngIf="displayToolsMenu" class="addressMenu">
-      <span class="bold headerDivider center">
-        <span class="marginMenu">
+    <td *ngIf="displayToolsMenu" class="divider text-center">
+      <div class="inline-toolbar tools-menu">
         <!-- we can use ngx-clipboard -->
-          <span ngxClipboard [cbContent]="address.address">
-            <span class="icon glyphicon glyphicon-copy"></span>
-          </span>
-          <span >
-            <!-- Open the modal for signing and verifying messages by address -->
-            <span class="icon glyphicon glyphicon-lock "></span>
-          </span>
-          <span (click)="addressService.deleteAddress(address.address)">
-            <span class="icon glyphicon glyphicon-trash red"></span>
-          </span>
-        </span>
-      </span>
+        <span ngxClipboard [cbContent]="address.address" class="icon fa fa-clone"></span>
+        <!-- Open the modal for signing and verifying messages by address -->
+        <span class="icon fa fa-shield"></span>
+        <span (click)="addressService.deleteAddress(address.address)" class="icon fa fa-trash color-red"></span>
+      </div>
     </td>
-    <td *ngIf="displayQrMenu" class="qrMenu">
-      <span class="bold headerDivider center">
-        <span class="marginMenu">
-          <span class="icon glyphicon glyphicon-qrcode"></span>
-        </span>
-      </span>
+    <td *ngIf="displayQrMenu" class="divider text-center">
+      <div class="inline-toolbar qrcode-menu">
+        <span class="icon fa fa-qrcode"></span>
+      </div>
     </td>
   </tr>
-</table>
-</div>
-
+</app-table>
 
 <pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" itemsPerPage="{{addressService.MAX_ADDRESSES_PER_PAGE}}" ></pagination>
+            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE" ></pagination>

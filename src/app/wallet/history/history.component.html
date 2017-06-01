@@ -1,4 +1,4 @@
-<header>
+<app-header>
   <div class="container-fluid">
     <ul class="header-nav">
       <li (click)="filterByCategory('all')" [ngClass]="{'active': category == 'all'}">All
@@ -14,7 +14,7 @@
       </button>
     </form>
   </div>
-</header>
+</app-header>
 <div class="container-fluid">
   <transaction-table
     [displayHeader]="false"

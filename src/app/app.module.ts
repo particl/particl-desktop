@@ -1,13 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
 import { BsDropdownModule, CollapseModule, PaginationModule } from 'ngx-bootstrap';
 
+import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
-import { AccordionModule } from './core/accordion/accordion.module';
 import { WalletModule } from './wallet/wallet.module';
 
 import { WindowService } from './core/window.service';
@@ -28,15 +26,13 @@ const routes: Routes = [
     StatusComponent
   ],
   imports: [
+    BrowserModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
     PaginationModule.forRoot(),
-    BrowserModule,
-    FormsModule,
-    HttpModule,
     RouterModule.forRoot(routes),
+    SharedModule,
     SidebarModule.forRoot(),
-    AccordionModule,
     WalletModule.forRoot()
   ],
   providers: [

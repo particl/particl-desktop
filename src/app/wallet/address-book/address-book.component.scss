@@ -1,16 +1,6 @@
-.addressHeader {
-	margin-left: 2%;
-	font-size: 17px;
-	color: #B5BAC0;
-	font-weight: 400;
-}
-
-.headerMenu {
-	float: right;
-	margin-right: 30px;
-
-}
-
-.green {
-	color: #02E8B0;
+app-header {
+	li.add-address > .icon {
+		font-size: 28px;
+		margin-right: 5px;
+	}
 }

@@ -57,7 +57,7 @@ export function deserialize(json, type) {
 export var TEST_ADDRESSES_JSON : Object[] = [
   {
     address: "PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY",
-    public_key: "PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY",
+    publicKey: "PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY",
     label: "Exchange",
     type: "normal",
     root: "AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh",
@@ -65,7 +65,7 @@ export var TEST_ADDRESSES_JSON : Object[] = [
   },
   {
     address: "PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY",
-    public_key: "PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY",
+    publicKey: "PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY",
     label: "Default",
     type: "normal",
     root: "AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh",

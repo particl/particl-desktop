@@ -1,8 +1,7 @@
-<header>
+<app-header>
   <div class="container-fluid">
     <ul class="header-nav">
-			<li class="active">All
-      <li>New Address
+      <li class="add-address"><span class="icon fa fa-plus-circle color-green"></span> New Address
     </ul>
     <form class="header-form pull-right">
       <input type="text" placeholder="Search address book">
@@ -11,7 +10,7 @@
       </button>
     </form>
   </div>
-</header>
+</app-header>
 <div class="container-fluid">
   <address-table
     [displayHeader]="false"
@@ -21,6 +20,7 @@
 		[displayAddress]="true"
 		[displayPublicKey]="true"
 		[displayType]="true"
+    [displayPurpose]="true"
 		[displayToolsMenu]="true"
 		[displayQrMenu]="true">
   </address-table>

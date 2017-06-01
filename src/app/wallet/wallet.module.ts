@@ -1,15 +1,11 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PaginationModule } from 'ngx-bootstrap';
-import { ClipboardModule } from 'ngx-clipboard';
+import { SharedModule } from '../shared/shared.module';
 
 import { TransactionService } from './shared/transaction.service';
 import { AddressService } from './shared/address.service';
 
-import { HeaderComponent } from './shared/header/header.component';
 import { TransactionTableComponent } from './shared/transaction-table/transaction-table.component';
 import { AddressTableComponent } from './shared/address-table/address-table.component';
 
@@ -31,14 +27,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule,
     RouterModule.forChild(routes),
-    PaginationModule,
-    ClipboardModule
+    SharedModule
   ],
   declarations: [
-    HeaderComponent,
     TransactionTableComponent,
     AddressTableComponent,
     AddressBookComponent,
@@ -47,7 +39,6 @@ const routes: Routes = [
     HistoryComponent
   ],
   exports: [
-    HeaderComponent,
     TransactionTableComponent,
     AddressTableComponent,
     BalanceComponent

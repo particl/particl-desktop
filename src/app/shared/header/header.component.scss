@@ -15,6 +15,15 @@ $header-height: 60px;
     margin-bottom: 15px;
   }
   /deep/ {
+    .color-red {
+      color: #EE4A52;
+    }
+    .color-green {
+      color: #03E8B0;
+    }
+    .icon {
+      vertical-align: middle;
+    }
     ul.header-nav {
       & {
         display: inline-block;
@@ -52,7 +61,7 @@ $header-height: 60px;
         @extend .center-vertical;
         display: inline-block;
       }
-      & > input {
+      & > input[type="text"] {
         & {
           height: 60%;
           background-color: transparent;
@@ -69,7 +78,7 @@ $header-height: 60px;
           border-left: 1px solid #41ECC2;
         }
       }
-      & > button {
+      & > button.btn {
         & {
           text-indent: 0;
           height: 60%;
@@ -84,6 +93,19 @@ $header-height: 60px;
           color: #000;
         }
       }
+    }
+    .header-link {
+      display: inline-block;
+      line-height: $header-height;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: bold;
+      color: inherit;
+      cursor: pointer;
+    }
+    .header-link:hover {
+      color: #000;
     }
   }
 }
