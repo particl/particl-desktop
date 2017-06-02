@@ -9,11 +9,11 @@ import { BalanceService } from './balance.service';
   providers: [BalanceService]
 })
 export class BalanceComponent implements OnInit {
-  balanceService;
   @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
 
   /*this.balance_service.balance_type = this.balance_type;*/
-  constructor(private _balanceService: BalanceService) {this.balanceService = _balanceService;}
+  constructor(public balanceService: BalanceService) {
+  }
 
   ngOnInit() {
   }

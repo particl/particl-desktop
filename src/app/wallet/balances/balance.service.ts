@@ -28,7 +28,7 @@ export class BalanceService {
 	Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
 
 */
-  rpc_loadBalance(type) {
+  rpc_loadBalance(type: any) {
 
   }
 

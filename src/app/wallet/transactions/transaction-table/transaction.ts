@@ -58,7 +58,7 @@
     Deserialize JSON and cast it to a class of "type".
 */
 
-export function deserialize(json, type) {
+export function deserialize(json: Object, type: any) {
     const instance = new type()
     const types = instance.getTypes();
 

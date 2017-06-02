@@ -45,9 +45,8 @@ export class TransactionsTableService {
     let real_index_start: number;
     if(this.txCount > this.MAX_TXS_PER_PAGE) {
       real_index_start = this.txCount - (index_start + 1) * this.MAX_TXS_PER_PAGE;
-    }
-      else {
-        real_index_start = 0;
+    } else {
+      real_index_start = 0;
     }
 
     for(let i = 0; i < this.MAX_TXS_PER_PAGE; i++) {

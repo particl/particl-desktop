@@ -10,9 +10,6 @@ import { TransactionsTableService } from './transaction.table.service';
   providers: [TransactionsTableService]
 })
 export class TransactionsTableComponent implements OnInit {
-
-  txService;
-
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
   @Input() displayHeader: boolean = true;
@@ -31,9 +28,8 @@ export class TransactionsTableComponent implements OnInit {
   @Input() displayBlockHash: boolean = false;
   @Input() displayBlockIndex: boolean = false;
 
-  constructor(private _transactionService: TransactionsTableService) {
+  constructor(public txService: TransactionsTableService) {
     // make life easy in component html
-    this.txService = _transactionService;
   }
 
   ngOnInit() {
