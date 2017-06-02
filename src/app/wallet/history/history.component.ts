@@ -9,7 +9,7 @@ import { TransactionCategory } from '../shared/transaction.model';
 })
 export class HistoryComponent implements OnInit {
 
-  category: TransactionCategory = "all";
+  category: TransactionCategory = 'all';
 
   constructor() { }
 

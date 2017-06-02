@@ -3,23 +3,23 @@ interface Deserializable {
     getTypes(): Object;
 }
 
-export class Address implements Deserializable{
-	address: string;
-    publicKey: string;
-	label: string;
-	purpose: string;
-	rootId: string;
-	path: string;
+export class Address implements Deserializable {
+  address: string;
+  publicKey: string;
+  label: string;
+  purpose: string;
+  rootId: string;
+  path: string;
 
-    constructor( address: string, publicKey: string, label: string, purpose: string, rootId: string, path: string) { 
-    	this.address = address; 
-        this.publicKey = publicKey; 
-    	this.label = label;
-    	this.purpose = purpose;
-    	this.rootId = rootId;
-        this.path = path;
+    constructor( address: string, publicKey: string, label: string, purpose: string, rootId: string, path: string) {
+      this.address = address;
+      this.publicKey = publicKey;
+      this.label = label;
+      this.purpose = purpose;
+      this.rootId = rootId;
+      this.path = path;
     }
-    
+
 
     getTypes() {
         // since everything is primitive, we don't need to
@@ -34,14 +34,14 @@ export class Address implements Deserializable{
 */
 
 export function deserialize(json, type) {
-    var instance = new type(),
-        types = instance.getTypes();
+    const instance = new type()
+    const types = instance.getTypes();
 
-    for(var prop in json) {
+    for(const prop in json) {
         if(!json.hasOwnProperty(prop)) {
             continue;
         }
-        //Note: disabled for walletconflicts, which is an empty array.
+        // Note: disabled for walletconflicts, which is an empty array.
         if(typeof json[prop] === 'object') {
             instance[prop] = deserialize(json[prop], types[prop]);
         } else {
@@ -55,17 +55,17 @@ export function deserialize(json, type) {
 /*
     TEST DATA
 */
-export var TEST_ADDRESSES_JSON : Object[] = [
+export const TEST_ADDRESSES_JSON: Object[] = [
     {
-        "address": "PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY",
-        "label": "Exchange",
-        "root": "AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh",
-        "path": "m/0/5"
+        'address': 'PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY',
+        'label': 'Exchange',
+        'root': 'AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh',
+        'path': 'm/0/5'
     },
     {
-        "address": "PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY",
-        "label": "Default",
-        "root": "AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh",
-        "path": "m/0/5"
+        'address': 'PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY',
+        'label': 'Default',
+        'root': 'AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh',
+        'path': 'm/0/5'
     }
 ];

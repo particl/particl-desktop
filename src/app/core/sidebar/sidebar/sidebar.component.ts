@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostBinding } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import "rxjs/add/observable/fromEvent";
+import 'rxjs/add/observable/fromEvent';
 
 import { SidebarService } from '../sidebar.service';
 
@@ -43,7 +43,7 @@ export class SidebarComponent implements OnInit {
 
   @HostBinding('class.open')
   get openClass() {
-    switch(this.position) {
+    switch (this.position) {
       case 'left':
       case 'right':
         return this._sidebarService.isOpen(this.position);
@@ -53,7 +53,7 @@ export class SidebarComponent implements OnInit {
   }
   @HostBinding('class.docked')
   get dockedClass() {
-    switch(this.position) {
+    switch (this.position) {
       case 'left':
       case 'right':
       case 'top':
@@ -66,7 +66,7 @@ export class SidebarComponent implements OnInit {
 
   @HostBinding('class.docked-left')
   get dockedLeftClass() {
-    switch(this.position) {
+    switch (this.position) {
       case 'top':
       case 'bottom':
       case 'center':
@@ -77,7 +77,7 @@ export class SidebarComponent implements OnInit {
   }
   @HostBinding('class.docked-right')
   get dockedRightClass() {
-    switch(this.position) {
+    switch (this.position) {
       case 'top':
       case 'bottom':
       case 'center':
@@ -88,7 +88,7 @@ export class SidebarComponent implements OnInit {
   }
   @HostBinding('class.docked-top')
   get dockedTopClass() {
-    switch(this.position) {
+    switch (this.position) {
       case 'center':
         return this._sidebarService.isDocked('top');
       default:
@@ -97,7 +97,7 @@ export class SidebarComponent implements OnInit {
   }
   @HostBinding('class.docked-bottom')
   get dockedBottomClass() {
-    switch(this.position) {
+    switch (this.position) {
       case 'center':
         return this._sidebarService.isDocked('bottom');
       default:
@@ -107,7 +107,7 @@ export class SidebarComponent implements OnInit {
 
   @HostBinding('class.pinned-left')
   get pinnedLeftClass() {
-    switch(this.position) {
+    switch (this.position) {
       case 'top':
       case 'bottom':
         return this._sidebarService.isOpen('left');
@@ -119,7 +119,7 @@ export class SidebarComponent implements OnInit {
   }
   @HostBinding('class.pinned-right')
   get pinnedRightClass() {
-    switch(this.position) {
+    switch (this.position) {
       case 'top':
       case 'bottom':
         return this._sidebarService.isOpen('right');
@@ -155,7 +155,7 @@ export class SidebarComponent implements OnInit {
       .subscribe(position => this._sidebarService.toggleOpen(position));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._sidebarService.toggleOpen(this.position, this._isOpen);
     this._sidebarService.toggleDocked(this.position, this._isDocked);
     this._sidebarService.togglePinned(this.position, this._isPinned);

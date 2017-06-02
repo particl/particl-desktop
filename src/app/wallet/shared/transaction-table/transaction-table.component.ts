@@ -8,10 +8,7 @@ import { TransactionService } from '../transaction.service';
   templateUrl: './transaction-table.component.html',
   styleUrls: ['./transaction-table.component.css']
 })
-export class TransactionTableComponent implements OnInit {
-
-	txService;
-
+export class TransactionsTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
   @Input() displayHeader: boolean = true;
@@ -30,17 +27,14 @@ export class TransactionTableComponent implements OnInit {
   @Input() displayBlockHash: boolean = false;
   @Input() displayBlockIndex: boolean = false;
 
-  constructor(private _transactionService: TransactionService) {
-  	//make life easy in component html
-  	this.txService = _transactionService;
+  constructor(public txService: TransactionsTableService) {
+    // make life easy in component html
   }
 
   ngOnInit() {
-
   }
 
-
-  public pageChanged(event:any):void {
+  public pageChanged(event: any): void {
     this.txService.changePage(event.page);
     console.log('Page changed to: ' + event.page);
     console.log('Number items per page: ' + event.itemsPerPage);
