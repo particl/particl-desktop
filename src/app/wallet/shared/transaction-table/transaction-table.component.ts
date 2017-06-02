@@ -27,7 +27,7 @@ export class TransactionsTableComponent implements OnInit {
   @Input() displayBlockHash: boolean = false;
   @Input() displayBlockIndex: boolean = false;
 
-  constructor(public txService: TransactionsTableService) {
+  constructor(public txService: TransactionService) {
     // make life easy in component html
   }
 
