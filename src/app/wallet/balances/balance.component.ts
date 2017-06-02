@@ -23,7 +23,7 @@ export class BalanceComponent implements OnInit {
 	  1. round down balance after point (for example 0.956246232656 => 0.956)
 	  2. same as 1 but for large balances (500 000 -> 500K)
   */
-  getBalanceBeforePoint(): string {
+  getBalanceBeforePoint(): number {
     return this.balanceService.balanceBeforePoint;
   }
 
@@ -35,7 +35,7 @@ export class BalanceComponent implements OnInit {
     return '.'; // Point needed
   }
 
-  getBalanceAfterPoint(): string {
+  getBalanceAfterPoint(): number {
     return this.balanceService.balanceAfterPoint;
   }
 
