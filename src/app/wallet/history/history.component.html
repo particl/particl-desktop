@@ -1,11 +1,11 @@
 <app-header>
   <div class="container-fluid">
     <ul class="header-nav">
-      <li (click)="filterByCategory('all')" [ngClass]="{'active': category == 'all'}">All
-      <li (click)="filterByCategory('send')" [ngClass]="{'active': category == 'send'}">Send
-      <li (click)="filterByCategory('receive')" [ngClass]="{'active': category == 'receive'}">Receive
-      <li (click)="filterByCategory('stake')" [ngClass]="{'active': category == 'stake'}">Stake
-      <li (click)="filterByCategory('orphaned_stake')" [ngClass]="{'active': category == 'orphaned_stake'}">Orphan
+      <li [class.active]="category == 'all'"><a href="javascript:void(0)" (click)="filterByCategory('all')">All</a>
+      <li [class.active]="category == 'send'"><a href="javascript:void(0)" (click)="filterByCategory('send')">Send</a>
+      <li [class.active]="category == 'receive'"><a href="javascript:void(0)" (click)="filterByCategory('receive')">Receive</a>
+      <li [class.active]="category == 'stake'"><a href="javascript:void(0)" (click)="filterByCategory('stake')">Stake</a>
+      <li [class.active]="category == 'orphaned_stake'"><a href="javascript:void(0)" (click)="filterByCategory('orphaned_stake')">Orphan</a>
     </ul>
     <form class="header-form pull-right">
       <input type="text" placeholder="Search history">

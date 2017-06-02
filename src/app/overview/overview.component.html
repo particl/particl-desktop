@@ -1,33 +1,73 @@
-<h3 class="balance ">
-  OVERVIEW
-</h3>
-<hr />
-<div class="overview">
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-2 balance">
+    <div class="col-sm-6 col-md-3">
     	<app-balance typeOfBalance="TOTAL BALANCE"></app-balance>
     </div>
-    <div class="col-md-2 balance">
+    <div class="col-sm-6 col-md-3">
     	<app-balance typeOfBalance="PUBLIC BALANCE"></app-balance>
     </div>
-    <div class="col-md-2 balance">
+    <div class="col-sm-6 col-md-3">
     	<app-balance typeOfBalance="PRIVATE BALANCE"></app-balance>
     </div>
-    <div class="col-md-2 balance">
+    <div class="col-sm-6 col-md-3">
     	<app-balance typeOfBalance="STAKE"></app-balance>
     </div>
   </div>
- </div>
-<br />
-<hr />
-<br />
-<div class="col-md-6">
-    <div class="transactionHeader">
-        <span>RECENT TRANSACTIONS</span>
-        <span class="icon glyphicon glyphicon-cog headerMenu green"></span>
-        <hr />
-    </div>
-	<transaction-table [displayHeader]=false [displayInternalHeader]=true [displayPagination]=false></transaction-table>
 </div>
+<hr>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <app-header>
+        <ul class="header-nav">
+          <li>Recent Transactions
+        </ul>
+        <ul class="header-nav pull-right">
+          <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a>
+        </ul>
+      </app-header>
+      <transaction-table
+        [displayHeader]="false"
+        [displayInternalHeader]="true"
+        [displayPagination]="false"
+        [displayCategory]="true"
+        [displaySenderAddress]="false"
+        [displayDate]="true"
+        [displayConfirmations]="false"
+        [displayAmount]="true">
+      </transaction-table>
+    </div>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-xs-12">
+          <app-header>
+            <ul class="header-nav">
+              <li>Widget Section 2
+            </ul>
+            <ul class="header-nav pull-right">
+              <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a>
+            </ul>
+          </app-header>
+          <div class="reserved-area">
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <app-header>
+            <ul class="header-nav">
+              <li>Widget Section 3
+            </ul>
+            <ul class="header-nav pull-right">
+              <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a>
+            </ul>
+          </app-header>
+          <div class="reserved-area">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
