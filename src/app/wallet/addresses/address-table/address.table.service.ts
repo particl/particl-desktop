@@ -5,39 +5,40 @@ import { Address, deserialize, TEST_ADDRESSES_JSON } from './address';
 export class AddressTableService {
 
 
-	/* 
+  /*
 		Stores address objects.
 	*/
-	addresses : Address[] = [];
+  addresses: Address[] = [];
 
   /* Pagination stuff */
-	addressCount : number = 0;
-	currentPage : number = 0;
-	totalPageCount : number = 0;
+  addressCount: number = 0;
+  currentPage: number = 0;
+  totalPageCount: number = 0;
 
 
-	/* 
-		How many addresses do we display per page and keep in memory at all times. When loading more addresses they are fetched JIT and added to txs.
-	*/
-	MAX_ADDRESSES_PER_PAGE : number = 3;
+  /*
+		How many addresses do we display per page and keep in memory at all times.
+		When loading more addresses they are fetched JIT and added to txs.
+  */
+  MAX_ADDRESSES_PER_PAGE: number = 3;
 
 
-	constructor() { 
-  		this.initializeTestData();
-   	}
+  constructor() {
+      this.initializeTestData();
+    }
 
 
-   //Pull test data and populate array of txs.
-   initializeTestData() : void {
-  	this.loadTestAddress(0);
-  	this.addressCount = TEST_ADDRESSES_JSON.length;
-   }
+  // Pull test data and populate array of txs.
+  initializeTestData(): void {
+    this.loadTestAddress(0);
+    this.addressCount = TEST_ADDRESSES_JSON.length;
+  }
 
-   loadTestAddress(index_start : number) : void {
-   	for(var i = 0; i < this.MAX_ADDRESSES_PER_PAGE; i++){
-  		let json = TEST_ADDRESSES_JSON[index_start + i];
-    	this.addAddress(json);
-  	}
+  loadTestAddress(index_start: number): void {
+    for(let i = 0; i < this.MAX_ADDRESSES_PER_PAGE; i++) {
+    const json = TEST_ADDRESSES_JSON[index_start + i];
+    this.addAddress(json);
+    }
   }
 
 
@@ -45,45 +46,46 @@ export class AddressTableService {
 /*
 
 
-  _    _ _______ _____ _      
- | |  | |__   __|_   _| |     
- | |  | |  | |    | | | |     
- | |  | |  | |    | | | |     
- | |__| |  | |   _| |_| |____ 
+  _    _ _______ _____ _
+ | |  | |__   __|_   _| |
+ | |  | |  | |    | | | |
+ | |  | |  | |    | | | |
+ | |__| |  | |   _| |_| |____
   \____/   |_|  |_____|______|
-                              
-                              
+
+
 */
 
-	changePage(page : number){
-    if(page <= 0)
+  changePage(page: number) {
+    if(page <= 0) {
       return;
+  }
 
     page--;
 
-		this.currentPage = page;
+    this.currentPage = page;
 
-		this.deleteAddresses();
+    this.deleteAddresses();
 
-		//page = 0 (first page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 0) => (0,10)
-		//page = 1 (second page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 1 * MAX_TXS_PER_PAGE) (10, 20)
-		this.rpc_loadAddresses(page * this.MAX_ADDRESSES_PER_PAGE);
-	}
+    // page = 0 (first page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 0) => (0,10)
+    // page = 1 (second page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 1 * MAX_TXS_PER_PAGE) (10, 20)
+    this.rpc_loadAddresses(page * this.MAX_ADDRESSES_PER_PAGE);
+  }
 
-	deleteAddresses(){
- 		this.addresses = [];
-  	}
+  deleteAddresses() {
+    this.addresses = [];
+  }
 
-/* 
+/*
 
 
-  _____  _____   _____ 
+  _____  _____   _____
  |  __ \|  __ \ / ____|
- | |__) | |__) | |     
- |  _  /|  ___/| |     
- | | \ \| |    | |____ 
+ | |__) | |__) | |
+ |  _  /|  ___/| |
+ | | \ \| |    | |____
  |_|  \_\_|     \_____|
-                         
+
 
 */
 
@@ -92,30 +94,31 @@ export class AddressTableService {
 
 */
 
-  rpc_loadAddresses(index_start : number) : void{
+  rpc_loadAddresses(index_start: number): void {
 
-  	this.loadTestAddress(index_start);
-  	//loadTransactionsRPC should call listtransaction amount index_start.
-  	//return this.txs;
+    this.loadTestAddress(index_start);
+    // loadTransactionsRPC should call listtransaction amount index_start.
+    // return this.txs;
   }
 
-  rpc_loadAddressCount() : void{
-  	//call getwalletinfo txcount
-  	this.addressCount = TEST_ADDRESSES_JSON.length-1;
+  rpc_loadAddressCount(): void {
+    // call getwalletinfo txcount
+    this.addressCount = TEST_ADDRESSES_JSON.length-1;
   }
 
-  //Adds an address to array from JSON object. 
-	addAddress(json: Object) : void {
-  		let instance = deserialize(json, Address);
-  		
-  		if(typeof instance.address == "undefined")
-  			return;
+  // Adds an address to array from JSON object.
+  addAddress(json: Object): void {
+      const instance = deserialize(json, Address);
 
-  		this.addresses.splice(0,0,instance);
-  	}
+      if(typeof instance.address === 'undefined') {
+        return;
+      }
 
-  deleteAddress(address: string){
-    console.log("delete " + address);
+      this.addresses.splice(0,0,instance);
+    }
+
+  deleteAddress(address: string) {
+    console.log('delete ' + address);
   }
 
 
