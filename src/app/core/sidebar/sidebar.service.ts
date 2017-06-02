@@ -48,36 +48,42 @@ export class SidebarService {
   }
 
   isOpen(position: string): boolean {
-    if (['left', 'right'].indexOf(position) != -1)
+    if (['left', 'right'].indexOf(position) !== -1) {
       return this[`_${position}IsOpenSubject`].value;
+    }
     return false;
   }
 
   isPinned(position: string): boolean {
-    if (['left', 'right'].indexOf(position) != -1)
+    if (['left', 'right'].indexOf(position) !== -1) {
       return this[`_${position}IsPinnedSubject`].value;
+    }
     return false;
   }
 
   isDocked(position: string): boolean {
-    if (['left', 'right', 'top', 'bottom'].indexOf(position) != -1)
+    if (['left', 'right', 'top', 'bottom'].indexOf(position) !== -1) {
       return this[`_${position}IsDockedSubject`].value;
+    }
     return false;
   }
 
   toggleOpen(position: string, open?: boolean): void {
-    if (['left', 'right'].indexOf(position) != -1)
+    if (['left', 'right'].indexOf(position) !== -1) {
       this[`_${position}IsOpenSubject`].next(String(open) !== 'undefined' ? open : !this[`_${position}IsOpenSubject`].value);
+    }
   }
 
   togglePinned(position: string, pin?: boolean): void {
-    if (['left', 'right'].indexOf(position) != -1)
+    if (['left', 'right'].indexOf(position) !== -1) {
       this[`_${position}IsPinnedSubject`].next(String(pin) !== 'undefined' ? pin : !this[`_${position}IsPinnedSubject`].value);
+    }
   }
 
   toggleDocked(position: string, dock?: boolean): void {
-    if (['left', 'right', 'top', 'bottom'].indexOf(position) != -1)
-      this[`_${position}IsDockedSubject`].next(String(dock) !== 'undefined' ? dock : !this[`_${position}IsDockedSubject`].value);
+    if (['left', 'right', 'top', 'bottom'].indexOf(position) !== -1) {
+        this[`_${position}IsDockedSubject`].next(String(dock) !== 'undefined' ? dock : !this[`_${position}IsDockedSubject`].value);
+    }
   }
 
 }

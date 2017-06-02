@@ -12,5 +12,5 @@ export class SidebarContainerComponent implements OnInit {
 
   ngOnInit() {
   }
-  
+
 }

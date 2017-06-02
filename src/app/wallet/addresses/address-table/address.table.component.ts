@@ -28,7 +28,7 @@ export class AddressTableComponent implements OnInit {
   @Input() displayIsMine: boolean = false;
 
   constructor(private _addressService: AddressTableService) {
-  	this.addressService = _addressService; 
+    this.addressService = _addressService;
   }
 
   ngOnInit() {

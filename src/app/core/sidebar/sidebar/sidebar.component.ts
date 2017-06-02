@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostBinding } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import "rxjs/add/observable/fromEvent";
+import 'rxjs/add/observable/fromEvent';
 
 import { SidebarService } from '../sidebar.service';
 
@@ -155,7 +155,7 @@ export class SidebarComponent implements OnInit {
       .subscribe(position => this._sidebarService.toggleOpen(position));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._sidebarService.toggleOpen(this.position, this._isOpen);
     this._sidebarService.toggleDocked(this.position, this._isDocked);
     this._sidebarService.togglePinned(this.position, this._isPinned);
