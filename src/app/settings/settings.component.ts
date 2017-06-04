@@ -11,7 +11,7 @@ import { Location } from '@angular/common';
 
 export class SettingsComponent implements OnInit {
 
-  tab: string = "main";
+  tab: string = 'main';
   settings: Object;
 
   constructor(

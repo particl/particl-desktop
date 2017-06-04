@@ -3,22 +3,6 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SettingsService {
 
-  loadSettings(): Object {
-    return (JSON.parse(localStorage.getItem("settings")));
-  }
-
-  applySettings(settings: Object) {
-
-    let oldSettings: string = localStorage.getItem("settings");
-    let newSettings: string = JSON.stringify(settings);
-
-    localStorage.setItem("settings", newSettings);
-
-    if (oldSettings !== newSettings) {
-      this.needsUpdate = true;
-    }
-  }
-
   needsUpdate: boolean = false;
 
   defaultSettings: Object = {
@@ -26,10 +10,10 @@ export class SettingsService {
       autostart: false,
       detachDatabases: true,
       feeAmount: 0.01,
-      feeCurrency: "part",
+      feeCurrency: 'part',
       stake: true,
       reserveAmount: 0,
-      reservceCurrency: "part",
+      reservceCurrency: 'part',
       stakeInterval: 30,
       minRing: 3,
       maxRing: 100,
@@ -42,7 +26,7 @@ export class SettingsService {
     network: {
       upnp: false,
       proxy: false,
-      proxyIP: "127.0.0.1",
+      proxyIP: '127.0.0.1',
       proxyPort: 9050,
       socketVersion: 5
     },
@@ -51,8 +35,8 @@ export class SettingsService {
       minimize: true
     },
     display: {
-      language: "default",
-      units: "part",
+      language: 'default',
+      units: 'part',
       rows: 20,
       addresses: true,
       notify: {
@@ -77,5 +61,21 @@ export class SettingsService {
     },
     i2p: {},
     tor: {}
+  }
+
+  loadSettings(): Object {
+    return (JSON.parse(localStorage.getItem('settings')));
+  }
+
+  applySettings(settings: Object) {
+
+    const oldSettings: string = localStorage.getItem('settings');
+    const newSettings: string = JSON.stringify(settings);
+
+    localStorage.setItem('settings', newSettings);
+
+    if (oldSettings !== newSettings) {
+      this.needsUpdate = true;
+    }
   }
 }
