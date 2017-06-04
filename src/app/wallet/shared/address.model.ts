@@ -9,7 +9,7 @@ export class Address implements Deserializable {
     purpose: string;
     rootId: string;
     path: string;
-    
+
     constructor( address: string, publicKey: string, label: string, purpose: string, rootId: string, path: string) {
         this.address = address;
         this.publicKey = publicKey;
@@ -18,8 +18,8 @@ export class Address implements Deserializable {
         this.rootId = rootId;
         this.path = path;
     }
-    
-    
+
+
     getTypes() {
         // since everything is primitive, we don't need to
         // return anything here
@@ -32,7 +32,7 @@ Deserialize JSON and cast it to a class of "type".
 */
 export function deserialize(json: Object, type: any): Address {
     const instance = new type(), types = instance.getTypes();
-    
+
     for (const prop in json) {
         if (!json.hasOwnProperty(prop)) {
             continue;
@@ -44,7 +44,7 @@ export function deserialize(json: Object, type: any): Address {
             instance[prop] = json[prop];
         }
     }
-    
+
     return instance;
 }
 
