@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { AddressTableService } from './address.table.service';
+import { AddressService } from './address.service';
 
-describe('AddressTableService', () => {
+describe('AddressService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [AddressService]
     });
   });
 
-  it('should ...', inject([AddressService], (service: AddressTableService) => {
+  it('should ...', inject([AddressService], (service: AddressService) => {
     expect(service).toBeTruthy();
   }));
 });

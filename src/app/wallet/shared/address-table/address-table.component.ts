@@ -1,16 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AddressTableService } from './address.table.service';
+import { AddressService } from '../address.service';
 
 @Component({
-  selector: 'app-address-table',
-  templateUrl: './address.table.component.html',
-  styleUrls: ['./address.table.component.css'],
-  providers: [AddressTableService]
+  selector: 'address-table',
+  templateUrl: './address-table.component.html',
+  styleUrls: ['./address-table.component.scss']
 })
 export class AddressTableComponent implements OnInit {
 
-
-  addressService;
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
   @Input() displayHeader: boolean = true;
@@ -27,14 +24,13 @@ export class AddressTableComponent implements OnInit {
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
 
-  constructor(private _addressService: AddressTableService) {
-    this.addressService = _addressService;
+  constructor(public addressService: AddressService) {
   }
 
   ngOnInit() {
   }
 
-  public pageChanged(event:any):void {
+  public pageChanged(event: any): void {
     this.addressService.changePage(event.page);
   }
 }
