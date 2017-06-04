@@ -2,22 +2,22 @@
   <div class="container-fluid">
     <ul class="header-nav">
       <li (click)="settingsTab('main')"
-      [ngClass]="{'active': tab == 'main'}">
+      [class.active]="tab == 'main'">
       Main
       <li (click)="settingsTab('network')"
-      [ngClass]="{'active': tab == 'network'}">
+      [class.active]="tab == 'network'">
       Network
       <li (click)="settingsTab('window')"
-      [ngClass]="{'active': tab == 'window'}">
+      [class.active]="tab == 'window'">
       Window
       <li (click)="settingsTab('display')"
-      [ngClass]="{'active': tab == 'display'}">
+      [class.active]="tab == 'display'">
       Display
       <li (click)="settingsTab('i2p')"
-      [ngClass]="{'active': tab == 'i2p'}">
+      [class.active]="tab == 'i2p'">
       I2P
       <li (click)="settingsTab('tor')"
-      [ngClass]="{'active': tab == 'tor'}">
+      [class.active]="tab == 'tor'">
       TOR
     </ul>
   </div>
