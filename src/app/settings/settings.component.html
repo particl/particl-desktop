@@ -1,39 +1,33 @@
 <app-header>
   <div class="container-fluid">
     <ul class="header-nav">
-      <li (click)="settingsTab('main')"
-        [class.active]="tab == 'main'">
-        <a href="javascript:void(0)">
+      <li [class.active]="tab == 'main'">
+        <a href="javascript:void(0)" (click)="settingsTab('main')">
           Main
         </a>
       </li>
-      <li (click)="settingsTab('network')"
-        [class.active]="tab == 'network'">
-        <a href="javascript:void(0)">
+      <li [class.active]="tab == 'network'">
+        <a href="javascript:void(0)" (click)="settingsTab('network')">
           Network
         </a>
       </li>
-      <li (click)="settingsTab('window')"
-        [class.active]="tab == 'window'">
-        <a href="javascript:void(0)">
+      <li [class.active]="tab == 'window'">
+        <a href="javascript:void(0)" (click)="settingsTab('window')">
           Window
         </a>
       </li>
-      <li (click)="settingsTab('display')"
-        [class.active]="tab == 'display'">
-        <a href="javascript:void(0)">
+      <li [class.active]="tab == 'display'">
+        <a href="javascript:void(0)" (click)="settingsTab('display')">
           Display
         </a>
       </li>
-      <li (click)="settingsTab('i2p')"
-        [class.active]="tab == 'i2p'">
-        <a href="javascript:void(0)">
+      <li [class.active]="tab == 'i2p'">
+        <a href="javascript:void(0)" (click)="settingsTab('i2p')">
           I2P
         </a>
       </li>
-      <li (click)="settingsTab('tor')"
-        [class.active]="tab == 'tor'">
-        <a href="javascript:void(0)">
+      <li [class.active]="tab == 'tor'">
+        <a href="javascript:void(0)" (click)="settingsTab('tor')">
           TOR
         </a>
       </li>
