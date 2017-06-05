@@ -2,23 +2,41 @@
   <div class="container-fluid">
     <ul class="header-nav">
       <li (click)="settingsTab('main')"
-      [class.active]="tab == 'main'">
-      Main
+        [class.active]="tab == 'main'">
+        <a href="javascript:void(0)">
+          Main
+        </a>
+      </li>
       <li (click)="settingsTab('network')"
-      [class.active]="tab == 'network'">
-      Network
+        [class.active]="tab == 'network'">
+        <a href="javascript:void(0)">
+          Network
+        </a>
+      </li>
       <li (click)="settingsTab('window')"
-      [class.active]="tab == 'window'">
-      Window
+        [class.active]="tab == 'window'">
+        <a href="javascript:void(0)">
+          Window
+        </a>
+      </li>
       <li (click)="settingsTab('display')"
-      [class.active]="tab == 'display'">
-      Display
+        [class.active]="tab == 'display'">
+        <a href="javascript:void(0)">
+          Display
+        </a>
+      </li>
       <li (click)="settingsTab('i2p')"
-      [class.active]="tab == 'i2p'">
-      I2P
+        [class.active]="tab == 'i2p'">
+        <a href="javascript:void(0)">
+          I2P
+        </a>
+      </li>
       <li (click)="settingsTab('tor')"
-      [class.active]="tab == 'tor'">
-      TOR
+        [class.active]="tab == 'tor'">
+        <a href="javascript:void(0)">
+          TOR
+        </a>
+      </li>
     </ul>
   </div>
 </app-header>
