@@ -1,8 +1,7 @@
 # Partgui
 
 [![Build Status](https://travis-ci.org/EagleEye25/partgui.svg?branch=master)](https://travis-ci.org/EagleEye25/partgui)
-[![Coverage Status](https://coveralls.io/repos/github/EagleEye25/partgui/badge.svg?branch=master)]
-   (https://coveralls.io/github/EagleEye25/partgui?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/EagleEye25/partgui/badge.svg?branch=master)](https://coveralls.io/github/EagleEye25/partgui?branch=master)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
 
