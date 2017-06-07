@@ -6,13 +6,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from './app.module';
 import { AppComponent } from './app.component';
 
-/*
-import { SharedModule } from './shared/shared.module';
-import { SidebarModule } from './core/sidebar/sidebar.module';
-
-
-*/
-
 import { WindowService } from './core/window.service';
 
 describe('AppComponent', () => {
@@ -21,9 +14,6 @@ describe('AppComponent', () => {
       imports : [
         RouterTestingModule,
         AppModule
-      ],
-      declarations: [
-        //AppComponent
       ],
       providers: [ {provide: APP_BASE_HREF, useValue: '/'} ]
     }).compileComponents();

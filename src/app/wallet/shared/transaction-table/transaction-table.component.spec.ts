@@ -4,8 +4,6 @@ import { TransactionsTableComponent } from './transaction-table.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 
-//import { SharedModule } from './shared/shared.module';
-
 describe('TransactionTableComponent', () => {
   let component: TransactionsTableComponent;
   let fixture: ComponentFixture<TransactionsTableComponent>;
