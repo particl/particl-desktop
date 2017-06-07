@@ -2,13 +2,19 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryComponent } from './history.component';
 
+import { SharedModule } from '../../shared/shared.module';
+import { WalletModule } from '../../wallet/wallet.module';
+
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
   let fixture: ComponentFixture<HistoryComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HistoryComponent ]
+      imports: [
+        SharedModule,
+        WalletModule.forRoot()
+      ],
     })
     .compileComponents();
   }));

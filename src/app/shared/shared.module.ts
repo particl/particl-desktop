@@ -14,6 +14,7 @@ import { TableComponent } from './table/table.component';
 @NgModule({
   imports: [
     CommonModule,
+    AccordionModule
   ],
   declarations: [
     HeaderComponent,
@@ -27,9 +28,9 @@ import { TableComponent } from './table/table.component';
     CollapseModule,
     PaginationModule,
     ClipboardModule,
-    AccordionModule,
     HeaderComponent,
-    TableComponent
+    TableComponent,
+    AccordionModule
   ]
 })
 export class SharedModule { }

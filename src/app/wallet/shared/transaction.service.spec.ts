@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { TransactionService } from './transaction-table.service';
+import { TransactionService } from './transaction.service';
 
 describe('TransactionService', () => {
   beforeEach(() => {
