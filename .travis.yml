@@ -25,3 +25,6 @@ before_script:
 script:
   - ng lint
   - ng test --single-run
+
+after_script:
+  - npm run coveralls
