@@ -9,7 +9,7 @@ export class AddressService {
   */
   addresses: Address[] = [];
 
- /* Pagination stuff */
+  /* Pagination stuff */
   addressCount: number = 0;
   currentPage: number = 0;
   totalPageCount: number = 0;
@@ -51,11 +51,11 @@ export class AddressService {
 */
 
   changePage(page: number) {
-  if (page <= 0) {
-   return;
+    if (page <= 0) {
+      return;
     }
 
-  page--;
+    page--;
 
     this.currentPage = page;
 
@@ -88,31 +88,29 @@ export class AddressService {
 
 */
 
- rpc_loadAddresses(index_start: number): void {
+  rpc_loadAddresses(index_start: number): void {
 
-   this.loadTestAddress(index_start);
-   // loadTransactionsRPC should call listtransaction amount index_start.
-   // return this.txs;
- }
+    this.loadTestAddress(index_start);
+    // loadTransactionsRPC should call listtransaction amount index_start.
+    // return this.txs;
+  }
 
- rpc_loadAddressCount(): void {
-   // call getwalletinfo txcount
-   this.addressCount = TEST_ADDRESSES_JSON.length - 1;
- }
+  rpc_loadAddressCount(): void {
+    // call getwalletinfo txcount
+    this.addressCount = TEST_ADDRESSES_JSON.length - 1;
+  }
 
- // Adds an address to array from JSON object.
+  // Adds an address to array from JSON object.
   addAddress(json: Address): void {
     const instance = deserialize(json, Address);
 
     if (typeof instance.address === 'undefined') {
       return;
     }
-
     this.addresses.splice(0, 0, instance);
   }
 
- deleteAddress(address: string) {
-  console.log('delete ' + address);
- }
-
+  deleteAddress(address: string) {
+    console.log('delete ' + address);
+  }
 }

@@ -1,20 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TransactionTableComponent } from './transaction-table.component';
+import { TransactionsTableComponent } from './transaction-table.component';
+import { SharedModule } from '../../../shared/shared.module';
+import { WalletModule } from '../../../wallet/wallet.module';
 
 describe('TransactionTableComponent', () => {
-  let component: TransactionTableComponent;
-  let fixture: ComponentFixture<TransactionTableComponent>;
+  let component: TransactionsTableComponent;
+  let fixture: ComponentFixture<TransactionsTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransactionTableComponent ]
+      imports: [
+         SharedModule,
+         WalletModule.forRoot()
+      ],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TransactionTableComponent);
+    fixture = TestBed.createComponent(TransactionsTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

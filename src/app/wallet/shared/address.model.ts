@@ -3,28 +3,27 @@ interface Deserializable {
 }
 
 export class Address implements Deserializable {
-    address: string;
-    publicKey: string;
-    label: string;
-    purpose: string;
-    rootId: string;
-    path: string;
+  address: string;
+  publicKey: string;
+  label: string;
+  purpose: string;
+  rootId: string;
+  path: string;
 
-    constructor( address: string, publicKey: string, label: string, purpose: string, rootId: string, path: string) {
-        this.address = address;
-        this.publicKey = publicKey;
-        this.label = label;
-        this.purpose = purpose;
-        this.rootId = rootId;
-        this.path = path;
-    }
+  constructor( address: string, publicKey: string, label: string, purpose: string, rootId: string, path: string) {
+    this.address = address;
+    this.publicKey = publicKey;
+    this.label = label;
+    this.purpose = purpose;
+    this.rootId = rootId;
+    this.path = path;
+  }
 
-
-    getTypes() {
-        // since everything is primitive, we don't need to
-        // return anything here
-        return {};
-    }
+  getTypes() {
+    // since everything is primitive, we don't need to
+    // return anything here
+    return {};
+  }
 }
 
 /*
@@ -34,15 +33,15 @@ export function deserialize(json: Object, type: any): Address {
     const instance = new type(), types = instance.getTypes();
 
     for (const prop in json) {
-        if (!json.hasOwnProperty(prop)) {
-            continue;
-        }
-        // Note: disabled for walletconflicts, which is an empty array.
-        if (typeof json[prop] === 'object') {
-            instance[prop] = deserialize(json[prop], types[prop]);
-        } else {
-            instance[prop] = json[prop];
-        }
+      if (!json.hasOwnProperty(prop)) {
+          continue;
+      }
+      // Note: disabled for walletconflicts, which is an empty array.
+      if (typeof json[prop] === 'object') {
+          instance[prop] = deserialize(json[prop], types[prop]);
+      } else {
+          instance[prop] = json[prop];
+      }
     }
 
     return instance;
