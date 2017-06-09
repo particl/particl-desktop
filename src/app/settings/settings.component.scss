@@ -3,6 +3,7 @@
 
 /* card element */
 .card {
+  position: relative;
   background-color: white;
   padding: 20px;
   margin: 20px 0 20px 0;
@@ -51,8 +52,9 @@ button:active {
 }
 
 /* Particl inputs */
-input[type=text] {
+input[type="text"] {
   background-color: #FBFBFB;
   border: 1px solid #EDEDED;
   border-radius: 3px;
+  padding: 4px;
 }
