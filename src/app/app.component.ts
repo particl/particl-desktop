@@ -4,10 +4,13 @@ import { Observable } from 'rxjs/Rx';
 
 import { WindowService } from './core/window.service';
 
+import { SettingsService } from './settings/settings.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [SettingsService]
 })
 export class AppComponent implements OnInit {
   isCollapsed: boolean = true;
@@ -18,12 +21,20 @@ export class AppComponent implements OnInit {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
-    private _windowService: WindowService
+    private _windowService: WindowService,
+    private _settingsService: SettingsService
   ) {
     this.window = this._windowService;
   }
 
   ngOnInit() {
+
+    /* Preload default settings if none found */
+    if (localStorage.getItem('settings') == null) {
+      const settings: string = JSON.stringify(this._settingsService.defaultSettings);
+      localStorage.setItem('settings', settings);
+    }
+
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events

@@ -14,18 +14,15 @@ export class AddressService {
   currentPage: number = 0;
   totalPageCount: number = 0;
 
-
   /*
     How many addresses do we display per page and keep in memory at all times. When loading more
     addresses they are fetched JIT and added to txs.
   */
   MAX_ADDRESSES_PER_PAGE: number = 3;
 
-
   constructor() {
     this.initializeTestData();
    }
-
 
   // Pull test data and populate array of txs.
   initializeTestData(): void {
@@ -40,17 +37,15 @@ export class AddressService {
     }
   }
 
-
-
 /*
 
 
-  _    _ _______ _____ _
- | |  | |__   __|_   _| |
- | |  | |  | |    | | | |
- | |  | |  | |    | | | |
- | |__| |  | |   _| |_| |____
-  \____/   |_|  |_____|______|
+ _  _ _______ _____ _
+ | | | |__  __|_  _| |
+ | | | | | |  | | | |
+ | | | | | |  | | | |
+ | |__| | | |  _| |_| |____
+ \____/  |_| |_____|______|
 
 
 */
@@ -78,12 +73,12 @@ export class AddressService {
 /*
 
 
-  _____  _____   _____
- |  __ \|  __ \ / ____|
+ _____ _____  _____
+ | __ \| __ \ / ____|
  | |__) | |__) | |
- |  _  /|  ___/| |
- | | \ \| |    | |____
- |_|  \_\_|     \_____|
+ | _ /| ___/| |
+ | | \ \| |  | |____
+ |_| \_\_|   \_____|
 
 
 */
@@ -112,12 +107,10 @@ export class AddressService {
     if (typeof instance.address === 'undefined') {
       return;
     }
-
     this.addresses.splice(0, 0, instance);
   }
 
   deleteAddress(address: string) {
     console.log('delete ' + address);
   }
-
 }

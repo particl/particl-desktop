@@ -13,17 +13,20 @@ import { WindowService } from './core/window.service';
 import { AppComponent } from './app.component';
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
+  { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
   { path: '**', redirectTo: 'overview', pathMatch: 'full' } // Catch all route
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
+    StatusComponent,
     OverviewComponent,
-    StatusComponent
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
