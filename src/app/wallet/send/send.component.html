@@ -1,3 +1,173 @@
-<p>
-  send works!
-</p>
+<app-header>
+  <div class="container-fluid header">
+    <ul class="header-nav">
+      <li [class.active]="type == 'sendPayment'">
+        <a href="javascript:void(0)" (click)="sendTab('sendPayment')">
+          Send payment
+        </a>
+      </li>
+      <li [class.active]="type == 'balanceTransfer'">
+        <a href="javascript:void(0)" (click)="sendTab('balanceTransfer')">
+          Balance transfer
+        </a>
+      </li>
+    </ul>
+    <div class="pull-right header-option"
+      (click)="toggleAdvanced()"
+      [ngClass]="{selected: advanced}">
+      <div class="header-option-container">
+        <div class="header-option-text">
+          <span class="icon fa fa-cog header-option-icon"></span>
+          <span>
+            Advanced options
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-header>
+
+
+
+<div class="container-fluid">
+
+  <div *ngIf="type == 'sendPayment'">
+
+    <div *ngIf="advanced" class="card row">
+      <div class="input-label col-xs-3">From account</div>
+      <span class="col-xs-4 public-private">
+        <input type="radio" name="from" id="fromPublic"
+          [(ngModel)]="send.fromType" value="public">
+        <label for="fromPublic" class="input-info-label">Public account</label>
+        <input type="radio" name="from" id="fromPrivate"
+          [(ngModel)]="send.fromType" value="private">
+        <label for="fromPrivate" class="input-info-label">Private account</label>
+      </span>
+      <span class="separator"></span>
+      <span class="col-xs-4 balance">
+        <span class="balance-label">Balance: </span>
+        <span class="balance-amount">{{getBalance(send.fromType)}} PART</span>
+      </span>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-3">Pay to</div>
+      <input class="col-xs-4" type="text"
+        placeholder="The address to send the payment to"
+        [(ngModel)]="send.toAddress">
+      <input class="col-xs-2" type="text" placeholder="Enter a label"
+        [(ngModel)]="send.toLabel">
+      <span class="separator"></span>
+      <span class="col-xs-2">
+        <span class="icon fa fa-users"></span>
+        <span class="icon fa fa-clone"></span>
+        <span class="icon fa fa-times"></span>
+      </span>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-3">Narration</div>
+      <input class="col-xs-4" type="text"
+        placeholder="Enter a short note to send with a payment"
+        maxlength="24"
+        [(ngModel)]="send.note">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-3">Amount</div>
+      <input class="col-xs-4" type="text"
+        placeholder="0.0000000000000000"
+        [(ngModel)]="send.amount">
+      <select [(ngModel)]="send.currency">
+        <option value="part">PART</option>
+      </select>
+    </div>
+
+    <div *ngIf="advanced" class="card row">
+      <div class="input-label col-xs-3">Privacy level</div>
+      <div class="col-xs-4 nopadding">
+        <div class="progress">
+          <div id="privacy" class="progress-bar" role="progressbar"
+            [ngStyle]="{ 'width': send.privacy + '%' }">
+          </div>
+        </div>
+        <div class="privacy-labels">
+          <span class="privacy-label" (click)="send.privacy = 10">Normal</span>
+          <span class="privacy-label" (click)="send.privacy = 50">Medium</span>
+          <span class="privacy-label" (click)="send.privacy = 100">High</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div *ngIf="type == 'balanceTransfer'">
+
+    <div class="card row">
+      <div class="input-label col-xs-3">From account</div>
+      <span class="col-xs-4 public-private">
+        <input type="radio" name="from" id="fromPublic"
+          [(ngModel)]="send.fromType" value="public">
+        <label for="fromPublic" class="input-info-label">Public account</label>
+        <input type="radio" name="from" id="fromPrivate"
+          [(ngModel)]="send.fromType" value="private">
+        <label for="fromPrivate" class="input-info-label">Private account</label>
+      </span>
+      <span class="separator"></span>
+      <span class="col-xs-4 balance">
+        <span class="balance-label">Balance: </span>
+        <span class="balance-amount">{{getBalance(send.fromType)}} PART</span>
+      </span>
+    </div>
+
+    <div *ngIf="advanced" class="card row">
+      <div class="input-label col-xs-3">To account</div>
+      <span class="col-xs-4 public-private">
+        <input type="radio" name="to" id="toPublic"
+          [(ngModel)]="send.toType" value="public">
+        <label for="toPublic" class="input-info-label">Public account</label>
+        <input type="radio" name="to" id="toPrivate"
+          [(ngModel)]="send.toType" value="private">
+        <label for="toPrivate" class="input-info-label">Private account</label>
+      </span>
+      <span class="separator"></span>
+      <span class="col-xs-4 balance">
+        <span class="balance-label">Balance: </span>
+        <span class="balance-amount">{{getBalance(send.toType)}} PART</span>
+      </span>
+    </div>
+
+    <div *ngIf="advanced" class="card row">
+      <div class="input-label col-xs-3">Pay to</div>
+      <input class="col-xs-4" type="text"
+        placeholder="The address to send the payment to"
+        [(ngModel)]="send.toAddress">
+      <input class="col-xs-2" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
+      <span class="separator"></span>
+      <span class="col-xs-2">
+        <span class="icon fa fa-users"></span>
+        <span class="icon fa fa-clone"></span>
+        <span class="icon fa fa-times"></span>
+      </span>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-3">Amount</div>
+      <input class="col-xs-4" type="text"
+        placeholder="0.0000000000000000"
+        [(ngModel)]="send.amount">
+      <select [(ngModel)]="send.currency">
+        <option value="part">PART</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="pull-right">
+    <button (click)="clear()">Clear all</button>
+    <button class="validate" (click)="pay()">Make payment</button>
+  </div>
+
+</div>
