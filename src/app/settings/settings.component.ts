@@ -20,6 +20,12 @@ export class SettingsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    /* Preload default settings if none found */
+    if (localStorage.getItem('settings') == null) {
+      const settings: string = JSON.stringify(this._settingsService.defaultSettings);
+      localStorage.setItem('settings', settings);
+    }
+
     this.settings = this._settingsService.loadSettings();
   }
 

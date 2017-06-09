@@ -28,13 +28,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    /* Preload default settings if none found */
-    if (localStorage.getItem('settings') == null) {
-      const settings: string = JSON.stringify(this._settingsService.defaultSettings);
-      localStorage.setItem('settings', settings);
-    }
-
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events

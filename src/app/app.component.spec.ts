@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { APP_BASE_HREF } from '@angular/common'
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AppModule } from './app.module';
