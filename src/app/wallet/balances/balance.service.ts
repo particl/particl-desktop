@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer } from 'rxjs/Observable';
 
   export class Balances {
     private _total: number;

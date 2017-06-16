@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './balance.component.html',
   styleUrls: ['./balance.component.css']
 })
-export class BalanceComponent implements OnInit {
+export class BalanceComponent implements OnInit,OnDestroy {
 
   @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
   private _sub: Subscription;
