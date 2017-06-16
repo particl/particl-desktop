@@ -5,12 +5,11 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   selector: 'app-balance',
   templateUrl: './balance.component.html',
-  styleUrls: ['./balance.component.css'],
-  providers: [BalanceService]
+  styleUrls: ['./balance.component.css']
 })
 export class BalanceComponent implements OnInit {
-  @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
 
+  @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
   private _sub: Subscription;
   private _balance : number = 0;
 
@@ -24,7 +23,7 @@ export class BalanceComponent implements OnInit {
         balances => {
           this._balance = balances.getBalance(this.typeOfBalance);
         },
-        error => console.log("error:" + error));
+        error => console.log("balanceService subscription error:" + error));
   }
 
   ngOnDestroy() {
@@ -38,9 +37,7 @@ export class BalanceComponent implements OnInit {
 	  2. same as 1 but for large balances (500 000 -> 500K)
   */
   getBalanceBeforePoint(): number {
-
     return Math.floor(this._balance);
-    //return this.balanceService.balanceBeforePoint;
   }
 
   getBalancePoint(): string {

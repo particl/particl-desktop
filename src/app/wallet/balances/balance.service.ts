@@ -29,8 +29,6 @@ import { Observable, Observer } from 'rxjs';
         return this._private;
       else if(type === "STAKE")
         return this._stake;
-
-      return 1337;
     }
 
     constructor(total: number, pub: number, priv: number, stake: number){ this._total = total; this._public = pub; this._private = priv; this._stake = stake;}
@@ -42,12 +40,6 @@ export class BalanceService {
   private _balances: Observable<Balances>;
   private _observer: Observer<Balances>;
 
-  balanceBeforePoint: number = 123000;
-  balanceAfterPoint: number = 4586649;
-
-
-  typeOfBalance: string;
-
   constructor() {
         // we only need to initialize this once, as it is a shared observable...
     this._balances = Observable.create(observer => this._observer = observer).publishReplay(1).refCount();
@@ -56,7 +48,7 @@ export class BalanceService {
   }
 
   getBalances(): Observable<Balances> { 
-    setTimeout(_ => this.rpc_loadBalance("stake"));
+    setTimeout(_ => this.rpc_loadBalance());
     return this._balances;
   }
 
@@ -81,9 +73,11 @@ export class BalanceService {
 	Load balances over RPC.
 
 */
-  rpc_loadBalance(type: any) {
+  rpc_loadBalance() {
+      //test values
       let balances = new Balances(123000.00000009, 123000.90000000, 123000.9, 123000.458664999);
       this._observer.next(balances);
+      setTimeout(_ => this.updateBalanceTest(), 5000);
   }
 
 /*

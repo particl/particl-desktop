@@ -5,6 +5,9 @@ import { SharedModule } from '../shared/shared.module';
 
 import { TransactionService } from './shared/transaction.service';
 import { AddressService } from './shared/address.service';
+//TODO: move balance to shared?
+import { BalanceService } from './balances/balance.service';
+
 
 import { TransactionsTableComponent } from './shared/transaction-table/transaction-table.component';
 import { AddressTableComponent } from './shared/address-table/address-table.component';
@@ -51,7 +54,8 @@ export class WalletModule {
       ngModule: WalletModule,
       providers: [
         TransactionService,
-        AddressService
+        AddressService,
+        BalanceService
       ]
     };
   }
