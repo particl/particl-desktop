@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BalanceService } from './balance.service';
-
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-balance',
@@ -11,12 +11,26 @@ import { BalanceService } from './balance.service';
 export class BalanceComponent implements OnInit {
   @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
 
-  /*this.balance_service.balance_type = this.balance_type;*/
+  private _sub: Subscription;
+  private _balance : number = 0;
+
   constructor(public balanceService: BalanceService) {
   }
 
+
   ngOnInit() {
+    this._sub = this.balanceService.getBalances()
+      .subscribe(
+        balances => {
+          this._balance = balances.getBalance(this.typeOfBalance);
+        },
+        error => console.log("error:" + error));
   }
+
+  ngOnDestroy() {
+    this._sub.unsubscribe();
+  }
+
 
   /*
 	  TODO:
@@ -24,7 +38,9 @@ export class BalanceComponent implements OnInit {
 	  2. same as 1 but for large balances (500 000 -> 500K)
   */
   getBalanceBeforePoint(): number {
-    return this.balanceService.balanceBeforePoint;
+
+    return Math.floor(this._balance);
+    //return this.balanceService.balanceBeforePoint;
   }
 
   getBalancePoint(): string {
@@ -35,8 +51,8 @@ export class BalanceComponent implements OnInit {
     return '.'; // Point needed
   }
 
-  getBalanceAfterPoint(): number {
-    return this.balanceService.balanceAfterPoint;
+  getBalanceAfterPoint(): string {
+    return (this._balance+"").split(".")[1];
   }
 
 
