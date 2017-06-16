@@ -5,7 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 
 import { TransactionService } from './shared/transaction.service';
 import { AddressService } from './shared/address.service';
-//TODO: move balance to shared?
+// TODO: move balance to shared?
 import { BalanceService } from './balances/balance.service';
 
 

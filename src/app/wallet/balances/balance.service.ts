@@ -7,32 +7,35 @@ import { Observable, Observer } from 'rxjs';
     private _private: number;
     private _stake: number;
 
-    getTotal(){
+    getTotal() {
       return this._total;
     }
-    getPublic(){
+    getPublic() {
       return this._public;
     }
-    getPrivate(){
+    getPrivate() {
       return this._private;
     }
-    getStake(){
+    getStake() {
       return this._stake;
     }
 
-    getBalance(type: string){
-      if(type === "TOTAL")
+    getBalance(type: string) {
+      if (type === 'TOTAL') {
         return this._total;
-      else if(type === "PUBLIC")
+      } else if (type === 'PUBLIC') {
         return this._public;
-      else if(type === "PRIVATE")
+      } else if (type === 'PRIVATE') {
         return this._private;
-      else if(type === "STAKE")
+      } else if (type === 'STAKE') {
         return this._stake;
+      }
     }
 
-    constructor(total: number, pub: number, priv: number, stake: number){ this._total = total; this._public = pub; this._private = priv; this._stake = stake;}
-  } 
+    constructor(total: number, pub: number, priv: number, stake: number) {
+      this._total = total; this._public = pub; this._private = priv; this._stake = stake;
+    }
+  }
 
 @Injectable()
 export class BalanceService {
@@ -44,15 +47,15 @@ export class BalanceService {
         // we only need to initialize this once, as it is a shared observable...
     this._balances = Observable.create(observer => this._observer = observer).publishReplay(1).refCount();
     this._balances.subscribe().unsubscribe(); // Kick it off, since its shared... We should look at a more functional approach in the future
-    
+
   }
 
-  getBalances(): Observable<Balances> { 
+  getBalances(): Observable<Balances> {
     setTimeout(_ => this.rpc_loadBalance());
     return this._balances;
   }
 
-  updateBalanceTest(): void{
+  updateBalanceTest(): void {
      setTimeout(_ => this._observer.next(new Balances(123000.111111119, 123000.9111111, 123000.91337, 123000.80082800)));
     return;
   }
@@ -74,8 +77,8 @@ export class BalanceService {
 
 */
   rpc_loadBalance() {
-      //test values
-      let balances = new Balances(123000.00000009, 123000.90000000, 123000.9, 123000.458664999);
+      // test values
+      const balances = new Balances(123000.00000009, 123000.90000000, 123000.9, 123000.458664999);
       this._observer.next(balances);
       setTimeout(_ => this.updateBalanceTest(), 5000);
   }

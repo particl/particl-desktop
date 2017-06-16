@@ -11,7 +11,7 @@ export class BalanceComponent implements OnInit {
 
   @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
   private _sub: Subscription;
-  private _balance : number = 0;
+  private _balance: number = 0;
 
   constructor(public balanceService: BalanceService) {
   }
@@ -23,7 +23,7 @@ export class BalanceComponent implements OnInit {
         balances => {
           this._balance = balances.getBalance(this.typeOfBalance);
         },
-        error => console.log("balanceService subscription error:" + error));
+        error => console.log('balanceService subscription error:' + error));
   }
 
   ngOnDestroy() {
@@ -49,7 +49,7 @@ export class BalanceComponent implements OnInit {
   }
 
   getBalanceAfterPoint(): string {
-    return (this._balance+"").split(".")[1];
+    return (this._balance + '').split('.')[1];
   }
 
 
