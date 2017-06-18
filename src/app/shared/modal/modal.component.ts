@@ -1,21 +1,25 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+
+/* TODO: should be included by shared */
 import { ModalService } from './modal.service'
 
 @Component({
-  selector: 'modal',
+  selector: 'app-modal',
   templateUrl: './modal.component.html',
-  styleUrls: [ './modal.component.scss' ]
+  styleUrls: ['./modal.component.scss'],
 })
 
 export class ModalComponent implements OnInit, OnDestroy {
 
   @Input() id: string;
   private elem: any;
+  private container: any;
 
-  constructor(private ModalService: ModalService) { }
+  constructor(
+    private _modalService: ModalService
+  ) { }
 
   ngOnInit() {
-    console.log("coucou");
 
     if (!this.id) {
       console.error('modals must have an id');
@@ -23,29 +27,28 @@ export class ModalComponent implements OnInit, OnDestroy {
     }
 
     this.elem = document.getElementById(this.id);
+    this.container = this.elem.getElementsByClassName("app-modal-container")[0]
     document.body.appendChild(this.elem);
 
-    this.elem.onclick = function (e: any) {
-      console.log(typeof(e));
-      console.log(e);
-    };
-
-    this.ModalService.add(this);
+    this._modalService.add(this);
   }
 
   ngOnDestroy() {
-    console.log("bye");
-    this.ModalService.remove(this.id);
+    this._modalService.remove(this.id);
     this.elem.remove();
   }
 
-  public open(): void {
-    this.elem.show();
-    //$('body').addClass('modal-open');
+  open() {
+    this.container.classList.remove('app-modal-hide');
+    this.container.classList.add('app-modal-display');
   }
-  close(): void {
-    this.elem.hide();
-    //$('body').removeClass('modal-open');
+
+  close() {
+    this.container.addEventListener('transitionend', function callback () {
+      this.classList.add('app-modal-hide');
+      this.removeEventListener('transitionend', callback, false);
+    }, false);
+    this.container.classList.remove('app-modal-display');
   }
 
 }

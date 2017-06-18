@@ -6,8 +6,6 @@ export class ModalService {
   private modals: Object = {};
 
   add(modal: any) {
-    console.log(modal);
-    console.log(typeof(modal));
     this.modals[modal.id] = modal;
   }
 
@@ -15,7 +13,7 @@ export class ModalService {
     this.modals[id] = undefined;
   }
 
-  open(id: string): void {
+  open(id: string) {
     this.modals[id].open();
   }
 
