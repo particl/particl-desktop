@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs//Observer';
+import { Observable, Observer } from 'rxjs';
 
   export class Balances {
     private _total: number;
@@ -112,4 +111,6 @@ export class BalanceService {
       When a new transaction arrives, we must update the balance. Might be worth ignoring this on IBD.
   	*/
   }
+
+
 }
