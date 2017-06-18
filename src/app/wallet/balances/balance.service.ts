@@ -43,20 +43,23 @@ export class BalanceService {
   private _balances: Observable<Balances>;
   private _observer: Observer<Balances>;
 
+
   constructor() {
         // we only need to initialize this once, as it is a shared observable...
     this._balances = Observable.create(observer => this._observer = observer).publishReplay(1).refCount();
     this._balances.subscribe().unsubscribe(); // Kick it off, since its shared... We should look at a more functional approach in the future
 
+    setTimeout(_ => this.rpc_loadBalance()); //load initial balances
+
   }
 
   getBalances(): Observable<Balances> {
-    setTimeout(_ => this.rpc_loadBalance());
     return this._balances;
   }
 
   updateBalanceTest(): void {
-     setTimeout(_ => this._observer.next(new Balances(123000.111111119, 123000.9111111, 123000.91337, 123000.80082800)));
+    let b = this.deserialize(this.TEST_BALANCES_JSON[0]);
+    setTimeout(_ => this._observer.next(b));
     return;
   }
   /*
@@ -112,5 +115,52 @@ export class BalanceService {
   	*/
   }
 
+
+  // TODO: unify with wallet/shared/transactions.model.ts and move to core/rpc/rpc.service.ts
+
+  /*
+    Deserialize JSON and cast it to a class of "type".
+  */
+
+  deserialize(json: Object): Balances {
+    let total_balance = json["total_balance"];
+    let public_balance = json["balance"] + json["blind_balance"]; //public =  balance + blind
+    let private_balance = json["anon_balance"];
+    let staked_balance = json["staked_balance"];
+    return new Balances(total_balance, public_balance, private_balance, staked_balance);
+  }
+
+  TEST_BALANCES_JSON: Object[] = [{
+    "walletversion": 60000,
+    "total_balance": 35611.69395286,
+    "balance": 0.12620448,
+    "blind_balance": 50.00000000,
+    "anon_balance": 0.00000000,
+    "staked_balance": 31010.42285840,
+    "unconfirmed_balance": 4551.14488998,
+    "immature_balance": 0.00000000,
+    "txcount": 10,
+    "keypoololdest": 1497784835,
+    "keypoolsize": 0,
+    "reserve": 0.00000000,
+    "encryptionstatus": "Unencrypted",
+    "paytxfee": 0.00000000
+  },
+  {
+    "walletversion": 60000,
+    "total_balance": 35611.69395286,
+    "balance": 0.12620448,
+    "blind_balance": 50.00000000,
+    "anon_balance": 0.00000000,
+    "staked_balance": 31010.42285840,
+    "unconfirmed_balance": 4551.14488998,
+    "immature_balance": 0.00000000,
+    "txcount": 10,
+    "keypoololdest": 1497784835,
+    "keypoolsize": 0,
+    "reserve": 0.00000000,
+    "encryptionstatus": "Unencrypted",
+    "paytxfee": 0.00000000
+  }];
 
 }

@@ -41,15 +41,20 @@ export class BalanceComponent implements OnInit,OnDestroy {
   }
 
   getBalancePoint(): string {
-    if (+this.getBalanceAfterPoint === 0) {
+    //console.log('type: ' + this.typeOfBalance + ' ' + this.getBalanceAfterPoint());
+    if (+this.getBalanceAfterPoint(true) === 0) {
       return ''; // Balance = 120 for example, no point needed.
     }
 
     return '.'; // Point needed
   }
 
-  getBalanceAfterPoint(): string {
-    return (this._balance + '').split('.')[1];
+  getBalanceAfterPoint(retzero?): string {
+    if((this._balance + '').indexOf('.') >= 0){
+      return (this._balance + '').split('.')[1];
+    } else {
+      return (retzero) ? "0" : "";
+    }
   }
 
 
