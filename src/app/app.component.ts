@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 
+import { AppService } from './app.service';
 import { WindowService } from './core/window.service';
 
 import { SettingsService } from './settings/settings.service';
@@ -9,23 +10,21 @@ import { SettingsService } from './settings/settings.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss', './app.component.controls.scss'],
   providers: [SettingsService]
 })
 export class AppComponent implements OnInit {
   isCollapsed: boolean = true;
   isFixed: boolean = false;
   title: string = '';
-  window: WindowService;
 
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
-    private _windowService: WindowService,
+    private appService: AppService,
+    public window: WindowService,
     private _settingsService: SettingsService
-  ) {
-    this.window = this._windowService;
-  }
+  ) { }
 
   ngOnInit() {
     // Change the header title derived from route data
@@ -41,6 +40,6 @@ export class AppComponent implements OnInit {
       })
       .filter(route => route.outlet === 'primary')
       .flatMap(route => route.data)
-      .subscribe(data => this.title = data.title);
+      .subscribe(data => this.title = data['title']);
   }
 }
