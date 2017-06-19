@@ -4,10 +4,11 @@ import {
   ViewContainerRef,
   Input,
   ReflectiveInjector,
-  ComponentFactoryResolver
+  ComponentFactoryResolver,
+  OnInit
 } from '@angular/core';
 
-import { FirstTimeModalComponent } from './firstTime/firstTime.modal.component';
+import { FirstTimeModalComponent } from './firsttime/firsttime.modal.component';
 import { SyncingModalComponent } from './syncing/syncing.modal.component'
 
 @Component({
@@ -22,14 +23,20 @@ import { SyncingModalComponent } from './syncing/syncing.modal.component'
 
 export class ModalComponent {
 
-  currentModal = null;
-  sync: Number = 0;
+  private container: any;
+  public modal: any = null;
+  public sync: Number = 0;
+  public message: Object = null;
 
   @ViewChild('messageContainer', { read: ViewContainerRef })
   messageContainer: ViewContainerRef;
 
-  @Input() set componentData(data: {component: any, inputs: any }) {
+  @Input() set currentModal(data: {component: any, inputs: any }) {
+
+    console.log("ModalComponent");
+
     if (!data) {
+      console.log("no data");
       return ;
     }
 
@@ -54,16 +61,46 @@ export class ModalComponent {
     this.messageContainer.insert(component.hostView);
 
     // destroy previously created component
-    if (this.currentModal) {
-      this.currentModal.destroy();
+    if (this.modal) {
+      this.modal.destroy();
     }
 
     console.log(component);
     console.log(typeof(component));
-    this.currentModal = component;
+    this.modal = component;
   }
 
   constructor (
     private _resolver: ComponentFactoryResolver
   ) { }
+
+  ngOnInit() {
+    this.container = document.getElementsByClassName("app-modal-container")[0]
+    console.log(this.container);
+  }
+
+  close() {
+    this.container.addEventListener('transitionend', function callback () {
+      this.classList.add('app-modal-hide');
+      this.removeEventListener('transitionend', callback, false);
+    }, false);
+    this.container.classList.remove('app-modal-display');
+  }
+
+  show() {
+    let el = document.getElementsByClassName("app-modal-container")[0];
+    el.classList.remove("app-modal-hide");
+    el.classList.add("app-modal-display");
+  }
+
+  firstTime() {
+    this.message = {
+      component: FirstTimeModalComponent,
+      inputs: {
+        sync: 20
+      }
+    };
+    this.show();
+  }
+
 }
