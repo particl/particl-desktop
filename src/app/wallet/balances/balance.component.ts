@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './balance.component.html',
   styleUrls: ['./balance.component.css']
 })
-export class BalanceComponent implements OnInit,OnDestroy {
+export class BalanceComponent implements OnInit, OnDestroy {
 
   @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
   private _sub: Subscription;
@@ -41,7 +41,6 @@ export class BalanceComponent implements OnInit,OnDestroy {
   }
 
   getBalancePoint(): string {
-    //console.log('type: ' + this.typeOfBalance + ' ' + this.getBalanceAfterPoint());
     if (+this.getBalanceAfterPoint(true) === 0) {
       return ''; // Balance = 120 for example, no point needed.
     }
@@ -49,11 +48,11 @@ export class BalanceComponent implements OnInit,OnDestroy {
     return '.'; // Point needed
   }
 
-  getBalanceAfterPoint(retzero?): string {
-    if((this._balance + '').indexOf('.') >= 0){
+  getBalanceAfterPoint(retzero?: boolean): string {
+    if ((this._balance + '').indexOf('.') >= 0) {
       return (this._balance + '').split('.')[1];
     } else {
-      return (retzero) ? "0" : "";
+      return (retzero) ? '0' : '';
     }
   }
 

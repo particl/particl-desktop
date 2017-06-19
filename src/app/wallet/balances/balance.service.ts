@@ -40,6 +40,39 @@ import { Observable, Observer } from 'rxjs';
 @Injectable()
 export class BalanceService {
 
+  TEST_BALANCES_JSON: Object[] = [{
+    'walletversion': 60000,
+    'total_balance': 35611.69395286,
+    'balance': 0.12620448,
+    'blind_balance': 50.00000000,
+    'anon_balance': 0.00000000,
+    'staked_balance': 31010.42285840,
+    'unconfirmed_balance': 4551.14488998,
+    'immature_balance': 0.00000000,
+    'txcount': 10,
+    'keypoololdest': 1497784835,
+    'keypoolsize': 0,
+    'reserve': 0.00000000,
+    'encryptionstatus': 'Unencrypted',
+    'paytxfee': 0.00000000
+  },
+  {
+    'walletversion': 60000,
+    'total_balance': 35611.69395286,
+    'balance': 0.12620448,
+    'blind_balance': 50.00000000,
+    'anon_balance': 0.00000000,
+    'staked_balance': 31010.42285840,
+    'unconfirmed_balance': 4551.14488998,
+    'immature_balance': 0.00000000,
+    'txcount': 10,
+    'keypoololdest': 1497784835,
+    'keypoolsize': 0,
+    'reserve': 0.00000000,
+    'encryptionstatus': 'Unencrypted',
+    'paytxfee': 0.00000000
+  }];
+
   private _balances: Observable<Balances>;
   private _observer: Observer<Balances>;
 
@@ -49,7 +82,7 @@ export class BalanceService {
     this._balances = Observable.create(observer => this._observer = observer).publishReplay(1).refCount();
     this._balances.subscribe().unsubscribe(); // Kick it off, since its shared... We should look at a more functional approach in the future
 
-    setTimeout(_ => this.rpc_loadBalance()); //load initial balances
+    setTimeout(_ => this.rpc_loadBalance()); // load initial balances
 
   }
 
@@ -58,7 +91,7 @@ export class BalanceService {
   }
 
   updateBalanceTest(): void {
-    let b = this.deserialize(this.TEST_BALANCES_JSON[0]);
+    const b = this.deserialize(this.TEST_BALANCES_JSON[0]);
     setTimeout(_ => this._observer.next(b));
     return;
   }
@@ -123,44 +156,13 @@ export class BalanceService {
   */
 
   deserialize(json: Object): Balances {
-    let total_balance = json["total_balance"];
-    let public_balance = json["balance"] + json["blind_balance"]; //public =  balance + blind
-    let private_balance = json["anon_balance"];
-    let staked_balance = json["staked_balance"];
+    const total_balance = json['total_balance'];
+    const public_balance = json['balance'] + json['blind_balance']; // public =  balance + blind
+    const private_balance = json['anon_balance'];
+    const staked_balance = json['staked_balance'];
     return new Balances(total_balance, public_balance, private_balance, staked_balance);
   }
 
-  TEST_BALANCES_JSON: Object[] = [{
-    "walletversion": 60000,
-    "total_balance": 35611.69395286,
-    "balance": 0.12620448,
-    "blind_balance": 50.00000000,
-    "anon_balance": 0.00000000,
-    "staked_balance": 31010.42285840,
-    "unconfirmed_balance": 4551.14488998,
-    "immature_balance": 0.00000000,
-    "txcount": 10,
-    "keypoololdest": 1497784835,
-    "keypoolsize": 0,
-    "reserve": 0.00000000,
-    "encryptionstatus": "Unencrypted",
-    "paytxfee": 0.00000000
-  },
-  {
-    "walletversion": 60000,
-    "total_balance": 35611.69395286,
-    "balance": 0.12620448,
-    "blind_balance": 50.00000000,
-    "anon_balance": 0.00000000,
-    "staked_balance": 31010.42285840,
-    "unconfirmed_balance": 4551.14488998,
-    "immature_balance": 0.00000000,
-    "txcount": 10,
-    "keypoololdest": 1497784835,
-    "keypoolsize": 0,
-    "reserve": 0.00000000,
-    "encryptionstatus": "Unencrypted",
-    "paytxfee": 0.00000000
-  }];
+
 
 }
