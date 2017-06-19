@@ -22,7 +22,7 @@ $width-lg: 100% / 12 * 2;
     display: block;
     overflow-x: hidden;
     overflow-y: auto;
-    z-index: 99999;
+    z-index: 1000;
   }
   @media (min-width: 768px) {
     &[position="left"].docked {
@@ -46,7 +46,7 @@ $width-lg: 100% / 12 * 2;
     display: block;
     overflow-x: hidden;
     overflow-y: auto;
-    z-index: 99999;
+    z-index: 1000;
   }
   @media (min-width: 768px) {
     &[position="right"].docked {
@@ -90,7 +90,7 @@ $width-lg: 100% / 12 * 2;
     display: block;
     overflow-x: auto;
     overflow-y: hidden;
-    z-index: 99999;
+    z-index: 1000;
   }
   &[position="top"].docked {
     top: inherit;
@@ -108,7 +108,7 @@ $width-lg: 100% / 12 * 2;
     display: block;
     overflow-x: auto;
     overflow-y: hidden;
-    z-index: 99999;
+    z-index: 1000;
   }
   &[position="bottom"].docked {
     top: calc(100% - #{$docked-height});
