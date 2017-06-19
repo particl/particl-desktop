@@ -4,17 +4,6 @@ language: node_js
 node_js:
   - '6.11'
 
-deploy:
-  - provider: releases
-    api-key:
-      secure: <7b90057b06ff5ffee07a08d63f6848c7d9424869>
-    file:
-      - $TRAVIS_BUILD_DIR/dist.zip
-      - $TRAVIS_BUILD_DIR/dist.zip.sha256sum.txt
-    overwrite: true
-    on:
-      tags: true
-
 addons:
 apt:
   sources:
@@ -60,3 +49,14 @@ script:
 
 after_script:
   - npm run coveralls
+
+  deploy:
+    - provider: releases
+      api-key:
+        secure: <>
+      file:
+        - $TRAVIS_BUILD_DIR/dist.zip
+        - $TRAVIS_BUILD_DIR/dist.zip.sha256sum.txt
+      overwrite: true
+      on:
+        tags: true
