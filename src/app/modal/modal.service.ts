@@ -1,22 +1,54 @@
+// TODO remove
 import { Injectable } from '@angular/core';
+
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+
+import { FirstTimeModalComponent } from './first-time/first-time.modal.component';
+import { SyncingModalComponent } from './syncing/syncing.modal.component';
 
 @Injectable()
 export class ModalService {
 
-  public modal: any;
-  public message: Object = null;
+  public modal: any = null;
+  private message = new Subject<any>();
+  private progress = new Subject<any>();
+
+  messages: Object = {
+    firstTime: FirstTimeModalComponent,
+    syncing: SyncingModalComponent
+  };
 
   open(modal) {
-    switch (modal) {
-      case 'firsttime':
-        this.show();
-    }
-  }
 
-  show() {
-    this.modal = document.getElementsByTagName('app-modal')[0].firstChild;
+    switch (modal) {
+      case 'firstTime':
+        this.message.next(this.messages['firstTime']);
+        break ;
+      case 'syncing':
+        this.message.next(this.messages['syncing']);
+        break ;
+      default:
+        console.error(`modal ${modal} doesn't exist`);
+        return ;
+    }
+
+    if (!this.modal) {
+      this.modal = document.getElementsByTagName('app-modal')[0].firstChild;
+    }
     this.modal.classList.remove('app-modal-hide');
     this.modal.classList.add('app-modal-display');
   }
 
+  updateProgress(progress) {
+    this.progress.next(progress);
+  }
+
+  getMessage() {
+      return (this.message.asObservable());
+  }
+
+  getProgress() {
+      return (this.progress.asObservable());
+  }
 }

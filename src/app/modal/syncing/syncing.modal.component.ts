@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'syncing',
+  selector: 'syncing-modal',
   templateUrl: './syncing.modal.component.html'
 })
 

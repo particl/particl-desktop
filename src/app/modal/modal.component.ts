@@ -1,13 +1,15 @@
+import { Subscription } from 'rxjs/Subscription';
 import {
   Component,
   ViewChild,
   ViewContainerRef,
-  Input,
   ReflectiveInjector,
   ComponentFactoryResolver
 } from '@angular/core';
 
-import { FirstTimeModalComponent } from './firsttime/firsttime.modal.component';
+import { ModalService } from './modal.service';
+
+import { FirstTimeModalComponent } from './first-time/first-time.modal.component';
 import { SyncingModalComponent } from './syncing/syncing.modal.component'
 
 @Component({
@@ -19,64 +21,44 @@ import { SyncingModalComponent } from './syncing/syncing.modal.component'
     SyncingModalComponent
   ]
 })
-
 export class ModalComponent {
-
-  public container: any;
-  public modal: any = null;
-  public sync: Number = 0;
 
   @ViewChild('messageContainer', { read: ViewContainerRef })
   messageContainer: ViewContainerRef;
 
-  @Input() set currentModal(data: {component: any, inputs: any }) {
-
-    this.container = document.getElementsByTagName('app-modal')[0].firstChild;
-
-    if (!data) {
-      console.error('Modal was initialized without input data');
-      return ;
-    }
-
-    // convert input in angular format
-    const inputProviders = Object.keys(data.inputs).map((inputName) => {
-      return ({
-        provide: inputName,
-        useValue: data.inputs[inputName]
-      });
-    });
-
-    // inject input data
-    const resolvedInputs = ReflectiveInjector.resolve(inputProviders);
-    const injector = ReflectiveInjector.fromResolvedProviders(
-      resolvedInputs,
-      this.messageContainer.parentInjector
-    );
-
-    // create and insert component
-    const factory = this._resolver.resolveComponentFactory(data.component);
-    const component = factory.create(injector);
-    this.messageContainer.insert(component.hostView);
-
-    // destroy previously created component
-    if (this.modal) {
-      this.modal.destroy();
-    }
-    this.modal = component;
-    this.sync = data.inputs.sync;
-  }
+  modal: any;
+  progress: Number = 0;
 
   constructor (
-    private _resolver: ComponentFactoryResolver
-  ) { }
+    private _resolver: ComponentFactoryResolver,
+    private _modalService: ModalService
+  ) {
+    this._modalService.getMessage().subscribe(
+      message => this.open(message)
+    );
+    this._modalService.getProgress().subscribe(
+      progress => { this.progress = progress; }
+    );
+  }
+
+  open(message) {
+    const factory = this._resolver.resolveComponentFactory(message);
+    this.modal = this.messageContainer.createComponent(factory);
+    console.log(typeof(this.modal));
+  }
 
   close() {
     // wait for opacity transition to finish before hiding
-    this.container.addEventListener('transitionend', function callback () {
+    const container: any = document.getElementsByTagName('app-modal')[0].firstChild;
+    container.addEventListener('transitionend', function callback () {
       this.classList.add('app-modal-hide');
       this.removeEventListener('transitionend', callback, false);
     }, false);
-    this.container.classList.remove('app-modal-display');
+    container.classList.remove('app-modal-display');
+
+    // remove and destroy message
+    this.messageContainer.remove();
+    this.modal.destroy();
   }
 
 }
