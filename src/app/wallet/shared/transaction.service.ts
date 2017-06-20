@@ -107,7 +107,7 @@ export class TransactionService {
   }
 
   rpc_loadTransactionCount(): void {
-    //to be modified or deleted; RPC will push this data
+    // to be modified or deleted; RPC will push this data
     // call getwalletinfo txcount
     this.txCount = TEST_TXS_JSON.length - 1;
   }
@@ -166,9 +166,9 @@ export class TransactionService {
       another good reason is that the RPC call listtransactions uses indexes to track the transactions.
 
     
-     This functionality of this function is potentially moved to the RPC service. This service is being "dumbed down" to doing basic UI logic, we'll have one function
+     This functionality of this function is potentially moved to the RPC service. 
+     This service is being "dumbed down" to doing basic UI logic, we'll have one function
      that feeds in the data for the component to fetch.
-
 
 
     */
