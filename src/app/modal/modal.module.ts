@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ModalComponent } from './modal.component';
+import { ModalService } from './modal.service';
 
 import { FirstTimeModalComponent } from './firsttime/firsttime.modal.component';
 import { SyncingModalComponent } from './syncing/syncing.modal.component';
@@ -13,10 +14,8 @@ import { SyncingModalComponent } from './syncing/syncing.modal.component';
   ],
   exports: [
     ModalComponent,
-    // TODO
-    FirstTimeModalComponent,
-    SyncingModalComponent
-  ]
+  ],
+  providers: [ModalService]
 })
 
 export class ModalModule { }
