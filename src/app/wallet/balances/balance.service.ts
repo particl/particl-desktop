@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-//import { Observable } from 'rxjs/Observable';
-//import { Observer } from 'rxjs/Observer';
+// import { Observable } from 'rxjs/Observable';
+// import { Observer } from 'rxjs/Observer';
 import { Observable, Observer } from 'rxjs'; // use this for testing atm
 
 
@@ -77,7 +77,7 @@ export class BalanceService {
         // we only need to initialize this once, as it is a shared observable...
     this._balances = Observable.create(observer => this._observer = observer).publishReplay(1).refCount();
     this._balances.subscribe().unsubscribe(); // Kick it off, since its shared... We should look at a more functional approach in the future
-    
+
     setTimeout(_ => this.rpc_loadBalance(this.TEST_BALANCES_JSON[1])); // load initial balances
     // just a test
     setTimeout(_ => this.updateBalanceTest(), 5000);
@@ -110,7 +110,7 @@ export class BalanceService {
 */
   rpc_loadBalance(JSON: Object): void {
       // test values
-      const balances : Balances = this.deserialize(JSON);
+      const balances: Balances = this.deserialize(JSON);
       this._observer.next(balances);
   }
 
@@ -135,8 +135,8 @@ export class BalanceService {
       A central RPC-service is required for a good design, we want to maintain one connection to the RPC and
       not spawn a new one for each BalanceService.
     */
-    //register(instance: Injectable, apiName: String, signture: Array<any>, callback: Function, when: Array<String>)
-    //rpc.register(this, getwalletinfo, [""], this.rpc_loadBalance(), ["ON_NEW_TX"]);
+    // register(instance: Injectable, apiName: String, signture: Array<any>, callback: Function, when: Array<String>)
+    // rpc.register(this, getwalletinfo, [""], this.rpc_loadBalance(), ["ON_NEW_TX"]);
   }
 
   signal_updateBalance(): void {
