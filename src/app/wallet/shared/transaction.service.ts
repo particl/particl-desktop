@@ -12,8 +12,6 @@ export class TransactionService {
   currentPage: number = 0;
   totalPageCount: number = 0;
 
-  // testVal$: Observable<Boolean> = false.AsObservable();
-
 
   /* How many transactions do we display per page and keep in memory at all times.
      When loading more transactions they are fetched JIT and added to txs. */
@@ -103,15 +101,19 @@ export class TransactionService {
 */
 
   rpc_loadTransactions(index_start: number): void {
-
     this.loadTestTransaction(index_start);
     // loadTransactionsRPC should call listtransaction amount index_start.
     // return this.txs;
   }
 
   rpc_loadTransactionCount(): void {
+    //to be modified or deleted; RPC will push this data
     // call getwalletinfo txcount
     this.txCount = TEST_TXS_JSON.length - 1;
+  }
+
+  rpc_getParameters() {
+    return ('"*" ' + this.MAX_TXS_PER_PAGE + ' ' + this.currentPage);
   }
 
   // Deserializes JSON objects to Transaction classes.
@@ -124,6 +126,13 @@ export class TransactionService {
 
     // this.txs.push(instance);
     this.txs.splice(0, 0, instance);
+  }
+
+  callback_updateTransactions(JSON: Array<Object>): void {
+      /*
+        The callback will send over an array of JSON transaction objects.
+
+      */
   }
 
 /*
@@ -143,7 +152,7 @@ export class TransactionService {
   register_newTxService(/* RPC-service */): void {
     /*
       This function registers this transaction service instance with the CENTRALIZED RPC-service
-      which in turn will call all the signals when it receives updates.
+      which in turn will conteniously callback with updates.
 
       A central RPC-service is required for a good design, we want to maintain one connection to
       the RPC and not spawn a new one for each TxService.
@@ -151,29 +160,17 @@ export class TransactionService {
   }
   signal_newTransaction(): void {
     /*
+      _MIGHT_ BE DELETED.
       When bitcoind finds a new transaction, it must signal it to the GUI.
       We constantly need to be aware of the latest transactions for a good UX,
       another good reason is that the RPC call listtransactions uses indexes to track the transactions.
-      So if we're not aware of the latest transaction, some shitty stuff may happen when loading more transactions.
-      example: (tx_NEW0, tx_old1, tx_old2, tx_old3, tx_old4)
-      If the GUI is not aware tx_NEW0 and assumes that tx_old1 has index 0 (in reality it would be 1) then it could
-      break pagination.
-      Assume each page displays 2 transactions, if we were not aware of the new transaction then every index is
-      shifted by one and we would load a duplicate.
-      tx_old2 would be retrieved again, while already being displayed. This can serve as a failsafe to check if our
-      signalling still works timely and properly.
 
-      Note: when opening a transaction we must
+    
+     This functionality of this function is potentially moved to the RPC service. This service is being "dumbed down" to doing basic UI logic, we'll have one function
+     that feeds in the data for the component to fetch.
 
-      Pseudo code
-      //only delete transaction records when we are on the first page. If you're on page five and the tx records
-      start shifting due to new transactions, you might get annoyed as it goes out of focus.
-      updateTxCount();
-        if(onFirstPageOfTransactions)
-          deleteExcessTransactionsFromTxs(); //to keep GUI lightweight
-          loadTransactionOverRPC(0,1); //load latest record.
-        else
-        doNothing();
+
+
     */
   }
 }
