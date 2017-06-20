@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-// import { Observable, Observer } from 'rxjs'; // use this for testing atm
+//import { Observable } from 'rxjs/Observable';
+//import { Observer } from 'rxjs/Observer';
+import { Observable, Observer } from 'rxjs'; // use this for testing atm
 
 
   export class Balances {
@@ -54,11 +54,11 @@ export class BalanceService {
   },
   {
     'walletversion': 60000,
-    'total_balance': 35611.69395286,
-    'balance': 0.12620448,
-    'blind_balance': 50.00000000,
-    'anon_balance': 0.00000000,
-    'staked_balance': 31010.42285840,
+    'total_balance': 123000.00000009,
+    'balance': 123000.00000000,
+    'blind_balance': 0.90000000,
+    'anon_balance': 123000.9,
+    'staked_balance': 123000.458664999,
     'unconfirmed_balance': 4551.14488998,
     'immature_balance': 0.00000000,
     'txcount': 10,
@@ -77,8 +77,10 @@ export class BalanceService {
         // we only need to initialize this once, as it is a shared observable...
     this._balances = Observable.create(observer => this._observer = observer).publishReplay(1).refCount();
     this._balances.subscribe().unsubscribe(); // Kick it off, since its shared... We should look at a more functional approach in the future
-
-    setTimeout(_ => this.rpc_loadBalance()); // load initial balances
+    
+    setTimeout(_ => this.rpc_loadBalance(this.TEST_BALANCES_JSON[1])); // load initial balances
+    // just a test
+    setTimeout(_ => this.updateBalanceTest(), 5000);
 
   }
 
@@ -87,9 +89,7 @@ export class BalanceService {
   }
 
   updateBalanceTest(): void {
-    const b = this.deserialize(this.TEST_BALANCES_JSON[0]);
-    setTimeout(_ => this._observer.next(b));
-    return;
+    this.rpc_loadBalance(this.TEST_BALANCES_JSON[0]);
   }
   /*
 
@@ -108,11 +108,10 @@ export class BalanceService {
 	Load balances over RPC.
 
 */
-  rpc_loadBalance() {
+  rpc_loadBalance(JSON: Object): void {
       // test values
-      const balances = new Balances(123000.00000009, 123000.90000000, 123000.9, 123000.458664999);
+      const balances : Balances = this.deserialize(JSON);
       this._observer.next(balances);
-      setTimeout(_ => this.updateBalanceTest(), 5000);
   }
 
 /*
@@ -136,6 +135,8 @@ export class BalanceService {
       A central RPC-service is required for a good design, we want to maintain one connection to the RPC and
       not spawn a new one for each BalanceService.
     */
+    //register(instance: Injectable, apiName: String, signture: Array<any>, callback: Function, when: Array<String>)
+    //rpc.register(this, getwalletinfo, [""], this.rpc_loadBalance(), ["ON_NEW_TX"]);
   }
 
   signal_updateBalance(): void {
@@ -145,7 +146,6 @@ export class BalanceService {
   }
 
 
-  // TODO: unify with wallet/shared/transactions.model.ts and move to core/rpc/rpc.service.ts
 
   /*
     Deserialize JSON and cast it to a class of "type".
