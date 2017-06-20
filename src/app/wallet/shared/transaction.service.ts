@@ -24,8 +24,8 @@ export class TransactionService {
 
   // Pull test data and populate array of txs.
   initializeTestData(): void {
-    //this.txCount = TEST_TXS_JSON.length;
-    //this.loadTestTransaction(0);
+    // this.txCount = TEST_TXS_JSON.length;
+    // this.loadTestTransaction(0);
     this.txCount = 18;
     this.callback_updateTransactions(TEST_ARRAY_TXS_JSON_PAGE_0);
 
@@ -161,8 +161,8 @@ export class TransactionService {
       We constantly need to be aware of the latest transactions for a good UX,
       another good reason is that the RPC call listtransactions uses indexes to track the transactions.
 
-    
-     This functionality of this function is potentially moved to the RPC service. 
+
+     This functionality of this function is potentially moved to the RPC service.
      This service is being "dumbed down" to doing basic UI logic, we'll have one function
      that feeds in the data for the component to fetch.
 

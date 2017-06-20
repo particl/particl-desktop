@@ -33,14 +33,14 @@ export class Transaction implements Deserializable {
   }
 
   getAmount(): string {
-    if(this.category == "stake"){
+    if (this.category === 'stake') {
       return this.reward.toFixed(8);
-    } 
+    }
     return this.amount.toFixed(8);
   }
 
   getAddress(): string {
-    if(this.stealth_address == undefined){
+    if (this.stealth_address === undefined) {
       return this.address;
     }
     return this.stealth_address;
@@ -239,7 +239,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     "timereceived": 1497427923,
     "bip125_replaceable": "no",
     "abandoned": false
-  }, 
+  },
   {
     "account": "",
     "address": "pZmDys6aaHxZ6Gd9d9YE19LT8yRE7ztzwz",
@@ -259,7 +259,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     "bip125_replaceable": "no",
     "n1": "",
     "abandoned": false
-  }, 
+  },
   {
     "address": "pqBdENeMtymB4k3cU67wMtCiK6GMFBfsoh",
     "category": "stake",
@@ -277,7 +277,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     "timereceived": 1497954881,
     "bip125_replaceable": "no",
     "abandoned": false
-  }, 
+  },
   {
     "account": "",
     "stealth_address": "TetWaRqu69tHAyoZxfcfCFrSb6ho9hjsoYbjUGZT6FVdBw37Tx4MAEZqBxqfEBNwVsNpNNGAokvJaSJJdZpYA28f9R1GmkUSErEsCG",
@@ -297,7 +297,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     ],
     "time": 1497430155,
     "abandoned": false
-  }, 
+  },
   {
     "account": "",
     "stealth_address": "TetWaRqu69tHAyoZxfcfCFrSb6ho9hjsoYbjUGZT6FVdBw37Tx4MAEZqBxqfEBNwVsNpNNGAokvJaSJJdZpYA28f9R1GmkUSErEsCG",
@@ -317,7 +317,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     ],
     "time": 1497430155,
     "abandoned": false
-  }, 
+  },
   {
     "account": "",
     "stealth_address": "TetabKKwC8TeFwzkyMMfHmN8LEifunGwcCozkJphV5QRBGEs5soZNyJGjXUcfyPrC1YmeXzBUs5du3DMS6UBG45tGFrd4zSLYp6LSC",
@@ -336,7 +336,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     ],
     "time": 1497432632,
     "abandoned": false
-  }, 
+  },
   {
     "account": "",
     "stealth_address": "TetabKKwC8TeFwzkyMMfHmN8LEifunGwcCozkJphV5QRBGEs5soZNyJGjXUcfyPrC1YmeXzBUs5du3DMS6UBG45tGFrd4zSLYp6LSC",
@@ -355,7 +355,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     ],
     "time": 1497432632,
     "abandoned": false
-  }, 
+  },
   {
     "account": "",
     "stealth_address": "TetWaRqu69tHAyoZxfcfCFrSb6ho9hjsoYbjUGZT6FVdBw37Tx4MAEZqBxqfEBNwVsNpNNGAokvJaSJJdZpYA28f9R1GmkUSErEsCG",
@@ -372,7 +372,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     "walletconflicts": [
     ],
     "time": 1497954655
-  }, 
+  },
   {
     "account": "",
     "stealth_address": "TetWaRqu69tHAyoZxfcfCFrSb6ho9hjsoYbjUGZT6FVdBw37Tx4MAEZqBxqfEBNwVsNpNNGAokvJaSJJdZpYA28f9R1GmkUSErEsCG",
@@ -389,7 +389,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_0: Object[] = JSON.parse(`{
     "walletconflicts": [
     ],
     "time": 1497954655
-  }, 
+  },
   {
     "address": "pqBdENeMtymB4k3cU67wMtCiK6GMFBfsoh",
     "category": "stake",
@@ -429,7 +429,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_1: Object[] = JSON.parse(`{
     "time": 1496769008,
     "timereceived": 1496777150,
     "bip125_replaceable": "unknown"
-  }, 
+  },
   {
     "account": "",
     "address": "pqBdENeMtymB4k3cU67wMtCiK6GMFBfsoh",
@@ -445,7 +445,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_1: Object[] = JSON.parse(`{
     "time": 1496771008,
     "timereceived": 1496777150,
     "bip125_replaceable": "unknown"
-  }, 
+  },
   {
     "account": "",
     "address": "psdcd5iB8aQX6p6fNQGQjxrncAnYGk8339",
@@ -461,7 +461,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_1: Object[] = JSON.parse(`{
     "time": 1496771616,
     "timereceived": 1496777150,
     "bip125_replaceable": "unknown"
-  }, 
+  },
   {
     "account": "",
     "address": "pbK8QtW1myH4oTDbE1VEbFdXjS2ioiVqjz",
@@ -477,7 +477,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_1: Object[] = JSON.parse(`{
     "time": 1496772272,
     "timereceived": 1496777150,
     "bip125_replaceable": "unknown"
-  }, 
+  },
   {
     "account": "",
     "address": "pXyckXCxbeVDvjychfaoFi7q8WVDPQxMx9",
@@ -495,7 +495,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_1: Object[] = JSON.parse(`{
     "time": 1497275136,
     "timereceived": 1497427442,
     "bip125_replaceable": "no"
-  }, 
+  },
   {
     "account": "",
     "address": "pqBdENeMtymB4k3cU67wMtCiK6GMFBfsoh",
@@ -513,7 +513,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_1: Object[] = JSON.parse(`{
     "time": 1497275840,
     "timereceived": 1497427442,
     "bip125_replaceable": "no"
-  }, 
+  },
   {
     "account": "",
     "address": "psdcd5iB8aQX6p6fNQGQjxrncAnYGk8339",
@@ -531,7 +531,7 @@ export let TEST_ARRAY_TXS_JSON_PAGE_1: Object[] = JSON.parse(`{
     "time": 1497276880,
     "timereceived": 1497427443,
     "bip125_replaceable": "no"
-  }, 
+  },
   {
     "account": "",
     "address": "pbK8QtW1myH4oTDbE1VEbFdXjS2ioiVqjz",
