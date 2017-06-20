@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Transaction, deserialize, TEST_TXS_JSON } from './transaction.model';
+import { Transaction, deserialize, TEST_TXS_JSON, TEST_ARRAY_TXS_JSON_PAGE_0, TEST_ARRAY_TXS_JSON_PAGE_1  } from './transaction.model';
 
 
 @Injectable()
@@ -15,7 +15,7 @@ export class TransactionService {
 
   /* How many transactions do we display per page and keep in memory at all times.
      When loading more transactions they are fetched JIT and added to txs. */
-  MAX_TXS_PER_PAGE: number = 4;
+  MAX_TXS_PER_PAGE: number = 10;
 
   constructor() {
     this.initializeTestData();
@@ -24,8 +24,11 @@ export class TransactionService {
 
   // Pull test data and populate array of txs.
   initializeTestData(): void {
-    this.txCount = TEST_TXS_JSON.length;
-    this.loadTestTransaction(0);
+    //this.txCount = TEST_TXS_JSON.length;
+    //this.loadTestTransaction(0);
+    this.txCount = 18;
+    this.callback_updateTransactions(TEST_ARRAY_TXS_JSON_PAGE_0);
+
   }
 
   loadTestTransaction(index_start: number): void {
@@ -68,18 +71,6 @@ export class TransactionService {
     this.rpc_loadTransactions(page);
   }
 
-  /* not needed probably
-  updatePageCount() : number {
-    this.totalPageCount = Math.ceil(this.txCount/this.MAX_TXS_PER_PAGE);
-    if(this.currentPage != 0){
-      let residual = this.txCount % this.MAX_TXS_PER_PAGE;
-      if(residual == 0) //new page
-        this.currentPage++;
-    }
-    return this.totalPageCount;
-  }
- */
-
   deleteTransactions() {
     this.txs = [];
   }
@@ -113,7 +104,7 @@ export class TransactionService {
   }
 
   rpc_getParameters() {
-    return ('"*" ' + this.MAX_TXS_PER_PAGE + ' ' + this.currentPage);
+    return ('"*" ' + this.MAX_TXS_PER_PAGE + ' ' + this.currentPage * this.MAX_TXS_PER_PAGE);
   }
 
   // Deserializes JSON objects to Transaction classes.
@@ -133,6 +124,11 @@ export class TransactionService {
         The callback will send over an array of JSON transaction objects.
 
       */
+
+    for (let i = 0; i < JSON.length; i++) {
+      const json: Object = JSON[i];
+      this.addTransaction(json);
+    }
   }
 
 /*

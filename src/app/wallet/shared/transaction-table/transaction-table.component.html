@@ -50,7 +50,7 @@
     </td>
     <td *ngIf="displayAmount">
       <span class="inline-header">Amount</span>
-      <span>{{ tx.amount }} PART</span>
+      <span>{{ tx.getAmount() }} PART</span>
     </td>
   </tr>
 </app-table>
