@@ -6,7 +6,9 @@ import { Location } from '@angular/common';
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
-  providers: [SettingsService]
+  providers: [
+    SettingsService
+  ]
 })
 
 export class SettingsComponent implements OnInit {
@@ -25,7 +27,6 @@ export class SettingsComponent implements OnInit {
       const settings: string = JSON.stringify(this._settingsService.defaultSettings);
       localStorage.setItem('settings', settings);
     }
-
     this.settings = this._settingsService.loadSettings();
   }
 
