@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+// import { Observable, Observer } from 'rxjs'; // use this for testing atm
 
 
   export class Balances {
-    private _total: number;
-    private _public: number;
-    private _private: number;
-    private _stake: number;
-
     getTotal() {
       return this._total;
     }
@@ -24,19 +20,17 @@ import { Observer } from 'rxjs/Observer';
 
     getBalance(type: string) {
       if (type === 'TOTAL') {
-        return this._total;
+        return this.getTotal();
       } else if (type === 'PUBLIC') {
-        return this._public;
+        return this.getPublic();
       } else if (type === 'PRIVATE') {
-        return this._private;
+        return this.getPrivate();
       } else if (type === 'STAKE') {
-        return this._stake;
+        return this.getStake();
       }
     }
 
-    constructor(total: number, pub: number, priv: number, stake: number) {
-      this._total = total; this._public = pub; this._private = priv; this._stake = stake;
-    }
+    constructor(private _total: number, private _public: number, private _private: number, private _stake: number) { }
   }
 
 @Injectable()
