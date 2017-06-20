@@ -40,15 +40,15 @@
 }
 
 .app-logo-container {
-  background-color: #212121;
   width: 30%;
   margin-bottom: 50px;
 }
 
 .app-modal-message {
-  background-color: pink;
+  flex-grow: 1;
   width: 100%;
-  margin-bottom: 15%;
+  margin-bottom: 10%;
+  position: relative;
 }
 
 .app-modal-footer {

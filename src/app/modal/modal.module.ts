@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ModalComponent } from './modal.component';
 
@@ -13,28 +13,10 @@ import { SyncingModalComponent } from './syncing/syncing.modal.component';
   ],
   exports: [
     ModalComponent,
+    // TODO
     FirstTimeModalComponent,
     SyncingModalComponent
   ]
 })
 
-export class ModalModule {
-
-  constructor () {
-    document.body.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
-      ModalComponent.show();
-    }, false);
-  }
-
-
-  // syncing() {
-  //   this.message = {
-  //     component: SyncingModalComponent,
-  //     inputs: {
-  //       sync: 80
-  //     }
-  //   };
-  // }
-
-}
+export class ModalModule { }

@@ -4,8 +4,7 @@ import {
   ViewContainerRef,
   Input,
   ReflectiveInjector,
-  ComponentFactoryResolver,
-  OnInit
+  ComponentFactoryResolver
 } from '@angular/core';
 
 import { FirstTimeModalComponent } from './firsttime/firsttime.modal.component';
@@ -23,20 +22,19 @@ import { SyncingModalComponent } from './syncing/syncing.modal.component'
 
 export class ModalComponent {
 
-  private container: any;
+  public container: any;
   public modal: any = null;
   public sync: Number = 0;
-  public message: Object = null;
 
   @ViewChild('messageContainer', { read: ViewContainerRef })
   messageContainer: ViewContainerRef;
 
   @Input() set currentModal(data: {component: any, inputs: any }) {
 
-    console.log("ModalComponent");
+    this.container = document.getElementsByTagName('app-modal')[0].firstChild;
 
     if (!data) {
-      console.log("no data");
+      console.error('Modal was initialized without input data');
       return ;
     }
 
@@ -64,43 +62,21 @@ export class ModalComponent {
     if (this.modal) {
       this.modal.destroy();
     }
-
-    console.log(component);
-    console.log(typeof(component));
     this.modal = component;
+    this.sync = data.inputs.sync;
   }
 
   constructor (
     private _resolver: ComponentFactoryResolver
   ) { }
 
-  ngOnInit() {
-    this.container = document.getElementsByClassName("app-modal-container")[0]
-    console.log(this.container);
-  }
-
   close() {
+    // wait for opacity transition to finish before hiding
     this.container.addEventListener('transitionend', function callback () {
       this.classList.add('app-modal-hide');
       this.removeEventListener('transitionend', callback, false);
     }, false);
     this.container.classList.remove('app-modal-display');
-  }
-
-  show() {
-    let el = document.getElementsByClassName("app-modal-container")[0];
-    el.classList.remove("app-modal-hide");
-    el.classList.add("app-modal-display");
-  }
-
-  firstTime() {
-    this.message = {
-      component: FirstTimeModalComponent,
-      inputs: {
-        sync: 20
-      }
-    };
-    this.show();
   }
 
 }
