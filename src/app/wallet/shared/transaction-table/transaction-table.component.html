@@ -22,14 +22,14 @@
         Send
         <span class="icon fa fa-arrow-right color-red"></span>
       </span>
-      <span *ngSwitchCase="'received'" class="inline-tag text-uppercase">
+      <span *ngSwitchCase="'receive'" class="inline-tag text-uppercase">
         Received
         <span class="icon fa fa-arrow-left color-green"></span>
       </span>
     </td>
     <td *ngIf="displaySenderAddress">
       <span class="inline-header">Address</span>
-      <span>{{ tx.address }}</span>
+      <span>{{ tx.getAddress() }}</span>
     </td>
     <td *ngIf="displayDate">
       <span class="inline-header"><span class="icon fa fa-clock-o"></span></span>

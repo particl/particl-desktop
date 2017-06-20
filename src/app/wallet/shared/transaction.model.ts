@@ -8,6 +8,8 @@ export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'recei
 export class Transaction implements Deserializable {
   txid: string;
   address: string;
+  stealth_address: string;
+  type: string;
   category: string;
   amount: number;
   reward: number;
@@ -31,9 +33,17 @@ export class Transaction implements Deserializable {
   }
 
   getAmount(): string {
-    if(this.category == "stake")
+    if(this.category == "stake"){
       return this.reward.toFixed(8);
+    } 
     return this.amount.toFixed(8);
+  }
+
+  getAddress(): string {
+    if(this.stealth_address == undefined){
+      return this.address;
+    }
+    return this.stealth_address;
   }
 
   getDate(): string {
