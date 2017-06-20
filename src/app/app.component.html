@@ -58,6 +58,10 @@
           Settings
         </a>
       </accordion-group>
+      <div>
+        <span><button (click)="firsttime()">firsttime</button></span>
+        <span><button (click)="syncing()">syncing</button></span>
+      </div>
     </accordion>
 
   </sidebar>
@@ -82,3 +86,5 @@
   <router-outlet></router-outlet>
 
 </sidebar-container>
+
+<app-modal [currentModal]="message" class="app-modal-hide"></app-modal>

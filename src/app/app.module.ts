@@ -15,6 +15,10 @@ import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 
+// TODO
+import { ModalModule } from './modal/modal.module';
+import { ModalService } from './modal/modal.service';
+
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
   { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
@@ -36,10 +40,12 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     SharedModule,
     SidebarModule.forRoot(),
-    WalletModule.forRoot()
+    WalletModule.forRoot(),
+    ModalModule
   ],
   providers: [
-    WindowService
+    WindowService,
+    ModalService
   ],
   bootstrap: [ AppComponent ]
 })

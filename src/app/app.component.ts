@@ -6,11 +6,17 @@ import { WindowService } from './core/window.service';
 
 import { SettingsService } from './settings/settings.service';
 
+// TODO remove
+import { FirstTimeModalComponent } from './modal/firsttime/firsttime.modal.component';
+import { ModalService } from './modal/modal.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [SettingsService]
+  providers: [
+    SettingsService
+  ]
 })
 export class AppComponent implements OnInit {
   isCollapsed: boolean = true;
@@ -18,11 +24,15 @@ export class AppComponent implements OnInit {
   title: string = '';
   window: WindowService;
 
+  // TODO remove
+  message: Object;
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     private _windowService: WindowService,
-    private _settingsService: SettingsService
+    private _settingsService: SettingsService,
+    private _modalService: ModalService
   ) {
     this.window = this._windowService;
   }
@@ -42,5 +52,18 @@ export class AppComponent implements OnInit {
       .filter(route => route.outlet === 'primary')
       .flatMap(route => route.data)
       .subscribe(data => this.title = data.title);
+
+    // TODO remove
+    this.message = {
+      component: FirstTimeModalComponent,
+      inputs: {
+        sync: 20
+      }
+    };
+  }
+
+  // TODO remove
+  firsttime() {
+    this._modalService.open('firsttime');
   }
 }
