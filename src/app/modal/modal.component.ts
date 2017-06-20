@@ -39,7 +39,7 @@ export class ModalComponent {
     }
 
     // convert input in angular format
-    let inputProviders = Object.keys(data.inputs).map((inputName) => {
+    const inputProviders = Object.keys(data.inputs).map((inputName) => {
       return ({
         provide: inputName,
         useValue: data.inputs[inputName]
@@ -47,15 +47,15 @@ export class ModalComponent {
     });
 
     // inject input data
-    let resolvedInputs = ReflectiveInjector.resolve(inputProviders);
-    let injector = ReflectiveInjector.fromResolvedProviders(
+    const resolvedInputs = ReflectiveInjector.resolve(inputProviders);
+    const injector = ReflectiveInjector.fromResolvedProviders(
       resolvedInputs,
       this.messageContainer.parentInjector
     );
 
     // create and insert component
-    let factory = this._resolver.resolveComponentFactory(data.component);
-    let component = factory.create(injector);
+    const factory = this._resolver.resolveComponentFactory(data.component);
+    const component = factory.create(injector);
     this.messageContainer.insert(component.hostView);
 
     // destroy previously created component
