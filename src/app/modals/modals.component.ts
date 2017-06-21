@@ -46,7 +46,7 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: any) {
-    if(this.closeOnEscape && event.code.toLowerCase() === 'escape') {
+    if (this.closeOnEscape && event.code.toLowerCase() === 'escape') {
       this.close();
     }
   }
