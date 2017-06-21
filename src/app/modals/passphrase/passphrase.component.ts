@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class PassphraseComponent {
 
-  unlock(password) {
+  unlock(password: string) {
     // TODO API call
     console.log(password);
   }

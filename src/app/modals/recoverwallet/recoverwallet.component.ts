@@ -9,7 +9,7 @@ export class RecoverwalletComponent {
 
   words: string[] = Array(24).fill('');
 
-  restore(password) {
+  restore(password: string) {
     // TODO API call
     console.log(this.words, password);
   }

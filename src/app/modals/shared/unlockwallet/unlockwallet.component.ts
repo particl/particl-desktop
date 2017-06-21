@@ -10,11 +10,11 @@ export class UnlockwalletComponent implements Input {
   private showPass: boolean = false;
   private password: string;
 
-  @Input() unlockButton;
-  @Output() passwordEmitter = new EventEmitter<string>();
+  @Input() unlockButton: string;
+  @Output() passwordEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   passwordInputType(): string {
-    return (this.showPass ? "text" : "password");
+    return (this.showPass ? 'text' : 'password');
   }
 
   unlock() {
