@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Location, LocationStrategy } from '@angular/common';
 
 import { ModalComponent } from './modal.component';
+import { ModalModule } from './modal.module';
 
 describe('ModalComponent', () => {
   let component: ModalComponent;
@@ -10,8 +11,10 @@ describe('ModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ RouterTestingModule ],
-      declarations: [ ModalComponent ],
+      imports: [
+        RouterTestingModule,
+        ModalModule
+      ],
       providers: [ Location ]
     })
     .compileComponents();

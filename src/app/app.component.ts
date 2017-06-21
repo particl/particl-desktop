@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
     // Modal example
     private _modalService: ModalService
   ) { }
-  
+
   ngOnInit() {
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events

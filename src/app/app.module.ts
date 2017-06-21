@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BsDropdownModule, CollapseModule, ModalModule, PaginationModule } from 'ngx-bootstrap';
+import { BsDropdownModule, CollapseModule, PaginationModule } from 'ngx-bootstrap';
 import { NgxElectronModule } from 'ngx-electron';
 
 import { SharedModule } from './shared/shared.module';

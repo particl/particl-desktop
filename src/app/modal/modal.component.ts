@@ -1,11 +1,12 @@
-import { Subscription } from 'rxjs/Subscription';
 import {
   Component,
   ViewChild,
   ViewContainerRef,
   ReflectiveInjector,
-  ComponentFactoryResolver
+  ComponentFactoryResolver,
+  ElementRef
 } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ModalService } from './modal.service';
 
@@ -31,6 +32,7 @@ export class ModalComponent {
   progressFormated: string;
 
   constructor (
+    private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
     private _modalService: ModalService
   ) {
@@ -42,13 +44,13 @@ export class ModalComponent {
     );
   }
 
-  open(message) {
+  open(message: any) {
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.messageContainer.createComponent(factory);
     console.log(typeof(this.modal));
   }
 
-  updateProgress(progress) {
+  updateProgress(progress: Number) {
     this.progress = progress;
     if (progress < 100) {
       this.progressFormated = `${progress} %`
@@ -59,7 +61,7 @@ export class ModalComponent {
 
   close() {
     // wait for opacity transition to finish before hiding
-    const container: any = document.getElementsByTagName('app-modal')[0].firstChild;
+    const container: any = this._element.nativeElement.firstChild;
     container.addEventListener('transitionend', function callback () {
       this.classList.add('app-modal-hide');
       this.removeEventListener('transitionend', callback, false);

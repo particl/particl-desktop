@@ -7,26 +7,26 @@ import { SyncingModalComponent } from './syncing/syncing.modal.component';
 export class ModalService {
 
   public modal: any = null;
-  private message = new Subject<any>();
-  private progress = new Subject<Number>();
+  private message: Subject<any> = new Subject<any>();
+  private progress: Subject<Number> = new Subject<Number>();
 
   messages: Object = {
     firstTime: FirstTimeModalComponent,
     syncing: SyncingModalComponent
   };
 
-  open(modal) {
+  open(modal: String): void {
 
     switch (modal) {
       case 'firstTime':
         this.message.next(this.messages['firstTime']);
-        break ;
+        break;
       case 'syncing':
         this.message.next(this.messages['syncing']);
-        break ;
+        break;
       default:
         console.error(`modal ${modal} doesn't exist`);
-        return ;
+        return;
     }
 
     if (!this.modal) {
@@ -36,7 +36,7 @@ export class ModalService {
     this.modal.classList.add('app-modal-display');
   }
 
-  updateProgress(progress) {
+  updateProgress(progress: Number): void {
     this.progress.next(progress);
   }
 
