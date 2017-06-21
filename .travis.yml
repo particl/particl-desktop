@@ -50,13 +50,13 @@ script:
 after_script:
   - npm run coveralls
 
-  deploy:
-    - provider: releases
-      api-key:
-        secure: <>
-      file:
-        - $TRAVIS_BUILD_DIR/dist.zip
-        - $TRAVIS_BUILD_DIR/dist.zip.sha256sum.txt
-      overwrite: true
-      on:
-        tags: true
+#deploy:
+#  - provider: releases
+#    api-key:
+#      secure: <>
+#    file:
+#      - $TRAVIS_BUILD_DIR/dist.zip
+#      - $TRAVIS_BUILD_DIR/dist.zip.sha256sum.txt
+#    overwrite: true
+#    on:
+#      tags: true
