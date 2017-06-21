@@ -1,18 +1,14 @@
-// TODO remove
-import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import { FirstTimeModalComponent } from './first-time/first-time.modal.component';
 import { SyncingModalComponent } from './syncing/syncing.modal.component';
 
-@Injectable()
 export class ModalService {
 
   public modal: any = null;
   private message = new Subject<any>();
-  private progress = new Subject<any>();
+  private progress = new Subject<Number>();
 
   messages: Object = {
     firstTime: FirstTimeModalComponent,

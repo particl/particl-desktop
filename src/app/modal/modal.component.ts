@@ -28,6 +28,7 @@ export class ModalComponent {
 
   modal: any;
   progress: Number = 0;
+  progressFormated: string;
 
   constructor (
     private _resolver: ComponentFactoryResolver,
@@ -37,7 +38,7 @@ export class ModalComponent {
       message => this.open(message)
     );
     this._modalService.getProgress().subscribe(
-      progress => { this.progress = progress; }
+      progress => this.updateProgress(progress)
     );
   }
 
@@ -45,6 +46,15 @@ export class ModalComponent {
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.messageContainer.createComponent(factory);
     console.log(typeof(this.modal));
+  }
+
+  updateProgress(progress) {
+    this.progress = progress;
+    if (progress < 100) {
+      this.progressFormated = `${progress} %`
+    } else {
+      this.progressFormated = 'Fully synced !'
+    }
   }
 
   close() {

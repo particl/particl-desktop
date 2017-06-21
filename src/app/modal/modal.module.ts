@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders, OnInit } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ModalComponent } from './modal.component';
 import { ModalService } from './modal.service';
@@ -13,15 +13,9 @@ import { SyncingModalComponent } from './syncing/syncing.modal.component';
     SyncingModalComponent
   ],
   exports: [
-    ModalComponent,
+    ModalComponent
   ],
   providers: [ModalService]
 })
 
-export class ModalModule {
-
-  ngOnInit() {
-    // TODO add component to dom
-  }
-
-}
+export class ModalModule { }

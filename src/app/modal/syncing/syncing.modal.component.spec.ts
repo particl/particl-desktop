@@ -2,23 +2,23 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location, LocationStrategy } from '@angular/common';
 
-import { ModalComponent } from './modal.component';
+import { SyncingModalComponent } from './syncing.modal.component';
 
-describe('ModalComponent', () => {
-  let component: ModalComponent;
-  let fixture: ComponentFixture<ModalComponent>;
+describe('SyncingModalComponent', () => {
+  let component: SyncingModalComponent;
+  let fixture: ComponentFixture<SyncingModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ RouterTestingModule ],
-      declarations: [ ModalComponent ],
+      declarations: [ SyncingModalComponent ],
       providers: [ Location ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ModalComponent);
+    fixture = TestBed.createComponent(SyncingModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

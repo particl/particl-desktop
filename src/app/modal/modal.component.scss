@@ -66,3 +66,15 @@
   background-color: #03e8b0;
   transition: width .2s;
 }
+
+.app-modal-progress-text {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  text-align: center;
+  transform: translateY(-50%);
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.9em;
+}
