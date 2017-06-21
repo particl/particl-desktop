@@ -8,6 +8,7 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
 import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
 import { FirsttimeComponent } from './firsttime/firsttime.component';
+import { PassphraseComponent } from './passphrase/passphrase.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { FirsttimeComponent } from './firsttime/firsttime.component';
     RecoverwalletComponent,
     GeneratewalletComponent,
     FirsttimeComponent,
+    PassphraseComponent,
   ],
   exports: [
     ModalsComponent

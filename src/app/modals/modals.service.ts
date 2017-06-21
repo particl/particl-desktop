@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
 import { SyncingComponent } from './syncing/syncing.component';
+import { PassphraseComponent } from './passphrase/passphrase.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
 
 export class ModalsService {
@@ -14,12 +15,13 @@ export class ModalsService {
   messages: Object = {
     firstTime: FirsttimeComponent,
     syncing: SyncingComponent,
+    passphrase: PassphraseComponent,
     recover: RecoverwalletComponent
   };
 
   open(modal: string): void {
 
-    if (['firstTime', 'syncing', 'recover'].indexOf(modal) != -1) {
+    if (['firstTime', 'syncing', 'passphrase', 'recover'].indexOf(modal) !== -1) {
       this.message.next(this.messages[modal]);
     } else {
       console.error(`modal ${modal} doesn't exist`);

@@ -2,6 +2,7 @@ import {
   Component,
   ComponentFactoryResolver,
   ComponentRef,
+  DoCheck,
   ElementRef,
   HostListener,
   OnInit,
@@ -16,6 +17,7 @@ import { ModalsService } from './modals.service';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
 import { SyncingComponent } from './syncing/syncing.component';
+import { PassphraseComponent } from './passphrase/passphrase.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
 
 @Component({
@@ -25,10 +27,11 @@ import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component'
   entryComponents: [
     FirsttimeComponent,
     SyncingComponent,
+    PassphraseComponent,
     RecoverwalletComponent
   ]
 })
-export class ModalsComponent implements OnInit {
+export class ModalsComponent implements DoCheck, OnInit {
 
   @ViewChild('staticModal')
   public staticModal: ModalDirective;
@@ -37,13 +40,13 @@ export class ModalsComponent implements OnInit {
   private modalContainer: ViewContainerRef;
 
   public modal: ComponentRef<Component>;
-  private hasScrollY: boolean = false;
+  public hasScrollY: boolean = false;
   public syncPercentage: number = 100;
   private closeOnEscape: boolean = true;
 
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: any) {
-    if(this.closeOnEscape && event.code.toLowerCase()=="escape") {
+    if(this.closeOnEscape && event.code.toLowerCase() === 'escape') {
       this.close();
     }
   }
@@ -66,8 +69,8 @@ export class ModalsComponent implements OnInit {
 
   ngDoCheck() {
     if (this._element) {
-      let element = this._element.nativeElement;
-      let style = element.ownerDocument.defaultView.getComputedStyle(element, undefined);
+      const element = this._element.nativeElement;
+      const style = element.ownerDocument.defaultView.getComputedStyle(element, undefined);
 
       this.hasScrollY = style.overflowY === 'scroll' || (style.overflowY === 'auto' && element.clientHeight < element.scrollHeight);
     }
