@@ -6,6 +6,7 @@ import { ModalModule } from 'ngx-bootstrap';
 import { ModalsService } from './modals.service';
 import { ModalsComponent } from './modals.component';
 
+import { UnlockwalletComponent } from './shared/unlockwallet/unlockwallet.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
 import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
@@ -20,6 +21,7 @@ import { PassphraseComponent } from './passphrase/passphrase.component';
   ],
   declarations: [
     ModalsComponent,
+    UnlockwalletComponent,
     SyncingComponent,
     RecoverwalletComponent,
     GeneratewalletComponent,

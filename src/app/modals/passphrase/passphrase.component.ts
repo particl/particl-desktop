@@ -7,15 +7,8 @@ import { Component } from '@angular/core';
 })
 export class PassphraseComponent {
 
-  password: string;
-  showPass: boolean = false;
-
-  passwordInputType(): string {
-    return (this.showPass ? "text" : "password");
-  }
-
-  unlock() {
+  unlock(password) {
     // TODO API call
-    console.log(this.password);
+    console.log(password);
   }
 }

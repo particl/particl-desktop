@@ -8,22 +8,7 @@
 
 <hr style="margin-top: 100px;">
 
-<div class="container">
-  <div class="col-md-3 text-right">
-    <label>YOUR WALLET PASSWORD</label>
-  </div>
-  <div class="col-md-7">
-    <div class="col-md-12">
-      <input type="{{passwordInputType()}}" name="password" class="form-control" style="width: 100%;"
-      [(ngModel)]="password"/>
-      <br>
-      <input type="checkbox" name="showpass" value="password" id="wallet-password"
-      [(ngModel)]="showPass"/>
-      <label for="wallet-password">SHOW PASSWORD</label>
-    </div>
-  </div>
-  <div class="col-md-2">
-    <button type="button" class="control" (click)="unlock()">UNLOCK WALLET</button>
-  </div>
-</div>
-<hr>
+<app-unlockwallet
+  [unlockButton]="'UNLOCK WALLET'"
+  (passwordEmitter)="unlock($event)">
+</app-unlockwallet>
