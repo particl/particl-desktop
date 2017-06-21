@@ -7,7 +7,7 @@ import { WindowService } from './core/window.service';
 
 import { SettingsService } from './settings/settings.service';
 // Modal example
-import { ModalService } from './modal/modal.service';
+import { ModalsService } from './modals/modals.service';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     public window: WindowService,
     private _settingsService: SettingsService,
     // Modal example
-    private _modalService: ModalService
+    private _modalsService: ModalsService
   ) { }
 
   ngOnInit() {
@@ -49,13 +49,20 @@ export class AppComponent implements OnInit {
       .subscribe(data => this.title = data['title']);
   }
 
-  // Modal example
+  // Modal examples
   firsttime() {
-    this._modalService.open('firstTime');
-    this._modalService.updateProgress(48);
+    this._modalsService.open('firstTime');
+    this._modalsService.updateProgress(33);
   }
+
   syncing() {
-    this._modalService.open('syncing');
-    this._modalService.updateProgress(100);
+    this._modalsService.open('syncing');
+    this._modalsService.updateProgress(48);
   }
+
+  recover() {
+    this._modalsService.open('recover');
+    this._modalsService.updateProgress(100);
+  }
+  // End Modal Examples
 }

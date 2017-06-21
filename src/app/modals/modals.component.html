@@ -1,0 +1,25 @@
+<div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: true, show: true}">
+
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="row">
+        <img class="logo img-responsive" src="assets/particl-logo-white-bg.svg">
+      </div>
+      <div class="row">
+        <div #modalContainer></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal-footer-info text-center" [ngClass]="{'scrollY': hasScrollY, 'synced': syncPercentage === 100, 'half': syncPercentage < 55}">
+    <span *ngIf="syncPercentage !== 100">{{ syncPercentage?.toFixed(1) }}%</span>
+    <span *ngIf="syncPercentage === 100">BLOCKCHAIN FULLY SYNCED</span>
+    <div #percentageBar class="percentage-bar" [style.width]="syncPercentage + '%'">&nbsp;</div>
+  </div>
+
+</div>
