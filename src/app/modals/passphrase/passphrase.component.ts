@@ -7,5 +7,15 @@ import { Component } from '@angular/core';
 })
 export class PassphraseComponent {
 
-  constructor() { }
+  password: string;
+  showPass: boolean = false;
+
+  passwordInputType(): string {
+    return (this.showPass ? "text" : "password");
+  }
+
+  unlock() {
+    // TODO API call
+    console.log(this.password);
+  }
 }

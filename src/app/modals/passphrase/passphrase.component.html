@@ -14,14 +14,16 @@
   </div>
   <div class="col-md-7">
     <div class="col-md-12">
-      <input type="password" name="password" class="form-control" style="width: 100%;"/>
+      <input type="{{passwordInputType()}}" name="password" class="form-control" style="width: 100%;"
+      [(ngModel)]="password"/>
       <br>
-      <input type="checkbox" name="showpass" value="password" id="wallet-password"/>
+      <input type="checkbox" name="showpass" value="password" id="wallet-password"
+      [(ngModel)]="showPass"/>
       <label for="wallet-password">SHOW PASSWORD</label>
     </div>
   </div>
   <div class="col-md-2">
-    <button type="button" class="control">UNLOCK WALLET</button>
+    <button type="button" class="control" (click)="unlock()">UNLOCK WALLET</button>
   </div>
 </div>
 <hr>

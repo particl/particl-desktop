@@ -1,8 +1,10 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap';
-import { ModalsComponent } from './modals.component';
+
 import { ModalsService } from './modals.service';
+import { ModalsComponent } from './modals.component';
 
 import { SyncingComponent } from './syncing/syncing.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
@@ -13,6 +15,7 @@ import { PassphraseComponent } from './passphrase/passphrase.component';
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     ModalModule
   ],
   declarations: [
