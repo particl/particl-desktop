@@ -5,7 +5,6 @@ import {
   DoCheck,
   ElementRef,
   HostListener,
-  OnInit,
   ReflectiveInjector,
   ViewChild,
   ViewContainerRef
@@ -31,7 +30,7 @@ import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component'
     RecoverwalletComponent
   ]
 })
-export class ModalsComponent implements DoCheck, OnInit {
+export class ModalsComponent implements DoCheck {
 
   @ViewChild('staticModal')
   public staticModal: ModalDirective;
@@ -41,7 +40,7 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   public modal: ComponentRef<Component>;
   public hasScrollY: boolean = false;
-  public syncPercentage: number = 100;
+  public syncPercentage: number = 0;
   private closeOnEscape: boolean = true;
 
   @HostListener('window:keydown', ['$event'])
@@ -64,22 +63,18 @@ export class ModalsComponent implements DoCheck, OnInit {
     );
   }
 
-  ngOnInit() {
-  }
-
   ngDoCheck() {
     if (this._element) {
       const element = this._element.nativeElement;
       const style = element.ownerDocument.defaultView.getComputedStyle(element, undefined);
-
-      this.hasScrollY = style.overflowY === 'scroll' || (style.overflowY === 'auto' && element.clientHeight < element.scrollHeight);
+      this.hasScrollY = style.overflowY === 'scroll'
+        || (style.overflowY === 'auto' && element.clientHeight < element.scrollHeight);
     }
   }
 
   open(message: any) {
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.modalContainer.createComponent(factory);
-    console.log(typeof(this.modal));
     this.staticModal.show();
   }
 
@@ -89,5 +84,4 @@ export class ModalsComponent implements DoCheck, OnInit {
     this.modalContainer.remove();
     this.modal.destroy();
   }
-
 }

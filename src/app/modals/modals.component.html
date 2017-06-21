@@ -16,7 +16,8 @@
     </div>
   </div>
 
-  <div class="modal-footer-info text-center" [ngClass]="{'scrollY': hasScrollY, 'synced': syncPercentage === 100, 'half': syncPercentage < 55}">
+  <div class="modal-footer-info text-center"
+    [ngClass]="{'scrollY': hasScrollY, 'synced': syncPercentage === 100, 'half': syncPercentage < 55}">
     <span *ngIf="syncPercentage !== 100">{{ syncPercentage?.toFixed(1) }}%</span>
     <span *ngIf="syncPercentage === 100">BLOCKCHAIN FULLY SYNCED</span>
     <div #percentageBar class="percentage-bar" [style.width]="syncPercentage + '%'">&nbsp;</div>

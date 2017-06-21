@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
 
 import { AppService } from './app.service';
 import { WindowService } from './core/window.service';

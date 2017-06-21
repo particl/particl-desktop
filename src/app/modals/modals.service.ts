@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
@@ -6,6 +6,7 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
 
+@Injectable()
 export class ModalsService {
 
   public modal: any = null;
@@ -21,7 +22,7 @@ export class ModalsService {
 
   open(modal: string): void {
 
-    if (['firstTime', 'syncing', 'passphrase', 'recover'].indexOf(modal) !== -1) {
+    if (modal in this.messages) {
       this.message.next(this.messages[modal]);
     } else {
       console.error(`modal ${modal} doesn't exist`);
