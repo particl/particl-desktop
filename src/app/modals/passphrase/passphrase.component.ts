@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ModalsModule } from '../modals.module';
 
 @Component({
   selector: 'app-passphrase',

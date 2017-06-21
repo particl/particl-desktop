@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RecoverwalletComponent } from './recoverwallet.component';
+import { ModalsModule } from '../modals.module';
 
 describe('RecoverwalletComponent', () => {
   let component: RecoverwalletComponent;
@@ -8,7 +9,7 @@ describe('RecoverwalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RecoverwalletComponent ]
+      imports: [ModalsModule]
     })
     .compileComponents();
   }));

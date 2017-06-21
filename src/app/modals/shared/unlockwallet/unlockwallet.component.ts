@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ModalsModule } from '../../modals.module';
 
 @Component({
   selector: 'app-unlockwallet',
   templateUrl: './unlockwallet.component.html',
   styleUrls: ['./unlockwallet.component.scss']
 })
-export class UnlockwalletComponent implements Input {
+export class UnlockwalletComponent implements Input, Output {
 
   private showPass: boolean = false;
   private password: string;

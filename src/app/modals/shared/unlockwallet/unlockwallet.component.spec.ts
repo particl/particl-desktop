@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UnlockwalletComponent } from './recoverwallet.component';
+import { ModalsModule } from '../../modals.module';
+import { UnlockwalletComponent } from './unlockwallet.component';
 
 describe('UnlockwalletComponent', () => {
   let component: UnlockwalletComponent;
@@ -8,7 +9,7 @@ describe('UnlockwalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UnlockwalletComponent ]
+      imports: [ModalsModule]
     })
     .compileComponents();
   }));
