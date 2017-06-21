@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { BsDropdownModule, CollapseModule, ModalModule, PaginationModule } from 'ngx-bootstrap';
@@ -7,8 +7,8 @@ import { NgxElectronModule } from 'ngx-electron';
 
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
-import { ModalModule } from './modal/modal.module';
 import { WalletModule } from './wallet/wallet.module';
+import { ModalsModule } from './modals/modals.module';
 
 import { WindowService } from './core/window.service';
 
@@ -38,10 +38,11 @@ const routes: Routes = [
     CollapseModule.forRoot(),
     PaginationModule.forRoot(),
     RouterModule.forRoot(routes),
+    ModalModule.forRoot(),
     SharedModule,
     SidebarModule.forRoot(),
-    ModalModule,
-    WalletModule.forRoot()
+    WalletModule.forRoot(),
+    ModalsModule
   ],
   providers: [
     WindowService,
