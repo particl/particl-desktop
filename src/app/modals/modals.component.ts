@@ -38,10 +38,11 @@ export class ModalsComponent implements DoCheck {
   @ViewChild('modalContainer', { read: ViewContainerRef })
   private modalContainer: ViewContainerRef;
 
-  public modal: ComponentRef<Component>;
-  public hasScrollY: boolean = false;
-  public syncPercentage: number = 0;
-  private closeOnEscape: boolean = true;
+  modal: ComponentRef<Component>;
+  hasScrollY: boolean = false;
+  syncPercentage: number = 0;
+  syncString: string;
+  closeOnEscape: boolean = true;
 
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: any) {
@@ -59,7 +60,7 @@ export class ModalsComponent implements DoCheck {
       message => this.open(message)
     );
     this._modalService.getProgress().subscribe(
-      progress => this.syncPercentage = <number>progress
+      progress => this.updateProgress(<number>progress)
     );
   }
 
@@ -70,6 +71,11 @@ export class ModalsComponent implements DoCheck {
       this.hasScrollY = style.overflowY === 'scroll'
         || (style.overflowY === 'auto' && element.clientHeight < element.scrollHeight);
     }
+  }
+
+  updateProgress(progress: number) {
+    this.syncPercentage = progress;
+    this.syncString = progress < 100 ? `${progress} %` : 'Fully synced !'
   }
 
   open(message: any) {
