@@ -114,6 +114,9 @@ export class BalanceService {
       this._observer.next(balances);
   }
 
+  rpc_getParameters() {
+    return ("");
+  }
 /*
 
 
