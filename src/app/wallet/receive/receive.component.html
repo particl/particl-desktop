@@ -1,0 +1,85 @@
+<app-header>
+  <div class="container-fluid header">
+
+    <ul class="col-xs-9 header-nav">
+      <li [class.active]="type == 'public'">
+        <a href="javascript:void(0)" (click)="type = 'public'">
+          Public
+        </a>
+      </li>
+      <li [class.active]="type == 'private'">
+        <a href="javascript:void(0)" (click)="type = 'private'">
+          Private
+        </a>
+      </li>
+    </ul>
+
+    <div class="col-xs-3 header-option row header-option-container"
+      (click)="selectInput()">
+      <span class="col-xs-10">
+        <input type="text" class="header-input" placeholder="Search receive">
+      </span>
+      <span class="col-xs-2 icon fa fa-search header-option-icon"></span>
+    </div>
+
+  </div>
+</app-header>
+
+<div class="row receive">
+
+  <div class="col-xs-8">
+
+    <div class="address-title">Fresh address</div>
+    <div class="card row">
+      <div class="col-xs-1 address-id vertical-center">
+        /{{address.id}}
+      </div>
+      <div class="col-xs-3 address-label vertical-center">
+        {{address.label}}
+      </div>
+      <div class="col-xs-6">
+        <div class="address">
+          {{address.address}}
+        </div>
+        <div class="total">
+          <span>Total received: </span>
+          <span>+{{address.balance}}</span>
+        </div>
+      </div>
+      <div class="col-xs-2 row address-options vertical-center">
+        <div class="col-xs-4 icon fa fa-clone"></div>
+        <div class="col-xs-4 icon fa fa-lock"></div>
+        <div class="col-xs-4 icon fa fa-qrcode"></div>
+      </div>
+    </div>
+
+    <div class="address-title">Previous addresses</div>
+
+  </div>
+
+  <div class="col-xs-3 pull-right receive-right">
+
+    <div class="card qr">
+      <qr-code [size]="qr.size" [level]="'H'"
+        [value]="address.address">
+      </qr-code>
+    </div>
+
+    <div class="card address-details">
+      <div class="details-title">
+        {{type}} address
+      </div>
+      <div class="details-label">
+        {{address.label}}
+      </div>
+      <div class="details-address row">
+        <div *ngFor="let word of address.readable" class="address-word col-xs-3">
+          {{word}}
+        </div>
+      </div>
+      <button (click)="newAddress()">new {{type}} address</button>
+      {{test}}
+    </div>
+
+  </div>
+</div>

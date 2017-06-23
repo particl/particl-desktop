@@ -1,0 +1,128 @@
+.header {
+  position: relative;
+}
+
+.header-option {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+}
+
+.header-option:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.header-option-container {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  padding-top: 10px !important;
+  border-left: 2px solid #efefef;
+}
+
+.header-option-text {
+
+}
+
+.header-input {
+  background-color: transparent;
+  border: none;
+  margin-left: 20px;
+}
+
+.header-input:focus {
+  outline: none;
+}
+
+.card {
+  background-color: white;
+  padding: 20px;
+  border-bottom: 2px solid #e9e9e9;
+}
+
+.receive {
+  margin: 0 30px 0 40px;
+}
+
+.receive-right {
+  margin-top: 59px;
+}
+
+.address-title {
+  text-transform: uppercase;
+  color: #7b8891;
+  margin: 20px 0 20px 0;
+}
+
+.address-id {
+  color: #7b8891;
+}
+
+.address-label {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.address {
+  text-overflow: ellipsis;
+}
+
+.total {
+  font-size: 0.8em;
+}
+
+.total > span:nth-child(2) {
+  color: #03e8b0;
+}
+
+.address-options {
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+  font-size: 1.4em;
+}
+
+.card.row > .vertical-center {
+  margin-top: 8px;
+}
+
+.address-options > div:nth-child(2) {
+  color: #03e8b0;
+}
+
+[class^='col-'] {
+  padding: 0;
+}
+
+.address-details {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.details-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.2em;
+}
+
+.details-label {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #515153;
+  margin: 20px 0 20px 0;
+}
+
+button {
+  background-color: #03e8b0;
+  border: none;
+  text-transform: uppercase;
+  color: white;
+  padding: 10px 20px 10px 20px;;
+  font-weight: bold;
+  margin-top: 30px;
+}
