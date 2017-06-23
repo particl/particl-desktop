@@ -13,6 +13,7 @@ import { WindowService } from './core/window.service';
 
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
+import { RPCService } from './core/rpc/rpc.service';
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -44,6 +45,7 @@ const routes: Routes = [
   providers: [
     WindowService,
     AppService,
+    RPCService
   ],
   bootstrap: [ AppComponent ]
 })
