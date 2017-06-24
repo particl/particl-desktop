@@ -173,7 +173,15 @@ export class ReceiveComponent implements OnInit {
   }
 
   newAddress() {
-    console.log(`generate new ${this.type} address`);
+    let label = prompt('Label for new address');
+    this.addresses[this.type].unshift({
+      id: this.addresses[this.type].length,
+      label: label,
+      address: 'THISISNEWADDRESS',
+      readable: ['this', 'is', 'new', 'address'],
+      balance: 0
+    });
+    this.loadPages();
   }
 
   selectInput() {
