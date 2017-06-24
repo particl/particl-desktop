@@ -61,7 +61,7 @@ export class SettingsService {
     },
     i2p: {},
     tor: {}
-  }
+  };
 
   loadSettings(): Object {
     return (JSON.parse(localStorage.getItem('settings')));
