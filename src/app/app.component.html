@@ -1,6 +1,6 @@
 <sidebar-container>
 
-  <sidebar position="left" isDocked="true" isPinned="true" isOpen="true"
+  <sidebar position="left" [isDocked]="true" [isPinned]="true" [isOpen]="true"
     (mouseenter)="!window.isXS && !sidebarLeft.isOpen && sidebarLeft.toggleOpen(true)"
     (mouseleave)="!window.isXS && !sidebarLeft.isPinned && sidebarLeft.toggleOpen(false)"
     #sidebarLeft>
@@ -14,13 +14,13 @@
     </div>
     <hr>
     <accordion class="menu">
-      <accordion-group isCollapsed="false">
+      <accordion-group [isCollapsed]="false">
         <a class="item" routerLinkActive="active" routerLink="/overview">
           <span class="icon fa fa-th"></span>
           Overview
         </a>
       </accordion-group>
-      <accordion-group #walletGroup isCollapsed="false">
+      <accordion-group #walletGroup [isCollapsed]="false">
         <accordion-heading>
           <a class="category" href="javascript:void(0)" (click)="walletGroup.toggleCollapse()">
             Wallet
@@ -45,7 +45,7 @@
           Address Book
         </a>
       </accordion-group>
-      <accordion-group #settingsGroup isCollapsed="false">
+      <accordion-group #settingsGroup [isCollapsed]="false">
         <accordion-heading>
           <a class="category" href="javascript:void(0)" (click)="settingsGroup.toggleCollapse()">
             Settings
@@ -62,9 +62,9 @@
 
   </sidebar>
 
-  <sidebar position="right" isPinned="true" #sidebarRight></sidebar>
+  <sidebar position="right" [isPinned]="true" #sidebarRight></sidebar>
 
-  <sidebar position="top" isDocked="true" #sidebarTop>
+  <sidebar position="top" [isDocked]="true" #sidebarTop>
     <div class="header pull-left">
       <span *ngIf="window.isXS" class="toggle-menu icon fa fa-bars fa-2x"
         (click)="sidebarLeft.toggleOpen(); sidebarLeft.togglePinned(sidebarLeft.isOpen)">

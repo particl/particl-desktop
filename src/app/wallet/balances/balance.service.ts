@@ -3,35 +3,36 @@ import { Injectable } from '@angular/core';
 // import { Observer } from 'rxjs/Observer';
 import { Observable, Observer } from 'rxjs'; // use this for testing atm
 
+import { AppService } from '../../app.service';
 
-  export class Balances {
-    getTotal() {
-      return this._total;
-    }
-    getPublic() {
-      return this._public;
-    }
-    getPrivate() {
-      return this._private;
-    }
-    getStake() {
-      return this._stake;
-    }
-
-    getBalance(type: string) {
-      if (type === 'TOTAL') {
-        return this.getTotal();
-      } else if (type === 'PUBLIC') {
-        return this.getPublic();
-      } else if (type === 'PRIVATE') {
-        return this.getPrivate();
-      } else if (type === 'STAKE') {
-        return this.getStake();
-      }
-    }
-
-    constructor(private _total: number, private _public: number, private _private: number, private _stake: number) { }
+export class Balances {
+  getTotal() {
+    return this._total;
   }
+  getPublic() {
+    return this._public;
+  }
+  getPrivate() {
+    return this._private;
+  }
+  getStake() {
+    return this._stake;
+  }
+
+  getBalance(type: string) {
+    if (type === 'TOTAL') {
+      return this.getTotal();
+    } else if (type === 'PUBLIC') {
+      return this.getPublic();
+    } else if (type === 'PRIVATE') {
+      return this.getPrivate();
+    } else if (type === 'STAKE') {
+      return this.getStake();
+    }
+  }
+
+  constructor(private _total: number, private _public: number, private _private: number, private _stake: number) { }
+}
 
 @Injectable()
 export class BalanceService {
@@ -72,16 +73,15 @@ export class BalanceService {
   private _balances: Observable<Balances>;
   private _observer: Observer<Balances>;
 
-
-  constructor() {
+  constructor(private appService: AppService) {
         // we only need to initialize this once, as it is a shared observable...
     this._balances = Observable.create(observer => this._observer = observer).publishReplay(1).refCount();
     this._balances.subscribe().unsubscribe(); // Kick it off, since its shared... We should look at a more functional approach in the future
 
-    setTimeout(_ => this.rpc_loadBalance(this.TEST_BALANCES_JSON[1])); // load initial balances
+    this.appService.rpc.register(this, 'getwalletinfo', null, this.rpc_loadBalance, 'both');
+    // setTimeout(_ => this.rpc_loadBalance(this.TEST_BALANCES_JSON[1])); // load initial balances
     // just a test
-    setTimeout(_ => this.updateBalanceTest(), 5000);
-
+    // setTimeout(_ => this.updateBalanceTest(), 5000);
   }
 
   getBalances(): Observable<Balances> {
@@ -115,7 +115,7 @@ export class BalanceService {
   }
 
   rpc_getParameters() {
-    return ("");
+    return ('');
   }
 /*
 
