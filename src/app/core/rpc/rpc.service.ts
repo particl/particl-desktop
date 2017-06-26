@@ -48,7 +48,8 @@ export class RPCService {
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
         .subscribe(
           response => {
-            callback(response.json().result);
+            () => { callback(response.json().result)}
+            //callback.call(instance, response.json().result);
           });
           // httperr => this._observer.error(error)); // TODO: Handle error
     }
@@ -79,14 +80,14 @@ export class RPCService {
     this._callOnBlock.forEach(element => {
       this.call(
         element.method,
-        element.params && element.params.typeOf === "function" ? element.params() : element.params,
+        element.params && element.params.typeOf === 'function' ? element.params() : element.params,
         element.callback);
     });
     console.log(this._callOnBlock);
     this._callOnTransaction.forEach(element => {
       this.call(
         element.method,
-        element.params && element.params.typeOf === "function" ? element.params() : element.params,
+        element.params && element.params.typeOf === 'function' ? element.params() : element.params,
         element.callback);
     });
 

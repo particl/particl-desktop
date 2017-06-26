@@ -15,7 +15,7 @@ export class AppService {
   testRpc(): void {
     this.rpc.register(this, 'getwalletinfo', null, this.testRpcResult, 'both');
     this.rpc.poll();
-    setTimeout(() => { this.rpc.stopPolling() }, 10000);
+    //setTimeout(() => { this.rpc.stopPolling() }, 10000);
   }
 
   testRpcResult(asd: any) {
