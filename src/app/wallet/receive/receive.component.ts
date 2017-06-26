@@ -93,6 +93,7 @@ export class ReceiveComponent implements OnInit {
       this.loadPages(this.addresses[this.type]);
     }
     // TODO doesn't search labels correctly
+    // TODO should search address numbers
     this.searchSubset = this.addresses[this.type].filter(el => {
       return (
         el.label.toLowerCase().indexOf(query.toLowerCase()) !== -1
@@ -207,6 +208,7 @@ export class ReceiveComponent implements OnInit {
       readable: ['this', 'is', 'new', 'address'],
       balance: 0
     });
+    this.selected = this.addresses[this.type][0];
     this.loadPages(this.addresses[this.type]);
   }
 

@@ -1,6 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angular2-qrcode';
 
 import { SharedModule } from '../shared/shared.module';
@@ -32,7 +31,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
-    FormsModule,
     SharedModule,
     QRCodeModule
   ],
