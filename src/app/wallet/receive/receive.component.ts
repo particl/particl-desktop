@@ -7,20 +7,23 @@ import { Component, OnInit, HostListener } from '@angular/core';
 })
 export class ReceiveComponent implements OnInit {
 
-  entriesPerPage = 6;
+  entriesPerPage: number = 6;
   type: string;
 
-  addresses = {
+  addresses: any = {
     private: [],
     public: []
   }
-  selected;
+  selected: any;
+
+  query: string;
+  searchSubset: any = [];
 
   page: number = 1;
-  pages = [];
-  nav;
+  pages: any = [];
+  nav: any;
 
-  qr = {
+  qr: any = {
     el: undefined,
     size: undefined
   }
@@ -31,35 +34,36 @@ export class ReceiveComponent implements OnInit {
   keyboardInput(event: any) {
     // clear search bar on esc
     if (event.code.toLowerCase() === 'escape') {
-      let searchbar: any = document.getElementById('searchbar');
+      const searchbar: any = document.getElementById('searchbar');
       if (searchbar === document.activeElement) {
         searchbar.value = '';
+        this.loadPages(this.addresses[this.type]);
       }
     }
   }
 
   ngOnInit() {
     // QR size
-    this.qr.el = document.getElementsByClassName("card qr")[0];
+    this.qr.el = document.getElementsByClassName('card qr')[0];
     this.qr.size = this.qr.el.offsetWidth - 40;
     window.onresize = () => this.qr.size = this.qr.el.offsetWidth - 40;
 
     // TODO remove init data
     const publicAddress = {
       id: 249,
-      label: "I'm label one",
-      address: "PwGP8BzRUHQwchwwPuzAe9WqskgmTLNx8F",
+      label: 'I\'m label one',
+      address: 'PwGP8BzRUHQwchwwPuzAe9WqskgmTLNx8F',
       balance: 2000.30
     }
     const privateAddress = {
       id: 138,
-      label: "I'm label one",
-      address: "4et9EGvUtNighRLspBeuxxMLHZmNKjbfJxTkLUGPf8hu2WbRi6w",
+      label: 'I\'m label one',
+      address: '4et9EGvUtNighRLspBeuxxMLHZmNKjbfJxTkLUGPf8hu2WbRi6w',
       balance: 1732.80
     }
     let address = JSON.parse(JSON.stringify(publicAddress));
     for (let id = 0; id < publicAddress.id; id++) {
-      let pushAddress = JSON.parse(JSON.stringify(address));
+      const pushAddress = JSON.parse(JSON.stringify(address));
       pushAddress.id = id;
       let array = publicAddress.address.split('');
       pushAddress.address = array.sort(() => .5 - Math.random()).join('');
@@ -70,7 +74,7 @@ export class ReceiveComponent implements OnInit {
     }
     address = JSON.parse(JSON.stringify(privateAddress));
     for (let id = 0; id < privateAddress.id; id++) {
-      let pushAddress = JSON.parse(JSON.stringify(address));
+      const pushAddress = JSON.parse(JSON.stringify(address));
       pushAddress.id = id;
       let array = privateAddress.address.split('');
       pushAddress.address = array.sort(() => .5 - Math.random()).join('');
@@ -80,19 +84,35 @@ export class ReceiveComponent implements OnInit {
       this.addresses.private.unshift(pushAddress)
     }
 
+    // keep this
     this.changeType('public');
   }
 
-  changeType(type) {
-    this.type = type;
-    this.selected = this.addresses[type][0];
-    this.loadPages();
+  search(query: string) {
+    if (!query) {
+      this.loadPages(this.addresses[this.type]);
+    }
+    // TODO doesn't search labels correctly
+    this.searchSubset = this.addresses[this.type].filter(el => {
+      return (
+        el.label.toLowerCase().indexOf(query.toLowerCase()) !== -1
+        || el.address.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      );
+    })
+    console.log(query);
+    this.loadPages(this.searchSubset);
   }
 
-  loadPages() {
-    let pages = [];
-    for (let i = 1; i <= this.addresses[this.type].length;) {
-      pages.push(this.addresses[this.type].slice(i, i + this.entriesPerPage));
+  changeType(type: string) {
+    this.type = type;
+    this.selected = this.addresses[type][0];
+    this.loadPages(this.addresses[this.type]);
+  }
+
+  loadPages(addresses: any[]) {
+    const pages = [];
+    for (let i = 1; i <= addresses.length; ) {
+      pages.push(addresses.slice(i, i + this.entriesPerPage));
       i += this.entriesPerPage;
     }
     this.pages = pages;
@@ -100,7 +120,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   pageNav() {
-    let nav;
+    let nav = [];
     if (this.pages.length <= 5) {
       for (let i = 1; i <= this.pages.length; i++) {
         nav.push(i);
@@ -127,8 +147,14 @@ export class ReceiveComponent implements OnInit {
       nav.push(this.pages.length);
     }
     this.nav = nav;
-    setTimeout(() => document.getElementById(`page-${this.page}`).style.color = '#03e8b0',
-      50);
+
+    // TODO fix hack
+    setTimeout(() => {
+      const currentPage: any = document.getElementById(`page-${this.page}`)
+      if (currentPage) {
+        currentPage.style.color = '#03e8b0'
+      }
+    }, 50);
     ;
   }
 
@@ -148,7 +174,7 @@ export class ReceiveComponent implements OnInit {
     this.pageNav();
   }
 
-  gotoPage(page) {
+  gotoPage(page: any) {
     if (page !== '...') {
       document.getElementById(`page-${this.page}`).style.color = 'black';
       this.page = page;
@@ -156,14 +182,14 @@ export class ReceiveComponent implements OnInit {
     this.pageNav();
   }
 
-  copyAddress(id) {
-    let address: any = document.getElementById(`address-${id}`)
+  copyAddress(id: string) {
+    const address: any = document.getElementById(`address-${id}`)
       .getElementsByClassName('address')[0];
     let selectable: any = document.createElement('textarea');
     selectable.style.height = '0';
     selectable.id = 'selectable';
     document.body.appendChild(selectable);
-    selectable.value = address.innerHTML;
+    selectable.value = address.innerHTML.trim();
     selectable = document.getElementById('selectable');
     address.classList.add('copied');
     selectable.select();
@@ -173,7 +199,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   newAddress() {
-    let label = prompt('Label for new address');
+    const label = prompt('Label for new address');
     this.addresses[this.type].unshift({
       id: this.addresses[this.type].length,
       label: label,
@@ -181,11 +207,11 @@ export class ReceiveComponent implements OnInit {
       readable: ['this', 'is', 'new', 'address'],
       balance: 0
     });
-    this.loadPages();
+    this.loadPages(this.addresses[this.type]);
   }
 
   selectInput() {
-    let input: any = document.getElementsByClassName('header-input')[0];
+    const input: any = document.getElementsByClassName('header-input')[0];
     input.select();
   }
 
