@@ -43,7 +43,7 @@ const routes: Routes = [
   ],
   providers: [
     WindowService,
-    AppService,
+    AppService
   ],
   bootstrap: [ AppComponent ]
 })
