@@ -21,7 +21,6 @@ export class ModalsService {
   };
 
   open(modal: string): void {
-
     if (modal in this.messages) {
       this.message.next(this.messages[modal]);
     } else {

@@ -79,6 +79,9 @@ export class ModalsComponent implements DoCheck {
   }
 
   open(message: any) {
+    if (this.modal) {
+      this.modal.destroy();
+    }
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.modalContainer.createComponent(factory);
     this.staticModal.show();

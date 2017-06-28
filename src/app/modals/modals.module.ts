@@ -17,7 +17,7 @@ import { PassphraseComponent } from './passphrase/passphrase.component';
   imports: [
     CommonModule,
     FormsModule,
-    ModalModule
+    ModalModule,
   ],
   declarations: [
     ModalsComponent,
