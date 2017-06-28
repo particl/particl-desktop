@@ -29,7 +29,7 @@ export class RPCService {
     this._appService = appService;
   }
 
-  call(method: string, params: Array<any> | null, callback: Function): void {
+  call(instance: Injectable, method: string, params: Array<any> | null, callback: Function): void {
     const postData = JSON.stringify({
       method: method,
       params: params,
@@ -48,8 +48,8 @@ export class RPCService {
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
         .subscribe(
           response => {
-            () => { callback(response.json().result)}
-            //callback.call(instance, response.json().result);
+            //callback(response.json().result);
+            callback.call(instance, response.json().result);
           });
           // httperr => this._observer.error(error)); // TODO: Handle error
     }
@@ -79,6 +79,7 @@ export class RPCService {
     console.log('cb', this._callOnBlock);
     this._callOnBlock.forEach(element => {
       this.call(
+        element.instance,
         element.method,
         element.params && element.params.typeOf === 'function' ? element.params() : element.params,
         element.callback);
@@ -86,6 +87,7 @@ export class RPCService {
     console.log(this._callOnBlock);
     this._callOnTransaction.forEach(element => {
       this.call(
+        element.instance,
         element.method,
         element.params && element.params.typeOf === 'function' ? element.params() : element.params,
         element.callback);
