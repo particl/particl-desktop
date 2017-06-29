@@ -78,7 +78,7 @@ export class RPCService {
 
   poll(): void {
     // TODO: Actual polling... Check block height and last transaction
-    let _call = (element) => {
+    const _call = (element) => {
       this.call(
         element.instance,
         element.method,
