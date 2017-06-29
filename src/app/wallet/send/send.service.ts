@@ -61,7 +61,7 @@ export class SendService {
     // json return value is just txid
     // We can't use gettransaction just yet, becaue
     if (true) {
-      console.log('rpc_send ' + this.amount + ' to ' + this.address);
+      console.log('rpc_send succesful ' + this.amount + ' to ' + this.address);
     } else {
       // error
     }
