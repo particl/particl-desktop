@@ -51,15 +51,15 @@ export class SendComponent implements OnInit {
 
   pay() {
     console.log(this.type, this.send);
-    let input = this.send["fromType"];
-    let output = this.send["toType"];
-    let address = this.send["toAddress"];
-    let amount = this.send["amount"];
-    let comment = this.send["note"];
-    let narration = this.send["note"];
-    let substractfee = false;
-    let ringsize = this.send["privacy"];
-    let numsigs = 1;
+    const input = this.send['fromType'];
+    const output = this.send['toType'];
+    const address = this.send['toAddress'];
+    const amount = this.send['amount'];
+    const comment = this.send['note'];
+    const narration = this.send['note'];
+    const substractfee = false;
+    const ringsize = this.send['privacy'];
+    const numsigs = 1;
     this.SendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
   }
 
