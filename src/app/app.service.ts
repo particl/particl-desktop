@@ -9,16 +9,5 @@ export class AppService {
   constructor(public rpc: RPCService) {
     this.isElectron = this.rpc.electronService.isElectronApp;
     rpc.postConstruct(this);
-    this.testRpc();
-  }
-
-  testRpc(): void {
-    this.rpc.register(this, 'getwalletinfo', null, this.testRpcResult, 'both');
-    this.rpc.poll();
-    //setTimeout(() => { this.rpc.stopPolling() }, 10000);
-  }
-
-  testRpcResult(asd: any) {
-    console.log(asd);
   }
 }

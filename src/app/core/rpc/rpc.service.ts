@@ -48,10 +48,12 @@ export class RPCService {
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
         .subscribe(
           response => {
-            //callback(response.json().result);
             callback.call(instance, response.json().result);
+          },
+          error => {
+            // TODO: Call error modal?
+            console.log('RPC Call returned an error', error);
           });
-          // httperr => this._observer.error(error)); // TODO: Handle error
     }
   }
 
@@ -76,24 +78,17 @@ export class RPCService {
 
   poll(): void {
     // TODO: Actual polling... Check block height and last transaction
-    console.log('cb', this._callOnBlock);
-    this._callOnBlock.forEach(element => {
+    let _call = (element) => {
       this.call(
         element.instance,
         element.method,
         element.params && element.params.typeOf === 'function' ? element.params() : element.params,
         element.callback);
-    });
-    console.log(this._callOnBlock);
-    this._callOnTransaction.forEach(element => {
-      this.call(
-        element.instance,
-        element.method,
-        element.params && element.params.typeOf === 'function' ? element.params() : element.params,
-        element.callback);
-    });
+    };
 
-    this._pollTimout = setTimeout(() => { this.poll(); }, 1000);
+    this._callOnBlock.forEach(_call);
+    this._callOnTransaction.forEach(_call);
+    this._pollTimout = setTimeout(() => { this.poll(); }, 3000);
   }
 
   startPolling(): void {
