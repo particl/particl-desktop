@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SendService } from './send.service';
 
 @Component({
   selector: 'app-send',
@@ -17,7 +18,7 @@ export class SendComponent implements OnInit {
     privacy: 50
   };
 
-  constructor() { }
+  constructor(private SendService: SendService) { }
 
   ngOnInit() {
   }
@@ -50,6 +51,16 @@ export class SendComponent implements OnInit {
 
   pay() {
     console.log(this.type, this.send);
+    let input = this.send["fromType"];
+    let output = this.send["toType"];
+    let address = this.send["toAddress"];
+    let amount = this.send["amount"];
+    let comment = this.send["note"];
+    let narration = this.send["note"];
+    let substractfee = false;
+    let ringsize = this.send["privacy"];
+    let numsigs = 1;
+    this.SendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
   }
 
 }
