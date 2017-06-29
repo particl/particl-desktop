@@ -61,6 +61,7 @@ export class SendComponent implements OnInit {
     const ringsize = this.send['privacy'];
     const numsigs = 1;
     this.SendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+    this.clear();
   }
 
 }
