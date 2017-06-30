@@ -19,10 +19,9 @@ export class TransactionService {
   MAX_TXS_PER_PAGE: number = 10;
 
   constructor(private appService: AppService) { }
-  
 
-  postConstructor(MAX_TXS_PER_PAGE) {
-    console.log("max" + MAX_TXS_PER_PAGE);
+
+  postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.rpc_update();
   }
@@ -64,13 +63,13 @@ export class TransactionService {
 */
 
 
-  rpc_update(){
+  rpc_update() {
     this.appService.rpc.call(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
   }
 
   rpc_loadTransactionCount(JSON: Object): void {
     this.txCount = JSON['txcount'];
-    console.log("txcount" + this.txCount);
+    console.log('txcount' + this.txCount);
     console.log(this.rpc_getParameters());
     this.appService.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
   }
