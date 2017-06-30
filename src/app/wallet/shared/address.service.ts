@@ -9,7 +9,7 @@ export class AddressService {
     Settings
   */
 
-  typeOfAddresses: string = 'receive'; // "receive","send", "total"
+  typeOfAddresses: string = 'send'; // "receive","send", "total"
 
   /*
     How many addresses do we display per page and keep in memory at all times. When loading more
