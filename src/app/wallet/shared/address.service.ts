@@ -21,7 +21,7 @@ export class AddressService {
   */
   MAX_ADDRESSES_PER_PAGE: number = 1;
 
-  constructor(private appService: AppService) { 
+  constructor(private appService: AppService) {
     this.rpc_update();
   }
 
@@ -52,7 +52,7 @@ export class AddressService {
   Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
 
 */
-  rpc_update(){
+  rpc_update() {
     this.appService.rpc.call(this, 'getwalletinfo', null, this.rpc_loadAddressCount);
   }
 
@@ -60,14 +60,14 @@ export class AddressService {
   rpc_loadAddressCount(JSON: Object): void {
     // test values
     const addressCount = JSON['txcount'];
-    this.addressCount = 2; // ! ! !! ! !! 
+    this.addressCount = 2; // ! ! !! ! !!
     this.appService.rpc.call(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses);
   }
 
   rpc_getParams() {
     let page = 0;
 
-    if(this.currentPage != 0) {
+    if (this.currentPage !== 0) {
       page = this.currentPage - 1;
     }
 
@@ -79,8 +79,11 @@ export class AddressService {
 
   rpc_loadAddresses(JSON: Object): void {
     this.deleteAddresses();
-    for(var k in JSON)
-      this.addAddress(JSON[k]);
+    for (const k in JSON) {
+      if (JSON[k] !== undefined) { // lint
+        this.addAddress(JSON[k]);
+      }
+    }
   }
 
 
