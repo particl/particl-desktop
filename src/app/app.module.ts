@@ -8,11 +8,13 @@ import { NgxElectronModule } from 'ngx-electron';
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
 import { WalletModule } from './wallet/wallet.module';
+import { ModalsModule } from './modals/modals.module';
 
 import { WindowService } from './core/window.service';
 
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
+import { RPCService } from './core/rpc/rpc.service';
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -37,13 +39,16 @@ const routes: Routes = [
     CollapseModule.forRoot(),
     PaginationModule.forRoot(),
     RouterModule.forRoot(routes),
+    ModalModule.forRoot(),
     SharedModule,
     SidebarModule.forRoot(),
-    WalletModule.forRoot()
+    WalletModule.forRoot(),
+    ModalsModule
   ],
   providers: [
     WindowService,
     AppService,
+    RPCService
   ],
   bootstrap: [ AppComponent ]
 })

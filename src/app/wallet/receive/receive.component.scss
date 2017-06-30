@@ -1,0 +1,177 @@
+.header {
+  position: relative;
+}
+
+.header-option {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+}
+
+.header-option:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.header-option-container {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  padding-top: 10px !important;
+  border-left: 2px solid #efefef;
+}
+
+.header-option-text {
+
+}
+
+.header-input {
+  background-color: transparent;
+  border: none;
+  margin-left: 20px;
+}
+
+.header-input:focus {
+  outline: none;
+}
+
+.card {
+  background-color: white;
+  padding: 20px;
+  border-bottom: 2px solid #e9e9e9;
+}
+
+.card.row {
+  margin-bottom: 20px;
+}
+
+.card.row:last-child {
+  margin-bottom: 0;
+}
+
+.qr {
+  margin-top: 60px;
+}
+
+.receive {
+  margin: 0 30px 0 40px !important;
+}
+
+.receive-right {
+  margin-top: 59px;
+}
+
+.address-title {
+  text-transform: uppercase;
+  color: #7b8891;
+  margin: 20px 0 20px 0;
+}
+
+.address-id {
+  color: #7b8891;
+}
+
+.address-label {
+  text-transform: uppercase;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.address {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: transparent;
+  transition: background .3s;
+}
+.address.copied {
+  background: yellow !important;
+  transition: background 0s;
+}
+
+.total {
+  font-size: 0.8em;
+}
+
+.total > span:nth-child(2) {
+  color: #03e8b0;
+}
+
+.address-options {
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+  font-size: 1.4em;
+}
+
+.address-options > div {
+  cursor: pointer;
+}
+
+.card.row > .vertical-center {
+  margin-top: 8px;
+}
+
+.address-options > div:nth-child(2) {
+  color: #03e8b0;
+}
+
+[class^='col-'] {
+  padding: 0;
+  margin: 0;
+}
+.row {
+  margin: 0;
+}
+
+.address-details {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.details-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.2em;
+}
+
+.details-label {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #515153;
+  margin: 20px 0 20px 0;
+}
+
+button {
+  background-color: #03e8b0;
+  border: none;
+  text-transform: uppercase;
+  color: white;
+  padding: 10px 20px 10px 20px;;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+.page-buttons {
+  text-align: right;
+  user-select: none;
+  margin: 30px 0 30px 0;
+}
+
+.page-button:last-child {
+  margin-right: 0;
+}
+
+.page-button {
+  background-color: white;
+  font-weight: bold;
+  padding: 15px;
+  border-bottom: 1px solid #e9e9e9;
+  margin-right: 10px;
+  cursor: pointer;
+}

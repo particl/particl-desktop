@@ -1,0 +1,28 @@
+<div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: true}">
+
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="row">
+        <img class="logo img-responsive" src="assets/particl-logo-white-bg.svg">
+      </div>
+      <div class="row">
+        <div #modalContainer></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal-footer-info">
+    <div class="percentage-bar" [style.width.%]="syncPercentage">
+      <div class="statusText">{{syncString}}</div>
+    </div>
+    <div class="inverted-bar percentage-bar" [style.width.%]="100 - syncPercentage">
+      <div class="statusText inverted-status">{{syncString}}</div>
+    </div>
+  </div>
+
+</div>

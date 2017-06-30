@@ -2,7 +2,6 @@ import { TestBed, inject } from '@angular/core/testing';
 import { APP_BASE_HREF } from '@angular/common';
 
 import { AppService } from './app.service';
-
 import { AppModule } from './app.module';
 
 describe('AppService', () => {
