@@ -14,7 +14,7 @@ export class TransactionsTableComponent implements OnInit {
   @Input() displayHeader: boolean = true;
   @Input() displayInternalHeader: boolean = false;
   @Input() displayPagination: boolean = false;
-  @Input() amountOfTxsToDisplay: number = 5;
+  @Input() amountOfTxsToDisplay: number = 10;
 
     /* actual fields */
   @Input() displayCategory: boolean = true;

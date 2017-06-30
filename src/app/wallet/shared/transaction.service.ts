@@ -71,6 +71,7 @@ export class TransactionService {
   rpc_loadTransactionCount(JSON: Object): void {
     this.txCount = JSON['txcount'];
     console.log("txcount" + this.txCount);
+    console.log(this.rpc_getParameters());
     this.appService.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
   }
 
@@ -86,7 +87,7 @@ export class TransactionService {
     }
   }
   rpc_getParameters() {
-    return ['*', this.MAX_TXS_PER_PAGE, (this.currentPage * this.MAX_TXS_PER_PAGE)];
+    return ['*', +this.MAX_TXS_PER_PAGE, (this.currentPage * this.MAX_TXS_PER_PAGE)];
   }
 
   // Deserializes JSON objects to Transaction classes.
