@@ -5,7 +5,13 @@ import { SendService } from './send.service';
 describe('SendService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SendService]
+      imports: [SharedModule],
+      providers: [
+        SendService,
+        AppService,
+        ElectronService,
+        RPCService
+      ]
     });
   });
 
