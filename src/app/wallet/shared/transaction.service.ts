@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Transaction, deserialize, TEST_TXS_JSON, TEST_ARRAY_TXS_JSON_PAGE_0, TEST_ARRAY_TXS_JSON_PAGE_1  } from './transaction.model';
 
+import { AppService } from '../../app.service';
 
 @Injectable()
 export class TransactionService {
@@ -17,47 +18,13 @@ export class TransactionService {
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
 
-  constructor() {
-    this.initializeTestData();
+  constructor(private appService: AppService) {
+    this.rpc_update();
   }
 
 
-  // Pull test data and populate array of txs.
-  initializeTestData(): void {
-    // this.txCount = TEST_TXS_JSON.length;
-    // this.loadTestTransaction(0);
-    this.txCount = 18;
-    this.callback_updateTransactions(TEST_ARRAY_TXS_JSON_PAGE_0);
-
-  }
-
-  loadTestTransaction(index_start: number): void {
-
-  /* The oldest transactions are the first ones to be displayed, so we must reverse the order and
-     calculate the real index first. */
-    let real_index_start: number;
-    if (this.txCount > this.MAX_TXS_PER_PAGE) {
-      real_index_start = this.txCount - (index_start + 1) * this.MAX_TXS_PER_PAGE;
-    } else {
-      real_index_start = 0;
-    }
-
-    for (let i = 0; i < this.MAX_TXS_PER_PAGE; i++) {
-      const json: Object = TEST_TXS_JSON[real_index_start + i];
-      this.addTransaction(json);
-    }
-   }
 /*
-
-
-  _    _ _______ _____ _
- | |  | |__   __|_   _| |
- | |  | |  | |    | | | |
- | |  | |  | |    | | | |
- | |__| |  | |   _| |_| |____
-  \____/   |_|  |_____|______|
-
-
+  UTIL
 */
 
   changePage(page: number) {
@@ -68,7 +35,7 @@ export class TransactionService {
     page--;
     this.currentPage = page;
     this.deleteTransactions();
-    this.rpc_loadTransactions(page);
+    this.rpc_update();
   }
 
   deleteTransactions() {
@@ -91,20 +58,30 @@ export class TransactionService {
 
 */
 
-  rpc_loadTransactions(index_start: number): void {
-    this.loadTestTransaction(index_start);
-    // loadTransactionsRPC should call listtransaction amount index_start.
-    // return this.txs;
+
+  rpc_update(){
+    this.appService.rpc.call(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
   }
 
-  rpc_loadTransactionCount(): void {
-    // to be modified or deleted; RPC will push this data
-    // call getwalletinfo txcount
-    this.txCount = TEST_TXS_JSON.length - 1;
+  rpc_loadTransactionCount(JSON: Object): void {
+    this.txCount = JSON['txcount'];
+    console.log("txcount" + this.txCount);
+    this.appService.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
   }
 
+  rpc_loadTransactions(JSON: Array<Object>): void {
+      /*
+        The callback will send over an array of JSON transaction objects.
+
+      */
+
+    for (let i = 0; i < JSON.length; i++) {
+      const json: Object = JSON[i];
+      this.addTransaction(json);
+    }
+  }
   rpc_getParameters() {
-    return ('"*" ' + this.MAX_TXS_PER_PAGE + ' ' + this.currentPage * this.MAX_TXS_PER_PAGE);
+    return ['*', this.MAX_TXS_PER_PAGE, (this.currentPage * this.MAX_TXS_PER_PAGE)];
   }
 
   // Deserializes JSON objects to Transaction classes.
@@ -119,54 +96,4 @@ export class TransactionService {
     this.txs.splice(0, 0, instance);
   }
 
-  callback_updateTransactions(JSON: Array<Object>): void {
-      /*
-        The callback will send over an array of JSON transaction objects.
-
-      */
-
-    for (let i = 0; i < JSON.length; i++) {
-      const json: Object = JSON[i];
-      this.addTransaction(json);
-    }
-  }
-
-/*
-
-
-   _____ _____ _____ _   _          _
-  / ____|_   _/ ____| \ | |   /\   | |
- | (___   | || |  __|  \| |  /  \  | |
-  \___ \  | || | |_ | . ` | / /\ \ | |
-  ____) |_| || |__| | |\  |/ ____ \| |____
- |_____/|_____\_____|_| \_/_/    \_\______|
-
-
-
-*/
-
-  register_newTxService(/* RPC-service */): void {
-    /*
-      This function registers this transaction service instance with the CENTRALIZED RPC-service
-      which in turn will conteniously callback with updates.
-
-      A central RPC-service is required for a good design, we want to maintain one connection to
-      the RPC and not spawn a new one for each TxService.
-    */
-  }
-  signal_newTransaction(): void {
-    /*
-      _MIGHT_ BE DELETED.
-      When bitcoind finds a new transaction, it must signal it to the GUI.
-      We constantly need to be aware of the latest transactions for a good UX,
-      another good reason is that the RPC call listtransactions uses indexes to track the transactions.
-
-
-     This functionality of this function is potentially moved to the RPC service.
-     This service is being "dumbed down" to doing basic UI logic, we'll have one function
-     that feeds in the data for the component to fetch.
-
-
-    */
-  }
 }
