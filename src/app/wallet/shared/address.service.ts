@@ -6,6 +6,20 @@ import { AppService } from '../../app.service';
 @Injectable()
 export class AddressService {
   /*
+    Settings 
+  */
+
+  typeOfAddresses = "receive"; // "receive","send", "total"
+
+  /*
+    How many addresses do we display per page and keep in memory at all times. When loading more
+    addresses they are fetched JIT and added to addresses.
+  */
+  MAX_ADDRESSES_PER_PAGE: number = 2;
+
+
+
+  /*
     Stores address objects.
   */
   addresses: Address[] = [];
@@ -15,11 +29,7 @@ export class AddressService {
   currentPage: number = 0;
   totalPageCount: number = 0;
 
-  /*
-    How many addresses do we display per page and keep in memory at all times. When loading more
-    addresses they are fetched JIT and added to addresses.
-  */
-  MAX_ADDRESSES_PER_PAGE: number = 1;
+
 
   constructor(private appService: AppService) {
     this.rpc_update();
@@ -53,14 +63,21 @@ export class AddressService {
 
 */
   rpc_update() {
-    this.appService.rpc.call(this, 'getwalletinfo', null, this.rpc_loadAddressCount);
+    this.appService.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
   }
 
   // TODO: real address count
   rpc_loadAddressCount(JSON: Object): void {
     // test values
-    const addressCount = JSON['txcount'];
-    this.addressCount = 2; // ! ! !! ! !!
+    let addressCount;
+    if (this.typeOfAddresses === "receive"){
+      addressCount = JSON['num_receive'];
+    } else if (this.typeOfAddresses === "send"){
+      addressCount = JSON['num_send'];
+    } else {
+      addressCount = JSON['total'];
+    }
+    this.addressCount = addressCount;
     this.appService.rpc.call(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses);
   }
 
@@ -74,6 +91,12 @@ export class AddressService {
     const offset: number = (page * this.MAX_ADDRESSES_PER_PAGE);
     const count: number = this.MAX_ADDRESSES_PER_PAGE;
 //    console.log("offset" + offset + " count" + count);
+    if (this.typeOfAddresses === "receive") {
+      return [offset, count, "0", "", "1"];
+    } else if (this.typeOfAddresses === "send") {
+      return [offset, count, "0", "", "2"];
+    } 
+
     return [offset, count];
   }
 
