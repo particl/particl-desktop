@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Address, deserialize, TEST_ADDRESSES_JSON } from './address.model';
+import { AppService } from '../../app.service';
 
 @Injectable()
 export class AddressService {
@@ -16,54 +17,27 @@ export class AddressService {
 
   /*
     How many addresses do we display per page and keep in memory at all times. When loading more
-    addresses they are fetched JIT and added to txs.
+    addresses they are fetched JIT and added to addresses.
   */
-  MAX_ADDRESSES_PER_PAGE: number = 3;
+  MAX_ADDRESSES_PER_PAGE: number = 1;
 
-  constructor() {
-    this.initializeTestData();
-   }
-
-  // Pull test data and populate array of txs.
-  initializeTestData(): void {
-    this.loadTestAddress(0);
-    this.addressCount = TEST_ADDRESSES_JSON.length;
+  constructor(private appService: AppService) { 
+    this.rpc_update();
   }
 
-  loadTestAddress(index_start: number): void {
-    for (let i = 0; i < this.MAX_ADDRESSES_PER_PAGE; i++) {
-      const json = TEST_ADDRESSES_JSON[index_start + i];
-      this.addAddress(<Address> json);
-    }
-  }
+
 
 /*
-
-
- _  _ _______ _____ _
- | | | |__  __|_  _| |
- | | | | | |  | | | |
- | | | | | |  | | | |
- | |__| | | |  _| |_| |____
- \____/  |_| |_____|______|
-
-
+  UTIL
 */
 
   changePage(page: number) {
     if (page <= 0) {
       return;
     }
-
     page--;
-
     this.currentPage = page;
-
-    this.deleteAddresses();
-
-    // page = 0 (first page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 0) => (0,10)
-    // page = 1 (second page) => rpc_loadTransactions(MAX_TXS_PER_PAGE, 1 * MAX_TXS_PER_PAGE) (10, 20)
-    this.rpc_loadAddresses(page * this.MAX_ADDRESSES_PER_PAGE);
+    this.rpc_update();
   }
 
   deleteAddresses() {
@@ -71,46 +45,52 @@ export class AddressService {
   }
 
 /*
-
-
- _____ _____  _____
- | __ \| __ \ / ____|
- | |__) | |__) | |
- | _ /| ___/| |
- | | \ \| |  | |____
- |_| \_\_|   \_____|
-
-
+    RPC
 */
 
 /*
   Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
 
 */
-
-  rpc_loadAddresses(index_start: number): void {
-
-    this.loadTestAddress(index_start);
-    // loadTransactionsRPC should call listtransaction amount index_start.
-    // return this.txs;
+  rpc_update(){
+    this.appService.rpc.call(this, 'getwalletinfo', null, this.rpc_loadAddressCount);
   }
 
-  rpc_loadAddressCount(): void {
-    // call getwalletinfo txcount
-    this.addressCount = TEST_ADDRESSES_JSON.length - 1;
+  // TODO: real address count
+  rpc_loadAddressCount(JSON: Object): void {
+    // test values
+    const addressCount = JSON['txcount'];
+    this.addressCount = 2; // ! ! !! ! !! 
+    this.appService.rpc.call(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses);
   }
+
+  rpc_getParams() {
+    let page = 0;
+
+    if(this.currentPage != 0) {
+      page = this.currentPage - 1;
+    }
+
+    const offset: number = (page * this.MAX_ADDRESSES_PER_PAGE);
+    const count: number = this.MAX_ADDRESSES_PER_PAGE;
+//    console.log("offset" + offset + " count" + count);
+    return [offset, count];
+  }
+
+  rpc_loadAddresses(JSON: Object): void {
+    this.deleteAddresses();
+    for(var k in JSON)
+      this.addAddress(JSON[k]);
+  }
+
 
   // Adds an address to array from JSON object.
-  addAddress(json: Address): void {
+  addAddress(json: Object): void {
     const instance = deserialize(json, Address);
 
     if (typeof instance.address === 'undefined') {
       return;
     }
     this.addresses.splice(0, 0, instance);
-  }
-
-  deleteAddress(address: string) {
-    console.log('delete ' + address);
   }
 }
