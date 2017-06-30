@@ -6,10 +6,10 @@ import { AppService } from '../../app.service';
 @Injectable()
 export class AddressService {
   /*
-    Settings 
+    Settings
   */
 
-  typeOfAddresses = "receive"; // "receive","send", "total"
+  typeOfAddresses: string = 'receive'; // "receive","send", "total"
 
   /*
     How many addresses do we display per page and keep in memory at all times. When loading more
@@ -70,9 +70,9 @@ export class AddressService {
   rpc_loadAddressCount(JSON: Object): void {
     // test values
     let addressCount;
-    if (this.typeOfAddresses === "receive"){
+    if (this.typeOfAddresses === 'receive') {
       addressCount = JSON['num_receive'];
-    } else if (this.typeOfAddresses === "send"){
+    } else if (this.typeOfAddresses === 'send') {
       addressCount = JSON['num_send'];
     } else {
       addressCount = JSON['total'];
@@ -91,11 +91,11 @@ export class AddressService {
     const offset: number = (page * this.MAX_ADDRESSES_PER_PAGE);
     const count: number = this.MAX_ADDRESSES_PER_PAGE;
 //    console.log("offset" + offset + " count" + count);
-    if (this.typeOfAddresses === "receive") {
-      return [offset, count, "0", "", "1"];
-    } else if (this.typeOfAddresses === "send") {
-      return [offset, count, "0", "", "2"];
-    } 
+    if (this.typeOfAddresses === 'receive') {
+      return [offset, count, '0', '', '1'];
+    } else if (this.typeOfAddresses === 'send') {
+      return [offset, count, '0', '', '2'];
+    }
 
     return [offset, count];
   }
