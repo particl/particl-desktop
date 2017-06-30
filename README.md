@@ -16,6 +16,19 @@ npm install
 ```
 * Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+## With real rpc data
+### Start
+```
+./particld -daemon -testnet -debug -rpcuser=test -rpcpassword=test -rpccorsdomain=http://localhost:4200
+```
+
+### Stop
+```
+./particl-cli -rpcuser=test -rpcpassword=test stop
+```
+
+You can now navigate to `http://localhost:4200/`.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
