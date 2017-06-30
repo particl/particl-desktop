@@ -7,8 +7,8 @@ import { AddressTableComponent } from './address-table.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 
-import { AppService } from '../../app.service';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { AppService } from '../../../app.service';
+import { RPCService } from '../../../core/rpc/rpc.service';
 
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
