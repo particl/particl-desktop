@@ -18,7 +18,12 @@ export class TransactionService {
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
 
-  constructor(private appService: AppService) {
+  constructor(private appService: AppService) { }
+  
+
+  postConstructor(MAX_TXS_PER_PAGE) {
+    console.log("max" + MAX_TXS_PER_PAGE);
+    this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.rpc_update();
   }
 
