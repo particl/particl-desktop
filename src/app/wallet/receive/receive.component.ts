@@ -11,12 +11,12 @@ export class ReceiveComponent implements OnInit {
   entriesPerPage: number = 6;
   type: string = 'public';
 
-  defaultAddress = {
+  defaultAddress: Object = {
       id: 0,
       label: 'Empty label',
       address: 'Empty address',
       balance: 0,
-      readable: ["Empty"]
+      readable: ['Empty']
     }
 
   addresses: any = {
@@ -28,10 +28,10 @@ export class ReceiveComponent implements OnInit {
       label: 'Empty label',
       address: 'Empty address',
       balance: 0,
-      readable: ["empty"]
+      readable: ['empty']
     };
 
-    initialized : boolean = false;
+    initialized: boolean = false;
 
   query: string;
   searchSubset: any = [];
@@ -65,62 +65,67 @@ export class ReceiveComponent implements OnInit {
     this.qr.size = this.qr.el.offsetWidth - 40;
     window.onresize = () => this.qr.size = this.qr.el.offsetWidth - 40;
 
-    //start rpc
+    // start rpc
     this.rpc_update();
-
-    // keep this
-    //this.changeType('public');
-
   }
 
   rpc_update() {
     this.appService.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
   }
 
-  rpc_loadAddressCount(JSON: Object){
-    let count = JSON['num_receive'];
+  rpc_loadAddressCount(JSON: Object) {
+    const count = JSON['num_receive'];
     this.appService.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses);
   }
 
-  rpc_loadAddresses(JSON: Object){
+  rpc_loadAddresses(JSON: Object) {
 
-    let pub = [];
-    let priv = [];
-    for(var k in JSON) {
-      if(JSON[k].address.indexOf('p') == 0){
+    const pub = [];
+    const priv = [];
+    for (const k in JSON) {
+      if (JSON[k].address.indexOf('p') === 0) {
         pub.push(JSON[k]);
-      }
-      else if(JSON[k].address.indexOf('T') == 0){
+      } else if (JSON[k].address.indexOf('T') === 0) {
         priv.push(JSON[k]);
       }
     }
 
-    //I need to get the count of the addresses seperate in public/private first, before doing addAddress..
-    if(pub.length > 0)
+    // I need to get the count of the addresses seperate in public/private first,
+    // because this.addresses[type] can never be empty,
+    // we need to delete our default address before doing addAddress..
+    if (pub.length > 0) {
       this.addresses.public = [];
+    }
 
-    if(priv.length > 0)
+    if (priv.length > 0) {
       this.addresses.private = [];
+    }
 
-    for(var k in pub)
-      this.addAddress(pub[k], 'public');
+    for (const k in pub) {
+      if (true) { // make lint happy
+        this.addAddress(pub[k], 'public');
+      }
+    }
 
-    for(var k in priv)
-      this.addAddress(priv[k], 'private');
+    for (const k in priv) {
+      if (true) { // make lint happy
+        this.addAddress(priv[k], 'private');
+      }
+    }
 
 
-    
 
-    if(JSON[0] !== undefined){
+
+    if (JSON[0] !== undefined) {
       this.sortArrays('public');
       this.sortArrays('private');
 
-      if(this.type == 'public') {
+      if (this.type === 'public') {
         this.loadPages(this.addresses.public);
-        this.selected = this.addresses.public[0];     
-      } else if(this.type == 'private') {
+        this.selected = this.addresses.public[0];
+      } else if (this.type === 'private') {
         this.loadPages(this.addresses.private);
-        this.selected = this.addresses.private[0];     
+        this.selected = this.addresses.private[0];
       }
 
     }
@@ -131,47 +136,45 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  addAddress(JSON: Object, type: string){
-    let tempAddress = {
+  addAddress(JSON: Object, type: string) {
+    const tempAddress = {
       id: 0,
       label: 'Empty label',
       address: 'Empty address',
       balance: 0,
-      readable: ["Empty"]
+      readable: ['Empty']
     }
-    
+
     tempAddress.address = JSON['address'];
-    if(JSON['label'] !== '') {
+    if (JSON['label'] !== '') {
       tempAddress.label = JSON['label'];
     }
 
     tempAddress.readable = tempAddress.address.match(/.{1,4}/g);
-    
+
     if (type === 'public') {
-      tempAddress.id = JSON['path'].replace("m/0/", "");
+      tempAddress.id = JSON['path'].replace('m/0/', '');
       this.addresses.public.unshift(tempAddress);
       console.log('public ' + tempAddress.address);
     } else if (type === 'private') {
-      tempAddress.id = +(JSON['path'].replace("m/0'/", "").replace("'", ""))/2;
+      tempAddress.id = +(JSON['path'].replace('m/0\'/', '').replace('\'', '')) / 2;
       this.addresses.private.unshift(tempAddress);
       console.log('priv ' + tempAddress.address);
     }
   }
 
-  sortArrays(type: string){
-    function compare(a, b){
+  sortArrays(type: string) {
+    function compare(a: Object, b: Object) {
       return b.id - a.id;
     }
 
     this.addresses[type].sort(compare);
-
-    for(var k in this.addresses[type])
-      console.log(this.addresses[type][k])
-
   }
+
   search(query: string) {
     if (!query) {
       this.loadPages(this.addresses[this.type]);
+      return;
     }
     // TODO doesn't search labels correctly
     // TODO should search address numbers
@@ -181,9 +184,7 @@ export class ReceiveComponent implements OnInit {
         || el.address.toLowerCase().indexOf(query.toLowerCase()) !== -1
       );
     })
-    console.log(query);
-    console.log(this.searchSubset);
-    this.loadPages(this.searchSubset);
+    this.loadPages(this.searchSubset, 0);
   }
 
   changeType(type: string) {
@@ -192,9 +193,9 @@ export class ReceiveComponent implements OnInit {
     this.loadPages(this.addresses[this.type]);
   }
 
-  loadPages(addresses: any[]) {
+  loadPages(addresses: any[], i: number = 1) {
     const pages = [];
-    for (let i = 1; i <= addresses.length; ) {
+    for (i; i <= addresses.length; ) {
       const address = addresses.slice(i, i + this.entriesPerPage);
       pages.push(address);
       i += this.entriesPerPage;
@@ -210,9 +211,9 @@ export class ReceiveComponent implements OnInit {
     setTimeout(() => { this.checkIfFreshAddress(); }, 30000);
   }
 
-  rpc_callbackFreshAddress(JSON: Object){
+  rpc_callbackFreshAddress(JSON: Object) {
     console.log(JSON);
-    if(JSON > 0) {
+    if (JSON > 0) {
       this.appService.rpc.call(this, 'getnewaddress', null, this.rpc_callbackGenerateNewAddress);
     }
   }
@@ -303,9 +304,9 @@ export class ReceiveComponent implements OnInit {
   newAddress() {
     const label = prompt('Label for new address');
 
-    if(this.type === 'public') {
+    if (this.type === 'public') {
       this.appService.rpc.call(this, 'getnewaddress', [label], this.rpc_callbackGenerateNewAddress);
-    } else if(this.type === 'private') {
+    } else if (this.type === 'private') {
       this.appService.rpc.call(this, 'getnewstealthaddress', [label], this.rpc_callbackGenerateNewAddress);
     }
   }
