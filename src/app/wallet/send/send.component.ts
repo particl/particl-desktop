@@ -60,7 +60,11 @@ export class SendComponent implements OnInit {
     const substractfee = false;
     const ringsize = this.send['privacy'];
     const numsigs = 1;
-    this.SendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+    if(this.type === 'sendPayment') {
+      this.SendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+    } else if (this.type === 'balanceTransfer') {
+      this.SendService.transferBalance(input, output, amount, ringsize, numsigs);
+    }
     this.clear();
   }
 
