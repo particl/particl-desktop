@@ -164,7 +164,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   sortArrays(type: string) {
-    function compare(a, b) {
+    function compare(a: any, b: any) {
       return b.id - a.id;
     }
 
