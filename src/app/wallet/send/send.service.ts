@@ -26,7 +26,7 @@ export class SendService {
     console.log(params);
     this.setTransactionDetails(address, amount);
 
-    // this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
+    this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
   }
 
   transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
@@ -46,7 +46,7 @@ export class SendService {
 
     console.log('transfering balance!');
     console.log(params);
-    // this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
+    this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
 
   }
 
