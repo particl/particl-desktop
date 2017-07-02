@@ -33,15 +33,18 @@
 
   <div *ngIf="type == 'sendPayment'">
 
-    <div *ngIf="advanced" class="card row">
+    <div class="card row">
       <div class="input-label col-xs-3">From account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="from" id="fromPublic"
           [(ngModel)]="send.fromType" value="public">
-        <label for="fromPublic" class="input-info-label">Public account</label>
+        <label for="fromPublic" class="input-info-label">Public</label>
+        <input type="radio" name="from" id="fromBlind"
+          [(ngModel)]="send.fromType" value="blind">
+        <label for="fromBlind" class="input-info-label">Blind</label>
         <input type="radio" name="from" id="fromPrivate"
           [(ngModel)]="send.fromType" value="private">
-        <label for="fromPrivate" class="input-info-label">Private account</label>
+        <label for="fromPrivate" class="input-info-label">Private</label>
       </span>
       <span class="separator"></span>
       <span class="col-xs-4 balance">
@@ -83,7 +86,7 @@
       </select>
     </div>
 
-    <div *ngIf="advanced" class="card row">
+    <div *ngIf="send.fromType === 'private'" class="card row">
       <div class="input-label col-xs-3">Privacy level</div>
       <div class="col-xs-4 nopadding">
         <div class="progress">
@@ -110,10 +113,13 @@
       <span class="col-xs-4 public-private">
         <input type="radio" name="from" id="fromPublic"
           [(ngModel)]="send.fromType" value="public">
-        <label for="fromPublic" class="input-info-label">Public account</label>
+        <label for="fromPublic" class="input-info-label">Public</label>
+        <input type="radio" name="from" id="fromBlind"
+          [(ngModel)]="send.fromType" value="blind">
+        <label for="fromBlind" class="input-info-label">Blind</label>
         <input type="radio" name="from" id="fromPrivate"
-          [(ngModel)]="send.fromType" value="private">
-        <label for="fromPrivate" class="input-info-label">Private account</label>
+          [(ngModel)]="send.fromType"  value="private">
+        <label for="fromPrivate" class="input-info-label">Private</label>
       </span>
       <span class="separator"></span>
       <span class="col-xs-4 balance">
@@ -122,15 +128,18 @@
       </span>
     </div>
 
-    <div *ngIf="advanced" class="card row">
+    <div class="card row">
       <div class="input-label col-xs-3">To account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="to" id="toPublic"
-          [(ngModel)]="send.toType" value="public">
-        <label for="toPublic" class="input-info-label">Public account</label>
+          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'public' }}" value="public">
+        <label for="toPublic" class="input-info-label">Public</label>
+        <input type="radio" name="to" id="toBlind"
+          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'blind' }}" value="blind">
+        <label for="toBlind" class="input-info-label">Blind</label>
         <input type="radio" name="to" id="toPrivate"
-          [(ngModel)]="send.toType" value="private">
-        <label for="toPrivate" class="input-info-label">Private account</label>
+          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'private' }}" value="private">
+        <label for="toPrivate" class="input-info-label">Private</label>
       </span>
       <span class="separator"></span>
       <span class="col-xs-4 balance">
@@ -161,6 +170,22 @@
       <select [(ngModel)]="send.currency">
         <option value="part">PART</option>
       </select>
+    </div>
+
+    <div *ngIf="send.fromType === 'private'" class="card row">
+      <div class="input-label col-xs-3">Privacy level</div>
+      <div class="col-xs-4 nopadding">
+        <div class="progress">
+          <div id="privacy" class="progress-bar" role="progressbar"
+            [ngStyle]="{ 'width': send.privacy + '%' }">
+          </div>
+        </div>
+        <div class="privacy-labels">
+          <span class="privacy-label" (click)="send.privacy = 10">Normal</span>
+          <span class="privacy-label" (click)="send.privacy = 50">Medium</span>
+          <span class="privacy-label" (click)="send.privacy = 100">High</span>
+        </div>
+      </div>
     </div>
 
   </div>

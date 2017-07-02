@@ -13,7 +13,7 @@ export class SendComponent implements OnInit {
   advanced: boolean = false;
   send: Object = {
     fromType: 'public',
-    toType: 'public',
+    toType: 'private',
     currency: 'part',
     privacy: 50
   };
@@ -35,6 +35,9 @@ export class SendComponent implements OnInit {
     if (account === 'public') {
       return (12345);
     }
+    if (account === 'blind') {
+      return (12345);
+    }
     if (account === 'private') {
       return (54321);
     }
@@ -52,7 +55,7 @@ export class SendComponent implements OnInit {
   pay() {
     console.log(this.type, this.send);
     const input = this.send['fromType'];
-    const output = this.send['toType'];
+    let output = this.send['toType'];
     const address = this.send['toAddress'];
     const amount = this.send['amount'];
     const comment = this.send['note'];
@@ -60,10 +63,32 @@ export class SendComponent implements OnInit {
     const substractfee = false;
     const ringsize = this.send['privacy'];
     const numsigs = 1;
-    if(this.type === 'sendPayment') {
+
+    if (amount === undefined ) {
+      alert('You need to enter an amount!');
+      return;
+    }
+
+
+    if (this.type === 'balanceTransfer' && this.send['fromType'] === this.send['toType']) {
+      alert('You have selected "' + this.send['fromType'] + '"" twice!\n Balance transfers can only happen between two different types.');
+    }
+
+    if (this.type === 'sendPayment') {
+      output = input;
+
+      if (address === undefined) {
+        alert('You need to enter an address to send to!');
+        return;
+      }
+
+      if (output === 'private' && address.indexOf('Tet') !== 0) {
+        alert('Stealth address required for private transaction');
+      }
+
       this.SendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
     } else if (this.type === 'balanceTransfer') {
-      this.SendService.transferBalance(input, output, amount, ringsize, numsigs);
+      this.SendService.transferBalance(input, output, address, amount, ringsize, numsigs);
     }
     this.clear();
   }
