@@ -46,7 +46,7 @@ export class SendComponent implements OnInit {
   clear() {
     this.send = {
       fromType: 'public',
-      toType: 'public',
+      toType: 'blind',
       currency: 'part',
       privacy: 50
     };
