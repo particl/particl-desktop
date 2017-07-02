@@ -93,7 +93,7 @@ export class SendService {
   // TODO: do I need to turn everything into strings manually?
   getSendParams(anon: boolean, address: string, amount: number, comment: string, substractfee: boolean,
     narration: string, ringsize: number, numsignatures: number) {
-    const params: Array<any> = [address, +amount, '', '', substractfee];
+    const params: Array<any> = [address, '' + amount, '', '', substractfee];
     if (narration !== '' && narration !== undefined) {
       params.push(narration);
     } else {
@@ -127,7 +127,7 @@ export class SendService {
     // json return value is just txid
     // We can't use gettransaction just yet, becaue
     if (true) {
-      console.log('rpc_send succesful ' + this.amount + ' to ' + this.address);
+      alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!');
     } else {
       // error
     }
