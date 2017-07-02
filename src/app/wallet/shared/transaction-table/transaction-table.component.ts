@@ -6,7 +6,8 @@ import { TransactionService } from '../transaction.service';
 @Component({
   selector: 'transaction-table',
   templateUrl: './transaction-table.component.html',
-  styleUrls: ['./transaction-table.component.scss']
+  styleUrls: ['./transaction-table.component.scss'],
+  providers: [TransactionService]
 })
 export class TransactionsTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
