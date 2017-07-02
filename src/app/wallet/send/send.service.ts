@@ -22,28 +22,31 @@ export class SendService {
     const anon: boolean = this.isAnon(rpcCall);
     const params: Array<any> = this.getSendParams(anon, address, amount, comment, substractfee, narration, ringsize, numsignatures);
 
-    console.log("sending tx!");
+    console.log('sending tx!');
     console.log(params);
     this.setTransactionDetails(address, amount);
 
-    //this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
+    // this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
   }
 
-  transferBalance(input: string, output: string, amount: number, ringsize: number, numsignatures: number) {
-    console.log("test");
+  transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
     this.resetTransactionDetails();
     // comment is internal, narration is stored on blockchain
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
-    const params: Array<any> = this.getSendParamsTransferBalance(anon, this.defaultStealthAddressForBalanceTransfer, amount, ringsize);
-    //const params: Array<any> = this.getSendParams(anon, this.defaultStealthAddressForBalanceTransfer, amount, '', false, '', ringsize, numsignatures);
 
+    if (address === undefined) {
+      address = this.defaultStealthAddressForBalanceTransfer;
+    }
+
+    const params: Array<any> = this.getSendParams(anon, this.defaultStealthAddressForBalanceTransfer,
+      amount, '', false, '', ringsize, numsignatures);
 
     this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
 
-    console.log("transfering balance!");
+    console.log('transfering balance!');
     console.log(params);
-    //this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
+    // this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
 
   }
 
@@ -68,7 +71,7 @@ export class SendService {
       return 'anontoanon';
     } else if (input === 'blind' && output === 'blind') {
       return 'blindtoblind';
-       
+
     // balance transfers (internal)
     } else if (input === 'private' && output === 'public') {
       return 'anontopart';
@@ -90,29 +93,34 @@ export class SendService {
   // TODO: do I need to turn everything into strings manually?
   getSendParams(anon: boolean, address: string, amount: number, comment: string, substractfee: boolean,
     narration: string, ringsize: number, numsignatures: number) {
-    let params : Array<any> = [address, '' + amount, comment, '', '' + substractfee];
-    if(narration !== '') {
+    const params: Array<any> = [address, +amount, '', '', substractfee];
+    if (narration !== '' && narration !== undefined) {
       params.push(narration);
+    } else {
+      params.push('');
     }
 
     if (anon) {
       // comment-to empty
-      params.push('' + ringsize);
-      params.push(numsignatures);
+      params.push(this.getRingSize(ringsize));
+      // params.push(numsignatures);
     }
 
     return params;
   }
 
-  getSendParamsTransferBalance(anon: boolean, address: string, amount: number, ringsize: number) {
-    if(anon)
-      return [address, '' + amount, ringsize];
-    else 
-      return [address, '' + amount];
-  }
-
   isAnon(input: string) {
     return (input === 'anontopart' || input === 'anontoanon' || input === 'anontoblind' )
+  }
+
+  getRingSize(ringsize: number): number {
+    if (ringsize === 100) {
+      return 16;
+    } else if (ringsize === 50) {
+      return 8;
+    } else if (ringsize === 10) {
+      return 4;
+    }
   }
 
   rpc_send(JSON: Object) {
