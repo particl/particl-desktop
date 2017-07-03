@@ -17,7 +17,7 @@ export class SendService {
     narration: string, ringsize: number, numsignatures: number) {
 
     this.resetTransactionDetails();
-    // comment is internal, narration is stored on blockchain
+
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
     const params: Array<any> = this.getSendParams(anon, address, amount, comment, substractfee, narration, ringsize, numsignatures);
@@ -46,19 +46,21 @@ export class SendService {
 
     console.log('transfering balance!');
     console.log(params);
+
     this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
 
   }
 
   rpc_callbackListDefaultAddress(JSON: Object) {
     if (JSON[0] !== undefined && JSON[0]['Stealth Addresses'] !== undefined && JSON[0]['Stealth Addresses'][0] !== undefined) {
-      this.defaultStealthAddressForBalanceTransfer = JSON[0]['Stealth Addresses'][0]['Address'];
+      this.rpc_callbackSetDefaultAddress(JSON[0]['Stealth Addresses'][0]['Address']);
     } else {
       this.appService.rpc.call(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_callbackSetDefaultAddress);
     }
   }
 
   rpc_callbackSetDefaultAddress (JSON: string) {
+    console.log(JSON);
     this.defaultStealthAddressForBalanceTransfer = JSON;
   }
 
@@ -94,10 +96,11 @@ export class SendService {
   getSendParams(anon: boolean, address: string, amount: number, comment: string, substractfee: boolean,
     narration: string, ringsize: number, numsignatures: number) {
     const params: Array<any> = [address, '' + amount, '', '', substractfee];
+    
     if (narration !== '' && narration !== undefined) {
       params.push(narration);
     } else {
-      params.push('');
+      params.push(' '); // TODO: remove space
     }
 
     if (anon) {
@@ -123,11 +126,11 @@ export class SendService {
     }
   }
 
-  rpc_send(JSON: Object) {
+  rpc_send(JSON: string) {
     // json return value is just txid
     // We can't use gettransaction just yet, becaue
     if (true) {
-      alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!');
+      alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!\nTransaction id: ' + JSON);
     } else {
       // error
     }

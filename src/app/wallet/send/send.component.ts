@@ -12,8 +12,8 @@ export class SendComponent implements OnInit {
   type: string = 'sendPayment';
   advanced: boolean = false;
   send: Object = {
-    fromType: 'public',
-    toType: 'private',
+    fromType: '',
+    toType: '',
     currency: 'part',
     privacy: 50
   };
@@ -45,8 +45,8 @@ export class SendComponent implements OnInit {
 
   clear() {
     this.send = {
-      fromType: 'public',
-      toType: 'blind',
+      fromType: '',
+      toType: '',
       currency: 'part',
       privacy: 50
     };
@@ -54,6 +54,7 @@ export class SendComponent implements OnInit {
 
   pay() {
     console.log(this.type, this.send);
+
     const input = this.send['fromType'];
     let output = this.send['toType'];
     const address = this.send['toAddress'];
@@ -63,6 +64,17 @@ export class SendComponent implements OnInit {
     const substractfee = false;
     const ringsize = this.send['privacy'];
     const numsigs = 1;
+
+    const currency = this.send['currency'];
+
+    if (input === '' ) {
+      alert('You need to select an input type (public, blind or anon)!');
+      return;
+    }
+    if (this.type === 'balanceTransfer' && output === '') {
+      alert('You need to select an output type (public, blind or anon)!');
+      return;
+    }
 
     if (amount === undefined ) {
       alert('You need to enter an amount!');
@@ -86,8 +98,15 @@ export class SendComponent implements OnInit {
         alert('Stealth address required for private transaction');
       }
 
+      if (!confirm('Are you sure you want to send ' + amount + ' ' + currency + ' to ' + address + '?')) {
+        return;
+      }
+
       this.SendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
     } else if (this.type === 'balanceTransfer') {
+      if (!confirm('Are you sure you want to transfer ' + amount + ' ' + currency + ' from ' + input + ' to ' + output + '?')) {
+        return;
+      }
       this.SendService.transferBalance(input, output, address, amount, ringsize, numsigs);
     }
     this.clear();
