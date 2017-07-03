@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class BalanceComponent implements OnInit, OnDestroy {
 
-  @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
+  @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE", "BLIND"
   private _sub: Subscription;
   private _balance: number = 0;
 

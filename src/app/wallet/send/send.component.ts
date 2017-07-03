@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SendService } from './send.service';
+import { BalanceService } from '../balances/balance.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-send',
@@ -7,7 +9,9 @@ import { SendService } from './send.service';
   // TODO merge / globalize styles
   styleUrls: ['./send.component.scss', '../../settings/settings.component.scss']
 })
-export class SendComponent implements OnInit {
+export class SendComponent implements OnInit, OnDestroy {
+  private _sub: Subscription;
+  private _balance: any;
 
   type: string = 'sendPayment';
   advanced: boolean = false;
@@ -18,9 +22,19 @@ export class SendComponent implements OnInit {
     privacy: 50
   };
 
-  constructor(private SendService: SendService) { }
+  constructor(private SendService: SendService, private balanceService: BalanceService) { }
 
   ngOnInit() {
+    this._sub = this.balanceService.getBalances()
+      .subscribe(
+        balances => {
+          this._balance = balances;
+        },
+        error => console.log('balanceService subscription error:' + error));
+  }
+
+  ngOnDestroy() {
+    this._sub.unsubscribe();
   }
 
   sendTab(type: string) {
@@ -33,13 +47,13 @@ export class SendComponent implements OnInit {
 
   getBalance(account: string) {
     if (account === 'public') {
-      return (12345);
+      return ( this._balance !== undefined ? this._balance.getBalance('PUBLIC') : '');
     }
     if (account === 'blind') {
-      return (12345);
+      return ( this._balance !== undefined ? this._balance.getBalance('BLIND') : '');
     }
     if (account === 'private') {
-      return (54321);
+      return ( this._balance !== undefined ? this._balance.getBalance('PRIVATE') : '');
     }
   }
 
