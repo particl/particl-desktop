@@ -14,7 +14,7 @@ export class FirsttimeComponent {
   ) { }
 
   create () {
-    this._modalsService.open('generatewallet');
+    this._modalsService.open('generate');
   }
 
   restore() {
