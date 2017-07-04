@@ -1,15 +1,21 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { HttpModule } from '@angular/http';
 
-import { RpcService } from './rpc.service';
+import { RPCService } from './rpc.service';
+import { ElectronService } from 'ngx-electron';
 
-describe('RpcService', () => {
+describe('RPCService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RpcService]
+      imports: [HttpModule],
+      providers: [
+        RPCService,
+        ElectronService
+      ]
     });
   });
 
-  it('should ...', inject([RpcService], (service: RpcService) => {
+  it('should be created', inject([RPCService], (service: RPCService) => {
     expect(service).toBeTruthy();
   }));
 });

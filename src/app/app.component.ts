@@ -46,6 +46,8 @@ export class AppComponent implements OnInit {
       .filter(route => route.outlet === 'primary')
       .flatMap(route => route.data)
       .subscribe(data => this.title = data['title']);
+
+    this.appService.rpc.poll();
   }
 
   // Modal examples
