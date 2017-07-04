@@ -55,9 +55,9 @@
 
     <div class="card row">
       <div class="input-label col-xs-3">Pay to</div>
-      <input class="col-xs-4" type="text"
+      <input class="col-xs-4" [ngClass]="{'good': checkAddress() == true, 'fault': checkAddress() == false }" type="text"
         placeholder="The address to send the payment to"
-        [(ngModel)]="send.toAddress">
+        [(ngModel)]="send.toAddress" (input)="verifyAddress()">
       <input class="col-xs-2" type="text" placeholder="Enter a label"
         [(ngModel)]="send.toLabel">
       <span class="separator"></span>
@@ -80,7 +80,8 @@
       <div class="input-label col-xs-3">Amount</div>
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
-        [(ngModel)]="send.amount">
+        [(ngModel)]="send.amount"
+        [ngClass]="{'good': verifyAmount() == true, 'fault': verifyAmount() == false }">
       <select [(ngModel)]="send.currency">
         <option value="part">PART</option>
       </select>
