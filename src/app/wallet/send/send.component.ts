@@ -18,6 +18,7 @@ export class SendComponent implements OnInit, OnDestroy {
   send: Object = {
     fromType: '',
     toType: '',
+    validAddress: undefined,
     currency: 'part',
     privacy: 50
   };
@@ -55,6 +56,45 @@ export class SendComponent implements OnInit, OnDestroy {
     if (account === 'private') {
       return ( this._balance !== undefined ? this._balance.getBalance('PRIVATE') : '');
     }
+  }
+
+  checkAddress(): boolean {
+    return this.send['validAddress'];
+  }
+
+  verifyAmount(): boolean {
+    if (this.send['amount'] === undefined || this.send['amount'] === 0 || this.send['fromType'] === '') {
+      return undefined;
+    }
+
+    if ((this.send['amount'] + '').indexOf('.') >= 0 && (this.send['amount'] + '').split('.')[1].length > 8) {
+      return false;
+    }
+
+
+    if (this.send['amount'] <= this.getBalance(this.send['fromType'])) {
+      return true;
+    }
+
+    return false;
+  }
+
+  verifyAddress() {
+    if (this.send['toAddress'] === undefined || this.send['toAddress'] === undefined) {
+      return;
+    }
+
+    if (this.send['toAddress'].length === 34 && this.send['toAddress'].indexOf('p') === 0) {
+      this.SendService.appService.rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
+    }
+
+
+
+    this.send['validAddress'] = undefined;
+  }
+
+  rpc_callbackVerifyAddress(JSON: Object) {
+    this.send['validAddress'] = JSON['isvalid'];
   }
 
   clear() {
@@ -95,6 +135,24 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.send['validAddress'] === false || this.send['validAddress'] === undefined) {
+      alert('You entered an invalid address!');
+      this.send['validAddress'] = false;
+      return;
+    }
+
+    if (this.verifyAmount() === false) {
+      if (this.send['amount'] > this.getBalance(this.send['fromType'])) {
+        alert('You\'re trying to send more money than you have.');
+        return;
+      }
+
+      if ((this.send['amount'] + '').indexOf('.') >= 0 && (this.send['amount'] + '').split('.')[1].length > 8) {
+        alert('The amount can only have 8 places after the decimal point.');
+        return;
+      }
+
+    }
 
     if (this.type === 'balanceTransfer' && this.send['fromType'] === this.send['toType']) {
       alert('You have selected "' + this.send['fromType'] + '"" twice!\n Balance transfers can only happen between two different types.');

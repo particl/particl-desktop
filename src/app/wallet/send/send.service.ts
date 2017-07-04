@@ -9,7 +9,7 @@ export class SendService {
 
   private defaultStealthAddressForBalanceTransfer: string;
 
-  constructor(private appService: AppService) {
+  constructor(public appService: AppService) {
     this.appService.rpc.call(this, 'liststealthaddresses', null, this.rpc_callbackListDefaultAddress);
   }
 
