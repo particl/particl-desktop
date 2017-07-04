@@ -88,7 +88,9 @@ export class SendComponent implements OnInit, OnDestroy {
       this.SendService.appService.rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
     }
 
-
+    if (this.send['toAddress'].length === 102 && this.send['toAddress'].indexOf('Tet') === 0) {
+      this.SendService.appService.rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
+    }
 
     this.send['validAddress'] = undefined;
   }
