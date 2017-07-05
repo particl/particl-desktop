@@ -80,10 +80,19 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
   verifyAddress() {
-    if (this.send['toAddress'] === undefined || this.send['toAddress'] === undefined) {
+    if (this.send['toAddress'] === undefined || this.send['toAddress'] === '') {
+      this.send['validAddress'] = undefined;
       return;
     }
 
+    let ret: boolean = false;
+    if((this.send['toAddress'].indexOf('p') === 0) === false) {
+      if((this.send['toAddress'].indexOf('T') === 0) === false){
+        this.send['validAddress'] = false;
+        return;
+      }
+    }
+    
     if (this.send['toAddress'].length === 34 && this.send['toAddress'].indexOf('p') === 0) {
       this.SendService.appService.rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
     }
@@ -137,11 +146,6 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.send['validAddress'] === false || this.send['validAddress'] === undefined) {
-      alert('You entered an invalid address!');
-      this.send['validAddress'] = false;
-      return;
-    }
 
     if (this.verifyAmount() === false) {
       if (this.send['amount'] > this.getBalance(this.send['fromType'])) {
@@ -165,6 +169,12 @@ export class SendComponent implements OnInit, OnDestroy {
 
       if (address === undefined) {
         alert('You need to enter an address to send to!');
+        return;
+      }
+
+      if (this.send['validAddress'] === false || this.send['validAddress'] === undefined) {
+        alert('You entered an invalid address!');
+        this.send['validAddress'] = false;
         return;
       }
 
