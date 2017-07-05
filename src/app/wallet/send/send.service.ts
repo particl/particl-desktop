@@ -22,8 +22,6 @@ export class SendService {
     const anon: boolean = this.isAnon(rpcCall);
     const params: Array<any> = this.getSendParams(anon, address, amount, comment, substractfee, narration, ringsize, numsignatures);
 
-    console.log('sending tx!');
-    console.log(params);
     this.setTransactionDetails(address, amount);
 
     this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
@@ -44,9 +42,6 @@ export class SendService {
 
     this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
 
-    console.log('transfering balance!');
-    console.log(params);
-
     this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
 
   }
@@ -60,7 +55,6 @@ export class SendService {
   }
 
   rpc_callbackSetDefaultAddress (JSON: string) {
-    console.log(JSON);
     this.defaultStealthAddressForBalanceTransfer = JSON;
   }
 
