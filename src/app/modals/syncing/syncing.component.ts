@@ -26,9 +26,7 @@ export class SyncingComponent implements OnInit, OnDestroy {
   private _subBlockInternal: Subscription;
   private _subBlockNetwork: Subscription;
 
-  constructor(private peerService: PeerService) {
-    console.log('syncing');
-  }
+  constructor(private peerService: PeerService) { }
 
   ngOnInit() {
     this._subBlockInternal = this.peerService.getBlockCount()
