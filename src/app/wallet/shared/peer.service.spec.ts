@@ -10,9 +10,9 @@ describe('PeerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-      	AppService,
-      	RPCService,
-      	PeerService]
+        AppService,
+        RPCService,
+        PeerService]
     });
   });
 

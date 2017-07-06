@@ -14,10 +14,10 @@ describe('SyncingComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SyncingComponent ],
-      providers: [ 
+      providers: [
         AppService,
         RPCService,
-        PeerService 
+        PeerService
       ]
     })
     .compileComponents();

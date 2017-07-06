@@ -93,7 +93,7 @@ export class SyncingComponent implements OnInit, OnDestroy {
     return (diff < 0 ? 0 : diff);
   }
 
-  //TODO: average out the estimated time left to stop random shifting when slowed down.
+  // TODO: average out the estimated time left to stop random shifting when slowed down.
   getEstimateTimeLeft() {
     const secs = this.estimatedTimeLeft;
     const seconds = Math.floor(secs % 60);
