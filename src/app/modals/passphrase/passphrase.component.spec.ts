@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PassphraseComponent } from './passphrase.component';
 import { ModalsModule } from '../modals.module';
+import { SharedModule } from '../../shared/shared.module';
 
 import { ElectronService } from 'ngx-electron';
 import { AppService } from '../../app.service';
@@ -14,7 +15,7 @@ describe('PassphraseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule],
+      imports: [SharedModule, ModalsModule],
       providers: [
         AppService,
         ElectronService,
