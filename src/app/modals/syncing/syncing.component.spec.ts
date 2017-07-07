@@ -20,6 +20,7 @@ describe('SyncingComponent', () => {
       providers: [
         AppService,
         RPCService,
+        ElectronService,
         PeerService
       ]
     })
