@@ -85,14 +85,14 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let ret: boolean = false;
-    if((this.send['toAddress'].indexOf('p') === 0) === false) {
-      if((this.send['toAddress'].indexOf('T') === 0) === false){
+    const ret = false;
+    if ((this.send['toAddress'].indexOf('p') === 0) === false) {
+      if ((this.send['toAddress'].indexOf('T') === 0) === false) {
         this.send['validAddress'] = false;
         return;
       }
     }
-    
+
     if (this.send['toAddress'].length === 34 && this.send['toAddress'].indexOf('p') === 0) {
       this.SendService.appService.rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
     }
