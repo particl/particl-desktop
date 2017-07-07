@@ -144,7 +144,7 @@ span.icon:hover {
   border-left: 2px solid #efefef;
 }
 
-#address-modal {
+.small-modal {
   position: absolute;
   z-index: 100000;
   top: 0;
@@ -154,7 +154,7 @@ span.icon:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-#address-modal.hide {
+.small-modal.hide {
   width: 0!important;
   height: 0!important;
   display: none;
@@ -179,7 +179,7 @@ span.icon:hover {
   font-size: 1.2em;
 }
 
-#address-modal .row {
+.small-modal .row {
   margin-bottom: 30px;
 }
 
@@ -189,4 +189,9 @@ th {
 
 tr {
   cursor: pointer;
+}
+
+.validate[disabled] {
+  background-color: #a1a1a1;
+  border-bottom-color: #222828;
 }

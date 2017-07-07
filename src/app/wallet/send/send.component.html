@@ -167,12 +167,16 @@
 
   <div class="pull-right">
     <button (click)="clear()">Clear all</button>
-    <button class="validate" (click)="pay()">Make payment</button>
+    <button class="validate"
+      (click)="openValidate()"
+      [disabled]="!send.toAddress || !send.amount">
+      Make payment
+    </button>
   </div>
 
 </div>
 
-<div id="address-modal" class="hide">
+<div class="small-modal hide" id="lookup">
   <div class="address-modal-container">
     <span class="close" (click)="closeLookup()">&times;</span>
 
@@ -212,6 +216,28 @@
     </table>
 
     <hr>
+
+  </div>
+</div>
+
+<div class="small-modal hide" id="validate">
+  <div class="address-modal-container">
+    <span class="close" (click)="closeLookup()">&times;</span>
+
+    <div class="modal-content-header">Validate</div>
+    <hr style="margin-top: 5px;">
+
+    <div class="">
+      Do you really want to send {{send.amount}} {{send.currency.toUpperCase()}}
+      to {{send.toAddress}} ?
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <button class="col-xs-5" (click)="closeValidate()">Cancel</button>
+      <button class="col-xs-5 validate" (click)="pay()">Confirm</button>
+    </div>
 
   </div>
 </div>

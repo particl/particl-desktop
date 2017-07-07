@@ -61,11 +61,19 @@ export class SendComponent implements OnInit {
   }
 
   openLookup() {
-    document.getElementById('address-modal').classList.remove('hide');
+    document.getElementById('lookup').classList.remove('hide');
   }
 
   closeLookup() {
-    document.getElementById('address-modal').classList.add('hide');
+    document.getElementById('lookup').classList.add('hide');
+  }
+
+  openValidate() {
+    document.getElementById('validate').classList.remove('hide');
+  }
+
+  closeValidate() {
+    document.getElementById('validate').classList.add('hide');
   }
 
   selectAddress(address: string, label: string) {
@@ -85,6 +93,8 @@ export class SendComponent implements OnInit {
 
   pay() {
     console.log(this.type, this.send);
+    this.clear();
+    this.closeValidate();
   }
 
 }
