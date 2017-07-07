@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { AppService } from '../../app.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
+import { PeerService } from '../../wallet/shared/peer.service';
 
 describe('SyncingComponent', () => {
   let component: SyncingComponent;
