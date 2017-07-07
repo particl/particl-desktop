@@ -2,9 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyncingComponent } from './syncing.component';
 
+import { ElectronService } from 'ngx-electron';
+import { SharedModule } from '../../shared/shared.module';
 import { AppService } from '../../app.service';
 import { RPCService } from '../../core/rpc/rpc.service';
-import { PeerService } from '../../wallet/shared/peer.service';
 
 
 describe('SyncingComponent', () => {
@@ -13,6 +14,7 @@ describe('SyncingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ SharedModule ],
       declarations: [ SyncingComponent ],
       providers: [
         AppService,
