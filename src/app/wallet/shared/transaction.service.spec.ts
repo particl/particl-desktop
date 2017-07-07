@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
+import { SharedModule } from '../../shared/shared.module';
 
 import { TransactionService } from './transaction.service';
 
@@ -10,6 +10,7 @@ import { RPCService } from '../../core/rpc/rpc.service';
 describe('TransactionService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [SharedModule],
       providers: [
         TransactionService,
         AppService,
