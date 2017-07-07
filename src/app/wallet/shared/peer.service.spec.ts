@@ -11,7 +11,8 @@ describe('PeerService', () => {
     TestBed.configureTestingModule({
       providers: [
         AppService,
-        RPCService
+        RPCService,
+        PeerService
        ]
     });
   });
