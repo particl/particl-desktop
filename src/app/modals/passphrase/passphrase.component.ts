@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ModalsModule } from '../modals.module';
 
+import { AppService } from '../../app.service';
+
 @Component({
   selector: 'app-passphrase',
   templateUrl: './passphrase.component.html',
@@ -8,8 +10,31 @@ import { ModalsModule } from '../modals.module';
 })
 export class PassphraseComponent {
 
-  unlock(password: string) {
+  constructor (private appService: AppService) { }
+
+  unlock(obj: Object) {
     // TODO API call
-    console.log(password);
+    const password: string = obj['password'];
+    const stakeOnly: boolean = obj['stakeOnly'];
+
+    this.appService.rpc.call(this, 'walletpassphrase', [password, 99999, stakeOnly], this.rpc_unlockSuccesful);
+    alert(obj['password'] + obj['stakeOnly']);
+  }
+
+  rpc_unlockSuccesful(JSON: Object) {
+    this.appService.rpc.call(this, 'getwalletinfo', null, this.walletAlert);
+  }
+
+  walletAlert(JSON: Object) {
+    const encryptionstatus = JSON['encryptionstatus'];
+    if (encryptionstatus === 'Unlocked') {
+      alert('Unlock succesful!');
+    } else if (encryptionstatus === 'Unlocked, staking only') {
+      alert('Unlock was succesful!');
+    } else if (encryptionstatus === 'Locked') {
+      alert('Warning: unlock was unsuccesful!');
+    } else {
+      alert('Wallet not encrypted!');
+    }
   }
 }

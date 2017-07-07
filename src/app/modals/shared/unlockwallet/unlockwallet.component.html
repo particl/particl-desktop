@@ -7,9 +7,15 @@
       <input type="{{passwordInputType()}}" name="password" class="form-control" style="width: 100%;"
       [(ngModel)]="password"/>
       <br>
+
       <input type="checkbox" name="showpass" value="password" id="wallet-password"
       [(ngModel)]="showPass"/>
       <label for="wallet-password">SHOW PASSWORD</label>
+
+      <input type="checkbox" name="stakeonly" value="stakeonly" id="stakeonly" style="margin-left: 5%"
+      [(ngModel)]="stakeOnly"/>
+      <label for="stakeonly">STAKE ONLY</label>
+
     </div>
   </div>
   <div class="col-md-2">

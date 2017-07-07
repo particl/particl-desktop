@@ -8,17 +8,27 @@ import { ModalsModule } from '../../modals.module';
 })
 export class UnlockwalletComponent implements Input, Output {
 
-  private showPass: boolean = false;
+
   private password: string;
+  private showPass: boolean = false;
+  private stakeOnly: boolean = false;
 
   @Input() unlockButton: string;
-  @Output() passwordEmitter: EventEmitter<string> = new EventEmitter<string>();
+  @Output() passwordEmitter: EventEmitter<Object> = new EventEmitter<Object>();
 
   passwordInputType(): string {
     return (this.showPass ? 'text' : 'password');
   }
 
   unlock() {
-    this.passwordEmitter.emit(this.password);
+
+    const obj = {
+      password: this.password,
+      stakeOnly: this.stakeOnly
+    }
+
+    this.passwordEmitter.emit(obj);
+
+    this.password = '';
   }
 }
