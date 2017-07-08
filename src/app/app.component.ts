@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
-import { AppService } from './app.service';
 import { WindowService } from './core/window.service';
+import { RPCService } from './core/rpc/rpc.service';
 
 import { SettingsService } from './settings/settings.service';
 // Modal example
@@ -24,8 +24,8 @@ export class AppComponent implements OnInit {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
-    private appService: AppService,
     public window: WindowService,
+    private _rpc: RPCService,
     private _settingsService: SettingsService,
     // Modal example
     private _modalsService: ModalsService
@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
       .flatMap(route => route.data)
       .subscribe(data => this.title = data['title']);
 
-    this.appService.rpc.poll();
+    this._rpc.poll();
   }
 
   // Modal examples

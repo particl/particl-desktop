@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Address, deserialize, TEST_ADDRESSES_JSON } from './address.model';
-import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
 
 @Injectable()
 export class AddressService {
@@ -31,7 +31,7 @@ export class AddressService {
 
 
 
-  constructor(private appService: AppService) {
+  constructor(private rpc: RPCService) {
     this.rpc_update();
   }
 
@@ -63,7 +63,7 @@ export class AddressService {
 
 */
   rpc_update() {
-    this.appService.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
+    this.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
   }
 
   // TODO: real address count
@@ -78,7 +78,7 @@ export class AddressService {
       addressCount = JSON['total'];
     }
     this.addressCount = addressCount;
-    this.appService.rpc.call(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses);
+    this.rpc.call(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses);
   }
 
   rpc_getParams() {

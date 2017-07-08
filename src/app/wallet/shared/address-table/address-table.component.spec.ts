@@ -6,9 +6,7 @@ import { AddressTableComponent } from './address-table.component';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
-
-import { AppService } from '../../../app.service';
-import { RPCService } from '../../../core/rpc/rpc.service';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
@@ -18,12 +16,8 @@ describe('AddressTableComponent', () => {
     TestBed.configureTestingModule({
       imports: [
          SharedModule,
-         WalletModule.forRoot()
-      ],
-      providers: [
-        AppService,
-        ElectronService,
-        RPCService
+         WalletModule.forRoot(),
+         RpcModule.forRoot()
       ]
     })
     .compileComponents();

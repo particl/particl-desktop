@@ -1,12 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 
-import { ElectronService } from 'ngx-electron';
-import { AppService } from '../../app.service';
-import { RPCService } from '../../core/rpc/rpc.service';
-
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { AddressBookComponent } from './address-book.component';
 
@@ -18,12 +15,8 @@ describe('AddressBookComponent', () => {
     TestBed.configureTestingModule({
       imports: [
          SharedModule,
-         WalletModule.forRoot()
-      ],
-      providers: [
-        AppService,
-        ElectronService,
-        RPCService
+         WalletModule.forRoot(),
+         RpcModule.forRoot()
       ],
       declarations: [ ]
     })

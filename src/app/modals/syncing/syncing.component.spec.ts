@@ -4,10 +4,10 @@ import { SyncingComponent } from './syncing.component';
 
 import { ElectronService } from 'ngx-electron';
 import { SharedModule } from '../../shared/shared.module';
-import { AppService } from '../../app.service';
+
 import { RPCService } from '../../core/rpc/rpc.service';
 
-import { PeerService } from '../../wallet/shared/peer.service';
+import { PeerService } from '../../core/rpc/peer.service';
 
 describe('SyncingComponent', () => {
   let component: SyncingComponent;
@@ -18,7 +18,6 @@ describe('SyncingComponent', () => {
       imports: [ SharedModule ],
       declarations: [ SyncingComponent ],
       providers: [
-        AppService,
         RPCService,
         ElectronService,
         PeerService

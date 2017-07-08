@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Transaction, deserialize, TEST_TXS_JSON, TEST_ARRAY_TXS_JSON_PAGE_0, TEST_ARRAY_TXS_JSON_PAGE_1  } from './transaction.model';
 
-import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
 
 @Injectable()
 export class TransactionService {
@@ -18,7 +18,7 @@ export class TransactionService {
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
 
-  constructor(private appService: AppService) { }
+  constructor(private rpc: RPCService) { }
 
 
   postConstructor(MAX_TXS_PER_PAGE: number) {
@@ -64,14 +64,14 @@ export class TransactionService {
 
 
   rpc_update() {
-    this.appService.rpc.call(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
+    this.rpc.call(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
   }
 
   rpc_loadTransactionCount(JSON: Object): void {
     this.txCount = JSON['txcount'];
     console.log('txcount' + this.txCount);
     console.log(this.rpc_getParameters());
-    this.appService.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
+    this.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
   }
 
   rpc_loadTransactions(JSON: Array<Object>): void {

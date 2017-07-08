@@ -5,7 +5,6 @@ import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 
 import { ElectronService } from 'ngx-electron';
-import { AppService } from '../../../app.service';
 import { RPCService } from '../../../core/rpc/rpc.service';
 
 describe('TransactionTableComponent', () => {
@@ -19,7 +18,6 @@ describe('TransactionTableComponent', () => {
          WalletModule.forRoot()
       ],
       providers: [
-        AppService,
         ElectronService,
         RPCService
       ]

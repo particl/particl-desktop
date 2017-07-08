@@ -4,10 +4,7 @@ import { HistoryComponent } from './history.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
-
-import { ElectronService } from 'ngx-electron';
-import { AppService } from '../../app.service';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
@@ -17,12 +14,8 @@ describe('HistoryComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        WalletModule.forRoot()
-      ],
-      providers: [
-        AppService,
-        ElectronService,
-        RPCService
+        WalletModule.forRoot(),
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();

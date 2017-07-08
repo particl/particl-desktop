@@ -6,8 +6,7 @@ import { OverviewComponent } from './overview.component';
 
 import { SharedModule } from '../shared/shared.module';
 import { WalletModule } from '../wallet/wallet.module';
-import { AppService } from '../app.service';
-import { RPCService } from '../core/rpc/rpc.service';
+import { RpcModule } from '../core/rpc/rpc.module';
 
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
@@ -17,14 +16,10 @@ describe('OverviewComponent', () => {
     TestBed.configureTestingModule({
       imports: [
          SharedModule,
-         WalletModule.forRoot()
+         WalletModule.forRoot(),
+         RpcModule.forRoot()
       ],
       declarations: [ OverviewComponent ],
-      providers: [
-        AppService,
-        ElectronService,
-        RPCService
-      ]
     })
     .compileComponents();
   }));

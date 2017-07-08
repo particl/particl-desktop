@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { PeerService } from '../../wallet/shared/peer.service';
+import { PeerService } from '../../core/rpc/peer.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
 
 @Component({
   selector: 'app-receive',
@@ -45,7 +45,7 @@ export class ReceiveComponent implements OnInit {
     size: undefined
   }
 
-  constructor(private appService: AppService) { }
+  constructor(private rpc: RPCService) { }
 
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: any) {
@@ -70,12 +70,12 @@ export class ReceiveComponent implements OnInit {
   }
 
   rpc_update() {
-    this.appService.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
+    this.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
   }
 
   rpc_loadAddressCount(JSON: Object) {
     const count = JSON['num_receive'];
-    this.appService.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses);
+    this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses);
   }
 
   rpc_loadAddresses(JSON: Object) {
@@ -206,7 +206,7 @@ export class ReceiveComponent implements OnInit {
 
   checkIfFreshAddress() {
     if (this.addresses.public[0].address !== 'Empty address') {
-      this.appService.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackFreshAddress);
+      this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackFreshAddress);
     }
     setTimeout(() => { this.checkIfFreshAddress(); }, 30000);
   }
@@ -214,7 +214,7 @@ export class ReceiveComponent implements OnInit {
   rpc_callbackFreshAddress(JSON: Object) {
     console.log(JSON);
     if (JSON > 0) {
-      this.appService.rpc.call(this, 'getnewaddress', null, this.rpc_callbackGenerateNewAddress);
+      this.rpc.call(this, 'getnewaddress', null, this.rpc_callbackGenerateNewAddress);
     }
   }
 
@@ -305,9 +305,9 @@ export class ReceiveComponent implements OnInit {
     const label = prompt('Label for new address');
 
     if (this.type === 'public') {
-      this.appService.rpc.call(this, 'getnewaddress', [label], this.rpc_callbackGenerateNewAddress);
+      this.rpc.call(this, 'getnewaddress', [label], this.rpc_callbackGenerateNewAddress);
     } else if (this.type === 'private') {
-      this.appService.rpc.call(this, 'getnewstealthaddress', [label], this.rpc_callbackGenerateNewAddress);
+      this.rpc.call(this, 'getnewstealthaddress', [label], this.rpc_callbackGenerateNewAddress);
     }
   }
 

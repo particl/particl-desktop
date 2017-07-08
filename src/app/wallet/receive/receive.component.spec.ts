@@ -6,10 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angular2-qrcode';
 
 import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
+
 import { ReceiveComponent } from './receive.component';
 
-import { AppService } from '../../app.service';
-import { RPCService } from '../../core/rpc/rpc.service';
 
 describe('ReceiveComponent', () => {
   let component: ReceiveComponent;
@@ -21,12 +21,8 @@ describe('ReceiveComponent', () => {
       imports: [
         FormsModule,
         SharedModule,
-        QRCodeModule
-      ],
-      providers: [
-        AppService,
-        ElectronService,
-        RPCService
+        QRCodeModule,
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();
