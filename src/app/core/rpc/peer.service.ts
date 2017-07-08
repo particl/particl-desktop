@@ -24,16 +24,14 @@ export class PeerService {
 
     // setup observable for internal block height
     this._highestBlockHeightInternal = Observable.create(
-      observer =>
-        this._observerHighestBlockHeightInternal = observer
+      observer => this._observerHighestBlockHeightInternal = observer
     ).publishReplay(1).refCount();
 
     this._highestBlockHeightInternal.subscribe().unsubscribe();
 
     // setup observable for network block height
     this._highestBlockHeightNetwork = Observable.create(
-      observer =>
-        this._observerHighestBlockHeightNetwork = observer
+      observer => this._observerHighestBlockHeightNetwork = observer
     ).publishReplay(1).refCount();
 
     this._highestBlockHeightNetwork.subscribe().unsubscribe();

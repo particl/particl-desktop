@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
 import { WindowService } from './core/window.service';
-import { RPCService } from './core/rpc/rpc.service';
+import { RPCService, PeerService } from './core/rpc/rpc.module';
 
 import { SettingsService } from './settings/settings.service';
 // Modal example
@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
     private _route: ActivatedRoute,
     public window: WindowService,
     private _rpc: RPCService,
+    private _peer: PeerService,
     private _settingsService: SettingsService,
     // Modal example
     private _modalsService: ModalsService
@@ -48,6 +49,29 @@ export class AppComponent implements OnInit {
       .subscribe(data => this.title = data['title']);
 
     this._rpc.poll();
+
+    const bcSub = this._peer.getBlockCount()
+      .subscribe(
+        height => {
+          const nbcSub = this._peer.getBlockCountNetwork()
+            .subscribe(
+              networkHeight => {
+                bcSub.unsubscribe();
+                nbcSub.unsubscribe();
+
+                if (height < networkHeight) {
+                  this._modalsService.open('syncing');
+                  this._modalsService.updateProgress(height / networkHeight * 100);
+                }
+
+                if (networkHeight < 0) {
+                  this._modalsService.open('syncing');
+                  this._modalsService.updateProgress(0);
+                }
+              }
+            )
+        }
+      );
   }
 
   // Modal examples
