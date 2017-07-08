@@ -34,3 +34,4 @@ export class AddressTableComponent implements OnInit {
     this.addressService.changePage(event.page);
   }
 }
+
