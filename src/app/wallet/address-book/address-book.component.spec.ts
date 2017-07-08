@@ -1,5 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+
+import { ElectronService } from 'ngx-electron';
+import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
+
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
 
@@ -14,6 +19,11 @@ describe('AddressBookComponent', () => {
       imports: [
          SharedModule,
          WalletModule.forRoot()
+      ],
+      providers: [
+        AppService,
+        ElectronService,
+        RPCService
       ],
       declarations: [ ]
     })

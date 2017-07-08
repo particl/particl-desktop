@@ -6,7 +6,8 @@ import { TransactionService } from '../transaction.service';
 @Component({
   selector: 'transaction-table',
   templateUrl: './transaction-table.component.html',
-  styleUrls: ['./transaction-table.component.scss']
+  styleUrls: ['./transaction-table.component.scss'],
+  providers: [TransactionService]
 })
 export class TransactionsTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
@@ -14,6 +15,7 @@ export class TransactionsTableComponent implements OnInit {
   @Input() displayHeader: boolean = true;
   @Input() displayInternalHeader: boolean = false;
   @Input() displayPagination: boolean = false;
+  @Input() amountOfTxsToDisplay: number = 10;
 
     /* actual fields */
   @Input() displayCategory: boolean = true;
@@ -27,11 +29,12 @@ export class TransactionsTableComponent implements OnInit {
   @Input() displayBlockHash: boolean = false;
   @Input() displayBlockIndex: boolean = false;
 
+
   constructor(public txService: TransactionService) {
-    // make life easy in component html
   }
 
   ngOnInit() {
+    this.txService.postConstructor(this.amountOfTxsToDisplay);
   }
 
   public pageChanged(event: any): void {

@@ -6,27 +6,36 @@ import { ModalModule } from 'ngx-bootstrap';
 import { ModalsService } from './modals.service';
 import { ModalsComponent } from './modals.component';
 
-import { UnlockwalletComponent } from './shared/unlockwallet/unlockwallet.component';
-import { SyncingComponent } from './syncing/syncing.component';
-import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
-import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
+import { PassphraseComponent } from './shared/passphrase/passphrase.component';
+import { PasswordComponent } from './shared/password/password.component';
+
 import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { PassphraseComponent } from './passphrase/passphrase.component';
+import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
+import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
+import { FinishComponent } from './firsttime/finish/finish.component';
+import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
+import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { SyncingComponent } from './syncing/syncing.component';
+import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    ModalModule
+    ModalModule,
   ],
   declarations: [
     ModalsComponent,
-    UnlockwalletComponent,
-    SyncingComponent,
-    RecoverwalletComponent,
-    GeneratewalletComponent,
-    FirsttimeComponent,
     PassphraseComponent,
+    PasswordComponent,
+    FirsttimeComponent,
+    ShowpassphraseComponent,
+    ConfirmpassphraseComponent,
+    FinishComponent,
+    GeneratewalletComponent,
+    RecoverwalletComponent,
+    SyncingComponent,
+    UnlockwalletComponent
   ],
   exports: [
     ModalsComponent

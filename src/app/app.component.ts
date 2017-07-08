@@ -61,14 +61,10 @@ export class AppComponent implements OnInit {
     this._modalsService.updateProgress(48);
   }
 
-  passphrase() {
-    this._modalsService.open('passphrase');
+  unlock() {
+    this._modalsService.open('unlock');
     this._modalsService.updateProgress(99);
   }
 
-  recover() {
-    this._modalsService.open('recover');
-    this._modalsService.updateProgress(100);
-  }
   // End Modal Examples
 }
