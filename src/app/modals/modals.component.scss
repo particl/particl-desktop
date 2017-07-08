@@ -13,9 +13,9 @@
 }
 
 .modal-content .logo {
-  width: 45%;
+  max-width: 35%;
   margin: auto;
-  margin: 100px auto 100px;
+  margin: 60px auto 60px;
 }
 
 .close {
@@ -27,7 +27,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 30px;
+  height: 20px;
   font-weight: bold;
   text-align: center;
 }
@@ -35,7 +35,7 @@
 .statusText {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-58%);
   bottom: 0;
   left: 0;
   width: 100vw;

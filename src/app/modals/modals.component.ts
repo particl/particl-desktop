@@ -2,6 +2,7 @@ import {
   Component,
   ComponentFactoryResolver,
   ComponentRef,
+  OnInit,
   DoCheck,
   ElementRef,
   HostListener,
@@ -15,9 +16,13 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ModalsService } from './modals.service';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { SyncingComponent } from './syncing/syncing.component';
-import { PassphraseComponent } from './passphrase/passphrase.component';
+import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
+import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
+import { FinishComponent } from './firsttime/finish/finish.component';
+import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { SyncingComponent } from './syncing/syncing.component';
+import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
 @Component({
   selector: 'app-modals',
@@ -25,12 +30,16 @@ import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component'
   styleUrls: ['./modals.component.scss'],
   entryComponents: [
     FirsttimeComponent,
+    ShowpassphraseComponent,
+    ConfirmpassphraseComponent,
+    FinishComponent,
+    GeneratewalletComponent,
+    RecoverwalletComponent,
     SyncingComponent,
-    PassphraseComponent,
-    RecoverwalletComponent
+    UnlockwalletComponent
   ]
 })
-export class ModalsComponent implements DoCheck {
+export class ModalsComponent implements DoCheck, OnInit {
 
   @ViewChild('staticModal')
   public staticModal: ModalDirective;
@@ -44,24 +53,32 @@ export class ModalsComponent implements DoCheck {
   syncString: string;
   closeOnEscape: boolean = true;
 
-  @HostListener('window:keydown', ['$event'])
-  keyboardInput(event: any) {
-    if (this.closeOnEscape && event.code.toLowerCase() === 'escape') {
-      this.close();
-    }
-  }
-
   constructor (
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
     private _modalService: ModalsService
   ) {
     this._modalService.getMessage().subscribe(
-      message => this.open(message)
+      message => {
+        if (this.modal) {
+          this.close();
+        }
+        this.open(message)
+      }
     );
     this._modalService.getProgress().subscribe(
       progress => this.updateProgress(<number>progress)
     );
+  }
+
+  ngOnInit() {
+    document.onkeydown = (event: any) => {
+      if (this.closeOnEscape
+          && event.key.toLowerCase() === 'escape'
+          && this.modal) {
+        this.close();
+      }
+    };
   }
 
   ngDoCheck() {
@@ -79,6 +96,9 @@ export class ModalsComponent implements DoCheck {
   }
 
   open(message: any) {
+    if (this.modal) {
+      this.modal.destroy();
+    }
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.modalContainer.createComponent(factory);
     this.staticModal.show();

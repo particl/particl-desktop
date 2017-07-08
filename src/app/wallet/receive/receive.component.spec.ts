@@ -1,10 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ElectronService } from 'ngx-electron';
+
 import { FormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angular2-qrcode';
 
 import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
+
 import { ReceiveComponent } from './receive.component';
+
 
 describe('ReceiveComponent', () => {
   let component: ReceiveComponent;
@@ -16,7 +21,8 @@ describe('ReceiveComponent', () => {
       imports: [
         FormsModule,
         SharedModule,
-        QRCodeModule
+        QRCodeModule,
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();

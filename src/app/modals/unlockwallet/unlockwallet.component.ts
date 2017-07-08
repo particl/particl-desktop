@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { ModalsModule } from '../modals.module';
 
 @Component({
-  selector: 'app-passphrase',
-  templateUrl: './passphrase.component.html',
-  styleUrls: ['./passphrase.component.scss']
+  selector: 'app-unlockwallet',
+  templateUrl: './unlockwallet.component.html',
+  styleUrls: ['./unlockwallet.component.scss']
 })
-export class PassphraseComponent {
+export class UnlockwalletComponent {
 
   unlock(password: string) {
     // TODO API call

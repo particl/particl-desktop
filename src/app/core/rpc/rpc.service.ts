@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 
 import { Headers, Http } from '@angular/http';
-import { AppService } from 'app/app.service';
 
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
@@ -17,16 +16,15 @@ export class RPCService {
   private username: string = 'test';
   private password: string = 'test';
 
-  private _appService: AppService;
   private _callOnBlock: Array<any> = [];
   private _callOnTransaction: Array<any> = [];
 
   private _pollTimout: NodeJS.Timer;
 
-  constructor(private http: Http, public electronService: ElectronService) { }
+  public isElectron: boolean = false;
 
-  postConstruct(appService: AppService) { // Gets rid of circular dependency.. We could possibly handle this better..
-    this._appService = appService;
+  constructor(private http: Http, public electronService: ElectronService) {
+    this.isElectron = this.electronService.isElectronApp;
   }
 
   call(instance: Injectable, method: string, params: Array<any> | null, callback: Function): void {
@@ -41,7 +39,7 @@ export class RPCService {
     headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
     headers.append('Accept', 'application/json');
 
-    if (this._appService.isElectron) {
+    if (this.isElectron) {
       // TODO: electron.ipcCall
     } else {
       this.http

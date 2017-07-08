@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { SyncingComponent } from './syncing/syncing.component';
-import { PassphraseComponent } from './passphrase/passphrase.component';
+import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
+import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
+import { FinishComponent } from './firsttime/finish/finish.component';
+import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { SyncingComponent } from './syncing/syncing.component';
+import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
 @Injectable()
 export class ModalsService {
@@ -15,13 +19,16 @@ export class ModalsService {
 
   messages: Object = {
     firstTime: FirsttimeComponent,
+    showPassphrase: ShowpassphraseComponent,
+    confirmPassphrase: ConfirmpassphraseComponent,
+    finish: FinishComponent,
+    generate: GeneratewalletComponent,
+    recover: RecoverwalletComponent,
     syncing: SyncingComponent,
-    passphrase: PassphraseComponent,
-    recover: RecoverwalletComponent
+    unlock: UnlockwalletComponent
   };
 
   open(modal: string): void {
-
     if (modal in this.messages) {
       this.message.next(this.messages[modal]);
     } else {
