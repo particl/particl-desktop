@@ -30,22 +30,24 @@
   </address-table>
 </div>
 
-<div id="address-modal" class="hide">
+<div id="address-modal"  [ngClass]="{'hide': openNewAddressModal == false }">
   <div class="address-modal-container">
     <span class="close" (click)="closeNewAddress()">&times;</span>
 
-    <div class="modal-content-header">Add new receive address</div>
+    <div class="modal-content-header">Add new address to addresbook</div>
     <hr style="margin-top: 5px;">
 
-    <div class="modal-label">Label:</div>
     <div class="row">
       <div class="col-xs-8">
-        <input type="text" class="form-control" [(ngModel)]="label"
-          placeholder="Enter a label for this address to add it to your address book">
+        <input type="text" class="form-control" [(ngModel)]="address"
+          placeholder="address"
+          [ngClass]="{'good': checkAddress() == true, 'fault': checkAddress() == false }"
+          (input)="verifyAddress()">
       </div>
-      <div class="col-xs-4"><select [(ngModel)]="type">
-        <option value="normal">Normal</option>
-      </select></div>
+      <div class="col-xs-4">
+        <input type="text" class="form-control" [(ngModel)]="label"
+          placeholder="label">
+      </div>
     </div>
 
     <button class="control pull-right" (click)="newAddress()">Add address</button>

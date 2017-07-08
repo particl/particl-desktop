@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppService } from '../../app.service';
 
 @Component({
   selector: 'app-address-book',
@@ -8,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 export class AddressBookComponent implements OnInit {
 
   label: string;
-  type: string = 'normal';
+  address: string;
+  validAddress: boolean = undefined;
 
-  constructor() { }
+  openNewAddressModal: boolean = false;
+
+  constructor(private appService: AppService) { }
 
   ngOnInit() {
     document.onkeydown = evt => {
@@ -21,15 +25,59 @@ export class AddressBookComponent implements OnInit {
   }
 
   openNewAddress() {
-    document.getElementById('address-modal').classList.remove('hide');
+    this.openNewAddressModal = true;
   }
 
   closeNewAddress() {
-    document.getElementById('address-modal').classList.add('hide');
+    this.openNewAddressModal = false;
   }
 
   newAddress() {
-    console.log(this.label, this.type)
+    if(this.checkAddress()) {
+      console.log(this.label, this.address)
+    } else {
+      alert('address invalid!');
+    }
+  }
+
+  verifyAddress() {
+    if (this.address === undefined || this.address === '') {
+      this.validAddress = undefined;
+      return;
+    }
+
+    const ret = false;
+    if ((this.address.indexOf('p') === 0) === false) { // does not start with p
+      if ((this.address.indexOf('T') === 0) === false) { // does not start with T
+        this.validAddress = false;
+        return;
+      } else if(this.address.length > 102) { // starts with T but over 102 chars
+        this.validAddress = false;
+        return;
+      }
+    } else if(this.address.length > 34) { // starts with p but over 34 chars
+      this.validAddress = false;
+      return;
+    }
+    // TODO: apply else if to send branch
+
+    if (this.address.length === 34 && this.address.indexOf('p') === 0) {
+      this.appService.rpc.call(this, 'validateaddress', [this.address], this.rpc_callbackVerifyAddress);
+     }
+
+    if (this.address.length === 102 && this.address.indexOf('Tet') === 0) {
+      this.appService.rpc.call(this, 'validateaddress', [this.address], this.rpc_callbackVerifyAddress);
+    }
+
+    this.validAddress = undefined;
+  }
+
+  rpc_callbackVerifyAddress(JSON: Object) {
+    this.validAddress = JSON['isvalid'];
+   }
+
+  checkAddress(): boolean { 
+    return this.validAddress;
   }
 
 }
