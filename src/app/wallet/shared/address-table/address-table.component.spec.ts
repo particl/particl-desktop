@@ -1,8 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ElectronService } from 'ngx-electron';
+
 import { AddressTableComponent } from './address-table.component';
+
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
+
+import { AppService } from '../../../app.service';
+import { RPCService } from '../../../core/rpc/rpc.service';
 
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
@@ -13,7 +19,12 @@ describe('AddressTableComponent', () => {
       imports: [
          SharedModule,
          WalletModule.forRoot()
-       ],
+      ],
+      providers: [
+        AppService,
+        ElectronService,
+        RPCService
+      ]
     })
     .compileComponents();
   }));

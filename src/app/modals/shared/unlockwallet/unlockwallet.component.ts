@@ -8,8 +8,8 @@ import { ModalsModule } from '../../modals.module';
 })
 export class UnlockwalletComponent implements Input, Output {
 
-  private showPass: boolean = false;
-  private password: string;
+  showPass: boolean = false;
+  password: string;
 
   @Input() unlockButton: string;
   @Output() passwordEmitter: EventEmitter<string> = new EventEmitter<string>();
