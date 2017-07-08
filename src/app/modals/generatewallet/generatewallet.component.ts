@@ -1,15 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, forwardRef } from '@angular/core';
+
+import { ModalsService } from '../modals.service';
 
 @Component({
   selector: 'app-generatewallet',
   templateUrl: './generatewallet.component.html',
   styleUrls: ['./generatewallet.component.scss']
 })
-export class GeneratewalletComponent implements OnInit {
+export class GeneratewalletComponent {
 
-  constructor() { }
+  name: string;
+  password: string;
 
-  ngOnInit() {
+  constructor (
+    @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
+  ) { }
+
+  back() {
+    this._modalsService.open('firstTime');
+  }
+
+  next(password: string) {
+    console.log(password, this.name);
+    this._modalsService.open('showPassphrase');
   }
 
 }

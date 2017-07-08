@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { FormsModule } from '@angular/forms';
 import { PassphraseComponent } from './passphrase.component';
-import { ModalsModule } from '../modals.module';
 
 describe('PassphraseComponent', () => {
   let component: PassphraseComponent;
@@ -9,7 +9,8 @@ describe('PassphraseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule]
+      imports: [ FormsModule ],
+      declarations: [ PassphraseComponent ]
     })
     .compileComponents();
   }));

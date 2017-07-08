@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FirsttimeComponent } from './firsttime.component';
+import { ModalsService } from '../modals.service';
 
 describe('FirsttimeComponent', () => {
   let component: FirsttimeComponent;
@@ -8,7 +9,8 @@ describe('FirsttimeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FirsttimeComponent ]
+      declarations: [ FirsttimeComponent ],
+      providers: [ ModalsService ]
     })
     .compileComponents();
   }));
