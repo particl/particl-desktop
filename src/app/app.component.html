@@ -28,7 +28,7 @@
           </a>
         </accordion-heading>
         <hr>
-        <a class="item" routerLinkActive="active" routerLink="#">
+        <a class="item" routerLinkActive="active" routerLink="/wallet/receive">
           <span class="icon fa fa-arrow-left"></span>
           Receive
         </a>
@@ -58,6 +58,12 @@
           Settings
         </a>
       </accordion-group>
+      <div>
+        <span><button (click)="firsttime()">firsttime</button></span>
+        <span><button (click)="syncing()">syncing</button></span>
+        <span><button (click)="passphrase()">passphrase</button></span>
+        <span><button (click)="recover()">recover</button></span>
+      </div>
     </accordion>
 
   </sidebar>
@@ -80,5 +86,5 @@
   <sidebar position="bottom" #sidebarBottom></sidebar>
 
   <router-outlet></router-outlet>
-
+  <app-modals></app-modals>
 </sidebar-container>

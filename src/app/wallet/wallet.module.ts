@@ -1,5 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { QRCodeModule } from 'angular2-qrcode';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -13,6 +14,7 @@ import { TransactionsTableComponent } from './shared/transaction-table/transacti
 import { AddressTableComponent } from './shared/address-table/address-table.component';
 
 import { AddressBookComponent } from './address-book/address-book.component';
+import { ReceiveComponent } from './receive/receive.component';
 import { SendComponent } from './send/send.component';
 import { BalanceComponent } from './balances/balance.component';
 import { HistoryComponent } from './history/history.component';
@@ -21,8 +23,9 @@ const routes: Routes = [
   {
     path: 'wallet',
     children: [
-      { path: 'history', component: HistoryComponent, data: { title: 'History' } },
+      { path: 'receive', component: ReceiveComponent, data: { title: 'Receive' } },
       { path: 'send', component: SendComponent, data: { title: 'Send' } },
+      { path: 'history', component: HistoryComponent, data: { title: 'History' } },
       { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } }
     ]
   }
@@ -31,15 +34,17 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
-    SharedModule
+    SharedModule,
+    QRCodeModule
   ],
   declarations: [
     TransactionsTableComponent,
     AddressTableComponent,
-    AddressBookComponent,
+    ReceiveComponent,
     SendComponent,
-    BalanceComponent,
-    HistoryComponent
+    HistoryComponent,
+    AddressBookComponent,
+    BalanceComponent
   ],
   exports: [
     TransactionsTableComponent,

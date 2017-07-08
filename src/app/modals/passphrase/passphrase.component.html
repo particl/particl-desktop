@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 text-center">
+      <h4>Please enter <b>your password</b> to unlock your wallet.</h4>
+    </div>
+  </div>
+</div>
+
+<hr style="margin-top: 100px;">
+
+<app-unlockwallet
+  [unlockButton]="'UNLOCK WALLET'"
+  (passwordEmitter)="unlock($event)">
+</app-unlockwallet>
