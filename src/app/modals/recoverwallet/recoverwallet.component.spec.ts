@@ -3,13 +3,25 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecoverwalletComponent } from './recoverwallet.component';
 import { ModalsModule } from '../modals.module';
 
+import { ElectronService } from 'ngx-electron';
+
+import { SharedModule } from '../../shared/shared.module';
+
+import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
+
 describe('RecoverwalletComponent', () => {
   let component: RecoverwalletComponent;
   let fixture: ComponentFixture<RecoverwalletComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule]
+      imports: [SharedModule, ModalsModule],
+      providers: [
+        AppService,
+        ElectronService,
+        RPCService
+      ]
     })
     .compileComponents();
   }));
