@@ -87,7 +87,7 @@ export class TransactionService {
   }
 
   rpc_getParameters() {
-    return ['*', +this.MAX_TXS_PER_PAGE, ((this.currentPage ? this.currentPage-1: 0) * this.MAX_TXS_PER_PAGE)];
+    return ['*', +this.MAX_TXS_PER_PAGE, ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)];
   }
 
   // Deserializes JSON objects to Transaction classes.

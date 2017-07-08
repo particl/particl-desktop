@@ -60,7 +60,9 @@ export class ModalsComponent implements DoCheck, OnInit {
   ) {
     this._modalService.getMessage().subscribe(
       message => {
-        this.modal && this.close();
+        if (this.modal) {
+          this.close();
+        }
         this.open(message)
       }
     );
