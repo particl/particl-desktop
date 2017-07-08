@@ -4,3 +4,50 @@ app-header {
 		margin-right: 5px;
 	}
 }
+
+#address-modal {
+  position: absolute;
+  z-index: 100000;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+#address-modal.hide {
+  width: 0!important;
+  height: 0!important;
+  display: none;
+}
+
+.address-modal-container {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  width: 600px;
+  padding: 30px;
+}
+
+.close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
+.modal-content-header {
+  font-size: 1.2em;
+}
+
+.modal-label {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.7em;
+  margin-bottom: 10px;
+}
+
+#address-modal .row {
+  margin-bottom: 30px;
+}

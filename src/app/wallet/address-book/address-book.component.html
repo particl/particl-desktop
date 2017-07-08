@@ -1,27 +1,54 @@
 <app-header>
   <div class="container-fluid">
     <ul class="header-nav">
-      <li class="add-address"><a href="javascript:void(0)"><span class="icon fa fa-plus-circle color-green"></span> New Address</a>
-    </ul>
-    <form class="header-form pull-right">
-      <input type="text" placeholder="Search address book">
-      <button class="btn" type="submit" name="button">
-        <span class="fa fa-search"></span>
-      </button>
-    </form>
-  </div>
-</app-header>
-<div class="container-fluid">
-  <address-table
-    [displayHeader]="false"
-		[displayInternalHeader]="true"
-    [displayPagination]="false"
-		[displayLabel]="true"
-		[displayAddress]="true"
-		[displayPublicKey]="true"
-		[displayType]="true"
-    [displayPurpose]="true"
-		[displayToolsMenu]="true"
-		[displayQrMenu]="true">
+      <li class="add-address">
+        <a href="javascript:void(0)" (click)="openNewAddress()">
+          <span class="icon fa fa-plus-circle color-green"></span>
+          New Address
+        </a>
+      </ul>
+      <form class="header-form pull-right">
+        <input type="text" placeholder="Search address book">
+        <button class="btn" type="submit" name="button">
+          <span class="fa fa-search"></span>
+        </button>
+      </form>
+    </div>
+  </app-header>
+  <div class="container-fluid">
+    <address-table
+      [displayHeader]="false"
+      [displayInternalHeader]="true"
+      [displayPagination]="false"
+      [displayLabel]="true"
+      [displayAddress]="true"
+      [displayPublicKey]="true"
+      [displayType]="true"
+      [displayPurpose]="true"
+      [displayToolsMenu]="true"
+      [displayQrMenu]="true">
   </address-table>
+</div>
+
+<div id="address-modal" class="hide">
+  <div class="address-modal-container">
+    <span class="close" (click)="closeNewAddress()">&times;</span>
+
+    <div class="modal-content-header">Add new receive address</div>
+    <hr style="margin-top: 5px;">
+
+    <div class="modal-label">Label:</div>
+    <div class="row">
+      <div class="col-xs-8">
+        <input type="text" class="form-control" [(ngModel)]="label"
+          placeholder="Enter a label for this address to add it to your address book">
+      </div>
+      <div class="col-xs-4"><select [(ngModel)]="type">
+        <option value="normal">Normal</option>
+      </select></div>
+    </div>
+
+    <button class="control pull-right" (click)="newAddress()">Add address</button>
+
+  </div>
 </div>
