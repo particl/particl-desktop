@@ -14,8 +14,8 @@ import { TableComponent } from './table/table.component';
 @NgModule({
   imports: [
     CommonModule,
-    AccordionModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    AccordionModule
   ],
   declarations: [
     HeaderComponent,
