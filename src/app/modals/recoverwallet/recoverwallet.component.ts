@@ -10,10 +10,16 @@ import { AppService } from '../../app.service';
 export class RecoverwalletComponent {
 
   words: string[] = Array(24).fill('');
+  isDisabled: boolean = false;
 
   constructor (private appService: AppService) { }
 
   restore(password: string) {
+  	if(this.isDisabled) {
+  		alert("Still importing the recovery phrase, please wait!");
+  	}
+  	// TODO: reset isDisabled on failure of rpc!
+
     let wordsString = '';
     for (const i in this.words) {
       if (true) { // lint error
@@ -25,7 +31,7 @@ export class RecoverwalletComponent {
     }
     const params: Array<any> = this.getParams(wordsString, password);
     this.appService.rpc.call(this, 'extkeygenesisimport', params, this.rpc_importFinished);
-    this.words = Array(24).fill('');
+    this.isDisabled = true;
   }
 
   getParams(words: string, password: string): Array<any> {
@@ -36,10 +42,28 @@ export class RecoverwalletComponent {
     }
   }
 
+  splitAndFill() {
+  	const seedArray = this.words[0].split(' ');
+
+  	if(seedArray.length > 1) {
+  	  console.log("multiple values entered!");
+  	  for(const i in seedArray) {
+  	  	if(true) { // lint error
+  	  	  this.words[i] = seedArray[i];
+  	  	}
+  	  }
+  	}
+
+  }
+
   rpc_importFinished(JSON: Object) {
     // TODO for rpc service: needs ERROR handling!
     if (JSON['result'] === 'Success.') {
       alert('Importing the recovery phrase succeeded!');
     }
+  }
+
+  clear() {
+  	this.words = Array(24).fill('');
   }
 }
