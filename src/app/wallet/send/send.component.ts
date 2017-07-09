@@ -90,12 +90,12 @@ export class SendComponent implements OnInit, OnDestroy {
       if ((this.send['toAddress'].indexOf('T') === 0) === false) {
         this.send['validAddress'] = false;
         return;
-      } else if(this.address.length > 102) { // starts with T but over 102 chars
-        this.validAddress = false;
+      } else if(this.send['toAddress'].length > 102) { // starts with T but over 102 chars
+        this.send['validAddress'] = false;
         return;
       }
-    } else if(this.address.length > 34) { // starts with p but over 34 chars
-      this.validAddress = false;
+    } else if(this.send['toAddress'].length > 34) { // starts with p but over 34 chars
+      this.send['validAddress'] = false;
       return;
     }
 
