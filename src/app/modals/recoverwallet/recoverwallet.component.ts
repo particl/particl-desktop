@@ -15,10 +15,10 @@ export class RecoverwalletComponent {
   constructor (private appService: AppService) { }
 
   restore(password: string) {
-  	if(this.isDisabled) {
-  		alert("Still importing the recovery phrase, please wait!");
-  	}
-  	// TODO: reset isDisabled on failure of rpc!
+    if (this.isDisabled) {
+      alert('Still importing the recovery phrase, please wait!');
+    }
+    // TODO: reset isDisabled on failure of rpc!
 
     let wordsString = '';
     for (const i in this.words) {
@@ -43,16 +43,16 @@ export class RecoverwalletComponent {
   }
 
   splitAndFill() {
-  	const seedArray = this.words[0].split(' ');
+    const seedArray = this.words[0].split(' ');
 
-  	if(seedArray.length > 1) {
-  	  console.log("multiple values entered!");
-  	  for(const i in seedArray) {
-  	  	if(true) { // lint error
-  	  	  this.words[i] = seedArray[i];
-  	  	}
-  	  }
-  	}
+    if (seedArray.length > 1) {
+      console.log('multiple values entered!');
+      for (const i in seedArray) {
+        if (true) { // lint error
+          this.words[i] = seedArray[i];
+        }
+      }
+    }
 
   }
 
@@ -64,6 +64,6 @@ export class RecoverwalletComponent {
   }
 
   clear() {
-  	this.words = Array(24).fill('');
+    this.words = Array(24).fill('');
   }
 }
