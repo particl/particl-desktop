@@ -59,15 +59,16 @@ export class AppComponent implements OnInit {
                 bcSub.unsubscribe();
                 nbcSub.unsubscribe();
 
+                if (networkHeight === -1 || height === -1) {
+                  //no peers (networkHeight is -1), or height === -1 (unable to call getblockcount)
+                  return;
+                }
+
                 if (height < networkHeight) {
                   this._modalsService.open('syncing');
                   this._modalsService.updateProgress(height / networkHeight * 100);
                 }
 
-                if (networkHeight < 0) {
-                  this._modalsService.open('syncing');
-                  this._modalsService.updateProgress(0);
-                }
               }
             )
         }
@@ -88,6 +89,10 @@ export class AppComponent implements OnInit {
   unlock() {
     this._modalsService.open('unlock');
     this._modalsService.updateProgress(99);
+  }
+
+  checkIfSyncing() {
+
   }
 
   // End Modal Examples

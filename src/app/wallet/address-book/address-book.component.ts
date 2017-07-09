@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AppService } from '../../app.service';
+
+import { RPCService } from '../../core/rpc/rpc.service';
 
 @Component({
   selector: 'app-address-book',
@@ -8,13 +9,13 @@ import { AppService } from '../../app.service';
 })
 export class AddressBookComponent implements OnInit {
 
-  label: string;
+  label: string = '';
   address: string;
   validAddress: boolean = undefined;
 
   openNewAddressModal: boolean = false;
 
-  constructor(private appService: AppService) { }
+  constructor(private _rpc: RPCService) { }
 
   ngOnInit() {
     document.onkeydown = evt => {
@@ -32,11 +33,22 @@ export class AddressBookComponent implements OnInit {
     this.openNewAddressModal = false;
   }
 
-  newAddress() {
-    if(this.checkAddress()) {
-      console.log(this.label, this.address)
+  addAddressToBook() {
+    if(this.validAddress && this.label !== undefined) {
+      this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label], this.rpc_callbackAddAddressToBook);
+      this.address = undefined;
+      this.validAddress = undefined;
+      this.label = '';
+      this.closeNewAddress();
     } else {
-      alert('address invalid!');
+      alert("Please enter a valid address!");
+    }
+  }
+
+  rpc_callbackAddAddressToBook(JSON: Object) {
+    console.log(JSON);
+    if(JSON['result'] === 'success') {
+      alert("Address successfully added to the addressbook!")
     }
   }
 
@@ -62,11 +74,11 @@ export class AddressBookComponent implements OnInit {
     // TODO: apply else if to send branch
 
     if (this.address.length === 34 && this.address.indexOf('p') === 0) {
-      this.appService.rpc.call(this, 'validateaddress', [this.address], this.rpc_callbackVerifyAddress);
+      this._rpc.call(this, 'validateaddress', [this.address], this.rpc_callbackVerifyAddress);
      }
 
     if (this.address.length === 102 && this.address.indexOf('Tet') === 0) {
-      this.appService.rpc.call(this, 'validateaddress', [this.address], this.rpc_callbackVerifyAddress);
+      this._rpc.call(this, 'validateaddress', [this.address], this.rpc_callbackVerifyAddress);
     }
 
     this.validAddress = undefined;
