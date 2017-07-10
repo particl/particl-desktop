@@ -15,7 +15,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint --type-check",
+    "lint": "ng lint --type-check && htmlhint",
     "e2e": "ng e2e",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js"
   },
@@ -49,6 +49,7 @@
     "@types/node": "~6.0.79",
     "codelyzer": "~3.0.1",
     "coveralls": "^2.13.1",
+    "htmlhint": "^0.9.13",
     "jasmine-core": "~2.6.4",
     "jasmine-spec-reporter": "~4.1.1",
     "karma": "^1.7.0",

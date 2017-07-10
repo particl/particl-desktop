@@ -36,15 +36,15 @@
     <div class="card row">
       <div class="input-label col-xs-3">From account</div>
       <span class="col-xs-4 public-private">
-        <input type="radio" name="from" id="fromPublic"
-          [(ngModel)]="send.fromType" value="public">
-        <label for="fromPublic" class="input-info-label">Public</label>
-        <input type="radio" name="from" id="fromBlind"
+        <input type="radio" name="from" id="fromPublic1"
+          [(ngModel)]="send.fromType" checked="checked" value="public">
+        <label for="fromPublic1" class="input-info-label">Public</label>
+        <input type="radio" name="from" id="fromBlind1"
           [(ngModel)]="send.fromType" value="blind">
-        <label for="fromBlind" class="input-info-label">Blind</label>
-        <input type="radio" name="from" id="fromPrivate"
+        <label for="fromBlind1" class="input-info-label">Blind</label>
+        <input type="radio" name="from" id="fromPrivate1"
           [(ngModel)]="send.fromType" value="private">
-        <label for="fromPrivate" class="input-info-label">Private</label>
+        <label for="fromPrivate1" class="input-info-label">Private</label>
       </span>
       <span class="separator"></span>
       <span class="col-xs-4 balance">
@@ -93,7 +93,7 @@
       <div class="input-label col-xs-3">Privacy level</div>
       <div class="col-xs-4 nopadding">
         <div class="progress">
-          <div id="privacy" class="progress-bar" role="progressbar"
+          <div class="progress-bar" role="progressbar"
             [ngStyle]="{ 'width': send.privacy + '%' }">
           </div>
         </div>
@@ -115,7 +115,7 @@
       <div class="input-label col-xs-3">From account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="from" id="fromPublic"
-          [(ngModel)]="send.fromType" value="public">
+          [(ngModel)]="send.fromType" checked="checked" value="public">
         <label for="fromPublic" class="input-info-label">Public</label>
         <input type="radio" name="from" id="fromBlind"
           [(ngModel)]="send.fromType" value="blind">
@@ -135,7 +135,7 @@
       <div class="input-label col-xs-3">To account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="to" id="toPublic"
-          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'public' }}" value="public">
+          [(ngModel)]="send.toType" checked="checked" disabled="{{ send.fromType === 'public' }}" value="public">
         <label for="toPublic" class="input-info-label">Public</label>
         <input type="radio" name="to" id="toBlind"
           [(ngModel)]="send.toType" disabled="{{ send.fromType === 'blind' }}" value="blind">
@@ -181,7 +181,7 @@
       <div class="input-label col-xs-3">Privacy level</div>
       <div class="col-xs-4 nopadding">
         <div class="progress">
-          <div id="privacy" class="progress-bar" role="progressbar"
+          <div class="progress-bar" role="progressbar"
             [ngStyle]="{ 'width': send.privacy + '%' }">
           </div>
         </div>

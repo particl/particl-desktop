@@ -25,8 +25,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   // TODO: Create proper Interface / type
   send: any = {
-    fromType: '',
-    toType: '',
+    fromType: 'public',
+    toType: 'public',
     toAddress: '',
     validAddress: undefined,
     currency: 'part',
@@ -58,15 +58,7 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
   getBalance(account: string) {
-    if (account === 'public') {
-      return ( this._balance !== undefined ? this._balance.getBalance('PUBLIC') : '');
-    }
-    if (account === 'blind') {
-      return ( this._balance !== undefined ? this._balance.getBalance('BLIND') : '');
-    }
-    if (account === 'private') {
-      return ( this._balance !== undefined ? this._balance.getBalance('PRIVATE') : '');
-    }
+    return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
   }
 
   checkAddress(): boolean {

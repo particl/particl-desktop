@@ -1,19 +1,19 @@
 <app-table>
-  <tr *ngIf="displayHeader">
-    <th *ngIf="displayCategory">category</th>
-    <th *ngIf="displayDate">date</th>
-    <th *ngIf="displaySenderAddress">address</th>
-    <th *ngIf="displayTxId">txid</th>
-    <th *ngIf="displayAmount">amount</th>
-    <th *ngIf="displayBlockIndex">blockindex</th>
-    <th *ngIf="displayConfirmations">confirmations</th>
-  </tr> 
+  <tr *ngIf="display.header">
+    <th *ngIf="display.category">category</th>
+    <th *ngIf="display.date">date</th>
+    <th *ngIf="display.senderAddress">address</th>
+    <th *ngIf="display.txid">txid</th>
+    <th *ngIf="display.amount">amount</th>
+    <th *ngIf="display.blockIndex">blockindex</th>
+    <th *ngIf="display.confirmations">confirmations</th>
+  </tr>
   <tr *ngFor="let tx of txService.txs">
-     <td *ngIf="displayDate">
+     <td *ngIf="display.date">
       <span class="inline-header"><span class="icon fa fa-clock-o"></span></span>
       <span>{{ tx.getDate() }}</span>
     </td>
-    <td *ngIf="displayCategory" [ngSwitch]="tx.category">
+    <td *ngIf="display.dategory" [ngSwitch]="tx.category">
       <span *ngSwitchCase="'stake'" class="inline-tag text-uppercase">
         Stake
         <span class="icon fa fa-plus color-green"></span>
@@ -31,31 +31,40 @@
         <span class="icon fa fa-arrow-left"></span>
       </span>
     </td>
-    <td *ngIf="displaySenderAddress">
+    <td *ngIf="display.senderAddress">
       <span>{{ tx.getAddress() }}</span>
     </td>
-    <td *ngIf="displayTxId">
+    <td *ngIf="display.txid">
       <span class="inline-header">TxId</span>
       <span>{{ tx.txid }}</span>
     </td>
-    <td *ngIf="displayBlockIndex">
+    <td *ngIf="display.blockIndex">
       <span class="inline-header">Blockindex</span>
       <span>{{ tx.blockindex }}</span>
     </td>
-    <td *ngIf="displayConfirmations">
+    <td *ngIf="display.confirmations">
       <span class="inline-header">Confirmations</span>
       <span>{{ tx.confirmations }}</span>
     </td>
-    <td *ngIf="displayAmount">
+    <td *ngIf="display.amount">
       <span class="inline-header">Amount</span>
       <span>{{ tx.getAmount() }} PART</span>
-    </td>	
-    <td>
+    </td>
+    <td *ngIf="display.expand">
       <span class="icon fa fa-plus"></span>
     </td>
-	
+
   </tr>
 </app-table>
 
-<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="txService.txCount" [maxSize]="5" [rotate]="false" [(ngModel)]="txService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="txService.MAX_TXS_PER_PAGE" ></pagination>
+<pagination *ngIf="display.pagination"
+  [boundaryLinks]="true"
+  (pageChanged)="pageChanged($event)"
+  [totalItems]="txService.txCount"
+  [maxSize]="5" [rotate]="false"
+  [(ngModel)]="txService.currentPage"
+  class="pagination-sm center"
+  previousText="&lsaquo;" nextText="&rsaquo;"
+  firstText="&laquo;" lastText="&raquo;"
+  [itemsPerPage]="txService.MAX_TXS_PER_PAGE" >
+</pagination>
