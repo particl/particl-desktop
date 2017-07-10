@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
 
 @Injectable()
 export class SendService {
@@ -9,8 +9,8 @@ export class SendService {
 
   private defaultStealthAddressForBalanceTransfer: string;
 
-  constructor(public appService: AppService) {
-    this.appService.rpc.call(this, 'liststealthaddresses', null, this.rpc_callbackListDefaultAddress);
+  constructor(public _rpc: RPCService) {
+    this._rpc.call(this, 'liststealthaddresses', null, this.rpc_callbackListDefaultAddress);
   }
 
   sendTransaction(input: string, output: string, address: string, amount: number, comment: string, substractfee: boolean,
@@ -24,7 +24,7 @@ export class SendService {
 
     this.setTransactionDetails(address, amount);
 
-    this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
+    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
   }
 
   transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
@@ -42,7 +42,7 @@ export class SendService {
 
     this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
 
-    this.appService.rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
+    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
 
   }
 
@@ -50,7 +50,7 @@ export class SendService {
     if (JSON[0] !== undefined && JSON[0]['Stealth Addresses'] !== undefined && JSON[0]['Stealth Addresses'][0] !== undefined) {
       this.rpc_callbackSetDefaultAddress(JSON[0]['Stealth Addresses'][0]['Address']);
     } else {
-      this.appService.rpc.call(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_callbackSetDefaultAddress);
+      this._rpc.call(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_callbackSetDefaultAddress);
     }
   }
 
