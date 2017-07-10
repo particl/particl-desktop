@@ -5,7 +5,6 @@ import { ModalsModule } from '../modals.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { ElectronService } from 'ngx-electron';
-import { AppService } from '../../app.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 
@@ -17,7 +16,6 @@ describe('PassphraseComponent', () => {
     TestBed.configureTestingModule({
       imports: [SharedModule, ModalsModule],
       providers: [
-        AppService,
         ElectronService,
         RPCService
       ]
