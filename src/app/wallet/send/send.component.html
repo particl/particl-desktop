@@ -62,7 +62,7 @@
         [(ngModel)]="send.toLabel">
       <span class="separator"></span>
       <span class="col-xs-2">
-        <span class="icon fa fa-users"></span>
+        <span class="icon fa fa-users" (click)="openLookup()"></span>
         <span class="icon fa fa-clone"></span>
         <span class="icon fa fa-times"></span>
       </span>
@@ -82,9 +82,11 @@
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount"
         [ngClass]="{'good': verifyAmount() == true, 'fault': verifyAmount() == false }">
-      <select [(ngModel)]="send.currency">
-        <option value="part">PART</option>
-      </select>
+      <div class="col-xs-2">
+        <select [(ngModel)]="send.currency" class="form-control">
+          <option value="part">PART</option>
+        </select>
+      </div>
     </div>
 
     <div *ngIf="send.fromType === 'private'" class="card row">
@@ -157,7 +159,7 @@
       <input class="col-xs-2" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
       <span class="separator"></span>
       <span class="col-xs-2">
-        <span class="icon fa fa-users"></span>
+        <span class="icon fa fa-users" (click)="openLookup()"></span>
         <span class="icon fa fa-clone"></span>
         <span class="icon fa fa-times"></span>
       </span>
@@ -168,9 +170,11 @@
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount">
-      <select [(ngModel)]="send.currency">
-        <option value="part">PART</option>
-      </select>
+      <div class="col-xs-2">
+        <select [(ngModel)]="send.currency" class="form-control">
+          <option value="part">PART</option>
+        </select>
+      </div>
     </div>
 
     <div *ngIf="send.fromType === 'private'" class="card row">
@@ -193,7 +197,35 @@
 
   <div class="pull-right">
     <button (click)="clear()">Clear all</button>
-    <button class="validate" (click)="pay()">Make payment</button>
+    <button class="validate"
+      (click)="openValidate()"
+      [disabled]="!send.toAddress || !send.amount">
+      Make payment
+    </button>
   </div>
 
+</div>
+
+<app-addresslookup #addressLookup [selectAddressCallback]="selectAddress.bind(this)"></app-addresslookup>
+
+<div class="small-modal hide" id="validate">
+  <div class="address-modal-container">
+    <span class="close" (click)="closeValidate()">&times;</span>
+
+    <div class="modal-content-header">Validate</div>
+    <hr style="margin-top: 5px;">
+
+    <div class="">
+      Do you really want to send {{send.amount}} {{send.currency.toUpperCase()}}
+      to {{send.toAddress}} ?
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <button class="col-xs-5" (click)="closeValidate()">Cancel</button>
+      <button class="col-xs-5 validate" (click)="pay()">Confirm</button>
+    </div>
+
+  </div>
 </div>

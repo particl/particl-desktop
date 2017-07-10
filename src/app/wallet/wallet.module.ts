@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angular2-qrcode';
+import { ModalModule } from 'ngx-bootstrap';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -19,6 +20,8 @@ import { SendComponent } from './send/send.component';
 import { BalanceComponent } from './balances/balance.component';
 import { HistoryComponent } from './history/history.component';
 
+import { AddressLookupComponent } from './addresslookup/addresslookup.component';
+
 const routes: Routes = [
   {
     path: 'wallet',
@@ -35,7 +38,9 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     SharedModule,
-    QRCodeModule
+    ModalModule.forRoot(),
+    QRCodeModule,
+
   ],
   declarations: [
     TransactionsTableComponent,
@@ -44,7 +49,8 @@ const routes: Routes = [
     SendComponent,
     HistoryComponent,
     AddressBookComponent,
-    BalanceComponent
+    BalanceComponent,
+    AddressLookupComponent
   ],
   exports: [
     TransactionsTableComponent,

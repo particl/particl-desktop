@@ -1,6 +1,8 @@
 // TODO vertical-center 50% logic as a class
 // TODO global colors
 
+// TODO small-modal as a component (also in wallet/address-book/newAddress)
+
 .balance-label {
   text-transform: uppercase;
   font-weight: bold;
@@ -150,4 +152,56 @@ span.icon:hover {
 .fault {
   color: #D8000C;
   background-color: #FFBABA !important;
+}
+
+.small-modal {
+  position: absolute;
+  z-index: 100000;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.small-modal.hide {
+  width: 0!important;
+  height: 0!important;
+  display: none;
+}
+
+.address-modal-container {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 30px;
+}
+
+.close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
+.modal-content-header {
+  font-size: 1.2em;
+}
+
+.small-modal .row {
+  margin-bottom: 30px;
+}
+
+th {
+  text-transform: uppercase;
+}
+
+tr {
+  cursor: pointer;
+}
+
+.validate[disabled] {
+  background-color: #a1a1a1;
+  border-bottom-color: #222828;
 }
