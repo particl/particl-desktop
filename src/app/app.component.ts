@@ -74,6 +74,7 @@ export class AppComponent implements OnInit {
       );
 
     this._rpc.poll();
+    this._rpc.specialPoll();
   }
 
   // Modal examples

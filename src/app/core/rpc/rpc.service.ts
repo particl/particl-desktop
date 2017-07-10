@@ -18,6 +18,7 @@ export class RPCService {
 
   private _callOnBlock: Array<any> = [];
   private _callOnTransaction: Array<any> = [];
+  private _callOnAddress: Array<any> = [];
 
   private _pollTimout: number;
 
@@ -76,6 +77,11 @@ export class RPCService {
       this._callOnTransaction.push(_call);
       valid = true;
     }
+    if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
+      console.log('registering address call');
+      this._callOnAddress.push(_call);
+      valid = true;
+    }
   }
 
   poll(): void {
@@ -92,6 +98,22 @@ export class RPCService {
     this._callOnBlock.forEach(_call);
     this._callOnTransaction.forEach(_call);
     this._pollTimout = setTimeout(this.poll.bind(this), 3000);
+  }
+
+
+  specialPoll(): void {
+    // A poll only for address changes, triggered from the GUI!
+
+    const _call = (element) => {
+      this.call(
+        element.instance,
+        element.method,
+        element.params && element.params.typeOf === 'function' ? element.params() : element.params,
+        element.successCB,
+        element.errorCB);
+    };
+
+    this._callOnAddress.forEach(_call);
   }
 
   startPolling(): void {

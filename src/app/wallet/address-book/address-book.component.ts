@@ -47,7 +47,10 @@ export class AddressBookComponent implements OnInit {
 
   rpc_callbackAddAddressToBook(json: Object) {
     if (json['result'] === 'success') {
-      alert('Address successfully added to the addressbook!')
+      alert('Address successfully added to the addressbook!');
+
+      // TODO: remove specialPoll!
+      this._rpc.specialPoll();
     }
   }
 
