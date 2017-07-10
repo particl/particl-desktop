@@ -1,9 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ElectronService } from 'ngx-electron';
+
 import { SendComponent } from './send.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
+
+import { RPCService } from '../../core/rpc/rpc.service';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -14,6 +18,10 @@ describe('SendComponent', () => {
       imports: [
          SharedModule,
          WalletModule.forRoot()
+      ],
+      providers: [
+        ElectronService,
+        RPCService
       ]
     })
     .compileComponents();
