@@ -59,7 +59,7 @@
         [(ngModel)]="send.toLabel">
       <span class="separator"></span>
       <span class="col-xs-2">
-        <span class="icon fa fa-users"></span>
+        <span class="icon fa fa-users" (click)="openLookup()"></span>
         <span class="icon fa fa-clone"></span>
         <span class="icon fa fa-times"></span>
       </span>
@@ -147,7 +147,7 @@
       <input class="col-xs-2" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
       <span class="separator"></span>
       <span class="col-xs-2">
-        <span class="icon fa fa-users"></span>
+        <span class="icon fa fa-users" (click)="openLookup()"></span>
         <span class="icon fa fa-clone"></span>
         <span class="icon fa fa-times"></span>
       </span>
@@ -167,7 +167,77 @@
 
   <div class="pull-right">
     <button (click)="clear()">Clear all</button>
-    <button class="validate" (click)="pay()">Make payment</button>
+    <button class="validate"
+      (click)="openValidate()"
+      [disabled]="!send.toAddress || !send.amount">
+      Make payment
+    </button>
   </div>
 
+</div>
+
+<div class="small-modal hide" id="lookup">
+  <div class="address-modal-container">
+    <span class="close" (click)="closeLookup()">&times;</span>
+
+    <div class="modal-content-header">Address lookup</div>
+    <hr style="margin-top: 5px;">
+
+    <div class="row">
+      <div class="col-xs-8">
+        <input type="text" class="form-control" [(ngModel)]="lookup"
+          placeholder="Filter by label or address...">
+      </div>
+      <div class="col-xs-4"><select>
+        <option value="" selected >Address Type</option>
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select></div>
+    </div>
+
+    <table class="table table-hover" id="addresses-table">
+      <thead>
+        <tr>
+          <th>Label</th>
+          <th>Address</th>
+          <th>Public Key</th>
+          <th>Address Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let address of lookupAddresses"
+          (click)="selectAddress(address.address, address.label)">
+          <th scope="row">{{address.label}}</th>
+          <td>{{address.address}}</td>
+          <td>{{address.publicKey}}</td>
+          <td>{{address.type}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+  </div>
+</div>
+
+<div class="small-modal hide" id="validate">
+  <div class="address-modal-container">
+    <span class="close" (click)="closeLookup()">&times;</span>
+
+    <div class="modal-content-header">Validate</div>
+    <hr style="margin-top: 5px;">
+
+    <div class="">
+      Do you really want to send {{send.amount}} {{send.currency.toUpperCase()}}
+      to {{send.toAddress}} ?
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <button class="col-xs-5" (click)="closeValidate()">Cancel</button>
+      <button class="col-xs-5 validate" (click)="pay()">Confirm</button>
+    </div>
+
+  </div>
 </div>

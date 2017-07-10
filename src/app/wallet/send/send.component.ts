@@ -10,16 +10,37 @@ export class SendComponent implements OnInit {
 
   type: string = 'sendPayment';
   advanced: boolean = false;
-  send: Object = {
+  lookup: string;
+  send: any = {
     fromType: 'public',
     toType: 'public',
     currency: 'part',
     privacy: 50
   };
 
+  lookupAddresses: any = [
+    {
+      label: 'testLabel',
+      address: 'sdfkjy34876ftks7fy847ydewi8uxndi3w8u',
+      publicKey: 'oq3847dro847xrnqox874nrxoq746rcnqo34876xoq347xnq3xno3487',
+      type: 'public'
+    },
+    {
+      label: 'testLabel2',
+      address: 'sdfkjy34876ftks7fy847ydewi8uxndi3w8u',
+      publicKey: 'oq3847dro847xrnqox874nrxoq746rcnqo34876xoq347xnq3xno3487',
+      type: 'public'
+    }
+  ];
+
   constructor() { }
 
   ngOnInit() {
+    document.onkeydown = evt => {
+      if (evt.key.toLowerCase() === 'escape') {
+        this.closeLookup();
+      }
+    }
   }
 
   sendTab(type: string) {
@@ -39,6 +60,28 @@ export class SendComponent implements OnInit {
     }
   }
 
+  openLookup() {
+    document.getElementById('lookup').classList.remove('hide');
+  }
+
+  closeLookup() {
+    document.getElementById('lookup').classList.add('hide');
+  }
+
+  openValidate() {
+    document.getElementById('validate').classList.remove('hide');
+  }
+
+  closeValidate() {
+    document.getElementById('validate').classList.add('hide');
+  }
+
+  selectAddress(address: string, label: string) {
+    this.send.toAddress = address;
+    this.send.toLabel = label;
+    this.closeLookup();
+  }
+
   clear() {
     this.send = {
       fromType: 'public',
@@ -50,6 +93,8 @@ export class SendComponent implements OnInit {
 
   pay() {
     console.log(this.type, this.send);
+    this.clear();
+    this.closeValidate();
   }
 
 }
