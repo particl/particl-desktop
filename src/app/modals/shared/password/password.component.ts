@@ -2,11 +2,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ModalsModule } from '../../modals.module';
 
 @Component({
-  selector: 'app-unlockwallet',
-  templateUrl: './unlockwallet.component.html',
-  styleUrls: ['./unlockwallet.component.scss']
+  selector: 'app-password',
+  templateUrl: './password.component.html',
+  styleUrls: ['./password.component.scss']
 })
-export class UnlockwalletComponent implements Input, Output {
+export class PasswordComponent implements Input, Output {
 
 
   private password: string;

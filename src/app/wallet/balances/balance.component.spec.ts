@@ -7,7 +7,6 @@ import { BalanceComponent } from './balance.component';
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
 
-import { AppService } from '../../app.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 describe('BalanceComponent', () => {
@@ -21,7 +20,6 @@ describe('BalanceComponent', () => {
         WalletModule.forRoot()
       ],
       providers: [
-        AppService,
         ElectronService,
         RPCService
       ]

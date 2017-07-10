@@ -83,12 +83,12 @@
     </div>
 
     <div class="page-buttons">
-      <span class="page-button" (click)="previousPage()"> < </span>
+      <span class="page-button" (click)="previousPage()"> &lt; </span>
       <span class="page-button" *ngFor="let pageRef of nav;"
         (click)="gotoPage(pageRef)" id="page-{{pageRef}}">
         {{ pageRef }}
       </span>
-      <span class="page-button" (click)="nextPage()"> > </span>
+      <span class="page-button" (click)="nextPage()"> &gt; </span>
     </div>
 
   </div>

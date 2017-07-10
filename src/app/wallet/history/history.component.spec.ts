@@ -4,6 +4,7 @@ import { HistoryComponent } from './history.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
@@ -13,8 +14,9 @@ describe('HistoryComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        WalletModule.forRoot()
-      ],
+        WalletModule.forRoot(),
+        RpcModule.forRoot()
+      ]
     })
     .compileComponents();
   }));

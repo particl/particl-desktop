@@ -6,7 +6,6 @@ import { BalanceService } from './balance.service';
 
 import { SharedModule } from '../../shared/shared.module';
 
-import { AppService } from '../../app.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 describe('BalanceService', () => {
@@ -15,7 +14,6 @@ describe('BalanceService', () => {
       imports: [SharedModule],
       providers: [
         BalanceService,
-        AppService,
         ElectronService,
         RPCService
       ]

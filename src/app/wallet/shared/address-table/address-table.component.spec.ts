@@ -1,8 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ElectronService } from 'ngx-electron';
+
 import { AddressTableComponent } from './address-table.component';
+
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
@@ -12,8 +16,9 @@ describe('AddressTableComponent', () => {
     TestBed.configureTestingModule({
       imports: [
          SharedModule,
-         WalletModule.forRoot()
-       ],
+         WalletModule.forRoot(),
+         RpcModule.forRoot()
+      ]
     })
     .compileComponents();
   }));
