@@ -88,10 +88,18 @@
   </div>
 </div>
 
-<hr>
+<hr style="margin-top: 40px;">
 
-<app-unlockwallet
-  [unlockText]="'RECOVERY PASSWORD'"
-  [unlockButton]="'RESTORE WALLET'"
-  (passwordEmitter)="restore($event)">
-</app-unlockwallet>
+<!--
+<hr style="margin-top: 40px;">
+<app-passphrase></app-passphrase>
+<hr>
+-->
+
+<app-password [unlockText]="RECOVERY PASSWORD" [unlockButton]="'RESTORE WALLET'" (passwordEmitter)="restore($event)">
+</app-password>
+
+<div style="text-align: center;">
+  <button class="control" (click)="back()">back</button>
+</div>
+

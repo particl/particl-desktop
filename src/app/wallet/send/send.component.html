@@ -33,15 +33,18 @@
 
   <div *ngIf="type == 'sendPayment'">
 
-    <div *ngIf="advanced" class="card row">
+    <div class="card row">
       <div class="input-label col-xs-3">From account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="from" id="fromPublic"
           [(ngModel)]="send.fromType" value="public">
-        <label for="fromPublic" class="input-info-label">Public account</label>
+        <label for="fromPublic" class="input-info-label">Public</label>
+        <input type="radio" name="from" id="fromBlind"
+          [(ngModel)]="send.fromType" value="blind">
+        <label for="fromBlind" class="input-info-label">Blind</label>
         <input type="radio" name="from" id="fromPrivate"
           [(ngModel)]="send.fromType" value="private">
-        <label for="fromPrivate" class="input-info-label">Private account</label>
+        <label for="fromPrivate" class="input-info-label">Private</label>
       </span>
       <span class="separator"></span>
       <span class="col-xs-4 balance">
@@ -52,14 +55,14 @@
 
     <div class="card row">
       <div class="input-label col-xs-3">Pay to</div>
-      <input class="col-xs-4" type="text"
+      <input class="col-xs-4" [ngClass]="{'good': checkAddress() == true, 'fault': checkAddress() == false }" type="text"
         placeholder="The address to send the payment to"
-        [(ngModel)]="send.toAddress">
+        [(ngModel)]="send.toAddress" (input)="verifyAddress()">
       <input class="col-xs-2" type="text" placeholder="Enter a label"
         [(ngModel)]="send.toLabel">
       <span class="separator"></span>
       <span class="col-xs-2">
-        <span class="icon fa fa-users"></span>
+        <span class="icon fa fa-users" (click)="openLookup()"></span>
         <span class="icon fa fa-clone"></span>
         <span class="icon fa fa-times"></span>
       </span>
@@ -77,13 +80,16 @@
       <div class="input-label col-xs-3">Amount</div>
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
-        [(ngModel)]="send.amount">
-      <select [(ngModel)]="send.currency">
-        <option value="part">PART</option>
-      </select>
+        [(ngModel)]="send.amount"
+        [ngClass]="{'good': verifyAmount() == true, 'fault': verifyAmount() == false }">
+      <div class="col-xs-2">
+        <select [(ngModel)]="send.currency" class="form-control">
+          <option value="part">PART</option>
+        </select>
+      </div>
     </div>
 
-    <div *ngIf="advanced" class="card row">
+    <div *ngIf="send.fromType === 'private'" class="card row">
       <div class="input-label col-xs-3">Privacy level</div>
       <div class="col-xs-4 nopadding">
         <div class="progress">
@@ -110,10 +116,13 @@
       <span class="col-xs-4 public-private">
         <input type="radio" name="from" id="fromPublic"
           [(ngModel)]="send.fromType" value="public">
-        <label for="fromPublic" class="input-info-label">Public account</label>
+        <label for="fromPublic" class="input-info-label">Public</label>
+        <input type="radio" name="from" id="fromBlind"
+          [(ngModel)]="send.fromType" value="blind">
+        <label for="fromBlind" class="input-info-label">Blind</label>
         <input type="radio" name="from" id="fromPrivate"
-          [(ngModel)]="send.fromType" value="private">
-        <label for="fromPrivate" class="input-info-label">Private account</label>
+          [(ngModel)]="send.fromType"  value="private">
+        <label for="fromPrivate" class="input-info-label">Private</label>
       </span>
       <span class="separator"></span>
       <span class="col-xs-4 balance">
@@ -122,15 +131,18 @@
       </span>
     </div>
 
-    <div *ngIf="advanced" class="card row">
+    <div class="card row">
       <div class="input-label col-xs-3">To account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="to" id="toPublic"
-          [(ngModel)]="send.toType" value="public">
-        <label for="toPublic" class="input-info-label">Public account</label>
+          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'public' }}" value="public">
+        <label for="toPublic" class="input-info-label">Public</label>
+        <input type="radio" name="to" id="toBlind"
+          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'blind' }}" value="blind">
+        <label for="toBlind" class="input-info-label">Blind</label>
         <input type="radio" name="to" id="toPrivate"
-          [(ngModel)]="send.toType" value="private">
-        <label for="toPrivate" class="input-info-label">Private account</label>
+          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'private' }}" value="private">
+        <label for="toPrivate" class="input-info-label">Private</label>
       </span>
       <span class="separator"></span>
       <span class="col-xs-4 balance">
@@ -147,7 +159,7 @@
       <input class="col-xs-2" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
       <span class="separator"></span>
       <span class="col-xs-2">
-        <span class="icon fa fa-users"></span>
+        <span class="icon fa fa-users" (click)="openLookup()"></span>
         <span class="icon fa fa-clone"></span>
         <span class="icon fa fa-times"></span>
       </span>
@@ -158,16 +170,62 @@
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount">
-      <select [(ngModel)]="send.currency">
-        <option value="part">PART</option>
-      </select>
+      <div class="col-xs-2">
+        <select [(ngModel)]="send.currency" class="form-control">
+          <option value="part">PART</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="send.fromType === 'private'" class="card row">
+      <div class="input-label col-xs-3">Privacy level</div>
+      <div class="col-xs-4 nopadding">
+        <div class="progress">
+          <div id="privacy" class="progress-bar" role="progressbar"
+            [ngStyle]="{ 'width': send.privacy + '%' }">
+          </div>
+        </div>
+        <div class="privacy-labels">
+          <span class="privacy-label" (click)="send.privacy = 10">Normal</span>
+          <span class="privacy-label" (click)="send.privacy = 50">Medium</span>
+          <span class="privacy-label" (click)="send.privacy = 100">High</span>
+        </div>
+      </div>
     </div>
 
   </div>
 
   <div class="pull-right">
     <button (click)="clear()">Clear all</button>
-    <button class="validate" (click)="pay()">Make payment</button>
+    <button class="validate"
+      (click)="openValidate()"
+      [disabled]="!send.toAddress || !send.amount">
+      Make payment
+    </button>
   </div>
 
+</div>
+
+<app-addresslookup #addressLookup [selectAddressCallback]="selectAddress.bind(this)"></app-addresslookup>
+
+<div class="small-modal hide" id="validate">
+  <div class="address-modal-container">
+    <span class="close" (click)="closeValidate()">&times;</span>
+
+    <div class="modal-content-header">Validate</div>
+    <hr style="margin-top: 5px;">
+
+    <div class="">
+      Do you really want to send {{send.amount}} {{send.currency.toUpperCase()}}
+      to {{send.toAddress}} ?
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <button class="col-xs-5" (click)="closeValidate()">Cancel</button>
+      <button class="col-xs-5 validate" (click)="pay()">Confirm</button>
+    </div>
+
+  </div>
 </div>

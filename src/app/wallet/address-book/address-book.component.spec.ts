@@ -1,7 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { AddressBookComponent } from './address-book.component';
 
@@ -13,7 +15,8 @@ describe('AddressBookComponent', () => {
     TestBed.configureTestingModule({
       imports: [
          SharedModule,
-         WalletModule.forRoot()
+         WalletModule.forRoot(),
+         RpcModule.forRoot()
       ],
       declarations: [ ]
     })

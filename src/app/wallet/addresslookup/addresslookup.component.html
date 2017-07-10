@@ -1,0 +1,52 @@
+<div class="modal fade" bsModal #staticLookup="bs-modal"
+     tabindex="-1" role="dialog" aria-labelledby="addressLookup" aria-hidden="true">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Address lookup</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="staticLookup.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-xs-8">
+            <input type="text" class="form-control" [(ngModel)]="lookup"
+              placeholder="Filter by label or address...">
+          </div>
+          <div class="col-xs-4">
+            <select class="form-control">
+              <option value="" selected >Address Type</option>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
+        </div>
+
+        <table class="table table-hover" id="addresses-table">
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>Address</th>
+              <th>Public Key</th>
+              <th>Address Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let address of lookupAddresses"
+              (click)="selectAddressCallback(address.address, address.label)">
+              <th scope="row">{{address.label}}</th>
+              <td>{{address.address}}</td>
+              <td>{{address.publicKey}}</td>
+              <td>{{address.type}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>

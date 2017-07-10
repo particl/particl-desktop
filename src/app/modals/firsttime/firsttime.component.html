@@ -6,10 +6,14 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-6 col-xs-12 text-right">
-      <button class="control">Create new wallet</button>
+      <button class="control" (click)="create()">
+        Create new wallet
+      </button>
     </div>
     <div class="col-sm-6 col-xs-12 text-left">
-      <button class="control">Restore wallet</button>
+      <button class="control" (click)="restore()">
+        Restore wallet
+      </button>
     </div>
   </div>
 </div>

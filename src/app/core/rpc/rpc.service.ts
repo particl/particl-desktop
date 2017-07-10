@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 
 import { Headers, Http } from '@angular/http';
-import { AppService } from 'app/app.service';
 
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
@@ -17,19 +16,18 @@ export class RPCService {
   private username: string = 'test';
   private password: string = 'test';
 
-  private _appService: AppService;
   private _callOnBlock: Array<any> = [];
   private _callOnTransaction: Array<any> = [];
 
-  private _pollTimout: NodeJS.Timer;
+  private _pollTimout: number;
 
-  constructor(private http: Http, public electronService: ElectronService) { }
+  public isElectron: boolean = false;
 
-  postConstruct(appService: AppService) { // Gets rid of circular dependency.. We could possibly handle this better..
-    this._appService = appService;
+  constructor(private http: Http, public electronService: ElectronService) {
+    this.isElectron = this.electronService.isElectronApp;
   }
 
-  call(instance: Injectable, method: string, params: Array<any> | null, callback: Function): void {
+  call(instance: Injectable, method: string, params: Array<any> | null, successCB: Function, errorCB?: Function): void {
     const postData = JSON.stringify({
       method: method,
       params: params,
@@ -41,16 +39,19 @@ export class RPCService {
     headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
     headers.append('Accept', 'application/json');
 
-    if (this._appService.isElectron) {
+    if (this.isElectron) {
       // TODO: electron.ipcCall
     } else {
       this.http
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
         .subscribe(
           response => {
-            callback.call(instance, response.json().result);
+            successCB.call(instance, response.json().result);
           },
           error => {
+            if (errorCB) {
+              errorCB.call(instance, error)
+            }
             // TODO: Call error modal?
             console.log('RPC Call returned an error', error);
           });
@@ -58,13 +59,14 @@ export class RPCService {
   }
 
   register(instance: Injectable, method: string, params: Array<any> | Function | null,
-           callback: Function, when: string): void {
+           successCB: Function, when: string, errorCB?: Function): void {
     let valid = false;
     const _call = {
       instance: instance,
       method: method,
       params: params,
-      callback: callback
+      successCB: successCB,
+      errorCB: errorCB
     };
     if (when.indexOf('block') !== -1 || when.indexOf('both') !== -1) {
       this._callOnBlock.push(_call);
@@ -83,12 +85,13 @@ export class RPCService {
         element.instance,
         element.method,
         element.params && element.params.typeOf === 'function' ? element.params() : element.params,
-        element.callback);
+        element.successCB,
+        element.errorCB);
     };
 
     this._callOnBlock.forEach(_call);
     this._callOnTransaction.forEach(_call);
-    this._pollTimout = setTimeout(() => { this.poll(); }, 3000);
+    this._pollTimout = setTimeout(this.poll.bind(this), 3000);
   }
 
   startPolling(): void {

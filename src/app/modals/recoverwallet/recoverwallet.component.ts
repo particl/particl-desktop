@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject, forwardRef } from '@angular/core';
+
+import { ModalsService } from '../modals.service';
 
 import { AppService } from '../../app.service';
 
@@ -13,6 +15,10 @@ export class RecoverwalletComponent {
   isDisabled: boolean = false;
 
   constructor (private appService: AppService) { }
+
+  constructor (
+    @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
+  ) { }
 
   restore(password: string) {
     if (this.isDisabled) {
@@ -65,5 +71,9 @@ export class RecoverwalletComponent {
 
   clear() {
     this.words = Array(24).fill('');
+  }
+
+  back() {
+    this._modalsService.open('firstTime');
   }
 }

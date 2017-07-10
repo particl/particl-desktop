@@ -15,7 +15,7 @@
     <div class="col-md-3 col-xs-6">
       <h3>Amount of blocks left</h3>
       <br />
-      {{ blocksRemaining }}
+      {{ getRemainder() }}
     </div>
     <div class="col-md-3 col-xs-6">
       <h3>Last block time</h3>
@@ -23,14 +23,14 @@
       {{ lastBlockTime }}
     </div>
     <div class="col-md-3 col-xs-6">
-      <h3>Progress increase per hour</h3>
+      <h3>Progress increase per minute</h3>
       <br />
-      {{ increasePerHour }}%
+      {{ increasePerMinute }}%
     </div>
     <div class="col-md-3 col-xs-6">
       <h3>Estimated time left until synced</h3>
       <br />
-      {{ estimatedTimeLeft }}
+      {{ getEstimateTimeLeft() }}
     </div>
   </div>
 </div>

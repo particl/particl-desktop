@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 // import { Observer } from 'rxjs/Observer';
 import { Observable, Observer } from 'rxjs'; // use this for testing atm
 
-import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
 
 export class Balances {
   getTotal() {
@@ -12,6 +12,11 @@ export class Balances {
   getPublic() {
     return this._public;
   }
+
+  getBlind() {
+    return this._blind;
+  }
+
   getPrivate() {
     return this._private;
   }
@@ -26,12 +31,15 @@ export class Balances {
       return this.getPublic();
     } else if (type === 'PRIVATE') {
       return this.getPrivate();
+    } else if (type === 'BLIND') {
+      return this.getBlind();
     } else if (type === 'STAKE') {
       return this.getStake();
     }
   }
 
-  constructor(private _total: number, private _public: number, private _private: number, private _stake: number) { }
+  constructor(private _total: number, private _public: number, private _blind: number,  private _private: number,
+    private _stake: number) { }
 }
 
 @Injectable()
@@ -73,12 +81,12 @@ export class BalanceService {
   private _balances: Observable<Balances>;
   private _observer: Observer<Balances>;
 
-  constructor(private appService: AppService) {
+  constructor(private _rpc: RPCService) {
         // we only need to initialize this once, as it is a shared observable...
     this._balances = Observable.create(observer => this._observer = observer).publishReplay(1).refCount();
     this._balances.subscribe().unsubscribe(); // Kick it off, since its shared... We should look at a more functional approach in the future
 
-    this.appService.rpc.register(this, 'getwalletinfo', null, this.rpc_loadBalance, 'both');
+    this._rpc.register(this, 'getwalletinfo', null, this.rpc_loadBalance, 'both');
     // setTimeout(_ => this.rpc_loadBalance(this.TEST_BALANCES_JSON[1])); // load initial balances
     // just a test
     // setTimeout(_ => this.updateBalanceTest(), 5000);
@@ -105,7 +113,7 @@ export class BalanceService {
 */
 
 /*
-	Load balances over RPC.
+  Load balances over RPC.
 
 */
   rpc_loadBalance(JSON: Object): void {
@@ -145,7 +153,7 @@ export class BalanceService {
   signal_updateBalance(): void {
     /*
       When a new transaction arrives, we must update the balance. Might be worth ignoring this on IBD.
-  	*/
+    */
   }
 
 
@@ -156,10 +164,11 @@ export class BalanceService {
 
   deserialize(json: Object): Balances {
     const total_balance = json['total_balance'];
-    const public_balance = json['balance'] + json['blind_balance']; // public =  balance + blind
+    const public_balance = json['balance'];
+    const blind_balance = json['blind_balance'];
     const private_balance = json['anon_balance'];
     const staked_balance = json['staked_balance'];
-    return new Balances(total_balance, public_balance, private_balance, staked_balance);
+    return new Balances(total_balance, public_balance, blind_balance, private_balance, staked_balance);
   }
 
 
