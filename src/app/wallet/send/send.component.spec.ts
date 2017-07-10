@@ -7,7 +7,6 @@ import { SendComponent } from './send.component';
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
 
-import { AppService } from '../../app.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 describe('SendComponent', () => {
@@ -21,7 +20,6 @@ describe('SendComponent', () => {
          WalletModule.forRoot()
       ],
       providers: [
-        AppService,
         ElectronService,
         RPCService
       ]

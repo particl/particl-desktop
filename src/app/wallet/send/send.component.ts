@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SendService } from './send.service';
 import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
-
+import { RPCService } from '../../core/rpc/rpc.service';
 @Component({
   selector: 'app-send',
   templateUrl: './send.component.html',
@@ -23,7 +23,7 @@ export class SendComponent implements OnInit, OnDestroy {
     privacy: 50
   };
 
-  constructor(private SendService: SendService, private balanceService: BalanceService) { }
+  constructor(private SendService: SendService, private balanceService: BalanceService, private _rpc: RPCService) { }
 
   ngOnInit() {
     this._sub = this.balanceService.getBalances()
@@ -100,11 +100,11 @@ export class SendComponent implements OnInit, OnDestroy {
     }
 
     if (this.send['toAddress'].length === 34 && this.send['toAddress'].indexOf('p') === 0) {
-      this.SendService.appService.rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
+      this._rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
     }
 
     if (this.send['toAddress'].length === 102 && this.send['toAddress'].indexOf('Tet') === 0) {
-      this.SendService.appService.rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
+      this._rpc.call(this, 'validateaddress', [this.send['toAddress']], this.rpc_callbackVerifyAddress);
     }
 
     this.send['validAddress'] = undefined;

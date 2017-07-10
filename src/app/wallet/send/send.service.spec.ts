@@ -4,7 +4,6 @@ import { SendService } from './send.service';
 
 import { ElectronService } from 'ngx-electron';
 import { SharedModule } from '../../shared/shared.module';
-import { AppService } from '../../app.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 describe('SendService', () => {
@@ -13,7 +12,6 @@ describe('SendService', () => {
       imports: [SharedModule],
       providers: [
         SendService,
-        AppService,
         ElectronService,
         RPCService
       ]
