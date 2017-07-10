@@ -2,6 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PassphraseComponent } from '../shared/passphrase/passphrase.component';
 import { ModalsModule } from '../modals.module';
+import { SharedModule } from '../../shared/shared.module';
+
+import { ElectronService } from 'ngx-electron';
+import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
+
 
 describe('PassphraseComponent', () => {
   let component: PassphraseComponent;
@@ -9,7 +15,12 @@ describe('PassphraseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule]
+      imports: [SharedModule, ModalsModule],
+      providers: [
+        AppService,
+        ElectronService,
+        RPCService
+      ]
     })
     .compileComponents();
   }));
