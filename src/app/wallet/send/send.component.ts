@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 
 @Component({
   selector: 'app-send',
@@ -8,9 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SendComponent implements OnInit {
 
+  @ViewChild('addressLookup')
+  public addressLookup: AddressLookupComponent;
+
   type: string = 'sendPayment';
   advanced: boolean = false;
-  send: Object = {
+  lookup: string;
+
+  send: any = {
     fromType: 'public',
     toType: 'public',
     currency: 'part',
@@ -20,6 +27,12 @@ export class SendComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    /*
+    document.onkeydown = evt => {
+      if (evt.key.toLowerCase() === 'escape') {
+        this.closeLookup();
+      }
+    }*/
   }
 
   sendTab(type: string) {
@@ -39,6 +52,24 @@ export class SendComponent implements OnInit {
     }
   }
 
+  openLookup() {
+    this.addressLookup.show();
+  }
+
+  openValidate() {
+    document.getElementById('validate').classList.remove('hide');
+  }
+
+  closeValidate() {
+    document.getElementById('validate').classList.add('hide');
+  }
+
+  selectAddress(address: string, label: string) {
+    this.send.toAddress = address;
+    this.send.toLabel = label;
+    this.addressLookup.hide();
+  }
+
   clear() {
     this.send = {
       fromType: 'public',
@@ -50,6 +81,8 @@ export class SendComponent implements OnInit {
 
   pay() {
     console.log(this.type, this.send);
+    this.clear();
+    this.closeValidate();
   }
 
 }

@@ -48,8 +48,6 @@ export class AppComponent implements OnInit {
       .flatMap(route => route.data)
       .subscribe(data => this.title = data['title']);
 
-    this._rpc.poll();
-
     const bcSub = this._peer.getBlockCount()
       .subscribe(
         height => {
@@ -72,6 +70,8 @@ export class AppComponent implements OnInit {
             )
         }
       );
+
+    this._rpc.poll();
   }
 
   // Modal examples
