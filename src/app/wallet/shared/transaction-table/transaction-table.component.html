@@ -7,8 +7,12 @@
     <th *ngIf="displayAmount">amount</th>
     <th *ngIf="displayBlockIndex">blockindex</th>
     <th *ngIf="displayConfirmations">confirmations</th>
-  </tr>
+  </tr> 
   <tr *ngFor="let tx of txService.txs">
+     <td *ngIf="displayDate">
+      <span class="inline-header"><span class="icon fa fa-clock-o"></span></span>
+      <span>{{ tx.getDate() }}</span>
+    </td>
     <td *ngIf="displayCategory" [ngSwitch]="tx.category">
       <span *ngSwitchCase="'stake'" class="inline-tag text-uppercase">
         Stake
@@ -24,16 +28,11 @@
       </span>
       <span *ngSwitchCase="'receive'" class="inline-tag text-uppercase">
         Received
-        <span class="icon fa fa-arrow-left color-green"></span>
+        <span class="icon fa fa-arrow-left"></span>
       </span>
     </td>
     <td *ngIf="displaySenderAddress">
-      <span class="inline-header">Address</span>
       <span>{{ tx.getAddress() }}</span>
-    </td>
-    <td *ngIf="displayDate">
-      <span class="inline-header"><span class="icon fa fa-clock-o"></span></span>
-      <span>{{ tx.getDate() }}</span>
     </td>
     <td *ngIf="displayTxId">
       <span class="inline-header">TxId</span>
@@ -46,12 +45,15 @@
     <td *ngIf="displayConfirmations">
       <span class="inline-header">Confirmations</span>
       <span>{{ tx.confirmations }}</span>
-      <span class="icon fa fa-clock-o color-red"></span>
     </td>
     <td *ngIf="displayAmount">
       <span class="inline-header">Amount</span>
       <span>{{ tx.getAmount() }} PART</span>
+    </td>	
+    <td>
+      <span class="icon fa fa-plus"></span>
     </td>
+	
   </tr>
 </app-table>
 
