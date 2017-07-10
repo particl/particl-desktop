@@ -34,21 +34,21 @@ export class AddressBookComponent implements OnInit {
   }
 
   addAddressToBook() {
-    if(this.validAddress && this.label !== undefined) {
+    if (this.validAddress && this.label !== undefined) {
       this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label], this.rpc_callbackAddAddressToBook);
       this.address = undefined;
       this.validAddress = undefined;
       this.label = '';
       this.closeNewAddress();
     } else {
-      alert("Please enter a valid address!");
+      alert('Please enter a valid address!');
     }
   }
 
   rpc_callbackAddAddressToBook(JSON: Object) {
     console.log(JSON);
-    if(JSON['result'] === 'success') {
-      alert("Address successfully added to the addressbook!")
+    if (JSON['result'] === 'success') {
+      alert('Address successfully added to the addressbook!')
     }
   }
 
@@ -63,11 +63,11 @@ export class AddressBookComponent implements OnInit {
       if ((this.address.indexOf('T') === 0) === false) { // does not start with T
         this.validAddress = false;
         return;
-      } else if(this.address.length > 102) { // starts with T but over 102 chars
+      } else if (this.address.length > 102) { // starts with T but over 102 chars
         this.validAddress = false;
         return;
       }
-    } else if(this.address.length > 34) { // starts with p but over 34 chars
+    } else if (this.address.length > 34) { // starts with p but over 34 chars
       this.validAddress = false;
       return;
     }
@@ -88,7 +88,7 @@ export class AddressBookComponent implements OnInit {
     this.validAddress = JSON['isvalid'];
    }
 
-  checkAddress(): boolean { 
+  checkAddress(): boolean {
     return this.validAddress;
   }
 

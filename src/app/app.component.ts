@@ -60,7 +60,8 @@ export class AppComponent implements OnInit {
                 nbcSub.unsubscribe();
 
                 if (networkHeight === -1 || height === -1) {
-                  //no peers (networkHeight is -1), or height === -1 (unable to call getblockcount)
+                  // no peers (networkHeight is -1), or height === -1 (unable to call getblockcount)
+                  alert( networkHeight === -1 ? "No peers!" : "Unable to retrieve blockcount - rpc connection issues!");
                   return;
                 }
 
