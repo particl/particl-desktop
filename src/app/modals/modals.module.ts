@@ -38,7 +38,7 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
     UnlockwalletComponent
   ],
   exports: [
-    ModalsComponent
+    ModalsComponent,
   ],
   providers: [ModalsService]
 })

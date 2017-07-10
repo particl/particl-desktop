@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 
 @Component({
   selector: 'app-send',
@@ -8,9 +10,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SendComponent implements OnInit {
 
+  @ViewChild('addressLookup')
+  public addressLookup: AddressLookupComponent;
+
   type: string = 'sendPayment';
   advanced: boolean = false;
   lookup: string;
+
   send: any = {
     fromType: 'public',
     toType: 'public',
@@ -18,29 +24,15 @@ export class SendComponent implements OnInit {
     privacy: 50
   };
 
-  lookupAddresses: any = [
-    {
-      label: 'testLabel',
-      address: 'sdfkjy34876ftks7fy847ydewi8uxndi3w8u',
-      publicKey: 'oq3847dro847xrnqox874nrxoq746rcnqo34876xoq347xnq3xno3487',
-      type: 'public'
-    },
-    {
-      label: 'testLabel2',
-      address: 'sdfkjy34876ftks7fy847ydewi8uxndi3w8u',
-      publicKey: 'oq3847dro847xrnqox874nrxoq746rcnqo34876xoq347xnq3xno3487',
-      type: 'public'
-    }
-  ];
-
   constructor() { }
 
   ngOnInit() {
+    /*
     document.onkeydown = evt => {
       if (evt.key.toLowerCase() === 'escape') {
         this.closeLookup();
       }
-    }
+    }*/
   }
 
   sendTab(type: string) {
@@ -61,11 +53,7 @@ export class SendComponent implements OnInit {
   }
 
   openLookup() {
-    document.getElementById('lookup').classList.remove('hide');
-  }
-
-  closeLookup() {
-    document.getElementById('lookup').classList.add('hide');
+    this.addressLookup.show();
   }
 
   openValidate() {
@@ -79,7 +67,7 @@ export class SendComponent implements OnInit {
   selectAddress(address: string, label: string) {
     this.send.toAddress = address;
     this.send.toLabel = label;
-    this.closeLookup();
+    this.addressLookup.hide();
   }
 
   clear() {

@@ -78,9 +78,11 @@
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount">
-      <select [(ngModel)]="send.currency">
-        <option value="part">PART</option>
-      </select>
+      <div class="col-xs-2">
+        <select [(ngModel)]="send.currency" class="form-control">
+          <option value="part">PART</option>
+        </select>
+      </div>
     </div>
 
     <div *ngIf="advanced" class="card row">
@@ -158,9 +160,11 @@
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount">
-      <select [(ngModel)]="send.currency">
-        <option value="part">PART</option>
-      </select>
+      <div class="col-xs-2">
+        <select [(ngModel)]="send.currency" class="form-control">
+          <option value="part">PART</option>
+        </select>
+      </div>
     </div>
 
   </div>
@@ -176,49 +180,7 @@
 
 </div>
 
-<div class="small-modal hide" id="lookup">
-  <div class="address-modal-container">
-    <span class="close" (click)="closeLookup()">&times;</span>
-
-    <div class="modal-content-header">Address lookup</div>
-    <hr style="margin-top: 5px;">
-
-    <div class="row">
-      <div class="col-xs-8">
-        <input type="text" class="form-control" [(ngModel)]="lookup"
-          placeholder="Filter by label or address...">
-      </div>
-      <div class="col-xs-4"><select>
-        <option value="" selected >Address Type</option>
-        <option value="public">Public</option>
-        <option value="private">Private</option>
-      </select></div>
-    </div>
-
-    <table class="table table-hover" id="addresses-table">
-      <thead>
-        <tr>
-          <th>Label</th>
-          <th>Address</th>
-          <th>Public Key</th>
-          <th>Address Type</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let address of lookupAddresses"
-          (click)="selectAddress(address.address, address.label)">
-          <th scope="row">{{address.label}}</th>
-          <td>{{address.address}}</td>
-          <td>{{address.publicKey}}</td>
-          <td>{{address.type}}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <hr>
-
-  </div>
-</div>
+<app-addresslookup #addressLookup [selectAddressCallback]="selectAddress.bind(this)"></app-addresslookup>
 
 <div class="small-modal hide" id="validate">
   <div class="address-modal-container">

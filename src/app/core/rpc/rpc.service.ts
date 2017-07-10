@@ -19,7 +19,7 @@ export class RPCService {
   private _callOnBlock: Array<any> = [];
   private _callOnTransaction: Array<any> = [];
 
-  private _pollTimout: NodeJS.Timer;
+  private _pollTimout: number;
 
   public isElectron: boolean = false;
 
@@ -86,7 +86,7 @@ export class RPCService {
 
     this._callOnBlock.forEach(_call);
     this._callOnTransaction.forEach(_call);
-    this._pollTimout = setTimeout(() => { this.poll(); }, 3000);
+    this._pollTimout = setTimeout(this.poll.bind(this), 3000);
   }
 
   startPolling(): void {
