@@ -7,7 +7,6 @@ import { ElectronService } from 'ngx-electron';
 
 import { SharedModule } from '../../shared/shared.module';
 
-import { AppService } from '../../app.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 describe('RecoverwalletComponent', () => {
@@ -18,7 +17,6 @@ describe('RecoverwalletComponent', () => {
     TestBed.configureTestingModule({
       imports: [SharedModule, ModalsModule],
       providers: [
-        AppService,
         ElectronService,
         RPCService
       ]

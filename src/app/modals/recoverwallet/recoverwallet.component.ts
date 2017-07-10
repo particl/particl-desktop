@@ -2,7 +2,7 @@ import { Component, Inject, forwardRef } from '@angular/core';
 
 import { ModalsService } from '../modals.service';
 
-import { AppService } from '../../app.service';
+import { AppService } from '../../core/rpc/rpc.service';
 
 @Component({
   selector: 'app-recoverwallet',
@@ -14,10 +14,10 @@ export class RecoverwalletComponent {
   words: string[] = Array(24).fill('');
   isDisabled: boolean = false;
 
-  constructor (private appService: AppService) { }
-
   constructor (
+  	private _rpc : RPCService,
     @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
+    
   ) { }
 
   restore(password: string) {
@@ -36,7 +36,7 @@ export class RecoverwalletComponent {
       }
     }
     const params: Array<any> = this.getParams(wordsString, password);
-    this.appService.rpc.call(this, 'extkeygenesisimport', params, this.rpc_importFinished);
+    this._rpc.call(this, 'extkeygenesisimport', params, this.rpc_importFinished);
     this.isDisabled = true;
   }
 
