@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ModalsModule } from '../modals.module';
 
-import { AppService } from '../../app.service';
+import { RPCService } from '../../core/rpc/rpc.service';
 
 @Component({
   selector: 'app-unlockwallet',
@@ -10,23 +10,23 @@ import { AppService } from '../../app.service';
 })
 export class UnlockwalletComponent {
 
-  constructor (private appService: AppService) { }
+  constructor (private _rpc: RPCService) { }
 
   unlock(obj: Object) {
     // TODO API call
     const password: string = obj['password'];
     const stakeOnly: boolean = obj['stakeOnly'];
-
-    this.appService.rpc.call(this, 'walletpassphrase', [password, 99999, stakeOnly], this.rpc_unlockSuccesful);
-    alert(obj['password'] + obj['stakeOnly']);
+    console.log('walletpassphrase');
+    this._rpc.call(this, 'walletpassphrase', [password, 99999, stakeOnly], this.rpc_unlockSuccesful);
   }
 
-  rpc_unlockSuccesful(JSON: Object) {
-    this.appService.rpc.call(this, 'getwalletinfo', null, this.walletAlert);
+  rpc_unlockSuccesful(json: Object) {
+    console.log('callback triggered');
+    this._rpc.call(this, 'getwalletinfo', null, this.walletAlert);
   }
 
-  walletAlert(JSON: Object) {
-    const encryptionstatus = JSON['encryptionstatus'];
+  walletAlert(json: Object) {
+    const encryptionstatus = json['encryptionstatus'];
     if (encryptionstatus === 'Unlocked') {
       alert('Unlock succesful!');
     } else if (encryptionstatus === 'Unlocked, staking only') {

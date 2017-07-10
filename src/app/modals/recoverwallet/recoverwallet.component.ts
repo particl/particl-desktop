@@ -21,7 +21,7 @@ export class RecoverwalletComponent {
   ) { }
 
   restore(passwordObj: Object) {
-  	const password = passwordObj['password'];
+    const password = passwordObj['password'];
     if (this.isDisabled) {
       alert('Still importing the recovery phrase, please wait!');
     }

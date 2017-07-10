@@ -15,6 +15,7 @@ export class PasswordComponent implements Input, Output {
 
   @Input() unlockText: string = 'YOUR WALLET PASSWORD';
   @Input() unlockButton: string;
+  @Input() showStakeOnly: boolean = true;
   @Output() passwordEmitter: EventEmitter<Object> = new EventEmitter<Object>();
 
   passwordInputType(): string {
