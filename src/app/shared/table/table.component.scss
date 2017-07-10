@@ -1,8 +1,9 @@
 :host {
 	& {
+		/*
     display: block;
-		overflow-x: auto;
-		overflow-y: hidden;
+	overflow-x: auto;
+	overflow-y: hidden;*/
 	}
   /deep/ {
     table {
@@ -56,14 +57,7 @@
   			}
   		}
 			.inline-tag {
-				display: inline-block;
-				padding: 10px 15px;
-				color: #616161;
-				background-color: #FFF;
-				border-style: solid;
-				border-width: 2px;
-				border-color: #F1F1F1;
-				border-radius: 17px;
+				font-weight:bold;
 			}
 			.color-red {
 		    color: #EE4A52;

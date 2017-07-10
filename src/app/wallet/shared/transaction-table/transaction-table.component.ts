@@ -12,29 +12,33 @@ import { TransactionService } from '../transaction.service';
 export class TransactionsTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
-  @Input() displayHeader: boolean = true;
-  @Input() displayInternalHeader: boolean = false;
-  @Input() displayPagination: boolean = false;
-  @Input() amountOfTxsToDisplay: number = 10;
+  private _defaults: any = {
+    header: true,
+    internalHeader: false,
+    pagination: false,
+    txDisplayAmount: 10,
+    category: true,
+    date: true,
+    amount: true,
+    confirmations: true,
+    txid: false,
+    senderAddress: true,
+    receiverAddress: true,
+    comment: true,
+    blockHash: false,
+    blockIndex: false,
+    expand: false
+  };
 
-    /* actual fields */
-  @Input() displayCategory: boolean = true;
-  @Input() displayDate: boolean = true;
-  @Input() displayAmount: boolean = true;
-  @Input() displayConfirmations: boolean = false;
-  @Input() displayTxId: boolean = false;
-  @Input() displaySenderAddress: boolean = false;
-  @Input() displayReceiverAddress: boolean = false;
-  @Input() displayComment: boolean = false;
-  @Input() displayBlockHash: boolean = false;
-  @Input() displayBlockIndex: boolean = false;
-
+  @Input() display: any;
 
   constructor(public txService: TransactionService) {
   }
 
   ngOnInit() {
-    this.txService.postConstructor(this.amountOfTxsToDisplay);
+    this.display = Object.assign({}, this._defaults, this.display); // Set defaults
+
+    this.txService.postConstructor(this.display.txDisplayAmount);
   }
 
   public pageChanged(event: any): void {
