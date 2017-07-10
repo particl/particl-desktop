@@ -15,9 +15,9 @@ export class RecoverwalletComponent {
   isDisabled: boolean = false;
 
   constructor (
-  	private _rpc : RPCService,
+    private _rpc: RPCService,
     @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
-    
+
   ) { }
 
   restore(password: string) {
