@@ -2,7 +2,7 @@ import { Component, Inject, forwardRef } from '@angular/core';
 
 import { ModalsService } from '../modals.service';
 
-import { AppService } from '../../core/rpc/rpc.service';
+import { RPCService } from '../../core/rpc/rpc.service';
 
 @Component({
   selector: 'app-recoverwallet',
