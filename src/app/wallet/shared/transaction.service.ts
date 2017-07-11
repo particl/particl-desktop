@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Transaction, deserialize, TEST_TXS_JSON, TEST_ARRAY_TXS_JSON_PAGE_0, TEST_ARRAY_TXS_JSON_PAGE_1  } from './transaction.model';
+import { Log } from 'ng2-logger'
+
+import { Transaction, deserialize, TEST_TXS_JSON, TEST_ARRAY_TXS_JSON_PAGE_0, TEST_ARRAY_TXS_JSON_PAGE_1 } from './transaction.model';
 
 import { RPCService } from '../../core/rpc/rpc.service';
 
 @Injectable()
 export class TransactionService {
+
+  log: any = Log.create('transaction.service');
+
   /* Stores transactions objects. */
   txs: Transaction[] = [];
 
@@ -18,7 +23,9 @@ export class TransactionService {
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
 
-  constructor(private rpc: RPCService) { }
+  constructor(
+    private rpc: RPCService
+  ) {}
 
 
   postConstructor(MAX_TXS_PER_PAGE: number) {
@@ -69,8 +76,10 @@ export class TransactionService {
 
   rpc_loadTransactionCount(JSON: Object): void {
     this.txCount = JSON['txcount'];
-    console.log('txcount' + this.txCount);
-    console.log(this.rpc_getParameters());
+
+    this.log.d('rpc_loadTransactionCount, txcount:', this.txCount);
+    this.log.d('rpc_loadTransactionCount, rpc_getParameters():', this.rpc_getParameters());
+
     this.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
   }
 

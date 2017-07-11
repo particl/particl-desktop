@@ -33,6 +33,7 @@ npm-debug.log
 testem.log
 /typings
 particl-0.14.1.4
+particl-0.14.1.8
 
 # e2e
 /e2e/*.js
