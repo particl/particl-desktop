@@ -2,13 +2,20 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StatusComponent } from './status.component';
 
+import { PeerService } from '../rpc/peer.service';
+import { RPCService } from '../rpc/rpc.service';
+
 describe('StatusComponent', () => {
   let component: StatusComponent;
   let fixture: ComponentFixture<StatusComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StatusComponent ]
+      declarations: [ StatusComponent ],
+      providers: [
+        RPCService,
+        PeerService
+      ]
     })
     .compileComponents();
   }));
