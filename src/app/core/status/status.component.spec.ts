@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StatusComponent } from './status.component';
 
+import { SharedModule } from '../shared/shared.module';
+
 import { PeerService } from '../rpc/peer.service';
 import { RPCService } from '../rpc/rpc.service';
 
@@ -12,6 +14,7 @@ describe('StatusComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ StatusComponent ],
+      imports: [SharedModule],
       providers: [
         RPCService,
         PeerService
