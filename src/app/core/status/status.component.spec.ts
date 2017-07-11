@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatusComponent } from './status.component';
 
 import { SharedModule } from '../../shared/shared.module';
+import { ElectronService } from 'ngx-electron';
 
 import { PeerService } from '../rpc/peer.service';
 import { RPCService } from '../rpc/rpc.service';
@@ -16,6 +17,7 @@ describe('StatusComponent', () => {
       declarations: [ StatusComponent ],
       imports: [SharedModule],
       providers: [
+        ElectronService,
         RPCService,
         PeerService
       ]
