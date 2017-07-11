@@ -36,8 +36,8 @@ export class StatusComponent implements OnInit {
       case this.peerListCount < 8: return 3;
       case this.peerListCount < 12: return 4;
       case this.peerListCount < 16: return 5;
-      case this.peerListCount >= 16: return 5;
-      default: return 6;
+      case this.peerListCount >= 16: return 6;
+      default: return 0;
     }
   }
 
