@@ -14,7 +14,7 @@ export class StatusComponent implements OnInit {
   private peerListCount: number = 0;
   private _subPeerList: Subscription;
 
-  private encryptionStatus: string = '_off';
+  public encryptionStatus: string = '_off';
 
   constructor(private  _peerService: PeerService, private _rpc: RPCService) { }
 
@@ -29,38 +29,33 @@ export class StatusComponent implements OnInit {
     this._rpc.register(this, 'getwalletinfo', null, this.rpc_walletEncryptionStatus, 'both'); ;
   }
 
-  getIconNumber(): string {
-    if (this.peerListCount <= 0) {
-      return '0';
-    } else if (this.peerListCount === 1) {
-      return '1';
-    } else if (this.peerListCount <= 3) {
-      return '2';
-    } else if (this.peerListCount === 4) {
-      return '3';
-    } else if (this.peerListCount <= 6) {
-      return '4';
-    } else if (this.peerListCount === 7) {
-      return '5';
-    } else if (this.peerListCount >= 8) {
-      return '6';
+  getIconNumber(): number {
+    switch (true) {
+      case this.peerListCount <= 0: return 0;
+      case this.peerListCount < 4: return 2;
+      case this.peerListCount < 8: return 3;
+      case this.peerListCount < 12: return 4;
+      case this.peerListCount < 16: return 5;
+      case this.peerListCount >= 16: return 5;
+      default: return 6;
     }
   }
 
-  getIconLock(): string {
-    return this.encryptionStatus;
-  }
-
-  rpc_walletEncryptionStatus(json: Object) {
-    if (json['encryptionstatus'] === 'Unencrypted') {
-      this.encryptionStatus = '_off'; // TODO: icon?
-    } else if (json['encryptionstatus'] === 'Unlocked') {
-      this.encryptionStatus = '_off';
-    } else if (json['encryptionstatus'] === 'Unlocked, staking only') {
-      this.encryptionStatus = '_stake';
-    } else if (json['encryptionstatus'] === 'Locked') {
-      this.encryptionStatus = '';
+  // TODO: Status Interface
+  rpc_walletEncryptionStatus(status: any) {
+    switch (status.encryptionstatus) {
+      case 'Unencrypted':  // TODO: icon?
+      case 'Unlocked':
+        this.encryptionStatus = '_off';
+        break;
+      case 'Unlocked, staking only':
+        this.encryptionStatus = '_stake';
+        break;
+      case 'Locked':
+        this.encryptionStatus = '';
+        break;
+      default:
+        this.encryptionStatus = '_off'; // TODO: icon?
     }
   }
-
 }
