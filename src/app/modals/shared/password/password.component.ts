@@ -6,10 +6,10 @@ import { ModalsModule } from '../../modals.module';
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent implements Input, Output {
+export class PasswordComponent {
 
-  private showPass: boolean = false;
-  private password: string;
+  showPass: boolean = false;
+  password: string;
 
   @Input() unlockButton: string;
   @Output() passwordEmitter: EventEmitter<string> = new EventEmitter<string>();

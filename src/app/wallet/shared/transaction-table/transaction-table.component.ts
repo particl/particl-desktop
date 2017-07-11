@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Log } from 'ng2-logger'
 
 import { TransactionService } from '../transaction.service';
-
 
 @Component({
   selector: 'transaction-table',
@@ -9,9 +9,11 @@ import { TransactionService } from '../transaction.service';
   styleUrls: ['./transaction-table.component.scss'],
   providers: [TransactionService]
 })
+
 export class TransactionsTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
+
   private _defaults: any = {
     header: true,
     internalHeader: false,
@@ -32,6 +34,8 @@ export class TransactionsTableComponent implements OnInit {
 
   @Input() display: any;
 
+  log: any = Log.create('transaction-table.component');
+
   constructor(public txService: TransactionService) {
   }
 
@@ -43,7 +47,9 @@ export class TransactionsTableComponent implements OnInit {
 
   public pageChanged(event: any): void {
     this.txService.changePage(event.page);
-    console.log('Page changed to: ' + event.page);
-    console.log('Number items per page: ' + event.itemsPerPage);
+
+    this.log.d('Page changed to:', event.page);
+    this.log.d('Number items per page:', event.itemsPerPage);
+
   }
 }
