@@ -10,5 +10,6 @@
 
 <app-password
   [unlockButton]="'UNLOCK WALLET'"
-  (passwordEmitter)="unlock($event)">
+  (unlockEmitter)="unlock($event)"
+  [emitUnlock]="true">
 </app-password>

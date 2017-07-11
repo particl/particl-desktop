@@ -1,4 +1,5 @@
 <hr style="margin: 40px 0 40px 0;">
+<!--
 <div class="container">
   <div class="col-md-3 text-right">
     <label style="text-transform: uppercase;">Your wallet name</label>
@@ -11,7 +12,14 @@
   </div>
 </div>
 <br />
-<app-password #passwordComponent></app-password>
+-->
+<app-password
+  #passwordComponent
+  [unlockText]="'RECOVERYPHRASE PASSWORD (OPTIONAL!)'"
+  (passwordEmitter)="nextFromEmitter($event)"
+  [emitPassword]="true"
+  [showStakeOnly]="false">
+  ></app-password>
 
 <div class="buttons" style="margin-top: 30px;">
   <div class="row col-xs-4 col-xs-offset-4">
@@ -21,7 +29,7 @@
       </button>
     </div>
     <div class="col-xs-6">
-      <button class="control" style="width: 100%;" (click)="next(passwordComponent.password)">
+      <button class="control" style="width: 100%;" (click)="passwordComponent.forceEmit()">
         next step
       </button>
     </div>

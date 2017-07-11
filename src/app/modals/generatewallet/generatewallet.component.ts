@@ -20,9 +20,13 @@ export class GeneratewalletComponent {
     this._modalsService.open('firstTime');
   }
 
+  nextFromEmitter(pass: object) {
+    this.next(pass['password']);
+  }
+
   next(password: string) {
-    console.log(password, this.name);
-    this._modalsService.open('showPassphrase');
+    console.log("next:" + password, this.name);
+    this._modalsService.showPassphrase(password);
   }
 
 }

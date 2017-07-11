@@ -4,7 +4,7 @@
   </div>
   <div class="col-md-9">
     <div class="col-md-2">
-      <input [(ngModel)]="words[0]" type="text" name="recovery" [readonly]="readOnly" class="form-control recovery-word">
+      <input [(ngModel)]="words[0]" type="text" name="recovery" [readonly]="readOnly" (input)="splitAndFill()" class="form-control recovery-word">
     </div>
     <div class="col-md-2">
       <input [(ngModel)]="words[1]" type="text" name="recovery" [readonly]="readOnly" class="form-control recovery-word">

@@ -36,6 +36,11 @@ export class ModalsService {
     }
   }
 
+  showPassphrase(password: string) { 
+    // How do I get the ^password into showPassphrase component?
+    this.open('showPassphrase');
+  }
+
   updateProgress(progress: Number): void {
     this.progress.next(progress);
   }

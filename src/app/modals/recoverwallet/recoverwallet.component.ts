@@ -49,19 +49,7 @@ export class RecoverwalletComponent {
     }
   }
 
-  splitAndFill() {
-    const seedArray = this.words[0].split(' ');
 
-    if (seedArray.length > 1) {
-      console.log('multiple values entered!');
-      for (const i in seedArray) {
-        if (true) { // lint error
-          this.words[i] = seedArray[i];
-        }
-      }
-    }
-
-  }
 
   rpc_importFinished(JSON: Object) {
     // TODO for rpc service: needs ERROR handling!
