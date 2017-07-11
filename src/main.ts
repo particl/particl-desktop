@@ -10,7 +10,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-if( environment.envName === 'dev' ) {
+if (environment.envName === 'dev') {
   // TODO: dev env logging config, see https://github.com/darekf77/ng2-logger
   Log.onlyModules('(.*?)');
 }
