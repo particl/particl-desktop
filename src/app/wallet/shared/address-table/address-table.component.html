@@ -1,3 +1,67 @@
+<ng2-smart-table
+  [settings]="tableSettings"
+  [source]="rows">
+</ng2-smart-table>
+
+<ngx-datatable
+  #addressesdatatable
+  class="particl"
+  [rows]="rows"
+  [columns]="columns"
+  [columnMode]="'force'"
+  [sortType]="'multi'"
+  [limit]="5"
+  [headerHeight]="50"
+  [footerHeight]="50"
+  [rowHeight]="'auto'">
+
+  <!-- headerHeight, false for no header -->
+
+  <ngx-datatable-column name="Label">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value}}</span>
+      <!--i [innerHTML]="row['name']"></i-->
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="Address">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="Public key">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="Type">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="Purpose">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="Tools">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>Tools here</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="QR Code">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>QR Code here</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+</ngx-datatable>
+
 <app-table>
   <tr *ngIf="displayHeader">
     <th *ngIf="displayLabel">Label</th>
@@ -43,3 +107,4 @@
 
 <pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
             previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE" ></pagination>
+

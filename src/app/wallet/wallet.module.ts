@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angular2-qrcode';
 import { ModalModule } from 'ngx-bootstrap';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -40,7 +41,7 @@ const routes: Routes = [
     SharedModule,
     ModalModule.forRoot(),
     QRCodeModule,
-
+    NgxDatatableModule
   ],
   declarations: [
     TransactionsTableComponent,
