@@ -1,11 +1,10 @@
 
 <app-passphrase 
   #passphraseComponent
-
-  [generateNewSeed]="true"
+  
   [password]="password"
   [readOnly]="true"
-  (wordsVerifyEmitter)="next()">
+  (seedImportedSuccesfulEmitter)="next()">
   </app-passphrase>
 <hr>
 

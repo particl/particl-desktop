@@ -2,7 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormsModule } from '@angular/forms';
 import { PassphraseComponent } from './passphrase.component';
+
+import { SharedModule } from '../../../shared/shared.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
+
 
 describe('PassphraseComponent', () => {
   let component: PassphraseComponent;
@@ -12,6 +15,7 @@ describe('PassphraseComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
+        SharedModule,
         RpcModule.forRoot()
        ],
       declarations: [ PassphraseComponent ]

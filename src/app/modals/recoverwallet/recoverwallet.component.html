@@ -1,106 +1,14 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 text-center">
-      <h4>Please enter your <b>24 word recovery phrase</b> and <b>password</b> below.</h4>
-    </div>
-  </div>
-</div>
 
-<hr style="margin-top: 100px;">
 
-<div class="container">
-  <div class="col-md-3 text-right">
-    <label>YOUR 24 WORD RECOVERY PHRASE</label>
-  </div>
-  <div class="col-md-9">
-    <div class="col-md-2">
-      <input [(ngModel)]="words[0]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[1]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[2]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[3]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[4]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[5]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[6]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[7]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[8]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[9]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[10]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-        <div class="col-md-2">
-      <input [(ngModel)]="words[11]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[12]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[13]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[14]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[15]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[16]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[17]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[18]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[19]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[20]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[21]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[22]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-    <div class="col-md-2">
-      <input [(ngModel)]="words[23]" type="text" name="recovery" [disabled]="isDisabled" class="form-control recovery-word">
-    </div>
-  </div>
-</div>
+<app-passphrase #passphraseComponent></app-passphrase>
 
-<hr style="margin-top: 40px;">
-
-<!--
-<hr style="margin-top: 40px;">
-<app-passphrase></app-passphrase>
 <hr>
--->
 
 <app-password 
   [unlockText]="'RECOVERY PASSWORD'" 
   [unlockButton]="'RESTORE WALLET'" 
   [showStakeOnly]="false" 
-  (passwordEmitter)="restore($event)">
+  (passwordEmitter)="passphraseComponent.restore($event)">
 </app-password>
 
 <div style="text-align: center;">

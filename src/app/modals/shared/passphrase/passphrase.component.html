@@ -1,32 +1,47 @@
 <span *ngIf="stateOfPassphrase === 'generate'">
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 text-center">
-      <h4>Write your wallet recovery phrase</h4>
-      <div style="color: #ec4b50;">
-        Lorem ipsum
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <h4>Write your wallet recovery phrase</h4>
+        <!--
+        <div style="color: #ec4b50;">
+          Lorem ipsum
+        </div>
+        -->
       </div>
     </div>
   </div>
-</div>
 
-<hr style="margin-top: 40px;">
+  <hr style="margin-top: 40px;">
 </span>
 
 <span *ngIf="stateOfPassphrase === 'verify'">
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 text-center">
-      <h4>Confirm your wallet recovery phrase</h4>
-      <div *ngIf="isValid === false" style="color: #ec4b50;">
-        Recovery phrase was not valid!
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <h4>Confirm your wallet recovery phrase</h4>
+        <div *ngIf="isValid === false" style="color: #ec4b50;">
+          Recovery phrase was not valid!
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<hr style="margin-top: 40px;">
+  <hr style="margin-top: 40px;">
 </span>
+
+<span *ngIf="stateOfPassphrase === 'recovery'">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <h4>Please enter your <b>24 word recovery phrase</b> and <b>password</b> below.</h4>
+      </div>
+    </div>
+  </div>
+
+  <hr style="margin-top: 100px;">
+</span>
+
 
 <div class="container">
   <div class="col-md-3 text-right">

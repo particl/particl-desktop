@@ -13,7 +13,6 @@ export class PassphraseComponent implements OnInit {
   // Used for verification
   private wordsVerification: string[];
 
-  @Input() generateNewSeed: boolean = false;
   @Input() recoverSeed: boolean = false;
 
   /*
@@ -21,7 +20,7 @@ export class PassphraseComponent implements OnInit {
   */
   @Input() password: string = undefined;
 
-  stateOfPassphrase: string = 'generate'; // generate or verify
+  stateOfPassphrase: string = 'generate'; // generate, verify or recovery
 
   isValid: boolean = undefined;
 
@@ -30,15 +29,11 @@ export class PassphraseComponent implements OnInit {
   @Input() isDisabled: boolean = false;
 
   @Output() wordsEmitter: EventEmitter<string> = new EventEmitter<string>();
-  @Output() wordsVerifyEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() seedImportedSuccesfulEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor (private _rpc: RPCService) { }
 
   ngOnInit() {
-    if (this.generateNewSeed) {
-      this.generateNew(this.password);
-      this.password = undefined;
-    }
   }
 
   forceEmit() {
@@ -102,7 +97,11 @@ export class PassphraseComponent implements OnInit {
     } else if (this.stateOfPassphrase === 'verify') {
       if (this.checkIfEqual(this.words, this.wordsVerification)) {
       alert('success, seeds match!');
-      this.createNew();
+      
+      this.generateNew(this.password);
+
+      // reset
+      this.password = undefined;
       this.stateOfPassphrase = 'generate';
       this.isValid = undefined;
       } else {
@@ -121,7 +120,7 @@ export class PassphraseComponent implements OnInit {
   rpc_createNewCallback(json: object) {
     if (json['result'] === 'Success.') {
       console.log('Succesfully imported the newly generated seed!');
-      this.wordsVerifyEmitter.emit(true);
+      this.seedImportedSuccesfulEmitter.emit(true);
       console.log('weir emitted!');
     }
   }
@@ -141,7 +140,12 @@ export class PassphraseComponent implements OnInit {
 	This is the logic for restoring the recovery phrase!
 */
 
-  restore(password: string) {
+  /*
+	The restore function is called by app-password as eventEmitter with the password object!
+	in recoverwallet.component.ts
+  */
+  restore(passwordObj: Object) {
+  	const password = passwordObj['password'];
     if (this.isDisabled) {
       alert('Still importing the recovery phrase, please wait!');
     }
