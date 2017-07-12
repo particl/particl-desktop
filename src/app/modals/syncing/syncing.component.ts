@@ -25,7 +25,9 @@ export class SyncingComponent {
   ) {
     this._rpcService.poll();
     this._statusService.statusUpdates.asObservable().subscribe(status => {
-      this.remainder = status.remainingBlocks;
+      this.remainder = status.remainingBlocks < 0
+        ? 'waiting for peers...'
+        : status.remainingBlocks;
       this.lastBlockTime = status.lastBlockTime;
       this.increasePerMinute = status.syncPercentage === 100
         ? 'DONE'

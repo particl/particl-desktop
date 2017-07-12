@@ -130,13 +130,16 @@ export class StatusService {
     let returnString = '';
 
     if (hours > 0) {
-      returnString += hours + ' hour' + (hours > 1 ? 's' : '') + ' '
+      returnString += `${hours} ${hours > 1 ? 'hours' : 'hour'} `
     }
     if (minutes > 0) {
-      returnString += minutes + ' minute' + (minutes > 1 ? 's' : '') + ' '
+      returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `
     }
     if (seconds > 0) {
-      returnString += seconds + ' second' + (seconds > 1 ? 's' : '') + ' '
+      returnString += `${seconds} ${seconds > 1 ? 'seconds' : 'second'}`
+    }
+    if (returnString === '') {
+      returnString = '∞';
     }
 
     this.status.estimatedTimeLeft = returnString;
