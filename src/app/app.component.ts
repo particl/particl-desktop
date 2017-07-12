@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Log } from 'ng2-logger'
 
 import { WindowService } from './core/window.service';
 import { RPCService, PeerService } from './core/rpc/rpc.module';
@@ -7,6 +8,7 @@ import { RPCService, PeerService } from './core/rpc/rpc.module';
 import { SettingsService } from './settings/settings.service';
 // Modal example
 import { ModalsService } from './modals/modals.service';
+import {Logger} from 'ng2-logger/src/logger';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +22,7 @@ export class AppComponent implements OnInit {
   isCollapsed: boolean = true;
   isFixed: boolean = false;
   title: string = '';
+  log: any = Log.create('app.component');
 
   constructor(
     private _router: Router,
@@ -30,7 +33,8 @@ export class AppComponent implements OnInit {
     private _settingsService: SettingsService,
     // Modal example
     private _modalsService: ModalsService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     // Change the header title derived from route data
@@ -72,6 +76,12 @@ export class AppComponent implements OnInit {
       );
 
     this._rpc.poll();
+
+    this.log.er('error!');
+    this.log.w('warn!');
+    this.log.i('info');
+    this.log.d('debug');
+
   }
 
   // Modal examples
