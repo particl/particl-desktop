@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ModalsModule } from '../modals.module';
 
 import { RPCService } from '../../core/rpc/rpc.service';
@@ -10,10 +10,6 @@ import { RPCService } from '../../core/rpc/rpc.service';
 })
 export class UnlockwalletComponent {
 
-  @Input() displayAsModal: boolean = false;
-  
-  openUnlockWalletModal: boolean = false;
-
   constructor (private _rpc: RPCService) { }
 
   unlock(obj: Object) {
@@ -24,11 +20,4 @@ export class UnlockwalletComponent {
     console.log('passw triggered');
   }
 
-  openModal() {
-    this.openUnlockWalletModal = true;
-  }
-
-  closeModal() {
-    this.openUnlockWalletModal = false;
-  }
 }
