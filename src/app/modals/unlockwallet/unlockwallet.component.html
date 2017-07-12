@@ -13,3 +13,22 @@
   (unlockEmitter)="unlock($event)"
   [emitUnlock]="true">
 </app-password>
+
+
+<div id="unlockwallet-modal"  [ngClass]="{'hide': openUnlockWalletModal == false }">
+  <div class="unlockwallet-modal-container">
+    <span class="close" (click)="closeUnlockWalletModal()">&times;</span>
+
+    <div class="modal-content-header">Unlock wallet</div>
+    <hr style="margin-top: 5px;">
+
+    <div class="row">
+      <app-password
+  		[unlockButton]="'UNLOCK WALLET'"
+  		(unlockEmitter)="unlock($event)"
+  		[emitUnlock]="true">
+	  </app-password>
+    </div>
+
+  </div>
+</div>
