@@ -12,6 +12,7 @@ import { RpcModule } from './core/rpc/rpc.module';
 import { ModalsModule } from './modals/modals.module';
 
 import { WindowService } from './core/window.service';
+import { StatusService } from './core/status/status.service';
 
 import { AppComponent } from './app.component';
 
@@ -47,7 +48,8 @@ const routes: Routes = [
     ModalsModule
   ],
   providers: [
-    WindowService
+    WindowService,
+    StatusService
   ],
   bootstrap: [ AppComponent ]
 })

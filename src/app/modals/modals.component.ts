@@ -92,7 +92,9 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   updateProgress(progress: number) {
     this.syncPercentage = progress;
-    this.syncString = progress < 100 ? `${progress} %` : 'Fully synced !'
+    this.syncString = progress === 100
+      ? 'blockchain fully synced'
+      : `${progress.toFixed(2)} %`
   }
 
   open(message: any) {

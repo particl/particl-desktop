@@ -7,7 +7,10 @@ import { RPCService } from '../rpc/rpc.service';
 @Component({
   selector: 'app-status',
   templateUrl: './status.component.html',
-  styleUrls: ['./status.component.css']
+  styleUrls: ['./status.component.css'],
+  providers: [
+    PeerService
+  ]
 })
 export class StatusComponent implements OnInit {
 

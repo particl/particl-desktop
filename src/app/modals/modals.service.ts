@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+
+import { StatusService } from '../core/status/status.service';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
 import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
@@ -16,6 +18,7 @@ export class ModalsService {
   public modal: any = null;
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
+  private _statusService: StatusService;
 
   messages: Object = {
     firstTime: FirsttimeComponent,
@@ -28,16 +31,22 @@ export class ModalsService {
     unlock: UnlockwalletComponent
   };
 
+  constructor (
+    injector: Injector
+  ) {
+    this._statusService = injector.get(StatusService);
+    this._statusService.statusUpdates.asObservable().subscribe(status => {
+      this.progress.next(status.syncPercentage);
+    });
+  }
+
   open(modal: string): void {
     if (modal in this.messages) {
+      this.modal = this.messages[modal];
       this.message.next(this.messages[modal]);
     } else {
       console.error(`modal ${modal} doesn't exist`);
     }
-  }
-
-  updateProgress(progress: Number): void {
-    this.progress.next(progress);
   }
 
   getMessage() {
