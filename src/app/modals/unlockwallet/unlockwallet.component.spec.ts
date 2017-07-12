@@ -4,8 +4,7 @@ import { PassphraseComponent } from '../shared/passphrase/passphrase.component';
 import { ModalsModule } from '../modals.module';
 import { SharedModule } from '../../shared/shared.module';
 
-import { ElectronService } from 'ngx-electron';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 
 describe('PassphraseComponent', () => {
@@ -14,10 +13,10 @@ describe('PassphraseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule, ModalsModule],
-      providers: [
-        ElectronService,
-        RPCService
+      imports: [
+        SharedModule,
+        ModalsModule,
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();
