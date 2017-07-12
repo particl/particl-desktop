@@ -9,7 +9,7 @@ import { ModalsService } from '../../modals.service';
 })
 export class ShowpassphraseComponent {
 
-  private password: string;
+  password: string;
 
   constructor (
     @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
