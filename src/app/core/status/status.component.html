@@ -2,10 +2,16 @@
     <b>Peers: </b> {{getPeerListCount()}}
 </tooltip-content>
 
+<app-unlockwallet 
+  #unlockComponent
+  [displayAsModal]="true">
+</app-unlockwallet>
+
 <span 
   [tooltip]="networkTooltip"
   tooltipPlacement="left"
   class="icon" >
 	  <img src="/assets/icons/network/connect_{{getIconNumber()}}.png" />
 </span>
-<span class="icon"><img src="/assets/icons/lock/lock{{ encryptionStatus }}.png" /></span>
+<span class="icon" (click)="unlockComponent.openModal()"><img src="/assets/icons/lock/lock{{ encryptionStatus }}.png" /></span>
+

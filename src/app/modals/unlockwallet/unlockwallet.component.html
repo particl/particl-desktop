@@ -1,4 +1,4 @@
-<div class="container">
+<div *ngIf="!displayAsModal" class="container">
   <div class="row">
     <div class="col-xs-12 text-center">
       <h4>Please enter <b>your password</b> to unlock your wallet.</h4>
@@ -15,9 +15,9 @@
 </app-password>
 
 
-<div id="unlockwallet-modal"  [ngClass]="{'hide': openUnlockWalletModal == false }">
+<div *ngIf="displayAsModal" id="unlockwallet-modal"  [ngClass]="{'hide': openUnlockWalletModal == false }">
   <div class="unlockwallet-modal-container">
-    <span class="close" (click)="closeUnlockWalletModal()">&times;</span>
+    <span class="close" (click)="closeModal()">&times;</span>
 
     <div class="modal-content-header">Unlock wallet</div>
     <hr style="margin-top: 5px;">

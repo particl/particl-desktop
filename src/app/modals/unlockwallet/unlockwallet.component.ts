@@ -10,7 +10,9 @@ import { RPCService } from '../../core/rpc/rpc.service';
 })
 export class UnlockwalletComponent {
 
-  @Input() openUnlockWalletModal: boolean = false;
+  @Input() displayAsModal: boolean = false;
+  
+  openUnlockWalletModal: boolean = false;
 
   constructor (private _rpc: RPCService) { }
 
@@ -22,4 +24,11 @@ export class UnlockwalletComponent {
     console.log('passw triggered');
   }
 
+  openModal() {
+    this.openUnlockWalletModal = true;
+  }
+
+  closeModal() {
+    this.openUnlockWalletModal = false;
+  }
 }
