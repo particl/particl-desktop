@@ -7,7 +7,7 @@ import { GeneratewalletComponent } from './generatewallet.component';
 import { ModalsService } from '../modals.service';
 
 import { SharedModule } from '../../shared/shared.module';
-import { RpcModule } from '../../rpc/rpc.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 describe('GeneratewalletComponent', () => {
   let component: GeneratewalletComponent;
