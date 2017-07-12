@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatusComponent } from './status.component';
 
 import { SharedModule } from '../../shared/shared.module';
-import { RpcModule } from './rpc.module';
+import { RpcModule } from '../rpc/rpc.module';
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
