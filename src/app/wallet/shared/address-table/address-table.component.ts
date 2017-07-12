@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AddressService } from '../address.service';
+import { AddressBookService } from '../address-book.service';
 import { Log } from 'ng2-logger'
 
 @Component({
@@ -8,9 +8,6 @@ import { Log } from 'ng2-logger'
   styleUrls: ['./address-table.component.scss']
 })
 
-/**
- * ngx-datatable styling: https://swimlane.gitbooks.io/ngx-datatable/introduction/themes.html
- */
 export class AddressTableComponent implements OnInit {
 
   log: any = Log.create('address-table.component');
@@ -41,20 +38,22 @@ export class AddressTableComponent implements OnInit {
     { name: 'QR Code',    sortable: false }
   ];
 
-  constructor(public addressService: AddressService) {
+
+  constructor(public addressBookService: AddressBookService) {
+  }
+
+  ngOnInit() {
 
     this.getAddresses((data) => {
-      this.log.d('data:', data);
+      // this.log.d('data:', data);
       this.rows = data; // .splice(0, 5);
     });
 
   }
 
-  ngOnInit() {
-  }
-
   public pageChanged(event: any): void {
-    this.addressService.changePage(event.page);
+    this.log.d('pageChanged: ...');
+    this.addressBookService.changePage(event.page);
   }
 
   getAddresses(cb: Function) {

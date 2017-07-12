@@ -125,10 +125,13 @@
   [boundaryLinks]="true"
   (pageChanged)="pageChanged($event)"
   [totalItems]="txService.txCount"
-  [maxSize]="5" [rotate]="false"
+  [maxSize]="5"
+  [rotate]="false"
   [(ngModel)]="txService.currentPage"
   class="pagination-sm center"
-  previousText="&lsaquo;" nextText="&rsaquo;"
-  firstText="&laquo;" lastText="&raquo;"
-  [itemsPerPage]="txService.MAX_TXS_PER_PAGE" >
+  previousText="&lsaquo;"
+  nextText="&rsaquo;"
+  firstText="&laquo;"
+  lastText="&raquo;"
+  [itemsPerPage]="txService.MAX_TXS_PER_PAGE">
 </pagination>

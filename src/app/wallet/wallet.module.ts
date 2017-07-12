@@ -2,12 +2,11 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angular2-qrcode';
 import { ModalModule } from 'ngx-bootstrap';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { SharedModule } from '../shared/shared.module';
 
 import { TransactionService } from './shared/transaction.service';
-import { AddressService } from './shared/address.service';
+import { AddressBookService } from './shared/address-book.service';
 // TODO: move balance to shared?
 import { BalanceService } from './balances/balance.service';
 import { SendService } from './send/send.service';
@@ -40,8 +39,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     ModalModule.forRoot(),
-    QRCodeModule,
-    NgxDatatableModule
+    QRCodeModule
   ],
   declarations: [
     TransactionsTableComponent,
@@ -66,7 +64,7 @@ export class WalletModule {
       ngModule: WalletModule,
       providers: [
         TransactionService,
-        AddressService,
+        AddressBookService,
         BalanceService,
         SendService
       ]

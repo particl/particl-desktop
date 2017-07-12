@@ -1,67 +1,3 @@
-<ng2-smart-table
-  [settings]="tableSettings"
-  [source]="rows">
-</ng2-smart-table>
-
-<ngx-datatable
-  #addressesdatatable
-  class="particl"
-  [rows]="rows"
-  [columns]="columns"
-  [columnMode]="'force'"
-  [sortType]="'multi'"
-  [limit]="5"
-  [headerHeight]="50"
-  [footerHeight]="50"
-  [rowHeight]="'auto'">
-
-  <!-- headerHeight, false for no header -->
-
-  <ngx-datatable-column name="Label">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>{{value}}</span>
-      <!--i [innerHTML]="row['name']"></i-->
-    </ng-template>
-  </ngx-datatable-column>
-
-  <ngx-datatable-column name="Address">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>{{value}}</span>
-    </ng-template>
-  </ngx-datatable-column>
-
-  <ngx-datatable-column name="Public key">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>{{value}}</span>
-    </ng-template>
-  </ngx-datatable-column>
-
-  <ngx-datatable-column name="Type">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>{{value}}</span>
-    </ng-template>
-  </ngx-datatable-column>
-
-  <ngx-datatable-column name="Purpose">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>{{value}}</span>
-    </ng-template>
-  </ngx-datatable-column>
-
-  <ngx-datatable-column name="Tools">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>Tools here</span>
-    </ng-template>
-  </ngx-datatable-column>
-
-  <ngx-datatable-column name="QR Code">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>QR Code here</span>
-    </ng-template>
-  </ngx-datatable-column>
-
-</ngx-datatable>
-
 <app-table>
   <tr *ngIf="displayHeader">
     <th *ngIf="displayLabel">Label</th>
@@ -72,7 +8,7 @@
     <th *ngIf="displayToolsMenu">Tools</th>
     <th *ngIf="displayQrMenu">QR Code</th>
   </tr>
-  <tr *ngFor="let address of addressService.addresses">
+  <tr *ngFor="let address of addressBookService.addresses">
     <td *ngIf="displayLabel" class="text-left">
       <span class="inline-header">{{ address.label }}</span>
     </td>
@@ -94,7 +30,7 @@
         <span ngxClipboard [cbContent]="address.address" class="icon fa fa-clone"></span>
         <!-- Open the modal for signing and verifying messages by address -->
         <span class="icon fa fa-shield"></span>
-        <span (click)="addressService.deleteAddress(address.address)" class="icon fa fa-trash color-red"></span>
+        <span (click)="addressBookService.deleteAddress(address.address)" class="icon fa fa-trash color-red"></span>
       </div>
     </td>
     <td *ngIf="displayQrMenu" class="divider text-center">
@@ -105,6 +41,18 @@
   </tr>
 </app-table>
 
-<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE" ></pagination>
+<pagination *ngIf="displayPagination"
+  [boundaryLinks]="true"
+  (pageChanged)="pageChanged($event)"
+  [totalItems]="addressBookService.addressCount"
+  [maxSize]="5"
+  [rotate]="false"
+  [(ngModel)]="addressBookService.currentPage"
+  class="pagination-sm center"
+  previousText="&lsaquo;"
+  nextText="&rsaquo;"
+  firstText="&laquo;"
+  lastText="&raquo;"
+  [itemsPerPage]="addressBookService.MAX_ADDRESSES_PER_PAGE">
+</pagination>
 

@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
+import { Log } from 'ng2-logger'
 
 import { Address, deserialize, TEST_ADDRESSES_JSON } from './address.model';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 @Injectable()
-export class AddressService {
+export class AddressBookService {
+
+  log: any = Log.create('address-book.service');
+
   /*
     Settings
   */
-
   typeOfAddresses: string = 'send'; // "receive","send", "total"
 
   /*
     How many addresses do we display per page and keep in memory at all times. When loading more
     addresses they are fetched JIT and added to addresses.
   */
-  MAX_ADDRESSES_PER_PAGE: number = 2;
-
-
+  MAX_ADDRESSES_PER_PAGE: number = 9;
 
   /*
     Stores address objects.
@@ -29,9 +30,9 @@ export class AddressService {
   currentPage: number = 0;
   totalPageCount: number = 0;
 
-
-
   constructor(private rpc: RPCService) {
+    this.log.d('constructor(): calling rpc_update');
+
     this.rpc_update();
   }
 
@@ -63,11 +64,14 @@ export class AddressService {
 
 */
   rpc_update() {
+    this.log.d('rpc_update(): calling filteraddresses with param -1');
     this.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
   }
 
   // TODO: real address count
   rpc_loadAddressCount(JSON: Object): void {
+
+    this.log.d('rpc_loadAddressCount(): ', JSON);
     // test values
     let addressCount;
     if (this.typeOfAddresses === 'receive') {
@@ -91,6 +95,12 @@ export class AddressService {
     const offset: number = (page * this.MAX_ADDRESSES_PER_PAGE);
     const count: number = this.MAX_ADDRESSES_PER_PAGE;
 //    console.log("offset" + offset + " count" + count);
+
+    this.log.d('rpc_getParams(), this.currentPage: ', this.currentPage);
+    this.log.d('rpc_getParams(), offset: ', offset);
+    this.log.d('rpc_getParams(), count: ', count);
+    this.log.d('rpc_getParams(), typeOfAddresses: ', this.typeOfAddresses);
+
     if (this.typeOfAddresses === 'receive') {
       return [offset, count, '0', '', '1'];
     } else if (this.typeOfAddresses === 'send') {
