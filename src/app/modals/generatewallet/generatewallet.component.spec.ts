@@ -15,7 +15,7 @@ describe('GeneratewalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         FormsModule,
         SharedModule,
         RpcModule.forRoot()

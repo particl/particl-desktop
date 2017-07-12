@@ -14,7 +14,7 @@ describe('ShowpassphraseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         FormsModule,
         SharedModule,
         RpcModule.forRoot()

@@ -97,7 +97,7 @@ export class PassphraseComponent implements OnInit {
     } else if (this.stateOfPassphrase === 'verify') {
       if (this.checkIfEqual(this.words, this.wordsVerification)) {
       alert('success, seeds match!');
-      
+
       this.generateNew(this.password);
 
       // reset
@@ -145,7 +145,7 @@ export class PassphraseComponent implements OnInit {
 	in recoverwallet.component.ts
   */
   restore(passwordObj: Object) {
-  	const password = passwordObj['password'];
+    const password = passwordObj['password'];
     if (this.isDisabled) {
       alert('Still importing the recovery phrase, please wait!');
     }
