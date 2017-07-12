@@ -3,11 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecoverwalletComponent } from './recoverwallet.component';
 import { ModalsModule } from '../modals.module';
 
-import { ElectronService } from 'ngx-electron';
-
-import { SharedModule } from '../../shared/shared.module';
-
-import { RPCService } from '../../core/rpc/rpc.service';
+import { RpcModule } from '../rpc/rpc.module';
 
 describe('RecoverwalletComponent', () => {
   let component: RecoverwalletComponent;
@@ -15,10 +11,10 @@ describe('RecoverwalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule, ModalsModule],
-      providers: [
-        ElectronService,
-        RPCService
+      imports: [
+        SharedModule,
+        ModalsModule,
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();
