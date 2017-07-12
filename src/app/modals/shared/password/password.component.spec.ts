@@ -4,9 +4,8 @@ import { ModalsModule } from '../../modals.module';
 import { PasswordComponent } from './password.component';
 
 
-import { ElectronService } from 'ngx-electron';
 import { SharedModule } from '../../../shared/shared.module';
-import { RPCService } from '../../../core/rpc/rpc.service';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 
 
 describe('UnlockwalletComponent', () => {
@@ -15,10 +14,10 @@ describe('UnlockwalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule, ModalsModule],
-      providers: [
-        ElectronService,
-        RPCService
+      imports: [
+        SharedModule,
+        RpcModule,
+        ModalsModule
       ]
     })
     .compileComponents();

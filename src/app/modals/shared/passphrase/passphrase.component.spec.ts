@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormsModule } from '@angular/forms';
 import { PassphraseComponent } from './passphrase.component';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 
 describe('PassphraseComponent', () => {
   let component: PassphraseComponent;
@@ -9,7 +10,10 @@ describe('PassphraseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule ],
+      imports: [ 
+        FormsModule,
+        RpcModule.forRoot()
+       ],
       declarations: [ PassphraseComponent ]
     })
     .compileComponents();
