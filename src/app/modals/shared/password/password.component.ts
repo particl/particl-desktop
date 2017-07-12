@@ -9,10 +9,10 @@ import { RPCService } from '../../../core/rpc/rpc.service';
 })
 export class PasswordComponent {
 
-  public password: string;
-  public stakeOnly: boolean = false;
+  password: string;
+  stakeOnly: boolean = false;
 
-  public showPass: boolean = false;
+  showPass: boolean = false;
 
 
   @Input() unlockText: string = 'YOUR WALLET PASSWORD';

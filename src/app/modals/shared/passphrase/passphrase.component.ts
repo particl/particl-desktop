@@ -21,9 +21,10 @@ export class PassphraseComponent implements OnInit {
   */
   @Input() password: string = undefined;
 
-  public stateOfPassphrase: string = 'generate'; // generate or verify
+  stateOfPassphrase: string = 'generate'; // generate or verify
 
-  public isValid: boolean = undefined;
+  isValid: boolean = undefined;
+
 
   @Input() readOnly: boolean = false;
   @Input() isDisabled: boolean = false;
