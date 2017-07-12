@@ -25,7 +25,7 @@ export class ShowpassphraseComponent {
   }
 
   public next() {
-    console.log('next called!');
+    console.log('finishing: next called!');
     this._modalsService.open('finish');
   }
 

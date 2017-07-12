@@ -100,9 +100,8 @@ export class PassphraseComponent implements OnInit {
       this.clear();
     } else if (this.stateOfPassphrase === 'verify') {
       if (this.checkIfEqual(this.words, this.wordsVerification)) {
-      alert('success seeds match!');
-      this.wordsVerifyEmitter.emit(true);
-      console.log('emitted!');
+      alert('success, seeds match!');
+      this.createNew();
       this.stateOfPassphrase = 'generate';
       this.isValid = undefined;
       } else {
@@ -112,12 +111,26 @@ export class PassphraseComponent implements OnInit {
     }
   }
 
+  createNew() {
+    const wordsString = this.getWordString();
+    const params: Array<any> = this.rpc_getParams(wordsString, this.password);
+    this._rpc.call(this, 'extkeygenesisimport', params, this.rpc_createNewCallback);
+  }
+
+  rpc_createNewCallback(json: object) {
+  	if (json['result'] === 'Success.') {
+  	  console.log('Succesfully imported the newly generated seed!');
+  	  this.wordsVerifyEmitter.emit(true);
+  	  console.log('weir emitted!');
+    }
+  }
+
   checkIfEqual(words: string[], verification: string[]) {
-    let state = false;
+    let state = true;
 
     for (const k in words) {
-      if (words[k] === verification[k]) {
-        state = true;
+      if (words[k] !== verification[k]) {
+        state = false;
         break;
       }
     }
