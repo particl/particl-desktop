@@ -1,7 +1,8 @@
 
 <app-passphrase 
   #passphraseComponent
-  
+
+  [generateSeed]="true"
   [password]="password"
   [readOnly]="true"
   (seedImportedSuccesfulEmitter)="next()">
