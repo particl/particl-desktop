@@ -9,16 +9,24 @@ import { ModalsService } from '../../modals.service';
 })
 export class ShowpassphraseComponent {
 
+  private password: string;
+
   constructor (
     @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
-  ) { }
+  ) {
+
+    this.password = this._modalsService.getData();
+    console.log('transfered pass:' + this.password);
+  }
+
 
   back() {
     this._modalsService.open('generate');
   }
 
-  next() {
-    this._modalsService.open('confirmPassphrase');
+  public next() {
+    console.log('next called!');
+    this._modalsService.open('finish');
   }
 
 }

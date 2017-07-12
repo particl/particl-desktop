@@ -19,8 +19,8 @@ export class PasswordComponent implements Input, Output {
   @Input() unlockButton: string;
   @Input() showStakeOnly: boolean = true;
 
-  /* 
-    The password emitter will send over an object with the password and stakingOnly info. 
+  /*
+    The password emitter will send over an object with the password and stakingOnly info.
     This is useful as a building block in the initial setup, where we want to have the actual value of the password.
   */
   @Input() emitPassword: boolean = false;
@@ -44,9 +44,9 @@ export class PasswordComponent implements Input, Output {
   unlock () {
     this.forceEmit();
   }
-  
+
   public forceEmit() {
-    if(this.emitPassword) {
+    if (this.emitPassword) {
       const obj = {
         password: this.password,
         stakeOnly: this.stakeOnly
@@ -64,7 +64,7 @@ export class PasswordComponent implements Input, Output {
   rpc_unlock() {
     const password: string = this.password;
     const stakeOnly: boolean = this.stakeOnly;
-    console.log('rpc_unlock in app-password: ' + password + " "  + 99999  +" " +stakeOnly);
+    console.log('rpc_unlock in app-password: ' + password + ' '  + 99999  + ' ' + stakeOnly);
     this._rpc.call(this, 'walletpassphrase', [password, 99999, stakeOnly], this.rpc_unlockSuccesful);
   }
 

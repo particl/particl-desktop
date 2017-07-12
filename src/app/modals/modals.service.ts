@@ -17,6 +17,8 @@ export class ModalsService {
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
 
+  private data: string;
+
   messages: Object = {
     firstTime: FirsttimeComponent,
     showPassphrase: ShowpassphraseComponent,
@@ -36,11 +38,6 @@ export class ModalsService {
     }
   }
 
-  showPassphrase(password: string) { 
-    // How do I get the ^password into showPassphrase component?
-    this.open('showPassphrase');
-  }
-
   updateProgress(progress: Number): void {
     this.progress.next(progress);
   }
@@ -52,4 +49,14 @@ export class ModalsService {
   getProgress() {
       return (this.progress.asObservable());
   }
+
+  storeData(data: any) {
+    this.data = data;
+  }
+
+  getData() {
+    const data: any = this.data;
+    this.data = undefined;
+    return (data);
+   }
 }

@@ -1,16 +1,12 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 text-center">
-      <h4>Write your wallet recovery phrase</h4>
-      <div style="color: #ec4b50;">
-        Lorem ipsum
-      </div>
-    </div>
-  </div>
-</div>
 
-<hr style="margin-top: 40px;">
-<app-passphrase [readOnly]="true"></app-passphrase>
+<app-passphrase 
+  #passphraseComponent
+
+  [generateNewSeed]="true"
+  [password]="password"
+  [readOnly]="true"
+  (wordsVerifyEmitter)="next()">
+  </app-passphrase>
 <hr>
 
 <div class="buttons">
@@ -19,7 +15,7 @@
       <button class="control" style="width: 100%" (click)="back()">back</button>
     </div>
     <div class="col-xs-6">
-      <button class="control" style="width: 100%" (click)="next()">next step</button>
+      <button class="control" style="width: 100%" (click)="passphraseComponent.verifySeed()">next step</button>
     </div>
   </div>
 </div>
