@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormsModule } from '@angular/forms';
-import { PassphraseComponent } from '../../shared/passphrase/passphrase.component';
 import { ModalsService } from '../../modals.service';
 import { ShowpassphraseComponent } from './showpassphrase.component';
 
@@ -12,7 +11,7 @@ describe('ShowpassphraseComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule ],
-      declarations: [ ShowpassphraseComponent, PassphraseComponent ],
+      declarations: [ ShowpassphraseComponent ],
       providers: [ ModalsService ]
     })
     .compileComponents();

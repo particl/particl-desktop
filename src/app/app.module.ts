@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { BsDropdownModule, CollapseModule, ModalModule, PaginationModule } from 'ngx-bootstrap';
 import { NgxElectronModule } from 'ngx-electron';
+import { TooltipModule } from "ngx-tooltip";
 
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
@@ -36,6 +37,7 @@ const routes: Routes = [
     BrowserModule,
     BsDropdownModule.forRoot(),
     NgxElectronModule,
+    TooltipModule,
     CollapseModule.forRoot(),
     PaginationModule.forRoot(),
     RouterModule.forRoot(routes),

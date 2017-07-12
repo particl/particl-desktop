@@ -29,6 +29,10 @@ export class StatusComponent implements OnInit {
     this._rpc.register(this, 'getwalletinfo', null, this.rpc_walletEncryptionStatus, 'both'); ;
   }
 
+  getPeerListCount() {
+  	return this.peerListCount;
+  }
+  
   getIconNumber(): number {
     switch (true) {
       case this.peerListCount <= 0: return 0;
