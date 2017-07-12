@@ -16,7 +16,7 @@ describe('UnlockwalletComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule,
+        RpcModule.forRoot(),
         ModalsModule
       ]
     })
