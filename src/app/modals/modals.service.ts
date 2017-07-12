@@ -3,7 +3,6 @@ import { Subject } from 'rxjs/Subject';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
 import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
 import { FinishComponent } from './firsttime/finish/finish.component';
 import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
@@ -22,7 +21,6 @@ export class ModalsService {
   messages: Object = {
     firstTime: FirsttimeComponent,
     showPassphrase: ShowpassphraseComponent,
-    confirmPassphrase: ConfirmpassphraseComponent,
     finish: FinishComponent,
     generate: GeneratewalletComponent,
     recover: RecoverwalletComponent,
