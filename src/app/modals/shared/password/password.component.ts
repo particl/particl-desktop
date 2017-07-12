@@ -7,13 +7,12 @@ import { RPCService } from '../../../core/rpc/rpc.service';
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent implements Input, Output {
+export class PasswordComponent {
 
+  password: string;
+  stakeOnly: boolean = false;
 
-  private password: string;
-  private stakeOnly: boolean = false;
-
-  private showPass: boolean = false;
+  showPass: boolean = false;
 
   @Input() unlockText: string = 'YOUR WALLET PASSWORD';
   @Input() unlockButton: string;

@@ -15,6 +15,8 @@ export class AddressLookupComponent implements OnInit {
   @Input()
   selectAddressCallback: Function;
 
+  filterAddress: string;
+
   lookupAddresses: any = [
     {
       label: 'testLabel',

@@ -8,7 +8,7 @@ import { RPCService } from '../../../core/rpc/rpc.service';
 })
 export class PassphraseComponent implements OnInit {
 
-  private words: string[] = Array(24).fill('');
+  words: string[] = Array(24).fill('');
 
   // Used for verification
   private wordsVerification: string[];
@@ -21,9 +21,9 @@ export class PassphraseComponent implements OnInit {
   */
   @Input() password: string = undefined;
 
-  private stateOfPassphrase: string = 'generate'; // generate or verify
+  stateOfPassphrase: string = 'generate'; // generate or verify
 
-  private isValid: boolean = undefined;
+  isValid: boolean = undefined;
 
   @Input() readOnly: boolean = false;
   @Input() isDisabled: boolean = false;
