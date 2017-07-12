@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger'
 
-import { Address, deserialize, TEST_ADDRESSES_JSON } from './address.model';
+import { Address, deserialize } from '../../core/rpc/models/address.model';
 import { RPCService } from '../../core/rpc/rpc.service';
+import { AddressService } from '../../core/rpc/address.service';
 
 @Injectable()
 export class AddressBookService {
@@ -23,14 +24,18 @@ export class AddressBookService {
   /*
     Stores address objects.
   */
-  addresses: Address[] = [];
+  // addresses: Address[] = [];
+  addresses: Array<Address> = Array();
 
   /* Pagination stuff */
   addressCount: number = 0;
   currentPage: number = 0;
   totalPageCount: number = 0;
 
-  constructor(private rpc: RPCService) {
+  constructor(private rpc: RPCService, private addressService: AddressService) {
+
+    this.log.d('constructor(), addressService.getAddresses():', addressService.getAddresses());
+    this.log.d('constructor(), addressService.getAddressCounts():', addressService.getAddressCounts());
     this.log.d('constructor(): calling rpc_update');
 
     this.rpc_update();

@@ -4,13 +4,18 @@ interface Deserializable {
 
 export class Address implements Deserializable {
   address: string;
-  publicKey: string;
   label: string;
-  purpose: string;
-  rootId: string;
+  owned: string;
+  root: string;
   path: string;
 
-  constructor( address: string, publicKey: string, label: string, purpose: string, rootId: string, path: string) { }
+  constructor( address: string, label: string, owned: string, root: string, path: string) {
+    this.address = address;
+    this.label = label;
+    this.owned = owned;
+    this.root = root;
+    this.path = path;
+  }
 
   getTypes() {
     // since everything is primitive, we don't need to
@@ -40,24 +45,3 @@ export function deserialize(json: Object, type: any): Address {
     return instance;
 }
 
-/*
-TEST DATA
-*/
-export let TEST_ADDRESSES_JSON: Object[] = [
-    {
-        address: 'PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY',
-        publicKey: 'PdVwKsTiksmqYZJAnM8jpktfQdQ1YTe7JY',
-        label: 'Exchange',
-        type: 'normal',
-        root: 'AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh',
-        path: 'm/0/5'
-    },
-    {
-        address: 'PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY',
-        publicKey: 'PsUjZnZikdqfYZJAnM8jpktfQdQ1YTe7JY',
-        label: 'Default',
-        type: 'normal',
-        root: 'AbUL5vpWYDDda9AVP88QUGmd33Kg8aS8eh',
-        path: 'm/0/5'
-    }
-];
