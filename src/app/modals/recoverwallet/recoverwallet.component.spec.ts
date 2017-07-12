@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecoverwalletComponent } from './recoverwallet.component';
 import { ModalsModule } from '../modals.module';
 
+import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 describe('RecoverwalletComponent', () => {
