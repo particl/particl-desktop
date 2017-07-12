@@ -30,9 +30,9 @@ export class StatusComponent implements OnInit {
   }
 
   getPeerListCount() {
-  	return this.peerListCount;
+    return this.peerListCount;
   }
-  
+
   getIconNumber(): number {
     switch (true) {
       case this.peerListCount <= 0: return 0;

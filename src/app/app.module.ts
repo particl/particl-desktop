@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { BsDropdownModule, CollapseModule, ModalModule, PaginationModule } from 'ngx-bootstrap';
 import { NgxElectronModule } from 'ngx-electron';
-import { TooltipModule } from "ngx-tooltip";
+import { TooltipModule } from 'ngx-tooltip';
 
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
