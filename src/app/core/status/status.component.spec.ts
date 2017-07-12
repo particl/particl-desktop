@@ -15,7 +15,8 @@ describe('StatusComponent', () => {
       declarations: [ StatusComponent ],
       imports: [
        SharedModule,
-       RpcModule.forRoot()
+       RpcModule.forRoot(),
+       TooltipModule
       ]
     })
     .compileComponents();
