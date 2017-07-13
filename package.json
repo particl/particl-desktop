@@ -37,7 +37,6 @@
     "ngx-bootstrap": "^1.7.1",
     "ngx-clipboard": "^8.0.3",
     "ngx-electron": "^1.0.2",
-    "ngx-tooltip": "0.0.9",
     "node-sass": "^4.5.3",
     "open-sans-all": "^0.1.2",
     "protractor": "^5.1.2",

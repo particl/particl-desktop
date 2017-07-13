@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TooltipModule } from 'ngx-bootstrap';
 import { StatusComponent } from './status.component';
-import { TooltipModule } from 'ngx-tooltip';
-
 
 import { ModalsModule } from '../../modals/modals.module';
 import { SharedModule } from '../../shared/shared.module';
@@ -18,8 +17,8 @@ describe('StatusComponent', () => {
       imports: [
        SharedModule,
        RpcModule.forRoot(),
-       ModalsModule,
-       TooltipModule
+       TooltipModule.forRoot(),
+       ModalsModule
       ]
     })
     .compileComponents();
