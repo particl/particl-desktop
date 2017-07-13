@@ -1,24 +1,18 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
-import { ElectronService } from 'ngx-electron';
+
+import { RpcModule } from '../rpc/rpc.module';
 
 import { ModalsService } from '../../modals/modals.service';
-import { RPCService } from '../../core/rpc/rpc.service';
-import { PeerService } from '../../core/rpc/peer.service';
-
 import { StatusService } from './status.service';
 
 describe('StatusService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpModule
+        RpcModule
       ],
       providers: [
-        ElectronService,
         ModalsService,
-        RPCService,
-        PeerService,
         StatusService
       ]
     });

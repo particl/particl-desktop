@@ -1,10 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 
-import { ElectronService } from 'ngx-electron';
-import { PeerService } from '../../../core/rpc/peer.service';
-import { RPCService } from '../../../core/rpc/rpc.service';
 import { StatusService } from '../../../core/status/status.service';
 import { ModalsService } from '../../modals.service';
 
@@ -18,17 +14,13 @@ describe('ConfirmpassphraseComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FormsModule,
-        HttpModule
+        FormsModule
       ],
       declarations: [
         ConfirmpassphraseComponent,
         PassphraseComponent
       ],
       providers: [
-        ElectronService,
-        PeerService,
-        RPCService,
         StatusService,
         ModalsService
       ]

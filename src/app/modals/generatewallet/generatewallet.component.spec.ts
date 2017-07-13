@@ -1,10 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
-import { ElectronService } from 'ngx-electron';
-import { PeerService } from '../../core/rpc/peer.service';
-import { RPCService } from '../../core/rpc/rpc.service';
 import { StatusService } from '../../core/status/status.service';
 import { ModalsService } from '../modals.service';
 
@@ -19,7 +15,6 @@ describe('GeneratewalletComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpModule,
         FormsModule
       ],
       declarations: [
@@ -28,9 +23,6 @@ describe('GeneratewalletComponent', () => {
         PasswordComponent
       ],
       providers: [
-        ElectronService,
-        PeerService,
-        RPCService,
         StatusService,
         ModalsService
       ]
