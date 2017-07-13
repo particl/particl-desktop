@@ -1,22 +1,22 @@
-<tooltip-content #networkTooltip>
+<template #networkTooltip>
     <b>Peers: </b> {{getPeerListCount()}}
-</tooltip-content>
+</template>
 
-<tooltip-content #encryptionTooltip>
-    <b> {{encryptionStatus}} </b> 
-</tooltip-content>
+<template #encryptionTooltip>
+    <b> {{encryptionStatus}} </b>
+</template>
 
-<span 
+<span
   [tooltip]="networkTooltip"
-  tooltipPlacement="left"
+  placement="left"
   class="icon" >
 	  <img src="/assets/icons/network/connect_{{getIconNumber()}}.png" />
 </span>
 
-<span 
-  class="icon" 
+<span
+  class="icon"
   [tooltip]="encryptionTooltip"
-  tooltipPlacement="left"
+  placement="left"
   (click)="toggle()">
     <img src="/assets/icons/lock/lock{{ getIconEncryption() }}.png" />
 </span>
