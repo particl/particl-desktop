@@ -11,7 +11,7 @@ export class AddressBookComponent implements OnInit {
 
   label: string = '';
   address: string;
-  validAddress: boolean = undefined;
+  private validAddress: boolean = undefined;
 
   openNewAddressModal: boolean = false;
 
@@ -86,8 +86,8 @@ export class AddressBookComponent implements OnInit {
     this.validAddress = undefined;
   }
 
-  rpc_callbackVerifyAddress(JSON: Object) {
-    this.validAddress = JSON['isvalid'];
+  rpc_callbackVerifyAddress(json: Object) {
+    this.validAddress = json['isvalid'];
    }
 
   checkAddress(): boolean {
