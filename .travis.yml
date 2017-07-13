@@ -18,13 +18,47 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 before_script:
-- npm install -g @angular/cli
-- npm install
-- ng build
+  - npm install -g @angular/cli
+  - npm install
 
 script:
-  - ng lint
+  - echo 'Build Dist' && echo -en 'travis_fold:start:script.build\\r'
+
+  - ng build --base-href="./"
+
+  - echo -en 'travis_fold:end:script.build\\r'
+  - echo 'Lint Codebase' && echo -en 'travis_fold:start:script.lint\\r'
+
+  - npm run lint
+
+  - echo -en 'travis_fold:end:script.lint\\r'
+  - echo 'Test Codebase' && echo -en 'travis_fold:start:script.test\\r'
+
   - ng test --single-run --code-coverage
 
-after_script:
-  - npm run coveralls
+  - echo -en 'travis_fold:end:script.test\\r'
+  - echo 'Package Dist' && echo -en 'travis_fold:start:script.dist\\r'
+
+  - cd dist
+  - zip -r $TRAVIS_BUILD_DIR/dist.zip *
+
+  - cd $TRAVIS_BUILD_DIR
+  - sha256sum $TRAVIS_BUILD_DIR/dist.zip > $TRAVIS_BUILD_DIR/dist.zip.sha256sum.txt
+  - cat $TRAVIS_BUILD_DIR/dist.zip.sha256sum.txt
+
+  - echo -en 'travis_fold:end:script.dist\\r'
+
+# Disable coveralls for now
+#after_script:
+#  - npm run coveralls
+
+#deploy:
+#  - provider: releases
+#    api-key:
+#      secure: <>
+#    file:
+#      - $TRAVIS_BUILD_DIR/dist.zip
+#      - $TRAVIS_BUILD_DIR/dist.zip.sha256sum.txt
+#    overwrite: true
+#    on:
+#      tags: true

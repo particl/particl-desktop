@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
-import { BsDropdownModule, CollapseModule, PaginationModule } from 'ngx-bootstrap';
+import { BsDropdownModule, CollapseModule, ModalDirective, PaginationModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { AccordionModule } from './accordion/accordion.module';
@@ -14,6 +14,7 @@ import { TableComponent } from './table/table.component';
 @NgModule({
   imports: [
     CommonModule,
+    PaginationModule.forRoot(),
     AccordionModule
   ],
   declarations: [

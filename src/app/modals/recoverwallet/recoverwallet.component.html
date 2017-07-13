@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 text-center">
+      <h4>Please enter your <b>24 word recovery phrase</b> and <b>password</b> below.</h4>
+    </div>
+  </div>
+</div>
+
+<hr style="margin-top: 40px;">
+<app-passphrase></app-passphrase>
+<hr>
+
+<app-password [unlockButton]="'RESTORE WALLET'" (passwordEmitter)="restore($event)">
+</app-password>
+
+<div style="text-align: center;">
+  <button class="control" (click)="back()">back</button>
+</div>

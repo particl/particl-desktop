@@ -1,22 +1,35 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { BalanceService } from './balance.service';
-
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-balance',
   templateUrl: './balance.component.html',
-  styleUrls: ['./balance.component.css'],
-  providers: [BalanceService]
+  styleUrls: ['./balance.component.css']
 })
-export class BalanceComponent implements OnInit {
-  @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE"
+export class BalanceComponent implements OnInit, OnDestroy {
 
-  /*this.balance_service.balance_type = this.balance_type;*/
+  @Input() typeOfBalance: string; // "ALL", "PRIVATE", "PUBLIC", "STAKE", "BLIND"
+  private _sub: Subscription;
+  private _balance: number = 0;
+
   constructor(public balanceService: BalanceService) {
   }
 
+
   ngOnInit() {
+    this._sub = this.balanceService.getBalances()
+      .subscribe(
+        balances => {
+          this._balance = balances.getBalance(this.typeOfBalance);
+        },
+        error => console.log('balanceService subscription error:' + error));
   }
+
+  ngOnDestroy() {
+    this._sub.unsubscribe();
+  }
+
 
   /*
 	  TODO:
@@ -24,19 +37,23 @@ export class BalanceComponent implements OnInit {
 	  2. same as 1 but for large balances (500 000 -> 500K)
   */
   getBalanceBeforePoint(): number {
-    return this.balanceService.balanceBeforePoint;
+    return Math.floor(this._balance);
   }
 
   getBalancePoint(): string {
-    if (+this.getBalanceAfterPoint === 0) {
+    if (+this.getBalanceAfterPoint(true) === 0) {
       return ''; // Balance = 120 for example, no point needed.
     }
 
     return '.'; // Point needed
   }
 
-  getBalanceAfterPoint(): number {
-    return this.balanceService.balanceAfterPoint;
+  getBalanceAfterPoint(retzero?: boolean): string {
+    if ((this._balance + '').indexOf('.') >= 0) {
+      return (this._balance + '').split('.')[1];
+    } else {
+      return (retzero) ? '0' : '';
+    }
   }
 
 

@@ -1,0 +1,29 @@
+<hr style="margin: 40px 0 40px 0;">
+<div class="container">
+  <div class="col-md-3 text-right">
+    <label style="text-transform: uppercase;">Your wallet name</label>
+  </div>
+  <div class="col-md-7">
+    <div class="col-md-12">
+      <input type="text" class="form-control" style="width: 100%;"
+      [(ngModel)]="name"/>
+    </div>
+  </div>
+</div>
+<br />
+<app-password #passwordComponent></app-password>
+
+<div class="buttons" style="margin-top: 30px;">
+  <div class="row col-xs-4 col-xs-offset-4">
+    <div class="col-xs-6">
+      <button class="control" style="width: 100%;" (click)="back()">
+        back
+      </button>
+    </div>
+    <div class="col-xs-6">
+      <button class="control" style="width: 100%;" (click)="next(passwordComponent.password)">
+        next step
+      </button>
+    </div>
+  </div>
+</div>

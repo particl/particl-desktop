@@ -1,11 +1,11 @@
 <app-header>
   <div class="container-fluid">
     <ul class="header-nav">
-      <li [class.active]="category == 'all'"><a href="javascript:void(0)" (click)="filterByCategory('all')">All</a>
-      <li [class.active]="category == 'send'"><a href="javascript:void(0)" (click)="filterByCategory('send')">Send</a>
-      <li [class.active]="category == 'receive'"><a href="javascript:void(0)" (click)="filterByCategory('receive')">Receive</a>
-      <li [class.active]="category == 'stake'"><a href="javascript:void(0)" (click)="filterByCategory('stake')">Stake</a>
-      <li [class.active]="category == 'orphaned_stake'"><a href="javascript:void(0)" (click)="filterByCategory('orphaned_stake')">Orphan</a>
+      <li [class.active]="category == 'all'"><a href="javascript:void(0)" (click)="filterByCategory('all')">All</a></li>
+      <li [class.active]="category == 'send'"><a href="javascript:void(0)" (click)="filterByCategory('send')">Send</a></li>
+      <li [class.active]="category == 'receive'"><a href="javascript:void(0)" (click)="filterByCategory('receive')">Receive</a></li>
+      <li [class.active]="category == 'stake'"><a href="javascript:void(0)" (click)="filterByCategory('stake')">Stake</a></li>
+      <li [class.active]="category == 'orphaned_stake'"><a href="javascript:void(0)" (click)="filterByCategory('orphaned_stake')">Orphan</a></li>
     </ul>
     <form class="header-form pull-right">
       <input type="text" placeholder="Search history">
@@ -17,13 +17,6 @@
 </app-header>
 <div class="container-fluid">
   <transaction-table
-    [displayHeader]="false"
-    [displayInternalHeader]="true"
-    [displayPagination]="false"
-    [displayCategory]="true"
-    [displaySenderAddress]="true"
-    [displayDate]="true"
-    [displayConfirmations]="true"
-    [displayAmount]="true">
+    [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': false, 'expand': true}">
   </transaction-table>
 </div>

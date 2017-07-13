@@ -1,0 +1,68 @@
+.modal.in .modal-dialog {
+  width: 100%;
+  height:100%;
+  margin: 0;
+}
+
+.modal-content {
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border: none;
+  margin-bottom: 45px;
+}
+
+.modal-content .logo {
+  max-width: 35%;
+  margin: auto;
+  margin: 60px auto 60px;
+}
+
+.close {
+  padding: 15px;
+}
+
+.modal-footer-info {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.statusText {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-58%);
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  margin: 0 auto;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 0.9;
+}
+
+.inverted-status {
+  left: auto !important;
+  right: 0;
+}
+
+.percentage-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transition: width .2s;
+  background-color: #02e8b0;
+  color: #212121;
+  height: 100%;
+  overflow: hidden;
+}
+
+.inverted-bar {
+  background-color: #212121 !important;
+  color: #02e8b0 !important;
+  right: 0 !important;
+}

@@ -1,0 +1,120 @@
+<app-header>
+  <div class="container-fluid header">
+
+    <ul class="col-xs-9 header-nav">
+      <li [class.active]="type == 'public'">
+        <a href="javascript:void(0)" (click)="changeType('public')">
+          Public
+        </a>
+      </li>
+      <li [class.active]="type == 'private'">
+        <a href="javascript:void(0)" (click)="changeType('private')">
+          Private
+        </a>
+      </li>
+    </ul>
+
+    <div class="col-xs-3 header-option row header-option-container"
+      (click)="selectInput()">
+      <span class="col-xs-10">
+        <input type="text" class="header-input" id="searchbar"
+          (ngModelChange)="search($event)" [(ngModel)]="query" placeholder="Search receive">
+      </span>
+      <span class="col-xs-2 icon fa fa-search header-option-icon"></span>
+    </div>
+
+  </div>
+</app-header>
+
+<div class="row receive">
+
+  <div class="col-xs-8">
+
+    <div class="address-title">Fresh address</div>
+    <div class="card row" id="address-{{ addresses[type][0].id }}">
+      <div class="col-xs-1 address-id vertical-center">
+        /{{ addresses[type][0].id }}
+      </div>
+      <div class="col-xs-3 address-label vertical-center">
+        {{ addresses[type][0].label }}
+      </div>
+      <div class="col-xs-6">
+        <div class="address">
+          {{ addresses[type][0].address }}
+        </div>
+        <div class="total">
+          <span>Total received: </span>
+          <span>+{{ addresses[type][0].balance }}</span>
+        </div>
+      </div>
+      <div class="col-xs-2 row address-options vertical-center">
+        <div class="col-xs-4 icon fa fa-clone"
+          (click)="copyAddress(addresses[type][0].id)">
+        </div>
+        <div class="col-xs-4 icon fa fa-lock"></div>
+        <div class="col-xs-4 icon fa fa-qrcode" (click)="selected = addresses[type][0]"></div>
+      </div>
+    </div>
+
+    <div class="address-title">Previous addresses</div>
+    <div class="card row"
+      *ngFor="let address of pages[page - 1]"
+       id="address-{{ address.id }}">
+      <div class="col-xs-1 address-id vertical-center">
+        /{{ address.id }}
+      </div>
+      <div class="col-xs-3 address-label vertical-center">
+        {{ address.label }}
+      </div>
+      <div class="col-xs-6">
+        <div class="address">
+          {{ address.address }}
+        </div>
+        <div class="total">
+          <span>Total received: </span>
+          <span>+{{ address.balance }}</span>
+        </div>
+      </div>
+      <div class="col-xs-2 row address-options vertical-center">
+        <div class="col-xs-4 icon fa fa-clone" (click)="copyAddress(address.id)"></div>
+        <div class="col-xs-4 icon fa fa-lock"></div>
+        <div class="col-xs-4 icon fa fa-qrcode" (click)="selected = address"></div>
+      </div>
+    </div>
+
+    <div class="page-buttons">
+      <span class="page-button" (click)="previousPage()"> &lt; </span>
+      <span class="page-button" *ngFor="let pageRef of nav;"
+        (click)="gotoPage(pageRef)" id="page-{{pageRef}}">
+        {{ pageRef }}
+      </span>
+      <span class="page-button" (click)="nextPage()"> &gt; </span>
+    </div>
+
+  </div>
+
+  <div class="col-xs-3 pull-right receive-right">
+
+    <div class="card qr">
+      <qr-code [size]="qr.size" [level]="'H'"
+        [value]="selected.address">
+      </qr-code>
+    </div>
+
+    <div class="card address-details">
+      <div class="details-title">
+        {{ type }} address
+      </div>
+      <div class="details-label">
+        {{ selected.label }}
+      </div>
+      <div class="details-address row">
+        <div *ngFor="let word of selected.readable" class="address-word col-xs-3">
+          {{ word }}
+        </div>
+      </div>
+      <button (click)="newAddress()">new {{ type }} address</button>
+    </div>
+
+  </div>
+</div>
