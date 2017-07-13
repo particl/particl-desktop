@@ -46,7 +46,7 @@ const routes: Routes = [
     SidebarModule.forRoot(),
     WalletModule.forRoot(),
     RpcModule.forRoot(),
-    ModalsModule
+    ModalsModule.forRoot()
   ],
   providers: [
     WindowService
