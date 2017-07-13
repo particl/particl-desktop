@@ -120,11 +120,11 @@ export class SendService {
     }
   }
 
-  rpc_send(JSON: string) {
+  rpc_send(json: string) {
     // json return value is just txid
     // We can't use gettransaction just yet, becaue
     if (true) {
-      alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!\nTransaction id: ' + JSON);
+      alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!\nTransaction id: ' + json);
     } else {
       // error
     }
