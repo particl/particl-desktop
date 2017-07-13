@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ModalsModule } from '../../modals.module';
 import { RPCService } from '../../../core/rpc/rpc.service';
+import { Log } from 'ng2-logger';
 
 @Component({
   selector: 'app-password',
@@ -34,6 +35,8 @@ export class PasswordComponent {
   */
   @Input() emitUnlock: boolean = false;
   @Output() unlockEmitter: EventEmitter<Object> = new EventEmitter<Object>();
+
+  log: any = Log.create('password.component');
 
   constructor (private _rpc: RPCService) { }
 
@@ -74,14 +77,12 @@ export class PasswordComponent {
   */
 
   rpc_unlock() {
-    const password: string = this.password;
-    const stakeOnly: boolean = this.stakeOnly;
-    console.log('rpc_unlock in app-password: ' + password + ' '  + 99999  + ' ' + stakeOnly);
-    this._rpc.call(this, 'walletpassphrase', [password, 99999, stakeOnly], this.rpc_unlockSuccesful);
+    this.log.i('rpc_unlock: calling unlock!');
+    this._rpc.call(this, 'walletpassphrase', [this.password, 99999, this.stakeOnly], this.rpc_unlock_success);
   }
 
-  rpc_unlockSuccesful(json: Object) {
-    console.log('rpc_unlockSuccesful in app-password');
+  rpc_unlock_success(json: Object) {
+    this.log.i('rpc_unlock_success: unlock was succesful :)');
     this._rpc.call(this, 'getwalletinfo', null, this.rpc_alertEncryptionStatus);
   }
 
