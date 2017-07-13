@@ -59,7 +59,7 @@ export class PasswordComponent {
   public forceEmit() {
     if (this.emitPassword) {
       // emit password
-      this.emitPassword();
+      this.sendPassword();
     }
 
     if (this.emitUnlock) {
@@ -73,11 +73,14 @@ export class PasswordComponent {
     Emit password!
   */
 
-  emitPassword() {
+  sendPassword() {
     const obj = {
       password: this.password,
       stakeOnly: this.stakeOnly
     }
+
+    this.passwordEmitter.emit(obj);
+  }
 
   /*
     _Actually_ unlock the wallet!
