@@ -58,19 +58,26 @@ export class PasswordComponent {
 
   public forceEmit() {
     if (this.emitPassword) {
-      const obj = {
-        password: this.password,
-        stakeOnly: this.stakeOnly
-      }
-
-      this.passwordEmitter.emit(obj);
+      // emit password
+      this.emitPassword();
     }
 
     if (this.emitUnlock) {
+      // emit unlock
       this.rpc_unlock();
     }
     this.reset();
   }
+
+  /*
+    Emit password!
+  */
+
+  emitPassword() {
+    const obj = {
+      password: this.password,
+      stakeOnly: this.stakeOnly
+    }
 
   /*
     _Actually_ unlock the wallet!
