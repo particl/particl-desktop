@@ -2,13 +2,25 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StatusComponent } from './status.component';
 
+import { SharedModule } from '../../shared/shared.module';
+import { ElectronService } from 'ngx-electron';
+
+import { PeerService } from '../rpc/peer.service';
+import { RPCService } from '../rpc/rpc.service';
+
 describe('StatusComponent', () => {
   let component: StatusComponent;
   let fixture: ComponentFixture<StatusComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StatusComponent ]
+      declarations: [ StatusComponent ],
+      imports: [SharedModule],
+      providers: [
+        ElectronService,
+        RPCService,
+        PeerService
+      ]
     })
     .compileComponents();
   }));

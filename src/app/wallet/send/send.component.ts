@@ -34,7 +34,7 @@ export class SendComponent implements OnInit, OnDestroy {
   };
   lookup: string;
 
-  constructor(private SendService: SendService, private balanceService: BalanceService, private _rpc: RPCService) { }
+  constructor(private sendService: SendService, private balanceService: BalanceService, private _rpc: RPCService) { }
 
   ngOnInit() {
     this._sub = this.balanceService.getBalances()
@@ -213,12 +213,12 @@ export class SendComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.SendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+      this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
     } else if (this.type === 'balanceTransfer') {
       if (!confirm('Are you sure you want to transfer ' + amount + ' ' + currency + ' from ' + input + ' to ' + output + '?')) {
         return;
       }
-      this.SendService.transferBalance(input, output, address, amount, ringsize, numsigs);
+      this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
     }
     this.clear();
     this.closeValidate();
