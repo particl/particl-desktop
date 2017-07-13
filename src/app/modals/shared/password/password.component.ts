@@ -37,13 +37,21 @@ export class PasswordComponent {
 
   constructor (private _rpc: RPCService) { }
 
+  /*
+    UI logic
+  */
   passwordInputType(): string {
     return (this.showPass ? 'text' : 'password');
   }
 
+  /*
+    RPC logic starts here
+  */
+
   unlock () {
     this.forceEmit();
   }
+
 
   public forceEmit() {
     if (this.emitPassword) {
@@ -61,6 +69,10 @@ export class PasswordComponent {
     this.reset();
   }
 
+  /*
+    _Actually_ unlock the wallet!
+  */
+
   rpc_unlock() {
     const password: string = this.password;
     const stakeOnly: boolean = this.stakeOnly;
@@ -70,13 +82,15 @@ export class PasswordComponent {
 
   rpc_unlockSuccesful(json: Object) {
     console.log('rpc_unlockSuccesful in app-password');
-    this._rpc.call(this, 'getwalletinfo', null, this.walletAlert);
+    this._rpc.call(this, 'getwalletinfo', null, this.rpc_alertEncryptionStatus);
   }
 
-  walletAlert(json: Object) {
+  rpc_alertEncryptionStatus(json: Object) {
 
+    // hook for unlockEmitter, warn parent component that wallet is unlocked!
     this.unlockEmitter.emit(json);
 
+    // send out alert box
     const encryptionstatus = json['encryptionstatus'];
     if (encryptionstatus === 'Unlocked') {
       alert('Unlock succesful!');
