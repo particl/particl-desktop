@@ -50,6 +50,10 @@ export class SendComponent implements OnInit, OnDestroy {
     this._sub.unsubscribe();
   }
 
+  /*
+    UI logic
+  */
+
   sendTab(type: string) {
     this.type = type;
   }
@@ -62,8 +66,16 @@ export class SendComponent implements OnInit, OnDestroy {
     return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
   }
 
-  checkAddress(): boolean {
-    return this.send['validAddress'];
+
+  /*
+    Amount validation functions
+  */
+
+  checkAmount() : boolean {
+    // hooking verifyAmount here, on change of type -> retrigger check of amount.
+    this.verifyAmount();
+
+    return this.send['validAmount'];
   }
 
   verifyAmount() {
@@ -94,11 +106,14 @@ export class SendComponent implements OnInit, OnDestroy {
 
   }
 
-  checkAmount() : boolean {
-    // hooking verifyAmount here, on change of type -> retrigger check of amount.
-    this.verifyAmount();
+  /*
+    Address validation functions
+      checkAddres: returns boolean, so it can be private later.
+      verifyAddress: calls RPC to validate it
+  */
 
-    return this.send['validAmount'];
+  checkAddress(): boolean {
+    return this.send['validAddress'];
   }
 
   verifyAddress() {
@@ -115,9 +130,25 @@ export class SendComponent implements OnInit, OnDestroy {
     this.send.validAddress = json['isvalid'];
   }
 
-  openLookup() {
-    this.addressLookup.show();
+
+  /*
+    Clear the send object
+  */
+  clear() {
+    this.send = {
+      fromType: '',
+      toType: '',
+      validAddress: undefined,
+      validAmount: undefined,
+      currency: 'part',
+      privacy: 50
+    };
   }
+
+
+  /*
+     Validation modal + payment function!
+  */
 
   openValidate() {
     document.getElementById('validate').classList.remove('hide');
@@ -127,23 +158,7 @@ export class SendComponent implements OnInit, OnDestroy {
     document.getElementById('validate').classList.add('hide');
   }
 
-  selectAddress(address: string, label: string) {
-    this.send.toAddress = address;
-    this.send.toLabel = label;
-    this.addressLookup.hide();
-  }
-
-  clear() {
-    this.send = {
-      fromType: '',
-      toType: '',
-      currency: 'part',
-      privacy: 50
-    };
-  }
-
   pay() {
-    console.log(this.type, this.send);
 
     // TODO: Why are we making a copy of all the properties?
     const input = this.send.fromType;
@@ -192,6 +207,20 @@ export class SendComponent implements OnInit, OnDestroy {
 
     this.clear();
     this.closeValidate();
+  }
+
+  /*
+    AddressLookup Modal + set details
+  */
+
+  openLookup() {
+    this.addressLookup.show();
+  }
+
+  selectAddress(address: string, label: string) {
+    this.send.toAddress = address;
+    this.send.toLabel = label;
+    this.addressLookup.hide();
   }
 
 }
