@@ -80,8 +80,8 @@
       <div class="input-label col-xs-3">Amount</div>
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
-        [(ngModel)]="send.amount"
-        [ngClass]="{'good': verifyAmount() == true, 'fault': verifyAmount() == false }">
+        [(ngModel)]="send.amount" (input)="verifyAmount()"
+        [ngClass]="{'good': checkAmount() == true, 'fault': checkAmount() == false }">
       <div class="col-xs-2">
         <select [(ngModel)]="send.currency" class="form-control">
           <option value="part">PART</option>
@@ -199,7 +199,7 @@
     <button (click)="clear()">Clear all</button>
     <button class="validate"
       (click)="openValidate()"
-      [disabled]="!send.toAddress || !send.amount">
+      [disabled]="!send.validAddress || !send.validAmount">
       Make payment
     </button>
   </div>
