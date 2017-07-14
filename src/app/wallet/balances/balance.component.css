@@ -1,36 +1,36 @@
 @media screen and (min-width: 1280px) {
-	.balance {
-		line-height: 0.9;
-		border-right:1.9px solid #EAEAEA;
-	}
+    .balance {
+        line-height: 0.9;
+        border-right:1.9px solid #EAEAEA;
+    }
 }
 
 .balance {
-	line-height: 0.9;
+    line-height: 0.9;
 }
 
 .balance {
-	line-height: 0.9;
+    line-height: 0.9;
 }
 
 .number {
-	color: #222728;
+    color: #222728;
 }
 
 .big{
-	font-size: 20px;
+    font-size: 20px;
 }
 
 .point {
-	color: #02E8B0;
-	font-size: 30px;
+    color: #02E8B0;
+    font-size: 30px;
 }
 
 .small{
-	font-size: 15px;
+    font-size: 15px;
 }
 
 .type {
-	color: #b6b6bc;
-	font-size: 10px;
+    color: #b6b6bc;
+    font-size: 10px;
 }
