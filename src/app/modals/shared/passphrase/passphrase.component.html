@@ -1,4 +1,4 @@
-<span *ngIf="stateOfPassphrase === 'generate'">
+<ng-template *ngIf="stateOfPassphrase === 'generate'">
   <div class="container">
     <div class="row">
       <div class="col-xs-12 text-center">
@@ -13,9 +13,9 @@
   </div>
 
   <hr style="margin-top: 40px;">
-</span>
+</ng-template>
 
-<span *ngIf="stateOfPassphrase === 'verify'">
+<ng-template *ngIf="stateOfPassphrase === 'verify'">
   <div class="container">
     <div class="row">
       <div class="col-xs-12 text-center">
@@ -28,9 +28,9 @@
   </div>
 
   <hr style="margin-top: 40px;">
-</span>
+</ng-template>
 
-<span *ngIf="stateOfPassphrase === 'recovery'">
+<ng-template *ngIf="stateOfPassphrase === 'recovery'">
   <div class="container">
     <div class="row">
       <div class="col-xs-12 text-center">
@@ -40,7 +40,7 @@
   </div>
 
   <hr style="margin-top: 100px;">
-</span>
+</ng-template>
 
 
 <div class="container">
