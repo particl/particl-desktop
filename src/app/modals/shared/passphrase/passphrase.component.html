@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <hr style="margin-top: 40px;">
+  <hr class="margin-top-40px">
 </ng-template>
 
 <ng-template *ngIf="stateOfPassphrase === 'verify'">
@@ -20,14 +20,14 @@
     <div class="row">
       <div class="col-xs-12 text-center">
         <h4>Confirm your wallet recovery phrase</h4>
-        <div *ngIf="isValid === false" style="color: #ec4b50;">
+        <div *ngIf="isValid === false" class="verify-error">
           Recovery phrase was not valid!
         </div>
       </div>
     </div>
   </div>
 
-  <hr style="margin-top: 40px;">
+  <hr class="margin-top-40px">
 </ng-template>
 
 <ng-template *ngIf="stateOfPassphrase === 'recovery'">
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <hr style="margin-top: 100px;">
+  <hr class="margin-top-100px">
 </ng-template>
 
 

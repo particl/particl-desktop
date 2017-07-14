@@ -4,15 +4,15 @@
 
 <hr>
 
-<app-password 
-  [unlockText]="'RECOVERY PASSWORD'" 
-  [unlockButton]="'RESTORE WALLET'" 
-  [showStakeOnly]="false" 
+<app-password
+  [unlockText]="'RECOVERY PASSWORD'"
+  [unlockButton]="'RESTORE WALLET'"
+  [showStakeOnly]="false"
   [emitPassword]="true"
   (passwordEmitter)="passphraseComponent.restore($event)">
 </app-password>
 
-<div style="text-align: center;">
+<div class="text-center">
   <button class="control" (click)="back()">back</button>
 </div>
 
