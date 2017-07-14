@@ -73,7 +73,6 @@ export class StatusService {
     }
 
     // remainingBlocks
-    console.log(networkBH, internalBH),
     this.status.remainingBlocks = networkBH - internalBH;
 
     // syncPercentage
@@ -96,10 +95,12 @@ export class StatusService {
     }
 
     // timeLeft
-    this.estimateTimeLeft(blockDiff, timeDiff);
+    if (blockDiff > 0) {
+      this.estimateTimeLeft(blockDiff, timeDiff);
+    }
 
     // Open syncing Modal
-    if (networkBH < 0 || networkBH - internalBH > 50) {
+    if (networkBH <= 0 || internalBH <= 0 || networkBH - internalBH > 50) {
       if (!this._modalsService) {
         this._modalsService = this._injector.get(ModalsService);
       }
@@ -109,7 +110,6 @@ export class StatusService {
     }
 
     // update
-    console.log(this.status);
     this.statusUpdates.next(this.status);
   }
 
@@ -124,24 +124,20 @@ export class StatusService {
 
     let returnString = '';
 
-    if (blockDiff > 0 && timeDiff > 0) {
+    const secs = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000);
+    const seconds = Math.floor(secs % 60);
+    const minutes = Math.floor((secs / 60) % 60);
+    const hours = Math.floor((secs / 3600) % 3600);
 
-      const secs = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000);
-      const seconds = Math.floor(secs % 60);
-      const minutes = Math.floor((secs / 60) % 60);
-      const hours = Math.floor((secs / 3600) % 3600);
-
-      if (hours > 0) {
-        returnString += `${hours} ${hours > 1 ? 'hours' : 'hour'} `
-      }
-      if (minutes > 0) {
-        returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `
-      }
-      if (seconds > 0) {
-        returnString += `${seconds} ${seconds > 1 ? 'seconds' : 'second'}`
-      }
+    if (hours > 0) {
+      returnString += `${hours} ${hours > 1 ? 'hours' : 'hour'} `
     }
-
+    if (minutes > 0) {
+      returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `
+    }
+    if (seconds > 0) {
+      returnString += `${seconds} ${seconds > 1 ? 'seconds' : 'second'}`
+    }
     if (returnString === '') {
       returnString = '∞';
     }
