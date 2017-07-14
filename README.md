@@ -1,8 +1,9 @@
 # Partgui
 
-[![Build Status](https://travis-ci.org/particl/partgui.svg?branch=master)](https://travis-ci.org/particl/partgui)
-[![Coverage Status](https://coveralls.io/repos/github/particl/partgui/badge.svg?branch=master)](https://coveralls.io/github/particl/partgui?branch=master)
-[![Greenkeeper badge](https://badges.greenkeeper.io/particl/partgui.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/EagleEye25/partgui.svg?branch=master)](https://travis-ci.org/EagleEye25/partgui)
+[![Coverage Status](https://coveralls.io/repos/github/EagleEye25/partgui/badge.svg?branch=master)](https://coveralls.io/github/EagleEye25/partgui?branch=master)
+[![Greenkeeper badge](https://badges.greenkeeper.io/EagleEye25/partgui.svg)](https://greenkeeper.io/)
+>>>>>>> upstream/master
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
 
