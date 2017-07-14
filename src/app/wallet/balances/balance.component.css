@@ -1,8 +1,12 @@
 @media screen and (min-width: 1280px) {
 	.balance {
 		line-height: 0.9;
-		border-right:1.9px solid #9D9FA4; 
+		border-right:1.9px solid #EAEAEA;
 	}
+}
+
+.balance {
+	line-height: 0.9;
 }
 
 .balance {

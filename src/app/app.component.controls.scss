@@ -34,7 +34,7 @@
     appearance: none;
     -webkit-appearance: none;
     vertical-align: middle;
-    padding: 12px;
+    padding: 14px;
     background-color: #fbfbfb;
     border: 1px solid #ccc;
     box-shadow: none;
@@ -42,7 +42,10 @@
     border-radius: 4px;
     color: #fff;
     margin: 0;
+	line-height: 56px;
   }
+  
+
 
   input[type=radio] {
     border-radius: 99px;
