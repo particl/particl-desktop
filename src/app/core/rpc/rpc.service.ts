@@ -50,7 +50,7 @@ export class RPCService {
           },
           error => {
             if (errorCB) {
-              errorCB.call(instance, error)
+              errorCB.call(instance, JSON.parse(error['_body']))
             }
             // TODO: Call error modal?
             console.log('RPC Call returned an error', error);

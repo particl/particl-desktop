@@ -9,8 +9,7 @@ import { ModalsService } from '../modals.service';
 })
 export class GeneratewalletComponent {
 
-  name: string;
-  password: string;
+//  name: string;
 
   constructor (
     @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
@@ -20,8 +19,13 @@ export class GeneratewalletComponent {
     this._modalsService.open('firstTime');
   }
 
+  nextFromEmitter(pass: object) {
+    this.next(pass['password']);
+  }
+
   next(password: string) {
-    console.log(password, this.name);
+    console.log('next:' + password);
+    this._modalsService.storeData(password);
     this._modalsService.open('showPassphrase');
   }
 
