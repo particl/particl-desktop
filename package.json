@@ -17,7 +17,8 @@
     "test": "ng test",
     "lint": "ng lint --type-check && htmlhint",
     "e2e": "ng e2e",
-    "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js"
+    "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
+    "compdoc": "compodoc -p tsconfig.json"
   },
   "private": true,
   "dependencies": {
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@angular/cli": "^1.2.0",
     "@angular/compiler-cli": "^4.2.6",
+    "@compodoc/compodoc": "^1.0.0-beta.12",
     "@types/jasmine": "^2.5.53",
     "@types/node": "~8.0.10",
     "codelyzer": "~3.1.2",
