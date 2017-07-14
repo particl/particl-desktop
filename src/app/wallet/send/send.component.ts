@@ -71,7 +71,7 @@ export class SendComponent implements OnInit, OnDestroy {
     Amount validation functions
   */
 
-  checkAmount() : boolean {
+  checkAmount(): boolean {
     // hooking verifyAmount here, on change of type -> retrigger check of amount.
     this.verifyAmount();
 
@@ -200,7 +200,7 @@ export class SendComponent implements OnInit, OnDestroy {
       }
 
       this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
-    
+
     } else if (this.type === 'balanceTransfer') {
       this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
     }
