@@ -72,14 +72,14 @@
     font-size: 22px;
     float: right;
     top: -15px;
-    left: -9px;
+    left: -8px;
   }
 
   input[type=radio]:checked:after {
     content: '\2022';
     font-size: 49px;
     top: -28px;
-    left: -8px;
+    left: -9px;
     font-family: "Arial";
     border: none;
   }
