@@ -68,26 +68,24 @@ export class StatusService {
     const networkBH = this.highestBlockHeightNetwork;
 
     if (internalBH < 0 || networkBH < 0) {
+      this.status.syncPercentage = 0;
       return ;
+    }
+
+    // remainingBlocks
+    console.log(networkBH, internalBH),
+    this.status.remainingBlocks = networkBH - internalBH;
+
+    // syncPercentage
+    this.status.syncPercentage = internalBH / networkBH * 100;
+    if (this.status.syncPercentage > 100) {
+      this.status.syncPercentage = 100;
     }
 
     const timeDiff: number = newTime.getTime() - this.status.lastBlockTime.getTime();
     const blockDiff: number = newHeight - this.highestBlockHeightInternal;
 
-    // remainingBlocks
-    this.status.remainingBlocks = networkBH - internalBH;
-
-    // syncPercentage
-    if (networkBH < 0) {
-      this.status.syncPercentage = 0;
-    } else {
-      this.status.syncPercentage = internalBH / networkBH * 100;
-      if (this.status.syncPercentage > 100) {
-        this.status.syncPercentage = 100;
-      }
-    }
-
-    // compute increasePerMinute
+    // increasePerMinute
     if (timeDiff > 0) {
       const increasePerMinute = blockDiff / this.totalRemainder * 100 * (60 * 1000 / timeDiff);
       if (increasePerMinute < 100) {
@@ -97,7 +95,7 @@ export class StatusService {
       }
     }
 
-    // time left
+    // timeLeft
     this.estimateTimeLeft(blockDiff, timeDiff);
 
     // Open syncing Modal
@@ -111,6 +109,7 @@ export class StatusService {
     }
 
     // update
+    console.log(this.status);
     this.statusUpdates.next(this.status);
   }
 
@@ -122,22 +121,27 @@ export class StatusService {
   // TODO: average out the estimated time left to stop random shifting when slowed down.
   // and localize
   estimateTimeLeft(blockDiff: number, timeDiff: number) {
-    const secs = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000);
-    const seconds = Math.floor(secs % 60);
-    const minutes = Math.floor((secs / 60) % 60);
-    const hours = Math.floor((secs / 3600) % 3600);
 
     let returnString = '';
 
-    if (hours > 0) {
-      returnString += `${hours} ${hours > 1 ? 'hours' : 'hour'} `
+    if (blockDiff > 0 && timeDiff > 0) {
+
+      const secs = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000);
+      const seconds = Math.floor(secs % 60);
+      const minutes = Math.floor((secs / 60) % 60);
+      const hours = Math.floor((secs / 3600) % 3600);
+
+      if (hours > 0) {
+        returnString += `${hours} ${hours > 1 ? 'hours' : 'hour'} `
+      }
+      if (minutes > 0) {
+        returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `
+      }
+      if (seconds > 0) {
+        returnString += `${seconds} ${seconds > 1 ? 'seconds' : 'second'}`
+      }
     }
-    if (minutes > 0) {
-      returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `
-    }
-    if (seconds > 0) {
-      returnString += `${seconds} ${seconds > 1 ? 'seconds' : 'second'}`
-    }
+
     if (returnString === '') {
       returnString = '∞';
     }
