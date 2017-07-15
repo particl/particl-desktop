@@ -1,16 +1,22 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { AddressBookService } from '../address-book.service';
 import { Log } from 'ng2-logger'
+import {Address} from '../../../core/rpc/models/address.model';
+import {AddressCount} from 'app/core/rpc/models/address-count.model';
 
 @Component({
   selector: 'address-table',
   templateUrl: './address-table.component.html',
   styleUrls: ['./address-table.component.scss']
 })
-
 export class AddressTableComponent implements OnInit {
 
   log: any = Log.create('address-table.component');
+
+  @Input() addresses: Address[] = [];
+  @Input() addressCount: AddressCount = new AddressCount();
+  @Output() remove: EventEmitter<Address> = new EventEmitter();
+  @Output() pageChanged: EventEmitter<number> = new EventEmitter();
 
   /* header and utils */
   @Input() displayHeader: boolean = true;
@@ -27,45 +33,28 @@ export class AddressTableComponent implements OnInit {
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
 
-  rows: Array<any> = [];  // TODO: type
-  columns: any = [
-    { name: 'Label',      sortable: true },
-    { name: 'Address',    sortable: false },
-    { name: 'Public key', sortable: false },
-    { name: 'Type',       sortable: true },
-    { name: 'Purpose',    sortable: false },
-    { name: 'Tools',      sortable: false },
-    { name: 'QR Code',    sortable: false }
-  ];
-
-
   constructor(public addressBookService: AddressBookService) {
   }
 
   ngOnInit() {
-
-    this.getAddresses((data) => {
-      // this.log.d('data:', data);
-      this.rows = data; // .splice(0, 5);
-    });
-
   }
 
-  public pageChanged(event: any): void {
-    this.log.d('pageChanged: ...');
-    this.addressBookService.changePage(event.page);
+  /**
+   * Invoked whenever the page changes via a click on one of the pagination controls.
+   *
+   * newPage: {page: 2, itemsPerPage: 9}
+   *
+   * @param newPage
+   */
+  public onPageChanged(newPage: any): void {
+    this.log.d('onPageChanged, newPage: ', newPage);
+    this.pageChanged.emit(newPage)
+    // this.addressBookService.changePage(event.page);
   }
 
-  getAddresses(cb: Function) {
-    const req = new XMLHttpRequest();
-    req.open('GET', 'assets/data/address-list.json');
-
-    req.onload = () => {
-      cb(JSON.parse(req.response));
-    };
-
-    req.send();
+  public onClickRemoveAddress(address: Address) {
+    this.log.d('onClickRemoveAddress, address: ', address);
+    this.remove.emit(address);
   }
-
 
 }

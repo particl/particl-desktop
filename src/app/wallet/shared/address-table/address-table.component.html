@@ -8,7 +8,12 @@
     <th *ngIf="displayToolsMenu">Tools</th>
     <th *ngIf="displayQrMenu">QR Code</th>
   </tr>
+
+  <!--
+  getting addresses from the component rather than from the service
   <tr *ngFor="let address of addressBookService.addresses">
+  -->
+  <tr *ngFor="let address of addresses">
     <td *ngIf="displayLabel" class="text-left">
       <span class="inline-header">{{ address.label }}</span>
     </td>
@@ -30,7 +35,7 @@
         <span ngxClipboard [cbContent]="address.address" class="icon fa fa-clone"></span>
         <!-- Open the modal for signing and verifying messages by address -->
         <span class="icon fa fa-shield"></span>
-        <span (click)="addressBookService.deleteAddress(address.address)" class="icon fa fa-trash color-red"></span>
+        <span (click)="onClickRemoveAddress(address.address)" class="icon fa fa-trash color-red"></span>
       </div>
     </td>
     <td *ngIf="displayQrMenu" class="divider text-center">
@@ -43,8 +48,8 @@
 
 <pagination *ngIf="displayPagination"
   [boundaryLinks]="true"
-  (pageChanged)="pageChanged($event)"
-  [totalItems]="addressBookService.addressCount"
+  (pageChanged)="onPageChanged($event)"
+  [totalItems]="addressCount.total"
   [maxSize]="5"
   [rotate]="false"
   [(ngModel)]="addressBookService.currentPage"

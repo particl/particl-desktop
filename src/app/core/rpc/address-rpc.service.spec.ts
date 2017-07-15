@@ -1,10 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { SharedModule } from '../../shared/shared.module';
-import { RpcModule, AddressService } from './rpc.module';
+import { RpcModule, AddressRpcService } from './rpc.module';
 
 
-describe('AddressService', () => {
+describe('AddressRpcService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -14,7 +14,7 @@ describe('AddressService', () => {
     });
   });
 
-  it('should be created', inject([AddressService], (service: AddressService) => {
+  it('should be created', inject([AddressRpcService], (service: AddressRpcService) => {
     expect(service).toBeTruthy();
   }));
 });

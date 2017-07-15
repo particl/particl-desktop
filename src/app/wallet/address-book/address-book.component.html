@@ -1,27 +1,35 @@
 <app-header>
   <div class="container-fluid">
     <ul class="header-nav">
-      <li class="add-address"><a href="javascript:void(0)"><span class="icon fa fa-plus-circle color-green"></span> New Address</a></li>
+      <li class="add-address"><a (click)="onClickNewAddress()" href="javascript:void(0)"><span class="icon fa fa-plus-circle color-green"></span> New Address</a></li>
     </ul>
     <form class="header-form pull-right">
       <input type="text" placeholder="Search address book">
-      <button class="btn" type="submit" name="button">
+      <button (click)="onClickSearchAddressBook()" class="btn" type="submit" name="button">
         <span class="fa fa-search"></span>
       </button>
     </form>
   </div>
 </app-header>
+
 <div class="container-fluid">
   <address-table
-    [displayHeader]="false"
-		[displayInternalHeader]="true"
-    [displayPagination]="true"
-		[displayLabel]="true"
-		[displayAddress]="true"
-		[displayPublicKey]="true"
-		[displayType]="true"
-    [displayPurpose]="true"
-		[displayToolsMenu]="true"
-		[displayQrMenu]="true">
+
+    [addresses]="addresses"
+    [addressCount]="addressCount"
+    (remove)="onRemoveAddress($event)"
+    (pageChanged)="onPageChanged($event)"
+
+    [displayHeader]="displayHeader"
+		[displayInternalHeader]="displayInternalHeader"
+    [displayPagination]="displayPagination"
+		[displayLabel]="displayLabel"
+		[displayAddress]="displayAddress"
+		[displayPublicKey]="displayPublicKey"
+		[displayType]="displayType"
+    [displayPurpose]="displayPurpose"
+		[displayToolsMenu]="displayToolsMenu"
+		[displayQrMenu]="displayQrMenu"
+  >
   </address-table>
 </div>
