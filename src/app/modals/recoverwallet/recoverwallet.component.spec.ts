@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RecoverwalletComponent } from './recoverwallet.component';
 import { ModalsModule } from '../modals.module';
 
-import { StatusService } from '../../core/status/status.service';
-
-import { RecoverwalletComponent } from './recoverwallet.component';
+import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 describe('RecoverwalletComponent', () => {
   let component: RecoverwalletComponent;
@@ -13,10 +13,9 @@ describe('RecoverwalletComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        ModalsModule
-      ],
-      providers: [
-        StatusService
+        SharedModule,
+        ModalsModule,
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();

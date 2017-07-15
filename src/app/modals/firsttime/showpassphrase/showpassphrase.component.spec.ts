@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { FormsModule } from '@angular/forms';
-
-import { StatusService } from '../../../core/status/status.service';
-import { ModalsService } from '../../modals.service';
-
 import { PassphraseComponent } from '../../shared/passphrase/passphrase.component';
+import { ModalsService } from '../../modals.service';
 import { ShowpassphraseComponent } from './showpassphrase.component';
+
+import { RpcModule } from '../../../core/rpc/rpc.module';
+import { SharedModule } from '../../../shared/shared.module';
 
 describe('ShowpassphraseComponent', () => {
   let component: ShowpassphraseComponent;
@@ -14,16 +15,12 @@ describe('ShowpassphraseComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FormsModule
-      ],
-      declarations: [
-        PassphraseComponent,
-        ShowpassphraseComponent
-      ],
-      providers: [
-        StatusService,
-        ModalsService
-      ]
+        FormsModule,
+        SharedModule,
+        RpcModule.forRoot()
+       ],
+      declarations: [ ShowpassphraseComponent, PassphraseComponent ],
+      providers: [ ModalsService ]
     })
     .compileComponents();
   }));

@@ -1,12 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { FormsModule } from '@angular/forms';
-
-import { StatusService } from '../../core/status/status.service';
-import { ModalsService } from '../modals.service';
-
-import { GeneratewalletComponent } from './generatewallet.component';
 import { PassphraseComponent } from '../shared/passphrase/passphrase.component';
 import { PasswordComponent } from '../shared/password/password.component';
+import { GeneratewalletComponent } from './generatewallet.component';
+import { ModalsService } from '../modals.service';
+
+import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 describe('GeneratewalletComponent', () => {
   let component: GeneratewalletComponent;
@@ -15,17 +16,12 @@ describe('GeneratewalletComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FormsModule
+        FormsModule,
+        SharedModule,
+        RpcModule.forRoot()
       ],
-      declarations: [
-        GeneratewalletComponent,
-        PassphraseComponent,
-        PasswordComponent
-      ],
-      providers: [
-        StatusService,
-        ModalsService
-      ]
+      declarations: [ GeneratewalletComponent, PassphraseComponent, PasswordComponent ],
+      providers: [ ModalsService ]
     })
     .compileComponents();
   }));
