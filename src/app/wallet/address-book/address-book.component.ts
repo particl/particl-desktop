@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Log } from 'ng2-logger'
 import { AddressService } from '../shared/address.service';
 import { Address } from '../../core/rpc/models/address.model';
 import { AddressCount } from '../../core/rpc/models/address-count.model';
 import { AddressType } from '../../core/rpc/models/address-type.enum';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Component({
@@ -12,9 +13,12 @@ import { AddressType } from '../../core/rpc/models/address-type.enum';
   styleUrls: ['./address-book.component.scss'],
   providers: [AddressService]
 })
-export class AddressBookComponent implements OnInit {
+export class AddressBookComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('address-book.component');
+
+  addressesSubscription: Subscription;
+  addressCountSubscription: Subscription;
 
   addresses: Address[] = [];
   addressCount: AddressCount = new AddressCount();
@@ -42,16 +46,21 @@ export class AddressBookComponent implements OnInit {
   ngOnInit() {
 
     // update the addressCount
-    this.updateAddressCount();
+    this.addressCountSubscription = this.updateAddressCount();
 
     // get initial addresses using default settings
-    this.addressService
+    this.addressesSubscription = this.addressService
       .findAddresses(this.getPaginationParams(this.addressType, this.currentPage))
       .subscribe(
         (addresses) => {
           this.addresses = addresses;
         }
       );
+  }
+
+  ngOnDestroy() {
+    this.addressesSubscription.unsubscribe();
+    this.addressCountSubscription.unsubscribe();
   }
 
   /**
@@ -85,7 +94,7 @@ export class AddressBookComponent implements OnInit {
    * update addressCount
    */
   updateAddressCount() {
-    this.addressService
+    return this.addressService
       .getAddressCount()
       .subscribe(
         (addressCount) => {
@@ -138,7 +147,7 @@ export class AddressBookComponent implements OnInit {
     this.currentPage = newPage.page;
 
     // get initial addresses using default settings
-    this.addressService
+    this.addressesSubscription = this.addressService
       .findAddresses(this.getPaginationParams(this.addressType, this.currentPage))
       .subscribe(
         (addresses) => {
