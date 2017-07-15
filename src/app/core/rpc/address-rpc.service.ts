@@ -71,6 +71,6 @@ export class AddressRpcService {
   private handleError (error: Response | any) {
     const errorMsg = (error.message) ? error.message : error.status ? error.status + ' - ' + error.statusText : 'Server error';
     this.log.error('handleError: ', errorMsg);
-    return Observable.throw(error);
+    return Observable.throw(errorMsg);
   }
 }
