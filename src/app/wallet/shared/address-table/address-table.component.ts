@@ -58,4 +58,27 @@ export class AddressTableComponent implements OnInit {
     this.remove.emit(address);
   }
 
+  /**
+   * flashes the address to notify the user that the address has been copied to clipboard
+   *
+   * @param id
+   */
+  copyAddress(address: string) {
+    const addressSpan: any = document.getElementById('address-' + address);
+    this.log.d('copyAddress, addressSpan: ', addressSpan);
+/*
+    let selectable: any = document.createElement('textarea');
+    selectable.style.height = '0';
+    selectable.id = 'selectable';
+    document.body.appendChild(selectable);
+    selectable.value = addressSpan.innerHTML.trim();
+    selectable = document.getElementById('selectable');
+    addressSpan.classList.add('copied');
+    selectable.select();
+    document.execCommand('copy');
+    addressSpan.classList.remove('copied');
+    document.body.removeChild(selectable);
+    */
+  }
+
 }

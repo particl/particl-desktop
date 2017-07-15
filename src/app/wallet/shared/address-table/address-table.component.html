@@ -19,7 +19,7 @@
     </td>
     <td *ngIf="displayAddress" class="text-left">
       <span class="inline-header">Address</span>
-      <span>{{ address.address }}</span>
+      <span id="address-{{ address.address }}">{{ address.address }}</span>
     </td>
     <td *ngIf="displayPublicKey">
       <span class="inline-header">Public Key</span>
@@ -32,7 +32,7 @@
     <td *ngIf="displayToolsMenu" class="divider text-center">
       <div class="inline-toolbar tools-menu">
         <!-- we can use ngx-clipboard -->
-        <span ngxClipboard [cbContent]="address.address" class="icon fa fa-clone"></span>
+        <span ngxClipboard [cbContent]="address.address" (click)="copyAddress(address.address)" class="icon fa fa-clone"></span>
         <!-- Open the modal for signing and verifying messages by address -->
         <span class="icon fa fa-shield"></span>
         <span (click)="onClickRemoveAddress(address.address)" class="icon fa fa-trash color-red"></span>

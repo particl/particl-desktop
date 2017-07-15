@@ -34,7 +34,7 @@ export class AddressBookComponent implements OnInit, OnDestroy {
   displayPagination: boolean = true;
   displayLabel: boolean = true;
   displayAddress: boolean = true;
-  displayPublicKey: boolean = true;
+  displayPublicKey: boolean = false;
   displayType: boolean = true;
   displayPurpose: boolean = true;
   displayToolsMenu: boolean = true;
