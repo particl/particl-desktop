@@ -15,6 +15,8 @@ export class AddressTableComponent implements OnInit {
 
   @Input() addresses: Address[] = [];
   @Input() addressCount: AddressCount = new AddressCount();
+  @Input() itemsPerPage: number = 9;
+
   @Output() remove: EventEmitter<Address> = new EventEmitter();
   @Output() pageChanged: EventEmitter<number> = new EventEmitter();
 
@@ -33,7 +35,7 @@ export class AddressTableComponent implements OnInit {
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
 
-  constructor(public addressBookService: AddressBookService) {
+  constructor() {
   }
 
   ngOnInit() {
@@ -49,7 +51,6 @@ export class AddressTableComponent implements OnInit {
   public onPageChanged(newPage: any): void {
     this.log.d('onPageChanged, newPage: ', newPage);
     this.pageChanged.emit(newPage)
-    // this.addressBookService.changePage(event.page);
   }
 
   public onClickRemoveAddress(address: Address) {

@@ -45,6 +45,9 @@
     </td>
   </tr>
 </app-table>
+<!--
+what is this [(ngModel)]="addressBookService.currentPage"
+-->
 
 <pagination *ngIf="displayPagination"
   [boundaryLinks]="true"
@@ -52,12 +55,11 @@
   [totalItems]="addressCount.total"
   [maxSize]="5"
   [rotate]="false"
-  [(ngModel)]="addressBookService.currentPage"
   class="pagination-sm center"
   previousText="&lsaquo;"
   nextText="&rsaquo;"
   firstText="&laquo;"
   lastText="&raquo;"
-  [itemsPerPage]="addressBookService.MAX_ADDRESSES_PER_PAGE">
+  [itemsPerPage]="itemsPerPage">
 </pagination>
 

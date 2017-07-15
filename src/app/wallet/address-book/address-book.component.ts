@@ -24,7 +24,7 @@ export class AddressBookComponent implements OnInit {
   addressType: AddressType = AddressType.total;
 
   // address-table configuration
-  MAX_ADDRESSES_PER_PAGE: number = 9; // TODO: move this to external config
+  itemsPerPage: number = 9; // TODO: move this to external config
   displayHeader: boolean = false;
   displayInternalHeader: boolean = true;
   displayPagination: boolean = true;
@@ -61,8 +61,8 @@ export class AddressBookComponent implements OnInit {
    */
   getPaginationParams(addressType: AddressType, page: number): Array<any> {
     page = page !== 0 ? page - 1 : 0;
-    const offset: number = (page * this.MAX_ADDRESSES_PER_PAGE);
-    const count: number = this.MAX_ADDRESSES_PER_PAGE;
+    const offset: number = (page * this.itemsPerPage);
+    const count: number = this.itemsPerPage;
 
     this.log.d('getPaginationParams(), page: ', page);
     this.log.d('getPaginationParams(), offset: ', offset);
