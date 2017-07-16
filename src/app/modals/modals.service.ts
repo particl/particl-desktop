@@ -5,7 +5,6 @@ import { StatusService } from '../core/status/status.service';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
 import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
 import { FinishComponent } from './firsttime/finish/finish.component';
 import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
@@ -20,10 +19,11 @@ export class ModalsService {
   private progress: Subject<Number> = new Subject<Number>();
   private _statusService: StatusService;
 
+  private data: string;
+
   messages: Object = {
     firstTime: FirsttimeComponent,
     showPassphrase: ShowpassphraseComponent,
-    confirmPassphrase: ConfirmpassphraseComponent,
     finish: FinishComponent,
     generate: GeneratewalletComponent,
     recover: RecoverwalletComponent,
@@ -56,4 +56,14 @@ export class ModalsService {
   getProgress() {
       return (this.progress.asObservable());
   }
+
+  storeData(data: any) {
+    this.data = data;
+  }
+
+  getData() {
+    const data: any = this.data;
+    this.data = undefined;
+    return (data);
+   }
 }

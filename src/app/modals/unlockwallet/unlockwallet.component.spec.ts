@@ -2,6 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PassphraseComponent } from '../shared/passphrase/passphrase.component';
 import { ModalsModule } from '../modals.module';
+import { SharedModule } from '../../shared/shared.module';
+
+import { RpcModule } from '../../core/rpc/rpc.module';
+
 
 describe('PassphraseComponent', () => {
   let component: PassphraseComponent;
@@ -9,7 +13,11 @@ describe('PassphraseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule]
+      imports: [
+        SharedModule,
+        ModalsModule,
+        RpcModule.forRoot()
+      ]
     })
     .compileComponents();
   }));

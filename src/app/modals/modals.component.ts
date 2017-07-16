@@ -17,7 +17,6 @@ import { ModalsService } from './modals.service';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
 import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
 import { FinishComponent } from './firsttime/finish/finish.component';
 import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
 import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
@@ -31,7 +30,6 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
   entryComponents: [
     FirsttimeComponent,
     ShowpassphraseComponent,
-    ConfirmpassphraseComponent,
     FinishComponent,
     GeneratewalletComponent,
     RecoverwalletComponent,

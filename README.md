@@ -1,6 +1,6 @@
 # Partgui
 
-[![Build Status](https://travis-ci.org/particl/partgui.svg?branch=master)](https://travis-ci.org/particl/partgui)
+[![Build Status](https://travis-ci.org/particl/partgui.svg?branch=master)](https://travis-ci.org/paritcl/partgui)
 [![Coverage Status](https://coveralls.io/repos/github/particl/partgui/badge.svg?branch=master)](https://coveralls.io/github/particl/partgui?branch=master)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/partgui.svg)](https://greenkeeper.io/)
 
