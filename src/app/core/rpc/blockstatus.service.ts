@@ -2,16 +2,14 @@ import { Injectable, Injector } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
-import { ModalsService } from '../../modals/modals.service';
-import { RPCService } from '../../core/rpc/rpc.service';
-import { PeerService } from '../../core/rpc/peer.service';
+import { RPCService } from './rpc.service';
+import { PeerService } from './peer.service';
 
 @Injectable()
-export class StatusService {
+export class BlockStatusService {
 
   private _subBlockInternal: Subscription;
   private _subBlockNetwork: Subscription;
-  private _modalsService: ModalsService;
 
   private highestBlockHeightNetwork: number = -1;
   private highestBlockHeightInternal: number = -1;
@@ -25,13 +23,14 @@ export class StatusService {
     lastBlockTime: undefined,
     increasePerMinute: 0,
     estimatedTimeLeft: undefined,
-    manuallyOpened: false
+    manuallyOpened: false,
+    networkBH: -1,
+    internalBH: -1
   };
 
   constructor(
     private _peerService: PeerService,
-    private _rpcService: RPCService,
-    private _injector: Injector
+    private _rpcService: RPCService
   ) {
     this._subBlockInternal = this._peerService.getBlockCount()
       .subscribe(
@@ -40,6 +39,7 @@ export class StatusService {
           const lastBlockTime = new Date();
           this.calculateSyncingDetails(lastBlockTime, height);
           this.highestBlockHeightInternal = height;
+          this.status.internalBH = height;
           this.status.lastBlockTime = lastBlockTime;
           if (this.startingBlockCount === -1) {
             this.startingBlockCount = height;
@@ -50,12 +50,12 @@ export class StatusService {
       .subscribe(
         height => {
           this.highestBlockHeightNetwork = height;
+          this.status.networkBH = height;
           if (this.totalRemainder === -1 && this.startingBlockCount !== -1) {
             this.totalRemainder = height - this.startingBlockCount;
           }
         },
         error => console.log('SyncingComponent subscription error:' + error));
-    this._rpcService.poll();
   }
 
   setManuallyOpened() {
@@ -85,7 +85,7 @@ export class StatusService {
     const blockDiff: number = newHeight - this.highestBlockHeightInternal;
 
     // increasePerMinute
-    if (timeDiff > 0) {
+    if (timeDiff > 0 && this.totalRemainder > 0) {
       const increasePerMinute = blockDiff / this.totalRemainder * 100 * (60 * 1000 / timeDiff);
       if (increasePerMinute < 100) {
         this.status.increasePerMinute = +increasePerMinute.toFixed(2);
@@ -97,16 +97,6 @@ export class StatusService {
     // timeLeft
     if (blockDiff > 0) {
       this.estimateTimeLeft(blockDiff, timeDiff);
-    }
-
-    // Open syncing Modal
-    if (networkBH <= 0 || internalBH <= 0 || networkBH - internalBH > 50) {
-      if (!this._modalsService) {
-        this._modalsService = this._injector.get(ModalsService);
-      }
-      if (!this._modalsService.modal) {
-        this._modalsService.open('syncing');
-      }
     }
 
     // update

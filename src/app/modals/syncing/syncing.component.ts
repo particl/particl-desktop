@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { ModalsService } from '../modals.service';
-import { StatusService } from '../../core/status/status.service';
+import { BlockStatusService } from '../../core/rpc/blockstatus.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 @Component({
@@ -20,11 +20,11 @@ export class SyncingComponent {
   syncPercentage: number;
 
   constructor(
-    private _statusService: StatusService,
+    private _blockStatusService: BlockStatusService,
     private _rpcService: RPCService
   ) {
-    this._rpcService.poll();
-    this._statusService.statusUpdates.asObservable().subscribe(status => {
+    //this._rpcService.poll();
+    this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.remainder = status.remainingBlocks < 0
         ? 'waiting for peers...'
         : status.remainingBlocks;

@@ -106,6 +106,7 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   close() {
     // remove and destroy message
+    this._modalService.close();
     this.staticModal.hide();
     this.modalContainer.remove();
     this.modal.destroy();

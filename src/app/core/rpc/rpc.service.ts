@@ -25,6 +25,7 @@ export class RPCService {
 
   constructor(private http: Http, public electronService: ElectronService) {
     this.isElectron = this.electronService.isElectronApp;
+    this.poll();
   }
 
   call(instance: Injectable, method: string, params: Array<any> | null, successCB: Function, errorCB?: Function): void {

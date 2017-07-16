@@ -5,6 +5,7 @@ import { ModalsService } from '../../modals/modals.service';
 
 import { PeerService } from '../rpc/peer.service';
 import { RPCService } from '../rpc/rpc.service';
+import { BlockStatusService } from '../rpc/blockstatus.service';
 
 @Component({
   selector: 'app-status',

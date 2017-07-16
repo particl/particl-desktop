@@ -1,11 +1,11 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { RpcModule } from '../rpc/rpc.module';
+import { RpcModule } from './rpc.module';
 
 import { ModalsService } from '../../modals/modals.service';
-import { StatusService } from './status.service';
+import { BlockStatusService } from './blockstatus.service';
 
-describe('StatusService', () => {
+describe('BlockStatusService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [

@@ -10,7 +10,7 @@ import { SettingsService } from './settings/settings.service';
 import { ModalsService } from './modals/modals.service';
 
 // Syncing example
-import { StatusService } from './core/status/status.service';
+import { BlockStatusService } from './core/rpc/blockstatus.service';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
-    private _statusService: StatusService,
+    private _statusService: BlockStatusService,
     public window: WindowService,
     // Modal example
     private _modalsService: ModalsService
