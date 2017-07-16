@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalModule } from 'ngx-bootstrap';
 
-import { ModalsComponent } from './modals.component';
+import { StatusService } from '../core/status/status.service';
+
 import { ModalsModule } from './modals.module';
 
+import { ModalsComponent } from './modals.component';
 
 describe('ModalsComponent', () => {
   let component: ModalsComponent;
@@ -11,7 +13,13 @@ describe('ModalsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule, ModalModule.forRoot()]
+      imports: [
+        ModalsModule,
+        ModalModule.forRoot()
+      ],
+      providers: [
+        StatusService,
+      ]
     })
     .compileComponents();
   }));

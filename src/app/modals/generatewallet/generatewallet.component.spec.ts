@@ -6,13 +6,20 @@ import { PasswordComponent } from '../shared/password/password.component';
 import { GeneratewalletComponent } from './generatewallet.component';
 import { ModalsService } from '../modals.service';
 
+import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
+
 describe('GeneratewalletComponent', () => {
   let component: GeneratewalletComponent;
   let fixture: ComponentFixture<GeneratewalletComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule ],
+      imports: [
+        FormsModule,
+        SharedModule,
+        RpcModule.forRoot()
+      ],
       declarations: [ GeneratewalletComponent, PassphraseComponent, PasswordComponent ],
       providers: [ ModalsService ]
     })

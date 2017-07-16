@@ -15,22 +15,22 @@
     <div class="col-md-3 col-xs-6">
       <h3>Amount of blocks left</h3>
       <br />
-      {{ getRemainder() }}
+      {{ syncPercentage ? remainder : 'loading...' }}
     </div>
     <div class="col-md-3 col-xs-6">
       <h3>Last block time</h3>
       <br />
-      {{ lastBlockTime }}
+      {{ syncPercentage ? lastBlockTime : 'loading...' }}
     </div>
     <div class="col-md-3 col-xs-6">
       <h3>Progress increase per minute</h3>
       <br />
-      {{ increasePerMinute }}%
+      {{ syncPercentage ? increasePerMinute : 'loading...' }}
     </div>
     <div class="col-md-3 col-xs-6">
       <h3>Estimated time left until synced</h3>
       <br />
-      {{ getEstimateTimeLeft() }}
+      {{ syncPercentage ? estimatedTimeLeft : 'loading...' }}
     </div>
   </div>
 </div>

@@ -1,12 +1,19 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ModalsService } from './modals.service';
 import { ModalsModule } from './modals.module';
+
+import { StatusService } from '../core/status/status.service';
+import { ModalsService } from './modals.service';
 
 describe('ModalsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule]
+      imports: [
+        ModalsModule
+      ],
+      providers: [
+        StatusService
+      ]
     });
   });
 

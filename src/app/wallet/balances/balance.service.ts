@@ -12,6 +12,11 @@ export class Balances {
   getPublic() {
     return this._public;
   }
+
+  getBlind() {
+    return this._blind;
+  }
+
   getPrivate() {
     return this._private;
   }
@@ -26,12 +31,15 @@ export class Balances {
       return this.getPublic();
     } else if (type === 'PRIVATE') {
       return this.getPrivate();
+    } else if (type === 'BLIND') {
+      return this.getBlind();
     } else if (type === 'STAKE') {
       return this.getStake();
     }
   }
 
-  constructor(private _total: number, private _public: number, private _private: number, private _stake: number) { }
+  constructor(private _total: number, private _public: number, private _blind: number,  private _private: number,
+    private _stake: number) { }
 }
 
 @Injectable()
@@ -105,7 +113,7 @@ export class BalanceService {
 */
 
 /*
-	Load balances over RPC.
+  Load balances over RPC.
 
 */
   rpc_loadBalance(JSON: Object): void {
@@ -145,7 +153,7 @@ export class BalanceService {
   signal_updateBalance(): void {
     /*
       When a new transaction arrives, we must update the balance. Might be worth ignoring this on IBD.
-  	*/
+    */
   }
 
 
@@ -156,10 +164,11 @@ export class BalanceService {
 
   deserialize(json: Object): Balances {
     const total_balance = json['total_balance'];
-    const public_balance = json['balance'] + json['blind_balance']; // public =  balance + blind
+    const public_balance = json['balance'];
+    const blind_balance = json['blind_balance'];
     const private_balance = json['anon_balance'];
     const staked_balance = json['staked_balance'];
-    return new Balances(total_balance, public_balance, private_balance, staked_balance);
+    return new Balances(total_balance, public_balance, blind_balance, private_balance, staked_balance);
   }
 
 
