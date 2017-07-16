@@ -51,7 +51,7 @@ export class ModalsService {
     }
   }
 
-  close(){
+  close() {
     this.state = false;
   }
 
@@ -73,7 +73,7 @@ export class ModalsService {
     return (data);
    }
 
-   needToOpenModal(status: any){
+   needToOpenModal(status: any) {
     const networkBH = status.networkBH;
     const internalBH = status.internalBH;
     // Open syncing Modal

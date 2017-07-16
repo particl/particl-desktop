@@ -23,7 +23,6 @@ export class SyncingComponent {
     private _blockStatusService: BlockStatusService,
     private _rpcService: RPCService
   ) {
-    //this._rpcService.poll();
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.remainder = status.remainingBlocks < 0
         ? 'waiting for peers...'
