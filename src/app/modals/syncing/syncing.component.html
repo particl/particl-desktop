@@ -1,37 +1,50 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 text-center">
-      The displayed information may be out of date. Your wallet automatically synchronizes with the Particl network after a connection is established,
-      but this process has not completed yet. This means that recent transactions will not be visible, and the balance may not be up-to-date until this
-      process has completed. <b>Spending Particl may not be possible during that phase!</b><!-- TODO: Red bold text (Information / Alert / Warning class?) -->
+<div *ngIf="syncPercentage">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        The displayed information may be out of date. Your wallet automatically synchronizes with the Particl network after a connection is established,
+        but this process has not completed yet. This means that recent transactions will not be visible, and the balance may not be up-to-date until this
+        process has completed. <b>Spending Particl may not be possible during that phase!</b><!-- TODO: Red bold text (Information / Alert / Warning class?) -->
+      </div>
+    </div>
+  </div>
+
+  <hr style="margin-top: 100px;">
+
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-3 col-xs-6">
+        <h3>Amount of blocks left</h3>
+        <br />
+        {{ syncPercentage ? remainder : 'loading...' }}
+      </div>
+      <div class="col-md-3 col-xs-6">
+        <h3>Last block time</h3>
+        <br />
+        {{ syncPercentage ? lastBlockTime : 'loading...' }}
+      </div>
+      <div class="col-md-3 col-xs-6">
+        <h3>Progress increase per minute</h3>
+        <br />
+        {{ syncPercentage ? increasePerMinute : 'loading...' }}
+      </div>
+      <div class="col-md-3 col-xs-6">
+        <h3>Estimated time left until synced</h3>
+        <br />
+        {{ syncPercentage ? estimatedTimeLeft : 'loading...' }}
+      </div>
     </div>
   </div>
 </div>
 
-<hr class="margin-top-100px">
-
-<div class="container">
-  <div class="row text-center">
-    <div class="col-md-3 col-xs-6">
-      <h3>Amount of blocks left</h3>
-      <br />
-      {{ syncPercentage ? remainder : 'loading...' }}
-    </div>
-    <div class="col-md-3 col-xs-6">
-      <h3>Last block time</h3>
-      <br />
-      {{ syncPercentage ? lastBlockTime : 'loading...' }}
-    </div>
-    <div class="col-md-3 col-xs-6">
-      <h3>Progress increase per minute</h3>
-      <br />
-      {{ syncPercentage ? increasePerMinute : 'loading...' }}
-    </div>
-    <div class="col-md-3 col-xs-6">
-      <h3>Estimated time left until synced</h3>
-      <br />
-      {{ syncPercentage ? estimatedTimeLeft : 'loading...' }}
-    </div>
+<div *ngIf="!syncPercentage">
+  <div class="center">
+    <img src="assets/loading.gif" id="loading">
+  </div>
+  <div id="quote" class="center">
+    "to hide the signal you must generate noise".
+  </div>
+  <div id="quote-author" class="center">
+    -Ido Kaiser
   </div>
 </div>
- 
