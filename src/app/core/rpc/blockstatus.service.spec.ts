@@ -13,12 +13,12 @@ describe('BlockStatusService', () => {
       ],
       providers: [
         ModalsService,
-        StatusService
+        BlockStatusService
       ]
     });
   });
 
-  it('should be created', inject([StatusService], (service: StatusService) => {
+  it('should be created', inject([BlockStatusService], (service: BlockStatusService) => {
     expect(service).toBeTruthy();
   }));
 });
