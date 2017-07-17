@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RpcModule } from '../../core/rpc/rpc.module';
+
 import { BlockStatusService } from '../../core/rpc/blockstatus.service';
 import { ModalsService } from '../modals.service';
 
@@ -12,6 +14,7 @@ describe('FirsttimeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        RpcModule.forRoot()
       ],
       declarations: [
         FirsttimeComponent

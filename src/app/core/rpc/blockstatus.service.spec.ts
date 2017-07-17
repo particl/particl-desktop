@@ -9,7 +9,7 @@ describe('BlockStatusService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        RpcModule
+        RpcModule.forRoot()
       ],
       providers: [
         ModalsService,
