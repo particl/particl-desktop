@@ -1,4 +1,4 @@
-<app-table>
+<app-table class="table">
   <tr *ngIf="display.header">
     <th *ngIf="display.category">category</th>
     <th *ngIf="display.date">date</th>
@@ -54,6 +54,63 @@
       <span class="icon fa fa-plus"></span>
     </td>
 
+  </tr>
+  <tr>
+    <table id="details-table">
+
+      <tr>
+        <td>
+          Status:
+        </td>
+        <td>
+          20000 confirmations
+        </td>
+        <td>
+          Transaction ID:
+        </td>
+        <td>
+          gdugjqigdaozdf598qsd9as9dfdsa6d
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Date:
+        </td>
+        <td>
+          17-4-2017 12:56:30 AM
+        </td>
+        <td>
+          Transaction fee:
+        </td>
+        <td>
+          -0.2 PART
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          To:
+        </td>
+        <td>
+          20000 confirmations
+        </td>
+        <td>
+          Net amount:
+        </td>
+        <td>
+          -20000.2 PART
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Debit:
+        </td>
+        <td>
+          -20000 PART
+        </td>
+      </tr>
+    </table>
   </tr>
 </app-table>
 
