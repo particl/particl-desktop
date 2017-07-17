@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { ModalsModule } from './modals.module';
 
-import { StatusService } from '../core/status/status.service';
+import { BlockStatusService } from '../core/rpc/blockstatus.service';
 import { ModalsService } from './modals.service';
 
 describe('ModalsService', () => {
@@ -12,7 +12,7 @@ describe('ModalsService', () => {
         ModalsModule
       ],
       providers: [
-        StatusService
+        BlockStatusService
       ]
     });
   });

@@ -4,7 +4,7 @@ import { SyncingComponent } from './syncing.component';
 
 import { SharedModule } from '../../shared/shared.module';
 
-import { StatusService } from '../../core/status/status.service';
+import { BlockStatusService } from '../../core/rpc/blockstatus.service';
 
 describe('SyncingComponent', () => {
   let component: SyncingComponent;
@@ -15,7 +15,7 @@ describe('SyncingComponent', () => {
       imports: [ SharedModule ],
       declarations: [ SyncingComponent ],
       providers: [
-        StatusService
+        BlockStatusService
       ]
     })
     .compileComponents();

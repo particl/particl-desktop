@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatusService } from '../../core/status/status.service';
+import { BlockStatusService } from '../../core/rpc/blockstatus.service';
 import { ModalsService } from '../modals.service';
 
 import { FirsttimeComponent } from './firsttime.component';
@@ -17,7 +17,7 @@ describe('FirsttimeComponent', () => {
         FirsttimeComponent
       ],
       providers: [
-        StatusService,
+        BlockStatusService,
         ModalsService
       ]
     })
