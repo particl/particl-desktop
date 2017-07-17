@@ -1,18 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { ModalsModule } from './modals.module';
+import { RpcModule } from '../core/rpc/rpc.module';
 
-import { BlockStatusService } from '../core/rpc/blockstatus.service';
 import { ModalsService } from './modals.service';
 
 describe('ModalsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        ModalsModule
-      ],
-      providers: [
-        BlockStatusService
+        ModalsModule;
+        RpcModule.forRoot()
       ]
     });
   });

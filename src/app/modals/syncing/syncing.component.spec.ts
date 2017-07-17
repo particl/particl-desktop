@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SyncingComponent } from './syncing.component';
 
 import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { BlockStatusService } from '../../core/rpc/blockstatus.service';
 
@@ -12,11 +13,11 @@ describe('SyncingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ SharedModule ],
-      declarations: [ SyncingComponent ],
-      providers: [
-        BlockStatusService
-      ]
+      imports: [ 
+        SharedModule,
+        RpcModule.forROot()
+       ],
+      declarations: [ SyncingComponent ]
     })
     .compileComponents();
   }));
