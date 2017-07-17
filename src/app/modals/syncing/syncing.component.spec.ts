@@ -13,7 +13,7 @@ describe('SyncingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         SharedModule,
         RpcModule.forRoot()
        ],
