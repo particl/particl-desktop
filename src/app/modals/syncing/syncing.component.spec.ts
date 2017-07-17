@@ -15,7 +15,7 @@ describe('SyncingComponent', () => {
     TestBed.configureTestingModule({
       imports: [ 
         SharedModule,
-        RpcModule.forROot()
+        RpcModule.forRoot()
        ],
       declarations: [ SyncingComponent ]
     })
