@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalModule } from 'ngx-bootstrap';
 
-import { BlockStatusService } from '../core/rpc/blockstatus.service';
-
 import { ModalsModule } from './modals.module';
+import { RpcModule } from '../core/rpc/rpc.module';
+import { SharedModule } from '../shared/shared.module';
+
+import { BlockStatusService } from '../core/rpc/blockstatus.service';
 
 import { ModalsComponent } from './modals.component';
 
@@ -15,7 +17,9 @@ describe('ModalsComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         ModalsModule,
-        ModalModule.forRoot()
+        ModalModule.forRoot(),
+        SharedModule,
+        RpcModule.forRoot()
       ],
       providers: [
         BlockStatusService,
