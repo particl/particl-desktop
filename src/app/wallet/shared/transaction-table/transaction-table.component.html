@@ -52,11 +52,11 @@
       <span>{{ tx.getAmount() }} PART</span>
     </td>
     <td *ngIf="display.expand">
-      <span class="icon fa fa-plus" (click)="showExpandedTransactionDetail(tx.txid)"></span>
+      <span class="icon fa fa-plus" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
     </td>
 
   </tr>
-  <tr *ngIf="getExpandedTransactionID() === tx.txid" class="background-hack">
+  <tr *ngIf="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)" class="background-hack">
     <td [attr.colspan]="getColumnCount()" class="padding-reset-hack border-reset-hack">
     <table class="details-table">
 

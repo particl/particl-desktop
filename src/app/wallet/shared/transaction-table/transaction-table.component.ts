@@ -34,7 +34,13 @@ export class TransactionsTableComponent implements OnInit {
 
   @Input() display: any;
 
+
+  /*
+    This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmount() + tx.category).
+    If the unique identifier is present, then the details will be expanded.
+  */
   private expandedTransactionID: string = undefined;
+
 
   log: any = Log.create('transaction-table.component');
 
@@ -57,32 +63,34 @@ export class TransactionsTableComponent implements OnInit {
   }
 
   public showExpandedTransactionDetail(txid: string) {
-    if(this.expandedTransactionID === txid) {
+    if (this.expandedTransactionID === txid) {
       this.expandedTransactionID = undefined;
     } else {
       this.expandedTransactionID = txid;
     }
   }
 
-  public getExpandedTransactionID(){
+  public getExpandedTransactionID() {
     return this.expandedTransactionID;
   }
 
   getColumnCount(): number {
-    let count: number = 0;
+    let count = 0;
 
-    for(const key in this.display) {
-      if (!this.display.hasOwnProperty(key)) continue;
-
-      // currently unused keys
-      if(key === "internalHeader" ||
-         key === "pagination" ||
-         key === "receiverAddress" ||
-         key === "comment") {
+    for (const key in this.display) {
+      if (!this.display.hasOwnProperty(key)) {
         continue;
       }
 
-      if(this.display[key] === true) {
+      // currently unused keys
+      if (key === 'internalHeader' ||
+         key === 'pagination' ||
+         key === 'receiverAddress' ||
+         key === 'comment') {
+        continue;
+      }
+
+      if (this.display[key] === true) {
         count++;
       }
     }
