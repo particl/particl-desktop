@@ -34,9 +34,12 @@ export class TransactionsTableComponent implements OnInit {
 
   @Input() display: any;
 
+  private expandedTransactionID: string = undefined;
+
   log: any = Log.create('transaction-table.component');
 
   constructor(public txService: TransactionService) {
+
   }
 
   ngOnInit() {
@@ -51,5 +54,38 @@ export class TransactionsTableComponent implements OnInit {
     this.log.d('Page changed to:', event.page);
     this.log.d('Number items per page:', event.itemsPerPage);
 
+  }
+
+  public showExpandedTransactionDetail(txid: string) {
+    if(this.expandedTransactionID === txid) {
+      this.expandedTransactionID = undefined;
+    } else {
+      this.expandedTransactionID = txid;
+    }
+  }
+
+  public getExpandedTransactionID(){
+    return this.expandedTransactionID;
+  }
+
+  getColumnCount(): number {
+    let count: number = 0;
+
+    for(const key in this.display) {
+      if (!this.display.hasOwnProperty(key)) continue;
+
+      // currently unused keys
+      if(key === "internalHeader" ||
+         key === "pagination" ||
+         key === "receiverAddress" ||
+         key === "comment") {
+        continue;
+      }
+
+      if(this.display[key] === true) {
+        count++;
+      }
+    }
+    return count;
   }
 }

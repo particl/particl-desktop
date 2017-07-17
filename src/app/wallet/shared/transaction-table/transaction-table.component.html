@@ -8,7 +8,8 @@
     <th *ngIf="display.blockIndex">blockindex</th>
     <th *ngIf="display.confirmations">confirmations</th>
   </tr>
-  <tr *ngFor="let tx of txService.txs">
+  <ng-container *ngFor="let tx of txService.txs">
+  <tr>
      <td *ngIf="display.date">
       <span class="inline-header"><span class="icon fa fa-clock-o"></span></span>
       <span>{{ tx.getDate() }}</span>
@@ -51,25 +52,26 @@
       <span>{{ tx.getAmount() }} PART</span>
     </td>
     <td *ngIf="display.expand">
-      <span class="icon fa fa-plus"></span>
+      <span class="icon fa fa-plus" (click)="showExpandedTransactionDetail(tx.txid)"></span>
     </td>
 
   </tr>
-  <tr>
-    <table id="details-table">
+  <tr *ngIf="getExpandedTransactionID() === tx.txid" class="background-hack">
+    <td [attr.colspan]="getColumnCount()" class="padding-reset-hack border-reset-hack">
+    <table class="details-table">
 
       <tr>
         <td>
           Status:
         </td>
         <td>
-          20000 confirmations
+          {{tx.confirmations}} confirmations
         </td>
         <td>
           Transaction ID:
         </td>
         <td>
-          gdugjqigdaozdf598qsd9as9dfdsa6d
+          {{tx.txid}}
         </td>
       </tr>
 
@@ -78,13 +80,13 @@
           Date:
         </td>
         <td>
-          17-4-2017 12:56:30 AM
+          {{tx.getDate()}}
         </td>
         <td>
           Transaction fee:
         </td>
         <td>
-          -0.2 PART
+          {{tx.fee ? tx.fee : 0}} PART
         </td>
       </tr>
 
@@ -93,25 +95,30 @@
           To:
         </td>
         <td>
-          20000 confirmations
+          {{tx.getAddress()}}
         </td>
         <td>
           Net amount:
         </td>
         <td>
-          -20000.2 PART
+          {{tx.fee ? tx.getAmount() - tx.fee : 0}} PART
         </td>
       </tr>
       <tr>
-        <td>
+        <td *ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">
+          Credit:
+        </td>
+        <td *ngIf="tx.category === 'send'">
           Debit:
         </td>
         <td>
-          -20000 PART
+          {{tx.getAmount()}} PART
         </td>
       </tr>
     </table>
+    </td>
   </tr>
+  </ng-container>
 </app-table>
 
 <pagination *ngIf="display.pagination"
