@@ -9,7 +9,7 @@ describe('ModalsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        ModalsModule;
+        ModalsModule,
         RpcModule.forRoot()
       ]
     });
