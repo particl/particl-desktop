@@ -33,8 +33,7 @@ export class AddressLookupComponent implements OnInit {
   ];
 
 
-  constructor(private _rpc: RPCService){
-    console.log("test cos")
+  constructor(private _rpc: RPCService) {
     this.rpc_update();
   }
 
@@ -42,7 +41,7 @@ export class AddressLookupComponent implements OnInit {
   /*
 
     UI functions
-  
+
   */
 
   page () {
@@ -53,14 +52,14 @@ export class AddressLookupComponent implements OnInit {
         || el.address.toLowerCase().indexOf(query.toLowerCase()) !== -1)
         && ((this.filter === this.cheatPublicAddress(el.address))
               || (this.filter === 'all')
-            ) 
+            )
       );
     })
   }
 
-  //needs to change..
-  cheatPublicAddress(address: string){
-    if(address.indexOf('p') === 0){
+  // needs to change..
+  cheatPublicAddress(address: string) {
+    if (address.indexOf('p') === 0) {
       return 'public';
     } else {
       return 'private';
@@ -81,7 +80,7 @@ export class AddressLookupComponent implements OnInit {
   /*
 
     RPC functions
-  
+
   */
 
   rpc_update() {
@@ -94,7 +93,7 @@ export class AddressLookupComponent implements OnInit {
   rpc_loadAddressCount_success(json: Object): void {
     this._addressCount = json['num_send'];
 
-    if(this._addressCount > 0) {
+    if (this._addressCount > 0) {
       this._rpc.call(this, 'filteraddresses', [0, this._addressCount, '0', '', '2'], this.rpc_loadAddresses_success);
     } else {
       this.addressStore = undefined;
@@ -103,7 +102,7 @@ export class AddressLookupComponent implements OnInit {
   }
 
   rpc_loadAddressCount_failed(json: Object): void {
-    console.log("Shit,failed!" + json);
+    console.log('Shit,failed!' + json);
   }
   /*
     Load addresses into lookupAddresses!
