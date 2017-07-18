@@ -102,9 +102,5 @@ export class AppComponent implements OnInit {
     this._modalsService.updateProgress(99);
   }
 
-  checkIfSyncing() {
-
-  }
-
   // End Modal Examples
 }
