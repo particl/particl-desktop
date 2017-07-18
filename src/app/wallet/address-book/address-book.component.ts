@@ -35,7 +35,7 @@ export class AddressBookComponent implements OnInit {
 
   addAddressToBook() {
     if (this.validAddress && this.label !== undefined) {
-      this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label], this.rpc_addAddressToBook_success);
+      this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label], this.rpc_addAddressToBook_success, this.rpc_addAddressToBook_failed);
       this.address = undefined;
       this.validAddress = undefined;
       this.label = '';
@@ -46,12 +46,18 @@ export class AddressBookComponent implements OnInit {
   }
 
   rpc_addAddressToBook_success(json: Object) {
+    console.log('rpc_addAddressToBook_success: yayaya')
     if (json['result'] === 'success') {
       alert('Address successfully added to the addressbook!');
 
       // TODO: remove specialPoll!
       this._rpc.specialPoll();
     }
+  }
+
+  rpc_addAddressToBook_failed(json: Object) {
+    console.log('rpc_addAddressToBook_failed');
+    console.log(json);
   }
 
   verifyAddress() {
