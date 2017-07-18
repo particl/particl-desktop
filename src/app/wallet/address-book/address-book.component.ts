@@ -35,7 +35,7 @@ export class AddressBookComponent implements OnInit {
 
   addAddressToBook() {
     if (this.validAddress && this.label !== undefined) {
-      this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label], this.rpc_callbackAddAddressToBook);
+      this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label], this.rpc_addAddressToBook_success);
       this.address = undefined;
       this.validAddress = undefined;
       this.label = '';
@@ -45,7 +45,7 @@ export class AddressBookComponent implements OnInit {
     }
   }
 
-  rpc_callbackAddAddressToBook(json: Object) {
+  rpc_addAddressToBook_success(json: Object) {
     if (json['result'] === 'success') {
       alert('Address successfully added to the addressbook!');
 
@@ -60,33 +60,11 @@ export class AddressBookComponent implements OnInit {
       return;
     }
 
-    const ret = false;
-    if ((this.address.indexOf('p') === 0) === false) { // does not start with p
-      if ((this.address.indexOf('T') === 0) === false) { // does not start with T
-        this.validAddress = false;
-        return;
-      } else if (this.address.length > 102) { // starts with T but over 102 chars
-        this.validAddress = false;
-        return;
-      }
-    } else if (this.address.length > 34) { // starts with p but over 34 chars
-      this.validAddress = false;
-      return;
-    }
-    // TODO: apply else if to send branch
-
-    if (this.address.length === 34 && this.address.indexOf('p') === 0) {
-      this._rpc.call(this, 'validateaddress', [this.address], this.rpc_callbackVerifyAddress);
-     }
-
-    if (this.address.length === 102 && this.address.indexOf('Tet') === 0) {
-      this._rpc.call(this, 'validateaddress', [this.address], this.rpc_callbackVerifyAddress);
-    }
-
-    this.validAddress = undefined;
+    this._rpc.call(this, 'validateaddress', [this.address], this.rpc_verifyAddress_success);
+    return;
   }
 
-  rpc_callbackVerifyAddress(json: Object) {
+  rpc_verifyAddress_success(json: Object) {
     this.validAddress = json['isvalid'];
    }
 
