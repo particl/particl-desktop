@@ -101,7 +101,7 @@ export class PasswordComponent {
     // hook for unlockEmitter, warn parent component that wallet is unlocked!
     this.unlockEmitter.emit(json);
 
-    /* send out alert box
+    // send out alert box
     const encryptionstatus = json['encryptionstatus'];
     if (encryptionstatus === 'Unlocked') {
       alert('Unlock succesful!');
@@ -111,7 +111,7 @@ export class PasswordComponent {
       alert('Warning: unlock was unsuccesful!');
     } else {
       alert('Wallet not encrypted!');
-    } */
+    }
   }
 
   reset() {
