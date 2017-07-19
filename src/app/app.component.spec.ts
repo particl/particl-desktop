@@ -27,20 +27,19 @@ let component: AppComponent;
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   });
-
 /*
   it('should test firstTime running', () => {
-    component._modalsService.firsttime();
-    expect(component.firsttime).toBeTruthy();
+    component.firsttime;
+    expect(component.firsttime).toBe(undefined);
   });
 
   it('should sync', () => {
-    component.syncing();
+    component.syncing;
     expect(component.syncing).toBeTruthy();
   });
 
   it('should unlock', () => {
-    component.unlock();
+    component.unlock;
     expect(component.unlock).toBeTruthy();
   });
 
@@ -54,7 +53,7 @@ let component: AppComponent;
   */
 /*
   it('should get isCollapsed', () => {
-    expect(component.isCollapsed).toBe(true);
+    expect(component.isCollapsed).toBeTruthy();
   });
 
   it('should get isFixed', () => {

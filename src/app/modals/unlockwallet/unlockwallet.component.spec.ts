@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PassphraseComponent } from '../shared/passphrase/passphrase.component';
+import { UnlockwalletComponent } from '../../modals/unlockwallet/unlockwallet.component';
 import { ModalsModule } from '../modals.module';
 
 describe('PassphraseComponent', () => {
-  let component: PassphraseComponent; // TODO: ????????
-  let fixture: ComponentFixture<PassphraseComponent>;
+  let component: UnlockwalletComponent;
+  let fixture: ComponentFixture<UnlockwalletComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -15,7 +15,7 @@ describe('PassphraseComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PassphraseComponent);
+    fixture = TestBed.createComponent(UnlockwalletComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -23,10 +23,9 @@ describe('PassphraseComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-/*
+
   it('should unlock', () => {
-    component.unlock;
     expect(component.unlock).toBeTruthy();
   });
-  */
+
 });

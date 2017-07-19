@@ -5,6 +5,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SidebarComponent } from './sidebar.component';
 import { SidebarService } from '../sidebar.service';
 
+@Component({
+ selector  : 'test-cmp',
+ template  : '<sidebar [position]="left"></sidebar>',
+})
+class TestWrapperComponent {
+}
+
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
@@ -12,7 +19,7 @@ describe('SidebarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        TestCmpWrapper,
+        TestWrapperComponent,
         SidebarComponent
       ],
       providers: [ SidebarService ]
@@ -84,10 +91,3 @@ describe('SidebarComponent', () => {
     expect(component.pinnedRightClass).toBe(false);
   });
 });
-
-@Component({
- selector  : 'test-cmp',
- template  : '<sidebar [position]="left"></sidebar>',
-})
-class TestCmpWrapper {
-}

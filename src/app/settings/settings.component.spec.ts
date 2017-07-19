@@ -31,4 +31,28 @@ describe('SettingsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should go to settingsTab', () => {
+    expect(component.settings).toBeTruthy();
+  });
+
+  it('should applySettings', () => {
+    expect(component.apply).toBeTruthy();
+  });
+
+  it('should cancel', () => {
+    expect(component.cancel).toBeTruthy();
+  });
+
+  it('should validate', () => {
+    expect(component.validate).toBeTruthy();
+  });
+
+  it('should get settings', () => {
+    expect(component.settings).toBeDefined();
+  });
+
+  it('should get tab', () => {
+    expect(component.tab).toBe('main');
+  });
 });
