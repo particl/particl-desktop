@@ -46,7 +46,7 @@ export class RPCService {
  *
  * @param {Injectable} instance  The instance in which the callback functions reside.
  * @param {string} method  The JSON-RPC method to call, see ```./particld help```
- * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request. 
+ * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
  * The content of the array is of type any (ints, strings, booleans etc)
  * @param {Function} successCB  The function to callback (in instance) when the RPC request was successful.
  * @param {Function} errorCB  The function to callback (in instance) when the RPC request failed.
@@ -104,7 +104,7 @@ export class RPCService {
  *
  * @param {Injectable} instance  The instance in which the callback functions reside.
  * @param {string} method  The JSON-RPC method to call, see ```./particld help```
- * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request. 
+ * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
  * The content of the array is of type any (ints, strings, booleans etc)
  * @param {Function} successCB  The function to callback (in instance) when the RPC request was successful.
  * @param {string} when  The trigger to register to: 'block' on a new block, 'tx' on a new transactions, 'address' on address changes.
