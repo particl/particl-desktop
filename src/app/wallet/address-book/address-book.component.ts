@@ -49,7 +49,7 @@ export class AddressBookComponent implements OnInit {
   }
 
   /*
-  
+
     RPC Logic
 
   */
