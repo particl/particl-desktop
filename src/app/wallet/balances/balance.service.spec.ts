@@ -5,7 +5,7 @@ import { RPCModule } from '../../core/rpc/rpc.module';
 
 import { BalanceService } from './balance.service';
 
-import { Balances } from '.balances.model';
+import { Balances } from './balances.model';
 
 
 describe('BalanceService', () => {
