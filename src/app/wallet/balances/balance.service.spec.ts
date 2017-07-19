@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { SharedModule } from '../../shared/shared.module';
-import { RPCModule } from '../../core/rpc/rpc.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { BalanceService } from './balance.service';
 
@@ -13,7 +13,7 @@ describe('BalanceService', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RPCModule.forRoot()
+        RpcModule.forRoot()
       ],
       providers: [
         BalanceService,
