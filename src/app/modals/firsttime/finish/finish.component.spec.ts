@@ -22,4 +22,8 @@ describe('FinishComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should close', () => {
+    expect(component.close).toBeTruthy();
+  });
 });

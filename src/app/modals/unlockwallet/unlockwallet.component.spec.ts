@@ -4,7 +4,7 @@ import { PassphraseComponent } from '../shared/passphrase/passphrase.component';
 import { ModalsModule } from '../modals.module';
 
 describe('PassphraseComponent', () => {
-  let component: PassphraseComponent;
+  let component: PassphraseComponent; // TODO: ????????
   let fixture: ComponentFixture<PassphraseComponent>;
 
   beforeEach(async(() => {
@@ -23,4 +23,10 @@ describe('PassphraseComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+/*
+  it('should unlock', () => {
+    component.unlock;
+    expect(component.unlock).toBeTruthy();
+  });
+  */
 });

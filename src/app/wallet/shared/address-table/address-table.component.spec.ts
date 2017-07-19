@@ -32,4 +32,12 @@ describe('AddressTableComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should changePage', () => {
+    expect(component.pageChanged).toBeTruthy();
+  });
+
+  it('should get addressService', () => {
+    expect(component.addressService).toBeDefined();
+  });
 });

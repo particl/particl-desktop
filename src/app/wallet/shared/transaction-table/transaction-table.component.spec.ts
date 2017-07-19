@@ -34,4 +34,16 @@ describe('TransactionTableComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should change page', () => {
+    expect(component.pageChanged).toBeTruthy();
+  });
+
+  it('should get log', () => {
+    expect(component.log).toBeDefined();
+  });
+
+  it('should get txService', () => {
+    expect(component.txService).toBeDefined();
+  });
 });

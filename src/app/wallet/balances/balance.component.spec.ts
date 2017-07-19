@@ -36,4 +36,24 @@ describe('BalanceComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should get balance before point', () => {
+    expect(component.getBalanceBeforePoint).toBeTruthy();
+  });
+
+  it('should get balance point', () => {
+    expect(component.getBalancePoint).toBeTruthy();
+  });
+
+  it('should get balance after point', () => {
+    expect(component.getBalanceAfterPoint).toBeTruthy();
+  });
+
+  it('should get type of balance', () => {
+    expect(component.getTypeOfBalance).toBeTruthy();
+  });
+
+  it('should get balanceService', () => {
+    expect(component.balanceService).toBeDefined();
+  });
 });

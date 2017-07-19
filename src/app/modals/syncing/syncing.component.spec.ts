@@ -35,4 +35,32 @@ describe('SyncingComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should calculateSyncingDetails', () => {
+    expect(component.calculateSyncingDetails).toBeTruthy();
+  });
+
+  it('should getRemainder', () => {
+    expect(component.getRemainder).toBeTruthy();
+  });
+
+  it('should getEstimateTimeLeft', () => {
+    expect(component.getEstimateTimeLeft).toBeTruthy();
+  });
+
+  it('should get estimatedTimeLeft', () => {
+    expect(component.estimatedTimeLeft).toBe(0);
+  });
+
+  it('should get increasePerMinute', () => {
+    expect(component.increasePerMinute).toBe(0);
+  });
+/*
+  it('should get lastBlockTime', () => {
+    expect(component.lastBlockTime).toBe(Date;
+  });
+*/
+  it('should get remainingBlocks', () => {
+    expect(component.remainingBlocks).toBeDefined();
+  });
 });

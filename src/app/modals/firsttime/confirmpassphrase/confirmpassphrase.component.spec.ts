@@ -27,4 +27,12 @@ describe('ConfirmpassphraseComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should go back', () => {
+    expect(component.back).toBeTruthy();
+  });
+
+  it('should go next', () => {
+    expect(component.next).toBeTruthy();
+  });
 });

@@ -34,4 +34,16 @@ describe('StatusComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should getIconNumber', () => {
+    expect(component.getIconNumber).toBeTruthy();
+  });
+
+  it('should rpc_walletEncryptionStatus', () => {
+    expect(component.rpc_walletEncryptionStatus).toBeTruthy();
+  });
+
+  it('should get encryptionStatus', () => {
+    expect(component.encryptionStatus).toBe('_off');
+  });
 });
