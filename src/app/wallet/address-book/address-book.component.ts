@@ -15,6 +15,7 @@ export class AddressBookComponent implements OnInit {
 
   openNewAddressModal: boolean = false;
 
+
   constructor(private _rpc: RPCService) { }
 
   ngOnInit() {
@@ -25,6 +26,13 @@ export class AddressBookComponent implements OnInit {
     }
   }
 
+  /*
+
+    UI Logic
+
+  */
+
+
   openNewAddress() {
     this.openNewAddressModal = true;
   }
@@ -33,6 +41,28 @@ export class AddressBookComponent implements OnInit {
     this.openNewAddressModal = false;
   }
 
+  /**
+  * Returns if the entered address is valid or not.
+  */
+  checkAddress(): boolean {
+    return this.validAddress;
+  }
+
+  /*
+  
+    RPC Logic
+
+  */
+
+
+  /*
+    Add address to addressbook
+  */
+
+
+  /**
+  * Adds the address to the addressbook if valid & has label.
+  */
   addAddressToBook() {
     if (this.validAddress && this.label !== undefined) {
 
@@ -48,21 +78,38 @@ export class AddressBookComponent implements OnInit {
     }
   }
 
+  /**
+  * Address was added succesfully to the address book.
+  */
   rpc_addAddressToBook_success(json: Object) {
-    console.log('rpc_addAddressToBook_success: yayaya')
     if (json['result'] === 'success') {
       alert('Address successfully added to the addressbook!');
 
-      // TODO: remove specialPoll!
+      // TODO: remove specialPoll! (updates the address table)
       this._rpc.specialPoll();
     }
   }
 
+  /**
+  * Address was not added to the addressbook
+  * e.g: wallet still locked
+  */
   rpc_addAddressToBook_failed(json: Object) {
     console.log('rpc_addAddressToBook_failed');
     console.log(json);
   }
 
+
+
+
+  /*
+    Verify address
+  */
+
+
+  /**
+  * Verify if address is valid through RPC call and set state to validAddress..
+  */
   verifyAddress() {
     if (this.address === undefined || this.address === '') {
       this.validAddress = undefined;
@@ -73,12 +120,11 @@ export class AddressBookComponent implements OnInit {
     return;
   }
 
+  /**
+  * Callback of verifyAddress, sets state.
+  */
   rpc_verifyAddress_success(json: Object) {
     this.validAddress = json['isvalid'];
    }
-
-  checkAddress(): boolean {
-    return this.validAddress;
-  }
 
 }
