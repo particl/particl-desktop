@@ -44,6 +44,10 @@ export class AddressLookupComponent implements OnInit {
 
   */
 
+  /**
+  * Returns a filtered addressStore (query and filter)
+  * @return Array
+  */
   page () {
     const query: string = this.query;
      return this.addressStore.filter(el => {
@@ -87,8 +91,8 @@ export class AddressLookupComponent implements OnInit {
     this._rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success, this.rpc_loadAddressCount_failed);
   }
 
-  /*
-    Load address count
+  /**
+    Successfully loaded address count
   */
   rpc_loadAddressCount_success(json: Object): void {
     this._addressCount = json['num_send'];
@@ -101,11 +105,15 @@ export class AddressLookupComponent implements OnInit {
 
   }
 
+  /**
+    Failed to load the address count
+  */
   rpc_loadAddressCount_failed(json: Object): void {
-    console.log('Shit,failed!' + json);
+    console.log('rpc_loadAddressCount_failed!' + json);
   }
-  /*
-    Load addresses into lookupAddresses!
+
+  /**
+    Callback that loads addresses into addressStore!
   */
   rpc_loadAddresses_success(json: Array<Object>) {
     this.addressStore = json;
