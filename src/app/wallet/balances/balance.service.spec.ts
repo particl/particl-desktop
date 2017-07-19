@@ -1,17 +1,20 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ElectronService } from 'ngx-electron';
+import { SharedModule } from '../../shared/shared.module';
+import { RPCModule } from '../../core/rpc/rpc.module';
 
 import { BalanceService } from './balance.service';
 
-import { SharedModule } from '../../shared/shared.module';
+import { Balances } from '.balances.model';
 
-import { RPCService } from '../../core/rpc/rpc.service';
 
 describe('BalanceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [
+        SharedModule,
+        RPCModule.forRoot()
+      ],
       providers: [
         BalanceService,
         ElectronService,
