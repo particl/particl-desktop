@@ -17,8 +17,6 @@ describe('BalanceService', () => {
       ],
       providers: [
         BalanceService,
-        ElectronService,
-        RPCService
       ]
     });
   });
