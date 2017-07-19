@@ -78,7 +78,6 @@ export class RPCService {
       valid = true;
     }
     if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
-      console.log('registering address call');
       this._callOnAddress.push(_call);
       valid = true;
     }
