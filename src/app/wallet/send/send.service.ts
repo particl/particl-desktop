@@ -17,9 +17,9 @@ export class SendService {
   /*
 
     RPC LOGIC
-  
+
   */
-  
+
   sendTransaction(input: string, output: string, address: string, amount: number, comment: string, substractfee: boolean,
     narration: string, ringsize: number, numsignatures: number) {
 
@@ -171,7 +171,7 @@ export class SendService {
   /*
 
     UI LOGIC
-  
+
   */
 
 

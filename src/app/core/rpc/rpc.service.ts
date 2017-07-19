@@ -42,11 +42,12 @@ export class RPCService {
 
 /**
  * The call function will perform a single call to the particld daemon and perform a callback to
- * the instance through the function as defined in the params. 
+ * the instance through the function as defined in the params.
  *
  * @param {Injectable} instance  The instance in which the callback functions reside.
  * @param {string} method  The JSON-RPC method to call, see ```./particld help```
- * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request. The content of the array is of type any (ints, strings, booleans etc)
+ * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request. 
+ * The content of the array is of type any (ints, strings, booleans etc)
  * @param {Function} successCB  The function to callback (in instance) when the RPC request was successful.
  * @param {Function} errorCB  The function to callback (in instance) when the RPC request failed.
  *
@@ -56,9 +57,9 @@ export class RPCService {
  * ```
  * ```JavaScript
  * rpc_loadTwentyTxs_success(json: Object) {
- *   console.log("Loaded transactions!"); 
- *   console.log(json); 
- * }  
+ *   console.log("Loaded transactions!");
+ *   console.log(json);
+ * }
  * ...
  * ```
  *
@@ -97,13 +98,14 @@ export class RPCService {
   }
 
 /**
- * The register function will register a call to the particld daemon 
+ * The register function will register a call to the particld daemon
  * which is executed whenever the trigger happens (new block, new transactions through ZMQ)
- * and performs a callback to the instance through the function as defined in the params. 
+ * and performs a callback to the instance through the function as defined in the params.
  *
  * @param {Injectable} instance  The instance in which the callback functions reside.
  * @param {string} method  The JSON-RPC method to call, see ```./particld help```
- * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request. The content of the array is of type any (ints, strings, booleans etc)
+ * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request. 
+ * The content of the array is of type any (ints, strings, booleans etc)
  * @param {Function} successCB  The function to callback (in instance) when the RPC request was successful.
  * @param {string} when  The trigger to register to: 'block' on a new block, 'tx' on a new transactions, 'address' on address changes.
  * @param {Function} errorCB  The function to callback (in instance) when the RPC request failed.
@@ -114,9 +116,9 @@ export class RPCService {
  * ```
  * ```JavaScript
  * rpc_loadTwentyTxs_success(json: Object) {
- *   console.log("Loaded transactions!"); 
- *   console.log(json); 
- * }  
+ *   console.log("Loaded transactions!");
+ *   console.log(json);
+ * }
  * ...
  * ```
  *
