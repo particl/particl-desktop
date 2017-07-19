@@ -35,7 +35,10 @@ export class AddressBookComponent implements OnInit {
 
   addAddressToBook() {
     if (this.validAddress && this.label !== undefined) {
-      this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label], this.rpc_addAddressToBook_success, this.rpc_addAddressToBook_failed);
+
+      this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label],
+        this.rpc_addAddressToBook_success, this.rpc_addAddressToBook_failed);
+
       this.address = undefined;
       this.validAddress = undefined;
       this.label = '';
