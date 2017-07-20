@@ -30,8 +30,11 @@ export class BlockStatusService {
 
   constructor(
     private _peerService: PeerService,
-    private _rpcService: RPCService
+    private _rpc: RPCService
   ) {
+    /*
+    * Get internal block height and calculate syncing details (ETA)
+    */
     this._subBlockInternal = this._peerService.getBlockCount()
       .subscribe(
         height => {
@@ -46,6 +49,10 @@ export class BlockStatusService {
           }
         },
         error => console.log('SyncingComponent subscription error:' + error));
+
+    /*
+    * Get heighest block count of peers and calculate remainerders.
+    */
     this._subBlockNetwork = this._peerService.getBlockCountNetwork()
       .subscribe(
         height => {
@@ -58,10 +65,17 @@ export class BlockStatusService {
         error => console.log('SyncingComponent subscription error:' + error));
   }
 
+  /**
+  * UI logic; has the syncing modal been opened manually?
+  */
   setManuallyOpened() {
     this.status.manuallyOpened = true;
   }
 
+
+  /**
+  * Calculates the details (percentage of synchronised, estimated time left, ..)
+  */
   calculateSyncingDetails(newTime: Date, newHeight: number) {
 
     const internalBH = this.highestBlockHeightInternal;
@@ -103,6 +117,9 @@ export class BlockStatusService {
     this.statusUpdates.next(this.status);
   }
 
+  /**
+  * Returns how many blocks remain to be synced.
+  */
   getRemainder() {
     const diff = this.highestBlockHeightNetwork - this.highestBlockHeightInternal;
     return (diff < 0 ? 0 : diff);
@@ -110,6 +127,10 @@ export class BlockStatusService {
 
   // TODO: average out the estimated time left to stop random shifting when slowed down.
   // and localize
+
+  /**
+  * Calculates how many time is left to be fully synchronised.
+  */
   estimateTimeLeft(blockDiff: number, timeDiff: number) {
 
     let returnString = '';
