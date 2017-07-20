@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { ElectronService } from 'ngx-electron';
 
@@ -18,8 +17,7 @@ describe('AddressTableComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        RpcModule.forRoot(),
-        NgxDatatableModule
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();
