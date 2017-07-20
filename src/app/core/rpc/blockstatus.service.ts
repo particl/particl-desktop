@@ -129,7 +129,7 @@ export class BlockStatusService {
   // and localize
 
   /**
-  * Calculates how many time is left to be fully synchronised.
+  * Calculates how much time is left to be fully synchronised.
   */
   estimateTimeLeft(blockDiff: number, timeDiff: number) {
 
