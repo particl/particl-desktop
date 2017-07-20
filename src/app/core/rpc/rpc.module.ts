@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ElectronService } from 'ngx-electron';
 import { RPCService } from './rpc.service';
 import { PeerService } from './peer.service';
+import { AddressRpcService } from './address-rpc.service';
 
 @NgModule({
   imports: [
@@ -17,10 +18,13 @@ export class RpcModule {
       providers: [
         RPCService,
         PeerService,
+        AddressRpcService,
         ElectronService
       ]
     };
   }
 }
+
 export { RPCService } from './rpc.service';
 export { PeerService } from './peer.service';
+export { AddressRpcService } from './address-rpc.service';

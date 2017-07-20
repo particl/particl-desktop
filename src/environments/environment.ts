@@ -4,5 +4,12 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 export const environment = {
   production: false,
-  envName: 'dev'
+  envName: 'dev',
+
+  server: {
+    hostname: 'localhost',
+    port: 51935, // no separate mainnet/testnet ports, assuming that we're always using testnet on dev
+    username: 'test',
+    password: 'test'
+  }
 };

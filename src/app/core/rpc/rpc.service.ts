@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
-
-import { Headers, Http } from '@angular/http';
-
-const MAINNET_PORT = 51935;
-const TESTNET_PORT = 51935;
-
-const HOSTNAME = 'localhost';
+import { Log } from 'ng2-logger';
+import { Headers, Http, RequestOptions } from '@angular/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class RPCService {
-  private hostname: String = HOSTNAME; // TODO: URL Flag / Settings
-  private port: number = TESTNET_PORT; // TODO: Mainnet / testnet flag...
 
-  private username: string = 'test';
-  private password: string = 'test';
+  private log: any = Log.create('rpc.service');
+
+  // don't know what was the plan regarding those todo's,
+  // below values are now set based on the environent
+  private hostname: String = environment.server.hostname; // TODO: URL Flag / Settings
+  private port: number = environment.server.port;         // TODO: Mainnet / testnet flag...
+  private username: string = environment.server.username;
+  private password: string = environment.server.password;
 
   private _callOnBlock: Array<any> = [];
   private _callOnTransaction: Array<any> = [];
@@ -25,25 +25,22 @@ export class RPCService {
 
   constructor(private http: Http, public electronService: ElectronService) {
     this.isElectron = this.electronService.isElectronApp;
+
+    this.log.d('configured to use API_URL:', this.getApiUrl());
+    this.log.d('authenticating with username: ' + this.username + 'and password: ' + this.password);
   }
 
   call(instance: Injectable, method: string, params: Array<any> | null, successCB: Function, errorCB?: Function): void {
-    const postData = JSON.stringify({
-      method: method,
-      params: params,
-      id: 1
-    });
-    const headers = new Headers();
 
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
-    headers.append('Accept', 'application/json');
+    const apiUrl = this.getApiUrl();
+    const postData = this.getPostData(method, params);
+    const options = this.getRequestOptions();
 
     if (this.isElectron) {
       // TODO: electron.ipcCall
     } else {
       this.http
-        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+        .post(apiUrl, postData, options)
         .subscribe(
           response => {
             successCB.call(instance, response.json().result);
@@ -103,4 +100,35 @@ export class RPCService {
     clearTimeout(this._pollTimout);
   }
 
+  /**
+   * returns the headers for a common api request
+   * @returns {Headers}
+   */
+  getHeaders(): any {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
+    headers.append('Accept', 'application/json');
+    return headers;
+  }
+
+  getRequestOptions(): RequestOptions {
+    return new RequestOptions({ method: 'POST', headers: this.getHeaders() });
+  }
+
+  getPostData(method: string, params: Array<any> | null): string {
+    return JSON.stringify({
+      method: method,
+      params: params,
+      id: 1
+    });
+  }
+
+  /**
+   *
+   * @returns {string}
+   */
+  getApiUrl(): string {
+    return 'http://' + this.hostname + ':' + this.port;
+  }
 }

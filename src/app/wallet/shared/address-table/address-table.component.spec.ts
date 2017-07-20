@@ -15,9 +15,9 @@ describe('AddressTableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-         SharedModule,
-         WalletModule.forRoot(),
-         RpcModule.forRoot()
+        SharedModule,
+        WalletModule.forRoot(),
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();

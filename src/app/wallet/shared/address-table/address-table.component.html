@@ -8,13 +8,18 @@
     <th *ngIf="displayToolsMenu">Tools</th>
     <th *ngIf="displayQrMenu">QR Code</th>
   </tr>
-  <tr *ngFor="let address of addressService.addresses">
+
+  <!--
+  getting addresses from the component rather than from the service
+  <tr *ngFor="let address of addressBookService.addresses">
+  -->
+  <tr *ngFor="let address of addresses">
     <td *ngIf="displayLabel" class="text-left">
       <span class="inline-header">{{ address.label }}</span>
     </td>
     <td *ngIf="displayAddress" class="text-left">
       <span class="inline-header">Address</span>
-      <span>{{ address.address }}</span>
+      <span id="address-{{ address.address }}">{{ address.address }}</span>
     </td>
     <td *ngIf="displayPublicKey">
       <span class="inline-header">Public Key</span>
@@ -27,10 +32,10 @@
     <td *ngIf="displayToolsMenu" class="divider text-center">
       <div class="inline-toolbar tools-menu">
         <!-- we can use ngx-clipboard -->
-        <span ngxClipboard [cbContent]="address.address" class="icon fa fa-clone"></span>
+        <span ngxClipboard [cbContent]="address.address" (click)="copyAddress(address.address)" class="icon fa fa-clone"></span>
         <!-- Open the modal for signing and verifying messages by address -->
         <span class="icon fa fa-shield"></span>
-        <span (click)="addressService.deleteAddress(address.address)" class="icon fa fa-trash color-red"></span>
+        <span (click)="onClickRemoveAddress(address.address)" class="icon fa fa-trash color-red"></span>
       </div>
     </td>
     <td *ngIf="displayQrMenu" class="divider text-center">
@@ -40,6 +45,21 @@
     </td>
   </tr>
 </app-table>
+<!--
+what is this [(ngModel)]="addressBookService.currentPage"
+-->
 
-<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE" ></pagination>
+<pagination *ngIf="displayPagination"
+  [boundaryLinks]="true"
+  (pageChanged)="onPageChanged($event)"
+  [totalItems]="addressCount.total"
+  [maxSize]="5"
+  [rotate]="false"
+  class="pagination-sm center"
+  previousText="&lsaquo;"
+  nextText="&rsaquo;"
+  firstText="&laquo;"
+  lastText="&raquo;"
+  [itemsPerPage]="itemsPerPage">
+</pagination>
+

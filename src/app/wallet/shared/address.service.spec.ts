@@ -1,10 +1,9 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { AddressService } from './address.service';
-
-import { ElectronService } from 'ngx-electron';
 import { SharedModule } from '../../shared/shared.module';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { AddressService } from './address.service';
+import { ElectronService } from 'ngx-electron';
+import { AddressRpcService } from '../../core/rpc/address-rpc.service';
 
 describe('AddressService', () => {
   beforeEach(() => {
@@ -13,7 +12,7 @@ describe('AddressService', () => {
       providers: [
         AddressService,
         ElectronService,
-        RPCService
+        AddressRpcService
       ]
     });
   });
