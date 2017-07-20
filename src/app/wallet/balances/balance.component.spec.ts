@@ -38,18 +38,22 @@ describe('BalanceComponent', () => {
   });
 
   it('should get balance before point', () => {
+    component.getBalanceBeforePoint();
     expect(component.getBalanceBeforePoint).toBeTruthy();
   });
 
   it('should get balance point', () => {
+    component.getBalancePoint();
     expect(component.getBalancePoint).toBeTruthy();
   });
 
   it('should get balance after point', () => {
+    //component.getBalanceAfterPoint()
     expect(component.getBalanceAfterPoint).toBeTruthy();
   });
 
   it('should get type of balance', () => {
+    component.getTypeOfBalance();
     expect(component.getTypeOfBalance).toBeTruthy();
   });
 

@@ -33,18 +33,22 @@ describe('SettingsComponent', () => {
   });
 
   it('should go to settingsTab', () => {
+    //component.settingsTab();
     expect(component.settings).toBeTruthy();
   });
 
   it('should applySettings', () => {
+    component.apply();
     expect(component.apply).toBeTruthy();
   });
 
   it('should cancel', () => {
+    component.cancel();
     expect(component.cancel).toBeTruthy();
   });
 
   it('should validate', () => {
+    component.validate();
     expect(component.validate).toBeTruthy();
   });
 

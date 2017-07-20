@@ -34,6 +34,7 @@ describe('AddressTableComponent', () => {
   });
 
   it('should changePage', () => {
+    //component.pageChanged();
     expect(component.pageChanged).toBeTruthy();
   });
 

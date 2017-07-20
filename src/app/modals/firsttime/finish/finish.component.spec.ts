@@ -24,6 +24,7 @@ describe('FinishComponent', () => {
   });
 
   it('should close', () => {
+    component.close();
     expect(component.close).toBeTruthy();
   });
 });

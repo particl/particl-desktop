@@ -36,6 +36,7 @@ describe('TransactionTableComponent', () => {
   });
 
   it('should change page', () => {
+    //component.pageChanged()
     expect(component.pageChanged).toBeTruthy();
   });
 

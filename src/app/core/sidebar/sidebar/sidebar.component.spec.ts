@@ -7,7 +7,7 @@ import { SidebarService } from '../sidebar.service';
 
 @Component({
  selector  : 'test-cmp',
- template  : '<sidebar [position]="left"></sidebar>',
+ template  : '<sidebar position="left"></sidebar>',
 })
 class TestWrapperComponent {
 }

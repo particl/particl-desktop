@@ -36,30 +36,25 @@ describe('SyncingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should calculateSyncingDetails', () => {
-    expect(component.calculateSyncingDetails).toBeTruthy();
-  });
-
-  it('should getRemainder', () => {
-    expect(component.getRemainder).toBeTruthy();
-  });
-
-  it('should getEstimateTimeLeft', () => {
-    expect(component.getEstimateTimeLeft).toBeTruthy();
-  });
-
-  it('should get estimatedTimeLeft', () => {
+  it('should calculateSyncingDetails and estimatedTimeLeft', () => {
+    component.calculateSyncingDetails(new Date(), 10);
+    console.log(component.estimatedTimeLeft);
     expect(component.estimatedTimeLeft).toBe(0);
   });
-
+/*
+  it('should getRemainder', () => {
+    component.getRemainder();
+    expect(component.)
+  });
+*/
   it('should get increasePerMinute', () => {
     expect(component.increasePerMinute).toBe(0);
   });
-/*
+
   it('should get lastBlockTime', () => {
-    expect(component.lastBlockTime).toBe(Date;
+    expect(component.lastBlockTime).toBeDefined();
   });
-*/
+
   it('should get remainingBlocks', () => {
     expect(component.remainingBlocks).toBeDefined();
   });

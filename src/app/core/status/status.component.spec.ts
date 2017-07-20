@@ -36,6 +36,7 @@ describe('StatusComponent', () => {
   });
 
   it('should getIconNumber', () => {
+    component.getIconNumber();
     expect(component.getIconNumber).toBeTruthy();
   });
 

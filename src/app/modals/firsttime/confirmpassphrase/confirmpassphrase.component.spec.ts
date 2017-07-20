@@ -29,10 +29,12 @@ describe('ConfirmpassphraseComponent', () => {
   });
 
   it('should go back', () => {
+    component.back();
     expect(component.back).toBeTruthy();
   });
 
   it('should go next', () => {
+    component.next();
     expect(component.next).toBeTruthy();
   });
 });

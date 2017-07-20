@@ -25,6 +25,7 @@ describe('PassphraseComponent', () => {
   });
 
   it('should unlock', () => {
+    //component.unlock()
     expect(component.unlock).toBeTruthy();
   });
 

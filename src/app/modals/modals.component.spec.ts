@@ -27,17 +27,20 @@ describe('ModalsComponent', () => {
   });
 
   it('should update progress', () => {
-    expect(component.updateProgress).toBeTruthy();
+    //component.updateProgress()
+    expect(component.syncPercentage).toBe(0);
   });
-
+/*
   it('should open', () => {
-    expect(component.open).toBeTruthy();
+    //component.open(any: message);
+    expect(component.syncString).toBeDefined();
   });
 
   it('should close', () => {
+    component.close();
     expect(component.close).toBeTruthy();
   });
-
+*/
   it('should get closeOnEscape', () => {
     expect(component.closeOnEscape).toBe(true);
   });
@@ -54,15 +57,4 @@ describe('ModalsComponent', () => {
     expect(component.modalContainer).toBeDefined();
   });
   */
-  it('should get staticModal', () => {
-    expect(component.staticModal).toBeDefined();
-  });
-
-  it('should get syncPercentage', () => {
-    expect(component.syncPercentage).toBe(0);
-  });
-
-  it('should get syncString', () => {
-    expect(component.syncString).toBe(undefined);
-  });
 });

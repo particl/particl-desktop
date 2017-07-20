@@ -25,10 +25,12 @@ describe('RecoverwalletComponent', () => {
   });
 
   it('should restore', () => {
+    //component.restore();
     expect(component.restore).toBeTruthy();
   });
 
   it('should go back', () => {
+    component.back();
     expect(component.back).toBeTruthy();
   });
 

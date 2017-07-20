@@ -26,12 +26,12 @@ describe('AddressLookupComponent', () => {
   });
 
   it('should show', () => {
-    component.staticLookup.show();
+    component.show();
     expect(component.staticLookup.isShown).toBe(true);
   });
 
   it('should hide', () => {
-    component.staticLookup.hide();
+    component.hide();
     expect(component.staticLookup.isShown).toBe(false);
   });
 
