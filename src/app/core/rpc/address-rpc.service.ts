@@ -70,7 +70,7 @@ export class AddressRpcService {
 
   private handleError (error: Response | any) {
     const errorMsg = (error.message) ? error.message : error.status ? error.status + ' - ' + error.statusText : 'Server error';
-    this.log.error('handleError: ', errorMsg);
+    this.log.er('handleError: ', errorMsg);
     return Observable.throw(errorMsg);
   }
 }
