@@ -1,10 +1,11 @@
-.logo {
+.logo-index {
+  height: 200px;
   max-width: 35%;
   margin: auto;
   margin: 60px auto 60px;
 }
 
-.center {
+.center-index {
   text-align: center;
 }
 
