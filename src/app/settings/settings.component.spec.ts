@@ -33,7 +33,7 @@ describe('SettingsComponent', () => {
   });
 
   it('should go to settingsTab', () => {
-    //component.settingsTab();
+    // component.settingsTab();
     expect(component.settings).toBeTruthy();
   });
 

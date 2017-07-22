@@ -32,7 +32,7 @@ describe('RecoverwalletComponent', () => {
   });
 
   it('should restore', () => {
-    //component.restore();
+    // component.restore();
     expect(component.restore).toBeTruthy();
   });
 

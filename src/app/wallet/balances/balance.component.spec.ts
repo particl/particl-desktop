@@ -48,7 +48,7 @@ describe('BalanceComponent', () => {
   });
 
   it('should get balance after point', () => {
-    //component.getBalanceAfterPoint()
+    // component.getBalanceAfterPoint()
     expect(component.getBalanceAfterPoint).toBeTruthy();
   });
 

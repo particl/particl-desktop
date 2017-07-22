@@ -7,7 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 
-describe('PassphraseComponent', () => {
+describe('UnlockwalletComponent', () => {
   let component: UnlockwalletComponent;
   let fixture: ComponentFixture<UnlockwalletComponent>;
 
@@ -33,7 +33,7 @@ describe('PassphraseComponent', () => {
   });
 
   it('should unlock', () => {
-    //component.unlock()
+    // component.unlock()
     expect(component.unlock).toBeTruthy();
   });
 

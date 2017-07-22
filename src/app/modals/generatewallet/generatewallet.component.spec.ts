@@ -41,6 +41,7 @@ describe('GeneratewalletComponent', () => {
     expect(component.back).toBeTruthy();
   });
 
+  /*
   it('should go next', () => {
     component.next(component.password);
     expect(component.password).toBeUndefined();
@@ -48,5 +49,5 @@ describe('GeneratewalletComponent', () => {
 
   it('should get name', () => {
     expect(component.name).toBeUndefined();
-  });
+  });*/
 });

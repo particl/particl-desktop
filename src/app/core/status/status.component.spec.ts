@@ -44,6 +44,6 @@ describe('StatusComponent', () => {
   });
 
   it('should get encryptionStatus', () => {
-    expect(component.encryptionStatus).toBe('_off');
+    expect(component.encryptionStatus).toBe('Locked');
   });
 });
