@@ -30,4 +30,9 @@ describe('HistoryComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should filter by category', () => {
+    //component.filterByCategory();
+    expect(component.category).toBeDefined();
+  });
 });

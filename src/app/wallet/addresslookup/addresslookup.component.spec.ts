@@ -24,4 +24,26 @@ describe('AddressLookupComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should show', () => {
+    component.show();
+    expect(component.staticLookup.isShown).toBe(true);
+  });
+
+  it('should hide', () => {
+    component.hide();
+    expect(component.staticLookup.isShown).toBe(false);
+  });
+
+  it('should get filterAddress', () => {
+    expect(component.filterAddress).toBe(undefined);
+  });
+
+  it('should get lookupAddresses', () => {
+    expect(component.lookupAddresses).toBeDefined();
+  });
+
+  it('should get staticLookup', () => {
+    expect(component.staticLookup).toBeDefined();
+  });
 });

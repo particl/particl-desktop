@@ -32,4 +32,8 @@ describe('PassphraseComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should get words', () => {
+    expect(component.words).toBeDefined();
+  });
 });

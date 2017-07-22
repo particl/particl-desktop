@@ -32,4 +32,18 @@ describe('UnlockwalletComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should get password input type', () => {
+    component.passwordInputType();
+    expect(component.password).toBeUndefined();
+  });
+
+  it('should unlock', () => {
+    component.unlock();
+    expect(component.password).toBeUndefined();
+  });
+
+  it('should get showPass', () => {
+    expect(component.showPass).toBe(false);
+  });
 });

@@ -25,4 +25,36 @@ describe('ModalsComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should update progress', () => {
+    //component.updateProgress()
+    expect(component.syncPercentage).toBe(0);
+  });
+/*
+  it('should open', () => {
+    //component.open(any: message);
+    expect(component.syncString).toBeDefined();
+  });
+
+  it('should close', () => {
+    component.close();
+    expect(component.close).toBeTruthy();
+  });
+*/
+  it('should get closeOnEscape', () => {
+    expect(component.closeOnEscape).toBe(true);
+  });
+
+  it('should get hasScrollY', () => {
+    expect(component.hasScrollY).toBe(false);
+  });
+
+  it('should get modal', () => {
+    expect(component.modal).toBe(undefined);
+  });
+/*
+  it('should get modalContainer', () => {
+    expect(component.modalContainer).toBeDefined();
+  });
+  */
 });

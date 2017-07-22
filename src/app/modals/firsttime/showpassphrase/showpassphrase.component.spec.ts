@@ -34,4 +34,14 @@ describe('ShowpassphraseComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should go back', () => {
+    component.back();
+    expect(component.back).toBeTruthy();
+  });
+
+  it('should go next', () => {
+    component.next();
+    expect(component.next).toBeTruthy();
+  });
 });

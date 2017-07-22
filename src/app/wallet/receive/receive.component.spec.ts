@@ -37,4 +37,142 @@ describe('ReceiveComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should execute rpc_update', () => {
+    component.rpc_update();
+    expect(component.rpc_update).toBeTruthy();
+  });
+
+  it('should execute rpc_loadAddressCount', () => {
+    component.rpc_loadAddressCount(new Object);
+    expect(component.rpc_loadAddressCount).toBeTruthy();
+  });
+
+  it('should execute rpc_loadAddresses', () => {
+    component.rpc_loadAddresses(new Object);
+    expect(component.rpc_loadAddresses).toBeTruthy();
+  });
+
+  it('should addAddress', () => {
+    //component.addAddress(new Object, );
+    expect(component.addAddress).toBeTruthy();
+  });
+
+  it('should sortArrays', () => {
+    //component.sortArrays();
+    expect(component.sortArrays).toBeTruthy();
+  });
+
+  it('should search', () => {
+    //component.search();
+    expect(component.search).toBeTruthy();
+  });
+
+  it('should changeType', () => {
+    //component.changeType()
+    expect(component.changeType).toBeTruthy();
+  });
+
+  it('should loadPages', () => {
+    //component.loadPages()
+    expect(component.loadPages).toBeTruthy();
+  });
+
+  it('should checkIfFreshAddress', () => {
+    component.checkIfFreshAddress();
+    expect(component.checkIfFreshAddress).toBeTruthy();
+  });
+
+  it('should rpc_callbackFreshAddress', () => {
+    component.rpc_callbackFreshAddress(new Object);
+    expect(component.rpc_callbackFreshAddress).toBeTruthy();
+  });
+
+  it('should rpc_callbackGenerateNewAddress', () => {
+    component.rpc_callbackGenerateNewAddress(new Object);
+    expect(component.rpc_callbackGenerateNewAddress).toBeTruthy();
+  });
+
+  it('should pageNav', () => {
+    component.pageNav();
+    expect(component.pageNav).toBeTruthy();
+  });
+
+  it('should go to previousPage', () => {
+    component.previousPage();
+    expect(component.previousPage).toBeTruthy();
+  });
+
+  it('should go to nextPage', () => {
+    component.nextPage();
+    expect(component.nextPage).toBeTruthy();
+  });
+
+  it('should gotoPage', () => {
+    //component.gotoPage();
+    expect(component.gotoPage).toBeTruthy();
+  });
+
+  it('should copyAddress', () => {
+    //component.copyAddress();
+    expect(component.copyAddress).toBeTruthy();
+  });
+
+  it('should newAddress', () => {
+    component.newAddress();
+    expect(component.newAddress).toBeTruthy();
+  });
+
+  it('should selectInput', () => {
+    component.selectInput();
+    expect(component.selectInput).toBeTruthy();
+  });
+
+  it('should get addresses', () => {
+    expect(component.addresses).toBeDefined();
+  });
+
+  it('should get defaultAddress', () => {
+    expect(component.defaultAddress).toBeDefined();
+  });
+
+  it('should get entriesPerPage', () => {
+    expect(component.entriesPerPage).toBe(6);
+  });
+
+  it('should get initialized', () => {
+    expect(component.initialized).toBe(false);
+  });
+
+  it('should get nav', () => {
+    expect(component.nav).toBe(undefined);
+  });
+
+  it('should get page', () => {
+    expect(component.page).toBe(1);
+  });
+
+  it('should get pages', () => {
+    expect(component.pages).toBeDefined();
+  });
+
+  it('should get qr', () => {
+    expect(component.qr).toBeDefined();
+  });
+
+  it('should get query', () => {
+    expect(component.query).toBe(undefined);
+  });
+
+  it('should get searchSubset', () => {
+    expect(component.searchSubset).toBeDefined();
+  });
+
+  it('should get selected', () => {
+    expect(component.selected).toBeDefined();
+  });
+
+  it('should get type', () => {
+    expect(component.type).toBe('public');
+  });
 });
