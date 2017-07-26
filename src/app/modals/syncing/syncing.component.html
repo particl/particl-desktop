@@ -3,7 +3,9 @@
     <div class="col-xs-12 text-center">
       The displayed information may be out of date. Your wallet automatically synchronizes with the Particl network after a connection is established,
       but this process has not completed yet. This means that recent transactions will not be visible, and the balance may not be up-to-date until this
-      process has completed. <b>Spending Particl may not be possible during that phase!</b><!-- TODO: Red bold text (Information / Alert / Warning class?) -->
+      process has completed.
+		<div class="alert"><b>SPENDING PARTICL MAY NOT BE POSSIBLE DURING THAT PHASE!</b><!-- TODO: Red bold text (Information / Alert / Warning class?) -->
+		</div> 
     </div>
   </div>
 </div>
@@ -11,24 +13,24 @@
 <hr class="margin-top-100px">
 
 <div class="container">
-  <div class="row text-center">
+  <div class="row text-center syncing-blocks">
     <div class="col-md-3 col-xs-6">
-      <h3>Amount of blocks left</h3>
+      <h4>AMOUNT OF BLOCKS LEFT</h4>
       <br />
       {{ getRemainder() }}
     </div>
     <div class="col-md-3 col-xs-6">
-      <h3>Last block time</h3>
+      <h4>LAST BLOCK TIME</h4>
       <br />
       {{ lastBlockTime }}
     </div>
     <div class="col-md-3 col-xs-6">
-      <h3>Progress increase per minute</h3>
+      <h4>PROGRESS INCREASE PER MINUTE</h4>
       <br />
       {{ increasePerMinute }}%
     </div>
     <div class="col-md-3 col-xs-6">
-      <h3>Estimated time left until synced</h3>
+      <h4>ESTIMATED TIME LEFT UNTIL SYNCED</h4>
       <br />
       {{ getEstimateTimeLeft() }}
     </div>
