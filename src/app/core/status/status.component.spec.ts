@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TooltipModule } from 'ngx-bootstrap';
 import { StatusComponent } from './status.component';
 
+import { ModalsModule } from '../../modals/modals.module';
 import { SharedModule } from '../../shared/shared.module';
-import { ElectronService } from 'ngx-electron';
-
-import { PeerService } from '../rpc/peer.service';
-import { RPCService } from '../rpc/rpc.service';
+import { RpcModule } from '../rpc/rpc.module';
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
@@ -15,11 +14,11 @@ describe('StatusComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ StatusComponent ],
-      imports: [SharedModule],
-      providers: [
-        ElectronService,
-        RPCService,
-        PeerService
+      imports: [
+       SharedModule,
+       RpcModule.forRoot(),
+       TooltipModule.forRoot(),
+       ModalsModule
       ]
     })
     .compileComponents();
@@ -45,6 +44,6 @@ describe('StatusComponent', () => {
   });
 
   it('should get encryptionStatus', () => {
-    expect(component.encryptionStatus).toBe('_off');
+    expect(component.encryptionStatus).toBe('Locked');
   });
 });

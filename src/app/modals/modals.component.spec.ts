@@ -3,6 +3,10 @@ import { ModalModule } from 'ngx-bootstrap';
 
 import { ModalsComponent } from './modals.component';
 import { ModalsModule } from './modals.module';
+import { RpcModule } from '../core/rpc/rpc.module';
+import { SharedModule } from '../shared/shared.module';
+
+import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
 
 describe('ModalsComponent', () => {
@@ -11,7 +15,12 @@ describe('ModalsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule, ModalModule.forRoot()]
+      imports: [
+        ModalsModule,
+        ModalModule.forRoot(),
+        RpcModule.forRoot(),
+        SharedModule
+      ]
     })
     .compileComponents();
   }));
@@ -27,20 +36,19 @@ describe('ModalsComponent', () => {
   });
 
   it('should update progress', () => {
-    //component.updateProgress()
-    expect(component.syncPercentage).toBe(0);
-  });
-/*
-  it('should open', () => {
-    //component.open(any: message);
-    expect(component.syncString).toBeDefined();
+    component.updateProgress(5);
+
+    expect(component.syncPercentage).toBe(5);
   });
 
-  it('should close', () => {
+  it('should open and close', () => {
+    component.open(UnlockwalletComponent);
+
+    expect(component.modal).toBeDefined();
+
     component.close();
-    expect(component.close).toBeTruthy();
   });
-*/
+
   it('should get closeOnEscape', () => {
     expect(component.closeOnEscape).toBe(true);
   });

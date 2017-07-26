@@ -32,7 +32,7 @@ describe('HistoryComponent', () => {
   });
 
   it('should filter by category', () => {
-    //component.filterByCategory();
+    // component.filterByCategory();
     expect(component.category).toBeDefined();
   });
 });

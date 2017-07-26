@@ -1,8 +1,14 @@
 .reserved-area {
-  height: 250px;
-  border-style: dashed;
-  border-width: 2px;
-  border-color: #EBEBEB;
-  background-color: #F7F7F7;
-  margin-bottom: 15px;
+    height: 250px;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: #EBEBEB;
+    background-color: #F7F7F7;
+    margin-bottom: 15px;
+}
+
+.balance-bg {
+    background:#fff;
+    padding-bottom:25px;
+    border-bottom:1px solid #EAEAEA;
 }

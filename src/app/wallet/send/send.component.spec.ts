@@ -38,12 +38,12 @@ describe('SendComponent', () => {
   });
 
   it('should send tab', () => {
-    //component.sendTab();
+    // component.sendTab();
     expect(component.sendTab).toBeTruthy();
   });
 
   it('should get balances', () => {
-    //component.sendTab();
+    // component.sendTab();
     expect(component.getBalance).toBeTruthy()
   });
 
@@ -58,7 +58,7 @@ describe('SendComponent', () => {
   });
 
   it('should select address', () => {
-    //component.selectAddress();
+    // component.selectAddress();
     expect(component.selectAddress).toBeTruthy();
   });
 
@@ -93,7 +93,7 @@ describe('SendComponent', () => {
   });
 
   it('should call back address', () => {
-    //component.rpc_callbackVerifyAddress();
+    // component.rpc_callbackVerifyAddress();
     expect(component.rpc_callbackVerifyAddress).toBeTruthy();
   });
 

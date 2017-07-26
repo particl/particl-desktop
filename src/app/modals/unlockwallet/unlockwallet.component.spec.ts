@@ -2,14 +2,22 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UnlockwalletComponent } from '../../modals/unlockwallet/unlockwallet.component';
 import { ModalsModule } from '../modals.module';
+import { SharedModule } from '../../shared/shared.module';
 
-describe('PassphraseComponent', () => {
+import { RpcModule } from '../../core/rpc/rpc.module';
+
+
+describe('UnlockwalletComponent', () => {
   let component: UnlockwalletComponent;
   let fixture: ComponentFixture<UnlockwalletComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule]
+      imports: [
+        SharedModule,
+        ModalsModule,
+        RpcModule.forRoot()
+      ]
     })
     .compileComponents();
   }));
@@ -25,7 +33,7 @@ describe('PassphraseComponent', () => {
   });
 
   it('should unlock', () => {
-    //component.unlock()
+    // component.unlock()
     expect(component.unlock).toBeTruthy();
   });
 

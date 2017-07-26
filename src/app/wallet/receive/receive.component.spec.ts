@@ -38,6 +38,18 @@ describe('ReceiveComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should addAddress', () => {
+    const address = {
+      label: 'test address label',
+      address: 'test address address',
+      path: 'm/0/0'
+    }
+
+    component.addAddress(address, 'public');
+    expect(component.addresses.public.length).toBe(2);
+  });
+
+  /* We will come back to RPC at a later stage
   it('should execute rpc_update', () => {
     component.rpc_update();
     expect(component.rpc_update).toBeTruthy();
@@ -51,11 +63,6 @@ describe('ReceiveComponent', () => {
   it('should execute rpc_loadAddresses', () => {
     component.rpc_loadAddresses(new Object);
     expect(component.rpc_loadAddresses).toBeTruthy();
-  });
-
-  it('should addAddress', () => {
-    //component.addAddress(new Object, );
-    expect(component.addAddress).toBeTruthy();
   });
 
   it('should sortArrays', () => {
@@ -84,13 +91,13 @@ describe('ReceiveComponent', () => {
   });
 
   it('should rpc_callbackFreshAddress', () => {
-    component.rpc_callbackFreshAddress(new Object);
-    expect(component.rpc_callbackFreshAddress).toBeTruthy();
+    component.rpc_callbackFreshAddress_success(new Object);
+    expect(component.rpc_callbackFreshAddress_success).toBeTruthy();
   });
 
   it('should rpc_callbackGenerateNewAddress', () => {
-    component.rpc_callbackGenerateNewAddress(new Object);
-    expect(component.rpc_callbackGenerateNewAddress).toBeTruthy();
+    component.rpc_callbackGenerateFreshAddress_success(new Object);
+    expect(component.rpc_callbackGenerateFreshAddress_success).toBeTruthy();
   });
 
   it('should pageNav', () => {
@@ -127,6 +134,7 @@ describe('ReceiveComponent', () => {
     component.selectInput();
     expect(component.selectInput).toBeTruthy();
   });
+  */
 
   it('should get addresses', () => {
     expect(component.addresses).toBeDefined();

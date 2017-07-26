@@ -34,7 +34,7 @@
     appearance: none;
     -webkit-appearance: none;
     vertical-align: middle;
-    padding: 12px;
+    padding: 14px;
     background-color: #fbfbfb;
     border: 1px solid #ccc;
     box-shadow: none;
@@ -42,7 +42,10 @@
     border-radius: 4px;
     color: #fff;
     margin: 0;
+	line-height: normal;
   }
+
+
 
   input[type=radio] {
     border-radius: 99px;
@@ -76,7 +79,7 @@
     content: '\2022';
     font-size: 49px;
     top: -28px;
-    left: -8px;
+    left: -9px;
     font-family: "Arial";
     border: none;
   }

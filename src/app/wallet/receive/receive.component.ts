@@ -1,6 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { RPCService } from '../../core/rpc/rpc.service';
 
+import { Log } from 'ng2-logger';
+
 @Component({
   selector: 'app-receive',
   templateUrl: './receive.component.html',
@@ -23,6 +25,7 @@ export class ReceiveComponent implements OnInit {
     private: [this.defaultAddress],
     public: [this.defaultAddress]
   }
+
   selected: any = {
       id: 0,
       label: 'Empty label',
@@ -44,6 +47,8 @@ export class ReceiveComponent implements OnInit {
     el: undefined,
     size: undefined
   }
+
+  log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService) { }
 
@@ -73,8 +78,8 @@ export class ReceiveComponent implements OnInit {
     this.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
   }
 
-  rpc_loadAddressCount(JSON: Object) {
-    const count = JSON['num_receive'];
+  rpc_loadAddressCount(json: Object) {
+    const count = json['num_receive'];
     this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses);
   }
 
@@ -136,7 +141,7 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  addAddress(JSON: Object, type: string) {
+  addAddress(json: Object, type: string) {
     const tempAddress = {
       id: 0,
       label: 'Empty label',
@@ -145,21 +150,19 @@ export class ReceiveComponent implements OnInit {
       readable: ['Empty']
     }
 
-    tempAddress.address = JSON['address'];
-    if (JSON['label'] !== '') {
-      tempAddress.label = JSON['label'];
+    tempAddress.address = json['address'];
+    if (json['label'] !== '') {
+      tempAddress.label = json['label'];
     }
 
     tempAddress.readable = tempAddress.address.match(/.{1,4}/g);
 
     if (type === 'public') {
-      tempAddress.id = JSON['path'].replace('m/0/', '');
+      tempAddress.id = json['path'].replace('m/0/', '');
       this.addresses.public.unshift(tempAddress);
-      console.log('public ' + tempAddress.address);
     } else if (type === 'private') {
-      tempAddress.id = +(JSON['path'].replace('m/0\'/', '').replace('\'', '')) / 2;
+      tempAddress.id = +(json['path'].replace('m/0\'/', '').replace('\'', '')) / 2;
       this.addresses.private.unshift(tempAddress);
-      console.log('priv ' + tempAddress.address);
     }
   }
 
@@ -204,23 +207,35 @@ export class ReceiveComponent implements OnInit {
     this.pageNav();
   }
 
+  /*
+    Checks if the newest address is still fresh (hasn't received funds).
+    If it has received funds, generate a new address and update the table.
+  */
+
   checkIfFreshAddress() {
     if (this.addresses.public[0].address !== 'Empty address') {
-      this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackFreshAddress);
+      this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackFreshAddress_success);
     }
     setTimeout(() => { this.checkIfFreshAddress(); }, 30000);
   }
 
-  rpc_callbackFreshAddress(JSON: Object) {
-    console.log(JSON);
-    if (JSON > 0) {
-      this.rpc.call(this, 'getnewaddress', null, this.rpc_callbackGenerateNewAddress);
+  rpc_callbackFreshAddress_success(json: Object) {
+    if (json > 0) {
+      this.log.i('rpc_callbackFreshAddress_success: Funds received, need fresh public address');
+      this.rpc.call(this, 'getnewaddress', null, this.rpc_callbackGenerateFreshAddress_success);
     }
   }
 
-  rpc_callbackGenerateNewAddress(JSON: Object) {
+  rpc_callbackGenerateFreshAddress_success(json: Object) {
+    this.log.i('rpc_callbackGenerateFreshAddress_success: successfully retrieved fresh public address');
+
+    // just call for a complete update, just adding the address isn't possible because
     this.rpc_update();
   }
+
+  /*
+    Page navigation
+  */
 
   pageNav() {
     let nav = [];
@@ -301,15 +316,28 @@ export class ReceiveComponent implements OnInit {
     document.body.removeChild(selectable);
   }
 
+  /*
+    Generate a new address with label
+  */
   newAddress() {
     const label = prompt('Label for new address');
 
     if (this.type === 'public') {
-      this.rpc.call(this, 'getnewaddress', [label], this.rpc_callbackGenerateNewAddress);
+      this.rpc.call(this, 'getnewaddress', [label], this.rpc_generateNewAddress_success);
     } else if (this.type === 'private') {
-      this.rpc.call(this, 'getnewstealthaddress', [label], this.rpc_callbackGenerateNewAddress);
+      this.rpc.call(this, 'getnewstealthaddress', [label], this.rpc_generateNewAddress_success);
     }
   }
+
+  rpc_generateNewAddress_success () {
+    this.log.i('rpc_generateNewAddress_success: successfully retrieved new address');
+
+    // just call for a complete update, just adding the address isn't possible because
+    this.rpc_update();
+  }
+  /*
+    ------------------
+  */
 
   selectInput() {
     const input: any = document.getElementsByClassName('header-input')[0];
