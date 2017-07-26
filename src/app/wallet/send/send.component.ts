@@ -29,6 +29,7 @@ export class SendComponent implements OnInit, OnDestroy {
     toType: 'public',
     toAddress: '',
     validAddress: undefined,
+    validAmount: undefined,
     currency: 'part',
     privacy: 50
   };
@@ -49,6 +50,10 @@ export class SendComponent implements OnInit, OnDestroy {
     this._sub.unsubscribe();
   }
 
+  /*
+    UI logic
+  */
+
   sendTab(type: string) {
     this.type = type;
   }
@@ -61,25 +66,54 @@ export class SendComponent implements OnInit, OnDestroy {
     return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
   }
 
-  checkAddress(): boolean {
-    return this.send['validAddress'];
+
+  /*
+    Amount validation functions
+  */
+
+  checkAmount(): boolean {
+    // hooking verifyAmount here, on change of type -> retrigger check of amount.
+    this.verifyAmount();
+
+    return this.send['validAmount'];
   }
 
-  verifyAmount(): boolean {
-    if (this.send['amount'] === undefined || this.send['amount'] === 0 || this.send['fromType'] === '') {
-      return undefined;
+  verifyAmount() {
+
+    if (this.send['amount'] === undefined || +this.send['amount'] === 0 || this.send['fromType'] === '') {
+      this.send.validAmount = undefined;
+      return;
+    }
+
+    if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
+      this.send.validAmount = false;
+      return;
     }
 
     if ((this.send['amount'] + '').indexOf('.') >= 0 && (this.send['amount'] + '').split('.')[1].length > 8) {
-      return false;
+      this.send.validAmount = false;
+      return;
     }
 
 
     if (this.send['amount'] <= this.getBalance(this.send['fromType'])) {
-      return true;
+      this.send.validAmount = true;
+      return;
+    } else {
+      this.send.validAmount = false;
+      return;
     }
 
-    return false;
+  }
+
+  /*
+    Address validation functions
+      checkAddres: returns boolean, so it can be private later.
+      verifyAddress: calls RPC to validate it
+  */
+
+  checkAddress(): boolean {
+    return this.send['validAddress'];
   }
 
   verifyAddress() {
@@ -88,38 +122,33 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const ret = false;
-    if ((this.send.toAddress.indexOf('p') === 0) === false) {
-      if ((this.send.toAddress.indexOf('T') === 0) === false) {
-        this.send.validAddress = false;
-        return;
-      } else if (this.send.toAddress.length > 102) { // starts with T but over 102 chars
-        this.send.validAddress = false;
-        return;
-      }
-    } else if (this.send.toAddress.length > 34) { // starts with p but over 34 chars
-      this.send.validAddress = false;
-      return;
-    }
-
-    if (this.send.toAddress.length === 34 && this.send.toAddress.indexOf('p') === 0) {
-      this._rpc.call(this, 'validateaddress', [this.send.toAddress], this.rpc_callbackVerifyAddress);
-    }
-
-    if (this.send.toAddress.length === 102 && this.send.toAddress.indexOf('Tet') === 0) {
-      this._rpc.call(this, 'validateaddress', [this.send.toAddress], this.rpc_callbackVerifyAddress);
-    }
-
-    this.send.validAddress = undefined;
+    this._rpc.call(this, 'validateaddress', [this.send.toAddress], this.rpc_callbackVerifyAddress);
+    return;
   }
 
-  rpc_callbackVerifyAddress(JSON: Object) {
-    this.send.validAddress = JSON['isvalid'];
+  rpc_callbackVerifyAddress(json: Object) {
+    this.send.validAddress = json['isvalid'];
   }
 
-  openLookup() {
-    this.addressLookup.show();
+
+  /*
+    Clear the send object
+  */
+  clear() {
+    this.send = {
+      fromType: '',
+      toType: '',
+      validAddress: undefined,
+      validAmount: undefined,
+      currency: 'part',
+      privacy: 50
+    };
   }
+
+
+  /*
+     Validation modal + payment function!
+  */
 
   openValidate() {
     document.getElementById('validate').classList.remove('hide');
@@ -129,23 +158,7 @@ export class SendComponent implements OnInit, OnDestroy {
     document.getElementById('validate').classList.add('hide');
   }
 
-  selectAddress(address: string, label: string) {
-    this.send.toAddress = address;
-    this.send.toLabel = label;
-    this.addressLookup.hide();
-  }
-
-  clear() {
-    this.send = {
-      fromType: '',
-      toType: '',
-      currency: 'part',
-      privacy: 50
-    };
-  }
-
   pay() {
-    console.log(this.type, this.send);
 
     // TODO: Why are we making a copy of all the properties?
     const input = this.send.fromType;
@@ -162,66 +175,52 @@ export class SendComponent implements OnInit, OnDestroy {
 
     if (input === '' ) {
       alert('You need to select an input type (public, blind or anon)!');
+      this.closeValidate();
       return;
     }
     if (this.type === 'balanceTransfer' && output === '') {
       alert('You need to select an output type (public, blind or anon)!');
+      this.closeValidate();
       return;
-    }
-
-    if (amount === undefined ) {
-      alert('You need to enter an amount!');
-      return;
-    }
-
-    if (this.verifyAmount() === false) {
-      if (this.send.amount > this.getBalance(this.send.fromType)) {
-        alert('You\'re trying to send more money than you have.');
-        return;
-      }
-
-      if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
-        alert('The amount can only have 8 places after the decimal point.');
-        return;
-      }
-
     }
 
     if (this.type === 'balanceTransfer' && this.send.fromType === this.send.toType) {
       alert('You have selected "' + this.send.fromType + '"" twice!\n Balance transfers can only happen between two different types.');
+      this.closeValidate();
+      return;
     }
 
     if (this.type === 'sendPayment') {
       output = input;
 
-      if (address === undefined) {
-        alert('You need to enter an address to send to!');
-        return;
-      }
-
-      if (this.send.validAddress === false || this.send.validAddress === undefined) {
-        alert('You entered an invalid address!');
-        this.send.validAddress = false;
-        return;
-      }
-
-      if (output === 'private' && address.indexOf('Tet') !== 0) {
-        alert('Stealth address required for private transaction');
-      }
-
-      if (!confirm('Are you sure you want to send ' + amount + ' ' + currency + ' to ' + address + '?')) {
+      if (output === 'private' && address.length < 35) {
+        alert('Stealth address required for private transactions!');
+        this.closeValidate();
         return;
       }
 
       this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+
     } else if (this.type === 'balanceTransfer') {
-      if (!confirm('Are you sure you want to transfer ' + amount + ' ' + currency + ' from ' + input + ' to ' + output + '?')) {
-        return;
-      }
       this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
     }
+
     this.clear();
     this.closeValidate();
+  }
+
+  /*
+    AddressLookup Modal + set details
+  */
+
+  openLookup() {
+    this.addressLookup.show();
+  }
+
+  selectAddress(address: string, label: string) {
+    this.send.toAddress = address;
+    this.send.toLabel = label;
+    this.addressLookup.hide();
   }
 
 }
