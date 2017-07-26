@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { Log } from 'ng2-logger'
 
-import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { FinishComponent } from './firsttime/finish/finish.component';
-import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
-import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -18,21 +15,20 @@ export class ModalsService {
 
   private data: string;
 
+  private log: any = Log.create('modals.service');
+
   messages: Object = {
-    firstTime: FirsttimeComponent,
-    showPassphrase: ShowpassphraseComponent,
-    finish: FinishComponent,
-    generate: GeneratewalletComponent,
-    recover: RecoverwalletComponent,
+    createWallet: CreateWalletComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent
   };
 
-  open(modal: string): void {
+  open(modal: string, data?: any): void {
     if (modal in this.messages) {
-      this.message.next(this.messages[modal]);
+      this.log.d(`next modal: ${modal}`);
+      this.message.next({modal: this.messages[modal], data: data});
     } else {
-      console.error(`modal ${modal} doesn't exist`);
+      this.log.er(`modal ${modal} doesn't exist`);
     }
   }
 
@@ -47,14 +43,4 @@ export class ModalsService {
   getProgress() {
       return (this.progress.asObservable());
   }
-
-  storeData(data: any) {
-    this.data = data;
-  }
-
-  getData() {
-    const data: any = this.data;
-    this.data = undefined;
-    return (data);
-   }
 }

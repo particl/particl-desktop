@@ -1,7 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Log } from 'ng2-logger';
+
+import { IPassword } from './password.interface';
+
 import { ModalsModule } from '../../modals.module';
 import { RPCService } from '../../../core/rpc/rpc.service';
-import { Log } from 'ng2-logger';
+
 
 @Component({
   selector: 'app-password',
@@ -15,17 +19,17 @@ export class PasswordComponent {
 
   showPass: boolean = false;
 
-
   @Input() unlockText: string = 'YOUR WALLET PASSWORD';
   @Input() unlockButton: string;
   @Input() showStakeOnly: boolean = true;
+  @Input() isDisabled: boolean = false;
 
   /*
     The password emitter will send over an object with the password and stakingOnly info.
     This is useful as a building block in the initial setup, where we want to have the actual value of the password.
   */
   @Input() emitPassword: boolean = false;
-  @Output() passwordEmitter: EventEmitter<Object> = new EventEmitter<Object>();
+  @Output() passwordEmitter: EventEmitter<IPassword> = new EventEmitter<IPassword>();
 
 
   /*
@@ -74,12 +78,11 @@ export class PasswordComponent {
   */
 
   sendPassword() {
-    const obj = {
+    const pass: IPassword = {
       password: this.password,
       stakeOnly: this.stakeOnly
     }
-
-    this.passwordEmitter.emit(obj);
+    this.passwordEmitter.emit(pass);
   }
 
   /*

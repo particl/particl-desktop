@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FirsttimeComponent } from './firsttime.component';
+import { CreateWalletComponent } from './createwallet.component';
 import { ModalsService } from '../modals.service';
 
-describe('FirsttimeComponent', () => {
-  let component: FirsttimeComponent;
-  let fixture: ComponentFixture<FirsttimeComponent>;
+describe('CreateWalletComponent', () => {
+  let component: CreateWalletComponent;
+  let fixture: ComponentFixture<CreateWalletComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FirsttimeComponent ],
+      declarations: [ CreateWalletComponent ],
       providers: [ ModalsService ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FirsttimeComponent);
+    fixture = TestBed.createComponent(CreateWalletComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

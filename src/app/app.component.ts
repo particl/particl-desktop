@@ -8,7 +8,6 @@ import { RPCService, PeerService } from './core/rpc/rpc.module';
 import { SettingsService } from './settings/settings.service';
 // Modal example
 import { ModalsService } from './modals/modals.service';
-import {Logger} from 'ng2-logger/src/logger';
 
 @Component({
   selector: 'app-root',
@@ -86,7 +85,7 @@ export class AppComponent implements OnInit {
 
   // Modal examples
   firsttime() {
-    this._modalsService.open('firstTime');
+    this._modalsService.open('createWallet');
     this._modalsService.updateProgress(33);
   }
 

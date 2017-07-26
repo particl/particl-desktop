@@ -10,6 +10,10 @@
     vertical-align: middle;
   }
 
+  button.control:disabled {
+    background: #e0e0e0;
+  }
+
   /* TODO: Once we've structured the modals correctly, we'll move this there.
     This is still discussion on terminology (Passphrase vs password, etc) too */
   .recovery-word {
@@ -42,7 +46,7 @@
     border-radius: 4px;
     color: #fff;
     margin: 0;
-	line-height: 56px;
+	  line-height: 56px;
   }
 
 
@@ -71,14 +75,13 @@
     position: relative;
     font-size: 22px;
     float: right;
-    top: -15px;
+    top: -28px;
     left: -8px;
   }
 
   input[type=radio]:checked:after {
     content: '\2022';
     font-size: 49px;
-    top: -28px;
     left: -9px;
     font-family: "Arial";
     border: none;

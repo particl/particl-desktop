@@ -10,16 +10,14 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
+import { Log } from 'ng2-logger'
+
 import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { ModalsService } from './modals.service';
 
-import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { FinishComponent } from './firsttime/finish/finish.component';
-import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
-import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -28,11 +26,7 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
   templateUrl: './modals.component.html',
   styleUrls: ['./modals.component.scss'],
   entryComponents: [
-    FirsttimeComponent,
-    ShowpassphraseComponent,
-    FinishComponent,
-    GeneratewalletComponent,
-    RecoverwalletComponent,
+    CreateWalletComponent,
     SyncingComponent,
     UnlockwalletComponent
   ]
@@ -51,18 +45,15 @@ export class ModalsComponent implements DoCheck, OnInit {
   syncString: string;
   closeOnEscape: boolean = true;
 
+  private logger: any = Log.create('modals.component');
+
   constructor (
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
     private _modalService: ModalsService
   ) {
     this._modalService.getMessage().subscribe(
-      message => {
-        if (this.modal) {
-          this.close();
-        }
-        this.open(message)
-      }
+      message => this.open(message.modal, message.data)
     );
     this._modalService.getProgress().subscribe(
       progress => this.updateProgress(<number>progress)
@@ -93,12 +84,15 @@ export class ModalsComponent implements DoCheck, OnInit {
     this.syncString = progress < 100 ? `${progress} %` : 'Fully synced !'
   }
 
-  open(message: any) {
-    if (this.modal) {
-      this.modal.destroy();
-    }
+  open(message: any, data?: any) {
+    this.logger.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
+    this.modalContainer.clear();
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.modalContainer.createComponent(factory);
+    const dynamicModal = this.modal as any;
+    if (data && dynamicModal.instance.setData) {
+      dynamicModal.instance.setData(data);
+    }
     this.staticModal.show();
   }
 
