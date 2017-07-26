@@ -1,7 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet.component';
-import { ModalsService } from '../modals.service';
+import { ModalsModule } from '../modals.module';
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -9,8 +13,12 @@ describe('CreateWalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateWalletComponent ],
-      providers: [ ModalsService ]
+      imports: [
+        BrowserAnimationsModule,
+        SharedModule,
+        RpcModule.forRoot(),
+        ModalsModule
+      ]
     })
     .compileComponents();
   }));

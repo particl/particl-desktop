@@ -14,7 +14,7 @@ const MAX_WORDS = 24;
 })
 export class PassphraseComponent {
 
-  Arr = Array;
+  Arr: Function = Array;
 
   focused: number = 0;
   public editable: number[] = [];
@@ -33,7 +33,7 @@ export class PassphraseComponent {
   constructor (private _passphraseService: PassphraseService) { }
 
   checkFocus(event: KeyboardEvent, index: number) {
-    if (event.key === " ") {
+    if (event.key === ' ') {
       this.focused = index + 1;
     }
   }

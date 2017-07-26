@@ -1,14 +1,14 @@
 import { Directive, Input, ElementRef, Renderer } from '@angular/core';
 
 @Directive({
-  selector : '[focus]'
+  selector : '[appFocusElement]'
 })
-export class Focus {
+export class FocusDirective {
   constructor(public renderer: Renderer, public elementRef: ElementRef) {}
 
   @Input()
-  set focus(value :boolean) {
-    if(value) {
+  set appFocusElement(value: boolean) {
+    if (value) {
       this.renderer.invokeElementMethod(
           this.elementRef.nativeElement, 'focus', []);
     }

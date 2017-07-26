@@ -6,7 +6,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 
 import { ModalsService } from './modals.service';
 import { ModalsComponent } from './modals.component';
-import { Focus } from './modals.directives';
+import { FocusDirective } from './modals.directives';
 
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PasswordComponent } from './shared/password/password.component';
@@ -23,7 +23,7 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
     ClipboardModule
   ],
   declarations: [
-    Focus,
+    FocusDirective,
     ModalsComponent,
     PassphraseComponent,
     PasswordComponent,

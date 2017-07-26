@@ -1,5 +1,5 @@
 import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef } from '@angular/core';
-import { Log } from "ng2-logger";
+import { Log } from 'ng2-logger';
 
 import { IPassword } from '../shared/password/password.interface';
 
@@ -75,7 +75,7 @@ export class CreateWalletComponent {
       this.animationState = 'next';
       this.validating = false;
       this.step++;
-      setTimeout(()=> this.animationState='', 300);
+      setTimeout(() => this.animationState = '', 300);
       this.doStep();
     }
 
@@ -84,13 +84,13 @@ export class CreateWalletComponent {
   prevStep() {
     this.animationState = 'prev';
     this.step--;
-    setTimeout(()=> this.animationState='', 300);
+    setTimeout(() => this.animationState = '', 300);
     this.doStep();
   }
 
   doStep() {
 
-    switch(this.step) {
+    switch (this.step) {
       case 1:
         setTimeout(() => this.nameField.nativeElement.focus(this), 1);
         break;
@@ -103,26 +103,26 @@ export class CreateWalletComponent {
         this._passphraseService.generateMnemonic(this.mnemonicCallback.bind(this), this.password);
         break;
       case 4:
-        while(this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
-          let k = Math.floor(Math.random() * 23);
+        while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
+          const k = Math.floor(Math.random() * 23);
 
           this.words[k] = '';
         }
         break;
       case 5:
-        this.animationState='';
+        this.animationState = '';
         this.step = 4;
         this.errorString = '';
 
         this._passphraseService.importMnemonic(this.words, this.password, () => {
           this.log.i('Mnemonic imported successfully');
-          this.animationState='next';
+          this.animationState = 'next';
           this.step = 5;
-        },(response) => {
+        }, (response) => {
           this.errorString = response.error.message;
           // TODO: FAT ERROR
           this.log.er('Mnemonic import failed');
-        },);
+        });
         break;
     }
   }

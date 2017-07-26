@@ -50,7 +50,7 @@
   <div class="col-md-9" >
     <div class="col-md-2 col-sm-3 col-xs-4" *ngFor="let k of Arr(24).fill(); let i = index">
       <input
-        [focus]="i === focused"
+        [appFocusElement]="i === focused"
         [(ngModel)]="words[i]" type="text" name="recovery"
         [readonly]="readOnly"
         [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
