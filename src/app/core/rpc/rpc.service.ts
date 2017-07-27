@@ -38,6 +38,7 @@ export class RPCService {
 
   constructor(private http: Http, public electronService: ElectronService) {
     this.isElectron = this.electronService.isElectronApp;
+    this.poll();
   }
 
 /**
