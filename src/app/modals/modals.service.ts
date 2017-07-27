@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+
+import { BlockStatusService } from '../core/rpc/rpc.module';
 
 import { FirsttimeComponent } from './firsttime/firsttime.component';
 import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
@@ -16,6 +18,8 @@ export class ModalsService {
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
 
+  private state: boolean = false;
+
   private data: string;
 
   messages: Object = {
@@ -28,16 +32,27 @@ export class ModalsService {
     unlock: UnlockwalletComponent
   };
 
+  constructor (
+    private _statusService: BlockStatusService
+  ) {
+    this._statusService.statusUpdates.asObservable().subscribe(status => {
+      this.progress.next(status.syncPercentage);
+      this.needToOpenModal(status);
+    });
+  }
+
   open(modal: string): void {
     if (modal in this.messages) {
+      this.modal = this.messages[modal];
       this.message.next(this.messages[modal]);
+      this.state = true;
     } else {
       console.error(`modal ${modal} doesn't exist`);
     }
   }
 
-  updateProgress(progress: Number): void {
-    this.progress.next(progress);
+  close() {
+    this.state = false;
   }
 
   getMessage() {
@@ -56,5 +71,14 @@ export class ModalsService {
     const data: any = this.data;
     this.data = undefined;
     return (data);
+   }
+
+   needToOpenModal(status: any) {
+    const networkBH = status.networkBH;
+    const internalBH = status.internalBH;
+    // Open syncing Modal
+    if ((networkBH <= 0 || internalBH <= 0 || networkBH - internalBH > 50) && (!this.state)) {
+        this.open('syncing');
+    }
    }
 }

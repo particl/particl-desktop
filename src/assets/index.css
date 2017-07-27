@@ -1,0 +1,23 @@
+.logo-index {
+  height: 200px;
+  max-width: 35%;
+  margin: auto;
+  margin: 60px auto 60px;
+}
+
+.center-index {
+  text-align: center;
+}
+
+#loading {
+margin: 0 auto;
+}
+
+#quote {
+  font-size: 1.3em;
+}
+
+#quote-author {
+  font-style: italic;
+  color: #9ca09f;
+}
