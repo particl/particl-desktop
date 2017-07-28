@@ -42,7 +42,7 @@
     "open-sans-all": "^0.1.2",
     "protractor": "^5.1.2",
     "rxjs": "^5.4.2",
-    "zone.js": "0.8.14"
+    "zone.js": "0.8.16"
   },
   "devDependencies": {
     "@angular/cli": "^1.2.4",
@@ -64,7 +64,7 @@
     "node-sass": "^4.5.3",
     "protractor": "~5.1.0",
     "sass-lint": "^1.10.2",
-    "ts-node": "~3.2.2",
+    "ts-node": "~3.3.0",
     "tslint": "~5.5.0",
     "typescript": "~2.4.2"
   }

@@ -81,7 +81,9 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   updateProgress(progress: number) {
     this.syncPercentage = progress;
-    this.syncString = progress < 100 ? `${progress} %` : 'Fully synced !'
+    this.syncString = progress === 100
+      ? 'blockchain fully synced'
+      : `${progress.toFixed(2)} %`
   }
 
   open(message: any, data?: any) {
@@ -98,6 +100,7 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   close() {
     // remove and destroy message
+    this._modalService.close();
     this.staticModal.hide();
     this.modalContainer.remove();
     this.modal.destroy();

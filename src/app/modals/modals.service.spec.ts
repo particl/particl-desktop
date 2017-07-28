@@ -1,12 +1,19 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ModalsService } from './modals.service';
 import { ModalsModule } from './modals.module';
+import { RpcModule } from '../core/rpc/rpc.module';
+import { SharedModule } from '../shared/shared.module';
+
+import { ModalsService } from './modals.service';
 
 describe('ModalsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule]
+      imports: [
+        SharedModule,
+        ModalsModule,
+        RpcModule.forRoot()
+      ]
     });
   });
 

@@ -1,12 +1,12 @@
 <app-header>
   <div class="container-fluid header">
     <ul class="header-nav">
-      <li [class.active]="type == 'sendPayment'">
+      <li [class.active]="type === 'sendPayment'">
         <a href="javascript:void(0)" (click)="sendTab('sendPayment')">
           Send payment
         </a>
       </li>
-      <li [class.active]="type == 'balanceTransfer'">
+      <li [class.active]="type === 'balanceTransfer'">
         <a href="javascript:void(0)" (click)="sendTab('balanceTransfer')">
           Balance transfer
         </a>
@@ -31,7 +31,7 @@
 
 <div class="container-fluid">
 
-  <div *ngIf="type == 'sendPayment'">
+  <div *ngIf="type === 'sendPayment'">
 
     <div class="card row">
       <div class="input-label col-xs-3">From account</div>
@@ -55,7 +55,7 @@
 
     <div class="card row">
       <div class="input-label col-xs-3">Pay to</div>
-      <input class="col-xs-4" [ngClass]="{'good': checkAddress() == true, 'fault': checkAddress() == false }" type="text"
+      <input class="col-xs-4" [ngClass]="{'good': checkAddress() === true, 'fault': checkAddress() === false }" type="text"
         placeholder="The address to send the payment to"
         [(ngModel)]="send.toAddress" (input)="verifyAddress()">
       <input class="col-xs-2" type="text" placeholder="Enter a label"
@@ -80,8 +80,8 @@
       <div class="input-label col-xs-3">Amount</div>
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
-        [(ngModel)]="send.amount"
-        [ngClass]="{'good': verifyAmount() == true, 'fault': verifyAmount() == false }">
+        [(ngModel)]="send.amount" (input)="verifyAmount()"
+        [ngClass]="{'good': checkAmount() === true, 'fault': checkAmount() === false }">
       <div class="col-xs-2">
         <select [(ngModel)]="send.currency" class="form-control">
           <option value="part">PART</option>
@@ -109,7 +109,7 @@
 
 
 
-  <div *ngIf="type == 'balanceTransfer'">
+  <div *ngIf="type === 'balanceTransfer'">
 
     <div class="card row">
       <div class="input-label col-xs-3">From account</div>
@@ -199,7 +199,7 @@
     <button (click)="clear()">Clear all</button>
     <button class="validate"
       (click)="openValidate()"
-      [disabled]="!send.toAddress || !send.amount">
+      [disabled]="!checkAddress || !checkAmount">
       Make payment
     </button>
   </div>

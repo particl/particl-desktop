@@ -5,6 +5,7 @@ import { ElectronService } from 'ngx-electron';
 import { RPCService } from './rpc.service';
 import { PeerService } from './peer.service';
 import { PassphraseService } from './passphrase.service';
+import { BlockStatusService } from './blockstatus.service'
 
 @NgModule({
   imports: [
@@ -19,7 +20,9 @@ export class RpcModule {
         ElectronService,
         RPCService,
         PeerService,
-        PassphraseService
+        PassphraseService,
+        BlockStatusService,
+        ElectronService
       ]
     };
   }
@@ -27,3 +30,4 @@ export class RpcModule {
 export { RPCService } from './rpc.service';
 export { PeerService } from './peer.service';
 export { PassphraseService } from './passphrase.service';
+export { BlockStatusService } from './blockstatus.service'
