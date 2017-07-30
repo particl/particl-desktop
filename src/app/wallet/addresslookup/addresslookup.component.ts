@@ -5,6 +5,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Contact } from './contact.model';
+import { Log } from 'ng2-logger';
 
 @Component({
   selector: 'app-addresslookup',
@@ -19,6 +20,7 @@ export class AddressLookupComponent implements OnInit {
   @Input()
   selectAddressCallback: Function;
 
+  log: any = Log.create('addresslookup.component');
   /*
     UI logic
   */
@@ -108,14 +110,14 @@ export class AddressLookupComponent implements OnInit {
   /**
     Failed to load the address count
   */
-  rpc_loadAddressCount_failed(json: Object): void {
-    console.log('rpc_loadAddressCount_failed!' + json);
+  rpc_loadAddressCount_failed(json: any): void {
+    this.log.d('rpc_loadAddressCount_failed!');
   }
 
   /**
     Callback that loads addresses into addressStore!
   */
-  rpc_loadAddresses_success(json: Array<Object>) {
+  rpc_loadAddresses_success(json: any) {
     this.addressStore = json.map((contact) => new Contact(contact['label'], contact['address']));
   }
 
