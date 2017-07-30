@@ -37,10 +37,10 @@
           </thead>
           <tbody>
             <tr *ngFor="let address of page()"
-              (click)="selectAddressCallback(address.address, address.label)">
-              <th scope="row">{{address.label}}</th>
-              <td>{{address.address}}</td>
-              <td>{{cheatPublicAddress(address.address)}}</td>
+              (click)="selectAddressCallback(address.getAddress(), address.getLabel())">
+              <th scope="row">{{address.getLabel()}}</th>
+              <td>{{address.getAddress()}}</td>
+              <td>{{cheatPublicAddress(address.getAddress())}}</td>
             </tr>
           </tbody>
         </table>

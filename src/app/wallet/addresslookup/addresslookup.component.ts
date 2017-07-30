@@ -52,9 +52,9 @@ export class AddressLookupComponent implements OnInit {
     const query: string = this.query;
     return this.addressStore.filter(el => {
       return ((
-        el.label.toLowerCase().indexOf(query.toLowerCase()) !== -1
-        || el.address.toLowerCase().indexOf(query.toLowerCase()) !== -1)
-        && ((this.filter === this.cheatPublicAddress(el.address))
+        el.getLabel().toLowerCase().indexOf(query.toLowerCase()) !== -1
+        || el.getAddress().toLowerCase().indexOf(query.toLowerCase()) !== -1)
+        && ((this.filter === this.cheatPublicAddress(el.getAddress()))
               || (this.filter === 'all')
             )
       );
