@@ -4,6 +4,8 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { RPCService } from '../../core/rpc/rpc.service';
 
+import { Contact } from './contact.model';
+
 @Component({
   selector: 'app-addresslookup',
   templateUrl: './addresslookup.component.html',
@@ -28,9 +30,7 @@ export class AddressLookupComponent implements OnInit {
     RPC data
   */
   private _addressCount: number;
-  addressStore: any = [
-
-  ];
+  addressStore: Contact[] = [];
 
 
   constructor(private _rpc: RPCService) {
@@ -50,7 +50,7 @@ export class AddressLookupComponent implements OnInit {
   */
   page () {
     const query: string = this.query;
-     return this.addressStore.filter(el => {
+    return this.addressStore.filter(el => {
       return ((
         el.label.toLowerCase().indexOf(query.toLowerCase()) !== -1
         || el.address.toLowerCase().indexOf(query.toLowerCase()) !== -1)
@@ -100,7 +100,7 @@ export class AddressLookupComponent implements OnInit {
     if (this._addressCount > 0) {
       this._rpc.call(this, 'filteraddresses', [0, this._addressCount, '0', '', '2'], this.rpc_loadAddresses_success);
     } else {
-      this.addressStore = undefined;
+      this.addressStore = [];
     }
 
   }
@@ -116,7 +116,7 @@ export class AddressLookupComponent implements OnInit {
     Callback that loads addresses into addressStore!
   */
   rpc_loadAddresses_success(json: Array<Object>) {
-    this.addressStore = json;
+    this.addressStore = json.map((contact) => new Contact(contact['label'], contact['address']));
   }
 
 
