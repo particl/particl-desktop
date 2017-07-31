@@ -45,6 +45,7 @@
         border-radius: 99px;
         vertical-align: default;
     }
+    /*
     input[type=checkbox][disabled] + label,
     input[type=radio][disabled] + label,
     label.disabled {
@@ -70,7 +71,7 @@
         margin: 0;
         line-height: normal;
         border-radius: 99px;
-    }
+    }*/
     input[type=checkbox]:checked,
     input[type=radio]:checked {
         background: #03e8b0;
