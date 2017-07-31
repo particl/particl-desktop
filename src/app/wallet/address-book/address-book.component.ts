@@ -97,6 +97,9 @@ export class AddressBookComponent implements OnInit {
   rpc_addAddressToBook_failed(json: Object) {
     console.log('rpc_addAddressToBook_failed');
     console.log(json);
+
+    // TODO: remove specialPoll! (updates the address table)
+    this._rpc.specialPoll();
   }
 
 
