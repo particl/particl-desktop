@@ -57,7 +57,7 @@
         class="form-control recovery-word" (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)" />
     </div>
     <div *ngIf="!isDisabled && !partialDisable"
-      class="col-xs-12 text-right icon fa fa-clone"
+      class="col-xs-12 text-right icon nc-icon nc-copy-2"
       ngxClipboard [cbContent]="words.join(' ')">
     </div>
   </div>

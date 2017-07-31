@@ -1,61 +1,61 @@
 .btn-round-lg{
-	border-radius: 22.5px;
+    border-radius: 22.5px;
 }
 .btn-round{
-	border-radius: 17px;
+    border-radius: 17px;
 }
 .btn-round-sm{
-	border-radius: 15px;
+    border-radius: 15px;
 }
 .btn-round-xs{
-	border-radius: 11px;
-	padding-left: 10px;
-	padding-right: 10px;
+    border-radius: 11px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .category-button {
-	padding: 10px;
+    padding: 10px;
 }
 
 .category-button > .icon-sign {
-	margin-left: 5px;
+    margin-left: 5px;
 }
 
 :host /deep/ td {
-	width: 0;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
+    width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .details-table {
-  	/* Space between rows */
-  	border-collapse: separate;
-  	border-spacing: 0 0px !important;
-  	margin: 0px 0 0px 0 !important;
-  	width: 100%;
-  	background-color: #FBFBFB !important;
+    /* Space between rows */
+    border-collapse: separate;
+    border-spacing: 0 0px !important;
+    margin: 0px 0 0px 0 !important;
+    width: 100%;
+    background-color: #FBFBFB !important;
 }
 
 .details-table tr {
-	height: auto !important;
-	background-color: #FBFBFB !important;
+    height: auto !important;
+    background-color: #FBFBFB !important;
 }
 
 .details-table td {
-	border-bottom: 0px solid !important;
-	background-color: #FBFBFB !important;
-	padding: 0 0 0 30px  !important;
+    border-bottom: 0px solid !important;
+    background-color: #FBFBFB !important;
+    padding: 0 0 0 30px  !important;
 }
 
 .background-hack {
-	background-color: #FBFBFB !important;
+    background-color: #FBFBFB !important;
 }
 
 .border-reset-hack {
-	border-bottom: 0px solid !important;
+    border-bottom: 0px solid !important;
 }
 
 .padding-reset-hack {
-	padding: 0 0 0 0 !important;
+    padding: 0 0 0 0 !important;
 }

@@ -3,6 +3,7 @@
 body {
     font-family: 'Open Sans', sans-serif;
     background-color: #FBFBFB;
+    font-size: 12px;
 }
 .modal-backdrop.fade.in {
     background-color: #fff;
@@ -166,8 +167,8 @@ input.verify-error::placeholder {
 .form-control {
     display: block;
     width: 100%;
-    height: 30px;
-    font-size: 14px;
+    height: 27px;
+    font-size: 12px;
     line-height: 1.42857143;
     color: #555;
     background-image: none;
@@ -182,10 +183,16 @@ input.verify-error::placeholder {
     -moz-box-shadow: none !important;
     box-shadow: none !important;
     outline: none !important;
+    margin-left:20px;
 }
-.form-nomargin {
+.no-margin-left {
     margin-left: 0px;
 }
+
+.no-padding-left {
+    padding-left: 0px;
+    } 
+
 @font-face {
     font-family: 'part';
     src: url('assets/fonts/part.eot');
@@ -311,33 +318,75 @@ input.verify-error::placeholder {
 .nc-barcode-qr::before {
     content: "\ea01";
 }
-.nc-circle-remove::before {
+
+.nc-card-add::before {
     content: "\ea02";
 }
-.nc-copy-2::before {
+
+.nc-circle-remove::before {
     content: "\ea03";
 }
-.nc-grid-48::before {
+
+.nc-copy-2::before {
     content: "\ea04";
 }
-.nc-lock::before {
+
+.nc-grid-48::before {
     content: "\ea05";
 }
-.nc-multiple-19::before {
+
+.nc-lock::before {
     content: "\ea06";
 }
-.nc-settings-gear-65::before {
+
+.nc-multiple-19::before {
     content: "\ea07";
 }
-.nc-swap-horizontal::before {
+
+.nc-preferences::before {
     content: "\ea08";
 }
-.nc-tail-triangle-left::before {
+
+.nc-settings-gear-65::before {
     content: "\ea09";
 }
-.nc-tail-triangle-right::before {
+
+.nc-share-2::before {
     content: "\ea0a";
 }
-.nc-time-3::before {
+
+.nc-simple-add::before {
     content: "\ea0b";
+}
+
+.nc-simple-left::before {
+    content: "\ea0c";
+}
+
+.nc-simple-right::before {
+    content: "\ea0d";
+}
+
+.nc-square-add-11::before {
+    content: "\ea0e";
+}
+
+.nc-swap-horizontal::before {
+    content: "\ea0f";
+}
+
+.nc-tag-add::before {
+    content: "\ea10";
+}
+
+.nc-tail-triangle-left::before {
+    content: "\ea11";
+}
+
+.nc-tail-triangle-right::before {
+    content: "\ea12";
+}
+
+.nc-time-3::before {
+    content: "\ea13";
 }
