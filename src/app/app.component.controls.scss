@@ -84,12 +84,13 @@
         position: relative;
         font-size: 18px;
         float: right;
-        top: -28px;
+        top: -15px;
         left: -8px;
     }
     input[type=radio]:checked:after {
         content: '\2022';
         font-size: 49px;
+        top: -28px;
         left: -9px;
         font-family: "Arial";
         border: 0;
