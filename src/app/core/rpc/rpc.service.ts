@@ -8,9 +8,22 @@ const TESTNET_PORT = 51935;
 
 const HOSTNAME = 'localhost';
 
+/**
+ * The RPC service that maintains a single connection to the particld daemon.
+ *
+ * It has two important functions: call and register.
+ */
+
 @Injectable()
 export class RPCService {
+  /**
+  * IP/URL for daemon (default = localhost)
+  */
   private hostname: String = HOSTNAME; // TODO: URL Flag / Settings
+
+  /**
+  * Port number of of daemon (default = 51935)
+  */
   private port: number = TESTNET_PORT; // TODO: Mainnet / testnet flag...
 
   private username: string = 'test';
@@ -26,7 +39,34 @@ export class RPCService {
 
   constructor(private http: Http, public electronService: ElectronService) {
     this.isElectron = this.electronService.isElectronApp;
+    this.poll();
   }
+
+/**
+ * The call function will perform a single call to the particld daemon and perform a callback to
+ * the instance through the function as defined in the params.
+ *
+ * @param {Injectable} instance  The instance in which the callback functions reside.
+ * @param {string} method  The JSON-RPC method to call, see ```./particld help```
+ * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
+ * The content of the array is of type any (ints, strings, booleans etc)
+ * @param {Function} successCB  The function to callback (in instance) when the RPC request was successful.
+ * @param {Function} errorCB  The function to callback (in instance) when the RPC request failed.
+ *
+ * @example
+ * ```JavaScript
+ * this._rpc.call(this, 'listtransactions', [0, 20], this.rpc_loadTwentyTxs_success, this.rpc_loadTwentyTxs_failed);
+ * ```
+ * ```JavaScript
+ * rpc_loadTwentyTxs_success(json: Object) {
+ *   console.log("Loaded transactions!");
+ *   console.log(json);
+ * }
+ * ...
+ * ```
+ *
+ * @returns      void
+ */
 
   call(instance: Injectable, method: string, params: Array<any> | null, successCB: Function, errorCB?: Function): void {
     const postData = JSON.stringify({
@@ -51,13 +91,41 @@ export class RPCService {
           },
           error => {
             if (errorCB) {
-              errorCB.call(instance, error)
+              errorCB.call(instance, JSON.parse(error['_body']))
             }
             // TODO: Call error modal?
             console.log('RPC Call returned an error', error);
           });
     }
   }
+
+/**
+ * The register function will register a call to the particld daemon
+ * which is executed whenever the trigger happens (new block, new transactions through ZMQ)
+ * and performs a callback to the instance through the function as defined in the params.
+ *
+ * @param {Injectable} instance  The instance in which the callback functions reside.
+ * @param {string} method  The JSON-RPC method to call, see ```./particld help```
+ * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
+ * The content of the array is of type any (ints, strings, booleans etc)
+ * @param {Function} successCB  The function to callback (in instance) when the RPC request was successful.
+ * @param {string} when  The trigger to register to: 'block' on a new block, 'tx' on a new transactions, 'address' on address changes.
+ * @param {Function} errorCB  The function to callback (in instance) when the RPC request failed.
+ *
+ * @example
+ * ```JavaScript
+ * this._rpc.register(this, 'listtransactions', [0, 20], this.rpc_loadTwentyTxs_success, 'block' this.rpc_loadTwentyTxs_failed);
+ * ```
+ * ```JavaScript
+ * rpc_loadTwentyTxs_success(json: Object) {
+ *   console.log("Loaded transactions!");
+ *   console.log(json);
+ * }
+ * ...
+ * ```
+ *
+ * @returns      void
+ */
 
   register(instance: Injectable, method: string, params: Array<any> | Function | null,
            successCB: Function, when: string, errorCB?: Function): void {
@@ -83,6 +151,11 @@ export class RPCService {
     }
   }
 
+/**
+ * Do one poll: execute all the registered calls.
+ *
+ * @returns      void
+ */
   poll(): void {
     // TODO: Actual polling... Check block height and last transaction
     const _call = (element) => {
@@ -96,9 +169,9 @@ export class RPCService {
 
     this._callOnBlock.forEach(_call);
     this._callOnTransaction.forEach(_call);
+
     this._pollTimout = setTimeout(this.poll.bind(this), 3000);
   }
-
 
   specialPoll(): void {
     // A poll only for address changes, triggered from the GUI!
@@ -114,12 +187,21 @@ export class RPCService {
 
     this._callOnAddress.forEach(_call);
   }
-
+/**
+ * Start a temporary loop that polls the RPC every 3 seconds.
+ *
+ * @returns      void
+ */
   startPolling(): void {
     clearTimeout(this._pollTimout);
     this.poll();
   }
 
+/**
+ * Stops a temporary loop that polls the RPC every 3 seconds.
+ *
+ * @returns      void
+ */
   stopPolling(): void {
     clearTimeout(this._pollTimout);
   }

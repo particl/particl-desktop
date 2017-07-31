@@ -2,19 +2,16 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { ModalsService } from './modals.service';
 import { ModalsComponent } from './modals.component';
+import { FocusDirective } from './modals.directives';
 
-import { PassphraseComponent } from './shared/passphrase/passphrase.component';
+import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PasswordComponent } from './shared/password/password.component';
 
-import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
-import { FinishComponent } from './firsttime/finish/finish.component';
-import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
-import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -23,22 +20,19 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
     CommonModule,
     FormsModule,
     ModalModule,
+    ClipboardModule
   ],
   declarations: [
+    FocusDirective,
     ModalsComponent,
     PassphraseComponent,
     PasswordComponent,
-    FirsttimeComponent,
-    ShowpassphraseComponent,
-    ConfirmpassphraseComponent,
-    FinishComponent,
-    GeneratewalletComponent,
-    RecoverwalletComponent,
+    CreateWalletComponent,
     SyncingComponent,
     UnlockwalletComponent
   ],
   exports: [
-    ModalsComponent,
+    ModalsComponent
   ],
   providers: [ModalsService]
 })
