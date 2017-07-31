@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { RPCService } from '../../core/rpc/rpc.service';
 
+import { Log } from 'ng2-logger'
+
 @Component({
   selector: 'app-address-book',
   templateUrl: './address-book.component.html',
@@ -9,11 +11,19 @@ import { RPCService } from '../../core/rpc/rpc.service';
 })
 export class AddressBookComponent implements OnInit {
 
+  log: any = Log.create('address-book.component');
+
+  /*
+    UI state
+  */
   label: string = '';
   address: string;
-  private validAddress: boolean = undefined;
-
   openNewAddressModal: boolean = false;
+
+  /*
+    Validation state
+  */
+  private validAddress: boolean = undefined;
 
 
   constructor(private _rpc: RPCService) { }
@@ -61,20 +71,30 @@ export class AddressBookComponent implements OnInit {
 
 
   /**
-  * Adds the address to the addressbook if valid & has label.
+  * Adds the address to the addressbook if address is valid & has label (in UI textbox) AND is not one of our own addresses.
   */
   addAddressToBook() {
-    if (this.validAddress && this.label !== undefined) {
+    if (!this.validAddress) {
+      alert('Please enter a valid address!');
+      return;
+    }
+
+    if (this.isMine) {
+      alert('This is your own address - can not be added to addressbook!');
+      return;
+    }
+
+    if (this.label !== undefined) {
 
       this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label],
-        this.rpc_addAddressToBook_success, this.rpc_addAddressToBook_failed);
+        this.rpc_addAddressToBook_success,
+        this.rpc_addAddressToBook_failed
+      );
 
       this.address = undefined;
       this.validAddress = undefined;
       this.label = '';
       this.closeNewAddress();
-    } else {
-      alert('Please enter a valid address!');
     }
   }
 
@@ -116,6 +136,7 @@ export class AddressBookComponent implements OnInit {
   verifyAddress() {
     if (this.address === undefined || this.address === '') {
       this.validAddress = undefined;
+      this.isMine = undefined;
       return;
     }
 
@@ -128,6 +149,7 @@ export class AddressBookComponent implements OnInit {
   */
   rpc_verifyAddress_success(json: Object) {
     this.validAddress = json['isvalid'];
+    this.isMine = json['ismine'];
    }
 
 }
