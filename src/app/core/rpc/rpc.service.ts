@@ -164,6 +164,7 @@ export class RPCService {
 
     this._callOnBlock.forEach(_call);
     this._callOnTransaction.forEach(_call);
+
     this._pollTimout = setTimeout(this.poll.bind(this), 3000);
   }
 

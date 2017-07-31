@@ -1,13 +1,10 @@
 import { Injectable, Injector } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { Log } from 'ng2-logger';
 
 import { BlockStatusService } from '../core/rpc/rpc.module';
 
-import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { FinishComponent } from './firsttime/finish/finish.component';
-import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
-import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -18,16 +15,14 @@ export class ModalsService {
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
 
-  private state: boolean = false;
+  private isOpen: boolean = false;
 
   private data: string;
 
+  private log: any = Log.create('modals.service');
+
   messages: Object = {
-    firstTime: FirsttimeComponent,
-    showPassphrase: ShowpassphraseComponent,
-    finish: FinishComponent,
-    generate: GeneratewalletComponent,
-    recover: RecoverwalletComponent,
+    createWallet: CreateWalletComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent
   };
@@ -41,18 +36,19 @@ export class ModalsService {
     });
   }
 
-  open(modal: string): void {
+  open(modal: string, data?: Object): void {
     if (modal in this.messages) {
+      this.log.d(`next modal: ${modal}`);
       this.modal = this.messages[modal];
-      this.message.next(this.messages[modal]);
-      this.state = true;
+      this.message.next({modal: this.modal, data: data});
+      this.isOpen = true;
     } else {
-      console.error(`modal ${modal} doesn't exist`);
+      this.log.er(`modal ${modal} doesn't exist`);
     }
   }
 
   close() {
-    this.state = false;
+    this.isOpen = false;
   }
 
   getMessage() {
@@ -73,12 +69,10 @@ export class ModalsService {
     return (data);
    }
 
-   needToOpenModal(status: any) {
-    const networkBH = status.networkBH;
-    const internalBH = status.internalBH;
+  needToOpenModal(status: any) {
     // Open syncing Modal
-    if ((networkBH <= 0 || internalBH <= 0 || networkBH - internalBH > 50) && (!this.state)) {
+    if (!this.isOpen && (status.networkBH <= 0 || status.internalBH <= 0 || status.networkBH - status.internalBH > 50)) {
         this.open('syncing');
     }
-   }
+  }
 }

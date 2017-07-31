@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
 import { NgxElectronModule } from 'ngx-electron';
@@ -34,6 +35,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot(routes),
     NgxElectronModule,
     SharedModule,

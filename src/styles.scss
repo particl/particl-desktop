@@ -11,16 +11,27 @@ body {
 }
 
 /* Common styles */
-.verify-error {
+.verify-error,
+.warning-text {
     color: #ec4b50;
+}
+
+input.verify-error,
+input.verify-error::placeholder {
+    color: #ec4b50;
+    border-color: #ec4b50;
+}
+
+.margin-top-5px {
+    margin-top: 5px;
 }
 
 .margin-40px-0 {
     margin: 40px 0;
 }
 
-.margin-top-5px {
-    margin-top: 5px;
+.margin-top-20px {
+    margin-top: 20px;
 }
 
 .margin-top-30px {
@@ -41,5 +52,9 @@ body {
 
 .width-100 {
     width: 100%;
+}
+
+.quick-pad-top {
+    padding-top: 12px;
 }
 /* End - Common styles */
