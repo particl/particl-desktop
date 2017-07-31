@@ -1,13 +1,14 @@
 :host /deep/ {
   button.control {
-    background: #03e8b0;
     border: 0;
     color: #fff;
     font-weight: 700;
     font-size: 12px;
     text-transform: uppercase;
-    padding: 10px 20px;
+	padding: 8px 30px;
     vertical-align: middle;
+	background-color: #03E8B0;
+	border-bottom: 1px solid #07B98D;
   }
 
   /* TODO: Once we've structured the modals correctly, we'll move this there.
@@ -34,7 +35,7 @@
     appearance: none;
     -webkit-appearance: none;
     vertical-align: middle;
-    padding: 14px;
+    padding: 9px;
     background-color: #fbfbfb;
     border: 1px solid #ccc;
     box-shadow: none;
@@ -55,12 +56,38 @@
   input[type=checkbox][disabled] + label,
   input[type=radio][disabled] + label,
   label.disabled {
-    color: #777;
+    color: #ED4B4D;
   }
+  
+  input[type=checkbox][disabled]:checked,
+  input[type=radio][disabled]:checked {
+    background: #ED4B4D;
+	color: #ED4B4D;
+  }
+  
+    input[type=checkbox][disabled],
+    input[type=radio][disabled] {
+    appearance: none;
+    -webkit-appearance: none;
+    vertical-align: middle;
+    padding: 9px;
+    background-color: #fbfbfb;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    background: #ED4B4D;
+    border-radius: 4px;
+	color: #ED4B4D;
+    margin: 0;
+	line-height: normal;
+	border-radius: 99px;
+  }
+
+  
 
   input[type=checkbox]:checked,
   input[type=radio]:checked {
     background: #03e8b0;
+	color: #03e8b0;
   }
 
   input[type=checkbox]:checked:after,
@@ -69,7 +96,7 @@
     width: 0;
     height: 0;
     position: relative;
-    font-size: 22px;
+    font-size: 18px;
     float: right;
     top: -15px;
     left: -8px;

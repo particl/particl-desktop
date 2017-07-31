@@ -46,8 +46,9 @@
           [(ngModel)]="send.fromType" value="private">
         <label for="fromPrivate1" class="input-info-label">Private</label>
       </span>
-      <span class="separator"></span>
-      <span class="col-xs-4 balance">
+
+      <span class="balance">
+	    <span class="separator"></span>
         <span class="balance-label">Balance: </span>
         <span class="balance-amount">{{getBalance(send.fromType)}} PART</span>
       </span>
@@ -60,12 +61,13 @@
         [(ngModel)]="send.toAddress" (input)="verifyAddress()">
       <input class="col-xs-2" type="text" placeholder="Enter a label"
         [(ngModel)]="send.toLabel">
-      <span class="separator"></span>
-      <span class="col-xs-2">
+
+ 
+	    <span class="separator"></span>
         <span class="icon fa fa-users" (click)="openLookup()"></span>
         <span class="icon fa fa-clone"></span>
         <span class="icon fa fa-times"></span>
-      </span>
+  
     </div>
 
     <div class="card row">
@@ -124,8 +126,8 @@
           [(ngModel)]="send.fromType"  value="private">
         <label for="fromPrivate" class="input-info-label">Private</label>
       </span>
-      <span class="separator"></span>
-      <span class="col-xs-4 balance">
+      <span class="balance">
+	    <span class="separator"></span>
         <span class="balance-label">Balance: </span>
         <span class="balance-amount">{{getBalance(send.fromType)}} PART</span>
       </span>
@@ -144,8 +146,8 @@
           [(ngModel)]="send.toType" disabled="{{ send.fromType === 'private' }}" value="private">
         <label for="toPrivate" class="input-info-label">Private</label>
       </span>
-      <span class="separator"></span>
-      <span class="col-xs-4 balance">
+      <span class="balance">
+	    <span class="separator"></span>
         <span class="balance-label">Balance: </span>
         <span class="balance-amount">{{getBalance(send.toType)}} PART</span>
       </span>
@@ -157,12 +159,12 @@
         placeholder="The address to send the payment to"
         [(ngModel)]="send.toAddress">
       <input class="col-xs-2" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
-      <span class="separator"></span>
-      <span class="col-xs-2">
+  
+	    <span class="separator"></span>
         <span class="icon fa fa-users" (click)="openLookup()"></span>
         <span class="icon fa fa-clone"></span>
         <span class="icon fa fa-times"></span>
-      </span>
+    
     </div>
 
     <div class="card row">
