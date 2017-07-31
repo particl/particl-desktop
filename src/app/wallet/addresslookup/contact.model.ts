@@ -1,6 +1,6 @@
 export class Contact {
-  private label: string;
-  private address: string;
+  private label: string = '';
+  private address: string = '';
 
   constructor(label: string, address: string) { }
 

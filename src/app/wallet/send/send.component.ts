@@ -28,6 +28,7 @@ export class SendComponent implements OnInit, OnDestroy {
     fromType: 'public',
     toType: 'public',
     toAddress: '',
+    toLabel: '',
     validAddress: undefined,
     validAmount: undefined,
     currency: 'part',
@@ -143,6 +144,12 @@ export class SendComponent implements OnInit, OnDestroy {
       currency: 'part',
       privacy: 50
     };
+  }
+
+  clearReceiver() {
+    this.send['toLabel'] = '';
+    this.send['toAddress'] = '';
+    this.send['validAddress'] = undefined;
   }
 
 
