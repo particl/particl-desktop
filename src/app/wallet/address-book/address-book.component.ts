@@ -24,7 +24,7 @@ export class AddressBookComponent implements OnInit {
     Validation state
   */
   private validAddress: boolean = undefined;
-
+  private isMine: boolean = undefined;
 
   constructor(private _rpc: RPCService) { }
 
@@ -51,11 +51,23 @@ export class AddressBookComponent implements OnInit {
     this.openNewAddressModal = false;
   }
 
+  clearAndClose() {
+    // reset UI state
+    this.label = '';
+    this.address = '';
+
+    // reset validation
+    this.validAddress = undefined;
+    this.isMine = undefined;
+
+    this.closeNewAddress();
+  }
+
   /**
-  * Returns if the entered address is valid or not.
+  * Returns if the entered address is valid or not AND if it is not ours (isMine).
   */
   checkAddress(): boolean {
-    return this.validAddress;
+    return this.validAddress && !this.isMine;
   }
 
   /*
@@ -80,6 +92,7 @@ export class AddressBookComponent implements OnInit {
     }
 
     if (this.isMine) {
+      this.clearAndClose();
       alert('This is your own address - can not be added to addressbook!');
       return;
     }
