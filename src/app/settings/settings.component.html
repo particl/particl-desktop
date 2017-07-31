@@ -67,27 +67,46 @@
       </div>
     </div>
 
+	<div class="card row">
+    <div class="input-label col-xs-4">Pay transaction fee</div>
+    <div class="col-xs-8">
+        <div class="input-comment row">
+            <p>Optionnal transaction fee per kB that helps make sure your transactions are processed quickly.
+                <br /> Most transactions are 1kB. Fee 0.01 recommended.</p>
+        </div>
+        <div class="row col-xs-6">
+            <input class="col-xs-4" type="text" [(ngModel)]="settings.main.feeAmount">
+            <div class="col-xs-6">
+                <select class="form-control-settings" [(ngModel)]="settings.main.feeCurrency">
+                    <option value="part">PART</option>
+                </select>
+            </div>
+        </div>
+    </div>
+	</div>
+	
+	
     <div class="card row">
       <div class="input-label col-xs-4">Enable staking</div>
       <input type="checkbox" [(ngModel)]="settings.main.stake">
     </div>
 
     <div class="card row">
-      <div class="input-label col-xs-4">Reserve</div>
-      <div class="col-xs-8">
+    <div class="input-label col-xs-4">Reserve</div>
+    <div class="col-xs-8">
         <div class="input-comment row">
-          <p>Reserved amount does not participate in staking and is therefore spendable at any time.</p>
+            <p>Reserved amount does not participate in staking and is therefore spendable at any time.</p>
         </div>
         <div class="row col-xs-6">
-          <input class="col-xs-4" type="text" [(ngModel)]="settings.main.reserveAmount">
-		   <div class="col-xs-6">
-         <select class="form-control-settings" [(ngModel)]="settings.main.reserveCurrency">
-            <option value="part">PART</option>
-          </select>
+            <input class="col-xs-4" type="text" [(ngModel)]="settings.main.reserveAmount">
+            <div class="col-xs-6">
+                <select class="form-control-settings" [(ngModel)]="settings.main.reserveCurrency">
+                    <option value="part">PART</option>
+                </select>
+            </div>
         </div>
-		  </div>
-      </div>
     </div>
+	</div>
 
     <div class="card row">
       <div class="input-label col-xs-4">Minimum stake interval</div>
@@ -131,42 +150,37 @@
 
   </div>
 
-
-
   <div *ngIf="tab == 'network'">
     <div class="card row">
-      <div class="input-label col-xs-4">Map port using UPNP</div>
-      <input type="checkbox" [(ngModel)]="settings.network.upnp">
+        <div class="input-label col-xs-4">Map port using UPNP</div>
+        <input type="checkbox" [(ngModel)]="settings.network.upnp">
     </div>
 
     <div class="card row">
-      <div class="input-label col-xs-4">Connect through Socks proxy</div>
-      <input type="checkbox" [(ngModel)]="settings.network.proxy">
+        <div class="input-label col-xs-4">Connect through Socks proxy</div>
+        <input type="checkbox" [(ngModel)]="settings.network.proxy">
     </div>
 
-  
     <div class="card row">
-      <div class="input-label col-xs-4">Proxy IP</div>
-      <input type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
-	</div>
- 
-     <div class="card row">
-      <div class="input-label col-xs-4">Port</div>
-      <input type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+        <div class="input-label col-xs-4">Proxy IP</div>
+        <input type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
     </div>
-	
-	<div class="card row">
+
+    <div class="card row">
+        <div class="input-label col-xs-4">Port</div>
+        <input type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+    </div>
+
+    <div class="card row">
         <div class="input-label col-xs-4">Socket version</div>
-		<div class="col-xs-4">
-        <select class="form-control-settings form-nomargin" id="version" [(ngModel)]="settings.network.socketVersion">
-        <option value="4">4</option>
-        <option value="5">5</option>
-        </select>
-		 </div>
+        <div class="col-xs-4">
+            <select class="form-control-settings form-nomargin" id="version" [(ngModel)]="settings.network.socketVersion">
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
     </div>
- 
-  </div>
-
+	</div>
 
   <div *ngIf="tab == 'window'">
     <div class="card row">
@@ -180,38 +194,37 @@
     </div>
   </div>
 
-
-
   <div *ngIf="tab == 'display'">
     <div class="card row">
-      <div class="input-label col-xs-4">User interface language</div>
-	  <div class="col-xs-4">
-      <select class="form-control-settings form-nomargin" [(ngModel)]="settings.display.language">
-        <option value="default">(default)</option>
-      </select>  </div>
+        <div class="input-label col-xs-4">User interface language</div>
+        <div class="col-xs-4">
+            <select class="form-control-settings form-nomargin" [(ngModel)]="settings.display.language">
+                <option value="default">(default)</option>
+            </select>
+        </div>
     </div>
+  
+    <div class="card row">
+    <div class="input-label col-xs-4">Unit to show amounts in</div>
+    <div class="col-xs-4">
+        <select class="form-control-settings form-nomargin" [(ngModel)]="settings.display.units">
+            <option value="part">PART</option>
+            <option value="usd">USD</option>
+        </select>
+    </div>
+	</div>
 
     <div class="card row">
-      <div class="input-label col-xs-4">Unit to show amounts in</div>
-	  <div class="col-xs-4">
-      <select class="form-control-settings form-nomargin" [(ngModel)]="settings.display.units">
-        <option value="part">PART</option>
-        <option value="usd">USD</option>
-      </select>
-	  </div>
+    <div class="input-label col-xs-4">Rows per page</div>
+    <div class="col-xs-4">
+        <select class="form-control-settings form-nomargin" [(ngModel)]="settings.display.rows">
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+        </select>
     </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-4">Rows per page</div>
-	  <div class="col-xs-4">
-      <select class="form-control-settings form-nomargin" [(ngModel)]="settings.display.rows">
-        <option value="20">20</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-        <option value="500">500</option>
-      </select>
-	 </div>
-    </div>
+	</div>
 
     <div class="card row">
       <div class="input-label col-xs-4">Display addresses in transaction list</div>
@@ -273,23 +286,17 @@
     </div>
   </div>
 
-
-
   <div *ngIf="tab == 'i2p'">
     <div class="card">
       I2P (coming soon)
     </div>
   </div>
 
-
-
   <div *ngIf="tab == 'tor'">
     <div class="card">
       TOR (coming soon)
     </div>
   </div>
-
-
 
   <div class="pull-right">
     <button (click)="cancel()">Cancel</button>
