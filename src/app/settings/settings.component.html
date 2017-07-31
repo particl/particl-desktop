@@ -58,16 +58,16 @@
         </div>
         <div class="row col-xs-6">
           <input class="col-xs-4" type="text" [(ngModel)]="settings.main.feeAmount">
-		  <div class="col-xs-6">
+          <div class="col-xs-6">
           <select class="form-control-settings" [(ngModel)]="settings.main.feeCurrency">
             <option value="part">PART</option>
           </select>
-		  </div>
+          </div>
         </div>
       </div>
     </div>
 
-	<div class="card row">
+    <div class="card row">
     <div class="input-label col-xs-4">Pay transaction fee</div>
     <div class="col-xs-8">
         <div class="input-comment row">
@@ -83,9 +83,8 @@
             </div>
         </div>
     </div>
-	</div>
-	
-	
+    </div>
+
     <div class="card row">
       <div class="input-label col-xs-4">Enable staking</div>
       <input type="checkbox" [(ngModel)]="settings.main.stake">
@@ -106,7 +105,7 @@
             </div>
         </div>
     </div>
-	</div>
+    </div>
 
     <div class="card row">
       <div class="input-label col-xs-4">Minimum stake interval</div>
@@ -180,7 +179,7 @@
             </select>
         </div>
     </div>
-	</div>
+    </div>
 
   <div *ngIf="tab == 'window'">
     <div class="card row">
@@ -212,7 +211,7 @@
             <option value="usd">USD</option>
         </select>
     </div>
-	</div>
+    </div>
 
     <div class="card row">
     <div class="input-label col-xs-4">Rows per page</div>
@@ -224,7 +223,7 @@
             <option value="500">500</option>
         </select>
     </div>
-	</div>
+    </div>
 
     <div class="card row">
       <div class="input-label col-xs-4">Display addresses in transaction list</div>
