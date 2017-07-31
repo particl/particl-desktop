@@ -1,0 +1,216 @@
+<div [@flyInOut]="animationState" class="col-xs-12">
+  <ng-template [ngIf]="step === 0">
+    <div class="col-xs-12 text-center">
+      <b>Welcome</b>, please select one of the options below.
+    </div>
+
+    <hr class="margin-top-100px">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-xs-12 text-right">
+          <button class="control" (click)="nextStep();create();">
+            Create new wallet
+          </button>
+        </div>
+        <div class="col-sm-6 col-xs-12 text-left">
+          <button class="control" (click)="nextStep();restore();">
+            Restore wallet
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template><!-- Step 0 -->
+
+
+  <ng-template [ngIf]="step === 1">
+    <div class="col-xs-12 text-center">
+      <b>Lets create a new wallet</b><!-- TODO: Dynamic text create / restore -->
+    </div>
+
+    <hr class="margin-40px-0">
+
+    <form #nameForm="ngForm"  (ngSubmit)="nextStep()">
+
+    <div class="container">
+      <div class="col-md-3 text-right">
+        <label>YOUR WALLET NAME</label>
+      </div>
+
+      <div class="col-md-7">
+        <div class="col-md-12">
+          <input #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
+            name="name" placeholder="Default Account..." required maxlength="32"
+            [class.verify-error]="validation.errors && (validation.dirty || validation.touched)" />
+
+          <div *ngIf="validation.errors && (validation.dirty || validation.touched)"
+              [@slideDown] class="alert alert-danger margin-top-5px">
+            <div [hidden]="!validation.errors.required">
+              Wallet Name is required
+            </div>
+            <div [hidden]="!validation.errors.maxlength">
+              Wallet Name cannot be more than 32 characters long.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons margin-top-30px">
+      <div class="row col-xs-4 col-xs-offset-4">
+        <div class="col-xs-6">
+          <button class="control width-100" (click)="prevStep()">
+            back
+          </button>
+        </div>
+        <div class="col-xs-6">
+          <button class="control width-100" type="submit" [disabled]="!nameForm.form.valid">
+            next step
+          </button>
+        </div>
+      </div>
+    </div>
+    </form>
+  </ng-template><!-- Step 1 -->
+
+  <ng-template [ngIf]="[2,3,4].indexOf(step) != -1 && !isRestore">
+    <div class="col-xs-12 text-center">
+      <span *ngIf="step === 2">
+        <b>Generate your wallet recovery phrase</b>
+      </span>
+      <span *ngIf="step === 3">
+        <b>Write down your wallet recovery phrase</b><br />
+        <div class="warning-text margin-top-5px">
+          It is very important to write down your recovery phrase and to remember your password.
+          You will not be able to restore your wallet without them.
+        </div>
+      </span>
+      <span *ngIf="step === 4">
+        <b>Enter your wallet recovery phrase</b><br />
+      </span>
+
+      <hr class="margin-60px-0">
+    </div>
+
+    <div class="container">
+      <div class="col-md-3 text-right">
+        <label>YOUR WALLET NAME</label>
+      </div>
+
+      <div class="col-md-7">
+        <div class="col-md-12">
+          <input class="form-control width-100" [(ngModel)]="name" placeholder="Default Account..." readonly />
+        </div>
+      </div>
+    </div>
+
+    <app-password
+      #passwordComponent
+      unlockText="RECOVERYPHRASE PASSWORD (OPTIONAL)"
+      [emitPassword]="true"
+      [isDisabled]="[3,4].indexOf(step) != -1"
+      (passwordEmitter)="passwordFromEmitter($event)"
+      [showStakeOnly]="false">
+      </app-password>
+
+    <ng-template [ngIf]="[3,4].indexOf(step) != -1">
+      <app-passphrase
+        #passphraseComponent
+        [readOnly]="step === 3"
+        [words]="words"
+        [partialDisable]="step === 4"
+        (wordsEmitter)="wordsFromEmitter($event)">
+        </app-passphrase>
+    </ng-template>
+
+    <div class="buttons margin-top-30px">
+      <div class="row col-xs-4 col-xs-offset-4">
+        <div class="col-xs-6">
+          <button class="control width-100" (click)="prevStep()">
+            back
+          </button>
+        </div>
+        <div class="col-xs-6">
+          <button class="control width-100"
+            (click)="step === 2 && passwordComponent.sendPassword();
+                    nextStep()"><!-- TODO: Move sendPassword to .ts -->
+            next step
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template><!-- Step 2,3 & 4 -->
+
+  <ng-template [ngIf]="step === 4 && isRestore">
+    <div class="col-xs-12 text-center">
+      <span *ngIf="step === 4">
+        Please enter your <b>24 word recovery phrase</b> and optional recovery passphrase below.
+      </span>
+
+      <hr class="margin-60px-0">
+    </div>
+
+    <div class="container">
+      <div class="col-md-3 text-right">
+        <label>YOUR WALLET NAME</label>
+      </div>
+
+      <div class="col-md-7">
+        <div class="col-md-12">
+          <input class="form-control width-100" [(ngModel)]="name" placeholder="Default Account..." readonly />
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <app-passphrase
+      #passphraseComponent
+      [words]="words"
+      (wordsEmitter)="wordsFromEmitter($event)">
+      </app-passphrase>
+
+    <div *ngIf="!!errorString"
+        [@slideDown] class="container alert alert-danger margin-top-5px">
+      {{ errorString }}
+    </div>
+
+    <app-password
+      unlockText="RECOVERY PASSPHRASE"
+      unlockButton="RESTORE WALLET"
+      [showStakeOnly]="false"
+      [emitPassword]="true"
+      (passwordEmitter)="passwordFromEmitter($event);nextStep()">
+      </app-password>
+
+    <div class="buttons margin-top-30px">
+      <div class="row col-xs-4 col-xs-offset-4">
+        <div class="col-xs-6">
+          <button class="control width-100" (click)="prevStep();restore()">
+            back
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </ng-template><!-- Step 2,3 & 4 -->
+
+  <ng-template [ngIf]="step === 5">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          <h4>Congratulations with your new wallet</h4>
+          <div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="margin-top-60px">
+
+    <div class="buttons text-center">
+      <button class="control" (click)="close()">close</button>
+    </div>
+  </ng-template>
+</div>

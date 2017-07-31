@@ -1,9 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalModule } from 'ngx-bootstrap';
 
-import { ModalsComponent } from './modals.component';
 import { ModalsModule } from './modals.module';
+import { RpcModule } from '../core/rpc/rpc.module';
+import { SharedModule } from '../shared/shared.module';
 
+import { BlockStatusService } from '../core/rpc/blockstatus.service';
+
+import { ModalsComponent } from './modals.component';
 
 describe('ModalsComponent', () => {
   let component: ModalsComponent;
@@ -11,7 +15,15 @@ describe('ModalsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ModalsModule, ModalModule.forRoot()]
+      imports: [
+        ModalsModule,
+        ModalModule.forRoot(),
+        SharedModule,
+        RpcModule.forRoot()
+      ],
+      providers: [
+        BlockStatusService,
+      ]
     })
     .compileComponents();
   }));

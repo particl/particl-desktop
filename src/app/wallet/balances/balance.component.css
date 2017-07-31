@@ -9,25 +9,21 @@
     line-height: 0.9;
 }
 
-.balance {
-    line-height: 0.9;
-}
-
 .number {
     color: #222728;
 }
 
 .big{
-    font-size: 20px;
+    font-size: 30px;
 }
 
 .point {
     color: #02E8B0;
-    font-size: 30px;
+    font-size: 35px;
 }
 
 .small{
-    font-size: 15px;
+    font-size: 20px;
 }
 
 .type {

@@ -1,28 +1,30 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { RecoverwalletComponent } from './recoverwallet.component';
-import { ModalsModule } from '../modals.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
-describe('RecoverwalletComponent', () => {
-  let component: RecoverwalletComponent;
-  let fixture: ComponentFixture<RecoverwalletComponent>;
+import { CreateWalletComponent } from './createwallet.component';
+import { ModalsModule } from '../modals.module';
+
+describe('CreateWalletComponent', () => {
+  let component: CreateWalletComponent;
+  let fixture: ComponentFixture<CreateWalletComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         SharedModule,
-        ModalsModule,
-        RpcModule.forRoot()
+        RpcModule.forRoot(),
+        ModalsModule
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecoverwalletComponent);
+    fixture = TestBed.createComponent(CreateWalletComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

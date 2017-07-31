@@ -14,6 +14,9 @@ export class UnlockwalletComponent {
 
   unlock(obj: Object) {
     // unlock actually happened in password.component.ts
+
+    // close the modal!
+    document.getElementById('close').click();
   }
 
   passw(json: Object) {

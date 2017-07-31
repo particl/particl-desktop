@@ -10,7 +10,7 @@
   </tr>
   <ng-container *ngFor="let tx of txService.txs">
   <tr>
-     <td *ngIf="display.date">
+    <td *ngIf="display.date">
       <span class="inline-header"><span class="icon fa fa-clock-o"></span></span>
       <span>{{ tx.getDate() }}</span>
     </td>
