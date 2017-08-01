@@ -69,7 +69,7 @@ export class SendService {
     // json return value is just txid
     // We can't use gettransaction just yet, becaue
     if (true) {
-      alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!\nTransaction id: ' + json);
+      alert('Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}');
     } else {
       // error
     }
