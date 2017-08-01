@@ -99,7 +99,7 @@ export class AddressBookComponent implements OnInit {
 
     if (this.label !== undefined) {
 
-      this._rpc.call(this, 'manageaddressbook', ['add', this.address, this.label],
+      this._rpc.call(this, 'manageaddressbook', ['edit', this.address, this.label],
         this.rpc_addAddressToBook_success,
         this.rpc_addAddressToBook_failed
       );
@@ -128,9 +128,8 @@ export class AddressBookComponent implements OnInit {
   * e.g: wallet still locked
   */
   rpc_addAddressToBook_failed(json: Object) {
-    console.log('rpc_addAddressToBook_failed');
-    console.log(json);
-
+    this.log.er('rpc_addAddressToBook_failed');
+    this.log.er(json);
     // TODO: remove specialPoll! (updates the address table)
     this._rpc.specialPoll();
   }
