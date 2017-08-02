@@ -15,7 +15,7 @@ export class AddressService {
     How many addresses do we display per page and keep in memory at all times. When loading more
     addresses they are fetched JIT and added to addresses.
   */
-  MAX_ADDRESSES_PER_PAGE: number = 2;
+  MAX_ADDRESSES_PER_PAGE: number = 5;
 
 
 
@@ -31,7 +31,10 @@ export class AddressService {
 
 
 
-  constructor(private rpc: RPCService) {
+  constructor(private rpc: RPCService) { }
+
+  postConstructor(MAX_ADDRESSES_PER_PAGE: number) {
+    this.MAX_ADDRESSES_PER_PAGE = MAX_ADDRESSES_PER_PAGE;
     this.rpc_update();
   }
 
@@ -78,7 +81,10 @@ export class AddressService {
       addressCount = JSON['total'];
     }
     this.addressCount = addressCount;
-    this.rpc.call(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses);
+    this.rpc.register(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses, 'address');
+
+    // TODO: remove specialPoll
+    this.rpc.specialPoll();
   }
 
   rpc_getParams() {

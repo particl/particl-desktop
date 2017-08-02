@@ -56,7 +56,6 @@ export class AppComponent implements OnInit {
     this.log.w('warn!');
     this.log.i('info');
     this.log.d('debug');
-
   }
 
   // TODO: remove Modal examples
