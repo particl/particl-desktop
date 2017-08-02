@@ -279,7 +279,7 @@ export class SendComponent implements OnInit, OnDestroy {
     const label = this.send.toLabel;
     const addr = this.send.toAddress;
 
-    this._rpc.call(this, 'manageaddressbook', ['edit', addr, label],
+    this._rpc.call(this, 'manageaddressbook', ['newsend', addr, label],
       this.rpc_addLabel_success,
       this.rpc_addLabel_failed
     );
