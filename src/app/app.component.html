@@ -18,7 +18,11 @@
         <a class="item" routerLinkActive="active" routerLink="/overview">
           <span class="icon nc-icon nc-grid-48"></span>
           Overview
-        </a>                  
+        </a>
+        <a class="item" (click)="firsttime()">
+          <span class="icon nc-icon nc-card-add"></span>
+          First time
+        </a>
       </accordion-group>
       <accordion-group #walletGroup [isCollapsed]="false">
         <accordion-heading>
@@ -29,11 +33,11 @@
         </accordion-heading>
         <hr>
         <a class="item" routerLinkActive="active" routerLink="/wallet/receive">
-          <span class="icon nc-icon nc-tail-triangle-right"></span>
+          <span class="icon nc-icon nc-simple-right"></span>
           Receive
         </a>
         <a class="item" routerLinkActive="active" routerLink="/wallet/send">
-          <span class="icon nc-icon nc-tail-triangle-left"></span>
+          <span class="icon nc-icon nc-simple-left"></span>
           Send
         </a>
         <a class="item" routerLinkActive="active" routerLink="/wallet/history">
@@ -54,7 +58,7 @@
         </accordion-heading>
         <hr>
         <a class="item" routerLinkActive="active" routerLink="/settings">
-          <span class="icon nc-icon nc-settings-gear-65"></span>
+          <span class="icon nc-icon nc-icon nc-preferences"></span>
           Settings
         </a>
       </accordion-group>
@@ -64,7 +68,6 @@
         <span><button (click)="unlock()">unlock</button></span>
       </div>
     </accordion>
-
   </sidebar>
 
   <sidebar position="right" [isPinned]="true" #sidebarRight></sidebar>

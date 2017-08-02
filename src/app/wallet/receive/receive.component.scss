@@ -171,9 +171,20 @@ button {
 
 .page-button {
   background-color: white;
-  font-weight: bold;
-  padding: 8px 15px;
-  border-bottom: 1px solid #e9e9e9;
+  padding: 8px 14px;
+  border-bottom: 1px solid #ddd;
   margin-right: 10px;
   cursor: pointer;
+  color: #777;
+  font-weight:bold;
+}
+
+.page-button-green {
+  margin-right: 10px;
+  padding: 8px 14px;
+  cursor: default;
+  background-color: #03e8b0;
+  border-color: #03e8b0;
+  border-bottom: 1px solid #07B98D;
+  color: #fff;
 }

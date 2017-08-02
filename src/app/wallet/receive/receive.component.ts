@@ -270,7 +270,7 @@ export class ReceiveComponent implements OnInit {
     setTimeout(() => {
       const currentPage: any = document.getElementById(`page-${this.page}`)
       if (currentPage) {
-        currentPage.style.color = '#03e8b0'
+        currentPage.style.color = '#fff'
       }
     }, 50);
     ;

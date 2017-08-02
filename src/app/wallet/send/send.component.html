@@ -78,8 +78,8 @@
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount" (input)="verifyAmount()"
         [ngClass]="{'good': checkAmount() === true, 'fault': checkAmount() === false }">
-      <div class="col-xs-2">
-        <select [(ngModel)]="send.currency" class="form-control">
+      <div class="col-xs-1 no-padding-left">
+        <select [(ngModel)]="send.currency" class="form-control no-margin-left">
           <option value="part">PART</option>
         </select>
       </div>
@@ -162,8 +162,8 @@
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount">
-      <div class="col-xs-2">
-        <select [(ngModel)]="send.currency" class="form-control">
+      <div class="col-xs-1 no-padding-left">
+        <select [(ngModel)]="send.currency" class="form-control no-margin-left">
           <option value="part">PART</option>
         </select>
       </div>
