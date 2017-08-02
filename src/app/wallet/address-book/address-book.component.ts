@@ -162,7 +162,7 @@ export class AddressBookComponent implements OnInit {
   rpc_verifyAddress_success(json: Object) {
     this.validAddress = json['isvalid'];
     this.isMine = json['ismine'];
-    if(json['account'] !== undefined) {
+    if (json['account'] !== undefined) {
       this.label = json['account'];
     }
    }
