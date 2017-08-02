@@ -99,7 +99,7 @@ export class AddressBookComponent implements OnInit {
 
     if (this.label !== undefined) {
 
-      this._rpc.call(this, 'manageaddressbook', ['edit', this.address, this.label],
+      this._rpc.call(this, 'manageaddressbook', ['newsend', this.address, this.label],
         this.rpc_addAddressToBook_success,
         this.rpc_addAddressToBook_failed
       );
@@ -162,6 +162,9 @@ export class AddressBookComponent implements OnInit {
   rpc_verifyAddress_success(json: Object) {
     this.validAddress = json['isvalid'];
     this.isMine = json['ismine'];
+    if(json['account'] !== undefined) {
+      this.label = json['account'];
+    }
    }
 
 }
