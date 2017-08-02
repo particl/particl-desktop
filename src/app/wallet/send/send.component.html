@@ -61,7 +61,7 @@
       <span class="separator"></span>
       <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
       <span class="icon-padding icon nc-icon nc-copy-2"></span>
-      <span class="icon-padding icon nc-icon nc-circle-remove"></span>
+      <span class="icon-padding icon nc-icon nc-circle-remove" (click)="clearReceiver()"></span>
     </div>
 
     <div class="card row">
@@ -190,7 +190,7 @@
     <button (click)="clear()">Clear all</button>
     <button class="validate"
       (click)="openValidate()"
-      [disabled]="!checkAddress || !checkAmount">
+      [disabled]="!checkAddress() || !checkAmount()">
       Make payment
     </button>
   </div>

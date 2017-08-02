@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { Log } from 'ng2-logger'
+import { Log } from 'ng2-logger';
 
 import { WindowService } from './core/window.service';
 
