@@ -48,11 +48,11 @@
         </div>
       </div>
       <div class="col-xs-2 row address-options vertical-center">
-        <div class="col-xs-4 icon fa fa-clone"
+        <div class="col-xs-4 nc-icon nc-copy-2"
           (click)="copyAddress(addresses[type][0].id)">
         </div>
-        <div class="col-xs-4 icon fa fa-lock"></div>
-        <div class="col-xs-4 icon fa fa-qrcode" (click)="selected = addresses[type][0]"></div>
+        <div class="col-xs-4 nc-icon nc-lock"></div>
+        <div class="col-xs-4 nc-icon nc-barcode-qr"  (click)="selected = addresses[type][0]"></div>
       </div>
     </div>
 
@@ -76,19 +76,19 @@
         </div>
       </div>
       <div class="col-xs-2 row address-options vertical-center">
-        <div class="col-xs-4 icon fa fa-clone" (click)="copyAddress(address.id)"></div>
-        <div class="col-xs-4 icon fa fa-lock"></div>
-        <div class="col-xs-4 icon fa fa-qrcode" (click)="selected = address"></div>
+        <div class="col-xs-4 nc-icon nc-copy-2" (click)="copyAddress(address.id)"></div>
+        <div class="col-xs-4 nc-icon nc-lock"></div>
+        <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selected = address"></div>
       </div>
     </div>
 
     <div class="page-buttons">
-      <span class="page-button" (click)="previousPage()"> < </span>
-      <span class="page-button" *ngFor="let pageRef of nav;"
+      <span class="page-button" (click)="previousPage()">‹</span>
+      <span class="page-button-green" *ngFor="let pageRef of nav;"
         (click)="gotoPage(pageRef)" id="page-{{pageRef}}">
         {{ pageRef }}
       </span>
-      <span class="page-button" (click)="nextPage()"> > </span>
+      <span class="page-button" (click)="nextPage()">›</span>
     </div>
 
   </div>

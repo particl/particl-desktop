@@ -2,6 +2,11 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
+import { RPCService } from '../../core/rpc/rpc.service';
+
+import { Contact } from './contact.model';
+import { Log } from 'ng2-logger';
+
 @Component({
   selector: 'app-addresslookup',
   templateUrl: './addresslookup.component.html',
@@ -15,22 +20,57 @@ export class AddressLookupComponent implements OnInit {
   @Input()
   selectAddressCallback: Function;
 
-  lookupAddresses: any = [
-    {
-      label: 'testLabel',
-      address: 'sdfkjy34876ftks7fy847ydewi8uxndi3w8u',
-      publicKey: 'oq3847dro847xrnqox874nrxoq746rcnqo34876xoq347xnq3xno3487',
-      type: 'public'
-    },
-    {
-      label: 'testLabel2',
-      address: 'sdfkjy34876ftks7fy847ydewi8uxndi3w8u',
-      publicKey: 'oq3847dro847xrnqox874nrxoq746rcnqo34876xoq347xnq3xno3487',
-      type: 'public'
-    }
-  ];
+  log: any = Log.create('addresslookup.component');
+  /*
+    UI logic
+  */
 
-  constructor() { }
+  filter: string = 'all';
+  query: string = '';
+
+  /*
+    RPC data
+  */
+  private _addressCount: number;
+  addressStore: Contact[] = [];
+
+
+  constructor(private _rpc: RPCService) {
+    this.rpc_update();
+  }
+
+
+  /*
+
+    UI functions
+
+  */
+
+  /**
+  * Returns a filtered addressStore (query and filter)
+  * @return Array
+  */
+  page () {
+    const query: string = this.query;
+    return this.addressStore.filter(el => {
+      return ((
+        el.getLabel().toLowerCase().indexOf(query.toLowerCase()) !== -1
+        || el.getAddress().toLowerCase().indexOf(query.toLowerCase()) !== -1)
+        && ((this.filter === this.cheatPublicAddress(el.getAddress()))
+              || (this.filter === 'all')
+            )
+      );
+    })
+  }
+
+  // needs to change..
+  cheatPublicAddress(address: string) {
+    if (address.indexOf('p') === 0) {
+      return 'public';
+    } else {
+      return 'private';
+    }
+  }
 
   ngOnInit() {
   }
@@ -42,5 +82,44 @@ export class AddressLookupComponent implements OnInit {
   hide() {
     this.staticLookup.hide();
   }
+
+  /*
+
+    RPC functions
+
+  */
+
+  rpc_update() {
+    this._rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success, this.rpc_loadAddressCount_failed);
+  }
+
+  /**
+    Successfully loaded address count
+  */
+  rpc_loadAddressCount_success(json: Object): void {
+    this._addressCount = json['num_send'];
+
+    if (this._addressCount > 0) {
+      this._rpc.call(this, 'filteraddresses', [0, this._addressCount, '0', '', '2'], this.rpc_loadAddresses_success);
+    } else {
+      this.addressStore = [];
+    }
+
+  }
+
+  /**
+    Failed to load the address count
+  */
+  rpc_loadAddressCount_failed(json: any): void {
+    this.log.d('rpc_loadAddressCount_failed!');
+  }
+
+  /**
+    Callback that loads addresses into addressStore!
+  */
+  rpc_loadAddresses_success(json: any) {
+    this.addressStore = json.map((contact) => new Contact(contact['label'], contact['address']));
+  }
+
 
 }

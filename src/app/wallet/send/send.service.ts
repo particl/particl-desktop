@@ -10,8 +10,15 @@ export class SendService {
   private defaultStealthAddressForBalanceTransfer: string;
 
   constructor(public _rpc: RPCService) {
-    this._rpc.call(this, 'liststealthaddresses', null, this.rpc_callbackListDefaultAddress);
+    this._rpc.call(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
   }
+
+
+  /*
+
+    RPC LOGIC
+
+  */
 
   sendTransaction(input: string, output: string, address: string, amount: number, comment: string, substractfee: boolean,
     narration: string, ringsize: number, numsignatures: number) {
@@ -24,7 +31,7 @@ export class SendService {
 
     this.setTransactionDetails(address, amount);
 
-    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
+    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send_success);
   }
 
   transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
@@ -42,23 +49,50 @@ export class SendService {
 
     this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
 
-    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send);
+    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send_success);
 
   }
 
-  rpc_callbackListDefaultAddress(JSON: Object) {
-    if (JSON[0] !== undefined && JSON[0]['Stealth Addresses'] !== undefined && JSON[0]['Stealth Addresses'][0] !== undefined) {
-      this.rpc_callbackSetDefaultAddress(JSON[0]['Stealth Addresses'][0]['Address']);
+  rpc_listDefaultAddress_success(json: Object) {
+    if (json[0] !== undefined && json[0]['Stealth Addresses'] !== undefined && json[0]['Stealth Addresses'][0] !== undefined) {
+      this.rpc_setDefaultAddress_success(json[0]['Stealth Addresses'][0]['Address']);
     } else {
-      this._rpc.call(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_callbackSetDefaultAddress);
+      this._rpc.call(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_setDefaultAddress_success);
     }
   }
 
-  rpc_callbackSetDefaultAddress (JSON: string) {
-    this.defaultStealthAddressForBalanceTransfer = JSON;
+  rpc_setDefaultAddress_success (json: string) {
+    this.defaultStealthAddressForBalanceTransfer = json;
   }
 
+  rpc_send_success(json: string) {
+    // json return value is just txid
+    // We can't use gettransaction just yet, becaue
+    if (true) {
+      alert('Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}');
+    } else {
+      // error
+    }
+  }
+
+
+
+  /*
+
+    Helper functions for RPC
+
+  */
+
+
   // TODO: blind?
+
+/**
+ * Returns a part of the method of the RPC call required to execute the transaction
+ *
+ * @param {string} input  From which type/balance we should send the funds (public, blind, anon)
+ * @param {string} output  To which type/balance we should send the funds (public, blind, anon)
+ *
+ */
   getSendRPCCall(input: string, output: string) {
     // real send (external)
     if (input === 'public' && output === 'public') {
@@ -87,6 +121,10 @@ export class SendService {
   }
 
   // TODO: do I need to turn everything into strings manually?
+/**
+ * A helper function that transforms the transaction details to an array with the right params (for passing to the RPC service).
+ *
+ */
   getSendParams(anon: boolean, address: string, amount: number, comment: string, substractfee: boolean,
     narration: string, ringsize: number, numsignatures: number) {
     const params: Array<any> = [address, '' + amount, '', '', substractfee];
@@ -106,10 +144,16 @@ export class SendService {
     return params;
   }
 
+  /**
+  * Returns true if the RPC method is anonto...
+  */
   isAnon(input: string) {
     return (input === 'anontopart' || input === 'anontoanon' || input === 'anontoblind' )
   }
 
+  /**
+  * Converts slider logic (0 -> 100) to actual ring size for RPC parameters.
+  */
   getRingSize(ringsize: number): number {
     if (ringsize === 100) {
       return 16;
@@ -120,24 +164,24 @@ export class SendService {
     }
   }
 
-  rpc_send(JSON: string) {
-    // json return value is just txid
-    // We can't use gettransaction just yet, becaue
-    if (true) {
-      alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!\nTransaction id: ' + JSON);
-    } else {
-      // error
-    }
-  }
 
-    /*
-  	We need to display a success modal when a transaction went through,
-  	if succesful it needs to have the address and amount.
 
-	gettransaction is broke, it returns an error for blind transactions given the txid.
-	We're just storing it here and resetting it on every tx. (or second option is grabbing it from the component UI).
+
+
+  /*
+
+    UI LOGIC
 
   */
+
+
+    /*
+      We need to display a success modal when a transaction went through,
+      if succesful it needs to have the address and amount.
+
+      gettransaction is broke, it returns an error for blind transactions given the txid.
+      We're just storing it here and resetting it on every tx. (or second option is grabbing it from the component UI).
+    */
 
   setTransactionDetails(address: string, amount: number) {
     this.address = address;

@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TooltipModule } from 'ngx-bootstrap';
 import { StatusComponent } from './status.component';
+
+import { ModalsModule } from '../../modals/modals.module';
+import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../rpc/rpc.module';
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
@@ -8,7 +13,13 @@ describe('StatusComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StatusComponent ]
+      declarations: [ StatusComponent ],
+      imports: [
+       SharedModule,
+       RpcModule.forRoot(),
+       TooltipModule.forRoot(),
+       ModalsModule
+      ]
     })
     .compileComponents();
   }));

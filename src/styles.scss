@@ -1,9 +1,392 @@
 /* You can add global styles to this file, and also import other style files */
+
 body {
-  background-color: #FBFBFB;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #FBFBFB;
+    font-size: 12px;
+}
+.modal-backdrop.fade.in {
+    background-color: #fff;
+    opacity: 0.9;
+}
+/* Common styles */
+
+.verify-error,
+.warning-text {
+    color: #ec4b50;
 }
 
-.modal-backdrop.fade.in {
-  background-color: #fff;
-  opacity: 0.9;
+input.verify-error,
+input.verify-error::placeholder {
+    color: #ec4b50;
+    border-color: #ec4b50;
+}
+
+.margin-40px-0 {
+    margin: 40px 0;
+}
+.margin-top-5px {
+    margin-top: 5px;
+}
+.margin-40px-0 {
+    margin: 40px 0;
+}
+.margin-top-20px {
+    margin-top: 20px;
+}
+.margin-top-30px {
+    margin-top: 30px;
+}
+.margin-top-40px {
+    margin-top: 40px;
+}
+.margin-top-60px {
+    margin-top: 60px;
+}
+.margin-top-100px {
+    margin-top: 100px;
+}
+.width-100 {
+    width: 100%;
+}
+
+.quick-pad-top {
+    padding-top: 12px;
+}
+.padding-25 {
+    padding: 25px;
+}
+/* End - Common styles */
+/* Pagination */
+
+.pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+.pagination > li {
+    display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+    position: relative;
+    float: left;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    font-weight: bold;
+    padding: 8px 30px;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-bottom: 1px solid #e9e9e9;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus {
+    z-index: 2;
+    color: #23527c;
+    background-color: #eee;
+    border-color: #ddd;
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    z-index: 3;
+    color: #fff;
+    cursor: default;
+    background-color: #03e8b0;
+    border-color: #03e8b0;
+    border-bottom: 1px solid #07B98D;
+}
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
+}
+.pagination-lg > li > a,
+.pagination-lg > li > span {
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.3333333;
+}
+.pagination-lg > li:first-child > a,
+.pagination-lg > li:first-child > span {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+.pagination-lg > li:last-child > a,
+.pagination-lg > li:last-child > span {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+.pagination-sm > li > a,
+.pagination-sm > li > span {
+    padding: 8px 15px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+.pagination-sm > li:first-child > a,
+.pagination-sm > li:first-child > span {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+.pagination-sm > li:last-child > a,
+.pagination-sm > li:last-child > span {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+/* Drop-downs */
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 27px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-image: none;
+    border-radius: 4px;
+    box-shadow: inset 0 0px 0px rgba(0, 0, 0, .075);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    background-color: #FBFBFB;
+    border: 1px solid #EDEDED;
+    border-radius: 3px;
+    padding: 4px;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    margin-left:20px;
+}
+.no-margin-left {
+    margin-left: 0px;
+}
+
+.no-padding-left {
+    padding-left: 0px;
+    } 
+
+@font-face {
+    font-family: 'part';
+    src: url('assets/fonts/part.eot');
+    src: url('assets/fonts/part.eot') format('embedded-opentype'), url('assets/fonts/part.woff2') format('woff2'), url('assets/fonts/part.woff') format('woff'), url('assets/fonts/part.ttf') format('truetype'), url('assets/fonts/part.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/*------------------------
+	base class definition
+-------------------------*/
+
+.nc-icon {
+    & {
+        display: inline-block;
+        font: normal normal normal 14px/1 'part';
+        font-size: inherit;
+        speak: none;
+        text-transform: none;
+        /* Better Font Rendering */
+
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    /*------------------------
+    change icon size
+    -------------------------*/
+
+    &.lg {
+        font-size: 1.33333333em;
+        vertical-align: -16%;
+    }
+    &.x2 {
+        font-size: 2em;
+    }
+    &.x3 {
+        font-size: 3em;
+    }
+    /*----------------------------------
+    add a square/circle background
+    -----------------------------------*/
+
+    &.square,
+    &.circle {
+        padding: 0.33333333em;
+        vertical-align: -16%;
+        background-color: #eee;
+        border-radius: 50%;
+    }
+}
+/*------------------------
+  list icons
+-------------------------*/
+
+.nc-icon-ul {
+    padding-left: 0;
+    margin-left: 2.14285714em;
+    list-style-type: none;
+}
+.nc-icon-ul > li {
+    position: relative;
+}
+.nc-icon-ul > li > .nc-icon {
+    position: absolute;
+    left: -1.57142857em;
+    top: 0.14285714em;
+    text-align: center;
+}
+.nc-icon-ul > li > .nc-icon.lg {
+    top: 0;
+    left: -1.35714286em;
+}
+.nc-icon-ul > li > .nc-icon.circle,
+.nc-icon-ul > li > .nc-icon.square {
+    top: -0.19047619em;
+    left: -1.9047619em;
+}
+/*------------------------
+  spinning icons
+-------------------------*/
+
+.nc-icon.spin {
+    -webkit-animation: nc-icon-spin 2s infinite linear;
+    -moz-animation: nc-icon-spin 2s infinite linear;
+    animation: nc-icon-spin 2s infinite linear;
+}
+@-webkit-keyframes nc-icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes nc-icon-spin {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+@keyframes nc-icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/*------------------------
+	font icons
+-------------------------*/
+
+.nc-barcode-qr::before {
+    content: "\ea01";
+}
+
+.nc-card-add::before {
+    content: "\ea02";
+}
+
+.nc-circle-remove::before {
+    content: "\ea03";
+}
+
+.nc-copy-2::before {
+    content: "\ea04";
+}
+
+.nc-grid-48::before {
+    content: "\ea05";
+}
+
+.nc-lock::before {
+    content: "\ea06";
+}
+
+.nc-multiple-19::before {
+    content: "\ea07";
+}
+
+.nc-preferences::before {
+    content: "\ea08";
+}
+
+.nc-settings-gear-65::before {
+    content: "\ea09";
+}
+
+.nc-share-2::before {
+    content: "\ea0a";
+}
+
+.nc-simple-add::before {
+    content: "\ea0b";
+}
+
+.nc-simple-left::before {
+    content: "\ea0c";
+}
+
+.nc-simple-right::before {
+    content: "\ea0d";
+}
+
+.nc-square-add-11::before {
+    content: "\ea0e";
+}
+
+.nc-swap-horizontal::before {
+    content: "\ea0f";
+}
+
+.nc-tag-add::before {
+    content: "\ea10";
+}
+
+.nc-tail-triangle-left::before {
+    content: "\ea11";
+}
+
+.nc-tail-triangle-right::before {
+    content: "\ea12";
+}
+
+.nc-time-3::before {
+    content: "\ea13";
 }

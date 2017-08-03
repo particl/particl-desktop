@@ -1,15 +1,20 @@
-<app-table>
-  <tr *ngIf="displayHeader">
-    <th *ngIf="displayCategory">category</th>
-    <th *ngIf="displayDate">date</th>
-    <th *ngIf="displaySenderAddress">address</th>
-    <th *ngIf="displayTxId">txid</th>
-    <th *ngIf="displayAmount">amount</th>
-    <th *ngIf="displayBlockIndex">blockindex</th>
-    <th *ngIf="displayConfirmations">confirmations</th>
+<app-table class="table">
+  <tr *ngIf="display.header">
+    <th *ngIf="display.category">category</th>
+    <th *ngIf="display.date">date</th>
+    <th *ngIf="display.senderAddress">address</th>
+    <th *ngIf="display.txid">txid</th>
+    <th *ngIf="display.amount">amount</th>
+    <th *ngIf="display.blockIndex">blockindex</th>
+    <th *ngIf="display.confirmations">confirmations</th>
   </tr>
-  <tr *ngFor="let tx of txService.txs">
-    <td *ngIf="displayCategory" [ngSwitch]="tx.category">
+  <ng-container *ngFor="let tx of txService.txs">
+  <tr>
+    <td *ngIf="display.date">
+      <!--<span class="inline-header"><span class="icon nc-icon nc-time-3"></span></span>-->
+      <span>{{ tx.getDate() }}</span>
+    </td>
+    <td *ngIf="display.dategory" [ngSwitch]="tx.category">
       <span *ngSwitchCase="'stake'" class="inline-tag text-uppercase">
         Stake
         <span class="icon fa fa-plus color-green"></span>
@@ -24,36 +29,106 @@
       </span>
       <span *ngSwitchCase="'receive'" class="inline-tag text-uppercase">
         Received
-        <span class="icon fa fa-arrow-left color-green"></span>
+        <span class="icon fa fa-arrow-left"></span>
       </span>
     </td>
-    <td *ngIf="displaySenderAddress">
-      <span class="inline-header">Address</span>
+    <td *ngIf="display.senderAddress">
       <span>{{ tx.getAddress() }}</span>
     </td>
-    <td *ngIf="displayDate">
-      <span class="inline-header"><span class="icon fa fa-clock-o"></span></span>
-      <span>{{ tx.getDate() }}</span>
-    </td>
-    <td *ngIf="displayTxId">
+    <td *ngIf="display.txid">
       <span class="inline-header">TxId</span>
       <span>{{ tx.txid }}</span>
     </td>
-    <td *ngIf="displayBlockIndex">
+    <td *ngIf="display.blockIndex">
       <span class="inline-header">Blockindex</span>
       <span>{{ tx.blockindex }}</span>
     </td>
-    <td *ngIf="displayConfirmations">
+    <td *ngIf="display.confirmations">
       <span class="inline-header">Confirmations</span>
       <span>{{ tx.confirmations }}</span>
-      <span class="icon fa fa-clock-o color-red"></span>
     </td>
-    <td *ngIf="displayAmount">
+    <td *ngIf="display.amount">
       <span class="inline-header">Amount</span>
       <span>{{ tx.getAmount() }} PART</span>
     </td>
+    <td *ngIf="display.expand">
+      <span class="icon nc-icon nc-simple-add" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
+    </td>
+
   </tr>
+  <tr *ngIf="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)" class="background-hack">
+    <td [attr.colspan]="getColumnCount()" class="padding-reset-hack border-reset-hack">
+    <table class="details-table">
+
+      <tr>
+        <td>
+          <b>Status:</b>
+        </td>
+        <td>
+          {{tx.confirmations}} confirmations
+        </td>
+        <td>
+          <b>Transaction ID:</b>
+        </td>
+        <td>
+          {{tx.txid}}
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <b>Date:</b>
+        </td>
+        <td>
+          {{tx.getDate()}}
+        </td>
+        <td>
+          <b>Transaction fee:</b>
+        </td>
+        <td>
+          {{tx.fee ? tx.fee : 0}} PART
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <b>To:</b>
+        </td>
+        <td>
+          {{tx.getAddress()}}
+        </td>
+        <td>
+          <b>Net amount:</b>
+        </td>
+        <td>
+          {{tx.fee ? tx.getAmount() - tx.fee : 0}} PART
+        </td>
+      </tr>
+      <tr>
+        <td *ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">
+          <b>Credit:</b>
+        </td>
+        <td *ngIf="tx.category === 'send'">
+          <b>Debit:</b>
+        </td>
+        <td>
+          {{tx.getAmount()}} PART
+        </td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+  </ng-container>
 </app-table>
 
-<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="txService.txCount" [maxSize]="5" [rotate]="false" [(ngModel)]="txService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="txService.MAX_TXS_PER_PAGE" ></pagination>
+<pagination *ngIf="display.pagination"
+  [boundaryLinks]="true"
+  (pageChanged)="pageChanged($event)"
+  [totalItems]="txService.txCount"
+  [maxSize]="5" [rotate]="false"
+  [(ngModel)]="txService.currentPage"
+  class="pagination-sm center"
+  previousText="&lsaquo;" nextText="&rsaquo;"
+  firstText="&laquo;" lastText="&raquo;"
+  [itemsPerPage]="txService.MAX_TXS_PER_PAGE" >
+</pagination>

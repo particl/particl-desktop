@@ -5,8 +5,8 @@ import { RPCService } from './rpc.service';
 
 @Injectable()
 export class PeerService {
-  private _peerList: Observable<Object>;
-  private _observerPeerList: Observer<Object>;
+  private _peerList: Observable<Array<Object>>;
+  private _observerPeerList: Observer<Array<Object>>;
 
   private _highestBlockHeightInternal: Observable<number>;
   private _observerHighestBlockHeightInternal: Observer<number>;
@@ -38,18 +38,19 @@ export class PeerService {
 
   }
 
-  setPeerList(JSON: Object) {
-    this._observerPeerList.next(JSON);
+  private setPeerList(json: Array<Object>) {
 
     // hook network block height changes
-    this._observerHighestBlockHeightNetwork.next(this.setBlockCountNetwork(JSON));
+    this._observerHighestBlockHeightNetwork.next(this.setBlockCountNetwork(json));
+
+    this._observerPeerList.next(json);
   }
 
   private setBlockCount(height: number) {
     this._observerHighestBlockHeightInternal.next(height);
   }
 
-  private setBlockCountNetwork(peerList: Object): number {
+  private setBlockCountNetwork(peerList: Array<Object>): number {
     let highestBlockHeightNetwork: number = -1;
 
     for (const peer in peerList) {
@@ -71,6 +72,10 @@ export class PeerService {
 
   getBlockCountNetwork(): Observable<number> {
     return this._highestBlockHeightNetwork;
+  }
+
+  getPeerList(): Observable<Array<Object>> {
+    return this._peerList;
   }
 
 }

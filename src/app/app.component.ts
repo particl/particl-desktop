@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Log } from 'ng2-logger';
 
 import { WindowService } from './core/window.service';
-import { RPCService, PeerService } from './core/rpc/rpc.module';
 
 import { SettingsService } from './settings/settings.service';
+
 // Modal example
 import { ModalsService } from './modals/modals.service';
+
+// Syncing example
+import { BlockStatusService } from './core/rpc/blockstatus.service';
 
 @Component({
   selector: 'app-root',
@@ -20,17 +24,17 @@ export class AppComponent implements OnInit {
   isCollapsed: boolean = true;
   isFixed: boolean = false;
   title: string = '';
+  log: any = Log.create('app.component');
 
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
+    private _statusService: BlockStatusService,
     public window: WindowService,
-    private _rpc: RPCService,
-    private _peer: PeerService,
-    private _settingsService: SettingsService,
     // Modal example
     private _modalsService: ModalsService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     // Change the header title derived from route data
@@ -48,47 +52,23 @@ export class AppComponent implements OnInit {
       .flatMap(route => route.data)
       .subscribe(data => this.title = data['title']);
 
-    const bcSub = this._peer.getBlockCount()
-      .subscribe(
-        height => {
-          const nbcSub = this._peer.getBlockCountNetwork()
-            .subscribe(
-              networkHeight => {
-                bcSub.unsubscribe();
-                nbcSub.unsubscribe();
-
-                if (height < networkHeight) {
-                  this._modalsService.open('syncing');
-                  this._modalsService.updateProgress(height / networkHeight * 100);
-                }
-
-                if (networkHeight < 0) {
-                  this._modalsService.open('syncing');
-                  this._modalsService.updateProgress(0);
-                }
-              }
-            )
-        }
-      );
-
-    this._rpc.poll();
+    this.log.er('error!');
+    this.log.w('warn!');
+    this.log.i('info');
+    this.log.d('debug');
   }
 
-  // Modal examples
+  // TODO: remove Modal examples
   firsttime() {
-    this._modalsService.open('firstTime');
-    this._modalsService.updateProgress(33);
+    this._modalsService.open('createWallet');
   }
 
   syncing() {
+    this._statusService.setManuallyOpened();
     this._modalsService.open('syncing');
-    this._modalsService.updateProgress(48);
   }
 
   unlock() {
     this._modalsService.open('unlock');
-    this._modalsService.updateProgress(99);
   }
-
-  // End Modal Examples
 }

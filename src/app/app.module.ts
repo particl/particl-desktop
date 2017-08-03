@@ -1,14 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BsDropdownModule, CollapseModule, ModalModule, PaginationModule } from 'ngx-bootstrap';
 import { NgxElectronModule } from 'ngx-electron';
+import { BsDropdownModule, CollapseModule, ModalModule, ModalDirective, PaginationModule, TooltipModule } from 'ngx-bootstrap';
 
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
 import { WalletModule } from './wallet/wallet.module';
-import { RpcModule } from './core/rpc/rpc.module';
+import { RpcModule, BlockStatusService } from './core/rpc/rpc.module';
 import { ModalsModule } from './modals/modals.module';
 
 import { WindowService } from './core/window.service';
@@ -34,12 +35,9 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
-    BsDropdownModule.forRoot(),
-    NgxElectronModule,
-    CollapseModule.forRoot(),
-    PaginationModule.forRoot(),
+    BrowserAnimationsModule,
     RouterModule.forRoot(routes),
-    ModalModule.forRoot(),
+    NgxElectronModule,
     SharedModule,
     SidebarModule.forRoot(),
     WalletModule.forRoot(),
@@ -47,8 +45,13 @@ const routes: Routes = [
     ModalsModule
   ],
   providers: [
-    WindowService
+    WindowService,
+    BlockStatusService
   ],
   bootstrap: [ AppComponent ]
 })
-export class AppModule { }
+
+export class AppModule {
+  constructor() {
+  }
+}
