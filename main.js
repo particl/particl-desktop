@@ -82,7 +82,7 @@ function createWindow () {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
+    width: 1000,
     height: 600,
     icon: trayImage,
     webPreferences: {
