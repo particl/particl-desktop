@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 
 import { Headers, Http } from '@angular/http';
-import { Log } from 'ng2-logger'
+import { Log } from 'ng2-logger';
 
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
