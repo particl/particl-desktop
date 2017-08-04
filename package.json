@@ -18,7 +18,7 @@
     "test": "ng test",
     "lint": "ng lint --type-check && htmlhint && sass-lint -v",
     "e2e": "ng e2e",
-    "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.6.11",
+    "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.2",
     "start:electron": "npm run build:electron && electron .",
     "package-mac": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --prune=true --out=release-builds",
     "package-windows": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds",
