@@ -38,7 +38,7 @@ export class PeerService {
 
   }
 
-  setPeerList(JSON: Array<Object>) {
+  private setPeerList(JSON: Array<Object>) {
     this._observerPeerList.next(JSON);
 
     // hook network block height changes

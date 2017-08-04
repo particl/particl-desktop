@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { SendService } from './send.service';
 import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { EncryptionStatusService, RPCService } from '../../core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
@@ -26,8 +26,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   // TODO: Create proper Interface / type
   send: any = {
-    fromType: 'public',
-    toType: 'public',
+    input: 'public',
+    output: 'public',
     toAddress: '',
     validAddress: undefined,
     validAmount: undefined,
@@ -41,7 +41,8 @@ export class SendComponent implements OnInit, OnDestroy {
     private sendService: SendService,
     private balanceService: BalanceService,
     private _rpc: RPCService,
-    private _modals: ModalsService
+    private _modals: ModalsService,
+    private _encryptionStatus: EncryptionStatusService
   ) {
   }
 
@@ -99,7 +100,7 @@ export class SendComponent implements OnInit, OnDestroy {
 
   verifyAmount() {
 
-    if (this.send['amount'] === undefined || +this.send['amount'] === 0 || this.send['fromType'] === '') {
+    if (this.send['amount'] === undefined || +this.send['amount'] === 0 || this.send['input'] === '') {
       this.send.validAmount = undefined;
       return;
     }
@@ -115,7 +116,7 @@ export class SendComponent implements OnInit, OnDestroy {
     }
 
 
-    if (this.send['amount'] <= this.getBalance(this.send['fromType'])) {
+    if (this.send['amount'] <= this.getBalance(this.send['input'])) {
       this.send.validAmount = true;
       return;
     } else {
@@ -155,8 +156,8 @@ export class SendComponent implements OnInit, OnDestroy {
   */
   clear() {
     this.send = {
-      fromType: '',
-      toType: '',
+      input: '',
+      output: '',
       validAddress: undefined,
       validAmount: undefined,
       currency: 'part',
@@ -181,52 +182,63 @@ export class SendComponent implements OnInit, OnDestroy {
 
     this.closeValidate();
 
-    // TODO: Why are we making a copy of all the properties?
-    const input = this.send.fromType;
-    let output = this.send.toType;
-    const address = this.send.toAddress;
-    const amount = this.send.amount;
-    const comment = this.send.note;
-    const narration = this.send.note;
-    const substractfee = false;
-    const ringsize = this.send.privacy;
-    const numsigs = 1;
-
-    const currency = this.send.currency;
-
-    if (input === '' ) {
+    if (this.send.input === '' ) {
       alert('You need to select an input type (public, blind or anon)!');
       return;
     }
-    if (this.type === 'balanceTransfer' && output === '') {
-      alert('You need to select an output type (public, blind or anon)!');
-      return;
-    }
 
-    if (this.type === 'balanceTransfer' && this.send.fromType === this.send.toType) {
-      alert('You have selected "' + this.send.fromType + '"" twice!\n Balance transfers can only happen between two different types.');
-      return;
-    }
-
+    /*
+      Send normal transaction - validation
+    */
     if (this.type === 'sendPayment') {
-      output = input;
 
-      if (output === 'private' && address.length < 35) {
+      // pub->pub, blind->blind, priv-> priv
+      this.send.output = this.send.input;
+
+      // Check if stealth address if output is private
+      if (this.send.output === 'private' && this.send.toAddress.length < 35) {
         alert('Stealth address required for private transactions!');
         return;
       }
 
-      // unlock wallet and send transaction
-      this._modals.unlockWallet(this,
-        this.sendTransaction,
-        2);
+      // Check if wallet is unlocked
+      if (this._encryptionStatus.getEncryptionStatusState() !== 'Unlocked') {
+
+        // unlock wallet and send transaction
+        this._modals.unlockWallet(this,
+          this.sendTransaction,
+          2);
+
+
+      } else {
+        // wallet already unlocked
+        this.sendTransaction();
+      }
+
+    /*
+      Balance transfer - validation
+    */
 
     } else if (this.type === 'balanceTransfer') {
 
-      // unlock wallet and transfer balance
-      this._modals.unlockWallet(this,
-        this.transferBalance,
-        2);
+      if (this.send.output === '') {
+        alert('You need to select an output type (public, blind or anon)!');
+        return;
+      }
+
+      if (this.send.input === this.send.output) {
+        alert('You have selected "' + this.send.input + '"" twice!\n Balance transfers can only happen between two different types.');
+        return;
+      }
+
+      if (this._encryptionStatus.getEncryptionStatusState() !== 'Unlocked') {
+        // unlock wallet and transfer balance
+        this._modals.unlockWallet(this,
+          this.transferBalance,
+          2);
+      } else {
+        this.transferBalance();
+      }
 
     }
   }
@@ -235,8 +247,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   sendTransaction(): void {
 
-    const input = this.send.fromType;
-    const output = this.send.toType;
+    const input = this.send.input;
+    const output = this.send.output;
     const address = this.send.toAddress;
     const amount = this.send.amount;
     const comment = this.send.note;
@@ -252,8 +264,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   transferBalance(): void {
 
-    const input = this.send.fromType;
-    const output = this.send.toType;
+    const input = this.send.input;
+    const output = this.send.output;
     const address = this.send.toAddress;
     const amount = this.send.amount;
     const ringsize = this.send.privacy;

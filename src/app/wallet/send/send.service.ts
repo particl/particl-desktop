@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { RPCService } from '../../core/rpc/rpc.module';
 
 import { Log } from 'ng2-logger'
 

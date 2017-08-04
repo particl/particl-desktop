@@ -72,7 +72,7 @@ export class ModalsService {
   needToOpenModal(status: any) {
     // Open syncing Modal
     if (!this.isOpen && (status.networkBH <= 0 || status.internalBH <= 0 || status.networkBH - status.internalBH > 50)) {
-        //this.open('syncing');
+        this.open('syncing');
     }
   }
 

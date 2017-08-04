@@ -21,7 +21,7 @@ export class PasswordComponent {
 
   @Input() unlockText: string = 'YOUR WALLET PASSWORD';
   @Input() unlockButton: string;
-  @Input() unlockTimeout: number = 6000;
+  @Input() unlockTimeout: number = 60;
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;
 
