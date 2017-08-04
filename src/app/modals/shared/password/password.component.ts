@@ -3,8 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { IPassword } from './password.interface';
 
-import { ModalsModule } from '../../modals.module';
-import { RPCService } from '../../../core/rpc/rpc.service';
+import { RPCService, EncryptionStatusService } from '../../../core/rpc/rpc.module';
 
 
 @Component({
@@ -14,9 +13,11 @@ import { RPCService } from '../../../core/rpc/rpc.service';
 })
 export class PasswordComponent {
 
+  /*
+    UI State
+  */
   password: string;
   stakeOnly: boolean = false;
-
   showPass: boolean = false;
 
   @Input() unlockText: string = 'YOUR WALLET PASSWORD';
@@ -43,7 +44,7 @@ export class PasswordComponent {
 
   log: any = Log.create('password.component');
 
-  constructor (private _rpc: RPCService) { }
+  constructor (private _rpc: RPCService, private _encryptionStatusService: EncryptionStatusService) { }
 
   /*
     UI logic
@@ -71,7 +72,6 @@ export class PasswordComponent {
       // emit unlock
       this.rpc_unlock();
     }
-    this.reset();
   }
 
   /*
@@ -90,25 +90,63 @@ export class PasswordComponent {
     _Actually_ unlock the wallet!
   */
 
-  rpc_unlock() {
+  private rpc_unlock() {
     this.log.i('rpc_unlock: calling unlock! timeout=' + this.unlockTimeout);
-    this._rpc.call(this, 'walletpassphrase', [this.password, this.unlockTimeout, this.stakeOnly],
+    this.checkAndFallbackToStaking();
+    this._rpc.call(this, 'walletpassphrase', this.rpc_getUnlockParams(),
       this.rpc_unlock_success,
       this.rpc_unlock_failed
     );
   }
 
-  rpc_unlock_success(json: Object) {
+  private rpc_getUnlockParams() {
+    return [
+      this.password,
+      (this.stakeOnly ? 0 : this.unlockTimeout),
+      this.stakeOnly
+    ];
+  }
+
+  private rpc_unlock_success(json: Object) {
     this.log.i('rpc_unlock_success: unlock was succesful!');
     this._rpc.call(this, 'getwalletinfo', null, this.rpc_alertEncryptionStatus);
   }
 
-  rpc_unlock_failed(json: Object) {
+  private rpc_unlock_failed(json: Object) {
     this.log.i('rpc_unlock_failed: unlock failed - wrong password?');
     alert('Unlock failed - password was incorrect.');
   }
 
-  rpc_alertEncryptionStatus(json: Object) {
+  /*
+    If we're unlocking the wallet for a period of this.unlockTimeout, then check if it was staking
+    if(staking === true) then fallback to staking instead of locked after timeout!
+    else lock wallet
+  */
+  private checkAndFallbackToStaking() {
+    if (this._encryptionStatusService.getEncryptionStatusState() === 'Unlocked, staking only') {
+      const password = this.password;
+      const timeout = this.unlockTimeout;
+      const that = this;
+
+      /*
+        After unlockTimeout, unlock wallet for staking again.
+      */
+      setTimeout(
+        function() {
+          that.log.d(`checkAndFallbackToStaking, falling back into staking mode!`);
+          that._rpc.call(that, 'walletpassphrase', [password, 0, true],
+            function() {}
+          );
+          that.reset();
+        }, (timeout + 1) * 1000);
+
+    } else {
+      // reset after 500ms so rpc_unlock has enough time to use it!
+      setTimeout(this.reset,  500);
+    }
+  }
+
+  private rpc_alertEncryptionStatus(json: Object) {
 
     // hook for unlockEmitter, warn parent component that wallet is unlocked!
     this.unlockEmitter.emit(json);
@@ -126,7 +164,7 @@ export class PasswordComponent {
     }
   }
 
-  reset() {
+  private reset() {
     this.password = '';
   }
 

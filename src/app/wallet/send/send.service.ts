@@ -37,7 +37,7 @@ export class SendService {
 
   rpc_setDefaultAddress_success (json: string) {
     this.defaultStealthAddressForBalanceTransfer = json;
-    this.log.d('rpc_setDefaultAddress_success, stealth address: ' + json);
+    this.log.d(`rpc_setDefaultAddress_success, stealth address: ${json}`);
   }
 
   public getBalanceTransferAddress(): string {
@@ -82,8 +82,8 @@ export class SendService {
 
 
   rpc_send_success(json: string) {
-    this.log.d('rpc_send_success, succesfully executed transaction with txid ${json}');
-    alert('Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}');
+    this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
+    alert(`Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}`);
   }
 
   rpc_send_failed(json: any) {

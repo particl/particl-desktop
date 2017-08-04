@@ -40,7 +40,7 @@ export class StatusComponent implements OnInit {
         },
         error => this.log.er(`peerListCount, subscription error: ${error}`));
 
-    this._subEncryptionStatus = this._peerService.getEncryptionStatus()
+    this._subEncryptionStatus = this._encryptionStatusService.getEncryptionStatus()
       .subscribe(
         encryptionStatus => {
           this.encryptionStatus = encryptionStatus;
