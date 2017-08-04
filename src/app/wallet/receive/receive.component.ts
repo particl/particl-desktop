@@ -84,9 +84,6 @@ export class ReceiveComponent implements OnInit {
   }
 
   rpc_loadAddresses(json: Object) {
-    console.log('crz : share this');
-    console.log(JSON.stringify(json));
-    console.log('End');
     const pub = [];
     const priv = [];
     for (const k in json) {
@@ -155,18 +152,23 @@ export class ReceiveComponent implements OnInit {
     }
 
     tempAddress.address = json['address'];
-    if (json['label'] !== '') {
+    if (json['label'] !== '' && json['label'] !== undefined) {
       tempAddress.label = json['label'];
     }
 
     tempAddress.readable = tempAddress.address.match(/.{1,4}/g);
 
     if (type === 'public') {
+
+      // not all addresses are derived from HD wallet (importprivkey) 
       if(json['path'] !== undefined) {
         tempAddress.id = json['path'].replace('m/0/', '');
       }
       this.addresses.public.unshift(tempAddress);
+
     } else if (type === 'private') {
+
+      // not all stealth addresses are derived from HD wallet (importprivkey) 
       if(json['path'] !== undefined) {
         tempAddress.id = +(json['path'].replace('m/0\'/', '').replace('\'', '')) / 2;
       }
