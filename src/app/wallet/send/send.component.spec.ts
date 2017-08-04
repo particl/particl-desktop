@@ -6,8 +6,9 @@ import { SendComponent } from './send.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
+import { RPCModule } from '../../core/rpc/rpc.service';
 
-import { RPCService } from '../../core/rpc/rpc.service';
+import { ModalsService } from '../../modals/modals.service';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -21,6 +22,7 @@ describe('SendComponent', () => {
       ],
       providers: [
         ElectronService,
+        ModalsService,
         RPCService
       ]
     })
