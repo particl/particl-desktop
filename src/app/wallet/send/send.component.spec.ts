@@ -6,7 +6,7 @@ import { SendComponent } from './send.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
-import { RPCModule } from '../../core/rpc/rpc.service';
+import { RPCModule } from '../../core/rpc/rpc.module';
 
 import { ModalsService } from '../../modals/modals.service';
 
