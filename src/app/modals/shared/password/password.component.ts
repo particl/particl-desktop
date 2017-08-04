@@ -21,6 +21,7 @@ export class PasswordComponent {
 
   @Input() unlockText: string = 'YOUR WALLET PASSWORD';
   @Input() unlockButton: string;
+  @Input() unlockTimeout: number = 6000;
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;
 
@@ -90,14 +91,22 @@ export class PasswordComponent {
   */
 
   rpc_unlock() {
-    this.log.i('rpc_unlock: calling unlock!');
-    this._rpc.call(this, 'walletpassphrase', [this.password, 99999, this.stakeOnly], this.rpc_unlock_success);
+    this.log.i('rpc_unlock: calling unlock! timeout=' + this.unlockTimeout);
+    this._rpc.call(this, 'walletpassphrase', [this.password, this.unlockTimeout, this.stakeOnly], 
+      this.rpc_unlock_success,
+      this.rpc_unlock_failed
+    );
   }
 
   rpc_unlock_success(json: Object) {
-    this.log.i('rpc_unlock_success: unlock was succesful :)');
+    this.log.i('rpc_unlock_success: unlock was succesful!');
     this._rpc.call(this, 'getwalletinfo', null, this.rpc_alertEncryptionStatus);
   }
+
+  rpc_unlock_failed(json: Object) {
+    this.log.i('rpc_unlock_failed: unlock failed - wrong password?');
+    alert("Unlock failed - password was incorrect.");
+  }  
 
   rpc_alertEncryptionStatus(json: Object) {
 

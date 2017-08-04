@@ -4,6 +4,7 @@ import { SendService } from './send.service';
 import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
 import { RPCService } from '../../core/rpc/rpc.service';
+import { ModalsService } from '../../modals/modals.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 
@@ -33,9 +34,20 @@ export class SendComponent implements OnInit, OnDestroy {
     currency: 'part',
     privacy: 50
   };
+
   lookup: string;
 
-  constructor(private sendService: SendService, private balanceService: BalanceService, private _rpc: RPCService) { }
+  constructor(
+    private sendService: SendService,
+    private balanceService: BalanceService,
+    private _rpc: RPCService,
+    private _modals: ModalsService
+  ) {
+  }
+
+  callback_walletUnlocked(t: boolean) {
+    console.log(t);
+  }
 
   ngOnInit() {
     this._sub = this.balanceService.getBalances()
@@ -66,6 +78,13 @@ export class SendComponent implements OnInit, OnDestroy {
     return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
   }
 
+  getAddress() : string {
+    if(this.type === 'sendPayment') {
+      return this.send.toAddress;
+    } else {
+      return this.sendService.getBalanceTransferAddress();
+    }
+  }
 
   /*
     Amount validation functions
@@ -160,6 +179,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   pay() {
 
+    this.closeValidate();
+
     // TODO: Why are we making a copy of all the properties?
     const input = this.send.fromType;
     let output = this.send.toType;
@@ -175,18 +196,15 @@ export class SendComponent implements OnInit, OnDestroy {
 
     if (input === '' ) {
       alert('You need to select an input type (public, blind or anon)!');
-      this.closeValidate();
       return;
     }
     if (this.type === 'balanceTransfer' && output === '') {
       alert('You need to select an output type (public, blind or anon)!');
-      this.closeValidate();
       return;
     }
 
     if (this.type === 'balanceTransfer' && this.send.fromType === this.send.toType) {
       alert('You have selected "' + this.send.fromType + '"" twice!\n Balance transfers can only happen between two different types.');
-      this.closeValidate();
       return;
     }
 
@@ -195,18 +213,55 @@ export class SendComponent implements OnInit, OnDestroy {
 
       if (output === 'private' && address.length < 35) {
         alert('Stealth address required for private transactions!');
-        this.closeValidate();
         return;
       }
 
-      this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+      // unlock wallet and send transaction
+      this._modals.unlockWallet(this,
+        this.sendTransaction,
+        2);
 
     } else if (this.type === 'balanceTransfer') {
-      this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
+
+      // unlock wallet and transfer balance
+      this._modals.unlockWallet(this,
+        this.transferBalance,
+        2);
+
     }
+  }
+
+
+
+  sendTransaction(): void {
+
+    const input = this.send.fromType;
+    const output = this.send.toType;
+    const address = this.send.toAddress;
+    const amount = this.send.amount;
+    const comment = this.send.note;
+    const narration = this.send.note;
+    const substractfee = false;
+    const ringsize = this.send.privacy;
+    const numsigs = 1;
+
+    this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
 
     this.clear();
-    this.closeValidate();
+  }
+
+  transferBalance(): void {
+
+    const input = this.send.fromType;
+    const output = this.send.toType;
+    const address = this.send.toAddress;
+    const amount = this.send.amount;
+    const ringsize = this.send.privacy;
+    const numsigs = 1;
+
+    this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
+
+    this.clear();
   }
 
   /*

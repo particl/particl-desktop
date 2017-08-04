@@ -36,7 +36,7 @@ export class ModalsService {
     });
   }
 
-  open(modal: string, data?: Object): void {
+  open(modal: string, data?: any): void {
     if (modal in this.messages) {
       this.log.d(`next modal: ${modal}`);
       this.modal = this.messages[modal];
@@ -72,7 +72,11 @@ export class ModalsService {
   needToOpenModal(status: any) {
     // Open syncing Modal
     if (!this.isOpen && (status.networkBH <= 0 || status.internalBH <= 0 || status.networkBH - status.internalBH > 50)) {
-        this.open('syncing');
+        //this.open('syncing');
     }
+  }
+
+  unlockWallet(i: Injectable, cb: Function, timeout: number) {
+    this.open('unlock', {'instance' : i, 'callback': cb, 'timeout': timeout});
   }
 }

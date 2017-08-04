@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { RPCService } from '../../core/rpc/rpc.service';
 
+import { Log } from 'ng2-logger'
+
+
 @Injectable()
 export class SendService {
 
+  // success alert box
   private address: string = '';
   private amount: number = 0;
 
+  // stealth address used for all balance transfers
   private defaultStealthAddressForBalanceTransfer: string;
 
-  constructor(public _rpc: RPCService) {
-    this._rpc.call(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
-  }
+  log: any = Log.create('send.service');
 
 
   /*
@@ -20,37 +23,8 @@ export class SendService {
 
   */
 
-  sendTransaction(input: string, output: string, address: string, amount: number, comment: string, substractfee: boolean,
-    narration: string, ringsize: number, numsignatures: number) {
-
-    this.resetTransactionDetails();
-
-    const rpcCall: string = this.getSendRPCCall(input, output);
-    const anon: boolean = this.isAnon(rpcCall);
-    const params: Array<any> = this.getSendParams(anon, address, amount, comment, substractfee, narration, ringsize, numsignatures);
-
-    this.setTransactionDetails(address, amount);
-
-    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send_success);
-  }
-
-  transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
-    this.resetTransactionDetails();
-    // comment is internal, narration is stored on blockchain
-    const rpcCall: string = this.getSendRPCCall(input, output);
-    const anon: boolean = this.isAnon(rpcCall);
-
-    if (address === undefined) {
-      address = this.defaultStealthAddressForBalanceTransfer;
-    }
-
-    const params: Array<any> = this.getSendParams(anon, this.defaultStealthAddressForBalanceTransfer,
-      amount, '', false, '', ringsize, numsignatures);
-
-    this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
-
-    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send_success);
-
+  constructor(public _rpc: RPCService) {
+    this._rpc.call(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
   }
 
   rpc_listDefaultAddress_success(json: Object) {
@@ -63,18 +37,59 @@ export class SendService {
 
   rpc_setDefaultAddress_success (json: string) {
     this.defaultStealthAddressForBalanceTransfer = json;
+    this.log.d("rpc_setDefaultAddress_success, stealth address: " + json);
   }
+
+  public getBalanceTransferAddress() : string {
+    return this.defaultStealthAddressForBalanceTransfer;
+  }
+
+  /*
+  * Sends a transactions
+  */
+  sendTransaction(input: string, output: string, address: string, amount: number, comment: string, substractfee: boolean,
+    narration: string, ringsize: number, numsignatures: number) {
+
+    this.resetTransactionDetails();
+
+    const rpcCall: string = this.getSendRPCCall(input, output);
+    const anon: boolean = this.isAnon(rpcCall);
+    const params: Array<any> = this.getSendParams(anon, address, amount, comment, substractfee, narration, ringsize, numsignatures);
+
+    this.setTransactionDetails(address, amount);
+
+    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
+  }
+
+  transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
+    this.resetTransactionDetails();
+    // comment is internal, narration is stored on blockchain
+    const rpcCall: string = this.getSendRPCCall(input, output);
+    const anon: boolean = this.isAnon(rpcCall);
+
+    this.log.d("transferBalance, sx" + this.defaultStealthAddressForBalanceTransfer);
+    if (address === undefined || address === '') {
+      address = this.defaultStealthAddressForBalanceTransfer;
+    }
+
+    const params: Array<any> = this.getSendParams(anon, this.defaultStealthAddressForBalanceTransfer,
+      amount, '', false, '', ringsize, numsignatures);
+
+    this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
+
+    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
+  }
+
 
   rpc_send_success(json: string) {
-    // json return value is just txid
-    // We can't use gettransaction just yet, becaue
-    if (true) {
-      alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!\nTransaction id: ' + json);
-    } else {
-      // error
-    }
+    this.log.d("rpc_send_success, succesfully executed transaction with txid ${json}");
+    alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!\nTransaction id: ' + json);
   }
 
+  rpc_send_failed(json: any) {
+    this.log.er("rpc_send_failed, failed to execute transactions!");
+    this.log.er(json);
+  }
 
 
   /*
@@ -163,9 +178,6 @@ export class SendService {
       return 4;
     }
   }
-
-
-
 
 
   /*

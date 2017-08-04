@@ -11,5 +11,7 @@
 <app-password
   [unlockButton]="'UNLOCK WALLET'"
   (unlockEmitter)="unlock($event)"
+  [unlockTimeout]="timeout"
+  [showStakeOnly]="showStakeOnly"
   [emitUnlock]="true">
   </app-password>
