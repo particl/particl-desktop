@@ -19,17 +19,17 @@ export class UnlockwalletComponent {
 
   unlock(json: Object) {
     // unlock actually happened in password.component.ts
-    console.log("Unlock emitted!");
+    console.log('Unlock emitted!');
     // perform callback
-    if(json['encryptionstatus'] === 'Unlocked' || json['encryptionstatus'] === 'Unlocked, staking only') {
+    if (json['encryptionstatus'] === 'Unlocked' || json['encryptionstatus'] === 'Unlocked, staking only') {
       this.callback.call(this.instance);
-    
+
       // clear callback data
       this.instance = undefined;
       this.callback = undefined;
       this.timeout = undefined;
       this.showStakeOnly = undefined;
-    } 
+    }
 
     // close the modal!
     document.getElementById('close').click();

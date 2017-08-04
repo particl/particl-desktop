@@ -37,10 +37,10 @@ export class SendService {
 
   rpc_setDefaultAddress_success (json: string) {
     this.defaultStealthAddressForBalanceTransfer = json;
-    this.log.d("rpc_setDefaultAddress_success, stealth address: " + json);
+    this.log.d('rpc_setDefaultAddress_success, stealth address: ' + json);
   }
 
-  public getBalanceTransferAddress() : string {
+  public getBalanceTransferAddress(): string {
     return this.defaultStealthAddressForBalanceTransfer;
   }
 
@@ -67,7 +67,7 @@ export class SendService {
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
 
-    this.log.d("transferBalance, sx" + this.defaultStealthAddressForBalanceTransfer);
+    this.log.d('transferBalance, sx' + this.defaultStealthAddressForBalanceTransfer);
     if (address === undefined || address === '') {
       address = this.defaultStealthAddressForBalanceTransfer;
     }
@@ -82,12 +82,12 @@ export class SendService {
 
 
   rpc_send_success(json: string) {
-    this.log.d("rpc_send_success, succesfully executed transaction with txid ${json}");
+    this.log.d('rpc_send_success, succesfully executed transaction with txid ${json}');
     alert('Succesfully sent ' + this.amount + ' PART to ' + this.address + '!\nTransaction id: ' + json);
   }
 
   rpc_send_failed(json: any) {
-    this.log.er("rpc_send_failed, failed to execute transactions!");
+    this.log.er('rpc_send_failed, failed to execute transactions!');
     this.log.er(json);
   }
 

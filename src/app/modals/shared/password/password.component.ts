@@ -92,7 +92,7 @@ export class PasswordComponent {
 
   rpc_unlock() {
     this.log.i('rpc_unlock: calling unlock! timeout=' + this.unlockTimeout);
-    this._rpc.call(this, 'walletpassphrase', [this.password, this.unlockTimeout, this.stakeOnly], 
+    this._rpc.call(this, 'walletpassphrase', [this.password, this.unlockTimeout, this.stakeOnly],
       this.rpc_unlock_success,
       this.rpc_unlock_failed
     );
@@ -105,8 +105,8 @@ export class PasswordComponent {
 
   rpc_unlock_failed(json: Object) {
     this.log.i('rpc_unlock_failed: unlock failed - wrong password?');
-    alert("Unlock failed - password was incorrect.");
-  }  
+    alert('Unlock failed - password was incorrect.');
+  }
 
   rpc_alertEncryptionStatus(json: Object) {
 

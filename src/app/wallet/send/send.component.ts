@@ -78,8 +78,8 @@ export class SendComponent implements OnInit, OnDestroy {
     return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
   }
 
-  getAddress() : string {
-    if(this.type === 'sendPayment') {
+  getAddress(): string {
+    if (this.type === 'sendPayment') {
       return this.send.toAddress;
     } else {
       return this.sendService.getBalanceTransferAddress();
