@@ -83,15 +83,19 @@ export class ReceiveComponent implements OnInit {
     this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses);
   }
 
-  rpc_loadAddresses(JSON: Object) {
-
+  rpc_loadAddresses(json: Object) {
+    console.log('crz : share this');
+    console.log(JSON.stringify(json));
+    console.log('End');
     const pub = [];
     const priv = [];
-    for (const k in JSON) {
-      if (JSON[k].address.indexOf('p') === 0) {
-        pub.push(JSON[k]);
-      } else if (JSON[k].address.indexOf('T') === 0) {
-        priv.push(JSON[k]);
+    for (const k in json) {
+
+      // TODO: detect address better
+      if (json[k].address.indexOf('p') === 0) {
+        pub.push(json[k]);
+      } else if (json[k].address.indexOf('T') === 0) {
+        priv.push(json[k]);
       }
     }
 
@@ -121,7 +125,7 @@ export class ReceiveComponent implements OnInit {
 
 
 
-    if (JSON[0] !== undefined) {
+    if (json[0] !== undefined) {
       this.sortArrays('public');
       this.sortArrays('private');
 
