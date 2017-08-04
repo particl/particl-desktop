@@ -6,7 +6,7 @@ import { SendComponent } from './send.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
-import { RPCModule } from '../../core/rpc/rpc.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { ModalsService } from '../../modals/modals.service';
 
@@ -18,12 +18,12 @@ describe('SendComponent', () => {
     TestBed.configureTestingModule({
       imports: [
          SharedModule,
-         WalletModule.forRoot()
+         WalletModule.forRoot(),
+         RpcModule.forRoot()
       ],
       providers: [
         ElectronService,
-        ModalsService,
-        RPCService
+        ModalsService
       ]
     })
     .compileComponents();
