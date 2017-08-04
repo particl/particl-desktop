@@ -1,11 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { EncryptionstatusService } from './encryptionstatus.service';
+import { SharedModule } from '../../shared/shared.module';
+import { RpcModule, EncryptionStatusService } from './rpc.module';
 
 describe('EncryptionStatusService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [EncryptionStatusService]
+      imports: [
+        SharedModule,
+        RpcModule.forRoot()
+      ]
     });
   });
 
