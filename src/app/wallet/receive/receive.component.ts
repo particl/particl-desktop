@@ -162,10 +162,14 @@ export class ReceiveComponent implements OnInit {
     tempAddress.readable = tempAddress.address.match(/.{1,4}/g);
 
     if (type === 'public') {
-      tempAddress.id = json['path'].replace('m/0/', '');
+      if(json['path'] !== undefined) {
+        tempAddress.id = json['path'].replace('m/0/', '');
+      }
       this.addresses.public.unshift(tempAddress);
     } else if (type === 'private') {
-      tempAddress.id = +(json['path'].replace('m/0\'/', '').replace('\'', '')) / 2;
+      if(json['path'] !== undefined) {
+        tempAddress.id = +(json['path'].replace('m/0\'/', '').replace('\'', '')) / 2;
+      }
       this.addresses.private.unshift(tempAddress);
     }
   }
