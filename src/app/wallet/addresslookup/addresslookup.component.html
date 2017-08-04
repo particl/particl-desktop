@@ -14,12 +14,13 @@
 
         <div class="row">
           <div class="col-xs-8">
-            <input type="text" class="form-control" [(ngModel)]="filterAddress"
-              placeholder="Filter by label or address...">
+            <input type="text" class="form-control"
+              placeholder="Filter by label or address..."
+              [(ngModel)]="query">
           </div>
           <div class="col-xs-4">
-            <select class="form-control">
-              <option value="" selected >Address Type</option>
+            <select class="form-control" [(ngModel)]="filter">
+              <option value="all" selected >All</option>
               <option value="public">Public</option>
               <option value="private">Private</option>
             </select>
@@ -31,17 +32,15 @@
             <tr>
               <th>Label</th>
               <th>Address</th>
-              <th>Public Key</th>
               <th>Address Type</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let address of lookupAddresses"
-              (click)="selectAddressCallback(address.address, address.label)">
-              <th scope="row">{{address.label}}</th>
-              <td>{{address.address}}</td>
-              <td>{{address.publicKey}}</td>
-              <td>{{address.type}}</td>
+            <tr *ngFor="let address of page()"
+              (click)="selectAddressCallback(address.getAddress(), address.getLabel())">
+              <th scope="row">{{address.getLabel()}}</th>
+              <td>{{address.getAddress()}}</td>
+              <td>{{cheatPublicAddress(address.getAddress())}}</td>
             </tr>
           </tbody>
         </table>

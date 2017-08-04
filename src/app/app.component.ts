@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { Log } from 'ng2-logger'
+import { Log } from 'ng2-logger';
 
 import { WindowService } from './core/window.service';
 
@@ -56,7 +56,6 @@ export class AppComponent implements OnInit {
     this.log.w('warn!');
     this.log.i('info');
     this.log.d('debug');
-
   }
 
   // TODO: remove Modal examples
