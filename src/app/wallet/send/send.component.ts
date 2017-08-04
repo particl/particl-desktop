@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
+import { Log } from 'ng2-logger';
+
 import { SendService } from './send.service';
 import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,9 +16,15 @@ import { AddressLookupComponent } from '../addresslookup/addresslookup.component
   styleUrls: ['./send.component.scss', '../../settings/settings.component.scss']
 })
 export class SendComponent implements OnInit, OnDestroy {
-  private _sub: Subscription;
-  private _balance: any;
 
+  /*
+    General
+  */
+  log: any = Log.create('send.component');
+
+  /*
+    UI logic
+  */
   @ViewChild('addressLookup')
   public addressLookup: AddressLookupComponent;
 
@@ -28,12 +36,21 @@ export class SendComponent implements OnInit, OnDestroy {
     fromType: 'public',
     toType: 'public',
     toAddress: '',
+    toLabel: '',
     validAddress: undefined,
     validAmount: undefined,
+    isMine: undefined,
     currency: 'part',
     privacy: 50
   };
+
+  /*
+    RPC logic
+  */
   lookup: string;
+
+  private _sub: Subscription;
+  private _balance: any;
 
   constructor(private sendService: SendService, private balanceService: BalanceService, private _rpc: RPCService) { }
 
@@ -43,7 +60,7 @@ export class SendComponent implements OnInit, OnDestroy {
         balances => {
           this._balance = balances;
         },
-        error => console.log('balanceService subscription error:' + error));
+        error => this.log.er('balanceService subscription error:' + error));
   }
 
   ngOnDestroy() {
@@ -119,6 +136,7 @@ export class SendComponent implements OnInit, OnDestroy {
   verifyAddress() {
     if (this.send.toAddress === '' || this.send.toAddress === undefined) {
       this.send.validAddress = undefined;
+      this.send.isMine = undefined;
       return;
     }
 
@@ -128,6 +146,14 @@ export class SendComponent implements OnInit, OnDestroy {
 
   rpc_callbackVerifyAddress(json: Object) {
     this.send.validAddress = json['isvalid'];
+    if (json['account'] !== undefined) {
+      this.send.toLabel = json['account'];
+    }
+
+    if (json['ismine'] !== undefined) {
+      this.send.isMine = json['ismine'];
+    }
+
   }
 
 
@@ -145,9 +171,15 @@ export class SendComponent implements OnInit, OnDestroy {
     };
   }
 
+  clearReceiver() {
+    this.send.toLabel = '';
+    this.send.toAddress = '';
+    this.send.validAddress = undefined;
+  }
+
 
   /*
-     Validation modal + payment function!
+     Validation modal
   */
 
   openValidate() {
@@ -158,9 +190,11 @@ export class SendComponent implements OnInit, OnDestroy {
     document.getElementById('validate').classList.add('hide');
   }
 
+  /*
+    Payment function
+  */
   pay() {
 
-    // TODO: Why are we making a copy of all the properties?
     const input = this.send.fromType;
     let output = this.send.toType;
     const address = this.send.toAddress;
@@ -199,9 +233,14 @@ export class SendComponent implements OnInit, OnDestroy {
         return;
       }
 
+      // edit label of address
+      this.addLabelToAddress();
+
+      // send transaction
       this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
 
     } else if (this.type === 'balanceTransfer') {
+      // perform balance transfer
       this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
     }
 
@@ -221,6 +260,37 @@ export class SendComponent implements OnInit, OnDestroy {
     this.send.toAddress = address;
     this.send.toLabel = label;
     this.addressLookup.hide();
+    this.verifyAddress();
+  }
+
+  /*
+  * Add/edits label of an address
+  */
+
+  addLabelToAddress() {
+    const isMine = this.send.isMine;
+
+    if (isMine) {
+      if (!confirm('Address is one of our own - change label? ')) {
+        return;
+      }
+    }
+
+    const label = this.send.toLabel;
+    const addr = this.send.toAddress;
+
+    this._rpc.call(this, 'manageaddressbook', ['newsend', addr, label],
+      this.rpc_addLabel_success,
+      this.rpc_addLabel_failed
+    );
+  }
+
+  rpc_addLabel_success(json: Object) {
+    this.log.er('rpc_addLabel_success: successfully added label to address.');
+  }
+
+  rpc_addLabel_failed(json: Object) {
+    this.log.er('rpc_addLabel_failed: failed to add label to address.');
   }
 
 }
