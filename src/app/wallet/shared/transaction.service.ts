@@ -88,8 +88,13 @@ export class TransactionService {
         The callback will send over an array of JSON transaction objects.
 
       */
+    this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
+    this.log.d(`rpc_loadTransactions_success, real tx per page: ${json.length}`);
 
-    this.log.d(`rpc_loadTransactions_success, real txcount: ${json.length}`);
+    if (json.length !== this.MAX_TXS_PER_PAGE) {
+      this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
+    }
+
     for (let i = 0; i < json.length; i++) {
       const tx: Object = json[i];
       this.addTransaction(tx);
