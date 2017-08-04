@@ -160,16 +160,16 @@ export class ReceiveComponent implements OnInit {
 
     if (type === 'public') {
 
-      // not all addresses are derived from HD wallet (importprivkey) 
-      if(json['path'] !== undefined) {
+      // not all addresses are derived from HD wallet (importprivkey)
+      if (json['path'] !== undefined) {
         tempAddress.id = json['path'].replace('m/0/', '');
       }
       this.addresses.public.unshift(tempAddress);
 
     } else if (type === 'private') {
 
-      // not all stealth addresses are derived from HD wallet (importprivkey) 
-      if(json['path'] !== undefined) {
+      // not all stealth addresses are derived from HD wallet (importprivkey)
+      if (json['path'] !== undefined) {
         tempAddress.id = +(json['path'].replace('m/0\'/', '').replace('\'', '')) / 2;
       }
       this.addresses.private.unshift(tempAddress);
