@@ -36,14 +36,20 @@ describe('SendComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
+/*
   it('should send tab', () => {
-    // component.sendTab();
-    expect(component.sendTab).toBeTruthy();
+    component.sendTab('sendPayment');
+    expect(component.sendTab).toBe('sendPayment');
   });
 
+    it('should open lookup', () => {
+      component.openLookup();
+      expect(component.openLookup).toBe('true');
+    });
+*/
+/*
   it('should get balances', () => {
-    // component.sendTab();
+    // component.getBalance();
     expect(component.getBalance).toBeTruthy()
   });
 
@@ -92,23 +98,15 @@ describe('SendComponent', () => {
     expect(component.verifyAddress).toBeTruthy();
   });
 
-  it('should call back address', () => {
-    // component.rpc_callbackVerifyAddress();
-    expect(component.rpc_callbackVerifyAddress).toBeTruthy();
+  it('should get send', () => {
+    expect(component.send).toBeTruthy();
   });
-
-  it('should open lookup', () => {
-    component.openLookup();
-    expect(component.openLookup).toBeTruthy();
-  });
-
+*/
   it('should get addressLookup property', () => {
     expect(component.addressLookup).toBeDefined();
   });
 
-  it('should get send', () => {
-    expect(component.send).toBeTruthy();
-  });
+
 
   it('should get advanced', () => {
     expect(component.advanced).toBe(false);
@@ -121,4 +119,10 @@ describe('SendComponent', () => {
   it('should get type', () => {
     expect(component.type).toBe('sendPayment');
   });
+  /*
+    it('should call back address', () => {
+      // component.rpc_callbackVerifyAddress();
+      expect(component.rpc_callbackVerifyAddress).toBeTruthy();
+    });
+  */
 });

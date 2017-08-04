@@ -35,10 +35,12 @@ let component: AppComponent;
   });
 
   it('should sync', () => {
+  component.sync();
     expect(component.syncing).toBeTruthy();
   });
 
   it('should unlock', () => {
+    component.unlock();
     expect(component.unlock).toBeTruthy();
   });
   */

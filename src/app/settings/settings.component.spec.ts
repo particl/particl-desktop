@@ -31,7 +31,7 @@ describe('SettingsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
+/*
   it('should go to settingsTab', () => {
     // component.settingsTab();
     expect(component.settings).toBeTruthy();
@@ -51,7 +51,7 @@ describe('SettingsComponent', () => {
     component.validate();
     expect(component.validate).toBeTruthy();
   });
-
+*/
   it('should get settings', () => {
     expect(component.settings).toBeDefined();
   });

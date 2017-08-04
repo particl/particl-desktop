@@ -30,7 +30,7 @@ describe('RecoverwalletComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-
+/*
   it('should restore', () => {
     // component.restore();
     expect(component.restore).toBeTruthy();
@@ -40,7 +40,7 @@ describe('RecoverwalletComponent', () => {
     component.back();
     expect(component.back).toBeTruthy();
   });
-
+*/
   it('should get words', () => {
     expect(component.words).toBeDefined();
   });

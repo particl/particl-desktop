@@ -44,7 +44,7 @@ describe('SyncingComponent', () => {
 /*
   it('should getRemainder', () => {
     component.getRemainder();
-    expect(component.)
+    expect(component.getRemainder).tobe();
   });
 */
   it('should get increasePerMinute', () => {

@@ -37,15 +37,12 @@ describe('ModalsComponent', () => {
 
   it('should update progress', () => {
     component.updateProgress(5);
-
     expect(component.syncPercentage).toBe(5);
   });
 
   it('should open and close', () => {
     component.open(UnlockwalletComponent);
-
     expect(component.modal).toBeDefined();
-
     component.close();
   });
 
@@ -60,9 +57,4 @@ describe('ModalsComponent', () => {
   it('should get modal', () => {
     expect(component.modal).toBe(undefined);
   });
-/*
-  it('should get modalContainer', () => {
-    expect(component.modalContainer).toBeDefined();
-  });
-  */
 });

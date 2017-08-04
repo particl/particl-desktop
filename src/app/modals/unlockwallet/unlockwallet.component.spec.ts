@@ -31,10 +31,4 @@ describe('UnlockwalletComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should unlock', () => {
-    // component.unlock()
-    expect(component.unlock).toBeTruthy();
-  });
-
 });
