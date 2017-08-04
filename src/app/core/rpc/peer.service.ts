@@ -40,7 +40,6 @@ export class PeerService {
 
   private setPeerList(json: Array<Object>) {
 
-
     // hook network block height changes
     this._observerHighestBlockHeightNetwork.next(this.setBlockCountNetwork(json));
 

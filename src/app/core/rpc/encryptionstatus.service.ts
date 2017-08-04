@@ -14,8 +14,7 @@ export class EncryptionStatusService {
   constructor(private _rpc: RPCService) {
 
     // register updates to encryptionStatus
-    // TODO: 'both' -> time
-    this._rpc.register(this, 'getwalletinfo', null, this.setEncryptionStatus, 'both');
+    this._rpc.register(this, 'getwalletinfo', null, this.setEncryptionStatus, 'time');
 
     this._encryptionStatus = Observable.create(observer => this._observerEncryptionStatus = observer).publishReplay(1).refCount();
     this._encryptionStatus.subscribe().unsubscribe();

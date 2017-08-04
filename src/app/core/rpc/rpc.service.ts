@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 
 import { Headers, Http } from '@angular/http';
+import { Log } from 'ng2-logger'
 
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
@@ -31,11 +32,14 @@ export class RPCService {
 
   private _callOnBlock: Array<any> = [];
   private _callOnTransaction: Array<any> = [];
+  private _callOnTime: Array<any> = [];
   private _callOnAddress: Array<any> = [];
 
   private _pollTimout: number;
 
   public isElectron: boolean = false;
+
+  private log: any = Log.create('rpc.service');
 
   constructor(private http: Http, public electronService: ElectronService) {
     this.isElectron = this.electronService.isElectronApp;
@@ -94,7 +98,7 @@ export class RPCService {
               errorCB.call(instance, (typeof error['_body'] === 'object' ? error['_body'] : JSON.parse(error['_body'])) )
             }
             // TODO: Call error modal?
-            console.log('RPC Call returned an error', error);
+            this.log.er(`RPC Call returned an error ${error}`);
           });
     }
   }
@@ -145,6 +149,10 @@ export class RPCService {
       this._callOnTransaction.push(_call);
       valid = true;
     }
+    if (when.indexOf('time') !== -1 || when.indexOf('both') !== -1) {
+      this._callOnTime.push(_call);
+      valid = true;
+    }
     if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
       this._callOnAddress.push(_call);
       valid = true;
@@ -169,10 +177,17 @@ export class RPCService {
 
     this._callOnBlock.forEach(_call);
     this._callOnTransaction.forEach(_call);
+    this._callOnTime.forEach(_call);
 
     this._pollTimout = setTimeout(this.poll.bind(this), 3000);
   }
 
+/**
+ * Do one poll for _address table_: execute all the registered calls.
+ * Triggered from within the GUI!
+ *
+ * @returns      void
+ */
   specialPoll(): void {
     // A poll only for address changes, triggered from the GUI!
 
@@ -187,6 +202,8 @@ export class RPCService {
 
     this._callOnAddress.forEach(_call);
   }
+
+
 /**
  * Start a temporary loop that polls the RPC every 3 seconds.
  *
