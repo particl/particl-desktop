@@ -74,24 +74,25 @@ export class TransactionService {
     this.rpc.call(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
   }
 
-  rpc_loadTransactionCount(JSON: Object): void {
-    this.txCount = JSON['txcount'];
+  rpc_loadTransactionCount(json: Object): void {
+    this.txCount = json['txcount'];
 
-    this.log.d('rpc_loadTransactionCount, txcount:', this.txCount);
-    this.log.d('rpc_loadTransactionCount, rpc_getParameters():', this.rpc_getParameters());
+    this.log.d(`rpc_loadTransactionCount, txcount: ${this.txCount}`);
+    this.log.d(`rpc_loadTransactionCount, rpc_getParameters(): ${this.rpc_getParameters()}`);
 
-    this.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
+    this.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions_success);
   }
 
-  rpc_loadTransactions(JSON: Array<Object>): void {
+  rpc_loadTransactions_success(json: Array<Object>): void {
       /*
         The callback will send over an array of JSON transaction objects.
 
       */
 
-    for (let i = 0; i < JSON.length; i++) {
-      const json: Object = JSON[i];
-      this.addTransaction(json);
+    this.log.d(`rpc_loadTransactions_success, real txcount: ${json.length}`);
+    for (let i = 0; i < json.length; i++) {
+      const tx: Object = json[i];
+      this.addTransaction(tx);
     }
   }
 
