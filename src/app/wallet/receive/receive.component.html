@@ -97,7 +97,7 @@
 
   <div class="col-xs-3 pull-right receive-right">
 
-    <div class="card qr">
+    <div #qrCode class="card qr" (window:resize)="setQrSize($event)">
       <qr-code [size]="getQrSize()" [level]="'H'"
         [value]="selected.address">
       </qr-code>

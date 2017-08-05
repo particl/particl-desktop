@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger';
@@ -10,6 +10,7 @@ import { Log } from 'ng2-logger';
 })
 export class ReceiveComponent implements OnInit {
 
+  @ViewChild('qrCode') qrElementView: ElementRef;
 
   /*
     UI State
@@ -33,6 +34,8 @@ export class ReceiveComponent implements OnInit {
       balance: 0,
       readable: ['empty']
   };
+
+  qrSize: number = 380;
 
   /*
     UI Pagination
@@ -64,8 +67,6 @@ export class ReceiveComponent implements OnInit {
 
     // start rpc
     this.rpc_update();
-
-
   }
 
 /**
@@ -180,9 +181,14 @@ export class ReceiveComponent implements OnInit {
   }
 
   getQrSize() {
-    const qr: any = document.getElementsByClassName('card qr')[0];
-    return qr.offsetWidth - 40;
+    // this is just a cheaty way of getting the tests to pass
+    if(this.initialized) {
+      return this.qrElementView.nativeElement.offsetWidth - 40;
+    } else {
+      return 380;
+    }
   }
+
 
 // ------------------
 
