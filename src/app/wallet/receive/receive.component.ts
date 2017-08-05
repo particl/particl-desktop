@@ -45,7 +45,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   MAX_ADDRESSES_PER_PAGE: number = 6;
-  page: number;
+  page: number = 1;
 
   /*
     initialized boolean: when true => checkFreshAddress is already looping!
