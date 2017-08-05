@@ -10,8 +10,13 @@ import { Log } from 'ng2-logger';
 })
 export class ReceiveComponent implements OnInit {
 
-  entriesPerPage: number = 6;
-  type: string = 'public';
+
+  /*
+    UI State
+  */
+
+  private type: string = 'public';
+  public query: string = '';
 
   defaultAddress: Object = {
       id: 0,
@@ -21,69 +26,180 @@ export class ReceiveComponent implements OnInit {
       readable: ['Empty']
     }
 
-  addresses: any = {
-    private: [this.defaultAddress],
-    public: [this.defaultAddress]
-  }
-
   selected: any = {
       id: 0,
       label: 'Empty label',
       address: 'Empty address',
       balance: 0,
       readable: ['empty']
-    };
+  };
 
-    initialized: boolean = false;
+  /*
+    UI Pagination
+  */
+  addresses: any = {
+    private: [this.defaultAddress],
+    public: [this.defaultAddress],
+    query: [this.defaultAddress]
 
-  query: string;
-  searchSubset: any = [];
-
-  page: number = 1;
-  pages: any = [];
-  nav: any;
-
-  qr: any = {
-    el: undefined,
-    size: undefined
   }
+
+  MAX_ADDRESSES_PER_PAGE: number = 6;
+  page: number;
+
+  /*
+    initialized boolean: when true => checkFreshAddress is already looping!
+  */
+  initialized: boolean = false;
+
+  /*
+    General
+  */
 
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService) { }
 
+  ngOnInit() {
+
+    // start rpc
+    this.rpc_update();
+
+  }
+
+/**
+ * Returns the addresses to display in the UI with regards to both pagination and search/query.
+ * Does _NOT_ return the fresh address!
+ * @returns      Object[]
+ */
+  getSinglePage(): Array<Object> {
+    if (this.inSearchMode()) { // in search mode
+      this.addresses['query'] = this.addresses[this.type].filter(el => {
+        return (
+          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+          || el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+        );
+      });
+
+      return this.addresses['query'].slice(((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
+
+    } else { // not in seach mode
+      return this.addresses[this.type].slice(1 + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
+    }
+  }
+
+/**
+ * Returns the fresh addresses to display in the UI.
+ * @returns      Object[]
+ */
+  getFreshAddress(): Object {
+    if (this.type === 'public') {
+      return this.addresses.public[0];
+    } else if (this.type === 'private') {
+      return this.addresses.private[0];
+    }
+  }
+
+/**
+ * Returns the total counts of addresses to display in the UI with regards to both the type of address (private/public) and search.
+ * Excludes the count for the fresh address! (- 1 except for search!)
+ * @returns      number
+ */
+  getTotalCountForPagination(): number {
+    if (this.inSearchMode()) {
+      return this.addresses.query.length;
+    }
+    if (this.type === 'public') {
+      return this.addresses.public.length - 1;
+    } else if (this.type === 'private') {
+      return this.addresses.private.length - 1;
+    }
+  }
+
+/**
+ * Called to change the page.
+ * @returns      void
+ */
+  pageChanged(event: any) {
+    if (event.page !== undefined) {
+      this.log.d(`pageChanged, changing receive page to: ${event.page}`);
+    }
+  }
+
+  /*
+    UI Helper functions
+  */
+
+// ------------------
+
+  /**
+  * Returns whether we're in search mode or not!
+  * The current table is showing limited results due to search.
+  * Mainly for hiding the "Fresh address" & ease of use in other functions.
+  */
+  inSearchMode(): boolean {
+    return (this.query !== undefined && this.query !== '');
+  }
+
+  /*
+  * OnEscape => exit search results
+  */
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: any) {
     // clear search bar on esc
     if (event.code.toLowerCase() === 'escape') {
-      const searchbar: any = document.getElementById('searchbar');
-      if (searchbar === document.activeElement) {
-        searchbar.value = '';
-        this.loadPages(this.addresses[this.type]);
-      }
+      this.query = '';
     }
   }
 
-  ngOnInit() {
-    // QR size
-    this.qr.el = document.getElementsByClassName('card qr')[0];
-    this.qr.size = this.qr.el.offsetWidth - 40;
-    window.onresize = () => this.qr.size = this.qr.el.offsetWidth - 40;
-
-    // start rpc
-    this.rpc_update();
+// ------------------
+  /**
+  * sets the address type, also checks if valid. Also changes the selected address.
+  */
+  setAddressType(type: string) {
+    if (type === 'public') {
+      this.type = 'public';
+    } else if (type === 'private') {
+      this.type = 'private';
+    }
+    this.selectAddress(this.addresses[type][0]);
   }
+
+  getAddressType() {
+    return this.type;
+  }
+
+// ------------------
+
+  /*
+  *   Selected address stuff + QRcode
+  */
+  selectAddress(address: Object) {
+    this.selected = address;
+  }
+
+  getQrSize() {
+    const qr: any = document.getElementsByClassName('card qr')[0];
+    return qr.offsetWidth - 40;
+  }
+
+// ------------------
+
+
+  /*
+    RPC LOGIC
+  */
 
   rpc_update() {
-    this.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount);
+    this.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success);
   }
 
-  rpc_loadAddressCount(json: Object) {
+  rpc_loadAddressCount_success(json: Object) {
     const count = json['num_receive'];
-    this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses);
+    this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
   }
 
-  rpc_loadAddresses(json: Object) {
+  rpc_loadAddresses_success(json: Object) {
     const pub = [];
     const priv = [];
     for (const k in json) {
@@ -120,18 +236,14 @@ export class ReceiveComponent implements OnInit {
     }
 
 
-
-
     if (json[0] !== undefined) {
       this.sortArrays('public');
       this.sortArrays('private');
 
       if (this.type === 'public') {
-        this.loadPages(this.addresses.public);
-        this.selected = this.addresses.public[0];
+        this.selectAddress(this.addresses.public[0]);
       } else if (this.type === 'private') {
-        this.loadPages(this.addresses.private);
-        this.selected = this.addresses.private[0];
+        this.selectAddress(this.addresses.private[0]);
       }
 
     }
@@ -140,8 +252,13 @@ export class ReceiveComponent implements OnInit {
       this.initialized = true;
       this.checkIfFreshAddress();
     }
+
   }
 
+  /**
+  * Transforms the json to the right format and adds it to the right array (public / private)
+  *
+  */
   addAddress(json: Object, type: string) {
     const tempAddress = {
       id: 0,
@@ -176,6 +293,10 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
+  /**
+  * Sorts the private/public address by id (= HD wallet path m/0/0 < m/0/1)
+  *
+  */
   sortArrays(type: string) {
     function compare(a: any, b: any) {
       return b.id - a.id;
@@ -184,39 +305,9 @@ export class ReceiveComponent implements OnInit {
     this.addresses[type].sort(compare);
   }
 
-  search(query: string) {
-    if (!query) {
-      this.loadPages(this.addresses[this.type]);
-      return;
-    }
-    // TODO doesn't search labels correctly
-    // TODO should search address numbers
-    this.searchSubset = this.addresses[this.type].filter(el => {
-      return (
-        el.label.toLowerCase().indexOf(query.toLowerCase()) !== -1
-        || el.address.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      );
-    })
-    this.loadPages(this.searchSubset, 0);
-  }
 
-  changeType(type: string) {
-    this.type = type;
-    this.selected = this.addresses[type][0];
-    this.loadPages(this.addresses[this.type]);
-  }
 
-  loadPages(addresses: any[], i: number = 1) {
-    const pages = [];
-    for (i; i <= addresses.length; ) {
-      const address = addresses.slice(i, i + this.entriesPerPage);
-      pages.push(address);
-      i += this.entriesPerPage;
-    }
-    this.pages = pages;
-    this.pageNav();
-  }
-
+// ------------------
   /*
     Checks if the newest address is still fresh (hasn't received funds).
     If it has received funds, generate a new address and update the table.
@@ -243,88 +334,8 @@ export class ReceiveComponent implements OnInit {
     this.rpc_update();
   }
 
-  /*
-    Page navigation
-  */
 
-  pageNav() {
-    let nav = [];
-    if (this.pages.length <= 5) {
-      for (let i = 1; i <= this.pages.length; i++) {
-        nav.push(i);
-      }
-    } else {
-      nav = [ '1' ];
-      if (this.page > 3) {
-        nav.push('...');
-        for (let i = this.page - 1; i < this.page + 2; i++) {
-          if (i < this.pages.length) {
-            nav.push(i);
-          }
-        }
-      } else {
-        for (let i = 2; i <= 4; i++) {
-          if (i < this.pages.length) {
-            nav.push(i);
-          }
-        }
-      }
-      if (this.pages.length >= this.page + 3) {
-        nav.push('...');
-      }
-      nav.push(this.pages.length);
-    }
-    this.nav = nav;
-
-    // TODO fix hack
-    setTimeout(() => {
-      const currentPage: any = document.getElementById(`page-${this.page}`)
-      if (currentPage) {
-        currentPage.style.color = '#fff'
-      }
-    }, 50);
-    ;
-  }
-
-  previousPage() {
-    if (this.page > 1) {
-      document.getElementById(`page-${this.page}`).style.color = 'black';
-      this.page--;
-    }
-    this.pageNav();
-  }
-
-  nextPage() {
-    if (this.page < this.pages.length) {
-      document.getElementById(`page-${this.page}`).style.color = 'black';
-      this.page++;
-    }
-    this.pageNav();
-  }
-
-  gotoPage(page: any) {
-    if (page !== '...') {
-      document.getElementById(`page-${this.page}`).style.color = 'black';
-      this.page = page;
-    }
-    this.pageNav();
-  }
-
-  copyAddress(id: string) {
-    const address: any = document.getElementById(`address-${id}`)
-      .getElementsByClassName('address')[0];
-    let selectable: any = document.createElement('textarea');
-    selectable.style.height = '0';
-    selectable.id = 'selectable';
-    document.body.appendChild(selectable);
-    selectable.value = address.innerHTML.trim();
-    selectable = document.getElementById('selectable');
-    address.classList.add('copied');
-    selectable.select();
-    document.execCommand('copy');
-    address.classList.remove('copied');
-    document.body.removeChild(selectable);
-  }
+// ------------------
 
   /*
     Generate a new address with label
@@ -345,9 +356,9 @@ export class ReceiveComponent implements OnInit {
     // just call for a complete update, just adding the address isn't possible because
     this.rpc_update();
   }
-  /*
-    ------------------
-  */
+// ------------------
+
+
 
   selectInput() {
     const input: any = document.getElementsByClassName('header-input')[0];
