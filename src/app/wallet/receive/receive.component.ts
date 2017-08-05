@@ -65,6 +65,7 @@ export class ReceiveComponent implements OnInit {
     // start rpc
     this.rpc_update();
 
+
   }
 
 /**
