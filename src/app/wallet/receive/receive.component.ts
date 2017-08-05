@@ -210,11 +210,11 @@ export class ReceiveComponent implements OnInit {
     const pub = [];
     const priv = [];
     for (const k in json) {
-
-      // TODO: detect address better
-      if (json[k].address.indexOf('p') === 0) {
+      // public address
+      if (json[k].address.length < 35) {
         pub.push(json[k]);
-      } else if (json[k].address.indexOf('T') === 0) {
+      // private address
+      } else {
         priv.push(json[k]);
       }
     }
@@ -247,12 +247,7 @@ export class ReceiveComponent implements OnInit {
       this.sortArrays('public');
       this.sortArrays('private');
 
-      if (this.type === 'public') {
-        this.selectAddress(this.addresses.public[0]);
-      } else if (this.type === 'private') {
-        this.selectAddress(this.addresses.private[0]);
-      }
-
+      this.selectAddress(this.addresses[this.type][0]);
     }
 
     if (!this.initialized) {
