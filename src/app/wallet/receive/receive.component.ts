@@ -182,7 +182,7 @@ export class ReceiveComponent implements OnInit {
 
   getQrSize() {
     // this is just a cheaty way of getting the tests to pass
-    if(this.initialized) {
+    if (this.initialized) {
       return this.qrElementView.nativeElement.offsetWidth - 40;
     } else {
       return 380;
