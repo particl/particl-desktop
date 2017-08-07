@@ -10,7 +10,10 @@
   </tr>
   <tr *ngFor="let address of getSinglePage()">
     <td *ngIf="displayLabel" class="text-left">
-      <span class="inline-header">{{ address.label }}</span>
+      <span class="inline-header"
+        (click)="editLabel(address.address)">
+          {{ address.label }}
+      </span>
     </td>
     <td *ngIf="displayAddress" class="text-left">
       <span class="inline-header">Address</span>

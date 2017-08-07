@@ -83,7 +83,12 @@ export class AddressBookComponent implements OnInit {
     Add address to addressbook
   */
 
-
+  editLabel(address: string) {
+    this.log.d(`editLabel, address: ${address}`);
+    this.address = address;
+    this.verifyAddress();
+    this.openNewAddress();
+  }
   /**
   * Adds the address to the addressbook if address is valid & has label (in UI textbox) AND is not one of our own addresses.
   */

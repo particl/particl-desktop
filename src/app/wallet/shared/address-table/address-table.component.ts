@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
@@ -29,6 +29,8 @@ export class AddressTableComponent implements OnInit {
   @Input() displayPublicKey: boolean = false;
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
+
+  @Output() editLabelEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   /*
     Search query
@@ -147,6 +149,15 @@ export class AddressTableComponent implements OnInit {
     this._rpc.specialPoll();
   }
 
+// ------------------
 
+/*
+  Edit label address
+*/
+
+  editLabel(address: string) {
+    this.log.d(`editLabel, address: ${address}`);
+    this.editLabelEmitter.emit(address);
+  }
 }
 
