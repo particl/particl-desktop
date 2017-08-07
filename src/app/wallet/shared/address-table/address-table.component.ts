@@ -45,7 +45,7 @@ export class AddressTableComponent implements OnInit {
     Pagination
   */
   currentPage: number = 1;
-  @Input() addressDisplayAmount: number = 3;
+  @Input() addressDisplayAmount: number = 5;
 
   /*
     General
