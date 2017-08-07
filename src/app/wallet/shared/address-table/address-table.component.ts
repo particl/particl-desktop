@@ -1,5 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+import { Log } from 'ng2-logger';
+
 import { AddressService } from '../address.service';
+import { Address } from '../address.model';
+
+import { RPCService } from '../../../core/rpc/rpc.module';
 
 @Component({
   selector: 'address-table',
@@ -23,17 +29,124 @@ export class AddressTableComponent implements OnInit {
   @Input() displayPublicKey: boolean = false;
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
-  @Input() addressDisplayAmount: number = 10;
 
+  /*
+    Search query
+  */
+  @Input() query: string;
 
-  constructor(public addressService: AddressService) { }
+  /*
+    Data storage
+  */
+  private addresses: Address[] = [];
+  private _subAddresses: Subscription;
+
+  /*
+    Pagination
+  */
+  currentPage: number = 1;
+  @Input() addressDisplayAmount: number = 3;
+
+  /*
+    General
+  */
+  log: any = Log.create('address-table.component');
+
+  constructor(
+    private _addressService: AddressService,
+    private _rpc: RPCService
+  ) {
+
+  }
 
   ngOnInit() {
-    this.addressService.postConstructor(this.addressDisplayAmount);
+    this._subAddresses = this._addressService.getAddresses()
+      .subscribe(
+        addresses => {
+          this.addresses = addresses;
+        },
+        error => console.log('addresstable-component subscription error:' + error));
   }
 
-  public pageChanged(event: any): void {
-    this.addressService.changePage(event.page);
+
+/**
+ * Returns the addresses to display in the UI with regards to both pagination and search/query.
+ * @returns      Object[]
+ */
+  public getSinglePage(): Array<Address> {
+    if (this.inSearchMode()) { // in search mode
+      return this.paginateArray(this.getSearchSubset());
+
+    } else { // not in seach mode
+      return this.paginateArray(this.addresses);
+    }
   }
+
+  private inSearchMode(): boolean {
+    return (this.query !== undefined && this.query !== '');
+  }
+
+
+/**
+ * Returns the addresses that match a search/query.
+ * @returns      Object[]
+ */
+  private getSearchSubset(): Address[] {
+    return this.addresses.filter(el => {
+        return (
+          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+          || el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+        );
+      });
+  }
+
+// ------------------
+
+/*
+  Pagination
+*/
+
+
+/**
+ * Returns the addresses to display in the UI with regards to the pagination parameters
+ */
+  private paginateArray(tempAddresses: Address[]): Address[] {
+    if (tempAddresses !== undefined) {
+      return tempAddresses.slice(((this.currentPage - 1) * this.addressDisplayAmount), this.currentPage * this.addressDisplayAmount);
+    } else {
+      return [];
+    }
+  }
+
+  public getTotalAddressCount(): number {
+    if (this.inSearchMode()) {
+      return this.getSearchSubset().length;
+    } else {
+      return this.addresses.length;
+    }
+  }
+
+  public getMaxAddressesPerPage(): number {
+    return this.addressDisplayAmount;
+  }
+
+// ------------------
+
+/*
+  Delete address
+*/
+
+  public deleteAddress(label: string, address: string) {
+    if (confirm(`Are you sure you want to delete ${label}: ${address}`)) {
+      this._rpc.call(this, 'manageaddressbook', ['del', address], this.rpc_deleteAddress_success);
+    }
+  }
+
+  private rpc_deleteAddress_success(json: Object) {
+    alert(`Succesfully deleted ${json['address']}`);
+    this._rpc.specialPoll();
+  }
+
+
 }
 

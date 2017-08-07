@@ -10,7 +10,8 @@
       </li>
     </ul>
       <form class="header-form pull-right">
-        <input type="text" placeholder="Search address book">
+        <input type="text" 
+        [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
         <button class="btn" type="submit" name="button">
           <span class="fa fa-search"></span>
         </button>
@@ -19,14 +20,15 @@
 </app-header>
   <div class="container-fluid">
     <address-table
+      [query]="query"
       [displayHeader]="false"
       [displayInternalHeader]="true"
-      [displayPagination]="false"
+      [displayPagination]="true"
       [displayLabel]="true"
       [displayAddress]="true"
       [displayPurpose]="true"
       [displayToolsMenu]="true"
-      [displayQrMenu]="true">
+      [displayQrMenu]="false">
 
   </address-table>
 </div>

@@ -13,6 +13,8 @@ export class AddressBookComponent implements OnInit {
 
   log: any = Log.create('address-book.component');
 
+  query: string;
+
   /*
     UI state
   */

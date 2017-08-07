@@ -8,7 +8,7 @@
     <th *ngIf="displayToolsMenu">Tools</th>
     <th *ngIf="displayQrMenu">QR Code</th>
   </tr>
-  <tr *ngFor="let address of addressService.addresses">
+  <tr *ngFor="let address of getSinglePage()">
     <td *ngIf="displayLabel" class="text-left">
       <span class="inline-header">{{ address.label }}</span>
     </td>
@@ -29,8 +29,8 @@
         <!-- we can use ngx-clipboard -->
         <span ngxClipboard [cbContent]="address.address" class="icon nc-icon nc-copy-2"></span>
         <!-- Open the modal for signing and verifying messages by address -->
-        <span class="icon fa fa-shield"></span>
-        <span (click)="addressService.deleteAddress(address.address)" class="icon nc-circle-remove color-red"></span>
+        <!-- <span class="icon fa fa-shield"></span> -->
+        <span (click)="deleteAddress(address.label, address.address)" class="icon fa fa-times color-red"></span>
       </div>
     </td>
     <td *ngIf="displayQrMenu" class="divider text-center">
@@ -41,5 +41,13 @@
   </tr>
 </app-table>
 
-<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE" ></pagination>
+<pagination *ngIf="displayPagination" 
+  [boundaryLinks]="true" 
+  [totalItems]="getTotalAddressCount()" 
+  [maxSize]="5" 
+  [rotate]="false" 
+  [(ngModel)]="currentPage" 
+  class="pagination-sm center" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" 
+  [itemsPerPage]="getMaxAddressesPerPage()" >
+    
+  </pagination>
