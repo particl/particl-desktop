@@ -3,8 +3,10 @@ import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
 import { BlockStatusService } from '../core/rpc/rpc.module';
+import { RPCService } from '../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -23,16 +25,22 @@ export class ModalsService {
 
   messages: Object = {
     createWallet: CreateWalletComponent,
+    daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent
   };
 
   constructor (
-    private _statusService: BlockStatusService
+    private _blockStatusService: BlockStatusService,
+    private _rpcService: RPCService
   ) {
-    this._statusService.statusUpdates.asObservable().subscribe(status => {
+    this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
       this.needToOpenModal(status);
+    });
+    this._rpcService.modalUpdates.asObservable().subscribe(status => {
+      console.log(status);
+      this.open('daemon');
     });
   }
 
