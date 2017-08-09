@@ -74,6 +74,10 @@ sidebar[position="left"] {
         padding: 0 0 0 10px;
         float: right;
         color: #00E8AF;
+        transition: all .2s ease;
+      }
+      .icon.collapsed {
+        transform: rotate(90deg);
       }
     }
     .item.active .icon {
