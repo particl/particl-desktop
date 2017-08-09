@@ -31,25 +31,25 @@
   <div class="col-xs-8">
 
   <span *ngIf="inSearchMode() === false">
-    <div class="address-title">Fresh address</div>
+    <div class="address-title">Unused address</div>
     <div class="card row">
       <div class="col-xs-1 address-id vertical-center">
-        /{{ getFreshAddress().id }}
+        /{{ getUnusedAddress().id }}
       </div>
       <div class="col-xs-3 address-label vertical-center">
-        {{ getFreshAddress().label }}
+        {{ getUnusedAddress().label }}
       </div>
       <div class="col-xs-6">
         <div class="address">
-          {{ getFreshAddress().address }}
+          {{ getUnusedAddress().address }}
         </div>
         <div class="total">
           <span>Total received: </span>
-          <span>+{{ getFreshAddress().balance }}</span>
+          <span>+{{ getUnusedAddress().balance }}</span>
         </div>
       </div>
       <div class="col-xs-2 row address-options vertical-center">
-        <div ngxClipboard [cbContent]="getFreshAddress().address" class="col-xs-4 nc-icon nc-copy-2">
+        <div ngxClipboard [cbContent]="getUnusedAddress().address" class="col-xs-4 nc-icon nc-copy-2">
         </div>
         <div class="col-xs-4 nc-icon nc-lock"></div>
         <div class="col-xs-4 nc-icon nc-barcode-qr"  (click)="selectAddress(addresses[getAddressType()][0])"></div>

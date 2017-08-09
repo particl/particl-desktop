@@ -12,10 +12,7 @@ export class ReceiveComponent implements OnInit {
 
   @ViewChild('qrCode') qrElementView: ElementRef;
 
-  /*
-    UI State
-  */
-
+  /* UI State */
   private type: string = 'public';
   public query: string = '';
 
@@ -37,9 +34,7 @@ export class ReceiveComponent implements OnInit {
 
   qrSize: number = 380;
 
-  /*
-    UI Pagination
-  */
+  /* UI Pagination */
   addresses: any = {
     private: [this.defaultAddress],
     public: [this.defaultAddress],
@@ -50,102 +45,76 @@ export class ReceiveComponent implements OnInit {
   MAX_ADDRESSES_PER_PAGE: number = 6;
   page: number = 1;
 
-  /*
-    initialized boolean: when true => checkFreshAddress is already looping!
-  */
+  /* initialized boolean: when true => checkUnusedAddress is already looping! */
   initialized: boolean = false;
 
-  /*
-    General
-  */
-
+  /* General */
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService) { }
 
   ngOnInit() {
-
     // start rpc
     this.rpc_update();
   }
 
-/**
- * Returns the addresses to display in the UI with regards to both pagination and search/query.
- * Does _NOT_ return the fresh address!
- * @returns      Object[]
- */
+ /**
+   * Returns the addresses to display in the UI with regards to both pagination and search/query.
+   * Does _NOT_ return the ununsed address!
+   */
   getSinglePage(): Array<Object> {
+    let type = this.type;
+
     if (this.inSearchMode()) { // in search mode
-      this.addresses['query'] = this.addresses[this.type].filter(el => {
+      type = 'query';
+
+      this.addresses.query = this.addresses[this.type].filter(el => {
         return (
-          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-          || el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+          el.label  .toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
+          el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
         );
       });
-
-      return this.addresses['query'].slice(((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
-
-    } else { // not in seach mode
-      return this.addresses[this.type].slice(1 + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
     }
+
+    return this.addresses[type].slice(1 + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
   }
 
-/**
- * Returns the fresh addresses to display in the UI.
- * @returns      Object[]
- */
-  getFreshAddress(): Object {
-    if (this.type === 'public') {
-      return this.addresses.public[0];
-    } else if (this.type === 'private') {
-      return this.addresses.private[0];
-    }
+ /** Returns the unused addresses to display in the UI. */
+  getUnusedAddress(): Object {
+    return this.addresses[this.type][0];
   }
 
-/**
- * Returns the total counts of addresses to display in the UI with regards to both the type of address (private/public) and search.
- * Excludes the count for the fresh address! (- 1 except for search!)
- * @returns      number
- */
+ /**
+   * Returns the total counts of addresses to display in the UI with regards to both the type of address (private/public) and search.
+   * Excludes the count for the unused address! (- 1 except for search!)
+   */
   getTotalCountForPagination(): number {
     if (this.inSearchMode()) {
       return this.addresses.query.length;
     }
-    if (this.type === 'public') {
-      return this.addresses.public.length - 1;
-    } else if (this.type === 'private') {
-      return this.addresses.private.length - 1;
-    }
+
+    return this.addresses[this.type].length - 1;
   }
 
-/**
- * Called to change the page.
- * @returns      void
- */
+ /** Called to change the page. */
   pageChanged(event: any) {
     if (event.page !== undefined) {
       this.log.d(`pageChanged, changing receive page to: ${event.page}`);
     }
   }
 
-  /*
-    UI Helper functions
-  */
-
-// ------------------
+  /* ---- UI Helper functions ---------------------------------------------- */
 
   /**
-  * Returns whether we're in search mode or not!
-  * The current table is showing limited results due to search.
-  * Mainly for hiding the "Fresh address" & ease of use in other functions.
-  */
+    * Returns whether we're in search mode or not!
+    * The current table is showing limited results due to search.
+    * Mainly for hiding the "Unused address" & ease of use in other functions.
+    */
   inSearchMode(): boolean {
-    return (this.query !== undefined && this.query !== '');
+    return !!this.query;
   }
 
-  /*
-  * OnEscape => exit search results
-  */
+  /** OnEscape => exit search results */
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: any) {
     // clear search bar on esc
@@ -154,16 +123,15 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-// ------------------
   /**
-  * sets the address type, also checks if valid. Also changes the selected address.
-  */
+    * Sets the address type, also checks if valid. Also changes the selected address.
+    * @param type Address type to set
+    */
   setAddressType(type: string) {
-    if (type === 'public') {
-      this.type = 'public';
-    } else if (type === 'private') {
-      this.type = 'private';
+    if (['public','private'].indexOf(type) !== -1) {
+      this.type = type;
     }
+
     this.selectAddress(this.addresses[type][0]);
   }
 
@@ -171,15 +139,15 @@ export class ReceiveComponent implements OnInit {
     return this.type;
   }
 
-// ------------------
-
-  /*
-  *   Selected address stuff + QRcode
-  */
-  selectAddress(address: Object) {
+  /**
+    * Selected address stuff + QRcode
+    * @param address The address to select
+    */
+  selectAddress(address: string) {
     this.selected = address;
   }
 
+  /** Get the QR Code size */
   getQrSize() {
     // this is just a cheaty way of getting the tests to pass
     if (this.initialized) {
@@ -189,35 +157,37 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
+  /* ---- RPC LOGIC -------------------------------------------------------- */
 
-// ------------------
-
-
-  /*
-    RPC LOGIC
-  */
-
+  /** Used to get the addresses. */
   rpc_update() {
     this.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success);
   }
 
-  rpc_loadAddressCount_success(json: Object) {
-    const count = json['num_receive'];
+  /**
+    * Used to get the addresses.
+    * TODO: Create interface
+    */
+  rpc_loadAddressCount_success(response: any) {
+    const count = response.num_receive;
     this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
   }
 
-  rpc_loadAddresses_success(json: Object) {
-    const pub = [];
-    const priv = [];
-    for (const k in json) {
-      // public address
-      if (json[k].address.length < 35) {
-        pub.push(json[k]);
-      // private address
+  /**
+    * Used to get the addresses.
+    * TODO: Create interface Array<AddressInterface?>
+    */
+  rpc_loadAddresses_success(response: Array<any>) {
+    const pub = [],
+          priv = [];
+
+    response.forEach((row) => {
+      if (row.address.length < 35) {
+        pub.push(row);
       } else {
-        priv.push(json[k]);
+        priv.push(row);
       }
-    }
+    });
 
     // I need to get the count of the addresses seperate in public/private first,
     // because this.addresses[type] can never be empty,
@@ -230,38 +200,27 @@ export class ReceiveComponent implements OnInit {
       this.addresses.private = [];
     }
 
-    for (const k in pub) {
-      if (true) { // make lint happy
-        this.addAddress(pub[k], 'public');
-      }
-    }
+    pub .forEach((val) => this.addAddress(val, 'public'));
+    priv.forEach((val) => this.addAddress(val, 'private'));
 
-    for (const k in priv) {
-      if (true) { // make lint happy
-        this.addAddress(priv[k], 'private');
-      }
-    }
-
-
-    if (json[0] !== undefined) {
-      this.sortArrays('public');
-      this.sortArrays('private');
+    if (!!response[0]) {
+      this.sortArrays();
 
       this.selectAddress(this.addresses[this.type][0]);
     }
 
     if (!this.initialized) {
       this.initialized = true;
-      this.checkIfFreshAddress();
+      this.checkIfUnusedAddress();
     }
 
   }
 
   /**
   * Transforms the json to the right format and adds it to the right array (public / private)
-  *
+  * TODO: Create interface for response
   */
-  addAddress(json: Object, type: string) {
+  addAddress(response: any, type: string) {
     const tempAddress = {
       id: 0,
       label: 'Empty label',
@@ -270,9 +229,9 @@ export class ReceiveComponent implements OnInit {
       readable: ['Empty']
     }
 
-    tempAddress.address = json['address'];
-    if (json['label'] !== '' && json['label'] !== undefined) {
-      tempAddress.label = json['label'];
+    tempAddress.address = response.address;
+    if (!!response.label) {
+      tempAddress.label = response.label;
     }
 
     tempAddress.readable = tempAddress.address.match(/.{1,4}/g);
@@ -280,91 +239,76 @@ export class ReceiveComponent implements OnInit {
     if (type === 'public') {
 
       // not all addresses are derived from HD wallet (importprivkey)
-      if (json['path'] !== undefined) {
-        tempAddress.id = json['path'].replace('m/0/', '');
+      if (!!response.path) {
+        tempAddress.id = response.path.replace('m/0/', '');
       }
       this.addresses.public.unshift(tempAddress);
 
     } else if (type === 'private') {
 
       // not all stealth addresses are derived from HD wallet (importprivkey)
-      if (json['path'] !== undefined) {
-        tempAddress.id = +(json['path'].replace('m/0\'/', '').replace('\'', '')) / 2;
+      if (response.path !== undefined) {
+        tempAddress.id = +(response.path.replace('m/0\'/', '').replace('\'', '')) / 2;
       }
       this.addresses.private.unshift(tempAddress);
     }
   }
 
-  /**
-  * Sorts the private/public address by id (= HD wallet path m/0/0 < m/0/1)
-  *
-  */
-  sortArrays(type: string) {
+  /** Sorts the private/public address by id (= HD wallet path m/0/0 < m/0/1) */
+  sortArrays() {
     function compare(a: any, b: any) {
       return b.id - a.id;
     }
 
-    this.addresses[type].sort(compare);
+    this.addresses.public.sort(compare);
+    this.addresses.private.sort(compare);
   }
 
 
-
-// ------------------
-  /*
-    Checks if the newest address is still fresh (hasn't received funds).
-    If it has received funds, generate a new address and update the table.
-  */
-
-  checkIfFreshAddress() {
+  /** Checks if the newest address is still unused (hasn't received funds).
+    * If it has received funds, generate a new address and update the table.
+    * TODO: Remove timeout if not currently on ngOnDestroy
+    */
+  checkIfUnusedAddress() {
     if (this.addresses.public[0].address !== 'Empty address') {
-      this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackFreshAddress_success);
+      this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
     }
-    setTimeout(() => { this.checkIfFreshAddress(); }, 30000);
+    setTimeout(() => { this.checkIfUnusedAddress(); }, 30000);
   }
 
-  rpc_callbackFreshAddress_success(json: Object) {
+  rpc_callbackUnusedAddress_success(json: Object) {
     if (json > 0) {
-      this.log.i('rpc_callbackFreshAddress_success: Funds received, need fresh public address');
-      this.rpc.call(this, 'getnewaddress', null, this.rpc_callbackGenerateFreshAddress_success);
+      this.log.i('rpc_callbackUnusedAddress_success: Funds received, need unused public address');
+
+      this.rpc.call(this, 'getnewaddress', null, () => {
+        this.log.i('rpc_callbackUnusedAddress_success: successfully retrieved new address');
+
+        // just call for a complete update, just adding the address isn't possible because
+        this.rpc_update();
+      });
     }
   }
 
-  rpc_callbackGenerateFreshAddress_success(json: Object) {
-    this.log.i('rpc_callbackGenerateFreshAddress_success: successfully retrieved fresh public address');
-
-    // just call for a complete update, just adding the address isn't possible because
-    this.rpc_update();
-  }
-
-
-// ------------------
-
-  /*
-    Generate a new address with label
-  */
+  /**
+    * Generate a new address with label.
+    * TODO: Get rid of prompt, use nice modal.
+    */
   newAddress() {
-    const label = prompt('Label for new address');
+    const label = prompt('Label for new address'),
+          call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
 
-    if (this.type === 'public') {
-      this.rpc.call(this, 'getnewaddress', [label], this.rpc_generateNewAddress_success);
-    } else if (this.type === 'private') {
-      this.rpc.call(this, 'getnewstealthaddress', [label], this.rpc_generateNewAddress_success);
+    if (!!call) {
+      this.rpc.call(this, call, [label], () => {
+        this.log.i('newAddress: successfully retrieved new address');
+
+        // just call for a complete update, just adding the address isn't possible because
+        this.rpc_update();
+      });
     }
   }
-
-  rpc_generateNewAddress_success () {
-    this.log.i('rpc_generateNewAddress_success: successfully retrieved new address');
-
-    // just call for a complete update, just adding the address isn't possible because
-    this.rpc_update();
-  }
-// ------------------
-
-
 
   selectInput() {
-    const input: any = document.getElementsByClassName('header-input')[0];
-    input.select();
+    (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
   }
 
 }
