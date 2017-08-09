@@ -9,7 +9,7 @@ import { ModalsService } from '../modals.service';
 })
 export class DaemonComponent {
 
-  private _message: any;
+  public message: any;
 
   constructor(
     @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
@@ -17,7 +17,7 @@ export class DaemonComponent {
   }
 
   setData(data: any) {
-    this._message = data;
+    this.message = data;
   }
 
 }

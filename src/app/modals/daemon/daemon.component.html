@@ -1,9 +1,9 @@
 <div style="text-align: center;">
-  <div *ngIf="!_message.electron">
+  <div *ngIf="message && !message.electron">
     you are running Particl in a browser.
   </div>
-  <div *ngIf="_message.error">
-    <div *ngIf="_message.error.status === 0">
+  <div *ngIf="message && message.error">
+    <div *ngIf="message.error.status === 0">
       Couldn't connect to Particl Daemon : connection refused
     </div>
   </div>
