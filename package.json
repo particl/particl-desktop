@@ -54,7 +54,7 @@
     "coveralls": "^2.13.1",
     "htmlhint": "^0.9.13",
     "jasmine-core": "~2.7.0",
-    "jasmine-spec-reporter": "~4.1.1",
+    "jasmine-spec-reporter": "~4.2.0",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "~2.2.0",
     "karma-cli": "~1.0.1",
