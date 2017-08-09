@@ -76,7 +76,8 @@ export class ReceiveComponent implements OnInit {
       });
     }
 
-    return this.addresses[type].slice(1 + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
+    return this.addresses[type].slice(
+      +(type === this.type) + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
   }
 
  /** Returns the unused addresses to display in the UI. */
@@ -128,7 +129,7 @@ export class ReceiveComponent implements OnInit {
     * @param type Address type to set
     */
   setAddressType(type: string) {
-    if (['public','private'].indexOf(type) !== -1) {
+    if (['public', 'private'].indexOf(type) !== -1) {
       this.type = type;
     }
 
