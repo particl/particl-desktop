@@ -51,7 +51,7 @@ export class PeerService {
   }
 
   private setBlockCountNetwork(peerList: Array<Object>): number {
-    let highestBlockHeightNetwork: number = -1;
+    let highestBlockHeightNetwork = -1;
 
     for (const peer in peerList) {
       if (true) { // lint issue
