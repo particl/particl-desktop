@@ -105,6 +105,10 @@ export class RPCService {
         .subscribe(
           response => {
             successCB.call(instance, response.json().result);
+            this.modalUpdates.next({
+              response: response,
+              electron: this.isElectron
+            });
           },
           error => {
             if (errorCB) {
@@ -113,7 +117,10 @@ export class RPCService {
                 : JSON.parse(error['_body']))
               );
             }
-            this.modalUpdates.next(error);
+            this.modalUpdates.next({
+              error: error,
+              electron: this.isElectron
+            });
             this.log.er('RPC Call returned an error', error);
           });
     }

@@ -1,3 +1,10 @@
-<p>
-  daemon works!
-</p>
+<div style="text-align: center;">
+  <div *ngIf="!_message.electron">
+    you are running Particl in a browser.
+  </div>
+  <div *ngIf="_message.error">
+    <div *ngIf="_message.error.status === 0">
+      Couldn't connect to Particl Daemon : connection refused
+    </div>
+  </div>
+</div>

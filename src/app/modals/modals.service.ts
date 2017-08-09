@@ -39,8 +39,11 @@ export class ModalsService {
       this.needToOpenModal(status);
     });
     this._rpcService.modalUpdates.asObservable().subscribe(status => {
-      console.log(status);
-      this.open('daemon');
+      if (status.error) {
+        this.open('daemon', status);
+      } else if (this.modal === this.messages['daemon']) {
+        this.close();
+      }
     });
   }
 
@@ -79,7 +82,9 @@ export class ModalsService {
 
   needToOpenModal(status: any) {
     // Open syncing Modal
-    if (!this.isOpen && (status.networkBH <= 0 || status.internalBH <= 0 || status.networkBH - status.internalBH > 50)) {
+    if (!this.isOpen && (status.networkBH <= 0
+      || status.internalBH <= 0
+      || status.networkBH - status.internalBH > 50)) {
         this.open('syncing');
     }
   }
