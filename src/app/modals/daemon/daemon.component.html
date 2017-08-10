@@ -1,6 +1,6 @@
 <div class="center">
   <div *ngIf="message && !message.electron">
-    you are running Particl in a browser.
+    Warning: You are using Particl through a browser.
   </div>
   <div *ngIf="message && message.error">
     <div *ngIf="message.error.status === 0">
