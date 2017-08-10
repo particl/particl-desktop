@@ -21,8 +21,7 @@ export class RpcModule {
         RPCService,
         PeerService,
         PassphraseService,
-        BlockStatusService,
-        ElectronService
+        BlockStatusService
       ]
     };
   }

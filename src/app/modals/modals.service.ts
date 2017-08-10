@@ -3,8 +3,10 @@ import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
 import { BlockStatusService } from '../core/rpc/rpc.module';
+import { RPCService } from '../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -23,16 +25,25 @@ export class ModalsService {
 
   messages: Object = {
     createWallet: CreateWalletComponent,
+    daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent
   };
 
   constructor (
-    private _statusService: BlockStatusService
+    private _blockStatusService: BlockStatusService,
+    private _rpcService: RPCService
   ) {
-    this._statusService.statusUpdates.asObservable().subscribe(status => {
+    this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
       this.needToOpenModal(status);
+    });
+    this._rpcService.modalUpdates.asObservable().subscribe(status => {
+      if (status.error) {
+        this.open('daemon', status);
+      } else if (this.modal === this.messages['daemon']) {
+        this.close();
+      }
     });
   }
 
@@ -71,7 +82,9 @@ export class ModalsService {
 
   needToOpenModal(status: any) {
     // Open syncing Modal
-    if (!this.isOpen && (status.networkBH <= 0 || status.internalBH <= 0 || status.networkBH - status.internalBH > 50)) {
+    if (!this.isOpen && (status.networkBH <= 0
+      || status.internalBH <= 0
+      || status.networkBH - status.internalBH > 50)) {
         this.open('syncing');
     }
   }
