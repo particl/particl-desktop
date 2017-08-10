@@ -89,6 +89,7 @@ export class SendComponent implements OnInit, OnDestroy {
     }
 
     const ret = false;
+    // This will never work on mainnet.....
     if ((this.send.toAddress.indexOf('p') === 0) === false) {
       if ((this.send.toAddress.indexOf('T') === 0) === false) {
         this.send.validAddress = false;
@@ -102,19 +103,21 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const validateAddressCB = (response) => {
+      this.send.validAddress = response.isvalid;
+    };
+
+    // This will never work on mainnet.....
     if (this.send.toAddress.length === 34 && this.send.toAddress.indexOf('p') === 0) {
-      this._rpc.call(this, 'validateaddress', [this.send.toAddress], this.rpc_callbackVerifyAddress);
+      this._rpc.call(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
     }
 
+    // This will never work on mainnet.....
     if (this.send.toAddress.length === 102 && this.send.toAddress.indexOf('Tet') === 0) {
-      this._rpc.call(this, 'validateaddress', [this.send.toAddress], this.rpc_callbackVerifyAddress);
+      this._rpc.call(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
     }
 
     this.send.validAddress = undefined;
-  }
-
-  rpc_callbackVerifyAddress(JSON: Object) {
-    this.send.validAddress = JSON['isvalid'];
   }
 
   openLookup() {

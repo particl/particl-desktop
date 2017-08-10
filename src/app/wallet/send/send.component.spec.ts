@@ -36,11 +36,23 @@ describe('SendComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-/*
+  /* cant do RPC yet
+
+    it('should call back address', () => {
+      // component.rpc_callbackVerifyAddress();
+      expect(component.rpc_callbackVerifyAddress).toBeTruthy();
+    });
+  */
   it('should send tab', () => {
     component.sendTab('sendPayment');
-    expect(component.sendTab).toBe('sendPayment');
+    expect(component.type).toBe('sendPayment');
   });
+
+  it('should verify amount', () => {
+    component.send.amount = 555.555555;
+    expect(component.verifyAmount()).toBe(true);
+  });
+/*
 
     it('should open lookup', () => {
       component.openLookup();
@@ -106,8 +118,6 @@ describe('SendComponent', () => {
     expect(component.addressLookup).toBeDefined();
   });
 
-
-
   it('should get advanced', () => {
     expect(component.advanced).toBe(false);
   });
@@ -119,10 +129,4 @@ describe('SendComponent', () => {
   it('should get type', () => {
     expect(component.type).toBe('sendPayment');
   });
-  /*
-    it('should call back address', () => {
-      // component.rpc_callbackVerifyAddress();
-      expect(component.rpc_callbackVerifyAddress).toBeTruthy();
-    });
-  */
 });
