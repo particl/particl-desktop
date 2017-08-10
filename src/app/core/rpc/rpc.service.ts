@@ -114,14 +114,15 @@ export class RPCService {
  *
  * @example
  * ```JavaScript
- * this._rpc.register(this, 'listtransactions', [0, 20], this.rpc_loadTwentyTxs_success, 'block' this.rpc_loadTwentyTxs_failed);
- * ```
- * ```JavaScript
- * rpc_loadTwentyTxs_success(json: Object) {
- *   console.log("Loaded transactions!");
- *   console.log(json);
- * }
- * ...
+ * this._rpc.register(this, 'listtransactions', [0, 20],
+ *   (response: Object) => {
+ *     console.log("Loaded transactions!");
+ *     console.log(response);
+ *   }, 'block',
+ *   (response: Object) => {
+ *     console.log("Loaded transactions!");
+ *     console.log(response);
+ *   });
  * ```
  *
  * @returns      void
