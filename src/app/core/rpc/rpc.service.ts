@@ -39,7 +39,7 @@ export class RPCService {
 
   constructor(private http: Http, public electronService: ElectronService) {
     this.isElectron = this.electronService.isElectronApp;
-    this.poll();
+    this.startPolling();
   }
 
 /**
@@ -156,7 +156,7 @@ export class RPCService {
  *
  * @returns      void
  */
-  poll(): void {
+  private poll(): void {
     // TODO: Actual polling... Check block height and last transaction
     const _call = (element) => {
       this.call(
@@ -192,7 +192,7 @@ export class RPCService {
  *
  * @returns      void
  */
-  startPolling(): void {
+  private startPolling(): void {
     clearTimeout(this._pollTimout);
     this.poll();
   }
@@ -202,7 +202,7 @@ export class RPCService {
  *
  * @returns      void
  */
-  stopPolling(): void {
+  private stopPolling(): void {
     clearTimeout(this._pollTimout);
   }
 
