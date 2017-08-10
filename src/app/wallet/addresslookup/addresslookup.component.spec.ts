@@ -42,11 +42,7 @@ describe('AddressLookupComponent', () => {
   });
 */
   it('should get filterAddress', () => {
-    expect(component.filterAddress).toBe(undefined);
-  });
-
-  it('should get lookupAddresses', () => {
-    expect(component.lookupAddresses).toBeDefined();
+    expect(component.filter).toBe('all');
   });
 
   it('should get staticLookup', () => {

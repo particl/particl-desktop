@@ -56,47 +56,21 @@ describe('ReceiveComponent', () => {
     expect(component.defaultAddress).toBeDefined();
   });
 
-  it('should get entriesPerPage', () => {
-    expect(component.entriesPerPage).toBe(6);
-  });
-
   it('should get initialized', () => {
     expect(component.initialized).toBe(false);
-  });
-
-  it('should get nav', () => {
-    expect(component.nav).toBe(undefined);
   });
 
   it('should get page', () => {
     expect(component.page).toBe(1);
   });
 
-  it('should get pages', () => {
-    expect(component.pages).toBeDefined();
-  });
-
-  it('should get qr', () => {
-    expect(component.qr).toBeDefined();
-  });
-
   it('should get query', () => {
-    expect(component.query).toBe(undefined);
-  });
-
-  it('should get searchSubset', () => {
-    expect(component.searchSubset).toBeDefined();
+    expect(component.query).toBe('');
   });
 
   it('should get selected', () => {
     expect(component.selected).toBeDefined();
   });
-
-  it('should get type', () => {
-    expect(component.type).toBe('public');
-  });
-
-
     /* We will come back to RPC at a later stage
     it('should execute rpc_update', () => {
       component.rpc_update();
