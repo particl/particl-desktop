@@ -15,7 +15,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint --type-check && htmlhint && sass-lint -v",
+    "lint": "ng lint --type-check && htmlhint --ignore **/documentation/** && sass-lint -v",
     "e2e": "ng e2e",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compdoc": "compodoc -p tsconfig.json -s -w"
