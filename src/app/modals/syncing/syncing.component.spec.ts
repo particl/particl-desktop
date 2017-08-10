@@ -2,12 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyncingComponent } from './syncing.component';
 
-import { ElectronService } from 'ngx-electron';
 import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
-import { RPCService } from '../../core/rpc/rpc.service';
-
-import { PeerService } from '../../core/rpc/peer.service';
+import { BlockStatusService } from '../../core/rpc/blockstatus.service';
 
 describe('SyncingComponent', () => {
   let component: SyncingComponent;
@@ -15,13 +13,11 @@ describe('SyncingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ SharedModule ],
-      declarations: [ SyncingComponent ],
-      providers: [
-        RPCService,
-        ElectronService,
-        PeerService
-      ]
+      imports: [
+        SharedModule,
+        RpcModule.forRoot()
+       ],
+      declarations: [ SyncingComponent ]
     })
     .compileComponents();
   }));

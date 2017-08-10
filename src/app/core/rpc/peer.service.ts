@@ -38,11 +38,12 @@ export class PeerService {
 
   }
 
-  setPeerList(JSON: Array<Object>) {
-    this._observerPeerList.next(JSON);
+  private setPeerList(json: Array<Object>) {
 
     // hook network block height changes
-    this._observerHighestBlockHeightNetwork.next(this.setBlockCountNetwork(JSON));
+    this._observerHighestBlockHeightNetwork.next(this.setBlockCountNetwork(json));
+
+    this._observerPeerList.next(json);
   }
 
   private setBlockCount(height: number) {
@@ -50,7 +51,7 @@ export class PeerService {
   }
 
   private setBlockCountNetwork(peerList: Array<Object>): number {
-    let highestBlockHeightNetwork: number = -1;
+    let highestBlockHeightNetwork = -1;
 
     for (const peer in peerList) {
       if (true) { // lint issue

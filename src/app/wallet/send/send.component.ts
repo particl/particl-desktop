@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
+import { Log } from 'ng2-logger';
+
 import { SendService } from './send.service';
 import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,9 +16,15 @@ import { AddressLookupComponent } from '../addresslookup/addresslookup.component
   styleUrls: ['./send.component.scss', '../../settings/settings.component.scss']
 })
 export class SendComponent implements OnInit, OnDestroy {
-  private _sub: Subscription;
-  private _balance: any;
 
+  /*
+    General
+  */
+  log: any = Log.create('send.component');
+
+  /*
+    UI logic
+  */
   @ViewChild('addressLookup')
   public addressLookup: AddressLookupComponent;
 
@@ -28,11 +36,21 @@ export class SendComponent implements OnInit, OnDestroy {
     fromType: 'public',
     toType: 'public',
     toAddress: '',
+    toLabel: '',
     validAddress: undefined,
+    validAmount: undefined,
+    isMine: undefined,
     currency: 'part',
     privacy: 50
   };
+
+  /*
+    RPC logic
+  */
   lookup: string;
+
+  private _sub: Subscription;
+  private _balance: any;
 
   constructor(private sendService: SendService, private balanceService: BalanceService, private _rpc: RPCService) { }
 
@@ -42,12 +60,16 @@ export class SendComponent implements OnInit, OnDestroy {
         balances => {
           this._balance = balances;
         },
-        error => console.log('balanceService subscription error:' + error));
+        error => this.log.er('balanceService subscription error:' + error));
   }
 
   ngOnDestroy() {
     this._sub.unsubscribe();
   }
+
+  /*
+    UI logic
+  */
 
   sendTab(type: string) {
     this.type = type;
@@ -61,68 +83,94 @@ export class SendComponent implements OnInit, OnDestroy {
     return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
   }
 
-  checkAddress(): boolean {
-    return this.send['validAddress'];
+
+  /** Amount validation functions. */
+  checkAmount(): boolean {
+    // hooking verifyAmount here, on change of type -> retrigger check of amount.
+    this.verifyAmount();
+
+    return this.send.validAmount;
   }
 
-  verifyAmount(): boolean {
-    if (this.send['amount'] === undefined || this.send['amount'] === 0 || this.send['fromType'] === '') {
-      return undefined;
-    }
+  verifyAmount() {
 
-    if ((this.send['amount'] + '').indexOf('.') >= 0 && (this.send['amount'] + '').split('.')[1].length > 8) {
-      return false;
-    }
-
-
-    if (this.send['amount'] <= this.getBalance(this.send['fromType'])) {
-      return true;
-    }
-
-    return false;
-  }
-
-  verifyAddress() {
-    if (this.send.toAddress === '' || this.send.toAddress === undefined) {
-      this.send.validAddress = undefined;
+    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.fromType === '') {
+      this.send.validAmount = undefined;
       return;
     }
 
-    const ret = false;
-    // This will never work on mainnet.....
-    if ((this.send.toAddress.indexOf('p') === 0) === false) {
-      if ((this.send.toAddress.indexOf('T') === 0) === false) {
-        this.send.validAddress = false;
-        return;
-      } else if (this.send.toAddress.length > 102) { // starts with T but over 102 chars
-        this.send.validAddress = false;
-        return;
-      }
-    } else if (this.send.toAddress.length > 34) { // starts with p but over 34 chars
-      this.send.validAddress = false;
+    if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
+      this.send.validAmount = false;
+      return;
+    }
+
+    if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
+      this.send.validAmount = false;
+      return;
+    }
+
+
+    if (this.send.amount <= this.getBalance(this.send.fromType)) {
+      this.send.validAmount = true;
+      return;
+    } else {
+      this.send.validAmount = false;
+      return;
+    }
+
+  }
+
+  /** checkAddres: returns boolean, so it can be private later. */
+  checkAddress(): boolean {
+    return this.send.validAddress;
+  }
+
+  /** verifyAddress: calls RPC to validate it. */
+  verifyAddress() {
+    if (!this.send.toAddress) {
+      this.send.validAddress = undefined;
+      this.send.isMine = undefined;
       return;
     }
 
     const validateAddressCB = (response) => {
       this.send.validAddress = response.isvalid;
+
+      if (!!response.account) {
+        this.send.toLabel = response.account;
+      }
+
+      if (!!response.ismine) {
+        this.send.isMine = response.ismine;
+      }
+    }
+
+    this._rpc.call(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
+  }
+
+
+  /** Clear the send object. */
+  clear() {
+    this.send = {
+      fromType: '',
+      toType: '',
+      validAddress: undefined,
+      validAmount: undefined,
+      currency: 'part',
+      privacy: 50
     };
+  }
 
-    // This will never work on mainnet.....
-    if (this.send.toAddress.length === 34 && this.send.toAddress.indexOf('p') === 0) {
-      this._rpc.call(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
-    }
-
-    // This will never work on mainnet.....
-    if (this.send.toAddress.length === 102 && this.send.toAddress.indexOf('Tet') === 0) {
-      this._rpc.call(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
-    }
-
+  clearReceiver() {
+    this.send.toLabel = '';
+    this.send.toAddress = '';
     this.send.validAddress = undefined;
   }
 
-  openLookup() {
-    this.addressLookup.show();
-  }
+
+  /*
+     Validation modal
+  */
 
   openValidate() {
     document.getElementById('validate').classList.remove('hide');
@@ -132,25 +180,11 @@ export class SendComponent implements OnInit, OnDestroy {
     document.getElementById('validate').classList.add('hide');
   }
 
-  selectAddress(address: string, label: string) {
-    this.send.toAddress = address;
-    this.send.toLabel = label;
-    this.addressLookup.hide();
-  }
-
-  clear() {
-    this.send = {
-      fromType: '',
-      toType: '',
-      currency: 'part',
-      privacy: 50
-    };
-  }
-
+  /*
+    Payment function
+  */
   pay() {
-    console.log(this.type, this.send);
 
-    // TODO: Why are we making a copy of all the properties?
     const input = this.send.fromType;
     let output = this.send.toType;
     const address = this.send.toAddress;
@@ -165,66 +199,89 @@ export class SendComponent implements OnInit, OnDestroy {
 
     if (input === '' ) {
       alert('You need to select an input type (public, blind or anon)!');
+      this.closeValidate();
       return;
     }
     if (this.type === 'balanceTransfer' && output === '') {
       alert('You need to select an output type (public, blind or anon)!');
+      this.closeValidate();
       return;
-    }
-
-    if (amount === undefined ) {
-      alert('You need to enter an amount!');
-      return;
-    }
-
-    if (this.verifyAmount() === false) {
-      if (this.send.amount > this.getBalance(this.send.fromType)) {
-        alert('You\'re trying to send more money than you have.');
-        return;
-      }
-
-      if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
-        alert('The amount can only have 8 places after the decimal point.');
-        return;
-      }
-
     }
 
     if (this.type === 'balanceTransfer' && this.send.fromType === this.send.toType) {
       alert('You have selected "' + this.send.fromType + '"" twice!\n Balance transfers can only happen between two different types.');
+      this.closeValidate();
+      return;
     }
 
     if (this.type === 'sendPayment') {
       output = input;
 
-      if (address === undefined) {
-        alert('You need to enter an address to send to!');
+      if (output === 'private' && address.length < 35) {
+        alert('Stealth address required for private transactions!');
+        this.closeValidate();
         return;
       }
 
-      if (this.send.validAddress === false || this.send.validAddress === undefined) {
-        alert('You entered an invalid address!');
-        this.send.validAddress = false;
-        return;
-      }
+      // edit label of address
+      this.addLabelToAddress();
 
-      if (output === 'private' && address.indexOf('Tet') !== 0) {
-        alert('Stealth address required for private transaction');
-      }
-
-      if (!confirm('Are you sure you want to send ' + amount + ' ' + currency + ' to ' + address + '?')) {
-        return;
-      }
-
+      // send transaction
       this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+
     } else if (this.type === 'balanceTransfer') {
-      if (!confirm('Are you sure you want to transfer ' + amount + ' ' + currency + ' from ' + input + ' to ' + output + '?')) {
-        return;
-      }
+      // perform balance transfer
       this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
     }
+
     this.clear();
     this.closeValidate();
+  }
+
+  /*
+    AddressLookup Modal + set details
+  */
+
+  openLookup() {
+    this.addressLookup.show();
+  }
+
+  /** Select an address, set the appropriate models
+    * @param address The address to send to
+    * @param label The label for the address.
+    */
+  selectAddress(address: string, label: string) {
+    this.send.toAddress = address;
+    this.send.toLabel = label;
+    this.addressLookup.hide();
+    this.verifyAddress();
+  }
+
+  /** Add/edits label of an address. */
+  addLabelToAddress() {
+    const isMine = this.send.isMine;
+
+    if (isMine) {
+      if (!confirm('Address is one of our own - change label? ')) {
+        return;
+      }
+    }
+
+    const label = this.send.toLabel;
+    const addr = this.send.toAddress;
+
+    this._rpc.call(this, 'manageaddressbook', ['newsend', addr, label],
+      this.rpc_addLabel_success,
+      this.rpc_addLabel_failed
+    );
+  }
+
+  rpc_addLabel_success(json: Object) {
+    this.log.er('rpc_addLabel_success: successfully added label to address.');
+  }
+
+  rpc_addLabel_failed(json: Object) {
+    this.log.er('rpc_addLabel_failed: failed to add label to address.');
   }
 
 }

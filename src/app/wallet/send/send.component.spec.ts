@@ -48,9 +48,9 @@ describe('SendComponent', () => {
     expect(component.type).toBe('sendPayment');
   });
 
-  it('should verify amount', () => {
+  it('should verify amount no balance service', () => {
     component.send.amount = 555.555555;
-    expect(component.verifyAmount()).toBe(true);
+    expect(component.checkAmount()).toBe(false);
   });
 /*
 

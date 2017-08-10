@@ -31,6 +31,7 @@ export class RPCService {
 
   private _callOnBlock: Array<any> = [];
   private _callOnTransaction: Array<any> = [];
+  private _callOnAddress: Array<any> = [];
 
   private _pollTimout: number;
 
@@ -38,6 +39,7 @@ export class RPCService {
 
   constructor(private http: Http, public electronService: ElectronService) {
     this.isElectron = this.electronService.isElectronApp;
+    this.startPolling();
   }
 
 /**
@@ -89,7 +91,7 @@ export class RPCService {
           },
           error => {
             if (errorCB) {
-              errorCB.call(instance, JSON.parse(error['_body']))
+              errorCB.call(instance, (typeof error['_body'] === 'object' ? error['_body'] : JSON.parse(error['_body'])) )
             }
             // TODO: Call error modal?
             console.log('RPC Call returned an error', error);
@@ -143,6 +145,10 @@ export class RPCService {
       this._callOnTransaction.push(_call);
       valid = true;
     }
+    if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
+      this._callOnAddress.push(_call);
+      valid = true;
+    }
   }
 
 /**
@@ -150,7 +156,7 @@ export class RPCService {
  *
  * @returns      void
  */
-  poll(): void {
+  private poll(): void {
     // TODO: Actual polling... Check block height and last transaction
     const _call = (element) => {
       this.call(
@@ -163,15 +169,30 @@ export class RPCService {
 
     this._callOnBlock.forEach(_call);
     this._callOnTransaction.forEach(_call);
+
     this._pollTimout = setTimeout(this.poll.bind(this), 3000);
   }
 
+  specialPoll(): void {
+    // A poll only for address changes, triggered from the GUI!
+
+    const _call = (element) => {
+      this.call(
+        element.instance,
+        element.method,
+        element.params && element.params.typeOf === 'function' ? element.params() : element.params,
+        element.successCB,
+        element.errorCB);
+    };
+
+    this._callOnAddress.forEach(_call);
+  }
 /**
  * Start a temporary loop that polls the RPC every 3 seconds.
  *
  * @returns      void
  */
-  startPolling(): void {
+  private startPolling(): void {
     clearTimeout(this._pollTimout);
     this.poll();
   }
@@ -181,7 +202,7 @@ export class RPCService {
  *
  * @returns      void
  */
-  stopPolling(): void {
+  private stopPolling(): void {
     clearTimeout(this._pollTimout);
   }
 

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UnlockwalletComponent } from '../../modals/unlockwallet/unlockwallet.component';
+import { UnlockwalletComponent } from './unlockwallet.component';
 import { ModalsModule } from '../modals.module';
 import { SharedModule } from '../../shared/shared.module';
 

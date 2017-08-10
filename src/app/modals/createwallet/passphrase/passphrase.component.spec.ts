@@ -1,10 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormsModule } from '@angular/forms';
-import { PassphraseComponent } from './passphrase.component';
-
 import { SharedModule } from '../../../shared/shared.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
+
+import { FormsModule } from '@angular/forms';
+import { FocusDirective } from '../../modals.directives';
+import { PassphraseComponent } from './passphrase.component';
 
 
 describe('PassphraseComponent', () => {
@@ -18,7 +19,7 @@ describe('PassphraseComponent', () => {
         SharedModule,
         RpcModule.forRoot()
        ],
-      declarations: [ PassphraseComponent ]
+      declarations: [ FocusDirective, PassphraseComponent ]
     })
     .compileComponents();
   }));

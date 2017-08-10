@@ -26,13 +26,15 @@ $width-lg: 100% / 12 * 2;
   }
   @media (min-width: 768px) {
     &[position="left"].docked {
-      left: inherit;
-      right: calc(100% - #{$docked-width});
+      left: 0;
+      transform: translateX(calc(-100% + #{$docked-width}));
+      transition: transform .3s;
     }
   }
   &[position="left"].open {
     left: 0;
     right: inherit;
+    transition: transform .3s;
   }
 
   // Sidebar right
@@ -145,6 +147,7 @@ $width-lg: 100% / 12 * 2;
     &[position="bottom"].docked-left,
     &[position="center"].docked-left {
       margin-left: $docked-width;
+      transition: margin-left .3s;
     }
     &[position="top"].docked-right,
     &[position="bottom"].docked-right,

@@ -10,8 +10,8 @@
   </tr>
   <ng-container *ngFor="let tx of txService.txs">
   <tr>
-     <td *ngIf="display.date">
-      <span class="inline-header"><span class="icon fa fa-clock-o"></span></span>
+    <td *ngIf="display.date">
+      <!--<span class="inline-header"><span class="icon nc-icon nc-time-3"></span></span>-->
       <span>{{ tx.getDate() }}</span>
     </td>
     <td *ngIf="display.dategory" [ngSwitch]="tx.category">
@@ -52,7 +52,7 @@
       <span>{{ tx.getAmount() }} PART</span>
     </td>
     <td *ngIf="display.expand">
-      <span class="icon fa fa-plus" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
+      <span class="icon nc-icon nc-simple-add" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
     </td>
 
   </tr>
@@ -62,13 +62,13 @@
 
       <tr>
         <td>
-          Status:
+          <b>Status:</b>
         </td>
         <td>
           {{tx.confirmations}} confirmations
         </td>
         <td>
-          Transaction ID:
+          <b>Transaction ID:</b>
         </td>
         <td>
           {{tx.txid}}
@@ -77,13 +77,13 @@
 
       <tr>
         <td>
-          Date:
+          <b>Date:</b>
         </td>
         <td>
           {{tx.getDate()}}
         </td>
         <td>
-          Transaction fee:
+          <b>Transaction fee:</b>
         </td>
         <td>
           {{tx.fee ? tx.fee : 0}} PART
@@ -92,13 +92,13 @@
 
       <tr>
         <td>
-          To:
+          <b>To:</b>
         </td>
         <td>
           {{tx.getAddress()}}
         </td>
         <td>
-          Net amount:
+          <b>Net amount:</b>
         </td>
         <td>
           {{tx.fee ? tx.getAmount() - tx.fee : 0}} PART
@@ -106,10 +106,10 @@
       </tr>
       <tr>
         <td *ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">
-          Credit:
+          <b>Credit:</b>
         </td>
         <td *ngIf="tx.category === 'send'">
-          Debit:
+          <b>Debit:</b>
         </td>
         <td>
           {{tx.getAmount()}} PART
