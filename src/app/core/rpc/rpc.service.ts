@@ -7,6 +7,9 @@ import { Headers, Http } from '@angular/http';
 
 import { ModalsService } from '../../modals/modals.service';
 
+import rxIpc from 'rx-ipc-electron/lib/renderer';
+
+
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
 
@@ -66,14 +69,15 @@ export class RPCService {
  *
  * @example
  * ```JavaScript
- * this._rpc.call(this, 'listtransactions', [0, 20], this.rpc_loadTwentyTxs_success, this.rpc_loadTwentyTxs_failed);
- * ```
- * ```JavaScript
- * rpc_loadTwentyTxs_success(json: Object) {
- *   console.log("Loaded transactions!");
- *   console.log(json);
- * }
- * ...
+ * this._rpc.call(this, 'listtransactions', [0, 20],
+ *   (response: Object) => {
+ *     console.log("Loaded transactions!");
+ *     console.log(response);
+ *   }, 'block',
+ *   (response: Object) => {
+ *     console.log("Loaded transactions!");
+ *     console.log(response);
+ *   });
  * ```
  *
  * @returns      void
@@ -98,6 +102,36 @@ export class RPCService {
     headers.append('Accept', 'application/json');
 
     if (this.isElectron) {
+      successCB = successCB.bind(instance);
+      if (errorCB) {
+        errorCB = errorCB.bind(instance);
+      }
+      this.electronService.ipcRenderer.send('backend_particlRPCCall', method, params);
+
+      this.electronService.ipcRenderer.once('frontend_particlRPCCallback'+method, (event, error, response) => {
+        //this.log.d(`frontend_particlRPCCallback: ${method}`, error, response);
+        if (error) {
+          this.log.er('frontend_particlRPCCallback:', error);
+          if (!!errorCB) {
+            errorCB(error);
+          }
+          this.modalUpdates.next({
+            error: error,
+            electron: this.isElectron
+          });
+          return;
+        }
+        console.log('response.result', response.result);
+        successCB(response.result);
+        this.modalUpdates.next({
+          response: response,
+          electron: this.isElectron
+        });
+        //this.stopPolling();
+      });
+
+      //.once('message', (test) => console.log(test));
+
       // TODO: electron.ipcCall
     } else {
       this.http
