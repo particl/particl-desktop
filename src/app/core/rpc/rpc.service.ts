@@ -7,8 +7,6 @@ import { Headers, Http } from '@angular/http';
 
 import { ModalsService } from '../../modals/modals.service';
 
-import rxIpc from 'rx-ipc-electron/lib/renderer';
-
 
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
