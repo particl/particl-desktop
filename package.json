@@ -22,9 +22,7 @@
     "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.2",
     "start:electron:dev": "electron . --dev",
     "start:electron": "npm run build:electron && electron . --dev",
-    "package-mac": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --prune=true --out=release-builds",
-    "package-windows": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds",
-    "package-linux": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds",
+    "package": "npm run build:electron && electron-builder -mwl",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compdoc": "compodoc -p tsconfig.json"
   },
