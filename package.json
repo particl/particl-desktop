@@ -96,7 +96,7 @@
     "@types/node": "~8.0.12",
     "codelyzer": "~3.1.2",
     "coveralls": "^2.13.1",
-    "electron": "^1.6.11",
+    "electron": "^1.7.5",
     "electron-builder": "^19.22.1",
     "electron-log": "^2.2.7",
     "htmlhint": "^0.9.13",
