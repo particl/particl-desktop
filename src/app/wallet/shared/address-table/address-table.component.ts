@@ -23,14 +23,17 @@ export class AddressTableComponent implements OnInit {
   @Input() displayPublicKey: boolean = false;
   @Input() displayPurpose: boolean = false;
   @Input() displayIsMine: boolean = false;
+  @Input() addressDisplayAmount: number = 10;
 
-  constructor(public addressService: AddressService) {
-  }
+
+  constructor(public addressService: AddressService) { }
 
   ngOnInit() {
+    this.addressService.postConstructor(this.addressDisplayAmount);
   }
 
   public pageChanged(event: any): void {
     this.addressService.changePage(event.page);
   }
 }
+

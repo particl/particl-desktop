@@ -6,9 +6,10 @@
   </div>
 </div>
 
-<hr style="margin-top: 100px;">
+<hr class="margin-top-100px">
 
 <app-password
   [unlockButton]="'UNLOCK WALLET'"
-  (passwordEmitter)="unlock($event)">
-</app-password>
+  (unlockEmitter)="unlock($event)"
+  [emitUnlock]="true">
+  </app-password>

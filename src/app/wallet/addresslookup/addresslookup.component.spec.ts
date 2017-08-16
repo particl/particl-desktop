@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WalletModule } from '../wallet.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
+import { SharedModule } from '../../shared/shared.module';
 
 import { AddressLookupComponent } from './addresslookup.component';
 
@@ -10,7 +12,11 @@ describe('AddressLookupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [WalletModule]
+      imports: [
+        SharedModule,
+        RpcModule.forRoot(),
+        WalletModule
+      ]
     })
     .compileComponents();
   }));
@@ -23,5 +29,23 @@ describe('AddressLookupComponent', () => {
 
   it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+/*
+  it('should show', () => {
+    component.show();
+    expect(component.staticLookup.isShown).toBe(true);
+  });
+
+  it('should hide', () => {
+    component.hide();
+    expect(component.staticLookup.isShown).toBe(false);
+  });
+*/
+  it('should get filterAddress', () => {
+    expect(component.filter).toBe('all');
+  });
+
+  it('should get staticLookup', () => {
+    expect(component.staticLookup).toBeDefined();
   });
 });

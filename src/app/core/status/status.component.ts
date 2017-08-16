@@ -1,22 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ModalsService } from '../../modals/modals.service';
+
 import { PeerService } from '../rpc/peer.service';
 import { RPCService } from '../rpc/rpc.service';
+import { BlockStatusService } from '../rpc/blockstatus.service';
 
 @Component({
   selector: 'app-status',
   templateUrl: './status.component.html',
-  styleUrls: ['./status.component.css']
+  styleUrls: ['./status.component.css'],
+  providers: [
+    PeerService
+  ]
 })
 export class StatusComponent implements OnInit {
 
   private peerListCount: number = 0;
   private _subPeerList: Subscription;
 
-  public encryptionStatus: string = '_off';
+  public encryptionStatus: string = 'Locked';
 
-  constructor(private  _peerService: PeerService, private _rpc: RPCService) { }
+  constructor(private  _peerService: PeerService, private _rpc: RPCService, private modalsService: ModalsService) { }
 
   ngOnInit() {
     this._subPeerList = this._peerService.getPeerList()
@@ -26,7 +32,11 @@ export class StatusComponent implements OnInit {
         },
         error => console.log('StatusComponent subscription error:' + error));
 
-    this._rpc.register(this, 'getwalletinfo', null, this.rpc_walletEncryptionStatus, 'both'); ;
+    this._rpc.register(this, 'getwalletinfo', null, this.rpc_walletEncryptionStatus, 'both');
+  }
+
+  getPeerListCount() {
+    return this.peerListCount;
   }
 
   getIconNumber(): number {
@@ -41,21 +51,42 @@ export class StatusComponent implements OnInit {
     }
   }
 
-  // TODO: Status Interface
-  rpc_walletEncryptionStatus(status: any) {
-    switch (status.encryptionstatus) {
+  getIconEncryption() {
+    switch (this.encryptionStatus) {
       case 'Unencrypted':  // TODO: icon?
       case 'Unlocked':
-        this.encryptionStatus = '_off';
-        break;
+        return '_off';
       case 'Unlocked, staking only':
-        this.encryptionStatus = '_stake';
+        return '_stake';
+      case 'Locked':
+        return '';
+      default:
+        return '_off'; // TODO: icon?
+    }
+  }
+
+  // TODO: Status Interface
+  rpc_walletEncryptionStatus(status: any) {
+    this.encryptionStatus = status.encryptionstatus;
+  }
+
+  rpc_walletLock_success(json: Object) {
+
+  }
+
+  toggle() {
+    switch (this.encryptionStatus) {
+      case 'Unencrypted':
+        break;
+      case 'Unlocked':
+      case 'Unlocked, staking only':
+        this._rpc.call(this, 'walletlock', null, this.rpc_walletLock_success);
         break;
       case 'Locked':
-        this.encryptionStatus = '';
+        this.modalsService.open('unlock');
         break;
       default:
-        this.encryptionStatus = '_off'; // TODO: icon?
+        break;
     }
   }
 }

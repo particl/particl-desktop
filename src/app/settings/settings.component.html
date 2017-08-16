@@ -21,7 +21,7 @@
           Display
         </a>
       </li>
-      <li [class.active]="tab == 'i2p'">
+      <!--<li [class.active]="tab == 'i2p'">
         <a href="javascript:void(0)" (click)="settingsTab('i2p')">
           I2P
         </a>
@@ -30,7 +30,7 @@
         <a href="javascript:void(0)" (click)="settingsTab('tor')">
           TOR
         </a>
-      </li>
+      </li>-->
     </ul>
   </div>
 </app-header>
@@ -53,14 +53,34 @@
       <div class="input-label col-xs-4">Pay transaction fee</div>
       <div class="col-xs-8">
         <div class="input-comment row">
-          Optionnal transaction fee per kB that helps make sure your transactions
-          are processed quickly. <br /> Most transactions are 1kB. Fee 0.01 recommended.
+          <p>Optionnal transaction fee per kB that helps make sure your transactions
+          are processed quickly. <br /> Most transactions are 1kB. Fee 0.01 recommended.</p>
         </div>
         <div class="row col-xs-6">
-          <input class="col-xs-6" type="text" [(ngModel)]="settings.main.feeAmount">
-          <select class="col-xs-6" [(ngModel)]="settings.main.feeCurrency">
-            <option value="part">PART</option>
-          </select>
+          <input class="col-xs-4" type="text" [(ngModel)]="settings.main.feeAmount">
+          <div class="col-xs-6">
+            <select class="form-control" [(ngModel)]="settings.main.feeCurrency">
+              <option value="part">PART</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Pay transaction fee</div>
+      <div class="col-xs-8">
+        <div class="input-comment row">
+            <p>Optionnal transaction fee per kB that helps make sure your transactions are processed quickly.
+                <br /> Most transactions are 1kB. Fee 0.01 recommended.</p>
+        </div>
+        <div class="row col-xs-6">
+            <input class="col-xs-4" type="text" [(ngModel)]="settings.main.feeAmount">
+            <div class="col-xs-6">
+                <select class="form-control" [(ngModel)]="settings.main.feeCurrency">
+                    <option value="part">PART</option>
+                </select>
+            </div>
         </div>
       </div>
     </div>
@@ -73,15 +93,17 @@
     <div class="card row">
       <div class="input-label col-xs-4">Reserve</div>
       <div class="col-xs-8">
-        <div class="input-comment row">
-          Reserved amount does not participate in staking and is therefore spendable at any time.
-        </div>
-        <div class="row col-xs-6">
-          <input class="col-xs-6" type="text" [(ngModel)]="settings.main.reserveAmount">
-          <select class="col-xs-6" [(ngModel)]="settings.main.reserveCurrency">
-            <option value="part">PART</option>
-          </select>
-        </div>
+          <div class="input-comment row">
+              <p>Reserved amount does not participate in staking and is therefore spendable at any time.</p>
+          </div>
+          <div class="row col-xs-6">
+              <input class="col-xs-4" type="text" [(ngModel)]="settings.main.reserveAmount">
+              <div class="col-xs-6">
+                  <select class="form-control" [(ngModel)]="settings.main.reserveCurrency">
+                      <option value="part">PART</option>
+                  </select>
+              </div>
+          </div>
       </div>
     </div>
 
@@ -127,45 +149,37 @@
 
   </div>
 
-
-
   <div *ngIf="tab == 'network'">
     <div class="card row">
-      <div class="input-label col-xs-4">Map port using UPNP</div>
-      <input type="checkbox" [(ngModel)]="settings.network.upnp">
+        <div class="input-label col-xs-4">Map port using UPNP</div>
+        <input type="checkbox" [(ngModel)]="settings.network.upnp">
     </div>
 
     <div class="card row">
-      <div class="input-label col-xs-4">Connect through Socks proxy</div>
-      <input type="checkbox" [(ngModel)]="settings.network.proxy">
+        <div class="input-label col-xs-4">Connect through Socks proxy</div>
+        <input type="checkbox" [(ngModel)]="settings.network.proxy">
     </div>
 
     <div class="card row">
-      <div class="input-label col-xs-4">Details</div>
+        <div class="input-label col-xs-4">Proxy IP</div>
+        <input type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
+    </div>
 
-      <div class="col-xs-8 row">
-        <div class="col-xs-5">
-          <label for="ip">Proxy IP</label>
-          <input type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
-        </div>
+    <div class="card row">
+        <div class="input-label col-xs-4">Port</div>
+        <input type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+    </div>
 
-        <div class="col-xs-5">
-          <label for="port">Port</label>
-          <input type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+    <div class="card row">
+        <div class="input-label col-xs-4">Socket version</div>
+        <div class="col-xs-4">
+            <select class="form-control no-margin-left" id="version" [(ngModel)]="settings.network.socketVersion">
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
         </div>
-
-        <div class="col-xs-2">
-          <label for="version">Socket version</label>
-          <select id="version" [(ngModel)]="settings.network.socketVersion">
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-        </div>
-      </div>
     </div>
   </div>
-
-
 
   <div *ngIf="tab == 'window'">
     <div class="card row">
@@ -179,32 +193,36 @@
     </div>
   </div>
 
-
-
   <div *ngIf="tab == 'display'">
     <div class="card row">
-      <div class="input-label col-xs-4">User interface language</div>
-      <select [(ngModel)]="settings.display.language">
-        <option value="default">(default)</option>
-      </select>
+        <div class="input-label col-xs-4">User interface language</div>
+        <div class="col-xs-4">
+            <select class="form-control no-margin-left" [(ngModel)]="settings.display.language">
+                <option value="default">(default)</option>
+            </select>
+        </div>
     </div>
 
     <div class="card row">
       <div class="input-label col-xs-4">Unit to show amounts in</div>
-      <select [(ngModel)]="settings.display.units">
-        <option value="part">PART</option>
-        <option value="usd">USD</option>
-      </select>
+      <div class="col-xs-4">
+          <select class="form-control no-margin-left" [(ngModel)]="settings.display.units">
+              <option value="part">PART</option>
+              <option value="usd">USD</option>
+          </select>
+      </div>
     </div>
 
     <div class="card row">
       <div class="input-label col-xs-4">Rows per page</div>
-      <select [(ngModel)]="settings.display.rows">
-        <option value="20">20</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-        <option value="500">500</option>
-      </select>
+      <div class="col-xs-4">
+          <select class="form-control no-margin-left" [(ngModel)]="settings.display.rows">
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+          </select>
+      </div>
     </div>
 
     <div class="card row">
@@ -267,15 +285,11 @@
     </div>
   </div>
 
-
-
   <div *ngIf="tab == 'i2p'">
     <div class="card">
       I2P (coming soon)
     </div>
   </div>
-
-
 
   <div *ngIf="tab == 'tor'">
     <div class="card">
@@ -283,10 +297,8 @@
     </div>
   </div>
 
-
-
   <div class="pull-right">
-    <button class="warning" (click)="cancel()">Cancel</button>
+    <button (click)="cancel()">Cancel</button>
     <button (click)="apply()">Apply</button>
     <button class="validate" (click)="validate()">OK</button>
   </div>

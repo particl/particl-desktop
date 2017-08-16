@@ -1,107 +1,124 @@
 .center-vertical {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
 $header-height: 60px;
 
 :host {
-  & {
-    display: block;
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid #EAEAEA;
-    color: #7A8693;
-    margin-bottom: 15px;
-  }
-  /deep/ {
-    .color-red {
-      color: #EE4A52;
-    }
-    .color-green {
-      color: #03E8B0;
-    }
-    .icon {
-      vertical-align: middle;
-    }
-    ul.header-nav {
-      & {
-        display: inline-block;
-        list-style-type: none;
-        padding: 0;
-        margin: -1px 0;
-        text-transform: uppercase;
-        font-size: 12px;
-        font-weight: bold;
-        height: $header-height + 2px;
-        line-height: $header-height + 2px - 8px;
-      }
-      & > li {
-        display: inline-block;
-        height: inherit;
-        padding: 0 10px;
-        border-top: 4px solid transparent;
-        border-bottom: 4px solid transparent;
-      }
-      & > li > a, & > li > .header-link {
-        display: inline-block;
-        height: 100%;
-        text-decoration: none;
-        color: #7A8693;
-        cursor: pointer;
-      }
-      & > li > a:hover, & > li > .header-link:hover {
-        color: #000;
-      }
-      & > li.active {
-        border-bottom: 4px solid #41ECC2;
-      }
-      & > li.active > a,  & > li.active > .header-link {
-        color: #000;
-      }
-    }
-    form.header-form {
-      & {
-        display: inline-block;
-        height: $header-height;
-      }
-      & > * {
-        @extend .center-vertical;
-        display: inline-block;
-      }
-      & > input[type="text"] {
-        & {
-          height: 60%;
-          background-color: transparent;
-          border: 0;
-          outline: none;
-          padding: 0 10px;
-          border-left: 1px solid #EAEAEA;
-        }
-        &::placeholder {
-          color: #7A8693;
-        }
-        &:focus {
-          outline: none;
-          border-left: 1px solid #41ECC2;
-        }
-      }
-      & > button.btn {
-        & {
-          text-indent: 0;
-          height: 60%;
-          background-color: transparent;
-          border: 0;
-          outline: none;
-          font-size: 20px;
-          box-shadow: none;
-        }
-        &:hover, &:focus {
-          outline: none;
-          color: #000;
-        }
-      }
+    & {
+        border-bottom: 1px solid #eaeaea;
+        border-top: 1px solid transparent;
+        color: #7a8693;
+        display: block;
+        margin-bottom: 15px;
     }
 
+    /deep/ {
+        .color-red {
+            color: #ee4a52;
+    }
+
+        .color-green {
+            color: #03e8b0;
+          }
+
+        .icon {
+            vertical-align: middle;
+          }
+
+        ul.header-nav {
+            & {
+                display: inline-block;
+                font-size: 12px;
+                font-weight: bold;
+                height: $header-height + 2px;
+                line-height: $header-height + 2px - 8px;
+                list-style-type: none;
+                margin: -1px 0;
+                padding: 0;
+                text-transform: uppercase;
+              }
+
+            & > li {
+                border-bottom: 4px solid transparent;
+                border-top: 4px solid transparent;
+                display: inline-block;
+                height: inherit;
+                padding: 0 10px;
+              }
+
+            & > li > a,
+            & > li > .header-link {
+                color: #7a8693;
+                cursor: pointer;
+                display: inline-block;
+                height: 100%;
+                text-decoration: none;
+              }
+
+            & > li > a:hover,
+            & > li > .header-link:hover {
+                color: #000;
+              }
+
+            & > li.active {
+                border-bottom: 4px solid #41ecc2;
+              }
+
+            & > li.active > a,
+            & > li.active > .header-link {
+                color: #000;
+              }
+    }
+
+        form.header-form {
+            & {
+                display: inline-block;
+                height: $header-height;
+              }
+
+            & > * {
+                @extend .center-vertical;
+                display: inline-block;
+            }
+
+            & > input[type='text'] {
+                & {
+                    background-color: transparent;
+                    border: 0;
+                    border-left: 1px solid #eaeaea;
+                    height: 60%;
+                    outline: none;
+                    padding: 0 10px;
+                  }
+
+                &::placeholder {
+                    color: #7a8693;
+                  }
+
+                &:focus {
+                    border-left: 1px solid #41ecc2;
+                    outline: none;
+                  }
+          }
+
+            & > button.btn {
+                & {
+                    background-color: transparent;
+                    border: 0;
+                    box-shadow: none;
+                    height: 60%;
+                    outline: none;
+                    text-indent: 0;
+                  }
+
+                &:hover, &:focus {
+                    color: #000;
+                    outline: none;
+        }
+      }
+    }
   }
 }
