@@ -5,7 +5,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet.component';
-import { ModalsModule } from '../modals.module';
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -16,8 +15,7 @@ describe('CreateWalletComponent', () => {
       imports: [
         BrowserAnimationsModule,
         SharedModule,
-        RpcModule.forRoot(),
-        ModalsModule
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();
