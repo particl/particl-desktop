@@ -11,10 +11,7 @@ export class DaemonComponent {
 
   public message: any;
 
-  constructor(
-    @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService
-  ) {
-  }
+  constructor() { }
 
   setData(data: any) {
     this.message = data;
