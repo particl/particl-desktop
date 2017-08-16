@@ -12,7 +12,7 @@
   <tr>
     <td *ngIf="display.date">
       <!--<span class="inline-header"><span class="icon nc-icon nc-time-3"></span></span>-->
-      <span>{{ tx.getDate() }}</span>
+      <span class="display-date">{{ tx.getDate() }}</span>
     </td>
     <td *ngIf="display.dategory" [ngSwitch]="tx.category">
       <span *ngSwitchCase="'stake'" class="inline-tag text-uppercase">
@@ -44,7 +44,7 @@
       <span>{{ tx.blockindex }}</span>
     </td>
     <td *ngIf="display.confirmations">
-      <span class="inline-header">Confirmations</span>
+      <span class="inline-header confirmations-hide">Confirmations</span>
       <span>{{ tx.confirmations }}</span>
     </td>
     <td *ngIf="display.amount">
@@ -52,7 +52,7 @@
       <span>{{ tx.getAmount() }} PART</span>
     </td>
     <td *ngIf="display.expand">
-      <span class="icon nc-icon nc-simple-add" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
+      <span class="icon nc-icon nc-simple-add expand-hide" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
     </td>
 
   </tr>
