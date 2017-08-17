@@ -1,0 +1,26 @@
+{
+  "clients": {
+    "particld": {
+      "version": "0.14.2.1",
+      "platforms": {
+        "linux": {
+          "x64": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-x86_64-linux-gnu.tar.gz",
+              "type": "tar",
+              "sha256": "5545cb7f2364ab773f3228ea1f0283fd389cc2ea43a886eb27d114f96ac54762",
+              "bin": "particl-0.14.2.1/bin/particld"
+            },
+            "bin": "particld",
+            "commands": {
+              "sanity": {
+                "args": ["-version"],
+                "output": [ "Particl Core Daemon", "0.14.2.1" ]
+              }
+            }
+          },
+        },
+      }
+    }
+  }
+}

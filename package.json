@@ -41,6 +41,7 @@
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "electron": "^1.6.11",
+    "ethereum-client-binaries": "^1.6.2",
     "font-awesome": "^4.7.0",
     "ng2-logger": "^1.0.3",
     "ngx-bootstrap": "^1.8.0",
