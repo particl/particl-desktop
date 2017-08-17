@@ -16,7 +16,8 @@ describe('CreateWalletComponent', () => {
         BrowserAnimationsModule,
         SharedModule,
         RpcModule.forRoot()
-      ]
+      ],
+      declarations: [ CreateWalletComponent ]
     })
     .compileComponents();
   }));
