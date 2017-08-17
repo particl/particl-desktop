@@ -5,6 +5,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet.component';
+import { PasswordComponent } from '../modals.module';
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -17,7 +18,10 @@ describe('CreateWalletComponent', () => {
         SharedModule,
         RpcModule.forRoot()
       ],
-      declarations: [ CreateWalletComponent ]
+      declarations: [ 
+        PasswordComponent,
+        CreateWalletComponent 
+      ]
     })
     .compileComponents();
   }));
