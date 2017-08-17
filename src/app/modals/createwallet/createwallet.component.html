@@ -125,15 +125,15 @@
 
     <div class="buttons margin-top-30px">
       <div class="row col-xs-4 col-xs-offset-4">
-               <div class="col-sm-6 col-xs-12 text-right">
+        <div class="col-sm-6 col-xs-12 text-right">
           <button class="control" (click)="prevStep()">
             back
           </button>
         </div>
-               <div class="col-sm-6 col-xs-12 text-left">
+        <div class="col-sm-6 col-xs-12 text-left">
           <button class="control"
             (click)="step === 2 && passwordComponent.sendPassword();
-                    nextStep()"><!-- TODO: Move sendPassword to .ts -->
+             nextStep()"><!-- TODO: Move sendPassword to .ts -->
             next step
           </button>
         </div>
