@@ -1,0 +1,63 @@
+:host /deep/ {
+
+    .grid {
+	overflow: hidden;
+
+  	.inline-header {
+  	    text-transform: uppercase;
+  	    font-weight: bold;
+  	}
+  	.inline-toolbar {
+  	    & {
+  		display: inline-block;
+  		font-size: 16px;
+  	    }
+  	    & > .icon {
+  		display: inline-block;
+  		margin: 0 5px;
+		cursor: pointer;
+  	    }
+  	    & > .icon:first-child {
+  		margin-left: 0;
+  	    }
+  	    & > .icon:last-child {
+  		margin-right: 0;
+  	    }
+  	}
+
+	.inline-tag {
+	    font-weight:bold;
+	}
+	.color-red {
+	    color: #EE4A52;
+	}
+	.color-green {
+	    color: #03E8B0;
+	}
+
+    }
+
+    .grid-header {
+	display: flex;
+	justify-content: space-between;
+    }
+
+    .grid-row {
+	display: flex;
+	justify-content: space-between;
+    }
+
+    .grid-cell {
+	vertical-align: middle;
+  	white-space: nowrap;
+  	margin: 0;
+  	padding: 26px 20px;
+  	background-color: #FFF;
+  	border: 0;
+  	border-bottom: 1px solid #e3e3e3;
+    }
+
+    .cell-expanded-row {
+	padding-bottom: 22px;
+    }
+}

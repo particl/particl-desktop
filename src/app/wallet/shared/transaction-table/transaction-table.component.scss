@@ -59,3 +59,39 @@
 .padding-reset-hack {
   padding: 0 0 0 0 !important;
 }
+
+.grid-row {
+    padding-bottom: 20px;
+}
+
+.cell-date {
+    flex-basis: 12em;
+}
+
+.cell-senderAddress {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 33vw;
+}
+
+.cell-confirmations {
+    flex-basis: 26em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cell-amount {
+    flex-grow: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-basis: 20em;
+}
+
+.cell-expand {
+    width: 42px;
+    padding-left: 0 !important;
+    padding-right: 30px !important;
+}

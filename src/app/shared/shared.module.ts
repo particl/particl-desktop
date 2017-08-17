@@ -10,6 +10,7 @@ import { AccordionModule } from './accordion/accordion.module';
 
 import { HeaderComponent } from './header/header.component';
 import { TableComponent } from './table/table.component';
+import { GridComponent } from './grid/grid.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { TableComponent } from './table/table.component';
   ],
   declarations: [
     HeaderComponent,
-    TableComponent
+    TableComponent,
+    GridComponent
   ],
   exports: [
     CommonModule,
@@ -37,6 +39,7 @@ import { TableComponent } from './table/table.component';
     ClipboardModule,
     HeaderComponent,
     TableComponent,
+    GridComponent,
     AccordionModule
   ]
 })
