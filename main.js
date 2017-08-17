@@ -34,10 +34,10 @@ function createWindow () {
   let trayImage = path.join(__dirname, 'src/assets/icons/logo.png')
 
   // Determine appropriate icon for platform
-  if (platform == 'darwin') {
+  if (platform === 'darwin') {
     trayImage = path.join(__dirname, 'src/assets/icons/logo.icns')
   }
-  else if (platform == 'win32' || platform == 'win64') {
+  else if (platform === 'win32' || platform === 'win64') {
     trayImage = path.join(__dirname, 'src/assets/icons/logo.ico')
   }
 
@@ -88,8 +88,8 @@ function createWindow () {
     webPreferences: {
       //sandbox: true,
       nodeIntegration: false,
-      preload: 'preload.js',
-    },
+      preload: 'preload.js'
+    }
   })
 
   // and load the index.html of the app.
@@ -119,7 +119,7 @@ function createWindow () {
   tray = new electron.Tray(trayImage)
 
   // TODO, tray pressed icon for OSX? :)
-  if (platform == "darwin") {
+  if (platform === "darwin") {
     tray.setPressedImage(imageFolder + '/osx/trayHighlight.png');
   }
 
