@@ -62,3 +62,35 @@
 .padding-reset-hack {
     padding: 0;
 }
+
+.details-table {
+/* Space between rows */
+  border-collapse: separate;
+  border-spacing: 0 0px;
+  margin: 0px 0 0px 0;
+  width: 100%;
+  background-color: #fbfbfb;
+}
+
+.details-table tr {
+  height: auto;
+  background-color: #fbfbfb;
+}
+
+.details-table td {
+  border-bottom: 0px solid;
+  background-color: #fbfbfb;
+  padding: 0 0 0 30px;
+}
+
+.background-hack {
+  background-color: #fbfbfb;
+}
+
+.border-reset-hack {
+  border-bottom: .01px solid;
+}
+
+.padding-reset-hack {
+  padding: 0 0 0 0;
+}

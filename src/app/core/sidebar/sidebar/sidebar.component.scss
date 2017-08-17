@@ -114,6 +114,7 @@ $width-lg: 100% / 12 * 2;
         top: inherit;
   }
 
+<<<<<<< HEAD
     // Sidebar bottom
     &[position='bottom'] {
         bottom: inherit;
@@ -139,6 +140,21 @@ $width-lg: 100% / 12 * 2;
     &[position='bottom'] {
         height: $docked-height;
         width: 768px;
+=======
+  // Sidebar top/bottom/center docked left/right
+  @media (min-width: 768px) {
+    &[position="top"].docked-left,
+    &[position="bottom"].docked-left,
+    &[position="center"].docked-left {
+      margin-left: $docked-width;
+      transition: margin-left .3s;
+    }
+    &[position="top"].docked-right,
+    &[position="bottom"].docked-right,
+    &[position="center"].docked-right {
+      margin-right: $docked-width;
+    }
+>>>>>>> upstream/master
   }
     @media (min-width: 768px) {
         &[position='top'],

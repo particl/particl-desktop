@@ -19,30 +19,24 @@
 input[type="text"] {
     margin-right: 20px;
 }
-
 // TODO replace with nomargin class
 .row {
     margin: 0;
 }
-
 .nopadding {
     padding: 0;
 }
-
 .public-private {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-
 span.icon {
     margin-right: 8px;
 }
-
 span.icon:hover {
     cursor: pointer;
 }
-
 .privacy-labels {
     bottom: 0;
     display: flex;
@@ -52,29 +46,24 @@ span.icon:hover {
     position: absolute;
     width: 100%;
 }
-
 .privacy-label {
     color: #9aa2ab;
     font-size: .8em;
     font-weight: bold;
     text-transform: uppercase;
 }
-
 .privacy-label:hover {
     color: black;
     cursor: pointer;
 }
-
 /* Particl progress bar */
 
 .progress {
     height: 10px;
 }
-
 .progress-bar {
     background-color: #00e8af;
 }
-
 /* Particl Card view */
 
 .separator {
@@ -85,11 +74,9 @@ span.icon:hover {
     transform: translateY(-50%);
     width: 1px;
 }
-
 .separator + span {
     margin-left: 20px;
 }
-
 .input-info-label {
     color: #9aa2ab;
     font-size: 0.9em;
@@ -97,26 +84,22 @@ span.icon:hover {
     margin: 0 10px;
     text-transform: uppercase;
 }
-
 /* Particl Header | Header option */
 
 // TODO integrate to header component
 .header {
     position: relative;
 }
-
 .header-option {
     height: 100%;
     position: absolute;
     right: 0;
     top: 0;
 }
-
 .header-option:hover {
     color: black;
     cursor: pointer;
 }
-
 .header-option-icon {
     background-color: transparent;
     border-radius: 5px;
@@ -124,22 +107,18 @@ span.icon:hover {
     margin: 0 8px 0 15px;
     padding: 4px;
 }
-
 .header-option.selected .header-option-icon {
     background-color: #00e8af;
     color: white;
 }
-
 .header-option-text {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
 }
-
 .header-option.selected .header-option-text {
     color: black;
 }
-
 .header-option-container {
     border-left: 2px solid #efefef;
     height: 60%;
@@ -149,17 +128,14 @@ span.icon:hover {
     transform: translateY(-50%);
     width: 200px;
 }
-
 .good {
     background-color: #dff2Bf;
     color: #4f8a10;
 }
-
 .fault {
     background-color: #ffbaba;
     color: #d8000c;
 }
-
 .small-modal {
     background-color: rgba(0, 0, 0, .3);
     height: 100vh;
@@ -169,13 +145,11 @@ span.icon:hover {
     width: 100vw;
     z-index: 100000;
 }
-
 .small-modal.hide {
     display: none;
     height: 0;
     width: 0;
 }
-
 .address-modal-container {
     background-color: white;
     left: 50%;
@@ -184,34 +158,31 @@ span.icon:hover {
     top: 20%;
     transform: translateX(-50%);
 }
-
 .close {
     position: absolute;
     right: 30px;
     top: 30px;
 }
-
 .modal-content-header {
     font-size: 1.2em;
 }
-
 .small-modal .row {
     margin-bottom: 30px;
 }
-
 th {
     text-transform: uppercase;
 }
-
 tr {
     cursor: pointer;
 }
-
 .validate[disabled] {
     background-color: #a1a1a1;
     border-bottom-color: #222828;
 }
 
+.icon-padding {
+    padding-top: 7px;
+}
 .icon-padding {
     padding-top: 7px;
 }
