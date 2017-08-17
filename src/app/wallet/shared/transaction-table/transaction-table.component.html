@@ -11,111 +11,111 @@
   <ng-container *ngFor="let tx of txService.txs">
     <div class="grid-row">
       <div class="grid-cell cell-date" *ngIf="display.date">
-	<!--<span class="inline-header"><span class="icon nc-icon nc-time-3"></span></span>-->
-	<span>{{ tx.getDate() }}</span>
+        <!--<span class="inline-header"><span class="icon nc-icon nc-time-3"></span></span>-->
+        <span>{{ tx.getDate() }}</span>
       </div>
       <div class="grid-cell cell-category" *ngIf="display.category" [ngSwitch]="tx.category">
-	<span *ngSwitchCase="'stake'" class="inline-tag text-uppercase">
+        <span *ngSwitchCase="'stake'" class="inline-tag text-uppercase">
           Stake
           <span class="icon fa fa-plus color-green"></span>
-	</span>
-	<span *ngSwitchCase="'orphaned_stake'" class="inline-tag text-uppercase">
+        </span>
+        <span *ngSwitchCase="'orphaned_stake'" class="inline-tag text-uppercase">
           Orphan
           <span class="icon fa fa-remove color-red"></span>
-	</span>
-	<span *ngSwitchCase="'send'" class="inline-tag text-uppercase">
+        </span>
+        <span *ngSwitchCase="'send'" class="inline-tag text-uppercase">
           Send
           <span class="icon fa fa-arrow-right color-red"></span>
-	</span>
-	<span *ngSwitchCase="'receive'" class="inline-tag text-uppercase">
+        </span>
+        <span *ngSwitchCase="'receive'" class="inline-tag text-uppercase">
           Received
           <span class="icon fa fa-arrow-left"></span>
-	</span>
+        </span>
       </div>
       <div class="grid-cell cell-senderAddress" *ngIf="display.senderAddress">
-	<span>{{ tx.getAddress() }}</span>
+        <span>{{ tx.getAddress() }}</span>
       </div>
       <div class="grid-cell cell-txid" *ngIf="display.txid">
-	<span class="inline-header">TxId</span>
-	<span>{{ tx.txid }}</span>
+        <span class="inline-header">TxId</span>
+        <span>{{ tx.txid }}</span>
       </div>
       <div class="grid-cell cell-blockIndex" *ngIf="display.blockIndex">
-	<span class="inline-header">Blockindex</span>
-	<span>{{ tx.blockindex }}</span>
+        <span class="inline-header">Blockindex</span>
+        <span>{{ tx.blockindex }}</span>
       </div>
       <div class="grid-cell cell-confirmations" *ngIf="display.confirmations">
-	<span class="inline-header">Confirmations</span>
-	<span>{{ tx.confirmations }}</span>
+        <span class="inline-header">Confirmations</span>
+        <span>{{ tx.confirmations }}</span>
       </div>
       <div class="grid-cell cell-amount" *ngIf="display.amount">
-	<span class="inline-header">Amount</span>
-	<span>{{ tx.getAmount() }} PART</span>
+        <span class="inline-header">Amount</span>
+        <span>{{ tx.getAmount() }} PART</span>
       </div>
       <div class="grid-cell cell-expand" *ngIf="display.expand">
-	<span class="icon nc-icon nc-simple-add" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
+        <span class="icon nc-icon nc-simple-add" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
       </div>
     </div>
 
     <div class="cell-expanded-row" *ngIf="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)" class="background-hack">
       <div [attr.colspan]="getColumnCount()" class="padding-reset-hack border-reset-hack">
-	<table class="details-table">
+        <table class="details-table">
 
-	  <tr>
+          <tr>
             <td>
-	      <b>Status:</b>
+              <b>Status:</b>
             </td>
             <td>
-	      {{tx.confirmations}} confirmations
+              {{tx.confirmations}} confirmations
             </td>
             <td>
-	      <b>Transaction ID:</b>
+              <b>Transaction ID:</b>
             </td>
             <td>
-	      {{tx.txid}}
+              {{tx.txid}}
             </td>
-	  </tr>
+          </tr>
 
-	  <tr>
+          <tr>
             <td>
-	      <b>Date:</b>
+              <b>Date:</b>
             </td>
             <td>
-	      {{tx.getDate()}}
+              {{tx.getDate()}}
             </td>
             <td>
-	      <b>Transaction fee:</b>
+              <b>Transaction fee:</b>
             </td>
             <td>
-	      {{tx.fee ? tx.fee : 0}} PART
+              {{tx.fee ? tx.fee : 0}} PART
             </td>
-	  </tr>
+          </tr>
 
-	  <tr>
+          <tr>
             <td>
-	      <b>To:</b>
+              <b>To:</b>
             </td>
             <td>
-	      {{tx.getAddress()}}
+              {{tx.getAddress()}}
             </td>
             <td>
-	      <b>Net amount:</b>
+              <b>Net amount:</b>
             </td>
             <td>
-	      {{tx.fee ? tx.getAmount() - tx.fee : 0}} PART
+              {{tx.fee ? tx.getAmount() - tx.fee : 0}} PART
             </td>
-	  </tr>
-	  <tr>
+          </tr>
+          <tr>
             <td *ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">
-	      <b>Credit:</b>
+              <b>Credit:</b>
             </td>
             <td *ngIf="tx.category === 'send'">
-	      <b>Debit:</b>
+              <b>Debit:</b>
             </td>
             <td>
-	      {{tx.getAmount()}} PART
+              {{tx.getAmount()}} PART
             </td>
-	  </tr>
-	</table>
+          </tr>
+        </table>
       </div>
     </div>
 
