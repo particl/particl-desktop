@@ -1,61 +1,96 @@
-.btn-round-lg{
-  border-radius: 22.5px;
+.btn-round-lg {
+    border-radius: 22.5px;
 }
-.btn-round{
-  border-radius: 17px;
+
+.btn-round {
+    border-radius: 17px;
 }
-.btn-round-sm{
-  border-radius: 15px;
+
+.btn-round-sm {
+    border-radius: 15px;
 }
-.btn-round-xs{
-  border-radius: 11px;
-  padding-left: 10px;
-  padding-right: 10px;
+
+.btn-round-xs {
+    border-radius: 11px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .category-button {
-  padding: 10px;
+    padding: 10px;
 }
 
 .category-button > .icon-sign {
-  margin-left: 5px;
+    margin-left: 5px;
 }
 
 :host /deep/ td {
-  width: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 0;
+}
+
+.details-table {
+    /* Space between rows */
+    background-color: #fbfbfb;
+    border-collapse: separate;
+    border-spacing: 0 .01px;
+    margin: .01px 0;
+    width: 100%;
+}
+
+.details-table tr {
+    background-color: #fbfbfb;
+    height: auto;
+}
+
+.details-table td {
+    background-color: #fbfbfb;
+    border-bottom: 0px solid;
+    padding: 0 0 0 30px;
+}
+
+.background-hack {
+    background-color: #fbfbfb;
+}
+
+.border-reset-hack {
+    border-bottom: .01px solid;
+}
+
+.padding-reset-hack {
+    padding: 0;
 }
 
 .details-table {
 /* Space between rows */
   border-collapse: separate;
-  border-spacing: 0 0px !important;
-  margin: 0px 0 0px 0 !important;
+  border-spacing: 0 0px;
+  margin: 0px 0 0px 0;
   width: 100%;
-  background-color: #FBFBFB !important;
+  background-color: #fbfbfb;
 }
 
 .details-table tr {
-  height: auto !important;
-  background-color: #FBFBFB !important;
+  height: auto;
+  background-color: #fbfbfb;
 }
 
 .details-table td {
-  border-bottom: 0px solid !important;
-  background-color: #FBFBFB !important;
-  padding: 0 0 0 30px  !important;
+  border-bottom: 0px solid;
+  background-color: #fbfbfb;
+  padding: 0 0 0 30px;
 }
 
 .background-hack {
-  background-color: #FBFBFB !important;
+  background-color: #fbfbfb;
 }
 
 .border-reset-hack {
-  border-bottom: 0px solid !important;
+  border-bottom: .01px solid;
 }
 
 .padding-reset-hack {
-  padding: 0 0 0 0 !important;
+  padding: 0 0 0 0;
 }

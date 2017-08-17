@@ -3,58 +3,62 @@
 
 /* card element */
 .card {
-  position: relative;
-  background-color: white;
-  padding: 20px;
-  margin: 0 0 20px 0;
-  border-bottom: 1px solid #F1F1F1;
-}
+    background-color: white;
+    border-bottom: 1px solid #f1f1f1;
+    margin: 0 0 20px;
+    padding: 20px;
+    position: relative;
+  }
 
 .col-xs-6 {
-  padding-left: 0;
+    padding-left: 0;
 }
 
 .col-xs-4 {
-  padding-left: 0;
+    padding-left: 0;
 }
 
 /* label of an input in a card */
 .input-label {
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.9em;
+    font-size: .9em;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 /* Particl buttons */
 button {
-  background-color: white;
-  border: none;
-  padding: 8px 30px;
-  margin: 0 5px 20px 5px;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.8em;
-  border-bottom: 1px solid #F1F1F1;
+    background-color: white;
+    border: none;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: .8em;
+    font-weight: bold;
+    margin: 0 5px 20px;
+    padding: 8px 30px;
+    text-transform: uppercase;
 }
-button:active {
-  border: 0px;
-  transform: translateY(2px);
+
+button
+:active {
+    border: .01px;
+    transform: translateY(2px);
 }
+
 .warning {
-  color: white;
-  background-color: #ED4B4D;
-  border-bottom: 2px solid #B64446;
+    background-color: #ed4b4d;
+    border-bottom: 2px solid #b64446;
+    color: white;
 }
+
 .validate {
-  color: white;
-  background-color: #03E8B0;
-  border-bottom: 1px solid #07B98D;
+    background-color: #03e8b0;
+    border-bottom: 1px solid #07b9bd;
+    color: white;
 }
 
 /* Particl inputs */
-input[type="text"] {
-  background-color: #FBFBFB;
-  border: 1px solid #EDEDED;
-  border-radius: 3px;
-  padding: 4px;
+input[type='text'] {
+    background-color: #fbfbfb;
+    border: 1px solid #ededed;
+    border-radius: 3px;
+    padding: 4px;
 }

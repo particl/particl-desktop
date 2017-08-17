@@ -2,17 +2,20 @@
 // TODO global colors
 // TODO small-modal as a component (also in wallet/address-book/newAddress)
 .balance-label {
-    text-transform: uppercase;
+    font-size: .9em;
     font-weight: bold;
-    font-size: 0.9em;
+    text-transform: uppercase;
 }
+
 .balance {
-    padding: 0;
     margin: 0;
+    padding: 0;
 }
+
 //span {
 //  padding: 0;
 //}
+
 input[type="text"] {
     margin-right: 20px;
 }
@@ -35,19 +38,19 @@ span.icon:hover {
     cursor: pointer;
 }
 .privacy-labels {
+    bottom: 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    position: absolute;
-    bottom: 0;
     left: 0;
+    position: absolute;
     width: 100%;
 }
 .privacy-label {
-    text-transform: uppercase;
-    font-weight: bold;
     color: #9aa2ab;
-    font-size: 0.8em;
+    font-size: .8em;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 .privacy-label:hover {
     color: black;
@@ -64,22 +67,22 @@ span.icon:hover {
 /* Particl Card view */
 
 .separator {
+    border: 1px solid #efefef;
+    height: 60%;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 0px;
-    height: 60%;
-    border: 1px solid #efefef;
+    width: 1px;
 }
 .separator + span {
     margin-left: 20px;
 }
 .input-info-label {
-    font-weight: normal;
-    font-size: 0.9em;
-    margin: 0 10px 0 10px;
-    text-transform: uppercase;
     color: #9aa2ab;
+    font-size: 0.9em;
+    font-weight: normal;
+    margin: 0 10px;
+    text-transform: uppercase;
 }
 /* Particl Header | Header option */
 
@@ -88,25 +91,25 @@ span.icon:hover {
     position: relative;
 }
 .header-option {
+    height: 100%;
     position: absolute;
     right: 0;
     top: 0;
-    height: 100%;
 }
 .header-option:hover {
     color: black;
     cursor: pointer;
 }
 .header-option-icon {
-    color: #00e8af;
     background-color: transparent;
-    padding: 4px;
     border-radius: 5px;
+    color: #00e8af;
     margin: 0 8px 0 15px;
+    padding: 4px;
 }
 .header-option.selected .header-option-icon {
-    color: white;
     background-color: #00e8af;
+    color: white;
 }
 .header-option-text {
     position: absolute;
@@ -117,48 +120,48 @@ span.icon:hover {
     color: black;
 }
 .header-option-container {
+    border-left: 2px solid #efefef;
+    height: 60%;
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    height: 60%;
     width: 200px;
-    border-left: 2px solid #efefef;
 }
 .good {
-    color: #4F8A10;
-    background-color: #DFF2BF !important;
+    background-color: #dff2Bf;
+    color: #4f8a10;
 }
 .fault {
-    color: #D8000C;
-    background-color: #FFBABA !important;
+    background-color: #ffbaba;
+    color: #d8000c;
 }
 .small-modal {
-    position: absolute;
-    z-index: 100000;
-    top: 0;
-    left: 0;
-    width: 100vw;
+    background-color: rgba(0, 0, 0, .3);
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.3);
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    z-index: 100000;
 }
 .small-modal.hide {
-    width: 0!important;
-    height: 0!important;
     display: none;
+    height: 0;
+    width: 0;
 }
 .address-modal-container {
+    background-color: white;
+    left: 50%;
+    padding: 30px;
     position: absolute;
     top: 20%;
-    left: 50%;
     transform: translateX(-50%);
-    background-color: white;
-    padding: 30px;
 }
 .close {
     position: absolute;
-    top: 30px;
     right: 30px;
+    top: 30px;
 }
 .modal-content-header {
     font-size: 1.2em;
@@ -175,6 +178,10 @@ tr {
 .validate[disabled] {
     background-color: #a1a1a1;
     border-bottom-color: #222828;
+}
+
+.icon-padding {
+    padding-top: 7px;
 }
 .icon-padding {
     padding-top: 7px;

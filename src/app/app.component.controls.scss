@@ -1,50 +1,55 @@
 :host /deep/ {
     button.control {
+        background-color: #03e8b0;
         border: 0;
+        border-bottom: 1px solid #07b98d;
         color: #fff;
-        font-weight: 700;
         font-size: 12px;
-        text-transform: uppercase;
+        font-weight: 700;
         padding: 8px 30px;
+        text-transform: uppercase;
         vertical-align: middle;
-        background-color: #03E8B0;
-        border-bottom: 1px solid #07B98D;
-    }
+      }
     /* TODO: Once we've structured the modals correctly, we'll move this there.
     This is still discussion on terminology (Passphrase vs password, etc) too */
 
     .recovery-word {
-        width: 120px;
         margin-bottom: 25px;
     }
+
     .password {
         width: 100%;
     }
+
     .password-label {
         top: 20;
     }
+
     input[disabled] {
         background-color: #efefef;
     }
+
     input[type=checkbox],
     input[type=radio] {
-        appearance: none;
         -webkit-appearance: none;
-        vertical-align: middle;
-        padding: 9px;
+        appearance: none;
+        background: #fff;
         background-color: #fbfbfb;
         border: 1px solid #ccc;
-        box-shadow: none;
-        background: #fff;
         border-radius: 4px;
+        box-shadow: none;
         color: #fff;
-        margin: 0;
         line-height: normal;
+        margin: 0;
+        padding: 9px;
+        vertical-align: middle;
     }
+
     input[type=radio] {
         border-radius: 99px;
         vertical-align: default;
     }
+
     /*
     input[type=checkbox][disabled] + label,
     input[type=radio][disabled] + label,
@@ -72,32 +77,46 @@
         line-height: normal;
         border-radius: 99px;
     }*/
-    input[type=checkbox]:checked,
-    input[type=radio]:checked {
+
+    input[type=checkbox]
+    :checked,
+    input[type=radio]
+    :checked {
         background: #03e8b0;
         color: #03e8b0;
     }
-    input[type=checkbox]:checked:after,
-    input[type=radio]:checked:after {
+
+    input[type=checkbox]
+    :checked
+    :after,
+    input[type=radio]
+    :checked
+    :after {
         content: '\2713';
-        width: 0;
-        height: 0;
-        position: relative;
-        font-size: 18px;
         float: right;
-        top: -15px;
+        font-size: 18px;
+        height: 0;
         left: -8px;
+        position: relative;
+        top: -15px;
+        width: 0;
     }
-    input[type=radio]:checked:after {
-        content: '\2022';
-        font-size: 49px;
-        top: -28px;
-        left: -9px;
-        font-family: "Arial";
+
+    input[type=radio]
+    :checked
+    :after {
         border: 0;
+        content: '\2022';
+        font-family: 'Arial';
+        font-size: 49px;
+        left: -9px;
+        top: -28px;
     }
-    input[type=checkbox]:focus,
-    input[type=radio]:focus {
-        outline: 0px;
+
+    input[type=checkbox]
+    :focus,
+    input[type=radio]
+    :focus {
+        outline: 1px;
     }
 }

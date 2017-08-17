@@ -1,8 +1,69 @@
 app-header {
-	li.add-address .icon {
-		font-size: 28px;
-		margin-right: 5px;
-	}
+    li.add-address .icon {
+        font-size: 28px;
+        margin-right: 5px;
+	  }
+}
+
+#address-modal {
+    background-color: rgba(0, 0, 0, 0.3);
+    height: 100vh;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    z-index: 100000;
+}
+
+#address-modal.hide {
+    display: none;
+    height: 0;
+    width: 0;
+}
+
+.address-modal-container {
+    background-color: #fff;
+    left: 50%;
+    padding: 30px;
+    position: absolute;
+    top: 20%;
+    transform: translateX(-50%);
+    width: 600px;
+}
+
+.close {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
+
+.modal-content-header {
+    font-size: 1.2em;
+}
+
+.modal-label {
+    font-size: .7em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+#address-modal .row {
+    margin-bottom: 30px;
+}
+
+.good {
+    background-color: #dff2bf;
+    color: #4f8a10;
+}
+
+.fault {
+    background-color: #ffbaba;
+    color: #d8000c;
+}
+
+.margin-top-5px {
+    margin-top: 5px;
 }
 
 #address-modal {
@@ -44,7 +105,7 @@ app-header {
 .modal-label {
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 0.7em;
+  font-size: .7em;
   margin-bottom: 10px;
 }
 
@@ -53,14 +114,14 @@ app-header {
 }
 
 .good {
-  color: #4F8A10;
-  background-color: #DFF2BF !important;
+  color: #4f8a10;
+  background-color: #dff2bf;
 }
 
 .fault {
-  color: #D8000C;
-  background-color: #FFBABA !important;
-} 
+  color: #d8000c;
+  background-color: #ffbaba;
+}
 
 .margin-top-5px {
   margin-top: 5px;
