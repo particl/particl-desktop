@@ -76,8 +76,13 @@ export class ReceiveComponent implements OnInit {
       });
     }
 
+    // offset unused address by 1 if not in search mode
+    // if in search mode -> offset = 0
+    // else offset = 1 -> skip the unused address
+    const offset: number = +(type !== 'query');
+
     return this.addresses[type].slice(
-      +(type === this.type) + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
+      offset + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
   }
 
  /** Returns the unused addresses to display in the UI. */
