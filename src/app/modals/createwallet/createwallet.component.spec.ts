@@ -5,9 +5,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet.component';
+import { FocusDirective } from '../modals.directives';
 import { PasswordComponent } from '../shared/password/password.component';
 import { PassphraseComponent } from './passphrase/passphrase.component';
-import { FocusDirective } from '../modals.directives';
+
 
 import { PassphraseService } from '../../core/rpc/passphrase.service';
 
