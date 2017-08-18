@@ -7,6 +7,7 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 import { CreateWalletComponent } from './createwallet.component';
 import { PasswordComponent } from '../shared/password/password.component';
 import { PassphraseComponent } from './passphrase/passphrase.component';
+import { FocusDirective } from '../modals.directives';
 
 import { PassphraseService } from '../../core/rpc/passphrase.service';
 
@@ -25,9 +26,10 @@ describe('CreateWalletComponent', () => {
         RpcModule.forRoot()
       ],
       declarations: [ 
+        CreateWalletComponent, 
+        FocusDirective,
         PasswordComponent,
-        PassphraseComponent,
-        CreateWalletComponent 
+        PassphraseComponent
       ]
     })
     .compileComponents();
