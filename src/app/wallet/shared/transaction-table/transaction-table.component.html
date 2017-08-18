@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <div class="cell-expanded-row" *ngIf="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)" class="background-hack">
+    <div *ngIf="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)" class="cell-expanded-row background-hack">
       <div [attr.colspan]="getColumnCount()" class="padding-reset-hack border-reset-hack">
         <table class="details-table">
 
