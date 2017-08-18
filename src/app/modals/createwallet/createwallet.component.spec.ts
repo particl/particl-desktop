@@ -5,7 +5,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet.component';
-import { PasswordComponent } from '../modals.module';
+import { PasswordComponent } from '../shared/password/password.component';
+import { PassphraseComponent } from './passphrase/passphrase.component';
+
+import { PassphraseService } from '../../core/rpc/passphrase.service';
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -13,6 +16,9 @@ describe('CreateWalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [
+        PassphraseService
+      ],
       imports: [
         BrowserAnimationsModule,
         SharedModule,
@@ -20,6 +26,7 @@ describe('CreateWalletComponent', () => {
       ],
       declarations: [ 
         PasswordComponent,
+        PassphraseComponent,
         CreateWalletComponent 
       ]
     })
