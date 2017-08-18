@@ -57,65 +57,73 @@
     </div>
 
     <div *ngIf="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)" class="cell-expanded-row background-hack">
-      <div [attr.colspan]="getColumnCount()" class="padding-reset-hack border-reset-hack">
-        <table class="details-table">
+      <div [attr.colspan]="getColumnCount()" class="padding-reset-hack border-reset-hack transaction-details">
 
-          <tr>
-            <td>
+        <section class="wrap-flexbox">
+          <div class="transaction-details-row">
+            <div class="transaction-details-label">
               <b>Status:</b>
-            </td>
-            <td>
+            </div>
+            <div>
               {{tx.confirmations}} confirmations
-            </td>
-            <td>
+            </div>
+            <div class="transaction-details-label">
               <b>Transaction ID:</b>
-            </td>
-            <td>
+            </div>
+            <div>
               {{tx.txid}}
-            </td>
-          </tr>
+            </div>
+          </div>
+        </section>
 
-          <tr>
-            <td>
+        <section class="wrap-flexbox">
+          <div class="transaction-details-row">
+            <div class="transaction-details-label">
               <b>Date:</b>
-            </td>
-            <td>
+            </div>
+            <div>
               {{tx.getDate()}}
-            </td>
-            <td>
+            </div>
+            <div class="transaction-details-label">
               <b>Transaction fee:</b>
-            </td>
-            <td>
+            </div>
+            <div>
               {{tx.fee ? tx.fee : 0}} PART
-            </td>
-          </tr>
+            </div>
+          </div>
+        </section>
 
-          <tr>
-            <td>
+        <section class="wrap-flexbox">
+          <div class="transaction-details-row">
+            <div class="transaction-details-label">
               <b>To:</b>
-            </td>
-            <td>
+            </div>
+            <div>
               {{tx.getAddress()}}
-            </td>
-            <td>
+            </div>
+            <div class="transaction-details-label">
               <b>Net amount:</b>
-            </td>
-            <td>
+            </div>
+            <div>
               {{tx.fee ? tx.getAmount() - tx.fee : 0}} PART
-            </td>
-          </tr>
-          <tr>
-            <td *ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">
+            </div>
+          </div>
+        </section>
+
+        <section class="wrap-flexbox">
+          <div class="transaction-details-row">
+            <div class="transaction-details-label" *ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">
               <b>Credit:</b>
-            </td>
-            <td *ngIf="tx.category === 'send'">
+            </div>
+            <div class="transaction-details-label" *ngIf="tx.category === 'send'">
               <b>Debit:</b>
-            </td>
-            <td>
+            </div>
+            <div>
               {{tx.getAmount()}} PART
-            </td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
 

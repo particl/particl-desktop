@@ -95,3 +95,43 @@
     padding-left: 0 !important;
     padding-right: 30px !important;
 }
+
+
+.cell-expanded-row {
+    padding-bottom: 22px;
+}
+
+.transaction-details {
+    display: flex;
+    flex-flow: column nowrap;
+    & > section {
+        flex-basis: 2em;
+    }
+}
+
+.transaction-details-row {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+
+    & > div {
+        word-break: break-all;
+        flex-basis: 34%;
+        padding-right: 1em;
+        text-align: right;
+    }
+
+    & > div.transaction-details-label {
+        flex-basis: 10em;
+        text-align: left;
+    }
+}
+
+@media (max-width: 767px) {
+    .transaction-details-row {
+        flex-flow: column wrap;
+        & > div, & > .transaction-details-label {
+            flex-basis: 100% !important;
+        }
+    }
+}
