@@ -89,14 +89,21 @@
 
     & > div {
         word-break: break-all;
-        flex-basis: 34%;
+        flex-basis: 40%;
         padding-right: 1em;
         text-align: right;
     }
-
-    & > div.transaction-details-label {
-        flex-basis: 10em;
+    & > div:first-child {
+        padding-left: 1em;
+        padding-right: 0;
+    }
+    & > .transaction-details-label {
+        flex-basis: 6em;
         text-align: left;
+        word-break: normal;
+    }
+    & > .label-duble-size {
+        flex-basis: 12em;
     }
 }
 
@@ -105,6 +112,7 @@
         flex-flow: column wrap;
         & > div, & > .transaction-details-label {
             flex-basis: 100% !important;
+            padding: 0 !important;
         }
     }
 }
