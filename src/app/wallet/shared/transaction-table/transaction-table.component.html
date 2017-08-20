@@ -53,7 +53,7 @@
       </div>
       <div class="grid-cell cell-expand" *ngIf="display.expand">
         <span class="icon nc-icon"
-          ngClass="{nc-simple-add: !checkExpandDetails(tx), nc-simple-remove: checkExpandDetails(tx)}"
+          [ngClass]="{'nc-simple-add': !checkExpandDetails(tx), 'nc-simple-remove': checkExpandDetails(tx)}"
           (click)="showExpandedTransactionDetail(tx)"></span>
       </div>
     </div>
@@ -124,7 +124,7 @@
               {{tx.getAmount()}} PART
             </div>
             <!-- empty column -->
-            <div class="transaction-details-label"></div>
+            <div class="transaction-details-label label-duble-size"></div>
             <div></div>
           </div>
         </section>
