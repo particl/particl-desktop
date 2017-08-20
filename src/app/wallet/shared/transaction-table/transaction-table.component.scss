@@ -21,33 +21,6 @@
   margin-left: 5px;
 }
 
-:host /deep/ td {
-  width: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.details-table {
-/* Space between rows */
-  border-collapse: separate;
-  border-spacing: 0 0px !important;
-  margin: 0px 0 0px 0 !important;
-  width: 100%;
-  background-color: #FBFBFB !important;
-}
-
-.details-table tr {
-  height: auto !important;
-  background-color: #FBFBFB !important;
-}
-
-.details-table td {
-  border-bottom: 0px solid !important;
-  background-color: #FBFBFB !important;
-  padding: 0 0 0 30px  !important;
-}
-
 .background-hack {
   background-color: #FBFBFB !important;
 }

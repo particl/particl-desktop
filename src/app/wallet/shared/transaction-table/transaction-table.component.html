@@ -52,12 +52,15 @@
         <span>{{ tx.getAmount() }} PART</span>
       </div>
       <div class="grid-cell cell-expand" *ngIf="display.expand">
-        <span class="icon nc-icon nc-simple-add" (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
+        <span class="icon nc-icon"
+          [class.nc-simple-add]="getExpandedTransactionID() !== (tx.txid + tx.getAmount() + tx.category)"
+          [class.nc-circle-remove]="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)"
+          (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
       </div>
     </div>
 
     <div *ngIf="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)" class="cell-expanded-row background-hack">
-      <div [attr.colspan]="getColumnCount()" class="padding-reset-hack border-reset-hack transaction-details">
+      <div  class="padding-reset-hack border-reset-hack transaction-details">
 
         <section class="wrap-flexbox">
           <div class="transaction-details-row">
@@ -121,8 +124,12 @@
             <div>
               {{tx.getAmount()}} PART
             </div>
+            <!-- empty column -->
+            <div class="transaction-details-label"></div>
+            <div></div>
           </div>
         </section>
+
 
       </div>
     </div>
