@@ -400,13 +400,3 @@ input.verify-error::placeholder {
 .nc-icon.nc-zoom-bold:before {
   content: "\ea16";
 }
-
-
-/*------------------------
-	1000x600px dirty fix
--------------------------*/
-
-  @media (max-width: 1000px) {
-  .confirmations-hide {display:none;}
-  .expand-hide {display:none;}
-  }
