@@ -53,8 +53,7 @@
       </div>
       <div class="grid-cell cell-expand" *ngIf="display.expand">
         <span class="icon nc-icon"
-          [class.nc-simple-add]="!checkExpandDetails(tx)"
-          [class.nc-circle-remove]="checkExpandDetails(tx)"
+          ngClass="{nc-simple-add: !checkExpandDetails(tx), nc-simple-remove: checkExpandDetails(tx)}"
           (click)="showExpandedTransactionDetail(tx)"></span>
       </div>
     </div>
