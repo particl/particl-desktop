@@ -53,13 +53,13 @@
       </div>
       <div class="grid-cell cell-expand" *ngIf="display.expand">
         <span class="icon nc-icon"
-          [class.nc-simple-add]="getExpandedTransactionID() !== (tx.txid + tx.getAmount() + tx.category)"
-          [class.nc-circle-remove]="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)"
-          (click)="showExpandedTransactionDetail(tx.txid + tx.getAmount() + tx.category)"></span>
+          [class.nc-simple-add]="!checkExpandDetails(tx)"
+          [class.nc-circle-remove]="checkExpandDetails(tx)"
+          (click)="showExpandedTransactionDetail(tx)"></span>
       </div>
     </div>
 
-    <div *ngIf="getExpandedTransactionID() === (tx.txid + tx.getAmount() + tx.category)" class="cell-expanded-row background-hack">
+    <div *ngIf="checkExpandDetails(tx)" class="cell-expanded-row background-hack">
       <div  class="padding-reset-hack border-reset-hack transaction-details">
 
         <section class="wrap-flexbox">
