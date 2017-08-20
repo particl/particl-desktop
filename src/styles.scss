@@ -199,7 +199,7 @@ input.verify-error::placeholder {
     font-style: normal;
 }
 /*------------------------
-	base class definition
+  base class definition
 -------------------------*/
 
 .nc-icon {
@@ -310,93 +310,97 @@ input.verify-error::placeholder {
 }
 
 /*------------------------
-	font icons
+  font icons
 -------------------------*/
 
-.nc-icon.nc-a-check:before {
-  content: "\ea01";
+.nc-a-check::before {
+    content: "\ea01";
 }
 
-.nc-icon.nc-barcode-qr:before {
-  content: "\ea02";
+.nc-barcode-qr::before {
+    content: "\ea02";
 }
 
-.nc-icon.nc-card-add:before {
-  content: "\ea03";
+.nc-card-add::before {
+    content: "\ea03";
 }
 
-.nc-icon.nc-circle-remove:before {
-  content: "\ea06";
+.nc-circle-remove::before {
+    content: "\ea04";
 }
 
-.nc-icon.nc-copy-2:before {
-  content: "\ea04";
+.nc-copy-2::before {
+    content: "\ea05";
 }
 
-.nc-icon.nc-eye-17:before {
-  content: "\ea07";
+.nc-eye-17::before {
+    content: "\ea06";
 }
 
-.nc-icon.nc-grid-48:before {
-  content: "\ea05";
+.nc-grid-48::before {
+    content: "\ea07";
 }
 
-.nc-icon.nc-lock:before {
-  content: "\ea08";
+.nc-lock::before {
+    content: "\ea08";
 }
 
-.nc-icon.nc-multiple-19:before {
-  content: "\ea09";
+.nc-multiple-19::before {
+    content: "\ea09";
 }
 
-.nc-icon.nc-preferences:before {
-  content: "\ea0a";
+.nc-preferences::before {
+    content: "\ea0a";
 }
 
-.nc-icon.nc-settings-gear-65:before {
-  content: "\ea0b";
+.nc-settings-gear-65::before {
+    content: "\ea0b";
 }
 
-.nc-icon.nc-share-2:before {
-  content: "\ea0c";
+.nc-share-2::before {
+    content: "\ea0c";
 }
 
-.nc-icon.nc-simple-add:before {
-  content: "\ea0e";
+.nc-simple-add::before {
+    content: "\ea0d";
 }
 
-.nc-icon.nc-simple-left:before {
-  content: "\ea0d";
+.nc-simple-delete::before {
+    content: "\ea0e";
 }
 
-.nc-icon.nc-simple-right:before {
-  content: "\ea0f";
+.nc-simple-left::before {
+    content: "\ea0f";
 }
 
-.nc-icon.nc-square-add-11:before {
-  content: "\ea10";
+.nc-simple-right::before {
+    content: "\ea10";
 }
 
-.nc-icon.nc-swap-horizontal:before {
-  content: "\ea11";
+.nc-square-add-11::before {
+    content: "\ea11";
 }
 
-.nc-icon.nc-tag-add:before {
-  content: "\ea13";
+.nc-swap-horizontal::before {
+    content: "\ea12";
 }
 
-.nc-icon.nc-tail-triangle-left:before {
-  content: "\ea12";
+.nc-tag-add::before {
+    content: "\ea13";
 }
 
-.nc-icon.nc-tail-triangle-right:before {
-  content: "\ea14";
+.nc-tail-triangle-left::before {
+    content: "\ea14";
 }
 
-.nc-icon.nc-time-3:before {
-  content: "\ea15";
+.nc-tail-triangle-right::before {
+    content: "\ea15";
 }
 
-.nc-icon.nc-zoom-bold:before {
-  content: "\ea16";
+.nc-time-3::before {
+    content: "\ea16";
+}
+
+.nc-zoom-bold::before {
+    content: "\ea17";
 }
