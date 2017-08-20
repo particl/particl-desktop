@@ -45,6 +45,11 @@
     .grid-row {
         display: flex;
         justify-content: space-between;
+        background-color: #FFF;
+        border: 0;
+        border-bottom: 1px solid #e3e3e3;
+        align-items: center;
+        margin-bottom: 20px;
     }
 
     .grid-cell {
@@ -52,9 +57,6 @@
         white-space: nowrap;
         margin: 0;
         padding: 26px 20px;
-        background-color: #FFF;
-        border: 0;
-        border-bottom: 1px solid #e3e3e3;
     }
 
 }
