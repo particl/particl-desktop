@@ -50,6 +50,10 @@ export class Transaction implements Deserializable {
     return this.dateFormatter(new Date(this.time * 1000));
   }
 
+  getExpandedTransactionID(): string {
+    return this.txid + this.getAmount() + this.category;
+  }
+
   private dateFormatter(d: Date) {
     return (
       d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + '-' +
