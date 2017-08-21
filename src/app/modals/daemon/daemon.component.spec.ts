@@ -4,7 +4,6 @@ import { DaemonComponent } from './daemon.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
-import { ModalsService } from '../modals.service';
 
 describe('DaemonComponent', () => {
   let component: DaemonComponent;
@@ -16,9 +15,6 @@ describe('DaemonComponent', () => {
       imports: [
         SharedModule,
         RpcModule.forRoot()
-      ],
-      providers: [
-        ModalsService
       ]
     })
     .compileComponents();

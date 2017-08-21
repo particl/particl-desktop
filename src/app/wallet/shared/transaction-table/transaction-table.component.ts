@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Log } from 'ng2-logger'
 
 import { TransactionService } from '../transaction.service';
+import { Transaction } from '../transaction.model';
 
 @Component({
   selector: 'transaction-table',
@@ -62,7 +63,8 @@ export class TransactionsTableComponent implements OnInit {
 
   }
 
-  public showExpandedTransactionDetail(txid: string) {
+  public showExpandedTransactionDetail(tx: Transaction) {
+    const txid: string = tx.getExpandedTransactionID();
     if (this.expandedTransactionID === txid) {
       this.expandedTransactionID = undefined;
     } else {
@@ -70,30 +72,7 @@ export class TransactionsTableComponent implements OnInit {
     }
   }
 
-  public getExpandedTransactionID() {
-    return this.expandedTransactionID;
-  }
-
-  getColumnCount(): number {
-    let count = 0;
-
-    for (const key in this.display) {
-      if (!this.display.hasOwnProperty(key)) {
-        continue;
-      }
-
-      // currently unused keys
-      if (key === 'internalHeader' ||
-         key === 'pagination' ||
-         key === 'receiverAddress' ||
-         key === 'comment') {
-        continue;
-      }
-
-      if (this.display[key] === true) {
-        count++;
-      }
-    }
-    return count;
+  public checkExpandDetails(tx: Transaction) {
+    return (this.expandedTransactionID === tx.getExpandedTransactionID());
   }
 }
