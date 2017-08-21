@@ -21,6 +21,14 @@ before_script:
   - npm install -g @angular/cli
   - npm install
 
+notifications:
+    webhooks:
+        urls:
+            - "https://scalar.vector.im/api/neb/services/hooks/dHJhdmlzLWNpLyU0MGtld2RlJTNBbWF0cml4Lm9yZy8lMjFRSHpLbVJjUG9qeEptUVJoTUQlM0FtYXRyaXgub3Jn"
+        on_success: change
+        on_failure: always
+        on_start: never
+
 script:
   - echo 'Build Dist' && echo -en 'travis_fold:start:script.build\\r'
 
