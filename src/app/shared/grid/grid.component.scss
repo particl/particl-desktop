@@ -2,7 +2,10 @@
 
     .grid {
         overflow: hidden;
-
+        .divider {
+            border-left: 1px solid #EAEAEA;
+            align-self: stretch;
+        }
         .inline-header {
             text-transform: uppercase;
             font-weight: bold;
@@ -24,7 +27,11 @@
                 margin-right: 0;
             }
         }
-
+        .tools-menu {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
         .inline-tag {
             font-weight:bold;
         }
