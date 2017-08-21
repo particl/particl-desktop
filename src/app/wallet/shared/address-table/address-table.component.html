@@ -27,10 +27,10 @@
     <td *ngIf="displayToolsMenu" class="divider text-center">
       <div class="inline-toolbar tools-menu">
         <!-- we can use ngx-clipboard -->
-        <span ngxClipboard [cbContent]="address.address" class="icon nc-icon nc-copy-2"></span>
+        <span ngxClipboard [cbContent]="address.address" class="nc-icon nc-copy-2"></span>
         <!-- Open the modal for signing and verifying messages by address -->
-        <span class="icon fa fa-shield"></span>
-        <span (click)="addressService.deleteAddress(address.address)" class="icon nc-circle-remove color-red"></span>
+        <span class="icon nc-icon nc-a-check"></span>
+        <span (click)="addressService.deleteAddress(address.address)" class="nc-icon nc-circle-remove color-red"></span>
       </div>
     </td>
     <td *ngIf="displayQrMenu" class="divider text-center">

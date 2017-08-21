@@ -39,6 +39,11 @@
 
 .cell-date {
     flex-basis: 12em;
+    font-weight:bold;
+}
+
+.padding-reset-hack {
+    padding: 0 0 0 0 !important;
 }
 
 .cell-senderAddress {
