@@ -37,6 +37,7 @@ class Manager extends EventEmitter {
   }
 
   startDaemon() {
+    // TODO: rpc cookie
     const user = 'test';
     const password = 'test';
     const args = [
