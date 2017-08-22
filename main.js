@@ -29,10 +29,13 @@ ipc.on("fromMain", function (a, b) {
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let tray
+let daemon
 
 function createWindow () {
 
-  daemonManager.init(false);
+  daemonManager.init(false).then(child => {
+    daemon = child;
+  });
 
   // Default tray image + icon
   let trayImage = path.join(__dirname, 'src/assets/icons/logo.png')
@@ -144,6 +147,10 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+app.on('quit', function () {
+  daemon.kill();
 })
 
 app.on('activate', function () {

@@ -6,6 +6,7 @@ const got = require('got');
 const path = require('path');
 const ClientBinaryManager = require('./clientBinariesManager').Manager;
 const EventEmitter = require('events').EventEmitter;
+const spawn = require('child_process').spawn;
 
 const log = {
   info: console.log,
@@ -33,6 +34,19 @@ class Manager extends EventEmitter {
 
     this._resolveBinPath();
     return this._checkForNewConfig(restart);
+  }
+
+  startDaemon() {
+    const user = 'test';
+    const password = 'test';
+    const args = [
+      `-rpcuser=${user}`,
+      `-rpcpassword=${password}`,
+      `-rpccorsdomain=http://localhost:4200`,
+      `-rpcport=51935`
+    ];
+    const child = spawn(this._availableClients['particld'].binPath, args);
+    return (child);
   }
 
   getClient(clientId) {
@@ -252,6 +266,8 @@ class Manager extends EventEmitter {
         }
 
         this._emit('done');
+
+        return this.startDaemon();
       });
     })
     .catch((err) => {
