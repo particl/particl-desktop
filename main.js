@@ -11,6 +11,7 @@ const platform = require('os').platform()
 const zmq = require('zeromq')
 const sock = zmq.socket('sub')
 
+const daemonManager = require('./modules/clientBinaries/clientBinaries');
 
 sock.connect('tcp://127.0.0.1:30000')
 sock.subscribe('hashtx')
@@ -28,16 +29,22 @@ ipc.on("fromMain", function (a, b) {
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let tray
+let daemon
 
 function createWindow () {
+
+  daemonManager.init(false).then(child => {
+    daemon = child;
+  });
+
   // Default tray image + icon
   let trayImage = path.join(__dirname, 'src/assets/icons/logo.png')
 
   // Determine appropriate icon for platform
-  if (platform == 'darwin') {
+  if (platform === 'darwin') {
     trayImage = path.join(__dirname, 'src/assets/icons/logo.icns')
   }
-  else if (platform == 'win32' || platform == 'win64') {
+  else if (platform === 'win32' || platform === 'win64') {
     trayImage = path.join(__dirname, 'src/assets/icons/logo.ico')
   }
 
@@ -88,8 +95,8 @@ function createWindow () {
     webPreferences: {
       //sandbox: true,
       nodeIntegration: false,
-      preload: 'preload.js',
-    },
+      preload: 'preload.js'
+    }
   })
 
   // and load the index.html of the app.
@@ -119,7 +126,7 @@ function createWindow () {
   tray = new electron.Tray(trayImage)
 
   // TODO, tray pressed icon for OSX? :)
-  if (platform == "darwin") {
+  if (platform === "darwin") {
     tray.setPressedImage(imageFolder + '/osx/trayHighlight.png');
   }
 
@@ -140,6 +147,10 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+app.on('quit', function () {
+  daemon.kill();
 })
 
 app.on('activate', function () {
