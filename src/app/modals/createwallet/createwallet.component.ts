@@ -89,7 +89,7 @@ export class CreateWalletComponent {
   }
 
   doStep() {
-
+    this._modalsService.disableClose['status'] = (this.step > 0);
     switch (this.step) {
       case 1:
         setTimeout(() => this.nameField.nativeElement.focus(this), 1);
