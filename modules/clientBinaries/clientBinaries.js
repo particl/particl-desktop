@@ -15,7 +15,7 @@ const log = {
 };
 
 // should be       'https://raw.githubusercontent.com/ethereum/mist/master/clientBinaries.json'
-const BINARY_URL = 'https://raw.githubusercontent.com/pciavald/partgui/feature/daemonManager/modules/ClientBinaries/clientBinaries.json';
+const BINARY_URL = 'https://raw.githubusercontent.com/pciavald/partgui/feature/daemonManager/modules/clientBinaries/clientBinaries.json';
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
@@ -43,7 +43,7 @@ class Manager extends EventEmitter {
     log.info('Write new client binaries local config to disk ...');
 
     fs.writeFileSync(
-      Path.join(app.getPath('userData'), 'clientBinaries.json'),
+      path.join(app.getPath('userData'), 'clientBinaries.json'),
       JSON.stringify(json, null, 2)
     );
   }
@@ -55,8 +55,7 @@ class Manager extends EventEmitter {
 
     log.info(`Checking for new client binaries config from: ${BINARY_URL}`);
 
-    // TODO: event emitting
-    //this._emit('loadConfig', 'Fetching remote client config');
+    this._emit('loadConfig', 'Fetching remote client config');
 
     // fetch config
     return got(BINARY_URL, {
@@ -74,7 +73,10 @@ class Manager extends EventEmitter {
       log.warn('Error fetching client binaries config from repo', err);
     })
     .then((latestConfig) => {
-      if(!latestConfig) return;
+
+      if (!latestConfig) {
+        return ;
+      }
 
       let localConfig;
       let skipedVersion;
@@ -87,7 +89,6 @@ class Manager extends EventEmitter {
         localConfig = JSON.parse(
           fs.readFileSync(path.join(app.getPath('userData'), 'clientBinaries.json')).toString()
         );
-
       } catch (err) {
         log.warn(`Error loading local config - assuming this is a first run: ${err}`);
 
@@ -107,7 +108,11 @@ class Manager extends EventEmitter {
       }
 
       // prepare node info
-      const platform = process.platform.replace('darwin', 'mac').replace('win32', 'win').replace('freebsd', 'linux').replace('sunos', 'linux');
+      const platform = process.platform
+        .replace('darwin', 'mac')
+        .replace('win32', 'win')
+        .replace('freebsd', 'linux')
+        .replace('sunos', 'linux');
       const binaryVersion = latestConfig.clients[nodeType].platforms[platform][process.arch];
       const checksums = _.pick(binaryVersion.download, 'sha256', 'md5');
       const algorithm = _.keys(checksums)[0].toUpperCase();
@@ -120,7 +125,6 @@ class Manager extends EventEmitter {
         checksum: hash,
         algorithm,
       };
-
 
       // if new config version available then ask user if they wish to update
       if (latestConfig
@@ -161,7 +165,7 @@ class Manager extends EventEmitter {
               // skip
             } else if (update === 'skip') {
               fs.writeFileSync(
-                // TODO path.join(Settings.userDataPath, 'skippedNodeVersion.json'),
+                path.join(app.getPath('userData'), 'skippedNodeVersion.json'),
                 nodeVersion
               );
 
@@ -182,11 +186,14 @@ class Manager extends EventEmitter {
       return localConfig;
     })
     .then((localConfig) => {
+
       if (!localConfig) {
         log.info('No config for the ClientBinaryManager could be loaded, using local clientBinaries.json.');
 
-        // TODO const localConfigPath = path.join(Settings.userDataPath, 'clientBinaries.json');
-        // TODO localConfig = (fs.existsSync(localConfigPath)) ? require(localConfigPath) : require('../clientBinaries.json');  // eslint-disable-line no-param-reassign, global-require, import/no-dynamic-require, import/no-unresolved
+        const localConfigPath = path.join(app.getPath('userData'), 'clientBinaries.json');
+        localConfig = (fs.existsSync(localConfigPath))
+          ? require(localConfigPath)
+          : require('./clientBinaries.json');
       }
 
       // scan for node
@@ -196,10 +203,7 @@ class Manager extends EventEmitter {
       this._emit('scanning', 'Scanning for binaries');
 
       return mgr.init({
-        folders: [
-          // TODO path.join(Settings.userDataPath, 'binaries', 'Geth', 'unpacked'),
-          // TODO path.join(Settings.userDataPath, 'binaries', 'Eth', 'unpacked'),
-        ],
+        folders: [ path.join(app.getPath('userData'), 'particld', 'unpacked') ],
       })
       .then(() => {
         const clients = mgr.clients;
@@ -219,13 +223,14 @@ class Manager extends EventEmitter {
             binariesDownloaded = true;
 
             return mgr.download(c.id, {
-              // TODO downloadFolder: path.join(Settings.userDataPath, 'binaries'),
+              downloadFolder: path.join(app.getPath('userData'))
               //urlRegex: ALLOWED_DOWNLOAD_URLS_REGEX,
             });
           });
         }
       })
       .then(() => {
+
         this._emit('filtering', 'Filtering available clients');
 
         _.each(mgr.clients, (client) => {
@@ -233,7 +238,7 @@ class Manager extends EventEmitter {
             const idlcase = client.id.toLowerCase();
 
             this._availableClients[idlcase] = {
-              // TODO binPath: Settings[`${idlcase}Path`] || client.activeCli.fullPath,
+              binPath: client.activeCli.fullPath,
               version: client.version,
             };
           }
@@ -299,18 +304,7 @@ class Manager extends EventEmitter {
 
     log.debug(`Platform: ${platform}`);
 
-    let binPath;
-    // TODO: prod mode
-    if (process.argv.indexOf('--dev') === -1 && false) {
-      // prod mode
-      binPath = path.basename(app.getPath('userData'));
-    } else {
-      // dev mode
-      binPath = path.join(__dirname, '..');
-      console.log("dev", binPath);
-    }
-
-    binPath = path.join(path.resolve(binPath), 'particld');
+    let binPath = path.join(app.getPath('userData'), 'particld', 'unpacked', 'particld');
 
     if (platform === 'win') {
       binPath += '.exe';
@@ -318,11 +312,9 @@ class Manager extends EventEmitter {
 
     log.info(`Client binary path: ${binPath}`);
 
-    // TODO
-    // this._availableClients.eth = {
-    //   binPath,
-    //   version: '1.3.0',
-    // };
+    this._availableClients.particld = {
+      binPath
+    };
   }
 }
 

@@ -12,8 +12,7 @@ const zmq = require('zeromq')
 const sock = zmq.socket('sub')
 
 const Manager = require('./modules/clientBinaries/clientBinaries');
-//const mgr = new Manager();
-Manager.init(true);
+Manager.init(false);
 
 sock.connect('tcp://127.0.0.1:30000')
 sock.subscribe('hashtx')
