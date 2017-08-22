@@ -15,7 +15,7 @@ const log = {
 };
 
 // should be       'https://raw.githubusercontent.com/ethereum/mist/master/clientBinaries.json'
-const BINARY_URL = 'https://gist.githubusercontent.com/pciavald/ce45f4823b27ad29ef17ec8c99920b9e/raw/e7926ff30ca5c64a4ed65e5da94589728aa15f16/clientBinaries.json';
+const BINARY_URL = 'https://raw.githubusercontent.com/pciavald/partgui/feature/daemonManager/modules/ClientBinaries/clientBinaries.json';
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
@@ -55,7 +55,8 @@ class Manager extends EventEmitter {
 
     log.info(`Checking for new client binaries config from: ${BINARY_URL}`);
 
-    this._emit('loadConfig', 'Fetching remote client config');
+    // TODO: event emitting
+    //this._emit('loadConfig', 'Fetching remote client config');
 
     // fetch config
     return got(BINARY_URL, {
@@ -298,12 +299,15 @@ class Manager extends EventEmitter {
 
     log.debug(`Platform: ${platform}`);
 
-    if (process.argv.indexOf('--dev') === -1) {
+    let binPath;
+    // TODO: prod mode
+    if (process.argv.indexOf('--dev') === -1 && false) {
       // prod mode
       binPath = path.basename(app.getPath('userData'));
     } else {
       // dev mode
-      let binPath = path.join(__dirname, '..');
+      binPath = path.join(__dirname, '..');
+      console.log("dev", binPath);
     }
 
     binPath = path.join(path.resolve(binPath), 'particld');

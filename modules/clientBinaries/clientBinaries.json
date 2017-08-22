@@ -18,8 +18,8 @@
                 "output": [ "Particl Core Daemon", "0.14.2.1" ]
               }
             }
-          },
-        },
+          }
+        }
       }
     }
   }
