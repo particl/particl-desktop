@@ -2,7 +2,10 @@
 
     .grid {
         overflow: hidden;
-
+        .divider {
+            border-left: 1px solid #EAEAEA;
+            align-self: stretch;
+        }
         .inline-header {
             text-transform: uppercase;
             font-weight: bold;
@@ -24,7 +27,11 @@
                 margin-right: 0;
             }
         }
-
+        .tools-menu {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
         .inline-tag {
             font-weight:bold;
         }
@@ -45,6 +52,11 @@
     .grid-row {
         display: flex;
         justify-content: space-between;
+        background-color: #FFF;
+        border: 0;
+        border-bottom: 1px solid #e3e3e3;
+        align-items: center;
+        margin-bottom: 20px;
     }
 
     .grid-cell {
@@ -52,9 +64,6 @@
         white-space: nowrap;
         margin: 0;
         padding: 26px 20px;
-        background-color: #FFF;
-        border: 0;
-        border-bottom: 1px solid #e3e3e3;
     }
 
 }
