@@ -3,8 +3,8 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
 
-      <button type="button" class="close pull-right" aria-label="Close" id="close" (click)="close()">
-        <span aria-hidden="true">&times;</span>
+      <button type="button" class="close pull-right" aria-label="Close" id="close" (click)="close()" [disabled]="disableClose.status">
+        <span aria-hidden="true">&times; {{disableClose1 | json}}</span>
       </button>
 
       <div class="row">
