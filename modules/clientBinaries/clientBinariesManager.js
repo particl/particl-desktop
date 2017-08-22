@@ -36,7 +36,6 @@ function copyFile(src, dst) {
   });
 }
 
-
 function checksum(filePath, algorithm) {
   return new Promise((resolve, reject) => {
     const checksum = crypto.createHash(algorithm);
@@ -53,17 +52,12 @@ function checksum(filePath, algorithm) {
   });
 }
 
-
 const DUMMY_LOGGER = {
   debug: function() {},
   info: function() {},
   warn: function() {},
   error: function() {}
 };
-
-
-const DefaultConfig = exports.DefaultConfig = require('./config.json');
-
 
 class Manager {
   /**
@@ -73,7 +67,7 @@ class Manager {
    * default configuration (`DefaultConfig`) will be used.
    */
   constructor (config) {
-    this._config = config || DefaultConfig;
+    this._config = config;
 
     this._logger = DUMMY_LOGGER;
   }

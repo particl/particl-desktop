@@ -11,8 +11,7 @@ const platform = require('os').platform()
 const zmq = require('zeromq')
 const sock = zmq.socket('sub')
 
-const Manager = require('./modules/clientBinaries/clientBinaries');
-Manager.init(false);
+const daemonManager = require('./modules/clientBinaries/clientBinaries');
 
 sock.connect('tcp://127.0.0.1:30000')
 sock.subscribe('hashtx')
@@ -32,6 +31,9 @@ let mainWindow
 let tray
 
 function createWindow () {
+
+  daemonManager.init(false);
+
   // Default tray image + icon
   let trayImage = path.join(__dirname, 'src/assets/icons/logo.png')
 
