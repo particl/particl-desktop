@@ -60,7 +60,7 @@ class Manager extends EventEmitter {
     // fetch config
     return got(BINARY_URL, {
       timeout: 3000,
-      json: true,
+      json: true
     })
     .then((res) => {
       if (!res || _.isEmpty(res.body)) {
@@ -123,7 +123,7 @@ class Manager extends EventEmitter {
         type: nodeType,
         version: nodeVersion,
         checksum: hash,
-        algorithm,
+        algorithm
       };
 
       // if new config version available then ask user if they wish to update
@@ -143,8 +143,8 @@ class Manager extends EventEmitter {
               height: 340,
               alwaysOnTop: false,
               resizable: false,
-              maximizable: false,
-            },
+              maximizable: false
+            }
           }, {
             sendData: {
               uiAction_sendData: {
@@ -152,9 +152,9 @@ class Manager extends EventEmitter {
                 version: nodeVersion,
                 checksum: `${algorithm}: ${hash}`,
                 downloadUrl: binaryVersion.download.url,
-                restart,
-              },
-            },
+                restart
+              }
+            }
           }), (update) => {
             // update
             if (update === 'update') {
@@ -203,7 +203,7 @@ class Manager extends EventEmitter {
       this._emit('scanning', 'Scanning for binaries');
 
       return mgr.init({
-        folders: [ path.join(app.getPath('userData'), 'particld', 'unpacked') ],
+        folders: [ path.join(app.getPath('userData'), 'particld', 'unpacked') ]
       })
       .then(() => {
         const clients = mgr.clients;
@@ -239,7 +239,7 @@ class Manager extends EventEmitter {
 
             this._availableClients[idlcase] = {
               binPath: client.activeCli.fullPath,
-              version: client.version,
+              version: client.version
             };
           }
         });
@@ -270,8 +270,8 @@ class Manager extends EventEmitter {
             type: nodeInfo.type,
             version: nodeInfo.version,
             algorithm: nodeInfo.algorithm,
-            hash: nodeInfo.checksum,
-          }),
+            hash: nodeInfo.checksum
+          })
         }, () => {
           app.quit();
         });

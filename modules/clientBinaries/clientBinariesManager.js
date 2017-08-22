@@ -12,7 +12,7 @@ const got = require('got'),
 const _ = {
   isEmpty: require('lodash.isempty'),
   get: require('lodash.get'),
-  values: require('lodash.values'),
+  values: require('lodash.values')
 };
 
 
@@ -177,7 +177,7 @@ class Manager {
     options = Object.assign({
       downloadFolder: null,
       unpackHandler: null,
-      urlRegex: null,
+      urlRegex: null
     }, options);
 
     this._logger.info(`Download binary for ${clientId} ...`);
@@ -254,7 +254,7 @@ class Manager {
 
           resolve({
             downloadFolder: downloadFolder,
-            downloadFile: downloadFile,
+            downloadFile: downloadFile
           });
         } catch (err) {
           reject(new Error(`Error downloading package for ${clientId}: ${err.message}`));
@@ -270,10 +270,10 @@ class Manager {
       // test checksum
       let value, algorithm, expectedHash;
 
-      if (value = _.get(downloadCfg, 'md5')) {
+      if ((value = _.get(downloadCfg, 'md5'))) {
           expectedHash = value;
           algorithm = 'md5';
-      } else if (value = _.get(downloadCfg, 'sha256')) {
+      } else if ((value = _.get(downloadCfg, 'sha256'))) {
           expectedHash = value;
           algorithm = 'sha256';
       }
@@ -373,13 +373,13 @@ class Manager {
         return {
           downloadFolder: downloadFolder,
           downloadFile: downloadFile,
-          unpackFolder: unpackFolder,
+          unpackFolder: unpackFolder
         };
       });
     })
     .then((info) => {
       return this._verifyClientStatus(client, {
-        folders: [info.unpackFolder],
+        folders: [info.unpackFolder]
       })
       .then(() => {
         info.client = client;
