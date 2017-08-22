@@ -1,7 +1,7 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { RPCService } from '../../core/rpc/rpc.service';
+import {Component, OnInit, HostListener, ElementRef, ViewChild} from '@angular/core';
+import {RPCService} from '../../core/rpc/rpc.service';
 
-import { Log } from 'ng2-logger';
+import {Log} from 'ng2-logger';
 
 @Component({
   selector: 'app-receive',
@@ -15,21 +15,22 @@ export class ReceiveComponent implements OnInit {
   /* UI State */
   private type: string = 'public';
   public query: string = '';
+  public openNewAddressModal: boolean = false;
 
   defaultAddress: Object = {
-      id: 0,
-      label: 'Empty label',
-      address: 'Empty address',
-      balance: 0,
-      readable: ['Empty']
-    }
+    id: 0,
+    label: 'Empty label',
+    address: 'Empty address',
+    balance: 0,
+    readable: ['Empty']
+  }
 
   selected: any = {
-      id: 0,
-      label: 'Empty label',
-      address: 'Empty address',
-      balance: 0,
-      readable: ['empty']
+    id: 0,
+    label: 'Empty label',
+    address: 'Empty address',
+    balance: 0,
+    readable: ['empty']
   };
 
   qrSize: number = 380;
@@ -40,7 +41,7 @@ export class ReceiveComponent implements OnInit {
     public: [this.defaultAddress],
     query: [this.defaultAddress]
 
-  }
+  };
 
   MAX_ADDRESSES_PER_PAGE: number = 6;
   page: number = 1;
@@ -51,14 +52,15 @@ export class ReceiveComponent implements OnInit {
   /* General */
   log: any = Log.create('receive.component');
 
-  constructor(private rpc: RPCService) { }
+  constructor(private rpc: RPCService) {
+  }
 
   ngOnInit() {
     // start rpc
     this.rpc_update();
   }
 
- /**
+  /**
    * Returns the addresses to display in the UI with regards to both pagination and search/query.
    * Does _NOT_ return the ununsed address!
    */
@@ -70,7 +72,7 @@ export class ReceiveComponent implements OnInit {
 
       this.addresses.query = this.addresses[this.type].filter(el => {
         return (
-          el.label  .toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
+          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
           el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
         );
       });
@@ -85,12 +87,12 @@ export class ReceiveComponent implements OnInit {
       offset + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
   }
 
- /** Returns the unused addresses to display in the UI. */
+  /** Returns the unused addresses to display in the UI. */
   getUnusedAddress(): Object {
     return this.addresses[this.type][0];
   }
 
- /**
+  /**
    * Returns the total counts of addresses to display in the UI with regards to both the type of address (private/public) and search.
    * Excludes the count for the unused address! (- 1 except for search!)
    */
@@ -102,7 +104,7 @@ export class ReceiveComponent implements OnInit {
     return this.addresses[this.type].length - 1;
   }
 
- /** Called to change the page. */
+  /** Called to change the page. */
   pageChanged(event: any) {
     if (event.page !== undefined) {
       this.log.d(`pageChanged, changing receive page to: ${event.page}`);
@@ -112,10 +114,10 @@ export class ReceiveComponent implements OnInit {
   /* ---- UI Helper functions ---------------------------------------------- */
 
   /**
-    * Returns whether we're in search mode or not!
-    * The current table is showing limited results due to search.
-    * Mainly for hiding the "Unused address" & ease of use in other functions.
-    */
+   * Returns whether we're in search mode or not!
+   * The current table is showing limited results due to search.
+   * Mainly for hiding the "Unused address" & ease of use in other functions.
+   */
   inSearchMode(): boolean {
     return !!this.query;
   }
@@ -130,9 +132,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-    * Sets the address type, also checks if valid. Also changes the selected address.
-    * @param type Address type to set
-    */
+   * Sets the address type, also checks if valid. Also changes the selected address.
+   * @param type Address type to set
+   */
   setAddressType(type: string) {
     if (['public', 'private'].indexOf(type) !== -1) {
       this.type = type;
@@ -146,9 +148,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-    * Selected address stuff + QRcode
-    * @param address The address to select
-    */
+   * Selected address stuff + QRcode
+   * @param address The address to select
+   */
   selectAddress(address: string) {
     this.selected = address;
   }
@@ -171,21 +173,21 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-    * Used to get the addresses.
-    * TODO: Create interface
-    */
+   * Used to get the addresses.
+   * TODO: Create interface
+   */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
     this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
   }
 
   /**
-    * Used to get the addresses.
-    * TODO: Create interface Array<AddressInterface?>
-    */
+   * Used to get the addresses.
+   * TODO: Create interface Array<AddressInterface?>
+   */
   rpc_loadAddresses_success(response: Array<any>) {
     const pub = [],
-          priv = [];
+      priv = [];
 
     response.forEach((row) => {
       if (row.address.length < 35) {
@@ -206,7 +208,7 @@ export class ReceiveComponent implements OnInit {
       this.addresses.private = [];
     }
 
-    pub .forEach((val) => this.addAddress(val, 'public'));
+    pub.forEach((val) => this.addAddress(val, 'public'));
     priv.forEach((val) => this.addAddress(val, 'private'));
 
     if (!!response[0]) {
@@ -223,9 +225,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-  * Transforms the json to the right format and adds it to the right array (public / private)
-  * TODO: Create interface for response
-  */
+   * Transforms the json to the right format and adds it to the right array (public / private)
+   * TODO: Create interface for response
+   */
   addAddress(response: any, type: string) {
     const tempAddress = {
       id: 0,
@@ -233,7 +235,7 @@ export class ReceiveComponent implements OnInit {
       address: 'Empty address',
       balance: 0,
       readable: ['Empty']
-    }
+    };
 
     tempAddress.address = response.address;
     if (!!response.label) {
@@ -272,14 +274,16 @@ export class ReceiveComponent implements OnInit {
 
 
   /** Checks if the newest address is still unused (hasn't received funds).
-    * If it has received funds, generate a new address and update the table.
-    * TODO: Remove timeout if not currently on ngOnDestroy
-    */
+   * If it has received funds, generate a new address and update the table.
+   * TODO: Remove timeout if not currently on ngOnDestroy
+   */
   checkIfUnusedAddress() {
     if (this.addresses.public[0].address !== 'Empty address') {
       this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
     }
-    setTimeout(() => { this.checkIfUnusedAddress(); }, 30000);
+    setTimeout(() => {
+      this.checkIfUnusedAddress();
+    }, 30000);
   }
 
   rpc_callbackUnusedAddress_success(json: Object) {
@@ -296,12 +300,12 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-    * Generate a new address with label.
-    * TODO: Get rid of prompt, use nice modal.
-    */
+   * Generate a new address with label.
+   * TODO: Get rid of prompt, use nice modal.
+   */
   newAddress() {
     const label = prompt('Label for new address'),
-          call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
+      call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
 
     if (!!call) {
       this.rpc.call(this, call, [label], () => {
@@ -315,6 +319,14 @@ export class ReceiveComponent implements OnInit {
 
   selectInput() {
     (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
+  }
+
+  openNewAddress(): void {
+    this.openNewAddressModal = true;
+  }
+
+  closeNewAddress(): void {
+    this.openNewAddressModal = false;
   }
 
 }
