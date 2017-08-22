@@ -4,7 +4,7 @@ const fs = require('fs');
 const { app, dialog } = require('electron');
 const got = require('got');
 const path = require('path');
-const ClientBinaryManager = require('ethereum-client-binaries').Manager;
+const ClientBinaryManager = require('./clientBinariesManager').Manager;
 const EventEmitter = require('events').EventEmitter;
 
 const log = {
