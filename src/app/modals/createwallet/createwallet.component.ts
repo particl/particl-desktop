@@ -49,6 +49,7 @@ export class CreateWalletComponent {
   }
 
   reset() {
+    this._modalsService.disableClose['status'] = (this.step > 0);
     this.words = Array(24).fill('');
     this.isRestore = false;
     this.name = '';
