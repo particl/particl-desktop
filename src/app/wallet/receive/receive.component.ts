@@ -2,7 +2,7 @@ import {Component, OnInit, HostListener, ElementRef, ViewChild} from '@angular/c
 import {RPCService} from '../../core/rpc/rpc.service';
 
 import {Log} from 'ng2-logger';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-receive',
