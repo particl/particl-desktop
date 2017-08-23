@@ -91,7 +91,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   }
 
   open(message: any, data?: any) {
-    // this.logger.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
+    this.logger.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
     this.modalContainer.clear();
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.modalContainer.createComponent(factory);

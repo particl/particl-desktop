@@ -15,10 +15,10 @@
     </ul>
 
     <div class="col-xs-3 header-option row header-option-container"
-      (click)="selectInput()">
+         (click)="selectInput()">
       <span class="col-xs-10">
         <input type="text" class="header-input" id="searchbar"
-          [(ngModel)]="query" placeholder="Search receive">
+               [(ngModel)]="query" placeholder="Search receive">
       </span>
       <span class="col-xs-2 icon fa fa-search header-option-icon"></span>
     </div>
@@ -52,14 +52,14 @@
         <div ngxClipboard [cbContent]="getUnusedAddress().address" class="col-xs-4 nc-icon nc-copy-2">
         </div>
         <div class="col-xs-4 nc-icon nc-a-check"></div>
-        <div class="col-xs-4 nc-icon nc-barcode-qr"  (click)="selectAddress(addresses[getAddressType()][0])"></div>
+        <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(addresses[getAddressType()][0])"></div>
       </div>
     </div>
     </span>
 
     <div class="address-title">Previous addresses</div>
     <div class="card row"
-      *ngFor="let address of getSinglePage()">
+         *ngFor="let address of getSinglePage()">
       <div class="col-xs-1 address-id vertical-center">
         /{{ address.id }}
       </div>
@@ -91,7 +91,7 @@
       class="pagination-sm center"
       previousText="&lsaquo;" nextText="&rsaquo;"
       firstText="&laquo;" lastText="&raquo;"
-      [itemsPerPage]="MAX_ADDRESSES_PER_PAGE" >
+      [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
     </pagination>
   </div>
 
@@ -99,7 +99,7 @@
 
     <div #qrCode class="card qr">
       <qr-code [size]="getQrSize()" [level]="'H'"
-        [value]="selected.address">
+               [value]="selected.address">
       </qr-code>
     </div>
 
@@ -121,21 +121,20 @@
   </div>
 </div>
 
-<div id="address-modal"  [ngClass]="{'hide': openNewAddressModal == false }">
+<div id="address-modal" [ngClass]="{'hide': openNewAddressModal == false }">
   <div class="address-modal-container">
     <span class="close" (click)="closeNewAddress()">&times;</span>
+    <form [formGroup]="addLableForm" (ngSubmit)="newAddress()" novalidate>
+      <div class="modal-content-header">Label for new {{ getAddressType() }} address</div>
+      <hr class="margin-top-5px">
 
-    <div class="modal-content-header">Add new address to addresbook</div>
-    <hr class="margin-top-5px">
-
-    <div class="row">
-      <div class="col-xs-10">
-        <input type="text" class="form-control" [(ngModel)]="label"
-               placeholder="label">
+      <div class="row">
+        <div class="col-xs-10">
+          <input type="text" formControlName="label" class="form-control" [(ngModel)]="label"
+                 placeholder="label">
+        </div>
       </div>
-    </div>
-
-    <button class="control pull-right" (click)="addAddressToBook()">Add address</button>
-
+      <button class="control pull-right" [disabled]="!addLableForm.valid">Add Label</button>
+    </form>
   </div>
 </div>

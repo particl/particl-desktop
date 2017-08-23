@@ -2,6 +2,7 @@ import {Component, OnInit, HostListener, ElementRef, ViewChild} from '@angular/c
 import {RPCService} from '../../core/rpc/rpc.service';
 
 import {Log} from 'ng2-logger';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-receive',
@@ -16,6 +17,8 @@ export class ReceiveComponent implements OnInit {
   private type: string = 'public';
   public query: string = '';
   public openNewAddressModal: boolean = false;
+  public addLableForm: FormGroup;
+  public label: string;
 
   defaultAddress: Object = {
     id: 0,
@@ -23,7 +26,7 @@ export class ReceiveComponent implements OnInit {
     address: 'Empty address',
     balance: 0,
     readable: ['Empty']
-  }
+  };
 
   selected: any = {
     id: 0,
@@ -52,13 +55,28 @@ export class ReceiveComponent implements OnInit {
   /* General */
   log: any = Log.create('receive.component');
 
-  constructor(private rpc: RPCService) {
+  constructor(private rpc: RPCService,
+              private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
     // start rpc
     this.rpc_update();
+    this.buildForm();
+
+    document.onkeydown = evt => {
+      if (evt.key.toLowerCase() === 'escape') {
+        this.closeNewAddress();
+      }
+    }
   }
+
+  buildForm(): void {
+    this.addLableForm = this.formBuilder.group({
+      label: this.formBuilder.control(null, [Validators.required]),
+    });
+  }
+
 
   /**
    * Returns the addresses to display in the UI with regards to both pagination and search/query.
@@ -304,15 +322,15 @@ export class ReceiveComponent implements OnInit {
    * TODO: Get rid of prompt, use nice modal.
    */
   newAddress() {
-    const label = prompt('Label for new address'),
-      call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
+    const call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
 
     if (!!call) {
-      this.rpc.call(this, call, [label], () => {
+      this.rpc.call(this, call, [this.label], () => {
         this.log.i('newAddress: successfully retrieved new address');
-
         // just call for a complete update, just adding the address isn't possible because
         this.rpc_update();
+        this.closeNewAddress();
+        this.addLableForm.reset();
       });
     }
   }
