@@ -17,7 +17,7 @@
       [ngClass]="{selected: advanced}">
       <div class="header-option-container">
         <div class="header-option-text">
-          <span class="icon fa fa-cog header-option-icon"></span>
+          <span class="icon nc-icon nc-settings-gear-65 header-option-icon"></span>
           <span>
             Advanced options
           </span>
@@ -61,7 +61,7 @@
       <span class="separator"></span>
       <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
       <span class="icon-padding icon nc-icon nc-copy-2"></span>
-      <span class="icon-padding icon nc-icon nc-circle-remove" (click)="clearReceiver()"></span>
+      <span class="icon-padding icon nc-icon nc-circle-remove color-red" (click)="clearReceiver()"></span>
     </div>
 
     <div class="card row">
@@ -78,7 +78,7 @@
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount" (input)="verifyAmount()"
         [ngClass]="{'good': checkAmount() === true, 'fault': checkAmount() === false }">
-      <div class="col-xs-1 no-padding-left">
+      <div class="col-xs-2 no-padding-left">
         <select [(ngModel)]="send.currency" class="form-control no-margin-left">
           <option value="part">PART</option>
         </select>
@@ -154,7 +154,7 @@
       <span class="separator"></span>
       <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
       <span class="icon-padding icon nc-icon nc-copy-2"></span>
-      <span class="icon-padding icon nc-icon nc-circle-remove"></span>
+      <span class="icon-padding icon nc-icon nc-circle-remove color-red"></span>
     </div>
 
     <div class="card row">
@@ -162,7 +162,7 @@
       <input class="col-xs-4" type="text"
         placeholder="0.0000000000000000"
         [(ngModel)]="send.amount">
-      <div class="col-xs-1 no-padding-left">
+      <div class="col-xs-2 no-padding-left">
         <select [(ngModel)]="send.currency" class="form-control no-margin-left">
           <option value="part">PART</option>
         </select>

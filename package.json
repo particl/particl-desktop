@@ -10,15 +10,21 @@
     "webpack",
     "typescript"
   ],
+  "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint --type-check && htmlhint && sass-lint -v",
+    "lint": "ng lint --type-check && htmlhint --ignore **/documentation/** && sass-lint -v",
     "e2e": "ng e2e",
+    "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.2",
+    "start:electron": "npm run build:electron && electron .",
+    "package-mac": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --prune=true --out=release-builds",
+    "package-windows": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds",
+    "package-linux": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
-    "compdoc": "compodoc -p tsconfig.json -s -w"
+    "compdoc": "compodoc -p tsconfig.json"
   },
   "private": true,
   "dependencies": {
@@ -33,16 +39,23 @@
     "@angular/router": "^4.3.1",
     "angular2-qrcode": "^2.0.1",
     "bootstrap": "^3.3.7",
+    "buffered-spawn": "^3.3.2",
     "core-js": "^2.4.1",
+    "electron": "^1.6.11",
     "font-awesome": "^4.7.0",
+    "got": "^7.1.0",
+    "lodash.get": "^4.4.2",
+    "lodash.isempty": "^4.4.0",
+    "lodash.values": "^4.3.0",
     "ng2-logger": "^1.0.3",
     "ngx-bootstrap": "^1.8.0",
     "ngx-clipboard": "^8.0.3",
     "ngx-electron": "^1.0.2",
+    "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.2",
     "protractor": "^5.1.2",
     "rxjs": "^5.4.2",
-    "zone.js": "0.8.16"
+    "zone.js": "0.8.17"
   },
   "devDependencies": {
     "@angular/cli": "^1.2.4",
@@ -52,9 +65,10 @@
     "@types/node": "~8.0.12",
     "codelyzer": "~3.1.2",
     "coveralls": "^2.13.1",
+    "electron-packager": "^8.7.2",
     "htmlhint": "^0.9.13",
     "jasmine-core": "~2.7.0",
-    "jasmine-spec-reporter": "~4.1.1",
+    "jasmine-spec-reporter": "~4.2.0",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "~2.2.0",
     "karma-cli": "~1.0.1",
@@ -65,7 +79,8 @@
     "protractor": "~5.1.0",
     "sass-lint": "^1.10.2",
     "ts-node": "~3.3.0",
-    "tslint": "~5.5.0",
-    "typescript": "~2.4.2"
+    "tslint": "~5.6.0",
+    "typescript": "~2.4.2",
+    "zeromq": "^4.5.0"
   }
 }

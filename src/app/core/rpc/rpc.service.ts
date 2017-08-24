@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
+import { Log } from 'ng2-logger';
+import { Subject } from 'rxjs/Subject';
 
 import { Headers, Http } from '@angular/http';
 import { Log } from 'ng2-logger';
+
+import { ModalsService } from '../../modals/modals.service';
 
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
@@ -41,9 +45,14 @@ export class RPCService {
 
   private log: any = Log.create('rpc.service');
 
-  constructor(private http: Http, public electronService: ElectronService) {
+  public modalUpdates: Subject<any> = new Subject<any>();
+
+  constructor(
+    private http: Http,
+    public electronService: ElectronService
+  ) {
     this.isElectron = this.electronService.isElectronApp;
-    this.poll();
+    this.startPolling();
   }
 
 /**
@@ -72,7 +81,13 @@ export class RPCService {
  * @returns      void
  */
 
-  call(instance: Injectable, method: string, params: Array<any> | null, successCB: Function, errorCB?: Function): void {
+  call(
+    instance: Injectable,
+    method: string,
+    params: Array<any> | null,
+    successCB: Function,
+    errorCB?: Function
+  ): void {
     const postData = JSON.stringify({
       method: method,
       params: params,
@@ -92,13 +107,23 @@ export class RPCService {
         .subscribe(
           response => {
             successCB.call(instance, response.json().result);
+            this.modalUpdates.next({
+              response: response,
+              electron: this.isElectron
+            });
           },
           error => {
             if (errorCB) {
-              errorCB.call(instance, (typeof error['_body'] === 'object' ? error['_body'] : JSON.parse(error['_body'])) )
+              errorCB.call(instance, (typeof error['_body'] === 'object'
+                ? error['_body']
+                : JSON.parse(error['_body']))
+              );
             }
-            // TODO: Call error modal?
-            this.log.er(`RPC Call returned an error ${error}`);
+            this.modalUpdates.next({
+              error: error,
+              electron: this.isElectron
+            });
+            this.log.er('RPC Call returned an error', error);
           });
     }
   }
@@ -118,21 +143,28 @@ export class RPCService {
  *
  * @example
  * ```JavaScript
- * this._rpc.register(this, 'listtransactions', [0, 20], this.rpc_loadTwentyTxs_success, 'block' this.rpc_loadTwentyTxs_failed);
- * ```
- * ```JavaScript
- * rpc_loadTwentyTxs_success(json: Object) {
- *   console.log("Loaded transactions!");
- *   console.log(json);
- * }
- * ...
+ * this._rpc.register(this, 'listtransactions', [0, 20],
+ *   (response: Object) => {
+ *     console.log("Loaded transactions!");
+ *     console.log(response);
+ *   }, 'block',
+ *   (response: Object) => {
+ *     console.log("Loaded transactions!");
+ *     console.log(response);
+ *   });
  * ```
  *
  * @returns      void
  */
 
-  register(instance: Injectable, method: string, params: Array<any> | Function | null,
-           successCB: Function, when: string, errorCB?: Function): void {
+  register(
+    instance: Injectable,
+    method: string,
+    params: Array<any> | Function | null,
+    successCB: Function,
+    when: string,
+    errorCB?: Function
+  ): void {
     let valid = false;
     const _call = {
       instance: instance,
@@ -164,13 +196,15 @@ export class RPCService {
  *
  * @returns      void
  */
-  poll(): void {
+  private poll(): void {
     // TODO: Actual polling... Check block height and last transaction
     const _call = (element) => {
       this.call(
         element.instance,
         element.method,
-        element.params && element.params.typeOf === 'function' ? element.params() : element.params,
+        element.params && element.params.typeOf === 'function'
+          ? element.params()
+          : element.params,
         element.successCB,
         element.errorCB);
     };
@@ -195,7 +229,9 @@ export class RPCService {
       this.call(
         element.instance,
         element.method,
-        element.params && element.params.typeOf === 'function' ? element.params() : element.params,
+        element.params && element.params.typeOf === 'function'
+          ? element.params()
+          : element.params,
         element.successCB,
         element.errorCB);
     };
@@ -209,7 +245,7 @@ export class RPCService {
  *
  * @returns      void
  */
-  startPolling(): void {
+  private startPolling(): void {
     clearTimeout(this._pollTimout);
     this.poll();
   }
@@ -219,7 +255,7 @@ export class RPCService {
  *
  * @returns      void
  */
-  stopPolling(): void {
+  private stopPolling(): void {
     clearTimeout(this._pollTimout);
   }
 

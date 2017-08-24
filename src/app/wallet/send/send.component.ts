@@ -102,20 +102,18 @@ export class SendComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*
-    Amount validation functions
-  */
-
+  /** Amount validation functions. */
   checkAmount(): boolean {
     // hooking verifyAmount here, on change of type -> retrigger check of amount.
     this.verifyAmount();
 
-    return this.send['validAmount'];
+    return this.send.validAmount;
   }
 
   verifyAmount() {
 
-    if (this.send['amount'] === undefined || +this.send['amount'] === 0 || this.send['input'] === '') {
+    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '') {
+
       this.send.validAmount = undefined;
       return;
     }
@@ -125,59 +123,39 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if ((this.send['amount'] + '').indexOf('.') >= 0 && (this.send['amount'] + '').split('.')[1].length > 8) {
-      this.send.validAmount = false;
-      return;
-    }
-
-
-    if (this.send['amount'] <= this.getBalance(this.send['input'])) {
-      this.send.validAmount = true;
-      return;
-    } else {
-      this.send.validAmount = false;
-      return;
-    }
-
+    this.send.validAmount = this.send.amount <= this.getBalance(this.send.input);
   }
 
-  /*
-    Address validation functions
-      checkAddres: returns boolean, so it can be private later.
-      verifyAddress: calls RPC to validate it
-  */
-
+  /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
-    return this.send['validAddress'];
+    return this.send.validAddress;
   }
 
+  /** verifyAddress: calls RPC to validate it. */
   verifyAddress() {
-    if (this.send.toAddress === '' || this.send.toAddress === undefined) {
+    if (!this.send.toAddress) {
       this.send.validAddress = undefined;
       this.send.isMine = undefined;
       return;
     }
 
-    this._rpc.call(this, 'validateaddress', [this.send.toAddress], this.rpc_callbackVerifyAddress);
-    return;
-  }
+    const validateAddressCB = (response) => {
+      this.send.validAddress = response.isvalid;
 
-  rpc_callbackVerifyAddress(json: Object) {
-    this.send.validAddress = json['isvalid'];
-    if (json['account'] !== undefined) {
-      this.send.toLabel = json['account'];
+      if (!!response.account) {
+        this.send.toLabel = response.account;
+      }
+
+      if (!!response.ismine) {
+        this.send.isMine = response.ismine;
+      }
     }
 
-    if (json['ismine'] !== undefined) {
-      this.send.isMine = json['ismine'];
-    }
-
+    this._rpc.call(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
   }
 
 
-  /*
-    Clear the send object
-  */
+  /** Clear the send object. */
   clear() {
     this.send = {
       input: '',
@@ -320,6 +298,10 @@ export class SendComponent implements OnInit, OnDestroy {
     this.addressLookup.show();
   }
 
+  /** Select an address, set the appropriate models
+    * @param address The address to send to
+    * @param label The label for the address.
+    */
   selectAddress(address: string, label: string) {
     this.send.toAddress = address;
     this.send.toLabel = label;
@@ -327,10 +309,7 @@ export class SendComponent implements OnInit, OnDestroy {
     this.verifyAddress();
   }
 
-  /*
-  * Add/edits label of an address
-  */
-
+  /** Add/edits label of an address. */
   addLabelToAddress() {
     const isMine = this.send.isMine;
 

@@ -1,8 +1,16 @@
-app-table {
+app-grid {
   .tools-menu {
     font-size: 14px;
   }
   .qrcode-menu {
     font-size: 34px;
+  }
+  .cell-label {
+      flex-basis: 14em;
+  }
+  .cell-address {
+      flex-basis: 100%;
+      word-break: break-word;
+      white-space: normal;
   }
 }
