@@ -121,7 +121,7 @@
   </div>
 </div>
 
-<div id="address-modal" [ngClass]="{'hide': openNewAddressModal == false }">
+<div id="address-modal" [class.hide]="openNewAddressModal == false">
   <div class="address-modal-container">
     <span class="close" (click)="closeNewAddress()">&times;</span>
     <form [formGroup]="addLableForm" (ngSubmit)="newAddress()" novalidate>

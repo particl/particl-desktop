@@ -1,8 +1,8 @@
-import {Component, OnInit, HostListener, ElementRef, ViewChild} from '@angular/core';
-import {RPCService} from '../../core/rpc/rpc.service';
+import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { RPCService } from '../../core/rpc/rpc.service';
 
-import {Log} from 'ng2-logger';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Log } from 'ng2-logger';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-receive',
@@ -79,9 +79,9 @@ export class ReceiveComponent implements OnInit {
 
 
   /**
-   * Returns the addresses to display in the UI with regards to both pagination and search/query.
-   * Does _NOT_ return the ununsed address!
-   */
+    * Returns the addresses to display in the UI with regards to both pagination and search/query.
+    * Does _NOT_ return the ununsed address!
+    */
   getSinglePage(): Array<Object> {
     let type = this.type;
 
@@ -111,9 +111,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-   * Returns the total counts of addresses to display in the UI with regards to both the type of address (private/public) and search.
-   * Excludes the count for the unused address! (- 1 except for search!)
-   */
+    * Returns the total counts of addresses to display in the UI with regards to both the type of address (private/public) and search.
+    * Excludes the count for the unused address! (- 1 except for search!)
+    */
   getTotalCountForPagination(): number {
     if (this.inSearchMode()) {
       return this.addresses.query.length;
@@ -132,10 +132,10 @@ export class ReceiveComponent implements OnInit {
   /* ---- UI Helper functions ---------------------------------------------- */
 
   /**
-   * Returns whether we're in search mode or not!
-   * The current table is showing limited results due to search.
-   * Mainly for hiding the "Unused address" & ease of use in other functions.
-   */
+    * Returns whether we're in search mode or not!
+    * The current table is showing limited results due to search.
+    * Mainly for hiding the "Unused address" & ease of use in other functions.
+    */
   inSearchMode(): boolean {
     return !!this.query;
   }
@@ -150,9 +150,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-   * Sets the address type, also checks if valid. Also changes the selected address.
-   * @param type Address type to set
-   */
+    * Sets the address type, also checks if valid. Also changes the selected address.
+    * @param type Address type to set
+    */
   setAddressType(type: string) {
     if (['public', 'private'].indexOf(type) !== -1) {
       this.type = type;
@@ -166,9 +166,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-   * Selected address stuff + QRcode
-   * @param address The address to select
-   */
+    * Selected address stuff + QRcode
+    * @param address The address to select
+    */
   selectAddress(address: string) {
     this.selected = address;
   }
@@ -191,21 +191,21 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-   * Used to get the addresses.
-   * TODO: Create interface
-   */
+    * Used to get the addresses.
+    * TODO: Create interface
+    */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
     this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
   }
 
   /**
-   * Used to get the addresses.
-   * TODO: Create interface Array<AddressInterface?>
-   */
+    * Used to get the addresses.
+    * TODO: Create interface Array<AddressInterface?>
+    */
   rpc_loadAddresses_success(response: Array<any>) {
     const pub = [],
-      priv = [];
+          priv = [];
 
     response.forEach((row) => {
       if (row.address.length < 35) {
@@ -226,7 +226,7 @@ export class ReceiveComponent implements OnInit {
       this.addresses.private = [];
     }
 
-    pub.forEach((val) => this.addAddress(val, 'public'));
+    pub .forEach((val) => this.addAddress(val, 'public'));
     priv.forEach((val) => this.addAddress(val, 'private'));
 
     if (!!response[0]) {
@@ -243,9 +243,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-   * Transforms the json to the right format and adds it to the right array (public / private)
-   * TODO: Create interface for response
-   */
+    * Transforms the json to the right format and adds it to the right array (public / private)
+    * TODO: Create interface for response
+    */
   addAddress(response: any, type: string) {
     const tempAddress = {
       id: 0,
@@ -292,9 +292,9 @@ export class ReceiveComponent implements OnInit {
 
 
   /** Checks if the newest address is still unused (hasn't received funds).
-   * If it has received funds, generate a new address and update the table.
-   * TODO: Remove timeout if not currently on ngOnDestroy
-   */
+    * If it has received funds, generate a new address and update the table.
+    * TODO: Remove timeout if not currently on ngOnDestroy
+    */
   checkIfUnusedAddress() {
     if (this.addresses.public[0].address !== 'Empty address') {
       this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
@@ -318,9 +318,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-   * Generate a new address with label.
-   * TODO: Get rid of prompt, use nice modal.
-   */
+    * Generate a new address with label.
+    * TODO: Get rid of prompt, use nice modal.
+    */
   newAddress() {
     const call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
 

@@ -87,6 +87,7 @@
   background: transparent;
   transition: background .3s;
 }
+
 .address.copied {
   background: yellow !important;
   transition: background 0s;
@@ -123,6 +124,7 @@
   padding: 0;
   margin: 0;
 }
+
 .row {
   margin: 0;
 }
@@ -165,6 +167,7 @@ button {
   user-select: none;
   margin: 30px 0 30px 0;
 }
+
 .page-button:last-child {
   margin-right: 0;
 }
@@ -176,7 +179,7 @@ button {
   margin-right: 10px;
   cursor: pointer;
   color: #777;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .page-button-green {
@@ -209,10 +212,15 @@ app-header {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-#address-modal.hide {
-  width: 0!important;
-  height: 0!important;
-  display: none;
+#address-modal {
+  &.hide {
+    width: 0 !important;
+    height: 0 !important;
+    display: none;
+  }
+  .row {
+    margin-bottom: 30px;
+  }
 }
 
 .address-modal-container {
@@ -240,10 +248,6 @@ app-header {
   font-weight: bold;
   font-size: 0.7em;
   margin-bottom: 10px;
-}
-
-#address-modal .row {
-  margin-bottom: 30px;
 }
 
 .good {
