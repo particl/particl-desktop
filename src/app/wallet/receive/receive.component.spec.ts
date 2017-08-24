@@ -159,32 +159,4 @@ describe('ReceiveComponent', () => {
     });
     */
 
-    describe('#newAddress()', function () {
-      it('is define', function () {
-        expect(component.newAddress).toBeDefined();
-      });
-    });
-
-    describe('#openNewAddress()', function () {
-      it('is define', function () {
-        expect(component.openNewAddress).toBeDefined();
-      });
-
-      it('should be open new address modal', function () {
-        component.openNewAddress();
-        expect(component.openNewAddressModal).toEqual(true);
-      })
-    });
-
-  describe('#closeNewAddress()', function () {
-    it('is define', function () {
-      expect(component.closeNewAddress).toBeDefined();
-    });
-
-    it('should be close new address modal', function () {
-      component.closeNewAddress();
-      expect(component.openNewAddressModal).toEqual(false);
-    })
-  })
-
 });

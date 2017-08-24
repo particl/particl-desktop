@@ -19,7 +19,7 @@ export class ModalsService {
   public closeButton: Subject<any> = new Subject<any>();
   // @TODO CREATE model for object
   public enableClose: object = {
-    status: false
+    status: true
   };
 
   private isOpen: boolean = false;

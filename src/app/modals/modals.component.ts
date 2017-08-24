@@ -66,7 +66,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   ngOnInit() {
     this.enableClose = this._modalService.enableClose;
     document.onkeydown = (event: any) => {
-      if (this.closeOnEscape && !this.enableClose['status']
+      if (this.closeOnEscape && this.enableClose['status']
           && event.key.toLowerCase() === 'escape'
           && this.modal) {
         this.close();
