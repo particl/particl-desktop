@@ -65,7 +65,7 @@
     "@types/node": "~8.0.12",
     "codelyzer": "~3.1.2",
     "coveralls": "^2.13.1",
-    "electron-packager": "^8.7.2",
+    "electron-packager": "^9.0.0",
     "htmlhint": "^0.9.13",
     "jasmine-core": "~2.7.0",
     "jasmine-spec-reporter": "~4.2.0",
