@@ -35,16 +35,12 @@ export class StatusComponent implements OnInit {
   ngOnInit() {
     this._subPeerList = this._peerService.getPeerList()
       .subscribe(
-        peerList => {
-          this.peerListCount = peerList.length;
-        },
+        peerList => this.peerListCount = peerList.length,
         error => this.log.er(`peerListCount, subscription error: ${error}`));
 
     this._subEncryptionStatus = this._encryptionStatusService.getEncryptionStatus()
       .subscribe(
-        encryptionStatus => {
-          this.encryptionStatus = encryptionStatus;
-        },
+        encryptionStatus => this.encryptionStatus = encryptionStatus,
         error => this.log.er(`getEncryptionStatus, subscription error: ${error}`));
   }
 
@@ -84,7 +80,7 @@ export class StatusComponent implements OnInit {
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':
-        this._rpc.call(this, 'walletlock', null, this.rpc_walletLock_success);
+        this._rpc.call(this, 'walletlock', null, () => {});
         break;
       case 'Locked':
         this._modalsService.open('unlock');
@@ -92,9 +88,5 @@ export class StatusComponent implements OnInit {
       default:
         break;
     }
-  }
-
-  rpc_walletLock_success(json: Object) {
-
   }
 }

@@ -174,10 +174,7 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
 
-  /*
-     Validation modal
-  */
-
+  /** Validation modal */
   openValidate() {
     document.getElementById('validate').classList.remove('hide');
   }
@@ -186,9 +183,7 @@ export class SendComponent implements OnInit, OnDestroy {
     document.getElementById('validate').classList.add('hide');
   }
 
-  /*
-    Payment function
-  */
+  /** Payment function */
   pay() {
     this.closeValidate();
 
@@ -198,9 +193,7 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
-    /*
-      Send normal transaction - validation
-    */
+    // Send normal transaction - validation
     if (this.type === 'sendPayment') {
 
       // pub->pub, blind->blind, priv-> priv
@@ -226,10 +219,7 @@ export class SendComponent implements OnInit, OnDestroy {
         this.sendTransaction();
       }
 
-    /*
-      Balance transfer - validation
-    */
-
+    // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
 
       if (this.send.output === '') {
@@ -261,17 +251,10 @@ export class SendComponent implements OnInit, OnDestroy {
     // edit label of address
     this.addLabelToAddress();
 
-    const input = this.send.input;
-    const output = this.send.output;
-    const address = this.send.toAddress;
-    const amount = this.send.amount;
-    const comment = this.send.note;
-    const narration = this.send.note;
-    const substractfee = false;
-    const ringsize = this.send.privacy;
-    const numsigs = 1;
-
-    this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+    this.sendService.sendTransaction(
+      this.send.input, this.send.output, this.send.toAddress,
+      this.send.amount, this.send.note, false, this.send.note,
+      this.send.privacy, 1);
 
     this.clear();
   }
@@ -285,7 +268,9 @@ export class SendComponent implements OnInit, OnDestroy {
     const ringsize = this.send.privacy;
     const numsigs = 1;
 
-    this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
+    this.sendService.transferBalance(
+      this.send.input, this.send.output, this.send.toAddress,
+      this.send.amount, this.send.privacy, 1);
 
     this.clear();
   }
@@ -313,11 +298,12 @@ export class SendComponent implements OnInit, OnDestroy {
   addLabelToAddress() {
     const isMine = this.send.isMine;
 
+    /*
     if (isMine) {
       if (!confirm('Address is one of our own - change label? ')) {
         return;
       }
-    }
+    }*/
 
     const label = this.send.toLabel;
     const addr = this.send.toAddress;

@@ -23,12 +23,12 @@ export class UnlockwalletComponent {
 
   constructor (private _rpc: RPCService) { }
 
-  unlock(json: Object) {
+  unlock(encryptionStatus: string) {
     // unlock actually happened in password.component.ts
     this.log.d('Unlock signal emitted!');
 
     // perform callback
-    if (json['encryptionstatus'] === 'Unlocked' || json['encryptionstatus'] === 'Unlocked, staking only') {
+    if (encryptionStatus === 'Unlocked' || encryptionStatus === 'Unlocked, staking only') {
       if (this.isCallbackSet()) {
         this.callback.call(this.instance);
         this.clearStateUnlockCallback();

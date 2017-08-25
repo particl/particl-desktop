@@ -5,7 +5,7 @@ import { RPCService } from './rpc.service';
 
 @Injectable()
 export class EncryptionStatusService {
-
+  private _method: string = 'getwalletinfo';
   private _encryptionStatus: Observable<string>;
   private _observerEncryptionStatus: Observer<string>;
 
@@ -14,15 +14,28 @@ export class EncryptionStatusService {
   constructor(private _rpc: RPCService) {
 
     // register updates to encryptionStatus
-    this._rpc.register(this, 'getwalletinfo', null, this.setEncryptionStatus, 'time');
+    this._rpc.register(this, this._method, null, (response: Object) => {
+        // TODO: Model for response
+      this._observerEncryptionStatus.next((<any>response).encryptionstatus);
+      this._encryptionStatusState = (<any>response).encryptionstatus;
+    }, 'time');
 
     this._encryptionStatus = Observable.create(observer => this._observerEncryptionStatus = observer).publishReplay(1).refCount();
     this._encryptionStatus.subscribe().unsubscribe();
   }
 
-  private setEncryptionStatus(json: Object): void {
-    this._observerEncryptionStatus.next(json['encryptionstatus']);
-    this._encryptionStatusState = json['encryptionstatus'];
+  refreshEncryptionStatus(): Observable<string> {
+    let observer: Observer<string>;
+
+    // register updates to encryptionStatus
+    this._rpc.call(this, this._method, null, (response: Object) => {
+      // TODO: Model for response
+      observer.next((<any>response).encryptionstatus);
+      this._encryptionStatusState = (<any>response).encryptionstatus;
+    });
+
+
+    return Observable.create(_observer => observer = _observer);
   }
 
   getEncryptionStatus(): Observable<string> {

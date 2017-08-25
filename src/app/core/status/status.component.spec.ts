@@ -35,12 +35,7 @@ describe('StatusComponent', () => {
   });
 
   it('should getIconNumber', () => {
-    component.getIconNumber();
-    expect(component.getIconNumber).toBeTruthy();
-  });
-
-  it('should rpc_walletEncryptionStatus', () => {
-    expect(component.rpc_walletEncryptionStatus).toBeTruthy();
+    expect(component.getIconNumber()).toBe(0);
   });
 
   it('should get encryptionStatus', () => {
