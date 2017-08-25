@@ -22,6 +22,11 @@ input.verify-error::placeholder {
     border-color: #ec4b50;
 }
 
+input.verify-sucess {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+
 .margin-40px-0 {
     margin: 40px 0;
 }
@@ -189,7 +194,7 @@ input.verify-error::placeholder {
 
 .no-padding-left {
     padding-left: 0px;
-    } 
+    }
 
 @font-face {
     font-family: 'part';
