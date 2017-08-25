@@ -131,7 +131,8 @@
       <div class="row">
         <div class="col-xs-10">
           <input type="text" formControlName="label" class="form-control" [(ngModel)]="label"
-                 placeholder="label">
+                 placeholder="Enter label..."
+                 [ngClass]="{'verify-sucess': addLableForm.valid, 'verify-error': !addLableForm.valid }">
         </div>
       </div>
       <button class="control pull-right" [disabled]="!addLableForm.valid">Add Label</button>

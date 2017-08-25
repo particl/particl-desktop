@@ -2,12 +2,12 @@
     margin-top: 20px;
 }
 
-.alert {
-    margin-bottom: 0;
+/deep/ input.recovery-word {
+    max-width: 100%;
 }
 
-/deep/ input.recovery-word{
-  max-width: 100%;
+.alert {
+    margin-bottom: 0;
 }
 
 @media only screen and (max-width: 480px) {
