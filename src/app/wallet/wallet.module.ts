@@ -21,6 +21,7 @@ import { BalanceComponent } from './balances/balance.component';
 import { HistoryComponent } from './history/history.component';
 
 import { AddressLookupComponent } from './addresslookup/addresslookup.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -40,6 +41,8 @@ const routes: Routes = [
     SharedModule,
     ModalModule.forRoot(),
     QRCodeModule,
+    FormsModule,
+    ReactiveFormsModule
 
   ],
   declarations: [

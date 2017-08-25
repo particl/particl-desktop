@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular
 import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-receive',
@@ -15,21 +16,24 @@ export class ReceiveComponent implements OnInit {
   /* UI State */
   private type: string = 'public';
   public query: string = '';
+  public openNewAddressModal: boolean = false;
+  public addLableForm: FormGroup;
+  public label: string;
 
   defaultAddress: Object = {
-      id: 0,
-      label: 'Empty label',
-      address: 'Empty address',
-      balance: 0,
-      readable: ['Empty']
-    }
+    id: 0,
+    label: 'Empty label',
+    address: 'Empty address',
+    balance: 0,
+    readable: ['Empty']
+  };
 
   selected: any = {
-      id: 0,
-      label: 'Empty label',
-      address: 'Empty address',
-      balance: 0,
-      readable: ['empty']
+    id: 0,
+    label: 'Empty label',
+    address: 'Empty address',
+    balance: 0,
+    readable: ['empty']
   };
 
   qrSize: number = 380;
@@ -40,7 +44,7 @@ export class ReceiveComponent implements OnInit {
     public: [this.defaultAddress],
     query: [this.defaultAddress]
 
-  }
+  };
 
   MAX_ADDRESSES_PER_PAGE: number = 6;
   page: number = 1;
@@ -51,17 +55,33 @@ export class ReceiveComponent implements OnInit {
   /* General */
   log: any = Log.create('receive.component');
 
-  constructor(private rpc: RPCService) { }
+  constructor(private rpc: RPCService,
+              private formBuilder: FormBuilder) {
+  }
 
   ngOnInit() {
     // start rpc
     this.rpc_update();
+    this.buildForm();
+
+    document.onkeydown = evt => {
+      if (evt.key.toLowerCase() === 'escape') {
+        this.closeNewAddress();
+      }
+    }
   }
 
- /**
-   * Returns the addresses to display in the UI with regards to both pagination and search/query.
-   * Does _NOT_ return the ununsed address!
-   */
+  buildForm(): void {
+    this.addLableForm = this.formBuilder.group({
+      label: this.formBuilder.control(null, [Validators.required]),
+    });
+  }
+
+
+  /**
+    * Returns the addresses to display in the UI with regards to both pagination and search/query.
+    * Does _NOT_ return the ununsed address!
+    */
   getSinglePage(): Array<Object> {
     let type = this.type;
 
@@ -70,7 +90,7 @@ export class ReceiveComponent implements OnInit {
 
       this.addresses.query = this.addresses[this.type].filter(el => {
         return (
-          el.label  .toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
+          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
           el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
         );
       });
@@ -85,15 +105,15 @@ export class ReceiveComponent implements OnInit {
       offset + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
   }
 
- /** Returns the unused addresses to display in the UI. */
+  /** Returns the unused addresses to display in the UI. */
   getUnusedAddress(): Object {
     return this.addresses[this.type][0];
   }
 
- /**
-   * Returns the total counts of addresses to display in the UI with regards to both the type of address (private/public) and search.
-   * Excludes the count for the unused address! (- 1 except for search!)
-   */
+  /**
+    * Returns the total counts of addresses to display in the UI with regards to both the type of address (private/public) and search.
+    * Excludes the count for the unused address! (- 1 except for search!)
+    */
   getTotalCountForPagination(): number {
     if (this.inSearchMode()) {
       return this.addresses.query.length;
@@ -102,7 +122,7 @@ export class ReceiveComponent implements OnInit {
     return this.addresses[this.type].length - 1;
   }
 
- /** Called to change the page. */
+  /** Called to change the page. */
   pageChanged(event: any) {
     if (event.page !== undefined) {
       this.log.d(`pageChanged, changing receive page to: ${event.page}`);
@@ -223,9 +243,9 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-  * Transforms the json to the right format and adds it to the right array (public / private)
-  * TODO: Create interface for response
-  */
+    * Transforms the json to the right format and adds it to the right array (public / private)
+    * TODO: Create interface for response
+    */
   addAddress(response: any, type: string) {
     const tempAddress = {
       id: 0,
@@ -233,7 +253,7 @@ export class ReceiveComponent implements OnInit {
       address: 'Empty address',
       balance: 0,
       readable: ['Empty']
-    }
+    };
 
     tempAddress.address = response.address;
     if (!!response.label) {
@@ -279,7 +299,9 @@ export class ReceiveComponent implements OnInit {
     if (this.addresses.public[0].address !== 'Empty address') {
       this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
     }
-    setTimeout(() => { this.checkIfUnusedAddress(); }, 30000);
+    setTimeout(() => {
+      this.checkIfUnusedAddress();
+    }, 30000);
   }
 
   rpc_callbackUnusedAddress_success(json: Object) {
@@ -300,21 +322,29 @@ export class ReceiveComponent implements OnInit {
     * TODO: Get rid of prompt, use nice modal.
     */
   newAddress() {
-    const label = prompt('Label for new address'),
-          call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
+    const call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
 
     if (!!call) {
-      this.rpc.call(this, call, [label], () => {
+      this.rpc.call(this, call, [this.label], () => {
         this.log.i('newAddress: successfully retrieved new address');
-
         // just call for a complete update, just adding the address isn't possible because
         this.rpc_update();
+        this.closeNewAddress();
+        this.addLableForm.reset();
       });
     }
   }
 
   selectInput() {
     (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
+  }
+
+  openNewAddress(): void {
+    this.openNewAddressModal = true;
+  }
+
+  closeNewAddress(): void {
+    this.openNewAddressModal = false;
   }
 
 }

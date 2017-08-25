@@ -17,6 +17,8 @@ export class ModalsService {
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
 
+  public enableClose: boolean = true;
+
   private isOpen: boolean = false;
 
   private data: string;
