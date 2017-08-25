@@ -46,7 +46,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   syncPercentage: number = 0;
   syncString: string;
   closeOnEscape: boolean = true;
-  enableClose: object; // @TODO CREATE model for object
+  enableClose: boolean; // @TODO CREATE model for object
 
   private logger: any = Log.create('modals.component');
 
@@ -66,7 +66,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   ngOnInit() {
     this.enableClose = this._modalService.enableClose;
     document.onkeydown = (event: any) => {
-      if (this.closeOnEscape && this.enableClose['status']
+      if (this.closeOnEscape && this.enableClose
           && event.key.toLowerCase() === 'escape'
           && this.modal) {
         this.close();
