@@ -16,7 +16,7 @@ export class ModalsService {
   public modal: any = null;
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
-  // @TODO CREATE model for object
+
   public enableClose: boolean = true;
 
   private isOpen: boolean = false;

@@ -46,7 +46,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   syncPercentage: number = 0;
   syncString: string;
   closeOnEscape: boolean = true;
-  enableClose: boolean; // @TODO CREATE model for object
+  enableClose: boolean;
 
   private logger: any = Log.create('modals.component');
 
