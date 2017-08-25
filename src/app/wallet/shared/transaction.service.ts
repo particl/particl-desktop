@@ -63,20 +63,20 @@ export class TransactionService {
 
       this.log.d(`rpc_loadTransactionCount: txcount: ${this.txCount}`);
 
-      this.rpc.call(this, 'listtransactions',[
+      this.rpc.call(this, 'listtransactions', [
           '*', +this.MAX_TXS_PER_PAGE,
           ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)
         ],
-        (response: Array<Object>) => {
+        (txResponse: Array<Object>) => {
           // The callback will send over an array of JSON transaction objects.
           this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
-          this.log.d(`rpc_loadTransactions_success, real tx per page: ${response.length}`);
+          this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
 
-          if (response.length !== this.MAX_TXS_PER_PAGE) {
+          if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
             this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
           }
 
-          response.forEach((tx) => {
+          txResponse.forEach((tx) => {
             this.addTransaction(tx);
           });
         });
