@@ -3,8 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { IPassword } from './password.interface';
 
-import { ModalsModule } from '../../modals.module';
-import { RPCService } from '../../../core/rpc/rpc.service';
+import { RPCService, EncryptionStatusService } from '../../../core/rpc/rpc.module';
 
 
 @Component({
@@ -14,13 +13,16 @@ import { RPCService } from '../../../core/rpc/rpc.service';
 })
 export class PasswordComponent {
 
+  /*
+    UI State
+  */
   password: string;
   stakeOnly: boolean = false;
-
   showPass: boolean = false;
 
   @Input() unlockText: string = 'YOUR WALLET PASSWORD';
   @Input() unlockButton: string;
+  @Input() unlockTimeout: number = 60;
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;
 
@@ -38,11 +40,13 @@ export class PasswordComponent {
     send a transaction, before it locks again.
   */
   @Input() emitUnlock: boolean = false;
-  @Output() unlockEmitter: EventEmitter<Object> = new EventEmitter<Object>();
+  @Output() unlockEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   log: any = Log.create('password.component');
 
-  constructor (private _rpc: RPCService) { }
+  constructor (
+    private _rpc: RPCService,
+    private _encryptionStatusService: EncryptionStatusService) { }
 
   /*
     UI logic
@@ -70,7 +74,6 @@ export class PasswordComponent {
       // emit unlock
       this.rpc_unlock();
     }
-    this.reset();
   }
 
   /*
@@ -85,40 +88,74 @@ export class PasswordComponent {
     this.passwordEmitter.emit(pass);
   }
 
-  /*
-    _Actually_ unlock the wallet!
-  */
+  /** Unlock the wallet
+    * TODO: This should be moved to a service...
+    */
+  private rpc_unlock() {
+    this.log.i('rpc_unlock: calling unlock! timeout=' + this.unlockTimeout);
+    this.checkAndFallbackToStaking();
+    this._rpc.call(this, 'walletpassphrase', [
+        this.password,
+        (this.stakeOnly ? 0 : this.unlockTimeout),
+        this.stakeOnly
+      ],
+      () => {
+        const _subs = this._encryptionStatusService.refreshEncryptionStatus()
+          .subscribe((encryptionstatus: string) => {
 
-  rpc_unlock() {
-    this.log.i('rpc_unlock: calling unlock!');
-    this._rpc.call(this, 'walletpassphrase', [this.password, 99999, this.stakeOnly], this.rpc_unlock_success);
+            this.log.i('rpc_unlock: success: unlock was called!');
+            // hook for unlockEmitter, warn parent component that wallet is unlocked!
+            this.unlockEmitter.emit(encryptionstatus);
+
+            // send out alert box
+            // TODO: Use modals instead of alerts..
+            if (encryptionstatus === 'Unlocked') {
+              alert('Unlock succesful!');
+            } else if (encryptionstatus === 'Unlocked, staking only') {
+              alert('Unlock was succesful!');
+            } else if (encryptionstatus === 'Locked') {
+              alert('Warning: unlock was unsuccesful!');
+            } else {
+              alert('Wallet not encrypted!');
+            }
+            _subs.unsubscribe();
+          });
+      },
+      () => {
+        this.log.i('rpc_unlock_failed: unlock failed - wrong password?');
+        // TODO: Use modals instead of alerts..
+        alert('Unlock failed - password was incorrect.');
+      }
+    );
   }
 
-  rpc_unlock_success(json: Object) {
-    this.log.i('rpc_unlock_success: unlock was succesful :)');
-    this._rpc.call(this, 'getwalletinfo', null, this.rpc_alertEncryptionStatus);
-  }
+  /**
+    * If we're unlocking the wallet for a period of this.unlockTimeout, then check if it was staking
+    * if(staking === true) then fallback to staking instead of locked after timeout!
+    * else lock wallet
+    */
+  private checkAndFallbackToStaking() {
+    if (this._encryptionStatusService.getEncryptionStatusState() === 'Unlocked, staking only') {
+      const password = this.password;
+      const timeout = this.unlockTimeout;
+      const that = this;
 
-  rpc_alertEncryptionStatus(json: Object) {
+      // After unlockTimeout, unlock wallet for staking again.
+      setTimeout((() => {
+          this.log.d(`checkAndFallbackToStaking, falling back into staking mode!`);
+          this._rpc.call(that, 'walletpassphrase', [password, 0, true],
+            function() {}
+          );
+          this.reset();
+        }).bind(this), (timeout + 1) * 1000);
 
-    // hook for unlockEmitter, warn parent component that wallet is unlocked!
-    this.unlockEmitter.emit(json);
-
-    // send out alert box
-    const encryptionstatus = json['encryptionstatus'];
-    if (encryptionstatus === 'Unlocked') {
-      alert('Unlock succesful!');
-    } else if (encryptionstatus === 'Unlocked, staking only') {
-      alert('Unlock was succesful!');
-    } else if (encryptionstatus === 'Locked') {
-      alert('Warning: unlock was unsuccesful!');
     } else {
-      alert('Wallet not encrypted!');
+      // reset after 500ms so rpc_unlock has enough time to use it!
+      setTimeout(this.reset,  500);
     }
   }
 
-  reset() {
+  private reset() {
     this.password = '';
   }
-
 }

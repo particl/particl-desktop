@@ -17,5 +17,6 @@ describe('RPCService', () => {
 
   it('should be created', inject([RPCService], (service: RPCService) => {
     expect(service).toBeTruthy();
+    service.stopPolling();
   }));
 });

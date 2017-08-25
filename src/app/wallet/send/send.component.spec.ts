@@ -6,8 +6,9 @@ import { SendComponent } from './send.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
-import { RPCService } from '../../core/rpc/rpc.service';
+import { ModalsService } from '../../modals/modals.service';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -17,11 +18,12 @@ describe('SendComponent', () => {
     TestBed.configureTestingModule({
       imports: [
          SharedModule,
-         WalletModule.forRoot()
+         WalletModule.forRoot(),
+         RpcModule.forRoot()
       ],
       providers: [
         ElectronService,
-        RPCService
+        ModalsService
       ]
     })
     .compileComponents();

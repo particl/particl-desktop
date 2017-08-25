@@ -35,19 +35,19 @@
       <div class="input-label col-xs-3">From account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="from" id="fromPublic1"
-          [(ngModel)]="send.fromType" checked="checked" value="public">
+          [(ngModel)]="send.input" checked="checked" value="public">
         <label for="fromPublic1" class="input-info-label">Public</label>
         <input type="radio" name="from" id="fromBlind1"
-          [(ngModel)]="send.fromType" value="blind">
+          [(ngModel)]="send.input" value="blind">
         <label for="fromBlind1" class="input-info-label">Blind</label>
         <input type="radio" name="from" id="fromPrivate1"
-          [(ngModel)]="send.fromType" value="private">
+          [(ngModel)]="send.input" value="private">
         <label for="fromPrivate1" class="input-info-label">Private</label>
       </span>
       <span class="balance">
         <span class="separator"></span>
         <span class="balance-label">Balance: </span>
-        <span class="balance-amount">{{getBalance(send.fromType)}} PART</span>
+        <span class="balance-amount">{{getBalance(send.input)}} PART</span>
       </span>
     </div>
 
@@ -85,7 +85,7 @@
       </div>
     </div>
 
-    <div *ngIf="send.fromType === 'private'" class="card row">
+    <div *ngIf="send.input === 'private'" class="card row">
       <div class="input-label col-xs-3">Privacy level</div>
       <div class="col-xs-4 nopadding">
         <div class="progress">
@@ -109,19 +109,19 @@
       <div class="input-label col-xs-3">From account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="from" id="fromPublic"
-          [(ngModel)]="send.fromType" checked="checked" value="public">
+          [(ngModel)]="send.input" checked="checked" value="public">
         <label for="fromPublic" class="input-info-label">Public</label>
         <input type="radio" name="from" id="fromBlind"
-          [(ngModel)]="send.fromType" value="blind">
+          [(ngModel)]="send.input" value="blind">
         <label for="fromBlind" class="input-info-label">Blind</label>
         <input type="radio" name="from" id="fromPrivate"
-          [(ngModel)]="send.fromType"  value="private">
+          [(ngModel)]="send.input"  value="private">
         <label for="fromPrivate" class="input-info-label">Private</label>
       </span>
       <span class="balance">
         <span class="separator"></span>
         <span class="balance-label">Balance: </span>
-        <span class="balance-amount">{{getBalance(send.fromType)}} PART</span>
+        <span class="balance-amount">{{getBalance(send.input)}} PART</span>
       </span>
     </div>
 
@@ -129,19 +129,19 @@
       <div class="input-label col-xs-3">To account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="to" id="toPublic"
-          [(ngModel)]="send.toType" checked="checked" disabled="{{ send.fromType === 'public' }}" value="public">
+          [(ngModel)]="send.output" checked="checked" disabled="{{ send.input === 'public' }}" value="public">
         <label for="toPublic" class="input-info-label">Public</label>
         <input type="radio" name="to" id="toBlind"
-          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'blind' }}" value="blind">
+          [(ngModel)]="send.output" disabled="{{ send.input === 'blind' }}" value="blind">
         <label for="toBlind" class="input-info-label">Blind</label>
         <input type="radio" name="to" id="toPrivate"
-          [(ngModel)]="send.toType" disabled="{{ send.fromType === 'private' }}" value="private">
+          [(ngModel)]="send.output" disabled="{{ send.input === 'private' }}" value="private">
         <label for="toPrivate" class="input-info-label">Private</label>
       </span>
       <span class="balance">
         <span class="separator"></span>
         <span class="balance-label">Balance: </span>
-        <span class="balance-amount">{{getBalance(send.toType)}} PART</span>
+        <span class="balance-amount">{{getBalance(send.output)}} PART</span>
       </span>
     </div>
 
@@ -169,7 +169,7 @@
       </div>
     </div>
 
-    <div *ngIf="send.fromType === 'private'" class="card row">
+    <div *ngIf="send.input === 'private'" class="card row">
       <div class="input-label col-xs-3">Privacy level</div>
       <div class="col-xs-4 nopadding">
         <div class="progress">
@@ -208,7 +208,7 @@
 
     <div class="">
       Do you really want to send {{send.amount}} {{send.currency.toUpperCase()}}
-      to {{send.toAddress}} ?
+      to {{getAddress()}} ?
     </div>
 
     <hr>

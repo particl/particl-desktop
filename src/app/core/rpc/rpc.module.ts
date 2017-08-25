@@ -1,11 +1,13 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ElectronService } from 'ngx-electron';
-import { RPCService } from './rpc.service';
-import { PeerService } from './peer.service';
-import { PassphraseService } from './passphrase.service';
+
 import { BlockStatusService } from './blockstatus.service'
+import { ElectronService } from 'ngx-electron';
+import { EncryptionStatusService } from './encryptionstatus.service'
+import { PassphraseService } from './passphrase.service';
+import { PeerService } from './peer.service';
+import { RPCService } from './rpc.service';
 
 @NgModule({
   imports: [
@@ -17,16 +19,18 @@ export class RpcModule {
     return {
       ngModule: RpcModule,
       providers: [
+        BlockStatusService,
         ElectronService,
-        RPCService,
-        PeerService,
+        EncryptionStatusService,
         PassphraseService,
-        BlockStatusService
+        PeerService,
+        RPCService
       ]
     };
   }
 }
-export { RPCService } from './rpc.service';
-export { PeerService } from './peer.service';
+export { BlockStatusService } from './blockstatus.service';
+export { EncryptionStatusService } from './encryptionstatus.service';
 export { PassphraseService } from './passphrase.service';
-export { BlockStatusService } from './blockstatus.service'
+export { PeerService } from './peer.service';
+export { RPCService } from './rpc.service';
