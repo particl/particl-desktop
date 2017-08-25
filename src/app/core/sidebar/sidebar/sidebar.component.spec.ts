@@ -51,4 +51,43 @@ describe('SidebarComponent', () => {
     expect(component.isDocked).toBeFalsy();
   });
 
+  it('should get dockedBottomClass', () => {
+    expect(component.dockedBottomClass).toBe(false);
+  });
+
+  it('should get dockedClass', () => {
+    expect(component.dockedClass).toBe(false);
+  });
+
+  it('should get dockedLeftClass', () => {
+    expect(component.dockedLeftClass).toBe(false);
+  });
+
+  it('should get dockedRightClass', () => {
+    expect(component.dockedRightClass).toBe(false);
+  });
+
+  it('should get dockedTopClass', () => {
+    expect(component.dockedTopClass).toBe(false);
+  });
+
+  it('should get isDocked', () => {
+    expect(component.isDocked).toBe(false);
+  });
+
+  it('should get isPinned', () => {
+    expect(component.isPinned).toBe(false);
+  });
+
+  it('should get openClass', () => {
+    expect(component.openClass).toBe(false);
+  });
+
+  it('should get pinnedLeftClass', () => {
+    expect(component.pinnedLeftClass).toBe(false);
+  });
+
+  it('should get pinnedRightClass', () => {
+    expect(component.pinnedRightClass).toBe(false);
+  });
 });

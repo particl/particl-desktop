@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HistoryComponent } from './history.component';
+import { DaemonComponent } from './daemon.component';
 
 import { SharedModule } from '../../shared/shared.module';
-import { WalletModule } from '../../wallet/wallet.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
-describe('HistoryComponent', () => {
-  let component: HistoryComponent;
-  let fixture: ComponentFixture<HistoryComponent>;
+describe('DaemonComponent', () => {
+  let component: DaemonComponent;
+  let fixture: ComponentFixture<DaemonComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [ DaemonComponent ],
       imports: [
         SharedModule,
-        WalletModule.forRoot(),
         RpcModule.forRoot()
       ]
     })
@@ -22,17 +21,12 @@ describe('HistoryComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HistoryComponent);
+    fixture = TestBed.createComponent(DaemonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should filter by category', () => {
-    component.filterByCategory('all');
-    expect(component.category).toBe('all');
   });
 });

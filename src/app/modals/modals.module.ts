@@ -12,6 +12,7 @@ import { PassphraseComponent } from './createwallet/passphrase/passphrase.compon
 import { PasswordComponent } from './shared/password/password.component';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -28,6 +29,7 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
     PassphraseComponent,
     PasswordComponent,
     CreateWalletComponent,
+    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent
   ],
