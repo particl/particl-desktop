@@ -1,25 +1,49 @@
 var got = require("got");
+var fs = require('fs');
 
+// TODO : remove
+const util = require('util');
+
+var auth = "?access_token=548cb455038661244694120879ed8465ae93efce"
 var releasesURL = "https://api.github.com/repos/particl/particl-core/releases";
 var signaturesURL = "https://api.github.com/repos/particl/gitian.sigs/contents";
 var maintainer = "tecnovert";
 
-var getAssetDetails = function (asset) {
+/*
+ * Gets one asset's details (platform, arch, type. sha256...)
+ */
+var getAssetDetails = function (asset, hashes, version) {
 
-  var platform, arch, type;
+  var platform, arch, type, sha256;
 
-  // TODO: add sha and bin
-
+  // windows binaries
   if (asset.name.includes("win")) {
     platform = "win";
     arch = asset.name.includes("win64") ? "x64" : "ia32";
     type = asset.content_type === "application/zip" ? "zip" : undefined;
-  }
+    var filter = new RegExp(`.*${asset.name}`);
+    sha256 = hashes["win"].match(filter);
+    if (sha256) {
+      sha256 = sha256[0].trim().split(" ")[0];
+    }
+  } // osx binaries
   else if (asset.name.includes("osx")) {
     platform = "mac";
     arch = asset.name.includes("osx64") ? arch = "x64" : "ia32";
-    type = asset.content_type === "application/x-apple-diskimage" ? "dmg" : undefined;
-  }
+    switch (asset.content_type) {
+      case "application/x-apple-diskimage":
+        type = "dmg";
+        break ;
+      case "application/gzip":
+        type = "tar";
+        break ;
+    }
+    var filter = new RegExp(`.*${asset.name}`);
+    sha256 = hashes["osx"].match(filter);
+    if (sha256) {
+      sha256 = sha256[0].trim().split(" ")[0];
+    }
+  } // linux binaries
   else if (asset.name.includes("linux")) {
     platform = "linux";
     if (asset.name.includes("x86_64")) {
@@ -30,75 +54,123 @@ var getAssetDetails = function (asset) {
       arch = "arm";
     }
     type = asset.content_type === "application/gzip" ? "tar" : undefined;
+    var filter = new RegExp(`.*${asset.name}`);
+    sha256 = hashes["linux"].match(filter)[0].trim().split(" ")[0];
   }
 
-  return (platform && arch && type ? {
+  // return asset only if it is fully compliant
+  var bin = `particld${platform === 'win' ? '.exe' : ''}`
+  return (platform && arch && type && sha256 ? {
     platform: platform,
     arch: arch,
-    type: type,
-    url: asset.browser_download_url
+    name: asset.name,
+    entry: {
+      download: {
+        url: asset.browser_download_url,
+        type: type,
+        sha256: sha256,
+        bin: `particl-${version}/bin/${bin}`
+      },
+      bin: bin,
+      commands: {
+        sanity: {
+          args: ["-version"],
+          output: ["Particl Core Daemon", version]
+        }
+      }
+    }
   } : undefined);
 }
 
-var getAssetHash(platform, name) {
+/*
+ * Gets all hashes of current version for a specific platform
+ */
+var getHashesForPlatform = function (platform, path, hashes, promises) {
+  // this promise is solved when both HTTP calls are solved
+  return new Promise((resolve, reject) => {
 
+    got(`${signaturesURL}/${path}/${maintainer}${auth}`).then(response => {
+      var files = JSON.parse(response.body);
+      for (id in files) {
+        if (!files[id].name.includes("assert.sig")) {
+
+          got(`${files[id].download_url}${auth}`).then(response => {
+            hashes[platform] = response.body;
+            resolve(response.body);
+          }).catch(error => console.error(error)); /* sig file */
+
+        }
+      }
+    }).catch(error => console.error(error)); /* folder containing sig files */
+
+  });
 }
 
-got(releasesURL).then(response => {
+/*
+ * Entry point
+ * get Particl latest release files
+ */
+got(`${releasesURL}${auth}`).then(response => {
 
   var release = JSON.parse(response.body)[0];
-  // console.log(release);
-
   var version = release.tag_name.substring(1);
   var binaries = [];
 
-  got(signaturesURL).then(response => {
-
+  // get gitian repository of hashes
+  got(`${signaturesURL}${auth}`).then(response => {
     var versions = JSON.parse(response.body);
-    var platforms = [];
+    var hashes = {};
+    var promises = [];
 
     for (id in versions) {
-
+      // select folders that match the current version
       if (versions[id].name.includes(version)) {
-
+        // extract matching folder's platform
         var platformIndex = versions[id].name.indexOf("-");
         var platform = versions[id].name.substring(platformIndex + 1);
-
-        got(`${signaturesURL}/${versions[id].path}/${maintainer}`).then(response => {
-
-          var files = JSON.parse(response.body);
-          for (id in files) {
-
-            if (!files[id].name.includes("assert.sig")) {
-
-              got(files[id].download_url).then(response => {
-                var filter = /.*particl.*(?!debug).*/g
-                console.log(response.body.match(filter));
-              }).catch(error => console.log(error));
-
-            }
-          }
-
-        }).catch(error => console.log(error));
+        // wait for hashes to be added to our hashes array
+        promises.push(getHashesForPlatform(platform, versions[id].name, hashes));
       }
     }
-    console.log(platforms);
-  }).catch(error => console.log(error));
 
-  for (id in release.assets) {
+    // once we have all hashes
+    Promise.all(promises).then(() => {
+      // get asset details for each release entry
+      for (id in release.assets) {
+        var asset = release.assets[id];
+        var entry = getAssetDetails(asset, hashes, version);
+        if (entry) {
+          binaries.push(entry);
+        }
+      }
+      // prepare JSON object for the output file
+      var json = {
+        clients: {
+          particld: {
+            version: version,
+            platforms: {}
+          }
+        }
+      }
+      // include entries in JSON object
+      var platforms = json.clients.particld.platforms;
+      for (id in binaries) {
+        var binary = binaries[id];
+        if (!platforms[binary.platform]) {
+          platforms[binary.platform] = {};
+        }
+        platforms[binary.platform][binary.arch] = binary.entry;
+      }
+      // console.log(util.inspect(json, false, null));
+      // generate JSON file
+      var stringJSON = JSON.stringify(json, null, 2);
+      fs.writeFile("./modules/clientBinaries/clientBinaries.json", stringJSON, function(err) {
+        if(err) {
+          return (console.error(err));
+        }
+        console.log("JSON file generated.");
+      });
+    });
+  }).catch(error => console.error(error)); /* signaturesURL */
 
-    var asset = release.assets[id];
-    var entry = getAssetDetails(asset);
-
-    if (entry) {
-      binaries.push(entry);
-    }
-  }
-
-  console.log(version, binaries)
-
-  // TODO: construct JSON
-
-}).catch(error => {
-  console.log(error);
-});
+}).catch(error => console.error(error)); /* releasesURL */

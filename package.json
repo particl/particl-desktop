@@ -24,7 +24,8 @@
     "package-windows": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds",
     "package-linux": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
-    "compdoc": "compodoc -p tsconfig.json"
+    "compdoc": "compodoc -p tsconfig.json",
+    "generateRelease": "node ./modules/clientBinaries/generateVersions.js"
   },
   "private": true,
   "dependencies": {
