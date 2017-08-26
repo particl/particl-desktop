@@ -68,7 +68,7 @@ export class ModalsService {
 
   close() {
     this.isOpen = false;
-    if (!this.manuallyClosed.includes(this.modal.name)) {
+    if (this.modal && !this.manuallyClosed.includes(this.modal.name)) {
       this.manuallyClosed.push(this.modal.name);
     }
   }
