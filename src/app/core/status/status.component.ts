@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
 
-import { PeerService } from '../rpc/peer.service';
-import { RPCService } from '../rpc/rpc.service';
-import { BlockStatusService } from '../rpc/blockstatus.service';
+import { PeerService, RPCService, BlockStatusService , EncryptionStatusService } from '../rpc/rpc.module';
 
 @Component({
   selector: 'app-status',
@@ -21,18 +20,28 @@ export class StatusComponent implements OnInit {
   private _subPeerList: Subscription;
 
   public encryptionStatus: string = 'Locked';
+  private _subEncryptionStatus: Subscription;
 
-  constructor(private  _peerService: PeerService, private _rpc: RPCService, private modalsService: ModalsService) { }
+  private log: any = Log.create('status.component');
+
+
+  constructor(
+    private  _peerService: PeerService,
+    private _encryptionStatusService: EncryptionStatusService,
+    private _rpc: RPCService,
+    private _modalsService: ModalsService,
+    ) { }
 
   ngOnInit() {
     this._subPeerList = this._peerService.getPeerList()
       .subscribe(
-        peerList => {
-          this.peerListCount = peerList.length;
-        },
-        error => console.log('StatusComponent subscription error:' + error));
+        peerList => this.peerListCount = peerList.length,
+        error => this.log.er(`peerListCount, subscription error: ${error}`));
 
-    this._rpc.register(this, 'getwalletinfo', null, this.rpc_walletEncryptionStatus, 'both');
+    this._subEncryptionStatus = this._encryptionStatusService.getEncryptionStatus()
+      .subscribe(
+        encryptionStatus => this.encryptionStatus = encryptionStatus,
+        error => this.log.er(`getEncryptionStatus, subscription error: ${error}`));
   }
 
   getPeerListCount() {
@@ -65,25 +74,16 @@ export class StatusComponent implements OnInit {
     }
   }
 
-  // TODO: Status Interface
-  rpc_walletEncryptionStatus(status: any) {
-    this.encryptionStatus = status.encryptionstatus;
-  }
-
-  rpc_walletLock_success(json: Object) {
-
-  }
-
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':
-        this._rpc.call(this, 'walletlock', null, this.rpc_walletLock_success);
+        this._rpc.call(this, 'walletlock', null, () => {});
         break;
       case 'Locked':
-        this.modalsService.open('unlock');
+        this._modalsService.open('unlock');
         break;
       default:
         break;

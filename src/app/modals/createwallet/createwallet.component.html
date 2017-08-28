@@ -7,7 +7,7 @@
     <hr class="margin-top-100px">
 
     <div class="container">
-      <div class="row">
+      <div class="row wallet-buttons-container">
         <div class="col-sm-6 col-xs-12 text-right">
           <button class="control" (click)="nextStep();create();">
             Create new wallet
@@ -57,14 +57,14 @@
     </div>
 
     <div class="buttons margin-top-30px">
-      <div class="row col-xs-4 col-xs-offset-4">
-        <div class="col-xs-6">
-          <button class="control width-100" (click)="prevStep()">
+      <div class="row wallet-buttons-container">
+        <div class="col-sm-6 col-xs-12 text-right">
+          <button class="control" (click)="prevStep()">
             back
           </button>
         </div>
-        <div class="col-xs-6">
-          <button class="control width-100" type="submit" [disabled]="!nameForm.form.valid">
+        <div class="col-sm-6 col-xs-12 text-left">
+          <button class="control" type="submit" [disabled]="!nameForm.form.valid">
             next step
           </button>
         </div>
@@ -124,16 +124,16 @@
     </ng-template>
 
     <div class="buttons margin-top-30px">
-      <div class="row col-xs-4 col-xs-offset-4">
-        <div class="col-xs-6">
-          <button class="control width-100" (click)="prevStep()">
+      <div class="row wallet-buttons-container">
+        <div class="col-sm-6 col-xs-12 text-right">
+          <button class="control" (click)="prevStep()">
             back
           </button>
         </div>
-        <div class="col-xs-6">
-          <button class="control width-100"
+        <div class="col-sm-6 col-xs-12 text-left">
+          <button class="control"
             (click)="step === 2 && passwordComponent.sendPassword();
-                    nextStep()"><!-- TODO: Move sendPassword to .ts -->
+             nextStep()"><!-- TODO: Move sendPassword to .ts -->
             next step
           </button>
         </div>
@@ -157,7 +157,7 @@
 
       <div class="col-md-7">
         <div class="col-md-12">
-          <input class="form-control width-100" [(ngModel)]="name" placeholder="Default Account..." readonly />
+          <input class="form-control" [(ngModel)]="name" placeholder="Default Account..." readonly />
         </div>
       </div>
     </div>
@@ -184,9 +184,9 @@
       </app-password>
 
     <div class="buttons margin-top-30px">
-      <div class="row col-xs-4 col-xs-offset-4">
+      <div class="row wallet-buttons-container">
         <div class="col-xs-6">
-          <button class="control width-100" (click)="prevStep();restore()">
+          <button class="control" (click)="prevStep();restore()">
             back
           </button>
         </div>

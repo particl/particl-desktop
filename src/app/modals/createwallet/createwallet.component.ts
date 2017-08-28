@@ -49,6 +49,7 @@ export class CreateWalletComponent {
   }
 
   reset() {
+    this._modalsService.enableClose = (this.step < 0);
     this.words = Array(24).fill('');
     this.isRestore = false;
     this.name = '';
@@ -89,7 +90,7 @@ export class CreateWalletComponent {
   }
 
   doStep() {
-
+    this._modalsService.enableClose = (this.step < 0);
     switch (this.step) {
       case 1:
         setTimeout(() => this.nameField.nativeElement.focus(this), 1);

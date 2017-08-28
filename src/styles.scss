@@ -22,6 +22,11 @@ input.verify-error::placeholder {
     border-color: #ec4b50;
 }
 
+input.verify-sucess {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+
 .margin-40px-0 {
     margin: 40px 0;
 }
@@ -49,7 +54,6 @@ input.verify-error::placeholder {
 .width-100 {
     width: 100%;
 }
-
 .quick-pad-top {
     padding-top: 12px;
 }
@@ -183,7 +187,6 @@ input.verify-error::placeholder {
     -moz-box-shadow: none !important;
     box-shadow: none !important;
     outline: none !important;
-    margin-left:20px;
 }
 .no-margin-left {
     margin-left: 0px;
@@ -191,7 +194,7 @@ input.verify-error::placeholder {
 
 .no-padding-left {
     padding-left: 0px;
-    } 
+    }
 
 @font-face {
     font-family: 'part';
@@ -201,7 +204,7 @@ input.verify-error::placeholder {
     font-style: normal;
 }
 /*------------------------
-	base class definition
+  base class definition
 -------------------------*/
 
 .nc-icon {
@@ -312,81 +315,97 @@ input.verify-error::placeholder {
 }
 
 /*------------------------
-	font icons
+  font icons
 -------------------------*/
 
-.nc-barcode-qr::before {
+.nc-a-check::before {
     content: "\ea01";
 }
 
-.nc-card-add::before {
+.nc-barcode-qr::before {
     content: "\ea02";
 }
 
-.nc-circle-remove::before {
+.nc-card-add::before {
     content: "\ea03";
 }
 
-.nc-copy-2::before {
+.nc-circle-remove::before {
     content: "\ea04";
 }
 
-.nc-grid-48::before {
+.nc-copy-2::before {
     content: "\ea05";
 }
 
-.nc-lock::before {
+.nc-eye-17::before {
     content: "\ea06";
 }
 
-.nc-multiple-19::before {
+.nc-grid-48::before {
     content: "\ea07";
 }
 
-.nc-preferences::before {
+.nc-lock::before {
     content: "\ea08";
 }
 
-.nc-settings-gear-65::before {
+.nc-multiple-19::before {
     content: "\ea09";
 }
 
-.nc-share-2::before {
+.nc-preferences::before {
     content: "\ea0a";
 }
 
-.nc-simple-add::before {
+.nc-settings-gear-65::before {
     content: "\ea0b";
 }
 
-.nc-simple-left::before {
+.nc-share-2::before {
     content: "\ea0c";
 }
 
-.nc-simple-right::before {
+.nc-simple-add::before {
     content: "\ea0d";
 }
 
-.nc-square-add-11::before {
+.nc-simple-delete::before {
     content: "\ea0e";
 }
 
-.nc-swap-horizontal::before {
+.nc-simple-left::before {
     content: "\ea0f";
 }
 
-.nc-tag-add::before {
+.nc-simple-right::before {
     content: "\ea10";
 }
 
-.nc-tail-triangle-left::before {
+.nc-square-add-11::before {
     content: "\ea11";
 }
 
-.nc-tail-triangle-right::before {
+.nc-swap-horizontal::before {
     content: "\ea12";
 }
 
-.nc-time-3::before {
+.nc-tag-add::before {
     content: "\ea13";
+}
+
+.nc-tail-triangle-left::before {
+    content: "\ea14";
+}
+
+.nc-tail-triangle-right::before {
+    content: "\ea15";
+}
+
+.nc-time-3::before {
+    content: "\ea16";
+}
+
+.nc-zoom-bold::before {
+    content: "\ea17";
 }

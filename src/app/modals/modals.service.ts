@@ -17,6 +17,8 @@ export class ModalsService {
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
 
+  public enableClose: boolean = true;
+
   private isOpen: boolean = false;
 
   private data: string;
@@ -47,7 +49,7 @@ export class ModalsService {
     });
   }
 
-  open(modal: string, data?: Object): void {
+  open(modal: string, data?: any): void {
     if (modal in this.messages) {
       this.log.d(`next modal: ${modal}`);
       this.modal = this.messages[modal];
@@ -87,5 +89,9 @@ export class ModalsService {
       || status.networkBH - status.internalBH > 50)) {
         this.open('syncing');
     }
+  }
+
+  unlockWallet(i: Injectable, cb: Function, timeout: number) {
+    this.open('unlock', {'instance' : i, 'callback': cb, 'timeout': timeout});
   }
 }

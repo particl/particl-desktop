@@ -5,7 +5,8 @@ import { Log } from 'ng2-logger';
 import { SendService } from './send.service';
 import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { EncryptionStatusService, RPCService } from '../../core/rpc/rpc.module';
+import { ModalsService } from '../../modals/modals.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 
@@ -33,8 +34,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   // TODO: Create proper Interface / type
   send: any = {
-    fromType: 'public',
-    toType: 'public',
+    input: 'public',
+    output: 'public',
     toAddress: '',
     toLabel: '',
     validAddress: undefined,
@@ -52,7 +53,17 @@ export class SendComponent implements OnInit, OnDestroy {
   private _sub: Subscription;
   private _balance: any;
 
-  constructor(private sendService: SendService, private balanceService: BalanceService, private _rpc: RPCService) { }
+
+
+  constructor(
+    private sendService: SendService,
+    private balanceService: BalanceService,
+    private _rpc: RPCService,
+    private _modals: ModalsService,
+    private _encryptionStatus: EncryptionStatusService
+  ) {
+  }
+
 
   ngOnInit() {
     this._sub = this.balanceService.getBalances()
@@ -83,6 +94,13 @@ export class SendComponent implements OnInit, OnDestroy {
     return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
   }
 
+  getAddress(): string {
+    if (this.type === 'sendPayment') {
+      return this.send.toAddress;
+    } else {
+      return this.sendService.getBalanceTransferAddress();
+    }
+  }
 
   /** Amount validation functions. */
   checkAmount(): boolean {
@@ -94,7 +112,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   verifyAmount() {
 
-    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.fromType === '') {
+    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '') {
+
       this.send.validAmount = undefined;
       return;
     }
@@ -104,20 +123,7 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
-      this.send.validAmount = false;
-      return;
-    }
-
-
-    if (this.send.amount <= this.getBalance(this.send.fromType)) {
-      this.send.validAmount = true;
-      return;
-    } else {
-      this.send.validAmount = false;
-      return;
-    }
-
+    this.send.validAmount = this.send.amount <= this.getBalance(this.send.input);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
@@ -152,8 +158,8 @@ export class SendComponent implements OnInit, OnDestroy {
   /** Clear the send object. */
   clear() {
     this.send = {
-      fromType: '',
-      toType: '',
+      input: '',
+      output: '',
       validAddress: undefined,
       validAmount: undefined,
       currency: 'part',
@@ -168,10 +174,7 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
 
-  /*
-     Validation modal
-  */
-
+  /** Validation modal */
   openValidate() {
     document.getElementById('validate').classList.remove('hide');
   }
@@ -180,62 +183,96 @@ export class SendComponent implements OnInit, OnDestroy {
     document.getElementById('validate').classList.add('hide');
   }
 
-  /*
-    Payment function
-  */
+  /** Payment function */
   pay() {
+    this.closeValidate();
 
-    const input = this.send.fromType;
-    let output = this.send.toType;
-    const address = this.send.toAddress;
-    const amount = this.send.amount;
-    const comment = this.send.note;
-    const narration = this.send.note;
-    const substractfee = false;
-    const ringsize = this.send.privacy;
-    const numsigs = 1;
 
-    const currency = this.send.currency;
-
-    if (input === '' ) {
+    if (this.send.input === '' ) {
       alert('You need to select an input type (public, blind or anon)!');
-      this.closeValidate();
-      return;
-    }
-    if (this.type === 'balanceTransfer' && output === '') {
-      alert('You need to select an output type (public, blind or anon)!');
-      this.closeValidate();
       return;
     }
 
-    if (this.type === 'balanceTransfer' && this.send.fromType === this.send.toType) {
-      alert('You have selected "' + this.send.fromType + '"" twice!\n Balance transfers can only happen between two different types.');
-      this.closeValidate();
-      return;
-    }
-
+    // Send normal transaction - validation
     if (this.type === 'sendPayment') {
-      output = input;
 
-      if (output === 'private' && address.length < 35) {
+      // pub->pub, blind->blind, priv-> priv
+      this.send.output = this.send.input;
+
+      // Check if stealth address if output is private
+      if (this.send.output === 'private' && this.send.toAddress.length < 35) {
         alert('Stealth address required for private transactions!');
-        this.closeValidate();
         return;
       }
 
-      // edit label of address
-      this.addLabelToAddress();
+      // Check if wallet is unlocked
+      if (this._encryptionStatus.getEncryptionStatusState() !== 'Unlocked') {
 
-      // send transaction
-      this.sendService.sendTransaction(input, output, address, amount, comment, substractfee, narration, ringsize, numsigs);
+        // unlock wallet and send transaction
+        this._modals.unlockWallet(this,
+          this.sendTransaction,
+          2);
 
+
+      } else {
+        // wallet already unlocked
+        this.sendTransaction();
+      }
+
+    // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
-      // perform balance transfer
-      this.sendService.transferBalance(input, output, address, amount, ringsize, numsigs);
+
+      if (this.send.output === '') {
+        alert('You need to select an output type (public, blind or anon)!');
+        return;
+      }
+
+      if (this.send.input === this.send.output) {
+        alert('You have selected "' + this.send.input + '"" twice!\n Balance transfers can only happen between two different types.');
+        return;
+      }
+
+      if (this._encryptionStatus.getEncryptionStatusState() !== 'Unlocked') {
+        // unlock wallet and transfer balance
+        this._modals.unlockWallet(this,
+          this.transferBalance,
+          2);
+      } else {
+        this.transferBalance();
+      }
+
     }
+  }
+
+
+
+  sendTransaction(): void {
+
+    // edit label of address
+    this.addLabelToAddress();
+
+    this.sendService.sendTransaction(
+      this.send.input, this.send.output, this.send.toAddress,
+      this.send.amount, this.send.note, false, this.send.note,
+      this.send.privacy, 1);
 
     this.clear();
-    this.closeValidate();
+  }
+
+  transferBalance(): void {
+
+    const input = this.send.input;
+    const output = this.send.output;
+    const address = this.send.toAddress;
+    const amount = this.send.amount;
+    const ringsize = this.send.privacy;
+    const numsigs = 1;
+
+    this.sendService.transferBalance(
+      this.send.input, this.send.output, this.send.toAddress,
+      this.send.amount, this.send.privacy, 1);
+
+    this.clear();
   }
 
   /*
@@ -261,11 +298,12 @@ export class SendComponent implements OnInit, OnDestroy {
   addLabelToAddress() {
     const isMine = this.send.isMine;
 
+    /*
     if (isMine) {
       if (!confirm('Address is one of our own - change label? ')) {
         return;
       }
-    }
+    }*/
 
     const label = this.send.toLabel;
     const addr = this.send.toAddress;

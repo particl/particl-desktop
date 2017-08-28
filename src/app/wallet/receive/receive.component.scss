@@ -87,6 +87,7 @@
   background: transparent;
   transition: background .3s;
 }
+
 .address.copied {
   background: yellow !important;
   transition: background 0s;
@@ -123,6 +124,7 @@
   padding: 0;
   margin: 0;
 }
+
 .row {
   margin: 0;
 }
@@ -150,7 +152,7 @@ button {
   border-bottom-width: medium;
   border-bottom-style: none;
   border-bottom-color: currentcolor;
-  padding: 8px 30px;
+  padding: 8px;
   margin: 15px 5px 20px 5px;
   text-transform: uppercase;
   font-weight: bold;
@@ -165,6 +167,7 @@ button {
   user-select: none;
   margin: 30px 0 30px 0;
 }
+
 .page-button:last-child {
   margin-right: 0;
 }
@@ -176,7 +179,7 @@ button {
   margin-right: 10px;
   cursor: pointer;
   color: #777;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .page-button-green {
@@ -188,3 +191,66 @@ button {
   border-bottom: 1px solid #07B98D;
   color: #fff;
 }
+
+// @TODO: Move this css into component
+// Address Model css
+
+app-header {
+  li.add-address .icon {
+    font-size: 28px;
+    margin-right: 5px;
+  }
+}
+
+#address-modal {
+  position: absolute;
+  z-index: 100000;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+#address-modal {
+  &.hide {
+    width: 0 !important;
+    height: 0 !important;
+    display: none;
+  }
+  .row {
+    margin-bottom: 30px;
+  }
+}
+
+.address-modal-container {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  width: 600px;
+  padding: 30px;
+}
+
+.close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
+.modal-content-header {
+  font-size: 1.2em;
+}
+
+.modal-label {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.7em;
+  margin-bottom: 10px;
+}
+
+.margin-top-5px {
+  margin-top: 5px;
+}
+
