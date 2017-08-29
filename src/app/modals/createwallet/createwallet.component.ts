@@ -116,15 +116,17 @@ export class CreateWalletComponent {
         this.errorString = '';
 
         this._passphraseService.importMnemonic(this.words, this.password)
-          .subscribe(() => {
-            this.log.i('Mnemonic imported successfully');
-            this.animationState = 'next';
-            this.step = 5;
-          }, error => {
-            this.log.er(error);
-            this.errorString = error.message;
-            this.log.er('Mnemonic import failed');
-          });
+          .subscribe(
+            success => {
+              this.log.i('Mnemonic imported successfully');
+              this.animationState = 'next';
+              this.step = 5;
+            },
+            error => {
+              this.log.er(error);
+              this.errorString = error.error.message;
+              this.log.er('Mnemonic import failed');
+            });
         break;
     }
   }

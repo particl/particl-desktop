@@ -73,6 +73,7 @@ export class RPCService {
   call(
     method: string,
     params?: Array<any> | null
+    // TODO: Response model
   ): Observable<Object> {
     const postData = JSON.stringify({
       method: method,
@@ -88,11 +89,11 @@ export class RPCService {
     if (this.isElectron) {
       // TODO: electron.ipcCall
     } else {
-      let observable = this.http
+      const observable = this.http
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
         .map(response => response.json().result)
-        .catch(error => Observable.throw(error, (
-          typeof error._body === 'object' ? error._body : JSON.parse(error._body))))
+        .catch(error => Observable.throw(
+          typeof error._body === 'object' ? error._body : JSON.parse(error._body)))
         .publishReplay(); // Make sure we return the result on subscribe
 
       observable.connect(); // Force the request at this stage, doesn't need a subscribe to execute.

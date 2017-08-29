@@ -35,7 +35,10 @@ export class PassphraseService {
   validateWord(word: string): boolean {
     if (!this.validWords) {
       this._rpc.call('mnemonic', ['dumpwords'])
-      .subscribe((response: any) => this.validWords = response.words);
+      .subscribe(
+        (response: any) => this.validWords = response.words,
+        // TODO: Handle error appropriately
+        error => this.log.er('validateWord: mnemonic - dumpwords: Error dumping words', error));
 
       return false;
     }
@@ -51,55 +54,4 @@ export class PassphraseService {
 
     return this._rpc.call('extkeygenesisimport', params);
   }
-
-/*
-	This is the logic for restoring the recovery phrase!
-*/
-
-  /*
-	 The restore function is called by app-password as eventEmitter with the password object!
-	 in recoverwallet.component.ts
-  * /
-
-  restore(passwordObj: Object) {
-    const password = passwordObj['password'];
-    if (this.isDisabled) {
-      alert('Still importing the recovery phrase, please wait!');
-    }
-    // TODO: reset isDisabled on failure of rpc!
-
-    const wordsString = this.getWordString();
-
-    const params: Array<any> = this.rpc_getParams(wordsString, password);
-    this._rpc.call(this, 'extkeygenesisimport', params, this.rpc_importFinished);
-    this.isDisabled = true;
-  }
-
-  rpc_getParams(words: string, password: string): Array<any> {
-    if (password === undefined) {
-      return [words];
-    } else {
-      return [words, password];
-    }
-  }
-
-  splitAndFill() {
-    const seedArray = this.words[0].split(' ');
-
-    if (seedArray.length > 1) {
-      for (const i in seedArray) {
-        if (true) { // lint error
-          this.words[i] = seedArray[i];
-        }
-      }
-    }
-  }
-
-  rpc_importFinished(JSON: Object) {
-    // TODO for rpc service: needs ERROR handling!
-    if (JSON['result'] === 'Success.') {
-      alert('Importing the recovery phrase succeeded!');
-    }
-  }
-*/
 }

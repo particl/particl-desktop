@@ -14,7 +14,7 @@ import { PeerService, RPCService, BlockStatusService , EncryptionStatusService }
     PeerService
   ]
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit, OnDestroy {
 
   peerListCount: number = 0;
   private _subPeerList: Subscription;
@@ -45,8 +45,12 @@ export class StatusComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this._subPeerList.unsubscribe();
-    this._subEncryptionStatus.unsubscribe();
+    if (this._subPeerList) {
+      this._subPeerList.unsubscribe();
+    }
+    if (this._subEncryptionStatus) {
+      this._subEncryptionStatus.unsubscribe();
+    }
   }
 
   getIconNumber(): number {

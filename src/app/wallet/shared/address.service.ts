@@ -1,30 +1,28 @@
 import { Injectable } from '@angular/core';
+import { Log } from 'ng2-logger'
 
 import { Address, deserialize, TEST_ADDRESSES_JSON } from './address.model';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 @Injectable()
 export class AddressService {
-  /*
-    Settings
-  */
+  private log: any = Log.create('address.service');
 
+  // Settings
   addressType: string = 'send'; // "receive","send", "total"
 
-  /*
-    How many addresses do we display per page and keep in memory at all times. When loading more
-    addresses they are fetched JIT and added to addresses.
-  */
+  /**
+    * How many addresses do we display per page and keep in memory at all times. When loading more
+    * addresses they are fetched JIT and added to addresses.
+    */
   MAX_ADDRESSES_PER_PAGE: number = 5;
 
 
 
-  /*
-    Stores address objects.
-  */
+  // Stores address objects.
   addresses: Address[] = [];
 
-  /* Pagination stuff */
+  // Pagination stuff
   addressCount: number = 0;
   currentPage: number = 0;
   totalPageCount: number = 0;
@@ -39,11 +37,6 @@ export class AddressService {
   }
 
 
-
-/*
-  UTIL
-*/
-
   changePage(page: number) {
     if (page <= 0) {
       return;
@@ -57,29 +50,24 @@ export class AddressService {
     this.addresses = [];
   }
 
-/*
-    RPC
-*/
-
-/*
-  Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
-
-*/
+  /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update() {
     this.rpc.call('filteraddresses', [-1])
       // TODO: real address count + respons model
       .subscribe((response: any) => {
-        this.addressCount = (
-          this.addressType === 'receive' ?
-          response.num_receive :
-          (this.addressType === 'send' ?
-          this.addressCount = response.num_send :
-          this.addressCount = response.total));
+          this.addressCount = (
+            this.addressType === 'receive' ?
+            response.num_receive :
+            (this.addressType === 'send' ?
+            this.addressCount = response.num_send :
+            this.addressCount = response.total));
 
-        this.rpc.register(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses, 'address');
-        // TODO: remove specialPoll
-        this.rpc.specialPoll();
-      });
+          this.rpc.register(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses, 'address');
+          // TODO: remove specialPoll
+          this.rpc.specialPoll();
+        },
+        // TODO: Handle error appropriately...
+        error => this.log.er('Error filtering addresses...', error));
   }
 
   rpc_getParams() {

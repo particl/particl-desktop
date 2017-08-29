@@ -98,7 +98,7 @@ export class PasswordComponent {
         this.stakeOnly
       ])
       .subscribe(
-        () => {
+        success => {
           const _subs = this._encryptionStatusService.refreshEncryptionStatus()
             .subscribe((encryptionstatus: string) => {
 
@@ -120,8 +120,8 @@ export class PasswordComponent {
               _subs.unsubscribe();
             });
         },
-        () => {
-          this.log.i('rpc_unlock_failed: unlock failed - wrong password?');
+        error => {
+          this.log.i('rpc_unlock_failed: unlock failed - wrong password?', error);
           // TODO: Use modals instead of alerts..
           alert('Unlock failed - password was incorrect.');
         });

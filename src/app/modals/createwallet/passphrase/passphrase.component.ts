@@ -55,7 +55,6 @@ export class PassphraseComponent {
   validateWord(word: string, index: number): boolean {
     if (index !== -1 && word === '' && this.canEdit(index)) {
       this.editable.unshift(index);
-      console.log(index);
     }
 
     return this._passphraseService.validateWord(word);

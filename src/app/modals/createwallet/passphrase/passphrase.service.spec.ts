@@ -12,6 +12,7 @@ describe('PassphraseService', () => {
         SharedModule,
         RpcModule.forRoot()
       ],
+      providers: [PassphraseService]
     });
   });
 

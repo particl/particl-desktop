@@ -12,6 +12,7 @@ describe('CreateWalletComponent', () => {
   let fixture: ComponentFixture<CreateWalletComponent>;
 
   beforeEach(async(() => {
+
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
