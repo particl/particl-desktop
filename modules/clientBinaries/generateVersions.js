@@ -5,6 +5,17 @@ var releasesURL = "https://api.github.com/repos/particl/particl-core/releases";
 var signaturesURL = "https://api.github.com/repos/particl/gitian.sigs/contents";
 var maintainer = "tecnovert";
 
+var getHash = function (platform, name, hashes) {
+  var filter = new RegExp(`.*${name}`);
+  sha256 = hashes[platform].match(filter);
+  if (sha256) {
+    sha256 = sha256[0].trim().split(" ")[0];
+  } else {
+    sha256 = undefined;
+  }
+  return (sha256);
+}
+
 /*
  * Gets one asset's details (platform, arch, type. sha256...)
  */
@@ -17,13 +28,7 @@ var getAssetDetails = function (asset, hashes, version) {
     platform = "win";
     arch = asset.name.includes("win64") ? "x64" : "ia32";
     type = asset.content_type === "application/zip" ? "zip" : undefined;
-    var filter = new RegExp(`.*${asset.name}`);
-    sha256 = hashes["win"].match(filter);
-    if (sha256) {
-      sha256 = sha256[0].trim().split(" ")[0];
-    } else {
-      sha256 = undefined;
-    }
+    sha256 = getHash(platform, asset.name, hashes);
   } // osx binaries
   else if (asset.name.includes("osx")) {
     platform = "mac";
@@ -36,13 +41,7 @@ var getAssetDetails = function (asset, hashes, version) {
         type = "tar";
         break ;
     }
-    var filter = new RegExp(`.*${asset.name}`);
-    sha256 = hashes["osx"].match(filter);
-    if (sha256) {
-      sha256 = sha256[0].trim().split(" ")[0];
-    } else {
-      sha256 = undefined;
-    }
+    sha256 = getHash("osx", asset.name, hashes);
   } // linux binaries
   else if (asset.name.includes("linux")) {
     platform = "linux";
@@ -54,13 +53,7 @@ var getAssetDetails = function (asset, hashes, version) {
       arch = "arm";
     }
     type = asset.content_type === "application/gzip" ? "tar" : undefined;
-    var filter = new RegExp(`.*${asset.name}`);
-    sha256 = hashes["linux"].match(filter);
-    if (sha256) {
-      sha256 = sha256[0].trim().split(" ")[0];
-    } else {
-      sha256 = undefined;
-    }
+    sha256 = getHash(platform, asset.name, hashes);
   }
 
   // add .exe extension for windows binaries
