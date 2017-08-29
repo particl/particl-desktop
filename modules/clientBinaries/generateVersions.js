@@ -1,10 +1,6 @@
 var got = require("got");
 var fs = require('fs');
 
-// TODO : remove
-const util = require('util');
-
-var auth = "?access_token=548cb455038661244694120879ed8465ae93efce"
 var releasesURL = "https://api.github.com/repos/particl/particl-core/releases";
 var signaturesURL = "https://api.github.com/repos/particl/gitian.sigs/contents";
 var maintainer = "tecnovert";
@@ -58,9 +54,10 @@ var getAssetDetails = function (asset, hashes, version) {
     sha256 = hashes["linux"].match(filter)[0].trim().split(" ")[0];
   }
 
-  // return asset only if it is fully compliant
+  // add .exe extension for windows binaries
   var bin = `particld${platform === 'win' ? '.exe' : ''}`
-  return (platform && arch && type && sha256 ? {
+  // return asset only if it is fully compliant
+  return (platform && arch && type ? {
     platform: platform,
     arch: arch,
     name: asset.name,
@@ -86,22 +83,24 @@ var getAssetDetails = function (asset, hashes, version) {
  * Gets all hashes of current version for a specific platform
  */
 var getHashesForPlatform = function (platform, path, hashes, promises) {
-  // this promise is solved when both HTTP calls are solved
+  // this promise is resolved when both HTTP calls returned
   return new Promise((resolve, reject) => {
 
-    got(`${signaturesURL}/${path}/${maintainer}${auth}`).then(response => {
+    got(`${signaturesURL}/${path}/${maintainer}`).then(response => {
+
       var files = JSON.parse(response.body);
       for (id in files) {
         if (!files[id].name.includes("assert.sig")) {
 
-          got(`${files[id].download_url}${auth}`).then(response => {
+          got(`${files[id].download_url}`).then(response => {
             hashes[platform] = response.body;
             resolve(response.body);
-          }).catch(error => console.error(error)); /* sig file */
+          }).catch(error => reject(error)); /* sig file */
 
         }
       }
-    }).catch(error => console.error(error)); /* folder containing sig files */
+
+    }).catch(error => reject(error)); /* folder containing sig files */
 
   });
 }
@@ -110,14 +109,14 @@ var getHashesForPlatform = function (platform, path, hashes, promises) {
  * Entry point
  * get Particl latest release files
  */
-got(`${releasesURL}${auth}`).then(response => {
+got(`${releasesURL}`).then(response => {
 
   var release = JSON.parse(response.body)[0];
   var version = release.tag_name.substring(1);
   var binaries = [];
 
   // get gitian repository of hashes
-  got(`${signaturesURL}${auth}`).then(response => {
+  got(`${signaturesURL}`).then(response => {
     var versions = JSON.parse(response.body);
     var hashes = {};
     var promises = [];
@@ -156,12 +155,12 @@ got(`${releasesURL}${auth}`).then(response => {
       var platforms = json.clients.particld.platforms;
       for (id in binaries) {
         var binary = binaries[id];
+        // define an empty object for current platform if not already defined
         if (!platforms[binary.platform]) {
           platforms[binary.platform] = {};
         }
         platforms[binary.platform][binary.arch] = binary.entry;
       }
-      // console.log(util.inspect(json, false, null));
       // generate JSON file
       var stringJSON = JSON.stringify(json, null, 2);
       fs.writeFile("./modules/clientBinaries/clientBinaries.json", stringJSON, function(err) {
