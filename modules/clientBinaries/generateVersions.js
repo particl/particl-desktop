@@ -5,6 +5,9 @@ var releasesURL = "https://api.github.com/repos/particl/particl-core/releases";
 var signaturesURL = "https://api.github.com/repos/particl/gitian.sigs/contents";
 var maintainer = "tecnovert";
 
+/*
+ * Filters a hash file to find this asset's hash
+ */
 var getHash = function (platform, name, hashes) {
   var filter = new RegExp(`.*${name}`);
   sha256 = hashes[platform].match(filter);
@@ -17,57 +20,74 @@ var getHash = function (platform, name, hashes) {
 }
 
 /*
+ * get assets for specific platforms
+ */
+var getWinAsset = function(data, asset, hashes) {
+  data.platform = "win";
+  data.arch = asset.name.includes("win64") ? "x64" : "ia32";
+  data.type = asset.content_type === "application/zip" ? "zip" : undefined;
+  data.sha256 = getHash(data.platform, asset.name, hashes);
+}
+
+var getOSXAsset = function (data, asset, hashes) {
+  data.platform = "mac";
+  data.arch = asset.name.includes("osx64") ? "x64" : "ia32";
+  if (asset.content_type === "application/x-apple-diskimage") {
+    data.type = "dmg";
+  } else if (asset.content_type === "application/gzip") {
+    data.type = "tar";
+  }
+  data.sha256 = getHash("osx", asset.name, hashes);
+}
+
+var getLinuxAsset = function (data, asset, hashes) {
+  data.platform = "linux";
+  if (asset.name.includes("x86_64")) {
+    data.arch = "x64";
+  } else if (asset.name.includes("i686")) {
+    data.arch = "ia32";
+  } else if (asset.name.includes("arm")) {
+    data.arch = "arm";
+  }
+  data.type = asset.content_type === "application/gzip" ? "tar" : undefined;
+  data.sha256 = getHash(data.platform, asset.name, hashes);
+}
+
+/*
  * Gets one asset's details (platform, arch, type. sha256...)
  */
 var getAssetDetails = function (asset, hashes, version) {
 
-  var platform, arch, type, sha256;
+  var data = {
+    platform: undefined,
+    arch: undefined,
+    type: undefined,
+    sha256: undefined
+  };
 
   // windows binaries
   if (asset.name.includes("win")) {
-    platform = "win";
-    arch = asset.name.includes("win64") ? "x64" : "ia32";
-    type = asset.content_type === "application/zip" ? "zip" : undefined;
-    sha256 = getHash(platform, asset.name, hashes);
+    getWinAsset(data, asset, hashes);
   } // osx binaries
   else if (asset.name.includes("osx")) {
-    platform = "mac";
-    arch = asset.name.includes("osx64") ? arch = "x64" : "ia32";
-    switch (asset.content_type) {
-      case "application/x-apple-diskimage":
-        type = "dmg";
-        break ;
-      case "application/gzip":
-        type = "tar";
-        break ;
-    }
-    sha256 = getHash("osx", asset.name, hashes);
+    getOSXAsset(data, asset, hashes);
   } // linux binaries
   else if (asset.name.includes("linux")) {
-    platform = "linux";
-    if (asset.name.includes("x86_64")) {
-      arch = "x64";
-    } else if (asset.name.includes("i686")) {
-      arch = "ia32";
-    } else if (asset.name.includes("arm")) {
-      arch = "arm";
-    }
-    type = asset.content_type === "application/gzip" ? "tar" : undefined;
-    sha256 = getHash(platform, asset.name, hashes);
+    getLinuxAsset(data, asset, hashes);
   }
 
   // add .exe extension for windows binaries
-  var bin = `particld${platform === 'win' ? '.exe' : ''}`
+  var bin = `particld${data.platform === 'win' ? '.exe' : ''}`
   // return asset only if it is fully compliant
-  return (platform && arch && type ? {
-    platform: platform,
-    arch: arch,
+  return (data.platform && data.arch && data.type ? {
+    platform: data.platform,
+    arch: data.arch,
     name: asset.name,
     entry: {
       download: {
         url: asset.browser_download_url,
-        type: type,
-        sha256: sha256,
+        type: data.type,
+        sha256: data.sha256,
         bin: `particl-${version}/bin/${bin}`
       },
       bin: bin,
