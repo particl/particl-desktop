@@ -1,3 +1,4 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 /* You can add global styles to this file, and also import other style files */
 
 body {
@@ -409,3 +410,62 @@ input.verify-sucess {
 .nc-zoom-bold::before {
     content: "\ea17";
 }
+
+// Material theme design
+.mat-sidenav{
+    width: 250px;background-color: #1c2825;   color: #fff;
+  .mat-toolbar{background: transparent;}
+  .logo-area{
+    .mat-toolbar-row{justify-content: center;height: 110px;}
+  }
+  .sidemenu{
+    a{
+      text-decoration: none;
+    }
+    .mat-list-item{
+      .mat-list-item-content{
+        color: #938f8f;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: bold;
+        border-bottom: 1px solid #222;
+        .mat-icon{
+          margin: 4px 8px 0 0;color: #41ECC2;font-size: 19px;
+        }
+        &:hover{
+          color: #41ECC2;
+        }
+      }
+    }
+  }
+  .sidesubmenu.mat-list {
+    a{
+      text-decoration: none;
+    }
+    .mat-list-item{
+      .mat-list-item-content{
+        color: #fff;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: bold;
+        border-bottom: none;
+        .mat-icon{
+            margin: 4px 8px 0 0;color: #938f8f;font-size: 19px;
+          &.fill{color: #41ECC2;}
+        }
+        &:hover{
+          color: #41ECC2;
+        }
+      }
+    }
+  }
+}
+//.submenuarea{display: none;}
+
+.header-main{border-bottom: 1px solid #ddd;background: #fff;}
+
+.active > md-list-item > div > md-icon{color: #41ECC2 !important;}
+
+.containerX{width: 100%;}
+.header-icons .material-icons{margin: 0 5px;}
+
