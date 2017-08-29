@@ -22,6 +22,7 @@ import { HistoryComponent } from './history/history.component';
 
 import { AddressLookupComponent } from './addresslookup/addresslookup.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MaterialModule} from "@angular/material";
 
 const routes: Routes = [
   {
@@ -42,8 +43,8 @@ const routes: Routes = [
     ModalModule.forRoot(),
     QRCodeModule,
     FormsModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    MaterialModule
   ],
   declarations: [
     TransactionsTableComponent,
