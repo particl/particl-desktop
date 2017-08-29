@@ -66,6 +66,25 @@
           }
         },
         "mac": {
+          "ia32": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-osx.dmg",
+              "type": "dmg",
+              "bin": "particl-0.14.2.1/bin/particld"
+            },
+            "bin": "particld",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.14.2.1"
+                ]
+              }
+            }
+          },
           "x64": {
             "download": {
               "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-osx64.tar.gz",

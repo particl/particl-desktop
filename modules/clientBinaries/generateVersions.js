@@ -21,6 +21,8 @@ var getAssetDetails = function (asset, hashes, version) {
     sha256 = hashes["win"].match(filter);
     if (sha256) {
       sha256 = sha256[0].trim().split(" ")[0];
+    } else {
+      sha256 = undefined;
     }
   } // osx binaries
   else if (asset.name.includes("osx")) {
@@ -38,6 +40,8 @@ var getAssetDetails = function (asset, hashes, version) {
     sha256 = hashes["osx"].match(filter);
     if (sha256) {
       sha256 = sha256[0].trim().split(" ")[0];
+    } else {
+      sha256 = undefined;
     }
   } // linux binaries
   else if (asset.name.includes("linux")) {
@@ -51,7 +55,12 @@ var getAssetDetails = function (asset, hashes, version) {
     }
     type = asset.content_type === "application/gzip" ? "tar" : undefined;
     var filter = new RegExp(`.*${asset.name}`);
-    sha256 = hashes["linux"].match(filter)[0].trim().split(" ")[0];
+    sha256 = hashes["linux"].match(filter);
+    if (sha256) {
+      sha256 = sha256[0].trim().split(" ")[0];
+    } else {
+      sha256 = undefined;
+    }
   }
 
   // add .exe extension for windows binaries
@@ -163,11 +172,12 @@ got(`${releasesURL}`).then(response => {
       }
       // generate JSON file
       var stringJSON = JSON.stringify(json, null, 2);
-      fs.writeFile("./modules/clientBinaries/clientBinaries.json", stringJSON, function(err) {
+      var path = "./modules/clientBinaries/clientBinaries.json";
+      fs.writeFile(path, stringJSON, function(err) {
         if(err) {
           return (console.error(err));
         }
-        console.log("JSON file generated.");
+        console.log("JSON file generated: " + path);
       });
     });
   }).catch(error => console.error(error)); /* signaturesURL */
