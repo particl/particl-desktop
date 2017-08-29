@@ -151,7 +151,7 @@ export class SendComponent implements OnInit, OnDestroy {
       }
     }
 
-    this._rpc.call(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
+    this._rpc.oldCall(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
   }
 
 
@@ -308,7 +308,7 @@ export class SendComponent implements OnInit, OnDestroy {
     const label = this.send.toLabel;
     const addr = this.send.toAddress;
 
-    this._rpc.call(this, 'manageaddressbook', ['newsend', addr, label],
+    this._rpc.oldCall(this, 'manageaddressbook', ['newsend', addr, label],
       this.rpc_addLabel_success,
       this.rpc_addLabel_failed
     );

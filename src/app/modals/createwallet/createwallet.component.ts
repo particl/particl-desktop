@@ -5,7 +5,7 @@ import { IPassword } from '../shared/password/password.interface';
 
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
-import { PassphraseService } from '../../core/rpc/passphrase.service';
+import { PassphraseService } from './passphrase/passphrase.service';
 
 import { flyInOut, slideDown } from './createwallet.animations';
 
@@ -115,15 +115,16 @@ export class CreateWalletComponent {
         this.step = 4;
         this.errorString = '';
 
-        this._passphraseService.importMnemonic(this.words, this.password, () => {
-          this.log.i('Mnemonic imported successfully');
-          this.animationState = 'next';
-          this.step = 5;
-        }, (response) => {
-          this.errorString = response.error.message;
-          // TODO: FAT ERROR
-          this.log.er('Mnemonic import failed');
-        });
+        this._passphraseService.importMnemonic(this.words, this.password)
+          .subscribe(() => {
+            this.log.i('Mnemonic imported successfully');
+            this.animationState = 'next';
+            this.step = 5;
+          }, error => {
+            this.log.er(error);
+            this.errorString = error.message;
+            this.log.er('Mnemonic import failed');
+          });
         break;
     }
   }

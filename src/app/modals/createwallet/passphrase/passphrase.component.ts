@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ClipboardModule } from 'ngx-clipboard';
 
-import { PassphraseService } from '../../../core/rpc/passphrase.service';
+import { PassphraseService } from './passphrase.service';
 
 import { Log } from 'ng2-logger';
 

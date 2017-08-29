@@ -90,7 +90,7 @@ export class AddressLookupComponent implements OnInit {
   */
 
   rpc_update() {
-    this._rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success, this.rpc_loadAddressCount_failed);
+    this._rpc.oldCall(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success, this.rpc_loadAddressCount_failed);
   }
 
   /**
@@ -100,7 +100,7 @@ export class AddressLookupComponent implements OnInit {
     this._addressCount = json['num_send'];
 
     if (this._addressCount > 0) {
-      this._rpc.call(this, 'filteraddresses', [0, this._addressCount, '0', '', '2'], this.rpc_loadAddresses_success);
+      this._rpc.oldCall(this, 'filteraddresses', [0, this._addressCount, '0', '', '2'], this.rpc_loadAddresses_success);
     } else {
       this.addressStore = [];
     }

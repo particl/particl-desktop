@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { RPCService } from './rpc.service';
+import { RPCService } from '../../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger';
 
@@ -26,27 +26,30 @@ export class PassphraseService {
     if (password === undefined || password === '') {
       params.pop();
     }
-    this._rpc.call(this, 'mnemonic', params, success, () => success(Array(24).fill('error')));
+    this._rpc.call('mnemonic', params)
+      .subscribe(
+        response => success(response),
+        error => Array(24).fill('error'));
   }
 
   validateWord(word: string): boolean {
     if (!this.validWords) {
-      this._rpc.call(
-        this, 'mnemonic', ['dumpwords'],
-        response => this.validWords = response.words);
+      this._rpc.call('mnemonic', ['dumpwords'])
+      .subscribe((response: any) => this.validWords = response.words);
+
       return false;
     }
 
     return this.validWords.indexOf(word) !== -1;
   }
 
-  importMnemonic(words: string[], password: string, success: Function, failure: Function) {
+  importMnemonic(words: string[], password: string) {
     const params = [words.join(' '), password];
     if (!password) {
       params.pop();
     }
 
-    this._rpc.call(this, 'extkeygenesisimport', params, success, failure);
+    return this._rpc.call('extkeygenesisimport', params);
   }
 
 /*

@@ -25,17 +25,17 @@ export class EncryptionStatusService {
   }
 
   refreshEncryptionStatus(): Observable<string> {
-    let observer: Observer<string>;
-
     // register updates to encryptionStatus
-    this._rpc.call(this, this._method, null, (response: Object) => {
-      // TODO: Model for response
-      observer.next((<any>response).encryptionstatus);
-      this._encryptionStatusState = (<any>response).encryptionstatus;
-    });
+    // TODO: Do we need to create a new observable here?
+    this._rpc.call(this._method)
+      .subscribe(response => {
+        this._encryptionStatusState = (<any>response).encryptionstatus;
+        // TODO: Model for response
+        this._observerEncryptionStatus.next(this._encryptionStatusState);
+      });
 
-
-    return Observable.create(_observer => observer = _observer);
+    // return Observable.create(_observer => observer = _observer);
+    return this._encryptionStatus.take(2).skip(1);
   }
 
   getEncryptionStatus(): Observable<string> {
