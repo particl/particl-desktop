@@ -166,7 +166,7 @@ got(`${releasesURL}`).then(response => {
     }
 
     // once we have all hashes
-    Promise.all(promises).then(() => {
+    Promise.all(promises).then(function () {
       // get asset details for each release entry
       for (id in release.assets) {
         if (!release.assets.hasOwnProperty(id)) { continue ; }
