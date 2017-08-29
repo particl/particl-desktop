@@ -158,6 +158,7 @@ got(`${releasesURL}`).then(response => {
     Promise.all(promises).then(() => {
       // get asset details for each release entry
       for (id in release.assets) {
+        if (!release.assets.hasOwnProperty(id)) { continue ; }
         var asset = release.assets[id];
         var entry = getAssetDetails(asset, hashes, version);
         if (entry) {
@@ -176,6 +177,7 @@ got(`${releasesURL}`).then(response => {
       // include entries in JSON object
       var platforms = json.clients.particld.platforms;
       for (id in binaries) {
+        if (!binaries.hasOwnProperty(id)) { continue ; }
         var binary = binaries[id];
         // define an empty object for current platform if not already defined
         if (!platforms[binary.platform]) {
