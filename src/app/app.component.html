@@ -1,91 +1,171 @@
-<sidebar-container>
-
-  <sidebar position="left" [isDocked]="true" [isPinned]="true" [isOpen]="true"
-    (mouseenter)="!window.isXS && !sidebarLeft.isOpen && sidebarLeft.toggleOpen(true)"
-    (mouseleave)="!window.isXS && !sidebarLeft.isPinned && sidebarLeft.toggleOpen(false)"
-    #sidebarLeft>
-
-    <div class="header">
-      <span *ngIf="!window.isXS" class="toggle-pinned fa"
-        [ngClass]="{'fa-dot-circle-o': sidebarLeft.isPinned, 'fa-circle': !sidebarLeft.isPinned}"
-        (click)="sidebarLeft.togglePinned()">
-      </span>
+<md-sidenav-container fullscreen>
+  <md-sidenav #sidenav mode="side" opened="true" color="indigo">
+    <md-toolbar class="logo-area">
       <span class="logo"></span>
+    </md-toolbar>
+    <md-divider></md-divider>
+    <md-content layout-padding>
+      <md-list class="sidesubmenu">
+        <a routerLinkActive="active" routerLink="/overview">
+          <md-list-item>
+            <md-icon class="fill">grid_on</md-icon>
+            Overview
+          </md-list-item>
+        </a>
+      </md-list>
+    </md-content>
+    <md-content layout-padding>
+      <md-list class="sidemenu">
+        <a href="javascript:void(0)">
+          <md-list-item>
+            <span fxFlex>Wallet</span>
+            <span fxLayout="row" fxFlex fxLayoutAlign="end center"><md-icon>arrow_forward</md-icon></span>
+          </md-list-item>
+        </a>
+        <md-content layout-padding class="submenuarea">
+          <md-list class="sidesubmenu">
+            <a routerLinkActive="active" routerLink="/wallet/receive">
+              <md-list-item>
+                <md-icon>arrow_forward</md-icon>
+                Recieve
+              </md-list-item>
+            </a>
+            <a routerLinkActive="active" routerLink="/wallet/send">
+              <md-list-item>
+                <md-icon>arrow_back</md-icon>
+                Send
+              </md-list-item>
+            </a>
+            <a routerLinkActive="active" routerLink="/wallet/history">
+              <md-list-item>
+                <md-icon>history</md-icon>
+                History
+              </md-list-item>
+            </a>
+            <a routerLinkActive="active" routerLink="/wallet/address-book">
+              <md-list-item>
+                <md-icon>people</md-icon>
+                Addess Book
+              </md-list-item>
+            </a>
+            <a routerLinkActive="active" href="javascript:void(0)" (click)="firsttime()">
+              <md-list-item>
+                <md-icon>library_add</md-icon>
+                Add Acount
+              </md-list-item>
+            </a>
+          </md-list>
+        </md-content>
+      </md-list>
+    </md-content>
+  </md-sidenav>
+  <md-toolbar class="header-main">
+    <button fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()">
+      <md-icon>menu</md-icon>
+    </button>
+
+    <div class="containerX">
+        <div fxLayout="row" fxFlex fxLayoutAlign="end center" fxcolor="accent" class="header-icons">
+             <i class="material-icons" color="orange">lock</i>
+             <i class="material-icons">lock_open</i>
+        </div>
     </div>
-    <hr>
-    <accordion class="menu">
-      <accordion-group [isCollapsed]="false">
-        <a class="item" routerLinkActive="active" routerLink="/overview">
-          <span class="icon nc-icon nc-grid-48"></span>
-          Overview
-        </a>
-      </accordion-group>
-      <accordion-group #walletGroup [isCollapsed]="false">
-        <accordion-heading>
-          <a class="category" href="javascript:void(0)" (click)="walletGroup.toggleCollapse()">
-            Wallet
-            <span class="icon fa fa-chevron-down" [class.collapsed]="walletGroup.isCollapsed"></span>
-          </a>
-        </accordion-heading>
-        <hr>
-        <a class="item" routerLinkActive="active" routerLink="/wallet/receive">
-          <span class="icon nc-icon nc-simple-right"></span>
-          Receive
-        </a>
-        <a class="item" routerLinkActive="active" routerLink="/wallet/send">
-          <span class="icon nc-icon nc-simple-left"></span>
-          Send
-        </a>
-        <a class="item" routerLinkActive="active" routerLink="/wallet/history">
-          <span class="icon nc-icon nc-time-3"></span>
-          History
-        </a>
-        <a class="item" routerLinkActive="active" routerLink="/wallet/address-book">
-          <span class="icon nc-icon nc-multiple-19"></span>
-          Address Book
-        </a>
-        <a class="item" href="javascript:void(0)" (click)="firsttime()">
-          <span class="icon nc-icon nc-card-add"></span>
-          Add account
-        </a>
-      </accordion-group>
-      <!--accordion-group #settingsGroup [isCollapsed]="false">
-        <accordion-heading>
-          <a class="category" href="javascript:void(0)" (click)="settingsGroup.toggleCollapse()">
-            Settings
-            <span class="icon fa fa-chevron-down" [class.collapsed]="settingsGroup.isCollapsed"></span>
-          </a>
-        </accordion-heading>
-        <hr>
-        <a class="item" routerLinkActive="active" routerLink="/settings">
-          <span class="icon nc-icon nc-icon nc-preferences"></span>
-          Settings
-        </a>
-      </accordion-group>
-      <div>
-        <span><button (click)="firsttime()">firsttime</button></span>
-        <span><button (click)="syncing()">syncing</button></span>
-        <span><button (click)="unlock()">unlock</button></span>
-      </div-->
-    </accordion>
-  </sidebar>
 
-  <sidebar position="right" [isPinned]="true" #sidebarRight></sidebar>
+      </md-toolbar>
 
-  <sidebar position="top" [isDocked]="true" class="pinned-left" #sidebarTop>
-    <div class="header pull-left">
-      <span *ngIf="window.isXS" class="toggle-menu icon fa fa-bars fa-2x"
-        (click)="sidebarLeft.toggleOpen(); sidebarLeft.togglePinned(sidebarLeft.isOpen)">
-      </span>
-      <strong>{{ title }}</strong>
-    </div>
-    <div class="header pull-right">
-      <app-status></app-status>
-    </div>
-  </sidebar>
+      <div class="margin-left-right-50">
+        <router-outlet></router-outlet>
+      </div>
+    </md-sidenav-container>
 
-  <sidebar position="bottom" #sidebarBottom></sidebar>
+    <!--<sidebar-container>-->
 
-  <router-outlet></router-outlet>
-  <app-modals></app-modals>
-</sidebar-container>
+<!--<sidebar position="left" [isDocked]="true" [isPinned]="true" [isOpen]="true"-->
+<!--(mouseenter)="!window.isXS && !sidebarLeft.isOpen && sidebarLeft.toggleOpen(true)"-->
+<!--(mouseleave)="!window.isXS && !sidebarLeft.isPinned && sidebarLeft.toggleOpen(false)"-->
+<!--#sidebarLeft>-->
+
+<!--<div class="header">-->
+<!--<span *ngIf="!window.isXS" class="toggle-pinned fa"-->
+<!--[ngClass]="{'fa-dot-circle-o': sidebarLeft.isPinned, 'fa-circle': !sidebarLeft.isPinned}"-->
+<!--(click)="sidebarLeft.togglePinned()">-->
+<!--</span>-->
+<!--<span class="logo"></span>-->
+<!--</div>-->
+<!--<hr>-->
+<!--<accordion class="menu">-->
+<!--<accordion-group [isCollapsed]="false">-->
+<!--<a class="item" routerLinkActive="active" routerLink="/overview">-->
+<!--<span class="icon nc-icon nc-grid-48"></span>-->
+<!--Overview-->
+<!--</a>-->
+<!--</accordion-group>-->
+<!--<accordion-group #walletGroup [isCollapsed]="false">-->
+<!--<accordion-heading>-->
+<!--<a class="category" href="javascript:void(0)" (click)="walletGroup.toggleCollapse()">-->
+<!--Wallet-->
+<!--<span class="icon fa fa-chevron-down" [class.collapsed]="walletGroup.isCollapsed"></span>-->
+<!--</a>-->
+<!--</accordion-heading>-->
+<!--<hr>-->
+<!--<a class="item" routerLinkActive="active" routerLink="/wallet/receive">-->
+<!--<span class="icon nc-icon nc-simple-right"></span>-->
+<!--Receive-->
+<!--</a>-->
+<!--<a class="item" routerLinkActive="active" routerLink="/wallet/send">-->
+<!--<span class="icon nc-icon nc-simple-left"></span>-->
+<!--Send-->
+<!--</a>-->
+<!--<a class="item" routerLinkActive="active" routerLink="/wallet/history">-->
+<!--<span class="icon nc-icon nc-time-3"></span>-->
+<!--History-->
+<!--</a>-->
+<!--<a class="item" routerLinkActive="active" routerLink="/wallet/address-book">-->
+<!--<span class="icon nc-icon nc-multiple-19"></span>-->
+<!--Address Book-->
+<!--</a>-->
+<!--<a class="item" href="javascript:void(0)" (click)="firsttime()">-->
+<!--<span class="icon nc-icon nc-card-add"></span>-->
+<!--Add account-->
+<!--</a>-->
+<!--</accordion-group>-->
+<!--&lt;!&ndash;accordion-group #settingsGroup [isCollapsed]="false">-->
+<!--<accordion-heading>-->
+<!--<a class="category" href="javascript:void(0)" (click)="settingsGroup.toggleCollapse()">-->
+<!--Settings-->
+<!--<span class="icon fa fa-chevron-down" [class.collapsed]="settingsGroup.isCollapsed"></span>-->
+<!--</a>-->
+<!--</accordion-heading>-->
+<!--<hr>-->
+<!--<a class="item" routerLinkActive="active" routerLink="/settings">-->
+<!--<span class="icon nc-icon nc-icon nc-preferences"></span>-->
+<!--Settings-->
+<!--</a>-->
+<!--</accordion-group>-->
+<!--<div>-->
+<!--<span><button (click)="firsttime()">firsttime</button></span>-->
+<!--<span><button (click)="syncing()">syncing</button></span>-->
+<!--<span><button (click)="unlock()">unlock</button></span>-->
+<!--</div&ndash;&gt;-->
+<!--</accordion>-->
+<!--</sidebar>-->
+
+<!--<sidebar position="right" [isPinned]="true" #sidebarRight></sidebar>-->
+
+<!--<sidebar position="top" [isDocked]="true" class="pinned-left" #sidebarTop>-->
+<!--<div class="header pull-left">-->
+<!--<span *ngIf="window.isXS" class="toggle-menu icon fa fa-bars fa-2x"-->
+<!--(click)="sidebarLeft.toggleOpen(); sidebarLeft.togglePinned(sidebarLeft.isOpen)">-->
+<!--</span>-->
+<!--<strong>{{ title }}</strong>-->
+<!--</div>-->
+<!--<div class="header pull-right">-->
+<!--<app-status></app-status>-->
+<!--</div>-->
+<!--</sidebar>-->
+
+<!--<sidebar position="bottom" #sidebarBottom></sidebar>-->
+
+<!--<router-outlet></router-outlet>-->
+<!--<app-modals></app-modals>-->
+<!--</sidebar-container>-->
