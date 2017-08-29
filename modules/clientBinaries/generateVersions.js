@@ -139,6 +139,17 @@ got(`${releasesURL}`).then(response => {
 
   // get gitian repository of hashes
   got(`${signaturesURL}`).then(response => {
+
+    // prepare JSON object for the output file
+    var json = {
+      clients: {
+        particld: {
+          version: version,
+          platforms: {}
+        }
+      }
+    }
+
     var versions = JSON.parse(response.body);
     var hashes = {};
     var promises = [];
@@ -163,15 +174,6 @@ got(`${releasesURL}`).then(response => {
         var entry = getAssetDetails(asset, hashes, version);
         if (entry) {
           binaries.push(entry);
-        }
-      }
-      // prepare JSON object for the output file
-      var json = {
-        clients: {
-          particld: {
-            version: version,
-            platforms: {}
-          }
         }
       }
       // include entries in JSON object
