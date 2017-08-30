@@ -6,7 +6,7 @@ import { Headers, Http } from '@angular/http';
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
-
+import { Observable } from 'rxjs/Observable';
 
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
@@ -101,36 +101,30 @@ export class RPCService {
     headers.append('Accept', 'application/json');
 
     if (this.isElectron) {
-      successCB = successCB.bind(instance);
-      if (errorCB) {
-        errorCB = errorCB.bind(instance);
-      }
+    
       this.electronService.ipcRenderer.send('backend_particlRPCCall', method, params);
 
-      this.electronService.ipcRenderer.once('frontend_particlRPCCallback' + method, (event, error, response) => {
-        // this.log.d(`frontend_particlRPCCallback: ${method}`, error, response);
-        if (error) {
-          this.log.er('frontend_particlRPCCallback:', error);
-          if (!!errorCB) {
-            errorCB(error);
-          }
-          this.modalUpdates.next({
-            error: error,
-            electron: this.isElectron
-          });
-          return;
-        }
-        console.log('response.result', response.result);
-        successCB(response.result);
-        this.modalUpdates.next({
-          response: response,
-          electron: this.isElectron
+      //Observe Creation
+      const observe = Observable.create(obs => {
+        this.electronService.ipcRenderer.once('frontend_particlRPCCallback' + method, (event, error, response) => {
+          //Look for the response
+          obs.next(response);
+          //Always observe for the Error
+          obs.error(error)
         });
-        // this.stopPolling();
       });
 
-      // .once('message', (test) => console.log(test));
-
+      //Observe Subscribe
+      observe.subscribe(
+        response => this.modalUpdates.next({
+                      response: response,
+                      electron: this.isElectron
+                    }),
+        error =>  this.modalUpdates.next({
+                    error: error,
+                    electron: this.isElectron
+                  })
+      )
       // TODO: electron.ipcCall
     } else {
       this.http
