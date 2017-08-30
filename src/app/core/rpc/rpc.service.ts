@@ -101,20 +101,19 @@ export class RPCService {
     headers.append('Accept', 'application/json');
 
     if (this.isElectron) {
-    
       this.electronService.ipcRenderer.send('backend_particlRPCCall', method, params);
 
-      //Observe Creation
+      // Observe Creation
       const observe = Observable.create(obs => {
         this.electronService.ipcRenderer.once('frontend_particlRPCCallback' + method, (event, error, response) => {
-          //Look for the response
+          // Look for the response
           obs.next(response);
-          //Always observe for the Error
+          // Always observe for the Error
           obs.error(error)
         });
       });
 
-      //Observe Subscribe
+      // Observe Subscribe
       observe.subscribe(
         response => this.modalUpdates.next({
                       response: response,
