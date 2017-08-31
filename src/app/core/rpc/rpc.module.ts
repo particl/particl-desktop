@@ -4,7 +4,6 @@ import { StoreModule } from '@ngrx/store';
 
 import { BlockStatusService } from './blockstatus.service'
 import { ElectronService } from 'ngx-electron';
-import { EncryptionStatusService } from './encryptionstatus.service'
 import { PeerService } from './peer.service';
 import { RPCService } from './rpc.service';
 
@@ -23,7 +22,6 @@ export class RpcModule {
       providers: [
         BlockStatusService,
         ElectronService,
-        EncryptionStatusService,
         PeerService,
         RPCService
       ]
@@ -31,6 +29,5 @@ export class RpcModule {
   }
 }
 export { BlockStatusService } from './blockstatus.service';
-export { EncryptionStatusService } from './encryptionstatus.service';
 export { PeerService } from './peer.service';
 export { RPCService } from './rpc.service';

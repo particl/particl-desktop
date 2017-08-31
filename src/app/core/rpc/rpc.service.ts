@@ -65,29 +65,10 @@ export class RPCService {
 
     this.chainState = store.select((state: ChainState) => state);
 
-    // Start polling.. TODO: Stop polling if it just errors, or increase timeout...
-    const poll = () => {
-      this.call('getinfo')
-        .subscribe(
-          success => this.store.dispatch(new chainState.UpdateStateAction(success)),
-          error => this.log.er('RPC Call returned an error', error));
-
-      this.call('getwalletinfo')
-        .subscribe(
-          success => this.store.dispatch(new chainState.UpdateStateAction(success)),
-          error => this.log.er('RPC Call returned an error', error));
-
-      this.call('getstakinginfo')
-        .subscribe(
-          success => {
-            this.store.dispatch(new chainState.UpdateStateAction(success));
-            setTimeout(poll, 500);
-          },
-          error => {
-            setTimeout(poll, 10000);
-          });
-    }
-    poll();
+    // Start polling...
+    this.registerStateCall('getinfo', 500);
+    this.registerStateCall('getwalletinfo', 3000);
+    this.registerStateCall('getstakinginfo', 15000);
   }
 
   /**
@@ -102,12 +83,9 @@ export class RPCService {
     * ```JavaScript
     * this._rpc.call('listtransactions', [0, 20]);
     * ```
+    * TODO: Response interface
     */
-  call(
-    method: string,
-    params?: Array<any> | null,
-    // TODO: Response model
-  ): Observable<Object> {
+  call(method: string, params?: Array<any> | null): Observable<Object> {
     const postData = JSON.stringify({
       method: method,
       params: params,
@@ -130,6 +108,47 @@ export class RPCService {
 
       return observable;
     }
+  }
+
+  stateCall(method: string): void {
+    this.call(method)
+      .subscribe(
+        this.stateCallSuccess.bind(this, method),
+        this.stateCallError.bind(this, method));
+  }
+
+  registerStateCall(method: string, timeout?: number): void {
+    if (timeout) {
+      const _call = () => {
+        this.call(method)
+        .subscribe(
+          success => {
+            this.stateCallSuccess(success);
+            setTimeout(_call, timeout);
+          },
+          error => {
+            this.stateCallError(error);
+
+            setTimeout(_call, 10000);
+          });
+      }
+      _call();
+    } else {
+      this.chainState.subscribe(success => this.stateCall(method));
+    }
+  }
+
+  private stateCallSuccess(success: any, method?: string) {
+    if (method) {
+      const obj = {};
+      obj[success] = method;
+      success = obj;
+    }
+    this.store.dispatch(new chainState.UpdateStateAction(success));
+  }
+
+  private stateCallError(error: Object, method?: string) {
+    this.log.er('RPC Call returned an error', error);
   }
 
   /**
@@ -163,40 +182,30 @@ export class RPCService {
     isPoll?: boolean,
     isLast?: boolean
   ): void {
-    const postData = JSON.stringify({
-      method: method,
-      params: params,
-      id: 1
-    });
-
-    if (this.isElectron) {
-      // TODO: electron.ipcCall
-    } else {
-      this.call(method, params)
-        .subscribe(
-          response => {
-            successCB.call(instance, response);
-            this.modalUpdates.next({
-              response: response,
-              electron: this.isElectron
-            });
-            if (isPoll && isLast) {
-              this._callOnPoll.forEach((func) => func());
-              this._callOnNextPoll.forEach((func) => func());
-              this._callOnNextPoll = [];
-            }
-          },
-          error => {
-            if (errorCB) {
-              errorCB.call(instance, error.target ? error.target : error);
-            }
-            this.modalUpdates.next({
-              error: error.target ? error.target : error,
-              electron: this.isElectron
-            });
-            this.log.er('RPC Call returned an error', error);
+    this.call(method, params)
+      .subscribe(
+        response => {
+          successCB.call(instance, response);
+          this.modalUpdates.next({
+            response: response,
+            electron: this.isElectron
           });
-    }
+          if (isPoll && isLast) {
+            this._callOnPoll.forEach((func) => func());
+            this._callOnNextPoll.forEach((func) => func());
+            this._callOnNextPoll = [];
+          }
+        },
+        error => {
+          if (errorCB) {
+            errorCB.call(instance, error.target ? error.target : error);
+          }
+          this.modalUpdates.next({
+            error: error.target ? error.target : error,
+            electron: this.isElectron
+          });
+          this.log.er('RPC Call returned an error', error);
+        });
   }
 
   /**
@@ -243,18 +252,7 @@ export class RPCService {
       successCB: successCB,
       errorCB: errorCB
     };
-    if (when.indexOf('block') !== -1 || when.indexOf('both') !== -1) {
-      this._callOnBlock.push(_call);
-      valid = true;
-    }
-    if (when.indexOf('tx') !== -1 || when.indexOf('both') !== -1) {
-      this._callOnTransaction.push(_call);
-      valid = true;
-    }
-    if (when.indexOf('time') !== -1 || when.indexOf('both') !== -1) {
-      this._callOnTime.push(_call);
-      valid = true;
-    }
+
     if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
       this._callOnAddress.push(_call);
       valid = true;
@@ -275,16 +273,6 @@ export class RPCService {
       index === arr.length - 1);
   }
 
-  /** Do one poll: execute all the registered calls. */
-  private poll(): void {
-    // TODO: Actual polling... Check block height and last transaction
-    this._callOnBlock.forEach(this._pollCall.bind(this));
-    this._callOnTransaction.forEach(this._pollCall.bind(this));
-    this._callOnTime.forEach(this._pollCall.bind(this));
-
-    this._pollTimout = setTimeout(this.poll.bind(this), 3000);
-  }
-
   /**
     * Do one poll for _address table_: execute all the registered calls.
     * Triggered from within the GUI!
@@ -294,17 +282,4 @@ export class RPCService {
 
     this._callOnAddress.forEach(this._pollCall.bind(this));
   }
-
-
-  /** Start a temporary loop that polls the RPC every 3 seconds. */
-  startPolling(): void {
-    clearTimeout(this._pollTimout);
-    this.poll();
-  }
-
-  /** Stops a temporary loop that polls the RPC every 3 seconds. */
-  stopPolling(): void {
-    clearTimeout(this._pollTimout);
-  }
-
 }

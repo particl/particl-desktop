@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
 
-import { PeerService, RPCService, BlockStatusService , EncryptionStatusService } from '../rpc/rpc.module';
+import { PeerService, RPCService, BlockStatusService } from '../rpc/rpc.module';
 
 @Component({
   selector: 'app-status',
@@ -14,39 +14,32 @@ import { PeerService, RPCService, BlockStatusService , EncryptionStatusService }
 export class StatusComponent implements OnInit, OnDestroy {
 
   peerListCount: number = 0;
-  private _subPeerList: Subscription;
 
   public encryptionStatus: string = 'Locked';
-  private _subEncryptionStatus: Subscription;
+  private _sub: Subscription;
 
   private log: any = Log.create('status.component');
 
 
   constructor(
     private  _peerService: PeerService,
-    private _encryptionStatusService: EncryptionStatusService,
     private _rpc: RPCService,
     private _modalsService: ModalsService,
     ) { }
 
   ngOnInit() {
-    this._subPeerList = this._peerService.getPeerList()
+    this._sub = this._rpc.chainState.skip(1)
       .subscribe(
-        peerList => this.peerListCount = peerList.length,
-        error => this.log.er(`peerListCount, subscription error: ${error}`));
-
-    this._subEncryptionStatus = this._encryptionStatusService.getEncryptionStatus()
-      .subscribe(
-        encryptionStatus => this.encryptionStatus = encryptionStatus,
+        state => {
+          this.encryptionStatus = state.chain.encryptionstatus,
+          this.peerListCount = state.chain.connections
+        },
         error => this.log.er(`getEncryptionStatus, subscription error: ${error}`));
   }
 
   ngOnDestroy() {
-    if (this._subPeerList) {
-      this._subPeerList.unsubscribe();
-    }
-    if (this._subEncryptionStatus) {
-      this._subEncryptionStatus.unsubscribe();
+    if (this._sub) {
+      this._sub.unsubscribe();
     }
   }
 
@@ -84,7 +77,7 @@ export class StatusComponent implements OnInit, OnDestroy {
       case 'Unlocked':
       case 'Unlocked, staking only':
         this._rpc.call('walletlock')
-          .subscribe(_ => this._encryptionStatusService.refreshEncryptionStatus().subscribe());
+          .subscribe();
         break;
       case 'Locked':
         this._modalsService.open('unlock');
