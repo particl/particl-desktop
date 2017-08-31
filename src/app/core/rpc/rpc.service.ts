@@ -68,10 +68,14 @@ export class RPCService {
     // Start polling.. TODO: Stop polling if it just errors, or increase timeout...
     const poll = () => {
       this.call('getinfo')
-        .subscribe(success => this.store.dispatch(new chainState.UpdateStateAction(success)));
+        .subscribe(
+          success => this.store.dispatch(new chainState.UpdateStateAction(success)),
+          error => this.log.er('RPC Call returned an error', error));
 
       this.call('getwalletinfo')
-        .subscribe(success => this.store.dispatch(new chainState.UpdateStateAction(success)));
+        .subscribe(
+          success => this.store.dispatch(new chainState.UpdateStateAction(success)),
+          error => this.log.er('RPC Call returned an error', error));
 
       this.call('getstakinginfo')
         .subscribe(

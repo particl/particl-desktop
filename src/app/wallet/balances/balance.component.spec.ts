@@ -6,8 +6,7 @@ import { BalanceComponent } from './balance.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
-
-import { RPCService } from '../../core/rpc/rpc.service';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -17,11 +16,8 @@ describe('BalanceComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        WalletModule.forRoot()
-      ],
-      providers: [
-        ElectronService,
-        RPCService
+        WalletModule.forRoot(),
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();
