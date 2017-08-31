@@ -5,8 +5,9 @@ import { ModalModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { ModalsService } from './modals.service';
+import { PassphraseService } from './createwallet/passphrase/passphrase.service';
 import { ModalsComponent } from './modals.component';
-import { FocusDirective } from './modals.directives';
+import { FocusDirective, FocusTimeoutDirective } from './modals.directives';
 
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PasswordComponent } from './shared/password/password.component';
@@ -25,6 +26,7 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
   ],
   declarations: [
     FocusDirective,
+    FocusTimeoutDirective,
     ModalsComponent,
     PassphraseComponent,
     PasswordComponent,
@@ -36,6 +38,9 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
   exports: [
     ModalsComponent
   ],
-  providers: [ModalsService]
+  providers: [
+    ModalsService,
+    PassphraseService
+  ]
 })
 export class ModalsModule { }

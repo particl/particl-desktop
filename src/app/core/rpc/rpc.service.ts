@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Subject } from 'rxjs/Subject';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, Response } from '@angular/http';
 
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
+import { Observable } from 'rxjs/Observable';
 
 
 const MAINNET_PORT = 51935;
@@ -61,6 +62,50 @@ export class RPCService {
     * The call function will perform a single call to the particld daemon and perform a callback to
     * the instance through the function as defined in the params.
     *
+    * @param {string} method  The JSON-RPC method to call, see ```./particld help```
+    * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
+    * The content of the array is of type any (ints, strings, booleans etc)
+    *
+    * @example
+    * ```JavaScript
+    * this._rpc.call('listtransactions', [0, 20]);
+    * ```
+    */
+  call(
+    method: string,
+    params?: Array<any> | null
+    // TODO: Response model
+  ): Observable<Object> {
+    const postData = JSON.stringify({
+      method: method,
+      params: params,
+      id: 1
+    });
+    const headers = new Headers();
+
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
+    headers.append('Accept', 'application/json');
+
+    if (this.isElectron) {
+      // TODO: electron.ipcCall
+    } else {
+      const observable = this.http
+        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+        .map(response => response.json().result)
+        .catch(error => Observable.throw(
+          typeof error._body === 'object' ? error._body : JSON.parse(error._body)))
+        .publishReplay(); // Make sure we return the result on subscribe
+
+      observable.connect(); // Force the request at this stage, doesn't need a subscribe to execute.
+      return observable;
+    }
+  }
+
+  /**
+    * The call function will perform a single call to the particld daemon and perform a callback to
+    * the instance through the function as defined in the params.
+    *
     * @param {Injectable} instance  The instance in which the callback functions reside.
     * @param {string} method  The JSON-RPC method to call, see ```./particld help```
     * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
@@ -77,10 +122,9 @@ export class RPCService {
     *   console.log("Loaded transactions!");
     *   console.log(json);
     * }
-    * ...
     * ```
     */
-  call(
+  oldCall(
     instance: Injectable,
     method: string,
     params: Array<any> | null,
@@ -94,11 +138,6 @@ export class RPCService {
       params: params,
       id: 1
     });
-    const headers = new Headers();
-
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
-    headers.append('Accept', 'application/json');
 
     if (this.isElectron) {
       successCB = successCB.bind(instance);
@@ -133,11 +172,10 @@ export class RPCService {
 
       // TODO: electron.ipcCall
     } else {
-      this.http
-        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+      this.call(method, params)
         .subscribe(
           response => {
-            successCB.call(instance, response.json().result);
+            successCB.call(instance, response);
             this.modalUpdates.next({
               response: response,
               electron: this.isElectron
@@ -150,10 +188,7 @@ export class RPCService {
           },
           error => {
             if (errorCB) {
-              errorCB.call(instance, (typeof error['_body'] === 'object'
-                ? error['_body']
-                : JSON.parse(error['_body']))
-              );
+              errorCB.call(instance, error);
             }
             this.modalUpdates.next({
               error: error,
@@ -240,7 +275,7 @@ export class RPCService {
 
   // TODO: Model / interface..
   private _pollCall (element: any, index: number, arr: Array<any>): void {
-    this.call(
+    this.oldCall(
       element.instance,
       element.method,
       element.params && element.params.typeOf === 'function'

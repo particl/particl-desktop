@@ -71,7 +71,8 @@ export class TransactionService {
 
 
   rpc_update() {
-    this.rpc.call(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
+    // TODO: This should use the State service
+    this.rpc.oldCall(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
   }
 
   rpc_loadTransactionCount(JSON: Object): void {
@@ -80,7 +81,7 @@ export class TransactionService {
     this.log.d('rpc_loadTransactionCount, txcount:', this.txCount);
     this.log.d('rpc_loadTransactionCount, rpc_getParameters():', this.rpc_getParameters());
 
-    this.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
+    this.rpc.oldCall(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
   }
 
   rpc_loadTransactions(JSON: Array<Object>): void {
