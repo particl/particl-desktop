@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { StoreModule } from '@ngrx/store';
 
 import { BlockStatusService } from './blockstatus.service'
 import { ElectronService } from 'ngx-electron';
@@ -8,9 +8,12 @@ import { EncryptionStatusService } from './encryptionstatus.service'
 import { PeerService } from './peer.service';
 import { RPCService } from './rpc.service';
 
+import { reducer } from './chain-state/chain-state.reducers';
+
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    StoreModule.forRoot(<any>{chain: reducer})
   ]
 })
 export class RpcModule {

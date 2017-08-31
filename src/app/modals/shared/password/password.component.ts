@@ -140,7 +140,7 @@ export class PasswordComponent {
       // After unlockTimeout, unlock wallet for staking again.
       setTimeout((() => {
           this.log.d(`checkAndFallbackToStaking, falling back into staking mode!`);
-          this._rpc.call('walletpassphrase', [password, 0, true]);
+          this._rpc.call('walletpassphrase', [password, 0, true]).subscribe();
           this.reset();
         }).bind(this), (timeout + 1) * 1000);
 

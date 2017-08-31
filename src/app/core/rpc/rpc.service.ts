@@ -2,11 +2,16 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Subject } from 'rxjs/Subject';
 import { Headers, Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
-import { Observable } from 'rxjs/Observable';
+
+
+import { ChainState } from './chain-state/chain-state.reducers';
+import * as chainState from './chain-state/chain-state.actions';
 
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
@@ -49,12 +54,36 @@ export class RPCService {
 
   public modalUpdates: Subject<any> = new Subject<any>();
 
+  public chainState: Observable<any>;
+
   constructor(
     private http: Http,
-    public electronService: ElectronService
+    public electronService: ElectronService,
+    private store: Store<ChainState>
   ) {
     this.isElectron = this.electronService.isElectronApp;
-    this.startPolling();
+
+    this.chainState = store.select((state: ChainState) => state);
+
+    // Start polling.. TODO: Stop polling if it just errors, or increase timeout...
+    const poll = () => {
+      this.call('getinfo')
+        .subscribe(success => this.store.dispatch(new chainState.UpdateStateAction(success)));
+
+      this.call('getwalletinfo')
+        .subscribe(success => this.store.dispatch(new chainState.UpdateStateAction(success)));
+
+      this.call('getstakinginfo')
+        .subscribe(
+          success => {
+            this.store.dispatch(new chainState.UpdateStateAction(success));
+            setTimeout(poll, 500);
+          },
+          error => {
+            setTimeout(poll, 10000);
+          });
+    }
+    poll();
   }
 
   /**
@@ -72,7 +101,7 @@ export class RPCService {
     */
   call(
     method: string,
-    params?: Array<any> | null
+    params?: Array<any> | null,
     // TODO: Response model
   ): Observable<Object> {
     const postData = JSON.stringify({
@@ -93,10 +122,8 @@ export class RPCService {
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
         .map(response => response.json().result)
         .catch(error => Observable.throw(
-          typeof error._body === 'object' ? error._body : JSON.parse(error._body)))
-        .publishReplay(); // Make sure we return the result on subscribe
+          typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
 
-      observable.connect(); // Force the request at this stage, doesn't need a subscribe to execute.
       return observable;
     }
   }
@@ -157,10 +184,10 @@ export class RPCService {
           },
           error => {
             if (errorCB) {
-              errorCB.call(instance, error);
+              errorCB.call(instance, error.target ? error.target : error);
             }
             this.modalUpdates.next({
-              error: error,
+              error: error.target ? error.target : error,
               electron: this.isElectron
             });
             this.log.er('RPC Call returned an error', error);
@@ -230,26 +257,14 @@ export class RPCService {
     }
   }
 
-  registerPollCall(method: Function, when: string): boolean {
-    if (when.indexOf('poll') !== -1) {
-      this._callOnPoll.push(method);
-      return true;
-    }
-    if (when.indexOf('next') !== -1) {
-      this._callOnNextPoll.push(method);
-      return true;
-    }
-    return false;
-  }
-
   // TODO: Model / interface..
   private _pollCall (element: any, index: number, arr: Array<any>): void {
     this.oldCall(
       element.instance,
       element.method,
       element.params && element.params.typeOf === 'function'
-        ? element.params()
-        : element.params,
+      ? element.params()
+      : element.params,
       element.successCB,
       element.errorCB,
       true,

@@ -9,10 +9,7 @@ import { PeerService, RPCService, BlockStatusService , EncryptionStatusService }
 @Component({
   selector: 'app-status',
   templateUrl: './status.component.html',
-  styleUrls: ['./status.component.css'],
-  providers: [
-    PeerService
-  ]
+  styleUrls: ['./status.component.css']
 })
 export class StatusComponent implements OnInit, OnDestroy {
 
