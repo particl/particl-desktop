@@ -14,12 +14,4 @@
     <img src="assets/icons/network/connect_{{getIconNumber()}}.png" />
 </span>
 
-<span
-  class="icon"
-  [tooltip]="encryptionTooltip"
-  placement="left"
-  container="body"
-  (click)="toggle()">
-    <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png" />
-</span>
-
+<i class="material-icons" (click)="toggle()" mdTooltip="{{encryptionStatus}}">{{ getIconEncryption() }}</i>

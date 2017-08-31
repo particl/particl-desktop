@@ -62,15 +62,16 @@ export class StatusComponent implements OnInit {
 
   getIconEncryption() {
     switch (this.encryptionStatus) {
-      case 'Unencrypted':  // TODO: icon?
+      case 'Unencrypted':
+        return 'lock_open';
       case 'Unlocked':
-        return '_off';
+        return 'lock_open';
       case 'Unlocked, staking only':
         return '_stake';
       case 'Locked':
-        return '';
+        return 'lock';
       default:
-        return '_off'; // TODO: icon?
+        return 'lock_open';
     }
   }
 
