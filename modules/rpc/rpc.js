@@ -2,10 +2,12 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const rpc = require('node-bitcoin-rpc');
-const ipc = require('electron').ipcMain;
+const { ipcMain } = require('electron');
 const log = require('electron-log');
+const Observable = require('rxjs/Observable').Observable;
+const rxIpc = require('rx-ipc-electron/lib/main').default;
 
-
+// TODO: Mainnet...
 const MAINNET_PORT = 51935;
 const TESTNET_PORT = 51935;
 
@@ -95,13 +97,17 @@ console.log(COOKIE_FILE);
 
 rpc.init('localhost', TESTNET_PORT, auth[0], auth[1]);
 
-ipc.on("backend_particlRPCCall", function (event, method, params) {
-  log.verbose(`${__filename}: backend_particlRPCCall: ${method} - ${params}`);
-
-
-  rpc.call(method, params, (error, response) => {
-    log.verbose(`${__filename}: frontend_particlRPCCallback: ${method} - ${params} - ${response} - ${error}`, response);
-    event.sender.send('frontend_particlRPCCallback'+method, error, response);
+// This is a factory function that returns an Observable
+function createObservable(event, method, params) {
+  return Observable.create(observer => {
+    rpc.call(method, params, (error, response) => {
+      if (error) {
+        observer.error(error);
+        return;
+      }
+      observer.next(response);
+    });
   });
-});
+}
 
+rxIpc.registerListener('backend-rpccall', createObservable);

@@ -35,18 +35,28 @@
     },
     "mac": {
       "category": "public.app-category.wallet",
-      "target": ["dmg", "zip"]
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "nsis": {
       "perMachine": true,
       "oneClick": false
     },
     "win": {
-      "target": ["nsis", "zip"]
+      "target": [
+        "nsis",
+        "zip"
+      ]
     },
     "linux": {
       "maintainer": "particl contributors <hello@particl.io>",
-      "target": ["deb", "AppImage", "tar.gz"],
+      "target": [
+        "deb",
+        "AppImage",
+        "tar.gz"
+      ],
       "desktop": {
         "Comment": "Particl, P2P Privacy project",
         "Exec": "/opt/particl/partgui %U",
@@ -73,7 +83,9 @@
     "@angular/platform-browser": "^4.3.1",
     "@angular/platform-browser-dynamic": "^4.3.1",
     "@angular/router": "^4.3.1",
+    "@ngrx/store": "^4.0.3",
     "angular2-qrcode": "^2.0.1",
+    "bluebird": "^3.4.7",
     "bootstrap": "^3.3.7",
     "buffered-spawn": "^3.3.2",
     "core-js": "^2.4.1",
@@ -91,6 +103,7 @@
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.2",
     "protractor": "^5.1.2",
+    "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.4.2",
     "zeromq": "^4.5.0",
     "zone.js": "0.8.17"
@@ -114,12 +127,11 @@
     "karma-coverage-istanbul-reporter": "^1.3.0",
     "karma-jasmine": "^1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "ngx-electron": "^1.0.2",
     "node-sass": "^4.5.3",
     "protractor": "~5.1.0",
     "sass-lint": "^1.10.2",
     "ts-node": "~3.3.0",
     "tslint": "~5.7.0",
-    "typescript": "~2.4.2"
+    "typescript": "~2.5.2"
   }
 }
