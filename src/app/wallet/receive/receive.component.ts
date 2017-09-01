@@ -187,7 +187,7 @@ export class ReceiveComponent implements OnInit {
 
   /** Used to get the addresses. */
   rpc_update() {
-    this.rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success);
+    this.rpc.oldCall(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success);
   }
 
   /**
@@ -196,7 +196,7 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
-    this.rpc.call(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
+    this.rpc.oldCall(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
   }
 
   /**
@@ -297,7 +297,7 @@ export class ReceiveComponent implements OnInit {
     */
   checkIfUnusedAddress() {
     if (this.addresses.public[0].address !== 'Empty address') {
-      this.rpc.call(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
+      this.rpc.oldCall(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
     }
     setTimeout(() => {
       this.checkIfUnusedAddress();
@@ -308,7 +308,7 @@ export class ReceiveComponent implements OnInit {
     if (json > 0) {
       this.log.i('rpc_callbackUnusedAddress_success: Funds received, need unused public address');
 
-      this.rpc.call(this, 'getnewaddress', null, () => {
+      this.rpc.oldCall(this, 'getnewaddress', null, () => {
         this.log.i('rpc_callbackUnusedAddress_success: successfully retrieved new address');
 
         // just call for a complete update, just adding the address isn't possible because
@@ -325,7 +325,7 @@ export class ReceiveComponent implements OnInit {
     const call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
 
     if (!!call) {
-      this.rpc.call(this, call, [this.label], () => {
+      this.rpc.oldCall(this, call, [this.label], () => {
         this.log.i('newAddress: successfully retrieved new address');
         // just call for a complete update, just adding the address isn't possible because
         this.rpc_update();

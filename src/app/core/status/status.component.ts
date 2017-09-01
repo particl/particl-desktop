@@ -1,51 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
 
-import { PeerService, RPCService, BlockStatusService , EncryptionStatusService } from '../rpc/rpc.module';
+import { PeerService, RPCService, BlockStatusService } from '../rpc/rpc.module';
 
 @Component({
   selector: 'app-status',
   templateUrl: './status.component.html',
-  styleUrls: ['./status.component.css'],
-  providers: [
-    PeerService
-  ]
+  styleUrls: ['./status.component.css']
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit, OnDestroy {
 
-  private peerListCount: number = 0;
-  private _subPeerList: Subscription;
+  peerListCount: number = 0;
 
   public encryptionStatus: string = 'Locked';
-  private _subEncryptionStatus: Subscription;
+  private _sub: Subscription;
 
   private log: any = Log.create('status.component');
 
 
   constructor(
-    private  _peerService: PeerService,
-    private _encryptionStatusService: EncryptionStatusService,
     private _rpc: RPCService,
-    private _modalsService: ModalsService,
-    ) { }
+    private _modalsService: ModalsService) { }
 
   ngOnInit() {
-    this._subPeerList = this._peerService.getPeerList()
+    this._sub = this._rpc.chainState.skip(1)
       .subscribe(
-        peerList => this.peerListCount = peerList.length,
-        error => this.log.er(`peerListCount, subscription error: ${error}`));
-
-    this._subEncryptionStatus = this._encryptionStatusService.getEncryptionStatus()
-      .subscribe(
-        encryptionStatus => this.encryptionStatus = encryptionStatus,
+        state => {
+          this.encryptionStatus = state.chain.encryptionstatus,
+          this.peerListCount = state.chain.connections
+        },
         error => this.log.er(`getEncryptionStatus, subscription error: ${error}`));
   }
 
-  getPeerListCount() {
-    return this.peerListCount;
+  ngOnDestroy() {
+    if (this._sub) {
+      this._sub.unsubscribe();
+    }
   }
 
   getIconNumber(): number {
@@ -77,10 +70,12 @@ export class StatusComponent implements OnInit {
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
+        // TODO: Encrypt wallet modal...
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':
-        this._rpc.call(this, 'walletlock', null, () => {});
+        this._rpc.call('walletlock')
+          .subscribe();
         break;
       case 'Locked':
         this._modalsService.open('unlock');

@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
   }
 
   // TODO: remove Modal examples
-  firsttime() {
+  createWallet() {
     this._modalsService.open('createWallet');
   }
 

@@ -5,7 +5,7 @@ import { Log } from 'ng2-logger';
 import { SendService } from './send.service';
 import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
-import { EncryptionStatusService, RPCService } from '../../core/rpc/rpc.module';
+import { RPCService } from '../../core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
@@ -59,8 +59,7 @@ export class SendComponent implements OnInit, OnDestroy {
     private sendService: SendService,
     private balanceService: BalanceService,
     private _rpc: RPCService,
-    private _modals: ModalsService,
-    private _encryptionStatus: EncryptionStatusService
+    private _modals: ModalsService
   ) {
   }
 
@@ -151,15 +150,15 @@ export class SendComponent implements OnInit, OnDestroy {
       }
     }
 
-    this._rpc.call(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
+    this._rpc.oldCall(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
   }
 
 
   /** Clear the send object. */
   clear() {
     this.send = {
-      input: '',
-      output: '',
+      input: this.send.input,
+      output: this.send.output,
       validAddress: undefined,
       validAmount: undefined,
       currency: 'part',
@@ -172,7 +171,6 @@ export class SendComponent implements OnInit, OnDestroy {
     this.send.toAddress = '';
     this.send.validAddress = undefined;
   }
-
 
   /** Validation modal */
   openValidate() {
@@ -205,19 +203,17 @@ export class SendComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // Check if wallet is unlocked
-      if (this._encryptionStatus.getEncryptionStatusState() !== 'Unlocked') {
-
-        // unlock wallet and send transaction
-        this._modals.unlockWallet(this,
-          this.sendTransaction,
-          2);
-
-
-      } else {
-        // wallet already unlocked
-        this.sendTransaction();
-      }
+      this._rpc.chainState.take(1)
+        .subscribe(
+          state => {
+            if (['Locked', 'Unlocked, staking only'].indexOf(state.chain.encryptionstatus) !== -1) {
+              // unlock wallet and send transaction
+              this._modals.unlockWallet(this, this.sendTransaction, 2);
+            } else {
+              // wallet already unlocked
+              this.sendTransaction();
+            }
+          });
 
     // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
@@ -232,19 +228,20 @@ export class SendComponent implements OnInit, OnDestroy {
         return;
       }
 
-      if (this._encryptionStatus.getEncryptionStatusState() !== 'Unlocked') {
-        // unlock wallet and transfer balance
-        this._modals.unlockWallet(this,
-          this.transferBalance,
-          2);
-      } else {
-        this.transferBalance();
-      }
+      this._rpc.chainState.take(1)
+        .subscribe(
+          state => {
+            if (['Locked', 'Unlocked, staking only'].indexOf(state.chain.encryptionstatus) !== -1) {
+              // unlock wallet and send transaction
+              this._modals.unlockWallet(this, this.sendTransaction, 2);
+            } else {
+              // wallet already unlocked
+              this.sendTransaction();
+            }
+          });
 
     }
   }
-
-
 
   sendTransaction(): void {
 
@@ -308,7 +305,7 @@ export class SendComponent implements OnInit, OnDestroy {
     const label = this.send.toLabel;
     const addr = this.send.toAddress;
 
-    this._rpc.call(this, 'manageaddressbook', ['newsend', addr, label],
+    this._rpc.oldCall(this, 'manageaddressbook', ['newsend', addr, label],
       this.rpc_addLabel_success,
       this.rpc_addLabel_failed
     );
