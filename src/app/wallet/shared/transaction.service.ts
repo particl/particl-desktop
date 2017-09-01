@@ -53,50 +53,38 @@ export class TransactionService {
     this.txs = [];
   }
 
-/*
-  _____  _____   _____
- |  __ \|  __ \ / ____|
- | |__) | |__) | |
- |  _  /|  ___/| |
- | | \ \| |    | |____
- |_|  \_\_|     \_____|
-
-
-*/
-
-/*
-  Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
-
-*/
-
+  /*
+    Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
+  */
 
   rpc_update() {
-    this.rpc.call(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
-  }
+    this.rpc.call(this, 'getwalletinfo', null, (response) => {
+      this.txCount = response.txcount;
 
-  rpc_loadTransactionCount(JSON: Object): void {
-    this.txCount = JSON['txcount'];
+      this.log.d(`rpc_loadTransactionCount: txcount: ${this.txCount}`);
 
-    this.log.d('rpc_loadTransactionCount, txcount:', this.txCount);
-    this.log.d('rpc_loadTransactionCount, rpc_getParameters():', this.rpc_getParameters());
+      this.rpc.call(this, 'listtransactions', [
+          '*', +this.MAX_TXS_PER_PAGE,
+          ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)
+        ],
+        (txResponse: Array<Object>) => {
+          // The callback will send over an array of JSON transaction objects.
+          this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
+          this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
 
-    this.rpc.call(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
-  }
+          if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
+            this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
+          }
 
-  rpc_loadTransactions(JSON: Array<Object>): void {
-      /*
-        The callback will send over an array of JSON transaction objects.
-
-      */
-
-    for (let i = 0; i < JSON.length; i++) {
-      const json: Object = JSON[i];
-      this.addTransaction(json);
-    }
+          txResponse.forEach((tx) => {
+            this.addTransaction(tx);
+          });
+        });
+    });
   }
 
   rpc_getParameters() {
-    return ['*', +this.MAX_TXS_PER_PAGE, ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)];
+    return ;
   }
 
   // Deserializes JSON objects to Transaction classes.
