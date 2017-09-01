@@ -10,6 +10,7 @@ export class BlockStatusService {
 
   private _subBlockInternal: Subscription;
   private _subBlockNetwork: Subscription;
+  private _peers: Subscription;
 
   private highestBlockHeightNetwork: number = -1;
   private highestBlockHeightInternal: number = -1;
@@ -25,7 +26,8 @@ export class BlockStatusService {
     estimatedTimeLeft: undefined,
     manuallyOpened: false,
     networkBH: -1,
-    internalBH: -1
+    internalBH: -1,
+    peerList: undefined
   };
 
   constructor(
@@ -63,6 +65,13 @@ export class BlockStatusService {
           }
         },
         error => console.log('SyncingComponent subscription error:' + error));
+
+    /*
+    * Get list of peers to know if daemon is actually connected to peers
+    */
+    this._peers = this._peerService.getPeerList().subscribe(peerList => {
+      this.status.peerList = peerList;
+    });
   }
 
   /**
