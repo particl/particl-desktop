@@ -23,9 +23,14 @@ export class TransactionService {
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
 
-  constructor(
-    private rpc: RPCService
-  ) {}
+  constructor(private rpc: RPCService) {
+    rpc.chainState.subscribe(state => {
+      if (state.chain) {
+        this.txCount = state.chain.txcount;
+        this.rpc_update();
+      }
+    })
+  }
 
 
   postConstructor(MAX_TXS_PER_PAGE: number) {
@@ -53,51 +58,29 @@ export class TransactionService {
     this.txs = [];
   }
 
-/*
-  _____  _____   _____
- |  __ \|  __ \ / ____|
- | |__) | |__) | |
- |  _  /|  ___/| |
- | | \ \| |    | |____
- |_|  \_\_|     \_____|
-
-
-*/
-
-/*
-  Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
-
-*/
-
+  /*
+    Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
+  */
 
   rpc_update() {
-    // TODO: This should use the State service
-    this.rpc.oldCall(this, 'getwalletinfo', null, this.rpc_loadTransactionCount);
-  }
+    this.rpc.call('listtransactions', [
+      '*', +this.MAX_TXS_PER_PAGE,
+      ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)
+    ])
+    .subscribe(
+      (txResponse: Array<Object>) => {
+        // The callback will send over an array of JSON transaction objects.
+        this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
+        this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
 
-  rpc_loadTransactionCount(JSON: Object): void {
-    this.txCount = JSON['txcount'];
+        if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
+          this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
+        }
 
-    this.log.d('rpc_loadTransactionCount, txcount:', this.txCount);
-    this.log.d('rpc_loadTransactionCount, rpc_getParameters():', this.rpc_getParameters());
-
-    this.rpc.oldCall(this, 'listtransactions', this.rpc_getParameters(), this.rpc_loadTransactions);
-  }
-
-  rpc_loadTransactions(JSON: Array<Object>): void {
-      /*
-        The callback will send over an array of JSON transaction objects.
-
-      */
-
-    for (let i = 0; i < JSON.length; i++) {
-      const json: Object = JSON[i];
-      this.addTransaction(json);
-    }
-  }
-
-  rpc_getParameters() {
-    return ['*', +this.MAX_TXS_PER_PAGE, ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)];
+        txResponse.forEach((tx) => {
+          this.addTransaction(tx);
+        });
+      });
   }
 
   // Deserializes JSON objects to Transaction classes.
@@ -113,3 +96,4 @@ export class TransactionService {
   }
 
 }
+

@@ -187,7 +187,14 @@ export class ReceiveComponent implements OnInit {
 
   /** Used to get the addresses. */
   rpc_update() {
-    this.rpc.oldCall(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success);
+    // this.rpc.oldCall(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success);
+    this.rpc.call('filteraddresses', [-1])
+      .subscribe(response => {
+        this.rpc_loadAddressCount_success(response)
+      },
+      error => {
+        this.log.i('error', error);
+      });
   }
 
   /**
@@ -196,7 +203,15 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
-    this.rpc.oldCall(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
+    // this.rpc.oldCall(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
+    this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
+      .subscribe(
+        (response: Array<any>) => {
+        this.rpc_loadAddresses_success(response)
+      },
+      error => {
+        this.log.i('error', error);
+      });
   }
 
   /**
@@ -325,13 +340,24 @@ export class ReceiveComponent implements OnInit {
     const call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
 
     if (!!call) {
-      this.rpc.oldCall(this, call, [this.label], () => {
-        this.log.i('newAddress: successfully retrieved new address');
-        // just call for a complete update, just adding the address isn't possible because
-        this.rpc_update();
-        this.closeNewAddress();
-        this.addLableForm.reset();
-      });
+      // this.rpc.oldCall(this, call, [this.label], () => {
+      //   this.log.i('newAddress: successfully retrieved new address');
+      //   // just call for a complete update, just adding the address isn't possible because
+      //   this.rpc_update();
+      //   this.closeNewAddress();
+      //   this.addLableForm.reset();
+      // });
+      this.rpc.call(call, [this.label])
+        .subscribe(response => {
+          this.log.i('newAddress: successfully retrieved new address');
+          // just call for a complete update, just adding the address isn't possible because
+          this.rpc_update();
+          this.closeNewAddress();
+          this.addLableForm.reset();
+        },
+        error => {
+          this.log.i('error', error);
+        });
     }
   }
 
