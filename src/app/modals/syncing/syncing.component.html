@@ -8,6 +8,9 @@
         <div class="alert">
           <b>SPENDING PARTICL MAY NOT BE POSSIBLE DURING THAT PHASE!</b><!-- TODO: Red bold text (Information / Alert / Warning class?) -->
         </div>
+        <div *ngIf="nPeers < 1" class="alert">
+          Warning : no peers connected. Please check your Internet connection.
+        </div>
       </div>
     </div>
   </div>
