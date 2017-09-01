@@ -6,6 +6,7 @@ import { BlockStatusService } from './blockstatus.service'
 import { ElectronService } from 'ngx-electron';
 import { PeerService } from './peer.service';
 import { RPCService } from './rpc.service';
+import { RPXService } from './rpx.class';
 
 import { reducer } from './chain-state/chain-state.reducers';
 
@@ -23,7 +24,8 @@ export class RpcModule {
         BlockStatusService,
         ElectronService,
         PeerService,
-        RPCService
+        RPCService,
+        RPXService
       ]
     };
   }
