@@ -99,7 +99,7 @@ export class AddressBookComponent implements OnInit {
 
     if (this.label !== undefined) {
 
-      this._rpc.call(this, 'manageaddressbook', ['newsend', this.address, this.label],
+      this._rpc.oldCall(this, 'manageaddressbook', ['newsend', this.address, this.label],
         this.rpc_addAddressToBook_success,
         this.rpc_addAddressToBook_failed
       );
@@ -152,7 +152,7 @@ export class AddressBookComponent implements OnInit {
       return;
     }
 
-    this._rpc.call(this, 'validateaddress', [this.address], this.rpc_verifyAddress_success);
+    this._rpc.oldCall(this, 'validateaddress', [this.address], this.rpc_verifyAddress_success);
     return;
   }
 

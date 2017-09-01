@@ -10,23 +10,69 @@
     "webpack",
     "typescript"
   ],
+  "author": "Particl contributors",
   "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint --type-check && htmlhint --ignore **/documentation/** && sass-lint -v",
+    "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/packages/** && sass-lint -v",
     "e2e": "ng e2e",
     "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.2",
-    "start:electron": "npm run build:electron && electron .",
-    "package-mac": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --prune=true --out=release-builds",
-    "package-windows": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds",
-    "package-linux": "npm run build:electron && electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds",
+    "start:electron:dev": "electron . --dev",
+    "start:electron": "npm run build:electron && electron . --dev",
+    "package": "npm run build:electron && electron-builder -mwl",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compdoc": "compodoc -p tsconfig.json"
   },
-  "private": true,
+  "build": {
+    "electronVersion": "1.7.5",
+    "appId": "io.particl.partgui",
+    "directories": {
+      "buildResources": "src/resources",
+      "output": "packages"
+    },
+    "mac": {
+      "category": "public.app-category.wallet",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "nsis": {
+      "perMachine": true,
+      "oneClick": false
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "linux": {
+      "maintainer": "particl contributors <hello@particl.io>",
+      "target": [
+        "deb",
+        "AppImage",
+        "tar.gz"
+      ],
+      "desktop": {
+        "Comment": "Particl, P2P Privacy project",
+        "Exec": "/opt/particl/partgui %U",
+        "Icon": "Particl",
+        "Name": "Particl",
+        "Path": "/opt/Particl/",
+        "StartupNotify": "true",
+        "Terminal": "false",
+        "Type": "Application",
+        "Categories": "P2P;eCommerce;Development;"
+      },
+      "category": "ecommerce",
+      "packageCategory": "wallet"
+    },
+    "asar": true
+  },
   "dependencies": {
     "@angular/animations": "^4.3.1",
     "@angular/common": "^4.3.1",
@@ -37,11 +83,13 @@
     "@angular/platform-browser": "^4.3.1",
     "@angular/platform-browser-dynamic": "^4.3.1",
     "@angular/router": "^4.3.1",
+    "@ngrx/store": "^4.0.3",
     "angular2-qrcode": "^2.0.1",
+    "bluebird": "^3.4.7",
     "bootstrap": "^3.3.7",
     "buffered-spawn": "^3.3.2",
     "core-js": "^2.4.1",
-    "electron": "^1.6.11",
+    "electron-log": "^2.2.7",
     "font-awesome": "^4.7.0",
     "got": "^7.1.0",
     "lodash.get": "^4.4.2",
@@ -51,10 +99,13 @@
     "ngx-bootstrap": "^1.8.0",
     "ngx-clipboard": "^8.0.3",
     "ngx-electron": "^1.0.2",
+    "node-bitcoin-rpc": "^1.1.2",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.2",
     "protractor": "^5.1.2",
+    "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.4.2",
+    "zeromq": "^4.5.0",
     "zone.js": "0.8.17"
   },
   "devDependencies": {
@@ -65,7 +116,8 @@
     "@types/node": "~8.0.12",
     "codelyzer": "~3.1.2",
     "coveralls": "^2.13.1",
-    "electron-packager": "^8.7.2",
+    "electron": "^1.7.5",
+    "electron-builder": "^19.22.1",
     "htmlhint": "^0.9.13",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.0",
@@ -80,7 +132,6 @@
     "sass-lint": "^1.10.2",
     "ts-node": "~3.3.0",
     "tslint": "~5.7.0",
-    "typescript": "~2.5.2",
-    "zeromq": "^4.5.0"
+    "typescript": "~2.5.2"
   }
 }

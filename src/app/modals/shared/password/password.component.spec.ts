@@ -34,8 +34,8 @@ describe('PasswordComponent', () => {
   });
 
   it('should get password input type', () => {
-    component.passwordInputType();
-    expect(component.password).toBeUndefined();
+    component.getInputType();
+    expect(component.getInputType()).toBe('password');
   });
 
   it('should get showPass', () => {

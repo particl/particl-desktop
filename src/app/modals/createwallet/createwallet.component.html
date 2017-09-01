@@ -106,7 +106,7 @@
 
     <app-password
       #passwordComponent
-      unlockText="RECOVERYPHRASE PASSWORD (OPTIONAL)"
+      label="RECOVERYPHRASE PASSWORD (OPTIONAL)"
       [emitPassword]="true"
       [isDisabled]="[3,4].indexOf(step) != -1"
       (passwordEmitter)="passwordFromEmitter($event)"
@@ -176,8 +176,8 @@
     </div>
 
     <app-password
-      unlockText="RECOVERY PASSPHRASE"
-      unlockButton="RESTORE WALLET"
+      label="RECOVERY PASSPHRASE"
+      buttonText="RESTORE WALLET"
       [showStakeOnly]="false"
       [emitPassword]="true"
       (passwordEmitter)="passwordFromEmitter($event);nextStep()">
@@ -185,7 +185,7 @@
 
     <div class="buttons margin-top-30px">
       <div class="row wallet-buttons-container">
-        <div class="col-xs-6">
+        <div class="col-sm-6 col-xs-12 text-right">
           <button class="control" (click)="prevStep();restore()">
             back
           </button>
@@ -201,6 +201,7 @@
         <div class="col-xs-12 text-center">
           <h4>Congratulations with your new wallet</h4>
           <div>
+            <!-- TODO: Final text?!?! -->
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
           </div>
         </div>

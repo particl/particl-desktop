@@ -58,12 +58,12 @@ export class TransactionService {
   */
 
   rpc_update() {
-    this.rpc.call(this, 'getwalletinfo', null, (response) => {
+    this.rpc.oldCall(this, 'getwalletinfo', null, (response) => {
       this.txCount = response.txcount;
 
       this.log.d(`rpc_loadTransactionCount: txcount: ${this.txCount}`);
 
-      this.rpc.call(this, 'listtransactions', [
+      this.rpc.oldCall(this, 'listtransactions', [
           '*', +this.MAX_TXS_PER_PAGE,
           ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)
         ],
@@ -81,10 +81,6 @@ export class TransactionService {
           });
         });
     });
-  }
-
-  rpc_getParameters() {
-    return ;
   }
 
   // Deserializes JSON objects to Transaction classes.

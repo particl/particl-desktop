@@ -1,28 +1,30 @@
-const electron = require('electron')
+const electron = require('electron');
 // Module to control application life.
-const app = electron.app
-const ipc = electron.ipcMain
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const app = electron.app;
 
-const path = require('path')
-const url = require('url')
-const platform = require('os').platform()
-const zmq = require('zeromq')
-const sock = zmq.socket('sub')
+// Module to create native browser window.
+const BrowserWindow = electron.BrowserWindow;
+
+const path = require('path');
+const url = require('url');
+const platform = require('os').platform();
+const zmq = require('zeromq');
+const sock = zmq.socket('sub');
+const log = require('electron-log');
+
+log.transports.file.appName = '.particl';
+log.transports.file.file = log.transports.file.findLogPath(log.transports.file.appName).replace('log.log', 'partgui.log');
+
+require('./modules/rpc/rpc');
 
 const daemonManager = require('./modules/clientBinaries/clientBinaries');
 
-sock.connect('tcp://127.0.0.1:30000')
-sock.subscribe('hashtx')
-sock.subscribe('hashblock')
+sock.connect('tcp://127.0.0.1:30000');
+sock.subscribe('hashtx');
+sock.subscribe('hashblock');
 
 sock.on('message', function(topic, message) {
   console.log('received a message related to:', topic, 'containing message:', message);
-})
-
-ipc.on("fromMain", function (a, b) {
-  ipc.send("fromRenderer", a, b);
 });
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -38,7 +40,7 @@ function createWindow () {
   });
 
   // Default tray image + icon
-  let trayImage = path.join(__dirname, 'src/assets/icons/logo.png')
+  let trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
 
   // Determine appropriate icon for platform
   if (platform === 'darwin') {
@@ -94,17 +96,21 @@ function createWindow () {
     icon: trayImage,
     webPreferences: {
       //sandbox: true,
-      nodeIntegration: false,
-      preload: 'preload.js'
-    }
+      //nodeIntegration: false,
+      preload: 'preload.js',
+    },
   })
 
   // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'dist/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  if (process.argv.indexOf('--dev') === -1) {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'dist/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+  } else {
+    mainWindow.loadURL('http://localhost:4200/');
+  }
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()

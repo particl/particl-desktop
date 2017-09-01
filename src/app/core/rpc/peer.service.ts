@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs'; // use this for testing atm
+import { Observable, Observer, Subscription } from 'rxjs'; // use this for testing atm
 
 import { RPCService } from './rpc.service';
 
@@ -13,13 +13,16 @@ export class PeerService {
 
   private _highestBlockHeightNetwork: Observable<number>;
   private _observerHighestBlockHeightNetwork: Observer<number>;
+  private subs: Subscription;
 
-  constructor(public rpc: RPCService) {
+  constructor(
+    public rpc: RPCService) {
 
-    this.rpc.register(this, 'getpeerinfo', null, this.setPeerList, 'block');
-    this.rpc.register(this, 'getblockcount', null, this.setBlockCount, 'block');
+    this.rpc.registerStateCall('getpeerinfo');
 
-    this._peerList = Observable.create(observer => this._observerPeerList = observer).publishReplay(1).refCount();
+    this._peerList = Observable.create(
+      observer => this._observerPeerList = observer
+    ).publishReplay(1).refCount();
     this._peerList.subscribe().unsubscribe();
 
     // setup observable for internal block height
@@ -31,26 +34,32 @@ export class PeerService {
 
     // setup observable for network block height
     this._highestBlockHeightNetwork = Observable.create(
-      observer => this._observerHighestBlockHeightNetwork = observer
+      observer => {
+        this._observerHighestBlockHeightNetwork = observer
+
+        this.rpc.chainState.subscribe(
+          state => {
+            if (state.chain) {
+              this._observerPeerList.next(state.chain.getpeerinfo);
+              this._observerHighestBlockHeightInternal.next(state.chain.blocks);
+              this.setPeerList(state.chain.getpeerinfo);
+            }
+          });
+      }
     ).publishReplay(1).refCount();
 
     this._highestBlockHeightNetwork.subscribe().unsubscribe();
-
   }
 
-  private setPeerList(json: Array<Object>) {
+  private setPeerList(peerList: Array<Object>) {
 
     // hook network block height changes
-    this._observerHighestBlockHeightNetwork.next(this.setBlockCountNetwork(json));
+    this._observerHighestBlockHeightNetwork.next(this.calculateBlockCountNetwork(peerList));
 
-    this._observerPeerList.next(json);
+    this._observerPeerList.next(peerList);
   }
 
-  private setBlockCount(height: number) {
-    this._observerHighestBlockHeightInternal.next(height);
-  }
-
-  private setBlockCountNetwork(peerList: Array<Object>): number {
+  private calculateBlockCountNetwork(peerList: Array<Object>): number {
     let highestBlockHeightNetwork = -1;
 
     for (const peer in peerList) {

@@ -58,17 +58,8 @@ export class AppComponent implements OnInit {
     this.log.d('debug');
   }
 
-  // TODO: remove Modal examples
-  firsttime() {
+
+  createWallet() {
     this._modalsService.open('createWallet', {forceOpen: true});
-  }
-
-  syncing() {
-    this._statusService.setManuallyOpened();
-    this._modalsService.open('syncing');
-  }
-
-  unlock() {
-    this._modalsService.open('unlock');
   }
 }
