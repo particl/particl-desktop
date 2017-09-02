@@ -1,29 +1,39 @@
+<md-card>
+  <md-card-content>
 <app-header>
   <div class="container-fluid header">
-    <ul class="header-nav">
-      <li [class.active]="type === 'sendPayment'">
-        <a href="javascript:void(0)" (click)="sendTab('sendPayment')">
-          Send payment
-        </a>
-      </li>
-      <li [class.active]="type === 'balanceTransfer'">
-        <a href="javascript:void(0)" (click)="sendTab('balanceTransfer')">
-          Balance transfer
-        </a>
-      </li>
-    </ul>
-    <div class="pull-right header-option"
-      (click)="toggleAdvanced()"
-      [ngClass]="{selected: advanced}">
-      <div class="header-option-container">
-        <div class="header-option-text">
-          <span class="icon nc-icon nc-settings-gear-65 header-option-icon"></span>
-          <span>
-            Advanced options
-          </span>
-        </div>
+    <div [fxLayout]="'row'">
+      <div fxFlex="80%">
+        <md-tab-group (selectChange)="sendTab($event.index)">
+          <md-tab>
+            <ng-template md-tab-label>
+              Send payment
+            </ng-template>
+          </md-tab>
+          <md-tab>
+            <ng-template md-tab-label>
+              Balance transfer
+            </ng-template>
+          </md-tab>
+        </md-tab-group>
+      </div>
+      <div fxFlex="20%">
+        <button class="btn btn-default" (click)="toggleAdvanced()"> <md-icon>settings</md-icon> Action</button>
       </div>
     </div>
+
+    <!--<div class="pull-right header-option"-->
+      <!--(click)="toggleAdvanced()"-->
+      <!--[ngClass]="{selected: advanced}">-->
+      <!--<div class="header-option-container">-->
+        <!--<div class="header-option-text">-->
+          <!--<span class="icon nc-icon nc-settings-gear-65 header-option-icon"></span>-->
+          <!--<span>-->
+            <!--Advanced options-->
+          <!--</span>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </app-header>
 
@@ -220,3 +230,5 @@
 
   </div>
 </div>
+  </md-card-content>
+</md-card>

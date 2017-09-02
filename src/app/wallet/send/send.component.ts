@@ -82,8 +82,13 @@ export class SendComponent implements OnInit, OnDestroy {
     UI logic
   */
 
-  sendTab(type: string) {
-    this.type = type;
+  sendTab(tabIndex: number) {
+    if (tabIndex) {
+      this.type = 'balanceTransfer';
+    } else {
+      this.type = 'sendPayment';
+    }
+
   }
 
   toggleAdvanced() {
