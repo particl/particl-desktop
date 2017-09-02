@@ -7,8 +7,7 @@ const log = require('electron-log');
 const Observable = require('rxjs/Observable').Observable;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 
-// TODO: Mainnet...
-const MAINNET_PORT = 51935;
+const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
 
 const COOKIE_FILE = findCookiePath() + '/testnet/.cookie';

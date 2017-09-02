@@ -18,12 +18,14 @@ export class SyncingComponent {
   estimatedTimeLeft: string;
   manuallyOpened: boolean;
   syncPercentage: number;
+  nPeers: number;
 
   constructor(
     private _blockStatusService: BlockStatusService,
     private _rpcService: RPCService
   ) {
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
+      this.nPeers = status.peerList ? status.peerList.length : 0;
       this.remainder = status.remainingBlocks < 0
         ? 'waiting for peers...'
         : status.remainingBlocks;

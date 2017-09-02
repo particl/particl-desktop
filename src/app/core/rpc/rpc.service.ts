@@ -131,6 +131,7 @@ export class RPCService {
 
   registerStateCall(method: string, timeout?: number): void {
     if (timeout) {
+      let first = true;
       const _call = () => {
         this.call(method)
           .subscribe(
@@ -144,10 +145,13 @@ export class RPCService {
             },
             error => {
               this.stateCallError(error);
-              this.modalUpdates.next({
-                error: error.target ? error.target : error,
-                electron: this.isElectron
-              });
+              if (!first) {
+                this.modalUpdates.next({
+                  error: error.target ? error.target : error,
+                  electron: this.isElectron
+                });
+              }
+              first = false;
               setTimeout(_call, 10000);
             });
       }

@@ -20,6 +20,7 @@ export class ModalsService {
   public enableClose: boolean = true;
 
   private isOpen: boolean = false;
+  private manuallyClosed: any[] = [];
 
   private data: string;
 
@@ -51,10 +52,15 @@ export class ModalsService {
 
   open(modal: string, data?: any): void {
     if (modal in this.messages) {
-      this.log.d(`next modal: ${modal}`);
-      this.modal = this.messages[modal];
-      this.message.next({modal: this.modal, data: data});
-      this.isOpen = true;
+      if (
+        (data && data.forceOpen)
+        || !this.manuallyClosed.includes(this.messages[modal].name)
+      ) {
+        this.log.d(`next modal: ${modal}`);
+        this.modal = this.messages[modal];
+        this.message.next({modal: this.modal, data: data});
+        this.isOpen = true;
+      }
     } else {
       this.log.er(`modal ${modal} doesn't exist`);
     }
@@ -62,6 +68,9 @@ export class ModalsService {
 
   close() {
     this.isOpen = false;
+    if (this.modal && !this.manuallyClosed.includes(this.modal.name)) {
+      this.manuallyClosed.push(this.modal.name);
+    }
   }
 
   getMessage() {

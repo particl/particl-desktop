@@ -37,14 +37,17 @@ class Manager extends EventEmitter {
   }
 
   startDaemon() {
-    // TODO: rpc cookie
+    /**
     const user = 'test';
     const password = 'test';
+    */
     const args = [
+      /*
       `-rpcuser=${user}`,
       `-rpcpassword=${password}`,
       `-rpccorsdomain=http://localhost:4200`,
       `-rpcport=51935`
+      */
     ];
     const child = spawn(this._availableClients['particld'].binPath, args);
     return (child);
