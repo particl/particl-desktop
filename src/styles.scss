@@ -1,5 +1,5 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
 
 body {
     font-family: 'Open Sans', sans-serif;
@@ -468,4 +468,41 @@ input.verify-sucess {
 
 .containerX{width: 100%;}
 .header-icons .material-icons{margin: 0 5px;}
+
+.md-expansion-menu > md-expansion-panel{
+  color: #ffffff;
+  background-color: #1c2825;
+}
+
+.mat-expansion-indicator.ng-tns-c7-2.ng-trigger.ng-trigger-indicatorRotate::after{ color: #41ECC2}
+.md-expansion-menu span { color: #938f8f; }
+.capitalize {
+  text-transform: capitalize;
+}
+
+/*list*/
+.mat-input-wrapper{
+  input.mat-input-element{height: 27px;}
+  .mat-icon{position: absolute;right: 0;top: 0;cursor: pointer;}
+  .mat-form-field-underline {
+    background-color: #ddd;
+  }
+  &:after{
+    content: '';
+    height: 30px;
+    width: 1px;
+    position: absolute;
+    left: -10px;
+    top: 10px;
+    background: #ddd;
+  }
+
+}
+
+.list-data{
+  .mat-list-item{font-size: 14px;word-wrap: break-word;line-height: 22px;}
+  .mat-subheader{padding-left:0;padding-right:0; }
+  .mat-divider{margin: 15px 0;}
+}
+
 
