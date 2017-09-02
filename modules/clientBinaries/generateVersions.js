@@ -10,7 +10,7 @@ var maintainer = "tecnovert";
  */
 var getHash = function (platform, name, hashes) {
   var filter = new RegExp(`.*${name}`);
-  sha256 = hashes[platform].match(filter);
+  var sha256 = hashes[platform].match(filter);
   if (sha256) {
     sha256 = sha256[0].trim().split(" ")[0];
   } else {
@@ -111,16 +111,17 @@ var getHashesForPlatform = function (platform, path, hashes, promises) {
     got(`${signaturesURL}/${path}/${maintainer}`).then(response => {
 
       var files = JSON.parse(response.body);
-      for (id in files) {
-        if (!files[id].name.includes("assert.sig")) {
 
-          got(`${files[id].download_url}`).then(response => {
+      files.forEach(file => {
+
+        if (!file.name.includes("assert.sig")) {
+          got(`${file.download_url}`).then(response => {
             hashes[platform] = response.body;
             resolve(response.body);
           }).catch(error => reject(error)); /* sig file */
-
         }
-      }
+
+      })
 
     }).catch(error => reject(error)); /* folder containing sig files */
 
@@ -134,64 +135,59 @@ var getHashesForPlatform = function (platform, path, hashes, promises) {
 got(`${releasesURL}`).then(response => {
 
   var release = JSON.parse(response.body)[0];
-  var version = release.tag_name.substring(1);
+  var tag = release.tag_name.substring(1);
   var binaries = [];
 
   // get gitian repository of hashes
   got(`${signaturesURL}`).then(response => {
 
-    // prepare JSON object for the output file
-    var json = {
-      clients: {
-        particld: {
-          version: version,
-          platforms: {}
-        }
-      }
-    }
-
     var versions = JSON.parse(response.body);
     var hashes = {};
     var promises = [];
 
-    for (id in versions) {
+    versions.forEach(version => {
       // select folders that match the current version
-      if (versions[id].name.includes(version)) {
+      if (version.name.includes(tag)) {
         // extract matching folder's platform
-        var platformIndex = versions[id].name.indexOf("-");
-        var platform = versions[id].name.substring(platformIndex + 1);
+        var platformIndex = version.name.indexOf("-");
+        var platform = version.name.substring(platformIndex + 1);
         // wait for hashes to be added to our hashes array
-        promises.push(getHashesForPlatform(platform, versions[id].name, hashes));
+        promises.push(getHashesForPlatform(platform, version.name, hashes));
       }
-    }
+    })
 
     // once we have all hashes
     Promise.all(promises).then(function () {
-      // get asset details for each release entry
-      for (id in release.assets) {
-        if (!release.assets.hasOwnProperty(id)) { continue ; }
-        var asset = release.assets[id];
-        var entry = getAssetDetails(asset, hashes, version);
-        if (entry) {
-          binaries.push(entry);
+      // prepare JSON object for the output file
+      var json = {
+        clients: {
+          particld: {
+            version: tag,
+            platforms: {}
+          }
         }
       }
+      // get asset details for each release entry
+      var entry;
+      release.assets.forEach(asset => {
+        if ((entry = getAssetDetails(asset, hashes, tag))) {
+          binaries.push(entry);
+        }
+      })
       // include entries in JSON object
       var platforms = json.clients.particld.platforms;
-      for (id in binaries) {
-        if (!binaries.hasOwnProperty(id)) { continue ; }
-        var binary = binaries[id];
+      binaries.forEach(binary => {
         // define an empty object for current platform if not already defined
         if (!platforms[binary.platform]) {
           platforms[binary.platform] = {};
         }
         platforms[binary.platform][binary.arch] = binary.entry;
-      }
+      })
       // generate JSON file
       var stringJSON = JSON.stringify(json, null, 2);
       var path = "./modules/clientBinaries/clientBinaries.json";
-      fs.writeFile(path, stringJSON, function(err) {
-        if(err) {
+      fs.writeFile(path, stringJSON, function(error) {
+        if (error) {
           return (console.error(err));
         }
         console.log("JSON file generated: " + path);
