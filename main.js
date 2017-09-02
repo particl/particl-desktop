@@ -91,8 +91,8 @@ function createWindow () {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 600,
+    width: 1280,
+    height: 720,
     icon: trayImage,
     webPreferences: {
       //sandbox: true,

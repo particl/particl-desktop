@@ -46,7 +46,7 @@ describe('ModalsComponent', () => {
   });
 
   it('should open and close', () => {
-    component.open(UnlockwalletComponent);
+    component.open(UnlockwalletComponent, {forceOpen: true});
     expect(component.modal).toBeDefined();
     component.close();
   });

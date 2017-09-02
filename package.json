@@ -21,8 +21,9 @@
     "e2e": "ng e2e",
     "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.2",
     "start:electron:dev": "electron . --dev",
-    "start:electron": "npm run build:electron && electron . --dev",
-    "package": "npm run build:electron && electron-builder -mwl",
+    "start:electron": "npm run build:electron && electron .",
+    "package:win": "npm run build:electron && electron-builder --win --x64 --ia32",
+    "package": "npm run build:electron && electron-builder -ml && npm run package:win",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compdoc": "compodoc -p tsconfig.json"
   },
