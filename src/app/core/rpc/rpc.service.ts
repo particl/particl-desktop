@@ -272,23 +272,16 @@ export class RPCService {
 
   // TODO: Model / interface..
   private _pollCall (element: any, index: number, arr: Array<any>): void {
-    this.call(element.method, element.params && element.params.typeOf === 'function'
-        ? element.params()
-        : element.params ).subscribe(
-            response => {
-              element.successCB.call(element.instance, response);
-              if (true && (index === arr.length - 1)) {
-                this._callOnPoll.forEach((func) => func());
-                this._callOnNextPoll.forEach((func) => func());
-                this._callOnNextPoll = [];
-              }
-            },
-            error => {
-              if (element.errorCB) {
-                element.errorCB.call(element.instance, error.target ? error.target : error);
-              }
-              this.log.er('RPC Call returned an error', error);
-            });
+    this.oldCall(
+      element.instance,
+      element.method,
+      element.params && element.params.typeOf === 'function'
+      ? element.params()
+      : element.params,
+      element.successCB,
+      element.errorCB,
+      true,
+      index === arr.length - 1);
   }
 
   /**
