@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Observable } from 'rxjs/Observable';
-
 
 // RxIPC related stuffs
 
@@ -10,7 +9,8 @@ export class RPXService {
   private listenerCount: number = 0;
   listeners: { [id: string]: boolean } = {};
   constructor(
-      public electronService: ElectronService
+      public electronService: ElectronService,
+      public zone: NgZone
   ) {
   }
   rpxCall() {
@@ -53,7 +53,9 @@ export class RPXService {
         .on(subChannel, function listener(event: Event, type: string, data: Object) {
         switch (type) {
           case 'n':
-            observer.next(data);
+            self.zone.run(() => {
+              observer.next(data);
+            })
             break;
           case 'e':
             observer.error(data);

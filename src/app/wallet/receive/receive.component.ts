@@ -312,7 +312,14 @@ export class ReceiveComponent implements OnInit {
     */
   checkIfUnusedAddress() {
     if (this.addresses.public[0].address !== 'Empty address') {
-      this.rpc.oldCall(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
+      // this.rpc.oldCall(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
+      this.rpc.call('getreceivedbyaddress', [this.addresses.public[0].address, 0])
+      .subscribe(response => {
+        this.rpc_callbackUnusedAddress_success(response)
+      },
+      error => {
+        this.log.i('error', error);
+      });
     }
     setTimeout(() => {
       this.checkIfUnusedAddress();
@@ -323,11 +330,22 @@ export class ReceiveComponent implements OnInit {
     if (json > 0) {
       this.log.i('rpc_callbackUnusedAddress_success: Funds received, need unused public address');
 
-      this.rpc.oldCall(this, 'getnewaddress', null, () => {
+      // this.rpc.oldCall(this, 'getnewaddress', null, () => {
+      //   this.log.i('rpc_callbackUnusedAddress_success: successfully retrieved new address');
+
+      //   // just call for a complete update, just adding the address isn't possible because
+      //   this.rpc_update();
+      // });
+
+      this.rpc.call('getnewaddress', null)
+      .subscribe(response => {
         this.log.i('rpc_callbackUnusedAddress_success: successfully retrieved new address');
 
         // just call for a complete update, just adding the address isn't possible because
         this.rpc_update();
+      },
+      error => {
+        this.log.i('error');
       });
     }
   }
@@ -356,7 +374,7 @@ export class ReceiveComponent implements OnInit {
           this.addLableForm.reset();
         },
         error => {
-          this.log.i('error', error);
+          this.log.i('error');
         });
     }
   }

@@ -24,12 +24,6 @@ export class TransactionService {
   MAX_TXS_PER_PAGE: number = 10;
 
   constructor(private rpc: RPCService) {
-    rpc.chainState.subscribe(state => {
-      if (state.chain) {
-        this.txCount = state.chain.txcount;
-        this.rpc_update();
-      }
-    })
   }
 
 
@@ -52,6 +46,12 @@ export class TransactionService {
     this.currentPage = page;
     this.deleteTransactions();
     this.rpc_update();
+    this.rpc.chainState.subscribe(state => {
+      if (state.chain) {
+        this.txCount = state.chain.txcount;
+        this.rpc_update();
+      }
+    })
   }
 
   deleteTransactions() {
