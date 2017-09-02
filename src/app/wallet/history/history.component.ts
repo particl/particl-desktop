@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { TransactionCategory } from '../shared/transaction.model';
 
@@ -7,18 +7,22 @@ import { TransactionCategory } from '../shared/transaction.model';
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss']
 })
-export class HistoryComponent implements OnInit {
+export class HistoryComponent {
 
   category: TransactionCategory = 'all';
+  tabsTtitles: Array<any> = ['all', 'send', 'receive', 'stake', 'orphaned Stake'];
 
   constructor() { }
 
-  ngOnInit() {
-  }
-
   filterByCategory(category: TransactionCategory) {
-    console.log(`filter by: ${category}`);
     this.category = category;
   }
 
+  changeTab(tabIndex: number): void {
+    if (tabIndex === 4) {
+      this.filterByCategory(this.tabsTtitles['orphaned_stake']);
+    } else {
+      this.filterByCategory(this.tabsTtitles[tabIndex]);
+    }
+  }
 }
