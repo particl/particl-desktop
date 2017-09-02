@@ -11,6 +11,8 @@ import { AccordionModule } from './accordion/accordion.module';
 import { HeaderComponent } from './header/header.component';
 import { TableComponent } from './table/table.component';
 import { GridComponent } from './grid/grid.component';
+import { MaterialModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   imports: [
@@ -20,7 +22,9 @@ import { GridComponent } from './grid/grid.component';
     PaginationModule.forRoot(),
     AccordionModule,
     ModalModule.forRoot(),
-    TooltipModule.forRoot()
+    TooltipModule.forRoot(),
+    MaterialModule,
+    FlexLayoutModule
   ],
   declarations: [
     HeaderComponent,
