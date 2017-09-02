@@ -254,3 +254,37 @@ app-header {
   margin-top: 5px;
 }
 
+.demo-basic {
+  padding: 0;
+}
+.demo-basic .mat-card-content {
+  padding: 16px;
+}
+.demo-full-width {
+  width: 100%;
+}
+
+.demo-card {
+  margin: 16px;
+}
+
+.demo-text-align-end {
+  text-align: end;
+}
+
+.demo-textarea {
+  resize: none;
+  border: none;
+  overflow: auto;
+  padding: 0;
+  background: lightblue;
+}
+
+.mat-form-field-wrapper {
+  padding-bottom: 1.96em !important;
+}
+
+.mat-form-field-infix {
+  padding: .8375em 0 !important;
+  border-top: .84375em solid transparent;
+}

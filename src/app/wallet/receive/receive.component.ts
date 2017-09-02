@@ -19,7 +19,7 @@ export class ReceiveComponent implements OnInit {
   public openNewAddressModal: boolean = false;
   public addLableForm: FormGroup;
   public label: string;
-
+  // public tabsTitle
   defaultAddress: Object = {
     id: 0,
     label: 'Empty label',
@@ -159,6 +159,14 @@ export class ReceiveComponent implements OnInit {
     }
 
     this.selectAddress(this.addresses[type][0]);
+  }
+
+  changeTab(tab: number) {
+    if (tab) {
+      this.setAddressType('private');
+    } else {
+      this.setAddressType('public');
+    }
   }
 
   getAddressType() {
@@ -333,10 +341,6 @@ export class ReceiveComponent implements OnInit {
         this.addLableForm.reset();
       });
     }
-  }
-
-  selectInput() {
-    (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
   }
 
   openNewAddress(): void {
