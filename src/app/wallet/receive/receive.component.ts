@@ -193,7 +193,7 @@ export class ReceiveComponent implements OnInit {
         this.rpc_loadAddressCount_success(response)
       },
       error => {
-        this.log.i('error', error);
+        this.log.er('error', error);
       });
   }
 
@@ -206,11 +206,11 @@ export class ReceiveComponent implements OnInit {
     // this.rpc.oldCall(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
     this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
       .subscribe(
-        (response: Array<any>) => {
-        this.rpc_loadAddresses_success(response)
+        (resp: Array<any>) => {
+        this.rpc_loadAddresses_success(resp)
       },
       error => {
-        this.log.i('error', error);
+        this.log.er('error', error);
       });
   }
 
@@ -318,7 +318,7 @@ export class ReceiveComponent implements OnInit {
         this.rpc_callbackUnusedAddress_success(response)
       },
       error => {
-        this.log.i('error', error);
+        this.log.er('error', error);
       });
     }
     setTimeout(() => {
@@ -328,10 +328,10 @@ export class ReceiveComponent implements OnInit {
 
   rpc_callbackUnusedAddress_success(json: Object) {
     if (json > 0) {
-      this.log.i('rpc_callbackUnusedAddress_success: Funds received, need unused public address');
+      this.log.er('rpc_callbackUnusedAddress_success: Funds received, need unused public address');
 
       // this.rpc.oldCall(this, 'getnewaddress', null, () => {
-      //   this.log.i('rpc_callbackUnusedAddress_success: successfully retrieved new address');
+      //   this.log.er('rpc_callbackUnusedAddress_success: successfully retrieved new address');
 
       //   // just call for a complete update, just adding the address isn't possible because
       //   this.rpc_update();
@@ -339,13 +339,13 @@ export class ReceiveComponent implements OnInit {
 
       this.rpc.call('getnewaddress', null)
       .subscribe(response => {
-        this.log.i('rpc_callbackUnusedAddress_success: successfully retrieved new address');
+        this.log.er('rpc_callbackUnusedAddress_success: successfully retrieved new address');
 
         // just call for a complete update, just adding the address isn't possible because
         this.rpc_update();
       },
       error => {
-        this.log.i('error');
+        this.log.er('error');
       });
     }
   }
@@ -359,7 +359,7 @@ export class ReceiveComponent implements OnInit {
 
     if (!!call) {
       // this.rpc.oldCall(this, call, [this.label], () => {
-      //   this.log.i('newAddress: successfully retrieved new address');
+      //   this.log.er('newAddress: successfully retrieved new address');
       //   // just call for a complete update, just adding the address isn't possible because
       //   this.rpc_update();
       //   this.closeNewAddress();
@@ -367,14 +367,14 @@ export class ReceiveComponent implements OnInit {
       // });
       this.rpc.call(call, [this.label])
         .subscribe(response => {
-          this.log.i('newAddress: successfully retrieved new address');
+          this.log.er('newAddress: successfully retrieved new address');
           // just call for a complete update, just adding the address isn't possible because
           this.rpc_update();
           this.closeNewAddress();
           this.addLableForm.reset();
         },
         error => {
-          this.log.i('error');
+          this.log.er('error');
         });
     }
   }

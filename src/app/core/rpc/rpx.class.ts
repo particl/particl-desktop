@@ -58,7 +58,9 @@ export class RPXService {
             })
             break;
           case 'e':
-            observer.error(data);
+            self.zone.run(() => {
+              observer.error(data);
+            })
             break;
           case 'c':
             observer.complete();

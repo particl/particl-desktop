@@ -113,7 +113,7 @@ export class AddressLookupComponent implements OnInit {
           this.rpc_loadAddresses_success(response)
         },
         error => {
-          this.log.d('error!');
+          this.log.er('error!');
         });
     } else {
       this.addressStore = [];
@@ -125,7 +125,7 @@ export class AddressLookupComponent implements OnInit {
     Failed to load the address count
   */
   rpc_loadAddressCount_failed(json: any): void {
-    this.log.d('rpc_loadAddressCount_failed!');
+    this.log.er('rpc_loadAddressCount_failed!');
   }
 
   /**
