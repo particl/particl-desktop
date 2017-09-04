@@ -24,6 +24,7 @@ import { AddressLookupComponent } from './addresslookup/addresslookup.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { AddAddressLabelComponent } from './receive/modals/add-address-label/add-address-label.component';
 
 const routes: Routes = [
   {
@@ -56,12 +57,16 @@ const routes: Routes = [
     HistoryComponent,
     AddressBookComponent,
     BalanceComponent,
-    AddressLookupComponent
+    AddressLookupComponent,
+    AddAddressLabelComponent
   ],
   exports: [
     TransactionsTableComponent,
     AddressTableComponent,
     BalanceComponent
+  ],
+  entryComponents: [
+    AddAddressLabelComponent
   ],
   providers: []
 })
