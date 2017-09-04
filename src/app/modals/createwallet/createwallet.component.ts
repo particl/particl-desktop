@@ -1,4 +1,4 @@
-import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef } from '@angular/core';
+import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { IPassword } from '../shared/password/password.interface';

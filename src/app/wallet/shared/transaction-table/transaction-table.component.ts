@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Log } from 'ng2-logger'
-
+import { ElectronService } from 'ngx-electron';
 import { TransactionService } from '../transaction.service';
 import { Transaction } from '../transaction.model';
 
@@ -45,13 +45,12 @@ export class TransactionsTableComponent implements OnInit {
 
   log: any = Log.create('transaction-table.component');
 
-  constructor(public txService: TransactionService) {
+  constructor(public txService: TransactionService, public electronService: ElectronService) {
 
   }
 
   ngOnInit() {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
-
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);
   }
@@ -71,6 +70,11 @@ export class TransactionsTableComponent implements OnInit {
     } else {
       this.expandedTransactionID = txid;
     }
+  }
+
+  // Link to blockchain explorer
+  public openSingleTransactionWindow(tx: Transaction) {
+    this.electronService.shell.openExternal('https://explorer-testnet.particl.io/tx/' + tx);
   }
 
   public checkExpandDetails(tx: Transaction) {

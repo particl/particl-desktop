@@ -64,7 +64,7 @@
           </button>
         </div>
         <div class="col-sm-6 col-xs-12 text-left">
-          <button class="control" type="submit" [disabled]="!nameForm.form.valid">
+          <button class="control" type="submit" [disabled]="!nameForm.form.valid" [appFocusTimeout]="nameForm.form.valid">
             next step
           </button>
         </div>
@@ -133,7 +133,7 @@
         <div class="col-sm-6 col-xs-12 text-left">
           <button class="control"
             (click)="step === 2 && passwordComponent.sendPassword();
-             nextStep()"><!-- TODO: Move sendPassword to .ts -->
+             nextStep()" [appFocusTimeout]="true"><!-- TODO: Move sendPassword to .ts -->
             next step
           </button>
         </div>
