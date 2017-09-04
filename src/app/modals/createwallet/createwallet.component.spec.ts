@@ -5,7 +5,12 @@ import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet.component';
-import { ModalsModule } from '../modals.module';
+import { FocusDirective } from '../modals.directives';
+import { PasswordComponent } from '../shared/password/password.component';
+import { PassphraseComponent } from './passphrase/passphrase.component';
+
+
+import { PassphraseService } from '../../core/rpc/passphrase.service';
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -14,11 +19,19 @@ describe('CreateWalletComponent', () => {
   beforeEach(async(() => {
 
     TestBed.configureTestingModule({
+      providers: [
+        PassphraseService
+      ],
       imports: [
         BrowserAnimationsModule,
         SharedModule,
-        RpcModule.forRoot(),
-        ModalsModule
+        RpcModule.forRoot()
+      ],
+      declarations: [ 
+        CreateWalletComponent, 
+        FocusDirective,
+        PasswordComponent,
+        PassphraseComponent
       ]
     })
     .compileComponents();

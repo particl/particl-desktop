@@ -3,7 +3,6 @@ import { Log } from 'ng2-logger';
 
 import { IPassword } from '../shared/password/password.interface';
 
-import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
 
@@ -42,7 +41,6 @@ export class CreateWalletComponent {
   errorString: string = '';
 
   constructor (
-    @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService,
     private _passphraseService: PassphraseService
   ) {
     this.reset();
