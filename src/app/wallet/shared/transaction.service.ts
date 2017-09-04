@@ -26,10 +26,14 @@ export class TransactionService {
   constructor(private rpc: RPCService) {
   }
 
-
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
-    this.rpc_update();
+    this.rpc.chainState.subscribe(state => {
+      if (state.chain) {
+        this.txCount = state.chain.txcount;
+        this.rpc_update();
+      }
+    })
   }
 
 
@@ -41,17 +45,10 @@ export class TransactionService {
     if (page <= 0) {
       return;
     }
-
     page--;
     this.currentPage = page;
     this.deleteTransactions();
     this.rpc_update();
-    this.rpc.chainState.subscribe(state => {
-      if (state.chain) {
-        this.txCount = state.chain.txcount;
-        this.rpc_update();
-      }
-    })
   }
 
   deleteTransactions() {
@@ -92,7 +89,7 @@ export class TransactionService {
     }
 
     // this.txs.push(instance);
-    this.txs.splice(0, 0, instance);
+    this.txs.unshift(instance);
   }
 
 }
