@@ -3,6 +3,8 @@ import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {MdDialog} from "@angular/material";
+import {AddAddressLabelComponent} from "./modals/add-address-label/add-address-label.component";
 
 @Component({
   selector: 'app-receive',
@@ -56,7 +58,8 @@ export class ReceiveComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              public dialog: MdDialog) {
   }
 
   ngOnInit() {
@@ -388,7 +391,13 @@ export class ReceiveComponent implements OnInit {
   }
 
   openNewAddress(): void {
-    this.openNewAddressModal = true;
+    const dialogRef = this.dialog.open(AddAddressLabelComponent);
+    dialogRef.componentInstance.type = this.type;
+    dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
+      this.rpc_update();
+      this.closeNewAddress();
+      this.addLableForm.reset();
+    });
   }
 
   closeNewAddress(): void {

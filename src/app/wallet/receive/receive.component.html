@@ -142,23 +142,3 @@
     </div>
   </md-card-content>
 </md-card>
-
-
-<div id="address-modal" [class.hide]="openNewAddressModal == false">
-  <div class="address-modal-container">
-    <span class="close" (click)="closeNewAddress()">&times;</span>
-    <form [formGroup]="addLableForm" (ngSubmit)="newAddress()" novalidate>
-      <div class="modal-content-header">Label for new {{ getAddressType() }} address</div>
-      <hr class="margin-top-5px">
-
-      <div class="row">
-        <div class="col-xs-10">
-          <input type="text" formControlName="label" class="form-control" [(ngModel)]="label"
-                 placeholder="Enter label..."
-                 [ngClass]="{'verify-sucess': addLableForm.valid, 'verify-error': !addLableForm.valid }">
-        </div>
-      </div>
-      <button class="control pull-right" [disabled]="!addLableForm.valid">Add Label</button>
-    </form>
-  </div>
-</div>
