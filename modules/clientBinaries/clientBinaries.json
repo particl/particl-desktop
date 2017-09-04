@@ -4,6 +4,46 @@
       "version": "0.14.2.1",
       "platforms": {
         "linux": {
+          "arm": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-arm-linux-gnueabihf.tar.gz",
+              "type": "tar",
+              "sha256": "24a4d647927989687046459268b3070e8691d75ad3692d54533f8e23f4d04ed3",
+              "bin": "particl-0.14.2.1/bin/particld"
+            },
+            "bin": "particld",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.14.2.1"
+                ]
+              }
+            }
+          },
+          "ia32": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-i686-pc-linux-gnu.tar.gz",
+              "type": "tar",
+              "sha256": "c62a3c51c43f6db231a0cc9e186f65a28c1267ae775dead9bc4f85da2405f81a",
+              "bin": "particl-0.14.2.1/bin/particld"
+            },
+            "bin": "particld",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.14.2.1"
+                ]
+              }
+            }
+          },
           "x64": {
             "download": {
               "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-x86_64-linux-gnu.tar.gz",
@@ -14,8 +54,96 @@
             "bin": "particld",
             "commands": {
               "sanity": {
-                "args": ["-version"],
-                "output": [ "Particl Core Daemon", "0.14.2.1" ]
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.14.2.1"
+                ]
+              }
+            }
+          }
+        },
+        "mac": {
+          "ia32": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-osx.dmg",
+              "type": "dmg",
+              "bin": "particl-0.14.2.1/bin/particld"
+            },
+            "bin": "particld",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.14.2.1"
+                ]
+              }
+            }
+          },
+          "x64": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-osx64.tar.gz",
+              "type": "tar",
+              "sha256": "e3671f5b321ebced99da3e3e3fd70fc1d0fce5dd43287ac8c6c7bc67de8cf749",
+              "bin": "particl-0.14.2.1/bin/particld"
+            },
+            "bin": "particld",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.14.2.1"
+                ]
+              }
+            }
+          }
+        },
+        "win": {
+          "ia32": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-win32.zip",
+              "type": "zip",
+              "sha256": "5b05839aac972af93ea94b60b51536b518521e16b3b6a89bf9485d82c1eea1ab",
+              "bin": "particl-0.14.2.1/bin/particld.exe"
+            },
+            "bin": "particld.exe",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.14.2.1"
+                ]
+              }
+            }
+          },
+          "x64": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.14.2.1/particl-0.14.2.1-win64.zip",
+              "type": "zip",
+              "sha256": "659567323348e7240642629ea6356ded7246589acb37d3d02f8eade3f2e2d15e",
+              "bin": "particl-0.14.2.1/bin/particld.exe"
+            },
+            "bin": "particld.exe",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.14.2.1"
+                ]
               }
             }
           }
