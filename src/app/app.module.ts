@@ -23,6 +23,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 
 import 'hammerjs';
+import { FlashNotificationService } from './services/flash-notification.service';
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -52,7 +53,8 @@ const routes: Routes = [
   ],
   providers: [
     WindowService,
-    BlockStatusService
+    BlockStatusService,
+    FlashNotificationService
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
