@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ClipboardModule } from 'ngx-clipboard';
 
-import { PassphraseService } from '../../../core/rpc/passphrase.service';
+import { PassphraseService } from './passphrase.service';
 
 import { Log } from 'ng2-logger';
 
@@ -55,7 +55,6 @@ export class PassphraseComponent {
   validateWord(word: string, index: number): boolean {
     if (index !== -1 && word === '' && this.canEdit(index)) {
       this.editable.unshift(index);
-      console.log(index);
     }
 
     return this._passphraseService.validateWord(word);

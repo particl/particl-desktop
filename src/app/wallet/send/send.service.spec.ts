@@ -1,20 +1,18 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { SendService } from './send.service';
-
-import { ElectronService } from 'ngx-electron';
+import { RpcModule } from '../../core/rpc/rpc.module';
 import { SharedModule } from '../../shared/shared.module';
-import { RPCService } from '../../core/rpc/rpc.service';
+
+import { SendService } from './send.service';
 
 describe('SendService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule],
-      providers: [
-        SendService,
-        ElectronService,
-        RPCService
-      ]
+      imports: [
+        SharedModule,
+        RpcModule.forRoot()
+      ],
+      providers: [SendService]
     });
   });
 

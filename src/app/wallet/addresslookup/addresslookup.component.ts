@@ -90,7 +90,14 @@ export class AddressLookupComponent implements OnInit {
   */
 
   rpc_update() {
-    this._rpc.call(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success, this.rpc_loadAddressCount_failed);
+    // this._rpc.oldCall(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success, this.rpc_loadAddressCount_failed);
+    this._rpc.call('filteraddresses', [-1])
+      .subscribe(response => {
+        this.rpc_loadAddressCount_success(response)
+      },
+      (error: any) => {
+        this.rpc_loadAddressCount_failed(error);
+      });
   }
 
   /**
@@ -100,7 +107,14 @@ export class AddressLookupComponent implements OnInit {
     this._addressCount = json['num_send'];
 
     if (this._addressCount > 0) {
-      this._rpc.call(this, 'filteraddresses', [0, this._addressCount, '0', '', '2'], this.rpc_loadAddresses_success);
+      // this._rpc.oldCall(this, 'filteraddresses', [0, this._addressCount, '0', '', '2'], this.rpc_loadAddresses_success);
+      this._rpc.call('filteraddresses', [0, this._addressCount, '0', '', '2'])
+        .subscribe(response => {
+          this.rpc_loadAddresses_success(response)
+        },
+        error => {
+          this.log.er('error!');
+        });
     } else {
       this.addressStore = [];
     }
@@ -111,7 +125,7 @@ export class AddressLookupComponent implements OnInit {
     Failed to load the address count
   */
   rpc_loadAddressCount_failed(json: any): void {
-    this.log.d('rpc_loadAddressCount_failed!');
+    this.log.er('rpc_loadAddressCount_failed!');
   }
 
   /**
