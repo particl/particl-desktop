@@ -15,6 +15,7 @@ export class TransactionsTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
 
+  public isElectron: boolean = false;
   private _defaults: any = {
     header: true,
     internalHeader: false,
@@ -46,7 +47,7 @@ export class TransactionsTableComponent implements OnInit {
   log: any = Log.create('transaction-table.component');
 
   constructor(public txService: TransactionService, public electronService: ElectronService) {
-
+    this.isElectron = this.electronService.isElectronApp;
   }
 
   ngOnInit() {
@@ -74,7 +75,11 @@ export class TransactionsTableComponent implements OnInit {
 
   // Link to blockchain explorer
   public openSingleTransactionWindow(tx: Transaction) {
-    this.electronService.shell.openExternal('https://explorer-testnet.particl.io/tx/' + tx);
+    if (this.isElectron) {
+      this.electronService.shell.openExternal('https://explorer-testnet.particl.io/tx/' + tx);
+    } else {
+      window.open('https://explorer-testnet.particl.io/tx/' + tx, '_blank')
+    }
   }
 
   public checkExpandDetails(tx: Transaction) {

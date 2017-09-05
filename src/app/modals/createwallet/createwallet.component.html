@@ -41,7 +41,7 @@
         <div class="col-md-12">
           <input #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
             name="name" placeholder="Default Account..." required maxlength="32"
-            [class.verify-error]="validation.errors && (validation.dirty || validation.touched)" />
+            [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
 
           <div *ngIf="validation.errors && (validation.dirty || validation.touched)"
               [@slideDown] class="alert alert-danger margin-top-5px">
@@ -64,7 +64,7 @@
           </button>
         </div>
         <div class="col-sm-6 col-xs-12 text-left">
-          <button class="control" type="submit" [disabled]="!nameForm.form.valid" [appFocusTimeout]="nameForm.form.valid">
+          <button class="control" type="submit" [disabled]="!nameForm.form.valid">
             next step
           </button>
         </div>
@@ -133,7 +133,7 @@
         <div class="col-sm-6 col-xs-12 text-left">
           <button class="control"
             (click)="step === 2 && passwordComponent.sendPassword();
-             nextStep()" [appFocusTimeout]="true"><!-- TODO: Move sendPassword to .ts -->
+             nextStep()"><!-- TODO: Move sendPassword to .ts -->
             next step
           </button>
         </div>

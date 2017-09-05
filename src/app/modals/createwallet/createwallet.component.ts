@@ -167,4 +167,12 @@ export class CreateWalletComponent {
     const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
     document.body.dispatchEvent(escape);
   }
+
+  // capture the enter button
+  @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+      if (event.keyCode === 13) {
+        this.nextStep();
+      }
+    }
 }
