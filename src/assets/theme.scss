@@ -1,3 +1,21 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+// Import a pre-built theme
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@angular/material/theming';
+
+//// Define a mixin that accepts a theme and outputs the color styles for the component.
+//@mixin candy-carousel-theme($theme) {
+//  // Extract whichever individual palettes you need from the theme.
+//  $primary: map-get($theme, primary);
+//  $accent: map-get($theme, accent);
+//
+//  // Use mat-color to extract individual colors from a palette as necessary.
+//  .candy-carousel {
+//    background-color: mat-color($primary);
+//    border-color: mat-color($accent, A400);
+//  }
+//}
+
 .mat-sidenav {
   width: 250px;
   background-color: #1c2825;
@@ -97,7 +115,7 @@
 }
 
 /*list*/
-.mat-input-wrapper {
+.icon-input {
   input.mat-input-element {
     height: 27px;
   }
@@ -136,3 +154,9 @@
     margin: 15px 0;
   }
 }
+
+/*input css*/
+input[type="text"] {
+  border: none;
+}
+
