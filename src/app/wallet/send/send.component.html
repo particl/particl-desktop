@@ -1,234 +1,178 @@
 <md-card>
   <md-card-content>
-<app-header>
-  <div class="container-fluid header">
-    <div [fxLayout]="'row'">
-      <div fxFlex="80%">
-        <md-tab-group (selectChange)="sendTab($event.index)">
-          <md-tab>
-            <ng-template md-tab-label>
-              Send payment
-            </ng-template>
-          </md-tab>
-          <md-tab>
-            <ng-template md-tab-label>
-              Balance transfer
-            </ng-template>
-          </md-tab>
-        </md-tab-group>
-      </div>
-      <div fxFlex="20%">
-        <button class="btn btn-default" (click)="toggleAdvanced()"> <md-icon>settings</md-icon> Action</button>
-      </div>
-    </div>
-
-    <!--<div class="pull-right header-option"-->
-      <!--(click)="toggleAdvanced()"-->
-      <!--[ngClass]="{selected: advanced}">-->
-      <!--<div class="header-option-container">-->
-        <!--<div class="header-option-text">-->
-          <!--<span class="icon nc-icon nc-settings-gear-65 header-option-icon"></span>-->
-          <!--<span>-->
-            <!--Advanced options-->
-          <!--</span>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-  </div>
-</app-header>
-
-<div class="container-fluid">
-
-  <div *ngIf="type === 'sendPayment'">
-
-    <div class="card row">
-      <div class="input-label col-xs-3">From account</div>
-      <span class="col-xs-4 public-private">
-        <input type="radio" name="from" id="fromPublic1"
-          [(ngModel)]="send.input" checked="checked" value="public">
-        <label for="fromPublic1" class="input-info-label">Public</label>
-        <input type="radio" name="from" id="fromBlind1"
-          [(ngModel)]="send.input" value="blind">
-        <label for="fromBlind1" class="input-info-label">Blind</label>
-        <input type="radio" name="from" id="fromPrivate1"
-          [(ngModel)]="send.input" value="private">
-        <label for="fromPrivate1" class="input-info-label">Private</label>
-      </span>
-      <span class="balance">
-        <span class="separator"></span>
-        <span class="balance-label">Balance: </span>
-        <span class="balance-amount">{{getBalance(send.input)}} PART</span>
-      </span>
-    </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-3">Pay to</div>
-      <input class="col-xs-4" [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text"
-        placeholder="The address to send the payment to"
-        [(ngModel)]="send.toAddress" (input)="verifyAddress()">
-      <input class="col-xs-2" type="text" placeholder="Enter a label"
-        [(ngModel)]="send.toLabel">
-      <span class="separator"></span>
-      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
-      <span class="icon-padding icon nc-icon nc-copy-2"></span>
-      <span class="icon-padding icon nc-icon nc-circle-remove color-red" (click)="clearReceiver()"></span>
-    </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-3">Narration</div>
-      <input class="col-xs-4" type="text"
-        placeholder="Enter a short note to send with a payment"
-        maxlength="24"
-        [(ngModel)]="send.note">
-    </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-3">Amount</div>
-      <input class="col-xs-4" type="text"
-        placeholder="0.0000000000000000"
-        [(ngModel)]="send.amount" (input)="verifyAmount()"
-        [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }">
-      <div class="col-xs-2 no-padding-left">
-        <select [(ngModel)]="send.currency" class="form-control no-margin-left">
-          <option value="part">PART</option>
-        </select>
-      </div>
-    </div>
-
-    <div *ngIf="send.input === 'private'" class="card row">
-      <div class="input-label col-xs-3">Privacy level</div>
-      <div class="col-xs-4 nopadding">
-        <div class="progress">
-          <div class="progress-bar" role="progressbar"
-            [ngStyle]="{ 'width': send.privacy + '%' }">
+    <app-header>
+      <div class="container-fluid header">
+        <div [fxLayout]="'row'">
+          <div fxFlex="80%">
+            <md-tab-group (selectChange)="sendTab($event.index)">
+              <md-tab>
+                <ng-template md-tab-label>
+                  Send payment
+                </ng-template>
+              </md-tab>
+              <md-tab>
+                <ng-template md-tab-label>
+                  Balance transfer
+                </ng-template>
+              </md-tab>
+            </md-tab-group>
+          </div>
+          <div fxFlex="20%">
+            <button md-icon-button class="btn btn-default" (click)="toggleAdvanced()">
+              <md-icon>settings</md-icon>
+              Action
+            </button>
           </div>
         </div>
-        <div class="privacy-labels">
-          <span class="privacy-label" (click)="send.privacy = 10">Normal</span>
-          <span class="privacy-label" (click)="send.privacy = 50">Medium</span>
-          <span class="privacy-label" (click)="send.privacy = 100">High</span>
-        </div>
       </div>
-    </div>
+    </app-header>
 
-  </div>
+    <div class="container-fluid">
+      <div *ngIf="type === 'sendPayment' || type ===  'balanceTransfer'">
+        <form class="example-form" name="walletSendForm">
+          <md-list>
+            <md-list-item>
+              <div class="md-line" fxFlex="'row'">
+                <md-radio-group name="sendInput" [(ngModel)]="send.input">
+                  <h5 fxFlex="33.3%"> From Account</h5>
+                  <md-radio-button value="public" fxFlex="33.3%">Public</md-radio-button>
+                  <md-radio-button value="blind" fxFlex="33.3%">Blind</md-radio-button>
+                  <md-radio-button value="private" fxFlex="33.3%">Private</md-radio-button>
 
-  <div *ngIf="type === 'balanceTransfer'">
+                  <div fxFlex="33.3%" fxFlex.gt-sm="100%">
+                    <span class="balance-label">Balance: </span>
+                    <span class="balance-amount">{{getBalance(send.input)}} PART</span>
+                  </div>
+                </md-radio-group>
+              </div>
+            </md-list-item>
+            <md-list-item>
+              <div fxFlex="row" fxLayoutGap="10px"></div>
+            </md-list-item>
+          </md-list>
 
-    <div class="card row">
-      <div class="input-label col-xs-3">From account</div>
-      <span class="col-xs-4 public-private">
-        <input type="radio" name="from" id="fromPublic"
-          [(ngModel)]="send.input" checked="checked" value="public">
-        <label for="fromPublic" class="input-info-label">Public</label>
-        <input type="radio" name="from" id="fromBlind"
-          [(ngModel)]="send.input" value="blind">
-        <label for="fromBlind" class="input-info-label">Blind</label>
-        <input type="radio" name="from" id="fromPrivate"
-          [(ngModel)]="send.input"  value="private">
-        <label for="fromPrivate" class="input-info-label">Private</label>
-      </span>
-      <span class="balance">
-        <span class="separator"></span>
-        <span class="balance-label">Balance: </span>
-        <span class="balance-amount">{{getBalance(send.input)}} PART</span>
-      </span>
-    </div>
+          <md-list *ngIf="type ===  'balanceTransfer'">
+            <md-list-item>
+              <div class="md-line" fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+                <h5 fxFlex="10%"> Pay to:</h5>
+                <md-form-field fxFlex="50%">
+                  <input mdInput type="text" name="toAddress" placeholder="The address to send the payment to"
+                         [(ngModel)]="send.toAddress">
+                </md-form-field>
+                <md-form-field fxFlex="40%">
+                  <input mdInput name="toLabel" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
+                </md-form-field>
+                <div fxFlex fxLayoutAlign="start center">
+                  <md-icon (click)="openLookup()">supervisor_account</md-icon>
+                  <md-icon class="cursor-pointer" mdTooltip="Copy">content_copy</md-icon>
+                  <md-icon>cancel</md-icon>
+                </div>
+              </div>
+            </md-list-item>
+          </md-list>
 
-    <div class="card row">
-      <div class="input-label col-xs-3">To account</div>
-      <span class="col-xs-4 public-private">
-        <input type="radio" name="to" id="toPublic"
-          [(ngModel)]="send.output" checked="checked" disabled="{{ send.input === 'public' }}" value="public">
-        <label for="toPublic" class="input-info-label">Public</label>
-        <input type="radio" name="to" id="toBlind"
-          [(ngModel)]="send.output" disabled="{{ send.input === 'blind' }}" value="blind">
-        <label for="toBlind" class="input-info-label">Blind</label>
-        <input type="radio" name="to" id="toPrivate"
-          [(ngModel)]="send.output" disabled="{{ send.input === 'private' }}" value="private">
-        <label for="toPrivate" class="input-info-label">Private</label>
-      </span>
-      <span class="balance">
-        <span class="separator"></span>
-        <span class="balance-label">Balance: </span>
-        <span class="balance-amount">{{getBalance(send.output)}} PART</span>
-      </span>
-    </div>
+          <md-list>
+            <md-list-item>
+              <div class="md-line" fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+                <h5 fxFlex="10%"> Balance:</h5>
+                <md-form-field fxFlex="50%">
+                  <input name="toAddress" mdInput
+                         [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
+                         type="text"
+                         placeholder="The address to send the payment to"
+                         [(ngModel)]="send.toAddress" (input)="verifyAddress()">
+                </md-form-field>
 
-    <div *ngIf="advanced" class="card row">
-      <div class="input-label col-xs-3">Pay to</div>
-      <input class="col-xs-4" type="text"
-        placeholder="The address to send the payment to"
-        [(ngModel)]="send.toAddress">
-      <input class="col-xs-2" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
-      <span class="separator"></span>
-      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
-      <span class="icon-padding icon nc-icon nc-copy-2"></span>
-      <span class="icon-padding icon nc-icon nc-circle-remove color-red"></span>
-    </div>
+                <md-form-field fxFlex="40%">
+                  <input name="toLabel" mdInput type="text" placeholder="Enter a label"
+                         [(ngModel)]="send.toLabel">
+                </md-form-field>
 
-    <div class="card row">
-      <div class="input-label col-xs-3">Amount</div>
-      <input class="col-xs-4" type="text"
-        placeholder="0.0000000000000000"
-        [(ngModel)]="send.amount">
-      <div class="col-xs-2 no-padding-left">
-        <select [(ngModel)]="send.currency" class="form-control no-margin-left">
-          <option value="part">PART</option>
-        </select>
-      </div>
-    </div>
+                <div fxFlex fxLayoutAlign="start center">
+                  <md-icon (click)="openLookup()">supervisor_account</md-icon>
+                  <md-icon class="cursor-pointer" mdTooltip="Copy">content_copy</md-icon>
+                  <md-icon (click)="clearReceiver()">cancel</md-icon>
+                </div>
+              </div>
+            </md-list-item>
+            <md-divider></md-divider>
+          </md-list>
 
-    <div *ngIf="send.input === 'private'" class="card row">
-      <div class="input-label col-xs-3">Privacy level</div>
-      <div class="col-xs-4 nopadding">
-        <div class="progress">
-          <div class="progress-bar" role="progressbar"
-            [ngStyle]="{ 'width': send.privacy + '%' }">
+          <md-list>
+            <md-list-item>
+              <div class="md-line" fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+                <h5 fxFlex="10%"> Narration</h5>
+                <md-form-field fxFlex>
+                  <input type="text" mdInput name="sendNote"
+                         placeholder="Enter a short note to send with a payment"
+                         maxlength="24"
+                         [(ngModel)]="send.note">
+                </md-form-field>
+              </div>
+            </md-list-item>
+            <md-divider></md-divider>
+          </md-list>
+
+          <md-list>
+            <md-list-item>
+              <div class="md-line" fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+                <h5 fxFlex="10%"> Amount </h5>
+
+                <md-form-field fxFlex="50%">
+                  <input mdInput type="text" name="sendAmount"
+                         placeholder="0.0000000000000000"
+                         [(ngModel)]="send.amount" (input)="verifyAmount()"
+                         [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }">
+                </md-form-field>
+
+                <md-select fxFlex="46%" name="currency" [(ngModel)]="send.currency" placeholder="Select currency">
+                  <md-option value="part">Part</md-option>
+                </md-select>
+
+              </div>
+            </md-list-item>
+            <md-divider></md-divider>
+          </md-list>
+
+          <md-list *ngIf="send.input === 'private'">
+            <md-list-item>
+              <div class="md-line" fxFlex="'row'">
+                <h5 fxFlex="10%"> Privacy level </h5>
+
+                <div fxFlex="90%" fxFlex="'column'" fxLayoutWrap>
+                  <md-progress-bar
+                    class="example-margin"
+                    [color]="'primary'"
+                    [mode]="'determinate'"
+                    [value]="send.privacy">
+                  </md-progress-bar>
+                  <div class="privacy-labels" fxFlex="100%">
+                    <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"
+                          (click)="send.privacy = 10">Normal</span>
+                    <span fxFlex="" fxLayoutAlign="center center" class="privacy-label cursor-pointer"
+                          (click)="send.privacy = 50">Medium</span>
+                    <span fxFlex="" fxLayoutAlign="end center" class="privacy-label cursor-pointer"
+                          (click)="send.privacy = 100">High</span>
+                  </div>
+                </div>
+              </div>
+            </md-list-item>
+            <md-list-item>
+              <div fxFlex="row" fxLayoutGap="10px"></div>
+            </md-list-item>
+          </md-list>
+
+          <div fxLayoutAlign="end center">
+            <button md-raised-button (click)="clear()">Clear all</button>
+            <button md-raised-button color="primary" class="validate"
+                    (click)="openValidate()"
+                    [disabled]="!checkAddress() || !checkAmount()">
+              Make payment
+            </button>
           </div>
-        </div>
-        <div class="privacy-labels">
-          <span class="privacy-label" (click)="send.privacy = 10">Normal</span>
-          <span class="privacy-label" (click)="send.privacy = 50">Medium</span>
-          <span class="privacy-label" (click)="send.privacy = 100">High</span>
-        </div>
+        </form>
       </div>
     </div>
-  </div>
 
-  <div class="pull-right">
-    <button (click)="clear()">Clear all</button>
-    <button class="validate"
-      (click)="openValidate()"
-      [disabled]="!checkAddress() || !checkAmount()">
-      Make payment
-    </button>
-  </div>
-
-</div>
-
-<app-addresslookup #addressLookup [selectAddressCallback]="selectAddress.bind(this)"></app-addresslookup>
-
-<div class="small-modal hide" id="validate">
-  <div class="address-modal-container">
-    <span class="close" (click)="closeValidate()">&times;</span>
-
-    <div class="modal-content-header">Validate</div>
-    <hr class="margin-top-5px">
-
-    <div class="">
-      Do you really want to send {{send.amount}} {{send.currency.toUpperCase()}}
-      to {{getAddress()}} ?
-    </div>
-
-    <hr>
-
-    <div class="row">
-      <button class="col-xs-5" (click)="closeValidate()">Cancel</button>
-      <button class="col-xs-5 validate" (click)="pay()">Confirm</button>
-    </div>
-
-  </div>
-</div>
   </md-card-content>
 </md-card>
