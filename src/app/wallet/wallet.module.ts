@@ -25,6 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddAddressLabelComponent } from './receive/modals/add-address-label/add-address-label.component';
+import { NewAddressModalComponent } from './address-book/modal/new-address-modal/new-address-modal.component';
 
 const routes: Routes = [
   {
@@ -58,7 +59,8 @@ const routes: Routes = [
     AddressBookComponent,
     BalanceComponent,
     AddressLookupComponent,
-    AddAddressLabelComponent
+    AddAddressLabelComponent,
+    NewAddressModalComponent
   ],
   exports: [
     TransactionsTableComponent,
@@ -66,7 +68,8 @@ const routes: Routes = [
     BalanceComponent
   ],
   entryComponents: [
-    AddAddressLabelComponent
+    AddAddressLabelComponent,
+    NewAddressModalComponent
   ],
   providers: []
 })
