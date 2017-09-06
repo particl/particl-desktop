@@ -191,3 +191,9 @@ button {
   border-bottom: 1px solid #07B98D;
   color: #fff;
 }
+
+.mat-list-item-content {
+  height: auto !important;
+  min-height: 40px;
+}
+

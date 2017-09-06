@@ -16,14 +16,14 @@
             </md-tab>
           </md-tab-group>
         </div>
-        <md-form-field>
+        <md-form-field class="icon-input">
           <input mdInput type="text" id="searchbar" [(ngModel)]="query" placeholder="Search receive">
           <md-icon>search</md-icon>
         </md-form-field>
       </div>
     </app-header>
 
-    <div class="containerX" >
+    <div class="containerX">
       <div fxLayout="row" class="coloredContainerX box">
         <div fxFlex="80%">
 
@@ -40,11 +40,14 @@
                   </div>
                 </div>
                 <div fxFlex="15%" fxFlex="'row'" fxLayoutAlign="end center">
-                  <div fxFlex="20%" ngxClipboard [cbContent]="getUnusedAddress().address" class=" nc-icon nc-copy-2">
-                  </div>
-                  <div fxFlex="20%" class="nc-icon nc-a-check"></div>
-                  <div fxFlex="20%" class="nc-icon nc-barcode-qr"
-                       (click)="selectAddress(addresses[getAddressType()][0])"></div>
+                  <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" ngxClipboard
+                           [cbContent]="getUnusedAddress().address">
+                    content_copy
+                  </md-icon>
+                  <md-icon fxFlex="20%" ngxClipboard>verified_user</md-icon>
+
+                  <i fxFlex="20%" class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
+                     (click)="selectAddress(addresses[getAddressType()][0])"></i>
                 </div>
               </div>
             </md-list-item>
@@ -65,41 +68,22 @@
                     </div>
                   </div>
                   <div fxFlex="15%" fxFlex="'row'" fxLayoutAlign="end center">
-                    <div fxFlex="20%" ngxClipboard [cbContent]="address.address" class=" nc-icon nc-copy-2">
-                    </div>
-                    <div fxFlex="20%" class="nc-icon nc-a-check"></div>
-                    <div fxFlex="20%" class="nc-icon nc-barcode-qr" (click)="selectAddress(address)"></div>
+                    <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" ngxClipboard
+                             [cbContent]="address.address">
+                      content_copy
+                    </md-icon>
+
+                    <md-icon fxFlex="20%" ngxClipboard>verified_user</md-icon>
+
+                    <i fxFlex="20%" class="material-icons cursor-pointer nc-icon nc-barcode-qr"
+                       mdTooltip="Select Address"
+                       (click)="selectAddress(address)"></i>
                   </div>
                 </div>
               </md-list-item>
               <md-divider></md-divider>
             </div>
           </md-list>
-
-          <!--<div class="address-title">Previous addresses</div>-->
-          <!--<div class="card row"-->
-          <!--*ngFor="let address of getSinglePage()">-->
-          <!--<div class="col-xs-1 address-id vertical-center">-->
-          <!--/{{ address.id }}-->
-          <!--</div>-->
-          <!--<div class="col-xs-3 address-label vertical-center">-->
-          <!--{{ address.label }}-->
-          <!--</div>-->
-          <!--<div class="col-xs-6">-->
-          <!--<div class="address">-->
-          <!--{{ address.address }}-->
-          <!--</div>-->
-          <!--<div class="total">-->
-          <!--<span>Total received: </span>-->
-          <!--<span>+{{ address.balance }}</span>-->
-          <!--</div>-->
-          <!--</div>-->
-          <!--<div class="col-xs-2 row address-options vertical-center">-->
-          <!--<div ngxClipboard [cbContent]="address.address" class="col-xs-4 nc-icon nc-copy-2"></div>-->
-          <!--<div class="col-xs-4 nc-icon nc-a-check"></div>-->
-          <!--<div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(address);"></div>-->
-          <!--</div>-->
-          <!--</div>-->
 
           <pagination
             [boundaryLinks]="true"

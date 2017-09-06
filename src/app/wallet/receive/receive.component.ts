@@ -2,9 +2,8 @@ import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular
 import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {MdDialog} from "@angular/material";
-import {AddAddressLabelComponent} from "./modals/add-address-label/add-address-label.component";
+import { MdDialog } from '@angular/material';
+import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 
 @Component({
   selector: 'app-receive',
@@ -18,9 +17,6 @@ export class ReceiveComponent implements OnInit {
   /* UI State */
   private type: string = 'public';
   public query: string = '';
-  public openNewAddressModal: boolean = false;
-  public addLableForm: FormGroup;
-  public label: string;
   // public tabsTitle
   defaultAddress: Object = {
     id: 0,
@@ -58,28 +54,13 @@ export class ReceiveComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService,
-              private formBuilder: FormBuilder,
               public dialog: MdDialog) {
   }
 
   ngOnInit() {
     // start rpc
     this.rpc_update();
-    this.buildForm();
-
-    document.onkeydown = evt => {
-      if (evt.key.toLowerCase() === 'escape') {
-        this.closeNewAddress();
-      }
-    }
   }
-
-  buildForm(): void {
-    this.addLableForm = this.formBuilder.group({
-      label: this.formBuilder.control(null, [Validators.required]),
-    });
-  }
-
 
   /**
     * Returns the addresses to display in the UI with regards to both pagination and search/query.
@@ -361,47 +342,11 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  /**
-    * Generate a new address with label.
-    * TODO: Get rid of prompt, use nice modal.
-    */
-  newAddress() {
-    const call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
-
-    if (!!call) {
-      // this.rpc.oldCall(this, call, [this.label], () => {
-      //   this.log.er('newAddress: successfully retrieved new address');
-      //   // just call for a complete update, just adding the address isn't possible because
-      //   this.rpc_update();
-      //   this.closeNewAddress();
-      //   this.addLableForm.reset();
-      // });
-      this.rpc.call(call, [this.label])
-        .subscribe(response => {
-          this.log.er('newAddress: successfully retrieved new address');
-          // just call for a complete update, just adding the address isn't possible because
-          this.rpc_update();
-          this.closeNewAddress();
-          this.addLableForm.reset();
-        },
-        error => {
-          this.log.er('error');
-        });
-    }
-  }
-
   openNewAddress(): void {
     const dialogRef = this.dialog.open(AddAddressLabelComponent);
     dialogRef.componentInstance.type = this.type;
     dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
       this.rpc_update();
-      this.closeNewAddress();
-      this.addLableForm.reset();
     });
   }
-
-  closeNewAddress(): void {
-    this.openNewAddressModal = false;
-  }
-
 }
