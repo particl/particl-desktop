@@ -14,7 +14,6 @@ export class TransactionsTableComponent implements OnInit {
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
 
-  public isElectron: boolean = false;
   private _defaults: any = {
     header: true,
     internalHeader: false,
@@ -45,7 +44,7 @@ export class TransactionsTableComponent implements OnInit {
 
   log: any = Log.create('transaction-table.component');
 
-  constructor(public txService: TransactionService ) {
+  constructor(public txService: TransactionService) {
   }
 
   ngOnInit() {
