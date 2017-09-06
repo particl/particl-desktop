@@ -17,6 +17,7 @@ const _ = {
 
 
 function copyFile(src, dst) {
+  console.log("COPYFILE", src, dst);
   return new Promise((resolve, reject) => {
     var rd = fs.createReadStream(src);
 
@@ -281,9 +282,9 @@ class Manager {
       if (algorithm) {
         return checksum(dInfo.downloadFile, algorithm)
           .then((hash) => {
-              this._logger.error(algorithm)
-                  this._logger.error(hash)
-                      this._logger.error(expectedHash)
+              this._logger.error(algorithm);
+              this._logger.error(hash);
+              this._logger.error(expectedHash);
             if (expectedHash !== hash) {
               throw new Error(`Hash mismatch: ${expectedHash}`);
             }
@@ -309,7 +310,6 @@ class Manager {
 
       if (options.unpackHandler) {
         this._logger.debug(`Invoking custom unpack handler ...`);
-
         promise = options.unpackHandler(downloadFile, unpackFolder);
       } else {
         switch (downloadCfg.type) {
@@ -348,7 +348,6 @@ class Manager {
         // need to rename binary?
         if (downloadCfg.bin) {
           let realPath = path.join(unpackFolder, downloadCfg.bin);
-
           try {
             fs.accessSync(linkPath, fs.R_OK);
             fs.unlinkSync(linkPath);
@@ -356,8 +355,7 @@ class Manager {
             if (e.code !== 'ENOENT')
               this._logger.warn(e);
           }
-
-          return copyFile(realPath, linkPath).then(() => linkPath)
+          return copyFile(realPath, linkPath).then(() => linkPath);
         } else {
           return Promise.resolve(linkPath);
         }
