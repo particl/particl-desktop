@@ -30,4 +30,22 @@ describe('AddressLookupComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+/*
+  it('should show', () => {
+    component.show();
+    expect(component.staticLookup.isShown).toBe(true);
+  });
+
+  it('should hide', () => {
+    component.hide();
+    expect(component.staticLookup.isShown).toBe(false);
+  });
+*/
+  it('should get filterAddress', () => {
+    expect(component.filter).toBe('all');
+  });
+
+  it('should get staticLookup', () => {
+    expect(component.staticLookup).toBeDefined();
+  });
 });

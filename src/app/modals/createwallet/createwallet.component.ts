@@ -1,11 +1,11 @@
-import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef } from '@angular/core';
+import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { IPassword } from '../shared/password/password.interface';
 
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
-import { PassphraseService } from '../../core/rpc/passphrase.service';
+import { PassphraseService } from './passphrase/passphrase.service';
 
 import { flyInOut, slideDown } from './createwallet.animations';
 
@@ -49,6 +49,7 @@ export class CreateWalletComponent {
   }
 
   reset() {
+    this._modalsService.enableClose = true;
     this.words = Array(24).fill('');
     this.isRestore = false;
     this.name = '';
@@ -89,7 +90,6 @@ export class CreateWalletComponent {
   }
 
   doStep() {
-
     switch (this.step) {
       case 1:
         setTimeout(() => this.nameField.nativeElement.focus(this), 1);
@@ -114,17 +114,22 @@ export class CreateWalletComponent {
         this.step = 4;
         this.errorString = '';
 
-        this._passphraseService.importMnemonic(this.words, this.password, () => {
-          this.log.i('Mnemonic imported successfully');
-          this.animationState = 'next';
-          this.step = 5;
-        }, (response) => {
-          this.errorString = response.error.message;
-          // TODO: FAT ERROR
-          this.log.er('Mnemonic import failed');
-        });
+        this._passphraseService.importMnemonic(this.words, this.password)
+          .subscribe(
+            success => {
+              this.log.i('Mnemonic imported successfully');
+              this.animationState = 'next';
+              this.step = 5;
+            },
+            error => {
+              this.log.er(error);
+              this.errorString = error.error.message;
+              this.log.er('Mnemonic import failed');
+            });
         break;
     }
+
+    this._modalsService.enableClose = (this.step === 0);
   }
 
   private mnemonicCallback(response: Object) {
@@ -162,4 +167,12 @@ export class CreateWalletComponent {
     const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
     document.body.dispatchEvent(escape);
   }
+
+  // capture the enter button
+  @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+      if (event.keyCode === 13) {
+        this.nextStep();
+      }
+    }
 }

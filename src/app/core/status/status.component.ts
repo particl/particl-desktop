@@ -1,42 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
 
-import { PeerService } from '../rpc/peer.service';
-import { RPCService } from '../rpc/rpc.service';
-import { BlockStatusService } from '../rpc/blockstatus.service';
+import { PeerService, RPCService, BlockStatusService } from '../rpc/rpc.module';
 
 @Component({
   selector: 'app-status',
   templateUrl: './status.component.html',
-  styleUrls: ['./status.component.css'],
-  providers: [
-    PeerService
-  ]
+  styleUrls: ['./status.component.css']
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit, OnDestroy {
 
-  private peerListCount: number = 0;
-  private _subPeerList: Subscription;
+  peerListCount: number = 0;
 
   public encryptionStatus: string = 'Locked';
+  private _sub: Subscription;
 
-  constructor(private  _peerService: PeerService, private _rpc: RPCService, private modalsService: ModalsService) { }
+  private log: any = Log.create('status.component');
+
+
+  constructor(
+    private _rpc: RPCService,
+    private _modalsService: ModalsService) { }
 
   ngOnInit() {
-    this._subPeerList = this._peerService.getPeerList()
+    this._sub = this._rpc.chainState.skip(1)
       .subscribe(
-        peerList => {
-          this.peerListCount = peerList.length;
+        state => {
+          this.encryptionStatus = state.chain.encryptionstatus,
+          this.peerListCount = state.chain.connections
         },
-        error => console.log('StatusComponent subscription error:' + error));
-
-    this._rpc.register(this, 'getwalletinfo', null, this.rpc_walletEncryptionStatus, 'both');
+        error => this.log.er(`getEncryptionStatus, subscription error: ${error}`));
   }
 
-  getPeerListCount() {
-    return this.peerListCount;
+  ngOnDestroy() {
+    if (this._sub) {
+      this._sub.unsubscribe();
+    }
   }
 
   getIconNumber(): number {
@@ -65,25 +67,18 @@ export class StatusComponent implements OnInit {
     }
   }
 
-  // TODO: Status Interface
-  rpc_walletEncryptionStatus(status: any) {
-    this.encryptionStatus = status.encryptionstatus;
-  }
-
-  rpc_walletLock_success(json: Object) {
-
-  }
-
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
+        // TODO: Encrypt wallet modal...
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':
-        this._rpc.call(this, 'walletlock', null, this.rpc_walletLock_success);
+        this._rpc.call('walletlock')
+          .subscribe();
         break;
       case 'Locked':
-        this.modalsService.open('unlock');
+        this._modalsService.open('unlock');
         break;
       default:
         break;

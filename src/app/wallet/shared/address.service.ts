@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger';
-
 import { Observable, Observer } from 'rxjs'; // use this for testing atm
 
 import { Address, deserialize, TEST_ADDRESSES_JSON } from './address.model';
@@ -59,7 +58,10 @@ export class AddressService {
     }
 
     if (this.addressCount > 0) {
-      this._rpc.call(this, 'filteraddresses', this.rpc_getParams(), this.rpc_loadAddresses);
+      this._rpc.call('filteraddresses', this.rpc_getParams())
+        .subscribe(response => {
+            this.rpc_loadAddresses(response);
+          });
     }
   }
 

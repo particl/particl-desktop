@@ -6,8 +6,7 @@ import { BalanceComponent } from './balance.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
-
-import { RPCService } from '../../core/rpc/rpc.service';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -17,11 +16,8 @@ describe('BalanceComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        WalletModule.forRoot()
-      ],
-      providers: [
-        ElectronService,
-        RPCService
+        WalletModule.forRoot(),
+        RpcModule.forRoot()
       ]
     })
     .compileComponents();
@@ -35,5 +31,29 @@ describe('BalanceComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should get balance before point', () => {
+    component.getBalanceBeforePoint();
+    expect(component.getBalanceBeforePoint.length).toBe(0);
+  });
+/*
+  it('should get balance point', () => {
+    component.getBalancePoint();
+    expect(component.getBalancePoint).toBeTruthy();
+  });
+
+  it('should get balance after point', () => {
+    component.getBalanceAfterPoint(true)
+    expect(component.getBalanceAfterPoint).toBeTruthy();
+  });
+
+  it('should get type of balance', () => {
+    component.getTypeOfBalance();
+    expect(component.getTypeOfBalance).toBeTruthy();
+  });
+*/
+  it('should get balanceService', () => {
+    expect(component.balanceService).toBeDefined();
   });
 });

@@ -6,8 +6,9 @@ import { SendComponent } from './send.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
 
-import { RPCService } from '../../core/rpc/rpc.service';
+import { ModalsService } from '../../modals/modals.service';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -17,11 +18,12 @@ describe('SendComponent', () => {
     TestBed.configureTestingModule({
       imports: [
          SharedModule,
-         WalletModule.forRoot()
+         WalletModule.forRoot(),
+         RpcModule.forRoot()
       ],
       providers: [
         ElectronService,
-        RPCService
+        ModalsService
       ]
     })
     .compileComponents();
@@ -35,5 +37,98 @@ describe('SendComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  /* cant do RPC yet
+
+    it('should call back address', () => {
+      // component.rpc_callbackVerifyAddress();
+      expect(component.rpc_callbackVerifyAddress).toBeTruthy();
+    });
+  */
+  it('should send tab', () => {
+    component.sendTab('sendPayment');
+    expect(component.type).toBe('sendPayment');
+  });
+
+  it('should verify amount no balance service', () => {
+    component.send.amount = 555.555555;
+    expect(component.checkAmount()).toBe(false);
+  });
+/*
+
+    it('should open lookup', () => {
+      component.openLookup();
+      expect(component.openLookup).toBe('true');
+    });
+*/
+/*
+  it('should get balances', () => {
+    // component.getBalance();
+    expect(component.getBalance).toBeTruthy()
+  });
+
+  it('should open validate', () => {
+    component.openValidate();
+    expect(component.openValidate).toBeTruthy();
+  });
+
+  it('should close validate', () => {
+    component.closeValidate();
+    expect(component.closeValidate).toBeTruthy();
+  });
+
+  it('should select address', () => {
+    // component.selectAddress();
+    expect(component.selectAddress).toBeTruthy();
+  });
+
+  it('should clear', () => {
+    component.clear();
+    expect(component.clear).toBeTruthy()
+  });
+
+  it('should pay', () => {
+    component.pay();
+    expect(component.pay).toBeTruthy()
+  });
+
+  it('should toggle advanced', () => {
+    component.toggleAdvanced();
+    expect(component.toggleAdvanced).toBeTruthy();
+  });
+
+  it('should check address', () => {
+    component.checkAddress();
+    expect(component.checkAddress).toBeTruthy();
+  });
+
+  it('should verify amount', () => {
+    component.verifyAmount();
+    expect(component.verifyAmount).toBeTruthy();
+  });
+
+  it('should verify address', () => {
+    component.verifyAddress();
+    expect(component.verifyAddress).toBeTruthy();
+  });
+
+  it('should get send', () => {
+    expect(component.send).toBeTruthy();
+  });
+*/
+  it('should get addressLookup property', () => {
+    expect(component.addressLookup).toBeDefined();
+  });
+
+  it('should get advanced', () => {
+    expect(component.advanced).toBe(false);
+  });
+
+  it('should get lookup', () => {
+    expect(component.lookup).toBe(undefined);
+  });
+
+  it('should get type', () => {
+    expect(component.type).toBe('sendPayment');
   });
 });

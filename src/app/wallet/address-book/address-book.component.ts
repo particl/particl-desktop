@@ -106,10 +106,17 @@ export class AddressBookComponent implements OnInit {
 
     if (this.label !== undefined) {
 
-      this._rpc.call(this, 'manageaddressbook', ['newsend', this.address, this.label],
-        this.rpc_addAddressToBook_success,
-        this.rpc_addAddressToBook_failed
-      );
+      // this._rpc.oldCall(this, 'manageaddressbook', ['newsend', this.address, this.label],
+      //   this.rpc_addAddressToBook_success,
+      //   this.rpc_addAddressToBook_failed
+      // );
+      this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
+        .subscribe(response => {
+          this.rpc_addAddressToBook_success(response)
+        },
+        error => {
+          this.rpc_addAddressToBook_failed(error);
+        });
 
       this.address = undefined;
       this.validAddress = undefined;
@@ -159,7 +166,14 @@ export class AddressBookComponent implements OnInit {
       return;
     }
 
-    this._rpc.call(this, 'validateaddress', [this.address], this.rpc_verifyAddress_success);
+    // this._rpc.oldCall(this, 'validateaddress', [this.address], this.rpc_verifyAddress_success);
+    this._rpc.call('validateaddress', [this.address])
+      .subscribe(response => {
+        this.rpc_verifyAddress_success(response)
+      },
+      error => {
+        this.log.er('rpc_validateaddress_failed');
+      });
     return;
   }
 

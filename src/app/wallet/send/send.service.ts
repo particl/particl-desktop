@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { RPCService } from '../../core/rpc/rpc.module';
+
+import { Log } from 'ng2-logger'
+
 
 @Injectable()
 export class SendService {
 
+  // success alert box
   private address: string = '';
   private amount: number = 0;
 
+  // stealth address used for all balance transfers
   private defaultStealthAddressForBalanceTransfer: string;
 
-  constructor(public _rpc: RPCService) {
-    this._rpc.call(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
-  }
+  log: any = Log.create('send.service');
 
 
   /*
@@ -20,6 +23,45 @@ export class SendService {
 
   */
 
+  constructor(public _rpc: RPCService) {
+    // this._rpc.oldCall(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
+    this._rpc.call('liststealthaddresses', null)
+      .subscribe(response => {
+        this.rpc_listDefaultAddress_success(response)
+      },
+      error => {
+        this.log.er('errr');
+      });
+  }
+
+  rpc_listDefaultAddress_success(json: Object) {
+    if (json[0] !== undefined && json[0]['Stealth Addresses'] !== undefined && json[0]['Stealth Addresses'][0] !== undefined) {
+      this.rpc_setDefaultAddress_success(json[0]['Stealth Addresses'][0]['Address']);
+    } else {
+      // this._rpc.oldCall(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_setDefaultAddress_success);
+      this._rpc.call('getnewstealthaddress', ['balance transfer'])
+        .subscribe(
+          (response: any) => {
+            this.rpc_setDefaultAddress_success(response)
+        },
+        error => {
+          this.log.er('errr');
+        });
+    }
+  }
+
+  rpc_setDefaultAddress_success (json: any) {
+    this.defaultStealthAddressForBalanceTransfer = json;
+    this.log.d(`rpc_setDefaultAddress_success, stealth address: ${json}`);
+  }
+
+  public getBalanceTransferAddress(): string {
+    return this.defaultStealthAddressForBalanceTransfer;
+  }
+
+  /*
+  * Sends a transactions
+  */
   sendTransaction(input: string, output: string, address: string, amount: number, comment: string, substractfee: boolean,
     narration: string, ringsize: number, numsignatures: number) {
 
@@ -31,7 +73,15 @@ export class SendService {
 
     this.setTransactionDetails(address, amount);
 
-    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send_success);
+    // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
+    this._rpc.call('send' + rpcCall, params)
+        .subscribe(
+          (response: any) => {
+          this.rpc_send_success(response)
+        },
+        (error: any) => {
+          this.rpc_send_failed(error);
+        });
   }
 
   transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
@@ -40,7 +90,8 @@ export class SendService {
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
 
-    if (address === undefined) {
+    this.log.d('transferBalance, sx' + this.defaultStealthAddressForBalanceTransfer);
+    if (address === undefined || address === '') {
       address = this.defaultStealthAddressForBalanceTransfer;
     }
 
@@ -49,32 +100,27 @@ export class SendService {
 
     this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
 
-    this._rpc.call(this, 'send' + rpcCall, params, this.rpc_send_success);
-
+    // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
+    this._rpc.call('send' + rpcCall, params)
+      .subscribe(
+        (response: any) => {
+          this.rpc_send_success(response)
+      },
+      (error: any) => {
+          this.rpc_send_failed(error);
+      });
   }
 
-  rpc_listDefaultAddress_success(json: Object) {
-    if (json[0] !== undefined && json[0]['Stealth Addresses'] !== undefined && json[0]['Stealth Addresses'][0] !== undefined) {
-      this.rpc_setDefaultAddress_success(json[0]['Stealth Addresses'][0]['Address']);
-    } else {
-      this._rpc.call(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_setDefaultAddress_success);
-    }
+
+  rpc_send_success(json: any) {
+    this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
+    alert(`Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}`);
   }
 
-  rpc_setDefaultAddress_success (json: string) {
-    this.defaultStealthAddressForBalanceTransfer = json;
+  rpc_send_failed(json: any) {
+    this.log.er('rpc_send_failed, failed to execute transactions!');
+    this.log.er(json);
   }
-
-  rpc_send_success(json: string) {
-    // json return value is just txid
-    // We can't use gettransaction just yet, becaue
-    if (true) {
-      alert('Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}');
-    } else {
-      // error
-    }
-  }
-
 
 
   /*
@@ -163,9 +209,6 @@ export class SendService {
       return 4;
     }
   }
-
-
-
 
 
   /*

@@ -3,12 +3,13 @@
         border: 0;
         color: #fff;
         font-weight: 700;
-        font-size: 12px;
+        font-size: 0.8em;
         text-transform: uppercase;
-        padding: 8px 30px;
+        padding: 8px;
         vertical-align: middle;
         background-color: #03E8B0;
         border-bottom: 1px solid #07B98D;
+		min-width:100px;
     }
     /* TODO: Once we've structured the modals correctly, we'll move this there.
     This is still discussion on terminology (Passphrase vs password, etc) too */

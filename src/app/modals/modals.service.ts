@@ -3,8 +3,10 @@ import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
 import { BlockStatusService } from '../core/rpc/rpc.module';
+import { RPCService } from '../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -15,7 +17,10 @@ export class ModalsService {
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
 
+  public enableClose: boolean = true;
+
   private isOpen: boolean = false;
+  private manuallyClosed: any[] = [];
 
   private data: string;
 
@@ -23,25 +28,39 @@ export class ModalsService {
 
   messages: Object = {
     createWallet: CreateWalletComponent,
+    daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent
   };
 
   constructor (
-    private _statusService: BlockStatusService
+    private _blockStatusService: BlockStatusService,
+    private _rpcService: RPCService
   ) {
-    this._statusService.statusUpdates.asObservable().subscribe(status => {
+    this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
       this.needToOpenModal(status);
     });
+    this._rpcService.modalUpdates.asObservable().subscribe(status => {
+      if (status.error) {
+        this.open('daemon', status);
+      } else if (this.modal === this.messages['daemon']) {
+        this.close();
+      }
+    });
   }
 
-  open(modal: string, data?: Object): void {
+  open(modal: string, data?: any): void {
     if (modal in this.messages) {
-      this.log.d(`next modal: ${modal}`);
-      this.modal = this.messages[modal];
-      this.message.next({modal: this.modal, data: data});
-      this.isOpen = true;
+      if (
+        (data && data.forceOpen)
+        || !this.manuallyClosed.includes(this.messages[modal].name)
+      ) {
+        this.log.d(`next modal: ${modal}`);
+        this.modal = this.messages[modal];
+        this.message.next({modal: this.modal, data: data});
+        this.isOpen = true;
+      }
     } else {
       this.log.er(`modal ${modal} doesn't exist`);
     }
@@ -49,6 +68,9 @@ export class ModalsService {
 
   close() {
     this.isOpen = false;
+    if (this.modal && !this.manuallyClosed.includes(this.modal.name)) {
+      this.manuallyClosed.push(this.modal.name);
+    }
   }
 
   getMessage() {
@@ -71,8 +93,14 @@ export class ModalsService {
 
   needToOpenModal(status: any) {
     // Open syncing Modal
-    if (!this.isOpen && (status.networkBH <= 0 || status.internalBH <= 0 || status.networkBH - status.internalBH > 50)) {
+    if (!this.isOpen && (status.networkBH <= 0
+      || status.internalBH <= 0
+      || status.networkBH - status.internalBH > 50)) {
         this.open('syncing');
     }
+  }
+
+  unlockWallet(i: Injectable, cb: Function, timeout: number) {
+    this.open('unlock', {'instance' : i, 'callback': cb, 'timeout': timeout});
   }
 }

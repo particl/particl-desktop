@@ -18,6 +18,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ModalsService } from './modals.service';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 
@@ -27,6 +28,7 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
   styleUrls: ['./modals.component.scss'],
   entryComponents: [
     CreateWalletComponent,
+    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent
   ]
@@ -44,6 +46,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   syncPercentage: number = 0;
   syncString: string;
   closeOnEscape: boolean = true;
+  enableClose: boolean;
 
   private logger: any = Log.create('modals.component');
 
@@ -61,8 +64,9 @@ export class ModalsComponent implements DoCheck, OnInit {
   }
 
   ngOnInit() {
+    this.enableClose = this._modalService.enableClose;
     document.onkeydown = (event: any) => {
-      if (this.closeOnEscape
+      if (this.closeOnEscape && this._modalService.enableClose
           && event.key.toLowerCase() === 'escape'
           && this.modal) {
         this.close();
@@ -71,6 +75,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   }
 
   ngDoCheck() {
+    this.enableClose = this._modalService.enableClose;
     if (this._element) {
       const element = this._element.nativeElement;
       const style = element.ownerDocument.defaultView.getComputedStyle(element, undefined);
@@ -92,7 +97,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.modalContainer.createComponent(factory);
     const dynamicModal = this.modal as any;
-    if (data && dynamicModal.instance.setData) {
+    if (data !== undefined && dynamicModal.instance.setData !== undefined) {
       dynamicModal.instance.setData(data);
     }
     this.staticModal.show();

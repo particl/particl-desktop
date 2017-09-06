@@ -9,7 +9,9 @@
 <hr class="margin-top-100px">
 
 <app-password
-  [unlockButton]="'UNLOCK WALLET'"
+  [buttonText]="'UNLOCK WALLET'"
   (unlockEmitter)="unlock($event)"
+  [unlockTimeout]="timeout"
+  [showStakeOnly]="showStakeOnly"
   [emitUnlock]="true">
   </app-password>

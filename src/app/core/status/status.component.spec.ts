@@ -33,4 +33,12 @@ describe('StatusComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should getIconNumber', () => {
+    expect(component.getIconNumber()).toBe(0);
+  });
+
+  it('should get encryptionStatus', () => {
+    expect(component.encryptionStatus).toBe('Locked');
+  });
 });

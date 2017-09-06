@@ -7,7 +7,9 @@ import { SharedModule } from '../shared/shared.module';
 
 import { BlockStatusService } from '../core/rpc/blockstatus.service';
 
+import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { ModalsComponent } from './modals.component';
+
 
 describe('ModalsComponent', () => {
   let component: ModalsComponent;
@@ -36,5 +38,28 @@ describe('ModalsComponent', () => {
 
   it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should update progress', () => {
+    component.updateProgress(5);
+    expect(component.syncPercentage).toBe(5);
+  });
+
+  it('should open and close', () => {
+    component.open(UnlockwalletComponent, {forceOpen: true});
+    expect(component.modal).toBeDefined();
+    component.close();
+  });
+
+  it('should get closeOnEscape', () => {
+    expect(component.closeOnEscape).toBe(true);
+  });
+
+  it('should get hasScrollY', () => {
+    expect(component.hasScrollY).toBe(false);
+  });
+
+  it('should get modal', () => {
+    expect(component.modal).toBe(undefined);
   });
 });

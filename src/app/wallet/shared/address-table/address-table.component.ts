@@ -140,7 +140,11 @@ export class AddressTableComponent implements OnInit {
 
   public deleteAddress(label: string, address: string) {
     if (confirm(`Are you sure you want to delete ${label}: ${address}`)) {
-      this._rpc.call(this, 'manageaddressbook', ['del', address], this.rpc_deleteAddress_success);
+      // this._rpc.call(this, 'manageaddressbook', ['del', address], this.rpc_deleteAddress_success);
+      this._rpc.call('manageaddressbook', ['del', address])
+        .subscribe(response => {
+            this.rpc_deleteAddress_success(response);
+          });
     }
   }
 
