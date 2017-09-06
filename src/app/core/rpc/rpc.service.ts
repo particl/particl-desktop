@@ -129,14 +129,6 @@ export class RPCService {
         this.stateCallError.bind(this, method));
   }
 
-  openLink(link: string): void {
-    if (this.isElectron) {
-      this.electronService.shell.openExternal(link);
-    } else {
-      window.open(link, '_blank')
-    }
-  }
-
   registerStateCall(method: string, timeout?: number): void {
     if (timeout) {
       let first = true;

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Log } from 'ng2-logger';
+import { Log } from 'ng2-logger'
 import { TransactionService } from '../transaction.service';
 import { Transaction } from '../transaction.model';
 
@@ -69,17 +69,6 @@ export class TransactionsTableComponent implements OnInit {
     } else {
       this.expandedTransactionID = txid;
     }
-  }
-
-  // Link to blockchain explorer
-  public openSingleTransactionWindow(tx: Transaction) {
-    // if (this.isElectron) {
-    //   // this.electronService.shell.openExternal('https://explorer-testnet.particl.io/tx/' + tx);
-    //   this.txService.openTransactionLink('https://explorer-testnet.particl.io/tx/' + tx)
-    // } else {
-    //   window.open('https://explorer-testnet.particl.io/tx/' + tx, '_blank')
-    // }
-    this.txService.openTransactionLink('https://explorer-testnet.particl.io/tx/' + tx)
   }
 
   public checkExpandDetails(tx: Transaction) {

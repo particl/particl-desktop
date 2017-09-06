@@ -56,10 +56,6 @@ export class TransactionService {
     this.txs = [];
   }
 
-  openTransactionLink(link: any) {
-    this.rpc.openLink(link)
-  }
-
   /*
     Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
   */
