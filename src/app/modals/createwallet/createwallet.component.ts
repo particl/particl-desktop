@@ -1,4 +1,4 @@
-import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef } from '@angular/core';
+import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { IPassword } from '../shared/password/password.interface';
@@ -167,4 +167,12 @@ export class CreateWalletComponent {
     const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
     document.body.dispatchEvent(escape);
   }
+
+  // capture the enter button
+  @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+      if (event.keyCode === 13) {
+        this.nextStep();
+      }
+    }
 }

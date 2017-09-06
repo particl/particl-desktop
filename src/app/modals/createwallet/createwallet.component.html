@@ -41,7 +41,7 @@
         <div class="col-md-12">
           <input #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
             name="name" placeholder="Default Account..." required maxlength="32"
-            [class.verify-error]="validation.errors && (validation.dirty || validation.touched)" />
+            [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
 
           <div *ngIf="validation.errors && (validation.dirty || validation.touched)"
               [@slideDown] class="alert alert-danger margin-top-5px">

@@ -51,20 +51,18 @@ export class RPXService {
         });
       this.electronService.ipcRenderer
         .on(subChannel, function listener(event: Event, type: string, data: Object) {
-        switch (type) {
-          case 'n':
-            self.zone.run(() => {
+        self.zone.run(() => {
+          switch (type) {
+            case 'n':
               observer.next(data);
-            })
-            break;
-          case 'e':
-            self.zone.run(() => {
+              break;
+            case 'e':
               observer.error(data);
-            })
-            break;
-          case 'c':
-            observer.complete();
-        }
+              break;
+            case 'c':
+              observer.complete();
+          }
+        })
         // Cleanup
         return () => {
           self.electronService.ipcRenderer.removeListener(subChannel, listener);
