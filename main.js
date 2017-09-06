@@ -15,8 +15,6 @@ const log = require('electron-log');
 log.transports.file.appName = '.particl';
 log.transports.file.file = log.transports.file.findLogPath(log.transports.file.appName).replace('log.log', 'partgui.log');
 
-require('./modules/rpc/rpc');
-
 const daemonManager = require('./modules/clientBinaries/clientBinaries');
 
 sock.connect('tcp://127.0.0.1:30000');
@@ -29,14 +27,16 @@ sock.on('message', function(topic, message) {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
-let tray
-let daemon
+let mainWindow;
+let tray;
+let daemon;
 
 function createWindow () {
 
+  // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false).then(child => {
-    daemon = child;
+    daemon = child ? child : undefined;
+    require('./modules/rpc/rpc');
   });
 
   // Default tray image + icon
@@ -162,7 +162,10 @@ app.on('window-all-closed', function () {
 })
 
 app.on('quit', function () {
-  daemon.kill();
+  // kill the particl daemon if initiated on launch
+  if (daemon) {
+    daemon.kill();
+  }
 })
 
 app.on('activate', function () {
