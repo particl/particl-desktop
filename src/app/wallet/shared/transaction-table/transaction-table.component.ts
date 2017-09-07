@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Log } from 'ng2-logger'
-
 import { TransactionService } from '../transaction.service';
 import { Transaction } from '../transaction.model';
 
@@ -46,12 +45,10 @@ export class TransactionsTableComponent implements OnInit {
   log: any = Log.create('transaction-table.component');
 
   constructor(public txService: TransactionService) {
-
   }
 
   ngOnInit() {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
-
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);
   }

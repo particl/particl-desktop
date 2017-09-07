@@ -31,6 +31,7 @@ export class TransactionService {
     this.rpc.chainState.subscribe(state => {
       if (state.chain) {
         this.txCount = state.chain.txcount;
+        this.currentPage = 0;
         this.rpc_update();
       }
     })
@@ -62,7 +63,7 @@ export class TransactionService {
   rpc_update() {
     this.rpc.call('listtransactions', [
       '*', +this.MAX_TXS_PER_PAGE,
-      ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)
+      (this.currentPage * this.MAX_TXS_PER_PAGE)
     ])
     .subscribe(
       (txResponse: Array<Object>) => {

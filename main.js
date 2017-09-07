@@ -101,6 +101,12 @@ function createWindow () {
     },
   })
 
+  // handle external URIs
+  mainWindow.webContents.on('new-window', (event, url) => {
+    event.preventDefault();
+    electron.shell.openExternal(url);
+  });
+
   // and load the index.html of the app.
   if (process.argv.indexOf('--dev') === -1) {
     mainWindow.loadURL(url.format({
