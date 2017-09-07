@@ -160,3 +160,27 @@ input[type="text"] {
   border: none;
 }
 
+.mat-list {
+  .mat-list-item{
+    .mat-list-item-content{
+      height: auto !important;
+    }
+
+  }
+
+}
+
+
+.address, .address-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: transparent;
+  transition: background .3s;
+  white-space: nowrap;
+}
+
+@media (max-width:960px) {
+  .mat-form-field {
+    width: 100%;
+  }
+}
