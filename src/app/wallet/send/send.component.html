@@ -2,7 +2,7 @@
   <md-card-content>
     <app-header>
       <div class="container-fluid header">
-        <div [fxLayout]="'row'">
+        <div  fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
           <div fxFlex="80%">
             <md-tab-group (selectChange)="sendTab($event.index)">
               <md-tab>
@@ -18,7 +18,7 @@
             </md-tab-group>
           </div>
           <div fxFlex="20%">
-            <button md-icon-button class="btn btn-default" (click)="toggleAdvanced()">
+            <button md-raised-button class="btn btn-default" (click)="toggleAdvanced()">
               <md-icon>settings</md-icon>
               Action
             </button>
@@ -32,12 +32,12 @@
         <form class="example-form" name="walletSendForm">
           <md-list>
             <md-list-item>
-              <div class="md-line" fxFlex="'row'">
-                <md-radio-group name="sendInput" [(ngModel)]="send.input">
-                  <h5 fxFlex="33.3%"> From Account</h5>
-                  <md-radio-button value="public" fxFlex="33.3%">Public</md-radio-button>
-                  <md-radio-button value="blind" fxFlex="33.3%">Blind</md-radio-button>
-                  <md-radio-button value="private" fxFlex="33.3%">Private</md-radio-button>
+              <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" >
+                <md-radio-group name="sendInput" [(ngModel)]="send.input" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
+                  <h5 fxFlex="33.3%" fxFlex.md="50%" fxFlex.lt-md="50%"> From Account</h5>
+                  <md-radio-button value="public" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Public</md-radio-button>
+                  <md-radio-button value="blind" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Blind</md-radio-button>
+                  <md-radio-button value="private" fxFlex.md="50%" fxFlex.lt-md="100%" fxFlex="33.3%">Private</md-radio-button>
 
                   <div fxFlex="33.3%" fxFlex.gt-sm="100%">
                     <span class="balance-label">Balance: </span>
@@ -53,7 +53,7 @@
 
           <md-list *ngIf="type ===  'balanceTransfer'">
             <md-list-item>
-              <div class="md-line" fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+              <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
                 <h5 fxFlex="10%"> Pay to:</h5>
                 <md-form-field fxFlex="50%">
                   <input mdInput type="text" name="toAddress" placeholder="The address to send the payment to"
@@ -73,7 +73,7 @@
 
           <md-list>
             <md-list-item>
-              <div class="md-line" fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+              <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
                 <h5 fxFlex="10%"> Balance:</h5>
                 <md-form-field fxFlex="50%">
                   <input name="toAddress" mdInput
@@ -100,7 +100,7 @@
 
           <md-list>
             <md-list-item>
-              <div class="md-line" fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+              <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
                 <h5 fxFlex="10%"> Narration</h5>
                 <md-form-field fxFlex>
                   <input type="text" mdInput name="sendNote"
@@ -115,7 +115,7 @@
 
           <md-list>
             <md-list-item>
-              <div class="md-line" fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+              <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column"fxLayoutGap="10px" layout-padding>
                 <h5 fxFlex="10%"> Amount </h5>
 
                 <md-form-field fxFlex="50%">
@@ -136,7 +136,7 @@
 
           <md-list *ngIf="send.input === 'private'">
             <md-list-item>
-              <div class="md-line" fxFlex="'row'">
+              <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
                 <h5 fxFlex="10%"> Privacy level </h5>
 
                 <div fxFlex="90%" fxFlex="'column'" fxLayoutWrap>
