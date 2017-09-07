@@ -1,3 +1,36 @@
+<div class="containerX">
+  <div fxLayout="row" class="coloredContainerX box">
+
+    <md-list class="list-data" >
+      <div md-subheader class="address-title">Previous addresses</div>
+      <div *ngFor="let address of addressService.addresses">
+        <md-list-item>
+          <div fxFlex="'row'" fxLayoutGap="10px" layout-padding>
+            <div fxFlex="20%" class="address-label"> {{ address.label }}</div>
+            <div fxFlex="50%" class="address">
+              <span>Address: </span>
+              {{ address.address }}
+            </div>
+            <div fxFlex="15%" fxFlex="'row'" fxLayoutAlign="end center">
+              <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" ngxClipboard
+                       [cbContent]="address.address">
+                content_copy
+              </md-icon>
+
+              <md-icon fxFlex="20%" ngxClipboard>verified_user</md-icon>
+
+              <i fxFlex="20%" class="material-icons cursor-pointer nc-icon nc-barcode-qr"
+                 mdTooltip="Select Address"
+                 (click)="selectAddress(address)"></i>
+            </div>
+          </div>
+        </md-list-item>
+        <md-divider></md-divider>
+      </div>
+    </md-list>
+
+  </div>
+</div>
 <app-grid>
   <div class="grid-row grid-header" *ngIf="displayHeader">
     <div *ngIf="displayLabel">Label</div>
