@@ -68,6 +68,9 @@ export class PasswordComponent {
     }
   }
 
+  clear() {
+    this.password = undefined;
+  }
   /*
     Emit password!
   */
@@ -88,7 +91,7 @@ export class PasswordComponent {
     this.checkAndFallbackToStaking();
     this._rpc.call('walletpassphrase', [
         this.password,
-        (this.stakeOnly ? 0 : this.unlockTimeout),
+        +(this.stakeOnly ? 0 : this.unlockTimeout),
         this.stakeOnly
       ])
       .subscribe(

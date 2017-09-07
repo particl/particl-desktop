@@ -37,6 +37,7 @@ export class PeerService {
       observer => {
         this._observerHighestBlockHeightNetwork = observer
 
+        // subscribe to chain state
         this.rpc.chainState.subscribe(
           state => {
             if (state.chain) {

@@ -47,9 +47,12 @@ export class UnlockwalletComponent {
   * setData sets the callback information for when the wallet unlocks.
   */
   setData(data: any) {
+    this.log.d('setting data');
     this.instance = data.instance;
     this.callback = data.callback;
-    this.timeout = data.timeout;
+    if (data.timeout) {
+      this.timeout = data.timeout;
+    }
     this.showStakeOnly = false;
   }
 

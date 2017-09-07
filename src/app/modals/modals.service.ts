@@ -9,6 +9,7 @@ import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
+import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 
 @Injectable()
 export class ModalsService {
@@ -30,7 +31,8 @@ export class ModalsService {
     createWallet: CreateWalletComponent,
     daemon: DaemonComponent,
     syncing: SyncingComponent,
-    unlock: UnlockwalletComponent
+    unlock: UnlockwalletComponent,
+    encrypt: EncryptwalletComponent
   };
 
   constructor (

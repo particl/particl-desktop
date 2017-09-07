@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="row">
+    <div *ngIf="!password" class="col-xs-12 text-center">
+      <h4>Please enter <b>a password</b> to encrypt your wallet.</h4>
+      <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
+    </div>
+
+    <div *ngIf="password" class="col-xs-12 text-center">
+      <h4>Please enter <b>your password again</b> to confirm that you've typed the right password.</h4>
+      <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
+    </div>
+
+  </div>
+</div>
+
+<hr class="margin-top-100px">
+
+<app-password
+  #passwordElement
+  [buttonText]="'ENCRYPT WALLET'"
+  (passwordEmitter)="encryptwallet($event)"
+  [unlockTimeout]="0"
+  [showStakeOnly]="false"
+  [emitPassword]="true">
+  </app-password>
+
+  <div *ngIf="password" class="buttons margin-top-30px">
+    <div class="row wallet-buttons-container">
+      <div class="col-sm-6 col-xs-12 text-right">
+        <button class="control" (click)="clearPassword()">
+          back
+        </button>
+      </div>
+    </div>
