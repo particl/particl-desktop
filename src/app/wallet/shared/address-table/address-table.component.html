@@ -36,8 +36,8 @@
 
       </div>
     </div>
-    <div class="grid-cell divider text-center" *ngIf="!displayQrMenu">
-      <div class="inline-toolbar qrcode-menu">
+    <div class="grid-cell divider text-center" *ngIf="displayQrMenu">
+      <div class="inline-toolbar qrcode-menu" (click)="openQrCodeModal(address)">
         <span class="nc-icon nc-barcode-qr"></span>
       </div>
     </div>
@@ -54,3 +54,35 @@
   [itemsPerPage]="getMaxAddressesPerPage()" >
     
   </pagination>
+
+<div id="qr-modal"  [ngClass]="{'hide': openQrModal == false }">
+  <div class="qr-modal-container">
+    <span class="close" (click)="closeQrModal()">&times;</span>
+
+    <div class="modal-content-header">{{singleAddress.label}}</div>
+    <hr class="margin-top-5px">
+
+    <div class="row">
+      <div class="col-xs-8 single-address">
+        <label class="label-address">Address</label>
+        <div class="card address-details">
+          <div class="details-address row">
+            <div *ngFor="let word of showAddress(singleAddress.address)" class="col-xs-4">
+              {{ word }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-4">
+        <div #qrCode class="card qr">
+          <qr-code [level]="'H'"
+                   [value]="singleAddress.address">
+          </qr-code>
+        </div>
+      </div>
+    </div>
+
+    <!-- <button class="control pull-right" (click)="addAddressToBook()">OK</button> -->
+
+  </div>
+</div>

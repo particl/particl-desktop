@@ -31,7 +31,7 @@ export class AddressTableComponent implements OnInit {
   @Input() displayIsMine: boolean = false;
 
   @Output() editLabelEmitter: EventEmitter<string> = new EventEmitter<string>();
-
+  openQrModal: boolean = false;
   /*
     Search query
   */
@@ -42,6 +42,11 @@ export class AddressTableComponent implements OnInit {
   */
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
+  public singleAddress: any = {
+    label: 'Empty label',
+    address: 'Empty address',
+    owned: false
+  };
 
   /*
     Pagination
@@ -162,6 +167,21 @@ export class AddressTableComponent implements OnInit {
   editLabel(address: string) {
     this.log.d(`editLabel, address: ${address}`);
     this.editLabelEmitter.emit(address);
+  }
+
+  // Open Qr Code Modal
+  openQrCodeModal(address: Object) {
+    this.log.d(`qrcode, address: ${JSON.stringify(address)}`);
+    this.openQrModal = true;
+    this.singleAddress = address
+  }
+
+  closeQrModal() {
+    this.openQrModal = false;
+  }
+
+  showAddress(address: string) {
+    return  address.match(/.{1,4}/g);
   }
 }
 
