@@ -1,12 +1,22 @@
-<h2 md-dialog-title>Label for new {{ type }} address</h2>
-<form [formGroup]="addLableForm" (ngSubmit)="onSubmitForm()" novalidate>
-  <md-form-field class="example-full-width">
-    <input mdInput type="text" formControlName="label" class="form-control" [(ngModel)]="label"
-           placeholder="Enter label..." required>
-  </md-form-field>
-  <md-dialog-actions>
+<h2 md-dialog-title>Add new address to addresbook</h2>
+
+<form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
+  <div md-dialog-content>
+    <md-form-field>
+      <input mdInput type="text" formControlName="address" [(ngModel)]="address"
+             placeholder="Enter Address"
+             [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
+             (input)="verifyAddress()"
+             required>
+    </md-form-field>
+
+    <md-form-field>
+      <input mdInput type="text" placeholder="Enter Label" name="label" formControlName="label" [(ngModel)]="label" required>
+    </md-form-field>
+  </div>
+  <md-dialog-actions fxLayoutAlign="end center">
     <button md-button md-dialog-close>Cancel</button>
-    <button md-button [md-dialog-close]="true" [disabled]="!addLableForm.valid" md-raised-button color="primary">
+    <button md-button [disabled]="!addAddressBookForm.valid" md-raised-button color="primary">
       Add Label
     </button>
   </md-dialog-actions>
