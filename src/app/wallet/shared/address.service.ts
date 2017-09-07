@@ -10,9 +10,7 @@ import { RPCService } from '../../core/rpc/rpc.service';
 
 @Injectable()
 export class AddressService {
-  /*
-    Settings
-  */
+  private log: any = Log.create('address.service');
 
   private typeOfAddresses: string = 'send'; // "receive","send", "total"
 
@@ -21,14 +19,23 @@ export class AddressService {
   */
   private _addresses: Observable<Array<Address>>;
   private _observerAddresses: Observer<Array<Address>>;
+  // Settings
+  addressType: string = 'send'; // "receive","send", "total"
+
+  /**
+    * How many addresses do we display per page and keep in memory at all times. When loading more
+    * addresses they are fetched JIT and added to addresses.
+    */
+  MAX_ADDRESSES_PER_PAGE: number = 5;
 
   private addressCount: number = 0;
 
-  /*
-    General
-  */
+  // Stores address objects.
+  addresses: Address[] = [];
 
-  log: any = Log.create('address.service');
+  // Pagination stuff
+  currentPage: number = 0;
+  totalPageCount: number = 0;
 
   constructor(private _rpc: RPCService) {
 
@@ -41,7 +48,6 @@ export class AddressService {
   getAddresses(): Observable<Array<Address>> {
     return this._addresses;
   }
-
 
 /*
     RPC
@@ -85,9 +91,9 @@ export class AddressService {
     const offset: number = (page * this.MAX_ADDRESSES_PER_PAGE);
     const count: number = this.MAX_ADDRESSES_PER_PAGE;
 //    console.log("offset" + offset + " count" + count);
-    if (this.typeOfAddresses === 'receive') {
+    if (this.addressType === 'receive') {
       return [offset, count, '0', '', '1'];
-    } else if (this.typeOfAddresses === 'send') {
+    } else if (this.addressType === 'send') {
       return [offset, count, '0', '', '2'];
     }
 

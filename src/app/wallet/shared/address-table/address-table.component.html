@@ -36,13 +36,14 @@
 
       </div>
     </div>
-    <div class="grid-cell divider text-center" *ngIf="displayQrMenu">
+    <div class="grid-cell divider text-center" *ngIf="!displayQrMenu">
       <div class="inline-toolbar qrcode-menu" (click)="openQrCodeModal(address)">
         <span class="nc-icon nc-barcode-qr"></span>
       </div>
     </div>
   </div>
 </app-grid>
+
 
 <pagination *ngIf="displayPagination" 
   [boundaryLinks]="true" 
@@ -81,8 +82,5 @@
         </div>
       </div>
     </div>
-
-    <!-- <button class="control pull-right" (click)="addAddressToBook()">OK</button> -->
-
   </div>
 </div>
