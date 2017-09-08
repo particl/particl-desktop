@@ -65,7 +65,8 @@ export class AddressService {
 
     if (this.addressCount > 0) {
       this._rpc.call('filteraddresses', this.rpc_getParams())
-        .subscribe(response => {
+        .subscribe(
+          (response: Array<Object>) => {
             this.rpc_loadAddresses(response);
           });
     }
@@ -101,13 +102,13 @@ export class AddressService {
   }
 */
 
-  private rpc_loadAddresses(json: Object): void {
+  private rpc_loadAddresses(response: Array<Object>): void {
     let addresses: Address[] = [];
-    for (const k in json) {
-      if (json[k] !== undefined) { // lint
-        addresses = this.addAddress(addresses, json[k]);
+    response.forEach((resp) => {
+      if (resp !== undefined) { // lint
+        addresses = this.addAddress(addresses, resp);
       }
-    }
+    });
     this._observerAddresses.next(addresses);
   }
 
@@ -120,7 +121,7 @@ export class AddressService {
     if (typeof instance.address === 'undefined') {
       return;
     }
-    addresses.splice(0, 0, instance);
+    addresses.unshift(instance);
     return addresses;
   }
 }

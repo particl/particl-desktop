@@ -69,9 +69,7 @@ export class AddressTableComponent implements OnInit {
   ngOnInit() {
     this._subAddresses = this._addressService.getAddresses()
       .subscribe(
-        addresses => {
-          this.addresses = addresses;
-        },
+        addresses => this.addresses = addresses,
         error => console.log('addresstable-component subscription error:' + error));
   }
 
@@ -83,7 +81,6 @@ export class AddressTableComponent implements OnInit {
   public getSinglePage(): Array<Address> {
     if (this.inSearchMode()) { // in search mode
       return this.paginateArray(this.getSearchSubset());
-
     } else { // not in seach mode
       return this.paginateArray(this.addresses);
     }
@@ -106,8 +103,6 @@ export class AddressTableComponent implements OnInit {
         );
       });
   }
-
-// ------------------
 
 /*
   Pagination
@@ -137,8 +132,6 @@ export class AddressTableComponent implements OnInit {
     return this.addressDisplayAmount;
   }
 
-// ------------------
-
 /*
   Delete address
 */
@@ -158,8 +151,6 @@ export class AddressTableComponent implements OnInit {
     this._rpc.specialPoll();
   }
 
-// ------------------
-
 /*
   Edit label address
 */
@@ -169,7 +160,7 @@ export class AddressTableComponent implements OnInit {
     this.editLabelEmitter.emit(address);
   }
 
-  // Open Qr Code Modal
+  /** Open QR Code Modal */
   openQrCodeModal(address: Object) {
     this.log.d(`qrcode, address: ${JSON.stringify(address)}`);
     this.openQrModal = true;
