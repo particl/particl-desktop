@@ -60,7 +60,7 @@ export class AddressTableComponent implements OnInit {
   log: any = Log.create('address-table.component');
 
   constructor(
-    private _addressService: AddressService,
+    public _addressService: AddressService,
     private _rpc: RPCService
   ) {
 
