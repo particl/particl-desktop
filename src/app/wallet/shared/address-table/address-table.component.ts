@@ -65,7 +65,6 @@ export class AddressTableComponent implements OnInit {
         error => console.log('addresstable-component subscription error:' + error));
   }
 
-
   /** Returns the addresses to display in the UI with regards to both pagination and search/query. */
   public getSinglePage(): Array<Address> {
     if (this.inSearchMode()) { // in search mode
@@ -78,7 +77,6 @@ export class AddressTableComponent implements OnInit {
   private inSearchMode(): boolean {
     return (this.query !== undefined && this.query !== '');
   }
-
 
   /** Returns the addresses that match a search/query. */
   private getSearchSubset(): Address[] {
