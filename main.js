@@ -16,6 +16,7 @@ log.transports.file.appName = '.particl';
 log.transports.file.file = log.transports.file.findLogPath(log.transports.file.appName).replace('log.log', 'partgui.log');
 
 const daemonManager = require('./modules/clientBinaries/clientBinaries');
+const rpc = require('./modules/rpc/rpc');
 
 sock.connect('tcp://127.0.0.1:30000');
 sock.subscribe('hashtx');
@@ -36,7 +37,9 @@ function createWindow () {
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false).then(child => {
     daemon = child ? child : undefined;
-    require('./modules/rpc/rpc');
+    rpc.init();
+  }).catch(error => {
+    console.error(error);
   });
 
   // Default tray image + icon

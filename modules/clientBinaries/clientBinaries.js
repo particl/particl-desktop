@@ -8,7 +8,7 @@ const EventEmitter = require('events').EventEmitter;
 const spawn = require('child_process').spawn;
 
 const ClientBinaryManager = require('./clientBinariesManager').Manager;
-const auth = require('../rpc/rpcCookie').getCookie();
+const auth = require('../rpc/rpc').getCookie();
 
 const log = {
   info: console.log,
@@ -61,18 +61,25 @@ class Manager extends EventEmitter {
 
       // particl-cli was not automatically downloaded and was already installed
       if (!fs.existsSync(cliPath)) {
-        cliPath = 'particl-cli';
+        const child = spawn('which', 'particl-cli').on('close', code => {
+          if (code === 0) {
+            cliPath = 'particl-cli';
+          } else {
+            console.error('particl-cli not found, trying to launch daemon anyway...');
+            args.length = 4;
+            const child = spawn(this._availableClients['particld'].binPath, args);
+            resolve(child);
+          }
+        })
       }
 
       // spawn particl-cli getinfo to know if daemon is connected
-      const child = spawn(cliPath, args).on('close', (code) => {
+      const child = spawn(cliPath, args).on('close', code => {
         if (code === 0) {
-          // daemon was already launched
-          console.info("daemon already launched");
+          log.info("daemon already launched");
           resolve(undefined);
         } else {
-          // daemon needs to be launched
-          console.info("launching daemon");
+          log.info("launching daemon");
           // remove particl-cli specific arguments: (user, pass, command getinfo)
           args.length = 4;
           const child = spawn(this._availableClients['particld'].binPath, args);
