@@ -18,7 +18,7 @@ const log = {
 };
 
 // should be 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
-const BINARY_URL = 'https://raw.githubusercontent.com/pciavald/partgui/master/modules/clientBinaries/clientBinaries.json';
+const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
