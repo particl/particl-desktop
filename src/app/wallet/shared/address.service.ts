@@ -6,17 +6,13 @@ import { Address, deserialize, TEST_ADDRESSES_JSON } from './address.model';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 
-
-
 @Injectable()
 export class AddressService {
   private log: any = Log.create('address.service');
 
   private typeOfAddresses: string = 'send'; // "receive","send", "total"
 
-  /*
-    Stores address objects.
-  */
+  // Stores address objects.
   private _addresses: Observable<Array<Address>>;
   private _observerAddresses: Observer<Array<Address>>;
   // Settings
@@ -38,7 +34,6 @@ export class AddressService {
   totalPageCount: number = 0;
 
   constructor(private _rpc: RPCService) {
-
     this._addresses = Observable.create(observer => this._observerAddresses = observer).publishReplay(1).refCount();
 
     this._rpc.register(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success, 'address');
@@ -49,25 +44,21 @@ export class AddressService {
     return this._addresses;
   }
 
-/*
-    RPC
-*/
-
-  private rpc_loadAddressCount_success(json: Object): void {
+  private rpc_loadAddressCount_success(response: Object): void {
     if (this.typeOfAddresses === 'receive') {
-      this.addressCount = json['num_receive'];
+      this.addressCount = response['num_receive'];
     } else if (this.typeOfAddresses === 'send') {
-      this.addressCount = json['num_send'];
+      this.addressCount = response['num_send'];
       this.log.d(`rpc_loadAddressCount_success, num_send: ${this.addressCount}`);
     } else {
-      this.addressCount = json['total'];
+      this.addressCount = response['total'];
     }
 
     if (this.addressCount > 0) {
       this._rpc.call('filteraddresses', this.rpc_getParams())
         .subscribe(
-          (response: Array<Object>) => {
-            this.rpc_loadAddresses(response);
+          (success: Array<Object>) => {
+            this.rpc_loadAddresses(success);
           });
     }
   }
@@ -82,37 +73,11 @@ export class AddressService {
     }
   }
 
-/*  private rpc_getParams() {
-    let page = 0;
-
-    if (this.currentPage !== 0) {
-      page = this.currentPage - 1;
-    }
-
-    const offset: number = (page * this.MAX_ADDRESSES_PER_PAGE);
-    const count: number = this.MAX_ADDRESSES_PER_PAGE;
-//    console.log("offset" + offset + " count" + count);
-    if (this.addressType === 'receive') {
-      return [offset, count, '0', '', '1'];
-    } else if (this.addressType === 'send') {
-      return [offset, count, '0', '', '2'];
-    }
-
-    return [offset, count];
-  }
-*/
-
   private rpc_loadAddresses(response: Array<Object>): void {
     let addresses: Address[] = [];
-    response.forEach((resp) => {
-      if (resp !== undefined) { // lint
-        addresses = this.addAddress(addresses, resp);
-      }
-    });
+    response.forEach((resp) => addresses = this.addAddress(addresses, resp));
     this._observerAddresses.next(addresses);
   }
-
-
 
   // Adds an address to array from JSON object.
   private addAddress(addresses: Address[], json: Object): Address[] {
