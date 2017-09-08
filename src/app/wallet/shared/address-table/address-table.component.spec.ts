@@ -39,6 +39,6 @@ describe('AddressTableComponent', () => {
   });
 */
   it('should get addressService', () => {
-    expect(component.addressService).toBeDefined();
+    expect(component._addressService).toBeDefined();
   });
 });

@@ -13,16 +13,14 @@ export class AddressBookComponent implements OnInit {
 
   log: any = Log.create('address-book.component');
 
-  /*
-    UI state
-  */
+  query: string;
+
+  // UI state
   label: string = '';
   address: string;
   openNewAddressModal: boolean = false;
 
-  /*
-    Validation state
-  */
+  // Validation state
   private validAddress: boolean = undefined;
   private isMine: boolean = undefined;
 
@@ -35,13 +33,6 @@ export class AddressBookComponent implements OnInit {
       }
     }
   }
-
-  /*
-
-    UI Logic
-
-  */
-
 
   openNewAddress() {
     this.openNewAddressModal = true;
@@ -63,53 +54,41 @@ export class AddressBookComponent implements OnInit {
     this.closeNewAddress();
   }
 
-  /**
-  * Returns if the entered address is valid or not AND if it is not ours (isMine).
-  */
+  /** Returns if the entered address is valid or not AND if it is not ours (isMine). */
   checkAddress(): boolean {
     return this.validAddress && !this.isMine;
   }
 
-  /*
-
-    RPC Logic
-
-  */
-
-
-  /*
-    Add address to addressbook
-  */
-
-
+  /** Add address to addressbook */
+  editLabel(address: string) {
+    this.log.d(`editLabel, address: ${address}`);
+    this.address = address;
+    this.verifyAddress();
+    this.openNewAddress();
+  }
   /**
-  * Adds the address to the addressbook if address is valid & has label (in UI textbox) AND is not one of our own addresses.
-  */
+    * Adds the address to the addressbook if address is valid and
+    * has a label (in the textbox) and is not one of our own addresses.
+    */
   addAddressToBook() {
     if (!this.validAddress) {
+      // TODO: We should get rid of alerts
       alert('Please enter a valid address!');
       return;
     }
 
     if (this.isMine) {
       this.clearAndClose();
+      // TODO: We should get rid of alerts
       alert('This is your own address - can not be added to addressbook!');
       return;
     }
 
-    if (this.label !== undefined) {
-
-      // this._rpc.oldCall(this, 'manageaddressbook', ['newsend', this.address, this.label],
-      //   this.rpc_addAddressToBook_success,
-      //   this.rpc_addAddressToBook_failed
-      // );
+    if (this.label) {
       this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
-        .subscribe(response => {
-          this.rpc_addAddressToBook_success(response)
-        },
-        error => {
-          this.rpc_addAddressToBook_failed(error);
-        });
+        .subscribe(
+          response => this.rpc_addAddressToBook_success(response),
+          error => this.rpc_addAddressToBook_failed(error));
 
       this.address = undefined;
       this.validAddress = undefined;
@@ -118,9 +97,7 @@ export class AddressBookComponent implements OnInit {
     }
   }
 
-  /**
-  * Address was added succesfully to the address book.
-  */
+  /** Address was added succesfully to the address book. */
   rpc_addAddressToBook_success(json: Object) {
     if (json['result'] === 'success') {
       alert('Address successfully added to the addressbook!');
@@ -131,9 +108,9 @@ export class AddressBookComponent implements OnInit {
   }
 
   /**
-  * Address was not added to the addressbook
-  * e.g: wallet still locked
-  */
+    * Address was not added to the addressbook
+    * e.g: wallet still locked
+    */
   rpc_addAddressToBook_failed(json: Object) {
     this.log.er('rpc_addAddressToBook_failed');
     this.log.er(json);
@@ -141,17 +118,7 @@ export class AddressBookComponent implements OnInit {
     this._rpc.specialPoll();
   }
 
-
-
-
-  /*
-    Verify address
-  */
-
-
-  /**
-  * Verify if address is valid through RPC call and set state to validAddress..
-  */
+  /** Verify if address is valid through RPC call and sets state to validAddress.. */
   verifyAddress() {
     if (this.address === undefined || this.address === '') {
       this.validAddress = undefined;
@@ -159,20 +126,18 @@ export class AddressBookComponent implements OnInit {
       return;
     }
 
-    // this._rpc.oldCall(this, 'validateaddress', [this.address], this.rpc_verifyAddress_success);
     this._rpc.call('validateaddress', [this.address])
-      .subscribe(response => {
-        this.rpc_verifyAddress_success(response)
-      },
-      error => {
-        this.log.er('rpc_validateaddress_failed');
-      });
+      .subscribe(
+        response => this.rpc_verifyAddress_success(response),
+        error => this.log.er('rpc_validateaddress_failed'));
+
     return;
   }
 
   /**
-  * Callback of verifyAddress, sets state.
-  */
+    * Callback of verifyAddress
+    * - sets state.
+    */
   rpc_verifyAddress_success(json: Object) {
     this.validAddress = json['isvalid'];
     this.isMine = json['ismine'];
@@ -180,5 +145,4 @@ export class AddressBookComponent implements OnInit {
       this.label = json['account'];
     }
    }
-
 }
