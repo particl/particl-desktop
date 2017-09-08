@@ -1,78 +1,79 @@
-<div class="containerX">
-  <div fxLayout="row" class="coloredContainerX box">
-
-    <md-list class="list-data" >
-      <div md-subheader class="address-title">Previous addresses</div>
-      <div *ngFor="let address of addressService.addresses">
-        <md-list-item>
-          <div fxFlex="'row'" fxLayoutGap="10px" layout-padding>
-            <div fxFlex="20%" class="address-label"> {{ address.label }}</div>
-            <div fxFlex="50%" class="address">
-              <span>Address: </span>
-              {{ address.address }}
+<md-card>
+  <md-card-content>
+    <div class="containerX">
+      <div fxLayout="'row'" class="coloredContainerX box">
+        <div class="grid-row grid-header" *ngIf="displayHeader">
+          <md-list class="list-data" fxFlex="100%">
+            <div *ngFor="let address of addressService.addresses">
+              <md-list-item>
+              </md-list-item>
             </div>
-            <div fxFlex="15%" fxFlex="'row'" fxLayoutAlign="end center">
-              <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" ngxClipboard
-                       [cbContent]="address.address">
-                content_copy
-              </md-icon>
+          </md-list>
+          <div *ngIf="displayLabel">Label</div>
+          <div *ngIf="displayAddress">Address</div>
+          <div *ngIf="displayPublicKey">Public Key</div>
+          <div *ngIf="displayType">Type</div>
+          <div *ngIf="displayPurpose">Purpose</div>
+          <div *ngIf="displayToolsMenu">Tools</div>
+          <div *ngIf="displayQrMenu">QR Code</div>
+        </div>
 
-              <md-icon fxFlex="20%" ngxClipboard>verified_user</md-icon>
+        <md-list class="list-data" fxFlex="100%">
+          <div *ngFor="let address of addressService.addresses">
+            <md-list-item>
+              <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
+                   fxlayout.lt-xs="column" fxLayoutGap="10px" layout-padding>
+                <div fxFlex="20%" class="title" *ngIf="displayLabel"> {{ address.label }}</div>
+                <div fxFlex="50%" class="address">
+                  <span class="title" *ngIf="displayAddress">Address: </span>
+                  {{ address.address }}
+                </div>
 
-              <i fxFlex="20%" class="material-icons cursor-pointer nc-icon nc-barcode-qr"
-                 mdTooltip="Select Address"
-                 (click)="selectAddress(address)"></i>
-            </div>
+                <div fxFlex="25%" class="grid-cell" *ngIf="displayPublicKey">
+                  <span class="title">Public Key</span>
+                  {{ address.publicKey }}
+                </div>
+
+                <div fxFlex="25%" clas="grid-cell" *ngIf="displayType">
+                  <span class="title">Type</span>
+                  <span class="text-uppercase">{{ address.type }}</span>
+                </div>
+
+                <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="15%"  fxFlex.md="50%" fxFlex.sm="50%"  fxFlex.xs="100%" fxLayoutAlign="end center" *ngIf="displayToolsMenu" class="md-left-border">
+                  <div fxFlex="100%" class=""  fxLayoutAlign="end center">
+                  <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%"  ngxClipboard
+                           [cbContent]="address.address">
+                    content_copy
+                  </md-icon>
+
+                  <md-icon fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%" ngxClipboard>verified_user</md-icon>
+
+                  <md-icon fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%"  color="warn" (click)="addressService.deleteAddress(address.address)"
+                           mdTooltip="Delete">cancel
+                  </md-icon>
+                  </div>
+                </div>
+                <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="10%"  fxFlex.md="50%" fxFlex.sm="50%"  fxFlex.xs="100%" *ngIf="displayQrMenu"   fxLayoutAlign="end center" class="md-left-border">
+                  <div class="grid-cell divider text-center" *ngIf="displayQrMenu">
+                    <div class="inline-toolbar qrcode-menu" fxFlex="100%" fxLayoutAlign.md="center end" fxLayoutAlign.lt-md="center end" fxLayoutAlign.lt-sm="center end"  fxLayoutAlign="end center">
+                      <i class="fa fa-qrcode fa-3x" aria-hidden="true"></i>
+                      <!--<span class="nc-icon nc-barcode-qr fa-5x"></span>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </md-list-item>
+            <md-divider></md-divider>
           </div>
-        </md-list-item>
-        <md-divider></md-divider>
+        </md-list>
       </div>
-    </md-list>
+    </div>
 
-  </div>
-</div>
-<app-grid>
-  <div class="grid-row grid-header" *ngIf="displayHeader">
-    <div *ngIf="displayLabel">Label</div>
-    <div *ngIf="displayAddress">Address</div>
-    <div *ngIf="displayPublicKey">Public Key</div>
-    <div *ngIf="displayType">Type</div>
-    <div *ngIf="displayPurpose">Purpose</div>
-    <div *ngIf="displayToolsMenu">Tools</div>
-    <div *ngIf="displayQrMenu">QR Code</div>
-  </div>
-  <div class="grid-row address-row" *ngFor="let address of addressService.addresses">
-    <div class="grid-cell cell-label text-left" *ngIf="displayLabel">
-      <span class="inline-header">{{ address.label }}</span>
-    </div>
-    <div class="grid-cell cell-address text-left" *ngIf="displayAddress">
-      <span class="inline-header">Address</span>
-      <span>{{ address.address }}</span>
-    </div>
-    <div class="grid-cell" *ngIf="displayPublicKey">
-      <span class="inline-header">Public Key</span>
-      <span>{{ address.publicKey }}</span>
-    </div>
-    <div clas="grid-cell" *ngIf="displayType">
-      <span class="inline-header">Type</span>
-      <span class="text-uppercase">{{ address.type }}</span>
-    </div>
-    <div class="grid-cell divider text-center" *ngIf="displayToolsMenu">
-      <div class="inline-toolbar tools-menu">
-        <!-- we can use ngx-clipboard -->
-        <span ngxClipboard [cbContent]="address.address" class="nc-icon nc-copy-2"></span>
-        <!-- Open the modal for signing and verifying messages by address -->
-        <span class="icon nc-icon nc-a-check"></span>
-        <span (click)="addressService.deleteAddress(address.address)" class="nc-icon nc-circle-remove color-red"></span>
-      </div>
-    </div>
-    <div class="grid-cell divider text-center" *ngIf="displayQrMenu">
-      <div class="inline-toolbar qrcode-menu">
-        <span class="nc-icon nc-barcode-qr"></span>
-      </div>
-    </div>
-  </div>
-</app-grid>
+    <pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)"
+                [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false"
+                [(ngModel)]="addressService.currentPage" class="pagination-sm center"
+                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+                [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE"></pagination>
 
-<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE" ></pagination>
+  </md-card-content>
+</md-card>
