@@ -1,7 +1,8 @@
 <md-card>
   <md-card-content>
     <app-header>
-      <div [fxLayout]="'row'" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
+      <div [fxLayout]="'row'" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column"
+           fxLayout.xs="column">
         <div fxFlex="80%">
           <md-tab-group (selectChange)="changeTab($event.index)">
             <md-tab>
@@ -24,13 +25,15 @@
     </app-header>
 
     <div class="containerX">
-      <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxlayout.lt-xs="column" class="coloredContainerX box">
+      <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
+           fxlayout.lt-xs="column" class="coloredContainerX box">
         <div fxFlex="80%" fxFlex.lt-md="100%">
 
           <md-list class="list-data" *ngIf="inSearchMode() === false">
             <div md-subheader class="address-title">Unused address</div>
             <md-list-item>
-              <div xLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
+              <div xLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
+                   fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
                 <div fxFlex="15%" class="address-id"> /{{ getUnusedAddress().id }}</div>
                 <div fxFlex="20%" class="address-label"> {{ getUnusedAddress().label }}</div>
                 <div fxFlex="50%" class="address">
@@ -39,14 +42,16 @@
                     <span>+{{ getUnusedAddress().balance }}</span>
                   </div>
                 </div>
-                <div fxFlex="15%"  fxLayoutAlign="end center">
-                  <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" ngxClipboard
+                <div fxFlex="15%" fxLayoutAlign="end center">
+                  <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%"
+                           ngxClipboard
                            [cbContent]="getUnusedAddress().address">
                     content_copy
                   </md-icon>
                   <md-icon fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" ngxClipboard>verified_user</md-icon>
 
-                  <i fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
+                  <i fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%"
+                     class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
                      (click)="selectAddress(addresses[getAddressType()][0])"></i>
                 </div>
               </div>
@@ -58,7 +63,9 @@
             <div md-subheader class="address-title">Previous addresses</div>
             <div *ngFor="let address of getSinglePage()">
               <md-list-item>
-                <div xLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
+                <div xLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
+                     fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px"
+                     layout-padding>
                   <div fxFlex="15%" class="address-id"> /{{ address.id }}</div>
                   <div fxFlex="20%" class="address-label"> {{ address.label }}</div>
                   <div fxFlex="50%" class="address">
@@ -67,15 +74,17 @@
                       <span>+{{  address.balance }}</span>
                     </div>
                   </div>
-                  <div fxFlex="15%"  fxLayoutAlign="end center">
-                    <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%"  ngxClipboard
+                  <div fxFlex="15%" fxLayoutAlign="end center">
+                    <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%"
+                             ngxClipboard
                              [cbContent]="address.address">
                       content_copy
                     </md-icon>
 
                     <md-icon fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" ngxClipboard>verified_user</md-icon>
 
-                    <i fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" class="material-icons cursor-pointer nc-icon nc-barcode-qr"
+                    <i fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%"
+                       class="material-icons cursor-pointer nc-icon nc-barcode-qr"
                        mdTooltip="Select Address"
                        (click)="selectAddress(address)"></i>
                   </div>
@@ -100,7 +109,7 @@
 
         <div fxFlex="20%" fxFlex.lt-md="100%">
 
-          <div #qrCode class="card qr">
+          <div #qrCode class="card qr qrcode">
             <qr-code [size]="getQrSize()" [level]="'H'"
                      [value]="selected.address">
             </qr-code>
@@ -113,8 +122,8 @@
             <div class="details-label">
               {{ selected.label }}
             </div>
-            <div class="details-address row">
-              <div *ngFor="let word of selected.readable" class="address-word col-xs-3">
+            <div class="details-address" fxLayout="row" layout-padding fxLayoutGap="10px">
+              <div *ngFor="let word of selected.readable" class="address-word" fxFlex="28%">
                 {{ word }}
               </div>
             </div>
