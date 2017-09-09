@@ -8,7 +8,7 @@ const EventEmitter = require('events').EventEmitter;
 const spawn = require('child_process').spawn;
 
 const ClientBinaryManager = require('./clientBinariesManager').Manager;
-const auth = require('../rpc/rpc').getCookie();
+const rpc = require('../rpc/rpc');
 
 const log = {
   info: console.log,
@@ -46,80 +46,32 @@ class Manager extends EventEmitter {
   */
   startDaemon() {
 
-    function launchDaemon(daemon, args) {
-      // remove particl-cli specific arguments: (user, pass, command getinfo)
-      args.length = 4;
-      const child = spawn(daemon, args.filter(arg => arg !== '')).on('close', code => {
-        if (code !== 0) {
-          log.error(`daemon exited with code ${code}.\n${daemon}\n${args}`);
-        } else {
-          log.info('daemon exited successfully');
-        }
-      });
-      return (child);
-    }
-
-    return new Promise((resolve, reject) => {
+    return (new Promise((resolve, reject) => {
 
       const daemon = options.customdaemon
         ? options.customdaemon
         : this._availableClients['particld'].binPath;
 
       let args = [
-        // common args (particld and particl-cli)
-        `${options.testnet ? '-testnet' : ''}`,
-        `${options.reindex ? '-reindex' : ''}`,
-        `-rpccorsdomain=${options.rpccorsdomain}`,
-        `-rpcport=${options.port}`,
-        // particl-cli args
-        `-rpcuser=${options.rpcuser ? options.rpcuser : auth[0]}`,
-        `-rpcpassword=${options.rpcpassword ? options.rpcpassword : auth[1]}`,
-        `getinfo`
-      ];
+        `${options.rpcport ? '' : '-rpcport=' + options.port}`,
+      ].filter(arg => arg !== '').concat(process.argv);
 
-      // resolve path of particl-cli
-      new Promise((resolveCliPath, noCli) => {
-        // particl-cli path from the downloaded archive
-        let cliPath = path.join(
-          path.dirname(this._availableClients['particld'].binPath),
-          `particl-${this._availableClients['particld'].version}`,
-          'bin',
-          'particl-cli'
-        );
-
-        if (!fs.existsSync(cliPath)) {
-          // particl-cli was not automatically downloaded, let's find it
-          const find = process.platform === 'win32' ? 'where' : 'which';
-          spawn(find, 'particl-cli').on('close', code => {
-            cliPath = code === 0 ? 'particl-cli' : undefined;
-            if (code === 0) {
-              // particl-cli was globally installed
-              resolveCliPath('particl-cli');
-            } else {
-              // particl-cli not found
-              noCli();
-            }
-          })
-        } else {
-          // particl-cli was at the expected path
-          resolveCliPath(cliPath);
-        }
-      }).then((cliPath) => {
-        // spawn particl-cli getinfo to know if daemon is already running
-        spawn(cliPath, args.filter(arg => arg !== '')).on('close', code => {
-          if (code === 0) {
-            log.info("daemon already launched");
-            resolve(undefined);
+      rpc.checkDaemon(options.testnet).then(() => {
+        log.info('daemon already started');
+        resolve(undefined);
+      }).catch(() => {
+        log.info(`starting daemon ${daemon}`);
+        const child = spawn(daemon, args).on('close', code => {
+          if (code !== 0) {
+            log.error(`daemon exited with code ${code}.\n${daemon}\n${args}`);
           } else {
-            log.info("launching daemon");
-            resolve(launchDaemon(daemon, args));
+            log.info('daemon exited successfully');
           }
         });
-      }).catch(() => {
-        log.warn('particl-cli was not found. Launching the daemon anyway.')
-        resolve(launchDaemon(daemon, args));
+        resolve(child);
       });
-    });
+
+    }));
   }
 
   getClient(clientId) {

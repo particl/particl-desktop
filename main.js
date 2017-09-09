@@ -41,14 +41,17 @@ function createWindow () {
 
   options = parseArguments();
   options.port = options.rpcport
+    // custom rpc port
     ? options.rpcport
     : options.testnet
-      // testnet port
+      // default testnet port
       ? 51935
-      // mainnet port
+      // default mainnet port
       : 51735;
   options.rpcbind = options.rpcbind
+    // custom rpc bind address
     ? options.rpcbind
+    // default rpc bind address
     : 'localhost';
 
   // check for daemon version, maybe update, and keep the daemon's process for exit
@@ -58,56 +61,6 @@ function createWindow () {
   }).catch(error => {
     console.error(error);
   });
-
-  // Default tray image + icon
-  let trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
-
-  // Determine appropriate icon for platform
-  if (platform === 'darwin') {
-    trayImage = path.join(__dirname, 'src/assets/icons/logo.icns')
-  }
-  else if (platform === 'win32' || platform === 'win64') {
-    trayImage = path.join(__dirname, 'src/assets/icons/logo.ico')
-  }
-
-  // The tray context menu
-  const contextMenu = electron.Menu.buildFromTemplate([
-    {
-      label: 'View',
-      submenu: [
-        {role: 'reload'},
-        {role: 'forcereload'},
-        {role: 'toggledevtools'},
-        {type: 'separator'},
-        {role: 'resetzoom'},
-        {role: 'zoomin'},
-        {role: 'zoomout'},
-        {type: 'separator'},
-        {role: 'togglefullscreen'}
-      ]
-    },
-    {
-      role: 'window',
-      submenu: [
-        {role: 'minimize'},
-        {role: 'close'}
-      ]
-    },
-    {
-      role: 'help',
-      submenu: [
-        {role: 'about'},
-        {
-          label: 'Visit Particl.io',
-          click () { require('electron').shell.openExternal('https://particl.io') }
-        },
-        {
-          label: 'Visit Electron',
-          click () { require('electron').shell.openExternal('https://electron.atom.io') }
-        }
-      ]
-    }
-  ])
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -156,6 +109,64 @@ function createWindow () {
     mainWindow = null
   })
 
+  makeTray();
+}
+
+/*
+** creates the tray icon and menu
+*/
+function makeTray() {
+
+  // Default tray image + icon
+  let trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
+
+  // Determine appropriate icon for platform
+  if (platform === 'darwin') {
+    trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
+  }
+  else if (platform === 'win32' || platform === 'win64') {
+    trayImage = path.join(__dirname, 'src/assets/icons/logo.ico');
+  }
+
+  // The tray context menu
+  const contextMenu = electron.Menu.buildFromTemplate([
+    {
+      label: 'View',
+      submenu: [
+        {role: 'reload'},
+        {role: 'forcereload'},
+        {role: 'toggledevtools'},
+        {type: 'separator'},
+        {role: 'resetzoom'},
+        {role: 'zoomin'},
+        {role: 'zoomout'},
+        {type: 'separator'},
+        {role: 'togglefullscreen'}
+      ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        {role: 'minimize'},
+        {role: 'close'}
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {role: 'about'},
+        {
+          label: 'Visit Particl.io',
+          click () { electron.shell.openExternal('https://particl.io') }
+        },
+        {
+          label: 'Visit Electron',
+          click () { electron.shell.openExternal('https://electron.atom.io') }
+        }
+      ]
+    }
+  ]);
+
   // Create the tray icon
   tray = new electron.Tray(trayImage)
 
@@ -174,7 +185,7 @@ function createWindow () {
 **
 ** exemple:
 ** --dev -testnet -reindex -rpcuser=user -rpcpassword=pass
-** returns
+** strips --dev out of argv (double dash is not a particld argument) and returns
 ** {
 **   dev: true,
 **   testnet: true,
@@ -186,21 +197,21 @@ function createWindow () {
 function parseArguments() {
 
   let options = {};
-  let args = process.argv.splice(1);
+  process.argv = process.argv.splice(1);
 
-  function stripDashes(str) {
-    while (str[0] === '-') {
-      str = str.substr(1);
-    }
-    return (str);
-  }
-
-  args.forEach(arg => {
+  process.argv.forEach((arg, index) => {
     if (arg.includes('=')) {
       arg = arg.split('=');
-      options[stripDashes(arg[0])] = arg[1];
-    } else {
-      options[stripDashes(arg)] = true;
+      options[arg[0].substr(1)] = arg[1];
+    } else if (arg[1] === '-'){
+      // double dash command
+      options[arg.substr(2)] = true;
+      // remove from parameters that are going to be passed to the daemon
+      process.argv.splice(index, 1);
+    }
+    else if (arg[0] === '-') {
+      // simple dash command
+      options[arg.substr(1)] = true;
     }
   });
 

@@ -133,7 +133,7 @@ function rpcCall (method, params, auth, cb) {
       'Content-Type': 'application/json',
       'Content-Length': postData.length
     },
-    auth: auth[0] + ':' + auth[1]
+    auth: auth ? auth[0] + ':' + auth[1] : undefined
   }
 
   var req = http.request(options, res => cb_handleRequestResponse(res, cb));
@@ -162,7 +162,8 @@ function getCookie(testnet) {
   if (fs.existsSync(COOKIE_FILE)) {
     auth = fs.readFileSync(COOKIE_FILE, 'utf8').split(':');
   } else {
-    // TODO: No cookie file...
+    auth = undefined;
+    console.error('could not find cookie file !');
   }
   return (auth)
 }
@@ -192,3 +193,16 @@ function init(options) {
   rxIpc.registerListener('backend-rpccall', createObservable);
 }
 exports.init = init;
+
+function checkDaemon(testnet) {
+  return new Promise((resolve, reject) => {
+    rpcCall('getinfo', null, getCookie(testnet), (error, response) => {
+      if (error) {
+        reject();
+      } else if (response) {
+        resolve();
+      }
+    })
+  });
+}
+exports.checkDaemon = checkDaemon;
