@@ -63,7 +63,7 @@ class Manager extends EventEmitter {
         log.info(`starting daemon ${daemon}`);
         const child = spawn(daemon, process.argv).on('close', code => {
           if (code !== 0) {
-            log.error(`daemon exited with code ${code}.\n${daemon}\n${args}`);
+            log.error(`daemon exited with code ${code}.\n${daemon}\n${process.argv}`);
           } else {
             log.info('daemon exited successfully');
           }

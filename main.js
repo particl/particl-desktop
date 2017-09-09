@@ -62,14 +62,13 @@ function createWindow () {
     console.error(error);
   });
 
-  initMainWindow();
-  makeTray();
+  initMainWindow(makeTray());
 }
 
 /*
 ** initiates the Main Window
 */
-function initMainWindow() {
+function initMainWindow(trayImage) {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -184,6 +183,8 @@ function makeTray() {
   // Set the tray icon
   tray.setToolTip('This is my application')
   tray.setContextMenu(contextMenu)
+
+  return (trayImage);
 }
 
 /*
@@ -203,7 +204,13 @@ function makeTray() {
 function parseArguments() {
 
   let options = {};
-  process.argv = process.argv.splice(1);
+  if (path.basename(process.argv[0]) === 'electron'){
+    // striping 'electron .' from argv
+    process.argv = process.argv.splice(2);
+  } else {
+    // striping /path/to/particl from argv
+    process.argv = process.argv.splice(1);
+  }
 
   process.argv.forEach((arg, index) => {
     if (arg.includes('=')) {
