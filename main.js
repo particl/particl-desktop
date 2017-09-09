@@ -47,9 +47,6 @@ function createWindow () {
       ? 51935
       // mainnet port
       : 51735;
-  options.rpccorsdomain = options.rpccorsdomain
-    ? options.rpccorsdomain
-    : 'http://localhost:4200';
   options.rpcbind = options.rpcbind
     ? options.rpcbind
     : 'localhost';
@@ -132,7 +129,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   if (options.dev) {
-    mainWindow.loadURL(options.rpccorsdomain);
+    mainWindow.loadURL('http://localhost:4200');
   } else {
     mainWindow.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
