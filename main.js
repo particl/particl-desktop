@@ -62,6 +62,14 @@ function createWindow () {
     console.error(error);
   });
 
+  initMainWindow();
+  makeTray();
+}
+
+/*
+** initiates the Main Window
+*/
+function initMainWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -99,8 +107,8 @@ function createWindow () {
   function test() {
     mainWindow.webContents.send("ipc-test", "test")
   }
-
   setTimeout(test, 2000);
+
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
@@ -108,8 +116,6 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
-
-  makeTray();
 }
 
 /*
