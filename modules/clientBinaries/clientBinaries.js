@@ -49,13 +49,22 @@ class Manager extends EventEmitter {
     function launchDaemon(daemon, args) {
       // remove particl-cli specific arguments: (user, pass, command getinfo)
       args.length = 4;
-      const child = spawn(daemon, args.filter(arg => arg !== ''));
+      const child = spawn(daemon, args.filter(arg => arg !== '')).on('close', code => {
+        if (code !== 0) {
+          log.error(`daemon exited with code ${code}.\n${daemon}\n${args}`);
+        } else {
+          log.info('daemon exited successfully');
+        }
+      });
       return (child);
     }
 
     return new Promise((resolve, reject) => {
 
-      const daemon = this._availableClients['particld'].binPath;
+      const daemon = options.customdaemon
+        ? options.customdaemon
+        : this._availableClients['particld'].binPath;
+
       let args = [
         // common args (particld and particl-cli)
         `${options.testnet ? '-testnet' : ''}`,
