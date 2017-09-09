@@ -11,9 +11,7 @@ const got = require('got'),
   spawn = require('buffered-spawn');
 
 
-
 function copyFile(src, dst) {
-  console.log("COPYFILE", src, dst);
   return new Promise((resolve, reject) => {
     var rd = fs.createReadStream(src);
 
@@ -77,7 +75,6 @@ class Manager {
     return this._config;
   }
 
-
   /**
    * Set the logger.
    * @param {Object} val Should have same methods as global `console` object.
@@ -92,7 +89,6 @@ class Manager {
       ;
     }
   }
-
 
   /**
    * Get info on available clients.
@@ -120,7 +116,6 @@ class Manager {
     return this._clients;
   }
 
-
   /**
    * Initialize the manager.
    *
@@ -139,7 +134,6 @@ class Manager {
 
     return this._scan(options);
   }
-
 
   /**
    * Download a particular client.
@@ -383,8 +377,6 @@ class Manager {
     });
   }
 
-
-
   _resolvePlatform () {
     this._logger.info('Resolving platform...');
 
@@ -405,7 +397,6 @@ class Manager {
 
     return Promise.resolve();
   }
-
 
   /**
    * Scan the local machine for client software, as defined in the configuration.
@@ -440,7 +431,6 @@ class Manager {
     });
   }
 
-
   /**
    * Calculate possible clients for this machine by searching for binaries.
    * @return {Promise}
@@ -468,7 +458,6 @@ class Manager {
       return possibleClients;
     });
   }
-
 
   /**
    * This will modify the passed-in `client` item according to check results.
@@ -583,7 +572,6 @@ class Manager {
     });
   }
 
-
   /**
    * Run sanity check for client.
 
@@ -635,7 +623,6 @@ class Manager {
     });
   }
 
-
   /**
    * @return {Promise} Resolves to { stdout, stderr } object
    */
@@ -647,6 +634,5 @@ class Manager {
     return spawn(cmd, args);
   }
 }
-
 
 exports.Manager = Manager;

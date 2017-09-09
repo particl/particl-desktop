@@ -208,8 +208,7 @@ function parseArguments() {
       options[arg.substr(2)] = true;
       // remove from parameters that are going to be passed to the daemon
       process.argv.splice(index, 1);
-    }
-    else if (arg[0] === '-') {
+    } else if (arg[0] === '-') {
       // simple dash command
       options[arg.substr(1)] = true;
     }
