@@ -106,7 +106,7 @@ function cb_handleRequestResponse (res, cb) {
   res.on('data', chunk => {data += chunk});
   res.on('end', () => {
     if (res.statusCode === 401) {
-      cb(res.statusCode);
+      cb(res);
       return ;
     }
     data = JSON.parse(data);
@@ -137,10 +137,10 @@ function rpcCall (method, params, auth, cb) {
   }
 
   var req = http.request(options, res => cb_handleRequestResponse(res, cb));
-  req.on('error', e => cb(e.message));
+  req.on('error', e => cb(e));
   req.setTimeout(TIMEOUT, e => {
-    cb('Timed out');
-    return(req.abort());
+    cb(e);
+    return (req.abort());
   });
   req.write(postData);
   req.end();
