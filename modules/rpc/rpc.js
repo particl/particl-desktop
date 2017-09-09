@@ -103,14 +103,14 @@ function mkDir(dirPath, root) {
 function cb_handleRequestResponse (res, cb) {
   var data = '';
   res.setEncoding('utf8');
-  res.on('data', chunk => data += chunk);
+  res.on('data', chunk => {data += chunk});
   res.on('end', () => {
     if (res.statusCode === 401) {
       cb(res.statusCode);
-    } else {
-      data = JSON.parse(data);
-      cb(null, data);
+      return ;
     }
+    data = JSON.parse(data);
+    cb(null, data);
   });
 }
 
@@ -139,8 +139,8 @@ function rpcCall (method, params, auth, cb) {
   var req = http.request(options, res => cb_handleRequestResponse(res, cb));
   req.on('error', e => cb(e.message));
   req.setTimeout(TIMEOUT, e => {
-    cb('Timed out')
-    req.abort()
+    cb('Timed out');
+    return(req.abort());
   });
   req.write(postData);
   req.end();
