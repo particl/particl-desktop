@@ -1,6 +1,7 @@
 "use strict";
 
 const got = require('got'),
+  _ = require('lodash'),
   fs = require('fs'),
   crypto = require('crypto'),
   path = require('path'),
@@ -9,11 +10,6 @@ const got = require('got'),
   unzip = require('node-unzip-2'),
   spawn = require('buffered-spawn');
 
-const _ = {
-  isEmpty: require('lodash.isempty'),
-  get: require('lodash.get'),
-  values: require('lodash.values')
-};
 
 
 function copyFile(src, dst) {

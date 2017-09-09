@@ -40,10 +40,19 @@ let options;
 function createWindow () {
 
   options = parseArguments();
-  options.mainnetPort = 51735;
-  options.testnetPort = 51935;
-  options.rpccorsdomain ? options.rpccorsdomain : 'http://localhost:4200';
-  options.rpcbind ? optins.rpcbind : 'localhost';
+  options.port = options.rpcport
+    ? options.rpcport
+    : options.testnet
+      // testnet port
+      ? 51935
+      // mainnet port
+      : 51735;
+  options.rpccorsdomain = options.rpccorsdomain
+    ? options.rpccorsdomain
+    : 'http://localhost:4200';
+  options.rpcbind = options.rpcbind
+    ? options.rpcbind
+    : 'localhost';
 
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
@@ -123,13 +132,13 @@ function createWindow () {
 
   // and load the index.html of the app.
   if (options.dev) {
+    mainWindow.loadURL(options.rpccorsdomain);
+  } else {
     mainWindow.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
       slashes: true
     }));
-  } else {
-    mainWindow.loadURL('http://localhost:4200/');
   }
 
   // Open the DevTools.
@@ -180,7 +189,7 @@ function createWindow () {
 function parseArguments() {
 
   let options = {};
-  let args = process.argv.splice(2);
+  let args = process.argv.splice(1);
 
   function stripDashes(str) {
     while (str[0] === '-') {

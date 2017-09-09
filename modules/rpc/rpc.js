@@ -174,13 +174,7 @@ exports.getCookie = getCookie;
 function init(options) {
 
   HOSTNAME = options.rpcbind;
-  if (options.rpcport) {
-    PORT = options.rpcport;
-  } else if (options.testnet) {
-    PORT = options.testnetPort;
-  } else {
-    PORT = options.mainnetPort;
-  }
+  PORT = options.port;
 
   // This is a factory function that returns an Observable
   function createObservable(event, method, params) {
@@ -189,7 +183,7 @@ function init(options) {
       rpcCall(method, params, auth, (error, response) => {
         if (error) {
           observer.error(error);
-          return;
+          return ;
         }
         observer.next(response);
       });

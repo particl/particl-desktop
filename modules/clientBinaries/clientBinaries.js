@@ -43,14 +43,12 @@ class Manager extends EventEmitter {
     return new Promise((resolve, reject) => {
 
       let args = [
+        // common args (particld and particl-cli)
         `${options.testnet ? '-testnet' : ''}`,
         `${options.reindex ? '-reindex' : ''}`,
         `-rpccorsdomain=${options.rpccorsdomain}`,
-        `-rpcport=${options.rpcport
-            ? options.rpcport
-            : options.testnet
-              ? options.testnetPort
-              : options.mainnetPort}`,
+        `-rpcport=${options.port}`,
+        // particl-cli args
         `-rpcuser=${options.rpcuser ? options.rpcuser : auth[0]}`,
         `-rpcpassword=${options.rpcpassword ? options.rpcpassword : auth[1]}`,
         `getinfo`,
@@ -64,36 +62,37 @@ class Manager extends EventEmitter {
         'particl-cli'
       );
 
-      // particl-cli was not automatically downloaded and was already installed
+      function launchDaemon(bin, args, resolve) {
+        log.info("launching daemon");
+        // remove particl-cli specific arguments: (user, pass, command getinfo)
+        args.length = 4;
+        const child = spawn(bin, args.filter(arg => arg !== ''));
+        resolve(child);
+      }
+
       if (!fs.existsSync(cliPath)) {
+        // particl-cli was not automatically downloaded and was already installed
+        // TODO: windows
         const child = spawn('which', 'particl-cli').on('close', code => {
           if (code === 0) {
             cliPath = 'particl-cli';
           } else {
             console.error('particl-cli not found, trying to launch daemon anyway...');
-            // preparing arguments to launch daemon
-            args.length = 4;
-            args.filter(arg => arg != '');
-            const child = spawn(this._availableClients['particld'].binPath, args);
-            resolve(child);
+            launchDaemon(this._availableClients['particld'].binPath, args, resolve);
           }
         })
+      } else {
+        // spawn particl-cli getinfo to know if daemon is connected
+        const child = spawn(cliPath, args.filter(arg => arg !== ''))
+          .on('close', code => {
+            if (code === 0) {
+              log.info("daemon already launched");
+              resolve(undefined);
+            } else {
+              launchDaemon(this._availableClients['particld'].binPath, args, resolve);
+            }
+          })
       }
-
-      // spawn particl-cli getinfo to know if daemon is connected
-      const child = spawn(cliPath, args).on('close', code => {
-        if (code === 0) {
-          log.info("daemon already launched");
-          resolve(undefined);
-        } else {
-          log.info("launching daemon");
-          // remove particl-cli specific arguments: (user, pass, command getinfo)
-          args.length = 4;
-          const child = spawn(this._availableClients['particld'].binPath, args);
-          resolve(child);
-        }
-      })
-
     });
   }
 
