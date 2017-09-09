@@ -17,6 +17,8 @@ const log = {
   error: console.log
 };
 
+let options;
+
 // should be 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
 const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
 
@@ -28,12 +30,11 @@ class Manager extends EventEmitter {
     this._availableClients = {};
   }
 
-  init(restart) {
+  init(restart, _options) {
     log.info('Initializing...');
-
+    options = _options;
     // check every hour
     setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
-
     this._resolveBinPath();
     return this._checkForNewConfig(restart);
   }
@@ -42,12 +43,16 @@ class Manager extends EventEmitter {
     return new Promise((resolve, reject) => {
 
       let args = [
-        `-testnet`,
-        `-reindex`,
-        `-rpccorsdomain=http://localhost:4200`,
-        `-rpcport=51935`,
-        `-rpcuser=${auth[0]}`,
-        `-rpcpassword=${auth[1]}`,
+        `${options.testnet ? '-testnet' : ''}`,
+        `${options.reindex ? '-reindex' : ''}`,
+        `-rpccorsdomain=${options.rpccorsdomain}`,
+        `-rpcport=${options.rpcport
+            ? options.rpcport
+            : options.testnet
+              ? options.testnetPort
+              : options.mainnetPort}`,
+        `-rpcuser=${options.rpcuser ? options.rpcuser : auth[0]}`,
+        `-rpcpassword=${options.rpcpassword ? options.rpcpassword : auth[1]}`,
         `getinfo`,
       ];
 
@@ -66,7 +71,9 @@ class Manager extends EventEmitter {
             cliPath = 'particl-cli';
           } else {
             console.error('particl-cli not found, trying to launch daemon anyway...');
+            // preparing arguments to launch daemon
             args.length = 4;
+            args.filter(arg => arg != '');
             const child = spawn(this._availableClients['particld'].binPath, args);
             resolve(child);
           }

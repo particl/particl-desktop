@@ -7,17 +7,9 @@ const http = require('http');
 const Observable = require('rxjs/Observable').Observable;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 
-const MAINNET_PORT = 51735;
-const TESTNET_PORT = 51935;
-
-const TIMEOUT = 500;
-const HOSTNAME = 'localhost';
-// TODO
-const PORT = TESTNET_PORT;
-
-// TODO: check testnet
-// TODO: change path depending on testnet
-const COOKIE_FILE = findCookiePath() + '/testnet/.cookie';
+let TIMEOUT = 500;
+let HOSTNAME;
+let PORT;
 
 /*
 ** returns Particl config folder
@@ -162,7 +154,9 @@ function rpcCall (method, params, auth, cb) {
 ** returns the current RPC cookie
 ** RPC cookie is regenerated at every particld startup
 */
-function getCookie() {
+function getCookie(testnet) {
+
+  const COOKIE_FILE = findCookiePath() + `${testnet ? '/testnet' : ''}/.cookie`;
   let auth = [];
 
   if (fs.existsSync(COOKIE_FILE)) {
@@ -177,10 +171,20 @@ exports.getCookie = getCookie;
 /*
 ** prepares `backend-rpccall` to receive RPC calls from the renderer
 */
-function init() {
+function init(options) {
+
+  HOSTNAME = options.rpcbind;
+  if (options.rpcport) {
+    PORT = options.rpcport;
+  } else if (options.testnet) {
+    PORT = options.testnetPort;
+  } else {
+    PORT = options.mainnetPort;
+  }
+
   // This is a factory function that returns an Observable
   function createObservable(event, method, params) {
-    let auth = getCookie();
+    let auth = getCookie(options.testnet);
     return Observable.create(observer => {
       rpcCall(method, params, auth, (error, response) => {
         if (error) {

@@ -13,7 +13,9 @@ const sock = zmq.socket('sub');
 const log = require('electron-log');
 
 log.transports.file.appName = '.particl';
-log.transports.file.file = log.transports.file.findLogPath(log.transports.file.appName).replace('log.log', 'partgui.log');
+log.transports.file.file = log.transports.file
+  .findLogPath(log.transports.file.appName)
+  .replace('log.log', 'partgui.log');
 
 const daemonManager = require('./modules/clientBinaries/clientBinaries');
 const rpc = require('./modules/rpc/rpc');
@@ -32,12 +34,21 @@ let mainWindow;
 let tray;
 let daemon;
 
+let openDevTools = false;
+let options;
+
 function createWindow () {
 
+  options = parseArguments();
+  options.mainnetPort = 51735;
+  options.testnetPort = 51935;
+  options.rpccorsdomain ? options.rpccorsdomain : 'http://localhost:4200';
+  options.rpcbind ? optins.rpcbind : 'localhost';
+
   // check for daemon version, maybe update, and keep the daemon's process for exit
-  daemonManager.init(false).then(child => {
+  daemonManager.init(false, options).then(child => {
     daemon = child ? child : undefined;
-    rpc.init();
+    rpc.init(options);
   }).catch(error => {
     console.error(error);
   });
@@ -111,7 +122,7 @@ function createWindow () {
   });
 
   // and load the index.html of the app.
-  if (process.argv.indexOf('--dev') === -1) {
+  if (options.dev) {
     mainWindow.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
@@ -122,7 +133,9 @@ function createWindow () {
   }
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+  if (openDevTools || options.devtools) {
+    mainWindow.webContents.openDevTools()
+  }
 
   function test() {
     mainWindow.webContents.send("ipc-test", "test")
@@ -148,6 +161,44 @@ function createWindow () {
   // Set the tray icon
   tray.setToolTip('This is my application')
   tray.setContextMenu(contextMenu)
+}
+
+/*
+** compose options from arguments
+**
+** exemple:
+** --dev -testnet -reindex -rpcuser=user -rpcpassword=pass
+** returns
+** {
+**   dev: true,
+**   testnet: true,
+**   reindex: true,
+**   rpcuser: user,
+**   rpcpassword: pass
+** }
+*/
+function parseArguments() {
+
+  let options = {};
+  let args = process.argv.splice(2);
+
+  function stripDashes(str) {
+    while (str[0] === '-') {
+      str = str.substr(1);
+    }
+    return (str);
+  }
+
+  args.forEach(arg => {
+    if (arg.includes('=')) {
+      arg = arg.split('=');
+      options[stripDashes(arg[0])] = arg[1];
+    } else {
+      options[stripDashes(arg)] = true;
+    }
+  });
+
+  return (options);
 }
 
 // This method will be called when Electron has finished
