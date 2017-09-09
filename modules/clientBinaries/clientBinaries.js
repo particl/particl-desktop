@@ -39,9 +39,23 @@ class Manager extends EventEmitter {
     return this._checkForNewConfig(restart);
   }
 
+  /*
+  ** Checks if particld is already running, starts it in case not running.
+  ** returns the daemon's process to be killed when application exits
+  ** or undefined if the daemon was not launched
+  */
   startDaemon() {
+
+    function launchDaemon(daemon, args) {
+      // remove particl-cli specific arguments: (user, pass, command getinfo)
+      args.length = 4;
+      const child = spawn(daemon, args.filter(arg => arg !== ''));
+      return (child);
+    }
+
     return new Promise((resolve, reject) => {
 
+      const daemon = this._availableClients['particld'].binPath;
       let args = [
         // common args (particld and particl-cli)
         `${options.testnet ? '-testnet' : ''}`,
@@ -51,48 +65,51 @@ class Manager extends EventEmitter {
         // particl-cli args
         `-rpcuser=${options.rpcuser ? options.rpcuser : auth[0]}`,
         `-rpcpassword=${options.rpcpassword ? options.rpcpassword : auth[1]}`,
-        `getinfo`,
+        `getinfo`
       ];
 
-      // particl-cli path from the downloaded archive
-      let cliPath = path.join(
-        path.dirname(this._availableClients['particld'].binPath),
-        `particl-${this._availableClients['particld'].version}`,
-        'bin',
-        'particl-cli'
-      );
+      // resolve path of particl-cli
+      new Promise((resolveCliPath, noCli) => {
+        // particl-cli path from the downloaded archive
+        let cliPath = path.join(
+          path.dirname(this._availableClients['particld'].binPath),
+          `particl-${this._availableClients['particld'].version}`,
+          'bin',
+          'particl-cli'
+        );
 
-      function launchDaemon(bin, args, resolve) {
-        log.info("launching daemon");
-        // remove particl-cli specific arguments: (user, pass, command getinfo)
-        args.length = 4;
-        const child = spawn(bin, args.filter(arg => arg !== ''));
-        resolve(child);
-      }
-
-      if (!fs.existsSync(cliPath)) {
-        // particl-cli was not automatically downloaded and was already installed
-        // TODO: windows
-        const child = spawn('which', 'particl-cli').on('close', code => {
-          if (code === 0) {
-            cliPath = 'particl-cli';
-          } else {
-            console.error('particl-cli not found, trying to launch daemon anyway...');
-            launchDaemon(this._availableClients['particld'].binPath, args, resolve);
-          }
-        })
-      } else {
-        // spawn particl-cli getinfo to know if daemon is connected
-        const child = spawn(cliPath, args.filter(arg => arg !== ''))
-          .on('close', code => {
+        if (!fs.existsSync(cliPath)) {
+          // particl-cli was not automatically downloaded, let's find it
+          const find = process.platform === 'win32' ? 'where' : 'which';
+          spawn(find, 'particl-cli').on('close', code => {
+            cliPath = code === 0 ? 'particl-cli' : undefined;
             if (code === 0) {
-              log.info("daemon already launched");
-              resolve(undefined);
+              // particl-cli was globally installed
+              resolveCliPath('particl-cli');
             } else {
-              launchDaemon(this._availableClients['particld'].binPath, args, resolve);
+              // particl-cli not found
+              noCli();
             }
           })
-      }
+        } else {
+          // particl-cli was at the expected path
+          resolveCliPath(cliPath);
+        }
+      }).then((cliPath) => {
+        // spawn particl-cli getinfo to know if daemon is already running
+        spawn(cliPath, args.filter(arg => arg !== '')).on('close', code => {
+          if (code === 0) {
+            log.info("daemon already launched");
+            resolve(undefined);
+          } else {
+            log.info("launching daemon");
+            resolve(launchDaemon(daemon, args));
+          }
+        });
+      }).catch(() => {
+        log.warn('particl-cli was not found. Launching the daemon anyway.')
+        resolve(launchDaemon(daemon, args));
+      });
     });
   }
 
