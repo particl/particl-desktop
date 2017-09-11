@@ -68,7 +68,7 @@
         <label class="label-address">Address</label>
         <div class="card address-details">
           <div class="details-address row">
-            <div *ngFor="let word of showAddress(singleAddress.address)" class="col-xs-4">
+            <div *ngFor="let word of showAddress(singleAddress.address)" class="col-xs-3">
               {{ word }}
             </div>
           </div>
@@ -76,7 +76,7 @@
       </div>
       <div class="col-xs-4">
         <div #qrCode class="card qr">
-          <qr-code [level]="'H'"
+          <qr-code [level]="'H'" [size]="getQrSize()" 
                    [value]="singleAddress.address">
           </qr-code>
         </div>

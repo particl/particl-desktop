@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
@@ -37,6 +37,7 @@ export class AddressTableComponent implements OnInit {
   */
   @Input() query: string;
 
+  @ViewChild('qrCode') qrElementView: ElementRef;
   /*
     Data storage
   */
@@ -130,6 +131,10 @@ export class AddressTableComponent implements OnInit {
 
   public getMaxAddressesPerPage(): number {
     return this.addressDisplayAmount;
+  }
+
+  public getQrSize() {
+    return this.qrElementView.nativeElement.offsetWidth - 40;
   }
 
 /*
