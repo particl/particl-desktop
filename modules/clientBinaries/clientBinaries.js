@@ -98,7 +98,7 @@ class Manager extends EventEmitter {
 
     // fetch config
     return got(BINARY_URL, {
-      timeout: 3000,
+      timeout: 5000,
       json: true
     })
     .then((res) => {
