@@ -1,21 +1,5 @@
 // Import a pre-built theme
 @import "theme/partgui-theme.css";
-//@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
-@import '~@angular/material/theming';
-
-//// Define a mixin that accepts a theme and outputs the color styles for the component.
-//@mixin candy-carousel-theme($theme) {
-//  // Extract whichever individual palettes you need from the theme.
-//  $primary: map-get($theme, primary);
-//  $accent: map-get($theme, accent);
-//
-//  // Use mat-color to extract individual colors from a palette as necessary.
-//  .candy-carousel {
-//    background-color: mat-color($primary);
-//    border-color: mat-color($accent, A400);
-//  }
-//}
-
 
 .mat-list {
   .mat-list-item{
