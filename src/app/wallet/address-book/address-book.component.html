@@ -1,32 +1,30 @@
-<md-card>
-  <md-card-content>
-    <app-header>
-      <div [fxLayout]="'row'">
-        <div fxFlex="80%">
-          <button  md-raised-button md-button color="primary" (click)="openNewAddress()">
-            <md-icon>add_circle</md-icon> Add new Address
-          </button>
-        </div>
-        <md-form-field class="icon-input">
-          <input mdInput type="text" id="searchbar" [(ngModel)]="query" placeholder="Search receive">
-          <md-icon>search</md-icon>
-        </md-form-field>
+<div class="container">
+  <app-header>
+    <div [fxLayout]="'row'">
+      <div fxFlex="80%">
+        <button md-raised-button md-button color="primary" (click)="openNewAddress()">
+          <md-icon>add_circle</md-icon>
+          Add new Address
+        </button>
       </div>
-    </app-header>
-
-    <div class="container-fluid">
-      <address-table
-        [displayHeader]="false"
-        [displayInternalHeader]="true"
-        [displayPagination]="false"
-        [displayLabel]="true"
-        [displayAddress]="true"
-        [displayPurpose]="true"
-        [displayToolsMenu]="true"
-        [displayQrMenu]="true">
-
-      </address-table>
+      <md-form-field class="icon-input">
+        <input mdInput type="text" id="searchbar" [(ngModel)]="query" placeholder="Search receive">
+        <md-icon>search</md-icon>
+      </md-form-field>
     </div>
-  </md-card-content>
-</md-card>
+  </app-header>
 
+  <div class="container-fluid">
+    <address-table
+      [displayHeader]="false"
+      [displayInternalHeader]="true"
+      [displayPagination]="false"
+      [displayLabel]="true"
+      [displayAddress]="true"
+      [displayPurpose]="true"
+      [displayToolsMenu]="true"
+      [displayQrMenu]="true">
+
+    </address-table>
+  </div>
+</div>
