@@ -143,7 +143,7 @@ function createWindow () {
   }
 
   // Set the tray icon
-  tray.setToolTip('This is my application')
+  tray.setToolTip('Particl v0.0.1')
   tray.setContextMenu(contextMenu)
 }
 

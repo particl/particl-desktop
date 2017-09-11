@@ -59,7 +59,7 @@
       <input class="col-xs-2" type="text" placeholder="Enter a label"
         [(ngModel)]="send.toLabel">
       <span class="separator"></span>
-      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
+      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup('send')"></span>
       <span class="icon-padding icon nc-icon nc-copy-2"></span>
       <span class="icon-padding icon nc-icon nc-circle-remove color-red" (click)="clearReceiver()"></span>
     </div>
@@ -152,7 +152,7 @@
         [(ngModel)]="send.toAddress" (input)="verifyAddress()">
       <input class="col-xs-2" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
       <span class="separator"></span>
-      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
+      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup('balance')"></span>
       <span class="icon-padding icon nc-icon nc-copy-2"></span>
       <span class="icon-padding icon nc-icon nc-circle-remove color-red" (click)="clearReceiver()"></span>
     </div>
