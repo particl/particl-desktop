@@ -143,7 +143,7 @@ function createWindow () {
   }
 
   // Set the tray icon
-  tray.setToolTip('Particl v0.0.1')
+  tray.setToolTip('Particl '+app.getVersion());
   tray.setContextMenu(contextMenu)
 }
 
