@@ -10,7 +10,7 @@ const rxIpc = require('rx-ipc-electron/lib/main').default;
 let TIMEOUT = 500;
 let HOSTNAME;
 let PORT;
-let options = undefined;
+let options;
 
 /*
 ** returns Particl config folder
