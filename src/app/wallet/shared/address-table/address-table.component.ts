@@ -37,9 +37,8 @@ export class AddressTableComponent implements OnInit {
   @Input() query: string;
 
   @ViewChild('qrCode') qrElementView: ElementRef;
-  /*
-    Data storage
-  */
+ 
+  // Data storage
 
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
@@ -117,9 +116,7 @@ export class AddressTableComponent implements OnInit {
     return this.qrElementView.nativeElement.offsetWidth - 40;
   }
 
-/*
-  Delete address
-*/
+  /** Delete address */
 
   public deleteAddress(label: string, address: string) {
     if (confirm(`Are you sure you want to delete ${label}: ${address}`)) {

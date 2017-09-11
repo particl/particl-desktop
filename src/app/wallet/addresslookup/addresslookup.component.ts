@@ -141,17 +141,12 @@ export class AddressLookupComponent implements OnInit {
     Callback that loads addresses into addressStore!
   */
   rpc_loadAddresses_success(json: any) {
-    const storeDetails = [];
-    json.forEach((contact, i) => {
-      if (this.type === 'send') {
-        storeDetails.push(new Contact(contact['label'], contact['address']));
-      } else {
-        if (contact['address'].length > 35) {
-          storeDetails.push(new Contact(contact['label'], contact['address']));
-        }
+    this.addressStore = [];
+    json.forEach((contact) => {
+      if (this.type === 'send' || contact['address'].length > 35) {
+        this.addressStore.push(new Contact(contact['label'], contact['address']));
       }
     });
-    this.addressStore = storeDetails;
   }
 
 
