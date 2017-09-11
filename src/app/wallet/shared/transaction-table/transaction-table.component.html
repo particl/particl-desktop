@@ -9,141 +9,168 @@
     <div class="cell-amount" *ngIf="display.amount">amount</div>
   </div>
   <ng-container *ngFor="let tx of txService.txs let i=index">
-    <div class="grid-row" *ngIf="i < display.txDisplayAmount">
-      <div class="grid-cell cell-date" *ngIf="display.date">
-        <!--<span class="inline-header"><span class="icon nc-icon nc-time-3"></span></span>-->
-        <span>{{ tx.getDate() }}</span>
-      </div>
-      <div class="grid-cell cell-category" *ngIf="display.category" [ngSwitch]="tx.category">
-        <span *ngSwitchCase="'stake'" class="inline-tag text-uppercase">
+    <md-expansion-panel  *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)">
+      <md-expansion-panel-header>
+        <md-panel-title *ngIf="display.date">
+          {{ tx.getDate() }}
+        </md-panel-title>
+        <md-panel-title *ngIf="display.category"  [ngSwitch]="tx.category">
+         <span *ngSwitchCase="'stake'" >
           Stake
-          <span class="icon fa fa-plus color-green"></span>
+           <md-icon>add</md-icon>
         </span>
-        <span *ngSwitchCase="'orphaned_stake'" class="inline-tag text-uppercase">
+          <span *ngSwitchCase="'orphaned_stake'">
           Orphan
-          <span class="icon fa fa-remove color-red"></span>
+            <md-icon color="warn">cacel</md-icon>
         </span>
-        <span *ngSwitchCase="'send'" class="inline-tag text-uppercase">
+          <span *ngSwitchCase="'send'">
           Send
-          <span class="icon fa fa-arrow-right color-red"></span>
+             <md-icon>arrow_forward</md-icon>
         </span>
-        <span *ngSwitchCase="'receive'" class="inline-tag text-uppercase">
+          <span *ngSwitchCase="'receive'">
           Received
-          <span class="icon fa fa-arrow-left"></span>
+           <md-icon>arrow_back</md-icon>
         </span>
-      </div>
-      <div class="grid-cell cell-senderAddress" *ngIf="display.senderAddress">
-        <span>{{ tx.getAddress() }}</span>
-      </div>
-      <div class="grid-cell cell-txid" *ngIf="display.txid">
-        <span class="inline-header">TxId</span>
-        <span>{{ tx.txid }}</span>
-      </div>
-      <div class="grid-cell cell-blockIndex" *ngIf="display.blockIndex">
-        <span class="inline-header">Blockindex</span>
-        <span>{{ tx.blockindex }}</span>
-      </div>
-      <div class="grid-cell cell-confirmations" *ngIf="display.confirmations">
-        <span class="inline-header">Confirmations</span>
-        <span>{{ tx.confirmations }}</span>
-      </div>
-      <div class="grid-cell cell-amount" *ngIf="display.amount">
-        <span class="inline-header">Amount</span>
-        <span>{{ tx.getAmount() }} PART</span>
-      </div>
-      <div class="grid-cell cell-expand" *ngIf="display.expand">
-        <span class="icon nc-icon"
-          [ngClass]="{'nc-simple-add': !checkExpandDetails(tx), 'nc-simple-delete': checkExpandDetails(tx)}"
-          (click)="showExpandedTransactionDetail(tx)"></span>
-      </div>
-    </div>
+        </md-panel-title>
+        <md-panel-title *ngIf="display.senderAddress">
+          {{ tx.getAddress() }}
+        </md-panel-title>
+        <md-panel-title *ngIf="display.txid">
+          <span md-line><b>TxId</b> {{ tx.txid }} </span>
+        </md-panel-title>
+        <md-panel-title *ngIf="display.blockIndex">
+          <span md-line>Blockindex {{ tx.blockindex }}</span>
+        </md-panel-title>
 
-    <div *ngIf="checkExpandDetails(tx)" class="cell-expanded-row background-hack">
-      <div  class="padding-reset-hack border-reset-hack transaction-details">
+        <md-panel-title *ngIf="display.confirmations">
+          <span md-line><b>Confirmations</b> {{ tx.confirmations }}</span>
+        </md-panel-title>
+        <md-panel-title *ngIf="display.amount">
+          <span md-line><b>Amount</b> {{ tx.getAmount() }} PART</span>
+        </md-panel-title>
+      </md-expansion-panel-header>
 
-        <section class="wrap-flexbox">
-          <div class="transaction-details-row">
-            <div class="transaction-details-label">
-              <b>Status:</b>
-            </div>
-            <div>
-              {{tx.confirmations}} confirmations
-            </div>
-            <div class="transaction-details-label label-duble-size">
-              <b>Transaction ID:</b>
-            </div>
-            <div>
-              <a href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight" target="_blank">{{tx.txid}}</a>
-            </div>
+      <div class="container">
+        <div fxFlex="row" fxFlex>
+          <div fxFlex="50%">
+            <b>Status:</b>
+            {{tx.confirmations}} confirmations
           </div>
-        </section>
-
-        <section class="wrap-flexbox">
-          <div class="transaction-details-row">
-            <div class="transaction-details-label">
-              <b>Date:</b>
-            </div>
-            <div>
-              {{tx.getDate()}}
-            </div>
-            <div class="transaction-details-label label-duble-size">
-              <b>Transaction fee:</b>
-            </div>
-            <div>
-              {{tx.fee ? tx.fee : 0}} PART
-            </div>
+          <div fxFlex="50%">
+            <b>Transaction ID:</b>
+            <a href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight" target="_blank">{{tx.txid}}</a>
           </div>
-        </section>
+        </div>
 
-        <section class="wrap-flexbox">
-          <div class="transaction-details-row">
-            <div class="transaction-details-label">
-              <b>To:</b>
-            </div>
-            <div>
-              {{tx.getAddress()}}
-            </div>
-            <div class="transaction-details-label label-duble-size">
-              <b>Net amount:</b>
-            </div>
-            <div>
-              {{tx.fee ? tx.getAmount() - tx.fee : 0}} PART
-            </div>
+        <div fxFlex="row" fxFlex>
+          <div fxFlex="50%">
+            <b>Date:</b>
+            {{tx.getDate()}}
           </div>
-        </section>
-
-        <section class="wrap-flexbox">
-          <div class="transaction-details-row">
-            <div class="transaction-details-label" *ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">
-              <b>Credit:</b>
-            </div>
-            <div class="transaction-details-label" *ngIf="tx.category === 'send'">
-              <b>Debit:</b>
-            </div>
-            <div>
-              {{tx.getAmount()}} PART
-            </div>
-            <!-- empty column -->
-            <div class="transaction-details-label label-duble-size"></div>
-            <div></div>
+          <div fxFlex="50%">
+            <b>Transaction fee:</b>
+            {{tx.fee ? tx.fee : 0}} PART
           </div>
-        </section>
+        </div>
 
-
+        <div fxFlex="row" fxFlex>
+          <div fxFlex="50%">
+            <b>To:</b>
+            {{tx.getAddress()}}
+          </div>
+          <div fxFlex="50%">
+            <b>Net amount:</b>
+            {{tx.fee ? tx.getAmount() - tx.fee : 0}} PART
+          </div>
+        </div>
       </div>
-    </div>
+      <!--<div *ngIf="checkExpandDetails(tx)" class="cell-expanded-row background-hack">-->
+        <!--<div class="padding-reset-hack border-reset-hack transaction-details">-->
 
+          <!--<section class="wrap-flexbox">-->
+            <!--<div class="transaction-details-row">-->
+              <!--<div class="transaction-details-label">-->
+                <!--<b>Status:</b>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--{{tx.confirmations}} confirmations-->
+              <!--</div>-->
+              <!--<div class="transaction-details-label label-duble-size">-->
+                <!--<b>Transaction ID:</b>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--<a href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight"-->
+                   <!--target="_blank">{{tx.txid}}</a>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</section>-->
+
+          <!--<section class="wrap-flexbox">-->
+            <!--<div class="transaction-details-row">-->
+              <!--<div class="transaction-details-label">-->
+                <!--<b>Date:</b>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--{{tx.getDate()}}-->
+              <!--</div>-->
+              <!--<div class="transaction-details-label label-duble-size">-->
+                <!--<b>Transaction fee:</b>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--{{tx.fee ? tx.fee : 0}} PART-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</section>-->
+
+          <!--<section class="wrap-flexbox">-->
+            <!--<div class="transaction-details-row">-->
+              <!--<div class="transaction-details-label">-->
+                <!--<b>To:</b>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--{{tx.getAddress()}}-->
+              <!--</div>-->
+              <!--<div class="transaction-details-label label-duble-size">-->
+                <!--<b>Net amount:</b>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</section>-->
+
+          <!--<section class="wrap-flexbox">-->
+            <!--<div class="transaction-details-row">-->
+              <!--<div class="transaction-details-label"-->
+                   <!--*ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">-->
+                <!--<b>Credit:</b>-->
+              <!--</div>-->
+              <!--<div class="transaction-details-label" *ngIf="tx.category === 'send'">-->
+                <!--<b>Debit:</b>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--{{tx.getAmount()}} PART-->
+              <!--</div>-->
+              <!--&lt;!&ndash; empty column &ndash;&gt;-->
+              <!--<div class="transaction-details-label label-duble-size"></div>-->
+              <!--<div></div>-->
+            <!--</div>-->
+          <!--</section>-->
+
+
+        <!--</div>-->
+      <!--</div>-->
+    </md-expansion-panel>
   </ng-container>
-</app-grid>
 
 <pagination *ngIf="display.pagination"
-  [boundaryLinks]="true"
-  (pageChanged)="pageChanged($event)"
-  [totalItems]="txService.txCount"
-  [maxSize]="5" [rotate]="false"
-  [(ngModel)]="txService.currentPage"
-  class="pagination-sm center"
-  previousText="&lsaquo;" nextText="&rsaquo;"
-  firstText="&laquo;" lastText="&raquo;"
-  [itemsPerPage]="txService.MAX_TXS_PER_PAGE" >
+            [boundaryLinks]="true"
+            (pageChanged)="pageChanged($event)"
+            [totalItems]="txService.txCount"
+            [maxSize]="5" [rotate]="false"
+            [(ngModel)]="txService.currentPage"
+            class="pagination-sm center"
+            previousText="&lsaquo;" nextText="&rsaquo;"
+            firstText="&laquo;" lastText="&raquo;"
+            [itemsPerPage]="txService.MAX_TXS_PER_PAGE">
 </pagination>
