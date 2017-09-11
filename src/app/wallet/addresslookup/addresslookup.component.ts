@@ -146,7 +146,7 @@ export class AddressLookupComponent implements OnInit {
       if (this.type === 'send') {
         storeDetails.push(new Contact(contact['label'], contact['address']));
       } else {
-        if (contact['address'].indexOf('p') !== 0) {
+        if (contact['address'].length > 35) {
           storeDetails.push(new Contact(contact['label'], contact['address']));
         }
       }
