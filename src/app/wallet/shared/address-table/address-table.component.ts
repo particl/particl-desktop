@@ -14,15 +14,15 @@ import { RPCService } from '../../../core/rpc/rpc.module';
 })
 export class AddressTableComponent implements OnInit {
 
-  /* Determines what fields are displayed in the Transaction Table. */
-    /* header and utils */
+  // Determines what fields are displayed in the Transaction Table.
+  // header and utils
   @Input() displayHeader: boolean = true;
   @Input() displayInternalHeader: boolean = false;
   @Input() displayToolsMenu: boolean = true;
   @Input() displayQrMenu: boolean = true;
   @Input() displayPagination: boolean = false;
 
-    /* actual fields */
+  // actual fields
   @Input() displayLabel: boolean = true;
   @Input() displayType: boolean = false;
   @Input() displayAddress: boolean = true;
@@ -32,15 +32,15 @@ export class AddressTableComponent implements OnInit {
 
   @Output() editLabelEmitter: EventEmitter<string> = new EventEmitter<string>();
   openQrModal: boolean = false;
-  /*
-    Search query
-  */
+
+  // Search query
   @Input() query: string;
 
   @ViewChild('qrCode') qrElementView: ElementRef;
   /*
     Data storage
   */
+
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
   public singleAddress: any = {
@@ -49,15 +49,10 @@ export class AddressTableComponent implements OnInit {
     owned: false
   };
 
-  /*
-    Pagination
-  */
+  // Pagination
   currentPage: number = 1;
   @Input() addressDisplayAmount: number = 5;
 
-  /*
-    General
-  */
   log: any = Log.create('address-table.component');
 
   constructor(
@@ -74,11 +69,7 @@ export class AddressTableComponent implements OnInit {
         error => console.log('addresstable-component subscription error:' + error));
   }
 
-
-/**
- * Returns the addresses to display in the UI with regards to both pagination and search/query.
- * @returns      Object[]
- */
+  /** Returns the addresses to display in the UI with regards to both pagination and search/query. */
   public getSinglePage(): Array<Address> {
     if (this.inSearchMode()) { // in search mode
       return this.paginateArray(this.getSearchSubset());
@@ -91,11 +82,7 @@ export class AddressTableComponent implements OnInit {
     return (this.query !== undefined && this.query !== '');
   }
 
-
-/**
- * Returns the addresses that match a search/query.
- * @returns      Object[]
- */
+  /** Returns the addresses that match a search/query. */
   private getSearchSubset(): Address[] {
     return this.addresses.filter(el => {
         return (
@@ -105,14 +92,7 @@ export class AddressTableComponent implements OnInit {
       });
   }
 
-/*
-  Pagination
-*/
-
-
-/**
- * Returns the addresses to display in the UI with regards to the pagination parameters
- */
+  /** Returns the addresses to display in the UI with regards to the pagination parameters */
   private paginateArray(tempAddresses: Address[]): Address[] {
     if (tempAddresses !== undefined) {
       return tempAddresses.slice(((this.currentPage - 1) * this.addressDisplayAmount), this.currentPage * this.addressDisplayAmount);
@@ -156,10 +136,7 @@ export class AddressTableComponent implements OnInit {
     this._rpc.specialPoll();
   }
 
-/*
-  Edit label address
-*/
-
+  /** Edit label address */
   editLabel(address: string) {
     this.log.d(`editLabel, address: ${address}`);
     this.editLabelEmitter.emit(address);
