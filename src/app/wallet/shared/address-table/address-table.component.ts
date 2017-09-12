@@ -6,6 +6,8 @@ import { AddressService } from '../address.service';
 import { Address } from '../address.model';
 
 import { RPCService } from '../../../core/rpc/rpc.module';
+import {MdDialog} from "@angular/material";
+import {QrCodeModalComponent} from "../qr-code-modal/qr-code-modal.component";
 
 @Component({
   selector: 'address-table',
@@ -42,11 +44,6 @@ export class AddressTableComponent implements OnInit {
 
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
-  public singleAddress: any = {
-    label: 'Empty label',
-    address: 'Empty address',
-    owned: false
-  };
 
   // Pagination
   currentPage: number = 1;
@@ -56,7 +53,8 @@ export class AddressTableComponent implements OnInit {
 
   constructor(
     public _addressService: AddressService,
-    private _rpc: RPCService
+    private _rpc: RPCService,
+    public dialog: MdDialog
   ) {
 
   }
@@ -141,9 +139,11 @@ export class AddressTableComponent implements OnInit {
 
   /** Open QR Code Modal */
   openQrCodeModal(address: Object) {
+    const dialogRef = this.dialog.open(QrCodeModalComponent);
+    dialogRef.componentInstance.singleAddress = address;
+    console.log('qrElementView', this.qrElementView)
+    dialogRef.componentInstance.qrElementView = this.qrElementView;
     this.log.d(`qrcode, address: ${JSON.stringify(address)}`);
-    this.openQrModal = true;
-    this.singleAddress = address
   }
 
   closeQrModal() {
