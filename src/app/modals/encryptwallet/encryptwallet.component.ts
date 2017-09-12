@@ -36,8 +36,11 @@ export class EncryptwalletComponent implements OnInit {
               alert(response);
               document.getElementById('close').click();
             } ,
-            // TODO: Handle error appropriately
-            error => this.log.er('encryptwallet: error encrypting wallet', error));
+            // Handle error appropriately
+            error => { 
+            	alert('Wallet failed to encrypt properly!');
+            	this.log.er('encryptwallet: error encrypting wallet', error)
+            });
       }
 
     } else {
