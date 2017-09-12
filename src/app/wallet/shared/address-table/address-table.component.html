@@ -23,7 +23,7 @@
             <md-list-item>
               <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
                    fxlayout.lt-xs="column" fxLayoutGap="10px" layout-padding>
-                <div fxFlex="20%" class="title" *ngIf="displayLabel" (click)="editLabel(address.address)"> {{
+                <div fxFlex="20%" class="title cursor-pointer" *ngIf="displayLabel" (click)="editLabel(address.address)"> {{
                   address.label }}
                 </div>
                 <div fxFlex="50%" class="address">
