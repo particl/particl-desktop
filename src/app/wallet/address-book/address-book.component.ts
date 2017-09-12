@@ -9,11 +9,11 @@ import { NewAddressModalComponent } from './modal/new-address-modal/new-address-
 })
 export class AddressBookComponent {
 
+  public query: string;
   constructor(private dialog: MdDialog) {
   }
 
   openNewAddress(): void {
     const dialogRef = this.dialog.open(NewAddressModalComponent);
   }
-
 }

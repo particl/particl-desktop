@@ -4,7 +4,7 @@
       <div fxLayout="'row'" class="coloredContainerX box">
         <div class="grid-row grid-header" *ngIf="displayHeader">
           <md-list class="list-data" fxFlex="100%">
-            <div *ngFor="let address of addressService.addresses">
+            <div *ngFor="let address of getSinglePage()">
               <md-list-item>
               </md-list-item>
             </div>
@@ -19,11 +19,13 @@
         </div>
 
         <md-list class="list-data" fxFlex="100%">
-          <div *ngFor="let address of addressService.addresses">
+          <div *ngFor="let address of getSinglePage()">
             <md-list-item>
               <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
                    fxlayout.lt-xs="column" fxLayoutGap="10px" layout-padding>
-                <div fxFlex="20%" class="title" *ngIf="displayLabel"> {{ address.label }}</div>
+                <div fxFlex="20%" class="title" *ngIf="displayLabel" (click)="editLabel(address.address)"> {{
+                  address.label }}
+                </div>
                 <div fxFlex="50%" class="address">
                   <span class="title" *ngIf="displayAddress">Address: </span>
                   {{ address.address }}
@@ -39,23 +41,33 @@
                   <span class="text-uppercase">{{ address.type }}</span>
                 </div>
 
-                <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="15%"  fxFlex.md="50%" fxFlex.sm="50%"  fxFlex.xs="100%" fxLayoutAlign="end center" *ngIf="displayToolsMenu" class="md-left-border">
-                  <div fxFlex="100%" class=""  fxLayoutAlign="end center">
-                  <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%"  ngxClipboard
-                           [cbContent]="address.address">
-                    content_copy
-                  </md-icon>
+                <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="15%" fxFlex.md="50%"
+                     fxFlex.sm="50%" fxFlex.xs="100%" fxLayoutAlign="end center" *ngIf="displayToolsMenu"
+                     class="md-left-border">
+                  <div fxFlex="100%" class="" fxLayoutAlign="end center">
+                    <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%"
+                             fxFlex.xs="33.33%" ngxClipboard
+                             [cbContent]="address.address">
+                      content_copy
+                    </md-icon>
 
-                  <md-icon fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%" ngxClipboard>verified_user</md-icon>
+                    <md-icon fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%" ngxClipboard>
+                      verified_user
+                    </md-icon>
 
-                  <md-icon fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%"  color="warn" (click)="addressService.deleteAddress(address.address)"
-                           mdTooltip="Delete">cancel
-                  </md-icon>
+                    <md-icon fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%" color="warn"
+                             (click)="deleteAddress(address.label, address.address)"
+                             mdTooltip="Delete">cancel
+                    </md-icon>
                   </div>
                 </div>
-                <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="10%"  fxFlex.md="50%" fxFlex.sm="50%"  fxFlex.xs="100%" *ngIf="displayQrMenu"   fxLayoutAlign="end center" class="md-left-border">
-                  <div class="grid-cell divider text-center" *ngIf="displayQrMenu">
-                    <div class="inline-toolbar qrcode-menu" fxFlex="100%" fxLayoutAlign.md="center end" fxLayoutAlign.lt-md="center end" fxLayoutAlign.lt-sm="center end"  fxLayoutAlign="end center">
+                <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="10%" fxFlex.md="50%"
+                     fxFlex.sm="50%" fxFlex.xs="100%" *ngIf="!displayQrMenu" fxLayoutAlign="end center"
+                     class="md-left-border">
+                  <div class="grid-cell divider text-center">
+                    <div class="inline-toolbar qrcode-menu" fxFlex="100%" fxLayoutAlign.md="center end"
+                         fxLayoutAlign.lt-md="center end" fxLayoutAlign.lt-sm="center end" fxLayoutAlign="end center"
+                         (click)="openQrCodeModal(address)">
                       <i class="fa fa-qrcode fa-3x" aria-hidden="true"></i>
                       <!--<span class="nc-icon nc-barcode-qr fa-5x"></span>-->
                     </div>
@@ -68,12 +80,17 @@
         </md-list>
       </div>
     </div>
+    <pagination *ngIf="displayPagination"
+                [boundaryLinks]="true"
+                [totalItems]="getTotalAddressCount()"
+                [maxSize]="5"
+                [rotate]="false"
+                [(ngModel)]="currentPage"
+                class="pagination-sm center" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+                lastText="&raquo;"
+                [itemsPerPage]="getMaxAddressesPerPage()">
 
-    <pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)"
-                [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false"
-                [(ngModel)]="addressService.currentPage" class="pagination-sm center"
-                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
-                [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE"></pagination>
+    </pagination>
 
   </md-card-content>
 </md-card>

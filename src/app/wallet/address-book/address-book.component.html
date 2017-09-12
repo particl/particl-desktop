@@ -8,7 +8,7 @@
         </button>
       </div>
       <md-form-field class="icon-input">
-        <input mdInput type="text" id="searchbar" [(ngModel)]="query" placeholder="Search receive">
+        <input mdInput type="text"  [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
         <md-icon>search</md-icon>
       </md-form-field>
     </div>
@@ -16,15 +16,16 @@
 
   <div class="container-fluid">
     <address-table
+      [query]="query"
       [displayHeader]="false"
       [displayInternalHeader]="true"
-      [displayPagination]="false"
+      [displayPagination]="true"
       [displayLabel]="true"
       [displayAddress]="true"
       [displayPurpose]="true"
       [displayToolsMenu]="true"
-      [displayQrMenu]="true">
-
+      [displayQrMenu]="false"
+      (editLabelEmitter)="editLabel($event)">
     </address-table>
   </div>
 </div>
