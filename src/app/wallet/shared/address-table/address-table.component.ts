@@ -37,7 +37,7 @@ export class AddressTableComponent implements OnInit {
   @Input() query: string;
 
   @ViewChild('qrCode') qrElementView: ElementRef;
- 
+
   // Data storage
 
   private addresses: Address[] = [];
