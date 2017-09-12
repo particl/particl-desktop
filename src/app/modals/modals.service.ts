@@ -39,10 +39,14 @@ export class ModalsService {
     private _blockStatusService: BlockStatusService,
     private _rpcService: RPCService
   ) {
+
+    // open syncing modal
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
       this.needToOpenModal(status);
     });
+
+    //
     this._rpcService.modalUpdates.asObservable().subscribe(status => {
       if (status.error) {
         this.open('daemon', status);
