@@ -1,27 +1,26 @@
-<h2 md-dialog-title>
-  {{singleAddress.label}}
-</h2>
-<div md-dialog-content>
-  <div fxFlex="row">
-    <div fxFlex="80%">
-      <label class="label-address">Address</label>
-      <div class="card address-details">
-        <div class="details-address row">
-          <div *ngFor="let word of showAddress(singleAddress.address)" class="col-xs-3">
+<div class="containerX">
+  <h2 md-dialog-title>
+    {{singleAddress.label}}
+  </h2>
+  <div>
+    <div>
+      <label>Address</label>
+      <div>
+        <div>
+          <div *ngFor="let word of showAddress(singleAddress.address)">
             {{ word }}
           </div>
         </div>
       </div>
     </div>
 
-    <div fxFlex="40%">
+    <div>
       <div #qrCode class="card qr">
-        <qr-code [level]="'H'" [size]="getQrSize()"
-                 [value]="singleAddress.address">
-        </qr-code>
+        <qr-code [level]="'H'" [size]="getQrSize()" [value]="singleAddress.address"></qr-code>
       </div>
     </div>
   </div>
+  <md-dialog-actions fxLayoutAlign="end center">
+    <button md-button md-dialog-close>Ok</button>
+  </md-dialog-actions>
 </div>
-
-

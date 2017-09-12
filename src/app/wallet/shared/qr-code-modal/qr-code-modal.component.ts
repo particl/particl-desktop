@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-qr-code-modal',
@@ -21,7 +21,7 @@ export class QrCodeModalComponent implements OnInit {
   }
 
   getQrSize() {
-    return this.qrElementView;
+    return this.qrElementView.nativeElement.offsetWidth - 40;
   }
 
   showAddress(address: string) {
