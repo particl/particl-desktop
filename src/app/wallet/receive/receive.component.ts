@@ -204,7 +204,7 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
-    
+
     if (count === 0) {
       return;
     }

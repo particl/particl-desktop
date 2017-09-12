@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
+
 import { Log } from 'ng2-logger';
 
 @Component({
@@ -10,8 +11,8 @@ import { Log } from 'ng2-logger';
 })
 export class AlertComponent implements OnInit {
 
-  @ViewChild('alertBox')
-  public alertBox: ModalDirective;
+  @ViewChild('alertBoxModal')
+  public alertBoxModal: ModalDirective;
 
   @Input()
   text: string;
@@ -39,11 +40,11 @@ export class AlertComponent implements OnInit {
   }
 
   show() {
-    this.alertBox.show();
+    this.alertBoxModal.show();
   }
 
   hide() {
-    this.alertBox.hide();
+    this.alertBoxModal.hide();
   }
 
 }

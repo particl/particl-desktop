@@ -1,11 +1,11 @@
-  <div class="modal fade" bsModal #alertBox="bs-modal"
+  <div class="modal fade" bsModal #alertBoxModal="bs-modal"
      tabindex="-1" role="dialog" aria-labelledby="alertBox" aria-hidden="true">
 
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title pull-left">{{title}}</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="alertBox.hide()">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="alertBoxModal.hide()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
