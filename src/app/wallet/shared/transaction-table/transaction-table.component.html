@@ -8,8 +8,8 @@
     <div class="cell-confirmations" *ngIf="display.confirmations">confirmations</div>
     <div class="cell-amount" *ngIf="display.amount">amount</div>
   </div>
-  <ng-container *ngFor="let tx of txService.txs">
-    <div class="grid-row">
+  <ng-container *ngFor="let tx of txService.txs let i=index">
+    <div class="grid-row" *ngIf="i < display.txDisplayAmount">
       <div class="grid-cell cell-date" *ngIf="display.date">
         <!--<span class="inline-header"><span class="icon nc-icon nc-time-3"></span></span>-->
         <span>{{ tx.getDate() }}</span>
@@ -73,7 +73,7 @@
               <b>Transaction ID:</b>
             </div>
             <div>
-              {{tx.txid}}
+              <a href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight" target="_blank">{{tx.txid}}</a>
             </div>
           </div>
         </section>

@@ -24,18 +24,33 @@ export class SendService {
   */
 
   constructor(public _rpc: RPCService) {
-    this._rpc.oldCall(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
+    // this._rpc.oldCall(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
+    this._rpc.call('liststealthaddresses', null)
+      .subscribe(response => {
+        this.rpc_listDefaultAddress_success(response)
+      },
+      error => {
+        this.log.er('errr');
+      });
   }
 
   rpc_listDefaultAddress_success(json: Object) {
     if (json[0] !== undefined && json[0]['Stealth Addresses'] !== undefined && json[0]['Stealth Addresses'][0] !== undefined) {
       this.rpc_setDefaultAddress_success(json[0]['Stealth Addresses'][0]['Address']);
     } else {
-      this._rpc.oldCall(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_setDefaultAddress_success);
+      // this._rpc.oldCall(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_setDefaultAddress_success);
+      this._rpc.call('getnewstealthaddress', ['balance transfer'])
+        .subscribe(
+          (response: any) => {
+            this.rpc_setDefaultAddress_success(response)
+        },
+        error => {
+          this.log.er('errr');
+        });
     }
   }
 
-  rpc_setDefaultAddress_success (json: string) {
+  rpc_setDefaultAddress_success (json: any) {
     this.defaultStealthAddressForBalanceTransfer = json;
     this.log.d(`rpc_setDefaultAddress_success, stealth address: ${json}`);
   }
@@ -58,7 +73,15 @@ export class SendService {
 
     this.setTransactionDetails(address, amount);
 
-    this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
+    // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
+    this._rpc.call('send' + rpcCall, params)
+        .subscribe(
+          (response: any) => {
+          this.rpc_send_success(response)
+        },
+        (error: any) => {
+          this.rpc_send_failed(error);
+        });
   }
 
   transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
@@ -77,11 +100,19 @@ export class SendService {
 
     this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
 
-    this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
+    // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
+    this._rpc.call('send' + rpcCall, params)
+      .subscribe(
+        (response: any) => {
+          this.rpc_send_success(response)
+      },
+      (error: any) => {
+          this.rpc_send_failed(error);
+      });
   }
 
 
-  rpc_send_success(json: string) {
+  rpc_send_success(json: any) {
     this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
     alert(`Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}`);
   }

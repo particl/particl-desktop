@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
-
+import { RPXService } from './rpx.class';
 
 import { ChainState } from './chain-state/chain-state.reducers';
 import * as chainState from './chain-state/chain-state.actions';
@@ -59,13 +59,10 @@ export class RPCService {
 
   public chainState: Observable<any>;
 
-  private listenerCount: number = 0;
-
-  listeners: { [id: string]: boolean } = {};
-
   constructor(
     private http: Http,
     public electronService: ElectronService,
+    public rpx: RPXService,
     private store: Store<ChainState>
   ) {
     this.isElectron = this.electronService.isElectronApp;
@@ -80,60 +77,10 @@ export class RPCService {
     if (this.isElectron) {
 
       // Respond to checks if a listener is registered
-      this.electronService.ipcRenderer.on('rx-ipc-check-listener', (event, channel) => {
-        const replyChannel = 'rx-ipc-check-reply:' + channel;
-        if (this.listeners[channel]) {
-          event.sender.send(replyChannel, true);
-        } else {
-          event.sender.send(replyChannel, false);
-        }
-      });
+      this.rpx.rpxCall()
     }
   }
 
-  checkRemoteListener(channel: string) {
-    return new Promise((resolve, reject) => {
-      this.electronService.ipcRenderer.once('rx-ipc-check-reply:' + channel, (event, result) => {
-        if (result) {
-          resolve(result);
-        } else {
-          reject(false);
-        }
-      });
-      this.electronService.ipcRenderer.send('rx-ipc-check-listener', channel);
-    });
-  }
-
-  runCommand(channel: string, ...args: any[]): Observable<any> {
-    const self = this;
-    const subChannel = channel + ':' + this.listenerCount;
-    this.listenerCount++;
-    const target = this.electronService.ipcRenderer;
-    target.send(channel, subChannel, ...args);
-    return new Observable((observer) => {
-      this.checkRemoteListener(channel)
-        .catch(() => {
-          observer.error('Invalid channel: ' + channel);
-        });
-      this.electronService.ipcRenderer
-        .on(subChannel, function listener(event: Event, type: string, data: Object) {
-        switch (type) {
-          case 'n':
-            observer.next(data);
-            break;
-          case 'e':
-            observer.error(data);
-            break;
-          case 'c':
-            observer.complete();
-        }
-        // Cleanup
-        return () => {
-          self.electronService.ipcRenderer.removeListener(subChannel, listener);
-        };
-      });
-    });
-  }
 
   /**
     * The call function will perform a single call to the particld daemon and perform a callback to
@@ -152,7 +99,7 @@ export class RPCService {
   call(method: string, params?: Array<any> | null): Observable<Object> {
 
     if (this.isElectron) {
-      return this.runCommand('backend-rpccall', null, method, params)
+      return this.rpx.runCommand('backend-rpccall', null, method, params)
         .map(response => response.result);
 
     } else {
@@ -184,6 +131,7 @@ export class RPCService {
 
   registerStateCall(method: string, timeout?: number): void {
     if (timeout) {
+      let first = true;
       const _call = () => {
         this.call(method)
           .subscribe(
@@ -197,10 +145,13 @@ export class RPCService {
             },
             error => {
               this.stateCallError(error);
-              this.modalUpdates.next({
-                error: error.target ? error.target : error,
-                electron: this.isElectron
-              });
+              if (!first) {
+                this.modalUpdates.next({
+                  error: error.target ? error.target : error,
+                  electron: this.isElectron
+                });
+              }
+              first = false;
               setTimeout(_call, 10000);
             });
       }
@@ -347,3 +298,4 @@ export class RPCService {
     this._callOnAddress.forEach(this._pollCall.bind(this));
   }
 }
+

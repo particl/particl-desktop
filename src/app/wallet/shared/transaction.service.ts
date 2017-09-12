@@ -23,14 +23,18 @@ export class TransactionService {
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
 
-  constructor(
-    private rpc: RPCService
-  ) {}
-
+  constructor(private rpc: RPCService) {
+  }
 
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
-    this.rpc_update();
+    this.rpc.chainState.subscribe(state => {
+      if (state.chain) {
+        this.txCount = state.chain.txcount;
+        this.currentPage = 0;
+        this.rpc_update();
+      }
+    })
   }
 
 
@@ -42,7 +46,6 @@ export class TransactionService {
     if (page <= 0) {
       return;
     }
-
     page--;
     this.currentPage = page;
     this.deleteTransactions();
@@ -58,29 +61,24 @@ export class TransactionService {
   */
 
   rpc_update() {
-    this.rpc.oldCall(this, 'getwalletinfo', null, (response) => {
-      this.txCount = response.txcount;
+    this.rpc.call('listtransactions', [
+      '*', +this.MAX_TXS_PER_PAGE,
+      (this.currentPage * this.MAX_TXS_PER_PAGE)
+    ])
+    .subscribe(
+      (txResponse: Array<Object>) => {
+        // The callback will send over an array of JSON transaction objects.
+        this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
+        this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
 
-      this.log.d(`rpc_loadTransactionCount: txcount: ${this.txCount}`);
+        if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
+          this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
+        }
 
-      this.rpc.oldCall(this, 'listtransactions', [
-          '*', +this.MAX_TXS_PER_PAGE,
-          ((this.currentPage ? this.currentPage - 1 : 0) * this.MAX_TXS_PER_PAGE)
-        ],
-        (txResponse: Array<Object>) => {
-          // The callback will send over an array of JSON transaction objects.
-          this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
-          this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
-
-          if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
-            this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
-          }
-
-          txResponse.forEach((tx) => {
-            this.addTransaction(tx);
-          });
+        txResponse.forEach((tx) => {
+          this.addTransaction(tx);
         });
-    });
+      });
   }
 
   // Deserializes JSON objects to Transaction classes.
@@ -92,7 +90,8 @@ export class TransactionService {
     }
 
     // this.txs.push(instance);
-    this.txs.splice(0, 0, instance);
+    this.txs.unshift(instance);
   }
 
 }
+

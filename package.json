@@ -21,10 +21,12 @@
     "e2e": "ng e2e",
     "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.2",
     "start:electron:dev": "electron . --dev",
-    "start:electron": "npm run build:electron && electron . --dev",
-    "package": "npm run build:electron && electron-builder -mwl",
+    "start:electron": "npm run build:electron && electron .",
+    "package:win": "npm run build:electron && electron-builder --win --x64 --ia32",
+    "package": "npm run build:electron && electron-builder -ml && npm run package:win",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
-    "compdoc": "compodoc -p tsconfig.json"
+    "compdoc": "compodoc -p tsconfig.json",
+    "generate-release": "node ./modules/clientBinaries/generateVersions.js"
   },
   "build": {
     "electronVersion": "1.7.5",
@@ -114,7 +116,7 @@
     "@compodoc/compodoc": "^1.0.0-beta.12",
     "@types/jasmine": "^2.5.53",
     "@types/node": "~8.0.12",
-    "codelyzer": "~3.1.2",
+    "codelyzer": "~3.2.0",
     "coveralls": "^2.13.1",
     "electron": "^1.7.5",
     "electron-builder": "^19.22.1",

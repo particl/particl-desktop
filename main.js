@@ -91,8 +91,8 @@ function createWindow () {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 600,
+    width: 1280,
+    height: 720,
     icon: trayImage,
     webPreferences: {
       //sandbox: true,
@@ -100,6 +100,12 @@ function createWindow () {
       preload: 'preload.js',
     },
   })
+
+  // handle external URIs
+  mainWindow.webContents.on('new-window', (event, url) => {
+    event.preventDefault();
+    electron.shell.openExternal(url);
+  });
 
   // and load the index.html of the app.
   if (process.argv.indexOf('--dev') === -1) {
@@ -137,7 +143,7 @@ function createWindow () {
   }
 
   // Set the tray icon
-  tray.setToolTip('This is my application')
+  tray.setToolTip('Particl '+app.getVersion());
   tray.setContextMenu(contextMenu)
 }
 

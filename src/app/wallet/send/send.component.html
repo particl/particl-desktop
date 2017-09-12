@@ -59,7 +59,7 @@
       <input class="col-xs-2" type="text" placeholder="Enter a label"
         [(ngModel)]="send.toLabel">
       <span class="separator"></span>
-      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
+      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup('send')"></span>
       <span class="icon-padding icon nc-icon nc-copy-2"></span>
       <span class="icon-padding icon nc-icon nc-circle-remove color-red" (click)="clearReceiver()"></span>
     </div>
@@ -147,14 +147,14 @@
 
     <div *ngIf="advanced" class="card row">
       <div class="input-label col-xs-3">Pay to</div>
-      <input class="col-xs-4" type="text"
+      <input class="col-xs-4" [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" 
         placeholder="The address to send the payment to"
-        [(ngModel)]="send.toAddress">
+        [(ngModel)]="send.toAddress" (input)="verifyAddress()">
       <input class="col-xs-2" type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
       <span class="separator"></span>
-      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup()"></span>
+      <span class="icon-padding icon nc-icon nc-multiple-19" (click)="openLookup('receive')"></span>
       <span class="icon-padding icon nc-icon nc-copy-2"></span>
-      <span class="icon-padding icon nc-icon nc-circle-remove color-red"></span>
+      <span class="icon-padding icon nc-icon nc-circle-remove color-red" (click)="clearReceiver()"></span>
     </div>
 
     <div class="card row">

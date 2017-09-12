@@ -8,9 +8,11 @@
     <div *ngIf="displayToolsMenu">Tools</div>
     <div *ngIf="displayQrMenu">QR Code</div>
   </div>
-  <div class="grid-row address-row" *ngFor="let address of addressService.addresses">
+  <div class="grid-row address-row" *ngFor="let address of getSinglePage()">
     <div class="grid-cell cell-label text-left" *ngIf="displayLabel">
-      <span class="inline-header">{{ address.label }}</span>
+      <span class="inline-header" (click)="editLabel(address.address)">
+        {{ address.label }}
+      </span>
     </div>
     <div class="grid-cell cell-address text-left" *ngIf="displayAddress">
       <span class="inline-header">Address</span>
@@ -30,16 +32,55 @@
         <span ngxClipboard [cbContent]="address.address" class="nc-icon nc-copy-2"></span>
         <!-- Open the modal for signing and verifying messages by address -->
         <span class="icon nc-icon nc-a-check"></span>
-        <span (click)="addressService.deleteAddress(address.address)" class="nc-icon nc-circle-remove color-red"></span>
+        <span (click)="deleteAddress(address.label, address.address)" class="nc-icon nc-circle-remove color-red"></span>
+
       </div>
     </div>
-    <div class="grid-cell divider text-center" *ngIf="displayQrMenu">
-      <div class="inline-toolbar qrcode-menu">
+    <div class="grid-cell divider text-center" *ngIf="!displayQrMenu">
+      <div class="inline-toolbar qrcode-menu" (click)="openQrCodeModal(address)">
         <span class="nc-icon nc-barcode-qr"></span>
       </div>
     </div>
   </div>
 </app-grid>
 
-<pagination *ngIf="displayPagination" [boundaryLinks]="true" (pageChanged)="pageChanged($event)" [totalItems]="addressService.addressCount" [maxSize]="5" [rotate]="false" [(ngModel)]="addressService.currentPage" class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [itemsPerPage]="addressService.MAX_ADDRESSES_PER_PAGE" ></pagination>
+
+<pagination *ngIf="displayPagination" 
+  [boundaryLinks]="true" 
+  [totalItems]="getTotalAddressCount()" 
+  [maxSize]="5" 
+  [rotate]="false" 
+  [(ngModel)]="currentPage" 
+  class="pagination-sm center" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" 
+  [itemsPerPage]="getMaxAddressesPerPage()" >
+    
+  </pagination>
+
+<div id="qr-modal"  [ngClass]="{'hide': openQrModal == false }">
+  <div class="qr-modal-container">
+    <span class="close" (click)="closeQrModal()">&times;</span>
+
+    <div class="modal-content-header">{{singleAddress.label}}</div>
+    <hr class="margin-top-5px">
+
+    <div class="row">
+      <div class="col-xs-8 single-address">
+        <label class="label-address">Address</label>
+        <div class="card address-details">
+          <div class="details-address row">
+            <div *ngFor="let word of showAddress(singleAddress.address)" class="col-xs-3">
+              {{ word }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-4">
+        <div #qrCode class="card qr">
+          <qr-code [level]="'H'" [size]="getQrSize()" 
+                   [value]="singleAddress.address">
+          </qr-code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

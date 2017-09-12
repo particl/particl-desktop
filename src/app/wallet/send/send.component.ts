@@ -150,7 +150,14 @@ export class SendComponent implements OnInit, OnDestroy {
       }
     }
 
-    this._rpc.oldCall(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
+    // this._rpc.oldCall(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
+    this._rpc.call('validateaddress', [this.send.toAddress])
+      .subscribe(response => {
+        validateAddressCB(response)
+      },
+      error => {
+        this.log.er('errr');
+      });
   }
 
 
@@ -276,8 +283,8 @@ export class SendComponent implements OnInit, OnDestroy {
     AddressLookup Modal + set details
   */
 
-  openLookup() {
-    this.addressLookup.show();
+  openLookup(type: string) {
+    this.addressLookup.show(type);
   }
 
   /** Select an address, set the appropriate models
@@ -305,10 +312,17 @@ export class SendComponent implements OnInit, OnDestroy {
     const label = this.send.toLabel;
     const addr = this.send.toAddress;
 
-    this._rpc.oldCall(this, 'manageaddressbook', ['newsend', addr, label],
-      this.rpc_addLabel_success,
-      this.rpc_addLabel_failed
-    );
+    // this._rpc.oldCall(this, 'manageaddressbook', ['newsend', addr, label],
+    //   this.rpc_addLabel_success,
+    //   this.rpc_addLabel_failed
+    // );
+    this._rpc.call('manageaddressbook', ['newsend', addr, label])
+      .subscribe(response => {
+        this.rpc_addLabel_success(response)
+      },
+      error => {
+        this.rpc_addLabel_failed(error);
+      });
   }
 
   rpc_addLabel_success(json: Object) {
