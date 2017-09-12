@@ -14,7 +14,6 @@ describe('AlertComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AlertComponent ],
       imports: [
         SharedModule,
         RpcModule.forRoot(),
