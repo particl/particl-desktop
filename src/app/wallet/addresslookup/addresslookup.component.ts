@@ -27,7 +27,8 @@ export class AddressLookupComponent implements OnInit {
 
   filter: string = 'all';
   query: string = '';
-
+  public type: string = 'send';
+  public value: string = ''
   /*
     RPC data
   */
@@ -36,7 +37,7 @@ export class AddressLookupComponent implements OnInit {
 
 
   constructor(private _rpc: RPCService) {
-    this.rpc_update();
+    // this.rpc_update();
   }
 
 
@@ -75,7 +76,9 @@ export class AddressLookupComponent implements OnInit {
   ngOnInit() {
   }
 
-  show() {
+  show(type: string) {
+    this.type = type;
+    this.rpc_update();
     this.staticLookup.show();
   }
 
@@ -104,11 +107,17 @@ export class AddressLookupComponent implements OnInit {
     Successfully loaded address count
   */
   rpc_loadAddressCount_success(json: Object): void {
-    this._addressCount = json['num_send'];
-
+    if (this.type === 'send') {
+      this.value = '2'
+      this._addressCount = json['num_send'];
+    } else {
+      this.filter = 'private';
+      this.value = '1';
+      this._addressCount = json['num_receive'];
+    }
     if (this._addressCount > 0) {
       // this._rpc.oldCall(this, 'filteraddresses', [0, this._addressCount, '0', '', '2'], this.rpc_loadAddresses_success);
-      this._rpc.call('filteraddresses', [0, this._addressCount, '0', '', '2'])
+      this._rpc.call('filteraddresses', [0, this._addressCount, '0', '', this.value])
         .subscribe(response => {
           this.rpc_loadAddresses_success(response)
         },
@@ -132,7 +141,12 @@ export class AddressLookupComponent implements OnInit {
     Callback that loads addresses into addressStore!
   */
   rpc_loadAddresses_success(json: any) {
-    this.addressStore = json.map((contact) => new Contact(contact['label'], contact['address']));
+    this.addressStore = [];
+    json.forEach((contact) => {
+      if (this.type === 'send' || contact['address'].length > 35) {
+        this.addressStore.push(new Contact(contact['label'], contact['address']));
+      }
+    });
   }
 
 

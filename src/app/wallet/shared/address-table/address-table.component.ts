@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
@@ -36,7 +36,10 @@ export class AddressTableComponent implements OnInit {
   // Search query
   @Input() query: string;
 
+  @ViewChild('qrCode') qrElementView: ElementRef;
+
   // Data storage
+
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
   public singleAddress: any = {
@@ -108,6 +111,12 @@ export class AddressTableComponent implements OnInit {
   public getMaxAddressesPerPage(): number {
     return this.addressDisplayAmount;
   }
+
+  public getQrSize() {
+    return this.qrElementView.nativeElement.offsetWidth - 40;
+  }
+
+  /** Delete address */
 
   public deleteAddress(label: string, address: string) {
     if (confirm(`Are you sure you want to delete ${label}: ${address}`)) {

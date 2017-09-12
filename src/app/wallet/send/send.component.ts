@@ -283,8 +283,8 @@ export class SendComponent implements OnInit, OnDestroy {
     AddressLookup Modal + set details
   */
 
-  openLookup() {
-    this.addressLookup.show();
+  openLookup(type: string) {
+    this.addressLookup.show(type);
   }
 
   /** Select an address, set the appropriate models
