@@ -3,6 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
+import { AlertComponent } from '../shared/alert/alert.component';
 import { IPassword } from '../shared/password/password.interface';
 
 @Component({
@@ -15,7 +16,11 @@ export class EncryptwalletComponent implements OnInit {
   log: any = Log.create('unlockwallet.component');
   public password: string;
 
-  @ViewChild('passwordElement') passwordElement: PasswordComponent;
+  @ViewChild('passwordElement')
+  passwordElement: PasswordComponent;
+
+  @ViewChild('alertBox')
+  alertBox: AlertComponent;
 
   constructor(private _rpc: RPCService) { }
 
@@ -33,14 +38,15 @@ export class EncryptwalletComponent implements OnInit {
         this._rpc.call('encryptwallet', [password.password])
             .subscribe(
             (response: any) => {
-              alert(response);
-              document.getElementById('close').click();
+              this.alertBox.open(response, 'Wallet');
             } ,
             // Handle error appropriately
             error => {
-              alert('Wallet failed to encrypt properly!');
-              this.log.er('encryptwallet: error encrypting wallet', error)
+              this.alertBox.open('Wallet failed to encrypt properly!', 'Wallet');
+              this.log.er('error encrypting wallet', error)
             });
+      } else {
+        this.alertBox.open(`The passwords do not match!`, 'Wallet');
       }
 
     } else {
