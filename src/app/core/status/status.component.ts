@@ -67,18 +67,37 @@ export class StatusComponent implements OnInit, OnDestroy {
     }
   }
 
+  // toggle() {
+  //   switch (this.encryptionStatus) {
+  //     case 'Unencrypted':
+  //       // TODO: Encrypt wallet modal...
+  //       break;
+  //     case 'Unlocked':
+  //     case 'Unlocked, staking only':
+  //       this._rpc.call('walletlock')
+  //         .subscribe();
+  //       break;
+  //     case 'Locked':
+  //       this._modalsService.open('unlock');
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
-        // TODO: Encrypt wallet modal...
+        this._modalsService.open('encrypt', {'forceOpen': true});
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':
         this._rpc.call('walletlock')
-          .subscribe();
+          .subscribe(
+            success => this._rpc.stateCall('getwalletinfo'),
+            error => this.log.er('walletlock error'));
         break;
       case 'Locked':
-        this._modalsService.open('unlock');
+        this._modalsService.open('unlock', {'timeout': 59, 'forceOpen': true});
         break;
       default:
         break;

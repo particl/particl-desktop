@@ -70,8 +70,8 @@ export class RPCService {
     this.chainState = store.select((state: ChainState) => state);
 
     // Start polling...
-    this.registerStateCall('getinfo', 10500);
-    this.registerStateCall('getwalletinfo', 3000);
+    this.registerStateCall('getinfo', 1000);
+    this.registerStateCall('getwalletinfo', 2000);
     this.registerStateCall('getstakinginfo', 15000);
 
     if (this.isElectron) {
