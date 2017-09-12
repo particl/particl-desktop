@@ -13,6 +13,7 @@ import { TableComponent } from './table/table.component';
 import { GridComponent } from './grid/grid.component';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   declarations: [
     HeaderComponent,
     TableComponent,
-    GridComponent
+    GridComponent,
+    DeleteConfirmationModalComponent
   ],
   exports: [
     CommonModule,
@@ -45,6 +47,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     TableComponent,
     GridComponent,
     AccordionModule
-  ]
+  ],
+  entryComponents: [
+    DeleteConfirmationModalComponent
+  ],
 })
 export class SharedModule { }
