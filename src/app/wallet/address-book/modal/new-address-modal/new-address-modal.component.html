@@ -1,5 +1,4 @@
-<h2 md-dialog-title>Add new address to addresbook</h2>
-
+<h2 md-dialog-title>{{modalTitle}}</h2>
 <form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
   <div md-dialog-content>
     <md-form-field>
@@ -11,7 +10,8 @@
     </md-form-field>
 
     <md-form-field>
-      <input mdInput type="text" placeholder="Enter Label" name="label" formControlName="label" [(ngModel)]="label" required>
+      <input mdInput type="text" placeholder="Enter Label" name="label" formControlName="label" [(ngModel)]="label"
+             required>
     </md-form-field>
   </div>
   <md-dialog-actions fxLayoutAlign="end center">

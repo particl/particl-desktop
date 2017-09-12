@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FlashNotificationService } from '../../../../services/flash-notification.service';
-import { RPCService } from '../../../../core/rpc/rpc.service';
-import { MdDialogRef } from '@angular/material';
-import { Log } from 'ng2-logger';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FlashNotificationService} from '../../../../services/flash-notification.service';
+import {RPCService} from '../../../../core/rpc/rpc.service';
+import {MdDialogRef} from '@angular/material';
+import {Log} from 'ng2-logger';
 
 @Component({
   selector: 'app-new-address-modal',
@@ -14,8 +14,10 @@ export class NewAddressModalComponent implements OnInit {
   public addAddressBookForm: FormGroup;
   public address: string;
   public label: string;
+  public isEdit: boolean;
+  public modalTitle: string;
 
-  log: any = Log.create('address-book.component');
+  log: any = Log.create('app-new-address-modal');
 
   /*
    Validation state
@@ -30,6 +32,12 @@ export class NewAddressModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.isEdit) {
+      this.verifyAddress();
+      this.modalTitle = 'Edit address';
+    } else {
+      this.modalTitle = 'Add new address to addresbook';
+    }
     this.buildForm();
   }
 
@@ -85,7 +93,7 @@ export class NewAddressModalComponent implements OnInit {
             this.rpc_addAddressToBook_success(response)
           },
           error => {
-          console.log('error', error);
+            console.log('error', error);
             this.rpc_addAddressToBook_failed(error);
           });
     }
@@ -97,7 +105,10 @@ export class NewAddressModalComponent implements OnInit {
   rpc_addAddressToBook_success(json: Object): void {
     if (json['result'] === 'success') {
       this.closeModal();
-      this.flashNotificationService.open('Address successfully added to the addressbook!');
+      const mesage: string = (this.isEdit) ? 'Address successfully updated to the addressbook!'
+        : 'Address successfully added to the addressbook!';
+
+      this.flashNotificationService.open(mesage);
       // TODO: remove specialPoll! (updates the address table)
       this._rpc.specialPoll();
     }
