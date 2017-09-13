@@ -19,7 +19,8 @@ export class AddressBookComponent implements OnInit {
   label: string = '';
   address: string;
   openNewAddressModal: boolean = false;
-
+  public errorAddress: boolean = false;
+  public errorString: string = '';
   // Validation state
   private validAddress: boolean = undefined;
   private isMine: boolean = undefined;
@@ -34,6 +35,7 @@ export class AddressBookComponent implements OnInit {
   }
 
   closeNewAddress() {
+    this.errorAddress = false;
     this.openNewAddressModal = false;
   }
 
@@ -68,14 +70,17 @@ export class AddressBookComponent implements OnInit {
   addAddressToBook() {
     if (!this.validAddress) {
       // TODO: We should get rid of alerts
-      alert('Please enter a valid address!');
+      // alert('Please enter a valid address!');
+      this.errorAddress = true;
+      this.errorString = 'Please enter a valid address!';
       return;
     }
 
     if (this.isMine) {
       this.clearAndClose();
       // TODO: We should get rid of alerts
-      alert('This is your own address - can not be added to addressbook!');
+      this.errorAddress = true;
+      this.errorString = 'This is your own address - can not be added to addressbook!';
       return;
     }
 

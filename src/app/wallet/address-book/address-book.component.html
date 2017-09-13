@@ -58,3 +58,12 @@
 
   </div>
 </div>
+
+<div id="error-modal"  [ngClass]="{'hide': errorAddress == false }">
+  <div class="error-modal-container alert alert-danger">
+    <span class="close" (click)="closeNewAddress()">&times;</span>
+    <!-- <div class="alert alert-danger"> -->
+      <strong>Error! </strong>{{errorString}}.
+    <!-- </div> -->
+  </div>
+</div>
