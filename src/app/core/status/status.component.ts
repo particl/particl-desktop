@@ -75,10 +75,12 @@ export class StatusComponent implements OnInit, OnDestroy {
       case 'Unlocked':
       case 'Unlocked, staking only':
         this._rpc.call('walletlock')
-          .subscribe();
+          .subscribe(
+            success => this._rpc.stateCall('getwalletinfo'),
+            error => this.log.er('walletlock error'));
         break;
       case 'Locked':
-        this._modalsService.open('unlock');
+        this._modalsService.open('unlock', {forceOpen: true, timeout: 0});
         break;
       default:
         break;

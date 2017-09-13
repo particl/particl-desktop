@@ -70,8 +70,8 @@ export class RPCService {
     this.chainState = store.select((state: ChainState) => state);
 
     // Start polling...
-    this.registerStateCall('getinfo', 10500);
-    this.registerStateCall('getwalletinfo', 3000);
+    this.registerStateCall('getinfo', 1000);
+    this.registerStateCall('getwalletinfo', 2000);
     this.registerStateCall('getstakinginfo', 15000);
 
     if (this.isElectron) {
@@ -122,11 +122,11 @@ export class RPCService {
     }
   }
 
-  stateCall(method: string): void {
+  stateCall(method: string, withMethod?: boolean): void {
     this.call(method)
       .subscribe(
-        this.stateCallSuccess.bind(this, method),
-        this.stateCallError.bind(this, method));
+        this.stateCallSuccess.bind(this, withMethod ? method : false),
+        this.stateCallError  .bind(this, withMethod ? method : false));
   }
 
   registerStateCall(method: string, timeout?: number): void {
@@ -157,7 +157,7 @@ export class RPCService {
       }
       _call();
     } else {
-      this.chainState.subscribe(success => this.stateCall(method));
+      this.chainState.subscribe(success => this.stateCall(method, true));
     }
   }
 

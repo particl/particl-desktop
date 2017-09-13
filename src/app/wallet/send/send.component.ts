@@ -215,7 +215,7 @@ export class SendComponent implements OnInit, OnDestroy {
           state => {
             if (['Locked', 'Unlocked, staking only'].indexOf(state.chain.encryptionstatus) !== -1) {
               // unlock wallet and send transaction
-              this._modals.unlockWallet(this, this.sendTransaction, 2);
+              this._modals.open('unlock', {'instance' : this, 'callback': this.sendTransaction, 'timeout': 5, forceOpen: true});
             } else {
               // wallet already unlocked
               this.sendTransaction();
@@ -240,7 +240,7 @@ export class SendComponent implements OnInit, OnDestroy {
           state => {
             if (['Locked', 'Unlocked, staking only'].indexOf(state.chain.encryptionstatus) !== -1) {
               // unlock wallet and send transaction
-              this._modals.unlockWallet(this, this.sendTransaction, 2);
+              this._modals.open('unlock', {'instance' : this, 'callback': this.sendTransaction, 'timeout': 5, forceOpen: true});
             } else {
               // wallet already unlocked
               this.sendTransaction();

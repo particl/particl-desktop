@@ -94,26 +94,15 @@ export class PasswordComponent {
       .subscribe(
         success => {
           this._rpc.stateCall('getwalletinfo');
-          // TODO: better handling here...
-          this._rpc.chainState.skip(1).take(1).subscribe(
-            state => {
-              this.log.i('rpc_unlock: success: unlock was called!');
 
-              // hook for unlockEmitter, warn parent component that wallet is unlocked!
-              this.unlockEmitter.emit(state.chain.encryptionstatus);
+          this._rpc.chainState.skip(1).take(1)
+            .subscribe(
+              state => {
+                this.log.d('rpc_unlock: success: unlock was called!');
 
-              // send out alert box
-              // TODO: Use modals instead of alerts..
-              if (state.chain.encryptionstatus === 'Unlocked') {
-                alert('Unlock succesful!');
-              } else if (state.chain.encryptionstatus === 'Unlocked, staking only') {
-                alert('Unlock was succesful!');
-              } else if (state.chain.encryptionstatus === 'Locked') {
-                alert('Warning: unlock was unsuccesful!');
-              } else {
-                alert('Wallet not encrypted!');
-              }
-            });
+                // hook for unlockEmitter, warn parent component that wallet is unlocked!
+                this.unlockEmitter.emit(state.chain.encryptionstatus);
+              });
         },
         error => {
           this.log.i('rpc_unlock_failed: unlock failed - wrong password?', error);

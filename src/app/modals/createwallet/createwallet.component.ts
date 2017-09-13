@@ -42,7 +42,8 @@ export class CreateWalletComponent {
   errorString: string = '';
 
   constructor (
-    @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService,
+    @Inject(forwardRef(() => ModalsService))
+    private _modalsService: ModalsService,
     private _passphraseService: PassphraseService
   ) {
     this.reset();
