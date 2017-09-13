@@ -104,12 +104,12 @@ export class ModalsComponent implements DoCheck, OnInit {
     this.modal.destroy();
   }
 
-    // @HostListener('window:keydown', ['$event'])
-    // keyDownEvent(event: any) {
-    // if (this.closeOnEscape && this._modalService.enableClose
-    //       && event.key.toLowerCase() === 'escape'
-    //       && this.modal) {
-    //     this.close();
-    //   }
-    // }
+    @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+    if (this.closeOnEscape && this._modalService.enableClose
+          && event.key.toLowerCase() === 'escape'
+          && this.modal) {
+        this.close();
+      }
+    }
 }
