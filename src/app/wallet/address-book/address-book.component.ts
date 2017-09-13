@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 
 import { RPCService } from '../../core/rpc/rpc.service';
 
@@ -27,11 +27,6 @@ export class AddressBookComponent implements OnInit {
   constructor(private _rpc: RPCService) { }
 
   ngOnInit() {
-    document.onkeydown = evt => {
-      if (evt.key.toLowerCase() === 'escape') {
-        this.closeNewAddress();
-      }
-    }
   }
 
   openNewAddress() {
@@ -145,4 +140,11 @@ export class AddressBookComponent implements OnInit {
       this.label = json['account'];
     }
    }
+
+    @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+      if (event.key.toLowerCase() === 'escape') {
+        this.closeNewAddress();
+      }
+    }
 }

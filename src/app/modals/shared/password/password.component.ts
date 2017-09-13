@@ -99,6 +99,7 @@ export class PasswordComponent {
             state => {
               this.log.d('rpc_unlock: success: unlock was called!');
               // hook for unlockEmitter, warn parent component that wallet is unlocked!
+              this.unlockTimeout = 0;
               this.unlockEmitter.emit(state.chain.getwalletinfo.encryptionstatus);
             });
         },

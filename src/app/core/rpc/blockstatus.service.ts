@@ -41,7 +41,10 @@ export class BlockStatusService {
       .subscribe(
         height => {
           // TODO lastBlockTime
-          const lastBlockTime = new Date();
+          this._rpc.chainState.skip(1)
+      .subscribe(
+        state => {
+          const lastBlockTime = new Date(state.chain.mediantime);
           this.calculateSyncingDetails(lastBlockTime, height);
           this.highestBlockHeightInternal = height;
           this.status.internalBH = height;
@@ -49,6 +52,8 @@ export class BlockStatusService {
           if (this.startingBlockCount === -1) {
             this.startingBlockCount = height;
           }
+        },
+        error => console.log(`error`));
         },
         error => console.log('SyncingComponent subscription error:' + error));
 
