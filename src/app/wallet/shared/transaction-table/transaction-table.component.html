@@ -9,13 +9,15 @@
     <div class="cell-amount" *ngIf="display.amount">amount</div>
   </div>
   <ng-container *ngFor="let tx of txService.txs let i=index">
-    <md-expansion-panel  *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)">
-      <md-expansion-panel-header>
-        <md-panel-title *ngIf="display.date">
+    <md-expansion-panel *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)">
+      <md-expansion-panel-header fxLayoutWrap xLayout.lt-md="column" fxLayout.md="column" fxLayout.lg="row" fxlayout.lt-sm="column"
+                                 fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px"
+                                 layout-padding>
+        <md-panel-title fxFlex="20%" fxFlex.md="100%" *ngIf="display.date" class="history_date">
           {{ tx.getDate() }}
         </md-panel-title>
-        <md-panel-title *ngIf="display.category"  [ngSwitch]="tx.category">
-         <span *ngSwitchCase="'stake'" >
+        <md-panel-title fxFlex="15%" fxFlex.md="100%" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
+         <span *ngSwitchCase="'stake'">
           Stake
            <md-icon>add</md-icon>
         </span>
@@ -32,25 +34,28 @@
            <md-icon>arrow_back</md-icon>
         </span>
         </md-panel-title>
-        <md-panel-title *ngIf="display.senderAddress">
+        <md-panel-title fxFlex="45%" fxFlex.md="100%" *ngIf="display.senderAddress" class="history_longAddress">
           {{ tx.getAddress() }}
         </md-panel-title>
-        <md-panel-title *ngIf="display.txid">
-          <span md-line><b>TxId</b> {{ tx.txid }} </span>
+        <md-panel-title fxFlex="20%" fxFlex.md="100%" *ngIf="display.txid" class="history_txt">
+          <span md-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row"><span fxFlex="10%"><b>TxId</b></span>  <span
+            fxFlex="80%">{{ tx.txid }} </span> </span>
         </md-panel-title>
-        <md-panel-title *ngIf="display.blockIndex">
+        <md-panel-title fxFlex="20%" fxFlex.md="100%" *ngIf="display.blockIndex" class="history_blockIndex">
           <span md-line>Blockindex {{ tx.blockindex }}</span>
         </md-panel-title>
 
-        <md-panel-title *ngIf="display.confirmations">
+        <md-panel-title fxFlex="20%" fxFlex.md="100%" fxFlex.md="100%" *ngIf="display.confirmations" class="history_confirmation">
           <span md-line><b>Confirmations</b> {{ tx.confirmations }}</span>
         </md-panel-title>
-        <md-panel-title *ngIf="display.amount">
+        <md-panel-title fxFlex="20%" fxFlex.md="100%" *ngIf="display.amount" class="history_amount">
           <span md-line><b>Amount</b> {{ tx.getAmount() }} PART</span>
         </md-panel-title>
       </md-expansion-panel-header>
 
-      <div class="container">
+      <div class="container" fxLayoutWrap xLayout.lt-md="column" fxLayout.md="column"  fxLayout.lg="column" fxlayout.lt-sm="column"
+           fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px"
+           layout-padding>
         <div fxFlex="row" fxFlex>
           <div fxFlex="50%">
             <b>Status:</b>
@@ -58,7 +63,8 @@
           </div>
           <div fxFlex="50%">
             <b>Transaction ID:</b>
-            <a href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight" target="_blank">{{tx.txid}}</a>
+            <a href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight"
+               target="_blank">{{tx.txid}}</a>
           </div>
         </div>
 
@@ -85,92 +91,92 @@
         </div>
       </div>
       <!--<div *ngIf="checkExpandDetails(tx)" class="cell-expanded-row background-hack">-->
-        <!--<div class="padding-reset-hack border-reset-hack transaction-details">-->
+      <!--<div class="padding-reset-hack border-reset-hack transaction-details">-->
 
-          <!--<section class="wrap-flexbox">-->
-            <!--<div class="transaction-details-row">-->
-              <!--<div class="transaction-details-label">-->
-                <!--<b>Status:</b>-->
-              <!--</div>-->
-              <!--<div>-->
-                <!--{{tx.confirmations}} confirmations-->
-              <!--</div>-->
-              <!--<div class="transaction-details-label label-duble-size">-->
-                <!--<b>Transaction ID:</b>-->
-              <!--</div>-->
-              <!--<div>-->
-                <!--<a href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight"-->
-                   <!--target="_blank">{{tx.txid}}</a>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</section>-->
+      <!--<section class="wrap-flexbox">-->
+      <!--<div class="transaction-details-row">-->
+      <!--<div class="transaction-details-label">-->
+      <!--<b>Status:</b>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--{{tx.confirmations}} confirmations-->
+      <!--</div>-->
+      <!--<div class="transaction-details-label label-duble-size">-->
+      <!--<b>Transaction ID:</b>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--<a href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight"-->
+      <!--target="_blank">{{tx.txid}}</a>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--</section>-->
 
-          <!--<section class="wrap-flexbox">-->
-            <!--<div class="transaction-details-row">-->
-              <!--<div class="transaction-details-label">-->
-                <!--<b>Date:</b>-->
-              <!--</div>-->
-              <!--<div>-->
-                <!--{{tx.getDate()}}-->
-              <!--</div>-->
-              <!--<div class="transaction-details-label label-duble-size">-->
-                <!--<b>Transaction fee:</b>-->
-              <!--</div>-->
-              <!--<div>-->
-                <!--{{tx.fee ? tx.fee : 0}} PART-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</section>-->
+      <!--<section class="wrap-flexbox">-->
+      <!--<div class="transaction-details-row">-->
+      <!--<div class="transaction-details-label">-->
+      <!--<b>Date:</b>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--{{tx.getDate()}}-->
+      <!--</div>-->
+      <!--<div class="transaction-details-label label-duble-size">-->
+      <!--<b>Transaction fee:</b>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--{{tx.fee ? tx.fee : 0}} PART-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--</section>-->
 
-          <!--<section class="wrap-flexbox">-->
-            <!--<div class="transaction-details-row">-->
-              <!--<div class="transaction-details-label">-->
-                <!--<b>To:</b>-->
-              <!--</div>-->
-              <!--<div>-->
-                <!--{{tx.getAddress()}}-->
-              <!--</div>-->
-              <!--<div class="transaction-details-label label-duble-size">-->
-                <!--<b>Net amount:</b>-->
-              <!--</div>-->
-              <!--<div>-->
-                <!--{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</section>-->
+      <!--<section class="wrap-flexbox">-->
+      <!--<div class="transaction-details-row">-->
+      <!--<div class="transaction-details-label">-->
+      <!--<b>To:</b>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--{{tx.getAddress()}}-->
+      <!--</div>-->
+      <!--<div class="transaction-details-label label-duble-size">-->
+      <!--<b>Net amount:</b>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--</section>-->
 
-          <!--<section class="wrap-flexbox">-->
-            <!--<div class="transaction-details-row">-->
-              <!--<div class="transaction-details-label"-->
-                   <!--*ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">-->
-                <!--<b>Credit:</b>-->
-              <!--</div>-->
-              <!--<div class="transaction-details-label" *ngIf="tx.category === 'send'">-->
-                <!--<b>Debit:</b>-->
-              <!--</div>-->
-              <!--<div>-->
-                <!--{{tx.getAmount()}} PART-->
-              <!--</div>-->
-              <!--&lt;!&ndash; empty column &ndash;&gt;-->
-              <!--<div class="transaction-details-label label-duble-size"></div>-->
-              <!--<div></div>-->
-            <!--</div>-->
-          <!--</section>-->
+      <!--<section class="wrap-flexbox">-->
+      <!--<div class="transaction-details-row">-->
+      <!--<div class="transaction-details-label"-->
+      <!--*ngIf="tx.category === 'stake' || tx.category === 'receive' || tx.category === 'coinbase' || tx.category === 'orphaned_stake'">-->
+      <!--<b>Credit:</b>-->
+      <!--</div>-->
+      <!--<div class="transaction-details-label" *ngIf="tx.category === 'send'">-->
+      <!--<b>Debit:</b>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--{{tx.getAmount()}} PART-->
+      <!--</div>-->
+      <!--&lt;!&ndash; empty column &ndash;&gt;-->
+      <!--<div class="transaction-details-label label-duble-size"></div>-->
+      <!--<div></div>-->
+      <!--</div>-->
+      <!--</section>-->
 
 
-        <!--</div>-->
+      <!--</div>-->
       <!--</div>-->
     </md-expansion-panel>
   </ng-container>
 
-<pagination *ngIf="display.pagination"
-            [boundaryLinks]="true"
-            (pageChanged)="pageChanged($event)"
-            [totalItems]="txService.txCount"
-            [maxSize]="5" [rotate]="false"
-            [(ngModel)]="txService.currentPage"
-            class="pagination-sm center"
-            previousText="&lsaquo;" nextText="&rsaquo;"
-            firstText="&laquo;" lastText="&raquo;"
-            [itemsPerPage]="txService.MAX_TXS_PER_PAGE">
-</pagination>
+  <pagination *ngIf="display.pagination"
+              [boundaryLinks]="true"
+              (pageChanged)="pageChanged($event)"
+              [totalItems]="txService.txCount"
+              [maxSize]="5" [rotate]="false"
+              [(ngModel)]="txService.currentPage"
+              class="pagination-sm center"
+              previousText="&lsaquo;" nextText="&rsaquo;"
+              firstText="&laquo;" lastText="&raquo;"
+              [itemsPerPage]="txService.MAX_TXS_PER_PAGE">
+  </pagination>
