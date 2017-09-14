@@ -21,7 +21,7 @@ export class AddAddressLabelComponent implements OnInit {
     public dialogRef: MdDialogRef<AddAddressLabelComponent>,
     private formBuilder: FormBuilder,
     private rpc: RPCService,
-    private flashNotificationService : FlashNotificationService
+    private flashNotificationService: FlashNotificationService
   ) { }
 
   ngOnInit() {

@@ -18,7 +18,7 @@ export class DeleteConfirmationModalComponent implements OnInit {
     this.dialogContent = (this.dialogContent) ? this.dialogContent : 'This item';
   }
 
-  onConfirmDelete(): void{
+  onConfirmDelete(): void {
     this.onDelete.emit();
   }
 }
