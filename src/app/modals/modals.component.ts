@@ -21,6 +21,7 @@ import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
+import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 
 @Component({
   selector: 'app-modals',
@@ -30,7 +31,8 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
     CreateWalletComponent,
     DaemonComponent,
     SyncingComponent,
-    UnlockwalletComponent
+    UnlockwalletComponent,
+    EncryptwalletComponent
   ]
 })
 export class ModalsComponent implements DoCheck, OnInit {
