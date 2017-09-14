@@ -19,9 +19,9 @@ export class BalanceComponent {
   constructor(private _state: StateService) { }
 
   /**
-	  * TODO:
-	  * 1. round down balance after point (for example 0.956246232656 => 0.956)
-	  * 2. same as 1 but for large balances (500 000 -> 500K)
+    * TODO:
+    * 1. round down balance after point (for example 0.956246232656 => 0.956)
+    * 2. same as 1 but for large balances (500 000 -> 500K)
     */
   getBalanceBeforePoint(): number {
     return Math.floor(this.balance);

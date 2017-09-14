@@ -37,10 +37,6 @@ export class TransactionService {
   }
 
 
-/*
-  UTIL
-*/
-
   changePage(page: number) {
     if (page <= 0) {
       return;
@@ -55,10 +51,7 @@ export class TransactionService {
     this.txs = [];
   }
 
-  /*
-    Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
-  */
-
+  /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update() {
     this.rpc.call('listtransactions', [
       '*', +this.MAX_TXS_PER_PAGE,
