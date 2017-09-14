@@ -85,7 +85,6 @@
     "@angular/platform-browser": "^4.3.1",
     "@angular/platform-browser-dynamic": "^4.3.1",
     "@angular/router": "^4.3.1",
-    "@ngrx/store": "^4.0.3",
     "angular2-qrcode": "^2.0.1",
     "bluebird": "^3.4.7",
     "bootstrap": "^3.3.7",
