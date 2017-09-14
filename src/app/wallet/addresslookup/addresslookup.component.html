@@ -1,51 +1,42 @@
-<div class="modal fade" bsModal #staticLookup="bs-modal"
-     tabindex="-1" role="dialog" aria-labelledby="addressLookup" aria-hidden="true">
-
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title pull-left">Address lookup</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="staticLookup.hide()">
-          <span aria-hidden="true">&times;</span>
-        </button>
+<h4 md-dialog-title> Address lookup </h4>
+<div md-dialog-content>
+  <div class="containerX">
+    <form name="addressLookupfilter">
+      <div xLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
+           fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
+        <md-form-field fxFlex="50%">
+          <input mdInput type="text" name="query"
+                 placeholder="Filter by label or address..."
+                 [(ngModel)]="query">
+        </md-form-field>
+        <md-select fxFlex="50%" name="filter" [(ngModel)]="filter" class="capitalize">
+          <md-option class="capitalize" *ngFor="let addressType of addressTypes" [value]="addressType">
+            {{ addressType }}
+          </md-option>
+        </md-select>
       </div>
+    </form>
 
-      <div class="modal-body">
-
-        <div class="row">
-          <div class="col-xs-8">
-            <input type="text" class="form-control"
-              placeholder="Filter by label or address..."
-              [(ngModel)]="query">
-          </div>
-          <div class="col-xs-4">
-            <select class="form-control" [(ngModel)]="filter">
-              <option value="all" selected >All</option>
-              <option value="public">Public</option>
-              <option value="private">Private</option>
-            </select>
-          </div>
+    <md-list class="list-data">
+      <md-list-item class="list-header">
+        <div fxFlex="row" fxLayoutGap="10px" layout-padding >
+          <div fxFlex="20%"> Label</div>
+          <div fxFlex="60%">Address</div>
+          <div fxFlex="20%">Address Type</div>
         </div>
+      </md-list-item>
 
-        <table class="table table-hover" id="addresses-table">
-          <thead>
-            <tr>
-              <th>Label</th>
-              <th>Address</th>
-              <th>Address Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let address of page()"
-              (click)="selectAddressCallback(address.getAddress(), address.getLabel())">
-              <th scope="row">{{address.getLabel()}}</th>
-              <td>{{address.getAddress()}}</td>
-              <td>{{cheatPublicAddress(address.getAddress())}}</td>
-            </tr>
-          </tbody>
-        </table>
-
+      <div *ngFor="let address of page()">
+        <md-list-item class="cursor-pointer" (click)="onSelectAddress(address.getAddress(), address.getLabel())">
+          <div  fxFlex="row" fxLayoutGap="10px"
+               layout-padding>
+            <div fxFlex="20%">{{address.getLabel()}}</div>
+            <div fxFlex="60%" class="address">{{address.getAddress()}}</div>
+            <div fxFlex="20%">{{cheatPublicAddress(address.getAddress())}}</div>
+          </div>
+        </md-list-item>
+        <md-divider></md-divider>
       </div>
-    </div>
+    </md-list>
   </div>
 </div>

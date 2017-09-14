@@ -1,18 +1,6 @@
-.modal-content {
-  border-radius: 0;
-}
-
-.modal-header h4 {
-  font-size: 1.2em;
-}
-
-.small-modal .row {
-  margin-bottom: 30px;
-}
-
-td {
-  max-width: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.address {
   overflow: hidden;
+  text-overflow: ellipsis;
+  background: transparent;
+  transition: background .3s;
 }

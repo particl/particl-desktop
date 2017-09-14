@@ -1,24 +1,18 @@
-import { Component, Input, ViewChild } from '@angular/core';
-
-import { ModalDirective } from 'ngx-bootstrap/modal';
-
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Contact } from './contact.model';
 import { Log } from 'ng2-logger';
+import { AddressLookUpCopy } from '../models/address-look-up-copy';
 
 @Component({
   selector: 'app-addresslookup',
   templateUrl: './addresslookup.component.html',
   styleUrls: ['./addresslookup.component.scss']
 })
-export class AddressLookupComponent {
+export class AddressLookupComponent implements OnInit {
 
-  @ViewChild('staticLookup')
-  public staticLookup: ModalDirective;
-
-  @Input()
-  selectAddressCallback: Function;
+  @Output() selectAddressCallback = new EventEmitter();
 
   log: any = Log.create('addresslookup.component');
 
@@ -26,20 +20,26 @@ export class AddressLookupComponent {
   query: string = '';
 
   public type: string = 'send';
+  public addressTypes: Array<string> = ['all', 'public', 'private'];
 
   private _addressCount: number;
   addressStore: Contact[] = [];
 
-  constructor(private _rpc: RPCService) { }
+  constructor(private _rpc: RPCService) {
+  }
+
+  ngOnInit() {
+    this.show();
+  }
 
   /** Returns a filtered addressStore (query and filter) */
-  page () {
+  page() {
     const query: string = this.query;
     return this.addressStore.filter(el => (
-        (  el.getLabel()  .toLowerCase().indexOf(query.toLowerCase()) !== -1
+        (  el.getLabel().toLowerCase().indexOf(query.toLowerCase()) !== -1
         || el.getAddress().toLowerCase().indexOf(query.toLowerCase()) !== -1)
         && ((this.filter === this.cheatPublicAddress(el.getAddress()))
-         || (this.filter === 'all'))
+        || (this.filter === 'all'))
       )
     )
   }
@@ -49,14 +49,8 @@ export class AddressLookupComponent {
     return address.length > 35 ? 'private' : 'public';
   }
 
-  show(type: string) {
-    this.type = type;
+  show() {
     this.rpc_update();
-    this.staticLookup.show();
-  }
-
-  hide() {
-    this.staticLookup.hide();
   }
 
   rpc_update() {
@@ -65,7 +59,7 @@ export class AddressLookupComponent {
         (response: any) => {
           let typeInt: string;
           if (this.type === 'send') {
-            typeInt = '2'
+            typeInt = '2';
             this._addressCount = response.num_send;
           } else {
             this.filter = 'private';
@@ -90,6 +84,11 @@ export class AddressLookupComponent {
 
         },
         (error: any) => this.log.er('rpc_update: filteraddresses Failed!'));
+  }
+
+  onSelectAddress(address: string, label: string) {
+    const emitData: AddressLookUpCopy = {address: address, label: label};
+    this.selectAddressCallback.emit(emitData);
   }
 
 }
