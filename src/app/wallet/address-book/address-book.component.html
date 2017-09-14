@@ -53,17 +53,24 @@
           placeholder="label">
       </div>
     </div>
+      <div *ngIf="(validAddress == false || isMine == true)"
+            class="alert alert-danger">
+            <div [hidden]="validAddress != false">
+              Please enter a valid address!
+            </div>
+            <div [hidden]="isMine != true">
+              This is your own address - can not be added to addressbook!
+            </div>
+      </div>
 
     <button class="control pull-right" (click)="addAddressToBook()">OK</button>
 
   </div>
 </div>
 
-<div id="error-modal"  [ngClass]="{'hide': errorAddress == false }">
+<!-- <div id="error-modal"  [ngClass]="{'hide': errorAddress == false }">
   <div class="error-modal-container alert alert-danger">
     <span class="close" (click)="closeNewAddress()">&times;</span>
-    <!-- <div class="alert alert-danger"> -->
       <strong>Error! </strong>{{errorString}}.
-    <!-- </div> -->
   </div>
-</div>
+</div> -->

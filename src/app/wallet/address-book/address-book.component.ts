@@ -35,7 +35,6 @@ export class AddressBookComponent implements OnInit {
   }
 
   closeNewAddress() {
-    this.errorAddress = false;
     this.openNewAddressModal = false;
   }
 
@@ -68,21 +67,21 @@ export class AddressBookComponent implements OnInit {
     * has a label (in the textbox) and is not one of our own addresses.
     */
   addAddressToBook() {
-    if (!this.validAddress) {
-      // TODO: We should get rid of alerts
-      // alert('Please enter a valid address!');
-      this.errorAddress = true;
-      this.errorString = 'Please enter a valid address!';
-      return;
-    }
+    // if (!this.validAddress) {
+    //   // TODO: We should get rid of alerts
+    //   // alert('Please enter a valid address!');
+    //   this.errorAddress = true;
+    //   this.errorString = 'Please enter a valid address!';
+    //   return;
+    // }
 
-    if (this.isMine) {
-      this.clearAndClose();
-      // TODO: We should get rid of alerts
-      this.errorAddress = true;
-      this.errorString = 'This is your own address - can not be added to addressbook!';
-      return;
-    }
+    // if (this.isMine) {
+    //   this.clearAndClose();
+    //   // TODO: We should get rid of alerts
+    //   this.errorAddress = true;
+    //   this.errorString = 'This is your own address - can not be added to addressbook!';
+    //   return;
+    // }
 
     if (this.label) {
       this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
