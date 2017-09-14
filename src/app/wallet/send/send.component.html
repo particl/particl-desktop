@@ -29,7 +29,7 @@
     </app-header>
 
     <div class="container-fluid">
-      <div *ngIf="type === 'sendPayment' || type ===  'balanceTransfer'">
+      <div>
         <form class="example-form" name="walletSendForm">
           <md-list class="md-list-radio">
             <md-list-item>
@@ -102,7 +102,7 @@
                          [(ngModel)]="send.toLabel">
                 </md-form-field>
 
-                <div fxFlex fxLayoutAlign="start center">
+                <div fxFlex fxLayoutAlign="start center" class="cursor-pointer">
                   <md-icon (click)="openLookup()">supervisor_account</md-icon>
                   <md-icon class="cursor-pointer" mdTooltip="Copy">content_copy</md-icon>
                   <md-icon (click)="clearReceiver()" color="warn">cancel</md-icon>
@@ -178,7 +178,7 @@
           <div fxLayoutAlign="end center">
             <button md-raised-button (click)="clear()">Clear all</button>
             <button md-raised-button color="primary" class="validate"
-                    (click)="openValidate()"
+                    (click)="onSubmit()"
                     [disabled]="!checkAddress() || !checkAmount()">
               Make payment
             </button>
