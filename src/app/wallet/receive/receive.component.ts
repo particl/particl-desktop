@@ -198,6 +198,10 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
+
+    if (count === 0) {
+      return;
+    }
     // this.rpc.oldCall(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
     this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
       .subscribe(

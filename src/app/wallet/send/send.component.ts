@@ -3,7 +3,6 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { SendService } from './send.service';
-import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
 import { RPCService } from '../../core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.service';
@@ -34,8 +33,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   // TODO: Create proper Interface / type
   send: any = {
-    input: 'public',
-    output: 'public',
+    input: 'balance',
+    output: 'balance',
     toAddress: '',
     toLabel: '',
     validAddress: undefined,
@@ -57,7 +56,6 @@ export class SendComponent implements OnInit, OnDestroy {
 
   constructor(
     private sendService: SendService,
-    private balanceService: BalanceService,
     private _rpc: RPCService,
     private _modals: ModalsService
   ) {
@@ -65,16 +63,11 @@ export class SendComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._sub = this.balanceService.getBalances()
-      .subscribe(
-        balances => {
-          this._balance = balances;
-        },
-        error => this.log.er('balanceService subscription error:' + error));
+
   }
 
   ngOnDestroy() {
-    this._sub.unsubscribe();
+
   }
 
   /*
@@ -90,7 +83,7 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
   getBalance(account: string) {
-    return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
+    return this._rpc.state.get(account);
   }
 
   getAddress(): string {
@@ -192,7 +185,6 @@ export class SendComponent implements OnInit, OnDestroy {
   pay() {
     this.closeValidate();
 
-
     if (this.send.input === '' ) {
       alert('You need to select an input type (public, blind or anon)!');
       return;
@@ -205,22 +197,10 @@ export class SendComponent implements OnInit, OnDestroy {
       this.send.output = this.send.input;
 
       // Check if stealth address if output is private
-      if (this.send.output === 'private' && this.send.toAddress.length < 35) {
+      if (this.send.output === 'anon_balance' && this.send.toAddress.length < 35) {
         alert('Stealth address required for private transactions!');
         return;
       }
-
-      this._rpc.chainState.take(1)
-        .subscribe(
-          state => {
-            if (['Locked', 'Unlocked, staking only'].indexOf(state.chain.encryptionstatus) !== -1) {
-              // unlock wallet and send transaction
-              this._modals.unlockWallet(this, this.sendTransaction, 2);
-            } else {
-              // wallet already unlocked
-              this.sendTransaction();
-            }
-          });
 
     // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
@@ -235,54 +215,39 @@ export class SendComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this._rpc.chainState.take(1)
-        .subscribe(
-          state => {
-            if (['Locked', 'Unlocked, staking only'].indexOf(state.chain.encryptionstatus) !== -1) {
-              // unlock wallet and send transaction
-              this._modals.unlockWallet(this, this.sendTransaction, 2);
-            } else {
-              // wallet already unlocked
-              this.sendTransaction();
-            }
-          });
+    }
 
+    if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) !== -1) {
+      // unlock wallet and send transaction
+      this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
+    } else {
+      // wallet already unlocked
+      this.sendTransaction();
     }
   }
 
-  sendTransaction(): void {
+  private sendTransaction(): void {
 
-    // edit label of address
-    this.addLabelToAddress();
+    if (this.type === 'sendPayment') {
+      // edit label of address
+      this.addLabelToAddress();
 
-    this.sendService.sendTransaction(
-      this.send.input, this.send.output, this.send.toAddress,
-      this.send.amount, this.send.note, false, this.send.note,
-      this.send.privacy, 1);
+      this.sendService.sendTransaction(
+        this.send.input, this.send.output, this.send.toAddress,
+        this.send.amount, this.send.note, this.send.note,
+        this.send.privacy, 1);
+    } else {
 
-    this.clear();
-  }
+      this.sendService.transferBalance(
+        this.send.input, this.send.output, this.send.toAddress,
+        this.send.amount, this.send.privacy, 1);
 
-  transferBalance(): void {
-
-    const input = this.send.input;
-    const output = this.send.output;
-    const address = this.send.toAddress;
-    const amount = this.send.amount;
-    const ringsize = this.send.privacy;
-    const numsigs = 1;
-
-    this.sendService.transferBalance(
-      this.send.input, this.send.output, this.send.toAddress,
-      this.send.amount, this.send.privacy, 1);
+    }
 
     this.clear();
   }
 
-  /*
-    AddressLookup Modal + set details
-  */
-
+  // AddressLookup Modal + set details
   openLookup(type: string) {
     this.addressLookup.show(type);
   }
@@ -312,25 +277,10 @@ export class SendComponent implements OnInit, OnDestroy {
     const label = this.send.toLabel;
     const addr = this.send.toAddress;
 
-    // this._rpc.oldCall(this, 'manageaddressbook', ['newsend', addr, label],
-    //   this.rpc_addLabel_success,
-    //   this.rpc_addLabel_failed
-    // );
     this._rpc.call('manageaddressbook', ['newsend', addr, label])
-      .subscribe(response => {
-        this.rpc_addLabel_success(response)
-      },
-      error => {
-        this.rpc_addLabel_failed(error);
-      });
-  }
-
-  rpc_addLabel_success(json: Object) {
-    this.log.er('rpc_addLabel_success: successfully added label to address.');
-  }
-
-  rpc_addLabel_failed(json: Object) {
-    this.log.er('rpc_addLabel_failed: failed to add label to address.');
+      .subscribe(
+        response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
+        error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
   }
 
 }

@@ -12,6 +12,7 @@ import { WalletModule } from './wallet/wallet.module';
 import { RpcModule, BlockStatusService } from './core/rpc/rpc.module';
 import { ModalsModule } from './modals/modals.module';
 
+import { StateService } from './core/state/state.service';
 import { WindowService } from './core/window.service';
 
 import { AppComponent } from './app.component';
@@ -46,7 +47,8 @@ const routes: Routes = [
   ],
   providers: [
     WindowService,
-    BlockStatusService
+    BlockStatusService,
+    StateService
   ],
   bootstrap: [ AppComponent ]
 })

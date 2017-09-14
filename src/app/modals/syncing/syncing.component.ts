@@ -5,12 +5,16 @@ import { ModalsService } from '../modals.service';
 import { BlockStatusService } from '../../core/rpc/blockstatus.service';
 import { RPCService } from '../../core/rpc/rpc.service';
 
+import { Log } from 'ng2-logger';
+
 @Component({
   selector: 'app-syncing',
   templateUrl: './syncing.component.html',
   styleUrls: ['./syncing.component.scss']
 })
 export class SyncingComponent {
+
+  log: any = Log.create('alertbox.component');
 
   remainder: any;
   lastBlockTime: Date;
@@ -39,7 +43,12 @@ export class SyncingComponent {
       this.manuallyOpened = status.manuallyOpened;
       this.syncPercentage = status.syncPercentage;
       if (status.syncPercentage === 100 && !this.manuallyOpened) {
-        document.getElementById('close').click();
+
+        // BUG: this constructor is on a loop when we're syncing?
+        // run particld with -reindex flag to trigger the bug
+        this.log.d(`syncPercentage is 100%, closing automatically!`);
+
+        // document.getElementById('close').click();
       }
     });
   }

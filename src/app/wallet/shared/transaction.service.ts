@@ -28,19 +28,14 @@ export class TransactionService {
 
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
-    this.rpc.chainState.subscribe(state => {
-      if (state.chain) {
-        this.txCount = state.chain.txcount;
+    this.rpc.state.observe('txcount')
+      .subscribe(txcount => {
+        this.txCount = txcount;
         this.currentPage = 0;
         this.rpc_update();
-      }
-    })
+      });
   }
 
-
-/*
-  UTIL
-*/
 
   changePage(page: number) {
     if (page <= 0) {
@@ -56,10 +51,7 @@ export class TransactionService {
     this.txs = [];
   }
 
-  /*
-    Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array.
-  */
-
+  /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update() {
     this.rpc.call('listtransactions', [
       '*', +this.MAX_TXS_PER_PAGE,
