@@ -95,8 +95,8 @@ function createWindow () {
     height: 720,
     icon: trayImage,
     webPreferences: {
-      //sandbox: true,
-      //nodeIntegration: false,
+      sandbox: true,
+      nodeIntegration: false,
       preload: 'preload.js',
     },
   })
