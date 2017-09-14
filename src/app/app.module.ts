@@ -9,7 +9,7 @@ import { BsDropdownModule, CollapseModule, ModalModule, ModalDirective, Paginati
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
 import { WalletModule } from './wallet/wallet.module';
-import { RpcModule, BlockStatusService } from './core/rpc/rpc.module';
+import { RpcModule } from './core/rpc/rpc.module';
 import { ModalsModule } from './modals/modals.module';
 
 import { StateService } from './core/state/state.service';
@@ -46,9 +46,7 @@ const routes: Routes = [
     ModalsModule
   ],
   providers: [
-    WindowService,
-    BlockStatusService,
-    StateService
+    WindowService
   ],
   bootstrap: [ AppComponent ]
 })

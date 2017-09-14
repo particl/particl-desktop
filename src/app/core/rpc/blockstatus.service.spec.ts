@@ -3,8 +3,8 @@ import { TestBed, inject } from '@angular/core/testing';
 import { RpcModule } from './rpc.module';
 import { SharedModule } from '../../shared/shared.module';
 
-import { ModalsService } from '../../modals/modals.service';
 import { BlockStatusService } from './blockstatus.service';
+import { ModalsService } from '../../modals/modals.service';
 
 describe('BlockStatusService', () => {
   beforeEach(() => {
@@ -14,8 +14,7 @@ describe('BlockStatusService', () => {
         RpcModule.forRoot()
       ],
       providers: [
-        ModalsService,
-        BlockStatusService
+        ModalsService
       ]
     });
   });
