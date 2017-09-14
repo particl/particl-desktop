@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import { Log } from 'ng2-logger';
 
@@ -15,7 +15,7 @@ import { AddressLookupComponent } from '../addresslookup/addresslookup.component
   // TODO merge / globalize styles
   styleUrls: ['./send.component.scss', '../../settings/settings.component.scss']
 })
-export class SendComponent implements OnInit, OnDestroy {
+export class SendComponent {
 
   /*
     General
@@ -52,8 +52,6 @@ export class SendComponent implements OnInit, OnDestroy {
   private _sub: Subscription;
   private _balance: any;
 
-
-
   constructor(
     private sendService: SendService,
     private _rpc: RPCService,
@@ -61,31 +59,27 @@ export class SendComponent implements OnInit, OnDestroy {
   ) {
   }
 
-
-  ngOnInit() {
-
-  }
-
-  ngOnDestroy() {
-
-  }
-
-  /*
-    UI logic
-  */
-
-  sendTab(type: string) {
+  /** Select tab */
+  selectTab(type: string) {
     this.type = type;
+
+    if (this.type === 'balanceTransfer') {
+      this.send.toAddress = '';
+      this.verifyAddress();
+    }
   }
 
+  /** Toggle advanced controls and settings */
   toggleAdvanced() {
     this.advanced = !this.advanced;
   }
 
+  /** Get current account balance (Public / Blind / Anon) */
   getBalance(account: string) {
     return this._rpc.state.get(account);
   }
 
+  /** Get the send address */
   getAddress(): string {
     if (this.type === 'sendPayment') {
       return this.send.toAddress;
@@ -152,7 +146,6 @@ export class SendComponent implements OnInit, OnDestroy {
         this.log.er('errr');
       });
   }
-
 
   /** Clear the send object. */
   clear() {
