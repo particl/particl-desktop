@@ -46,7 +46,7 @@ describe('SendComponent', () => {
     });
   */
   it('should send tab', () => {
-    component.sendTab('sendPayment');
+    component.selectTab('sendPayment');
     expect(component.type).toBe('sendPayment');
   });
 
