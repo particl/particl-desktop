@@ -10,7 +10,7 @@ describe('PeerService', () => {
       imports: [
         SharedModule,
         RpcModule.forRoot()
-      ],
+      ]
     });
   });
 

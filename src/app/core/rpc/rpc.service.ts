@@ -64,9 +64,10 @@ export class RPCService {
     this.isElectron = this.electronService.isElectronApp;
 
     // Start polling...
+    this.registerStateCall('getinfo', 1000);
+    this.registerStateCall('getblockchaininfo', 2000);
     this.registerStateCall('getwalletinfo', 2000);
     this.registerStateCall('getstakinginfo', 15000);
-    this.registerStateCall('getinfo', 1000);
 
     if (this.isElectron) {
 

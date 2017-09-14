@@ -13,7 +13,7 @@ export class BalanceComponent {
   private _sub: Subscription;
 
   get balance() {
-    return this._state.get(this.type);
+    return this._state.get(this.type) || 0;
   }
 
   constructor(private _state: StateService) { }

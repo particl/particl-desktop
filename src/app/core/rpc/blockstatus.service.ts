@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
-import { RPCService } from './rpc.service';
+import { StateService } from '../state/state.service';
 import { PeerService } from './peer.service';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class BlockStatusService {
 
   constructor(
     private _peerService: PeerService,
-    private _rpc: RPCService
+    private _state: StateService
   ) {
     /*
     * Get internal block height and calculate syncing details (ETA)
@@ -40,8 +40,7 @@ export class BlockStatusService {
     this._subBlockInternal = this._peerService.getBlockCount()
       .subscribe(
         height => {
-          // TODO lastBlockTime
-          const lastBlockTime = new Date();
+          const lastBlockTime = new Date(this._state.get('mediantime'));
           this.calculateSyncingDetails(lastBlockTime, height);
           this.highestBlockHeightInternal = height;
           this.status.internalBH = height;

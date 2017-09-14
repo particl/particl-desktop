@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
@@ -153,5 +153,11 @@ export class AddressTableComponent implements OnInit {
   showAddress(address: string) {
     return  address.match(/.{1,4}/g);
   }
+  @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+      if (event.key.toLowerCase() === 'escape') {
+        this.openQrModal = false;
+      }
+    }
 }
 

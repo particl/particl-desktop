@@ -63,12 +63,6 @@ export class ReceiveComponent implements OnInit {
     // start rpc
     this.rpc_update();
     this.buildForm();
-
-    document.onkeydown = evt => {
-      if (evt.key.toLowerCase() === 'escape') {
-        this.closeNewAddress();
-      }
-    }
   }
 
   buildForm(): void {
@@ -395,5 +389,13 @@ export class ReceiveComponent implements OnInit {
   closeNewAddress(): void {
     this.openNewAddressModal = false;
   }
+
+    // capture the enter button
+  @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+      if (event.key.toLowerCase() === 'escape') {
+        this.openNewAddressModal = false;
+      }
+    }
 
 }
