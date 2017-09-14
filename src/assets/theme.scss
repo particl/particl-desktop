@@ -190,6 +190,16 @@ input[type="text"] {
   padding: 20px;
 }
 
+
+/*14/09/17*/
+//.history_date{flex: 0 0 10% !important;}
+.history_longAddress{overflow: hidden; text-overflow: ellipsis;}
+.history_txt{overflow: hidden; text-overflow: ellipsis;}
+//.history_blockIndex{flex: 0 0 8%;}
+//.history_confirmation{flex: 0 0 8%;}
+//.history_amount{flex: 0 0 18%;}
+.mat-content{max-width: 100%;}
+
 @media (max-width: 1280px) {
   .qrcode {
     text-align: center;
