@@ -10,9 +10,6 @@ import { ModalsService } from '../../modals/modals.service';
 import { StateService } from '../state/state.service';
 import { RPXService } from './rpx.class';
 
-import { ChainState } from './chain-state/chain-state.reducers';
-import * as chainState from './chain-state/chain-state.actions';
-
 
 const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
