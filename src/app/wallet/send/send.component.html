@@ -2,12 +2,12 @@
   <div class="container-fluid header">
     <ul class="header-nav">
       <li [class.active]="type === 'sendPayment'">
-        <a href="javascript:void(0)" (click)="sendTab('sendPayment')">
+        <a href="javascript:void(0)" (click)="selectTab('sendPayment')">
           Send payment
         </a>
       </li>
       <li [class.active]="type === 'balanceTransfer'">
-        <a href="javascript:void(0)" (click)="sendTab('balanceTransfer')">
+        <a href="javascript:void(0)" (click)="selectTab('balanceTransfer')">
           Balance transfer
         </a>
       </li>
