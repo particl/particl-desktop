@@ -408,7 +408,7 @@ input.mat-input-element {
 }
 
 .mat-list .mat-list-item, .mat-nav-list .mat-list-item, .mat-selection-list .mat-list-item {
-  font-size: 16px
+  font-size: 14px
 }
 
 .mat-list .mat-list-item .mat-line, .mat-nav-list .mat-list-item .mat-line, .mat-selection-list .mat-list-item .mat-line {
