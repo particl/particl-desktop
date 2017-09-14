@@ -53,13 +53,16 @@
           placeholder="label">
       </div>
     </div>
-      <div *ngIf="(validAddress == false || isMine == true)"
+      <div *ngIf="(validAddress == false || isMine == true || isLock)"
             class="alert alert-danger">
             <div [hidden]="validAddress != false">
               Please enter a valid address!
             </div>
             <div [hidden]="isMine != true">
               This is your own address - can not be added to addressbook!
+            </div>
+            <div [hidden]="!isLock">
+               Wallet is locked you aren't able to edit a label !
             </div>
       </div>
 
