@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Observer, Subscription } from 'rxjs'; // use this for testing atm
 
 import { RPCService } from './rpc.service';
+import { StateService } from '../state/state.service';
 
 @Injectable()
 export class PeerService {
@@ -16,7 +17,8 @@ export class PeerService {
   private subs: Subscription;
 
   constructor(
-    public rpc: RPCService) {
+    public rpc: RPCService,
+    state: StateService) {
 
     this.rpc.registerStateCall('getpeerinfo');
 
@@ -36,20 +38,21 @@ export class PeerService {
     this._highestBlockHeightNetwork = Observable.create(
       observer => {
         this._observerHighestBlockHeightNetwork = observer
-
-        // subscribe to chain state
-        this.rpc.chainState.subscribe(
-          state => {
-            if (state.chain) {
-              this._observerPeerList.next(state.chain.getpeerinfo);
-              this._observerHighestBlockHeightInternal.next(state.chain.blocks);
-              this.setPeerList(state.chain.getpeerinfo);
-            }
-          });
       }
     ).publishReplay(1).refCount();
 
     this._highestBlockHeightNetwork.subscribe().unsubscribe();
+
+    // subscribe to chain state
+    this.rpc.state.observe('getpeerinfo')
+      .subscribe(peerinfo => {
+        this._observerPeerList.next(peerinfo);
+        this.setPeerList(peerinfo);
+      });
+
+    this.rpc.state.observe('blocks')
+      .subscribe(blocks => this._observerHighestBlockHeightInternal.next(blocks));
+
   }
 
   private setPeerList(peerList: Array<Object>) {

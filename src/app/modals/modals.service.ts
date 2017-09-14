@@ -105,8 +105,4 @@ export class ModalsService {
         this.open('syncing');
     }
   }
-
-  unlockWallet(i: Injectable, cb: Function, timeout: number) {
-    this.open('unlock', {'instance' : i, 'callback': cb, 'timeout': timeout});
-  }
 }
