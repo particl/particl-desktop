@@ -27,6 +27,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddAddressLabelComponent } from './receive/modals/add-address-label/add-address-label.component';
 import { NewAddressModalComponent } from './address-book/modal/new-address-modal/new-address-modal.component';
 import { QrCodeModalComponent } from './shared/qr-code-modal/qr-code-modal.component';
+import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
 
 const routes: Routes = [
   {
@@ -62,7 +63,8 @@ const routes: Routes = [
     AddressLookupComponent,
     AddAddressLabelComponent,
     NewAddressModalComponent,
-    QrCodeModalComponent
+    QrCodeModalComponent,
+    SendConfirmationModalComponent
   ],
   exports: [
     TransactionsTableComponent,
@@ -72,7 +74,9 @@ const routes: Routes = [
   entryComponents: [
     AddAddressLabelComponent,
     NewAddressModalComponent,
-    QrCodeModalComponent
+    QrCodeModalComponent,
+    AddressLookupComponent,
+    SendConfirmationModalComponent
   ],
   providers: []
 })
