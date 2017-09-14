@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { RPCService } from '../../core/rpc/rpc.module';
 
 import { Log } from 'ng2-logger'
+import {FlashNotificationService} from "../../services/flash-notification.service";
 
 
 @Injectable()
@@ -23,7 +24,8 @@ export class SendService {
 
   */
 
-  constructor(public _rpc: RPCService) {
+  constructor(public _rpc: RPCService,
+              private flashNotification: FlashNotificationService) {
     // this._rpc.oldCall(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
     this._rpc.call('liststealthaddresses', null)
       .subscribe(response => {
@@ -114,7 +116,7 @@ export class SendService {
 
   rpc_send_success(json: any) {
     this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
-    alert(`Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}`);
+    this.flashNotification.open(`Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}`);
   }
 
   rpc_send_failed(json: any) {
