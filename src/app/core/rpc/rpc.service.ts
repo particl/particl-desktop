@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ElectronService } from 'ngx-electron';
 import { Subject } from 'rxjs/Subject';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -15,6 +14,13 @@ const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
 
 const HOSTNAME = 'localhost';
+
+
+declare global {
+  interface Window {
+    electron: boolean;
+  }
+}
 
 /**
  * The RPC service that maintains a single connection to the particld daemon.
@@ -54,11 +60,10 @@ export class RPCService {
 
   constructor(
     private http: Http,
-    public electronService: ElectronService,
     private rpx: RPXService,
     public state: StateService
   ) {
-    this.isElectron = this.electronService.isElectronApp;
+    this.isElectron = window.electron;
 
     // Start polling...
     this.registerStateCall('getinfo', 1000);
@@ -160,8 +165,11 @@ export class RPCService {
       obj[success] = method;
       success = obj;
     }
+    console.log(success);
 
-    Object.keys(success).forEach(key => this.state.set(key, success[key]));
+    if (success) {
+      Object.keys(success).forEach(key => this.state.set(key, success[key]));
+    }
   }
 
   private stateCallError(error: Object, method?: string) {

@@ -95,11 +95,12 @@ function createWindow () {
     height: 720,
     icon: trayImage,
     webPreferences: {
-      sandbox: true,
       nodeIntegration: false,
-      preload: 'preload.js',
+      sandbox: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     },
-  })
+  });
 
   // handle external URIs
   mainWindow.webContents.on('new-window', (event, url) => {

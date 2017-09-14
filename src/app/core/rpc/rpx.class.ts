@@ -1,21 +1,31 @@
 import { Injectable, NgZone } from '@angular/core';
-import { ElectronService } from 'ngx-electron';
 import { Observable } from 'rxjs/Observable';
 
 // RxIPC related stuffs
+
+declare global {
+  interface Window {
+    electron: boolean;
+    ipcSend:(channel: string, arguments?: {}) => void;
+    ipcOn:(channel: string, listener: Function) => void;
+    ipcOnce:(channel: string, listener: Function) => void;
+    ipcRemove:(channel: string, listener: Function) => void;
+  }
+}
 
 @Injectable()
 export class RPXService {
   private listenerCount: number = 0;
   listeners: { [id: string]: boolean } = {};
+
   constructor(
-      public electronService: ElectronService,
       public zone: NgZone
   ) {
   }
+
   rpxCall() {
    // Respond to checks if a listener is registered
-    this.electronService.ipcRenderer.on('rx-ipc-check-listener', (event, channel) => {
+    window.ipcOn('rx-ipc-check-listener', (event, channel) => {
       const replyChannel = 'rx-ipc-check-reply:' + channel;
       if (this.listeners[channel]) {
         event.sender.send(replyChannel, true);
@@ -27,14 +37,14 @@ export class RPXService {
 
   checkRemoteListener(channel: string) {
     return new Promise((resolve, reject) => {
-      this.electronService.ipcRenderer.once('rx-ipc-check-reply:' + channel, (event, result) => {
+      window.ipcOnce('rx-ipc-check-reply:' + channel, (event, result) => {
         if (result) {
           resolve(result);
         } else {
           reject(false);
         }
       });
-      this.electronService.ipcRenderer.send('rx-ipc-check-listener', channel);
+      window.ipcSend('rx-ipc-check-listener', channel);
     });
   }
 
@@ -42,18 +52,19 @@ export class RPXService {
     const self = this;
     const subChannel = channel + ':' + this.listenerCount;
     this.listenerCount++;
-    const target = this.electronService.ipcRenderer;
-    target.send(channel, subChannel, ...args);
+
+    window.ipcSend(channel, subChannel, ...args);
     return new Observable((observer) => {
       this.checkRemoteListener(channel)
-        .catch(() => {
-          observer.error('Invalid channel: ' + channel);
-        });
-      this.electronService.ipcRenderer
-        .on(subChannel, function listener(event: Event, type: string, data: Object) {
+        .catch(() => observer.error('Invalid channel: ' + channel));
+
+      window.ipcOn(subChannel, function listener(event: Event, type: string, data: Object) {
         self.zone.run(() => {
+
+          console.log('data', data);
           switch (type) {
             case 'n':
+            console.log('data', data);
               observer.next(data);
               break;
             case 'e':
@@ -65,7 +76,7 @@ export class RPXService {
         })
         // Cleanup
         return () => {
-          self.electronService.ipcRenderer.removeListener(subChannel, listener);
+          window.ipcRemove(subChannel, listener);
         };
       });
     });

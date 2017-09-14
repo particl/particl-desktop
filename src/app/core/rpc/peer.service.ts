@@ -55,7 +55,7 @@ export class PeerService {
     let highestBlockHeightNetwork = -1;
 
     peerList.forEach(peer => {
-      const networkHeightByPeer= (<any>peer).currentheight;
+      const networkHeightByPeer = (<any>peer).currentheight;
 
       if (highestBlockHeightNetwork < networkHeightByPeer || highestBlockHeightNetwork === -1) {
         highestBlockHeightNetwork = networkHeightByPeer;
