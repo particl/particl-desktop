@@ -1,6 +1,7 @@
 "use strict";
 
 const got = require('got'),
+  _ = require('lodash'),
   fs = require('fs'),
   crypto = require('crypto'),
   path = require('path'),
@@ -8,12 +9,6 @@ const got = require('got'),
   mkdirp = require('mkdirp'),
   unzip = require('node-unzip-2'),
   spawn = require('buffered-spawn');
-
-const _ = {
-  isEmpty: require('lodash.isempty'),
-  get: require('lodash.get'),
-  values: require('lodash.values')
-};
 
 
 function copyFile(src, dst) {
@@ -80,7 +75,6 @@ class Manager {
     return this._config;
   }
 
-
   /**
    * Set the logger.
    * @param {Object} val Should have same methods as global `console` object.
@@ -95,7 +89,6 @@ class Manager {
       ;
     }
   }
-
 
   /**
    * Get info on available clients.
@@ -123,7 +116,6 @@ class Manager {
     return this._clients;
   }
 
-
   /**
    * Initialize the manager.
    *
@@ -142,7 +134,6 @@ class Manager {
 
     return this._scan(options);
   }
-
 
   /**
    * Download a particular client.
@@ -281,9 +272,9 @@ class Manager {
       if (algorithm) {
         return checksum(dInfo.downloadFile, algorithm)
           .then((hash) => {
-              this._logger.error(algorithm)
-                  this._logger.error(hash)
-                      this._logger.error(expectedHash)
+              this._logger.error(algorithm);
+              this._logger.error(hash);
+              this._logger.error(expectedHash);
             if (expectedHash !== hash) {
               throw new Error(`Hash mismatch: ${expectedHash}`);
             }
@@ -309,7 +300,6 @@ class Manager {
 
       if (options.unpackHandler) {
         this._logger.debug(`Invoking custom unpack handler ...`);
-
         promise = options.unpackHandler(downloadFile, unpackFolder);
       } else {
         switch (downloadCfg.type) {
@@ -348,7 +338,6 @@ class Manager {
         // need to rename binary?
         if (downloadCfg.bin) {
           let realPath = path.join(unpackFolder, downloadCfg.bin);
-
           try {
             fs.accessSync(linkPath, fs.R_OK);
             fs.unlinkSync(linkPath);
@@ -356,8 +345,7 @@ class Manager {
             if (e.code !== 'ENOENT')
               this._logger.warn(e);
           }
-
-          return copyFile(realPath, linkPath).then(() => linkPath)
+          return copyFile(realPath, linkPath).then(() => linkPath);
         } else {
           return Promise.resolve(linkPath);
         }
@@ -389,8 +377,6 @@ class Manager {
     });
   }
 
-
-
   _resolvePlatform () {
     this._logger.info('Resolving platform...');
 
@@ -411,7 +397,6 @@ class Manager {
 
     return Promise.resolve();
   }
-
 
   /**
    * Scan the local machine for client software, as defined in the configuration.
@@ -446,7 +431,6 @@ class Manager {
     });
   }
 
-
   /**
    * Calculate possible clients for this machine by searching for binaries.
    * @return {Promise}
@@ -474,7 +458,6 @@ class Manager {
       return possibleClients;
     });
   }
-
 
   /**
    * This will modify the passed-in `client` item according to check results.
@@ -589,7 +572,6 @@ class Manager {
     });
   }
 
-
   /**
    * Run sanity check for client.
 
@@ -641,7 +623,6 @@ class Manager {
     });
   }
 
-
   /**
    * @return {Promise} Resolves to { stdout, stderr } object
    */
@@ -653,6 +634,5 @@ class Manager {
     return spawn(cmd, args);
   }
 }
-
 
 exports.Manager = Manager;
