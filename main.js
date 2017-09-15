@@ -44,10 +44,11 @@ function createWindow () {
     // default rpc bind address
     : 'localhost';
 
+
+  rpc.init(options);
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
     daemon = child ? child : undefined;
-    rpc.init(options);
   }).catch(error => {
     console.error(error);
   });
@@ -211,8 +212,6 @@ function parseArguments() {
     } else if (arg[1] === '-'){
       // double dash command
       options[arg.substr(2)] = true;
-      // remove from parameters that are going to be passed to the daemon
-      process.argv.splice(index, 1);
     } else if (arg[0] === '-') {
       // simple dash command
       options[arg.substr(1)] = true;

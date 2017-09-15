@@ -6,10 +6,15 @@ import { Observable } from 'rxjs/Observable';
 declare global {
   interface Window {
     electron: boolean;
-    ipcSend:(channel: string, arguments?: {}) => void;
-    ipcOn:(channel: string, listener: Function) => void;
-    ipcOnce:(channel: string, listener: Function) => void;
-    ipcRemove:(channel: string, listener: Function) => void;
+    ipc: {
+      on: (channel: string, listener: Function) => void;
+      once: (channel: string, listener: Function) => void;
+      send: (channel: string, arguments?: {}) => void;
+      sendSync: (channel: string, arguments?: {}) => void;
+      sendToHost: (channel: string, arguments?: {}) => void;
+      removeListener: (channel: string, listener: Function) => void;
+      removeAllListeners: () => void;
+    }
   }
 }
 
@@ -25,7 +30,7 @@ export class RPXService {
 
   rpxCall() {
    // Respond to checks if a listener is registered
-    window.ipcOn('rx-ipc-check-listener', (event, channel) => {
+    window.ipc.on('rx-ipc-check-listener', (event, channel) => {
       const replyChannel = 'rx-ipc-check-reply:' + channel;
       if (this.listeners[channel]) {
         event.sender.send(replyChannel, true);
@@ -37,14 +42,14 @@ export class RPXService {
 
   checkRemoteListener(channel: string) {
     return new Promise((resolve, reject) => {
-      window.ipcOnce('rx-ipc-check-reply:' + channel, (event, result) => {
+      window.ipc.once('rx-ipc-check-reply:' + channel, (event, result) => {
         if (result) {
           resolve(result);
         } else {
           reject(false);
         }
       });
-      window.ipcSend('rx-ipc-check-listener', channel);
+      window.ipc.send('rx-ipc-check-listener', channel);
     });
   }
 
@@ -53,12 +58,12 @@ export class RPXService {
     const subChannel = channel + ':' + this.listenerCount;
     this.listenerCount++;
 
-    window.ipcSend(channel, subChannel, ...args);
+    window.ipc.send(channel, subChannel, ...args);
     return new Observable((observer) => {
       this.checkRemoteListener(channel)
         .catch(() => observer.error('Invalid channel: ' + channel));
 
-      window.ipcOn(subChannel, function listener(event: Event, type: string, data: Object) {
+      window.ipc.on(subChannel, function listener(event: Event, type: string, data: Object) {
         self.zone.run(() => {
 
           console.log('data', data);
@@ -76,7 +81,7 @@ export class RPXService {
         })
         // Cleanup
         return () => {
-          window.ipcRemove(subChannel, listener);
+          window.ipc.removeListener(subChannel, listener);
         };
       });
     });

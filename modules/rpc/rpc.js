@@ -110,7 +110,13 @@ function cb_handleRequestResponse (res, cb) {
       cb(res);
       return ;
     }
+    try {
     data = JSON.parse(data);
+    } catch(e) {
+      console.log('Error returned from rpc:', e);
+      cb(new Error(e));
+      return;
+    }
     cb(null, data);
   });
 }
@@ -124,6 +130,10 @@ function rpcCall (method, params, auth, cb) {
     params: params,
     id: '1'
   });
+  /*
+  if (!HOSTNAME) {
+    return;
+  }*/
 
   if (!options) {
     options = {
@@ -183,7 +193,6 @@ exports.getCookie = getCookie;
 ** prepares `backend-rpccall` to receive RPC calls from the renderer
 */
 function init(options) {
-
   HOSTNAME = options.rpcbind;
   PORT = options.port;
 
