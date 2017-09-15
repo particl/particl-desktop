@@ -50,7 +50,7 @@ export class SyncingComponent {
         // run particld with -reindex flag to trigger the bug
         this.log.d(`syncPercentage is 100%, closing automatically!`);
 
-        // document.getElementById('close').click();
+        document.getElementById('close').click();
       }
     });
   }

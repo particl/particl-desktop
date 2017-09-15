@@ -4,9 +4,11 @@ const fs = require('fs');
 const { app, dialog } = require('electron');
 const got = require('got');
 const path = require('path');
-const ClientBinaryManager = require('./clientBinariesManager').Manager;
 const EventEmitter = require('events').EventEmitter;
 const spawn = require('child_process').spawn;
+
+const ClientBinaryManager = require('./clientBinariesManager').Manager;
+const rpc = require('../rpc/rpc');
 
 const log = {
   info: console.log,
@@ -15,8 +17,10 @@ const log = {
   error: console.log
 };
 
-// should be       'https://raw.githubusercontent.com/ethereum/mist/master/clientBinaries.json'
-const BINARY_URL = 'https://raw.githubusercontent.com/pciavald/partgui/feature/daemonManager/modules/clientBinaries/clientBinaries.json';
+let options;
+
+// should be 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
+const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
@@ -26,31 +30,48 @@ class Manager extends EventEmitter {
     this._availableClients = {};
   }
 
-  init(restart) {
+  init(restart, _options) {
     log.info('Initializing...');
-
+    options = _options;
     // check every hour
     setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
-
     this._resolveBinPath();
     return this._checkForNewConfig(restart);
   }
 
+  /*
+  ** Checks if particld is already running, starts it in case not running.
+  ** returns the daemon's process to be killed when application exits
+  ** or undefined if the daemon was not launched
+  */
   startDaemon() {
-    /**
-    const user = 'test';
-    const password = 'test';
-    */
-    const args = [
-      /*
-      `-rpcuser=${user}`,
-      `-rpcpassword=${password}`,
-      `-rpccorsdomain=http://localhost:4200`,
-      `-rpcport=51935`
-      */
-    ];
-    const child = spawn(this._availableClients['particld'].binPath, args);
-    return (child);
+
+    return (new Promise((resolve, reject) => {
+
+      const daemon = options.customdaemon
+        ? options.customdaemon
+        : this._availableClients['particld'].binPath;
+
+      if (!options.rpcport) {
+        process.argv.push(`-rpcport=${options.port}`);
+      }
+
+      rpc.checkDaemon(options.testnet).then(() => {
+        log.info('daemon already started');
+        resolve(undefined);
+      }).catch(() => {
+        log.info(`starting daemon ${daemon}`);
+        const child = spawn(daemon, process.argv).on('close', code => {
+          if (code !== 0) {
+            log.error(`daemon exited with code ${code}.\n${daemon}\n${process.argv}`);
+          } else {
+            log.info('daemon exited successfully');
+          }
+        });
+        resolve(child);
+      });
+
+    }));
   }
 
   getClient(clientId) {
@@ -77,7 +98,7 @@ class Manager extends EventEmitter {
 
     // fetch config
     return got(BINARY_URL, {
-      timeout: 3000,
+      timeout: 5000,
       json: true
     })
     .then((res) => {
@@ -153,51 +174,53 @@ class Manager extends EventEmitter {
 
           log.debug('New client binaries config found, asking user if they wish to update...');
 
-          // TODO start
-          const wnd = Windows.createPopup('clientUpdateAvailable', _.extend({
-            useWeb3: false,
-            electronOptions: {
-              width: 600,
-              height: 340,
-              alwaysOnTop: false,
-              resizable: false,
-              maximizable: false
-            }
-          }, {
-            sendData: {
-              uiAction_sendData: {
-                name: nodeType,
-                version: nodeVersion,
-                checksum: `${algorithm}: ${hash}`,
-                downloadUrl: binaryVersion.download.url,
-                restart
-              }
-            }
-          }), (update) => {
-            // update
-            if (update === 'update') {
-              this._writeLocalConfig(latestConfig);
+          log.debug('skipping ask user because Electron is not yet linked for that');
+          this._writeLocalConfig(latestConfig);
+          resolve(latestConfig);
 
-              resolve(latestConfig);
-
-              // skip
-            } else if (update === 'skip') {
-              fs.writeFileSync(
-                path.join(app.getPath('userData'), 'skippedNodeVersion.json'),
-                nodeVersion
-              );
-
-              resolve(localConfig);
-            }
-
-            wnd.close();
-          });
-
-          // if the window is closed, simply continue and as again next time
-          wnd.on('close', () => {
-            resolve(localConfig);
-          });
-          // TODO end
+          // const wnd = Windows.createPopup('clientUpdateAvailable', _.extend({
+          //   useWeb3: false,
+          //   electronOptions: {
+          //     width: 600,
+          //     height: 340,
+          //     alwaysOnTop: false,
+          //     resizable: false,
+          //     maximizable: false
+          //   }
+          // }, {
+          //   sendData: {
+          //     uiAction_sendData: {
+          //       name: nodeType,
+          //       version: nodeVersion,
+          //       checksum: `${algorithm}: ${hash}`,
+          //       downloadUrl: binaryVersion.download.url,
+          //       restart
+          //     }
+          //   }
+          // }), (update) => {
+          //   // update
+          //   if (update === 'update') {
+          //     this._writeLocalConfig(latestConfig);
+          //
+          //     resolve(latestConfig);
+          //
+          //     // skip
+          //   } else if (update === 'skip') {
+          //     fs.writeFileSync(
+          //       path.join(app.getPath('userData'), 'skippedNodeVersion.json'),
+          //       nodeVersion
+          //     );
+          //
+          //     resolve(localConfig);
+          //   }
+          //
+          //   wnd.close();
+          // });
+          //
+          // // if the window is closed, simply continue and as again next time
+          // wnd.on('close', () => {
+          //   resolve(localConfig);
+          // });
         });
       }
 
