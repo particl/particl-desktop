@@ -34,7 +34,7 @@ export class BlockStatusService {
     this._state.observe('blocks')
       .subscribe(
         height => {
-          const lastBlockTime = new Date(this._state.get('mediantime'));
+          const lastBlockTime = new Date(+this._state.get('mediantime') * 1000);
           this.calculateSyncingDetails(lastBlockTime, height);
           this.highestBlockHeightInternal = height;
           this.status.internalBH = height;
