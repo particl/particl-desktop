@@ -2,3 +2,15 @@
     display: inline-block;
     padding: 1px;
 }
+
+.blue {
+	color: #0b45d2;
+    text-shadow: 1px 1px 1px #ccc;
+    font-size: 1.2em;
+}
+
+.red {
+	color: red;
+    text-shadow: 1px 1px 1px #ccc;
+    font-size: 1.1em;
+}

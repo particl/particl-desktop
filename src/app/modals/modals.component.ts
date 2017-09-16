@@ -18,6 +18,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ModalsService } from './modals.service';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
@@ -29,6 +30,7 @@ import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component'
   styleUrls: ['./modals.component.scss'],
   entryComponents: [
     CreateWalletComponent,
+    ColdstakeComponent,
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,

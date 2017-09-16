@@ -19,6 +19,7 @@ export class UnlockwalletComponent {
   private callback: Function;
   timeout: number = this.DEFAULT_TIMEOUT;
   showStakeOnly: boolean = true;
+  disableAutoClose: boolean = false;
 
   constructor (private _rpc: RPCService) { }
 
@@ -49,13 +50,17 @@ export class UnlockwalletComponent {
       this.timeout = data.timeout;
     }
     this.showStakeOnly = Boolean(data.showStakeOnly);
+    this.disableAutoClose = Boolean(data.disableAutoClose)
   }
 
   closeModal() {
     // clear callback data
     this.timeout = this.DEFAULT_TIMEOUT;
     this.showStakeOnly = true;
-    this.log.d('Closing modal!');
-    document.getElementById('close').click();
+
+    if(this.disableAutoClose === false) {
+      this.log.d('Closing modal!');
+      document.getElementById('close').click();
+    }
   }
 }

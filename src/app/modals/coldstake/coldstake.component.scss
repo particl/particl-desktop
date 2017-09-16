@@ -1,0 +1,15 @@
+.red {
+	background-color: red !important;
+}
+
+.blue {
+	background-color: #00d2ff !important;
+}
+
+@media only screen and (max-width: 480px) {
+  .wallet-buttons-container button{
+    float: none;
+    display: block;
+    margin: 10px auto 0;
+  }
+}

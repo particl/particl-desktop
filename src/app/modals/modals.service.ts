@@ -6,6 +6,7 @@ import { BlockStatusService } from '../core/rpc/rpc.module';
 import { RPCService } from '../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
@@ -29,6 +30,7 @@ export class ModalsService {
 
   messages: Object = {
     createWallet: CreateWalletComponent,
+    coldStake: ColdstakeComponent,
     daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent,
