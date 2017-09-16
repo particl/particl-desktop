@@ -1,14 +1,15 @@
 // Import a pre-built theme
 @import "theme/partgui-theme.css";
 
+/**
+ * Side bar Menu.
+ */
 .mat-list {
   .mat-list-item {
     .mat-list-item-content {
       height: auto !important;
     }
-
   }
-
 }
 
 .mat-sidenav {
@@ -74,8 +75,6 @@
   }
 }
 
-//.submenuarea{display: none;}
-
 .header-main {
   border-bottom: 1px solid #ddd;
   background: #fff;
@@ -110,12 +109,13 @@
   text-transform: capitalize;
 }
 
-//.address-word:nth-child(3){word-wrap: break-word;white-space: normal;flex-wrap: wrap;}
 .details-address {
   flex-wrap: wrap;
 }
 
-/*list*/
+/**
+ *list
+ */
 .icon-input {
   input.mat-input-element {
     height: 27px;
@@ -156,7 +156,9 @@
   }
 }
 
-/*input css*/
+/**
+ * Form Design
+ */
 input[type="text"] {
   border: none;
 }
@@ -186,19 +188,71 @@ input[type="text"] {
 .md-left-border {
   border-left: 1px solid #ddd;
 }
-.container-block{
+
+.container-block {
   padding: 20px;
 }
 
+/**
+ * History List
+ */
 
-/*14/09/17*/
-//.history_date{flex: 0 0 10% !important;}
-.history_longAddress{overflow: hidden; text-overflow: ellipsis;}
-.history_txt{overflow: hidden; text-overflow: ellipsis;}
-//.history_blockIndex{flex: 0 0 8%;}
-//.history_confirmation{flex: 0 0 8%;}
-//.history_amount{flex: 0 0 18%;}
-.mat-content{max-width: 100%;}
+.history_longAddress {
+  overflow: hidden;
+  flex-wrap: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history_txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-list .mat-content {
+  max-width: 100%;
+  width: 100%;
+  margin-bottom: 0;
+  align-items: center;
+}
+
+.history-list .mat-icon {
+  font-size: 18px;
+}
+
+.history-list {
+  .history_cat_icon {
+    justify-content: center;
+  }
+  .history_container {
+    > div {
+      min-height: 25px;
+      > div {
+        margin-right: 10px;
+      }
+      .highlight {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.md-right {
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/**
+ * Dialog style
+ */
+.mat-dialog-container {
+  max-width: 100% !important;
+  background: transparent !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
 
 @media (max-width: 1280px) {
   .qrcode {
@@ -218,6 +272,23 @@ input[type="text"] {
   .mat-form-field {
     width: 100%;
   }
+  .history-list {
+    .history_container {
+      > div {
+        min-height: 50px;
+        div {
+          min-height: 25px;
+          align-items: center;
+          .highlight, .md-right {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+  }
+
 }
 
 @media (max-width: 640px) {
@@ -229,5 +300,3 @@ input[type="text"] {
     }
   }
 }
-
-
