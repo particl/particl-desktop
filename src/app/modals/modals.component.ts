@@ -22,6 +22,7 @@ import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
+import {MdDialogRef} from "@angular/material";
 
 @Component({
   selector: 'app-modals',
@@ -55,7 +56,8 @@ export class ModalsComponent implements DoCheck, OnInit {
   constructor (
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
-    private _modalService: ModalsService
+    private _modalService: ModalsService,
+    private _dialogRef: MdDialogRef<ModalsComponent>
   ) {
     this._modalService.getMessage().subscribe(
       message => this.open(message.modal, message.data)
@@ -99,11 +101,12 @@ export class ModalsComponent implements DoCheck, OnInit {
   }
 
   close() {
+    this._dialogRef.close();
     // remove and destroy message
-    this._modalService.close();
-    this.staticModal.hide();
-    this.modalContainer.remove();
-    this.modal.destroy();
+    // this._modalService.close();
+    // this.staticModal.hide();
+    // this.modalContainer.remove();
+    // this.modal.destroy();
   }
 
     @HostListener('window:keydown', ['$event'])

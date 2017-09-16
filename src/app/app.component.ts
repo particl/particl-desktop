@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
+import { MdDialog } from '@angular/material';
 
 import { WindowService } from './core/window.service';
 
@@ -11,6 +12,7 @@ import { ModalsService } from './modals/modals.service';
 
 // Syncing example
 import { BlockStatusService } from './core/rpc/blockstatus.service';
+import {ModalsComponent} from "./modals/modals.component";
 
 @Component({
   selector: 'app-root',
@@ -32,7 +34,8 @@ export class AppComponent implements OnInit {
     private _statusService: BlockStatusService,
     public window: WindowService,
     // Modal example
-    private _modalsService: ModalsService
+    private _modalsService: ModalsService,
+    private dialog: MdDialog,
   ) {
   }
 
@@ -60,6 +63,7 @@ export class AppComponent implements OnInit {
 
 
   createWallet() {
+    this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
     this._modalsService.open('createWallet', {forceOpen: true});
   }
 }

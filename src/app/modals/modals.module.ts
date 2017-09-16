@@ -45,6 +45,9 @@ import { AlertComponent } from './shared/alert/alert.component';
   providers: [
     ModalsService,
     PassphraseService
-  ]
+  ],
+  entryComponents: [
+    ModalsComponent
+  ],
 })
 export class ModalsModule { }
