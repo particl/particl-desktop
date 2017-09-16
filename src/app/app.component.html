@@ -17,7 +17,7 @@
     <md-content layout-padding>
       <md-accordion [displayMode]="flat" [multi]="multi"
                     class="md-expansion-menu">
-        <md-expansion-panel #panel1 >
+        <md-expansion-panel #panel1 expanded="true">
           <md-expansion-panel-header>Wallet</md-expansion-panel-header>
 
           <md-content layout-padding class="submenuarea">
@@ -46,7 +46,7 @@
                   Addess Book
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" href="javascript:void(0)" (click)="firsttime()">
+              <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
                 <md-list-item>
                   <md-icon>library_add</md-icon>
                   Add Acount
@@ -60,8 +60,8 @@
 
   </md-sidenav>
   <md-toolbar class="header-main">
-    <button fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()">
-      <md-icon>menu</md-icon>
+    <button fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()" fxHide.lg>
+      <md-icon >menu</md-icon>
     </button>
 
     {{ title }}
@@ -76,5 +76,6 @@
 
   <div class="margin-left-right-50">
     <router-outlet></router-outlet>
+    <app-modals></app-modals>
   </div>
 </md-sidenav-container>
