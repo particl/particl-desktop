@@ -22,6 +22,8 @@
     "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.2",
     "start:electron:dev": "electron . --dev",
     "start:electron": "npm run build:electron && electron .",
+    "package:mac": "npm run build:electron && electron-builder -m",
+    "package:linux": "npm run build:electron && electron-builder -l",
     "package:win": "npm run build:electron && electron-builder --win --x64 --ia32",
     "package": "npm run build:electron && electron-builder -ml && npm run package:win",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
@@ -88,7 +90,6 @@
     "@angular/platform-browser": "^4.3.1",
     "@angular/platform-browser-dynamic": "^4.3.1",
     "@angular/router": "^4.3.1",
-    "@ngrx/store": "^4.0.3",
     "angular2-qrcode": "^2.0.1",
     "bluebird": "^3.4.7",
     "bootstrap": "^3.3.7",
@@ -101,17 +102,17 @@
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
     "lodash.values": "^4.3.0",
+    "lodash": "^4.17.4",
     "ng2-logger": "^1.0.3",
     "ngx-bootstrap": "^1.8.0",
     "ngx-clipboard": "^8.0.3",
     "ngx-electron": "^1.0.2",
-    "node-bitcoin-rpc": "^1.1.2",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.2",
     "protractor": "^5.1.2",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.4.2",
-    "zeromq": "^4.5.0",
+    "tmp": "0.0.33",
     "zone.js": "0.8.17"
   },
   "devDependencies": {
@@ -138,6 +139,7 @@
     "sass-lint": "^1.10.2",
     "ts-node": "~3.3.0",
     "tslint": "~5.7.0",
+    "tslint-microsoft-contrib": "^5.0.1",
     "typescript": "~2.5.2"
   }
 }

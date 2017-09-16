@@ -3,7 +3,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { ModalsService } from '../modals.service';
 import { BlockStatusService } from '../../core/rpc/blockstatus.service';
-import { RPCService } from '../../core/rpc/rpc.service';
+import { StateService } from '../../core/state/state.service';
+
+import { Log } from 'ng2-logger';
 
 @Component({
   selector: 'app-syncing',
@@ -11,6 +13,8 @@ import { RPCService } from '../../core/rpc/rpc.service';
   styleUrls: ['./syncing.component.scss']
 })
 export class SyncingComponent {
+
+  log: any = Log.create('alertbox.component');
 
   remainder: any;
   lastBlockTime: Date;
@@ -22,10 +26,12 @@ export class SyncingComponent {
 
   constructor(
     private _blockStatusService: BlockStatusService,
-    private _rpcService: RPCService
+    private _state: StateService
   ) {
+    _state.observe('connections')
+      .subscribe(connections => this.nPeers = connections);
+
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
-      this.nPeers = status.peerList ? status.peerList.length : 0;
       this.remainder = status.remainingBlocks < 0
         ? 'waiting for peers...'
         : status.remainingBlocks;
@@ -39,6 +45,11 @@ export class SyncingComponent {
       this.manuallyOpened = status.manuallyOpened;
       this.syncPercentage = status.syncPercentage;
       if (status.syncPercentage === 100 && !this.manuallyOpened) {
+
+        // BUG: this constructor is on a loop when we're syncing?
+        // run particld with -reindex flag to trigger the bug
+        this.log.d(`syncPercentage is 100%, closing automatically!`);
+
         document.getElementById('close').click();
       }
     });

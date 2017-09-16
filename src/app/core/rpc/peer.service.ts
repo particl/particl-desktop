@@ -5,6 +5,7 @@ import { RPCService } from './rpc.service';
 
 @Injectable()
 export class PeerService {
+  // TODO: Peer interface
   private _peerList: Observable<Array<Object>>;
   private _observerPeerList: Observer<Array<Object>>;
 
@@ -15,10 +16,7 @@ export class PeerService {
   private _observerHighestBlockHeightNetwork: Observer<number>;
   private subs: Subscription;
 
-  constructor(
-    public rpc: RPCService) {
-
-    this.rpc.registerStateCall('getpeerinfo');
+  constructor(private _rpc: RPCService) {
 
     this._peerList = Observable.create(
       observer => this._observerPeerList = observer
@@ -26,29 +24,23 @@ export class PeerService {
     this._peerList.subscribe().unsubscribe();
 
     // setup observable for internal block height
-    this._highestBlockHeightInternal = Observable.create(
-      observer => this._observerHighestBlockHeightInternal = observer
-    ).publishReplay(1).refCount();
-
-    this._highestBlockHeightInternal.subscribe().unsubscribe();
+    this._highestBlockHeightInternal = this._rpc.state.observe('blocks');
 
     // setup observable for network block height
     this._highestBlockHeightNetwork = Observable.create(
       observer => {
         this._observerHighestBlockHeightNetwork = observer
-
-        this.rpc.chainState.subscribe(
-          state => {
-            if (state.chain) {
-              this._observerPeerList.next(state.chain.getpeerinfo);
-              this._observerHighestBlockHeightInternal.next(state.chain.blocks);
-              this.setPeerList(state.chain.getpeerinfo);
-            }
-          });
       }
     ).publishReplay(1).refCount();
 
     this._highestBlockHeightNetwork.subscribe().unsubscribe();
+
+    // Subscribe to connections state
+    this._rpc.state.observe('connections')
+      .subscribe(_ => this._rpc.call('getpeerinfo')
+        .subscribe((peerinfo: Array<Object>) => {
+          this.setPeerList(peerinfo);
+        }));
   }
 
   private setPeerList(peerList: Array<Object>) {
@@ -62,15 +54,13 @@ export class PeerService {
   private calculateBlockCountNetwork(peerList: Array<Object>): number {
     let highestBlockHeightNetwork = -1;
 
-    for (const peer in peerList) {
-      if (true) { // lint issue
-        const networkHeightByPeer: number = +peerList[peer]['currentheight'];
+    peerList.forEach(peer => {
+      const networkHeightByPeer = (<any>peer).currentheight;
 
-        if (highestBlockHeightNetwork < networkHeightByPeer || highestBlockHeightNetwork === -1) {
-          highestBlockHeightNetwork = networkHeightByPeer;
-        }
+      if (highestBlockHeightNetwork < networkHeightByPeer || highestBlockHeightNetwork === -1) {
+        highestBlockHeightNetwork = networkHeightByPeer;
       }
-    }
+    });
 
     return highestBlockHeightNetwork;
   }

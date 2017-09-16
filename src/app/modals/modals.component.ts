@@ -21,6 +21,7 @@ import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
+import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 
 @Component({
   selector: 'app-modals',
@@ -30,7 +31,8 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
     CreateWalletComponent,
     DaemonComponent,
     SyncingComponent,
-    UnlockwalletComponent
+    UnlockwalletComponent,
+    EncryptwalletComponent
   ]
 })
 export class ModalsComponent implements DoCheck, OnInit {
@@ -65,13 +67,6 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   ngOnInit() {
     this.enableClose = this._modalService.enableClose;
-    document.onkeydown = (event: any) => {
-      if (this.closeOnEscape && this._modalService.enableClose
-          && event.key.toLowerCase() === 'escape'
-          && this.modal) {
-        this.close();
-      }
-    };
   }
 
   ngDoCheck() {
@@ -110,4 +105,13 @@ export class ModalsComponent implements DoCheck, OnInit {
     this.modalContainer.remove();
     this.modal.destroy();
   }
+
+    @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+    if (this.closeOnEscape && this._modalService.enableClose
+          && event.key.toLowerCase() === 'escape'
+          && this.modal) {
+        this.close();
+      }
+    }
 }

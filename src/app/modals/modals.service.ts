@@ -9,6 +9,7 @@ import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
+import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 
 @Injectable()
 export class ModalsService {
@@ -30,17 +31,22 @@ export class ModalsService {
     createWallet: CreateWalletComponent,
     daemon: DaemonComponent,
     syncing: SyncingComponent,
-    unlock: UnlockwalletComponent
+    unlock: UnlockwalletComponent,
+    encrypt: EncryptwalletComponent
   };
 
   constructor (
     private _blockStatusService: BlockStatusService,
     private _rpcService: RPCService
   ) {
+
+    // open syncing modal
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
       this.needToOpenModal(status);
     });
+
+    //
     this._rpcService.modalUpdates.asObservable().subscribe(status => {
       if (status.error) {
         this.open('daemon', status);
@@ -98,9 +104,5 @@ export class ModalsService {
       || status.networkBH - status.internalBH > 50)) {
         this.open('syncing');
     }
-  }
-
-  unlockWallet(i: Injectable, cb: Function, timeout: number) {
-    this.open('unlock', {'instance' : i, 'callback': cb, 'timeout': timeout});
   }
 }

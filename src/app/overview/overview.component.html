@@ -3,19 +3,19 @@
        style="cursor: pointer;">
     <div fxFlex [fxLayout]="'row'">
       <div class="one   flexitem " fxFlex>
-        <app-balance typeOfBalance="TOTAL"></app-balance>
+        <app-balance type="total_balance"></app-balance>
       </div>
       <div class="two flexitem " fxFlex>
-        <app-balance typeOfBalance="PUBLIC"></app-balance>
+        <app-balance type="balance"></app-balance>
       </div>
       <div class="three flexitem " fxFlex>
-        <app-balance typeOfBalance="BLIND"></app-balance>
+        <app-balance type="blind_balance"></app-balance>
       </div>
       <div class="four flexitem " fxFlex>
-        <app-balance typeOfBalance="PRIVATE"></app-balance>
+        <app-balance type="anon_balance"></app-balance>
       </div>
       <div class="five flexitem " fxFlex>
-        <app-balance typeOfBalance="STAKE"></app-balance>
+        <app-balance type="staked_balance"></app-balance>
       </div>
     </div>
   </div>
@@ -64,53 +64,3 @@
     </div>
   </div>
 </md-card>
-
-<!--<div class="container-fluid">-->
-<!--<div class="row">-->
-<!--<div class="col-md-6">-->
-<!--<app-header>-->
-<!--<ul class="header-nav">-->
-<!--<li>Recent Transactions</li>-->
-<!--</ul>-->
-<!--<ul class="header-nav pull-right">-->
-<!--&lt;!&ndash; <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> &ndash;&gt;-->
-<!--</ul>-->
-<!--</app-header>-->
-<!--<transaction-table-->
-<!--[display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': false, 'confirmations': false}">-->
-<!--</transaction-table>-->
-<!--</div>-->
-<!--<div class="col-md-6">-->
-<!--<div class="row">-->
-<!--<div class="col-xs-12">-->
-<!--<app-header>-->
-<!--<ul class="header-nav">-->
-<!--<li>Widget Section 2</li>-->
-<!--</ul>-->
-<!--<ul class="header-nav pull-right">-->
-<!--&lt;!&ndash; <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> &ndash;&gt;-->
-<!--</ul>-->
-<!--</app-header>-->
-<!--<div class="reserved-area">-->
-
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="col-xs-12">-->
-<!--<app-header>-->
-<!--<ul class="header-nav">-->
-<!--<li>Widget Section 3</li>-->
-<!--</ul>-->
-<!--<ul class="header-nav pull-right">-->
-<!--&lt;!&ndash; <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> &ndash;&gt;-->
-<!--</ul>-->
-<!--</app-header>-->
-<!--<div class="reserved-area">-->
-
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->

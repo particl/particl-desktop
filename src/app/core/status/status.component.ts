@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
+import { StateService } from '../state/state.service';
 
 import { PeerService, RPCService, BlockStatusService } from '../rpc/rpc.module';
 
@@ -11,7 +12,7 @@ import { PeerService, RPCService, BlockStatusService } from '../rpc/rpc.module';
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.css']
 })
-export class StatusComponent implements OnInit, OnDestroy {
+export class StatusComponent implements OnInit {
 
   peerListCount: number = 0;
 
@@ -23,22 +24,15 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   constructor(
     private _rpc: RPCService,
-    private _modalsService: ModalsService) { }
+    private _modalsService: ModalsService,
+    private _stateService: StateService) { }
 
   ngOnInit() {
-    this._sub = this._rpc.chainState.skip(1)
-      .subscribe(
-        state => {
-          this.encryptionStatus = state.chain.encryptionstatus,
-          this.peerListCount = state.chain.connections
-        },
-        error => this.log.er(`getEncryptionStatus, subscription error: ${error}`));
-  }
+    this._rpc.state.observe('connections')
+      .subscribe(connections => this.peerListCount = connections)
 
-  ngOnDestroy() {
-    if (this._sub) {
-      this._sub.unsubscribe();
-    }
+    this._rpc.state.observe('encryptionstatus')
+      .subscribe(status => this.encryptionStatus = status);
   }
 
   getIconNumber(): number {
@@ -71,15 +65,17 @@ export class StatusComponent implements OnInit, OnDestroy {
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
-        // TODO: Encrypt wallet modal...
+        this._modalsService.open('encrypt', {'forceOpen': true});
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':
         this._rpc.call('walletlock')
-          .subscribe();
+          .subscribe(
+            success => this._rpc.stateCall('getwalletinfo'),
+            error => this.log.er('walletlock error'));
         break;
       case 'Locked':
-        this._modalsService.open('unlock');
+        this._modalsService.open('unlock', {forceOpen: true, showStakeOnly: true});
         break;
       default:
         break;

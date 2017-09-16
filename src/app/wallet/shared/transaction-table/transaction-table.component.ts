@@ -3,11 +3,14 @@ import { Log } from 'ng2-logger'
 import { TransactionService } from '../transaction.service';
 import { Transaction } from '../transaction.model';
 
+import { slideDown } from '../../../core/core.animations';
+
 @Component({
   selector: 'transaction-table',
   templateUrl: './transaction-table.component.html',
   styleUrls: ['./transaction-table.component.scss'],
-  providers: [TransactionService]
+  providers: [TransactionService],
+  animations: [slideDown()]
 })
 
 export class TransactionsTableComponent implements OnInit {

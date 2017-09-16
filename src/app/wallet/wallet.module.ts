@@ -7,8 +7,6 @@ import { SharedModule } from '../shared/shared.module';
 
 import { TransactionService } from './shared/transaction.service';
 import { AddressService } from './shared/address.service';
-// TODO: move balance to shared?
-import { BalanceService } from './balances/balance.service';
 import { SendService } from './send/send.service';
 
 import { TransactionsTableComponent } from './shared/transaction-table/transaction-table.component';
@@ -87,7 +85,6 @@ export class WalletModule {
       providers: [
         TransactionService,
         AddressService,
-        BalanceService,
         SendService
       ]
     };

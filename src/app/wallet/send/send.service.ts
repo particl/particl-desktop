@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { RPCService } from '../../core/rpc/rpc.module';
 
 import { Log } from 'ng2-logger'
-import {FlashNotificationService} from "../../services/flash-notification.service";
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 
 @Injectable()
@@ -64,53 +64,52 @@ export class SendService {
   /*
   * Sends a transactions
   */
-  sendTransaction(input: string, output: string, address: string, amount: number, comment: string, substractfee: boolean,
-    narration: string, ringsize: number, numsignatures: number) {
+  sendTransaction(
+    input: string, output: string, address: string,
+    amount: number, comment: string, narration: string,
+    ringsize: number, numsignatures: number) {
 
     this.resetTransactionDetails();
 
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
-    const params: Array<any> = this.getSendParams(anon, address, amount, comment, substractfee, narration, ringsize, numsignatures);
+    const params: Array<any> = this.getSendParams(
+      anon, address, amount, comment,
+      narration, ringsize, numsignatures);
 
     this.setTransactionDetails(address, amount);
 
     // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
     this._rpc.call('send' + rpcCall, params)
-        .subscribe(
-          (response: any) => {
-          this.rpc_send_success(response)
-        },
-        (error: any) => {
-          this.rpc_send_failed(error);
-        });
+      .subscribe(
+        success => this.rpc_send_success(success),
+        error => this.rpc_send_failed(error));
   }
 
-  transferBalance(input: string, output: string, address: string, amount: number, ringsize: number, numsignatures: number) {
+  transferBalance(
+    input: string, output: string, address: string,
+    amount: number, ringsize: number, numsignatures: number) {
     this.resetTransactionDetails();
     // comment is internal, narration is stored on blockchain
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
 
     this.log.d('transferBalance, sx' + this.defaultStealthAddressForBalanceTransfer);
-    if (address === undefined || address === '') {
+    if (!!address) {
       address = this.defaultStealthAddressForBalanceTransfer;
     }
 
-    const params: Array<any> = this.getSendParams(anon, this.defaultStealthAddressForBalanceTransfer,
-      amount, '', false, '', ringsize, numsignatures);
+    const params: Array<any> = this.getSendParams(
+      anon, this.defaultStealthAddressForBalanceTransfer,
+      amount, '', '', ringsize, numsignatures);
 
     this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
 
     // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
     this._rpc.call('send' + rpcCall, params)
       .subscribe(
-        (response: any) => {
-          this.rpc_send_success(response)
-      },
-      (error: any) => {
-          this.rpc_send_failed(error);
-      });
+        success => this.rpc_send_success(success),
+        error => this.rpc_send_failed(error));
   }
 
 
@@ -126,42 +125,40 @@ export class SendService {
 
 
   /*
-
     Helper functions for RPC
-
   */
 
 
   // TODO: blind?
 
-/**
- * Returns a part of the method of the RPC call required to execute the transaction
- *
- * @param {string} input  From which type/balance we should send the funds (public, blind, anon)
- * @param {string} output  To which type/balance we should send the funds (public, blind, anon)
- *
- */
+  /**
+    * Returns a part of the method of the RPC call required to execute the transaction
+    *
+    * @param {string} input  From which type/balance we should send the funds (public, blind, anon)
+    * @param {string} output  To which type/balance we should send the funds (public, blind, anon)
+    *
+    */
   getSendRPCCall(input: string, output: string) {
     // real send (external)
-    if (input === 'public' && output === 'public') {
+    if (input === 'balance' && output === 'balance') {
       return 'toaddress';
-    } else if (input === 'private' && output === 'private') {
+    } else if (input === 'anon_balance' && output === 'anon_balance') {
       return 'anontoanon';
-    } else if (input === 'blind' && output === 'blind') {
+    } else if (input === 'blind_balance' && output === 'blind_balance') {
       return 'blindtoblind';
 
     // balance transfers (internal)
-    } else if (input === 'private' && output === 'public') {
+    } else if (input === 'anon_balance' && output === 'balance') {
       return 'anontopart';
-    } else if (input === 'public' && output === 'private') {
+    } else if (input === 'balance' && output === 'anon_balance') {
       return 'parttoanon';
-    } else if (input === 'public' && output === 'blind') {
+    } else if (input === 'balance' && output === 'blind_balance') {
       return 'parttoblind';
-    } else if (input === 'private' && output === 'blind') {
+    } else if (input === 'anon_balance' && output === 'blind_balance') {
       return 'anontoblind';
-    } else if (input === 'blind' && output === 'public') {
+    } else if (input === 'blind_balance' && output === 'balance') {
       return 'blindtopart';
-    } else if (input === 'blind' && output === 'private') {
+    } else if (input === 'blind_balance' && output === 'anon_balance') {
       return 'blindtoanon';
     } else {
       return 'error'; // todo: real error
@@ -169,19 +166,13 @@ export class SendService {
   }
 
   // TODO: do I need to turn everything into strings manually?
-/**
- * A helper function that transforms the transaction details to an array with the right params (for passing to the RPC service).
- *
- */
-  getSendParams(anon: boolean, address: string, amount: number, comment: string, substractfee: boolean,
+  /** A helper function that transforms the transaction details to an array with the right params (for passing to the RPC service). */
+  getSendParams(
+    anon: boolean, address: string, amount: number, comment: string,
     narration: string, ringsize: number, numsignatures: number) {
-    const params: Array<any> = [address, '' + amount, '', '', substractfee];
+    const params: Array<any> = [address, amount, '', '', false];
 
-    if (narration !== '' && narration !== undefined) {
-      params.push(narration);
-    } else {
-      params.push(' '); // TODO: remove space
-    }
+    params.push(!!narration ? narration : '');
 
     if (anon) {
       // comment-to empty

@@ -3,20 +3,15 @@ import { ElectronService } from 'ngx-electron';
 import { Subject } from 'rxjs/Subject';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
 
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
+import { StateService } from '../state/state.service';
 import { RPXService } from './rpx.class';
 
-import { ChainState } from './chain-state/chain-state.reducers';
-import * as chainState from './chain-state/chain-state.actions';
 
-
-
-
-const MAINNET_PORT = 51935;
+const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
 
 const HOSTNAME = 'localhost';
@@ -57,21 +52,18 @@ export class RPCService {
 
   public modalUpdates: Subject<any> = new Subject<any>();
 
-  public chainState: Observable<any>;
-
   constructor(
     private http: Http,
     public electronService: ElectronService,
-    public rpx: RPXService,
-    private store: Store<ChainState>
+    private rpx: RPXService,
+    public state: StateService
   ) {
     this.isElectron = this.electronService.isElectronApp;
 
-    this.chainState = store.select((state: ChainState) => state);
-
     // Start polling...
-    this.registerStateCall('getinfo', 10500);
-    this.registerStateCall('getwalletinfo', 3000);
+    this.registerStateCall('getinfo', 1000);
+    this.registerStateCall('getblockchaininfo', 2000);
+    this.registerStateCall('getwalletinfo', 2000);
     this.registerStateCall('getstakinginfo', 15000);
 
     if (this.isElectron) {
@@ -122,11 +114,11 @@ export class RPCService {
     }
   }
 
-  stateCall(method: string): void {
+  stateCall(method: string, withMethod?: boolean): void {
     this.call(method)
       .subscribe(
-        this.stateCallSuccess.bind(this, method),
-        this.stateCallError.bind(this, method));
+        this.stateCallSuccess.bind(this, withMethod ? method : false),
+        this.stateCallError  .bind(this, withMethod ? method : false));
   }
 
   registerStateCall(method: string, timeout?: number): void {
@@ -157,7 +149,8 @@ export class RPCService {
       }
       _call();
     } else {
-      this.chainState.subscribe(success => this.stateCall(method));
+      this.state.observe('blocks').subscribe(success => this.stateCall(method, true));
+      this.state.observe('txcount').subscribe(success => this.stateCall(method, true));
     }
   }
 
@@ -167,7 +160,8 @@ export class RPCService {
       obj[success] = method;
       success = obj;
     }
-    this.store.dispatch(new chainState.UpdateStateAction(success));
+
+    Object.keys(success).forEach(key => this.state.set(key, success[key]));
   }
 
   private stateCallError(error: Object, method?: string) {

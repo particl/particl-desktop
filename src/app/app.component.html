@@ -63,12 +63,10 @@
     <button fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()" fxHide.lg>
       <md-icon >menu</md-icon>
     </button>
-
     {{ title }}
     <div class="containerX">
       <div fxLayout="row" fxFlex fxLayoutAlign="end center" fxcolor="accent" class="header-icons">
         <app-status></app-status>
-
       </div>
     </div>
 
@@ -76,6 +74,6 @@
 
   <div class="margin-left-right-50">
     <router-outlet></router-outlet>
-    <app-modals></app-modals>
+    <!--<app-modals></app-modals>-->
   </div>
 </md-sidenav-container>

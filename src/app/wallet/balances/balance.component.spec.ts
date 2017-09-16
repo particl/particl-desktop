@@ -6,7 +6,7 @@ import { BalanceComponent } from './balance.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
+import { StateService } from '../../core/state/state.service';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -16,9 +16,9 @@ describe('BalanceComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        WalletModule.forRoot(),
-        RpcModule.forRoot()
-      ]
+        WalletModule.forRoot()
+      ],
+      providers: [StateService]
     })
     .compileComponents();
   }));
@@ -53,7 +53,4 @@ describe('BalanceComponent', () => {
     expect(component.getTypeOfBalance).toBeTruthy();
   });
 */
-  it('should get balanceService', () => {
-    expect(component.balanceService).toBeDefined();
-  });
 });

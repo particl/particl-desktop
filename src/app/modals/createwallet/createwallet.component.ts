@@ -7,7 +7,7 @@ import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
 
-import { flyInOut, slideDown } from './createwallet.animations';
+import { flyInOut, slideDown } from '../../core/core.animations';
 
 @Component({
   selector: 'modal-createwallet',
@@ -42,7 +42,8 @@ export class CreateWalletComponent {
   errorString: string = '';
 
   constructor (
-    @Inject(forwardRef(() => ModalsService)) private _modalsService: ModalsService,
+    @Inject(forwardRef(() => ModalsService))
+    private _modalsService: ModalsService,
     private _passphraseService: PassphraseService
   ) {
     this.reset();

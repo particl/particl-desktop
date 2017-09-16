@@ -78,6 +78,7 @@ md-expansion-panel.mat-expansion-panel.mat-expanded md-expansion-panel-header {
     white-space: nowrap;
     text-overflow: ellipsis;
     flex-basis: 20em;
+    min-width: 80px;
 }
 
 .cell-expand {
@@ -85,7 +86,6 @@ md-expansion-panel.mat-expansion-panel.mat-expanded md-expansion-panel-header {
     padding-left: 0 !important;
     padding-right: 30px !important;
 }
-
 
 .cell-expanded-row {
     padding-bottom: 22px;

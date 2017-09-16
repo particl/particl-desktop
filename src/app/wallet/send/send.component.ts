@@ -1,18 +1,17 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Log } from 'ng2-logger';
 
 import { SendService } from './send.service';
-import { BalanceService } from '../balances/balance.service';
 import { Subscription } from 'rxjs/Subscription';
 import { RPCService } from '../../core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 import { MdDialog } from '@angular/material';
-import {AddressLookUpCopy} from '../models/address-look-up-copy';
-import {SendConfirmationModalComponent} from "./send-confirmation-modal/send-confirmation-modal.component";
-import {FlashNotificationService} from "../../services/flash-notification.service";
+import { AddressLookUpCopy } from '../models/address-look-up-copy';
+import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 @Component({
   selector: 'app-send',
@@ -20,7 +19,7 @@ import {FlashNotificationService} from "../../services/flash-notification.servic
   // TODO merge / globalize styles
   styleUrls: ['./send.component.scss', '../../settings/settings.component.scss']
 })
-export class SendComponent implements OnInit, OnDestroy {
+export class SendComponent {
 
   /*
     General
@@ -36,8 +35,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
   // TODO: Create proper Interface / type
   send: any = {
-    input: 'public',
-    output: 'public',
+    input: 'balance',
+    output: 'balance',
     toAddress: '',
     toLabel: '',
     validAddress: undefined,
@@ -55,30 +54,13 @@ export class SendComponent implements OnInit, OnDestroy {
   private _sub: Subscription;
   private _balance: any;
 
-
-
   constructor(
     private sendService: SendService,
-    private balanceService: BalanceService,
     private _rpc: RPCService,
     private _modals: ModalsService,
     private dialog: MdDialog,
     private flashNotification: FlashNotificationService
   ) {
-  }
-
-
-  ngOnInit() {
-    this._sub = this.balanceService.getBalances()
-      .subscribe(
-        balances => {
-          this._balance = balances;
-        },
-        error => this.log.er('balanceService subscription error:' + error));
-  }
-
-  ngOnDestroy() {
-    this._sub.unsubscribe();
   }
 
   /*
@@ -91,17 +73,19 @@ export class SendComponent implements OnInit, OnDestroy {
     } else {
       this.type = 'sendPayment';
     }
-
   }
 
+  /** Toggle advanced controls and settings */
   toggleAdvanced() {
     this.advanced = !this.advanced;
   }
 
+  /** Get current account balance (Public / Blind / Anon) */
   getBalance(account: string) {
-    return (this._balance ? this._balance.getBalance(account.toUpperCase()) : '');
+    return this._rpc.state.get(account);
   }
 
+  /** Get the send address */
   getAddress(): string {
     if (this.type === 'sendPayment') {
       return this.send.toAddress;
@@ -169,7 +153,6 @@ export class SendComponent implements OnInit, OnDestroy {
       });
   }
 
-
   /** Clear the send object. */
   clear() {
     this.send = {
@@ -218,18 +201,6 @@ export class SendComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this._rpc.chainState.take(1)
-        .subscribe(
-          state => {
-            if (['Locked', 'Unlocked, staking only'].indexOf(state.chain.encryptionstatus) !== -1) {
-              // unlock wallet and send transaction
-              this._modals.unlockWallet(this, this.sendTransaction, 2);
-            } else {
-              // wallet already unlocked
-              this.sendTransaction();
-            }
-          });
-
     // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
 
@@ -245,57 +216,42 @@ export class SendComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this._rpc.chainState.take(1)
-        .subscribe(
-          state => {
-            if (['Locked', 'Unlocked, staking only'].indexOf(state.chain.encryptionstatus) !== -1) {
-              // unlock wallet and send transaction
-              this._modals.unlockWallet(this, this.sendTransaction, 2);
-            } else {
-              // wallet already unlocked
-              this.sendTransaction();
-            }
-          });
+    }
 
+    if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) !== -1) {
+      // unlock wallet and send transaction
+      this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
+    } else {
+      // wallet already unlocked
+      this.sendTransaction();
     }
   }
 
-  sendTransaction(): void {
+  private sendTransaction(): void {
 
-    // edit label of address
-    this.addLabelToAddress();
+    if (this.type === 'sendPayment') {
+      // edit label of address
+      this.addLabelToAddress();
 
-    this.sendService.sendTransaction(
-      this.send.input, this.send.output, this.send.toAddress,
-      this.send.amount, this.send.note, false, this.send.note,
-      this.send.privacy, 1);
+      this.sendService.sendTransaction(
+        this.send.input, this.send.output, this.send.toAddress,
+        this.send.amount, this.send.note, this.send.note,
+        this.send.privacy, 1);
+    } else {
 
+      this.sendService.transferBalance(
+        this.send.input, this.send.output, this.send.toAddress,
+        this.send.amount, this.send.privacy, 1);
+    }
     this.clear();
   }
-
-  transferBalance(): void {
-
-    const input = this.send.input;
-    const output = this.send.output;
-    const address = this.send.toAddress;
-    const amount = this.send.amount;
-    const ringsize = this.send.privacy;
-    const numsigs = 1;
-
-    this.sendService.transferBalance(
-      this.send.input, this.send.output, this.send.toAddress,
-      this.send.amount, this.send.privacy, 1);
-
-    this.clear();
-  }
-
   /*
     AddressLookup Modal + set details
   */
 
   openLookup() {
     const dialogRef = this.dialog.open(AddressLookupComponent);
-    dialogRef.componentInstance.type = (this.type == 'balanceTransfer') ? 'receive' : 'send';
+    dialogRef.componentInstance.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
       dialogRef.close();
@@ -327,25 +283,10 @@ export class SendComponent implements OnInit, OnDestroy {
     const label = this.send.toLabel;
     const addr = this.send.toAddress;
 
-    // this._rpc.oldCall(this, 'manageaddressbook', ['newsend', addr, label],
-    //   this.rpc_addLabel_success,
-    //   this.rpc_addLabel_failed
-    // );
     this._rpc.call('manageaddressbook', ['newsend', addr, label])
-      .subscribe(response => {
-        this.rpc_addLabel_success(response)
-      },
-      error => {
-        this.rpc_addLabel_failed(error);
-      });
-  }
-
-  rpc_addLabel_success(json: Object) {
-    this.log.er('rpc_addLabel_success: successfully added label to address.');
-  }
-
-  rpc_addLabel_failed(json: Object) {
-    this.log.er('rpc_addLabel_failed: failed to add label to address.');
+      .subscribe(
+        response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
+        error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
   }
 
 }

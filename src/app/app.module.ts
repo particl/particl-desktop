@@ -10,9 +10,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
 import { WalletModule } from './wallet/wallet.module';
-import { RpcModule, BlockStatusService } from './core/rpc/rpc.module';
+import { RpcModule } from './core/rpc/rpc.module';
 import { ModalsModule } from './modals/modals.module';
 
+import { StateService } from './core/state/state.service';
 import { WindowService } from './core/window.service';
 
 import { AppComponent } from './app.component';
@@ -23,6 +24,7 @@ import { SettingsComponent } from './settings/settings.component';
 
 import 'hammerjs';
 import { FlashNotificationService } from './services/flash-notification.service';
+import { BlockStatusService } from './core/rpc/blockstatus.service';
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -53,7 +55,8 @@ const routes: Routes = [
   providers: [
     WindowService,
     BlockStatusService,
-    FlashNotificationService
+    FlashNotificationService,
+    WindowService
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
