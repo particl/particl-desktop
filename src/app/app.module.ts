@@ -20,6 +20,7 @@ import { AppComponent } from './app.component';
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
+import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -32,7 +33,8 @@ const routes: Routes = [
     AppComponent,
     StatusComponent,
     OverviewComponent,
-    SettingsComponent
+    SettingsComponent,
+    StakinginfoComponent
   ],
   imports: [
     BrowserModule,
