@@ -15,25 +15,21 @@ export class ColdstakeComponent implements OnInit {
 
   log: any = Log.create('coldstake.component');
 
-  /*
-	State
-  */
+  /*  State  */
   step: number = 0;
   type: string;
 
 
-  /*
-    Hot wallet (step 3)
-  */
+  /*  Hot wallet (step 3)  */
 
   hotStakeAddress: any = "Generating...";
 
-  /*
-    Cold wallet (step 3)
-  */
+  /*  Cold wallet (step 3)  */
   prevColdStakeAddress: any = "";
   coldStakeAddress: any = "";
   private validAddress: boolean = undefined;
+  /*  Cold wallet (step 4)  */
+  finalMessage = '';
 
   constructor(
     @Inject(forwardRef(() => ModalsService))
@@ -177,10 +173,11 @@ export class ColdstakeComponent implements OnInit {
     ])
     .subscribe(
       success => {
-        this.log.er(`getColdStakingAddress: got changeaddress: ${success['changeaddress']['coldstakingaddress']}`);
-        this.coldStakeAddress = success['changeaddress']['coldstakingaddress'];
+        this.log.er(`getColdStakingAddress: set changeaddress: ${success['changeaddress']['coldstakingaddress']}`);
+        this.finalMessage = 'Successfully activated cold staking! ' + success['changeaddress']['coldstakingaddress'];
       },
       error => {
+        this.finalMessage = 'Failed to activate cold staking.. ' + error;
         this.log.er('getColdStakingAddress: ', error);
       });
   }
