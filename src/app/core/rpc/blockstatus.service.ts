@@ -8,16 +8,13 @@ import { PeerService } from './peer.service';
 @Injectable()
 export class BlockStatusService {
 
-  private _subBlockInternal: Subscription;
-  private _subBlockNetwork: Subscription;
-  private _peers: Subscription;
-
   private highestBlockHeightNetwork: number = -1;
   private highestBlockHeightInternal: number = -1;
   private startingBlockCount: number = -1;
   private totalRemainder: number = -1;
 
   public statusUpdates: Subject<any> = new Subject<any>();
+
   private status: any = {
     syncPercentage: 0,
     remainingBlocks: undefined,
@@ -26,21 +23,18 @@ export class BlockStatusService {
     estimatedTimeLeft: undefined,
     manuallyOpened: false,
     networkBH: -1,
-    internalBH: -1,
-    peerList: undefined
+    internalBH: -1
   };
 
   constructor(
     private _peerService: PeerService,
     private _state: StateService
   ) {
-    /*
-    * Get internal block height and calculate syncing details (ETA)
-    */
-    this._subBlockInternal = this._peerService.getBlockCount()
+    // Get internal block height and calculate syncing details (ETA)
+    this._state.observe('blocks')
       .subscribe(
         height => {
-          const lastBlockTime = new Date(this._state.get('mediantime'));
+          const lastBlockTime = new Date(+this._state.get('mediantime') * 1000);
           this.calculateSyncingDetails(lastBlockTime, height);
           this.highestBlockHeightInternal = height;
           this.status.internalBH = height;
@@ -51,10 +45,8 @@ export class BlockStatusService {
         },
         error => console.log('SyncingComponent subscription error:' + error));
 
-    /*
-    * Get heighest block count of peers and calculate remainerders.
-    */
-    this._subBlockNetwork = this._peerService.getBlockCountNetwork()
+    // Get heighest block count of peers and calculate remainerders.
+    this._peerService.getBlockCountNetwork()
       .subscribe(
         height => {
           this.highestBlockHeightNetwork = height;
@@ -64,34 +56,18 @@ export class BlockStatusService {
           }
         },
         error => console.log('SyncingComponent subscription error:' + error));
-
-    /*
-    * Get list of peers to know if daemon is actually connected to peers
-    */
-    this._peers = this._peerService.getPeerList().subscribe(peerList => {
-      this.status.peerList = peerList;
-    });
-  }
-
-  /**
-  * UI logic; has the syncing modal been opened manually?
-  */
-  setManuallyOpened() {
-    this.status.manuallyOpened = true;
   }
 
 
-  /**
-  * Calculates the details (percentage of synchronised, estimated time left, ..)
-  */
-  calculateSyncingDetails(newTime: Date, newHeight: number) {
+  /** Calculates the details (percentage of synchronised, estimated time left, ..) */
+  private calculateSyncingDetails(newTime: Date, newHeight: number) {
 
     const internalBH = this.highestBlockHeightInternal;
     const networkBH = this.highestBlockHeightNetwork;
 
     if (internalBH < 0 || networkBH < 0) {
       this.status.syncPercentage = 0;
-      return ;
+      return;
     }
 
     // remainingBlocks
@@ -125,10 +101,8 @@ export class BlockStatusService {
     this.statusUpdates.next(this.status);
   }
 
-  /**
-  * Returns how many blocks remain to be synced.
-  */
-  getRemainder() {
+  /** Returns how many blocks remain to be synced. */
+  private getRemainder() {
     const diff = this.highestBlockHeightNetwork - this.highestBlockHeightInternal;
     return (diff < 0 ? 0 : diff);
   }
@@ -136,17 +110,15 @@ export class BlockStatusService {
   // TODO: average out the estimated time left to stop random shifting when slowed down.
   // and localize
 
-  /**
-  * Calculates how much time is left to be fully synchronised.
-  */
-  estimateTimeLeft(blockDiff: number, timeDiff: number) {
+  /** Calculates how much time is left to be fully synchronised. */
+  private estimateTimeLeft(blockDiff: number, timeDiff: number) {
 
     let returnString = '';
 
-    const secs = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000);
-    const seconds = Math.floor(secs % 60);
-    const minutes = Math.floor((secs / 60) % 60);
-    const hours = Math.floor((secs / 3600) % 3600);
+    const secs = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000),
+          seconds = Math.floor(secs % 60),
+          minutes = Math.floor((secs / 60) % 60),
+          hours = Math.floor((secs / 3600) % 3600);
 
     if (hours > 0) {
       returnString += `${hours} ${hours > 1 ? 'hours' : 'hour'} `
