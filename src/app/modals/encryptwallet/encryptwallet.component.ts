@@ -5,6 +5,7 @@ import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { IPassword } from '../shared/password/password.interface';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 @Component({
   selector: 'app-encryptwallet',
@@ -22,7 +23,9 @@ export class EncryptwalletComponent implements OnInit {
   @ViewChild('alertBox')
   alertBox: AlertComponent;
 
-  constructor(private _rpc: RPCService) { }
+  constructor(private _rpc: RPCService,
+              private flashNotification: FlashNotificationService) {
+  }
 
   ngOnInit() {
   }
@@ -38,15 +41,16 @@ export class EncryptwalletComponent implements OnInit {
         this._rpc.call('encryptwallet', [password.password])
             .subscribe(
             (response: any) => {
-              this.alertBox.open(response, 'Wallet');
+              this.log.d(`Encrypting wallet! password: ${this.password}`);
+              this.flashNotification.open(`response`);
             } ,
             // Handle error appropriately
             error => {
-              this.alertBox.open('Wallet failed to encrypt properly!', 'Wallet');
+              this.flashNotification.open('Wallet failed to encrypt properly!');
               this.log.er('error encrypting wallet', error)
             });
       } else {
-        this.alertBox.open(`The passwords do not match!`, 'Wallet');
+        this.flashNotification.open('The passwords do not match!');
       }
 
     } else {
@@ -60,5 +64,4 @@ export class EncryptwalletComponent implements OnInit {
   clearPassword() {
     this.password = undefined;
   }
-
 }

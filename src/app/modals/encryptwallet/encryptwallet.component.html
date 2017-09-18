@@ -24,15 +24,11 @@
   [emitPassword]="true">
   </app-password>
 
-  <div *ngIf="password" class="buttons margin-top-30px">
-    <div class="row wallet-buttons-container">
-      <div class="col-sm-6 col-xs-12 text-right">
-        <button class="control" (click)="clearPassword()">
-          back
-        </button>
-      </div>
-    </div>
+  <div *ngIf="password" class="button-row">
+    <button md-raised-button (click)="clearPassword()">
+      back
+    </button>
   </div>
 
 
-<app-alert #alertBox ></app-alert>
+<!--<app-alert #alertBox ></app-alert>-->
