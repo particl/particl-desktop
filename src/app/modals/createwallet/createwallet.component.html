@@ -7,14 +7,14 @@
     <hr class="margin-top-100px">
 
     <div class="container">
-      <div class="row wallet-buttons-container">
+      <div class="button-row">
         <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control" (click)="nextStep();create();">
+          <button md-raised-button (click)="nextStep();create();">
             Create new wallet
           </button>
         </div>
         <div class="col-sm-6 col-xs-12 text-left">
-          <button class="control" (click)="nextStep();restore();">
+          <button md-raised-button (click)="nextStep();restore();">
             Restore wallet
           </button>
         </div>
@@ -39,9 +39,11 @@
 
       <div class="col-md-7">
         <div class="col-md-12">
-          <input #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
+          <md-form-field >
+          <input mdInput #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
             name="name" placeholder="Default Account..." required maxlength="32"
             [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
+          </md-form-field>
 
           <div *ngIf="validation.errors && (validation.dirty || validation.touched)"
               [@slideDown] class="alert alert-danger margin-top-5px">
@@ -59,12 +61,12 @@
     <div class="buttons margin-top-30px">
       <div class="row wallet-buttons-container">
         <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control" (click)="prevStep()">
+          <button md-raised-button (click)="prevStep()">
             back
           </button>
         </div>
         <div class="col-sm-6 col-xs-12 text-left">
-          <button class="control" type="submit" [disabled]="!nameForm.form.valid">
+          <button md-raised-button type="submit" [disabled]="!nameForm.form.valid">
             next step
           </button>
         </div>
@@ -99,7 +101,9 @@
 
       <div class="col-md-7">
         <div class="col-md-12">
-          <input class="form-control width-100" [(ngModel)]="name" placeholder="Default Account..." readonly />
+          <md-form-field>
+          <input mdInput class="form-control width-100" [(ngModel)]="name" placeholder="Default Account..." readonly />
+          </md-form-field>
         </div>
       </div>
     </div>
@@ -126,12 +130,12 @@
     <div class="buttons margin-top-30px">
       <div class="row wallet-buttons-container">
         <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control" (click)="prevStep()">
+          <button md-raised-button (click)="prevStep()">
             back
           </button>
         </div>
         <div class="col-sm-6 col-xs-12 text-left">
-          <button class="control"
+          <button md-raised-button
             (click)="step === 2 && passwordComponent.sendPassword();
              nextStep()"><!-- TODO: Move sendPassword to .ts -->
             next step
@@ -157,7 +161,9 @@
 
       <div class="col-md-7">
         <div class="col-md-12">
-          <input class="form-control" [(ngModel)]="name" placeholder="Default Account..." readonly />
+          <md-form-field>
+          <input mdInput [(ngModel)]="name" placeholder="Default Account..." readonly />
+          </md-form-field>
         </div>
       </div>
     </div>
@@ -186,7 +192,7 @@
     <div class="buttons margin-top-30px">
       <div class="row wallet-buttons-container">
         <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control" (click)="prevStep();restore()">
+          <button md-raised-button (click)="prevStep();restore()">
             back
           </button>
         </div>
@@ -211,7 +217,7 @@
     <hr class="margin-top-60px">
 
     <div class="buttons text-center">
-      <button class="control" (click)="close()">close</button>
+      <button md-raised-button (click)="close()">close</button>
     </div>
   </ng-template>
 </div>
