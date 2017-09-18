@@ -11,15 +11,8 @@ import { Log } from 'ng2-logger';
 })
 export class AlertComponent implements OnInit {
 
-  @ViewChild('alertBoxModal')
-  public alertBoxModal: ModalDirective;
-
-  @Input()
-  text: string;
-
-  @Input()
-  title: string = 'Alert';
-
+  public title: string;
+  public text: string;
   log: any = Log.create('alertbox.component');
 
   constructor() { }
@@ -35,16 +28,6 @@ export class AlertComponent implements OnInit {
     if (title) {
       this.title = title;
     }
-
-    this.show();
-  }
-
-  show() {
-    this.alertBoxModal.show();
-  }
-
-  hide() {
-    this.alertBoxModal.hide();
   }
 
 }
