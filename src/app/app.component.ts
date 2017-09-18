@@ -12,7 +12,7 @@ import { ModalsService } from './modals/modals.service';
 
 // Syncing example
 import { BlockStatusService } from './core/rpc/blockstatus.service';
-import {ModalsComponent} from "./modals/modals.component";
+import { ModalsComponent } from './modals/modals.component';
 
 @Component({
   selector: 'app-root',
@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
 
 
   createWallet() {
-    this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
+    this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     this._modalsService.open('createWallet', {forceOpen: true});
   }
 }
