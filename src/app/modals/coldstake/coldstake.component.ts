@@ -22,14 +22,14 @@ export class ColdstakeComponent implements OnInit {
 
   /*  Hot wallet (step 3)  */
 
-  hotStakeAddress: any = "Generating...";
+  hotStakeAddress: any = 'Generating...';
 
   /*  Cold wallet (step 3)  */
-  prevColdStakeAddress: any = "";
-  coldStakeAddress: any = "";
+  prevColdStakeAddress: any = '';
+  coldStakeAddress: any = '';
   private validAddress: boolean = undefined;
   /*  Cold wallet (step 4)  */
-  finalMessage = '';
+  finalMessage: string = '';
 
   constructor(
     @Inject(forwardRef(() => ModalsService))
@@ -46,9 +46,9 @@ export class ColdstakeComponent implements OnInit {
   }
 
   create(type: string) {
-    if(['hot', 'cold'].indexOf(type) !== -1) {
-  	  this.type = type;
-  	}
+    if (['hot', 'cold'].indexOf(type) !== -1) {
+      this.type = type;
+    }
 
 
     if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) === -1) {
@@ -56,10 +56,10 @@ export class ColdstakeComponent implements OnInit {
       this.nextStep();
     }
 
-    if(type === 'hot') { 
+    if (type === 'hot') {
       this.rpc_retrieveHotWallet();
     }
-    
+
   }
 
 
@@ -67,11 +67,11 @@ export class ColdstakeComponent implements OnInit {
   * called when the hot wallet unlocked (by password component)
   */
   unlockHotWallet(encryptionStatus: String) {
-    if(this.step === 1) {
+    if (this.step === 1) {
       this.nextStep();
     }
 
-    if(encryptionStatus === 'Unlocked') {
+    if (encryptionStatus === 'Unlocked') {
       this.rpc_retrieveHotWallet();
     } else {
       this.log.d(`unlockHotWallet, did not unlock: ${encryptionStatus}`);
@@ -79,7 +79,7 @@ export class ColdstakeComponent implements OnInit {
   }
 
 
-  rpc_retrieveHotWallet() : void {
+  rpc_retrieveHotWallet(): void {
     this.log.d('rpc_retrieveHotWallet called');
     this._rpc.call('extkey', [
       'account'
@@ -94,15 +94,15 @@ export class ColdstakeComponent implements OnInit {
   }
 
   rpc_filterHotListOfAccounts(response: Object) {
-    let chains: Array<Object> = response['chains'];
+    const chains: Array<Object> = response['chains'];
 
     // get our cold stake chain if it exists
-    let hotStakeChain = chains.filter(function(chain){
+    const hotStakeChain: Array<Object> = chains.filter(function(chain: Object){
       return chain['label'] === 'Cold Staking';
     });
 
     // if it exists, return to ui
-    if(hotStakeChain.length === 1) {
+    if (hotStakeChain.length === 1) {
       this.log.d('rpc_filterHotListOfAccounts: coldStakeChain already exist');
       this.hotStakeAddress = hotStakeChain[0]['chain'];
     } else {
@@ -126,13 +126,13 @@ export class ColdstakeComponent implements OnInit {
   * called when the cold wallet unlocked (by password component)
   */
   unlockColdWallet(encryptionStatus: String) {
-    if(this.step === 1) {
+    if (this.step === 1) {
       this.nextStep();
       this.getColdStakingAddress();
 
     }
 
-    if(this.step === 3) {
+    if (this.step === 3) {
       this.nextStep();
       this.setColdStakingAddress();
     }
@@ -141,7 +141,7 @@ export class ColdstakeComponent implements OnInit {
   /**
   * Get the existing cold staking address.
   */
-  getColdStakingAddress() : void {
+  getColdStakingAddress(): void {
     this.log.d('getColdStakingAddress called');
     this._rpc.call('walletsettings', [
       'changeaddress'
@@ -158,11 +158,11 @@ export class ColdstakeComponent implements OnInit {
   }
 
   /**
-  * Set the coldStakeAddress if it has changed. 
+  * Set the coldStakeAddress if it has changed.
   */
-  setColdStakingAddress() : void {
-    if(this.prevColdStakeAddress === this.coldStakeAddress) {
-      if(this.step === 3) {
+  setColdStakingAddress(): void {
+    if (this.prevColdStakeAddress === this.coldStakeAddress) {
+      if (this.step === 3) {
         this.nextStep();
       }
       return;
@@ -183,10 +183,10 @@ export class ColdstakeComponent implements OnInit {
   }
 
   /**
-  * We need to send all the public coins to our own wallet to change the output script, 
+  * We need to send all the public coins to our own wallet to change the output script,
   * if we do not do this then the hot wallet can not stake immediately.
   */
-  transferAllCoinsToColdStake() : void {
+  transferAllCoinsToColdStake(): void {
 
   }
 }

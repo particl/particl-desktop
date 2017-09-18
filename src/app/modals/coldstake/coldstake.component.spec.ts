@@ -1,5 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../core/rpc/rpc.module';
+import { ModalsModule } from '../modals.module';
+
 import { ColdstakeComponent } from './coldstake.component';
 
 describe('ColdstakeComponent', () => {
@@ -8,7 +12,11 @@ describe('ColdstakeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ColdstakeComponent ]
+      imports: [
+        SharedModule,
+        RpcModule.forRoot(),
+        ModalsModule
+      ]
     })
     .compileComponents();
   }));

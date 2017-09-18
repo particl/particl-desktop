@@ -58,7 +58,7 @@ export class UnlockwalletComponent {
     this.timeout = this.DEFAULT_TIMEOUT;
     this.showStakeOnly = true;
 
-    if(this.disableAutoClose === false) {
+    if (this.disableAutoClose === false) {
       this.log.d('Closing modal!');
       document.getElementById('close').click();
     }

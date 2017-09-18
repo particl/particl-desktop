@@ -65,7 +65,7 @@ export class RPCService {
     this.registerStateCall('getblockchaininfo', 2000);
     this.registerStateCall('getwalletinfo', 2000);
     this.registerStateCall('getstakinginfo', 15000);
-    //this.registerStateCall('extkey', 15000, ['account']);
+    // this.registerStateCall('extkey', 15000, ['account']);
 
     if (this.isElectron) {
 
