@@ -6,6 +6,10 @@ import { ModalsService } from '../../modals/modals.service';
 import { StateService } from '../state/state.service';
 
 import { PeerService, RPCService, BlockStatusService } from '../rpc/rpc.module';
+import {MdDialog} from "@angular/material";
+import {EncryptwalletComponent} from "../../modals/encryptwallet/encryptwallet.component";
+import {UnlockwalletComponent} from "../../modals/unlockwallet/unlockwallet.component";
+import {ModalsComponent} from "../../modals/modals.component";
 
 @Component({
   selector: 'app-status',
@@ -25,11 +29,12 @@ export class StatusComponent implements OnInit {
   constructor(
     private _rpc: RPCService,
     private _modalsService: ModalsService,
+    private dialog: MdDialog,
     private _stateService: StateService) { }
 
   ngOnInit() {
     this._rpc.state.observe('connections')
-      .subscribe(connections => this.peerListCount = connections)
+      .subscribe(connections => this.peerListCount = connections);
 
     this._rpc.state.observe('encryptionstatus')
       .subscribe(status => this.encryptionStatus = status);
@@ -65,6 +70,7 @@ export class StatusComponent implements OnInit {
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
+        this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('encrypt', {'forceOpen': true});
         break;
       case 'Unlocked':
@@ -75,6 +81,8 @@ export class StatusComponent implements OnInit {
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':
+        // this.dialog.open(UnlockwalletComponent, {forceOpen: true, showStakeOnly: true});
+        this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('unlock', {forceOpen: true, showStakeOnly: true});
         break;
       default:
