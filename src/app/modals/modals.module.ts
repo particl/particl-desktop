@@ -18,13 +18,16 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
+import {MaterialModule} from '@angular/material';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    ModalModule,
-    ClipboardModule
+    ClipboardModule,
+    MaterialModule,
+    FlexLayoutModule
   ],
   declarations: [
     FocusDirective,
@@ -47,7 +50,12 @@ import { AlertComponent } from './shared/alert/alert.component';
     PassphraseService
   ],
   entryComponents: [
-    ModalsComponent
+    ModalsComponent,
+    DaemonComponent,
+    SyncingComponent,
+    UnlockwalletComponent,
+    EncryptwalletComponent,
+    AlertComponent
   ],
 })
 export class ModalsModule { }

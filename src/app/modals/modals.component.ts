@@ -97,16 +97,15 @@ export class ModalsComponent implements DoCheck, OnInit {
     if (data !== undefined && dynamicModal.instance.setData !== undefined) {
       dynamicModal.instance.setData(data);
     }
-    this.staticModal.show();
   }
 
   close() {
     this._dialogRef.close();
     // remove and destroy message
-    // this._modalService.close();
-    // this.staticModal.hide();
-    // this.modalContainer.remove();
-    // this.modal.destroy();
+    this._modalService.close();
+    this.staticModal.hide();
+    this.modalContainer.remove();
+    this.modal.destroy();
   }
 
     @HostListener('window:keydown', ['$event'])
