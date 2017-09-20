@@ -52,11 +52,11 @@ class Manager extends EventEmitter {
         ? options.customdaemon
         : this._availableClients['particld'].binPath;
 
-      if (!options.rpcport) {
-        process.argv.push(`-rpcport=${options.port}`);
-      }
+      // if (!options.rpcport) {
+      //   process.argv.push(`-rpcport=${options.port}`);
+      // }
 
-      rpc.checkDaemon(options.testnet).then(() => {
+      rpc.checkDaemon(options).then(() => {
         log.info('daemon already started');
         resolve(undefined);
       }).catch(() => {

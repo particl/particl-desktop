@@ -96,10 +96,10 @@ function initMainWindow(trayImage) {
   }
 
   // handle external URIs
-  mainWindow.webContents.on('new-window', (event, url) => {
-    event.preventDefault();
-    electron.shell.openExternal(url);
-  });
+  // mainWindow.webContents.on('new-window', (event, url) => {
+  //   event.preventDefault();
+  //   electron.shell.openExternal(url);
+  // });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -120,7 +120,8 @@ function makeTray() {
 
   // Determine appropriate icon for platform
   if (platform === 'darwin') {
-    trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
+    // trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
+    trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
   }
   else if (platform === 'win32' || platform === 'win64') {
     trayImage = path.join(__dirname, 'src/assets/icons/logo.ico');
@@ -170,7 +171,7 @@ function makeTray() {
 
   // TODO, tray pressed icon for OSX? :)
   if (platform === "darwin") {
-    tray.setPressedImage(imageFolder + '/osx/trayHighlight.png');
+    // tray.setPressedImage(imageFolder + '/osx/trayHighlight.png');
   }
 
   // Set the tray icon
@@ -212,6 +213,8 @@ function parseArguments() {
     } else if (arg[1] === '-'){
       // double dash command
       options[arg.substr(2)] = true;
+      // remove from parameters that are going to be passed to the daemon
+        process.argv.splice(index, 1);
     } else if (arg[0] === '-') {
       // simple dash command
       options[arg.substr(1)] = true;
