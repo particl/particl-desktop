@@ -291,6 +291,16 @@
 
 .mat-form-field-autofill-float:-webkit-autofill + .mat-form-field-placeholder-wrapper .mat-form-field-float {
   -ms-transform: translateY(-1.28125em) scale(.75);
+  -webkit-transform: translateY(-1.28125em) scale(.75);
+  -o-transform: translateY(-1.28125em) scale(.75);
+  -moz-transform: translateY(-1.28125em) scale(.75);
+  transform: translateY(-1.28125em) scale(.75);
+
+  transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+  -webkit-transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+  -o-transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+  -moz-transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+  -ms-transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
   transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
   width: 133.33333%
 }
@@ -306,7 +316,16 @@
 
 .mat-focused .mat-form-field-placeholder.mat-form-field-float, .mat-form-field-placeholder.mat-form-field-float:not(.mat-form-field-empty) {
   -ms-transform: translateY(-1.28125em) scale(.75);
+  -webkit-transform: translateY(-1.28125em) scale(.75);
+  -o-transform: translateY(-1.28125em) scale(.75);
+  -moz-transform: translateY(-1.28125em) scale(.75);
+  transform: translateY(-1.28125em) scale(.75);
+
   transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+  -webkit-transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+  -o-transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+  -moz-transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+  -ms-transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
   width: 133.33333%
 }
 
@@ -329,7 +348,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  box-sizing: border-box
+  box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .mat-grid-tile-footer .mat-line:nth-child(n+2), .mat-grid-tile-header .mat-line:nth-child(n+2) {
@@ -416,7 +439,11 @@ input.mat-input-element {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  box-sizing: border-box
+  box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .mat-list .mat-list-item .mat-line:nth-child(n+2), .mat-nav-list .mat-list-item .mat-line:nth-child(n+2), .mat-selection-list .mat-list-item .mat-line:nth-child(n+2) {
@@ -432,7 +459,11 @@ input.mat-input-element {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  box-sizing: border-box
+  box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .mat-list .mat-list-option .mat-line:nth-child(n+2), .mat-nav-list .mat-list-option .mat-line:nth-child(n+2), .mat-selection-list .mat-list-option .mat-line:nth-child(n+2) {
@@ -454,7 +485,11 @@ input.mat-input-element {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  box-sizing: border-box
+  box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .mat-list[dense] .mat-list-item .mat-line:nth-child(n+2), .mat-nav-list[dense] .mat-list-item .mat-line:nth-child(n+2), .mat-selection-list[dense] .mat-list-item .mat-line:nth-child(n+2) {
@@ -470,7 +505,11 @@ input.mat-input-element {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  box-sizing: border-box
+  box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .mat-list[dense] .mat-list-option .mat-line:nth-child(n+2), .mat-nav-list[dense] .mat-list-option .mat-line:nth-child(n+2), .mat-selection-list[dense] .mat-list-option .mat-line:nth-child(n+2) {
@@ -667,6 +706,10 @@ input.mat-input-element {
   position: absolute;
   pointer-events: auto;
   box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   z-index: 1000
 }
 
