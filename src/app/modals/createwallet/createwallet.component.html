@@ -28,12 +28,13 @@
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
         <form #nameForm="ngForm" fxLayout="column" fxLayoutAlign="center center" fxFlex="100%" (ngSubmit)="nextStep()">
 
-          <div class="container form_block" fxFlex="70%">
-            <div fxFlex="30%">
+          <div class="container form_block" fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%" fxlayout.sm="column" fxlayout.lt-sm="column"
+               fxlayout.lt-xs="column" fxlayout.xs="column">
+            <div fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
               <label class="wallet-name-label">YOUR WALLET NAME</label>
             </div>
 
-            <div fxFlex="70%">
+            <div fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
               <div class="col-md-12">
                 <md-form-field>
                   <input mdInput #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
@@ -88,11 +89,11 @@
       </div>
       <div fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
         <div class="container form_block" fxFlex="70%">
-          <div fxFlex="30%">
+          <div fxFlex="30%"  fxFlex.sm="100%" fxFlex.xs="100%">
             <label class="wallet-name-label">YOUR WALLET NAME</label>
           </div>
 
-          <div fxFlex="70%">
+          <div fxFlex="70%"  fxFlex.sm="100%" fxFlex.xs="100%">
             <div class="col-md-12">
               <md-form-field>
                 <input mdInput class="form-control width-100" [(ngModel)]="name" placeholder="Default Account..."

@@ -1,54 +1,9 @@
-<!--ng-template *ngIf="stateOfPassphrase === 'generate'">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12 text-center">
-        <h4>Write your wallet recovery phrase</h4>
-        <!
-        <div style="color: #ec4b50;">
-          Lorem ipsum
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <hr class="margin-top-40px">
-</ng-template!-->
-
-<!--ng-template *ngIf="stateOfPassphrase === 'verify'">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12 text-center">
-        <h4>Confirm your wallet recovery phrase</h4>
-        <div *ngIf="isValid === false" class="verify-error">
-          Recovery phrase was not valid!
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="margin-top-40px">
-</ng-template>
-
-<ng-template *ngIf="stateOfPassphrase === 'recovery'">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12 text-center">
-        <h4>Please enter your <b>24 word recovery phrase</b> and <b>password</b> below.</h4>
-      </div>
-    </div>
-  </div>
-
-  <hr class="margin-top-100px">
-</ng-template-->
-
-
 <div fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
-  <div class="container form_block" fxFlex="70%">
+  <div class="container form_block" fxFlex="70%"  fxFlex.sm="100%" fxFlex.xs="100%">
     <div fxFlex="30%">
       <label>YOUR 24 WORD RECOVERY PHRASE</label>
     </div>
-    <div  fxFlex="70%"  class="containerX">
+    <div  fxFlex="70%"  class="containerX"  fxFlex.sm="100%" fxFlex.xs="100%">
       <div fxLayout="row wrap">
       <div fxFlex="16.66%"  *ngFor="let k of Arr(24).fill(); let i = index">
         <md-form-field class="row_input_gap" >
