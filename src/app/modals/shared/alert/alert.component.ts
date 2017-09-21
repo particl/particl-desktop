@@ -1,6 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import { Component, OnInit } from '@angular/core';
 
 import { Log } from 'ng2-logger';
 
@@ -9,7 +7,7 @@ import { Log } from 'ng2-logger';
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.scss']
 })
-export class AlertComponent implements OnInit {
+export class AlertComponent {
 
   public title: string;
   public text: string;
@@ -17,10 +15,7 @@ export class AlertComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
-
-  open(text: string, title?: string) {
+  open(text: string, title?: string): void {
     if (text) {
       this.text = text;
     }

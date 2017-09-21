@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ComponentRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.module';
@@ -12,7 +12,7 @@ import { FlashNotificationService } from '../../services/flash-notification.serv
   templateUrl: './encryptwallet.component.html',
   styleUrls: ['./encryptwallet.component.scss']
 })
-export class EncryptwalletComponent implements OnInit {
+export class EncryptwalletComponent {
 
   log: any = Log.create('unlockwallet.component');
   public password: string;
@@ -25,9 +25,6 @@ export class EncryptwalletComponent implements OnInit {
 
   constructor(private _rpc: RPCService,
               private flashNotification: FlashNotificationService) {
-  }
-
-  ngOnInit() {
   }
 
   encryptwallet(password: IPassword) {

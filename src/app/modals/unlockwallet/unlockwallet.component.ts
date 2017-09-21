@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.service';
-import {MdDialogRef} from "@angular/material";
+import { MdDialogRef } from '@angular/material';
 
 
 @Component({

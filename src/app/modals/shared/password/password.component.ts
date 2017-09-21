@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 import { IPassword } from './password.interface';
 
 import { RPCService } from '../../../core/rpc/rpc.module';
-import {FlashNotificationService} from "../../../services/flash-notification.service";
+import { FlashNotificationService } from '../../../services/flash-notification.service';
 
 
 @Component({

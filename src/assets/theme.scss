@@ -253,17 +253,26 @@ input[type="text"] {
   background: transparent !important;
   background-color: rgba(255, 255, 255, 0.9) !important;
   position: relative;
-  .close_button{
-    position: absolute;right: 0px;top: 5px;background: transparent;color: #999;min-width: 50px;
-    &:hover{color: #222;}
+  .close_button {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    background: transparent;
+    color: #999;
+    min-width: 50px;
+    &:hover {
+      color: #222;
+    }
   }
-  .md-wallet-content{max-height: 100% !important;}
+  .md-wallet-content {
+    max-height: 100% !important;
+  }
 }
 
 .create-wallet-action-button {
-  min-width: 145px !important;margin: 12px !important;
+  min-width: 145px !important;
+  margin: 12px !important;
 }
-
 
 .form_block {
   width: 60%;
@@ -271,7 +280,7 @@ input[type="text"] {
     width: 100%;
     display: block;
   }
-  .row_input_gap{
+  .row_input_gap {
     width: 80% !important;
   }
   .button-row {
@@ -288,12 +297,16 @@ input[type="text"] {
     text-transform: uppercase;
   }
 }
-.error{color: #ec4b50;}
-.hr-light{    border: none;
+
+.error {
+  color: #ec4b50;
+}
+
+.hr-light {
+  border: none;
   border-bottom: 1px solid #ccc;
   margin: 20px 0;
 }
-
 
 @media (max-width: 1280px) {
   .qrcode {
@@ -331,8 +344,6 @@ input[type="text"] {
   }
 
 }
-
-
 
 @media (max-width: 640px) {
   .qrcode {

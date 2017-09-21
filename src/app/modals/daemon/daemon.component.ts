@@ -1,6 +1,4 @@
-import { Component, Inject, forwardRef } from '@angular/core';
-
-import { ModalsService } from '../modals.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-daemon',

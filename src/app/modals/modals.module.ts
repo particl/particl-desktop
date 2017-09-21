@@ -1,7 +1,6 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { ModalsService } from './modals.service';
@@ -18,8 +17,8 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
-import {MaterialModule} from '@angular/material';
-import {FlexLayoutModule} from '@angular/flex-layout';
+import { MaterialModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   imports: [
