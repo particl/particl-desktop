@@ -290,8 +290,8 @@
 }
 
 .mat-form-field-autofill-float:-webkit-autofill + .mat-form-field-placeholder-wrapper .mat-form-field-float {
-  transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
   -ms-transform: translateY(-1.28125em) scale(.75);
+  transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
   width: 133.33333%
 }
 
@@ -305,8 +305,8 @@
 }
 
 .mat-focused .mat-form-field-placeholder.mat-form-field-float, .mat-form-field-placeholder.mat-form-field-float:not(.mat-form-field-empty) {
-  transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
   -ms-transform: translateY(-1.28125em) scale(.75);
+  transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
   width: 133.33333%
 }
 

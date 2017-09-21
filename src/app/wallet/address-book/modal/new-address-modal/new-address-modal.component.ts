@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FlashNotificationService} from '../../../../services/flash-notification.service';
-import {RPCService} from '../../../../core/rpc/rpc.service';
-import {MdDialogRef} from '@angular/material';
-import {Log} from 'ng2-logger';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FlashNotificationService } from '../../../../services/flash-notification.service';
+import { RPCService } from '../../../../core/rpc/rpc.service';
+import { MdDialogRef } from '@angular/material';
+import { Log } from 'ng2-logger';
 
 @Component({
   selector: 'app-new-address-modal',

@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import { Component } from '@angular/core';
 import { MdDialog } from '@angular/material';
 import { NewAddressModalComponent } from './modal/new-address-modal/new-address-modal.component';
 import { Log } from 'ng2-logger';
