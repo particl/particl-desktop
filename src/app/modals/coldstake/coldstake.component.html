@@ -68,7 +68,7 @@
     <div class="container">
       <div class="row wallet-buttons-container">
         <div class="center text-center" >
-          <input type="textbox" value="{{hotStakeAddress}}" style="width: 100%"/>
+          <input type="textbox" class="width-100" value="{{hotStakeAddress}}" />
         </div>
       </div>
     </div>
@@ -109,7 +109,7 @@
     <div class="container">
       <div class="row wallet-buttons-container">
         <div class="center text-center" >
-          <input type="textbox" [(ngModel)]="coldStakeAddress" style="width: 100%"/>
+          <input type="textbox" class="width-100" [(ngModel)]="coldStakeAddress" />
         </div>
       </div>
       <br />
@@ -117,7 +117,7 @@
       <div class="col-sm-12 col-xs-12 text-center">
         <button class="control blue" (click)="nextStep();">
           Enable cold staking
-         </button>
+        </button>
       </div>
     </div>
 
