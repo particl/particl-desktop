@@ -11,7 +11,7 @@ import { FlashNotificationService } from '../../../../services/flash-notificatio
 })
 export class AddAddressLabelComponent implements OnInit {
 
-  @Output() onAddressAdd = new EventEmitter();
+  @Output() onAddressAdd: EventEmitter<Object> = new EventEmitter<Object>();
 
   public addLableForm: FormGroup;
   public type: string;

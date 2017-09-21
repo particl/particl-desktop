@@ -10,7 +10,7 @@ export class DeleteConfirmationModalComponent implements OnInit {
 
   public dialogContent: string;
 
-  @Output() onDelete = new EventEmitter();
+  @Output() onDelete: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private diloagRef: MdDialogRef<DeleteConfirmationModalComponent>) { }
 

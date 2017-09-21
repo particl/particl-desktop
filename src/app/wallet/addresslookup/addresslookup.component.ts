@@ -12,7 +12,7 @@ import { AddressLookUpCopy } from '../models/address-look-up-copy';
 })
 export class AddressLookupComponent implements OnInit {
 
-  @Output() selectAddressCallback = new EventEmitter();
+  @Output() selectAddressCallback: EventEmitter<AddressLookUpCopy> = new EventEmitter<AddressLookUpCopy>();
 
   log: any = Log.create('addresslookup.component');
 

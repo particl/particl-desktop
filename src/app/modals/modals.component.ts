@@ -6,13 +6,10 @@ import {
   DoCheck,
   ElementRef,
   HostListener,
-  ReflectiveInjector,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
 import { Log } from 'ng2-logger'
-
-import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { ModalsService } from './modals.service';
@@ -22,7 +19,7 @@ import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
-import {MdDialogRef} from "@angular/material";
+import { MdDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-modals',

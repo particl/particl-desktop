@@ -1,5 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-send-confirmation-modal',
@@ -8,7 +7,7 @@ import { MdDialogRef } from '@angular/material';
 })
 export class SendConfirmationModalComponent {
 
-  @Output() onConfirm = new EventEmitter();
+  @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
 
   public dialogContent: string;
 
