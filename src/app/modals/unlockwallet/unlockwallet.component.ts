@@ -1,8 +1,8 @@
-import { Component, Injectable } from '@angular/core';
-import { ModalsModule } from '../modals.module';
+import { Component } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.service';
+import {MdDialogRef} from "@angular/material";
 
 
 @Component({
@@ -20,7 +20,8 @@ export class UnlockwalletComponent {
   timeout: number = this.DEFAULT_TIMEOUT;
   showStakeOnly: boolean = true;
 
-  constructor (private _rpc: RPCService) { }
+  constructor (private _rpc: RPCService,
+  private dialogRef: MdDialogRef<UnlockwalletComponent>) { }
 
   unlock(encryptionStatus: string) {
     // unlock actually happened in password.component.ts
@@ -56,6 +57,6 @@ export class UnlockwalletComponent {
     this.timeout = this.DEFAULT_TIMEOUT;
     this.showStakeOnly = true;
     this.log.d('Closing modal!');
-    document.getElementById('close').click();
+    this.dialogRef.close();
   }
 }
