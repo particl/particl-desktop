@@ -111,6 +111,10 @@ function cb_handleRequestResponse (res, cb) {
       return ;
     }
     data = JSON.parse(data);
+    if (data.error !== null){
+      cb(data, null);
+      return ;
+    }
     cb(null, data);
   });
 }
