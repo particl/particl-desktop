@@ -1,4 +1,6 @@
-# Partgui
+# Particl-UI
+
+![UI Preview](preview.png)
 
 [![Build Status](https://travis-ci.org/particl/partgui.svg?branch=master)](https://travis-ci.org/particl/partgui)
 [![Coverage Status](https://coveralls.io/repos/github/particl/partgui/badge.svg?branch=master)](https://coveralls.io/github/particl/partgui?branch=master)
@@ -10,15 +12,16 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Development server
 * Download + Install [nodejs](https://nodejs.org/) 6.4 - 7.10
 * Download + Install [git](https://git-scm.com/)
-*
+
 ```
 git clone https://github.com/particl/partgui
 cd partgui
 npm install
 ```
-* Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+* Run `ng serve` for a dev server. 
+* Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## With real rpc data
+## Start the particl-core daemon
 ### Start
 ```
 ./particld -daemon -testnet -debug -rpcuser=test -rpcpassword=test -rpccorsdomain=http://localhost:4200
