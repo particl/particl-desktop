@@ -7,6 +7,15 @@
 [![Code Climate](https://codeclimate.com/github/particl/partgui/badges/gpa.svg)](https://codeclimate.com/github/particl/partgui)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/partgui.svg)](https://greenkeeper.io/)
 
+Particl is an open source project that aims to restore the balance of privacy on the internet. 
+
+We provide a decentralized privacy platform with a suite of tools to enhance your online privacy:
+* **An anonymous cryptocurrency** - send and receive the PART cryptocurrency without revealing the transaction history
+* **End-to-end encrypted messaging** - communicate in a secure and decentralized manner without revealing your IP address
+* **A private marketplace** - buy and sell goods without leaving a trace
+
+This repository is the user interface that works in combination our `particl-core`.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
 
 ## Development server
