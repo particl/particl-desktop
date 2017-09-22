@@ -14,7 +14,7 @@ We provide a decentralized privacy platform with a suite of tools to enhance you
 * **End-to-end encrypted messaging** - communicate in a secure and decentralized manner without revealing your IP address
 * **A private marketplace** - buy and sell goods without leaving a trace
 
-This repository is the user interface that works in combination our `particl-core`.
+This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
 
