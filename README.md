@@ -7,7 +7,7 @@
 [![Code Climate](https://codeclimate.com/github/particl/partgui/badges/gpa.svg)](https://codeclimate.com/github/particl/partgui)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/partgui.svg)](https://greenkeeper.io/)
 
-Particl is an open source project that aims to restore the balance of privacy on the internet. 
+> *"Particl is an open source project that aims to restore the balance of privacy on the internet."* 
 
 We provide a decentralized privacy platform with a suite of tools to enhance your online privacy:
 * **An anonymous cryptocurrency** - send and receive the PART cryptocurrency without revealing the transaction history
