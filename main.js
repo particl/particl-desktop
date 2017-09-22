@@ -74,10 +74,10 @@ function initMainWindow(trayImage) {
   })
 
   // handle external URIs
-  mainWindow.webContents.on('new-window', (event, url) => {
-    event.preventDefault();
-    electron.shell.openExternal(url);
-  });
+  // mainWindow.webContents.on('new-window', (event, url) => {
+  //   event.preventDefault();
+  //   electron.shell.openExternal(url);
+  // });
 
   // and load the index.html of the app.
   if (options.dev) {
@@ -96,10 +96,10 @@ function initMainWindow(trayImage) {
   }
 
   // handle external URIs
-  // mainWindow.webContents.on('new-window', (event, url) => {
-  //   event.preventDefault();
-  //   electron.shell.openExternal(url);
-  // });
+  mainWindow.webContents.on('new-window', (event, url) => {
+    event.preventDefault();
+    electron.shell.openExternal(url);
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -119,13 +119,13 @@ function makeTray() {
   let trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
 
   // Determine appropriate icon for platform
-  if (platform === 'darwin') {
-    // trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
-    trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
-  }
-  else if (platform === 'win32' || platform === 'win64') {
-    trayImage = path.join(__dirname, 'src/assets/icons/logo.ico');
-  }
+  // if (platform === 'darwin') {
+  //   // trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
+  //   trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
+  // }
+  // else if (platform === 'win32' || platform === 'win64') {
+  //   trayImage = path.join(__dirname, 'src/assets/icons/logo.ico');
+  // }
 
   // The tray context menu
   const contextMenu = electron.Menu.buildFromTemplate([
