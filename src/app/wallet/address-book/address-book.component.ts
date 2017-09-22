@@ -19,10 +19,12 @@ export class AddressBookComponent implements OnInit {
   label: string = '';
   address: string;
   openNewAddressModal: boolean = false;
-
+  public errorAddress: boolean = false;
+  public errorString: string = '';
   // Validation state
-  private validAddress: boolean = undefined;
-  private isMine: boolean = undefined;
+  public validAddress: boolean = undefined;
+  public isMine: boolean = undefined;
+  public isLock: boolean = false;
 
   constructor(private _rpc: RPCService) { }
 
@@ -30,6 +32,7 @@ export class AddressBookComponent implements OnInit {
   }
 
   openNewAddress() {
+    this.isLock = false;
     this.openNewAddressModal = true;
   }
 
@@ -66,40 +69,28 @@ export class AddressBookComponent implements OnInit {
     * has a label (in the textbox) and is not one of our own addresses.
     */
   addAddressToBook() {
-    if (!this.validAddress) {
-      // TODO: We should get rid of alerts
-      alert('Please enter a valid address!');
-      return;
-    }
-
-    if (this.isMine) {
-      this.clearAndClose();
-      // TODO: We should get rid of alerts
-      alert('This is your own address - can not be added to addressbook!');
-      return;
-    }
-
     if (this.label) {
       this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
         .subscribe(
           response => this.rpc_addAddressToBook_success(response),
           error => this.rpc_addAddressToBook_failed(error));
-
-      this.address = undefined;
-      this.validAddress = undefined;
-      this.label = '';
-      this.closeNewAddress();
     }
   }
 
   /** Address was added succesfully to the address book. */
   rpc_addAddressToBook_success(json: Object) {
-    if (json['result'] === 'success') {
+    if (json && json['result'] === 'success') {
       alert('Address successfully added to the addressbook!');
-
+      this.address = undefined;
+      this.label = '';
+      this.closeNewAddress();
       // TODO: remove specialPoll! (updates the address table)
       this._rpc.specialPoll();
+    } else {
+      this.isLock = true;
     }
+    this.validAddress = undefined;
+    this.isMine = undefined;
   }
 
   /**
@@ -118,6 +109,7 @@ export class AddressBookComponent implements OnInit {
     if (this.address === undefined || this.address === '') {
       this.validAddress = undefined;
       this.isMine = undefined;
+      this.isLock = false;
       return;
     }
 
@@ -136,6 +128,7 @@ export class AddressBookComponent implements OnInit {
   rpc_verifyAddress_success(json: Object) {
     this.validAddress = json['isvalid'];
     this.isMine = json['ismine'];
+    this.isLock = false;
     if (json['account'] !== undefined) {
       this.label = json['account'];
     }
