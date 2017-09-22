@@ -63,9 +63,7 @@ export class ColdstakeComponent implements OnInit {
   }
 
 
-  /**
-  * called when the hot wallet unlocked (by password component)
-  */
+  /** called when the hot wallet unlocked (by password component)  */
   unlockHotWallet(encryptionStatus: String) {
     if (this.step === 1) {
       this.nextStep();
@@ -122,9 +120,7 @@ export class ColdstakeComponent implements OnInit {
   }
 
 
-  /**
-  * called when the cold wallet unlocked (by password component)
-  */
+  /**  called when the cold wallet unlocked (by password component)  */
   unlockColdWallet(encryptionStatus: String) {
     if (this.step === 1) {
       this.nextStep();
@@ -138,9 +134,7 @@ export class ColdstakeComponent implements OnInit {
     }
   }
 
-  /**
-  * Get the existing cold staking address.
-  */
+  /**  Get the existing cold staking address.  */
   getColdStakingAddress(): void {
     this.log.d('getColdStakingAddress called');
     this._rpc.call('walletsettings', [
@@ -157,9 +151,7 @@ export class ColdstakeComponent implements OnInit {
       });
   }
 
-  /**
-  * Set the coldStakeAddress if it has changed.
-  */
+  /**  Set the coldStakeAddress if it has changed.  */
   setColdStakingAddress(): void {
     if (this.prevColdStakeAddress === this.coldStakeAddress) {
       if (this.step === 3) {
