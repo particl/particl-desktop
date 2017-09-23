@@ -111,6 +111,10 @@ function cb_handleRequestResponse (res, cb) {
       return ;
     }
     data = JSON.parse(data);
+    if (data.error !== null){
+      cb(data, null);
+      return ;
+    }
     cb(null, data);
   });
 }
@@ -124,7 +128,6 @@ function rpcCall (method, params, auth, cb) {
     params: params,
     id: '1'
   });
-
   if (!options) {
     options = {
       hostname: HOSTNAME,
@@ -166,7 +169,8 @@ function getCookie(options) {
     ]);
   }
 
-  const COOKIE_FILE = findCookiePath() + `${options.testnet ? '/testnet' : ''}/.cookie`;
+  // const COOKIE_FILE = findCookiePath() + `${options.testnet ? '/testnet' : ''}/.cookie`;
+  const COOKIE_FILE = findCookiePath() + (options.testnet ? '/testnet' : '') + '/.cookie';
   let auth = [];
 
   if (fs.existsSync(COOKIE_FILE)) {
@@ -183,7 +187,6 @@ exports.getCookie = getCookie;
 ** prepares `backend-rpccall` to receive RPC calls from the renderer
 */
 function init(options) {
-
   HOSTNAME = options.rpcbind;
   PORT = options.port;
 
@@ -204,9 +207,9 @@ function init(options) {
 }
 exports.init = init;
 
-function checkDaemon(testnet) {
+function checkDaemon(options) {
   return new Promise((resolve, reject) => {
-    rpcCall('getinfo', null, getCookie(testnet), (error, response) => {
+    rpcCall('getinfo', null, getCookie(options), (error, response) => {
       if (error) {
         reject();
       } else if (response) {
