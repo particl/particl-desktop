@@ -9,13 +9,13 @@
         </a>
       </li>
     </ul>
-      <form class="header-form pull-right">
-        <input type="text" 
-        [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
-        <button class="btn" type="submit" name="button">
-          <span class="fa fa-search"></span>
-        </button>
-      </form>
+    <form class="header-form pull-right">
+      <input type="text"
+      [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
+      <button class="btn" type="submit" name="button">
+        <span class="fa fa-search"></span>
+      </button>
+    </form>
   </div>
 </app-header>
   <div class="container-fluid">
@@ -45,7 +45,7 @@
       <div class="col-xs-8">
         <input type="text" class="form-control" [(ngModel)]="address"
           placeholder="address"
-          [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
+          [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
           (input)="verifyAddress()">
       </div>
       <div class="col-xs-4">
@@ -53,27 +53,20 @@
           placeholder="label">
       </div>
     </div>
-      <div *ngIf="(validAddress == false || isMine == true || isLock)"
-            class="alert alert-danger">
-            <div [hidden]="validAddress != false">
-              Please enter a valid address!
-            </div>
-            <div [hidden]="isMine != true">
-              This is your own address - can not be added to addressbook!
-            </div>
-            <div [hidden]="!isLock">
-              Wallet is locked you aren't able to edit a label !
-            </div>
+    <div *ngIf="validAddress === false || isMine === true || isLocked"
+          class="alert alert-danger">
+      <div *ngIf="validAddress === false">
+        Please enter a valid address!
       </div>
+      <div *ngIf="isMine">
+        This is your own address - can not be added to addressbook!
+      </div>
+      <div *ngIf="isLocked">
+        Wallet is locked you aren't able to edit a label !
+      </div>
+    </div>
 
     <button class="control pull-right" (click)="addAddressToBook()">OK</button>
 
   </div>
 </div>
-
-<!-- <div id="error-modal"  [ngClass]="{'hide': errorAddress == false }">
-  <div class="error-modal-container alert alert-danger">
-    <span class="close" (click)="closeNewAddress()">&times;</span>
-      <strong>Error! </strong>{{errorString}}.
-  </div>
-</div> -->
