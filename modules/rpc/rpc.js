@@ -99,35 +99,14 @@ function mkDir(dirPath, root) {
 }
 
 /*
-** handle RPC call response
-*/
-function cb_handleRequestResponse (res, cb) {
-  var data = '';
-  res.setEncoding('utf8');
-  res.on('data', chunk => {data += chunk});
-  res.on('end', () => {
-    if (res.statusCode === 401) {
-      cb(res);
-      return ;
-    }
-    data = JSON.parse(data);
-    if (data.error !== null){
-      cb(data, null);
-      return ;
-    }
-    cb(null, data);
-  });
-}
-
-/*
 ** execute RPC call
 */
-function rpcCall (method, params, auth, cb) {
-  var postData = JSON.stringify({
+function rpcCall (method, params, auth, callback) {
+  const postData = JSON.stringify({
     method: method,
-    params: params,
-    id: '1'
+    params: params
   });
+
   if (!options) {
     options = {
       hostname: HOSTNAME,
@@ -136,20 +115,54 @@ function rpcCall (method, params, auth, cb) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      },
-      auth: auth ? auth[0] + ':' + auth[1] : undefined
+      }
     }
   }
+
+  if (options.auth !== auth) {
+    options.auth = auth
+  }
+
   options.headers['Content-Length'] = postData.length;
 
-  var req = http.request(options, res => cb_handleRequestResponse(res, cb));
-  req.on('error', e => cb(e));
-  req.setTimeout(TIMEOUT, e => {
-    cb(e);
-    return (req.abort());
+  const request = http.request(options, response => {
+    let data = '';
+    response.setEncoding('utf8');
+    response.on('data', chunk => data += chunk);
+    response.on('end', () => {
+      if (response.statusCode === 401) {
+        callback({
+          status: 401,
+          message: 'Unauthorized'
+        });
+        return ;
+      }
+
+      try {
+        data = JSON.parse(data);
+      } catch(e) {
+        log.error('ERROR: should not happen', e);
+        callback(e);
+      }
+
+      if (data.error !== null) {
+        callback(data, null);
+        return;
+      }
+      callback(null, data);
+    });
   });
-  req.write(postData);
-  req.end();
+
+  request.on('error', error => {
+    callback(error)
+  });
+
+  request.setTimeout(TIMEOUT, error => {
+    callback(error);
+    return request.abort();
+  });
+  request.write(postData);
+  request.end();
 }
 
 /*******************************/
@@ -160,44 +173,41 @@ function rpcCall (method, params, auth, cb) {
 ** returns the current RPC cookie
 ** RPC cookie is regenerated at every particld startup
 */
-function getCookie(options) {
+function getAuth(options) {
 
   if (options.rpcuser && options.rpcpassword) {
-    return ([
-      options.rpcuser,
-      options.rpcpassword
-    ]);
+    return options.rpcuser + ':' + options.rpcpassword;
   }
 
   // const COOKIE_FILE = findCookiePath() + `${options.testnet ? '/testnet' : ''}/.cookie`;
   const COOKIE_FILE = findCookiePath() + (options.testnet ? '/testnet' : '') + '/.cookie';
-  let auth = [];
+  let auth;
 
   if (fs.existsSync(COOKIE_FILE)) {
-    auth = fs.readFileSync(COOKIE_FILE, 'utf8').split(':');
+    auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();
   } else {
     auth = undefined;
     console.error('could not find cookie file !');
   }
+
   return (auth)
 }
-exports.getCookie = getCookie;
 
 /*
 ** prepares `backend-rpccall` to receive RPC calls from the renderer
 */
 function init(options) {
-  HOSTNAME = options.rpcbind;
+  HOSTNAME = options.rpcbind || 'localhost';
   PORT = options.port;
 
   // This is a factory function that returns an Observable
   function createObservable(event, method, params) {
-    let auth = getCookie(options);
+    let auth = getAuth(options);
     return Observable.create(observer => {
       rpcCall(method, params, auth, (error, response) => {
         if (error) {
           observer.error(error);
-          return ;
+          return;
         }
         observer.next(response);
       });
@@ -209,8 +219,9 @@ exports.init = init;
 
 function checkDaemon(options) {
   return new Promise((resolve, reject) => {
-    rpcCall('getinfo', null, getCookie(options), (error, response) => {
+    rpcCall('getnetworkinfo', null, getAuth(options), (error, response) => {
       if (error) {
+        // console.log('ERROR:', error);
         reject();
       } else if (response) {
         resolve();
