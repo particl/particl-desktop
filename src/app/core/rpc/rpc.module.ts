@@ -5,7 +5,7 @@ import { BlockStatusService } from './blockstatus.service'
 import { ElectronService } from 'ngx-electron';
 import { PeerService } from './peer.service';
 import { RPCService } from './rpc.service';
-import { RPXService } from './rpx.class';
+import { RPXService } from './rpx.service';
 import { StateService } from '../state/state.service';
 
 
