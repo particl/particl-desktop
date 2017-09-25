@@ -1,89 +1,104 @@
 :host /deep/ {
-  button.control {
-    background: #03e8b0;
-    border: 0;
-    color: #fff;
-    font-weight: 700;
-    font-size: 12px;
-    text-transform: uppercase;
-    padding: 10px 20px;
-    vertical-align: middle;
-  }
-
-  /* TODO: Once we've structured the modals correctly, we'll move this there.
+    button.control {
+        border: 0;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.8em;
+        text-transform: uppercase;
+        padding: 8px;
+        vertical-align: middle;
+        background-color: #03E8B0;
+        border-bottom: 1px solid #07B98D;
+		min-width:100px;
+    }
+    /* TODO: Once we've structured the modals correctly, we'll move this there.
     This is still discussion on terminology (Passphrase vs password, etc) too */
-  .recovery-word {
-    width: 120px;
-    margin-bottom: 25px;
-  }
 
-  .password {
-    width: 100%;
-  }
-
-  .password-label {
-    top: 20;
-  }
-
-  input[disabled] {
-    background-color: #efefef;
-  }
-
-  input[type=checkbox],
-  input[type=radio] {
-    appearance: none;
-    -webkit-appearance: none;
-    vertical-align: middle;
-    padding: 12px;
-    background-color: #fbfbfb;
-    border: 1px solid #ccc;
-    box-shadow: none;
-    background: #fff;
-    border-radius: 4px;
-    color: #fff;
-    margin: 0;
-  }
-
-  input[type=radio] {
-    border-radius: 99px;
-    vertical-align: default;
-  }
-
-  input[type=checkbox][disabled] + label,
-  input[type=radio][disabled] + label,
-  label.disabled {
-    color: #777;
-  }
-
-  input[type=checkbox]:checked,
-  input[type=radio]:checked {
-    background: #03e8b0;
-  }
-
-  input[type=checkbox]:checked:after,
-  input[type=radio]:checked:after {
-    content: '\2713';
-    width: 0;
-    height: 0;
-    position: relative;
-    font-size: 22px;
-    float: right;
-    top: -15px;
-    left: -8px;
-  }
-
-  input[type=radio]:checked:after {
-    content: '\2022';
-    font-size: 49px;
-    top: -28px;
-    left: -8px;
-    font-family: "Arial";
-    border: none;
-  }
-
-  input[type=checkbox]:focus,
-  input[type=radio]:focus {
-    outline: 0px;
-  }
-
+    .recovery-word {
+        width: 120px;
+        margin-bottom: 25px;
+    }
+    .password {
+        width: 100%;
+    }
+    .password-label {
+        top: 20;
+    }
+    input[disabled] {
+        background-color: #efefef;
+    }
+    input[type=checkbox],
+    input[type=radio] {
+        appearance: none;
+        -webkit-appearance: none;
+        vertical-align: middle;
+        padding: 9px;
+        background-color: #fbfbfb;
+        border: 1px solid #ccc;
+        box-shadow: none;
+        background: #fff;
+        border-radius: 4px;
+        color: #fff;
+        margin: 0;
+        line-height: normal;
+    }
+    input[type=radio] {
+        border-radius: 99px;
+        vertical-align: default;
+    }
+    /*
+    input[type=checkbox][disabled] + label,
+    input[type=radio][disabled] + label,
+    label.disabled {
+        color: #ED4B4D;
+    }
+    input[type=checkbox][disabled]:checked,
+    input[type=radio][disabled]:checked {
+        background: #ED4B4D;
+        color: #ED4B4D;
+    }
+    input[type=checkbox][disabled],
+    input[type=radio][disabled] {
+        appearance: none;
+        -webkit-appearance: none;
+        vertical-align: middle;
+        padding: 9px;
+        background-color: #fbfbfb;
+        border: 1px solid #ccc;
+        box-shadow: none;
+        background: #ED4B4D;
+        border-radius: 4px;
+        color: #ED4B4D;
+        margin: 0;
+        line-height: normal;
+        border-radius: 99px;
+    }*/
+    input[type=checkbox]:checked,
+    input[type=radio]:checked {
+        background: #03e8b0;
+        color: #03e8b0;
+    }
+    input[type=checkbox]:checked:after,
+    input[type=radio]:checked:after {
+        content: '\2713';
+        width: 0;
+        height: 0;
+        position: relative;
+        font-size: 18px;
+        float: right;
+        top: -15px;
+        left: -8px;
+    }
+    input[type=radio]:checked:after {
+        content: '\2022';
+        font-size: 49px;
+        top: -28px;
+        left: -9px;
+        font-family: "Arial";
+        border: 0;
+    }
+    input[type=checkbox]:focus,
+    input[type=radio]:focus {
+        outline: 0px;
+    }
 }

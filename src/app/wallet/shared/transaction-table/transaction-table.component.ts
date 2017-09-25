@@ -1,13 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Log } from 'ng2-logger'
-
 import { TransactionService } from '../transaction.service';
+import { Transaction } from '../transaction.model';
+
+import { slideDown } from '../../../core/core.animations';
 
 @Component({
   selector: 'transaction-table',
   templateUrl: './transaction-table.component.html',
   styleUrls: ['./transaction-table.component.scss'],
-  providers: [TransactionService]
+  providers: [TransactionService],
+  animations: [slideDown()]
 })
 
 export class TransactionsTableComponent implements OnInit {
@@ -34,6 +37,14 @@ export class TransactionsTableComponent implements OnInit {
 
   @Input() display: any;
 
+
+  /*
+    This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmount() + tx.category).
+    If the unique identifier is present, then the details will be expanded.
+  */
+  private expandedTransactionID: string = undefined;
+
+
   log: any = Log.create('transaction-table.component');
 
   constructor(public txService: TransactionService) {
@@ -41,7 +52,7 @@ export class TransactionsTableComponent implements OnInit {
 
   ngOnInit() {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
-
+    this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);
   }
 
@@ -51,5 +62,18 @@ export class TransactionsTableComponent implements OnInit {
     this.log.d('Page changed to:', event.page);
     this.log.d('Number items per page:', event.itemsPerPage);
 
+  }
+
+  public showExpandedTransactionDetail(tx: Transaction) {
+    const txid: string = tx.getExpandedTransactionID();
+    if (this.expandedTransactionID === txid) {
+      this.expandedTransactionID = undefined;
+    } else {
+      this.expandedTransactionID = txid;
+    }
+  }
+
+  public checkExpandDetails(tx: Transaction) {
+    return (this.expandedTransactionID === tx.getExpandedTransactionID());
   }
 }

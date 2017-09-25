@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs'; // use this for testing atm
+import { Observable, Observer, Subscription } from 'rxjs'; // use this for testing atm
 
 import { RPCService } from './rpc.service';
 
 @Injectable()
 export class PeerService {
+  // TODO: Peer interface
   private _peerList: Observable<Array<Object>>;
   private _observerPeerList: Observer<Array<Object>>;
 
@@ -13,54 +14,53 @@ export class PeerService {
 
   private _highestBlockHeightNetwork: Observable<number>;
   private _observerHighestBlockHeightNetwork: Observer<number>;
+  private subs: Subscription;
 
-  constructor(public rpc: RPCService) {
+  constructor(private _rpc: RPCService) {
 
-    this.rpc.register(this, 'getpeerinfo', null, this.setPeerList, 'block');
-    this.rpc.register(this, 'getblockcount', null, this.setBlockCount, 'block');
-
-    this._peerList = Observable.create(observer => this._observerPeerList = observer).publishReplay(1).refCount();
+    this._peerList = Observable.create(
+      observer => this._observerPeerList = observer
+    ).publishReplay(1).refCount();
     this._peerList.subscribe().unsubscribe();
 
     // setup observable for internal block height
-    this._highestBlockHeightInternal = Observable.create(
-      observer => this._observerHighestBlockHeightInternal = observer
-    ).publishReplay(1).refCount();
-
-    this._highestBlockHeightInternal.subscribe().unsubscribe();
+    this._highestBlockHeightInternal = this._rpc.state.observe('blocks');
 
     // setup observable for network block height
     this._highestBlockHeightNetwork = Observable.create(
-      observer => this._observerHighestBlockHeightNetwork = observer
+      observer => {
+        this._observerHighestBlockHeightNetwork = observer
+      }
     ).publishReplay(1).refCount();
 
     this._highestBlockHeightNetwork.subscribe().unsubscribe();
 
+    // Subscribe to connections state
+    this._rpc.state.observe('connections')
+      .subscribe(_ => this._rpc.call('getpeerinfo')
+        .subscribe((peerinfo: Array<Object>) => {
+          this.setPeerList(peerinfo);
+        }));
   }
 
-  setPeerList(JSON: Array<Object>) {
-    this._observerPeerList.next(JSON);
+  private setPeerList(peerList: Array<Object>) {
 
     // hook network block height changes
-    this._observerHighestBlockHeightNetwork.next(this.setBlockCountNetwork(JSON));
+    this._observerHighestBlockHeightNetwork.next(this.calculateBlockCountNetwork(peerList));
+
+    this._observerPeerList.next(peerList);
   }
 
-  private setBlockCount(height: number) {
-    this._observerHighestBlockHeightInternal.next(height);
-  }
+  private calculateBlockCountNetwork(peerList: Array<Object>): number {
+    let highestBlockHeightNetwork = -1;
 
-  private setBlockCountNetwork(peerList: Array<Object>): number {
-    let highestBlockHeightNetwork: number = -1;
+    peerList.forEach(peer => {
+      const networkHeightByPeer = (<any>peer).currentheight;
 
-    for (const peer in peerList) {
-      if (true) { // lint issue
-        const networkHeightByPeer: number = +peerList[peer]['currentheight'];
-
-        if (highestBlockHeightNetwork < networkHeightByPeer || highestBlockHeightNetwork === -1) {
-          highestBlockHeightNetwork = networkHeightByPeer;
-        }
+      if (highestBlockHeightNetwork < networkHeightByPeer || highestBlockHeightNetwork === -1) {
+        highestBlockHeightNetwork = networkHeightByPeer;
       }
-    }
+    });
 
     return highestBlockHeightNetwork;
   }

@@ -1,20 +1,18 @@
 import { TestBed, inject } from '@angular/core/testing';
+
+import { RpcModule } from '../../core/rpc/rpc.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { TransactionService } from './transaction.service';
 
-import { ElectronService } from 'ngx-electron';
-import { RPCService } from '../../core/rpc/rpc.service';
-
 describe('TransactionService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule],
-      providers: [
-        TransactionService,
-        ElectronService,
-        RPCService
-      ]
+      imports: [
+        SharedModule,
+        RpcModule.forRoot()
+      ],
+      providers: [TransactionService]
     });
   });
 

@@ -1,6 +1,6 @@
 <app-header>
   <div class="container-fluid">
-    <ul class="header-nav">
+    <!--ul class="header-nav">
       <li [class.active]="category == 'all'"><a href="javascript:void(0)" (click)="filterByCategory('all')">All</a></li>
       <li [class.active]="category == 'send'"><a href="javascript:void(0)" (click)="filterByCategory('send')">Send</a></li>
       <li [class.active]="category == 'receive'"><a href="javascript:void(0)" (click)="filterByCategory('receive')">Receive</a></li>
@@ -12,11 +12,11 @@
       <button class="btn" type="submit" name="button">
         <span class="fa fa-search"></span>
       </button>
-    </form>
+    </form-->
   </div>
 </app-header>
 <div class="container-fluid">
   <transaction-table
-    [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': false, 'expand': true}">
+    [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
   </transaction-table>
 </div>

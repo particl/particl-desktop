@@ -1,2 +1,26 @@
-<span class="icon"><img src="/assets/icons/network/connect_{{getIconNumber()}}.png" /></span>
-<span class="icon"><img src="/assets/icons/lock/lock{{ encryptionStatus }}.png" /></span>
+<ng-template #networkTooltip>
+    <b>Peers: </b> {{ peerListCount }}
+</ng-template>
+
+<ng-template #encryptionTooltip>
+    <b> {{ encryptionStatus }} </b>
+</ng-template>
+
+<span
+  [tooltip]="networkTooltip"
+  placement="left"
+  container="body"
+  class="icon" >
+    <img src="assets/icons/network/connect_{{ getIconNumber() }}.png" />
+</span>
+
+<span
+  class="icon"
+  [tooltip]="encryptionTooltip"
+  placement="left"
+  container="body"
+  (click)="toggle()"
+  [class.pointer]="">
+    <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png" />
+</span>
+

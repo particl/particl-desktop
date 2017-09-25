@@ -58,7 +58,7 @@ sidebar[position="left"] {
       padding: 15px 20px;
       color: #FFF;
       text-transform: uppercase;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: bold;
     }
     .icon {
@@ -74,6 +74,10 @@ sidebar[position="left"] {
         padding: 0 0 0 10px;
         float: right;
         color: #00E8AF;
+        transition: all .2s ease;
+      }
+      .icon.collapsed {
+        transform: rotate(90deg);
       }
     }
     .item.active .icon {
@@ -133,4 +137,9 @@ sidebar[position="top"] {
       cursor: pointer;
     }
   }
+}
+
+/deep/ .verify-sucess {
+  color: #4F8A10;
+  background-color: #DFF2BF !important;
 }

@@ -2,7 +2,8 @@
 
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
-      <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+
+      <button type="button" class="close pull-right" aria-label="Close" id="close" (click)="close()" *ngIf="enableClose">
         <span aria-hidden="true">&times;</span>
       </button>
 
@@ -10,7 +11,7 @@
         <img class="logo img-responsive" src="assets/particl-logo-white-bg.svg">
       </div>
       <div class="row">
-        <div #modalContainer></div>
+        <ng-template #modalContainer></ng-template>
       </div>
 
     </div>

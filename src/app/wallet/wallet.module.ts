@@ -7,8 +7,6 @@ import { SharedModule } from '../shared/shared.module';
 
 import { TransactionService } from './shared/transaction.service';
 import { AddressService } from './shared/address.service';
-// TODO: move balance to shared?
-import { BalanceService } from './balances/balance.service';
 import { SendService } from './send/send.service';
 
 import { TransactionsTableComponent } from './shared/transaction-table/transaction-table.component';
@@ -21,6 +19,7 @@ import { BalanceComponent } from './balances/balance.component';
 import { HistoryComponent } from './history/history.component';
 
 import { AddressLookupComponent } from './addresslookup/addresslookup.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -40,6 +39,8 @@ const routes: Routes = [
     SharedModule,
     ModalModule.forRoot(),
     QRCodeModule,
+    FormsModule,
+    ReactiveFormsModule
 
   ],
   declarations: [
@@ -66,7 +67,6 @@ export class WalletModule {
       providers: [
         TransactionService,
         AddressService,
-        BalanceService,
         SendService
       ]
     };

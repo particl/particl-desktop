@@ -25,7 +25,6 @@
 }
 
 .header-option-text {
-
 }
 
 .header-input {
@@ -41,7 +40,7 @@
 .card {
   background-color: white;
   padding: 20px;
-  border-bottom: 2px solid #e9e9e9;
+  border-bottom: 1px solid #e9e9e9;
 }
 
 .card.row {
@@ -88,6 +87,7 @@
   background: transparent;
   transition: background .3s;
 }
+
 .address.copied {
   background: yellow !important;
   transition: background 0s;
@@ -106,7 +106,6 @@
   display: inline-block;
   vertical-align: middle;
   float: none;
-  font-size: 1.4em;
 }
 
 .address-options > div {
@@ -125,6 +124,7 @@
   padding: 0;
   margin: 0;
 }
+
 .row {
   margin: 0;
 }
@@ -148,13 +148,18 @@
 }
 
 button {
-  background-color: #03e8b0;
   border: none;
+  border-bottom-width: medium;
+  border-bottom-style: none;
+  border-bottom-color: currentcolor;
+  padding: 8px;
+  margin: 15px 5px 20px 5px;
   text-transform: uppercase;
-  color: white;
-  padding: 10px 20px 10px 20px;;
   font-weight: bold;
-  margin-top: 30px;
+  font-size: 0.8em;
+  color: white;
+  background-color: #03E8B0;
+  border-bottom: 1px solid #07B98D;
 }
 
 .page-buttons {
@@ -169,9 +174,83 @@ button {
 
 .page-button {
   background-color: white;
-  font-weight: bold;
-  padding: 15px;
-  border-bottom: 1px solid #e9e9e9;
+  padding: 8px 14px;
+  border-bottom: 1px solid #ddd;
   margin-right: 10px;
   cursor: pointer;
+  color: #777;
+  font-weight: bold;
 }
+
+.page-button-green {
+  margin-right: 10px;
+  padding: 8px 14px;
+  cursor: default;
+  background-color: #03e8b0;
+  border-color: #03e8b0;
+  border-bottom: 1px solid #07B98D;
+  color: #fff;
+}
+
+// @TODO: Move this css into component
+// Address Model css
+
+app-header {
+  li.add-address .icon {
+    font-size: 28px;
+    margin-right: 5px;
+  }
+}
+
+#address-modal {
+  position: absolute;
+  z-index: 100000;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+#address-modal {
+  &.hide {
+    width: 0 !important;
+    height: 0 !important;
+    display: none;
+  }
+  .row {
+    margin-bottom: 30px;
+  }
+}
+
+.address-modal-container {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  width: 600px;
+  padding: 30px;
+}
+
+.close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
+.modal-content-header {
+  font-size: 1.2em;
+}
+
+.modal-label {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.7em;
+  margin-bottom: 10px;
+}
+
+.margin-top-5px {
+  margin-top: 5px;
+}
+

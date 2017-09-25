@@ -1,6 +1,10 @@
 .accordion-content {
-  display: block;
+  max-height: 400px;
+  overflow: hidden;
+  transition: max-height .3s;
 }
 .accordion-content.collapsed {
-  display: none;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height .3s;
 }

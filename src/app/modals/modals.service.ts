@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { Log } from 'ng2-logger';
 
-import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
-import { FinishComponent } from './firsttime/finish/finish.component';
-import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
-import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { BlockStatusService } from '../core/rpc/rpc.module';
+import { RPCService } from '../core/rpc/rpc.module';
+
+import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
+import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 
 @Injectable()
 export class ModalsService {
@@ -17,27 +18,65 @@ export class ModalsService {
   private message: Subject<any> = new Subject<any>();
   private progress: Subject<Number> = new Subject<Number>();
 
+  public enableClose: boolean = true;
+
+  private isOpen: boolean = false;
+  private manuallyClosed: any[] = [];
+
+  private data: string;
+
+  private log: any = Log.create('modals.service');
+
   messages: Object = {
-    firstTime: FirsttimeComponent,
-    showPassphrase: ShowpassphraseComponent,
-    confirmPassphrase: ConfirmpassphraseComponent,
-    finish: FinishComponent,
-    generate: GeneratewalletComponent,
-    recover: RecoverwalletComponent,
+    createWallet: CreateWalletComponent,
+    daemon: DaemonComponent,
     syncing: SyncingComponent,
-    unlock: UnlockwalletComponent
+    unlock: UnlockwalletComponent,
+    encrypt: EncryptwalletComponent
   };
 
-  open(modal: string): void {
+  constructor (
+    private _blockStatusService: BlockStatusService,
+    private _rpcService: RPCService
+  ) {
+
+    // open syncing modal
+    this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
+      this.progress.next(status.syncPercentage);
+      this.needToOpenModal(status);
+    });
+
+    //
+    this._rpcService.modalUpdates.asObservable().subscribe(status => {
+      if (status.error) {
+        this.open('daemon', status);
+      } else if (this.modal === this.messages['daemon']) {
+        this.close();
+      }
+    });
+  }
+
+  open(modal: string, data?: any): void {
     if (modal in this.messages) {
-      this.message.next(this.messages[modal]);
+      if (
+        (data && data.forceOpen)
+        || !this.manuallyClosed.includes(this.messages[modal].name)
+      ) {
+        this.log.d(`next modal: ${modal}`);
+        this.modal = this.messages[modal];
+        this.message.next({modal: this.modal, data: data});
+        this.isOpen = true;
+      }
     } else {
-      console.error(`modal ${modal} doesn't exist`);
+      this.log.er(`modal ${modal} doesn't exist`);
     }
   }
 
-  updateProgress(progress: Number): void {
-    this.progress.next(progress);
+  close() {
+    this.isOpen = false;
+    if (this.modal && !this.manuallyClosed.includes(this.modal.name)) {
+      this.manuallyClosed.push(this.modal.name);
+    }
   }
 
   getMessage() {
@@ -46,5 +85,24 @@ export class ModalsService {
 
   getProgress() {
       return (this.progress.asObservable());
+  }
+
+  storeData(data: any) {
+    this.data = data;
+  }
+
+  getData() {
+    const data: any = this.data;
+    this.data = undefined;
+    return (data);
+   }
+
+  needToOpenModal(status: any) {
+    // Open syncing Modal
+    if (!this.isOpen && (status.networkBH <= 0
+      || status.internalBH <= 0
+      || status.networkBH - status.internalBH > 50)) {
+        this.open('syncing');
+    }
   }
 }

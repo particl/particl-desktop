@@ -6,9 +6,12 @@
   </div>
 </div>
 
-<hr style="margin-top: 100px;">
+<hr class="margin-top-100px">
 
 <app-password
-  [unlockButton]="'UNLOCK WALLET'"
-  (passwordEmitter)="unlock($event)">
-</app-password>
+  buttonText="UNLOCK WALLET"
+  (unlockEmitter)="unlock($event)"
+  [unlockTimeout]="timeout"
+  [showStakeOnly]="showStakeOnly"
+  [emitUnlock]="true">
+  </app-password>

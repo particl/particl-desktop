@@ -10,33 +10,29 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
+import { Log } from 'ng2-logger'
+
 import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { ModalsService } from './modals.service';
 
-import { FirsttimeComponent } from './firsttime/firsttime.component';
-import { ShowpassphraseComponent } from './firsttime/showpassphrase/showpassphrase.component';
-import { ConfirmpassphraseComponent } from './firsttime/confirmpassphrase/confirmpassphrase.component';
-import { FinishComponent } from './firsttime/finish/finish.component';
-import { GeneratewalletComponent } from './generatewallet/generatewallet.component';
-import { RecoverwalletComponent } from './recoverwallet/recoverwallet.component';
+import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
+import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 
 @Component({
   selector: 'app-modals',
   templateUrl: './modals.component.html',
   styleUrls: ['./modals.component.scss'],
   entryComponents: [
-    FirsttimeComponent,
-    ShowpassphraseComponent,
-    ConfirmpassphraseComponent,
-    FinishComponent,
-    GeneratewalletComponent,
-    RecoverwalletComponent,
+    CreateWalletComponent,
+    DaemonComponent,
     SyncingComponent,
-    UnlockwalletComponent
+    UnlockwalletComponent,
+    EncryptwalletComponent
   ]
 })
 export class ModalsComponent implements DoCheck, OnInit {
@@ -52,6 +48,9 @@ export class ModalsComponent implements DoCheck, OnInit {
   syncPercentage: number = 0;
   syncString: string;
   closeOnEscape: boolean = true;
+  enableClose: boolean;
+
+  private logger: any = Log.create('modals.component');
 
   constructor (
     private _element: ElementRef,
@@ -59,12 +58,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     private _modalService: ModalsService
   ) {
     this._modalService.getMessage().subscribe(
-      message => {
-        if (this.modal) {
-          this.close();
-        }
-        this.open(message)
-      }
+      message => this.open(message.modal, message.data)
     );
     this._modalService.getProgress().subscribe(
       progress => this.updateProgress(<number>progress)
@@ -72,16 +66,11 @@ export class ModalsComponent implements DoCheck, OnInit {
   }
 
   ngOnInit() {
-    document.onkeydown = (event: any) => {
-      if (this.closeOnEscape
-          && event.key.toLowerCase() === 'escape'
-          && this.modal) {
-        this.close();
-      }
-    };
+    this.enableClose = this._modalService.enableClose;
   }
 
   ngDoCheck() {
+    this.enableClose = this._modalService.enableClose;
     if (this._element) {
       const element = this._element.nativeElement;
       const style = element.ownerDocument.defaultView.getComputedStyle(element, undefined);
@@ -92,22 +81,37 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   updateProgress(progress: number) {
     this.syncPercentage = progress;
-    this.syncString = progress < 100 ? `${progress} %` : 'Fully synced !'
+    this.syncString = progress === 100
+      ? 'blockchain fully synced'
+      : `${progress.toFixed(2)} %`
   }
 
-  open(message: any) {
-    if (this.modal) {
-      this.modal.destroy();
-    }
+  open(message: any, data?: any) {
+    this.logger.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
+    this.modalContainer.clear();
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.modalContainer.createComponent(factory);
+    const dynamicModal = this.modal as any;
+    if (data !== undefined && dynamicModal.instance.setData !== undefined) {
+      dynamicModal.instance.setData(data);
+    }
     this.staticModal.show();
   }
 
   close() {
     // remove and destroy message
+    this._modalService.close();
     this.staticModal.hide();
     this.modalContainer.remove();
     this.modal.destroy();
   }
+
+    @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+    if (this.closeOnEscape && this._modalService.enableClose
+          && event.key.toLowerCase() === 'escape'
+          && this.modal) {
+        this.close();
+      }
+    }
 }

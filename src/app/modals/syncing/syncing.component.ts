@@ -1,126 +1,57 @@
+// remove on
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { PeerService } from '../../core/rpc/peer.service';
-import { Subscription } from 'rxjs/Subscription';
+
+import { ModalsService } from '../modals.service';
+import { BlockStatusService } from '../../core/rpc/blockstatus.service';
+import { StateService } from '../../core/state/state.service';
+
+import { Log } from 'ng2-logger';
 
 @Component({
   selector: 'app-syncing',
   templateUrl: './syncing.component.html',
-  styleUrls: ['./syncing.component.scss'],
-  providers: [
-    PeerService
-  ]
+  styleUrls: ['./syncing.component.scss']
 })
-export class SyncingComponent implements OnInit, OnDestroy {
+export class SyncingComponent {
 
-  private highestBlockHeightNetwork: number = -1;
-  private highestBlockHeightInternal: number = -1;
+  log: any = Log.create('alertbox.component');
 
-  private startingBlockCount: number = -1;
-  private totalRemainder: number = -1;
+  remainder: any;
+  lastBlockTime: Date;
+  increasePerMinute: string;
+  estimatedTimeLeft: string;
+  manuallyOpened: boolean;
+  syncPercentage: number;
+  nPeers: number;
 
-  public remainingBlocks: number = 0;
-  public lastBlockTime: Date = new Date();
-  public increasePerMinute: number = 0;
-  public estimatedTimeLeft: number = 0;
+  constructor(
+    private _blockStatusService: BlockStatusService,
+    private _state: StateService
+  ) {
+    _state.observe('connections')
+      .subscribe(connections => this.nPeers = connections);
 
-  private _subBlockInternal: Subscription;
-  private _subBlockNetwork: Subscription;
+    this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
+      this.remainder = status.remainingBlocks < 0
+        ? 'waiting for peers...'
+        : status.remainingBlocks;
+      this.lastBlockTime = status.lastBlockTime;
+      this.increasePerMinute = status.syncPercentage === 100
+        ? 'DONE'
+        : status.syncPercentage.toFixed(2).toString() + ' %';
+      this.estimatedTimeLeft = status.syncPercentage === 100
+        ? 'DONE'
+        : status.estimatedTimeLeft;
+      this.manuallyOpened = status.manuallyOpened;
+      this.syncPercentage = status.syncPercentage;
+      if (status.syncPercentage === 100 && !this.manuallyOpened) {
 
-  constructor(private peerService: PeerService) { }
+        // BUG: this constructor is on a loop when we're syncing?
+        // run particld with -reindex flag to trigger the bug
+        this.log.d(`syncPercentage is 100%, closing automatically!`);
 
-  ngOnInit() {
-    this._subBlockInternal = this.peerService.getBlockCount()
-      .subscribe(
-        height => {
-          const lastBlockTime = new Date();
-          this.calculateSyncingDetails(lastBlockTime, height);
-
-          this.highestBlockHeightInternal = height;
-          this.lastBlockTime = lastBlockTime;
-
-
-          if (this.startingBlockCount === -1) {
-            this.startingBlockCount = height;
-          }
-
-        },
-        error => console.log('SyncingComponent subscription error:' + error));
-
-    this._subBlockNetwork = this.peerService.getBlockCountNetwork()
-      .subscribe(
-        height => {
-
-          this.highestBlockHeightNetwork = height;
-
-          if (this.totalRemainder === -1) {
-            this.totalRemainder = height - this.startingBlockCount;
-          }
-
-        },
-        error => console.log('SyncingComponent subscription error:' + error));
-  }
-
-  ngOnDestroy() {
-    this._subBlockInternal.unsubscribe();
-    this._subBlockNetwork.unsubscribe();
-  }
-
-  calculateSyncingDetails(newTime: Date, newHeight: number) {
-    if (this.highestBlockHeightInternal === -1 || this.totalRemainder <= 0) {
-      return;
-    }
-    const timeDiff: number = newTime.getTime() - this.lastBlockTime.getTime();
-    const blockDiff: number = newHeight - this.highestBlockHeightInternal;
-
-    if (timeDiff > 0) {
-      const increasePerMinute = blockDiff / this.totalRemainder * 100 * (60 * 1000 / timeDiff);
-
-      if (increasePerMinute <= 100) {
-        this.increasePerMinute = +increasePerMinute.toFixed(2);
-      } else {
-        this.increasePerMinute = 100;
+        document.getElementById('close').click();
       }
-    }
-
-    if (blockDiff > 0) {
-      this.estimatedTimeLeft = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000);
-    }
-
+    });
   }
-
-  getRemainder() {
-    const diff = this.highestBlockHeightNetwork - this.highestBlockHeightInternal;
-    return (diff < 0 ? 0 : diff);
-  }
-
-  // TODO: average out the estimated time left to stop random shifting when slowed down.
-  getEstimateTimeLeft() {
-    const secs = this.estimatedTimeLeft;
-    const seconds = Math.floor(secs % 60);
-    const minutes = Math.floor((secs / 60) % 60);
-    const hours = Math.floor((secs / 3600) % 3600);
-
-    let returnString = '';
-
-    if (hours > 0) {
-      returnString += hours + ' hour' + (hours > 1 ? 's' : '') + ' '
-    }
-
-    if (minutes > 0) {
-      returnString += minutes + ' minute' + (minutes > 1 ? 's' : '') + ' '
-    }
-
-    if (seconds > 0) {
-      returnString += seconds + ' second' + (seconds > 1 ? 's' : '') + ' '
-    }
-
-    if (returnString === '') {
-      returnString = 'DONE';
-    }
-    return returnString;
-  }
-
-
-
-
 }

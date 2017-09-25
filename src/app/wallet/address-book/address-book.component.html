@@ -1,27 +1,60 @@
 <app-header>
   <div class="container-fluid">
     <ul class="header-nav">
-      <li class="add-address"><a href="javascript:void(0)"><span class="icon fa fa-plus-circle color-green"></span> New Address</a></li>
+
+      <li class="add-address">
+        <a href="javascript:void(0)" (click)="openNewAddress()">
+          <span class="icon fa fa-plus-circle color-green"></span>
+          New Address
+        </a>
+      </li>
     </ul>
-    <form class="header-form pull-right">
-      <input type="text" placeholder="Search address book">
-      <button class="btn" type="submit" name="button">
-        <span class="fa fa-search"></span>
-      </button>
-    </form>
+      <form class="header-form pull-right">
+        <input type="text" 
+        [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
+        <button class="btn" type="submit" name="button">
+          <span class="fa fa-search"></span>
+        </button>
+      </form>
   </div>
 </app-header>
-<div class="container-fluid">
-  <address-table
-    [displayHeader]="false"
-		[displayInternalHeader]="true"
-    [displayPagination]="true"
-		[displayLabel]="true"
-		[displayAddress]="true"
-		[displayPublicKey]="true"
-		[displayType]="true"
-    [displayPurpose]="true"
-		[displayToolsMenu]="true"
-		[displayQrMenu]="true">
+  <div class="container-fluid">
+    <address-table
+      [query]="query"
+      [displayHeader]="false"
+      [displayInternalHeader]="true"
+      [displayPagination]="true"
+      [displayLabel]="true"
+      [displayAddress]="true"
+      [displayPurpose]="true"
+      [displayToolsMenu]="true"
+      [displayQrMenu]="false"
+      (editLabelEmitter)="editLabel($event)">
+
   </address-table>
+</div>
+
+<div id="address-modal"  [ngClass]="{'hide': openNewAddressModal == false }">
+  <div class="address-modal-container">
+    <span class="close" (click)="closeNewAddress()">&times;</span>
+
+    <div class="modal-content-header">Add label to address</div>
+    <hr class="margin-top-5px">
+
+    <div class="row">
+      <div class="col-xs-8">
+        <input type="text" class="form-control" [(ngModel)]="address"
+          placeholder="address"
+          [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
+          (input)="verifyAddress()">
+      </div>
+      <div class="col-xs-4">
+        <input type="text" class="form-control" [(ngModel)]="label"
+          placeholder="label">
+      </div>
+    </div>
+
+    <button class="control pull-right" (click)="addAddressToBook()">OK</button>
+
+  </div>
 </div>

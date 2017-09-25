@@ -2,23 +2,23 @@
   <div class="container-fluid header">
 
     <ul class="col-xs-9 header-nav">
-      <li [class.active]="type == 'public'">
-        <a href="javascript:void(0)" (click)="changeType('public')">
+      <li [class.active]="getAddressType() === 'public'">
+        <a href="javascript:void(0)" (click)="setAddressType('public')">
           Public
         </a>
       </li>
-      <li [class.active]="type == 'private'">
-        <a href="javascript:void(0)" (click)="changeType('private')">
+      <li [class.active]="getAddressType() === 'private'">
+        <a href="javascript:void(0)" (click)="setAddressType('private')">
           Private
         </a>
       </li>
     </ul>
 
     <div class="col-xs-3 header-option row header-option-container"
-      (click)="selectInput()">
+         (click)="selectInput()">
       <span class="col-xs-10">
         <input type="text" class="header-input" id="searchbar"
-          (ngModelChange)="search($event)" [(ngModel)]="query" placeholder="Search receive">
+               [(ngModel)]="query" placeholder="Search receive">
       </span>
       <span class="col-xs-2 icon fa fa-search header-option-icon"></span>
     </div>
@@ -30,36 +30,36 @@
 
   <div class="col-xs-8">
 
-    <div class="address-title">Fresh address</div>
-    <div class="card row" id="address-{{ addresses[type][0].id }}">
+  <span *ngIf="inSearchMode() === false">
+    <div class="address-title">Unused address</div>
+    <div class="card row">
       <div class="col-xs-1 address-id vertical-center">
-        /{{ addresses[type][0].id }}
+        /{{ getUnusedAddress().id }}
       </div>
       <div class="col-xs-3 address-label vertical-center">
-        {{ addresses[type][0].label }}
+        {{ getUnusedAddress().label }}
       </div>
       <div class="col-xs-6">
         <div class="address">
-          {{ addresses[type][0].address }}
+          {{ getUnusedAddress().address }}
         </div>
         <div class="total">
           <span>Total received: </span>
-          <span>+{{ addresses[type][0].balance }}</span>
+          <span>+{{ getUnusedAddress().balance }}</span>
         </div>
       </div>
       <div class="col-xs-2 row address-options vertical-center">
-        <div class="col-xs-4 icon fa fa-clone"
-          (click)="copyAddress(addresses[type][0].id)">
+        <div ngxClipboard [cbContent]="getUnusedAddress().address" class="col-xs-4 nc-icon nc-copy-2">
         </div>
-        <div class="col-xs-4 icon fa fa-lock"></div>
-        <div class="col-xs-4 icon fa fa-qrcode" (click)="selected = addresses[type][0]"></div>
+        <div class="col-xs-4 nc-icon nc-a-check"></div>
+        <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(addresses[getAddressType()][0])"></div>
       </div>
     </div>
+    </span>
 
     <div class="address-title">Previous addresses</div>
     <div class="card row"
-      *ngFor="let address of pages[page - 1]"
-       id="address-{{ address.id }}">
+         *ngFor="let address of getSinglePage()">
       <div class="col-xs-1 address-id vertical-center">
         /{{ address.id }}
       </div>
@@ -76,34 +76,36 @@
         </div>
       </div>
       <div class="col-xs-2 row address-options vertical-center">
-        <div class="col-xs-4 icon fa fa-clone" (click)="copyAddress(address.id)"></div>
-        <div class="col-xs-4 icon fa fa-lock"></div>
-        <div class="col-xs-4 icon fa fa-qrcode" (click)="selected = address"></div>
+        <div ngxClipboard [cbContent]="address.address" class="col-xs-4 nc-icon nc-copy-2"></div>
+        <div class="col-xs-4 nc-icon nc-a-check"></div>
+        <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(address);"></div>
       </div>
     </div>
 
-    <div class="page-buttons">
-      <span class="page-button" (click)="previousPage()"> &lt; </span>
-      <span class="page-button" *ngFor="let pageRef of nav;"
-        (click)="gotoPage(pageRef)" id="page-{{pageRef}}">
-        {{ pageRef }}
-      </span>
-      <span class="page-button" (click)="nextPage()"> &gt; </span>
-    </div>
-
+    <pagination
+      [boundaryLinks]="true"
+      (pageChanged)="pageChanged($event)"
+      [totalItems]="getTotalCountForPagination()"
+      [maxSize]="5" [rotate]="false"
+      [(ngModel)]="page"
+      class="pagination-sm center"
+      previousText="&lsaquo;" nextText="&rsaquo;"
+      firstText="&laquo;" lastText="&raquo;"
+      [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
+    </pagination>
   </div>
 
   <div class="col-xs-3 pull-right receive-right">
 
-    <div class="card qr">
-      <qr-code [size]="qr.size" [level]="'H'"
-        [value]="selected.address">
+    <div #qrCode class="card qr">
+      <qr-code [size]="getQrSize()" [level]="'H'"
+               [value]="selected.address">
       </qr-code>
     </div>
 
     <div class="card address-details">
       <div class="details-title">
-        {{ type }} address
+        {{ getAddressType() }} address
       </div>
       <div class="details-label">
         {{ selected.label }}
@@ -113,8 +115,27 @@
           {{ word }}
         </div>
       </div>
-      <button (click)="newAddress()">new {{ type }} address</button>
+      <button (click)="openNewAddress()">new {{ getAddressType() }} address</button>
     </div>
 
+  </div>
+</div>
+
+<div id="address-modal" [class.hide]="openNewAddressModal == false">
+  <div class="address-modal-container">
+    <span class="close" (click)="closeNewAddress()">&times;</span>
+    <form [formGroup]="addLableForm" (ngSubmit)="newAddress()" novalidate>
+      <div class="modal-content-header">Label for new {{ getAddressType() }} address</div>
+      <hr class="margin-top-5px">
+
+      <div class="row">
+        <div class="col-xs-10">
+          <input type="text" formControlName="label" class="form-control" [(ngModel)]="label"
+                 placeholder="Enter label..."
+                 [ngClass]="{'verify-sucess': addLableForm.valid, 'verify-error': !addLableForm.valid }">
+        </div>
+      </div>
+      <button class="control pull-right" [disabled]="!addLableForm.valid">Add Label</button>
+    </form>
   </div>
 </div>

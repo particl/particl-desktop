@@ -1,0 +1,32 @@
+  <div class="modal fade" bsModal #alertBoxModal="bs-modal"
+     tabindex="-1" role="dialog" aria-labelledby="alertBox" aria-hidden="true">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">{{title}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="alertBoxModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-xs-12">
+            {{text}}
+          </div>
+        </div>
+        <div class="row wallet-buttons-container">
+          <div class="padding-right pull-right">
+            <button class="control" (click)="hide()">
+              Ok
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

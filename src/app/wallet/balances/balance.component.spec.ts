@@ -6,8 +6,7 @@ import { BalanceComponent } from './balance.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
-
-import { RPCService } from '../../core/rpc/rpc.service';
+import { StateService } from '../../core/state/state.service';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -19,10 +18,7 @@ describe('BalanceComponent', () => {
         SharedModule,
         WalletModule.forRoot()
       ],
-      providers: [
-        ElectronService,
-        RPCService
-      ]
+      providers: [StateService]
     })
     .compileComponents();
   }));
@@ -36,4 +32,25 @@ describe('BalanceComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should get balance before point', () => {
+    component.getBalanceBeforePoint();
+    expect(component.getBalanceBeforePoint.length).toBe(0);
+  });
+/*
+  it('should get balance point', () => {
+    component.getBalancePoint();
+    expect(component.getBalancePoint).toBeTruthy();
+  });
+
+  it('should get balance after point', () => {
+    component.getBalanceAfterPoint(true)
+    expect(component.getBalanceAfterPoint).toBeTruthy();
+  });
+
+  it('should get type of balance', () => {
+    component.getTypeOfBalance();
+    expect(component.getTypeOfBalance).toBeTruthy();
+  });
+*/
 });

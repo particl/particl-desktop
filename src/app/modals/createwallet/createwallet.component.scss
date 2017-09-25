@@ -1,0 +1,19 @@
+/deep/ app-password > div {
+    margin-top: 20px;
+}
+
+/deep/ input.recovery-word {
+    max-width: 100%;
+}
+
+.alert {
+    margin-bottom: 0;
+}
+
+@media only screen and (max-width: 480px) {
+  .wallet-buttons-container button{
+    float: none;
+    display: block;
+    margin: 10px auto 0;
+  }
+}
