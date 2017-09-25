@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
@@ -10,6 +10,8 @@ import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
+import { MdDialog } from '@angular/material';
+import { ModalsComponent } from './modals.component';
 
 @Injectable()
 export class ModalsService {
@@ -37,7 +39,8 @@ export class ModalsService {
 
   constructor (
     private _blockStatusService: BlockStatusService,
-    private _rpcService: RPCService
+    private _rpcService: RPCService,
+    private dialog: MdDialog
   ) {
 
     // open syncing modal
@@ -49,6 +52,7 @@ export class ModalsService {
     //
     this._rpcService.modalUpdates.asObservable().subscribe(status => {
       if (status.error) {
+        // this.dialog.open(ModalsComponent);
         this.open('daemon', status);
       } else if (this.modal === this.messages['daemon']) {
         this.close();
@@ -102,6 +106,7 @@ export class ModalsService {
     if (!this.isOpen && (status.networkBH <= 0
       || status.internalBH <= 0
       || status.networkBH - status.internalBH > 50)) {
+        this.dialog.open(DaemonComponent);
         this.open('syncing');
     }
   }

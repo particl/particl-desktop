@@ -67,7 +67,7 @@ export class SendComponent {
     UI logic
   */
 
-  sendTab(tabIndex: number) {
+  selectTab(tabIndex: number) {
     if (tabIndex) {
       this.type = 'balanceTransfer';
     } else {

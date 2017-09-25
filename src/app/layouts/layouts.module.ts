@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SideNavComponent } from './side-nav/side-nav.component';
+import { LayoutSideNavComponent } from './side-nav/side-nav.component';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ModalsService } from '../modals/modals.service';
 
 @NgModule({
   imports: [
@@ -10,9 +11,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MaterialModule,
     FlexLayoutModule
   ],
-  declarations: [SideNavComponent],
+  declarations: [LayoutSideNavComponent],
   exports: [
-    SideNavComponent
+    LayoutSideNavComponent
+  ],
+  providers: [
+    ModalsService
   ]
 })
 export class LayoutsModule {

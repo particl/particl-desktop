@@ -10,7 +10,6 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { Log } from 'ng2-logger'
-import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { ModalsService } from './modals.service';
 
@@ -35,8 +34,8 @@ import { MdDialogRef } from '@angular/material';
 })
 export class ModalsComponent implements DoCheck, OnInit {
 
-  @ViewChild('staticModal')
-  public staticModal: ModalDirective;
+  // @ViewChild('staticModal')
+  // public staticModal: ModalDirective;
 
   @ViewChild('modalContainer', { read: ViewContainerRef })
   private modalContainer: ViewContainerRef;
@@ -100,7 +99,6 @@ export class ModalsComponent implements DoCheck, OnInit {
     this._dialogRef.close();
     // remove and destroy message
     this._modalService.close();
-    this.staticModal.hide();
     this.modalContainer.remove();
     this.modal.destroy();
   }

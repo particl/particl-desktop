@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
+import {FlashNotificationService} from './flash-notification.service';
 
-import { FlashNotificationServiceService } from './flash-notification-service.service';
 
 describe('FlashNotificationServiceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FlashNotificationServiceService]
+      providers: [FlashNotificationService]
     });
   });
 
-  it('should be created', inject([FlashNotificationServiceService], (service: FlashNotificationServiceService) => {
+  it('should be created', inject([FlashNotificationService], (service: FlashNotificationService) => {
     expect(service).toBeTruthy();
   }));
 });

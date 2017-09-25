@@ -19,6 +19,8 @@ import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component'
 import { AlertComponent } from './shared/alert/alert.component';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlashNotificationService } from '../services/flash-notification.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -26,7 +28,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     FormsModule,
     ClipboardModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    BrowserAnimationsModule
   ],
   declarations: [
     FocusDirective,
@@ -46,7 +49,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   ],
   providers: [
     ModalsService,
-    PassphraseService
+    PassphraseService,
+    FlashNotificationService
   ],
   entryComponents: [
     ModalsComponent,

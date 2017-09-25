@@ -46,8 +46,8 @@ describe('SendComponent', () => {
     });
   */
   it('should send tab', () => {
-    component.selectTab('sendPayment');
-    expect(component.type).toBe('sendPayment');
+    component.selectTab(1);
+    expect(component.type).toBe('balanceTransfer');
   });
 
   it('should verify amount no balance service', () => {
@@ -116,9 +116,6 @@ describe('SendComponent', () => {
     expect(component.send).toBeTruthy();
   });
 */
-  it('should get addressLookup property', () => {
-    expect(component.addressLookup).toBeDefined();
-  });
 
   it('should get advanced', () => {
     expect(component.advanced).toBe(false);

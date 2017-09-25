@@ -8,7 +8,7 @@ import { ModalsService } from '../../modals/modals.service';
   templateUrl: './side-nav.component.html',
   styleUrls: ['./side-nav.component.css']
 })
-export class SideNavComponent implements OnInit {
+export class LayoutSideNavComponent implements OnInit {
 
   constructor(private dialog: MdDialog,
               private _modalsService: ModalsService) {
@@ -18,8 +18,8 @@ export class SideNavComponent implements OnInit {
   }
 
   createWallet() {
-    this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
-    this._modalsService.open('createWallet', {forceOpen: true});
+   //  this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
+   // this._modalsService.open('createWallet', {forceOpen: true});
   }
 
 }

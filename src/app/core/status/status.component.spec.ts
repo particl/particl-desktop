@@ -6,6 +6,7 @@ import { StatusComponent } from './status.component';
 import { ModalsModule } from '../../modals/modals.module';
 import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../rpc/rpc.module';
+import { MaterialModule } from '@angular/material';
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
@@ -18,7 +19,8 @@ describe('StatusComponent', () => {
        SharedModule,
        RpcModule.forRoot(),
        TooltipModule.forRoot(),
-       ModalsModule
+       ModalsModule,
+        MaterialModule
       ]
     })
     .compileComponents();

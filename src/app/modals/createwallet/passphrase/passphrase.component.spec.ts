@@ -8,6 +8,8 @@ import { PassphraseService } from './passphrase.service';
 import { FormsModule } from '@angular/forms';
 import { FocusDirective } from '../../modals.directives';
 import { PassphraseComponent } from './passphrase.component';
+import { MaterialModule } from '@angular/material';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 describe('PassphraseComponent', () => {
@@ -19,7 +21,9 @@ describe('PassphraseComponent', () => {
       imports: [
         FormsModule,
         SharedModule,
-        RpcModule.forRoot()
+        RpcModule.forRoot(),
+        MaterialModule,
+        BrowserAnimationsModule
        ],
       declarations: [
         FocusDirective,

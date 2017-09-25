@@ -20,18 +20,10 @@
         </md-panel-title>
         <md-panel-title fxFlex.lg="5%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.category"
                         class="history_cat_icon" [ngSwitch]="tx.category">
-         <span *ngSwitchCase="'stake'">
-           <md-icon color="primary">add</md-icon>
-        </span>
-          <span *ngSwitchCase="'orphaned_stake'">
-            <md-icon color="warn">cacel</md-icon>
-        </span>
-          <span *ngSwitchCase="'send'">
-             <md-icon color="warn">arrow_forward</md-icon>
-        </span>
-          <span *ngSwitchCase="'receive'">
-           <md-icon>arrow_back</md-icon>
-        </span>
+          <span *ngSwitchCase="'stake'"><md-icon color="primary">add</md-icon></span>
+          <span *ngSwitchCase="'orphaned_stake'"><md-icon color="warn">cacel</md-icon></span>
+          <span *ngSwitchCase="'send'"><md-icon color="warn">arrow_forward</md-icon></span>
+          <span *ngSwitchCase="'receive'"><md-icon>arrow_back</md-icon></span>
         </md-panel-title>
         <md-panel-title fxFlex.lg="45%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.senderAddress"
                         class="history_longAddress">
@@ -39,8 +31,12 @@
         </md-panel-title>
         <md-panel-title fxFlex.lg="20%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.txid"
                         class="history_txt">
-          <span md-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row"><span fxFlex="10%"><b>TxId</b></span>  <span
-            fxFlex="80%">{{ tx.txid }} </span> </span>
+          <span md-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row">
+            <span fxFlex="10%">
+            <b>TxId</b>
+            </span>
+            <span fxFlex="80%">{{ tx.txid }} </span>
+          </span>
         </md-panel-title>
         <md-panel-title fxFlex.lg="20%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.blockIndex"
                         class="history_blockIndex">
@@ -69,8 +65,8 @@
           </div>
           <div fxFlex="50%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
             <b fxFlex.lg="30%" fxFlex.md="40%" fxFlex.sm="100%" fxFlex.xs="100%">Transaction ID:</b>
-            <a class="md-right" fxFlex.lg="70%" fxFlex.md="60%" fxFlex.sm="100%" fxFlex.xs="100%"
-               href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" class="highlight"
+            <a class="md-right highlight" fxFlex.lg="70%" fxFlex.md="60%" fxFlex.sm="100%" fxFlex.xs="100%"
+               href="https://explorer-testnet.particl.io/tx/{{tx.txid}}"
                target="_blank">{{tx.txid}}</a>
           </div>
         </div>
@@ -115,3 +111,4 @@
               firstText="&laquo;" lastText="&raquo;"
               [itemsPerPage]="txService.MAX_TXS_PER_PAGE">
   </pagination>
+</app-grid>
