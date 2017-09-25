@@ -10,11 +10,6 @@ const url = require('url');
 const platform = require('os').platform();
 const log = require('electron-log');
 
-log.transports.file.appName = '.particl';
-log.transports.file.file = log.transports.file
-  .findLogPath(log.transports.file.appName)
-  .replace('log.log', 'partgui.log');
-
 const daemonManager = require('./modules/clientBinaries/clientBinaries');
 const rpc = require('./modules/rpc/rpc');
 
@@ -41,7 +36,7 @@ function createWindow () {
 
   // Daemon already running... Start window
   rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
-    .catch(_ => console.log('Daemon not running. It will be started bt the daemon manager'));
+    .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
 
 
   // check for daemon version, maybe update, and keep the daemon's process for exit
@@ -230,7 +225,7 @@ app.on('window-all-closed', function () {
 app.on('quit', function () {
   // kill the particl daemon if initiated on launch
   if (daemon) {
-    daemon.kill();
+    daemon.kill('SIGINT');
   }
 })
 
