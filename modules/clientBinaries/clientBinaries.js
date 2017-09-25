@@ -308,13 +308,8 @@ class Manager extends EventEmitter {
         dialog.showMessageBox({
           type: 'warning',
           buttons: ['OK'],
-          message: global.i18n.t('mist.errors.nodeChecksumMismatch.title'),
-          detail: global.i18n.t('mist.errors.nodeChecksumMismatch.description', {
-            type: nodeInfo.type,
-            version: nodeInfo.version,
-            algorithm: nodeInfo.algorithm,
-            hash: nodeInfo.checksum
-          })
+          message: 'Checksum mismatch in downloaded node!',
+          detail: `${nodeInfo.algorithm}:${nodeInfo.checksum}\n\nPlease install the ${nodeInfo.type} node version ${nodeInfo.version} manually.`
         }, () => {
           app.quit();
         });
