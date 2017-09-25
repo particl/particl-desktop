@@ -89,7 +89,7 @@ export class RPCService {
 
     if (this.isElectron) {
       return this.rpx.runCommand('backend-rpccall', null, method, params)
-        .map(response => response.result);
+        .map(response => response && response.result ? response.result : response);
 
     } else {
       const postData = JSON.stringify({
@@ -162,7 +162,11 @@ export class RPCService {
       }
     }
 
-    Object.keys(success).forEach(key => this.state.set(key, success[key]));
+    if (success) {
+      Object.keys(success).forEach(key => this.state.set(key, success[key]))
+    } else {
+      this.log.err('Should not be null, ever!', success, method);
+    }
   }
 
   private stateCallError(error: Object, method?: string) {
