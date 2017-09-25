@@ -19,13 +19,14 @@
     "test": "ng test",
     "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/packages/** && sass-lint -v",
     "e2e": "ng e2e",
-    "build:electron": "ng build --base-href='./' --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.2",
+    "build:electron:prod": "ng build --base-href=./ --env=prod && npm rebuild zeromq --runtime=electron --target=1.7.5",
+    "build:electron": "ng build --base-href=./ && npm rebuild zeromq --runtime=electron --target=1.7.5",
     "start:electron:dev": "electron . --dev",
     "start:electron": "npm run build:electron && electron .",
-    "package:mac": "npm run build:electron && electron-builder -m",
-    "package:linux": "npm run build:electron && electron-builder -l",
-    "package:win": "npm run build:electron && electron-builder --win --x64 --ia32",
-    "package": "npm run build:electron && electron-builder -ml && npm run package:win",
+    "package:mac": "npm run build:electron:prod && electron-builder -m",
+    "package:linux": "npm run build:electron:prod && electron-builder -l",
+    "package:win": "npm run build:electron:prod && electron-builder --win --x64 --ia32",
+    "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compdoc": "compodoc -p tsconfig.json",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
@@ -58,7 +59,6 @@
       "maintainer": "particl contributors <hello@particl.io>",
       "target": [
         "deb",
-        "AppImage",
         "tar.gz"
       ],
       "desktop": {
@@ -66,7 +66,7 @@
         "Exec": "/opt/particl/partgui %U",
         "Icon": "Particl",
         "Name": "Particl",
-        "Path": "/opt/Particl/",
+        "Path": "/opt/particl/",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
