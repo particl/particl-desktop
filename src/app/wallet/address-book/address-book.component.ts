@@ -3,6 +3,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger'
+import { ModalsService } from '../../modals/modals.service';
 
 @Component({
   selector: 'app-address-book',
@@ -24,7 +25,7 @@ export class AddressBookComponent implements OnInit {
   private validAddress: boolean = undefined;
   private isMine: boolean = undefined;
 
-  constructor(private _rpc: RPCService) { }
+  constructor(private _rpc: RPCService, private _modals: ModalsService) { }
 
   ngOnInit() {
   }
@@ -80,16 +81,26 @@ export class AddressBookComponent implements OnInit {
     }
 
     if (this.label) {
-      this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
-        .subscribe(
-          response => this.rpc_addAddressToBook_success(response),
-          error => this.rpc_addAddressToBook_failed(error));
-
-      this.address = undefined;
-      this.validAddress = undefined;
-      this.label = '';
+      if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) !== -1) {
+        // unlock wallet and send transaction
+        this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addressCallBack.bind(this)});
+      } else {
+        // wallet already unlocked
+        this.addressCallBack();
+      }
       this.closeNewAddress();
     }
+  }
+
+  private addressCallBack() {
+    this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
+      .subscribe(
+        response => this.rpc_addAddressToBook_success(response),
+        error => this.rpc_addAddressToBook_failed(error));
+
+    this.address = undefined;
+    this.validAddress = undefined;
+    this.label = '';
   }
 
   /** Address was added succesfully to the address book. */

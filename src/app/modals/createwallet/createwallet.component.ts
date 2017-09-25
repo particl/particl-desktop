@@ -114,22 +114,16 @@ export class CreateWalletComponent {
         this.animationState = '';
         this.step = 4;
         this.errorString = '';
+        if (['Locked', 'Unlocked, staking only'].indexOf(this._passphraseService.checkStatus()) !== -1) {
+          // unlock wallet and send transaction
+          this._modalsService.open('unlock', {forceOpen: true, timeout: 3, callback: this.importMnemonicCallback.bind(this)});
+        } else {
+          // wallet already unlocked
+          this.importMnemonicCallback();
+        }
 
-        this._passphraseService.importMnemonic(this.words, this.password)
-          .subscribe(
-            success => {
-              this.log.i('Mnemonic imported successfully');
-              this.animationState = 'next';
-              this.step = 5;
-            },
-            error => {
-              this.log.er(error);
-              this.errorString = error.error.message;
-              this.log.er('Mnemonic import failed');
-            });
         break;
     }
-
     this._modalsService.enableClose = (this.step === 0);
   }
 
@@ -142,6 +136,21 @@ export class CreateWalletComponent {
 
     this.wordsVerification = Object.assign({}, this.words);
     this.log.d(`word string: ${this.words.join(' ')}`);
+  }
+
+  private importMnemonicCallback() {
+    this._passphraseService.importMnemonic(this.words, this.password)
+      .subscribe(
+        success => {
+          this.log.i('Mnemonic imported successfully');
+          this.animationState = 'next';
+          this.step = 5;
+        },
+        error => {
+          this.log.er(error);
+          this.errorString = error.error.message;
+          this.log.er('Mnemonic import failed');
+        });
   }
 
   validate(): boolean {
