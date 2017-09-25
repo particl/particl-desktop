@@ -40,7 +40,9 @@ function createWindow () {
   rpc.init(options);
 
   // Daemon already running... Start window
-  rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()));
+  rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
+    .catch(_ => console.log('Daemon not running. It will be started bt the daemon manager'));
+
 
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
@@ -187,7 +189,8 @@ function makeTray() {
 function parseArguments() {
 
   let options = {};
-  if (path.basename(process.argv[0]) === 'electron'){
+  if (path.basename(process.argv[0]).includes('electron')) {
+
     // striping 'electron .' from argv
     process.argv = process.argv.splice(2);
   } else {
