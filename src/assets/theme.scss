@@ -1,5 +1,116 @@
 // Import a pre-built theme
-@import "theme/partgui-theme.css";
+@import '~@angular/material/theming';
+
+@include mat-core();
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+$mat-cyan: (
+  50: #e0f7fa,
+  100: #b2ebf2,
+  200: #80deea,
+  300: #4dd0e1,
+  400: #26c6da,
+  500: #00bcd4,
+  600: #00acc1,
+  700: #0097a7,
+  800: #00838f,
+  900: #006064,
+  A100: #84ffff,
+  A200: #18ffff,
+  A400: #00e5ff,
+  A700: #00b8d4,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $black-87-opacity,
+  )
+);
+
+$mat-pink: (
+  50: #fce4ec,
+  100: #f8bbd0,
+  200: #f48fb1,
+  300: #f06292,
+  400: #ec407a,
+  500: #e91e63,
+  600: #d81b60,
+  700: #c2185b,
+  800: #ad1457,
+  900: #880e4f,
+  A100: #ff80ab,
+  A200: #ff4081,
+  A400: #f50057,
+  A700: #c51162,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: $white-87-opacity,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$mat-red: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #f44336,
+  600: #e53935,
+  700: #d32f2f,
+  800: #c62828,
+  900: #b71c1c,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$partgui-app-primary: mat-palette($mat-cyan);
+$partgui-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+// The warn palette is optional (defaults to red).
+$partgui-app-warn:    mat-palette($mat-red);
+
+$partgui-app-theme: mat-light-theme($partgui-app-primary, $partgui-app-accent, $partgui-app-warn);
+@include angular-material-theme($partgui-app-theme);
+// @import "theme/partgui-theme.css";
 
 /**
  * Side bar Menu.
@@ -14,7 +125,7 @@
 
 .mat-sidenav {
   width: 250px;
-  background-color: #1c2825;
+  background-color: #222828;
   color: #fff;
   .mat-toolbar {
     background: transparent;
@@ -94,7 +205,7 @@
 
 .md-expansion-menu > md-expansion-panel {
   color: #ffffff;
-  background-color: #1c2825;
+  background-color: #222828;
 }
 
 .mat-expansion-indicator.ng-tns-c7-2.ng-trigger.ng-trigger-indicatorRotate::after {
@@ -346,7 +457,10 @@ input[type="text"] {
 }
 
 @media (max-width: 768px) {
-  .form_block{flex-direction: column !important;width: 100%;}
+  .form_block {
+    flex-direction: column !important;
+    width: 100%;
+  }
 
 }
 
