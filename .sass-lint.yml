@@ -74,9 +74,9 @@ rules:
     - extra-properties: []
   no-qualifying-elements:
     - 1
-    - allow-element-with-attribute: false
-      allow-element-with-class: false
-      allow-element-with-id: false
+    - allow-element-with-attribute: true
+      allow-element-with-class: true
+      allow-element-with-id: true
   no-trailing-zero: 1
   no-transition-all: 0
   no-url-protocols: 1

@@ -52,17 +52,18 @@ class Manager extends EventEmitter {
         ? options.customdaemon
         : this._availableClients['particld'].binPath;
 
-      if (!options.rpcport) {
-        process.argv.push(`-rpcport=${options.port}`);
-      }
+      // if (!options.rpcport) {
+      //   process.argv.push(`-rpcport=${options.port}`);
+      // }
 
-      rpc.checkDaemon(options.testnet).then(() => {
+      rpc.checkDaemon(options).then(() => {
         log.info('daemon already started');
         resolve(undefined);
       }).catch(() => {
         log.info(`starting daemon ${daemon}`);
         const child = spawn(daemon, process.argv).on('close', code => {
           if (code !== 0) {
+            reject();
             log.error(`daemon exited with code ${code}.\n${daemon}\n${process.argv}`);
           } else {
             log.info('daemon exited successfully');
@@ -308,13 +309,8 @@ class Manager extends EventEmitter {
         dialog.showMessageBox({
           type: 'warning',
           buttons: ['OK'],
-          message: global.i18n.t('mist.errors.nodeChecksumMismatch.title'),
-          detail: global.i18n.t('mist.errors.nodeChecksumMismatch.description', {
-            type: nodeInfo.type,
-            version: nodeInfo.version,
-            algorithm: nodeInfo.algorithm,
-            hash: nodeInfo.checksum
-          })
+          message: 'Checksum mismatch in downloaded node!',
+          detail: `${nodeInfo.algorithm}:${nodeInfo.checksum}\n\nPlease install the ${nodeInfo.type} node version ${nodeInfo.version} manually.`
         }, () => {
           app.quit();
         });

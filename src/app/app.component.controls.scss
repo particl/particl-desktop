@@ -11,6 +11,9 @@
         border-bottom: 1px solid #07B98D;
 		min-width:100px;
     }
+    button.control:disabled {
+        background-color: #ccc;
+    }
     /* TODO: Once we've structured the modals correctly, we'll move this there.
     This is still discussion on terminology (Passphrase vs password, etc) too */
 
