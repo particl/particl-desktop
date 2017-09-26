@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewAddressModalComponent } from './new-address-modal.component';
+import { FormGroup } from '@angular/forms';
 
 describe('NewAddressModalComponent', () => {
   let component: NewAddressModalComponent;
@@ -8,6 +9,7 @@ describe('NewAddressModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ FormGroup ],
       declarations: [ NewAddressModalComponent ]
     })
     .compileComponents();

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddAddressLabelComponent } from './add-address-label.component';
+import { FormsModule } from '@angular/forms';
+import { MdDialogModule } from '@angular/material';
 
 describe('AddAddressLabelComponent', () => {
   let component: AddAddressLabelComponent;
@@ -8,6 +10,7 @@ describe('AddAddressLabelComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ FormsModule, MdDialogModule ],
       declarations: [ AddAddressLabelComponent ]
     })
     .compileComponents();

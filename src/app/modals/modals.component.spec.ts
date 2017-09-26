@@ -9,6 +9,8 @@ import { BlockStatusService } from '../core/rpc/blockstatus.service';
 
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { ModalsComponent } from './modals.component';
+import { MdDialogModule, MdSnackBarModule} from '@angular/material';
+import { ModalsService } from './modals.service';
 
 
 describe('ModalsComponent', () => {
@@ -18,13 +20,16 @@ describe('ModalsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        MdDialogModule,
         ModalsModule,
         ModalModule.forRoot(),
         SharedModule,
-        RpcModule.forRoot()
+        RpcModule.forRoot(),
+        MdSnackBarModule
       ],
       providers: [
         BlockStatusService,
+        ModalsService
       ]
     })
     .compileComponents();
@@ -52,14 +57,14 @@ describe('ModalsComponent', () => {
   });
 
   it('should get closeOnEscape', () => {
-    expect(component.closeOnEscape).toBe(true);
+    expect(component.closeOnEscape).toBeTruthy()
   });
 
   it('should get hasScrollY', () => {
-    expect(component.hasScrollY).toBe(false);
+    expect(component.hasScrollY).toBeFalsy();
   });
 
   it('should get modal', () => {
-    expect(component.modal).toBe(undefined);
+    expect(component.modal).toBeUndefined()
   });
 });

@@ -21,7 +21,7 @@ export class UnlockwalletComponent {
   showStakeOnly: boolean = true;
 
   constructor (private _rpc: RPCService,
-  private dialogRef: MdDialogRef<UnlockwalletComponent>) { }
+  public dialogRef: MdDialogRef<UnlockwalletComponent>) { }
 
   unlock(encryptionStatus: string) {
     // unlock actually happened in password.component.ts

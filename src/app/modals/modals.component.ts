@@ -53,7 +53,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
     private _modalService: ModalsService,
-    private _dialogRef: MdDialogRef<ModalsComponent>
+    public _dialogRef: MdDialogRef<ModalsComponent>
   ) {
     this._modalService.getMessage().subscribe(
       message => this.open(message.modal, message.data)

@@ -6,6 +6,7 @@ import { PasswordComponent } from './password.component';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
+import { MdSnackBarModule } from '@angular/material';
 
 
 describe('PasswordComponent', () => {
@@ -17,7 +18,8 @@ describe('PasswordComponent', () => {
       imports: [
         SharedModule,
         RpcModule.forRoot(),
-        ModalsModule
+        ModalsModule,
+        MdSnackBarModule
       ]
     })
     .compileComponents();
@@ -39,7 +41,7 @@ describe('PasswordComponent', () => {
   });
 
   it('should get showPass', () => {
-    expect(component.showPass).toBe(false);
+    expect(!component.showPass).toBeTruthy();
   });
 
   /* TODO: Can't do RPC yet

@@ -1,7 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ElectronService } from 'ngx-electron';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angular2-qrcode';
 
@@ -9,6 +7,9 @@ import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { ReceiveComponent } from './receive.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MdTabsModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 describe('ReceiveComponent', () => {
@@ -23,7 +24,10 @@ describe('ReceiveComponent', () => {
         ReactiveFormsModule,
         SharedModule,
         QRCodeModule,
-        RpcModule.forRoot()
+        RpcModule.forRoot(),
+        FlexLayoutModule,
+        MdTabsModule,
+        BrowserAnimationsModule
       ]
     })
     .compileComponents();
@@ -44,7 +48,7 @@ describe('ReceiveComponent', () => {
       label: 'test address label',
       address: 'test address address',
       path: 'm/0/0'
-    }
+    };
     component.addAddress(address, 'public');
     expect(component.addresses.public.length).toBe(2);
   });
@@ -58,7 +62,7 @@ describe('ReceiveComponent', () => {
   });
 
   it('should get initialized', () => {
-    expect(component.initialized).toBe(false);
+    expect(component.initialized).toBeFalsy()
   });
 
   it('should get page', () => {

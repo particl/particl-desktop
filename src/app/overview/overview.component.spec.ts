@@ -7,6 +7,7 @@ import { OverviewComponent } from './overview.component';
 import { SharedModule } from '../shared/shared.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { RpcModule } from '../core/rpc/rpc.module';
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
@@ -15,13 +16,14 @@ describe('OverviewComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-         SharedModule,
-         WalletModule.forRoot(),
-         RpcModule.forRoot()
+        SharedModule,
+        WalletModule.forRoot(),
+        RpcModule.forRoot(),
+        FlexLayoutModule
       ],
-      declarations: [ OverviewComponent ],
+      declarations: [OverviewComponent],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

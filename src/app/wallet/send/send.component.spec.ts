@@ -9,6 +9,9 @@ import { WalletModule } from '../wallet.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { ModalsService } from '../../modals/modals.service';
+import { FlashNotificationService } from '../../services/flash-notification.service';
+import { MdSnackBarModule } from '@angular/material';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -17,16 +20,19 @@ describe('SendComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-         SharedModule,
-         WalletModule.forRoot(),
-         RpcModule.forRoot()
+        SharedModule,
+        WalletModule.forRoot(),
+        RpcModule.forRoot(),
+        MdSnackBarModule,
+        BrowserAnimationsModule
       ],
       providers: [
         ElectronService,
-        ModalsService
+        ModalsService,
+        FlashNotificationService
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -52,7 +58,7 @@ describe('SendComponent', () => {
 
   it('should verify amount no balance service', () => {
     component.send.amount = 555.555555;
-    expect(component.checkAmount()).toBe(false);
+    expect(component.checkAmount()).toBeFalsy();
   });
 /*
 

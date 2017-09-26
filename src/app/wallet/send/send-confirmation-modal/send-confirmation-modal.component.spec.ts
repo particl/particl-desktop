@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
+import { MdDialogModule } from '@angular/material';
 
 describe('SendConfirmationModalComponent', () => {
   let component: SendConfirmationModalComponent;
@@ -8,6 +9,7 @@ describe('SendConfirmationModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ MdDialogModule ],
       declarations: [ SendConfirmationModalComponent ]
     })
     .compileComponents();

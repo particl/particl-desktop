@@ -5,6 +5,7 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { AddressLookupComponent } from './addresslookup.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddressLookupComponent', () => {
   let component: AddressLookupComponent;
@@ -15,7 +16,8 @@ describe('AddressLookupComponent', () => {
       imports: [
         SharedModule,
         RpcModule.forRoot(),
-        WalletModule
+        WalletModule,
+        BrowserAnimationsModule
       ]
     })
     .compileComponents();
