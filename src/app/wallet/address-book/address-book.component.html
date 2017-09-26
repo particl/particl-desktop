@@ -9,13 +9,13 @@
         </a>
       </li>
     </ul>
-      <form class="header-form pull-right">
-        <input type="text" 
-        [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
-        <button class="btn" type="submit" name="button">
-          <span class="fa fa-search"></span>
-        </button>
-      </form>
+    <form class="header-form pull-right">
+      <input type="text"
+      [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
+      <button class="btn" type="submit" name="button">
+        <span class="fa fa-search"></span>
+      </button>
+    </form>
   </div>
 </app-header>
   <div class="container-fluid">
@@ -36,7 +36,7 @@
 
 <div id="address-modal"  [ngClass]="{'hide': openNewAddressModal == false }">
   <div class="address-modal-container">
-    <span class="close" (click)="closeNewAddress()">&times;</span>
+    <span class="close" (click)="clearAndClose()">&times;</span>
 
     <div class="modal-content-header">Add label to address</div>
     <hr class="margin-top-5px">
@@ -45,7 +45,7 @@
       <div class="col-xs-8">
         <input type="text" class="form-control" [(ngModel)]="address"
           placeholder="address"
-          [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
+          [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
           (input)="verifyAddress()">
       </div>
       <div class="col-xs-4">
@@ -53,8 +53,14 @@
           placeholder="label">
       </div>
     </div>
+    <div *ngIf="!!errorString"
+          class="alert alert-danger">
+      <div>
+        {{ errorString }}
+      </div>
+    </div>
 
-    <button class="control pull-right" (click)="addAddressToBook()">OK</button>
+    <button class="control pull-right" (click)="addAddressToBook()" [disabled]="(!label || !label.trim())||!validAddress||isMine">OK</button>
 
   </div>
 </div>

@@ -52,6 +52,7 @@ export class RPCService {
   private log: any = Log.create('rpc.service');
 
   public modalUpdates: Subject<any> = new Subject<any>();
+  private _rpcState: RPCStateClass;
 
   constructor(
     private http: Http,
@@ -62,12 +63,7 @@ export class RPCService {
     this.isElectron = this.electronService.isElectronApp;
 
     // We just execute it.. Might convert it to a service later on
-    const rpcState = new RPCStateClass(this);
-
-    if (this.isElectron) {
-      // Respond to checks if a listener is registered
-      this.rpx.rpxCall()
-    }
+    this._rpcState = new RPCStateClass(this);
   }
 
 
@@ -89,7 +85,7 @@ export class RPCService {
 
     if (this.isElectron) {
       return this.rpx.runCommand('backend-rpccall', null, method, params)
-        .map(response => response.result);
+        .map(response => response && response.result ? response.result : response);
 
     } else {
       const postData = JSON.stringify({
@@ -140,7 +136,7 @@ export class RPCService {
                   electron: this.isElectron
                 });
               }
-              setTimeout(_call, first ? 150 : 10000);
+              setTimeout(_call, first ? 150 : error.status === 0 ? 500 : 10000);
               first = false;
             });
       }
@@ -162,7 +158,11 @@ export class RPCService {
       }
     }
 
-    Object.keys(success).forEach(key => this.state.set(key, success[key]));
+    if (success) {
+      Object.keys(success).forEach(key => this.state.set(key, success[key]))
+    } else {
+      this.log.er('Should not be null, ever!', success, method);
+    }
   }
 
   private stateCallError(error: Object, method?: string) {

@@ -13,17 +13,6 @@ export class RPXService {
       public zone: NgZone
   ) {
   }
-  rpxCall() {
-   // Respond to checks if a listener is registered
-    this.electronService.ipcRenderer.on('rx-ipc-check-listener', (event, channel) => {
-      const replyChannel = 'rx-ipc-check-reply:' + channel;
-      if (this.listeners[channel]) {
-        event.sender.send(replyChannel, true);
-      } else {
-        event.sender.send(replyChannel, false);
-      }
-    });
-  }
 
   checkRemoteListener(channel: string) {
     return new Promise((resolve, reject) => {
