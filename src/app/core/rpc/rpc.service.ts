@@ -8,7 +8,8 @@ import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../modals/modals.service';
 import { StateService } from '../state/state.service';
-import { RPXService } from './rpx.class';
+import { RPXService } from './rpx.service';
+import { RPCStateClass } from './rpc-state.class';
 
 
 const MAINNET_PORT = 51735;
@@ -51,6 +52,7 @@ export class RPCService {
   private log: any = Log.create('rpc.service');
 
   public modalUpdates: Subject<any> = new Subject<any>();
+  private _rpcState: RPCStateClass;
 
   constructor(
     private http: Http,
@@ -60,14 +62,10 @@ export class RPCService {
   ) {
     this.isElectron = this.electronService.isElectronApp;
 
-    // Start polling...
-    this.registerStateCall('getinfo', 1000);
-    this.registerStateCall('getblockchaininfo', 2000);
-    this.registerStateCall('getwalletinfo', 2000);
-    this.registerStateCall('getstakinginfo', 15000);
+    // We just execute it.. Might convert it to a service later on
+    this._rpcState = new RPCStateClass(this);
 
     if (this.isElectron) {
-
       // Respond to checks if a listener is registered
       this.rpx.rpxCall()
     }
@@ -92,7 +90,7 @@ export class RPCService {
 
     if (this.isElectron) {
       return this.rpx.runCommand('backend-rpccall', null, method, params)
-        .map(response => response.result);
+        .map(response => response && response.result ? response.result : response);
 
     } else {
       const postData = JSON.stringify({
@@ -143,25 +141,33 @@ export class RPCService {
                   electron: this.isElectron
                 });
               }
+              setTimeout(_call, first ? 150 : error.status === 0 ? 500 : 10000);
               first = false;
-              setTimeout(_call, 10000);
             });
       }
       _call();
     } else {
-      this.state.observe('blocks').subscribe(success => this.stateCall(method, true));
+      this.state.observe('blocks') .subscribe(success => this.stateCall(method, true));
       this.state.observe('txcount').subscribe(success => this.stateCall(method, true));
     }
   }
 
-  private stateCallSuccess(success: any, method?: string) {
+  private stateCallSuccess(success: any, method?: string | boolean) {
     if (method) {
-      const obj = {};
-      obj[success] = method;
-      success = obj;
+      if (success) {
+        const obj = {};
+        obj[success] = method;
+        success = obj;
+      } else {
+        success = method;
+      }
     }
 
-    Object.keys(success).forEach(key => this.state.set(key, success[key]));
+    if (success) {
+      Object.keys(success).forEach(key => this.state.set(key, success[key]))
+    } else {
+      this.log.er('Should not be null, ever!', success, method);
+    }
   }
 
   private stateCallError(error: Object, method?: string) {
