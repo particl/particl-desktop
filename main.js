@@ -10,7 +10,7 @@ const url = require('url');
 const platform = require('os').platform();
 const log = require('electron-log');
 
-log.transports.file.appName = '.particl';
+log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
 log.transports.file.file = log.transports.file
   .findLogPath(log.transports.file.appName)
   .replace('log.log', 'partgui.log');
@@ -31,29 +31,29 @@ function createWindow () {
 
   options = parseArguments();
   options.port = options.rpcport
-    // custom rpc port
-    ? options.rpcport
+    ? options.rpcport // custom rpc port
     : options.testnet
-      // default testnet port
-      ? 51935
-      // default mainnet port
-      : 51735;
-  options.rpcbind = options.rpcbind
-    // custom rpc bind address
-    ? options.rpcbind
-    // default rpc bind address
-    : 'localhost';
+      ? 51935  // default testnet port
+      : 51735; // default mainnet port
+
+  rpc.init(options);
+
+  // Daemon already running... Start window
+  rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
+    .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
+
 
 
   rpc.init(options);
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
     daemon = child ? child : undefined;
+    if (!mainWindow) {
+      initMainWindow(makeTray());
+    }
   }).catch(error => {
     console.error(error);
   });
-
-  initMainWindow(makeTray());
 }
 
 /*
@@ -71,12 +71,6 @@ function initMainWindow(trayImage) {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     },
-  })
-
-  // handle external URIs
-  mainWindow.webContents.on('new-window', (event, url) => {
-    event.preventDefault();
-    electron.shell.openExternal(url);
   });
 
   // and load the index.html of the app.
@@ -107,7 +101,7 @@ function initMainWindow(trayImage) {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
-  })
+  });
 }
 
 /*
@@ -119,12 +113,12 @@ function makeTray() {
   let trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
 
   // Determine appropriate icon for platform
-  if (platform === 'darwin') {
-    trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
-  }
-  else if (platform === 'win32' || platform === 'win64') {
-    trayImage = path.join(__dirname, 'src/assets/icons/logo.ico');
-  }
+  // if (platform === 'darwin') {
+  //    trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
+  // }
+  // else if (platform === 'win32' || platform === 'win64') {
+  //   trayImage = path.join(__dirname, 'src/assets/icons/logo.ico');
+  // }
 
   // The tray context menu
   const contextMenu = electron.Menu.buildFromTemplate([
@@ -169,15 +163,15 @@ function makeTray() {
   tray = new electron.Tray(trayImage)
 
   // TODO, tray pressed icon for OSX? :)
-  if (platform === "darwin") {
-    tray.setPressedImage(imageFolder + '/osx/trayHighlight.png');
-  }
+  // if (platform === "darwin") {
+  //   tray.setPressedImage(imageFolder + '/osx/trayHighlight.png');
+  // }
 
   // Set the tray icon
-  tray.setToolTip('Particl '+app.getVersion());
+  tray.setToolTip('Particl ' + app.getVersion());
   tray.setContextMenu(contextMenu)
 
-  return (trayImage);
+  return trayImage;
 }
 
 /*
@@ -197,7 +191,8 @@ function makeTray() {
 function parseArguments() {
 
   let options = {};
-  if (path.basename(process.argv[0]) === 'electron'){
+  if (path.basename(process.argv[0]).includes('electron')) {
+
     // striping 'electron .' from argv
     process.argv = process.argv.splice(2);
   } else {
@@ -217,8 +212,7 @@ function parseArguments() {
       options[arg.substr(1)] = true;
     }
   });
-
-  return (options);
+  return options;
 }
 
 // This method will be called when Electron has finished
@@ -238,7 +232,7 @@ app.on('window-all-closed', function () {
 app.on('quit', function () {
   // kill the particl daemon if initiated on launch
   if (daemon) {
-    daemon.kill();
+    daemon.kill('SIGINT');
   }
 })
 

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { BlockStatusService } from './blockstatus.service'
 import { PeerService } from './peer.service';
 import { RPCService } from './rpc.service';
-import { RPXService } from './rpx.class';
+import { RPXService } from './rpx.service';
 import { StateService } from '../state/state.service';
 
 

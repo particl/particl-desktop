@@ -11,7 +11,7 @@
   <div class="grid-row address-row" *ngFor="let address of getSinglePage()">
     <div class="grid-cell cell-label text-left" *ngIf="displayLabel">
       <span class="inline-header" (click)="editLabel(address.address)">
-        {{ address.label }}
+        {{ address.label && address.label.trim() || 'No Label' }}
       </span>
     </div>
     <div class="grid-cell cell-address text-left" *ngIf="displayAddress">
@@ -45,15 +45,15 @@
 </app-grid>
 
 
-<pagination *ngIf="displayPagination" 
-  [boundaryLinks]="true" 
-  [totalItems]="getTotalAddressCount()" 
-  [maxSize]="5" 
-  [rotate]="false" 
-  [(ngModel)]="currentPage" 
-  class="pagination-sm center" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" 
+<pagination *ngIf="displayPagination"
+  [boundaryLinks]="true"
+  [totalItems]="getTotalAddressCount()"
+  [maxSize]="5"
+  [rotate]="false"
+  [(ngModel)]="currentPage"
+  class="pagination-sm center" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
   [itemsPerPage]="getMaxAddressesPerPage()" >
-    
+
   </pagination>
 
 <div id="qr-modal"  [ngClass]="{'hide': openQrModal == false }">
@@ -76,7 +76,7 @@
       </div>
       <div class="col-xs-4">
         <div #qrCode class="card qr">
-          <qr-code [level]="'H'" [size]="getQrSize()" 
+          <qr-code [level]="'H'" [size]="getQrSize()"
                    [value]="singleAddress.address">
           </qr-code>
         </div>
