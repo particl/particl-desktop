@@ -7,7 +7,6 @@ import { WindowService } from './core/window.service';
 
 import { SettingsService } from './settings/settings.service';
 
-// Modal example
 import { ModalsService } from './modals/modals.service';
 
 // Syncing example
@@ -31,7 +30,6 @@ export class AppComponent implements OnInit {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
-    private _statusService: BlockStatusService,
     public window: WindowService,
     // Modal example
     private _modalsService: ModalsService,

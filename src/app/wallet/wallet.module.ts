@@ -20,7 +20,14 @@ import { HistoryComponent } from './history/history.component';
 
 import { AddressLookupComponent } from './addresslookup/addresslookup.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '@angular/material';
+import {
+  MdButtonModule, MdCardModule, MdCheckboxModule,
+  MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdProgressBarModule,
+  MdRadioModule,
+  MdSelectModule,
+  MdTabsModule,
+  MdTooltipModule
+} from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddAddressLabelComponent } from './receive/modals/add-address-label/add-address-label.component';
 import { NewAddressModalComponent } from './address-book/modal/new-address-modal/new-address-modal.component';
@@ -47,8 +54,21 @@ const routes: Routes = [
     QRCodeModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule,
-    FlexLayoutModule
+    MdDialogModule,
+    FlexLayoutModule,
+    MdProgressBarModule,
+    MdExpansionModule,
+    MdSelectModule,
+    MdTooltipModule,
+    MdButtonModule,
+    MdTabsModule,
+    MdGridListModule,
+    MdCardModule,
+    MdIconModule,
+    MdListModule,
+    MdInputModule,
+    MdCheckboxModule,
+    MdRadioModule
   ],
   declarations: [
     TransactionsTableComponent,

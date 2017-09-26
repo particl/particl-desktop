@@ -17,7 +17,7 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
-import { MaterialModule } from '@angular/material';
+import { MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FlashNotificationService } from '../services/flash-notification.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -27,9 +27,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CommonModule,
     FormsModule,
     ClipboardModule,
-    MaterialModule,
+    MdDialogModule,
     FlexLayoutModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MdButtonModule,
+    MdIconModule,
+    MdInputModule,
+    MdCheckboxModule
   ],
   declarations: [
     FocusDirective,

@@ -11,7 +11,7 @@ import { AccordionModule } from './accordion/accordion.module';
 import { HeaderComponent } from './header/header.component';
 import { TableComponent } from './table/table.component';
 import { GridComponent } from './grid/grid.component';
-import { MaterialModule } from '@angular/material';
+import { MdDialogModule, MdExpansionModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
 
@@ -24,7 +24,8 @@ import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/de
     AccordionModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
-    MaterialModule,
+    MdDialogModule,
+    MdExpansionModule,
     FlexLayoutModule
   ],
   declarations: [

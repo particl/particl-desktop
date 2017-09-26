@@ -117,8 +117,9 @@ export class AddressTableComponent implements OnInit {
     dialogRef.componentInstance.onDelete.subscribe(() => {
       this._rpc.call('manageaddressbook', ['del', address])
         .subscribe(response => {
-          this.rpc_deleteAddress_success(response);
-        });
+            this.rpc_deleteAddress_success(response);
+          },
+          error => console.log(`${error.error.message}`));
     });
   }
 

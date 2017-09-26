@@ -4,7 +4,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
 import { NgxElectronModule } from 'ngx-electron';
-import { MaterialModule } from '@angular/material';
+import {
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdExpansionModule, MdGridListModule, MdIconModule, MdListModule,
+  MdMenuModule,
+  MdProgressBarModule,
+  MdSidenavModule,
+  MdSnackBarModule, MdTabsModule, MdToolbarModule,
+  MdTooltipModule
+} from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { SharedModule } from './shared/shared.module';
@@ -49,8 +56,20 @@ const routes: Routes = [
     WalletModule.forRoot(),
     RpcModule.forRoot(),
     ModalsModule,
-    MaterialModule,
-    FlexLayoutModule
+    MdButtonModule,
+    MdCheckboxModule,
+    MdListModule,
+    MdExpansionModule,
+    FlexLayoutModule,
+    MdTooltipModule,
+    MdSnackBarModule,
+    MdMenuModule,
+    MdProgressBarModule,
+    MdIconModule,
+    MdSidenavModule,
+    MdGridListModule,
+    MdCardModule,
+    MdToolbarModule
   ],
   providers: [
     WindowService,

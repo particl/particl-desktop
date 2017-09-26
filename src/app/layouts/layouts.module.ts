@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutSideNavComponent } from './side-nav/side-nav.component';
-import { MaterialModule } from '@angular/material';
+import { MdDialog, MdDialogRef} from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ModalsService } from '../modals/modals.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    MaterialModule,
+    MdDialog,
+    MdDialogRef,
     FlexLayoutModule
   ],
   declarations: [LayoutSideNavComponent],
