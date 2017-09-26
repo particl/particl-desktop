@@ -36,7 +36,7 @@
 
 <div id="address-modal"  [ngClass]="{'hide': openNewAddressModal == false }">
   <div class="address-modal-container">
-    <span class="close" (click)="closeNewAddress()">&times;</span>
+    <span class="close" (click)="clearAndClose()">&times;</span>
 
     <div class="modal-content-header">Add label to address</div>
     <hr class="margin-top-5px">
@@ -53,20 +53,14 @@
           placeholder="label">
       </div>
     </div>
-    <div *ngIf="validAddress === false || isMine === true || isLocked"
+    <div *ngIf="!!errorString"
           class="alert alert-danger">
-      <div *ngIf="validAddress === false">
-        Please enter a valid address!
-      </div>
-      <div *ngIf="isMine">
-        This is your own address - can not be added to addressbook!
-      </div>
-      <div *ngIf="isLocked">
-        Wallet is locked you aren't able to edit a label !
+      <div>
+        {{ errorString }}
       </div>
     </div>
 
-    <button class="control pull-right" (click)="addAddressToBook()">OK</button>
+    <button class="control pull-right" (click)="addAddressToBook()" [disabled]="(!label || !label.trim())||!validAddress||isMine">OK</button>
 
   </div>
 </div>

@@ -10,9 +10,8 @@
   </div>
   <div class="grid-row address-row" *ngFor="let address of getSinglePage()">
     <div class="grid-cell cell-label text-left" *ngIf="displayLabel">
-      <span class="inline-header">Label</span>
-      <span (click)="editLabel(address.address)">
-        &nbsp;&nbsp;{{ address.label }}&nbsp;&nbsp;&nbsp;
+      <span class="inline-header" (click)="editLabel(address.address)">
+        {{ address.label && address.label.trim() || 'No Label' }}
       </span>
     </div>
     <div class="grid-cell cell-address text-left" *ngIf="displayAddress">

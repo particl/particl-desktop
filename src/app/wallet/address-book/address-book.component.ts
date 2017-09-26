@@ -24,7 +24,6 @@ export class AddressBookComponent implements OnInit {
   // Validation state
   public validAddress: boolean = undefined;
   public isMine: boolean = undefined;
-  public isLocked: boolean = false;
 
   constructor(private _rpc: RPCService) { }
 
@@ -32,7 +31,6 @@ export class AddressBookComponent implements OnInit {
   }
 
   openNewAddress() {
-    this.isLocked = false;
     this.openNewAddressModal = true;
   }
 
@@ -48,6 +46,7 @@ export class AddressBookComponent implements OnInit {
     // reset validation
     this.validAddress = undefined;
     this.isMine = undefined;
+    this.errorString = '';
 
     this.closeNewAddress();
   }
@@ -69,7 +68,7 @@ export class AddressBookComponent implements OnInit {
     * has a label (in the textbox) and is not one of our own addresses.
     */
   addAddressToBook() {
-    if (this.label) {
+    if (this.label && this.label.trim() && !this.isMine) {
       this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
         .subscribe(
           response => this.rpc_addAddressToBook_success(response),
@@ -82,15 +81,12 @@ export class AddressBookComponent implements OnInit {
     * TODO: INTERFACE
     */
   rpc_addAddressToBook_success(response: any) {
-    if (response && response.result === 'success') {
-      this.address = undefined;
-      this.label = '';
-      this.closeNewAddress();
-      // TODO: remove specialPoll! (updates the address table)
-      this._rpc.specialPoll();
-    } else {
-      this.isLocked = true;
-    }
+    this.address = undefined;
+    this.label = '';
+    this.closeNewAddress();
+    // TODO: remove specialPoll! (updates the address table)
+    this._rpc.specialPoll();
+
     this.validAddress = undefined;
     this.isMine = undefined;
   }
@@ -98,10 +94,15 @@ export class AddressBookComponent implements OnInit {
   /**
     * Address was not added to the addressbook
     * e.g: wallet still locked
+    * TODO: Error interface
     */
-  rpc_addAddressToBook_failed(response: Object) {
+  rpc_addAddressToBook_failed(response: any) {
     this.log.er('rpc_addAddressToBook_failed', response);
     this.log.er(response);
+
+    if (response.error) {
+      this.errorString = response.error.message;
+    }
     // TODO: remove specialPoll! (updates the address table)
     this._rpc.specialPoll();
   }
@@ -111,7 +112,7 @@ export class AddressBookComponent implements OnInit {
     if (this.address === undefined || this.address === '') {
       this.validAddress = undefined;
       this.isMine = undefined;
-      this.isLocked = false;
+      this.errorString = '';
       return;
     }
 
@@ -119,8 +120,6 @@ export class AddressBookComponent implements OnInit {
       .subscribe(
         response => this.rpc_verifyAddress_success(response),
         error => this.log.er('rpc_validateaddress_failed'));
-
-    return;
   }
 
   /**
@@ -131,9 +130,14 @@ export class AddressBookComponent implements OnInit {
   rpc_verifyAddress_success(response: any) {
     this.validAddress = response.isvalid;
     this.isMine = response.ismine;
-    this.isLocked = false;
     if (response.account !== undefined) {
       this.label = response.account;
+    }
+    if (this.isMine) {
+      this.errorString = 'Error: Can\'t add own address to address book.';
+    }
+    if (!this.validAddress) {
+      this.errorString = 'Error: Invalid Particl address.';
     }
   }
 
