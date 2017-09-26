@@ -289,6 +289,11 @@ export class ReceiveComponent implements OnInit {
       // not all stealth addresses are derived from HD wallet (importprivkey)
       if (response.path !== undefined) {
         tempAddress.id = +(response.path.replace('m/0\'/', '').replace('\'', '')) / 2;
+
+        // filter out accounts m/1 m/2 etc. stealth addresses are always m/0'/0'
+        if (response.path.search(/m\/[0-9]+/g) !== -1 && response.path.search(/m\/[0-9]+'\/[0-9]+/g) === -1) {
+          return;
+        }
       }
       this.addresses.private.unshift(tempAddress);
     }
