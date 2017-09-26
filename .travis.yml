@@ -49,8 +49,8 @@ script:
   - echo -en 'travis_fold:end:script.dist\\r'
 
 # Disable coveralls for now
-#after_script:
-#  - npm run coveralls
+after_script:
+  - npm run coveralls
 
 #deploy:
 #  - provider: releases

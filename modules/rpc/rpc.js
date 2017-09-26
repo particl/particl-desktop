@@ -137,16 +137,15 @@ function rpcCall (method, params, auth, callback) {
         });
         return ;
       }
-
       try {
         data = JSON.parse(data);
       } catch(e) {
-        log.error('ERROR: should not happen', e);
+        log.error('ERROR: should not happen', e, data);
         callback(e);
       }
 
       if (data.error !== null) {
-        callback(data, null);
+        callback(data);
         return;
       }
       callback(null, data);
@@ -154,11 +153,17 @@ function rpcCall (method, params, auth, callback) {
   });
 
   request.on('error', error => {
-    callback(error)
+    if (error.code === 'ECONNRESET') {
+      callback({
+        status: 0,
+        message: 'Timeout'
+      });
+    } else {
+      callback(error);
+    }
   });
 
   request.setTimeout(TIMEOUT, error => {
-    callback(error);
     return request.abort();
   });
   request.write(postData);
@@ -174,7 +179,6 @@ function rpcCall (method, params, auth, callback) {
 ** RPC cookie is regenerated at every particld startup
 */
 function getAuth(options) {
-
   if (options.rpcuser && options.rpcpassword) {
     return options.rpcuser + ':' + options.rpcpassword;
   }
