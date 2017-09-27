@@ -1,33 +1,31 @@
-// Import a pre-built theme
 @import '~@angular/material/theming';
 @include mat-core();
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
-$mat-cyan: (
-  50:  #E8FDF8,
-  100: #D1FBF1,
-  200: #A3F6E2,
-  300: #75F2D4,
-  400: #47EDC5,
-  500: #03E8B0,
-  600: #03BE91,
+$app-primary-color: (
+  50: #e8fdf8,
+  100: #d1fbf1,
+  200: #a3f6e2,
+  300: #75f2d4,
+  400: #47edc5,
+  500: #03e8b0,
+  600: #03be91,
   700: #029470,
   800: #029471,
   900: #006064,
-  A100: #8CF4DB,
+  A100: #8cf4db,
   A200: #18ffff,
-  A400: #1AEAB8,
-  A700: #03A981,
+  A400: #1aeab8,
+  A700: #03a981,
   contrast: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
     300: $black-87-opacity,
     400: $black-87-opacity,
-    500: white,
-    600: white,
-    700: white,
-    800: white,
+    500: #fff,
+    600: #fff,
+    700: #fff,
+    800: #fff,
     900: $white-87-opacity,
     A100: $black-87-opacity,
     A200: $black-87-opacity,
@@ -36,40 +34,40 @@ $mat-cyan: (
   )
 );
 
-$mat-pink: (
-  50:  #fce4ec,
-  100: #f8bbd0,
-  200: #f48fb1,
-  300: #f06292,
-  400: #ec407a,
-  500: #02a981,
-  600: #d81b60,
-  700: #c2185b,
-  800: #ad1457,
-  900: #880e4f,
-  A100: #ff80ab,
-  A200: #ff4081,
-  A400: #f50057,
-  A700: #c51162,
+$app-secondary-color: (
+  50: #e8fdf8,
+  100: #d1fbf1,
+  200: #a3f6e2,
+  300: #75f2d4,
+  400: #47edc5,
+  500: #03e8b0,
+  600: #03be91,
+  700: #029470,
+  800: #029471,
+  900: #006064,
+  A100: #47edc5,
+  A200: #75f2d4,
+  A400: #02a981,
+  A700: #03a981,
   contrast: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
     300: $black-87-opacity,
     400: $black-87-opacity,
-    500: white,
-    600: white,
+    500: #fff,
+    600: #fff,
     700: $white-87-opacity,
     800: $white-87-opacity,
     900: $white-87-opacity,
     A100: $black-87-opacity,
-    A200: white,
-    A400: white,
-    A700: white,
+    A200: #fff,
+    A400: #fff,
+    A700: #fff,
   )
 );
 
-$mat-red: (
+$app-red: (
   50: #ffebee,
   100: #ffcdd2,
   200: #ef9a9a,
@@ -90,22 +88,22 @@ $mat-red: (
     200: $black-87-opacity,
     300: $black-87-opacity,
     400: $black-87-opacity,
-    500: white,
-    600: white,
-    700: white,
+    500: #fff,
+    600: #fff,
+    700: #fff,
     800: $white-87-opacity,
     900: $white-87-opacity,
     A100: $black-87-opacity,
-    A200: white,
-    A400: white,
-    A700: white,
+    A200: #fff,
+    A400: #fff,
+    A700: #fff,
   )
 );
 
-$partgui-app-primary: mat-palette($mat-cyan);
-$partgui-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$partgui-app-primary: mat-palette($app-primary-color);
+$partgui-app-accent: mat-palette($app-secondary-color, A200, A100, A400);
 // The warn palette is optional (defaults to red).
-$partgui-app-warn:    mat-palette($mat-red);
+$partgui-app-warn: mat-palette($app-red);
 
 $partgui-app-theme: mat-light-theme($partgui-app-primary, $partgui-app-accent, $partgui-app-warn);
 @include angular-material-theme($partgui-app-theme);
