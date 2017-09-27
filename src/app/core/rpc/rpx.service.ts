@@ -23,8 +23,7 @@ export class RPXService {
   private listenerCount: number = 0;
   listeners: { [id: string]: boolean } = {};
 
-  constructor(public zone: NgZone) {
-  }
+  constructor(public zone: NgZone) { }
 
   checkRemoteListener(channel: string) {
     return new Promise((resolve, reject) => {
