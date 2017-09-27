@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { BlockStatusService } from './blockstatus.service'
-import { ElectronService } from 'ngx-electron';
 import { PeerService } from './peer.service';
 import { RPCService } from './rpc.service';
 import { RPXService } from './rpx.service';
@@ -20,7 +19,6 @@ export class RpcModule {
       ngModule: RpcModule,
       providers: [
         BlockStatusService,
-        ElectronService,
         PeerService,
         RPCService,
         RPXService,
