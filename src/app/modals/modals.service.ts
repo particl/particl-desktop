@@ -46,10 +46,11 @@ export class ModalsService {
       this.needToOpenModal(status);
     });
 
-    //
+    // open daemon model on error
     this._rpcService.modalUpdates.asObservable().subscribe(status => {
       if (status.error) {
         this.open('daemon', status);
+        // no error and daemon model open -> close it
       } else if (this.modal === this.messages['daemon']) {
         this.close();
       }
@@ -60,7 +61,7 @@ export class ModalsService {
     if (modal in this.messages) {
       if (
         (data && data.forceOpen)
-        || !this.manuallyClosed.includes(this.messages[modal].name)
+        || !this.wasManuallyClosed(modal)
       ) {
         this.log.d(`next modal: ${modal}`);
         this.modal = this.messages[modal];
@@ -74,18 +75,21 @@ export class ModalsService {
 
   close() {
     this.isOpen = false;
-    if (this.modal && !this.manuallyClosed.includes(this.modal.name)) {
+    if (this.modal && !this.wasManuallyClosed(this.modal)) {
       this.manuallyClosed.push(this.modal.name);
     }
+  }
+
+  wasManuallyClosed(modal: string) {
+    return this.manuallyClosed.includes(this.messages[modal].name);
   }
 
   getMessage() {
       return (this.message.asObservable());
   }
 
-  getProgress() {
-      return (this.progress.asObservable());
-  }
+
+  /* DATA functions */
 
   storeData(data: any) {
     this.data = data;
@@ -97,6 +101,16 @@ export class ModalsService {
     return (data);
    }
 
+
+
+
+  /*  MODAL SPECIFIC FUNCTIONS  */
+
+  // Blockstatus
+  getProgress() {
+    return (this.progress.asObservable());
+  }
+
   needToOpenModal(status: any) {
     // Open syncing Modal
     if (!this.isOpen && (status.networkBH <= 0
@@ -105,4 +119,7 @@ export class ModalsService {
         this.open('syncing');
     }
   }
+
+
+
 }

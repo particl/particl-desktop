@@ -192,6 +192,7 @@ function getAuth(options) {
   } else {
     auth = undefined;
     console.error('could not find cookie file !');
+    console.error('path: ' + COOKIE_FILE);
   }
 
   return (auth)
