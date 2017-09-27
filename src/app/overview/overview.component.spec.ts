@@ -1,7 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ElectronService } from 'ngx-electron';
-
 import { OverviewComponent } from './overview.component';
 
 import { SharedModule } from '../shared/shared.module';
