@@ -124,17 +124,19 @@ export class AddressTableComponent implements OnInit {
     this.address = address;
     if (confirm(`Are you sure you want to delete ${label}: ${address}`)) {
       // this._rpc.call(this, 'manageaddressbook', ['del', address], this.rpc_deleteAddress_success);
-      if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) !== -1) {
+      if (this._rpc.state.get('locked')) {
         // unlock wallet and send transaction
-        this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.deleteAddressCallBack.bind(this)});
+        this._modals.open('unlock', {
+          forceOpen: true, timeout: 3, callback: this.deleteAddressCallBack.bind(this, address)
+        });
       } else {
         // wallet already unlocked
-        this.deleteAddressCallBack();
+        this.deleteAddressCallBack(address);
       }
     }
   }
 
-  private deleteAddressCallBack() {
+  private deleteAddressCallBack(address: string) {
     this._rpc.call('manageaddressbook', ['del', this.address])
       .subscribe(response => {
           this.rpc_deleteAddress_success(response);

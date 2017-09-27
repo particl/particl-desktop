@@ -32,7 +32,10 @@ export class StatusComponent implements OnInit {
       .subscribe(connections => this.peerListCount = connections)
 
     this._rpc.state.observe('encryptionstatus')
-      .subscribe(status => this.encryptionStatus = status);
+      .subscribe(status => {
+        this.encryptionStatus = status;
+        this._rpc.state.set('locked', ['Locked', 'Unlocked, staking only'].includes(status))
+      });
   }
 
   getIconNumber(): number {

@@ -53,8 +53,4 @@ export class PassphraseService {
     }
     return this._rpc.call('extkeygenesisimport', params);
   }
-
-  checkStatus() {
-    return this._rpc.state.get('encryptionstatus');
-  }
 }

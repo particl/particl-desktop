@@ -6,6 +6,7 @@ import { IPassword } from '../shared/password/password.interface';
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
+import { RPCService } from '../../core/rpc/rpc.module';
 
 import { flyInOut, slideDown } from '../../core/core.animations';
 
@@ -44,18 +45,14 @@ export class CreateWalletComponent {
   constructor (
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
-    private _passphraseService: PassphraseService
+    private _passphraseService: PassphraseService,
+    private _rpc: RPCService
   ) {
-    if (this._modalsService.globStep === 5) {
-      this.step = this._modalsService.globStep;
-    } else {
       this.reset();
-    }
   }
 
   reset() {
     this._modalsService.enableClose = true;
-    this._modalsService.globStep = 0;
     this.words = Array(24).fill('');
     this.isRestore = false;
     this.name = '';
@@ -119,9 +116,9 @@ export class CreateWalletComponent {
         this.animationState = '';
         this.step = 4;
         this.errorString = '';
-        if (['Locked', 'Unlocked, staking only'].indexOf(this._passphraseService.checkStatus()) !== -1) {
+        if (this._rpc.state.get('locked')) {
           // unlock wallet
-          this._modalsService.open('unlock', {forceOpen: true, timeout: 3, callback: this.importMnemonicCallback.bind(this)});
+          this.step = 6
         } else {
           // wallet already unlocked
           this.importMnemonicCallback();
@@ -143,13 +140,12 @@ export class CreateWalletComponent {
     this.log.d(`word string: ${this.words.join(' ')}`);
   }
 
-  private importMnemonicCallback() {
+  public importMnemonicCallback() {
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {
           this.animationState = 'next';
-          this._modalsService.globStep = 5;
-          this._modalsService.open('createWallet', {forceOpen: true});
+          this.step = 5;
           this.log.i('Mnemonic imported successfully');
         },
         error => {

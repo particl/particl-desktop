@@ -70,9 +70,11 @@ export class AddressBookComponent implements OnInit {
     */
   addAddressToBook() {
     if (this.label && this.label.trim() && !this.isMine) {
-      if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) !== -1) {
+      if (this._rpc.state.get('locked')) {
         // unlock wallet and send transaction
-        this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addressCallBack.bind(this)});
+        this._modals.open('unlock', {
+          forceOpen: true, timeout: 3, callback: this.addressCallBack.bind(this)
+        });
       } else {
         // wallet already unlocked
         this.addressCallBack();
