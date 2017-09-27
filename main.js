@@ -10,9 +10,13 @@ const url = require('url');
 const platform = require('os').platform();
 const log = require('electron-log');
 
+log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
+log.transports.file.file = log.transports.file
+  .findLogPath(log.transports.file.appName)
+  .replace('log.log', 'partgui.log');
+
 const daemonManager = require('./modules/clientBinaries/clientBinaries');
 const rpc = require('./modules/rpc/rpc');
-
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -39,6 +43,9 @@ function createWindow () {
     .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
 
 
+
+  rpc.init(options);
+
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
     daemon = child ? child : undefined;
@@ -60,9 +67,10 @@ function initMainWindow(trayImage) {
     height: 720,
     icon: trayImage,
     webPreferences: {
-      //sandbox: true,
-      //nodeIntegration: false,
-      preload: 'preload.js',
+      nodeIntegration: false,
+      sandbox: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     },
   });
 

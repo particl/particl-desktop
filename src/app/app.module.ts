@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NgxElectronModule } from 'ngx-electron';
 import { BsDropdownModule, CollapseModule, ModalModule, ModalDirective, PaginationModule, TooltipModule } from 'ngx-bootstrap';
 
 import { SharedModule } from './shared/shared.module';
@@ -38,7 +37,6 @@ const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(routes),
-    NgxElectronModule,
     SharedModule,
     SidebarModule.forRoot(),
     WalletModule.forRoot(),
