@@ -10,8 +10,8 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { ModalsService } from '../../modals/modals.service';
 import { FlashNotificationService } from '../../services/flash-notification.service';
-import { MdSnackBarModule } from '@angular/material';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { MdDialogRef, MdSnackBarModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -27,6 +27,7 @@ describe('SendComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
+        { provide: MdDialogRef },
         ElectronService,
         ModalsService,
         FlashNotificationService

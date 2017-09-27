@@ -6,7 +6,7 @@ import { ModalsModule } from '../../modals.module';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
-import { MdDialogModule } from '@angular/material';
+import {MdDialogModule, MdDialogRef} from '@angular/material';
 
 
 describe('AlertComponent', () => {
@@ -20,7 +20,8 @@ describe('AlertComponent', () => {
         RpcModule.forRoot(),
         ModalsModule,
         MdDialogModule
-      ]
+      ],
+      providers: [ { provide: MdDialogRef } ]
     })
       .compileComponents();
   }));

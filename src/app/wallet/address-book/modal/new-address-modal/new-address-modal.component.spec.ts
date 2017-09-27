@@ -1,7 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewAddressModalComponent } from './new-address-modal.component';
-import { FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../../../../shared/shared.module';
+import { RpcModule } from '../../../../core/rpc/rpc.module';
+import { BrowserModule } from '@angular/platform-browser';
+import {MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule} from '@angular/material';
+import { FlashNotificationService } from '../../../../services/flash-notification.service';
 
 describe('NewAddressModalComponent', () => {
   let component: NewAddressModalComponent;
@@ -9,8 +14,22 @@ describe('NewAddressModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormGroup ],
-      declarations: [ NewAddressModalComponent ]
+      imports: [
+        SharedModule,
+        RpcModule.forRoot(),
+        BrowserModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MdFormFieldModule,
+        MdDialogModule,
+        MdSnackBarModule,
+        MdInputModule
+      ],
+      declarations: [ NewAddressModalComponent ],
+      providers: [
+        FlashNotificationService,
+        { provide: MdDialogRef}
+        ]
     })
     .compileComponents();
   }));

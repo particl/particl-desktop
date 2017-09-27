@@ -14,6 +14,7 @@ import { GridComponent } from './grid/grid.component';
 import { MdDialogModule, MdExpansionModule, MdIconModule, MdInputModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/de
     MdExpansionModule,
     MdInputModule,
     MdIconModule,
+    BrowserAnimationsModule,
     FlexLayoutModule
   ],
   declarations: [

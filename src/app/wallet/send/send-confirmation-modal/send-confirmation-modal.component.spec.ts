@@ -1,7 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
-import { MdDialogModule } from '@angular/material';
+import { MdDialogModule, MdDialogRef, MdFormFieldModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('SendConfirmationModalComponent', () => {
   let component: SendConfirmationModalComponent;
@@ -9,8 +11,17 @@ describe('SendConfirmationModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MdDialogModule ],
-      declarations: [ SendConfirmationModalComponent ]
+      imports: [
+        MdDialogModule,
+        BrowserModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MdFormFieldModule
+      ],
+      declarations: [ SendConfirmationModalComponent ],
+      providers: [
+        { provide: MdDialogRef}
+      ]
     })
     .compileComponents();
   }));

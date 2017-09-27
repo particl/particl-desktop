@@ -1,13 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ElectronService } from 'ngx-electron';
-
 import { OverviewComponent } from './overview.component';
 
 import { SharedModule } from '../shared/shared.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { RpcModule } from '../core/rpc/rpc.module';
-import {FlexLayoutModule} from "@angular/flex-layout";
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MdCardModule } from '@angular/material';
 
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
@@ -19,7 +18,8 @@ describe('OverviewComponent', () => {
         SharedModule,
         WalletModule.forRoot(),
         RpcModule.forRoot(),
-        FlexLayoutModule
+        FlexLayoutModule,
+        MdCardModule
       ],
       declarations: [OverviewComponent],
     })

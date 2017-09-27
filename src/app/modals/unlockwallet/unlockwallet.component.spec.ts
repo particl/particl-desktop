@@ -5,7 +5,7 @@ import { ModalsModule } from '../modals.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { RpcModule } from '../../core/rpc/rpc.module';
-import { MdDialogModule, MdSnackBarModule } from '@angular/material';
+import {MdDialogModule, MdDialogRef, MdSnackBarModule} from '@angular/material';
 
 
 describe('UnlockwalletComponent', () => {
@@ -20,7 +20,8 @@ describe('UnlockwalletComponent', () => {
         RpcModule.forRoot(),
         MdDialogModule,
         MdSnackBarModule
-      ]
+      ],
+      providers: [ { provide: MdDialogRef } ]
     })
     .compileComponents();
   }));

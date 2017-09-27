@@ -5,7 +5,7 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { EncryptwalletComponent } from './encryptwallet.component';
 import { ModalsModule } from '../modals.module';
-import {MdSnackBarModule} from "@angular/material";
+import { MdSnackBarModule } from '@angular/material';
 
 
 describe('EncryptwalletComponent', () => {
