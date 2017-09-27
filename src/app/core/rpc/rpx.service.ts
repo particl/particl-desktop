@@ -13,7 +13,7 @@ declare global {
       sendSync: (channel: string, arguments?: {}) => void;
       sendToHost: (channel: string, arguments?: {}) => void;
       removeListener: (channel: string, listener: Function) => void;
-      removeAllListeners: () => void;
+      removeAllListeners: (channel?: string) => void;
     }
   }
 }
@@ -23,21 +23,7 @@ export class RPXService {
   private listenerCount: number = 0;
   listeners: { [id: string]: boolean } = {};
 
-  constructor(
-      public zone: NgZone
-  ) {
-  }
-
-  rpxCall() {
-   // Respond to checks if a listener is registered
-    window.ipc.on('rx-ipc-check-listener', (event, channel) => {
-      const replyChannel = 'rx-ipc-check-reply:' + channel;
-      if (this.listeners[channel]) {
-        event.sender.send(replyChannel, true);
-      } else {
-        event.sender.send(replyChannel, false);
-      }
-    });
+  constructor(public zone: NgZone) {
   }
 
   checkRemoteListener(channel: string) {
@@ -61,15 +47,12 @@ export class RPXService {
     window.ipc.send(channel, subChannel, ...args);
     return new Observable((observer) => {
       this.checkRemoteListener(channel)
-        .catch(() => observer.error('Invalid channel: ' + channel));
+        .catch((error) => observer.error('Invalid channel: ' + channel + '\nError: ' + error));
 
-      window.ipc.on(subChannel, function listener(event: Event, type: string, data: Object) {
+      window.ipc.once(subChannel, function listener(event: Event, type: string, data: Object) {
         self.zone.run(() => {
-
-          console.log('data', data);
           switch (type) {
             case 'n':
-            console.log('data', data);
               observer.next(data);
               break;
             case 'e':
@@ -78,11 +61,7 @@ export class RPXService {
             case 'c':
               observer.complete();
           }
-        })
-        // Cleanup
-        return () => {
-          window.ipc.removeListener(subChannel, listener);
-        };
+        });
       });
     });
   }

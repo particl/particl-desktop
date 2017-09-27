@@ -69,11 +69,6 @@ export class RPCService {
 
     // We just execute it.. Might convert it to a service later on
     this._rpcState = new RPCStateClass(this);
-
-    if (this.isElectron) {
-      // Respond to checks if a listener is registered
-      this.rpx.rpxCall()
-    }
   }
 
 
@@ -136,6 +131,7 @@ export class RPCService {
                 response: success,
                 electron: this.isElectron
               });
+              console.log(timeout);
               setTimeout(_call, timeout);
             },
             error => {

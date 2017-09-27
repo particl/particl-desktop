@@ -31,7 +31,8 @@ class SafeIpcRenderer {
         }
 
         if (!validEvents.includes(validChannel)) {
-          throw new Error(`Blocked access to unknown channel ${channel} from the renderer`);
+          throw new Error(`Blocked access to unknown channel
+            ${channel} ${validChannel} from the renderer`);
         }
         return fn.apply(ipcRenderer, [channel].concat(args));
       };
@@ -46,6 +47,10 @@ class SafeIpcRenderer {
   }
 }
 
-window.ipc = new SafeIpcRenderer(['backend-rpccall', 'rx-ipc-check-listener']);
+window.ipc = new SafeIpcRenderer([
+  'backend-rpccall',
+  'rx-ipc-check-reply:backend-rpccall',
+  'rx-ipc-check-listener'
+]);
 
 window.electron = true;

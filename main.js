@@ -45,6 +45,7 @@ function createWindow () {
 
 
   rpc.init(options);
+
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
     daemon = child ? child : undefined;
