@@ -152,7 +152,8 @@ function makeTray() {
           label: 'Close',
           click () { app.quit() }
         },
-        label: 'Hide',
+        {
+          label: 'Hide',
           click () { hideShow('hide') }
         },
         {
