@@ -20,7 +20,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development
 
-### Boostrapping development:
+### Boostrapping for development:
 * Download + Install [Node.js®](https://nodejs.org/) 6.4 - 7.10
 * Download + Install [git](https://git-scm.com/)
 
