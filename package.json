@@ -35,7 +35,7 @@
     "electronVersion": "1.7.5",
     "appId": "io.particl.partgui",
     "directories": {
-      "buildResources": "src/resources",
+      "buildResources": "resources",
       "output": "packages"
     },
     "mac": {
