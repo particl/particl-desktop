@@ -24,7 +24,7 @@ let mainWindow;
 let tray;
 let daemon;
 
-let openDevTools = false;
+let openDevTools = true;
 let options;
 
 function createWindow () {

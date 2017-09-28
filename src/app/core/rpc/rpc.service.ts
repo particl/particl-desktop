@@ -131,7 +131,6 @@ export class RPCService {
                 response: success,
                 electron: this.isElectron
               });
-              console.log(timeout);
               setTimeout(_call, timeout);
             },
             error => {

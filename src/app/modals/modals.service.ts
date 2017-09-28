@@ -53,6 +53,8 @@ export class ModalsService {
         // no error and daemon model open -> close it
       } else if (this.modal === this.messages['daemon']) {
         this.close();
+      } else {
+        this.openInitialCreateWallet();
       }
     });
   }
@@ -121,5 +123,19 @@ export class ModalsService {
   }
 
 
+  // createwallet
+  openInitialCreateWallet() {
+    this._rpcService.call('extkey', ['list'])
+      .subscribe(
+        response => {
+          // check if account is active
+          console.log(response);
+          // if no accoutns founds, open modal box
+        },
+        error => {
+          // maybe wallet is locked?
+          this.log.er('RPC Call returned an error', error);
+        });
+  }
 
 }
