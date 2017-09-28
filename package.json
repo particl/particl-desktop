@@ -105,7 +105,7 @@
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.4.2",
     "tmp": "0.0.33",
-    "zone.js": "0.8.17"
+    "zone.js": "0.8.18"
   },
   "devDependencies": {
     "@angular/cli": "^1.2.4",
