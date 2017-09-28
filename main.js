@@ -38,12 +38,9 @@ function createWindow () {
 
   rpc.init(options);
 
-
   // Daemon already running... Start window
   rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
     .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
-
-  rpc.init(options);
 
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
