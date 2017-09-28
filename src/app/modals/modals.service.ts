@@ -23,6 +23,9 @@ export class ModalsService {
   private isOpen: boolean = false;
   private manuallyClosed: any[] = [];
 
+  // Is true if user already has a wallet (imported seed or created wallet)
+  private initializedWallet: boolean = false;
+
   private data: string;
 
   private log: any = Log.create('modals.service');
@@ -43,7 +46,7 @@ export class ModalsService {
     // open syncing modal
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
-      this.needToOpenModal(status);
+      this.openSyncModal(status);
     });
 
     // open daemon model on error
@@ -51,9 +54,9 @@ export class ModalsService {
       if (status.error) {
         this.open('daemon', status);
         // no error and daemon model open -> close it
-      } else if (this.modal === this.messages['daemon']) {
+      } else if (this.wasAlreadyOpen('daemon')) {
         this.close();
-      } else {
+      } else if (!this.initializedWallet) {
         this.openInitialCreateWallet();
       }
     });
@@ -65,10 +68,12 @@ export class ModalsService {
         (data && data.forceOpen)
         || !this.wasManuallyClosed(modal)
       ) {
-        this.log.d(`next modal: ${modal}`);
-        this.modal = this.messages[modal];
-        this.message.next({modal: this.modal, data: data});
-        this.isOpen = true;
+        if (!this.wasAlreadyOpen(modal)) {
+          this.log.d(`next modal: ${modal}`);
+          this.modal = this.messages[modal];
+          this.message.next({modal: this.modal, data: data});
+          this.isOpen = true;
+        }
       }
     } else {
       this.log.er(`modal ${modal} doesn't exist`);
@@ -77,17 +82,23 @@ export class ModalsService {
 
   close() {
     this.isOpen = false;
-    if (this.modal && !this.wasManuallyClosed(this.modal)) {
+    this.modal = undefined;
+    if (!!this.modal && !this.wasManuallyClosed(this.modal)) {
+
       this.manuallyClosed.push(this.modal.name);
     }
   }
 
-  wasManuallyClosed(modal: string) {
-    return this.manuallyClosed.includes(this.messages[modal].name);
+  wasManuallyClosed(modal: any) {
+    return this.manuallyClosed.includes(modal.name);
   }
 
   getMessage() {
       return (this.message.asObservable());
+  }
+
+  wasAlreadyOpen(modalName: string) {
+    return (this.modal === this.messages[modalName]);
   }
 
 
@@ -113,7 +124,7 @@ export class ModalsService {
     return (this.progress.asObservable());
   }
 
-  needToOpenModal(status: any) {
+  openSyncModal(status: any) {
     // Open syncing Modal
     if (!this.isOpen && (status.networkBH <= 0
       || status.internalBH <= 0
@@ -125,12 +136,19 @@ export class ModalsService {
 
   // createwallet
   openInitialCreateWallet() {
+    this.log.d(`openInitialCreateWallet()`);
     this._rpcService.call('extkey', ['list'])
       .subscribe(
         response => {
           // check if account is active
-          console.log(response);
-          // if no accoutns founds, open modal box
+          if (response['result'] === 'No keys to list.') {
+            this.open('createWallet', {forceOpen: true});
+
+          } else {
+            this.log.d(`Already has imported their keys!`);
+            this.initializedWallet = true;
+          }
+
         },
         error => {
           // maybe wallet is locked?

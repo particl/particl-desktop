@@ -98,23 +98,10 @@ function mkDir(dirPath, root) {
   return !dirs.length || mkDir(dirs.join(path.sep), root);
 }
 
-// remove me
-let extkeygenesisdebug = false;
 /*
 ** execute RPC call
 */
 function rpcCall (method, params, auth, callback) {
-
-  // temporary clusterfuck stop, move log.error outside of if loop to see
-  // why..
-  if(method === 'extkeygenesisimport') {
-    log.error('DEBUG: params: ', method, params);
-
-    if(extkeygenesisdebug) {
-      return;
-    }
-    extkeygenesisdebug = true;
-  }
 
   const postData = JSON.stringify({
     method: method,
