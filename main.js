@@ -46,7 +46,7 @@ function createWindow () {
   daemonManager.init(false, options).then(child => {
     daemon = child ? child : undefined;
     if (!mainWindow) {
-      const maxRetries = 5;
+      const maxRetries = 10;
       let retries = 0;
       const daemonStartup = () => {
         rpc.checkDaemon(options)
