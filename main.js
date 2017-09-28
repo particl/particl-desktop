@@ -82,15 +82,7 @@ function initMainWindow(trayImage) {
   });
 
   // and load the index.html of the app.
-  if (options.dev) {
-    mainWindow.loadURL('http://localhost:4200');
-  } else {
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'dist/index.html'),
-      protocol: 'file:',
-      slashes: true
-    }));
-  }
+  initialLoad();
 
   // Open the DevTools.
   if (openDevTools || options.devtools) {
@@ -110,6 +102,18 @@ function initMainWindow(trayImage) {
     // when you should delete the corresponding element.
     mainWindow = null
   });
+}
+
+function initialLoad() {
+  if (options.dev) {
+    mainWindow.loadURL('http://localhost:4200');
+  } else {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'dist/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+  }
 }
 
 /*
@@ -133,35 +137,44 @@ function makeTray() {
     {
       label: 'View',
       submenu: [
-        {role: 'reload'},
-        {role: 'forcereload'},
-        {role: 'toggledevtools'},
-        {type: 'separator'},
-        {role: 'resetzoom'},
-        {role: 'zoomin'},
-        {role: 'zoomout'},
-        {type: 'separator'},
-        {role: 'togglefullscreen'}
+        {
+          label: 'Reload',
+          click () {
+            initialLoad()
+          }
+        }
       ]
     },
     {
       role: 'window',
       submenu: [
-        {role: 'minimize'},
-        {role: 'close'}
+        {
+          label: 'Close',
+          click () { app.quit() }
+        },
+        label: 'Hide',
+          click () { hideShow('hide') }
+        },
+        {
+          label: 'Show',
+          click () { hideShow('show') }
+        }
       ]
     },
     {
       role: 'help',
       submenu: [
-        {role: 'about'},
+        {
+          label: 'About ' + app.getName(),
+          click () { loadExternalUrl('https://particl.io/#about') }
+        },
         {
           label: 'Visit Particl.io',
-          click () { electron.shell.openExternal('https://particl.io') }
+          click () { loadExternalUrl('https://particl.io') }
         },
         {
           label: 'Visit Electron',
-          click () { electron.shell.openExternal('https://electron.atom.io') }
+          click () { loadExternalUrl('https://electron.atom.io') }
         }
       ]
     }
@@ -221,6 +234,16 @@ function parseArguments() {
     }
   });
   return options;
+}
+
+// Show/Hide Window
+function hideShow(type) {
+  type == 'show'? mainWindow.show() : mainWindow.hide()
+}
+
+// load external url
+function loadExternalUrl(url) {
+  electron.shell.openExternal(url);
 }
 
 // This method will be called when Electron has finished
