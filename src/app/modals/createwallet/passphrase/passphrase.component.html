@@ -56,9 +56,13 @@
         [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
         class="form-control recovery-word" (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)" />
     </div>
-    <div *ngIf="!isDisabled && !partialDisable"
-      class="col-xs-12 text-right icon nc-icon nc-copy-2"
-      ngxClipboard [cbContent]="words.join(' ')">
+    <div *ngIf="!isDisabled && !partialDisable" class="col-xs-12">
+      <span class="pull-right icon nc-icon nc-copy-2"
+        tooltip="Copy recovery phrase to clipboard"
+        placement="left"
+        container="body"
+        ngxClipboard [cbContent]="words.join(' ')">
+      </span>
     </div>
   </div>
 </div>
