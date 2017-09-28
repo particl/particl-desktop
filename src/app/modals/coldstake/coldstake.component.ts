@@ -85,25 +85,23 @@ export class ColdstakeComponent implements OnInit {
       error => this.log.er('rpc_retrieveHotWallet: ', error));
   }
 
-  rpc_filterHotListOfAccounts(response: Object) {
-    const chains: Array<Object> = response['chains'];
+  rpc_filterHotListOfAccounts(response: any) {
+    const chains: Array<any> = response.chains;
 
     // get our cold stake chain if it exists
-    const hotStakeChain: Array<Object> = chains.filter(function(chain: Object){
-      return chain['label'] === 'Cold Staking';
+    const hotStakeChain: Array<any> = chains.filter(function(chain: any){
+      return chain.label === 'Cold Staking';
     });
 
     // if it exists, return to ui
     if (hotStakeChain.length === 1) {
       this.log.d('rpc_filterHotListOfAccounts: coldStakeChain already exist');
-      this.hotStakeAddress = hotStakeChain[0]['chain'];
+      this.hotStakeAddress = hotStakeChain[0].chain;
     } else {
     // else create a new one
       this._rpc.call('getnewextaddress', ['Cold Staking'])
       .subscribe(
-        success => {
-          this.hotStakeAddress = (success);
-        },
+        success => this.hotStakeAddress = (success),
         error => this.log.er('rpc_filterHotListOfAccounts: getnewextaddress failed: ', error));
     }
   }
@@ -129,9 +127,9 @@ export class ColdstakeComponent implements OnInit {
     this._rpc.call('walletsettings', ['changeaddress'])
     .subscribe(
       success => {
-        this.log.d(`getColdStakingAddress: got changeaddress: ${success['changeaddress']['coldstakingaddress']}`);
-        this.prevColdStakeAddress = success['changeaddress']['coldstakingaddress'];
-        this.coldStakeAddress = success['changeaddress']['coldstakingaddress'];
+        this.log.d(`getColdStakingAddress: got changeaddress: ${success.changeaddress.coldstakingaddress}`);
+        this.prevColdStakeAddress = success.changeaddress.coldstakingaddress;
+        this.coldStakeAddress = success.changeaddress.coldstakingaddress;
       },
       error => this.log.er('getColdStakingAddress: ', error));
   }
@@ -150,8 +148,8 @@ export class ColdstakeComponent implements OnInit {
     ])
     .subscribe(
       success => {
-        this.log.er(`getColdStakingAddress: set changeaddress: ${success['changeaddress']['coldstakingaddress']}`);
-        this.finalMessage = 'Successfully activated cold staking! ' + success['changeaddress']['coldstakingaddress'];
+        this.log.er(`getColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
+        this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
       },
       error => {
         this.finalMessage = 'Failed to activate cold staking.. ' + error;
