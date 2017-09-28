@@ -21,40 +21,43 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Development
 
 ### Boostrapping development:
-* Download + Install nodejs 6.4 - 7.10
-* Download + Install git
+* Download + Install [Node.js®](https://nodejs.org/) 6.4 - 7.10
+* Download + Install [git](https://git-scm.com/)
 
-```
+```bash
 git clone https://github.com/particl/partgui
 cd partgui
 npm install
 ```
 
-### Development in Electron
+### Development with Electron
 * Run `ng serve` to start the dev server.
 * Run `npm run start:electron:dev -- -testnet` in another window to start the electron application.
 
-## Development server
-* Download + Install [nodejs](https://nodejs.org/) 6.4 - 7.10
-* Download + Install [git](https://git-scm.com/)
-
-```
-git clone https://github.com/particl/partgui
-cd partgui
-npm install
-```
+### Development with a Browser
 * Run `ng serve` for a dev server. 
-* Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Start the particl-core daemon
-### Start
+#### Start the particl-core daemon
 ```
 ./particld -daemon -testnet -debug -rpcuser=test -rpcpassword=test -rpccorsdomain=http://localhost:4200
 ```
-
-### Stop
+* Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+#### Stop particl-core daemon
 ```
 ./particl-cli -rpcuser=test -rpcpassword=test stop
 ```
+#### Interact with particl-core daemon
+```
+./particl-cli -rpcuser=test -rpcpassword=test getblockchaininfo
+```
 
-You can now navigate to `http://localhost:4200/`.
+## Running
+### Start Electron
+* `npm run start:electron` - Windows
+
+### Package Electron
+* `npm run package:win` - Windows
+* `npm run package:mac` - OSX
+* `npm run package:linux` - Linux
+
+## Contributors
+Join us in [#particl-dev:matrix.org](https://riot.im/app/#/room/#particl-dev:matrix.org) on [riot](https://riot.im)
