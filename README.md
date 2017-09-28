@@ -18,6 +18,22 @@ This repository is the user interface that works in combination with our [`parti
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
 
+## Development
+
+### Boostrapping development:
+* Download + Install nodejs 6.4 - 7.10
+* Download + Install git
+
+```
+git clone https://github.com/particl/partgui
+cd partgui
+npm install
+```
+
+### Development in Electron
+* Run `ng serve` to start the dev server.
+* Run `npm run start:electron:dev -- -testnet` in another window to start the electron application.
+
 ## Development server
 * Download + Install [nodejs](https://nodejs.org/) 6.4 - 7.10
 * Download + Install [git](https://git-scm.com/)
@@ -42,24 +58,3 @@ npm install
 ```
 
 You can now navigate to `http://localhost:4200/`.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
