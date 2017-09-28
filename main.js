@@ -42,15 +42,19 @@ function createWindow () {
   rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
     .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
 
-
-
   rpc.init(options);
 
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
     daemon = child ? child : undefined;
+
     if (!mainWindow) {
-      initMainWindow(makeTray());
+      const daemonStartup = () => {
+        rpc.checkDaemon(options)
+          .then(() => initMainWindow(makeTray()))
+          .catch(() => setTimeout(daemonStartup, 1000));
+      }
+      daemonStartup();
     }
   }).catch(error => {
     console.error(error);
@@ -233,7 +237,8 @@ app.on('window-all-closed', function () {
 app.on('quit', function () {
   // kill the particl daemon if initiated on launch
   if (daemon) {
-    daemon.kill('SIGINT');
+    rpc.stopDaemon()
+      .catch(() => daemon.kill('SIGINT'));
   }
 })
 
