@@ -105,8 +105,7 @@ function rpcCall (method, params, auth, callback) {
 
   const postData = JSON.stringify({
     method: method,
-    params: params,
-    id: 1
+    params: params
   });
 
   if (!options) {
@@ -193,8 +192,7 @@ function getAuth(options) {
     auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();
   } else {
     auth = undefined;
-    console.error('could not find cookie file !');
-    console.error('path: ' + COOKIE_FILE);
+    console.error('could not find cookie file! path: ' + COOKIE_FILE);
   }
 
   return (auth)

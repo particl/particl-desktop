@@ -115,7 +115,6 @@ export class CreateWalletComponent {
         this.step = 4;
         this.errorString = '';
 
-        this.log.d('debug words:', this.words);
         this._passphraseService.importMnemonic(this.words, this.password)
           .subscribe(
             success => {
