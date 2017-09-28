@@ -239,7 +239,11 @@ function parseArguments() {
 
 // Show/Hide Window
 function hideShow(type) {
-  type == 'show'? mainWindow.show() : mainWindow.hide()
+  if (type === 'show') {
+    mainWindow.show()
+  } else {
+    mainWindow.hide()
+  }
 }
 
 // load external url
