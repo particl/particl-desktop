@@ -33,6 +33,7 @@ import { AddAddressLabelComponent } from './receive/modals/add-address-label/add
 import { NewAddressModalComponent } from './address-book/modal/new-address-modal/new-address-modal.component';
 import { QrCodeModalComponent } from './shared/qr-code-modal/qr-code-modal.component';
 import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Routes = [
   {
@@ -48,6 +49,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    BrowserAnimationsModule,
     RouterModule.forChild(routes),
     SharedModule,
     ModalModule.forRoot(),
