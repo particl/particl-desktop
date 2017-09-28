@@ -6,7 +6,7 @@ import { IPassword } from '../shared/password/password.interface';
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
-import { RPCService } from '../../core/rpc/rpc.module';
+import { StateService } from '../../core/state/state.service';
 
 import { flyInOut, slideDown } from '../../core/core.animations';
 
@@ -46,7 +46,7 @@ export class CreateWalletComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _passphraseService: PassphraseService,
-    private _rpc: RPCService
+    private state: StateService
   ) {
       this.reset();
   }
@@ -116,7 +116,7 @@ export class CreateWalletComponent {
         this.animationState = '';
         this.step = 4;
         this.errorString = '';
-        if (this._rpc.state.get('locked')) {
+        if (this.state.get('locked')) {
           // unlock wallet
           this.step = 6
         } else {

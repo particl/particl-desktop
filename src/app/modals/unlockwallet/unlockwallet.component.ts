@@ -31,7 +31,8 @@ export class UnlockwalletComponent {
       if (!!this.callback) {
         this.callback();
       }
-
+      // create wallet emitter
+      this.createEmitter.emit();
       // close the modal!
       this.closeModal();
     } else {
@@ -59,8 +60,6 @@ export class UnlockwalletComponent {
     this.log.d('Closing modal!');
     if (document.getElementById('close') !== null) {
       document.getElementById('close').click();
-    } else {
-      this.createEmitter.emit();
     }
   }
 }
