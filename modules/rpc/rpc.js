@@ -119,7 +119,7 @@ function rpcCall (method, params, auth, callback) {
     }
   }
 
-  if (options.auth !== auth) {
+  if (auth && options.auth !== auth) {
     options.auth = auth
   }
 
@@ -219,11 +219,11 @@ function init(options) {
   }
   rxIpc.registerListener('backend-rpccall', createObservable);
 }
-exports.init = init;
 
 function checkDaemon(options) {
   return new Promise((resolve, reject) => {
     rpcCall('getnetworkinfo', null, getAuth(options), (error, response) => {
+      rxIpc.removeListeners();
       if (error) {
         // console.log('ERROR:', error);
         reject();
@@ -233,4 +233,19 @@ function checkDaemon(options) {
     })
   });
 }
+
+function stopDaemon() {
+  return new Promise((resolve, reject) => {
+    rpcCall('stop', null, null, (error, response) => {
+      if (error) {
+        reject();
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+exports.init = init;
 exports.checkDaemon = checkDaemon;
+exports.stopDaemon = stopDaemon;

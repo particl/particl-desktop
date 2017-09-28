@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ElectronService } from 'ngx-electron';
 import { Subject } from 'rxjs/Subject';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +15,13 @@ const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
 
 const HOSTNAME = 'localhost';
+
+
+declare global {
+  interface Window {
+    electron: boolean;
+  }
+}
 
 /**
  * The RPC service that maintains a single connection to the particld daemon.
@@ -56,19 +62,13 @@ export class RPCService {
 
   constructor(
     private http: Http,
-    public electronService: ElectronService,
     private rpx: RPXService,
     public state: StateService
   ) {
-    this.isElectron = this.electronService.isElectronApp;
+    this.isElectron = window.electron;
 
     // We just execute it.. Might convert it to a service later on
     this._rpcState = new RPCStateClass(this);
-
-    if (this.isElectron) {
-      // Respond to checks if a listener is registered
-      this.rpx.rpxCall()
-    }
   }
 
 
@@ -131,6 +131,7 @@ export class RPCService {
                 response: success,
                 electron: this.isElectron
               });
+              console.log(timeout);
               setTimeout(_call, timeout);
             },
             error => {
