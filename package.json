@@ -25,7 +25,7 @@
     "start:electron": "npm run build:electron && electron .",
     "package:mac": "npm run build:electron:prod && electron-builder -m",
     "package:linux": "npm run build:electron:prod && electron-builder -l",
-    "package:win": "npm run build:electron:prod && electron-builder --win --x64 --ia32",
+    "package:win": "npm run build:electron:prod && electron-builder --win --x64",
     "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compdoc": "compodoc -p tsconfig.json",
@@ -35,7 +35,7 @@
     "electronVersion": "1.7.5",
     "appId": "io.particl.partgui",
     "directories": {
-      "buildResources": "src/resources",
+      "buildResources": "resources",
       "output": "packages"
     },
     "mac": {
@@ -105,7 +105,7 @@
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.4.2",
     "tmp": "0.0.33",
-    "zone.js": "0.8.17"
+    "zone.js": "0.8.18"
   },
   "devDependencies": {
     "@angular/cli": "^1.2.4",
