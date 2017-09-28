@@ -79,16 +79,10 @@ export class ColdstakeComponent implements OnInit {
 
   rpc_retrieveHotWallet(): void {
     this.log.d('rpc_retrieveHotWallet called');
-    this._rpc.call('extkey', [
-      'account'
-    ])
+    this._rpc.call('extkey', ['account'])
     .subscribe(
-      success => {
-        this.rpc_filterHotListOfAccounts(success);
-      },
-      error => {
-        this.log.i('rpc_retrieveHotWallet: ', error);
-      });
+      success => this.rpc_filterHotListOfAccounts(success),
+      error => this.log.er('rpc_retrieveHotWallet: ', error));
   }
 
   rpc_filterHotListOfAccounts(response: Object) {
@@ -105,17 +99,12 @@ export class ColdstakeComponent implements OnInit {
       this.hotStakeAddress = hotStakeChain[0]['chain'];
     } else {
     // else create a new one
-      this._rpc.call('getnewextaddress', [
-       'Cold Staking'
-      ])
+      this._rpc.call('getnewextaddress', ['Cold Staking'])
       .subscribe(
         success => {
-          console.log(success);
           this.hotStakeAddress = (success);
         },
-        error => {
-          this.log.i('rpc_filterHotListOfAccounts: getnewextaddress failed: ', error);
-        });
+        error => this.log.er('rpc_filterHotListOfAccounts: getnewextaddress failed: ', error));
     }
   }
 
@@ -137,18 +126,14 @@ export class ColdstakeComponent implements OnInit {
   /**  Get the existing cold staking address.  */
   getColdStakingAddress(): void {
     this.log.d('getColdStakingAddress called');
-    this._rpc.call('walletsettings', [
-      'changeaddress'
-    ])
+    this._rpc.call('walletsettings', ['changeaddress'])
     .subscribe(
       success => {
-        this.log.er(`getColdStakingAddress: got changeaddress: ${success['changeaddress']['coldstakingaddress']}`);
+        this.log.d(`getColdStakingAddress: got changeaddress: ${success['changeaddress']['coldstakingaddress']}`);
         this.prevColdStakeAddress = success['changeaddress']['coldstakingaddress'];
         this.coldStakeAddress = success['changeaddress']['coldstakingaddress'];
       },
-      error => {
-        this.log.er('getColdStakingAddress: ', error);
-      });
+      error => this.log.er('getColdStakingAddress: ', error));
   }
 
   /**  Set the coldStakeAddress if it has changed.  */
