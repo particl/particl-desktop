@@ -38,6 +38,7 @@ function createWindow () {
 
   rpc.init(options);
 
+
   // Daemon already running... Start window
   rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
     .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
@@ -47,12 +48,17 @@ function createWindow () {
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
     daemon = child ? child : undefined;
-
     if (!mainWindow) {
+      const maxRetries = 5;
+      let retries = 0;
       const daemonStartup = () => {
         rpc.checkDaemon(options)
           .then(() => initMainWindow(makeTray()))
-          .catch(() => setTimeout(daemonStartup, 1000));
+          .catch(() => retries < maxRetries && setTimeout(daemonStartup, 1000));
+        retries++;
+        if (retries >= maxRetries) {
+          app.exit(991);
+        }
       }
       daemonStartup();
     }
@@ -234,11 +240,14 @@ app.on('window-all-closed', function () {
   }
 })
 
-app.on('quit', function () {
+app.on('quit', function (event, exitCode) {
   // kill the particl daemon if initiated on launch
-  if (daemon) {
+  if (daemon && !daemon.exitCode) {
     rpc.stopDaemon()
       .catch(() => daemon.kill('SIGINT'));
+  }
+  if (exitCode === 991) {
+    throw Error('Could not connect to daemon.');
   }
 })
 

@@ -223,6 +223,7 @@ function init(options) {
 function checkDaemon(options) {
   return new Promise((resolve, reject) => {
     rpcCall('getnetworkinfo', null, getAuth(options), (error, response) => {
+      rxIpc.removeListeners();
       if (error) {
         // console.log('ERROR:', error);
         reject();

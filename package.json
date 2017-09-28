@@ -25,7 +25,7 @@
     "start:electron": "npm run build:electron && electron .",
     "package:mac": "npm run build:electron:prod && electron-builder -m",
     "package:linux": "npm run build:electron:prod && electron-builder -l",
-    "package:win": "npm run build:electron:prod && electron-builder --win --x64 --ia32",
+    "package:win": "npm run build:electron:prod && electron-builder --win --x64",
     "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compdoc": "compodoc -p tsconfig.json",
