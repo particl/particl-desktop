@@ -141,7 +141,7 @@ export class ModalsService {
       .subscribe(
         response => {
           // check if account is active
-          if (response['result'] === 'No keys to list.') {
+          if (response.result === 'No keys to list.') {
             this.open('createWallet', {forceOpen: true});
 
           } else {
