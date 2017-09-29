@@ -74,7 +74,7 @@
 
     <div class="card row">
       <div class="input-label col-xs-3">Amount</div>
-      <input class="col-xs-4" type="text"
+      <input class="col-xs-4" type="number"
         placeholder="0.00000000"
         [(ngModel)]="send.amount" (input)="verifyAmount()"
         [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }">
@@ -159,7 +159,7 @@
 
     <div class="card row">
       <div class="input-label col-xs-3">Amount</div>
-      <input class="col-xs-4" type="text"
+      <input class="col-xs-4" type="number"
         placeholder="0.00000000"
         [(ngModel)]="send.amount">
       <div class="col-xs-2 no-padding-left">
