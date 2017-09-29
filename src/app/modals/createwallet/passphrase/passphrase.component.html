@@ -53,7 +53,7 @@
         [appFocusElement]="i === focused"
         [(ngModel)]="words[i]" type="text" name="recovery"
         [readonly]="readOnly"
-        [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
+        [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i)) || words[i] !== ''"
         class="form-control recovery-word" (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)" />
     </div>
     <div *ngIf="!isDisabled && !partialDisable" class="col-xs-12">
