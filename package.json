@@ -1,8 +1,8 @@
 {
-  "name": "partgui",
+  "name": "ParticlWallet",
   "version": "0.0.1",
   "license": "GPL-2.0",
-  "description": "Particl Angular2 GUI - The source for the Particl GUI.",
+  "description": "Particl Angular2 GUI - The source for the Particl Wallet.",
   "keywords": [
     "particl",
     "angular2",
