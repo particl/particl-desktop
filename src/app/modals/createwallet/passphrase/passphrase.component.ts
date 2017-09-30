@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input,  OnChanges, Output, EventEmitter } from '@angular/core';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { PassphraseService } from './passphrase.service';
@@ -12,7 +12,7 @@ const MAX_WORDS = 24;
   templateUrl: './passphrase.component.html',
   styleUrls: ['./passphrase.component.scss'],
 })
-export class PassphraseComponent {
+export class PassphraseComponent implements  OnChanges {
 
   Arr: Function = Array;
 
@@ -30,7 +30,11 @@ export class PassphraseComponent {
 
   log: any = Log.create('passphrase.component');
 
-  constructor (private _passphraseService: PassphraseService) { }
+  constructor (private _passphraseService: PassphraseService) {}
+
+  ngOnChanges(): void {
+    this.editable = [];
+  }
 
   checkFocus(event: KeyboardEvent, index: number) {
     if (event.key === ' ') {
@@ -61,7 +65,7 @@ export class PassphraseComponent {
   }
 
   canEdit(index: number) {
-    return this.editable.indexOf(index) === -1;
+    return (this.editable.indexOf(index) === -1);
   }
 
   sendWords(): void {

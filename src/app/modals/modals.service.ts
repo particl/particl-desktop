@@ -48,6 +48,7 @@ export class ModalsService {
     //
     this._rpcService.modalUpdates.asObservable().subscribe(status => {
       if (status.error) {
+        this.enableClose = true;
         this.open('daemon', status);
       } else if (this.modal === this.messages['daemon']) {
         this.close();

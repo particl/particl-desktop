@@ -10,9 +10,13 @@ const url = require('url');
 const platform = require('os').platform();
 const log = require('electron-log');
 
+log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
+log.transports.file.file = log.transports.file
+  .findLogPath(log.transports.file.appName)
+  .replace('log.log', 'partgui.log');
+
 const daemonManager = require('./modules/clientBinaries/clientBinaries');
 const rpc = require('./modules/rpc/rpc');
-
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -38,16 +42,28 @@ function createWindow () {
   rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
     .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
 
-
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
-    daemon = child ? child : undefined;
-    if (!mainWindow) {
-      initMainWindow(makeTray());
+    if (child) {
+      daemon = child;
     }
-  }).catch(error => {
-    console.error(error);
-  });
+    if (!mainWindow) {
+      const maxRetries = 10;
+      let retries = 0;
+      const daemonStartup = () => {
+        rpc.checkDaemon(options)
+          .then(() => initMainWindow(makeTray()))
+          .catch(() =>  retries < maxRetries && setTimeout(daemonStartup, 1000));
+        retries++;
+        if (daemon.exitCode || retries >= maxRetries) {
+          app.exit(991);
+        }
+      }
+      if (daemon && !daemon.exitCode) {
+        setTimeout(daemonStartup, 1000);
+      }
+    }
+  }).catch(error => log.error(error));
 }
 
 /*
@@ -60,9 +76,10 @@ function initMainWindow(trayImage) {
     height: 720,
     icon: trayImage,
     webPreferences: {
-      //sandbox: true,
-      //nodeIntegration: false,
-      preload: 'preload.js',
+      nodeIntegration: false,
+      sandbox: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     },
   });
 
@@ -222,10 +239,15 @@ app.on('window-all-closed', function () {
   }
 })
 
-app.on('quit', function () {
+app.on('quit', function (event, exitCode) {
+  electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
   // kill the particl daemon if initiated on launch
-  if (daemon) {
-    daemon.kill('SIGINT');
+  if (daemon && !daemon.exitCode) {
+    rpc.stopDaemon()
+      .catch(() => daemon.kill('SIGINT'));
+  }
+  if (exitCode === 991) {
+    throw Error('Could not connect to daemon.');
   }
 })
 
