@@ -113,13 +113,10 @@ export class ModalsComponent implements DoCheck, OnInit {
     }
   }
 
-
-
-
-
-  /*  MODAL SPECIFIC FUNCTIONS  */
-
-  // Blockstatus
+  /**
+    * Update sync progress
+    * @param {number} number  The sync percentage
+    */
   updateProgress(progress: number) {
     this.syncPercentage = progress;
     this.syncString = progress === 100
