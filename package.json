@@ -1,12 +1,14 @@
 {
-  "name": "partgui",
+  "name": "particl",
   "version": "0.0.1",
   "license": "GPL-2.0",
-  "description": "Particl Angular2 GUI - The source for the Particl GUI.",
+  "description": "Particl Electron GUI - The source for the Particl GUI.",
   "keywords": [
     "particl",
     "angular2",
+    "angular4",
     "angular-cli",
+    "electron",
     "webpack",
     "typescript"
   ],
@@ -114,7 +116,7 @@
     "@types/jasmine": "^2.5.53",
     "@types/node": "~8.0.12",
     "codelyzer": "~3.2.0",
-    "coveralls": "^2.13.1",
+    "coveralls": "^3.0.0",
     "electron": "^1.7.5",
     "electron-builder": "^19.22.1",
     "htmlhint": "^0.9.13",

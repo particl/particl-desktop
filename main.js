@@ -44,24 +44,26 @@ function createWindow () {
 
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(false, options).then(child => {
-    daemon = child ? child : undefined;
+    if (child) {
+      daemon = child;
+    }
     if (!mainWindow) {
       const maxRetries = 10;
       let retries = 0;
       const daemonStartup = () => {
         rpc.checkDaemon(options)
           .then(() => initMainWindow(makeTray()))
-          .catch(() => retries < maxRetries && setTimeout(daemonStartup, 1000));
+          .catch(() =>  retries < maxRetries && setTimeout(daemonStartup, 1000));
         retries++;
-        if (retries >= maxRetries) {
+        if (daemon.exitCode || retries >= maxRetries) {
           app.exit(991);
         }
       }
-      daemonStartup();
+      if (daemon && !daemon.exitCode) {
+        setTimeout(daemonStartup, 1000);
+      }
     }
-  }).catch(error => {
-    console.error(error);
-  });
+  }).catch(error => log.error(error));
 }
 
 /*
@@ -238,6 +240,7 @@ app.on('window-all-closed', function () {
 })
 
 app.on('quit', function (event, exitCode) {
+  electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
   // kill the particl daemon if initiated on launch
   if (daemon && !daemon.exitCode) {
     rpc.stopDaemon()
