@@ -60,7 +60,7 @@ function createWindow () {
         }
       }
       if (daemon && !daemon.exitCode) {
-        daemonStartup();
+        setTimeout(daemonStartup, 1000);
       }
     }
   }).catch(error => log.error(error));
