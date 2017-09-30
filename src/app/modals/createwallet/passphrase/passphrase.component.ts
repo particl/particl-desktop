@@ -12,7 +12,7 @@ const MAX_WORDS = 24;
   templateUrl: './passphrase.component.html',
   styleUrls: ['./passphrase.component.scss'],
 })
-export class PassphraseComponent implements  OnChanges{
+export class PassphraseComponent implements  OnChanges {
 
   Arr: Function = Array;
 
