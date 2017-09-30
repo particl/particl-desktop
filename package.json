@@ -1,6 +1,6 @@
 {
   "name": "particl",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "GPL-2.0",
   "description": "Particl Electron GUI - The source for the Particl GUI.",
   "keywords": [
