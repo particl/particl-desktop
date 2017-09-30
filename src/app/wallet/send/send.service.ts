@@ -45,7 +45,7 @@ export class SendService {
             this.rpc_setDefaultAddress_success(response)
         },
         error => {
-          this.log.er('errr');
+          this.log.er('rpc_listDefaultAddress_success: liststealthaddresses failed');
         });
     }
   }
