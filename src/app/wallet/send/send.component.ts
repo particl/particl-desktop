@@ -114,13 +114,8 @@ export class SendComponent {
 
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
-    // use default transferBalance address.
-    if(this.type === 'balanceTransfer' && !this.send.toAddress) {
-      return true;
-    // custom address
-    } else {
-      return this.send.validAddress;
-    }
+    // use default transferBalance address or custom address.
+    return (this.type === 'balanceTransfer' && !this.send.toAddress) || this.send.validAddress;
   }
 
   /** verifyAddress: calls RPC to validate it. */
