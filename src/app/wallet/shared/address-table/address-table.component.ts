@@ -6,6 +6,7 @@ import { AddressService } from '../address.service';
 import { Address } from '../address.model';
 
 import { RPCService } from '../../../core/rpc/rpc.module';
+import { ModalsService } from '../../../modals/modals.service';
 
 @Component({
   selector: 'address-table',
@@ -47,7 +48,6 @@ export class AddressTableComponent implements OnInit {
     address: 'Empty address',
     owned: false
   };
-
   // Pagination
   currentPage: number = 1;
   @Input() addressDisplayAmount: number = 5;
@@ -56,7 +56,8 @@ export class AddressTableComponent implements OnInit {
 
   constructor(
     public _addressService: AddressService,
-    private _rpc: RPCService
+    private _rpc: RPCService,
+    private _modals: ModalsService
   ) {
 
   }
@@ -121,12 +122,24 @@ export class AddressTableComponent implements OnInit {
   public deleteAddress(label: string, address: string) {
     if (confirm(`Are you sure you want to delete ${label}: ${address}`)) {
       // this._rpc.call(this, 'manageaddressbook', ['del', address], this.rpc_deleteAddress_success);
-      this._rpc.call('manageaddressbook', ['del', address])
-        .subscribe(response => {
-            this.rpc_deleteAddress_success(response);
-          },
-          error => console.log(`${error.error.message}`));
+      if (this._rpc.state.get('locked')) {
+        // unlock wallet and send transaction
+        this._modals.open('unlock', {
+          forceOpen: true, timeout: 3, callback: this.deleteAddressCallBack.bind(this, address)
+        });
+      } else {
+        // wallet already unlocked
+        this.deleteAddressCallBack(address);
+      }
     }
+  }
+
+  private deleteAddressCallBack(address: string) {
+    this._rpc.call('manageaddressbook', ['del', address])
+      .subscribe(response => {
+          this.rpc_deleteAddress_success(response);
+        },
+        error => console.log(`${error.error.message}`));
   }
 
   private rpc_deleteAddress_success(json: Object) {
