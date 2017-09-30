@@ -7,7 +7,7 @@ const http = require('http');
 const Observable = require('rxjs/Observable').Observable;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 
-let TIMEOUT = 500;
+let TIMEOUT = 5000;
 let HOSTNAME;
 let PORT;
 let options;
@@ -223,6 +223,8 @@ function init(options) {
 
 function checkDaemon(options) {
   return new Promise((resolve, reject) => {
+    const _timeout = TIMEOUT;
+    TIMEOUT = 200;
     rpcCall('getnetworkinfo', null, getAuth(options), (error, response) => {
       rxIpc.removeListeners();
       if (error) {
@@ -231,7 +233,8 @@ function checkDaemon(options) {
       } else if (response) {
         resolve();
       }
-    })
+    });
+    TIMEOUT = _timeout;
   });
 }
 

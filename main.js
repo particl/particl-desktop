@@ -48,7 +48,7 @@ function createWindow () {
       daemon = child;
     }
     if (!mainWindow) {
-      const maxRetries = 10;
+      const maxRetries = 10; // Some slow computers...
       let retries = 0;
       const daemonStartup = () => {
         rpc.checkDaemon(options)
