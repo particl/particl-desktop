@@ -135,35 +135,57 @@ function makeTray() {
     {
       label: 'View',
       submenu: [
-        {role: 'reload'},
-        {role: 'forcereload'},
-        {role: 'toggledevtools'},
-        {type: 'separator'},
-        {role: 'resetzoom'},
-        {role: 'zoomin'},
-        {role: 'zoomout'},
-        {type: 'separator'},
-        {role: 'togglefullscreen'}
+        {
+          label: 'Reload',
+          click () { mainWindow.webContents.reloadIgnoringCache(); }
+        },
+        {
+          label: 'Open Dev Tools',
+          click () { mainWindow.openDevTools(); }
+        }
       ]
     },
     {
       role: 'window',
       submenu: [
-        {role: 'minimize'},
-        {role: 'close'}
+        {
+          label: 'Close',
+          click () { app.quit() }
+        },
+        {
+          label: 'Hide',
+          click () { mainWindow.hide(); }
+        },
+        {
+          label: 'Show',
+          click () { mainWindow.show(); }
+        },
+        {
+          label: 'Maximize',
+          click () { mainWindow.maximize(); }
+        } /* TODO: stop full screen somehow,
+        {
+          label: 'Toggle Full Screen',
+          click () {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+           }
+        }*/
       ]
     },
     {
       role: 'help',
       submenu: [
-        {role: 'about'},
+        {
+          label: 'About ' + app.getName(),
+          click () { electron.shell.openExternal('https://particl.io/#about'); }
+        },
         {
           label: 'Visit Particl.io',
-          click () { electron.shell.openExternal('https://particl.io') }
+          click () { electron.shell.openExternal('https://particl.io'); }
         },
         {
           label: 'Visit Electron',
-          click () { electron.shell.openExternal('https://electron.atom.io') }
+          click () { electron.shell.openExternal('https://electron.atom.io'); }
         }
       ]
     }
