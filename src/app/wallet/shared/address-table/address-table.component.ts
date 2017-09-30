@@ -48,7 +48,6 @@ export class AddressTableComponent implements OnInit {
     address: 'Empty address',
     owned: false
   };
-  public address: string;
   // Pagination
   currentPage: number = 1;
   @Input() addressDisplayAmount: number = 5;
@@ -121,7 +120,6 @@ export class AddressTableComponent implements OnInit {
   /** Delete address */
 
   public deleteAddress(label: string, address: string) {
-    this.address = address;
     if (confirm(`Are you sure you want to delete ${label}: ${address}`)) {
       // this._rpc.call(this, 'manageaddressbook', ['del', address], this.rpc_deleteAddress_success);
       if (this._rpc.state.get('locked')) {
@@ -137,7 +135,7 @@ export class AddressTableComponent implements OnInit {
   }
 
   private deleteAddressCallBack(address: string) {
-    this._rpc.call('manageaddressbook', ['del', this.address])
+    this._rpc.call('manageaddressbook', ['del', address])
       .subscribe(response => {
           this.rpc_deleteAddress_success(response);
         },
