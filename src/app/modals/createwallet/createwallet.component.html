@@ -216,4 +216,10 @@
       <button class="control" (click)="close()">close</button>
     </div>
   </ng-template>
+
+  <ng-template [ngIf]="step === 6">
+    <app-unlockwallet
+    (createEmitter)="importMnemonicCallback()">
+    </app-unlockwallet>
+  </ng-template>
 </div>

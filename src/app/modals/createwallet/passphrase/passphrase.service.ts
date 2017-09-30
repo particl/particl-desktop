@@ -51,7 +51,6 @@ export class PassphraseService {
     if (!password) {
       params.pop();
     }
-
     return this._rpc.call('extkeygenesisimport', params);
   }
 }
