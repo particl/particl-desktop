@@ -42,12 +42,13 @@ export class ModalsService {
     private _blockStatusService: BlockStatusService,
     private _rpcService: RPCService
   ) {
-
     // open syncing modal
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
       this.openSyncModal(status);
     });
+
+    this.openInitialCreateWallet();
 
     // open daemon model on error
     this._rpcService.modalUpdates.asObservable().subscribe(status => {
@@ -57,17 +58,20 @@ export class ModalsService {
         // no error and daemon model open -> close it
       } else if (this.wasAlreadyOpen('daemon')) {
         this.close();
-      } else if (!this.initializedWallet) {
-        this.openInitialCreateWallet();
       }
     });
   }
 
+  /**
+    * Open a modal
+    * @param {string} modal   The name of the modal to open
+    * @param {any} data       Optional - data to pass through to the modal.
+    */
   open(modal: string, data?: any): void {
     if (modal in this.messages) {
       if (
         (data && data.forceOpen)
-        || !this.wasManuallyClosed(modal)
+        || !this.wasManuallyClosed(this.messages[modal].name)
       ) {
         if (!this.wasAlreadyOpen(modal)) {
           this.log.d(`next modal: ${modal}`);
@@ -81,29 +85,30 @@ export class ModalsService {
     }
   }
 
+  /** Close the modal */
   close() {
-    this.isOpen = false;
-    this.modal = undefined;
-    if (!!this.modal && !this.wasManuallyClosed(this.modal)) {
-
+    if (!!this.modal && !this.wasManuallyClosed(this.modal.name)) {
       this.manuallyClosed.push(this.modal.name);
     }
+    this.isOpen = false;
+    this.modal = undefined;
   }
 
+  /**
+    * Check if a modal was manually closed
+    * @param {any} modal  The modal to check
+    */
   wasManuallyClosed(modal: any) {
-    return this.manuallyClosed.includes(modal.name);
+    return this.manuallyClosed.includes(modal);
   }
 
   getMessage() {
-      return (this.message.asObservable());
+    return (this.message.asObservable());
   }
 
   wasAlreadyOpen(modalName: string) {
     return (this.modal === this.messages[modalName]);
   }
-
-
-  /* DATA functions */
 
   storeData(data: any) {
     this.data = data;
@@ -115,41 +120,37 @@ export class ModalsService {
     return (data);
    }
 
-
-
-
-  /*  MODAL SPECIFIC FUNCTIONS  */
-
-  // Blockstatus
+  /** Get progress set by block status */
   getProgress() {
     return (this.progress.asObservable());
   }
 
+  /**
+    * Open the Sync modal if it needs to be opened
+    * @param {any} status  Blockchain status
+    */
   openSyncModal(status: any) {
     // Open syncing Modal
-    if (!this.isOpen && (status.networkBH <= 0
+    if (!this.isOpen && !this.wasManuallyClosed(this.messages['syncing'].name)
+      && (status.networkBH <= 0
       || status.internalBH <= 0
       || status.networkBH - status.internalBH > 50)) {
         this.open('syncing');
     }
   }
 
-
-  // createwallet
-  openInitialCreateWallet() {
-    this.log.d(`openInitialCreateWallet()`);
+  /** Initial wallet creation */
+  private openInitialCreateWallet() {
     this._rpcService.call('extkey', ['list'])
       .subscribe(
         response => {
           // check if account is active
           if (response.result === 'No keys to list.') {
             this.open('createWallet', {forceOpen: true});
-
           } else {
-            this.log.d(`Already has imported their keys!`);
+            this.log.d('Already has imported their keys!');
             this.initializedWallet = true;
           }
-
         },
         error => {
           // maybe wallet is locked?
