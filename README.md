@@ -1,4 +1,4 @@
-# Particl Wallet
+# Particl Wallet - UI
 
 ![UI Preview](preview.png)
 
