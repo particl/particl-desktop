@@ -86,7 +86,7 @@ export class RPCService {
     * ```
     * TODO: Response interface
     */
-  call(method: string, params?: Array<any> | null): Observable<Object> {
+  call(method: string, params?: Array<any> | null): Observable<any> {
 
     if (this.isElectron) {
       return this.rpx.runCommand('backend-rpccall', null, method, params)
@@ -131,7 +131,6 @@ export class RPCService {
                 response: success,
                 electron: this.isElectron
               });
-              console.log(timeout);
               setTimeout(_call, timeout);
             },
             error => {
