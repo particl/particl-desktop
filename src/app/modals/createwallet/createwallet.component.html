@@ -219,7 +219,7 @@
 
   <ng-template [ngIf]="step === 6">
     <app-unlockwallet
-    (createEmitter)="importMnemonicCallback()">
+    (unlockEmitter)="importMnemonicCallback($event)" [autoClose]="false">
     </app-unlockwallet>
   </ng-template>
 </div>

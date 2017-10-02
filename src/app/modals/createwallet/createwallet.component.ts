@@ -3,12 +3,13 @@ import { Log } from 'ng2-logger';
 
 import { IPassword } from '../shared/password/password.interface';
 
+import { flyInOut, slideDown } from '../../core/core.animations';
+
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
 import { StateService } from '../../core/state/state.service';
 
-import { flyInOut, slideDown } from '../../core/core.animations';
 
 @Component({
   selector: 'modal-createwallet',
@@ -17,7 +18,7 @@ import { flyInOut, slideDown } from '../../core/core.animations';
   animations: [
     flyInOut(),
     slideDown()
-  ],
+  ]
 })
 export class CreateWalletComponent {
 
@@ -59,6 +60,7 @@ export class CreateWalletComponent {
     this.password = '';
     this.errorString = '';
     this.step = 0;
+    this.animationState = '';
   }
 
   create () {

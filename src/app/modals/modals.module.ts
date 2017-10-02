@@ -13,11 +13,13 @@ import { PassphraseComponent } from './createwallet/passphrase/passphrase.compon
 import { PasswordComponent } from './shared/password/password.component';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
+
 
 @NgModule({
   imports: [
@@ -38,7 +40,8 @@ import { AlertComponent } from './shared/alert/alert.component';
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
-    AlertComponent
+    AlertComponent,
+    ColdstakeComponent
   ],
   exports: [
     ModalsComponent

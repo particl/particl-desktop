@@ -6,6 +6,7 @@ import { BlockStatusService } from '../core/rpc/rpc.module';
 import { RPCService } from '../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
@@ -31,6 +32,7 @@ export class ModalsService {
 
   messages: Object = {
     createWallet: CreateWalletComponent,
+    coldStake: ColdstakeComponent,
     daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent,
@@ -140,20 +142,29 @@ export class ModalsService {
 
   /** Initial wallet creation */
   private openInitialCreateWallet() {
-    this._rpcService.call('extkey', ['list'])
+    this._rpcService.state.observe('locked').take(1)
       .subscribe(
-        response => {
-          // check if account is active
-          if (response.result === 'No keys to list.') {
-            this.open('createWallet', {forceOpen: true});
-          } else {
-            this.log.d('Already has imported their keys!');
+        locked => {
+          if (locked) {
             this.initializedWallet = true;
+            this.log.d('Wallet already initialized.');
+            return;
           }
-        },
-        error => {
-          // maybe wallet is locked?
-          this.log.er('RPC Call returned an error', error);
+          this._rpcService.call('extkey', ['list'])
+            .subscribe(
+              response => {
+                // check if account is active
+                if (response.result === 'No keys to list.') {
+                  this.open('createWallet', {forceOpen: true});
+                } else {
+                  this.log.d('Already has imported their keys.');
+                  this.initializedWallet = true;
+                }
+              },
+              error => {
+                // maybe wallet is locked?
+                this.log.er('RPC Call returned an error', error);
+              });
         });
   }
 
