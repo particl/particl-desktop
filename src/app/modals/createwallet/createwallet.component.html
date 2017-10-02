@@ -13,19 +13,19 @@
     <div class="container">
       <div class="row wallet-buttons-container">
         <div *ngIf="!isCrypted" class="col-sm-4 col-xs-12 text-right">
-          <button class="control" (click)="nextStep();initialize(0);">
+          <button class="control" (click)="initialize(0);">
             Encrypt Wallet
           </button>
         </div>
         <div class="col-sm-6 col-xs-12 text-right"
           [ngClass]="{'col-sm-4': !isCrypted, 'text-center': !isCrypted}">
-          <button class="control" (click)="nextStep();initialize(1);">
+          <button class="control" (click)="initialize(1);">
             Create new wallet
           </button>
         </div>
         <div class="col-sm-6 col-xs-12 text-left"
           [class.col-sm-4]="!isCrypted">
-          <button class="control" (click)="nextStep();initialize(2);">
+          <button class="control" (click)="initialize(2);">
             Restore wallet
           </button>
         </div>
@@ -200,7 +200,7 @@
     <div class="buttons margin-top-30px">
       <div class="row wallet-buttons-container">
         <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control" (click)="prevStep();restore()">
+          <button class="control" (click)="prevStep();initialize(2)">
             back
           </button>
         </div>

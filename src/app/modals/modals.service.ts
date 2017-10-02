@@ -77,6 +77,7 @@ export class ModalsService {
           this.modal = this.messages[modal];
           this.message.next({modal: this.modal, data: data});
           this.isOpen = true;
+          this.enableClose = true;
         }
       }
     } else {
