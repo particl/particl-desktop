@@ -28,6 +28,7 @@ export class CreateWalletComponent {
   step: number = 0;
   isRestore: boolean = false;
   name: string;
+  isCrypted: boolean = false;
 
   @ViewChild('nameField') nameField: ElementRef;
 
@@ -59,17 +60,22 @@ export class CreateWalletComponent {
     this.password = '';
     this.errorString = '';
     this.step = 0;
+    this.isCrypted = (this.state.get('encryptionstatus') !== 'Unencrypted');
   }
 
-  create () {
-    this.reset();
-    this.step = 1;
-  }
-
-  restore() {
-    this.reset();
-    this.isRestore = true;
-    this.step = 1;
+  initialize(type: number) {
+    switch (type) {
+      case 0:
+        this._modalsService.open('encrypt');
+      case 1: // Create
+        this.reset();
+        this.step = 1;
+        break;
+      case 2: // Restore
+        this.reset();
+        this.isRestore = true;
+        this.step = 1;
+    }
   }
 
   nextStep() {
