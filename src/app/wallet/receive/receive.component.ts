@@ -291,7 +291,7 @@ export class ReceiveComponent implements OnInit {
         tempAddress.id = +(response.path.replace('m/0\'/', '').replace('\'', '')) / 2;
 
         // filter out accounts m/1 m/2 etc. stealth addresses are always m/0'/0'
-        if (response.path.search(/m\/[0-9]+/g) !== -1 && response.path.search(/m\/[0-9]+'\/[0-9]+/g) === -1) {
+        if (/m\/[0-9]+/g.test(response.path) && /m\/[0-9]+'\/[0-9]+/g.test(response.path)) {
           return;
         }
       }
@@ -301,9 +301,7 @@ export class ReceiveComponent implements OnInit {
 
   /** Sorts the private/public address by id (= HD wallet path m/0/0 < m/0/1) */
   sortArrays() {
-    function compare(a: any, b: any) {
-      return b.id - a.id;
-    }
+    const compare = (a, b) => b.id - a.id;
 
     this.addresses.public.sort(compare);
     this.addresses.private.sort(compare);
@@ -316,18 +314,12 @@ export class ReceiveComponent implements OnInit {
     */
   checkIfUnusedAddress() {
     if (this.addresses.public[0].address !== 'Empty address') {
-      // this.rpc.oldCall(this, 'getreceivedbyaddress', [this.addresses.public[0].address, 0], this.rpc_callbackUnusedAddress_success);
       this.rpc.call('getreceivedbyaddress', [this.addresses.public[0].address, 0])
-      .subscribe(response => {
-        this.rpc_callbackUnusedAddress_success(response)
-      },
-      error => {
-        this.log.er('error', error);
-      });
+        .subscribe(
+          response => this.rpc_callbackUnusedAddress_success(response),
+          error => this.log.er('error', error));
     }
-    setTimeout(() => {
-      this.checkIfUnusedAddress();
-    }, 30000);
+    setTimeout(this.checkIfUnusedAddress, 30000);
   }
 
   rpc_callbackUnusedAddress_success(json: Object) {
@@ -359,16 +351,11 @@ export class ReceiveComponent implements OnInit {
     * TODO: Get rid of prompt, use nice modal.
     */
   newAddress() {
-    const call = this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : '');
+    const call =
+      (this.type === 'public' ? 'getnewaddress' :
+      (this.type === 'private' ? 'getnewstealthaddress' : ''));
 
     if (!!call) {
-      // this.rpc.oldCall(this, call, [this.label], () => {
-      //   this.log.er('newAddress: successfully retrieved new address');
-      //   // just call for a complete update, just adding the address isn't possible because
-      //   this.rpc_update();
-      //   this.closeNewAddress();
-      //   this.addLableForm.reset();
-      // });
       this.rpc.call(call, [this.label])
         .subscribe(response => {
           this.log.er('newAddress: successfully retrieved new address');

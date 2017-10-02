@@ -1,4 +1,4 @@
-import { Component, Injectable } from '@angular/core';
+import { Component, Injectable, EventEmitter, Input, Output } from '@angular/core';
 import { ModalsModule } from '../modals.module';
 import { Log } from 'ng2-logger';
 
@@ -16,10 +16,12 @@ export class UnlockwalletComponent {
   DEFAULT_TIMEOUT: number = 60;
   log: any = Log.create('unlockwallet.component');
 
+  @Output() unlockEmitter: EventEmitter<string> = new EventEmitter<string>();
+  @Input() autoClose: boolean = true;
+
   private callback: Function;
   timeout: number = this.DEFAULT_TIMEOUT;
-  showStakeOnly: boolean = true;
-  disableAutoClose: boolean = false;
+  showStakeOnly: boolean = false;
 
   constructor (private _rpc: RPCService) { }
 
@@ -31,7 +33,8 @@ export class UnlockwalletComponent {
       if (!!this.callback) {
         this.callback();
       }
-
+      // unlock wallet emitter
+      this.unlockEmitter.emit(encryptionStatus);
       // close the modal!
       this.closeModal();
     } else {
@@ -50,7 +53,7 @@ export class UnlockwalletComponent {
       this.timeout = data.timeout;
     }
     this.showStakeOnly = Boolean(data.showStakeOnly);
-    this.disableAutoClose = Boolean(data.disableAutoClose)
+    this.autoClose = (data.autoClose !== false)
   }
 
   closeModal() {
@@ -58,8 +61,9 @@ export class UnlockwalletComponent {
     this.timeout = this.DEFAULT_TIMEOUT;
     this.showStakeOnly = true;
 
-    if (this.disableAutoClose === false) {
+    if (this.autoClose && document.getElementById('close')) {
       this.log.d('Closing modal!');
+
       document.getElementById('close').click();
     }
   }

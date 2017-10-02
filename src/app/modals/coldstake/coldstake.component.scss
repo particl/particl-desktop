@@ -1,13 +1,16 @@
+.icon {
+  padding: 7px 2px;
+}
 .red-bg {
-	background-color: red !important;
+  background-color: red !important;
 }
 
 .blue-bg {
-	background-color: #00d2ff !important;
+  background-color: #00d2ff !important;
 }
 
 @media only screen and (max-width: 480px) {
-  .wallet-buttons-container button{
+  .wallet-buttons-container button {
     float: none;
     display: block;
     margin: 10px auto 0;

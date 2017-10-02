@@ -5,6 +5,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
+import { ModalsService } from '../../modals/modals.service';
+
 import { AddressBookComponent } from './address-book.component';
 
 describe('AddressBookComponent', () => {
@@ -18,7 +20,10 @@ describe('AddressBookComponent', () => {
          WalletModule.forRoot(),
          RpcModule.forRoot()
       ],
-      declarations: [ ]
+      declarations: [ ],
+      providers: [
+        ModalsService
+      ]
     })
     .compileComponents();
   }));

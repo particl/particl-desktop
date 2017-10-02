@@ -7,7 +7,7 @@ const http = require('http');
 const Observable = require('rxjs/Observable').Observable;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 
-let TIMEOUT = 500;
+let TIMEOUT = 5000;
 let HOSTNAME;
 let PORT;
 let options;
@@ -102,6 +102,7 @@ function mkDir(dirPath, root) {
 ** execute RPC call
 */
 function rpcCall (method, params, auth, callback) {
+
   const postData = JSON.stringify({
     method: method,
     params: params
@@ -191,7 +192,7 @@ function getAuth(options) {
     auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();
   } else {
     auth = undefined;
-    console.error('could not find cookie file !');
+    log.error('could not find cookie file! path:', COOKIE_FILE);
   }
 
   return (auth)
@@ -222,6 +223,8 @@ function init(options) {
 
 function checkDaemon(options) {
   return new Promise((resolve, reject) => {
+    const _timeout = TIMEOUT;
+    TIMEOUT = 200;
     rpcCall('getnetworkinfo', null, getAuth(options), (error, response) => {
       rxIpc.removeListeners();
       if (error) {
@@ -230,7 +233,8 @@ function checkDaemon(options) {
       } else if (response) {
         resolve();
       }
-    })
+    });
+    TIMEOUT = _timeout;
   });
 }
 

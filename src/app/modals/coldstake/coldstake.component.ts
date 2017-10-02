@@ -1,5 +1,7 @@
-import { Component, OnInit, Inject, forwardRef } from '@angular/core';
+import { Component, Inject, forwardRef } from '@angular/core';
 import { Log } from 'ng2-logger';
+
+import { flyInOut, slideDown } from '../../core/core.animations';
 
 import { ModalsService } from '../modals.service';
 import { RPCService } from '../../core/rpc/rpc.module';
@@ -9,26 +11,29 @@ import { PasswordComponent } from '../shared/password/password.component';
 @Component({
   selector: 'app-coldstake',
   templateUrl: './coldstake.component.html',
-  styleUrls: ['./coldstake.component.scss']
+  styleUrls: ['./coldstake.component.scss'],
+  animations: [
+    flyInOut()
+  ]
 })
-export class ColdstakeComponent implements OnInit {
+export class ColdstakeComponent {
 
   log: any = Log.create('coldstake.component');
 
-  /*  State  */
+  // State
   step: number = 0;
   type: string;
+  animationState: string;
 
-
-  /*  Hot wallet (step 3)  */
-
+  // Hot wallet (step 3)
   hotStakeAddress: any = 'Generating...';
 
-  /*  Cold wallet (step 3)  */
+  // Cold wallet (step 3)
   prevColdStakeAddress: any = '';
   coldStakeAddress: any = '';
   private validAddress: boolean = undefined;
-  /*  Cold wallet (step 4)  */
+
+  // Cold wallet (step 4)
   finalMessage: string = '';
 
   constructor(
@@ -37,45 +42,31 @@ export class ColdstakeComponent implements OnInit {
     private _rpc: RPCService
   ) { }
 
-  ngOnInit() {
-  }
-
   nextStep () {
     this.log.d(`Going to step: ${this.step + 1}`)
     this.step++;
+    this.animationState = 'next';
+    setTimeout(() => this.animationState = '', 300);
+    if ([1, 3].includes(this.step)) {
+      const encryptionstatus = this._rpc.state.get('encryptionstatus').trim();
+      if (encryptionstatus === 'Unlocked') {
+        this.unlockWallet(encryptionstatus);
+      }
+    }
+  }
+
+  prevStep() {
+    this.step--;
+    this.animationState = 'prev';
+    setTimeout(() => this.animationState = '', 300);
   }
 
   create(type: string) {
-    if (['hot', 'cold'].indexOf(type) !== -1) {
+    if (['hot', 'cold'].includes(type)) {
       this.type = type;
     }
-
-
-    if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) === -1) {
-      // unlock wallet and send transaction
-      this.nextStep();
-    }
-
-    if (type === 'hot') {
-      this.rpc_retrieveHotWallet();
-    }
-
+    this.nextStep();
   }
-
-
-  /** called when the hot wallet unlocked (by password component)  */
-  unlockHotWallet(encryptionStatus: String) {
-    if (this.step === 1) {
-      this.nextStep();
-    }
-
-    if (encryptionStatus === 'Unlocked') {
-      this.rpc_retrieveHotWallet();
-    } else {
-      this.log.d(`unlockHotWallet, did not unlock: ${encryptionStatus}`);
-    }
-  }
-
 
   rpc_retrieveHotWallet(): void {
     this.log.d('rpc_retrieveHotWallet called');
@@ -89,9 +80,8 @@ export class ColdstakeComponent implements OnInit {
     const chains: Array<any> = response.chains;
 
     // get our cold stake chain if it exists
-    const hotStakeChain: Array<any> = chains.filter(function(chain: any){
-      return chain.label === 'Cold Staking';
-    });
+    const hotStakeChain: Array<any> = chains.filter(
+      chain => chain.label === 'Cold Staking');
 
     // if it exists, return to ui
     if (hotStakeChain.length === 1) {
@@ -101,23 +91,37 @@ export class ColdstakeComponent implements OnInit {
     // else create a new one
       this._rpc.call('getnewextaddress', ['Cold Staking'])
       .subscribe(
-        success => this.hotStakeAddress = (success),
+        success => this.hotStakeAddress = success,
         error => this.log.er('rpc_filterHotListOfAccounts: getnewextaddress failed: ', error));
     }
   }
 
+  /**
+    * called when unlocked (by password component)
+    * @param {string} encryptionStatus  The wallet encryption status
+    */
+  unlockWallet(encryptionStatus: string) {
 
-  /**  called when the cold wallet unlocked (by password component)  */
-  unlockColdWallet(encryptionStatus: String) {
-    if (this.step === 1) {
-      this.nextStep();
-      this.getColdStakingAddress();
+    if (encryptionStatus === 'Unlocked') {
 
-    }
+      if (this.step === 1) {
+        if (this.type === 'cold') {
+          this.getColdStakingAddress();
+          this.nextStep();
+        }
 
-    if (this.step === 3) {
-      this.nextStep();
-      this.setColdStakingAddress();
+        if (this.type === 'hot') {
+          this.rpc_retrieveHotWallet();
+          this.nextStep();
+        }
+      }
+
+      if (this.type === 'cold' && this.step === 3) {
+        this.setColdStakingAddress();
+        this.nextStep();
+      }
+    } else {
+      this.log.er(`unlockHotWallet, did not unlock: ${encryptionStatus}`);
     }
   }
 
@@ -125,13 +129,13 @@ export class ColdstakeComponent implements OnInit {
   getColdStakingAddress(): void {
     this.log.d('getColdStakingAddress called');
     this._rpc.call('walletsettings', ['changeaddress'])
-    .subscribe(
-      success => {
-        this.log.d(`getColdStakingAddress: got changeaddress: ${success.changeaddress.coldstakingaddress}`);
-        this.prevColdStakeAddress = success.changeaddress.coldstakingaddress;
-        this.coldStakeAddress = success.changeaddress.coldstakingaddress;
-      },
-      error => this.log.er('getColdStakingAddress: ', error));
+      .subscribe(
+        success => {
+          this.log.d(`getColdStakingAddress: got changeaddress: ${success.changeaddress.coldstakingaddress}`);
+          this.prevColdStakeAddress = success.changeaddress.coldstakingaddress;
+          this.coldStakeAddress = success.changeaddress.coldstakingaddress;
+        },
+        error => this.log.er('getColdStakingAddress: ', error));
   }
 
   /**  Set the coldStakeAddress if it has changed.  */
@@ -143,25 +147,28 @@ export class ColdstakeComponent implements OnInit {
       return;
     }
 
-    this._rpc.call('walletsettings', [
-      'changeaddress', this.coldStakeAddress
-    ])
-    .subscribe(
-      success => {
-        this.log.er(`getColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
-        this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
-      },
-      error => {
-        this.finalMessage = 'Failed to activate cold staking.. ' + error;
-        this.log.er('getColdStakingAddress: ', error);
-      });
+    this._rpc.call('walletsettings', ['changeaddress', {coldstakingaddress: this.coldStakeAddress}])
+      .subscribe(
+        success => {
+          this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
+          this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
+        },
+        error => {
+          this.log.er('setColdStakingAddress: ', error);
+          this.finalMessage = 'Failed to activate cold staking.. ' + error.error.message;
+        });
+  }
+
+  close() {
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+    document.body.dispatchEvent(escape);
   }
 
   /**
   * We need to send all the public coins to our own wallet to change the output script,
   * if we do not do this then the hot wallet can not stake immediately.
-  */
+  *
   transferAllCoinsToColdStake(): void {
 
-  }
+  } */
 }

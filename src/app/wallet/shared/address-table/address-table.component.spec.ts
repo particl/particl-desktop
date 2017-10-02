@@ -6,6 +6,8 @@ import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
 
+import { ModalsService } from '../../../modals/modals.service';
+
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
   let fixture: ComponentFixture<AddressTableComponent>;
@@ -16,6 +18,9 @@ describe('AddressTableComponent', () => {
          SharedModule,
          WalletModule.forRoot(),
          RpcModule.forRoot()
+      ],
+      providers: [
+        ModalsService
       ]
     })
     .compileComponents();
