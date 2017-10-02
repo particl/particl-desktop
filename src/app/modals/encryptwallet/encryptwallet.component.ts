@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ComponentRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ComponentRef } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.module';
@@ -11,7 +11,7 @@ import { IPassword } from '../shared/password/password.interface';
   templateUrl: './encryptwallet.component.html',
   styleUrls: ['./encryptwallet.component.scss']
 })
-export class EncryptwalletComponent implements OnInit {
+export class EncryptwalletComponent {
 
   log: any = Log.create('unlockwallet.component');
   public password: string;
@@ -24,9 +24,6 @@ export class EncryptwalletComponent implements OnInit {
 
   constructor(private _rpc: RPCService) { }
 
-  ngOnInit() {
-  }
-
   encryptwallet(password: IPassword) {
     if (this.password) {
 
@@ -36,17 +33,18 @@ export class EncryptwalletComponent implements OnInit {
 
         this.log.d(`Encrypting wallet! password: ${this.password}`);
         this._rpc.call('encryptwallet', [password.password])
-            .subscribe(
-            (response: any) => {
-              this.alertBox.open(response, 'Wallet');
-            } ,
+          .subscribe(
+            response => {
+              this._rpc.stopState();
+              this.alertBox.open(response, 'Wallet')
+            },
             // Handle error appropriately
             error => {
               this.alertBox.open('Wallet failed to encrypt properly!', 'Wallet');
               this.log.er('error encrypting wallet', error)
             });
       } else {
-        this.alertBox.open(`The passwords do not match!`, 'Wallet');
+        this.alertBox.open('The passwords do not match!', 'Wallet');
       }
 
     } else {
@@ -54,11 +52,9 @@ export class EncryptwalletComponent implements OnInit {
       this.password = password.password;
       this.passwordElement.clear();
     }
-
   }
 
   clearPassword() {
     this.password = undefined;
   }
-
 }
