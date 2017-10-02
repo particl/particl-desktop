@@ -119,11 +119,11 @@ export class RPCService {
         this.stateCallError  .bind(this, withMethod ? method : false));
   }
 
-  registerStateCall(method: string, timeout?: number): void {
+  registerStateCall(method: string, timeout?: number, params?: Array<any> | null): void {
     if (timeout) {
       let first = true;
       const _call = () => {
-        this.call(method)
+        this.call(method, params)
           .subscribe(
             success => {
               this.stateCallSuccess(success);
@@ -135,6 +135,8 @@ export class RPCService {
             },
             error => {
               this.stateCallError(error);
+
+              // if not first error, pop up error box
               if (!first) {
                 this.modalUpdates.next({
                   error: error.target ? error.target : error,
