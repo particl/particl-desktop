@@ -49,7 +49,7 @@ export class ColdstakeComponent {
     setTimeout(() => this.animationState = '', 300);
     if ([1, 3].includes(this.step)) {
       const encryptionstatus = this._rpc.state.get('encryptionstatus').trim();
-      if (encryptionstatus === 'Unlocked') {
+      if (['Unlocked', 'Unencrypted'].includes(encryptionstatus)) {
         this.unlockWallet(encryptionstatus);
       }
     }
@@ -58,6 +58,10 @@ export class ColdstakeComponent {
   prevStep() {
     this.step--;
     this.animationState = 'prev';
+    if ([1, 3].includes(this.step)) {
+      this.step--;
+    }
+
     setTimeout(() => this.animationState = '', 300);
   }
 
@@ -102,7 +106,7 @@ export class ColdstakeComponent {
     */
   unlockWallet(encryptionStatus: string) {
 
-    if (encryptionStatus === 'Unlocked') {
+    if (['Unlocked', 'Unencrypted'].includes(encryptionStatus)) {
 
       if (this.step === 1) {
         if (this.type === 'cold') {
