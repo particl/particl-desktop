@@ -69,12 +69,14 @@ export class CreateWalletComponent {
 
     switch (type) {
       case 0:
-        this._modalsService.enableClose = true;
-        this._modalsService.open('encrypt');
+          this._modalsService.enableClose = true;
+          this._modalsService.open('encrypt');
+        break;
       case 1: // Create
         break;
       case 2: // Restore
-        this.isRestore = true;
+          this.isRestore = true;
+        break;
     }
   }
 
