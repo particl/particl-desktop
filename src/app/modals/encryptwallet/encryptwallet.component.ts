@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { ModalsService } from "app/modals/modals.service";
+import { ModalsService } from 'app/modals/modals.service';
 import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
 import { AlertComponent } from '../shared/alert/alert.component';
