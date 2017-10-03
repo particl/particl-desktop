@@ -64,8 +64,7 @@ export class RPCService {
   ) {
     this.isElectron = window.electron;
 
-    // We just execute it.. Might convert it to a service later on
-    this._rpcState = new RPCStateClass(this);
+    this.toggleState(true);
   }
 
   /**
@@ -302,8 +301,12 @@ export class RPCService {
     this._callOnAddress.forEach(this._pollCall.bind(this));
   }
 
-  stopState(): void {
-    this._enableState = false;
+  toggleState(enable?: boolean): void {
+    this._enableState = enable ? enable : !this._enableState;
+    if (this._enableState) {
+      // We just execute it.. Might convert it to a service later on
+      this._rpcState = new RPCStateClass(this);
+    }
   }
 }
 

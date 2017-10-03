@@ -1,6 +1,10 @@
-import { Component, ViewChild, ElementRef, ComponentRef } from '@angular/core';
+import {
+  Component, ComponentRef, Inject,
+  forwardRef, ElementRef, ViewChild
+} from '@angular/core';
 import { Log } from 'ng2-logger';
 
+import { ModalsService } from "app/modals/modals.service";
 import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
 import { AlertComponent } from '../shared/alert/alert.component';
@@ -13,7 +17,7 @@ import { IPassword } from '../shared/password/password.interface';
 })
 export class EncryptwalletComponent {
 
-  log: any = Log.create('unlockwallet.component');
+  log: any = Log.create('encryptwallet.component');
   public password: string;
 
   @ViewChild('passwordElement')
@@ -22,7 +26,10 @@ export class EncryptwalletComponent {
   @ViewChild('alertBox')
   alertBox: AlertComponent;
 
-  constructor(private _rpc: RPCService) { }
+  constructor(
+    private _rpc: RPCService,
+    @Inject(forwardRef(() => ModalsService))
+    private _modalsService: ModalsService) { }
 
   encryptwallet(password: IPassword) {
     if (this.password) {
@@ -35,8 +42,15 @@ export class EncryptwalletComponent {
         this._rpc.call('encryptwallet', [password.password])
           .subscribe(
             response => {
-              this._rpc.stopState();
-              this.alertBox.open(response, 'Wallet')
+              this._rpc.toggleState(false);
+              this.alertBox.open(response, 'Wallet');
+              setTimeout(() => {
+                this._rpc.call('restart-daemon')
+                  .subscribe(() => {
+                    this._modalsService.open('createWallet', {forceOpen: true});
+                    this._rpc.toggleState(true);
+                  });
+              }, 3000);
             },
             // Handle error appropriately
             error => {

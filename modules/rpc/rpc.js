@@ -1,102 +1,15 @@
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
 const { ipcMain } = require('electron');
 const log = require('electron-log');
 const http = require('http');
 const Observable = require('rxjs/Observable').Observable;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
+const cookie = require('./cookie');
+const daemon = require('./daemon');
 
 let TIMEOUT = 5000;
 let HOSTNAME;
 let PORT;
-let options;
-
-/*
-** returns Particl config folder
-*/
-function findCookiePath() {
-
-  var homeDir = os.homedir ? os.homedir() : process.env['HOME'];
-
-  var dir,
-      appName = 'Particl';
-  switch (process.platform) {
-    case 'linux': {
-      dir = prepareDir(homeDir, '.' + appName.toLowerCase())
-        .result;
-      break;
-    }
-
-    case 'darwin': {
-      dir = prepareDir(homeDir, 'Library', 'Application Support', appName)
-        .result;
-      break;
-    }
-
-    case 'win32': {
-      dir = prepareDir(process.env['APPDATA'], appName)
-        .or(homeDir, 'AppData', 'Roaming', appName)
-        .result;
-      break;
-    }
-  }
-
-  if (dir) {
-    return dir;
-  } else {
-    return false;
-  }
-}
-
-/*
-** directory resolver
-*/
-function prepareDir(dirPath) {
-  // jshint -W040
-  if (!this || this.or !== prepareDir || !this.result) {
-    // if dirPath couldn't be resolved
-    if (!dirPath) {
-      // return this function to be chained with .or()
-      return { or: prepareDir };
-    }
-
-    //noinspection JSCheckFunctionSignatures
-    dirPath = path.join.apply(path, arguments);
-    mkDir(dirPath);
-
-    try {
-      fs.accessSync(dirPath, fs.W_OK);
-    } catch (e) {
-      // return this function to be chained with .or()
-      return { or: prepareDir };
-    }
-  }
-
-  return {
-    or: prepareDir,
-    result: (this ? this.result : false) || dirPath
-  };
-}
-
-/*
-** create a directory
-*/
-function mkDir(dirPath, root) {
-  var dirs = dirPath.split(path.sep);
-  var dir = dirs.shift();
-  root = (root || '') + dir + path.sep;
-
-  try {
-    fs.mkdirSync(root);
-  } catch (e) {
-    if (!fs.statSync(root).isDirectory()) {
-      throw new Error(e);
-    }
-  }
-
-  return !dirs.length || mkDir(dirs.join(path.sep), root);
-}
+let rpcOptions;
 
 /*
 ** execute RPC call
@@ -108,8 +21,8 @@ function rpcCall (method, params, auth, callback) {
     params: params
   });
 
-  if (!options) {
-    options = {
+  if (!rpcOptions) {
+    rpcOptions = {
       hostname: HOSTNAME,
       port: PORT,
       path: '/',
@@ -120,13 +33,13 @@ function rpcCall (method, params, auth, callback) {
     }
   }
 
-  if (auth && options.auth !== auth) {
-    options.auth = auth
+  if (auth && rpcOptions.auth !== auth) {
+    rpcOptions.auth = auth
   }
 
-  options.headers['Content-Length'] = postData.length;
+  rpcOptions.headers['Content-Length'] = postData.length;
 
-  const request = http.request(options, response => {
+  const request = http.request(rpcOptions, response => {
     let data = '';
     response.setEncoding('utf8');
     response.on('data', chunk => data += chunk);
@@ -176,29 +89,6 @@ function rpcCall (method, params, auth, callback) {
 /*******************************/
 
 /*
-** returns the current RPC cookie
-** RPC cookie is regenerated at every particld startup
-*/
-function getAuth(options) {
-  if (options.rpcuser && options.rpcpassword) {
-    return options.rpcuser + ':' + options.rpcpassword;
-  }
-
-  // const COOKIE_FILE = findCookiePath() + `${options.testnet ? '/testnet' : ''}/.cookie`;
-  const COOKIE_FILE = findCookiePath() + (options.testnet ? '/testnet' : '') + '/.cookie';
-  let auth;
-
-  if (fs.existsSync(COOKIE_FILE)) {
-    auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();
-  } else {
-    auth = undefined;
-    log.error('could not find cookie file! path:', COOKIE_FILE);
-  }
-
-  return (auth)
-}
-
-/*
 ** prepares `backend-rpccall` to receive RPC calls from the renderer
 */
 function init(options) {
@@ -207,15 +97,23 @@ function init(options) {
 
   // This is a factory function that returns an Observable
   function createObservable(event, method, params) {
-    let auth = getAuth(options);
+    let auth = cookie.getAuth(options);
     return Observable.create(observer => {
-      rpcCall(method, params, auth, (error, response) => {
-        if (error) {
-          observer.error(error);
-          return;
-        }
-        observer.next(response);
-      });
+      if (['restart-daemon'].includes(method)) {
+        const callback = () => {
+          observer.next(true);
+        };
+        daemon.startDaemon(true, callback);
+
+      } else {
+        rpcCall(method, params, auth, (error, response) => {
+          if (error) {
+            observer.error(error);
+            return;
+          }
+          observer.next(response);
+        });
+      }
     });
   }
   rxIpc.registerListener('backend-rpccall', createObservable);
@@ -225,31 +123,19 @@ function checkDaemon(options) {
   return new Promise((resolve, reject) => {
     const _timeout = TIMEOUT;
     TIMEOUT = 200;
-    rpcCall('getnetworkinfo', null, getAuth(options), (error, response) => {
-      rxIpc.removeListeners();
-      if (error) {
-        // console.log('ERROR:', error);
-        reject();
-      } else if (response) {
-        resolve();
-      }
-    });
+    rpcCall(
+      'getnetworkinfo', null, cookie.getAuth(options), (error, response) => {
+        rxIpc.removeListeners();
+        if (error) {
+          // console.log('ERROR:', error);
+          reject();
+        } else if (response) {
+          resolve();
+        }
+      });
     TIMEOUT = _timeout;
-  });
-}
-
-function stopDaemon() {
-  return new Promise((resolve, reject) => {
-    rpcCall('stop', null, null, (error, response) => {
-      if (error) {
-        reject();
-      } else {
-        resolve();
-      }
-    });
   });
 }
 
 exports.init = init;
 exports.checkDaemon = checkDaemon;
-exports.stopDaemon = stopDaemon;
