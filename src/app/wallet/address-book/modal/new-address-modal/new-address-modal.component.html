@@ -16,7 +16,7 @@
   </div>
   <md-dialog-actions fxLayoutAlign="end center">
     <button md-button md-dialog-close>Cancel</button>
-    <button md-button [disabled]="!addAddressBookForm.valid" md-raised-button color="primary">
+    <button md-button md-raised-button color="primary" [disabled]="(!label || !label.trim())||!validAddress||isMine">
       Add Label
     </button>
   </md-dialog-actions>
