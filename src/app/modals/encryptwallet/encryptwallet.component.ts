@@ -50,7 +50,7 @@ export class EncryptwalletComponent {
                     this._modalsService.open('createWallet', {forceOpen: true});
                     this._rpc.toggleState(true);
                   });
-              }, 3000);
+              }, 5000);
             },
             // Handle error appropriately
             error => {

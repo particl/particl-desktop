@@ -9,12 +9,9 @@ let options;
 let initialized;
 
 function init(callback) {
-  options = parseArguments();
-
-  if (initialized) {
-    return;
+  if (initialized === undefined) {
+    options = parseArguments();
   }
-
   rpc.init(options);
 
   // Daemon already running... Start window
