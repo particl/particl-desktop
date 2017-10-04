@@ -80,6 +80,10 @@ function parseArguments() {
   } else {
     // striping /path/to/particl from argv
     process.argv = process.argv.splice(1);
+    // fixed for development mode only
+    if (process.platform === 'darwin') {
+      process.argv = process.argv.splice(1);
+    }
   }
 
   process.argv.forEach((arg, index) => {
