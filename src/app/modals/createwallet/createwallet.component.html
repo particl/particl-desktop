@@ -3,13 +3,19 @@
     <div class="container" fxFlex="100%">
       <div class="align-center">
         <b>Welcome</b>, please select one of the options below.
+        <div *ngIf="!isCrypted" class="warning-text margin-top-30px">
+          It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
+        </div>
       </div>
       <div class="gap50"></div>
+      <button *ngIf="!isCrypted" md-raised-button color="primary" class="create-wallet-action-button"  (click)="initialize(0);">
+        Encrypt Wallet
+      </button>
       <div class="button-row align-center">
-        <button md-raised-button color="primary" class="create-wallet-action-button" (click)="nextStep();create();">
+        <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
           Create new wallet
         </button>
-        <button md-raised-button color="primary" class="create-wallet-action-button" (click)="nextStep();restore();">
+        <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
           Restore wallet
         </button>
       </div>
@@ -83,6 +89,9 @@
       </span>
         <span *ngIf="step === 4" fxLayout="column" fxLayoutAlign="center center">
         <b>Enter your wallet recovery phrase</b><br/>
+        <div class="warning-text margin-top-5px">
+          Fill in the missing words of the recovery passphrase.
+        </div>
       </span>
 
         <hr class="margin-top-100px">
@@ -185,7 +194,7 @@
       <div class="row wallet-buttons-container">
         <div class="capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
           <div fxFlex="70%" fxFlexOffset="0px">
-          <button md-raised-button (click)="prevStep();restore()">
+          <button md-raised-button (click)="prevStep();initialize(2)">
             Back
           </button>
           </div>
@@ -201,12 +210,7 @@
       <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
           <h4>Congratulations with your new wallet</h4>
           <div  fxFlexOffset="20px">
-            <!-- TODO: Final text?!?! -->
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
+            Your new wallet has been set as the default wallet, you can new generate new addresses on your wallet.
           </div>
       </div>
       <hr class="margin-top-60px">
@@ -217,5 +221,11 @@
         </div>
       </div>
     </div>
+  </ng-template>
+
+  <ng-template [ngIf]="step === 6">
+    <app-unlockwallet
+    (unlockEmitter)="importMnemonicCallback($event)" [autoClose]="false">
+    </app-unlockwallet>
   </ng-template>
 </div>

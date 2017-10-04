@@ -10,6 +10,8 @@ import { MdDialog } from '@angular/material';
 import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { ModalsService } from '../../../modals/modals.service';
+import {ModalsComponent} from '../../../modals/modals.component';
 
 @Component({
   selector: 'address-table',
@@ -42,7 +44,11 @@ export class AddressTableComponent implements OnInit {
   // Data storage
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
-
+  public singleAddress: any = {
+    label: 'Empty label',
+    address: 'Empty address',
+    owned: false
+  };
   // Pagination
   currentPage: number = 1;
   @Input() addressDisplayAmount: number = 5;
@@ -53,7 +59,8 @@ export class AddressTableComponent implements OnInit {
     public _addressService: AddressService,
     private _rpc: RPCService,
     public dialog: MdDialog,
-    public flashNotification: FlashNotificationService
+    public flashNotification: FlashNotificationService,
+    private _modals: ModalsService
   ) {
 
   }
@@ -115,12 +122,25 @@ export class AddressTableComponent implements OnInit {
     const dialogRef = this.dialog.open(DeleteConfirmationModalComponent);
     dialogRef.componentInstance.dialogContent = `${label}: ${address}`;
     dialogRef.componentInstance.onDelete.subscribe(() => {
-      this._rpc.call('manageaddressbook', ['del', address])
-        .subscribe(response => {
-            this.rpc_deleteAddress_success(response);
-          },
-          error => console.log(`${error.error.message}`));
+      if (this._rpc.state.get('locked')) {
+        // unlock wallet and send transaction
+        this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
+        this._modals.open('unlock', {
+          forceOpen: true, timeout: 3, callback: this.deleteAddressCallBack.bind(this, address)
+        });
+      } else {
+        // wallet already unlocked
+        this.deleteAddressCallBack(address);
+      }
     });
+  }
+
+  private deleteAddressCallBack(address: string) {
+    this._rpc.call('manageaddressbook', ['del', address])
+      .subscribe(response => {
+          this.rpc_deleteAddress_success(response);
+        },
+        error => console.log(`${error.error.message}`));
   }
 
   private rpc_deleteAddress_success(json: Object) {

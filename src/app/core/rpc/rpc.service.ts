@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ElectronService } from 'ngx-electron';
 import { Subject } from 'rxjs/Subject';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +15,13 @@ const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
 
 const HOSTNAME = 'localhost';
+
+
+declare global {
+  interface Window {
+    electron: boolean;
+  }
+}
 
 /**
  * The RPC service that maintains a single connection to the particld daemon.
@@ -38,14 +44,11 @@ export class RPCService {
   private username: string = 'test';
   private password: string = 'test';
 
-  private _callOnBlock: Array<any> = [];
-  private _callOnTransaction: Array<any> = [];
-  private _callOnTime: Array<any> = [];
   private _callOnAddress: Array<any> = [];
   private _callOnPoll: Array<any> = [];
   private _callOnNextPoll: Array<any> = [];
 
-  private _pollTimout: number;
+  private _enableState: boolean = true;
 
   public isElectron: boolean = false;
 
@@ -56,21 +59,13 @@ export class RPCService {
 
   constructor(
     private http: Http,
-    public electronService: ElectronService,
     private rpx: RPXService,
     public state: StateService
   ) {
-    this.isElectron = this.electronService.isElectronApp;
+    this.isElectron = window.electron;
 
-    // We just execute it.. Might convert it to a service later on
-    this._rpcState = new RPCStateClass(this);
-
-    if (this.isElectron) {
-      // Respond to checks if a listener is registered
-      this.rpx.rpxCall()
-    }
+    this.toggleState(true);
   }
-
 
   /**
     * The call function will perform a single call to the particld daemon and perform a callback to
@@ -86,7 +81,7 @@ export class RPCService {
     * ```
     * TODO: Response interface
     */
-  call(method: string, params?: Array<any> | null): Observable<Object> {
+  call(method: string, params?: Array<any> | null): Observable<any> {
 
     if (this.isElectron) {
       return this.rpx.runCommand('backend-rpccall', null, method, params)
@@ -113,17 +108,23 @@ export class RPCService {
   }
 
   stateCall(method: string, withMethod?: boolean): void {
+    if (!this._enableState) {
+      return;
+    }
     this.call(method)
       .subscribe(
         this.stateCallSuccess.bind(this, withMethod ? method : false),
         this.stateCallError  .bind(this, withMethod ? method : false));
   }
 
-  registerStateCall(method: string, timeout?: number): void {
+  registerStateCall(method: string, timeout?: number, params?: Array<any> | null): void {
     if (timeout) {
       let first = true;
       const _call = () => {
-        this.call(method)
+        if (!this._enableState) {
+          return;
+        }
+        this.call(method, params)
           .subscribe(
             success => {
               this.stateCallSuccess(success);
@@ -135,6 +136,8 @@ export class RPCService {
             },
             error => {
               this.stateCallError(error);
+
+              // if not first error, pop up error box
               if (!first) {
                 this.modalUpdates.next({
                   error: error.target ? error.target : error,
@@ -296,6 +299,14 @@ export class RPCService {
     // A poll only for address changes, triggered from the GUI!
 
     this._callOnAddress.forEach(this._pollCall.bind(this));
+  }
+
+  toggleState(enable?: boolean): void {
+    this._enableState = enable ? enable : !this._enableState;
+    if (this._enableState) {
+      // We just execute it.. Might convert it to a service later on
+      this._rpcState = new RPCStateClass(this);
+    }
   }
 }
 

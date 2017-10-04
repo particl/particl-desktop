@@ -11,6 +11,8 @@ apt:
   packages:
     - google-chrome-stable
     - google-chrome-beta
+    - icnsutils
+    - graphicsmagick
 
 before_install:
   - export CHROME_BIN=chromium-browser

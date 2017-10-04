@@ -50,7 +50,6 @@ const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(routes),
-    NgxElectronModule,
     SharedModule,
     SidebarModule.forRoot(),
     WalletModule.forRoot(),

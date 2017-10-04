@@ -14,7 +14,7 @@ import { FlashNotificationService } from '../../services/flash-notification.serv
 })
 export class EncryptwalletComponent {
 
-  log: any = Log.create('unlockwallet.component');
+  log: any = Log.create('encryptwallet.component');
   public password: string;
 
   @ViewChild('passwordElement')
@@ -22,7 +22,6 @@ export class EncryptwalletComponent {
 
   @ViewChild('alertBox')
   alertBox: AlertComponent;
-
   constructor(private _rpc: RPCService,
               private flashNotification: FlashNotificationService) {
   }
@@ -55,7 +54,6 @@ export class EncryptwalletComponent {
       this.password = password.password;
       this.passwordElement.clear();
     }
-
   }
 
   clearPassword() {

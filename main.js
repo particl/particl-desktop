@@ -10,44 +10,30 @@ const url = require('url');
 const platform = require('os').platform();
 const log = require('electron-log');
 
-const daemonManager = require('./modules/clientBinaries/clientBinaries');
-const rpc = require('./modules/rpc/rpc');
+log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
+log.transports.file.file = log.transports.file
+  .findLogPath(log.transports.file.appName)
+  .replace('log.log', 'partgui.log');
 
+const daemon = require('./modules/rpc/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-let daemon;
-
-let openDevTools = false;
 let options;
 
+let openDevTools = false;
+
 function createWindow () {
-
-  options = parseArguments();
-  options.port = options.rpcport
-    ? options.rpcport // custom rpc port
-    : options.testnet
-      ? 51935  // default testnet port
-      : 51735; // default mainnet port
-
-  rpc.init(options);
-
-  // Daemon already running... Start window
-  rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
-    .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
-
-
-  // check for daemon version, maybe update, and keep the daemon's process for exit
-  daemonManager.init(false, options).then(child => {
-    daemon = child ? child : undefined;
+  const _initWindow = () => {
     if (!mainWindow) {
       initMainWindow(makeTray());
     }
-  }).catch(error => {
-    console.error(error);
-  });
+  };
+
+  daemon.init(_initWindow);
+  options = daemon.getOptions();
 }
 
 /*
@@ -60,9 +46,10 @@ function initMainWindow(trayImage) {
     height: 720,
     icon: trayImage,
     webPreferences: {
-      //sandbox: true,
-      //nodeIntegration: false,
-      preload: 'preload.js',
+      nodeIntegration: false,
+      sandbox: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     },
   });
 
@@ -118,35 +105,57 @@ function makeTray() {
     {
       label: 'View',
       submenu: [
-        {role: 'reload'},
-        {role: 'forcereload'},
-        {role: 'toggledevtools'},
-        {type: 'separator'},
-        {role: 'resetzoom'},
-        {role: 'zoomin'},
-        {role: 'zoomout'},
-        {type: 'separator'},
-        {role: 'togglefullscreen'}
+        {
+          label: 'Reload',
+          click () { mainWindow.webContents.reloadIgnoringCache(); }
+        },
+        {
+          label: 'Open Dev Tools',
+          click () { mainWindow.openDevTools(); }
+        }
       ]
     },
     {
       role: 'window',
       submenu: [
-        {role: 'minimize'},
-        {role: 'close'}
+        {
+          label: 'Close',
+          click () { app.quit() }
+        },
+        {
+          label: 'Hide',
+          click () { mainWindow.hide(); }
+        },
+        {
+          label: 'Show',
+          click () { mainWindow.show(); }
+        },
+        {
+          label: 'Maximize',
+          click () { mainWindow.maximize(); }
+        } /* TODO: stop full screen somehow,
+        {
+          label: 'Toggle Full Screen',
+          click () {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+           }
+        }*/
       ]
     },
     {
       role: 'help',
       submenu: [
-        {role: 'about'},
+        {
+          label: 'About ' + app.getName(),
+          click () { electron.shell.openExternal('https://particl.io/#about'); }
+        },
         {
           label: 'Visit Particl.io',
-          click () { electron.shell.openExternal('https://particl.io') }
+          click () { electron.shell.openExternal('https://particl.io'); }
         },
         {
           label: 'Visit Electron',
-          click () { electron.shell.openExternal('https://electron.atom.io') }
+          click () { electron.shell.openExternal('https://electron.atom.io'); }
         }
       ]
     }
@@ -167,51 +176,10 @@ function makeTray() {
   return trayImage;
 }
 
-/*
-** compose options from arguments
-**
-** exemple:
-** --dev -testnet -reindex -rpcuser=user -rpcpassword=pass
-** strips --dev out of argv (double dash is not a particld argument) and returns
-** {
-**   dev: true,
-**   testnet: true,
-**   reindex: true,
-**   rpcuser: user,
-**   rpcpassword: pass
-** }
-*/
-function parseArguments() {
-
-  let options = {};
-  if (path.basename(process.argv[0]).includes('electron')) {
-
-    // striping 'electron .' from argv
-    process.argv = process.argv.splice(2);
-  } else {
-    // striping /path/to/particl from argv
-    process.argv = process.argv.splice(1);
-  }
-
-  process.argv.forEach((arg, index) => {
-    if (arg.includes('=')) {
-      arg = arg.split('=');
-      options[arg[0].substr(1)] = arg[1];
-    } else if (arg[1] === '-'){
-      // double dash command
-      options[arg.substr(2)] = true;
-    } else if (arg[0] === '-') {
-      // simple dash command
-      options[arg.substr(1)] = true;
-    }
-  });
-  return options;
-}
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -220,14 +188,7 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
-
-app.on('quit', function () {
-  // kill the particl daemon if initiated on launch
-  if (daemon) {
-    daemon.kill('SIGINT');
-  }
-})
+});
 
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
@@ -235,7 +196,7 @@ app.on('activate', function () {
   if (mainWindow === null) {
     createWindow()
   }
-})
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

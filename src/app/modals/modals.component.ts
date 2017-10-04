@@ -14,6 +14,7 @@ import { Log } from 'ng2-logger'
 import { ModalsService } from './modals.service';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
@@ -26,6 +27,7 @@ import { MdDialogRef } from '@angular/material';
   styleUrls: ['./modals.component.scss'],
   entryComponents: [
     CreateWalletComponent,
+    ColdstakeComponent,
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
@@ -55,9 +57,12 @@ export class ModalsComponent implements DoCheck, OnInit {
     private _modalService: ModalsService,
     public _dialogRef: MdDialogRef<ModalsComponent>
   ) {
+    // update new modal, open it
     this._modalService.getMessage().subscribe(
       message => this.open(message.modal, message.data)
     );
+
+    // update progress bar blockstatus
     this._modalService.getProgress().subscribe(
       progress => this.updateProgress(<number>progress)
     );
@@ -77,13 +82,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     }
   }
 
-  updateProgress(progress: number) {
-    this.syncPercentage = progress;
-    this.syncString = progress === 100
-      ? 'blockchain fully synced'
-      : `${progress.toFixed(2)} %`
-  }
-
+  // open modal
   open(message: any, data?: any) {
     this.logger.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
     this.modalContainer.clear();
@@ -103,12 +102,24 @@ export class ModalsComponent implements DoCheck, OnInit {
     this.modal.destroy();
   }
 
-    @HostListener('window:keydown', ['$event'])
-    keyDownEvent(event: any) {
-    if (this.closeOnEscape && this._modalService.enableClose
-          && event.key.toLowerCase() === 'escape'
-          && this.modal) {
-        this.close();
-      }
+  // close window on escape
+  @HostListener('window:keydown', ['$event'])
+  keyDownEvent(event: any) {
+  if (this.closeOnEscape && this._modalService.enableClose
+        && event.key.toLowerCase() === 'escape'
+        && this.modal) {
+      this.close();
     }
+  }
+
+  /**
+    * Update sync progress
+    * @param {number} number  The sync percentage
+    */
+  updateProgress(progress: number) {
+    this.syncPercentage = progress;
+    this.syncString = progress === 100
+      ? 'blockchain fully synced'
+      : `${progress.toFixed(2)} %`
+  }
 }

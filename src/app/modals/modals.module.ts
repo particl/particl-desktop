@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ModalModule, TooltipModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { ModalsService } from './modals.service';
@@ -12,6 +13,7 @@ import { PassphraseComponent } from './createwallet/passphrase/passphrase.compon
 import { PasswordComponent } from './shared/password/password.component';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
+import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
@@ -33,7 +35,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MdButtonModule,
     MdIconModule,
     MdInputModule,
-    MdCheckboxModule
+    MdCheckboxModule,
+    ModalModule,
+    TooltipModule,
+    ClipboardModule
   ],
   declarations: [
     FocusDirective,
@@ -46,7 +51,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
-    AlertComponent
+    AlertComponent,
+    ColdstakeComponent
   ],
   exports: [
     ModalsComponent

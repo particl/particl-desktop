@@ -5,6 +5,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
+import { ModalsService } from '../../modals/modals.service';
+
 import { AddressBookComponent } from './address-book.component';
 import { FlashNotificationService } from '../../services/flash-notification.service';
 import { MdSnackBarModule } from '@angular/material';

@@ -120,7 +120,8 @@ export class SendComponent {
 
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
-    return this.send.validAddress;
+    // use default transferBalance address or custom address.
+    return (this.type === 'balanceTransfer' && !this.send.toAddress) || this.send.validAddress;
   }
 
   /** verifyAddress: calls RPC to validate it. */
@@ -143,13 +144,12 @@ export class SendComponent {
       }
     };
 
-    // this._rpc.oldCall(this, 'validateaddress', [this.send.toAddress], validateAddressCB);
     this._rpc.call('validateaddress', [this.send.toAddress])
       .subscribe(response => {
         validateAddressCB(response)
       },
       error => {
-        this.log.er('errr');
+        this.log.er('verifyAddress: validateAddressCB failed');
       });
   }
 

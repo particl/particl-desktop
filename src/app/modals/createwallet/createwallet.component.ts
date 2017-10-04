@@ -3,11 +3,13 @@ import { Log } from 'ng2-logger';
 
 import { IPassword } from '../shared/password/password.interface';
 
+import { flyInOut, slideDown } from '../../core/core.animations';
+
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
+import { StateService } from '../../core/state/state.service';
 
-import { flyInOut, slideDown } from '../../core/core.animations';
 
 @Component({
   selector: 'modal-createwallet',
@@ -16,7 +18,7 @@ import { flyInOut, slideDown } from '../../core/core.animations';
   animations: [
     flyInOut(),
     slideDown()
-  ],
+  ]
 })
 export class CreateWalletComponent {
 
@@ -27,6 +29,7 @@ export class CreateWalletComponent {
   step: number = 0;
   isRestore: boolean = false;
   name: string;
+  isCrypted: boolean = false;
 
   @ViewChild('nameField') nameField: ElementRef;
 
@@ -44,9 +47,10 @@ export class CreateWalletComponent {
   constructor (
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
-    private _passphraseService: PassphraseService
+    private _passphraseService: PassphraseService,
+    private state: StateService
   ) {
-    this.reset();
+      this.reset();
   }
 
   reset() {
@@ -57,17 +61,25 @@ export class CreateWalletComponent {
     this.password = '';
     this.errorString = '';
     this.step = 0;
+    this.animationState = '';
+    this.isCrypted = (this.state.get('encryptionstatus') !== 'Unencrypted');
   }
 
-  create () {
+  initialize(type: number) {
     this.reset();
-    this.step = 1;
-  }
 
-  restore() {
-    this.reset();
-    this.isRestore = true;
-    this.step = 1;
+    switch (type) {
+      case 0:
+        this._modalsService.enableClose = true;
+        this._modalsService.open('encrypt', {forceOpen: true});
+        return;
+      case 1: // Create
+        break;
+      case 2: // Restore
+          this.isRestore = true;
+        break;
+    }
+    this.nextStep();
   }
 
   nextStep() {
@@ -114,22 +126,16 @@ export class CreateWalletComponent {
         this.animationState = '';
         this.step = 4;
         this.errorString = '';
+        if (this.state.get('locked')) {
+          // unlock wallet
+          this.step = 6
+        } else {
+          // wallet already unlocked
+          this.importMnemonicCallback();
+        }
 
-        this._passphraseService.importMnemonic(this.words, this.password)
-          .subscribe(
-            success => {
-              this.log.i('Mnemonic imported successfully');
-              this.animationState = 'next';
-              this.step = 5;
-            },
-            error => {
-              this.log.er(error);
-              this.errorString = error.error.message;
-              this.log.er('Mnemonic import failed');
-            });
         break;
     }
-
     this._modalsService.enableClose = (this.step === 0);
   }
 
@@ -142,6 +148,21 @@ export class CreateWalletComponent {
 
     this.wordsVerification = Object.assign({}, this.words);
     this.log.d(`word string: ${this.words.join(' ')}`);
+  }
+
+  public importMnemonicCallback() {
+    this._passphraseService.importMnemonic(this.words, this.password)
+      .subscribe(
+        success => {
+          this.animationState = 'next';
+          this.step = 5;
+          this.log.i('Mnemonic imported successfully');
+        },
+        error => {
+          this.log.er(error);
+          this.errorString = error.message;
+          this.log.er('Mnemonic import failed');
+        });
   }
 
   validate(): boolean {

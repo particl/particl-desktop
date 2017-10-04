@@ -1,4 +1,4 @@
-# Particl-UI
+# Particl Wallet - UI
 
 ![UI Preview](preview.png)
 
@@ -18,48 +18,46 @@ This repository is the user interface that works in combination with our [`parti
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
 
-## Development server
-* Download + Install [nodejs](https://nodejs.org/) 6.4 - 7.10
+## Development
+
+### Boostrapping for development:
+* Download + Install [Node.js®](https://nodejs.org/) 6.4 - 7.10
 * Download + Install [git](https://git-scm.com/)
 
-```
+```bash
 git clone https://github.com/particl/partgui
 cd partgui
 npm install
 ```
-* Run `ng serve` for a dev server. 
-* Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Start the particl-core daemon
-### Start
+### Development with Electron
+* Run `ng serve` to start the dev server.
+* Run `npm run start:electron:dev -- -testnet` in another window to start the electron application.
+
+### Development with a Browser
+* Run `ng serve` for a dev server. 
+#### Start the particl-core daemon
 ```
 ./particld -daemon -testnet -debug -rpcuser=test -rpcpassword=test -rpccorsdomain=http://localhost:4200
 ```
-
-### Stop
+* Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+#### Stop particl-core daemon
 ```
 ./particl-cli -rpcuser=test -rpcpassword=test stop
 ```
+#### Interact with particl-core daemon
+```
+./particl-cli -rpcuser=test -rpcpassword=test getblockchaininfo
+```
 
-You can now navigate to `http://localhost:4200/`.
+## Running
+### Start Electron
+* `npm run start:electron` - Windows
 
-## Code scaffolding
+### Package Electron
+* `npm run package:win` - Windows
+* `npm run package:mac` - OSX
+* `npm run package:linux` - Linux
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Contributors
+Join us in [#particl-dev:matrix.org](https://riot.im/app/#/room/#particl-dev:matrix.org) on [riot](https://riot.im)

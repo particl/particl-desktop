@@ -86,4 +86,9 @@ export class StatusComponent implements OnInit {
         break;
     }
   }
+
+  openColdStakeModal() {
+    this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
+    this._modalsService.open('coldStake', {'forceOpen': true});
+  }
 }

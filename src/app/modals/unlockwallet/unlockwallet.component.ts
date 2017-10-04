@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Injectable, EventEmitter, Input, Output } from '@angular/core';
+import { ModalsModule } from '../modals.module';
 import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.service';
@@ -16,9 +17,12 @@ export class UnlockwalletComponent {
   DEFAULT_TIMEOUT: number = 60;
   log: any = Log.create('unlockwallet.component');
 
+  @Output() unlockEmitter: EventEmitter<string> = new EventEmitter<string>();
+  @Input() autoClose: boolean = true;
+
   private callback: Function;
   timeout: number = this.DEFAULT_TIMEOUT;
-  showStakeOnly: boolean = true;
+  showStakeOnly: boolean = false;
 
   constructor (private _rpc: RPCService,
   public dialogRef: MdDialogRef<UnlockwalletComponent>) { }
@@ -31,7 +35,8 @@ export class UnlockwalletComponent {
       if (!!this.callback) {
         this.callback();
       }
-
+      // unlock wallet emitter
+      this.unlockEmitter.emit(encryptionStatus);
       // close the modal!
       this.closeModal();
     } else {
@@ -50,6 +55,7 @@ export class UnlockwalletComponent {
       this.timeout = data.timeout;
     }
     this.showStakeOnly = Boolean(data.showStakeOnly);
+    this.autoClose = (data.autoClose !== false)
   }
 
   closeModal() {

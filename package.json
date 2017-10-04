@@ -1,12 +1,14 @@
 {
-  "name": "partgui",
-  "version": "0.0.1",
+  "name": "particl",
+  "version": "0.1.0",
   "license": "GPL-2.0",
-  "description": "Particl Angular2 GUI - The source for the Particl GUI.",
+  "description": "Particl Electron GUI - The source for the Particl GUI.",
   "keywords": [
     "particl",
     "angular2",
+    "angular4",
     "angular-cli",
+    "electron",
     "webpack",
     "typescript"
   ],
@@ -25,7 +27,7 @@
     "start:electron": "npm run build:electron && electron .",
     "package:mac": "npm run build:electron:prod && electron-builder -m",
     "package:linux": "npm run build:electron:prod && electron-builder -l",
-    "package:win": "npm run build:electron:prod && electron-builder --win --x64 --ia32",
+    "package:win": "npm run build:electron:prod && electron-builder --win --x64",
     "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compdoc": "compodoc -p tsconfig.json",
@@ -35,7 +37,7 @@
     "electronVersion": "1.7.5",
     "appId": "io.particl.partgui",
     "directories": {
-      "buildResources": "src/resources",
+      "buildResources": "resources",
       "output": "packages"
     },
     "mac": {
@@ -106,14 +108,13 @@
     "ng2-logger": "^1.0.3",
     "ngx-bootstrap": "^1.8.0",
     "ngx-clipboard": "^8.0.3",
-    "ngx-electron": "^1.0.2",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.2",
     "protractor": "^5.1.2",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.4.2",
     "tmp": "0.0.33",
-    "zone.js": "0.8.17"
+    "zone.js": "0.8.18"
   },
   "devDependencies": {
     "@angular/cli": "^1.2.4",
@@ -122,7 +123,7 @@
     "@types/jasmine": "^2.5.53",
     "@types/node": "~8.0.12",
     "codelyzer": "~3.2.0",
-    "coveralls": "^2.13.1",
+    "coveralls": "^3.0.0",
     "electron": "^1.7.5",
     "electron-builder": "^19.22.1",
     "htmlhint": "^0.9.13",

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { IPassword } from './password.interface';
@@ -32,7 +32,6 @@ export class PasswordComponent {
     */
   @Input() emitPassword: boolean = false;
   @Output() passwordEmitter: EventEmitter<IPassword> = new EventEmitter<IPassword>();
-
 
   /**
     * The unlock emitter will automatically unlock the wallet for a given time and emit the JSON result
@@ -102,13 +101,17 @@ export class PasswordComponent {
           // update state
           this._rpc.stateCall('getwalletinfo');
 
-          this._rpc.state.observe('encryptionstatus')
+          let _subs = this._rpc.state.observe('encryptionstatus').skip(1)
             .subscribe(
               encryptionstatus => {
                 this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
 
                 // hook for unlockEmitter, warn parent component that wallet is unlocked!
                 this.unlockEmitter.emit(encryptionstatus);
+                if (_subs) {
+                  _subs.unsubscribe();
+                  _subs = null;
+                }
               });
         },
         error => {
@@ -144,4 +147,12 @@ export class PasswordComponent {
   private reset() {
     this.password = '';
   }
+
+  // capture the enter button
+  @HostListener('window:keydown', ['$event'])
+    keyDownEvent(event: any) {
+      if (event.keyCode === 13) {
+        this.unlock();
+      }
+    }
 }
