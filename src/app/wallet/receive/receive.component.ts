@@ -311,7 +311,7 @@ export class ReceiveComponent implements OnInit {
     * TODO: Remove timeout if not currently on ngOnDestroy
     */
   checkIfUnusedAddress() {
-    if (this.addresses.public[0].address !== 'Empty address') {
+    if (this.addresses && this.addresses.public[0].address !== 'Empty address') {
       this.rpc.call('getreceivedbyaddress', [this.addresses.public[0].address, 0])
         .subscribe(
           response => this.rpc_callbackUnusedAddress_success(response),
