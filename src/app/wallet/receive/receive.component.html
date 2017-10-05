@@ -1,141 +1,143 @@
-<app-header *ngIf="initialized">
-  <div class="container-fluid header">
+<div *ngIf="addresses.private.length>0 || addresses.public.length>0">
+  <app-header>
+    <div class="container-fluid header">
 
-    <ul class="col-xs-9 header-nav">
-      <li [class.active]="getAddressType() === 'public'">
-        <a href="javascript:void(0)" (click)="setAddressType('public')">
-          Public
-        </a>
-      </li>
-      <li [class.active]="getAddressType() === 'private'">
-        <a href="javascript:void(0)" (click)="setAddressType('private')">
-          Private
-        </a>
-      </li>
-    </ul>
+      <ul class="col-xs-9 header-nav">
+        <li [class.active]="getAddressType() === 'public'">
+          <a href="javascript:void(0)" (click)="setAddressType('public')">
+            Public
+          </a>
+        </li>
+        <li [class.active]="getAddressType() === 'private'">
+          <a href="javascript:void(0)" (click)="setAddressType('private')">
+            Private
+          </a>
+        </li>
+      </ul>
 
-    <div class="col-xs-3 header-option row header-option-container"
-         (click)="selectInput()">
-      <span class="col-xs-10">
-        <input type="text" class="header-input" id="searchbar"
-               [(ngModel)]="query" placeholder="Search receive">
+      <div class="col-xs-3 header-option row header-option-container"
+           (click)="selectInput()">
+        <span class="col-xs-10">
+          <input type="text" class="header-input" id="searchbar"
+                 [(ngModel)]="query" placeholder="Search receive">
+        </span>
+        <span class="col-xs-2 icon fa fa-search header-option-icon"></span>
+      </div>
+
+    </div>
+  </app-header>
+
+  <div class="row receive">
+
+    <div class="col-xs-8">
+
+    <span *ngIf="inSearchMode() === false">
+      <div class="address-title">Unused address</div>
+      <div class="card row">
+        <div class="col-xs-1 address-id vertical-center">
+          /{{ getUnusedAddress().id }}
+        </div>
+        <div class="col-xs-3 address-label vertical-center">
+          {{ getUnusedAddress().label }}
+        </div>
+        <div class="col-xs-6">
+          <div class="address">
+            {{ getUnusedAddress().address }}
+          </div>
+          <div class="total">
+            <span>Total received: </span>
+            <span>+{{ getUnusedAddress().balance }}</span>
+          </div>
+        </div>
+        <div class="col-xs-2 row address-options vertical-center">
+          <div ngxClipboard [cbContent]="getUnusedAddress().address" class="col-xs-4 nc-icon nc-copy-2">
+          </div>
+          <div class="col-xs-4 nc-icon nc-a-check"></div>
+          <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(addresses[getAddressType()][0])"></div>
+        </div>
+      </div>
       </span>
-      <span class="col-xs-2 icon fa fa-search header-option-icon"></span>
+
+      <div class="address-title">Previous addresses</div>
+      <div class="card row"
+           *ngFor="let address of getSinglePage()">
+        <div class="col-xs-1 address-id vertical-center">
+          /{{ address.id }}
+        </div>
+        <div class="col-xs-3 address-label vertical-center">
+          {{ address.label }}
+        </div>
+        <div class="col-xs-6">
+          <div class="address">
+            {{ address.address }}
+          </div>
+          <div class="total">
+            <span>Total received: </span>
+            <span>+{{ address.balance }}</span>
+          </div>
+        </div>
+        <div class="col-xs-2 row address-options vertical-center">
+          <div ngxClipboard [cbContent]="address.address" class="col-xs-4 nc-icon nc-copy-2"></div>
+          <div class="col-xs-4 nc-icon nc-a-check"></div>
+          <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(address);"></div>
+        </div>
+      </div>
+
+      <pagination
+        [boundaryLinks]="true"
+        (pageChanged)="pageChanged($event)"
+        [totalItems]="getTotalCountForPagination()"
+        [maxSize]="5" [rotate]="false"
+        [(ngModel)]="page"
+        class="pagination-sm center"
+        previousText="&lsaquo;" nextText="&rsaquo;"
+        firstText="&laquo;" lastText="&raquo;"
+        [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
+      </pagination>
     </div>
 
-  </div>
-</app-header>
+    <div class="col-xs-3 pull-right receive-right">
 
-<div class="row receive" *ngIf="initialized">
+      <div #qrCode class="card qr">
+        <qr-code [size]="getQrSize()" [level]="'H'"
+                 [value]="selected.address">
+        </qr-code>
+      </div>
 
-  <div class="col-xs-8">
+      <div class="card address-details">
+        <div class="details-title">
+          {{ getAddressType() }} address
+        </div>
+        <div class="details-label">
+          {{ selected.label }}
+        </div>
+        <div class="details-address row">
+          <div *ngFor="let word of selected.readable" class="address-word col-xs-3">
+            {{ word }}
+          </div>
+        </div>
+        <button (click)="openNewAddress()">new {{ getAddressType() }} address</button>
+      </div>
 
-  <span *ngIf="inSearchMode() === false">
-    <div class="address-title">Unused address</div>
-    <div class="card row">
-      <div class="col-xs-1 address-id vertical-center">
-        /{{ getUnusedAddress().id }}
-      </div>
-      <div class="col-xs-3 address-label vertical-center">
-        {{ getUnusedAddress().label }}
-      </div>
-      <div class="col-xs-6">
-        <div class="address">
-          {{ getUnusedAddress().address }}
-        </div>
-        <div class="total">
-          <span>Total received: </span>
-          <span>+{{ getUnusedAddress().balance }}</span>
-        </div>
-      </div>
-      <div class="col-xs-2 row address-options vertical-center">
-        <div ngxClipboard [cbContent]="getUnusedAddress().address" class="col-xs-4 nc-icon nc-copy-2">
-        </div>
-        <div class="col-xs-4 nc-icon nc-a-check"></div>
-        <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(addresses[getAddressType()][0])"></div>
-      </div>
     </div>
-    </span>
-
-    <div class="address-title">Previous addresses</div>
-    <div class="card row"
-         *ngFor="let address of getSinglePage()">
-      <div class="col-xs-1 address-id vertical-center">
-        /{{ address.id }}
-      </div>
-      <div class="col-xs-3 address-label vertical-center">
-        {{ address.label }}
-      </div>
-      <div class="col-xs-6">
-        <div class="address">
-          {{ address.address }}
-        </div>
-        <div class="total">
-          <span>Total received: </span>
-          <span>+{{ address.balance }}</span>
-        </div>
-      </div>
-      <div class="col-xs-2 row address-options vertical-center">
-        <div ngxClipboard [cbContent]="address.address" class="col-xs-4 nc-icon nc-copy-2"></div>
-        <div class="col-xs-4 nc-icon nc-a-check"></div>
-        <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(address);"></div>
-      </div>
-    </div>
-
-    <pagination
-      [boundaryLinks]="true"
-      (pageChanged)="pageChanged($event)"
-      [totalItems]="getTotalCountForPagination()"
-      [maxSize]="5" [rotate]="false"
-      [(ngModel)]="page"
-      class="pagination-sm center"
-      previousText="&lsaquo;" nextText="&rsaquo;"
-      firstText="&laquo;" lastText="&raquo;"
-      [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
-    </pagination>
   </div>
 
-  <div class="col-xs-3 pull-right receive-right">
+  <div id="address-modal" [class.hide]="openNewAddressModal == false">
+    <div class="address-modal-container">
+      <span class="close" (click)="closeNewAddress()">&times;</span>
+      <form [formGroup]="addLableForm" (ngSubmit)="newAddress()" novalidate>
+        <div class="modal-content-header">Label for new {{ getAddressType() }} address</div>
+        <hr class="margin-top-5px">
 
-    <div #qrCode class="card qr">
-      <qr-code [size]="getQrSize()" [level]="'H'"
-               [value]="selected.address">
-      </qr-code>
-    </div>
-
-    <div class="card address-details">
-      <div class="details-title">
-        {{ getAddressType() }} address
-      </div>
-      <div class="details-label">
-        {{ selected.label }}
-      </div>
-      <div class="details-address row">
-        <div *ngFor="let word of selected.readable" class="address-word col-xs-3">
-          {{ word }}
+        <div class="row">
+          <div class="col-xs-10">
+            <input type="text" formControlName="label" class="form-control" [(ngModel)]="label"
+                   placeholder="Enter label..."
+                   [ngClass]="{'verify-sucess': addLableForm.valid, 'verify-error': !addLableForm.valid }">
+          </div>
         </div>
-      </div>
-      <button (click)="openNewAddress()">new {{ getAddressType() }} address</button>
+        <button class="control pull-right" [disabled]="!addLableForm.valid">Add Label</button>
+      </form>
     </div>
-
-  </div>
-</div>
-
-<div id="address-modal" [class.hide]="openNewAddressModal == false">
-  <div class="address-modal-container">
-    <span class="close" (click)="closeNewAddress()">&times;</span>
-    <form [formGroup]="addLableForm" (ngSubmit)="newAddress()" novalidate>
-      <div class="modal-content-header">Label for new {{ getAddressType() }} address</div>
-      <hr class="margin-top-5px">
-
-      <div class="row">
-        <div class="col-xs-10">
-          <input type="text" formControlName="label" class="form-control" [(ngModel)]="label"
-                 placeholder="Enter label..."
-                 [ngClass]="{'verify-sucess': addLableForm.valid, 'verify-error': !addLableForm.valid }">
-        </div>
-      </div>
-      <button class="control pull-right" [disabled]="!addLableForm.valid">Add Label</button>
-    </form>
   </div>
 </div>
