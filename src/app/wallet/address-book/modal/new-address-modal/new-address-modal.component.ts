@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
 import { RPCService } from '../../../../core/rpc/rpc.service';
-import { MdDialogRef } from '@angular/material';
+import {MdDialog, MdDialogRef} from '@angular/material';
 import { Log } from 'ng2-logger';
+import {ModalsService} from '../../../../modals/modals.service';
+import {ModalsComponent} from "../../../../modals/modals.component";
 
 @Component({
   selector: 'app-new-address-modal',
@@ -28,7 +30,9 @@ export class NewAddressModalComponent implements OnInit {
   constructor(public dialogRef: MdDialogRef<NewAddressModalComponent>,
               private formBuilder: FormBuilder,
               private _rpc: RPCService,
-              private flashNotificationService: FlashNotificationService) {
+              private flashNotificationService: FlashNotificationService,
+              private _modals: ModalsService,
+              private dialog: MdDialog) {
   }
 
   ngOnInit(): void {
@@ -87,16 +91,26 @@ export class NewAddressModalComponent implements OnInit {
       return;
     }
 
-    if (this.label !== undefined) {
-      this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
-        .subscribe(response => {
-            this.rpc_addAddressToBook_success(response)
-          },
-          error => {
-            console.log('error', error);
-            this.rpc_addAddressToBook_failed(error);
-          });
+    if (this.label !== undefined && this.label.trim() && !this.isMine) {
+      if (this._rpc.state.get('locked')) {
+        // unlock wallet and send transaction
+        this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
+        this._modals.open('unlock', {
+          forceOpen: true, timeout: 3, callback: this.addressCallBack.bind(this)
+        });
+      } else {
+        // wallet already unlocked
+        this.addressCallBack();
+      }
+      this.dialogRef.close();
     }
+  }
+
+  private addressCallBack() {
+    this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
+      .subscribe(
+        response => this.rpc_addAddressToBook_success(response),
+        error => this.rpc_addAddressToBook_failed(error));
   }
 
   /**
