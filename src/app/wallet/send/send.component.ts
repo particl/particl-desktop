@@ -76,8 +76,6 @@ export class SendComponent {
 
   /** Get current account balance (Public / Blind / Anon) */
   getBalance(account: string) {
-    console.log(account);
-    console.log(this._rpc.state.get(account));
     return this._rpc.state.get(account) ? this._rpc.state.get(account) : 0;
   }
 
