@@ -21,29 +21,15 @@ export class ReceiveComponent implements OnInit {
   public addLableForm: FormGroup;
   public label: string;
 
-  defaultAddress: Object = {
-    id: 0,
-    label: 'Empty label',
-    address: 'Empty address',
-    balance: 0,
-    readable: ['Empty']
-  };
-
-  selected: any = {
-    id: 0,
-    label: 'Empty label',
-    address: 'Empty address',
-    balance: 0,
-    readable: ['empty']
-  };
+  selected: any = {};
 
   qrSize: number = 380;
 
   /* UI Pagination */
   addresses: any = {
-    private: [this.defaultAddress],
-    public: [this.defaultAddress],
-    query: [this.defaultAddress]
+    private: [],
+    public: [],
+    query: []
 
   };
 
@@ -178,10 +164,11 @@ export class ReceiveComponent implements OnInit {
   /** Get the QR Code size */
   getQrSize() {
     // this is just a cheaty way of getting the tests to pass
-    if (this.initialized) {
+    if (this.qrElementView && this.initialized) {
       return this.qrElementView.nativeElement.offsetWidth - 40;
     } else {
-      return 380;
+      // return 380;
+      return 206;
     }
   }
 
