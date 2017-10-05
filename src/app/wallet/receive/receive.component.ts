@@ -151,7 +151,7 @@ export class ReceiveComponent implements OnInit {
     * @param type Address type to set
     */
   setAddressType(type: string) {
-    if(this.addresses[type].length == 0) {
+    if (this.addresses[type].length === 0) {
       this.openNewAddressModal = true;
       return;
     }
