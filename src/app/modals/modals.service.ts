@@ -20,6 +20,7 @@ export class ModalsService {
   private progress: Subject<Number> = new Subject<Number>();
 
   public enableClose: boolean = true;
+  public encryptCheck: boolean = false;
   private isOpen: boolean = false;
   private manuallyClosed: any[] = [];
 

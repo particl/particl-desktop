@@ -157,6 +157,7 @@ export class CreateWalletComponent {
           this.animationState = 'next';
           this.step = 5;
           this.log.i('Mnemonic imported successfully');
+          this._modalsService.encryptCheck = true;
         },
         error => {
           this.log.er(error);

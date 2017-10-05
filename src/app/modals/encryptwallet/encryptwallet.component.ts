@@ -47,8 +47,13 @@ export class EncryptwalletComponent {
               setTimeout(() => {
                 this._rpc.call('restart-daemon')
                   .subscribe(() => {
-                    this._modalsService.open('createWallet', {forceOpen: true});
-                    this._rpc.toggleState(true);
+                    if (!this._modalsService.encryptCheck) {
+                      this._modalsService.open('createWallet', {forceOpen: true});
+                      this._rpc.toggleState(true);
+                    } else {
+                      const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+                      document.body.dispatchEvent(escape)
+                    }
                   });
               }, 5000);
             },
