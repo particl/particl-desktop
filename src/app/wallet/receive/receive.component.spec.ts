@@ -7,7 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { ReceiveComponent } from './receive.component';
-
+import { ModalsService } from '../../modals/modals.service';
 
 describe('ReceiveComponent', () => {
   let component: ReceiveComponent;
@@ -22,6 +22,9 @@ describe('ReceiveComponent', () => {
         SharedModule,
         QRCodeModule,
         RpcModule.forRoot()
+      ],
+      providers: [
+        ModalsService
       ]
     })
     .compileComponents();

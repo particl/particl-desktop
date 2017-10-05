@@ -1,4 +1,4 @@
-<app-header>
+<app-header *ngIf="initialized">
   <div class="container-fluid header">
 
     <ul class="col-xs-9 header-nav">
@@ -26,7 +26,7 @@
   </div>
 </app-header>
 
-<div class="row receive">
+<div class="row receive" *ngIf="initialized">
 
   <div class="col-xs-8">
 

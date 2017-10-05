@@ -3,6 +3,7 @@ import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ModalsService } from '../../modals/modals.service';
 
 @Component({
   selector: 'app-receive',
@@ -56,7 +57,8 @@ export class ReceiveComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private _modalService: ModalsService) {
   }
 
   ngOnInit() {
@@ -200,6 +202,7 @@ export class ReceiveComponent implements OnInit {
     const count = response.num_receive;
 
     if (count === 0) {
+      this._modalService.open('createWallet', {forceOpen: true});
       return;
     }
     // this.rpc.oldCall(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
