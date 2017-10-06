@@ -1,10 +1,8 @@
-import { Component, Injectable, EventEmitter, Input, Output } from '@angular/core';
-import { ModalsModule } from '../modals.module';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.service';
 import { MdDialogRef } from '@angular/material';
-import { ModalsService } from '../modals.service';
 
 
 @Component({
