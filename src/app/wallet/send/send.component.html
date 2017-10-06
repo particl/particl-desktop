@@ -129,7 +129,7 @@
       <div class="input-label col-xs-3">To account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="to" id="toPublic"
-          [(ngModel)]="send.output" checked="checked" disabled="{{ send.input === 'balance' }}" value="balance">
+          [(ngModel)]="send.output" disabled="{{ send.input === 'balance' }}" value="balance">
         <label for="toPublic" class="input-info-label">Public</label>
         <input type="radio" name="to" id="toBlind"
           [(ngModel)]="send.output" disabled="{{ send.input === 'blind_balance' }}" value="blind_balance">
