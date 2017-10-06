@@ -34,7 +34,7 @@ export class SendComponent {
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
-    output: 'balance',
+    output: 'blind_balance',
     toAddress: '',
     toLabel: '',
     validAddress: undefined,
