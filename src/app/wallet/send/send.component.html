@@ -77,7 +77,7 @@
       <input class="col-xs-4" type="number"
         placeholder="0.00000000"
         [(ngModel)]="send.amount" (input)="verifyAmount()"
-        [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }">
+        [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }" oninput="validity.valid||(value='');" step="any">
       <div class="col-xs-2 no-padding-left">
         <select [(ngModel)]="send.currency" class="form-control no-margin-left">
           <option value="part">PART</option>
@@ -161,7 +161,8 @@
       <div class="input-label col-xs-3">Amount</div>
       <input class="col-xs-4" type="number"
         placeholder="0.00000000"
-        [(ngModel)]="send.amount">
+        [(ngModel)]="send.amount" (input)="verifyAmount()"
+        [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }" oninput="validity.valid||(value='');" step="any">
       <div class="col-xs-2 no-padding-left">
         <select [(ngModel)]="send.currency" class="form-control no-margin-left">
           <option value="part">PART</option>
