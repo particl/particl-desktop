@@ -190,12 +190,17 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
-    if (count === 0) {
-      if (this._modalService.initializedWallet) {
-        this.openNewAddress();
-      } else {
+    if ([0, 1].includes(count)) {
+      if (!this._modalService.initializedWallet) {
         this._modalService.openInitialCreateWallet();
       }
+
+      setTimeout(() => {
+        if (this._modalService.initializedWallet) {
+          this.openNewAddress();
+        }
+      }, 200);
+
       return;
     }
     this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
@@ -282,7 +287,7 @@ export class ReceiveComponent implements OnInit {
         tempAddress.id = +(response.path.replace('m/0\'/', '').replace('\'', '')) / 2;
 
         // filter out accounts m/1 m/2 etc. stealth addresses are always m/0'/0'
-        if (!/m\/[0-9]+/g.test(response.path) && /m\/[0-9]+'\/[0-9]+/g.test(response.path)) {
+        if (/m\/[0-9]+/g.test(response.path) && !/m\/[0-9]+'\/[0-9]+/g.test(response.path)) {
           return;
         }
       }
