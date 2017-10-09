@@ -2,19 +2,30 @@
   <ng-template [ngIf]="step === 0">
     <div class="col-xs-12 text-center">
       <b>Welcome</b>, please select one of the options below.
+
+      <div *ngIf="!isCrypted" class="warning-text margin-top-30px">
+        It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
+      </div>
     </div>
 
     <hr class="margin-top-100px">
 
     <div class="container">
       <div class="row wallet-buttons-container">
-        <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control" (click)="nextStep();create();">
+        <div *ngIf="!isCrypted" class="col-sm-4 col-xs-12 text-right">
+          <button class="control" (click)="initialize(0);">
+            Encrypt Wallet
+          </button>
+        </div>
+        <div class="col-sm-6 col-xs-12 text-right"
+          [ngClass]="{'col-sm-4': !isCrypted, 'text-center': !isCrypted}">
+          <button class="control" (click)="initialize(1);">
             Create new wallet
           </button>
         </div>
-        <div class="col-sm-6 col-xs-12 text-left">
-          <button class="control" (click)="nextStep();restore();">
+        <div class="col-sm-6 col-xs-12 text-left"
+          [class.col-sm-4]="!isCrypted">
+          <button class="control" (click)="initialize(2);">
             Restore wallet
           </button>
         </div>
@@ -189,7 +200,7 @@
     <div class="buttons margin-top-30px">
       <div class="row wallet-buttons-container">
         <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control" (click)="prevStep();restore()">
+          <button class="control" (click)="prevStep();initialize(2)">
             back
           </button>
         </div>

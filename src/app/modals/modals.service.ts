@@ -24,7 +24,7 @@ export class ModalsService {
   private manuallyClosed: any[] = [];
 
   // Is true if user already has a wallet (imported seed or created wallet)
-  private initializedWallet: boolean = false;
+  public initializedWallet: boolean = false;
 
   private data: string;
 
@@ -79,6 +79,7 @@ export class ModalsService {
           this.modal = this.messages[modal];
           this.message.next({modal: this.modal, data: data});
           this.isOpen = true;
+          this.enableClose = true;
         }
       }
     } else {
@@ -88,11 +89,17 @@ export class ModalsService {
 
   /** Close the modal */
   close() {
+    const isOpen = this.isOpen;
+
     if (!!this.modal && !this.wasManuallyClosed(this.modal.name)) {
       this.manuallyClosed.push(this.modal.name);
     }
     this.isOpen = false;
     this.modal = undefined;
+
+    if (isOpen) {
+      this.message.next({close: true});
+    }
   }
 
   /**
@@ -141,10 +148,16 @@ export class ModalsService {
   }
 
   /** Initial wallet creation */
-  private openInitialCreateWallet() {
-    this._rpcService.state.observe('locked').take(1)
+  openInitialCreateWallet() {
+    if (this.initializedWallet) {
+      return;
+    }
+
+    // Use 'encryptionstatus' as 'locked' isn't replaying due to no connections...
+    this._rpcService.state.observe('encryptionstatus').take(1)
       .subscribe(
-        locked => {
+        status => {
+          const locked = this._rpcService.state.get('locked');
           if (locked) {
             this.initializedWallet = true;
             this.log.d('Wallet already initialized.');

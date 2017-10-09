@@ -29,6 +29,7 @@ export class CreateWalletComponent {
   step: number = 0;
   isRestore: boolean = false;
   name: string;
+  isCrypted: boolean = false;
 
   @ViewChild('nameField') nameField: ElementRef;
 
@@ -49,7 +50,7 @@ export class CreateWalletComponent {
     private _passphraseService: PassphraseService,
     private state: StateService
   ) {
-      this.reset();
+    this.reset();
   }
 
   reset() {
@@ -61,17 +62,24 @@ export class CreateWalletComponent {
     this.errorString = '';
     this.step = 0;
     this.animationState = '';
+    this.state.observe('encryptionstatus').take(2)
+      .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 
-  create () {
+  initialize(type: number) {
     this.reset();
-    this.step = 1;
-  }
 
-  restore() {
-    this.reset();
-    this.isRestore = true;
-    this.step = 1;
+    switch (type) {
+      case 0:
+        this._modalsService.open('encrypt', {forceOpen: true});
+        return;
+      case 1: // Create
+        break;
+      case 2: // Restore
+          this.isRestore = true;
+        break;
+    }
+    this.nextStep();
   }
 
   nextStep() {
@@ -178,15 +186,15 @@ export class CreateWalletComponent {
 
   close() {
     this.reset();
-    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
-    document.body.dispatchEvent(escape);
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   }
 
   // capture the enter button
   @HostListener('window:keydown', ['$event'])
-    keyDownEvent(event: any) {
-      if (event.keyCode === 13) {
-        this.nextStep();
-      }
+  keyDownEvent(event: any) {
+    if (event.keyCode === 13) {
+      this.nextStep();
     }
+  }
 }

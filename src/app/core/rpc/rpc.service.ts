@@ -44,14 +44,11 @@ export class RPCService {
   private username: string = 'test';
   private password: string = 'test';
 
-  private _callOnBlock: Array<any> = [];
-  private _callOnTransaction: Array<any> = [];
-  private _callOnTime: Array<any> = [];
   private _callOnAddress: Array<any> = [];
   private _callOnPoll: Array<any> = [];
   private _callOnNextPoll: Array<any> = [];
 
-  private _pollTimout: number;
+  private _enableState: boolean = true;
 
   public isElectron: boolean = false;
 
@@ -67,10 +64,8 @@ export class RPCService {
   ) {
     this.isElectron = window.electron;
 
-    // We just execute it.. Might convert it to a service later on
-    this._rpcState = new RPCStateClass(this);
+    this.toggleState(true);
   }
-
 
   /**
     * The call function will perform a single call to the particld daemon and perform a callback to
@@ -113,6 +108,9 @@ export class RPCService {
   }
 
   stateCall(method: string, withMethod?: boolean): void {
+    if (!this._enableState) {
+      return;
+    }
     this.call(method)
       .subscribe(
         this.stateCallSuccess.bind(this, withMethod ? method : false),
@@ -123,6 +121,9 @@ export class RPCService {
     if (timeout) {
       let first = true;
       const _call = () => {
+        if (!this._enableState) {
+          return;
+        }
         this.call(method, params)
           .subscribe(
             success => {
@@ -298,6 +299,14 @@ export class RPCService {
     // A poll only for address changes, triggered from the GUI!
 
     this._callOnAddress.forEach(this._pollCall.bind(this));
+  }
+
+  toggleState(enable?: boolean): void {
+    this._enableState = enable ? enable : !this._enableState;
+    if (this._enableState) {
+      // We just execute it.. Might convert it to a service later on
+      this._rpcState = new RPCStateClass(this);
+    }
   }
 }
 

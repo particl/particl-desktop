@@ -1,6 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, ComponentRef } from '@angular/core';
+import {
+  Component, ComponentRef, Inject,
+  forwardRef, ElementRef, ViewChild
+} from '@angular/core';
 import { Log } from 'ng2-logger';
 
+import { ModalsService } from 'app/modals/modals.service';
 import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
 import { AlertComponent } from '../shared/alert/alert.component';
@@ -11,9 +15,9 @@ import { IPassword } from '../shared/password/password.interface';
   templateUrl: './encryptwallet.component.html',
   styleUrls: ['./encryptwallet.component.scss']
 })
-export class EncryptwalletComponent implements OnInit {
+export class EncryptwalletComponent {
 
-  log: any = Log.create('unlockwallet.component');
+  log: any = Log.create('encryptwallet.component');
   public password: string;
 
   @ViewChild('passwordElement')
@@ -22,10 +26,10 @@ export class EncryptwalletComponent implements OnInit {
   @ViewChild('alertBox')
   alertBox: AlertComponent;
 
-  constructor(private _rpc: RPCService) { }
-
-  ngOnInit() {
-  }
+  constructor(
+    private _rpc: RPCService,
+    @Inject(forwardRef(() => ModalsService))
+    private _modalsService: ModalsService) { }
 
   encryptwallet(password: IPassword) {
     if (this.password) {
@@ -36,17 +40,30 @@ export class EncryptwalletComponent implements OnInit {
 
         this.log.d(`Encrypting wallet! password: ${this.password}`);
         this._rpc.call('encryptwallet', [password.password])
-            .subscribe(
-            (response: any) => {
+          .subscribe(
+            response => {
+              this._rpc.toggleState(false);
               this.alertBox.open(response, 'Wallet');
-            } ,
+
+              if (this._rpc.isElectron) {
+                this._rpc.call('restart-daemon')
+                  .subscribe(() => {
+                    if (!this._modalsService.initializedWallet) {
+                      this._modalsService.open('createWallet', {forceOpen: true});
+                      this._rpc.toggleState(true);
+                    } else {
+                      this._modalsService.close();
+                    }
+                  });
+              }
+            },
             // Handle error appropriately
             error => {
               this.alertBox.open('Wallet failed to encrypt properly!', 'Wallet');
               this.log.er('error encrypting wallet', error)
             });
       } else {
-        this.alertBox.open(`The passwords do not match!`, 'Wallet');
+        this.alertBox.open('The passwords do not match!', 'Wallet');
       }
 
     } else {
@@ -54,11 +71,9 @@ export class EncryptwalletComponent implements OnInit {
       this.password = password.password;
       this.passwordElement.clear();
     }
-
   }
 
   clearPassword() {
     this.password = undefined;
   }
-
 }

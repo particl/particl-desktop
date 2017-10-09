@@ -15,55 +15,25 @@ log.transports.file.file = log.transports.file
   .findLogPath(log.transports.file.appName)
   .replace('log.log', 'partgui.log');
 
-const daemonManager = require('./modules/clientBinaries/clientBinaries');
-const rpc = require('./modules/rpc/rpc');
+const daemon = require('./modules/rpc/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-let daemon;
-
-let openDevTools = false;
 let options;
 
+let openDevTools = false;
+
 function createWindow () {
-
-  options = parseArguments();
-  options.port = options.rpcport
-    ? options.rpcport // custom rpc port
-    : options.testnet
-      ? 51935  // default testnet port
-      : 51735; // default mainnet port
-
-  rpc.init(options);
-
-  // Daemon already running... Start window
-  rpc.checkDaemon(options).then(() =>initMainWindow(makeTray()))
-    .catch(_ => log.debug('Daemon not running. It will be started bt the daemon manager'));
-
-  // check for daemon version, maybe update, and keep the daemon's process for exit
-  daemonManager.init(false, options).then(child => {
-    if (child) {
-      daemon = child;
-    }
+  const _initWindow = () => {
     if (!mainWindow) {
-      const maxRetries = 10; // Some slow computers...
-      let retries = 0;
-      const daemonStartup = () => {
-        rpc.checkDaemon(options)
-          .then(() => initMainWindow(makeTray()))
-          .catch(() =>  retries < maxRetries && setTimeout(daemonStartup, 1000));
-        retries++;
-        if (daemon.exitCode || retries >= maxRetries) {
-          app.exit(991);
-        }
-      }
-      if (daemon && !daemon.exitCode) {
-        setTimeout(daemonStartup, 1000);
-      }
+      initMainWindow(makeTray());
     }
-  }).catch(error => log.error(error));
+  };
+
+  daemon.init(_initWindow);
+  options = daemon.getOptions();
 }
 
 /*
@@ -202,55 +172,18 @@ function makeTray() {
   // Set the tray icon
   tray.setToolTip('Particl ' + app.getVersion());
   tray.setContextMenu(contextMenu)
-
-  return trayImage;
-}
-
-/*
-** compose options from arguments
-**
-** exemple:
-** --dev -testnet -reindex -rpcuser=user -rpcpassword=pass
-** strips --dev out of argv (double dash is not a particld argument) and returns
-** {
-**   dev: true,
-**   testnet: true,
-**   reindex: true,
-**   rpcuser: user,
-**   rpcpassword: pass
-** }
-*/
-function parseArguments() {
-
-  let options = {};
-  if (path.basename(process.argv[0]).includes('electron')) {
-
-    // striping 'electron .' from argv
-    process.argv = process.argv.splice(2);
-  } else {
-    // striping /path/to/particl from argv
-    process.argv = process.argv.splice(1);
-  }
-
-  process.argv.forEach((arg, index) => {
-    if (arg.includes('=')) {
-      arg = arg.split('=');
-      options[arg[0].substr(1)] = arg[1];
-    } else if (arg[1] === '-'){
-      // double dash command
-      options[arg.substr(2)] = true;
-    } else if (arg[0] === '-') {
-      // simple dash command
-      options[arg.substr(1)] = true;
-    }
+  
+  // Always show window when tray icon clicked
+  tray.on('click',function() {
+    mainWindow.show()
   });
-  return options;
+  return trayImage;
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -259,19 +192,7 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
-
-app.on('quit', function (event, exitCode) {
-  electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
-  // kill the particl daemon if initiated on launch
-  if (daemon && !daemon.exitCode) {
-    rpc.stopDaemon()
-      .catch(() => daemon.kill('SIGINT'));
-  }
-  if (exitCode === 991) {
-    throw Error('Could not connect to daemon.');
-  }
-})
+});
 
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
@@ -279,7 +200,7 @@ app.on('activate', function () {
   if (mainWindow === null) {
     createWindow()
   }
-})
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
