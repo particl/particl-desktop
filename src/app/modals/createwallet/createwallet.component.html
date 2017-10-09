@@ -137,6 +137,11 @@
         </app-passphrase>
     </ng-template>
 
+    <div *ngIf="!!errorString"
+      [@slideDown] class="container alert alert-danger margin-top-5px">
+      {{ errorString }}
+    </div>
+
     <div class="buttons margin-top-30px">
       <div class="row wallet-buttons-container">
         <div class="col-sm-6 col-xs-12 text-right">
@@ -185,7 +190,7 @@
       </app-passphrase>
 
     <div *ngIf="!!errorString"
-        [@slideDown] class="container alert alert-danger margin-top-5px">
+      [@slideDown] class="container alert alert-danger margin-top-5px">
       {{ errorString }}
     </div>
 
