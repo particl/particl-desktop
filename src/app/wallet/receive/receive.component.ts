@@ -3,6 +3,7 @@ import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ModalsService } from '../../modals/modals.service';
 
 @Component({
   selector: 'app-receive',
@@ -20,29 +21,15 @@ export class ReceiveComponent implements OnInit {
   public addLableForm: FormGroup;
   public label: string;
 
-  defaultAddress: Object = {
-    id: 0,
-    label: 'Empty label',
-    address: 'Empty address',
-    balance: 0,
-    readable: ['Empty']
-  };
-
-  selected: any = {
-    id: 0,
-    label: 'Empty label',
-    address: 'Empty address',
-    balance: 0,
-    readable: ['empty']
-  };
+  selected: any = {};
 
   qrSize: number = 380;
 
   /* UI Pagination */
   addresses: any = {
-    private: [this.defaultAddress],
-    public: [this.defaultAddress],
-    query: [this.defaultAddress]
+    private: [],
+    public: [],
+    query: []
 
   };
 
@@ -56,7 +43,8 @@ export class ReceiveComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private _modalService: ModalsService) {
   }
 
   ngOnInit() {
@@ -84,10 +72,14 @@ export class ReceiveComponent implements OnInit {
 
       this.addresses.query = this.addresses[this.type].filter(el => {
         this.log.d(`pageChanged, changing receive page to: ${JSON.stringify(el)}`);
-        return (
-          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
-          el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-        );
+        if (el) {
+          return (
+            el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
+            el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+          );
+        } else {
+          return;
+        }
       });
     }
 
@@ -149,11 +141,14 @@ export class ReceiveComponent implements OnInit {
     * @param type Address type to set
     */
   setAddressType(type: string) {
-    if (['public', 'private'].indexOf(type) !== -1) {
+    if (['public', 'private'].includes(type)) {
       this.type = type;
     }
-
-    this.selectAddress(this.addresses[type][0]);
+    if (this.addresses[type].length === 0) {
+      this.openNewAddressModal = true;
+    } else {
+      this.selectAddress(this.addresses[type][0]);
+    }
   }
 
   getAddressType() {
@@ -171,10 +166,11 @@ export class ReceiveComponent implements OnInit {
   /** Get the QR Code size */
   getQrSize() {
     // this is just a cheaty way of getting the tests to pass
-    if (this.initialized) {
+    if (this.qrElementView && this.initialized) {
       return this.qrElementView.nativeElement.offsetWidth - 40;
     } else {
-      return 380;
+      // return 380;
+      return 206;
     }
   }
 
@@ -182,14 +178,10 @@ export class ReceiveComponent implements OnInit {
 
   /** Used to get the addresses. */
   rpc_update() {
-    // this.rpc.oldCall(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success);
     this.rpc.call('filteraddresses', [-1])
-      .subscribe(response => {
-        this.rpc_loadAddressCount_success(response)
-      },
-      error => {
-        this.log.er('error', error);
-      });
+      .subscribe(
+        response => this.rpc_loadAddressCount_success(response),
+        error => this.log.er('error', error));
   }
 
   /**
@@ -198,19 +190,18 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
-
     if (count === 0) {
+      if (this._modalService.initializedWallet) {
+        this.openNewAddress();
+      } else {
+        this._modalService.openInitialCreateWallet();
+      }
       return;
     }
-    // this.rpc.oldCall(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
     this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
       .subscribe(
-        (resp: Array<any>) => {
-        this.rpc_loadAddresses_success(resp)
-      },
-      error => {
-        this.log.er('error', error);
-      });
+        (resp: Array<any>) => this.rpc_loadAddresses_success(resp),
+        error => this.log.er('error', error));
   }
 
   /**
@@ -291,7 +282,7 @@ export class ReceiveComponent implements OnInit {
         tempAddress.id = +(response.path.replace('m/0\'/', '').replace('\'', '')) / 2;
 
         // filter out accounts m/1 m/2 etc. stealth addresses are always m/0'/0'
-        if (/m\/[0-9]+/g.test(response.path) && /m\/[0-9]+'\/[0-9]+/g.test(response.path)) {
+        if (!/m\/[0-9]+/g.test(response.path) && /m\/[0-9]+'\/[0-9]+/g.test(response.path)) {
           return;
         }
       }
@@ -313,7 +304,7 @@ export class ReceiveComponent implements OnInit {
     * TODO: Remove timeout if not currently on ngOnDestroy
     */
   checkIfUnusedAddress() {
-    if (this.addresses.public[0].address !== 'Empty address') {
+    if (this.addresses && this.addresses.public[0] && this.addresses.public[0].address) {
       this.rpc.call('getreceivedbyaddress', [this.addresses.public[0].address, 0])
         .subscribe(
           response => this.rpc_callbackUnusedAddress_success(response),
@@ -340,9 +331,7 @@ export class ReceiveComponent implements OnInit {
         // just call for a complete update, just adding the address isn't possible because
         this.rpc_update();
       },
-      error => {
-        this.log.er('error');
-      });
+      error => this.log.er('error'));
     }
   }
 
@@ -358,15 +347,13 @@ export class ReceiveComponent implements OnInit {
     if (!!call) {
       this.rpc.call(call, [this.label])
         .subscribe(response => {
-          this.log.er('newAddress: successfully retrieved new address');
+          this.log.d(call, 'newAddress: successfully retrieved new address');
           // just call for a complete update, just adding the address isn't possible because
           this.rpc_update();
           this.closeNewAddress();
           this.addLableForm.reset();
         },
-        error => {
-          this.log.er('error');
-        });
+        error => this.log.er('error'));
     }
   }
 
@@ -384,10 +371,9 @@ export class ReceiveComponent implements OnInit {
 
     // capture the enter button
   @HostListener('window:keydown', ['$event'])
-    keyDownEvent(event: any) {
-      if (event.key.toLowerCase() === 'escape') {
-        this.openNewAddressModal = false;
-      }
+  keyDownEvent(event: any) {
+    if (event.key.toLowerCase() === 'escape') {
+      this.openNewAddressModal = false;
     }
-
+  }
 }

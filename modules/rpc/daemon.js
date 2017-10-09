@@ -9,12 +9,9 @@ let options;
 let initialized;
 
 function init(callback) {
-  options = parseArguments();
-
-  if (initialized) {
-    return;
+  if (!initialized) {
+    options = parseArguments();
   }
-
   rpc.init(options);
 
   // Daemon already running... Start window
@@ -29,6 +26,13 @@ function init(callback) {
 }
 
 function startDaemon(restart, callback) {
+  if (restart && daemon) {
+    if (daemon.exitCode !== 0) {
+      setTimeout(() => startDaemon(restart, callback), 100);
+      return;
+    }
+  }
+
   // check for daemon version, maybe update, and keep the daemon's process for exit
   daemonManager.init(!!restart, options).then(child => {
     if (child) {
@@ -80,6 +84,10 @@ function parseArguments() {
   } else {
     // striping /path/to/particl from argv
     process.argv = process.argv.splice(1);
+    // fixed for development mode only
+    if (process.platform === 'darwin') {
+      process.argv = process.argv.splice(1);
+    }
   }
 
   process.argv.forEach((arg, index) => {
