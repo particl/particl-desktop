@@ -30,7 +30,7 @@ export class SendComponent {
 
   type: string = 'sendPayment';
   advanced: boolean = false;
-
+  advancedText: string = 'Show Recipient Address'
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
@@ -71,6 +71,11 @@ export class SendComponent {
 
   /** Toggle advanced controls and settings */
   toggleAdvanced() {
+    if (this.advanced) {
+      this.advancedText = 'Show Recipient Address';
+    } else {
+      this.advancedText = 'Hide Recipient Address';
+    }
     this.advanced = !this.advanced;
   }
 
