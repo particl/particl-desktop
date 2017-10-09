@@ -34,7 +34,7 @@ export class SendComponent {
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
-    output: 'balance',
+    output: 'blind_balance',
     toAddress: '',
     toLabel: '',
     validAddress: undefined,
@@ -62,7 +62,7 @@ export class SendComponent {
   /** Select tab */
   selectTab(type: string) {
     this.type = type;
-
+    this.send.input = 'balance';
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
       this.verifyAddress();
@@ -76,7 +76,7 @@ export class SendComponent {
 
   /** Get current account balance (Public / Blind / Anon) */
   getBalance(account: string) {
-    return this._rpc.state.get(account);
+    return this._rpc.state.get(account) || 0;
   }
 
   /** Get the send address */
@@ -98,7 +98,7 @@ export class SendComponent {
 
   verifyAmount() {
 
-    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '') {
+    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '' || this.send.amount === null) {
 
       this.send.validAmount = undefined;
       return;

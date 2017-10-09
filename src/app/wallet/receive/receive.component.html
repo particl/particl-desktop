@@ -15,10 +15,10 @@
     </ul>
 
     <div class="col-xs-3 header-option row header-option-container"
-         (click)="selectInput()">
+          (click)="selectInput()">
       <span class="col-xs-10">
         <input type="text" class="header-input" id="searchbar"
-               [(ngModel)]="query" placeholder="Search receive">
+                [(ngModel)]="query" placeholder="Search receive">
       </span>
       <span class="col-xs-2 icon fa fa-search header-option-icon"></span>
     </div>
@@ -28,78 +28,79 @@
 
 <div class="row receive">
 
-  <div class="col-xs-8">
+  <div *ngIf="getUnusedAddress()" class="col-xs-8">
 
-  <span *ngIf="inSearchMode() === false">
-    <div class="address-title">Unused address</div>
-    <div class="card row">
-      <div class="col-xs-1 address-id vertical-center">
-        /{{ getUnusedAddress().id }}
-      </div>
-      <div class="col-xs-3 address-label vertical-center">
-        {{ getUnusedAddress().label }}
-      </div>
-      <div class="col-xs-6">
-        <div class="address">
-          {{ getUnusedAddress().address }}
+    <span *ngIf="inSearchMode() === false">
+      <div class="address-title">Unused address</div>
+      <div class="card row">
+        <div class="col-xs-1 address-id vertical-center">
+          /{{ getUnusedAddress().id }}
         </div>
-        <div class="total">
-          <span>Total received: </span>
-          <span>+{{ getUnusedAddress().balance }}</span>
+        <div class="col-xs-3 address-label vertical-center">
+          {{ getUnusedAddress().label }}
+        </div>
+        <div class="col-xs-6">
+          <div class="address">
+            {{ getUnusedAddress().address }}
+          </div>
+          <div class="total">
+            <span>Total received: </span>
+            <span>+{{ getUnusedAddress().balance }}</span>
+          </div>
+        </div>
+        <div class="col-xs-2 row address-options vertical-center">
+          <div ngxClipboard [cbContent]="getUnusedAddress().address" class="col-xs-4 nc-icon nc-copy-2">
+          </div>
+          <div class="col-xs-4 nc-icon nc-a-check"></div>
+          <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(addresses[getAddressType()][0])"></div>
         </div>
       </div>
-      <div class="col-xs-2 row address-options vertical-center">
-        <div ngxClipboard [cbContent]="getUnusedAddress().address" class="col-xs-4 nc-icon nc-copy-2">
-        </div>
-        <div class="col-xs-4 nc-icon nc-a-check"></div>
-        <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(addresses[getAddressType()][0])"></div>
-      </div>
-    </div>
     </span>
 
-    <div class="address-title">Previous addresses</div>
-    <div class="card row"
-         *ngFor="let address of getSinglePage()">
-      <div class="col-xs-1 address-id vertical-center">
-        /{{ address.id }}
-      </div>
-      <div class="col-xs-3 address-label vertical-center">
-        {{ address.label }}
-      </div>
-      <div class="col-xs-6">
-        <div class="address">
-          {{ address.address }}
-        </div>
-        <div class="total">
-          <span>Total received: </span>
-          <span>+{{ address.balance }}</span>
-        </div>
-      </div>
-      <div class="col-xs-2 row address-options vertical-center">
-        <div ngxClipboard [cbContent]="address.address" class="col-xs-4 nc-icon nc-copy-2"></div>
-        <div class="col-xs-4 nc-icon nc-a-check"></div>
-        <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(address);"></div>
-      </div>
-    </div>
+    <div *ngIf="getSinglePage().length" class="address-title">Previous addresses</div>
 
-    <pagination
-      [boundaryLinks]="true"
-      (pageChanged)="pageChanged($event)"
-      [totalItems]="getTotalCountForPagination()"
-      [maxSize]="5" [rotate]="false"
-      [(ngModel)]="page"
-      class="pagination-sm center"
-      previousText="&lsaquo;" nextText="&rsaquo;"
-      firstText="&laquo;" lastText="&raquo;"
-      [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
-    </pagination>
+      <div class="card row"
+          *ngFor="let address of getSinglePage()">
+        <div class="col-xs-1 address-id vertical-center">
+          /{{ address.id }}
+        </div>
+        <div class="col-xs-3 address-label vertical-center">
+          {{ address.label }}
+        </div>
+        <div class="col-xs-6">
+          <div class="address">
+            {{ address.address }}
+          </div>
+          <div class="total">
+            <span>Total received: </span>
+            <span>+{{ address.balance }}</span>
+          </div>
+        </div>
+        <div class="col-xs-2 row address-options vertical-center">
+          <div ngxClipboard [cbContent]="address.address" class="col-xs-4 nc-icon nc-copy-2"></div>
+          <div class="col-xs-4 nc-icon nc-a-check"></div>
+          <div class="col-xs-4 nc-icon nc-barcode-qr" (click)="selectAddress(address);"></div>
+        </div>
+      </div>
+
+      <pagination
+        [boundaryLinks]="true"
+        (pageChanged)="pageChanged($event)"
+        [totalItems]="getTotalCountForPagination()"
+        [maxSize]="5" [rotate]="false"
+        [(ngModel)]="page"
+        class="pagination-sm center"
+        previousText="&lsaquo;" nextText="&rsaquo;"
+        firstText="&laquo;" lastText="&raquo;"
+        [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
+      </pagination>
   </div>
 
-  <div class="col-xs-3 pull-right receive-right">
+  <div *ngIf="selected" class="col-xs-3 pull-right receive-right">
 
     <div #qrCode class="card qr">
       <qr-code [size]="getQrSize()" [level]="'H'"
-               [value]="selected.address">
+        [value]="selected && selected.address">
       </qr-code>
     </div>
 
@@ -131,8 +132,8 @@
       <div class="row">
         <div class="col-xs-10">
           <input type="text" formControlName="label" class="form-control" [(ngModel)]="label"
-                 placeholder="Enter label..."
-                 [ngClass]="{'verify-sucess': addLableForm.valid, 'verify-error': !addLableForm.valid }">
+                  placeholder="Enter label..."
+                  [ngClass]="{'verify-sucess': addLableForm.valid, 'verify-error': !addLableForm.valid }">
         </div>
       </div>
       <button class="control pull-right" [disabled]="!addLableForm.valid">Add Label</button>

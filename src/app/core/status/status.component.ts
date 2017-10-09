@@ -82,6 +82,6 @@ export class StatusComponent implements OnInit {
   }
 
   openColdStakeModal() {
-    this._modalsService.open('coldStake', {'forceOpen': true});
+    this._modalsService.open('coldStake', {forceOpen: true});
   }
 }

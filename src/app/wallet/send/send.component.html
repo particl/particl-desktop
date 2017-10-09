@@ -77,7 +77,7 @@
       <input class="col-xs-4" type="number"
         placeholder="0.00000000"
         [(ngModel)]="send.amount" (input)="verifyAmount()"
-        [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }">
+        [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }" oninput="validity.valid||(value='');" step="any">
       <div class="col-xs-2 no-padding-left">
         <select [(ngModel)]="send.currency" class="form-control no-margin-left">
           <option value="part">PART</option>
@@ -109,13 +109,13 @@
       <div class="input-label col-xs-3">From account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="from" id="fromPublic"
-          [(ngModel)]="send.input" checked="checked" value="balance">
+          [(ngModel)]="send.input" checked="checked" disabled="{{ send.output === 'balance' }}"  value="balance">
         <label for="fromPublic" class="input-info-label">Public</label>
         <input type="radio" name="from" id="fromBlind"
-          [(ngModel)]="send.input" value="blind_balance">
+          [(ngModel)]="send.input" value="blind_balance" disabled="{{ send.output === 'blind_balance' }}">
         <label for="fromBlind" class="input-info-label">Blind</label>
         <input type="radio" name="from" id="anon_balance"
-          [(ngModel)]="send.input"  value="private">
+          [(ngModel)]="send.input"  value="anon_balance" disabled="{{ send.output === 'anon_balance' }}">
         <label for="fromPrivate" class="input-info-label">Private</label>
       </span>
       <span class="balance">
@@ -129,7 +129,7 @@
       <div class="input-label col-xs-3">To account</div>
       <span class="col-xs-4 public-private">
         <input type="radio" name="to" id="toPublic"
-          [(ngModel)]="send.output" checked="checked" disabled="{{ send.input === 'balance' }}" value="balance">
+          [(ngModel)]="send.output" disabled="{{ send.input === 'balance' }}" value="balance">
         <label for="toPublic" class="input-info-label">Public</label>
         <input type="radio" name="to" id="toBlind"
           [(ngModel)]="send.output" disabled="{{ send.input === 'blind_balance' }}" value="blind_balance">
@@ -161,7 +161,8 @@
       <div class="input-label col-xs-3">Amount</div>
       <input class="col-xs-4" type="number"
         placeholder="0.00000000"
-        [(ngModel)]="send.amount">
+        [(ngModel)]="send.amount" (input)="verifyAmount()"
+        [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }" oninput="validity.valid||(value='');" step="any">
       <div class="col-xs-2 no-padding-left">
         <select [(ngModel)]="send.currency" class="form-control no-margin-left">
           <option value="part">PART</option>
@@ -169,7 +170,7 @@
       </div>
     </div>
 
-    <div *ngIf="send.input === 'private'" class="card row">
+    <div *ngIf="send.input === 'anon_balance'" class="card row">
       <div class="input-label col-xs-3">Privacy level</div>
       <div class="col-xs-4 nopadding">
         <div class="progress">

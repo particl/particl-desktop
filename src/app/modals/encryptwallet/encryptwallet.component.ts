@@ -44,13 +44,18 @@ export class EncryptwalletComponent {
             response => {
               this._rpc.toggleState(false);
               this.alertBox.open(response, 'Wallet');
-              setTimeout(() => {
+
+              if (this._rpc.isElectron) {
                 this._rpc.call('restart-daemon')
                   .subscribe(() => {
-                    this._modalsService.open('createWallet', {forceOpen: true});
-                    this._rpc.toggleState(true);
+                    if (!this._modalsService.initializedWallet) {
+                      this._modalsService.open('createWallet', {forceOpen: true});
+                      this._rpc.toggleState(true);
+                    } else {
+                      this._modalsService.close();
+                    }
                   });
-              }, 3000);
+              }
             },
             // Handle error appropriately
             error => {
