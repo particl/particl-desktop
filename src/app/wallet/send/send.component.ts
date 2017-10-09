@@ -62,7 +62,7 @@ export class SendComponent {
   /** Select tab */
   selectTab(type: string) {
     this.type = type;
-    this.send.input = 'balance'
+    this.send.input = 'balance';
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
       this.verifyAddress();

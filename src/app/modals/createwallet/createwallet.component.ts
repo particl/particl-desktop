@@ -50,7 +50,7 @@ export class CreateWalletComponent {
     private _passphraseService: PassphraseService,
     private state: StateService
   ) {
-      this.reset();
+    this.reset();
   }
 
   reset() {
@@ -62,7 +62,8 @@ export class CreateWalletComponent {
     this.errorString = '';
     this.step = 0;
     this.animationState = '';
-    this.isCrypted = (this.state.get('encryptionstatus') !== 'Unencrypted');
+    this.state.observe('encryptionstatus').take(2)
+      .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 
   initialize(type: number) {
@@ -70,7 +71,6 @@ export class CreateWalletComponent {
 
     switch (type) {
       case 0:
-        this._modalsService.enableClose = true;
         this._modalsService.open('encrypt', {forceOpen: true});
         return;
       case 1: // Create
@@ -157,7 +157,6 @@ export class CreateWalletComponent {
           this.animationState = 'next';
           this.step = 5;
           this.log.i('Mnemonic imported successfully');
-          this._modalsService.encryptCheck = true;
         },
         error => {
           this.log.er(error);
@@ -187,15 +186,15 @@ export class CreateWalletComponent {
 
   close() {
     this.reset();
-    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
-    document.body.dispatchEvent(escape);
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   }
 
   // capture the enter button
   @HostListener('window:keydown', ['$event'])
-    keyDownEvent(event: any) {
-      if (event.keyCode === 13) {
-        this.nextStep();
-      }
+  keyDownEvent(event: any) {
+    if (event.keyCode === 13) {
+      this.nextStep();
     }
+  }
 }
