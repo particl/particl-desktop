@@ -39,14 +39,12 @@
         <div class="col-xs-3 address-label vertical-center">
           {{ getUnusedAddress().label }}
         </div>
-        <div class="col-xs-6">
-          <div class="address">
-            {{ getUnusedAddress().address }}
-          </div>
-          <div class="total">
+        <div class="col-xs-6 address vertical-center">
+          {{ getUnusedAddress().address }}
+          <!-- div class="total">
             <span>Total received: </span>
             <span>+{{ getUnusedAddress().balance }}</span>
-          </div>
+          </div-->
         </div>
         <div class="col-xs-2 row address-options vertical-center">
           <div ngxClipboard [cbContent]="getUnusedAddress().address" class="col-xs-4 nc-icon nc-copy-2">
@@ -67,14 +65,12 @@
         <div class="col-xs-3 address-label vertical-center">
           {{ address.label }}
         </div>
-        <div class="col-xs-6">
-          <div class="address">
-            {{ address.address }}
-          </div>
-          <div class="total">
+        <div class="col-xs-6 address vertical-center">
+          {{ address.address }}
+          <!--div class="total">
             <span>Total received: </span>
             <span>+{{ address.balance }}</span>
-          </div>
+          </div-->
         </div>
         <div class="col-xs-2 row address-options vertical-center">
           <div ngxClipboard [cbContent]="address.address" class="col-xs-4 nc-icon nc-copy-2"></div>

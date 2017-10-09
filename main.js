@@ -172,7 +172,11 @@ function makeTray() {
   // Set the tray icon
   tray.setToolTip('Particl ' + app.getVersion());
   tray.setContextMenu(contextMenu)
-
+  
+  // Always show window when tray icon clicked
+  tray.on('click',function() {
+    mainWindow.show()
+  });
   return trayImage;
 }
 

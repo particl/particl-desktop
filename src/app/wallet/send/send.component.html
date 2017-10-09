@@ -14,12 +14,14 @@
     </ul>
     <div class="pull-right header-option"
       (click)="toggleAdvanced()"
+      *ngIf="type === 'balanceTransfer'"
       [ngClass]="{selected: advanced}">
       <div class="header-option-container">
         <div class="header-option-text">
           <span class="icon nc-icon nc-settings-gear-65 header-option-icon"></span>
           <span>
-            Advanced options
+            <!-- Advanced options -->
+            {{advancedText}}
           </span>
         </div>
       </div>
