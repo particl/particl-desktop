@@ -6,7 +6,7 @@ const rxIpc = require('rx-ipc-electron/lib/main').default;
 const cookie = require('./cookie');
 const daemon = require('./daemon');
 
-let TIMEOUT = 5000;
+let TIMEOUT = 10000;
 let HOSTNAME;
 let PORT;
 let rpcOptions;

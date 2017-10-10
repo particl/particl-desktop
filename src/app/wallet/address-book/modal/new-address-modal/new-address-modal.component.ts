@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
 import { RPCService } from '../../../../core/rpc/rpc.service';
-import {MdDialog, MdDialogRef} from '@angular/material';
+import { MdDialog, MdDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
-import {ModalsService} from '../../../../modals/modals.service';
-import {ModalsComponent} from "../../../../modals/modals.component";
+import { ModalsService } from '../../../../modals/modals.service';
+import { ModalsComponent } from '../../../../modals/modals.component';
 
 @Component({
   selector: 'app-new-address-modal',
@@ -24,8 +24,8 @@ export class NewAddressModalComponent implements OnInit {
   /*
    Validation state
    */
-  private validAddress: boolean = undefined;
-  private isMine: boolean = undefined;
+  public validAddress: boolean = undefined;
+  public isMine: boolean = undefined;
 
   constructor(public dialogRef: MdDialogRef<NewAddressModalComponent>,
               private formBuilder: FormBuilder,

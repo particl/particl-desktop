@@ -5,8 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../../../shared/shared.module';
 import { RpcModule } from '../../../../core/rpc/rpc.module';
 import { BrowserModule } from '@angular/platform-browser';
-import {MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule} from '@angular/material';
+import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
+import { ModalsService } from '../../../../modals/modals.service';
 
 describe('NewAddressModalComponent', () => {
   let component: NewAddressModalComponent;
@@ -28,6 +29,7 @@ describe('NewAddressModalComponent', () => {
       declarations: [ NewAddressModalComponent ],
       providers: [
         FlashNotificationService,
+        ModalsService,
         { provide: MdDialogRef}
         ]
     })

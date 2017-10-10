@@ -19,9 +19,9 @@
             </md-tab-group>
           </div>
           <div fxFlex="20%">
-            <button md-button (click)="toggleAdvanced()">
+            <button md-button (click)="toggleAdvanced()" *ngIf="type === 'balanceTransfer'">
               <md-icon color="primary">{{(advanced)? 'settings_applications': 'settings'}}</md-icon>
-              Advanced options
+              {{advancedText}}
             </button>
           </div>
         </div>
@@ -38,11 +38,11 @@
                 <md-radio-group name="sendInput" [(ngModel)]="send.input" fxFlex="100%" fxLayout.lg="row"
                                 fxlayout.lt-sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
                   <h5 fxFlex="33.3%" fxFlex.md="50%" fxFlex.lt-md="50%"> From Account</h5>
-                  <md-radio-button value="public" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Public
+                  <md-radio-button value="balance" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Public
                   </md-radio-button>
-                  <md-radio-button value="blind" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Blind
+                  <md-radio-button value="blind_balance" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Blind
                   </md-radio-button>
-                  <md-radio-button value="private" fxFlex.md="50%" fxFlex.lt-md="100%" fxFlex="33.3%">Private
+                  <md-radio-button value="anon_balance" fxFlex.md="50%" fxFlex.lt-md="100%" fxFlex="33.3%">Private
                   </md-radio-button>
 
                   <div fxFlex="33.3%" fxFlex.gt-sm="100%">
@@ -65,11 +65,14 @@
                                 fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column"
                                 fxLayout.xs="column">
                   <h5 fxFlex="33.3%" fxFlex.md="50%" fxFlex.lt-md="50%"> TO ACCOUNT</h5>
-                  <md-radio-button value="public" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Public
+                  <md-radio-button value="balance" disabled="{{ send.output === 'balance' }}" fxFlex.md="50%"
+                                   fxFlex.lt-md="50%" fxFlex="33.3%">Public
                   </md-radio-button>
-                  <md-radio-button value="blind" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Blind
+                  <md-radio-button value="blind_balance" disabled="{{ send.output === 'blind_balance' }}"
+                                   fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Blind
                   </md-radio-button>
-                  <md-radio-button value="private" fxFlex.md="50%" fxFlex.lt-md="100%" fxFlex="33.3%">Private
+                  <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex.md="50%"
+                                   fxFlex.lt-md="100%" fxFlex="33.3%">Private
                   </md-radio-button>
 
                   <div fxFlex="33.3%" fxFlex.gt-sm="100%">
@@ -135,9 +138,10 @@
                 <h5 fxFlex="10%"> Amount </h5>
                 <md-form-field fxFlex="50%">
                   <input mdInput type="text" name="sendAmount"
-                         placeholder="0.0000000000000000"
+                         placeholder="0.00000000"
                          [(ngModel)]="send.amount" (input)="verifyAmount()"
-                         [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }">
+                         [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
+                         oninput="validity.valid||(value='');" step="any">
                 </md-form-field>
                 <md-select fxFlex="46%" name="currency" [(ngModel)]="send.currency" placeholder="Select currency">
                   <md-option value="part">Part</md-option>

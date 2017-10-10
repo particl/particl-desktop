@@ -4,6 +4,8 @@ import { RPCService } from '../../core/rpc/rpc.service';
 import { Log } from 'ng2-logger';
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { MdDialog } from '@angular/material';
+import { ModalsService } from '../../modals/modals.service';
+import {ModalsComponent} from '../../modals/modals.component';
 
 @Component({
   selector: 'app-receive',
@@ -38,9 +40,9 @@ export class ReceiveComponent implements OnInit {
 
   /* UI Pagination */
   addresses: any = {
-    private: [this.defaultAddress],
-    public: [this.defaultAddress],
-    query: [this.defaultAddress]
+    private: [],
+    public: [],
+    query: []
 
   };
 
@@ -54,7 +56,8 @@ export class ReceiveComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService,
-              public dialog: MdDialog) {
+              public dialog: MdDialog,
+              public _modalService: ModalsService) {
   }
 
   ngOnInit() {
@@ -74,10 +77,14 @@ export class ReceiveComponent implements OnInit {
 
       this.addresses.query = this.addresses[this.type].filter(el => {
         this.log.d(`pageChanged, changing receive page to: ${JSON.stringify(el)}`);
-        return (
-          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
-          el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-        );
+        if (el) {
+          return (
+            el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
+            el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+          );
+        } else {
+          return;
+        }
       });
     }
 
@@ -139,11 +146,14 @@ export class ReceiveComponent implements OnInit {
     * @param type Address type to set
     */
   setAddressType(type: string) {
-    if (['public', 'private'].indexOf(type) !== -1) {
+    if (['public', 'private'].includes(type)) {
       this.type = type;
     }
-
-    this.selectAddress(this.addresses[type][0]);
+    if (this.addresses[type].length === 0) {
+      this.openNewAddress()
+    } else {
+      this.selectAddress(this.addresses[type][0]);
+    }
   }
 
   changeTab(tab: number) {
@@ -169,10 +179,11 @@ export class ReceiveComponent implements OnInit {
   /** Get the QR Code size */
   getQrSize() {
     // this is just a cheaty way of getting the tests to pass
-    if (this.initialized) {
+    if (this.qrElementView && this.initialized) {
       return this.qrElementView.nativeElement.offsetWidth - 40;
     } else {
-      return 380;
+      // return 380;
+      return 206;
     }
   }
 
@@ -180,14 +191,10 @@ export class ReceiveComponent implements OnInit {
 
   /** Used to get the addresses. */
   rpc_update() {
-    // this.rpc.oldCall(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success);
     this.rpc.call('filteraddresses', [-1])
-      .subscribe(response => {
-        this.rpc_loadAddressCount_success(response)
-      },
-      error => {
-        this.log.er('error', error);
-      });
+      .subscribe(
+        response => this.rpc_loadAddressCount_success(response),
+        error => this.log.er('error', error));
   }
 
   /**
@@ -196,19 +203,25 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
+    if ([0, 1].includes(count)) {
+      // @TODO remove two service calling for create wallet
+      if (!this._modalService.initializedWallet) {
+        this._modalService.openInitialCreateWallet();
+        this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
+      }
 
-    if (count === 0) {
+      setTimeout(() => {
+        if (this._modalService.initializedWallet) {
+          this.openNewAddress();
+        }
+      }, 200);
+
       return;
     }
-    // this.rpc.oldCall(this, 'filteraddresses', [0, count, '0', '', '1'], this.rpc_loadAddresses_success);
     this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
       .subscribe(
-        (resp: Array<any>) => {
-        this.rpc_loadAddresses_success(resp)
-      },
-      error => {
-        this.log.er('error', error);
-      });
+        (resp: Array<any>) => this.rpc_loadAddresses_success(resp),
+        error => this.log.er('error', error));
   }
 
   /**
@@ -289,7 +302,7 @@ export class ReceiveComponent implements OnInit {
         tempAddress.id = +(response.path.replace('m/0\'/', '').replace('\'', '')) / 2;
 
         // filter out accounts m/1 m/2 etc. stealth addresses are always m/0'/0'
-        if (/m\/[0-9]+/g.test(response.path) && /m\/[0-9]+'\/[0-9]+/g.test(response.path)) {
+        if (/m\/[0-9]+/g.test(response.path) && !/m\/[0-9]+'\/[0-9]+/g.test(response.path)) {
           return;
         }
       }
@@ -311,7 +324,7 @@ export class ReceiveComponent implements OnInit {
     * TODO: Remove timeout if not currently on ngOnDestroy
     */
   checkIfUnusedAddress() {
-    if (this.addresses && this.addresses.public[0].address !== 'Empty address') {
+    if (this.addresses && this.addresses.public[0] && this.addresses.public[0].address) {
       this.rpc.call('getreceivedbyaddress', [this.addresses.public[0].address, 0])
         .subscribe(
           response => this.rpc_callbackUnusedAddress_success(response),
@@ -338,12 +351,9 @@ export class ReceiveComponent implements OnInit {
         // just call for a complete update, just adding the address isn't possible because
         this.rpc_update();
       },
-      error => {
-        this.log.er('error');
-      });
+      error => this.log.er('error'));
     }
   }
-
   openNewAddress(): void {
     const dialogRef = this.dialog.open(AddAddressLabelComponent);
     dialogRef.componentInstance.type = this.type;

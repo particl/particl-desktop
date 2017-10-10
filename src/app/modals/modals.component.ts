@@ -59,7 +59,13 @@ export class ModalsComponent implements DoCheck, OnInit {
   ) {
     // update new modal, open it
     this._modalService.getMessage().subscribe(
-      message => this.open(message.modal, message.data)
+      message => {
+        if (message.close) {
+          this.close();
+        } else {
+          this.open(message.modal, message.data);
+        }
+      }
     );
 
     // update progress bar blockstatus
@@ -105,10 +111,9 @@ export class ModalsComponent implements DoCheck, OnInit {
   // close window on escape
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
-  if (this.closeOnEscape && this._modalService.enableClose
-        && event.key.toLowerCase() === 'escape'
-        && this.modal) {
-      this.close();
+    if (this.closeOnEscape && this._modalService.enableClose
+        && event.key.toLowerCase() === 'escape' && this.modal) {
+        this.close();
     }
   }
 

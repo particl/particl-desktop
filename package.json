@@ -33,6 +33,7 @@
     "compdoc": "compodoc -p tsconfig.json",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
   },
+  "productName": "Particl Wallet",
   "build": {
     "electronVersion": "1.7.5",
     "appId": "io.particl.partgui",

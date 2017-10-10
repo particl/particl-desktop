@@ -136,6 +136,10 @@
         </app-passphrase>
       </ng-template>
       <div class="button-row capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
+        <div *ngIf="!!errorString"
+             [@slideDown] class="container alert alert-danger margin-top-5px">
+          {{ errorString }}
+        </div>
         <div fxFlex="70%" fxFlexOffset="0px">
           <button md-raised-button class="create-wallet-action-button" color="primary" (click)="prevStep()">
             BACK

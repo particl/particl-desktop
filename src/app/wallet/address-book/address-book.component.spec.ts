@@ -26,7 +26,7 @@ describe('AddressBookComponent', () => {
         BrowserAnimationsModule
       ],
       declarations: [ ],
-      providers: [ FlashNotificationService ]
+      providers: [ FlashNotificationService, ModalsService ]
     })
     .compileComponents();
   }));
