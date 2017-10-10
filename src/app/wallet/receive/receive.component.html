@@ -59,7 +59,7 @@
         <md-divider></md-divider>
       </md-list>
 
-      <md-list *ngIf="getSinglePage().length && inSearchMode() === false" class="list-data" >
+      <md-list *ngIf="getSinglePage().length && inSearchMode() === false" class="list-data">
         <div md-subheader class="address-title">Previous addresses</div>
         <div *ngFor="let address of getSinglePage()">
           <md-list-item>
@@ -75,18 +75,16 @@
                 </div>
               </div>
               <div fxFlex="15%" fxLayoutAlign="end center">
-                <md-icon class="cursor-pointer" mdTooltip="Copy" fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%"
-                         ngxClipboard
-                         [cbContent]="address.address">
-                  content_copy
-                </md-icon>
+                <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+                  <md-icon class="cursor-pointer" mdTooltip="Copy" ngxClipboard [cbContent]="address.address">
+                    content_copy </md-icon>
+                </span>
 
-                <md-icon fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" ngxClipboard>verified_user</md-icon>
-
-                <i fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%"
-                   class="material-icons cursor-pointer nc-icon nc-barcode-qr"
-                   mdTooltip="Select Address"
-                   (click)="selectAddress(address)"></i>
+                <div fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" ngxClipboard class="nc-icon nc-a-check"></div>
+                <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+                <i class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
+                  (click)="selectAddress(address)"></i>
+                  </span>
               </div>
             </div>
           </md-list-item>

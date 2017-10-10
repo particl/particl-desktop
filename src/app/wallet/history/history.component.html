@@ -1,26 +1,23 @@
-<md-card>
-  <md-card-content>
-    <app-header>
-      <div class="container-fluid">
-        <!--ul class="header-nav">
-          <li [class.active]="category == 'all'"><a href="javascript:void(0)" (click)="filterByCategory('all')">All</a></li>
-          <li [class.active]="category == 'send'"><a href="javascript:void(0)" (click)="filterByCategory('send')">Send</a></li>
-          <li [class.active]="category == 'receive'"><a href="javascript:void(0)" (click)="filterByCategory('receive')">Receive</a></li>
-          <li [class.active]="category == 'stake'"><a href="javascript:void(0)" (click)="filterByCategory('stake')">Stake</a></li>
-          <li [class.active]="category == 'orphaned_stake'"><a href="javascript:void(0)" (click)="filterByCategory('orphaned_stake')">Orphan</a></li>
-        </ul>
-        <form class="header-form pull-right">
-          <input type="text" placeholder="Search history">
-          <button class="btn" type="submit" name="button">
-            <span class="fa fa-search"></span>
-          </button>
-        </form-->
-      </div>
-    </app-header>
-    <div class="container-fluid">
-      <transaction-table
-        [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
-      </transaction-table>
-    </div>
-  </md-card-content>
-</md-card>
+<app-header>
+  <div class="container-fluid">
+    <!--ul class="header-nav">
+      <li [class.active]="category == 'all'"><a href="javascript:void(0)" (click)="filterByCategory('all')">All</a></li>
+      <li [class.active]="category == 'send'"><a href="javascript:void(0)" (click)="filterByCategory('send')">Send</a></li>
+      <li [class.active]="category == 'receive'"><a href="javascript:void(0)" (click)="filterByCategory('receive')">Receive</a></li>
+      <li [class.active]="category == 'stake'"><a href="javascript:void(0)" (click)="filterByCategory('stake')">Stake</a></li>
+      <li [class.active]="category == 'orphaned_stake'"><a href="javascript:void(0)" (click)="filterByCategory('orphaned_stake')">Orphan</a></li>
+    </ul>
+    <form class="header-form pull-right">
+      <input type="text" placeholder="Search history">
+      <button class="btn" type="submit" name="button">
+        <span class="fa fa-search"></span>
+      </button>
+    </form-->
+  </div>
+</app-header>
+<div class="container-fluid">
+  <transaction-table
+    [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
+  </transaction-table>
+</div>
+
