@@ -6,14 +6,10 @@ import {
   DoCheck,
   ElementRef,
   HostListener,
-  ReflectiveInjector,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
 import { Log } from 'ng2-logger'
-
-import { Subscription } from 'rxjs/Subscription';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { ModalsService } from './modals.service';
 
@@ -23,6 +19,7 @@ import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
+import { MdDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-modals',
@@ -39,8 +36,8 @@ import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component'
 })
 export class ModalsComponent implements DoCheck, OnInit {
 
-  @ViewChild('staticModal')
-  public staticModal: ModalDirective;
+  // @ViewChild('staticModal')
+  // public staticModal: ModalDirective;
 
   @ViewChild('modalContainer', { read: ViewContainerRef })
   private modalContainer: ViewContainerRef;
@@ -57,7 +54,8 @@ export class ModalsComponent implements DoCheck, OnInit {
   constructor (
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
-    private _modalService: ModalsService
+    private _modalService: ModalsService,
+    public _dialogRef: MdDialogRef<ModalsComponent>
   ) {
     // update new modal, open it
     this._modalService.getMessage().subscribe(
@@ -100,13 +98,12 @@ export class ModalsComponent implements DoCheck, OnInit {
     if (data !== undefined && dynamicModal.instance.setData !== undefined) {
       dynamicModal.instance.setData(data);
     }
-    this.staticModal.show();
   }
 
   close() {
+    this._dialogRef.close();
     // remove and destroy message
     this._modalService.close();
-    this.staticModal.hide();
     this.modalContainer.remove();
     this.modal.destroy();
   }

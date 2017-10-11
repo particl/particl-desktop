@@ -2,8 +2,10 @@ import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular
 import { RPCService } from '../../core/rpc/rpc.service';
 
 import { Log } from 'ng2-logger';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
+import { MdDialog } from '@angular/material';
 import { ModalsService } from '../../modals/modals.service';
+import {ModalsComponent} from '../../modals/modals.component';
 
 @Component({
   selector: 'app-receive',
@@ -17,11 +19,22 @@ export class ReceiveComponent implements OnInit {
   /* UI State */
   private type: string = 'public';
   public query: string = '';
-  public openNewAddressModal: boolean = false;
-  public addLableForm: FormGroup;
-  public label: string;
+  // public tabsTitle
+  defaultAddress: Object = {
+    id: 0,
+    label: 'Empty label',
+    address: 'Empty address',
+    balance: 0,
+    readable: ['Empty']
+  };
 
-  selected: any = {};
+  selected: any = {
+    id: 0,
+    label: 'Empty label',
+    address: 'Empty address',
+    balance: 0,
+    readable: ['empty']
+  };
 
   qrSize: number = 380;
 
@@ -43,22 +56,14 @@ export class ReceiveComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RPCService,
-              private formBuilder: FormBuilder,
-              private _modalService: ModalsService) {
+              public dialog: MdDialog,
+              public _modalService: ModalsService) {
   }
 
   ngOnInit() {
     // start rpc
     this.rpc_update();
-    this.buildForm();
   }
-
-  buildForm(): void {
-    this.addLableForm = this.formBuilder.group({
-      label: this.formBuilder.control(null, [Validators.required]),
-    });
-  }
-
 
   /**
     * Returns the addresses to display in the UI with regards to both pagination and search/query.
@@ -145,9 +150,17 @@ export class ReceiveComponent implements OnInit {
       this.type = type;
     }
     if (this.addresses[type].length === 0) {
-      this.openNewAddressModal = true;
+      this.openNewAddress()
     } else {
       this.selectAddress(this.addresses[type][0]);
+    }
+  }
+
+  changeTab(tab: number) {
+    if (tab) {
+      this.setAddressType('private');
+    } else {
+      this.setAddressType('public');
     }
   }
 
@@ -191,8 +204,10 @@ export class ReceiveComponent implements OnInit {
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
     if ([0, 1].includes(count)) {
+      // @TODO remove two service calling for create wallet
       if (!this._modalService.initializedWallet) {
         this._modalService.openInitialCreateWallet();
+        this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
       }
 
       setTimeout(() => {
@@ -339,46 +354,11 @@ export class ReceiveComponent implements OnInit {
       error => this.log.er('error'));
     }
   }
-
-  /**
-    * Generate a new address with label.
-    * TODO: Get rid of prompt, use nice modal.
-    */
-  newAddress() {
-    const call =
-      (this.type === 'public' ? 'getnewaddress' :
-      (this.type === 'private' ? 'getnewstealthaddress' : ''));
-
-    if (!!call) {
-      this.rpc.call(call, [this.label])
-        .subscribe(response => {
-          this.log.d(call, 'newAddress: successfully retrieved new address');
-          // just call for a complete update, just adding the address isn't possible because
-          this.rpc_update();
-          this.closeNewAddress();
-          this.addLableForm.reset();
-        },
-        error => this.log.er('error'));
-    }
-  }
-
-  selectInput() {
-    (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
-  }
-
   openNewAddress(): void {
-    this.openNewAddressModal = true;
-  }
-
-  closeNewAddress(): void {
-    this.openNewAddressModal = false;
-  }
-
-    // capture the enter button
-  @HostListener('window:keydown', ['$event'])
-  keyDownEvent(event: any) {
-    if (event.key.toLowerCase() === 'escape') {
-      this.openNewAddressModal = false;
-    }
+    const dialogRef = this.dialog.open(AddAddressLabelComponent);
+    dialogRef.componentInstance.type = this.type;
+    dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
+      this.rpc_update();
+    });
   }
 }

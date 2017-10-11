@@ -5,6 +5,8 @@ import { AddressTableComponent } from './address-table.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
+import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { MdSnackBarModule } from '@angular/material';
 
 import { ModalsService } from '../../../modals/modals.service';
 
@@ -15,15 +17,14 @@ describe('AddressTableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-         SharedModule,
-         WalletModule.forRoot(),
-         RpcModule.forRoot()
+        SharedModule,
+        WalletModule.forRoot(),
+        RpcModule.forRoot(),
+        MdSnackBarModule
       ],
-      providers: [
-        ModalsService
-      ]
+      providers: [ FlashNotificationService, ModalsService ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

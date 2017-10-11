@@ -53,11 +53,11 @@ let component: AppComponent;
   }));
 */
   it('should get isCollapsed', () => {
-    expect(component.isCollapsed).toBe(true);
+    expect(component.isCollapsed).toBeTruthy()
   });
 
 it('should get isFixed', () => {
-  expect(component.isFixed).toBe(false);
+  expect(component.isFixed).toBeFalsy();
 });
 
 it('should get log', () => {

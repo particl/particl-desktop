@@ -5,7 +5,9 @@ import { Log } from 'ng2-logger';
 import { ModalsService } from '../../modals/modals.service';
 import { StateService } from '../state/state.service';
 
-import { PeerService, RPCService, BlockStatusService } from '../rpc/rpc.module';
+import { RPCService } from '../rpc/rpc.module';
+import { MdDialog} from '@angular/material';
+import { ModalsComponent } from '../../modals/modals.component';
 
 @Component({
   selector: 'app-status',
@@ -25,6 +27,7 @@ export class StatusComponent implements OnInit {
   constructor(
     private _rpc: RPCService,
     private _modalsService: ModalsService,
+    private dialog: MdDialog,
     private _stateService: StateService) { }
 
   ngOnInit() {
@@ -49,21 +52,23 @@ export class StatusComponent implements OnInit {
 
   getIconEncryption() {
     switch (this.encryptionStatus) {
-      case 'Unencrypted':  // TODO: icon?
+      case 'Unencrypted':
+        return 'lock_open';
       case 'Unlocked':
-        return '_off';
+        return 'lock_open';
       case 'Unlocked, staking only':
         return '_stake';
       case 'Locked':
-        return '';
+        return 'lock';
       default:
-        return '_off'; // TODO: icon?
+        return 'lock_open';
     }
   }
 
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
+        this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('encrypt', {'forceOpen': true});
         break;
       case 'Unlocked':
@@ -74,6 +79,7 @@ export class StatusComponent implements OnInit {
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':
+        this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('unlock', {forceOpen: true, showStakeOnly: true});
         break;
       default:
@@ -82,6 +88,7 @@ export class StatusComponent implements OnInit {
   }
 
   openColdStakeModal() {
-    this._modalsService.open('coldStake', {forceOpen: true});
+    this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
+    this._modalsService.open('coldStake', {'forceOpen': true});
   }
 }

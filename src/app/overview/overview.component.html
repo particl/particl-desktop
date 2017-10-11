@@ -1,69 +1,65 @@
-<div class="container-fluid">
-  <div class="row balance-bg">
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="total_balance"></app-balance>
-    </div>
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="balance"></app-balance>
-    </div>
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="blind_balance"></app-balance>
-    </div>
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="anon_balance"></app-balance>
-    </div>
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="staked_balance"></app-balance>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6">
-      <app-header>
-        <ul class="header-nav">
-          <li>Recent Transactions</li>
-        </ul>
-        <ul class="header-nav pull-right">
-          <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
-        </ul>
-      </app-header>
-      <transaction-table
-        [display]="{'txDisplayAmount': 6, 'header': false, 'internalHeader': true, 'category': false, 'confirmations': false}">
-      </transaction-table>
-    </div>
-    <div class="col-md-6">
-      <div class="row">
-        <div class="col-xs-12">
-          <app-header>
-            <ul class="header-nav">
-              <li>Widget Section 2</li>
-            </ul>
-            <ul class="header-nav pull-right">
-              <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
-            </ul>
-          </app-header>
-          <div class="reserved-area">
-
-          </div>
-        </div>
+<md-card>
+  <div class="container" [fxLayout]="'row'">
+    <div fxFlex [fxLayout]="'row'">
+      <div class="one   flexitem " fxFlex>
+        <app-balance type="total_balance"></app-balance>
       </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <app-header>
-            <ul class="header-nav">
-              <li>Widget Section 3</li>
-            </ul>
-            <ul class="header-nav pull-right">
-              <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
-            </ul>
-          </app-header>
-          <div class="reserved-area">
-
-          </div>
-        </div>
+      <div class="two flexitem " fxFlex>
+        <app-balance type="balance"></app-balance>
+      </div>
+      <div class="three flexitem " fxFlex>
+        <app-balance type="blind_balance"></app-balance>
+      </div>
+      <div class="four flexitem " fxFlex>
+        <app-balance type="anon_balance"></app-balance>
+      </div>
+      <div class="five flexitem " fxFlex>
+        <app-balance type="staked_balance"></app-balance>
       </div>
     </div>
   </div>
-</div>
+</md-card>
+
+<md-card>
+  <div class="container" [fxLayout]="'row'">
+    <div fxFlex [fxLayout]="'row'">
+      <div class="one   flexitem " fxFlex="50%">
+        <app-header>
+          <ul class="header-nav">
+            <li>Recent Transactions</li>
+          </ul>
+          <ul class="header-nav pull-right">
+            <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
+          </ul>
+        </app-header>
+        <transaction-table
+          [display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': false, 'confirmations': false}">
+        </transaction-table>
+      </div>
+      <div class="flexitem" fxFlex="50%">
+        <app-header>
+          <ul class="header-nav">
+            <li>Widget Section 2</li>
+          </ul>
+          <ul class="header-nav pull-right">
+            <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
+          </ul>
+        </app-header>
+        <div class="reserved-area">
+        </div>
+
+        <app-header>
+          <ul class="header-nav">
+            <li>Widget Section 3</li>
+          </ul>
+          <ul class="header-nav pull-right">
+            <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
+          </ul>
+        </app-header>
+        <div class="reserved-area">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</md-card>

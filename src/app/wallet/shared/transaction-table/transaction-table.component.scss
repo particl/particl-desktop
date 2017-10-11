@@ -1,3 +1,19 @@
+.mat-expansion-panel-header {
+  border-bottom: 1px solid #e3e3e3;
+  min-height: 67px !important;
+  font-size: 14px;
+
+  .mat-expansion-panel {
+    .mat-expanded {
+      border-bottom: none !important;
+    }
+  }
+}
+// @TODO conver css to scss
+md-expansion-panel.mat-expansion-panel.mat-expanded md-expansion-panel-header {
+  border-bottom: none !important;
+}
+
 .btn-round-lg{
   border-radius: 22.5px;
 }

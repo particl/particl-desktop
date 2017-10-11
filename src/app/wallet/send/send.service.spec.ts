@@ -4,15 +4,18 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { SendService } from './send.service';
+import { FlashNotificationService } from '../../services/flash-notification.service';
+import { MdSnackBarModule } from '@angular/material';
 
 describe('SendService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule.forRoot()
+        RpcModule.forRoot(),
+        MdSnackBarModule
       ],
-      providers: [SendService]
+      providers: [SendService, FlashNotificationService]
     });
   });
 

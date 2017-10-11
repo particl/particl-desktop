@@ -20,6 +20,20 @@ import { HistoryComponent } from './history/history.component';
 
 import { AddressLookupComponent } from './addresslookup/addresslookup.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MdButtonModule, MdCardModule, MdCheckboxModule,
+  MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdProgressBarModule,
+  MdRadioModule,
+  MdSelectModule,
+  MdTabsModule,
+  MdTooltipModule
+} from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { AddAddressLabelComponent } from './receive/modals/add-address-label/add-address-label.component';
+import { NewAddressModalComponent } from './address-book/modal/new-address-modal/new-address-modal.component';
+import { QrCodeModalComponent } from './shared/qr-code-modal/qr-code-modal.component';
+import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Routes = [
   {
@@ -35,13 +49,28 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    BrowserAnimationsModule,
     RouterModule.forChild(routes),
     SharedModule,
     ModalModule.forRoot(),
     QRCodeModule,
     FormsModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    MdDialogModule,
+    FlexLayoutModule,
+    MdProgressBarModule,
+    MdExpansionModule,
+    MdSelectModule,
+    MdTooltipModule,
+    MdButtonModule,
+    MdTabsModule,
+    MdGridListModule,
+    MdCardModule,
+    MdIconModule,
+    MdListModule,
+    MdInputModule,
+    MdCheckboxModule,
+    MdRadioModule
   ],
   declarations: [
     TransactionsTableComponent,
@@ -51,12 +80,23 @@ const routes: Routes = [
     HistoryComponent,
     AddressBookComponent,
     BalanceComponent,
-    AddressLookupComponent
+    AddressLookupComponent,
+    AddAddressLabelComponent,
+    NewAddressModalComponent,
+    QrCodeModalComponent,
+    SendConfirmationModalComponent
   ],
   exports: [
     TransactionsTableComponent,
     AddressTableComponent,
     BalanceComponent
+  ],
+  entryComponents: [
+    AddAddressLabelComponent,
+    NewAddressModalComponent,
+    QrCodeModalComponent,
+    AddressLookupComponent,
+    SendConfirmationModalComponent
   ],
   providers: []
 })

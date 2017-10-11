@@ -1,17 +1,15 @@
-<div class="container">
-  <div class="row">
-    <div *ngIf="!password" class="col-xs-12 text-center">
+<div class="container" fxFlex="100%">
+  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
+    <div *ngIf="!password">
       <h4>Please enter <b>a password</b> to encrypt your wallet.</h4>
       <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
     </div>
 
-    <div *ngIf="password" class="col-xs-12 text-center">
+    <div *ngIf="password">
       <h4>Please enter <b>your password again</b> to confirm that you've typed the right password.</h4>
       <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
     </div>
-
   </div>
-</div>
 
 <hr class="margin-top-100px">
 
@@ -24,15 +22,12 @@
   [emitPassword]="true">
   </app-password>
 
-  <div *ngIf="password" class="buttons margin-top-30px">
-    <div class="row wallet-buttons-container">
-      <div class="col-sm-6 col-xs-12 text-right">
-        <button class="control" (click)="clearPassword()">
-          back
-        </button>
-      </div>
+  <div *ngIf="password" fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
+    <div md-raised-button class="create-wallet-action-button">
+    <button md-raised-button class="create-wallet-action-button" (click)="clearPassword()">
+      Back
+    </button>
     </div>
   </div>
-
-
-<app-alert #alertBox ></app-alert>
+</div>
+<!--<app-alert #alertBox ></app-alert>-->

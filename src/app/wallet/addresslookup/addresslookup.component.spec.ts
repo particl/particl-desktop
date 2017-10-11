@@ -5,6 +5,7 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { AddressLookupComponent } from './addresslookup.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddressLookupComponent', () => {
   let component: AddressLookupComponent;
@@ -15,7 +16,8 @@ describe('AddressLookupComponent', () => {
       imports: [
         SharedModule,
         RpcModule.forRoot(),
-        WalletModule
+        WalletModule,
+        BrowserAnimationsModule
       ]
     })
     .compileComponents();
@@ -45,7 +47,7 @@ describe('AddressLookupComponent', () => {
     expect(component.filter).toBe('all');
   });
 
-  it('should get staticLookup', () => {
-    expect(component.staticLookup).toBeDefined();
-  });
+  // it('should get staticLookup', () => {
+  //   expect(component.staticLookup).toBeDefined();
+  // });
 });

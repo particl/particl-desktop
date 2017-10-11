@@ -1,23 +1,19 @@
-<app-header>
-  <div class="container-fluid">
-    <ul class="header-nav">
+<div class="container-block">
+  <app-header>
+    <div [fxLayout]="'row'">
+      <div fxFlex="80%">
+        <button md-raised-button md-button color="primary" (click)="openNewAddress()">
+          <md-icon>add_circle</md-icon>
+          Add new Address
+        </button>
+      </div>
+      <md-form-field class="icon-input">
+        <input mdInput type="text"  [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
+        <md-icon>search</md-icon>
+      </md-form-field>
+    </div>
+  </app-header>
 
-      <li class="add-address">
-        <a href="javascript:void(0)" (click)="openNewAddress()">
-          <span class="icon fa fa-plus-circle color-green"></span>
-          New Address
-        </a>
-      </li>
-    </ul>
-    <form class="header-form pull-right">
-      <input type="text"
-      [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
-      <button class="btn" type="submit" name="button">
-        <span class="fa fa-search"></span>
-      </button>
-    </form>
-  </div>
-</app-header>
   <div class="container-fluid">
     <address-table
       [query]="query"
@@ -30,37 +26,6 @@
       [displayToolsMenu]="true"
       [displayQrMenu]="false"
       (editLabelEmitter)="editLabel($event)">
-
-  </address-table>
-</div>
-
-<div id="address-modal"  [ngClass]="{'hide': openNewAddressModal == false }">
-  <div class="address-modal-container">
-    <span class="close" (click)="clearAndClose()">&times;</span>
-
-    <div class="modal-content-header">Add label to address</div>
-    <hr class="margin-top-5px">
-
-    <div class="row">
-      <div class="col-xs-8">
-        <input type="text" class="form-control" [(ngModel)]="address"
-          placeholder="address"
-          [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
-          (input)="verifyAddress()">
-      </div>
-      <div class="col-xs-4">
-        <input type="text" class="form-control" [(ngModel)]="label"
-          placeholder="label">
-      </div>
-    </div>
-    <div *ngIf="!!errorString"
-          class="alert alert-danger">
-      <div>
-        {{ errorString }}
-      </div>
-    </div>
-
-    <button class="control pull-right" (click)="addAddressToBook()" [disabled]="(!label || !label.trim())||!validAddress||isMine">OK</button>
-
+    </address-table>
   </div>
 </div>

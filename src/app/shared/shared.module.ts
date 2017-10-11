@@ -11,6 +11,10 @@ import { AccordionModule } from './accordion/accordion.module';
 import { HeaderComponent } from './header/header.component';
 import { TableComponent } from './table/table.component';
 import { GridComponent } from './grid/grid.component';
+import { MdButtonModule, MdDialogModule, MdExpansionModule, MdIconModule, MdInputModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -20,12 +24,20 @@ import { GridComponent } from './grid/grid.component';
     PaginationModule.forRoot(),
     AccordionModule,
     ModalModule.forRoot(),
-    TooltipModule.forRoot()
+    TooltipModule.forRoot(),
+    MdDialogModule,
+    MdExpansionModule,
+    MdInputModule,
+    MdIconModule,
+    BrowserAnimationsModule,
+    MdButtonModule,
+    FlexLayoutModule
   ],
   declarations: [
     HeaderComponent,
     TableComponent,
-    GridComponent
+    GridComponent,
+    DeleteConfirmationModalComponent
   ],
   exports: [
     CommonModule,
@@ -41,6 +53,9 @@ import { GridComponent } from './grid/grid.component';
     TableComponent,
     GridComponent,
     AccordionModule
-  ]
+  ],
+  entryComponents: [
+    DeleteConfirmationModalComponent
+  ],
 })
 export class SharedModule { }

@@ -8,6 +8,9 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.service';
 
 import { AddressBookComponent } from './address-book.component';
+import { FlashNotificationService } from '../../services/flash-notification.service';
+import { MdSnackBarModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddressBookComponent', () => {
   let component: AddressBookComponent;
@@ -16,14 +19,14 @@ describe('AddressBookComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-         SharedModule,
-         WalletModule.forRoot(),
-         RpcModule.forRoot()
+        SharedModule,
+        WalletModule.forRoot(),
+        RpcModule.forRoot(),
+        MdSnackBarModule,
+        BrowserAnimationsModule
       ],
       declarations: [ ],
-      providers: [
-        ModalsService
-      ]
+      providers: [ FlashNotificationService, ModalsService ]
     })
     .compileComponents();
   }));

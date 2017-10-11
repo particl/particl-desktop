@@ -1,9 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BsDropdownModule, CollapseModule, ModalModule, ModalDirective, PaginationModule, TooltipModule } from 'ngx-bootstrap';
+import {
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdExpansionModule, MdGridListModule, MdIconModule, MdListModule,
+  MdMenuModule,
+  MdProgressBarModule,
+  MdSidenavModule,
+  MdSnackBarModule, MdTabsModule, MdToolbarModule,
+  MdTooltipModule
+} from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './core/sidebar/sidebar.module';
@@ -19,6 +27,10 @@ import { AppComponent } from './app.component';
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
+
+import 'hammerjs';
+import { FlashNotificationService } from './services/flash-notification.service';
+import { BlockStatusService } from './core/rpc/blockstatus.service';
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -41,12 +53,30 @@ const routes: Routes = [
     SidebarModule.forRoot(),
     WalletModule.forRoot(),
     RpcModule.forRoot(),
-    ModalsModule
+    ModalsModule,
+    MdButtonModule,
+    MdCheckboxModule,
+    MdListModule,
+    MdExpansionModule,
+    FlexLayoutModule,
+    MdTooltipModule,
+    MdSnackBarModule,
+    MdMenuModule,
+    MdProgressBarModule,
+    MdIconModule,
+    MdSidenavModule,
+    MdGridListModule,
+    MdCardModule,
+    MdToolbarModule
   ],
   providers: [
+    WindowService,
+    BlockStatusService,
+    FlashNotificationService,
     WindowService
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [ AppComponent ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class AppModule {

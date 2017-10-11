@@ -1,17 +1,16 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 text-center">
+<div class="container"  fxFlex="100%" fxLayout="column" fxLayoutWra>
+  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
+    <div>
       <h4>Please enter <b>your password</b> to unlock your wallet.</h4>
     </div>
   </div>
-</div>
+  <hr class="margin-top-60px">
 
-<hr class="margin-top-100px">
-
-<app-password
-  buttonText="UNLOCK WALLET"
-  (unlockEmitter)="unlock($event)"
-  [unlockTimeout]="timeout"
-  [showStakeOnly]="showStakeOnly"
-  [emitUnlock]="true">
+  <app-password
+    buttonText="UNLOCK WALLET"
+    (unlockEmitter)="unlock($event)"
+    [unlockTimeout]="timeout"
+    [showStakeOnly]="showStakeOnly"
+    [emitUnlock]="true">
   </app-password>
+</div>

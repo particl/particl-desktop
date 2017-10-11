@@ -1,0 +1,42 @@
+<md-accordion displayMode="flat"
+              class="md-expansion-menu">
+  <md-expansion-panel #panel1 expanded="true" hideToggle="true">
+    <md-expansion-panel-header>Wallet</md-expansion-panel-header>
+
+    <div layout-padding class="submenuarea">
+      <md-list class="sidesubmenu">
+        <a routerLinkActive="active" routerLink="/wallet/receive">
+          <md-list-item>
+            <md-icon>arrow_forward</md-icon>
+            Recieve
+          </md-list-item>
+        </a>
+        <a routerLinkActive="active" routerLink="/wallet/send">
+          <md-list-item>
+            <md-icon>arrow_back</md-icon>
+            Send
+          </md-list-item>
+        </a>
+        <a routerLinkActive="active" routerLink="/wallet/history">
+          <md-list-item>
+            <md-icon>history</md-icon>
+            History
+          </md-list-item>
+        </a>
+        <a routerLinkActive="active" routerLink="/wallet/address-book">
+          <md-list-item>
+            <md-icon>people</md-icon>
+            Addess Book
+          </md-list-item>
+        </a>
+        <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
+          <md-list-item>
+            <md-icon>library_add</md-icon>
+            Add Acount
+          </md-list-item>
+        </a>
+      </md-list>
+    </div>
+  </md-expansion-panel>
+
+</md-accordion>
