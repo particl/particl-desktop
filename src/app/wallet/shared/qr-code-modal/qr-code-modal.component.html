@@ -16,7 +16,9 @@
 
     <div>
       <div #qrCode class="card qr">
-        <qr-code [level]="'H'" [size]="getQrSize()" [value]="singleAddress.address"></qr-code>
+        <qr-code [level]="'H'" [size]="getQrSize()"
+          value="particl:{{ singleAddress.address }}">
+        </qr-code>
       </div>
     </div>
   </div>

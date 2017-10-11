@@ -161,6 +161,7 @@ export class CreateWalletComponent {
         error => {
           this.log.er(error);
           this.errorString = error.message;
+          this._modalsService.enableClose = true;
           this.log.er('Mnemonic import failed');
         });
   }

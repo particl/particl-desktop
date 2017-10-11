@@ -130,7 +130,7 @@
 
             <div fxFlex fxLayoutAlign="start center" class="cursor-pointer">
               <md-icon mdTooltip="Address Lookup" (click)="openLookup()">supervisor_account</md-icon>
-              <md-icon mdTooltip="Copy" class="cursor-pointer" mdTooltip="Copy">content_copy</md-icon>
+              <md-icon class="cursor-pointer" mdTooltip="Copy">content_copy</md-icon> <!-- This shoud be paste -->
               <md-icon mdTooltip="Clear" (click)="clearReceiver()" color="warn">cancel</md-icon>
             </div>
           </div>
@@ -167,7 +167,7 @@
                      oninput="validity.valid||(value='');" step="any">
             </md-form-field>
             <md-select fxFlex="46%" name="currency" [(ngModel)]="send.currency" placeholder="Select currency">
-              <md-option value="part">Part</md-option>
+              <md-option value="part">PART</md-option>
             </md-select>
           </div>
         </md-list-item>
