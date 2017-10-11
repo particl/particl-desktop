@@ -19,28 +19,27 @@ export class StakinginfoComponent implements OnInit {
   dynamicStakingReward: number;
 
   /*  RPC   */
-  private curStakeReward = 0;
+  private curStakeReward: number = 0;
   private curWeight: number = 1;
   private curSupply: number = 0;
 
 
   constructor(
-  	private _rpc: RPCService
-  ){
-
-  	this.log.d(`constructor, started`);
-  	this._rpc.state.observe('percentyearreward')
-  	  .subscribe(
+    private _rpc: RPCService
+  ) {
+    this.log.d(`constructor, started`);
+    this._rpc.state.observe('percentyearreward')
+      .subscribe(
         success => {
-       	  this.log.d(`setting curStakeReward ${success}`);
+          this.log.d(`setting curStakeReward ${success}`);
           this.curStakeReward = success;
           this.calculateDynamicStakingReward();
         },
         error => this.log.er('Constructor, percentyearreward error:' + error));
 
 
-  	this._rpc.state.observe('netstakeweight')
-  	  .subscribe(
+    this._rpc.state.observe('netstakeweight')
+      .subscribe(
         success => {
           this.log.d(`setting weight ${success}`);
           this.curWeight = success / (10000000);
@@ -48,8 +47,8 @@ export class StakinginfoComponent implements OnInit {
         },
         error => this.log.er('Constructor, weight error:' + error));
 
-  	this._rpc.state.observe('moneysupply')
-  	  .subscribe(
+    this._rpc.state.observe('moneysupply')
+      .subscribe(
         success => {
           this.log.d(`setting moneysupply ${success}`);
           this.curSupply = success;
@@ -64,7 +63,7 @@ export class StakinginfoComponent implements OnInit {
 
 
   calculateDynamicStakingReward() {
-  	this.dynamicStakingReward = Math.floor(this.curStakeReward * (this.curSupply / this.curWeight));
-  	this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
+    this.dynamicStakingReward = Math.floor(this.curStakeReward * (this.curSupply / this.curWeight));
+    this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
   }
 }
