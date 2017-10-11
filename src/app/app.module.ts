@@ -27,6 +27,7 @@ import { AppComponent } from './app.component';
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
+import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
 
 import 'hammerjs';
 import { FlashNotificationService } from './services/flash-notification.service';
@@ -43,7 +44,8 @@ const routes: Routes = [
     AppComponent,
     StatusComponent,
     OverviewComponent,
-    SettingsComponent
+    SettingsComponent,
+    StakinginfoComponent
   ],
   imports: [
     BrowserModule,
