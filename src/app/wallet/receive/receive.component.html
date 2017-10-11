@@ -15,17 +15,17 @@
         </md-tab>
       </md-tab-group>
     </div>
-    <md-form-field class="icon-input" fxFlex.lt-sm="100%" fxFlex.sm="100%">
-      <input mdInput type="text" id="searchbar" [(ngModel)]="query" placeholder="Search receive">
+    <md-form-field class="icon-input" fxFlex.lt-sm="100%" fxFlex.sm="100%" (click)="selectInput()">
+      <input mdInput type="text" class="header-input" id="searchbar" [(ngModel)]="query" placeholder="Search receive">
       <md-icon>search</md-icon>
     </md-form-field>
   </div>
 </app-header>
 
 <div class="container-block">
-  <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
-       fxlayout.lt-xs="column" class="coloredContainerX box">
-    <div fxFlex="80%" fxFlex.lt-md="100%" *ngIf="getUnusedAddress()">
+  <div fxLayout.lt-md="row" fxLayout.md="row" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="row"
+       fxlayout.lt-xs="row" class="coloredContainerX box">
+    <div fxFlex="80%" *ngIf="getUnusedAddress()">
 
       <md-list class="list-data" *ngIf="inSearchMode() === false">
         <div md-subheader class="address-title">Unused address</div>
@@ -59,7 +59,7 @@
         <md-divider></md-divider>
       </md-list>
 
-      <md-list *ngIf="getSinglePage().length && inSearchMode() === false" class="list-data">
+      <md-list *ngIf="getSinglePage().length" class="list-data">
         <div md-subheader class="address-title">Previous addresses</div>
         <div *ngFor="let address of getSinglePage()">
           <md-list-item>
@@ -105,7 +105,7 @@
       </pagination>
     </div>
 
-    <div fxFlex="20%" fxFlex.lt-md="100%" *ngIf="selected">
+    <div fxFlex="20%" *ngIf="selected">
 
       <div #qrCode class="card qr qrcode">
         <qr-code [size]="getQrSize()" [level]="'H'"

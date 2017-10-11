@@ -23,6 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule,
   MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdProgressBarModule,
+  MdProgressSpinnerModule,
   MdRadioModule,
   MdSelectModule,
   MdTabsModule,
@@ -70,7 +71,8 @@ const routes: Routes = [
     MdListModule,
     MdInputModule,
     MdCheckboxModule,
-    MdRadioModule
+    MdRadioModule,
+    MdProgressSpinnerModule
   ],
   declarations: [
     TransactionsTableComponent,

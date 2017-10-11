@@ -361,4 +361,8 @@ export class ReceiveComponent implements OnInit {
       this.rpc_update();
     });
   }
+
+  selectInput() {
+    (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
+  }
 }
