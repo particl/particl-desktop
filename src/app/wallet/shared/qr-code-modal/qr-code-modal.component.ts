@@ -1,11 +1,11 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-qr-code-modal',
   templateUrl: './qr-code-modal.component.html',
   styleUrls: ['./qr-code-modal.component.scss']
 })
-export class QrCodeModalComponent implements OnInit {
+export class QrCodeModalComponent {
 
   public singleAddress: any = {
     label: 'Empty label',
@@ -15,17 +15,12 @@ export class QrCodeModalComponent implements OnInit {
 
   @ViewChild('qrCode') qrElementView: ElementRef;
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
   getQrSize() {
-    return this.qrElementView.nativeElement.offsetWidth - 40;
+    return this.qrElementView.nativeElement.offsetWidth;
   }
 
   showAddress(address: string) {
-    return  address.match(/.{1,4}/g);
+    return address.match(/.{1,4}/g);
   }
 
 }
