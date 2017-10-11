@@ -55,8 +55,7 @@ export class RPXService {
               observer.next(data);
               break;
             case 'e':
-              observer.error((<any>data).error ? (<any>data).error.error ? (<any>data).error.error
-               : (<any>data).error : data);
+              observer.error((<any>data).error ? (<any>data).error : data);
               break;
             case 'c':
               observer.complete();
