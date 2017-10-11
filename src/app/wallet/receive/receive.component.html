@@ -109,7 +109,7 @@
 
       <div #qrCode class="card qr qrcode">
         <qr-code [size]="getQrSize()" [level]="'H'"
-                 [value]="selected.address">
+          value="particl:{{ selected.address }}">
         </qr-code>
       </div>
 
