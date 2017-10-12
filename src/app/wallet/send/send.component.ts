@@ -108,7 +108,6 @@ export class SendComponent {
       this.send.validAmount = undefined;
       return;
     }
-
     
     if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
       this.send.validAmount = false;
