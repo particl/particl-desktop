@@ -104,7 +104,6 @@ export class SendComponent {
   verifyAmount() {
 
     if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '' || this.send.amount === null) {
-
       this.send.validAmount = undefined;
       return;
     }
@@ -113,8 +112,9 @@ export class SendComponent {
       this.send.validAmount = false;
       return;
     }
-
-    this.send.validAmount = this.send.amount <= this.getBalance(this.send.input);
+    // is amount in range of 0...CurrentBalance
+    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input)
+                            && this.send.amount > 0);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
