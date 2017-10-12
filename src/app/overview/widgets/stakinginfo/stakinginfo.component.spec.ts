@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StakinginfoComponent } from './stakinginfo.component';
-import { RpcModule } from '../../../core/rpc/rpc.module';
+import { StateService } from '../../../core/state/state.service';
 import { SharedModule } from '../../../shared/shared.module';
 
 describe('StakinginfoComponent', () => {
@@ -11,10 +11,10 @@ describe('StakinginfoComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RpcModule.forRoot(),
         SharedModule
       ],
-      declarations: [ StakinginfoComponent ]
+      declarations: [ StakinginfoComponent ],
+      providers: [StateService]
     })
     .compileComponents();
   }));

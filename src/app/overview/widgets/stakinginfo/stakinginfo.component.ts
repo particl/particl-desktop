@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { RPCService } from '../../../core/rpc/rpc.module';
+import { StateService } from '../../../core/state/state.service';
 
 @Component({
   selector: 'app-stakinginfo',
@@ -20,15 +20,15 @@ export class StakinginfoComponent implements OnInit {
 
   /*  RPC   */
   private curStakeReward: number = 0;
-  private curWeight: number = 1;
+  public curWeight: number = 1;
   private curSupply: number = 0;
 
 
   constructor(
-    private _rpc: RPCService
+    private state: StateService
   ) {
     this.log.d(`constructor, started`);
-    this._rpc.state.observe('percentyearreward')
+    this.state.observe('percentyearreward')
       .subscribe(
         success => {
           this.log.d(`setting curStakeReward ${success}`);
@@ -38,7 +38,7 @@ export class StakinginfoComponent implements OnInit {
         error => this.log.er('Constructor, percentyearreward error:' + error));
 
 
-    this._rpc.state.observe('netstakeweight')
+    this.state.observe('netstakeweight')
       .subscribe(
         success => {
           this.log.d(`setting weight ${success}`);
@@ -47,7 +47,7 @@ export class StakinginfoComponent implements OnInit {
         },
         error => this.log.er('Constructor, weight error:' + error));
 
-    this._rpc.state.observe('moneysupply')
+    this.state.observe('moneysupply')
       .subscribe(
         success => {
           this.log.d(`setting moneysupply ${success}`);
@@ -64,6 +64,7 @@ export class StakinginfoComponent implements OnInit {
 
   calculateDynamicStakingReward() {
     this.dynamicStakingReward = Math.floor(this.curStakeReward * (this.curSupply / this.curWeight));
+    this.curWeight = Math.floor(this.curWeight);
     this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
   }
 }
