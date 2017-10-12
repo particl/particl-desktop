@@ -51,12 +51,12 @@
                 </md-icon>
                   </span>
                 <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
-                                  <md-icon ngxClipboard>
+                                  <md-icon class="cursor-pointer" mdTooltip="Verify message" ngxClipboard>
                   verified_user
                 </md-icon>
                 </span>
                 <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
-                  <md-icon color="warn"
+                  <md-icon color="warn" class="cursor-pointer" 
                            (click)="deleteAddress(address.label, address.address)"
                            mdTooltip="Delete">cancel
                 </md-icon>
