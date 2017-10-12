@@ -104,11 +104,10 @@ export class SendComponent {
   verifyAmount() {
 
     if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '' || this.send.amount === null) {
-
       this.send.validAmount = undefined;
       return;
     }
-    
+
     if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
       this.send.validAmount = false;
       return;
