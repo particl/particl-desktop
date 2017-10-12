@@ -109,12 +109,14 @@ export class SendComponent {
       return;
     }
 
+    
     if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
       this.send.validAmount = false;
       return;
     }
-
-    this.send.validAmount = this.send.amount <= this.getBalance(this.send.input);
+    // is amount in range of 0...CurrentBalance
+    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input)
+                            && this.send.amount > 0);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
