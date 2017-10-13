@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   isFixed: boolean = false;
   title: string = '';
   log: any = Log.create('app.component');
-
+  isWalletInitialized: boolean;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -57,6 +57,9 @@ export class AppComponent implements OnInit {
     this.log.w('warn!');
     this.log.i('info');
     this.log.d('debug');
+    setTimeout(() => {
+      this.isWalletInitialized = this._modalsService.initializedWallet;
+    }, 1);
   }
 
 

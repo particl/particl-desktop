@@ -22,25 +22,25 @@
 
           <md-content layout-padding class="submenuarea">
             <md-list class="sidesubmenu">
-              <a routerLinkActive="active" routerLink="/wallet/receive">
+              <a routerLinkActive="active" [routerLink]="(!isWalletInitialized) ? null : '/wallet/receive'">
                 <md-list-item>
                   <md-icon>arrow_forward</md-icon>
                   <span>Receive</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" routerLink="/wallet/send">
+              <a routerLinkActive="active" [routerLink]="(!isWalletInitialized) ? null : '/wallet/send'">
                 <md-list-item>
                   <md-icon>arrow_back</md-icon>
                   <span>Send</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" routerLink="/wallet/history">
+              <a routerLinkActive="active" [routerLink]="(!isWalletInitialized) ? null : '/wallet/history'">
                 <md-list-item>
                   <md-icon>history</md-icon>
                   <span>History</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" routerLink="/wallet/address-book">
+              <a routerLinkActive="active" [routerLink]="(!isWalletInitialized) ? null : '/wallet/address-book'">
                 <md-list-item>
                   <md-icon>people</md-icon>
                   <span>Addess Book</span>

@@ -174,27 +174,36 @@
         <md-divider></md-divider>
       </md-list>
 
-      <md-list *ngIf="send.input === 'private'">
+      <md-list *ngIf="send.input === 'anon_balance'">
         <md-list-item>
           <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column"
                fxlayout.lt-xs="column" fxLayout.xs="column">
             <h5 fxFlex="10%"> Privacy level </h5>
 
             <div fxFlex="'column'" fxLayoutWrap>
+              <div class="privacy-labels" fxFlex="100%">
+                    <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"
+                          (click)="progress = 10; setPrivacy(2)">Low</span>
+                <span fxFlex="" fxLayoutAlign="center center" class="privacy-label cursor-pointer"
+                      (click)="progress = 50; setPrivacy(4)">Medium</span>
+                <span fxFlex="" fxLayoutAlign="end center" class="privacy-label cursor-pointer"
+                      (click)="progress = 100; setPrivacy(16)">High</span>
+              </div>  
               <md-progress-bar
                 class="example-margin"
                 [color]="'primary'"
+                [bufferValue]="send.privacy"
                 [mode]="'determinate'"
-                [value]="send.privacy">
+                [value]="progress">
               </md-progress-bar>
-              <div class="privacy-labels" fxFlex="100%">
+              <!-- <div class="privacy-labels" fxFlex="100%">
                     <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"
                           (click)="send.privacy = 10">Normal</span>
                 <span fxFlex="" fxLayoutAlign="center center" class="privacy-label cursor-pointer"
                       (click)="send.privacy = 50">Medium</span>
                 <span fxFlex="" fxLayoutAlign="end center" class="privacy-label cursor-pointer"
                       (click)="send.privacy = 100">High</span>
-              </div>
+              </div> -->
             </div>
           </div>
         </md-list-item>
