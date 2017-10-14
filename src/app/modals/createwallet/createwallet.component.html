@@ -62,16 +62,16 @@
                   </div>
                 </div>
               </div>
-              <div class="button-row capitalize">
-                <button md-raised-button class="create-wallet-action-button" (click)="prevStep()">
-                  back
-                </button>
-                <button md-raised-button class="create-wallet-action-button" color="primary" type="submit"
-                        [disabled]="!nameForm.form.valid">
-                  next step
-                </button>
-              </div>
             </div>
+          </div>
+          <div  class="button-row capitalize">
+            <button md-raised-button class="create-wallet-action-button" (click)="prevStep()">
+              back
+            </button>
+            <button md-raised-button class="create-wallet-action-button" color="primary" type="submit"
+                    [disabled]="!nameForm.form.valid">
+              next step
+            </button>
           </div>
         </form>
       </div>
