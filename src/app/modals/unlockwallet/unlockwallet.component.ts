@@ -3,6 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.service';
 import { MdDialogRef } from '@angular/material';
+import {ModalsComponent} from "../modals.component";
 
 
 @Component({
@@ -24,7 +25,7 @@ export class UnlockwalletComponent {
   showStakeOnly: boolean = false;
 
   constructor(private _rpc: RPCService,
-              public dialogRef: MdDialogRef<UnlockwalletComponent>) {
+              public dialogRef: MdDialogRef<ModalsComponent>) {
   }
 
   unlock(encryptionStatus: string) {
@@ -65,7 +66,7 @@ export class UnlockwalletComponent {
     this.log.d('Closing modal!');
 
     if (this.autoClose ) {
-      this.dialogRef.close();
+      this.dialogRef.componentInstance.close();
       this.log.d('Closing modal!');
     }
   }

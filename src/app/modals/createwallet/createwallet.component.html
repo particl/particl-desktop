@@ -64,7 +64,7 @@
               </div>
               <div class="button-row capitalize">
                 <button md-raised-button class="create-wallet-action-button" (click)="prevStep()">
-                  back
+                  BACK
                 </button>
                 <button md-raised-button class="create-wallet-action-button" color="primary" type="submit"
                         [disabled]="!nameForm.form.valid">
@@ -141,7 +141,7 @@
           {{ errorString }}
         </div>
         <div fxFlex="70%" fxFlexOffset="0px">
-          <button md-raised-button class="create-wallet-action-button" color="primary" (click)="prevStep()">
+          <button md-raised-button class="create-wallet-action-button" (click)="prevStep()">
             BACK
           </button>
           <button md-raised-button class="create-wallet-action-button" color="primary"
@@ -204,7 +204,7 @@
           <div class="capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
             <div fxFlex="70%" fxFlexOffset="0px">
               <button md-raised-button (click)="prevStep();initialize(2)">
-                Back
+                BACK
               </button>
             </div>
           </div>
@@ -233,8 +233,10 @@
   </ng-template>
 
   <ng-template [ngIf]="step === 6">
-    <app-unlockwallet
-      (unlockEmitter)="importMnemonicCallback($event)" [autoClose]="false">
-    </app-unlockwallet>
+    <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
+      <app-unlockwallet
+        (unlockEmitter)="importMnemonicCallback($event)" [autoClose]="false">
+      </app-unlockwallet>
+    </div>
   </ng-template>
 </div>
