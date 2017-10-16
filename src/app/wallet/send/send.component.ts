@@ -12,6 +12,7 @@ import { MdDialog } from '@angular/material';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 import { FlashNotificationService } from '../../services/flash-notification.service';
+import {ModalsComponent} from "../../modals/modals.component";
 
 @Component({
   selector: 'app-send',
@@ -223,6 +224,7 @@ export class SendComponent {
 
     if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) !== -1) {
       // unlock wallet and send transaction
+      this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
     } else {
       // wallet already unlocked
@@ -231,7 +233,7 @@ export class SendComponent {
   }
 
   private sendTransaction(): void {
-
+alert('sendTransaction');
     if (this.type === 'sendPayment') {
       // edit label of address
       this.addLabelToAddress();
