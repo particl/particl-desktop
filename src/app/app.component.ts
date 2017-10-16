@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { MdDialog } from '@angular/material';
+import { MdDialog, MdIconRegistry } from '@angular/material';
 
 import { WindowService } from './core/window.service';
 
@@ -34,7 +34,12 @@ export class AppComponent implements OnInit {
     // Modal example
     private _modalsService: ModalsService,
     private dialog: MdDialog,
+    private iconRegistry: MdIconRegistry
   ) {
+
+    iconRegistry
+      .registerFontClassAlias('ncIcon', 'nc-icon')
+      .registerFontClassAlias('faIcon', 'fa');
   }
 
   ngOnInit() {

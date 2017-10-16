@@ -42,13 +42,16 @@
             </div>
             <div fxFlex="15%" fxLayoutAlign="end center">
                   <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                    <md-icon class="cursor-pointer" mdTooltip="Copy" ngxClipboard
-                             [cbContent]="getUnusedAddress().address">
-                      content_copy
-                    </md-icon>
+                    <md-icon class="cursor-pointer"  mdTooltip="Copy" ngxClipboard
+                             [cbContent]="getUnusedAddress().address" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
+                    <!--<md-icon class="cursor-pointer" mdTooltip="Copy" ngxClipboard-->
+                             <!--[cbContent]="getUnusedAddress().address">-->
+                      <!--content_copy-->
+                    <!--</md-icon>-->
                   </span>
-
-              <div fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" class="nc-icon nc-a-check"></div>
+              <div fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+                <md-icon fontSet="ncIcon" fontIcon="nc-a-check"></md-icon>
+              </div>
               <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
                   <i class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
                      (click)="selectAddress(addresses[getAddressType()][0])"></i>
@@ -76,14 +79,15 @@
               </div>
               <div fxFlex="15%" fxLayoutAlign="end center">
                 <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                  <md-icon class="cursor-pointer" mdTooltip="Copy" ngxClipboard [cbContent]="address.address">
-                    content_copy </md-icon>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy" ngxClipboard [cbContent]="address.address"></md-icon>
                 </span>
 
-                <div fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%" ngxClipboard class="nc-icon nc-a-check"></div>
                 <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                <i class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
-                  (click)="selectAddress(address)"></i>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer" ngxClipboard ></md-icon>
+                </span>
+                <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+                  <md-icon class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
+                           (click)="selectAddress(address)"></md-icon>
                   </span>
               </div>
             </div>

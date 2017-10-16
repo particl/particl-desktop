@@ -25,10 +25,10 @@
         </md-panel-title>
         <md-panel-title fxFlex.lg="5%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.category"
                         class="history_cat_icon" [ngSwitch]="tx.category">
-          <span *ngSwitchCase="'stake'"><md-icon color="primary">add</md-icon></span>
-          <span *ngSwitchCase="'orphaned_stake'"><md-icon color="warn">cacel</md-icon></span>
-          <span *ngSwitchCase="'send'"><md-icon color="warn">arrow_forward</md-icon></span>
-          <span *ngSwitchCase="'receive'"><md-icon>arrow_back</md-icon></span>
+          <span *ngSwitchCase="'stake'"><md-icon fontSet="faIcon" fontIcon="fa-plus" color="primary"></md-icon></span>
+          <span *ngSwitchCase="'orphaned_stake'"><md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon></span>
+          <span *ngSwitchCase="'send'"><md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="warn"></md-icon></span>
+          <span *ngSwitchCase="'receive'"><md-icon fontSet="faIcon" fontIcon="fa-arrow-left"></md-icon></span>
         </md-panel-title>
         <md-panel-title fxFlex.lg="45%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.senderAddress"
                         class="history_longAddress">

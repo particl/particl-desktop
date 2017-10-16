@@ -114,25 +114,27 @@
         <md-list-item>
           <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column"
                fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
-            <h5 fxFlex="100%"  fxFlex.gt-sm="10%"> Pay to:</h5>
-            <md-form-field fxFlex="100%"  fxFlex.gt-sm="43%">
+            <h5 fxFlex="100%" fxFlex.gt-sm="10%"> Pay to:</h5>
+            <md-form-field fxFlex="100%" fxFlex.gt-sm="43%">
               <input name="toAddress" mdInput
                      [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
                      type="text"
                      placeholder="The address to send the payment to"
                      [(ngModel)]="send.toAddress" (input)="verifyAddress()">
             </md-form-field>
-            <div  fxFlex="100%" fxFlex.gt-sm="47%" fxLayout.lg="row" fxlayout.lt-sm="row" fxLayout.sm="row"
+            <div fxFlex="100%" fxFlex.gt-sm="47%" fxLayout.lg="row" fxlayout.lt-sm="row" fxLayout.sm="row"
                  fxlayout.lt-xs="row" fxLayout.xs="row">
               <md-form-field fxFlex="80%" fxFlex.gt-sm="75%">
                 <input class="md-bg-transparent" name="toLabel" mdInput type="text" placeholder="Enter a label"
                        [(ngModel)]="send.toLabel">
               </md-form-field>
 
-              <div fxFlex="20%" fxFlexFill  fxFlex.lt-sm="25%"  fxLayoutAlign="start center" class="cursor-pointer">
-                <md-icon flex="100%" mdTooltip="Address Lookup" (click)="openLookup()">supervisor_account</md-icon>
-                <md-icon flex="100%" class="cursor-pointer" mdTooltip="Copy">content_copy</md-icon> <!-- This shoud be paste -->
-                <md-icon flex="100%" mdTooltip="Clear" (click)="clearReceiver()" color="warn">cancel</md-icon>
+              <div fxFlex="20%" fxFlexFill fxFlex.lt-sm="25%" fxLayoutAlign="start center" class="cursor-pointer">
+                <md-icon class="cursor-pointer" flex="100%" mdTooltip="Address Lookup" (click)="openLookup()" fontSet="ncIcon"
+                         fontIcon="nc-multiple-19"></md-icon>
+                <md-icon flex="100%" class="cursor-pointer" mdTooltip="Paste" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
+                <!-- This shoud be paste -->
+                <md-icon flex="100%" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"></md-icon>
               </div>
             </div>
 
@@ -145,7 +147,7 @@
         <md-list-item>
           <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column"
                fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
-            <h5 fxFlex="100%"  fxFlex.gt-sm="10%"> Narration</h5>
+            <h5 fxFlex="100%" fxFlex.gt-sm="10%"> Narration</h5>
             <md-form-field fxFlex fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
               <input type="text" mdInput name="sendNote"
                      placeholder="Enter a short note to send with a payment"
@@ -161,15 +163,16 @@
         <md-list-item>
           <div class="md-line" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column"
                fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
-            <h5  fxFlex="100%"  fxFlex.gt-sm="10%"> Amount </h5>
-            <md-form-field fxFlex="100%"  fxFlex.gt-sm="50%">
+            <h5 fxFlex="100%" fxFlex.gt-sm="10%"> Amount </h5>
+            <md-form-field fxFlex="100%" fxFlex.gt-sm="50%">
               <input mdInput type="text" name="sendAmount"
                      placeholder="0.00000000"
                      [(ngModel)]="send.amount" (input)="verifyAmount()"
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                      oninput="validity.valid||(value='');" step="any">
             </md-form-field>
-            <md-select fxFlex="100%"  fxFlex.gt-sm="46%" name="currency" [(ngModel)]="send.currency" placeholder="Select currency">
+            <md-select fxFlex="100%" fxFlex.gt-sm="46%" name="currency" [(ngModel)]="send.currency"
+                       placeholder="Select currency">
               <md-option value="part">PART</md-option>
             </md-select>
           </div>

@@ -38,7 +38,6 @@
         .mat-icon {
           margin: 4px 8px 0 0;
           color: #41ecc2;
-          font-size: 19px;
         }
         &:hover {
           color: #41ecc2;
@@ -61,7 +60,6 @@
         .mat-icon {
           margin: 4px 8px 0 0;
           color: #938f8f;
-          font-size: 19px;
           &.fill {
             color: #41ecc2;
           }
@@ -216,9 +214,6 @@ input[type="text"] {
   align-items: center;
 }
 
-.history-list .mat-icon {
-  font-size: 18px;
-}
 
 .history-list {
   .history_cat_icon {
