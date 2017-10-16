@@ -182,12 +182,12 @@
 
             <div fxFlex="'column'" fxLayoutWrap>
               <div class="privacy-labels" fxFlex="100%">
-                    <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"
-                          (click)="progress = 10; setPrivacy(2)">Low</span>
+                <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"
+                      (click)="setPrivacy(4,10)">Low</span>
                 <span fxFlex="" fxLayoutAlign="center center" class="privacy-label cursor-pointer"
-                      (click)="progress = 50; setPrivacy(4)">Medium</span>
+                      (click)="setPrivacy(8,50)">Medium</span>
                 <span fxFlex="" fxLayoutAlign="end center" class="privacy-label cursor-pointer"
-                      (click)="progress = 100; setPrivacy(16)">High</span>
+                      (click)="setPrivacy(16,100)">High</span>
               </div>  
               <md-progress-bar
                 class="example-margin"

@@ -156,6 +156,7 @@ export class CreateWalletComponent {
         success => {
           this.animationState = 'next';
           this.step = 5;
+          this.state.set('activeWallet', true);
           this.log.i('Mnemonic imported successfully');
         },
         error => {

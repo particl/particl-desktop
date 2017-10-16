@@ -164,6 +164,7 @@ export class ModalsService {
           const locked = this._rpcService.state.get('locked');
           if (locked) {
             this.initializedWallet = true;
+            this._rpcService.state.set('activeWallet', true);
             this.log.d('Wallet already initialized.');
             return;
           }
@@ -173,8 +174,10 @@ export class ModalsService {
                 // check if account is active
                 if (response.result === 'No keys to list.') {
                   this.open('createWallet', {forceOpen: true});
+                  this._rpcService.state.set('activeWallet', false);
                 } else {
                   this.log.d('Already has imported their keys.');
+                  this._rpcService.state.set('activeWallet', true);
                   this.initializedWallet = true;
                 }
               },

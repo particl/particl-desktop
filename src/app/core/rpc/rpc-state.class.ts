@@ -12,6 +12,7 @@ export class RPCStateClass {
     this.lastBlockTimeState();
     this.blockLoop();
     this.walletLockedState();
+    this.activeWalletState();
   }
 
   private lastBlockTimeState() {
@@ -42,5 +43,11 @@ export class RPCStateClass {
     this.rpc.state.observe('encryptionstatus')
       .subscribe(status => this.rpc.state
         .set('locked', ['Locked', 'Unlocked, staking only'].includes(status)));
+  }
+
+  private activeWalletState() {
+    this.rpc.state.observe('activeWallet')
+      .subscribe(status => this.rpc.state
+        .set('active', status));
   }
 }
