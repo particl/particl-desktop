@@ -12,7 +12,7 @@ import { MdDialog } from '@angular/material';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 import { FlashNotificationService } from '../../services/flash-notification.service';
-import {ModalsComponent} from "../../modals/modals.component";
+import { ModalsComponent } from '../../modals/modals.component';
 
 @Component({
   selector: 'app-send',

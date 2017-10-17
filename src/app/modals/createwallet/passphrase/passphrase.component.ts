@@ -4,7 +4,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { PassphraseService } from './passphrase.service';
 
 import { Log } from 'ng2-logger';
-import {FlashNotificationService} from "../../../services/flash-notification.service";
+import { FlashNotificationService } from '../../../services/flash-notification.service';
 
 const MAX_WORDS = 24;
 
@@ -80,7 +80,7 @@ export class PassphraseComponent implements  OnChanges {
     this.words = Array(MAX_WORDS).fill('');
   }
 
-  copyToClipBoard(): void{
+  copyToClipBoard(): void {
     this.flashNotificationService.open('Wallet recovery phrase copied to clipboard !!');
   }
 }

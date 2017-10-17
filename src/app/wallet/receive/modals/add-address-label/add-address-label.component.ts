@@ -1,11 +1,11 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RPCService } from '../../../../core/rpc/rpc.service';
-import {MdDialog, MdDialogRef} from '@angular/material';
+import { MdDialog, MdDialogRef } from '@angular/material';
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
 import { Log } from 'ng2-logger';
-import {ModalsComponent} from "../../../../modals/modals.component";
-import {ModalsService} from "../../../../modals/modals.service";
+import { ModalsComponent } from '../../../../modals/modals.component';
+import { ModalsService } from '../../../../modals/modals.service';
 
 @Component({
   selector: 'app-add-address-label',
@@ -21,14 +21,13 @@ export class AddAddressLabelComponent implements OnInit {
   public label: string;
   log: any = Log.create('receive.component');
 
-  constructor(
-    public dialogRef: MdDialogRef<AddAddressLabelComponent>,
-    private formBuilder: FormBuilder,
-    private rpc: RPCService,
-    private flashNotificationService: FlashNotificationService,
-    private dialog: MdDialog,
-    private _modals: ModalsService
-  ) { }
+  constructor(public dialogRef: MdDialogRef<AddAddressLabelComponent>,
+              private formBuilder: FormBuilder,
+              private rpc: RPCService,
+              private flashNotificationService: FlashNotificationService,
+              private dialog: MdDialog,
+              private _modals: ModalsService) {
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -41,8 +40,9 @@ export class AddAddressLabelComponent implements OnInit {
   }
 
   onSubmitForm(): void {
-    if (['Locked', 'Unlocked, staking only'].indexOf(this.rpc.state.get('encryptionstatus')) !== -1) {
-      // unlock wallet and send transaction
+    if (['Locked', 'Unlocked, staking only'].indexOf(this.rpc.state.get('encryptionstatus')) !== -1 && this.type === 'private') {
+      // unlock wallet
+      // @TODO: remove two modal service
       this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addNewLabel.bind(this)});
     } else {
@@ -51,7 +51,7 @@ export class AddAddressLabelComponent implements OnInit {
     }
   }
 
-  addNewLabel(): void{
+  addNewLabel(): void {
     const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
     this.log.d(call, 'newAddress: successfully retrieved new address');
     if (!!call) {

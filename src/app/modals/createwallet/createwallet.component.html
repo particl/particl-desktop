@@ -29,7 +29,7 @@
   <ng-template [ngIf]="step === 1">
     <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
       <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-        <b>Lets create a new wallet</b><!-- TODO: Dynamic text create / restore -->
+        <b>Let's create a new wallet</b><!-- TODO: Dynamic text create / restore -->
       </div>
 
       <!--<div class="gap50"></div>-->
@@ -48,7 +48,7 @@
               <div class="col-md-12">
                 <md-form-field>
                   <input mdInput #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
-                         name="name" placeholder="Default Account..." required maxlength="32"
+                         name="name" placeholder="Enter Wallet Name here" required maxlength="32"
                          [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
                 </md-form-field>
 
@@ -110,7 +110,7 @@
           <div fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
             <div class="col-md-12">
               <md-form-field>
-                <input mdInput class="form-control width-100" [(ngModel)]="name" placeholder="Default Account..."
+                <input mdInput class="form-control width-100" [(ngModel)]="name" placeholder="Enter Wallet Name here"
                        readonly/>
               </md-form-field>
             </div>
@@ -172,7 +172,7 @@
           <div fxFlex="70%">
             <div>
               <md-form-field>
-                <input mdInput [(ngModel)]="name" placeholder="Default Account..." readonly/>
+                <input mdInput [(ngModel)]="name" placeholder="Enter Wallet Name here" readonly/>
               </md-form-field>
             </div>
           </div>
@@ -183,7 +183,8 @@
       <app-passphrase
         #passphraseComponent
         [words]="words"
-        (wordsEmitter)="wordsFromEmitter($event)">
+        (wordsEmitter)="wordsFromEmitter($event)"
+        [isClipboard]="true">
       </app-passphrase>
 
       <div *ngIf="!!errorString"

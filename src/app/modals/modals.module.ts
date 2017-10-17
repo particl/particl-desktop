@@ -19,7 +19,10 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
-import { MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule } from '@angular/material';
+import {
+  MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule,
+  MdTooltipModule
+} from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FlashNotificationService } from '../services/flash-notification.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,6 +40,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MdInputModule,
     MdCheckboxModule,
     ModalModule,
+    MdTooltipModule,
     TooltipModule,
     ClipboardModule
   ],

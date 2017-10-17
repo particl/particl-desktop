@@ -5,7 +5,7 @@ import { Log } from 'ng2-logger';
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { MdDialog } from '@angular/material';
 import { ModalsService } from '../../modals/modals.service';
-import {ModalsComponent} from '../../modals/modals.component';
+import { ModalsComponent } from '../../modals/modals.component';
 
 @Component({
   selector: 'app-receive',

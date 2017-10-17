@@ -245,7 +245,7 @@ input[type="text"] {
 .mat-dialog-container {
   max-width: 100% !important;
   background: transparent !important;
-  background-color: rgba(255, 255, 255, 0.9) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
   position: relative;
   .close_button {
     position: absolute;
@@ -269,7 +269,6 @@ input[type="text"] {
 }
 .form_block {
   width: 60%;
-  background-color: #ffffff;
   .mat-form-field {
     width: 100%;
     display: block;
@@ -282,7 +281,7 @@ input[type="text"] {
     margin-top: 30px;
   }
   .wallet-name-label {
-    padding-top: 21px;
+    padding-top: 14px;
     display: inline-block;
     font-weight: 700;
   }

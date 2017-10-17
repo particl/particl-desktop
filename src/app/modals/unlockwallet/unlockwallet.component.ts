@@ -3,7 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { RPCService } from '../../core/rpc/rpc.service';
 import { MdDialogRef } from '@angular/material';
-import {ModalsComponent} from "../modals.component";
+import { ModalsComponent } from '../modals.component';
 
 
 @Component({
