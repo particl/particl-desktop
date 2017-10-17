@@ -4,6 +4,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { PassphraseService } from './passphrase.service';
 
 import { Log } from 'ng2-logger';
+import {FlashNotificationService} from "../../../services/flash-notification.service";
 
 const MAX_WORDS = 24;
 
@@ -24,13 +25,16 @@ export class PassphraseComponent implements  OnChanges {
   @Input() readOnly: boolean = false;
   @Input() isDisabled: boolean = false;
   @Input() partialDisable: boolean = false;
+  @Input() isClipboard: boolean = false;
 
   @Output() wordsEmitter: EventEmitter<string> = new EventEmitter<string>();
   @Output() seedImportedSuccesfulEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   log: any = Log.create('passphrase.component');
 
-  constructor (private _passphraseService: PassphraseService) {}
+  constructor(private _passphraseService: PassphraseService,
+              private flashNotificationService: FlashNotificationService) {
+  }
 
   ngOnChanges(): void {
     this.editable = [];
@@ -74,5 +78,9 @@ export class PassphraseComponent implements  OnChanges {
 
   clear() {
     this.words = Array(MAX_WORDS).fill('');
+  }
+
+  copyToClipBoard(): void{
+    this.flashNotificationService.open('Wallet recovery phrase copied to clipboard !!');
   }
 }
