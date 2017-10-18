@@ -199,6 +199,7 @@ input[type="text"] {
   flex-wrap: nowrap;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: block !important;
 }
 
 .history_txt {
@@ -237,6 +238,7 @@ input[type="text"] {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  height: 18px;
 }
 
 /**
@@ -313,6 +315,9 @@ input[type="text"].md-bg-transparent{
     li{
       font-weight: bold;
     }
+}
+panel-header-title {
+  display: block;
 }
 
 
