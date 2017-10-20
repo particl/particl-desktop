@@ -21,6 +21,7 @@ import { FlashNotificationService } from '../../services/flash-notification.serv
 })
 export class SendComponent {
 
+
   /*
     General
   */
