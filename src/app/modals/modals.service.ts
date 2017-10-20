@@ -43,7 +43,7 @@ export class ModalsService {
 
   constructor (
     private _blockStatusService: BlockStatusService,
-    private _rpcService: RPCService,
+    private _rpc: RPCService,
     private dialog: MdDialog
   ) {
     // open syncing modal
@@ -55,7 +55,7 @@ export class ModalsService {
     this.openInitialCreateWallet();
 
     // open daemon model on error
-    this._rpcService.modalUpdates.asObservable().subscribe(status => {
+    this._rpc.modalUpdates.asObservable().subscribe(status => {
       if (status.error) {
         this.enableClose = true;
         this.open('daemon', status);
@@ -146,42 +146,21 @@ export class ModalsService {
       && (status.networkBH <= 0
       || status.internalBH <= 0
       || status.networkBH - status.internalBH > 50)) {
-        this.dialog.open(DaemonComponent);
         this.open('syncing');
     }
   }
 
   /** Initial wallet creation */
   openInitialCreateWallet() {
-    if (this.initializedWallet) {
-      return;
-    }
-
-    // Use 'encryptionstatus' as 'locked' isn't replaying due to no connections...
-    this._rpcService.state.observe('encryptionstatus').take(1)
+    this._rpc.state.observe('walletInitialized')
       .subscribe(
-        status => {
-          const locked = this._rpcService.state.get('locked');
-          if (locked) {
-            this.initializedWallet = true;
-            this.log.d('Wallet already initialized.');
+        state => {
+          this.initializedWallet = state;
+          if (state) {
+            this.log.i('Wallet already initialized.');
             return;
           }
-          this._rpcService.call('extkey', ['list'])
-            .subscribe(
-              response => {
-                // check if account is active
-                if (response.result === 'No keys to list.') {
-                  this.open('createWallet', {forceOpen: true});
-                } else {
-                  this.log.d('Already has imported their keys.');
-                  this.initializedWallet = true;
-                }
-              },
-              error => {
-                // maybe wallet is locked?
-                this.log.er('RPC Call returned an error', error);
-              });
+          this.open('createWallet', {forceOpen: true});
         });
   }
 

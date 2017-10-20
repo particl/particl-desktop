@@ -21,12 +21,13 @@ export class AddAddressLabelComponent implements OnInit {
   public label: string;
   log: any = Log.create('receive.component');
 
-  constructor(public dialogRef: MdDialogRef<AddAddressLabelComponent>,
-              private formBuilder: FormBuilder,
-              private rpc: RPCService,
-              private flashNotificationService: FlashNotificationService,
-              private dialog: MdDialog,
-              private _modals: ModalsService) {
+  constructor(
+    public dialogRef: MdDialogRef<AddAddressLabelComponent>,
+    private formBuilder: FormBuilder,
+    private rpc: RPCService,
+    private flashNotificationService: FlashNotificationService,
+    private dialog: MdDialog,
+    private _modals: ModalsService) {
   }
 
   ngOnInit() {
@@ -40,7 +41,7 @@ export class AddAddressLabelComponent implements OnInit {
   }
 
   onSubmitForm(): void {
-    if (['Locked', 'Unlocked, staking only'].indexOf(this.rpc.state.get('encryptionstatus')) !== -1 && this.type === 'private') {
+    if (this.rpc.state.get('locked')) {
       // unlock wallet
       // @TODO: remove two modal service
       this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});

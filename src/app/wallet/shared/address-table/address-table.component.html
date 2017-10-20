@@ -45,17 +45,20 @@
               <div fxFlex="100%" class="" fxLayoutAlign="end center">
                 <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%"
                       fxFlex.xs="33.33%">
-                <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy" ngxClipboard
-                         [cbContent]="address.address">
-                </md-icon>
-                  </span>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy" ngxClipboard
+                          [cbContent]="address.address">
+                  </md-icon>
+                </span>
                 <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
-                  <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer" ngxClipboard></md-icon>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer"
+                           mdTooltip="Verify message" ngxClipboard>
+                  </md-icon>
                 </span>
                 <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
                   <md-icon color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"
                            (click)="deleteAddress(address.label, address.address)"
-                           mdTooltip="Delete"></md-icon>
+                           mdTooltip="Delete">
+                  </md-icon>
                 </span>
               </div>
             </div>

@@ -67,6 +67,7 @@ export class StatusComponent implements OnInit {
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
+        // TODO: Get rid of 2x opening modals / dialogs..
         this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('encrypt', {'forceOpen': true});
         break;
@@ -78,6 +79,7 @@ export class StatusComponent implements OnInit {
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':
+        // TODO: Get rid of 2x opening modals / dialogs..
         this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('unlock', {forceOpen: true, showStakeOnly: true});
         break;
@@ -87,6 +89,7 @@ export class StatusComponent implements OnInit {
   }
 
   openColdStakeModal() {
+    // TODO: Get rid of 2x opening modals / dialogs..
     this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
     this._modalsService.open('coldStake', {'forceOpen': true});
   }

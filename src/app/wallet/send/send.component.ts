@@ -22,6 +22,7 @@ import { ModalsComponent } from '../../modals/modals.component';
 })
 export class SendComponent {
 
+
   /*
     General
   */
@@ -33,6 +34,7 @@ export class SendComponent {
 
   type: string = 'sendPayment';
   advanced: boolean = false;
+  progress: number = 10;
   advancedText: string = 'Show Recipient Address'
   // TODO: Create proper Interface / type
   send: any = {
@@ -44,7 +46,7 @@ export class SendComponent {
     validAmount: undefined,
     isMine: undefined,
     currency: 'part',
-    privacy: 50
+    privacy: 8
   };
 
   /*
@@ -62,6 +64,7 @@ export class SendComponent {
     private dialog: MdDialog,
     private flashNotification: FlashNotificationService
   ) {
+    this.progress = 50;
   }
 
   /** Select tab */
@@ -149,12 +152,9 @@ export class SendComponent {
     };
 
     this._rpc.call('validateaddress', [this.send.toAddress])
-      .subscribe(response => {
-        validateAddressCB(response)
-      },
-      error => {
-        this.log.er('verifyAddress: validateAddressCB failed');
-      });
+      .subscribe(
+        response => validateAddressCB(response),
+        error => this.log.er('verifyAddress: validateAddressCB failed'));
   }
 
   /** Clear the send object. */
@@ -177,8 +177,8 @@ export class SendComponent {
 
   onSubmit(): void {
     const dialogRef = this.dialog.open(SendConfirmationModalComponent);
-    dialogRef.componentInstance.dialogContent = `Do you really want to send ${this.send.amount} ${this.send.currency.toUpperCase()}
-      to ${this.getAddress()} ?`;
+    dialogRef.componentInstance.dialogContent = `Do you really want to send
+      ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.getAddress()} ?`;
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       dialogRef.close();
@@ -214,16 +214,17 @@ export class SendComponent {
       }
 
       if (this.send.input === this.send.output) {
-        this.flashNotification.open(`You have selected ${this.send.input}` +
-        `twice!\n Balance transfers can only happen between two different types.`);
+        this.flashNotification.open(`You have selected ${this.send.input}
+          twice!\n Balance transfers can only happen between two different types.`);
 
         return;
       }
 
     }
 
-    if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) !== -1) {
+    if (this._rpc.state.get('locked')) {
       // unlock wallet and send transaction
+      // TODO: Get rid of 2x opening modals / dialogs..
       this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
     } else {
@@ -233,7 +234,6 @@ export class SendComponent {
   }
 
   private sendTransaction(): void {
-alert('sendTransaction');
     if (this.type === 'sendPayment') {
       // edit label of address
       this.addLabelToAddress();
@@ -292,6 +292,11 @@ alert('sendTransaction');
       .subscribe(
         response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
         error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
+  }
+
+  setPrivacy(level: number, prog: number) {
+    this.send.privacy = level;
+    this.progress = prog;
   }
 
 }

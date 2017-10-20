@@ -132,7 +132,8 @@
           [readOnly]="step === 3"
           [words]="words"
           [partialDisable]="step === 4"
-          (wordsEmitter)="wordsFromEmitter($event)">
+          (wordsEmitter)="wordsFromEmitter($event)"
+          [generate]="true">
         </app-passphrase>
       </ng-template>
       <div class="button-row capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
@@ -184,7 +185,7 @@
         #passphraseComponent
         [words]="words"
         (wordsEmitter)="wordsFromEmitter($event)"
-        [isClipboard]="true">
+        [generate]="false">
       </app-passphrase>
 
       <div *ngIf="!!errorString"
@@ -220,7 +221,7 @@
       <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
         <h4>Congratulations with your new wallet</h4>
         <div fxFlexOffset="20px">
-          Your new wallet has been set as the default wallet, you can new generate new addresses on your wallet.
+          Your new wallet has been set as the default wallet, you can now generate new addresses on your wallet.
         </div>
       </div>
       <hr class="margin-top-60px">

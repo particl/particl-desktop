@@ -18,11 +18,14 @@
         </div>
       </div>
       <div fxLayoutAlign="end center" *ngIf="!isDisabled && !partialDisable">
-        <md-icon *ngIf="!isClipboard" class="cursor-pointer icon" mdTooltip="Copy" fontSet="ncIcon" fontIcon="nc-copy-2"
+        <md-icon *ngIf="generate" class="cursor-pointer icon"
+                 mdTooltip="Copy" fontSet="ncIcon" fontIcon="nc-copy-2"
                  (click)="copyToClipBoard()" ngxClipboard
-                 [cbContent]="words.join(' ')"></md-icon>
-
-        <md-icon class="cursor-pointer icon" *ngIf="isClipboard" mdTooltip="Paste" fontSet="faIcon" fontIcon="fa-clipboard"></md-icon>
+                 [cbContent]="words.join(' ')">
+        </md-icon>
+        <md-icon class="cursor-pointer icon" *ngIf="!generate"
+                 mdTooltip="Paste" fontSet="faIcon" fontIcon="fa-clipboard">
+        </md-icon>
       </div>
     </div>
   </div>

@@ -25,7 +25,7 @@ export class PassphraseComponent implements  OnChanges {
   @Input() readOnly: boolean = false;
   @Input() isDisabled: boolean = false;
   @Input() partialDisable: boolean = false;
-  @Input() isClipboard: boolean = false;
+  @Input() generate: boolean = false;
 
   @Output() wordsEmitter: EventEmitter<string> = new EventEmitter<string>();
   @Output() seedImportedSuccesfulEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -81,6 +81,6 @@ export class PassphraseComponent implements  OnChanges {
   }
 
   copyToClipBoard(): void {
-    this.flashNotificationService.open('Wallet recovery phrase copied to clipboard !!');
+    this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.', '', 1000);
   }
 }
