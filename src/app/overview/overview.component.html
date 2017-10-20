@@ -1,29 +1,31 @@
-<md-card>
+<md-card class="balance-overview">
   <div class="container" [fxLayout]="'row'">
     <div fxFlex [fxLayout]="'row'">
-      <div class="one   flexitem " fxFlex>
+      <div class="one flexitem" fxFlex>
         <app-balance type="total_balance"></app-balance>
       </div>
-      <div class="two flexitem " fxFlex>
+      <div class="two flexitem" fxFlex>
         <app-balance type="balance"></app-balance>
       </div>
-      <div class="three flexitem " fxFlex>
+      <div class="three flexitem" fxFlex>
         <app-balance type="blind_balance"></app-balance>
       </div>
-      <div class="four flexitem " fxFlex>
+      <div class="four flexitem" fxFlex>
         <app-balance type="anon_balance"></app-balance>
       </div>
-      <div class="five flexitem " fxFlex>
+      <div class="five flexitem" fxFlex>
         <app-balance type="staked_balance"></app-balance>
       </div>
     </div>
   </div>
 </md-card>
 
-<md-card>
+
+<div class="overview-content">
   <div class="container" [fxLayout]="'row'">
     <div fxFlex [fxLayout]="'row'">
-      <div class="one   flexitem " fxFlex="50%">
+
+      <div class="one flexitem" fxFlex="50%">
         <app-header>
           <ul class="header-nav">
             <li>Recent Transactions</li>
@@ -36,29 +38,93 @@
           [display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': false, 'confirmations': false}">
         </transaction-table>
       </div>
+
+
       <div class="flexitem" fxFlex="50%">
+
         <app-header>
           <ul class="header-nav">
-            <li>Widget Section 2</li>
+            <li>Staking Information</li>
           </ul>
           <ul class="header-nav pull-right">
             <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
           </ul>
         </app-header>
-        <div class="reserved-area">
-        </div>
+        <md-card class="multiple">
+          <div fxFlex [fxLayout]="'row'">
+            <div class="one flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">~3 h</div>
+                <div class="description">Next reward</div>
+                <app-stakinginfo></app-stakinginfo>
+              </div>
+            </div>
+            <div class="two flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">1<span class="point">.</span><small>5</small>&nbsp;%</div>
+                <div class="description">Stake percentage</div>
+              </div>
+            </div>
+            <div class="three flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">1<span class="point">.</span><small>4949327</small>&nbsp;PART</div>
+                <div class="description">Stake reward</div>
+              </div>
+            </div>
+          </div>
+        </md-card>
 
-        <!-- <app-header>
-          <ul class="header-nav">
-            <li>Widget Section 3</li>
-          </ul>
-          <ul class="header-nav pull-right">
-          </ul>
-        </app-header> -->
-        <div class=" text-center">
-          <app-stakinginfo></app-stakinginfo>
-        </div>
-      </div>
+        <md-card class="multiple">
+          <div fxFlex [fxLayout]="'row'">
+            <div class="two flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">2254764680994</div>
+                <div class="description">Your Stake weight</div>
+              </div>
+            </div>
+            <div class="two flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">434972889332496</div>
+                <div class="description">Network Stake weight</div>
+              </div>
+            </div>
+          </div>
+        </md-card>
+
+
+        <div class="cold-staking">
+          <app-header>
+            <ul class="header-nav">
+              <li class="section-title">Cold Staking</li>
+            </ul>
+          </app-header>
+
+          <md-card class="multiple staking-node">
+            <div class="title">
+              <md-icon fontSet="faIcon" class="cs-icon" fontIcon="fa-snowflake-o"></md-icon>
+              Cold Staking <span class="not-enabled">not enabled</span>
+            </div>
+            <button class="mat-raised-button mat-primary pull-right">
+              <md-icon fontSet="faIcon" fontIcon="fa-plus"></md-icon>
+              <strong>Add</strong> node key
+            </button>
+          </md-card>
+
+          <md-card class="multiple staking-node">
+            <div class="title">
+              <md-icon fontSet="faIcon" class="cs-icon" fontIcon="fa-snowflake-o"></md-icon>
+              Cold Staking <span class="enabled">enabled</span>
+            </div>
+            <button class="mat-button pull-right">
+              <md-icon fontSet="faIcon" fontIcon="fa-pencil"></md-icon>
+              <strong>Edit</strong> node key
+            </button>
+          </md-card>
+
+        </div><!-- .cold-staking -->
+
+      </div><!-- .flexitem 50% -->
+
     </div>
   </div>
-</md-card>
+</div><!-- .overview-content -->
