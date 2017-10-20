@@ -52,22 +52,22 @@ export class StatusComponent implements OnInit {
 
   getIconEncryption() {
     switch (this.encryptionStatus) {
-      case 'Unencrypted':
-        return 'lock_open';
+      case 'Unencrypted':  // TODO: icon?
       case 'Unlocked':
-        return 'lock_open';
+        return '_off';
       case 'Unlocked, staking only':
         return '_stake';
       case 'Locked':
-        return 'lock';
+        return '';
       default:
-        return 'lock_open';
+        return '_off'; // TODO: icon?
     }
   }
 
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
+        // TODO: Get rid of 2x opening modals / dialogs..
         this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('encrypt', {'forceOpen': true});
         break;
@@ -79,6 +79,7 @@ export class StatusComponent implements OnInit {
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':
+        // TODO: Get rid of 2x opening modals / dialogs..
         this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('unlock', {forceOpen: true, showStakeOnly: true});
         break;
@@ -88,6 +89,7 @@ export class StatusComponent implements OnInit {
   }
 
   openColdStakeModal() {
+    // TODO: Get rid of 2x opening modals / dialogs..
     this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
     this._modalsService.open('coldStake', {'forceOpen': true});
   }

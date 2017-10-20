@@ -22,7 +22,7 @@
         <div fxFlex="row" fxLayoutGap="10px" layout-padding >
           <div fxFlex="20%"> Label</div>
           <div fxFlex="60%">Address</div>
-          <div fxFlex="20%">Address Type</div>
+          <div fxFlex="30%">Address Type</div>
         </div>
       </md-list-item>
 
@@ -32,7 +32,7 @@
                layout-padding>
             <div fxFlex="20%">{{address.getLabel()}}</div>
             <div fxFlex="60%" class="address">{{address.getAddress()}}</div>
-            <div fxFlex="20%">{{cheatPublicAddress(address.getAddress())}}</div>
+            <div fxFlex="30%">{{cheatPublicAddress(address.getAddress())}}</div>
           </div>
         </md-list-item>
         <md-divider></md-divider>

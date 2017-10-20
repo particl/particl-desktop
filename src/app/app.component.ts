@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { MdDialog } from '@angular/material';
+import { MdDialog, MdIconRegistry } from '@angular/material';
 
 import { WindowService } from './core/window.service';
 
@@ -38,7 +38,12 @@ export class AppComponent implements OnInit {
     private _rpc: RPCService,
     private _modalsService: ModalsService,
     private dialog: MdDialog,
+    private iconRegistry: MdIconRegistry
   ) {
+
+    iconRegistry
+      .registerFontClassAlias('ncIcon', 'nc-icon')
+      .registerFontClassAlias('faIcon', 'fa');
   }
 
   ngOnInit() {
@@ -77,6 +82,7 @@ export class AppComponent implements OnInit {
 
 
   createWallet() {
+    // TODO: Get rid of 2x opening modals / dialogs..
     this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     this._modalsService.open('createWallet', {forceOpen: true});
   }

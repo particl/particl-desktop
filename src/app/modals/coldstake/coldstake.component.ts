@@ -7,6 +7,8 @@ import { ModalsService } from '../modals.service';
 import { RPCService } from '../../core/rpc/rpc.module';
 
 import { PasswordComponent } from '../shared/password/password.component';
+import { MdDialogRef } from '@angular/material';
+import { ModalsComponent } from '../modals.component';
 
 @Component({
   selector: 'app-coldstake',
@@ -39,7 +41,8 @@ export class ColdstakeComponent {
   constructor(
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
-    private _rpc: RPCService
+    private _rpc: RPCService,
+    public dialogRef: MdDialogRef<ModalsComponent>
   ) { }
 
   nextStep () {
@@ -164,8 +167,7 @@ export class ColdstakeComponent {
   }
 
   close() {
-    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
-    document.body.dispatchEvent(escape);
+    this.dialogRef.componentInstance.close();
   }
 
   /**

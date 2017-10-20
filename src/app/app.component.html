@@ -8,7 +8,7 @@
       <md-list class="sidesubmenu">
         <a routerLinkActive="active" routerLink="/overview">
           <md-list-item>
-            <md-icon class="fill">grid_on</md-icon>
+            <md-icon fontSet="ncIcon" fontIcon="nc-grid-48"></md-icon>
             <span>Overview</span>
           </md-list-item>
         </a>
@@ -24,31 +24,31 @@
             <md-list class="sidesubmenu">
               <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/receive' : null">
                 <md-list-item>
-                  <md-icon>arrow_forward</md-icon>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-simple-right"></md-icon>
                   <span>Receive</span>
                 </md-list-item>
               </a>
               <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/send' : null">
                 <md-list-item>
-                  <md-icon>arrow_back</md-icon>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-simple-left"></md-icon>
                   <span>Send</span>
                 </md-list-item>
               </a>
               <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/history' : null">
                 <md-list-item>
-                  <md-icon>history</md-icon>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-time-3"></md-icon>
                   <span>History</span>
                 </md-list-item>
               </a>
               <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/address-book' : null">
                 <md-list-item>
-                  <md-icon>people</md-icon>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
                   <span>Addess Book</span>
                 </md-list-item>
               </a>
               <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
                 <md-list-item>
-                  <md-icon>library_add</md-icon>
+                  <md-icon fontSet="ncIcon" fontIcon="nc-card-add" ></md-icon>
                   <span>Add Acount</span>
                 </md-list-item>
               </a>
@@ -85,90 +85,3 @@
     <router-outlet></router-outlet>
   </div>
 </md-sidenav-container>
-
-<!--<div fullscreen>-->
-<!--<md-drawer-container>-->
-<!--<md-drawer #sidenav (open)="myinput.focus()" mode="push">-->
-<!--<md-toolbar class="logo-area">-->
-<!--<span class="logo"></span>-->
-<!--</md-toolbar>-->
-<!--<md-divider></md-divider>-->
-<!--<md-content layout-padding>-->
-<!--<md-list class="sidesubmenu">-->
-<!--<a routerLinkActive="active" routerLink="/overview">-->
-<!--<md-list-item>-->
-<!--<md-icon class="fill">grid_on</md-icon>-->
-<!--Overview-->
-<!--</md-list-item>-->
-<!--</a>-->
-<!--</md-list>-->
-<!--</md-content>-->
-<!--<md-content layout-padding>-->
-<!--<md-accordion displayMode="flat" [multi]="'multi'"-->
-<!--class="md-expansion-menu">-->
-<!--<md-expansion-panel #panel1 expanded="true">-->
-<!--<md-expansion-panel-header>Wallet</md-expansion-panel-header>-->
-
-<!--<md-content layout-padding class="submenuarea">-->
-<!--<md-list class="sidesubmenu">-->
-<!--<a routerLinkActive="active" routerLink="/wallet/receive">-->
-<!--<md-list-item>-->
-<!--<md-icon>arrow_forward</md-icon>-->
-<!--Recieve-->
-<!--</md-list-item>-->
-<!--</a>-->
-<!--<a routerLinkActive="active" routerLink="/wallet/send">-->
-<!--<md-list-item>-->
-<!--<md-icon>arrow_back</md-icon>-->
-<!--Send-->
-<!--</md-list-item>-->
-<!--</a>-->
-<!--<a routerLinkActive="active" routerLink="/wallet/history">-->
-<!--<md-list-item>-->
-<!--<md-icon>history</md-icon>-->
-<!--History-->
-<!--</md-list-item>-->
-<!--</a>-->
-<!--<a routerLinkActive="active" routerLink="/wallet/address-book">-->
-<!--<md-list-item>-->
-<!--<md-icon>people</md-icon>-->
-<!--Addess Book-->
-<!--</md-list-item>-->
-<!--</a>-->
-<!--<a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">-->
-<!--<md-list-item>-->
-<!--<md-icon>library_add</md-icon>-->
-<!--Add Acount-->
-<!--</md-list-item>-->
-<!--</a>-->
-<!--</md-list>-->
-<!--</md-content>-->
-<!--</md-expansion-panel>-->
-<!--</md-accordion>-->
-<!--</md-content>-->
-<!--</md-drawer>-->
-
-<!--<div class="demo-drawer-content">-->
-<!--<md-toolbar class="header-main">-->
-<!--<button fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()" fxHide.lg>-->
-<!--<md-icon>menu</md-icon>-->
-<!--</button>-->
-<!--{{ title }}-->
-<!--<div class="containerX">-->
-<!--<div fxLayout="row" fxFlex fxLayoutAlign="end center" fxcolor="accent" class="header-icons">-->
-<!--<app-status></app-status>-->
-<!--</div>-->
-<!--</div>-->
-<!--</md-toolbar>-->
-
-<!--<h1>My Content</h1>-->
-
-<!--<div>-->
-<!--<header>Drawer</header>-->
-<!--<button md-button (click)="sidenav.toggle()">Toggle Start Side Drawer</button>-->
-<!--<button md-button (click)="end.toggle()">Toggle End Side Drawer</button>-->
-<!--</div>-->
-<!--<router-outlet></router-outlet>-->
-<!--</div>-->
-<!--</md-drawer-container>-->
-<!--</div>-->

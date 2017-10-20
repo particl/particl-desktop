@@ -1,14 +1,24 @@
 <span class="cursor-pointer" mdTooltip="{{'Peers: '+ peerListCount}}">
-    <img src="assets/icons/network/connect_{{ getIconNumber() }}.png" />
+    <img src="assets/icons/network/connect_{{ getIconNumber() }}.png"/>
 </span>
 
-<i class="material-icons cursor-pointer" (click)="toggle()" mdTooltip="{{encryptionStatus}}">{{ getIconEncryption() }}</i>
+<span
+  class="cursor-pointer icon"
+  mdTooltip="{{encryptionStatus}}"
+  placement="left"
+  container="body"
+  (click)="toggle()"
+  [class.pointer]="">
+    <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png"/>
+</span>
 
 <span
-  class="icon"
+  class="icon cursor-pointer blue cold-icon"
   mdTooltip="Cold"
+  placement="left"
+  container="body"
   (click)="openColdStakeModal()"
   [class.pointer]="">
-    <i class="fa fa-snowflake-o blue" aria-hidden="true"></i>
+    <md-icon fontSet="faIcon" fontIcon="fa-snowflake-o"></md-icon>
   <!-- <i class="fa fa-key red" aria-hidden="true"></i> -->
 </span>

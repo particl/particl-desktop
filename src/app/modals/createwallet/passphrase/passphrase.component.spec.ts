@@ -9,7 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { FocusDirective } from '../../modals.directives';
 import { PassphraseComponent } from './passphrase.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdInputModule } from '@angular/material';
+import { MdDialogRef, MdIconModule, MdInputModule, MdSnackBarModule } from '@angular/material';
+import { FlashNotificationService } from '../../../services/flash-notification.service';
 
 
 describe('PassphraseComponent', () => {
@@ -23,13 +24,18 @@ describe('PassphraseComponent', () => {
         SharedModule,
         RpcModule.forRoot(),
         BrowserAnimationsModule,
-        MdInputModule
+        MdIconModule,
+        MdSnackBarModule
        ],
       declarations: [
         FocusDirective,
         PassphraseComponent
       ],
-      providers: [PassphraseService]
+      providers: [
+        { provide: MdDialogRef},
+        PassphraseService,
+        FlashNotificationService
+      ]
     })
     .compileComponents();
   }));

@@ -29,7 +29,7 @@
   <ng-template [ngIf]="step === 1">
     <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
       <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-        <b>Lets create a new wallet</b><!-- TODO: Dynamic text create / restore -->
+        <b>Let's create a new wallet</b><!-- TODO: Dynamic text create / restore -->
       </div>
 
       <!--<div class="gap50"></div>-->
@@ -48,7 +48,7 @@
               <div class="col-md-12">
                 <md-form-field>
                   <input mdInput #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
-                         name="name" placeholder="Default Account..." required maxlength="32"
+                         name="name" placeholder="Enter Wallet Name here" required maxlength="32"
                          [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
                 </md-form-field>
 
@@ -62,16 +62,16 @@
                   </div>
                 </div>
               </div>
+              <div class="button-row capitalize">
+                <button md-raised-button class="create-wallet-action-button" (click)="prevStep()">
+                  BACK
+                </button>
+                <button md-raised-button class="create-wallet-action-button" color="primary" type="submit"
+                        [disabled]="!nameForm.form.valid">
+                  NEXT STEP
+                </button>
+              </div>
             </div>
-          </div>
-          <div  class="button-row capitalize">
-            <button md-raised-button class="create-wallet-action-button" color="primary" (click)="prevStep()">
-              BACK
-            </button>
-            <button md-raised-button class="create-wallet-action-button" color="primary" type="submit"
-                    [disabled]="!nameForm.form.valid">
-              NEXT STEP
-            </button>
           </div>
         </form>
       </div>
@@ -110,7 +110,7 @@
           <div fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
             <div class="col-md-12">
               <md-form-field>
-                <input mdInput class="form-control width-100" [(ngModel)]="name" placeholder="Default Account..."
+                <input mdInput class="form-control width-100" [(ngModel)]="name" placeholder="Enter Wallet Name here"
                        readonly/>
               </md-form-field>
             </div>
@@ -132,7 +132,8 @@
           [readOnly]="step === 3"
           [words]="words"
           [partialDisable]="step === 4"
-          (wordsEmitter)="wordsFromEmitter($event)">
+          (wordsEmitter)="wordsFromEmitter($event)"
+          [generate]="true">
         </app-passphrase>
       </ng-template>
       <div class="button-row capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
@@ -141,7 +142,7 @@
           {{ errorString }}
         </div>
         <div fxFlex="70%" fxFlexOffset="0px">
-          <button md-raised-button class="create-wallet-action-button" color="primary" (click)="prevStep()">
+          <button md-raised-button class="create-wallet-action-button" (click)="prevStep()">
             BACK
           </button>
           <button md-raised-button class="create-wallet-action-button" color="primary"
@@ -172,7 +173,7 @@
           <div fxFlex="70%">
             <div>
               <md-form-field>
-                <input mdInput [(ngModel)]="name" placeholder="Default Account..." readonly/>
+                <input mdInput [(ngModel)]="name" placeholder="Enter Wallet Name here" readonly/>
               </md-form-field>
             </div>
           </div>
@@ -183,7 +184,8 @@
       <app-passphrase
         #passphraseComponent
         [words]="words"
-        (wordsEmitter)="wordsFromEmitter($event)">
+        (wordsEmitter)="wordsFromEmitter($event)"
+        [generate]="false">
       </app-passphrase>
 
       <div *ngIf="!!errorString"
@@ -204,7 +206,7 @@
           <div class="capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
             <div fxFlex="70%" fxFlexOffset="0px">
               <button md-raised-button (click)="prevStep();initialize(2)">
-                Back
+                BACK
               </button>
             </div>
           </div>
@@ -233,8 +235,15 @@
   </ng-template>
 
   <ng-template [ngIf]="step === 6">
-    <app-unlockwallet
-      (unlockEmitter)="importMnemonicCallback($event)" [autoClose]="false">
-    </app-unlockwallet>
+    <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
+      <app-unlockwallet
+        (unlockEmitter)="importMnemonicCallback($event)" [autoClose]="false">
+      </app-unlockwallet>
+      <!--<div class="capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">-->
+        <!--<button md-raised-button class="create-wallet-action-button" (click)="prevStep()">-->
+          <!--BACK-->
+        <!--</button>-->
+      <!--</div>-->
+    </div>
   </ng-template>
 </div>

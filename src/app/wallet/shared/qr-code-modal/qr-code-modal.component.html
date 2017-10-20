@@ -2,12 +2,12 @@
   <h2 md-dialog-title>
     {{singleAddress.label}}
   </h2>
-  <div>
+  <div fxLayout.lg="row">
     <div>
       <label>Address</label>
       <div>
-        <div>
-          <div *ngFor="let word of showAddress(singleAddress.address)">
+        <div class="details-address" fxLayout="row" layout-padding fxLayoutGap="10px">
+          <div *ngFor="let word of showAddress(singleAddress.address)"  class="address-word" fxFlex="28%">
             {{ word }}
           </div>
         </div>
@@ -23,6 +23,6 @@
     </div>
   </div>
   <md-dialog-actions fxLayoutAlign="end center">
-    <button md-button md-dialog-close>Ok</button>
+    <button md-button md-dialog-close>Close</button>
   </md-dialog-actions>
 </div>

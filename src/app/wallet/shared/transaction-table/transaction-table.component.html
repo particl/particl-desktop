@@ -1,3 +1,8 @@
+<!-- @TODO add empty result box if no result found. & Hide progress bar if no result forund-->
+<md-progress-bar mode="indeterminate" *ngIf="!txService.txs.length > 0"></md-progress-bar>
+<!--<div fxLayoutAlign="center center" *ngIf="!txService.txs.length > 0">-->
+  <!--<md-spinner></md-spinner>-->
+<!--</div>-->
 <app-grid>
   <div class="grid-row grid-header" *ngIf="display.header">
     <div class="cell-date" *ngIf="display.date">date</div>
@@ -11,8 +16,8 @@
   <ng-container *ngFor="let tx of txService.txs let i=index">
     <md-expansion-panel class="history-list" *ngIf="i < display.txDisplayAmount"
                         (click)="showExpandedTransactionDetail(tx)">
-      <md-expansion-panel-header fxLayout.lt-md="column" fxLayout.md="column" fxLayout.lg="row" fxlayout.lt-sm="column"
-                                 fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px"
+      <md-expansion-panel-header fxLayout.lt-md="row" fxLayout.md="row" fxLayout.lg="row" fxlayout.lt-sm="row"
+                                 fxLayout.sm="row" fxlayout.lt-xs="row" fxLayout.xs="row" fxLayoutGap="10px"
                                  layout-padding>
         <md-panel-title fxFlex.lg="10%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.date"
                         class="history_date">
@@ -20,10 +25,10 @@
         </md-panel-title>
         <md-panel-title fxFlex.lg="5%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.category"
                         class="history_cat_icon" [ngSwitch]="tx.category">
-          <span *ngSwitchCase="'stake'"><md-icon color="primary">add</md-icon></span>
-          <span *ngSwitchCase="'orphaned_stake'"><md-icon color="warn">cacel</md-icon></span>
-          <span *ngSwitchCase="'send'"><md-icon color="warn">arrow_forward</md-icon></span>
-          <span *ngSwitchCase="'receive'"><md-icon>arrow_back</md-icon></span>
+          <span *ngSwitchCase="'stake'"><md-icon fontSet="faIcon" fontIcon="fa-plus" color="primary"></md-icon></span>
+          <span *ngSwitchCase="'orphaned_stake'"><md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon></span>
+          <span *ngSwitchCase="'send'"><md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="warn"></md-icon></span>
+          <span *ngSwitchCase="'receive'"><md-icon fontSet="faIcon" fontIcon="fa-arrow-left"></md-icon></span>
         </md-panel-title>
         <md-panel-title fxFlex.lg="45%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.senderAddress"
                         class="history_longAddress">
@@ -100,7 +105,7 @@
     </md-expansion-panel>
   </ng-container>
 
-  <pagination *ngIf="display.pagination"
+  <pagination *ngIf="display.pagination && txService.txs.length > 0"
               [boundaryLinks]="true"
               (pageChanged)="pageChanged($event)"
               [totalItems]="txService.txCount"

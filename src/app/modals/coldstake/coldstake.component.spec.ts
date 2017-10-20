@@ -6,6 +6,7 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 import { ModalsModule } from '../modals.module';
 
 import { ColdstakeComponent } from './coldstake.component';
+import { MdDialogRef } from '@angular/material';
 
 describe('ColdstakeComponent', () => {
   let component: ColdstakeComponent;
@@ -18,6 +19,9 @@ describe('ColdstakeComponent', () => {
         SharedModule,
         RpcModule.forRoot(),
         ModalsModule
+      ],
+      providers: [
+        { provide: MdDialogRef}
       ]
     })
     .compileComponents();

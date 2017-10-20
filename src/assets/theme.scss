@@ -38,7 +38,6 @@
         .mat-icon {
           margin: 4px 8px 0 0;
           color: #41ecc2;
-          font-size: 19px;
         }
         &:hover {
           color: #41ecc2;
@@ -61,7 +60,6 @@
         .mat-icon {
           margin: 4px 8px 0 0;
           color: #938f8f;
-          font-size: 19px;
           &.fill {
             color: #41ecc2;
           }
@@ -117,7 +115,7 @@
  */
 .icon-input {
   input.mat-input-element {
-    height: 27px;
+    height: 29px;
   }
   .mat-icon {
     position: absolute;
@@ -201,6 +199,7 @@ input[type="text"] {
   flex-wrap: nowrap;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: block !important;
 }
 
 .history_txt {
@@ -216,9 +215,6 @@ input[type="text"] {
   align-items: center;
 }
 
-.history-list .mat-icon {
-  font-size: 18px;
-}
 
 .history-list {
   .history_cat_icon {
@@ -242,6 +238,10 @@ input[type="text"] {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  height: 18px;
+}
+.cold-icon {
+  font-size: 1em !important;
 }
 
 /**
@@ -250,7 +250,7 @@ input[type="text"] {
 .mat-dialog-container {
   max-width: 100% !important;
   background: transparent !important;
-  background-color: rgba(255, 255, 255, 0.9) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
   position: relative;
   .close_button {
     position: absolute;
@@ -272,7 +272,6 @@ input[type="text"] {
   min-width: 145px !important;
   margin: 12px !important;
 }
-
 .form_block {
   width: 60%;
   .mat-form-field {
@@ -287,7 +286,7 @@ input[type="text"] {
     margin-top: 30px;
   }
   .wallet-name-label {
-    padding-top: 21px;
+    padding-top: 14px;
     display: inline-block;
     font-weight: 700;
   }
@@ -306,13 +305,31 @@ input[type="text"] {
   border-bottom: 1px solid #ccc;
   margin: 20px 0;
 }
+input[type="text"].md-bg-transparent{
+  background-color: transparent !important;
+}
+
+.md-send-list {
+  .mat-select-trigger{height: 37px;}
+}
+
+.header-nav {
+  list-style-type: none;padding: 0;
+  li {
+    font-weight: bold;
+  }
+}
+panel-header-title {
+  display: block;
+}
+
 
 @media (max-width: 1280px) {
   .qrcode {
     text-align: center;
     img {
-      width: 300px;
-      height: 300px;
+      width: 127px;
+      height: 127px;
     }
   }
   .md-left-border {
@@ -341,8 +358,21 @@ input[type="text"] {
       }
     }
   }
+  .md-send-list {
+    .mat-form-field {
+      width: 100%;
+    }
+    .mat-list {
+      .mat-divider {
+        margin: 4px 0;
+      }
+    }
+  }
+
 
 }
+
+
 
 @media (max-width: 768px) {
   .form_block {

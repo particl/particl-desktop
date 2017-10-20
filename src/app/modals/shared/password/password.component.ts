@@ -25,6 +25,7 @@ export class PasswordComponent {
   @Input() unlockTimeout: number = 60;
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;
+  @Input() isButtonDisable: boolean = false;
 
   /**
     * The password emitter will send over an object with the password and stakingOnly info.
