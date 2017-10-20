@@ -74,8 +74,8 @@ export class TransactionService {
         txResponse.forEach((tx) => {
           this.addTransaction(tx);
         });
-      })
-    .add(_ => this.loading = false);
+        this.loading = false;
+      });
   }
 
   // Deserializes JSON objects to Transaction classes.
