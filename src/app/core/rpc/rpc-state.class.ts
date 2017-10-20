@@ -1,6 +1,10 @@
+import { Log } from 'ng2-logger';
 import { RPCService } from './rpc.service';
 
+
 export class RPCStateClass {
+  private log: any = Log.create('rpc-state.class');
+
   constructor(private rpc: RPCService) {
 
     // Start polling...
@@ -12,7 +16,7 @@ export class RPCStateClass {
     this.lastBlockTimeState();
     this.blockLoop();
     this.walletLockedState();
-    this.activeWalletState();
+    this.initWalletState();
   }
 
   private lastBlockTimeState() {
@@ -45,9 +49,29 @@ export class RPCStateClass {
         .set('locked', ['Locked', 'Unlocked, staking only'].includes(status)));
   }
 
-  private activeWalletState() {
-    this.rpc.state.observe('activeWallet')
-      .subscribe(status => this.rpc.state
-        .set('active', status));
+  private initWalletState() {
+
+    this.rpc.state.observe('encryptionstatus').take(1)
+      .subscribe(
+        status => {
+          const locked = this.rpc.state.get('locked');
+
+          if (locked) {
+            this.rpc.state.set('walletInitialized', true);
+            return;
+          }
+
+          this.rpc.call('extkey', ['list'])
+            .subscribe(
+              response => {
+                // check if account is active
+                if (response.result === 'No keys to list.') {
+                  this.rpc.state.set('walletInitialized', false);
+                } else {
+                  this.rpc.state.set('walletInitialized', true);
+                }
+              },
+              error => this.log.er('RPC Call returned an error', error));
+        });
   }
 }

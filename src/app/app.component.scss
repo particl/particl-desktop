@@ -3,6 +3,7 @@
   top: 50%;
   transform: translateY(-50%);
 }
+
 .logo {
   display: inline-block;
   background-image: url("../assets/particl-logo.svg");
@@ -13,137 +14,7 @@
   width: 120px;
 }
 
-sidebar[position="left"] {
-  & {
-    background-color: #222828;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  .full-width {
-    margin-left: -20px;
-    margin-right: -20px;
-  }
-  hr {
-    @extend .full-width;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 0;
-    border-top: 1px solid #191D1F;
-    border-bottom: 1px solid #272B2B;
-  }
-  .header {
-    & {
-      @extend .full-width;
-      height: 100px;
-      text-align: center;
-      transform-style: preserve-3d;
-    }
-    .logo {
-      @extend .center-vertical;
-    }
-    .toggle-pinned {
-      cursor: pointer;
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      color: #595D5E;
-    }
-  }
-  .menu {
-    .item {
-      display: block;
-      text-decoration: none;
-      margin-left: -20px;
-      margin-right: -20px;
-      padding: 15px 20px;
-      color: #FFF;
-      text-transform: uppercase;
-      font-size: 11px;
-      font-weight: bold;
-    }
-    .icon {
-      color: #595D5E;
-      padding: 0 10px 0 10px;
-    }
-    .category {
-      & {
-        @extend .item;
-        color: #595D5E;
-      }
-      .icon {
-        padding: 0 0 0 10px;
-        float: right;
-        color: #00E8AF;
-        transition: all .2s ease;
-      }
-      .icon.collapsed {
-        transform: rotate(90deg);
-      }
-    }
-    .item.active .icon {
-      color: #00E8AF;
-    }
-  }
-  &.docked {
-    .header {
-      & {
-        text-align: right;
-      }
-      .logo {
-        width: 50px;
-        margin-right: 10px;
-      }
-      .toggle-pinned {
-        display: none;
-      }
-    }
-    .menu {
-      .icon, .category .icon {
-        float: right;
-        padding: 0 10px;
-      }
-    }
-  }
-}
-
-sidebar[position="top"] {
-  & {
-    background-color: #FFF;
-    border-bottom: 1px solid #F2F2F2;
-    box-shadow: 0 0 1px #F2F2F2;
-    padding: 0 15px;
-    transform-style: preserve-3d;
-  }
-  .header {
-    & {
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #000;
-      text-transform: uppercase;
-      font-size: 12px;
-    }
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-    .icon {
-      vertical-align: middle;
-    }
-    * + * {
-      margin-left: 10px;
-    }
-    .toggle-menu {
-      cursor: pointer;
-    }
-  }
-}
-
 /deep/ .verify-sucess {
   color: #4F8A10;
   background-color: #DFF2BF !important;
-}
-
-.error-card {
-  background: red;
 }

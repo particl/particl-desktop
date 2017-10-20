@@ -22,25 +22,25 @@
 
           <md-content layout-padding class="submenuarea">
             <md-list class="sidesubmenu">
-              <a [class.active]="isActiveRoute('/wallet/receive')" routerLink="[]" (click)="changeRoute('/wallet/receive')">
+              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/receive' : null">
                 <md-list-item>
                   <md-icon>arrow_forward</md-icon>
                   <span>Receive</span>
                 </md-list-item>
               </a>
-              <a [class.active]="isActiveRoute('/wallet/send')" routerLink="[]" (click)="changeRoute('/wallet/send')">
+              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/send' : null">
                 <md-list-item>
                   <md-icon>arrow_back</md-icon>
                   <span>Send</span>
                 </md-list-item>
               </a>
-              <a [class.active]="isActiveRoute('/wallet/history')" routerLink="[]" (click)="changeRoute('/wallet/history')">
+              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/history' : null">
                 <md-list-item>
                   <md-icon>history</md-icon>
                   <span>History</span>
                 </md-list-item>
               </a>
-              <a [class.active]="isActiveRoute('/wallet/address-book')" routerLink="[]" (click)="changeRoute('/wallet/address-book')">
+              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/address-book' : null">
                 <md-list-item>
                   <md-icon>people</md-icon>
                   <span>Addess Book</span>
@@ -57,15 +57,18 @@
         </md-expansion-panel>
       </md-accordion>
     </md-content>
-    <md-card class="error-card" *ngIf="isDaemon || !isWalletInitialized">
-      <div class="container" [fxLayout]="'row'">
-        <div fxFlex [fxLayout]="'row'">
-          <div class="one   flexitem " fxFlex="100%">
-              {{errorString}}
-          </div>  
-        </div>    
-      </div>
-    </md-card>
+    <md-content layout-padding *ngIf="!!daemonError || !!walletError">
+      <md-list class="sidesubmenu">
+        <md-list-item *ngIf="daemonError">
+          <md-icon>error</md-icon>
+          {{daemonError}}
+        </md-list-item>
+        <md-list-item *ngIf="walletError">
+          <md-icon>error</md-icon>
+          {{walletError}}
+        </md-list-item>
+      </md-list>
+    </md-content>
   </md-sidenav>
   <md-toolbar class="header-main">
     <button fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()" fxHide.lg>
