@@ -29,11 +29,12 @@ export class TransactionService {
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.rpc.state.observe('txcount')
-      .subscribe(txcount => {
-        this.txCount = txcount;
-        this.currentPage = 0;
-        this.rpc_update();
-      });
+      .subscribe(
+        txcount => {
+          this.txCount = txcount;
+          this.currentPage = 0;
+          this.rpc_update();
+        });
   }
 
 

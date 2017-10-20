@@ -32,8 +32,9 @@ export class PassphraseComponent implements  OnChanges {
 
   log: any = Log.create('passphrase.component');
 
-  constructor(private _passphraseService: PassphraseService,
-              private flashNotificationService: FlashNotificationService) {
+  constructor(
+    private _passphraseService: PassphraseService,
+    private flashNotificationService: FlashNotificationService) {
   }
 
   ngOnChanges(): void {

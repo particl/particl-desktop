@@ -1,5 +1,5 @@
 <!-- @TODO add empty result box if no result found. & Hide progress bar if no result forund-->
-<md-progress-bar mode="indeterminate" *ngIf="!txService.txs.length > 0"></md-progress-bar>
+<md-progress-bar mode="indeterminate" *ngIf="!txService.txs.length"></md-progress-bar>
 <!--<div fxLayoutAlign="center center" *ngIf="!txService.txs.length > 0">-->
   <!--<md-spinner></md-spinner>-->
 <!--</div>-->
@@ -105,15 +105,17 @@
     </md-expansion-panel>
   </ng-container>
 
-  <pagination *ngIf="display.pagination && txService.txs.length > 0"
-              [boundaryLinks]="true"
-              (pageChanged)="pageChanged($event)"
-              [totalItems]="txService.txCount"
-              [maxSize]="5" [rotate]="false"
-              [(ngModel)]="txService.currentPage"
-              class="pagination-sm center"
-              previousText="&lsaquo;" nextText="&rsaquo;"
-              firstText="&laquo;" lastText="&raquo;"
-              [itemsPerPage]="txService.MAX_TXS_PER_PAGE">
+  <pagination
+    *ngIf="display.pagination && (txService.txs.length > 0||txService.currentPage>1)"
+    [hidden]="!txService.txs.length"
+    [boundaryLinks]="true"
+    (pageChanged)="pageChanged($event)"
+    [totalItems]="txService.txCount"
+    [maxSize]="5" [rotate]="false"
+    [(ngModel)]="txService.currentPage"
+    class="pagination-sm center"
+    previousText="&lsaquo;" nextText="&rsaquo;"
+    firstText="&laquo;" lastText="&raquo;"
+    [itemsPerPage]="txService.MAX_TXS_PER_PAGE">
   </pagination>
 </app-grid>
