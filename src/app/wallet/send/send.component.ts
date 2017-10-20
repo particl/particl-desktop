@@ -33,6 +33,7 @@ export class SendComponent {
 
   type: string = 'sendPayment';
   advanced: boolean = false;
+  progress: number = 10;
   advancedText: string = 'Show Recipient Address'
   // TODO: Create proper Interface / type
   send: any = {
@@ -44,7 +45,7 @@ export class SendComponent {
     validAmount: undefined,
     isMine: undefined,
     currency: 'part',
-    privacy: 50
+    privacy: 8
   };
 
   /*
@@ -62,6 +63,7 @@ export class SendComponent {
     private dialog: MdDialog,
     private flashNotification: FlashNotificationService
   ) {
+    this.progress = 50;
   }
 
   /** Select tab */
@@ -291,6 +293,11 @@ export class SendComponent {
       .subscribe(
         response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
         error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
+  }
+
+  setPrivacy(level: number, prog: number) {
+    this.send.privacy = level;
+    this.progress = prog;
   }
 
 }

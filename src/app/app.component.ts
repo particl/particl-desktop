@@ -7,6 +7,7 @@ import { WindowService } from './core/window.service';
 
 import { SettingsService } from './settings/settings.service';
 
+import { RPCService } from './core/rpc/rpc.service';
 import { ModalsService } from './modals/modals.service';
 
 // Syncing example
@@ -26,12 +27,15 @@ export class AppComponent implements OnInit {
   isFixed: boolean = false;
   title: string = '';
   log: any = Log.create('app.component');
-
+  walletInitialized: boolean = false;
+  daemonRunning: boolean = false;
+  daemonError: string = '';
+  walletError: string = '';
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     public window: WindowService,
-    // Modal example
+    private _rpc: RPCService,
     private _modalsService: ModalsService,
     private dialog: MdDialog,
   ) {
@@ -57,6 +61,18 @@ export class AppComponent implements OnInit {
     this.log.w('warn!');
     this.log.i('info');
     this.log.d('debug');
+
+    this._rpc.modalUpdates.asObservable().subscribe(status => {
+      this.daemonRunning = !status.error;
+      this.daemonError = this.daemonRunning ? '' : 'Connection Refused, Daemon is not connected';
+    });
+
+    this._rpc.state.observe('walletInitialized')
+      .subscribe(
+        status => {
+          this.walletInitialized = status;
+          this.walletError = status ? '' : 'Please create wallet first to access other tabs';
+      });
   }
 
 
