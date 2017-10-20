@@ -4,9 +4,20 @@ $bg-shadow: #E9E9E9; // lines under titles etc.
 
 $text-muted: #7E8790; // grey (for section titles, descriptions etc.)
 
-.header-nav {
+.header-nav { // section titles
     padding: 0 0 20px; margin: 30px 0 30px;
     border-bottom: 1px solid $bg-shadow;
+}
+
+.balance-overview { // list of balances
+    padding: 24px 50px;
+    .balance-item {
+        border-right: 1px solid $bg-shadow;
+        margin-right: 25px;
+        &:last-of-type {
+            border: none; margin: none;
+        }
+    }
 }
 
 .overview-content { // area with widgets
@@ -43,6 +54,6 @@ md-card.multiple {
             & > .enabled { color: $color; }
             & > .not-enabled { color: $color-alert; }
         }
-        button { text-transform: uppercase; }
+        button { font-size: 12px; text-transform: uppercase; }
     }
 }
