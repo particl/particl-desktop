@@ -2,8 +2,14 @@
 
 $font: "Open Sans", sans-serif;
 
+// main colors
+$color: #02E8B0; // primary green-ish color
+$color-alert: #EE494D;
+
+// text colors
 $text-muted: #7E8790; // grey (for section titles, descriptions etc.)
 
+// bg/element colors
 $bg-shadow: #E9E9E9; // lines, box shadows etc.
 
 /**
@@ -63,7 +69,7 @@ $bg-shadow: #E9E9E9; // lines, box shadows etc.
         font-weight: bold;
         min-height: 40px;
         border-bottom: none;
-        .mat-icon {
+        /*.mat-icon {
           margin: 4px 8px 0 0;
           color: #938f8f;
           &.fill {
@@ -72,7 +78,7 @@ $bg-shadow: #E9E9E9; // lines, box shadows etc.
         }
         &:hover {
           color: #41ecc2;
-        }
+        }*/
       }
     }
   }
@@ -83,9 +89,11 @@ $bg-shadow: #E9E9E9; // lines, box shadows etc.
   background: #fff;
 }
 
+/*
 .active > md-list-item > div > md-icon {
   color: #41ECC2 !important;
 }
+*/
 
 .containerX {
   width: 100%;
