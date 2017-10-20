@@ -7,6 +7,7 @@ import { WindowService } from './core/window.service';
 
 import { SettingsService } from './settings/settings.service';
 
+import { RPCService } from './core/rpc/rpc.service';
 import { ModalsService } from './modals/modals.service';
 
 // Syncing example
@@ -26,11 +27,14 @@ export class AppComponent implements OnInit {
   isFixed: boolean = false;
   title: string = '';
   log: any = Log.create('app.component');
-
+  isWalletInitialized: boolean = false;
+  isDaemon: boolean = false;
+  errorString: string = '';
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     public window: WindowService,
+    private _rpc: RPCService,
     // Modal example
     private _modalsService: ModalsService,
     private dialog: MdDialog,
@@ -57,11 +61,40 @@ export class AppComponent implements OnInit {
     this.log.w('warn!');
     this.log.i('info');
     this.log.d('debug');
+    this._rpc.modalUpdates.asObservable().subscribe(status => {
+      if (status.error) {
+        this.isDaemon = true;
+        this.errorString = 'Connection Refused, Daemon is not connected'
+        // no error and daemon model open -> close it
+      } else {
+        this.isDaemon = false;
+      }
+    });
+
+    this._rpc.state.observe('activeWallet')
+      .subscribe(status => {
+          if (!status && !this.isDaemon) {
+            this.errorString = 'Please create wallet first to access other tabs';
+            this.isWalletInitialized = status;
+          } else {
+            this.isWalletInitialized = status;
+          }
+      });
   }
 
 
   createWallet() {
     this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     this._modalsService.open('createWallet', {forceOpen: true});
+  }
+
+  changeRoute(link: string) {
+    if (this.isWalletInitialized) {
+      this._router.navigate([link])
+    }
+  }
+
+  isActiveRoute(path: string) {
+    return this._router.url === path;
   }
 }
