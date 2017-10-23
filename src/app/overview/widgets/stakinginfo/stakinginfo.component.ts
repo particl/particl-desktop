@@ -26,35 +26,35 @@ export class StakinginfoComponent implements OnInit {
 
   constructor(
     private state: StateService
-  ) {
+    ) {
     this.log.d(`constructor, started`);
     this.state.observe('percentyearreward')
-      .subscribe(
-        success => {
-          this.log.d(`setting curStakeReward ${success}`);
-          this.curStakeReward = success;
-          this.calculateDynamicStakingReward();
-        },
-        error => this.log.er('Constructor, percentyearreward error:' + error));
+    .subscribe(
+      success => {
+        this.log.d(`setting curStakeReward ${success}`);
+        this.curStakeReward = success;
+        this.calculateDynamicStakingReward();
+      },
+      error => this.log.er('Constructor, percentyearreward error:' + error));
 
 
     this.state.observe('netstakeweight')
-      .subscribe(
-        success => {
-          this.log.d(`setting weight ${success}`);
-          this.curWeight = success / (10000000);
-          this.calculateDynamicStakingReward();
-        },
-        error => this.log.er('Constructor, weight error:' + error));
+    .subscribe(
+      success => {
+        this.log.d(`setting weight ${success}`);
+        this.curWeight = success / (10000000);
+        this.calculateDynamicStakingReward();
+      },
+      error => this.log.er('Constructor, weight error:' + error));
 
     this.state.observe('moneysupply')
-      .subscribe(
-        success => {
-          this.log.d(`setting moneysupply ${success}`);
-          this.curSupply = success;
-          this.calculateDynamicStakingReward();
-        },
-        error => this.log.er('Constructor, moneysupply error:' + error));
+    .subscribe(
+      success => {
+        this.log.d(`setting moneysupply ${success}`);
+        this.curSupply = success;
+        this.calculateDynamicStakingReward();
+      },
+      error => this.log.er('Constructor, moneysupply error:' + error));
 
   }
 
@@ -69,7 +69,7 @@ export class StakinginfoComponent implements OnInit {
   }
 
   getBeforeDot(int: number): string {
-    if ((int + '').indexOf('.') >= 0) {
+    if ((int.toString()).indexOf('.') >= 0) {
       return (int + '').split('.')[0];
     } else {
       return '0';
@@ -77,8 +77,8 @@ export class StakinginfoComponent implements OnInit {
   }
 
   getAfterDot(int: number): string {
-    if ((int + '').indexOf('.') >= 0) {
-      return (int + '').split('.')[1];
+    if ((int.toString()).indexOf('.') >= 0) {
+      return (int.toString()).split('.')[1];
     } else {
       return '0';
     }
