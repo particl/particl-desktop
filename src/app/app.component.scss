@@ -16,7 +16,9 @@ $color-alert: #EE494D;
   border-bottom: 1px solid #15191A;
   box-shadow: 0 1px 0 #333 !important;
   .mat-expansion-panel-header {
-    font-family: $font; font-size: 11.5px; color: #646869;
+    font-family: $font;
+    font-size: 11.5px;
+    color: #646869;
     text-transform: uppercase;
   }
 }
@@ -27,11 +29,15 @@ $color-alert: #EE494D;
 }
 
 .menu-item {
-  font-family: $font; font-size: 11.5px; font-weight: 600; color: white;
+  font-family: $font;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: white;
 }
 
 .mat-divider { // section divider
-  border-bottom: 1px solid #333; border-top: 1px solid #15191A;
+  border-bottom: 1px solid #333;
+  border-top: 1px solid #15191A;
 }
 
 

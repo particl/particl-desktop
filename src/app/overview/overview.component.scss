@@ -35,7 +35,8 @@ md-card.multiple {
         font-size: 24px;
     }
     & > .description {
-        color: $text-muted; text-transform: uppercase;
+        color: $text-muted;
+        text-transform: uppercase;
         margin-top: 15px;
     }
 }
@@ -44,16 +45,24 @@ md-card.multiple {
     .staking-node {
         padding: 24px 24px 30px;
         .cs-icon { // snowflake
-            font-size: 40px; color: $bg-shadow;
-            position: relative; top: 9px;
-            width: auto; height: auto; margin: -11px 15px 0 0;
+            font-size: 40px;
+            color: $bg-shadow;
+            position: relative;
+            top: 9px;
+            width: auto;
+            height: auto;
+            margin: -11px 15px 0 0;
         }
         .title {
             display: inline-block;
-            text-transform: uppercase; font-weight: bold;
+            text-transform: uppercase;
+            font-weight: bold;
             & > .enabled { color: $color; }
             & > .not-enabled { color: $color-alert; }
         }
-        button { font-size: 12px; text-transform: uppercase; }
+        button {
+            font-size: 12px;
+            text-transform: uppercase;
+        }
     }
 }

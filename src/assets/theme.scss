@@ -337,9 +337,13 @@ input[type="text"].md-bg-transparent {
 }
 
 .header-nav {
-  list-style-type: none; padding: 0;
+  list-style-type: none;
+  padding: 0;
   li {
-    font-size: 16px; font-weight: normal; text-transform: uppercase; color: $text-muted;
+    font-size: 16px;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: $text-muted;
   }
 }
 panel-header-title {
