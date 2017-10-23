@@ -14,94 +14,85 @@
     <div class="cell-amount" *ngIf="display.amount">amount</div>
   </div>
   <ng-container *ngFor="let tx of txService.txs let i=index">
-    <md-expansion-panel class="history-list" *ngIf="i < display.txDisplayAmount"
-                        (click)="showExpandedTransactionDetail(tx)">
-      <md-expansion-panel-header fxLayout.lt-md="row" fxLayout.md="row" fxLayout.lg="row" fxlayout.lt-sm="row"
-                                 fxLayout.sm="row" fxlayout.lt-xs="row" fxLayout.xs="row" fxLayoutGap="10px"
-                                 layout-padding>
-        <md-panel-title fxFlex.lg="10%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.date"
-                        class="history_date">
+    <md-expansion-panel class="history-list" *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)">
+
+      <md-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
+
+        <!-- Date -->
+        <md-panel-title fxFlex.lg="15" fxFlex.lt-lg="100" *ngIf="display.date" class="history_date">
           {{ tx.getDate() }}
         </md-panel-title>
-        <md-panel-title fxFlex.lg="5%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.category"
-                        class="history_cat_icon" [ngSwitch]="tx.category">
-          <span *ngSwitchCase="'stake'"><md-icon fontSet="faIcon" fontIcon="fa-plus" color="primary"></md-icon></span>
-          <span *ngSwitchCase="'orphaned_stake'"><md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon></span>
-          <span *ngSwitchCase="'send'"><md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="warn"></md-icon></span>
-          <span *ngSwitchCase="'receive'"><md-icon fontSet="faIcon" fontIcon="fa-arrow-left"></md-icon></span>
-        </md-panel-title>
-        <md-panel-title fxFlex.lg="45%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.senderAddress"
-                        class="history_longAddress">
-          {{ tx.getAddress() }}
-        </md-panel-title>
-        <md-panel-title fxFlex.lg="20%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.txid"
-                        class="history_txt">
-          <span md-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row">
-            <span fxFlex="10%">
-            <b>TxId</b>
-            </span>
-            <span fxFlex="80%">{{ tx.txid }} </span>
+
+        <!-- Category icon -->
+        <md-panel-title fxFlex.lg="5" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
+          <span mdTooltip="Staked" *ngSwitchCase="'stake'">
+            <md-icon fontSet="faIcon" fontIcon="fa-plus" color="primary"></md-icon>
+          </span>
+          <span mdTooltip="Orphaned stake" *ngSwitchCase="'orphaned_stake'">
+            <md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon>
+          </span>
+          <span mdTooltip="Sent" *ngSwitchCase="'send'">
+            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="warn"></md-icon>
+          </span>
+          <span mdTooltip="Received" *ngSwitchCase="'receive'">
+            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left"></md-icon>
           </span>
         </md-panel-title>
-        <md-panel-title fxFlex.lg="20%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.blockIndex"
-                        class="history_blockIndex">
+
+        <!-- Address -->
+        <md-panel-title fxFlex.lg="57" fxFlex.lt-lg="100" *ngIf="display.senderAddress" class="history_longAddress">
+          {{ tx.getAddress() }}
+        </md-panel-title>
+
+        <md-panel-title fxFlex.lg="20" fxFlex.lt-lg="100" *ngIf="display.txid" class="history_txt">
+          <span md-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row">
+            <span fxFlex="10"><b>TxId</b></span>
+            <span fxFlex="80">{{ tx.txid }} </span>
+          </span>
+        </md-panel-title>
+
+        <md-panel-title fxFlex.lg="20" fxFlex.lt-lg="100" *ngIf="display.blockIndex" class="history_blockIndex">
           <span md-line>Blockindex {{ tx.blockindex }}</span>
         </md-panel-title>
 
-        <md-panel-title fxFlex.lg="20%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.confirmations"
-                        class="history_confirmation">
-          <span md-line><b>Confirmations</b> {{ tx.confirmations }}</span>
+        <!-- Confirmations -->
+        <md-panel-title fxFlex.lg="5" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
+          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.confirmations }}</span>
         </md-panel-title>
-        <md-panel-title fxFlex.lg="20%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%" *ngIf="display.amount"
-                        class="history_amount">
-          <span md-line><b>Amount</b> {{ tx.getAmount() }} PART</span>
+
+        <!-- Amount -->
+        <md-panel-title fxFlex.lg="18" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
+          <span md-line><span class="amount">{{ tx.getAmount() }}</span> PART</span>
         </md-panel-title>
+
       </md-expansion-panel-header>
 
-      <div class="container history_container" fxLayout.lt-md="column" fxLayout.md="column" fxLayout.lg="column"
-           fxlayout.lt-sm="column"
-           fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px"
-           layout-padding>
-        <div fxLayout.lt-md="column" fxLayout.md="column" fxLayout.lg="row" fxlayout.lt-sm="column"
-             fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
-          <div fxFlex="50%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <b fxFlex.lg="30%" fxFlex.md="40%" fxFlex.sm="100%" fxFlex.xs="100%">Status:</b>
-            <span class="md-right" fxFlex.lg="70%" fxFlex.md="60%" fxFlex.sm="100%" fxFlex.xs="100%">{{tx.confirmations}} confirmations</span>
+
+      <div class="container history_container" fxLayout="row" fxLayoutGap="10px" layout-padding>
+
+        <div fxLayout="column" fxFlex="55">
+          <div class="tx-detail-item" fxFlex>
+            <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">To/from:</b>
+            <input class="md-right" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" value="{{ tx.getAddress() }}" placeholder="To/from">
           </div>
-          <div fxFlex="50%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <b fxFlex.lg="30%" fxFlex.md="40%" fxFlex.sm="100%" fxFlex.xs="100%">Transaction ID:</b>
-            <a class="md-right highlight" fxFlex.lg="70%" fxFlex.md="60%" fxFlex.sm="100%" fxFlex.xs="100%"
-               href="https://explorer-testnet.particl.io/tx/{{tx.txid}}"
-               target="_blank">{{tx.txid}}</a>
+          <div class="tx-detail-item" fxFlex>
+            <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">Transaction ID:</b>
+            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight" href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" target="_blank">{{tx.txid}}</a>
           </div>
         </div>
 
-        <div fxLayout.lt-md="column" fxLayout.md="column" fxLayout.lg="row" fxlayout.lt-sm="column"
-             fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxFlex>
-          <div fxFlex="50%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <b fxFlex.lg="30%" fxFlex.md="40%" fxFlex.sm="100%" fxFlex.xs="100%">Date:</b>
-            <span class="md-right" fxFlex.lg="70%" fxFlex.md="60%" fxFlex.sm="100%"
-                  fxFlex.xs="100%">{{tx.getDate()}}</span>
+        <div fxLayout.lg="column" fxFlex="45">
+          <div class="tx-detail-item" fxFlex>
+            <b fxFlex.lg="40" fxFlex.md="40" fxFlex.lt-md="100">Transaction fee:</b>
+            <span fxFlex.lg="60" fxFlex.md="60" fxFlex.lt-md="100" class="md-right">{{tx.fee ? tx.fee : 0}} PART</span>
           </div>
-          <div fxFlex="50%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <b fxFlex.lg="40%" fxFlex.md="40%" fxFlex.sm="100%" fxFlex.xs="100%">Transaction fee:</b>
-            <span class="md-right" fxFlex.lg="60%" fxFlex.md="60%" fxFlex.sm="100%" fxFlex.xs="100%">{{tx.fee ? tx.fee : 0}} PART</span>
+          <div class="tx-detail-item" fxFlex>
+            <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">Net amount:</b>
+            <span class="md-right" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100">{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART</span>
           </div>
         </div>
 
-        <div fxLayout.lt-md="column" fxLayout.md="column" fxLayout.lg="row" fxlayout.lt-sm="column"
-             fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxFlex>
-          <div fxFlex="50%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <b fxFlex.lg="30%" fxFlex.md="40%" fxFlex.sm="100%" fxFlex.xs="100%">To:</b>
-            <span class="md-right" fxFlex.lg="70%" fxFlex.md="60%" fxFlex.sm="100%"
-                  fxFlex.xs="100%">{{tx.getAddress()}}</span>
-          </div>
-          <div fxFlex="50%">
-            <b fxFlex.lg="30%" fxFlex.md="40%" fxFlex.sm="100%" fxFlex.xs="100%">Net amount:</b>
-            <span class="md-right" fxFlex.lg="70%" fxFlex.md="60%" fxFlex.sm="100%" fxFlex.xs="100%">{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART</span>
-          </div>
-        </div>
-      </div>
+      </div><!-- .history_cointainer -->
     </md-expansion-panel>
   </ng-container>
 
