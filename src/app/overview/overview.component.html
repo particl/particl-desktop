@@ -1,21 +1,19 @@
-<md-card class="balance-overview">
+<md-card class="balance-overview" fxLayoutWrap fxLayoutGap="3%">
   <!-- https://github.com/angular/flex-layout/wiki/API-Documentation#html-api-declarative -->
-  <div fxLayoutWrap fxLayoutGap="3%">
-    <div class="one flexitem balance-item" fxFlex="20">
-      <app-balance type="total_balance"></app-balance>
-    </div>
-    <div class="two flexitem balance-item" fxFlex="17">
-      <app-balance type="balance"></app-balance>
-    </div>
-    <div class="three flexitem balance-item" fxFlex="17">
-      <app-balance type="blind_balance"></app-balance>
-    </div>
-    <div class="four flexitem balance-item" fxFlex="17">
-      <app-balance type="anon_balance"></app-balance>
-    </div>
-    <div class="five flexitem balance-item" fxFlex="17">
-      <app-balance type="staked_balance"></app-balance>
-    </div>
+  <div class="balance-item" fxFlex="20">
+    <app-balance type="total_balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="blind_balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="anon_balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="staked_balance"></app-balance>
   </div>
 </md-card>
 
@@ -23,7 +21,7 @@
 <div class="overview-content" fxLayout="row" fxLayoutGap="5%">
 
 
-  <div class="recent-transactions" fxFlex="50">
+  <div class="recent-transactions" fxFlex="65">
     <app-header>
       <ul class="header-nav">
         <li>Recent Transactions</li>
@@ -38,47 +36,21 @@
   </div><!-- .recent-transactions -->
 
 
-  <div class="staking-info" fxFlex="45">
+  <div class="overview-sidebar" fxFlex="30">
 
-    <app-header>
-      <ul class="header-nav">
-        <li>Staking Information</li>
-      </ul>
-      <!--ul class="header-nav pull-right">
-        <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li>
-      </ul-->
-    </app-header>
-
-    <md-card class="multiple">
-      <div fxLayout="row">
-        <div fxFlex class="stat-box">
-          <div class="value">~3 h</div>
-          <div class="description">Next reward</div>
-          <app-stakinginfo></app-stakinginfo>
-        </div>
-        <div fxFlex class="stat-box">
-          <div class="value">1<span class="point">.</span><small>5</small>&nbsp;%</div>
-          <div class="description">Stake percentage</div>
-        </div>
-        <div fxFlex class="stat-box">
-          <div class="value">1<span class="point">.</span><small>4949327</small>&nbsp;PART</div>
-          <div class="description">Stake reward</div>
-        </div>
-      </div>
-    </md-card>
-
-    <md-card class="multiple">
-      <div fxLayout="row">
-        <div fxFlex class="stat-box">
-          <div class="value">2254764680994</div>
-          <div class="description">Your Stake weight</div>
-        </div>
-        <div fxFlex class="stat-box">
-          <div class="value">434972889332496</div>
-          <div class="description">Network Stake weight</div>
-        </div>
-      </div>
-    </md-card>
+    <div class="staking-info">
+      <app-header>
+        <ul class="header-nav">
+          <li>Staking Information</li>
+        </ul>
+        <!--ul class="header-nav pull-right">
+          <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li>
+        </ul-->
+      </app-header>
+      <md-card>
+        <app-stakinginfo></app-stakinginfo> 
+      </md-card>
+    </div><!-- .staking-info -->
 
 
     <div class="cold-staking">
@@ -91,28 +63,25 @@
       <md-card class="multiple staking-node">
         <div class="title">
           <md-icon fontSet="faIcon" class="cs-icon" fontIcon="fa-snowflake-o"></md-icon>
-          Cold Staking <span class="not-enabled">not enabled</span>
+          Cold Staking <span class="not-enabled">inactive</span>
         </div>
-        <button class="mat-raised-button mat-primary pull-right">
+        <button class="mat-raised-button mat-primary pull-right" mdTooltip="Add Cold Staking node key">
           <md-icon fontSet="faIcon" fontIcon="fa-plus"></md-icon>
-          <strong>Add</strong> node key
         </button>
       </md-card>
 
       <md-card class="multiple staking-node">
         <div class="title">
           <md-icon fontSet="faIcon" class="cs-icon" fontIcon="fa-snowflake-o"></md-icon>
-          Cold Staking <span class="enabled">enabled</span>
+          Cold Staking <span class="enabled">active</span>
         </div>
-        <button class="mat-button pull-right">
+        <button class="mat-button pull-right" mdTooltip="Edit Cold Staking node key">
           <md-icon fontSet="faIcon" fontIcon="fa-pencil"></md-icon>
-          <strong>Edit</strong> node key
         </button>
       </md-card>
-
     </div><!-- .cold-staking -->
 
-  </div><!-- .staking-info -->
+  </div><!-- .overview-sidebar -->
 
 
 </div><!-- .overview-content -->

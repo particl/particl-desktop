@@ -29,17 +29,6 @@ md-card.multiple {
     margin-bottom: 20px;
 }
 
-.stat-box {
-    & > .value {
-        font-size: 24px;
-    }
-    & > .description {
-        color: $text-muted;
-        text-transform: uppercase;
-        margin-top: 15px;
-    }
-}
-
 .cold-staking {
     .staking-node {
         padding: 24px 24px 30px;
