@@ -22,7 +22,11 @@ describe('OverviewComponent', () => {
         FlexLayoutModule,
         MdCardModule
       ],
-      declarations: [OverviewComponent, StakinginfoComponent],
+      declarations: [
+        OverviewComponent,
+        StakinginfoComponent,
+        ColdstakeComponent
+      ],
     })
       .compileComponents();
   }));
