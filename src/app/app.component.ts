@@ -31,6 +31,8 @@ export class AppComponent implements OnInit {
   daemonRunning: boolean = false;
   daemonError: string = '';
   walletError: string = '';
+  isPinned: boolean = true;
+  sideMenu: boolean = true;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -80,6 +82,24 @@ export class AppComponent implements OnInit {
       });
   }
 
+  toggle() {
+    this.sideMenu = !this.sideMenu;
+    if (this.sideMenu) {
+      this.isPinned = true;
+    } else {
+      this.isPinned = false;
+    }
+  }
+
+  unPin(value: string) {
+    if (!this.sideMenu) {
+      if (value === 'enter') {
+        this.isPinned = true;
+      } else {
+        this.isPinned = false;
+      }
+    }
+  }
 
   createWallet() {
     // TODO: Get rid of 2x opening modals / dialogs..
