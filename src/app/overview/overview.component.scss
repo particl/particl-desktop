@@ -13,7 +13,6 @@ $text-muted: #7E8790; // grey (for section titles, descriptions etc.)
     padding: 24px 50px;
     .balance-item {
         border-right: 1px solid $bg-shadow;
-        margin-right: 25px;
         &:last-of-type {
             border: none; margin: none;
         }
