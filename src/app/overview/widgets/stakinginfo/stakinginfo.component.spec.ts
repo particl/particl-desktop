@@ -4,6 +4,9 @@ import { StakinginfoComponent } from './stakinginfo.component';
 import { StateService } from '../../../core/state/state.service';
 import { SharedModule } from '../../../shared/shared.module';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MdCardModule } from '@angular/material';
+
 describe('StakinginfoComponent', () => {
   let component: StakinginfoComponent;
   let fixture: ComponentFixture<StakinginfoComponent>;

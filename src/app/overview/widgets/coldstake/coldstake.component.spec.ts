@@ -2,6 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ColdstakeComponent } from './coldstake.component';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MdCardModule } from '@angular/material';
+
 describe('ColdstakeComponent', () => {
   let component: ColdstakeComponent;
   let fixture: ComponentFixture<ColdstakeComponent>;
