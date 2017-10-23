@@ -67,4 +67,21 @@ export class StakinginfoComponent implements OnInit {
     this.curWeight = Math.floor(this.curWeight);
     this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
   }
+
+  getBeforeDot(int: number): string {
+    if ((int + '').indexOf('.') >= 0) {
+      return (int + '').split('.')[0];
+    } else {
+      return '0';
+    }
+  }
+
+  getAfterDot(int: number): string {
+    if ((int + '').indexOf('.') >= 0) {
+      return (int + '').split('.')[1];
+    } else {
+      return '0';
+    }
+  }
+
 }

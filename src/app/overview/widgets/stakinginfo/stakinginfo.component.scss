@@ -1,0 +1,12 @@
+@import '../shared/shared.scss';
+
+.stat-box {
+    & > .value {
+        font-size: 24px;
+    }
+    & > .description {
+        color: $text-muted;
+        text-transform: uppercase;
+        margin-top: 15px;
+    }
+}

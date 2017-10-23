@@ -32,6 +32,7 @@ import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo
 import 'hammerjs';
 import { FlashNotificationService } from './services/flash-notification.service';
 import { BlockStatusService } from './core/rpc/blockstatus.service';
+import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -45,7 +46,8 @@ const routes: Routes = [
     StatusComponent,
     OverviewComponent,
     SettingsComponent,
-    StakinginfoComponent
+    StakinginfoComponent,
+    ColdstakeComponent
   ],
   imports: [
     BrowserModule,

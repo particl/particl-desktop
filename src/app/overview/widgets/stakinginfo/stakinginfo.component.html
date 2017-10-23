@@ -1,2 +1,47 @@
-<h4>STAKING REWARD: ~{{dynamicStakingReward}}%</h4>
-<h4>NETWORK WEIGHT: ~{{curWeight}}</h4>
+        <app-header>
+          <ul class="header-nav">
+            <li>Staking Information</li>
+          </ul>
+          <ul class="header-nav pull-right">
+            <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
+          </ul>
+        </app-header>
+        <md-card class="multiple">
+          <div fxFlex [fxLayout]="'row'">
+            <div class="one flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">~3 h</div>
+                <div class="description">Next reward</div>
+              </div>
+            </div>
+            <div class="two flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">{{dynamicStakingReward}}<span class="point">.</span><small>{{getAfterDot(dynamicStakingReward)}}</small>&nbsp;%</div>
+                <div class="description">Stake percentage</div>
+              </div>
+            </div>
+            <div class="three flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">1<span class="point">.</span><small>4949327</small>&nbsp;PART</div>
+                <div class="description">Stake reward</div>
+              </div>
+            </div>
+          </div>
+        </md-card>
+
+        <md-card class="multiple">
+          <div fxFlex [fxLayout]="'row'">
+            <div class="two flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">2254764680994</div>
+                <div class="description">Your Stake weight</div>
+              </div>
+            </div>
+            <div class="two flexitem" fxFlex>
+              <div class="stat-box">
+                <div class="value">434972889332496</div>
+                <div class="description">Network Stake weight</div>
+              </div>
+            </div>
+          </div>
+        </md-card>
