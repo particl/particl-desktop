@@ -21,8 +21,8 @@
         <md-list-item>
           <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
                fxlayout.lt-xs="column" fxLayoutGap="10px" layout-padding>
-            <div fxFlex="20%" class="title cursor-pointer" *ngIf="displayLabel" (click)="editLabel(address.address)"> {{
-              address.label }}
+            <div fxFlex="20%" class="title" *ngIf="displayLabel" >
+              <span  class="cursor-pointer" (click)="editLabel(address.address)" mdTooltip="Edit">{{address.label }}</span>
             </div>
             <div fxFlex="50%" class="address">
               <span class="title" *ngIf="displayAddress">Address: </span>
@@ -55,7 +55,7 @@
                   </md-icon>
                 </span>
                 <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
-                  <md-icon color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"
+                  <md-icon class="cursor-pointer" color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"
                            (click)="deleteAddress(address.label, address.address)"
                            mdTooltip="Delete">
                   </md-icon>
@@ -69,7 +69,7 @@
                 <div class="inline-toolbar qrcode-menu" fxFlex="100%" fxLayoutAlign.md="center end"
                      fxLayoutAlign.lt-md="center end" fxLayoutAlign.lt-sm="center end" fxLayoutAlign="end center"
                      (click)="openQrCodeModal(address)">
-                  <i class="fa fa-qrcode fa-3x" aria-hidden="true"></i>
+                  <i class="fa fa-qrcode fa-3x cursor-pointer"  aria-hidden="true"></i>
                   <!--<span class="nc-icon nc-barcode-qr fa-5x"></span>-->
                 </div>
               </div>
