@@ -16,7 +16,8 @@ export class StakinginfoComponent implements OnInit {
 
 
   /*  UI   */
-  dynamicStakingReward: number;
+  dynamicStakingReward: number = 2;
+
 
   /*  RPC   */
   private curStakeReward: number = 0;
@@ -68,17 +69,10 @@ export class StakinginfoComponent implements OnInit {
     this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
   }
 
-  getBeforeDot(int: number): string {
-    if ((int.toString()).indexOf('.') >= 0) {
-      return (int + '').split('.')[0];
-    } else {
-      return '0';
-    }
-  }
 
-  getAfterDot(int: number): string {
+  private splitAmount(int: number, afterDot: boolean) {
     if ((int.toString()).indexOf('.') >= 0) {
-      return (int.toString()).split('.')[1];
+      return (int.toString()).split('.')[+afterDot];
     } else {
       return '0';
     }
