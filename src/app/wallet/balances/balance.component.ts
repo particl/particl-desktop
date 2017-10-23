@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   selector: 'app-balance',
   templateUrl: './balance.component.html',
-  styleUrls: ['./balance.component.css']
+  styleUrls: ['./balance.component.scss']
 })
 export class BalanceComponent {
 
@@ -43,13 +43,13 @@ export class BalanceComponent {
 
     switch (this.type) {
       case 'total_balance':
-        return 'TOTAL';
+        return 'TOTAL BALANCE';
       case 'balance':
-        return 'PUBLIC';
+        return 'PUBLIC BALANCE';
       case 'anon_balance':
-        return 'PRIVATE';
+        return 'PRIVATE BALANCE';
       case 'blind_balance':
-        return 'BLIND';
+        return 'BLIND BALANCE';
       case 'staked_balance':
         return 'STAKE';
     }

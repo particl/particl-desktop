@@ -1,5 +1,17 @@
 @import "theme/partgui-theme";
 
+$font: "Open Sans", sans-serif;
+
+// main colors
+$color: #02E8B0; // primary green-ish color
+$color-alert: #EE494D;
+
+// text colors
+$text-muted: #7E8790; // grey (for section titles, descriptions etc.)
+
+// bg/element colors
+$bg-shadow: #E9E9E9; // lines, box shadows etc.
+
 /**
  * Side bar Menu.
  */
@@ -57,7 +69,7 @@
         font-weight: bold;
         min-height: 40px;
         border-bottom: none;
-        .mat-icon {
+        /*.mat-icon {
           margin: 4px 8px 0 0;
           color: #938f8f;
           &.fill {
@@ -66,7 +78,7 @@
         }
         &:hover {
           color: #41ecc2;
-        }
+        }*/
       }
     }
   }
@@ -77,9 +89,11 @@
   background: #fff;
 }
 
+/*
 .active > md-list-item > div > md-icon {
   color: #41ECC2 !important;
 }
+*/
 
 .containerX {
   width: 100%;
@@ -109,6 +123,15 @@
 .details-address {
   flex-wrap: wrap;
 }
+
+/**
+ * Cards
+ */
+ md-card.mat-card { // FIXME: remove the !important and solve overwriting
+  font-family: $font;
+  box-shadow: 0 1px 0 $bg-shadow !important;
+}
+
 
 /**
  *list
@@ -305,18 +328,22 @@ input[type="text"] {
   border-bottom: 1px solid #ccc;
   margin: 20px 0;
 }
-input[type="text"].md-bg-transparent{
+input[type="text"].md-bg-transparent {
   background-color: transparent !important;
 }
 
 .md-send-list {
-  .mat-select-trigger{height: 37px;}
+  .mat-select-trigger{ height: 37px; }
 }
 
 .header-nav {
-  list-style-type: none;padding: 0;
+  list-style-type: none;
+  padding: 0;
   li {
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: $text-muted;
   }
 }
 panel-header-title {

@@ -1,14 +1,68 @@
-.reserved-area {
-    height: 250px;
-    border-style: dashed;
-    border-width: 2px;
-    border-color: #EBEBEB;
-    background-color: #F7F7F7;
-    margin-bottom: 15px;
+$color: #02E8B0; // primary green-ish color
+$color-alert: #EE494D;
+$bg-shadow: #E9E9E9; // lines under titles etc.
+
+$text-muted: #7E8790; // grey (for section titles, descriptions etc.)
+
+.header-nav { // section titles
+    padding: 0 0 20px; margin: 30px 0 30px;
+    border-bottom: 1px solid $bg-shadow;
 }
-.balance-bg {
-    background: #fff;
-    padding-bottom: 30px;
-    padding-top: 20px;
-    border-bottom: 1px solid #EAEAEA;
+
+.balance-overview { // list of balances
+    padding: 24px 50px;
+    .balance-item {
+        border-right: 1px solid $bg-shadow;
+        margin-right: 25px;
+        &:last-of-type {
+            border: none; margin: none;
+        }
+    }
+}
+
+.overview-content { // area with widgets
+    padding: 10px 50px;
+}
+
+span.point { color: $color; }
+
+md-card.multiple {
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    & > .value {
+        font-size: 24px;
+    }
+    & > .description {
+        color: $text-muted;
+        text-transform: uppercase;
+        margin-top: 15px;
+    }
+}
+
+.cold-staking {
+    .staking-node {
+        padding: 24px 24px 30px;
+        .cs-icon { // snowflake
+            font-size: 40px;
+            color: $bg-shadow;
+            position: relative;
+            top: 9px;
+            width: auto;
+            height: auto;
+            margin: -11px 15px 0 0;
+        }
+        .title {
+            display: inline-block;
+            text-transform: uppercase;
+            font-weight: bold;
+            & > .enabled { color: $color; }
+            & > .not-enabled { color: $color-alert; }
+        }
+        button {
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+    }
 }

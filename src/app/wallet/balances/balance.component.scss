@@ -1,0 +1,26 @@
+$text-muted: #7E8790; // grey (for section titles, descriptions etc.)
+$bg-shadow: #E9E9E9; // lines under titles etc.
+
+@media screen and (min-width: 1280px) {
+    .balance {
+        line-height: 0.9;
+    }
+}
+
+.balance {
+    line-height: 0.9;
+    .number {
+        color: #222728;
+        &.big { font-size: 30px; }
+        &.small { font-size: 20px; }
+    }
+    .point {
+        color: #02E8B0;
+        font-size: 35px;
+    }
+    .description {
+        color: $text-muted;
+        text-transform: uppercase;
+        margin-top: 15px;
+    }
+}
