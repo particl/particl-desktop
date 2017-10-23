@@ -224,8 +224,6 @@ export class SendComponent {
 
     if (this._rpc.state.get('locked')) {
       // unlock wallet and send transaction
-      // TODO: Get rid of 2x opening modals / dialogs..
-      this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
     } else {
       // wallet already unlocked

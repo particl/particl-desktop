@@ -54,32 +54,31 @@ export class ModalsComponent implements DoCheck, OnInit {
   constructor (
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
-    private _modalService: ModalsService,
     public _dialogRef: MdDialogRef<ModalsComponent>
   ) {
     // update new modal, open it
-    this._modalService.getMessage().subscribe(
-      message => {
-        if (message.close) {
-          this.close();
-        } else {
-          this.open(message.modal, message.data);
-        }
-      }
-    );
-
-    // update progress bar blockstatus
-    this._modalService.getProgress().subscribe(
-      progress => this.updateProgress(<number>progress)
-    );
+    // this._modalService.getMessage().subscribe(
+    //   message => {
+    //     if (message.close) {
+    //       this.close();
+    //     } else {
+    //       this.open(message.modal, message.data);
+    //     }
+    //   }
+    // );
+    //
+    // // update progress bar blockstatus
+    // this._modalService.getProgress().subscribe(
+    //   progress => this.updateProgress(<number>progress)
+    // );
   }
 
   ngOnInit() {
-    this.enableClose = this._modalService.enableClose;
+    // this.enableClose = this._modalService.enableClose;
   }
 
   ngDoCheck() {
-    this.enableClose = this._modalService.enableClose;
+    // this.enableClose = this._modalService.enableClose;
     if (this._element) {
       const element = this._element.nativeElement;
       const style = element.ownerDocument.defaultView.getComputedStyle(element, undefined);
@@ -103,7 +102,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   close() {
     this._dialogRef.close();
     // remove and destroy message
-    this._modalService.close();
+    // this._modalService.close();
     this.modalContainer.remove();
     this.modal.destroy();
   }
@@ -111,7 +110,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   // close window on escape
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
-    if (this.closeOnEscape && this._modalService.enableClose
+    if (this.closeOnEscape && this.enableClose
         && event.key.toLowerCase() === 'escape' && this.modal) {
         this.close();
     }
@@ -121,6 +120,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     * Update sync progress
     * @param {number} number  The sync percentage
     */
+  // @TODO create sparate component to display process
   updateProgress(progress: number) {
     this.syncPercentage = progress;
     this.syncString = progress === 100

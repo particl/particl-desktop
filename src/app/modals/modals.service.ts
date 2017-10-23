@@ -72,6 +72,7 @@ export class ModalsService {
     * @param {any} data       Optional - data to pass through to the modal.
     */
   open(modal: string, data?: any): void {
+    const dialogRef = this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     if (modal in this.messages) {
       if (
         (data && data.forceOpen)
@@ -80,9 +81,14 @@ export class ModalsService {
         if (!this.wasAlreadyOpen(modal)) {
           this.log.d(`next modal: ${modal}`);
           this.modal = this.messages[modal];
-          this.message.next({modal: this.modal, data: data});
+          dialogRef.componentInstance.open(this.modal, {data: data});
+          // this.message.next({modal: this.modal, data: data});
           this.isOpen = true;
-          this.enableClose = true;
+          dialogRef.componentInstance.enableClose = this.enableClose = true;
+          dialogRef.disableClose = this.enableClose;
+          dialogRef.afterClosed().subscribe(() => {
+            this.close();
+          });
         }
       }
     } else {
