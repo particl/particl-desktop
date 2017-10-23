@@ -1,7 +1,19 @@
+$color: #02E8B0; // primary green-ish color
+
+$bg-shadow: #E9E9E9; // lines under titles etc.
+
+.mat-expansion-panel {
+    margin-bottom: 12px;
+    box-shadow: none;
+    border-bottom: 1px solid $bg-shadow;
+}
+
 .mat-expansion-panel-header {
-  border-bottom: 1px solid #e3e3e3;
   min-height: 67px !important;
   font-size: 14px;
+  &:hover {
+    background: inherit;
+  }
 
   .mat-expansion-panel {
     .mat-expanded {
