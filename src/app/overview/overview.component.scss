@@ -13,7 +13,6 @@ $text-muted: #7E8790; // grey (for section titles, descriptions etc.)
     padding: 24px 50px;
     .balance-item {
         border-right: 1px solid $bg-shadow;
-        margin-right: 25px;
         &:last-of-type {
             border: none; margin: none;
         }
@@ -30,21 +29,10 @@ md-card.multiple {
     margin-bottom: 20px;
 }
 
-.stat-box {
-    & > .value {
-        font-size: 24px;
-    }
-    & > .description {
-        color: $text-muted;
-        text-transform: uppercase;
-        margin-top: 15px;
-    }
-}
-
 .cold-staking {
     .staking-node {
         padding: 24px 24px 30px;
-        .cs-icon { // snowflake
+        /*.cs-icon { // snowflake
             font-size: 40px;
             color: $bg-shadow;
             position: relative;
@@ -52,17 +40,34 @@ md-card.multiple {
             width: auto;
             height: auto;
             margin: -11px 15px 0 0;
-        }
+        }*/
         .title {
             display: inline-block;
             text-transform: uppercase;
             font-weight: bold;
-            & > .enabled { color: $color; }
-            & > .not-enabled { color: $color-alert; }
+            & > .active { color: $color; }
+            & > .inactive { color: $text-muted; }
+        }
+        .status {
+            display: block;
         }
         button {
             font-size: 12px;
             text-transform: uppercase;
+            min-width: 0;
+            padding: 0 10px;
+            margin-right: 20px;
+            border: 1px solid transparent;
+            top: -1px;
+            &.secondary {
+                border-color: $bg-shadow;
+            }
         }
     }
+}
+
+p.widget-help {
+    color: grey;
+    font-size: 11px;
+    margin-bottom: 25px;
 }

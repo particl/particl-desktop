@@ -15,24 +15,33 @@ $color-alert: #EE494D;
 .mat-expansion-panel { // accordion submenu
   border-bottom: 1px solid #15191A;
   box-shadow: 0 1px 0 #333 !important;
-  .mat-expansion-panel-header {
+  .mat-expansion-panel-header { // submenu toggle
     font-family: $font;
     font-size: 11.5px;
     color: #646869;
     text-transform: uppercase;
+    padding: 0 24px 0 38px;
+  }
+  .sidesubmenu { // submenu content
+    padding-top: 0;
   }
 }
 
-.mat-icon { // all icons in menu
-  margin: 12px 6px 0 0 !important;
-  color: #4B4A4F !important;
-}
 
-.menu-item {
-  font-family: $font;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: white;
+.mat-list { // menu item (whole)
+  .mat-list-item { 
+    padding: 0 24px;
+  }
+  .mat-icon { // all icons in menu
+    margin: 8px 10px 0 0;
+    color: #4B4A4F;
+  }
+  .menu-item { // menu-item (name only)
+    font-family: $font;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: white;
+  }
 }
 
 .mat-divider { // section divider
@@ -42,6 +51,15 @@ $color-alert: #EE494D;
 
 
 // ----------- SPECIFIC ----------- //
+
+.mat-sidenav { // nav container
+  width: 250px;
+  background-color: #222828;
+  color: #fff;
+  .mat-toolbar {
+    background: transparent;
+  }
+}
 
 .logo {
   display: inline-block;
