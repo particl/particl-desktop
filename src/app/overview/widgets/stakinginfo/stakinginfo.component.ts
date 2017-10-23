@@ -70,7 +70,7 @@ export class StakinginfoComponent implements OnInit {
   }
 
 
-  private splitAmount(int: number, afterDot: boolean) {
+  private splitAmountByDot(int: number, afterDot: boolean) {
     if ((int.toString()).indexOf('.') >= 0) {
       return (int.toString()).split('.')[+afterDot];
     } else {
