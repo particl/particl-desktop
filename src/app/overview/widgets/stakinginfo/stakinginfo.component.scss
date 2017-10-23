@@ -1,12 +1,14 @@
+
 @import '../shared/shared.scss';
 
-.stat-box {
-    & > .value {
-        font-size: 24px;
-    }
-    & > .description {
-        color: $text-muted;
-        text-transform: uppercase;
-        margin-top: 15px;
-    }
+.staking-overview { // listing of staking stats
+   th {
+       text-align: left;
+       padding-right: 20px;
+       font-weight: normal;
+   }
+   td {
+       font-weight: 600;
+   }
+
 }

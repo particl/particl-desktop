@@ -4,7 +4,6 @@
     padding: 24px 50px;
     .balance-item {
         border-right: 1px solid $bg-shadow;
-        margin-right: 25px;
         &:last-of-type {
             border: none; margin: none;
         }
@@ -15,32 +14,3 @@
     padding: 10px 50px;
 }
 
-
-
-
-
-.cold-staking {
-    .staking-node {
-        padding: 24px 24px 30px;
-        .cs-icon { // snowflake
-            font-size: 40px;
-            color: $bg-shadow;
-            position: relative;
-            top: 9px;
-            width: auto;
-            height: auto;
-            margin: -11px 15px 0 0;
-        }
-        .title {
-            display: inline-block;
-            text-transform: uppercase;
-            font-weight: bold;
-            & > .enabled { color: $color; }
-            & > .not-enabled { color: $color-alert; }
-        }
-        button {
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-    }
-}

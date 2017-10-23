@@ -1,53 +1,48 @@
-<md-card class="balance-overview">
-  <div class="container" [fxLayout]="'row'">
-    <div fxFlex [fxLayout]="'row'">
-      <div class="one flexitem balance-item" fxFlex>
-        <app-balance type="total_balance"></app-balance>
-      </div>
-      <div class="two flexitem balance-item" fxFlex>
-        <app-balance type="balance"></app-balance>
-      </div>
-      <div class="three flexitem balance-item" fxFlex>
-        <app-balance type="blind_balance"></app-balance>
-      </div>
-      <div class="four flexitem balance-item" fxFlex>
-        <app-balance type="anon_balance"></app-balance>
-      </div>
-      <div class="five flexitem balance-item" fxFlex>
-        <app-balance type="staked_balance"></app-balance>
-      </div>
-    </div>
+<md-card class="balance-overview" fxLayoutWrap fxLayoutGap="3%">
+  <!-- https://github.com/angular/flex-layout/wiki/API-Documentation#html-api-declarative -->
+  <div class="balance-item" fxFlex="20">
+    <app-balance type="total_balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="blind_balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="anon_balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="staked_balance"></app-balance>
   </div>
 </md-card>
 
 
-<div class="overview-content">
-  <div class="container" [fxLayout]="'row'">
-    <div fxFlex [fxLayout]="'row'">
-
-      <div class="one flexitem" fxFlex="50%">
-        <app-header>
-          <ul class="header-nav">
-            <li>Recent Transactions</li>
-          </ul>
-          <ul class="header-nav pull-right">
-            <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
-          </ul>
-        </app-header>
-        <transaction-table
-          [display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': false, 'confirmations': false}">
-        </transaction-table>
-      </div>
+<div class="overview-content" fxLayout="row" fxLayoutGap="5%">
 
 
-      <div class="flexitem" fxFlex="50%">
+  <div class="recent-transactions" fxFlex="65">
+    <app-header>
+      <ul class="header-nav">
+        <li>Recent Transactions</li>
+      </ul>
+      <!--ul class="header-nav pull-right">
+        <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li>
+      </ul-->
+    </app-header>
+    <transaction-table
+      [display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': false, 'confirmations': false}">
+    </transaction-table>
+  </div><!-- .recent-transactions -->
 
-        <app-stakinginfo></app-stakinginfo>
 
-        <app-coldstake></app-coldstake>
+  <div class="overview-sidebar" fxFlex="30">
 
-      </div><!-- .flexitem 50% -->
+    <app-stakinginfo></app-stakinginfo>
+    <app-coldstake></app-coldstake>
+    
+  </div><!-- .overview-sidebar -->
 
-    </div>
-  </div>
+
+
 </div><!-- .overview-content -->
