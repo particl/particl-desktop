@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { StateService } from '../../../core/state/state.service';
@@ -8,7 +8,7 @@ import { StateService } from '../../../core/state/state.service';
   templateUrl: './stakinginfo.component.html',
   styleUrls: ['./stakinginfo.component.scss']
 })
-export class StakinginfoComponent implements OnInit {
+export class StakinginfoComponent {
 
 
   /*  General   */
@@ -59,18 +59,14 @@ export class StakinginfoComponent implements OnInit {
 
   }
 
-  ngOnInit() {
-  }
-
-
-  calculateDynamicStakingReward() {
+  private calculateDynamicStakingReward() {
     this.dynamicStakingReward = Math.floor(this.curStakeReward * (this.curSupply / this.curWeight));
     this.curWeight = Math.floor(this.curWeight);
     this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
   }
 
 
-  private splitAmountByDot(int: number, afterDot: boolean) {
+  public splitAmountByDot(int: number, afterDot: boolean) {
     if ((int.toString()).indexOf('.') >= 0) {
       return (int.toString()).split('.')[+afterDot];
     } else {
