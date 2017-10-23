@@ -11,6 +11,10 @@ describe('ColdstakeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FlexLayoutModule,
+        MdCardModule
+      ],
       declarations: [ ColdstakeComponent ]
     })
     .compileComponents();

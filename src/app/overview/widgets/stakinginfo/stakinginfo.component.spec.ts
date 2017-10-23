@@ -14,7 +14,9 @@ describe('StakinginfoComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule
+        SharedModule,
+        FlexLayoutModule,
+        MdCardModule
       ],
       declarations: [ StakinginfoComponent ],
       providers: [StateService]
