@@ -1,15 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StakinginfoComponent } from './stakinginfo.component';
-import { StateService } from '../../../core/state/state.service';
+import { ColdstakeComponent } from './coldstake.component';
 import { SharedModule } from '../../../shared/shared.module';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdCardModule } from '@angular/material';
 
-describe('StakinginfoComponent', () => {
-  let component: StakinginfoComponent;
-  let fixture: ComponentFixture<StakinginfoComponent>;
+describe('ColdstakeComponent', () => {
+  let component: ColdstakeComponent;
+  let fixture: ComponentFixture<ColdstakeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -18,14 +17,13 @@ describe('StakinginfoComponent', () => {
         FlexLayoutModule,
         MdCardModule
       ],
-      declarations: [ StakinginfoComponent ],
-      providers: [StateService]
+      declarations: [ ColdstakeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StakinginfoComponent);
+    fixture = TestBed.createComponent(ColdstakeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
