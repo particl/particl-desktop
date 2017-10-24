@@ -1,24 +1,37 @@
-<table class="staking-overview">
-   <tr>
-      <th>Next reward</th>
-      <td>~3 hours</td>
-   </tr>
-   <tr>
-      <th>Your Stake weight</th>
-      <!-- (your weight) / (network weight) * 1000 -->
-      <td>3.<small>48</small>&nbsp;&permil;</td>
-   </tr>
-   <tr>
-      <th>Stake percentage</th>
-      <td>1.<small>5</small>&nbsp;%</td>
-   </tr>
-   <tr>
-      <th>Stake reward</th>
-      <td>1.<small>4949327</small>&nbsp;PART</td>
-   </tr>
-</table><!-- .staking-overview -->
-
-
+<div class="staking-info">
+  <app-header>
+    <ul class="header-nav">
+      <li>Staking Information</li>
+    </ul>
+    <!--ul class="header-nav pull-right">
+      <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li>
+    </ul-->
+  </app-header>
+  <md-card>
+    <table class="staking-overview">
+      <tr>
+        <th>Next reward</th>
+        <td>~3 hours</td>
+      </tr>
+      <tr>
+        <th>Your Stake weight</th>
+        <!-- (your weight) / (network weight) * 1000 -->
+        <td>3.<small>48</small>&nbsp;&permil;</td>
+      </tr>
+      <tr>
+        <th>Stake percentage</th>
+        <td>{{splitAmountByDot(dynamicStakingReward)}}.<small>{{splitAmountByDot(dynamicStakingReward,true)}}</small>&nbsp;%</td>
+      </tr>
+      <tr>
+        <th>Stake reward</th>
+        <td>1.<small>4949327</small>&nbsp;PART</td>
+      </tr>
+    </table>
+    <!-- .staking-overview -->
+  </md-card>
+</div>
+<!-- .staking-info -->
 <!-- @TODO: remove these -->
 <!--h4>Staking reward: ~{{dynamicStakingReward}}%</h4>
-<h4>Network weight: ~{{curWeight}}</h4-->
+  <h4>Network weight: ~{{curWeight}}</h4-->
+
