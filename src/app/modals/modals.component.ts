@@ -20,6 +20,7 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { MdDialogRef } from '@angular/material';
+import {StateService} from "../core/state/state.service";
 
 @Component({
   selector: 'app-modals',
@@ -54,7 +55,8 @@ export class ModalsComponent implements DoCheck, OnInit {
   constructor (
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
-    public _dialogRef: MdDialogRef<ModalsComponent>
+    public _dialogRef: MdDialogRef<ModalsComponent>,
+    private state: StateService
   ) {
     // update new modal, open it
     // this._modalService.getMessage().subscribe(
@@ -74,7 +76,11 @@ export class ModalsComponent implements DoCheck, OnInit {
   }
 
   ngOnInit() {
-    // this.enableClose = this._modalService.enableClose;
+    this.state.observe('model:fullWidth:enableClose')
+      .subscribe(
+        status => {
+          this.enableClose = status;
+        });
   }
 
   ngDoCheck() {
