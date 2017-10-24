@@ -84,8 +84,7 @@ export class ModalsService {
           dialogRef.componentInstance.open(this.modal, {data: data});
           // this.message.next({modal: this.modal, data: data});
           this.isOpen = true;
-          dialogRef.componentInstance.enableClose = this.enableClose = true;
-          dialogRef.disableClose = this.enableClose;
+          dialogRef.componentInstance.enableClose = true;
           dialogRef.afterClosed().subscribe(() => {
             this.close();
           });

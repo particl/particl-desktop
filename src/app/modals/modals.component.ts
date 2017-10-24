@@ -45,18 +45,16 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   private logger: any = Log.create('modals.component');
 
-  constructor(private _element: ElementRef,
-              private _resolver: ComponentFactoryResolver,
-              public _dialogRef: MdDialogRef<ModalsComponent>,
-              private state: StateService) {
+  constructor(
+    private _element: ElementRef,
+    private _resolver: ComponentFactoryResolver,
+    public _dialogRef: MdDialogRef<ModalsComponent>,
+    private state: StateService) {
   }
 
   ngOnInit() {
-    this.state.observe('model:fullWidth:enableClose')
-      .subscribe(
-        status => {
-          this.enableClose = status;
-        });
+    this.state.observe('modal:fullWidth:enableClose')
+      .subscribe(status => this.enableClose = status);
   }
 
   ngDoCheck() {
