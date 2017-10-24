@@ -1,5 +1,9 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+md-card.address-entry {
+  margin-bottom: 15px;
+}
+
 .title {
   text-transform: uppercase;
   font-weight: bold;

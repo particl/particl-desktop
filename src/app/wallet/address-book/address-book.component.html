@@ -1,14 +1,15 @@
-<div class="container-block">
+<div class="container-block address-book">
+
   <app-header>
-    <div [fxLayout]="'row'">
-      <div fxFlex="80%">
+    <div fxLayout="row">
+      <div fxFlex="75">
         <button md-raised-button md-button color="primary" (click)="openNewAddress()">
           <md-icon>add_circle</md-icon>
           Add new Address
         </button>
       </div>
-      <md-form-field class="icon-input">
-        <input mdInput type="text"  [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search address book">
+      <md-form-field class="icon-input" fxFlex>
+        <input mdInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search Addresses">
         <md-icon>search</md-icon>
       </md-form-field>
     </div>
@@ -28,4 +29,5 @@
       (editLabelEmitter)="editLabel($event)">
     </address-table>
   </div>
+
 </div>
