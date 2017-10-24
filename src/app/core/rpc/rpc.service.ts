@@ -120,6 +120,8 @@ export class RPCService {
   registerStateCall(method: string, timeout?: number, params?: Array<any> | null): void {
     if (timeout) {
       let first = true;
+
+      // loop procedure
       const _call = () => {
         if (!this._enableState) {
           return;
@@ -132,6 +134,8 @@ export class RPCService {
                 response: success,
                 electron: this.isElectron
               });
+
+              // re-start loop after timeout
               setTimeout(_call, timeout);
             },
             error => {
@@ -148,7 +152,9 @@ export class RPCService {
               first = false;
             });
       }
+      // initiate loop
       _call();
+
     } else {
       this.state.observe('blocks') .subscribe(success => this.stateCall(method, true));
       this.state.observe('txcount').subscribe(success => this.stateCall(method, true));
