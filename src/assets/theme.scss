@@ -15,7 +15,7 @@ $bg-shadow: #E9E9E9; // lines, box shadows etc.
 /**
  * Side bar Menu.
  */
- 
+
  .mat-sidenav {
   .logo-area {
     .mat-toolbar-row {
@@ -315,6 +315,16 @@ input[type="text"].md-bg-transparent {
 }
 panel-header-title {
   display: block;
+}
+
+.percentage-bar-bottom {
+  .progress-bar-bottom {
+    height: 20px !important;
+  }
+  .percentage-bar-text {
+    position: absolute;
+    z-index: 99999;
+  }
 }
 
 
