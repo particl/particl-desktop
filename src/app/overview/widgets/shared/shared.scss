@@ -1,12 +1,7 @@
 /*
     Values shared among widgets
 */
-$color: #02E8B0; // primary green-ish color
-$color-alert: #EE494D;
-$bg-shadow: #E9E9E9; // lines under titles etc.
-
-
-$text-muted: #7E8790; // grey (for section titles, descriptions etc.)
+@import "./src/assets/_config"; // import shared colors etc.
 
 .header-nav { // section titles
     padding: 0 0 20px; margin: 30px 0 30px;
