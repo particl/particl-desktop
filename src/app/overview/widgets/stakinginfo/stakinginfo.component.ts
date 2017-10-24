@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { StateService } from '../../../core/state/state.service';
@@ -8,7 +8,7 @@ import { StateService } from '../../../core/state/state.service';
   templateUrl: './stakinginfo.component.html',
   styleUrls: ['./stakinginfo.component.scss']
 })
-export class StakinginfoComponent implements OnInit {
+export class StakinginfoComponent {
 
 
   /*  General   */
@@ -16,7 +16,8 @@ export class StakinginfoComponent implements OnInit {
 
 
   /*  UI   */
-  dynamicStakingReward: number;
+  dynamicStakingReward: number = 2;
+
 
   /*  RPC   */
   private curStakeReward: number = 0;
@@ -26,45 +27,51 @@ export class StakinginfoComponent implements OnInit {
 
   constructor(
     private state: StateService
-  ) {
+    ) {
     this.log.d(`constructor, started`);
     this.state.observe('percentyearreward')
-      .subscribe(
-        success => {
-          this.log.d(`setting curStakeReward ${success}`);
-          this.curStakeReward = success;
-          this.calculateDynamicStakingReward();
-        },
-        error => this.log.er('Constructor, percentyearreward error:' + error));
+    .subscribe(
+      success => {
+        this.log.d(`setting curStakeReward ${success}`);
+        this.curStakeReward = success;
+        this.calculateDynamicStakingReward();
+      },
+      error => this.log.er('Constructor, percentyearreward error:' + error));
 
 
     this.state.observe('netstakeweight')
-      .subscribe(
-        success => {
-          this.log.d(`setting weight ${success}`);
-          this.curWeight = success / (10000000);
-          this.calculateDynamicStakingReward();
-        },
-        error => this.log.er('Constructor, weight error:' + error));
+    .subscribe(
+      success => {
+        this.log.d(`setting weight ${success}`);
+        this.curWeight = success / (10000000);
+        this.calculateDynamicStakingReward();
+      },
+      error => this.log.er('Constructor, weight error:' + error));
 
     this.state.observe('moneysupply')
-      .subscribe(
-        success => {
-          this.log.d(`setting moneysupply ${success}`);
-          this.curSupply = success;
-          this.calculateDynamicStakingReward();
-        },
-        error => this.log.er('Constructor, moneysupply error:' + error));
+    .subscribe(
+      success => {
+        this.log.d(`setting moneysupply ${success}`);
+        this.curSupply = success;
+        this.calculateDynamicStakingReward();
+      },
+      error => this.log.er('Constructor, moneysupply error:' + error));
 
   }
 
-  ngOnInit() {
-  }
-
-
-  calculateDynamicStakingReward() {
+  private calculateDynamicStakingReward() {
     this.dynamicStakingReward = Math.floor(this.curStakeReward * (this.curSupply / this.curWeight));
     this.curWeight = Math.floor(this.curWeight);
     this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
   }
+
+
+  public splitAmountByDot(int: number, afterDot: boolean) {
+    if ((int.toString()).indexOf('.') >= 0) {
+      return (int.toString()).split('.')[+afterDot];
+    } else {
+      return '0';
+    }
+  }
+
 }

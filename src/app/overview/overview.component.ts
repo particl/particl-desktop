@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { StakinginfoComponent } from './widgets/stakinginfo/stakinginfo.component';
+import { ColdstakeComponent } from './widgets/coldstake/coldstake.component';
 
 @Component({
   selector: 'app-overview',
