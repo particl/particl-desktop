@@ -46,11 +46,6 @@ describe('ModalsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update progress', () => {
-    component.updateProgress(5);
-    expect(component.syncPercentage).toEqual(5);
-  });
-
   it('should open and close', () => {
     component.open(UnlockwalletComponent, {forceOpen: true});
     expect(component.modal).toBeDefined();

@@ -11,7 +11,7 @@ import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { FlashNotificationService } from '../../../services/flash-notification.service';
 import { ModalsService } from '../../../modals/modals.service';
-import {ModalsComponent} from '../../../modals/modals.component';
+import { ModalsComponent } from '../../../modals/modals.component';
 
 @Component({
   selector: 'address-table',
@@ -124,7 +124,6 @@ export class AddressTableComponent implements OnInit {
     dialogRef.componentInstance.onDelete.subscribe(() => {
       if (this._rpc.state.get('locked')) {
         // unlock wallet and send transaction
-        this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
         this._modals.open('unlock', {
           forceOpen: true, timeout: 3, callback: this.deleteAddressCallBack.bind(this, address)
         });

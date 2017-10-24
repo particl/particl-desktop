@@ -20,12 +20,13 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
 import {
-  MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule,
+  MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule, MdProgressBarModule,
   MdTooltipModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FlashNotificationService } from '../services/flash-notification.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.component';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MdCheckboxModule,
     ModalModule,
     MdTooltipModule,
+    MdProgressBarModule,
     TooltipModule,
     ClipboardModule
   ],
@@ -56,7 +58,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
-    ColdstakeComponent
+    ColdstakeComponent,
+    PercentageBarComponent
   ],
   exports: [
     ModalsComponent

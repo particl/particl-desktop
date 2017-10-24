@@ -55,6 +55,7 @@ export class CreateWalletComponent {
 
   reset() {
     this._modalsService.enableClose = true;
+    this.state.set('modal:fullWidth:enableClose', true);
     this.words = Array(24).fill('');
     this.isRestore = false;
     this.name = '';
@@ -137,6 +138,7 @@ export class CreateWalletComponent {
         break;
     }
     this._modalsService.enableClose = (this.step === 0);
+    this.state.set('modal:fullWidth:enableClose', (this.step === 0));
   }
 
   private mnemonicCallback(response: Object) {
@@ -163,6 +165,7 @@ export class CreateWalletComponent {
           this.log.er(error);
           this.errorString = error.message;
           this._modalsService.enableClose = true;
+          this.state.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');
         });
   }

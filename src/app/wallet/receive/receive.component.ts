@@ -207,7 +207,6 @@ export class ReceiveComponent implements OnInit {
       // @TODO remove two service calling for create wallet
       if (!this._modalService.initializedWallet) {
         this._modalService.openInitialCreateWallet();
-        this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
       }
 
       setTimeout(() => {

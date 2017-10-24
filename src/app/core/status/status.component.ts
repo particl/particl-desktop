@@ -7,7 +7,6 @@ import { StateService } from '../state/state.service';
 
 import { RPCService } from '../rpc/rpc.module';
 import { MdDialog} from '@angular/material';
-import { ModalsComponent } from '../../modals/modals.component';
 
 @Component({
   selector: 'app-status',
@@ -27,7 +26,6 @@ export class StatusComponent implements OnInit {
   constructor(
     private _rpc: RPCService,
     private _modalsService: ModalsService,
-    private dialog: MdDialog,
     private _stateService: StateService) { }
 
   ngOnInit() {
@@ -67,8 +65,6 @@ export class StatusComponent implements OnInit {
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
-        // TODO: Get rid of 2x opening modals / dialogs..
-        this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('encrypt', {'forceOpen': true});
         break;
       case 'Unlocked':
@@ -79,8 +75,6 @@ export class StatusComponent implements OnInit {
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':
-        // TODO: Get rid of 2x opening modals / dialogs..
-        this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
         this._modalsService.open('unlock', {forceOpen: true, showStakeOnly: true});
         break;
       default:
@@ -89,8 +83,6 @@ export class StatusComponent implements OnInit {
   }
 
   openColdStakeModal() {
-    // TODO: Get rid of 2x opening modals / dialogs..
-    this.dialog.open(ModalsComponent, {width: '100%', height: '100%'});
     this._modalsService.open('coldStake', {'forceOpen': true});
   }
 }
