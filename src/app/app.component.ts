@@ -82,22 +82,13 @@ export class AppComponent implements OnInit {
       });
   }
 
-  toggle() {
-    this.sideMenu = !this.sideMenu;
-    if (this.sideMenu) {
-      this.isPinned = true;
-    } else {
-      this.isPinned = false;
+  toggle(value: string) {
+    if (value === 'toggle') {
+      this.sideMenu = !this.sideMenu;
+      return;
     }
-  }
-
-  unPin(value: string) {
     if (!this.sideMenu) {
-      if (value === 'enter') {
-        this.isPinned = true;
-      } else {
-        this.isPinned = false;
-      }
+      this.isPinned = value === 'enter';
     }
   }
 

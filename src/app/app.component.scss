@@ -78,14 +78,16 @@ $color-alert: #EE494D;
   right: 20px;
   color: #595D5E;
 }
-
-.md-sidenav-left
-{
-   width : 7.5em;
+.md-sidenav-left md-list-item span {
+  display:none;
 }
 
-.md-side-submenu {
-  padding-left: 22px;
+.md-sidenav-left md-expansion-panel-header {
+  display:none;
+}
+
+.md-sidenav-left {
+  width : 7.5em;
 }
 
 /deep/ .verify-sucess {
