@@ -28,8 +28,8 @@ function init(callback) {
 function startDaemon(restart, callback) {
   if (restart && daemon) {
     if (daemon.exitCode !== 0) {
-      setTimeout(() => startDaemon(restart, callback), 100);
-      return;
+      setTimeout(() => startDaemon(restart, callback), 200);
+      return false;
     }
   }
 
@@ -40,22 +40,40 @@ function startDaemon(restart, callback) {
       waitForDaemon(callback);
     }
   }).catch(error => log.error(error));
+
+  return true;
 }
 
 function waitForDaemon(callback) {
   const maxRetries = 10; // Some slow computers...
   let retries = 0;
+  let errorString = '';
   const daemonStartup = () => {
     rpc.checkDaemon(options)
       .then(callback)
-      .catch(() =>  retries < maxRetries && setTimeout(daemonStartup, 1000));
+      .catch(() => !daemon.exitCode && retries < maxRetries && setTimeout(daemonStartup, 1000));
     retries++;
+
     if (daemon.exitCode || retries >= maxRetries) {
-      console.log(daemon.exitCode, retries);
+      // Rebuild block and transaction indexes
+      if (errorString.includes('-reindex')) {
+        log.info('Corrupted block database detected, '
+               + 'restarting the daemon with the -reindex flag.');
+        process.argv.push('-reindex');
+        daemon.exitCode = 0; // Hack a bit here...
+        // We don't want it to exit at this stage if start was called..
+        // it will probably error again if it has to.
+        if(startDaemon(true, callback)) {
+          return;
+        }
+      }
       electron.app.exit(991);
     }
   }
   if (daemon && !daemon.exitCode) {
+    daemon.stderr.on('data', data => {
+      errorString = data.toString('utf8');
+    });
     setTimeout(daemonStartup, 1000);
   }
 }
