@@ -208,7 +208,9 @@ input[type="text"] {
 
 .history-list {
   .history_cat_icon {
-    justify-content: center;
+    .mat-icon {
+      margin-right: 8px;
+    }
   }
   .history_container {
     > div {

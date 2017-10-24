@@ -58,7 +58,9 @@ $text-muted: #7E8790; // grey (for section titles, descriptions etc.)
 
 // detail item of TX info
 .tx-detail-item {
-    padding: 5px 0 25px;
+    padding: 5px 0;
+    color: $text-muted;
+    font-size: 13px;
 }
 
 // @TODO conver css to scss

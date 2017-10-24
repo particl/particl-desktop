@@ -19,30 +19,30 @@
       <md-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
 
         <!-- Date -->
-        <md-panel-title fxFlex.lg="15" fxFlex.lt-lg="100" *ngIf="display.date" class="history_date">
+        <md-panel-title fxFlex.lg="25" fxFlex.lt-lg="100" *ngIf="display.date" class="history_date">
           {{ tx.getDate() }}
         </md-panel-title>
 
         <!-- Category icon -->
-        <md-panel-title fxFlex.lg="5" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
-          <span mdTooltip="Staked" *ngSwitchCase="'stake'">
-            <md-icon fontSet="faIcon" fontIcon="fa-plus" color="primary"></md-icon>
+        <md-panel-title fxFlex.lg="25" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
+          <span *ngSwitchCase="'stake'">
+            <md-icon fontSet="faIcon" fontIcon="fa-plus" color="primary"></md-icon> Staked
           </span>
-          <span mdTooltip="Orphaned stake" *ngSwitchCase="'orphaned_stake'">
-            <md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon>
+          <span *ngSwitchCase="'orphaned_stake'">
+            <md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon> Orphaned Stake
           </span>
-          <span mdTooltip="Sent" *ngSwitchCase="'send'">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="warn"></md-icon>
+          <span *ngSwitchCase="'send'">
+            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="warn"></md-icon> Sent
           </span>
-          <span mdTooltip="Received" *ngSwitchCase="'receive'">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left"></md-icon>
+          <span *ngSwitchCase="'receive'">
+            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left"></md-icon> Received
           </span>
         </md-panel-title>
 
         <!-- Address -->
-        <md-panel-title fxFlex.lg="57" fxFlex.lt-lg="100" *ngIf="display.senderAddress" class="history_longAddress">
+        <!--md-panel-title fxFlex.lg="57" fxFlex.lt-lg="100" *ngIf="display.senderAddress" class="history_longAddress">
           {{ tx.getAddress() }}
-        </md-panel-title>
+        </md-panel-title-->
 
         <md-panel-title fxFlex.lg="20" fxFlex.lt-lg="100" *ngIf="display.txid" class="history_txt">
           <span md-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row">
@@ -56,12 +56,12 @@
         </md-panel-title>
 
         <!-- Confirmations -->
-        <md-panel-title fxFlex.lg="5" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
+        <md-panel-title fxFlex.lg="10" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
           <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.confirmations }}</span>
         </md-panel-title>
 
         <!-- Amount -->
-        <md-panel-title fxFlex.lg="18" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
+        <md-panel-title fxFlex.lg="30" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
           <span md-line><span class="amount">{{ tx.getAmount() }}</span> PART</span>
         </md-panel-title>
 
@@ -71,24 +71,28 @@
       <div class="container history_container" fxLayout="row" fxLayoutGap="10px" layout-padding>
 
         <div fxLayout="column" fxFlex="55">
+          <!-- To/from (detail) -->
           <div class="tx-detail-item" fxFlex>
             <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">To/from:</b>
             <input class="md-right" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" value="{{ tx.getAddress() }}" placeholder="To/from">
           </div>
+          <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
             <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">Transaction ID:</b>
             <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight" href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" target="_blank">{{tx.txid}}</a>
           </div>
         </div>
 
-        <div fxLayout.lg="column" fxFlex="45">
-          <div class="tx-detail-item" fxFlex>
-            <b fxFlex.lg="40" fxFlex.md="40" fxFlex.lt-md="100">Transaction fee:</b>
-            <span fxFlex.lg="60" fxFlex.md="60" fxFlex.lt-md="100" class="md-right">{{tx.fee ? tx.fee : 0}} PART</span>
+        <div fxLayout="column" fxFlex="45">
+          <!-- TX fee (detail) -->
+          <div class="tx-detail-item text-right" fxFlex>
+            <b>Transaction fee:</b>
+            <span class="md-right">{{tx.fee ? tx.fee : 0}} PART</span>
           </div>
-          <div class="tx-detail-item" fxFlex>
-            <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">Net amount:</b>
-            <span class="md-right" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100">{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART</span>
+          <!-- Net amount (detail) -->
+          <div class="tx-detail-item text-right" fxFlex>
+            <b>Net amount:</b>
+            <span class="md-right">{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART</span>
           </div>
         </div>
 
