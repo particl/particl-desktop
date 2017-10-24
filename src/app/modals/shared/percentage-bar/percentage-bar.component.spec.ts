@@ -31,4 +31,9 @@ describe('PercentageBarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should update progress', () => {
+    component.updateProgress(5);
+    expect(component.syncPercentage).toEqual(5);
+  });
 });
