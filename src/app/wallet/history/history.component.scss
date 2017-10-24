@@ -100,15 +100,9 @@ table.transaction-table {
     background-color: #FFF;
     border-bottom: 1px solid #EBEBEB;
   }
-  .category-col {}
-  .address-col {}
-
 }
 
 .transaction-list {
-  & {
-
-  }
   .transaction-item + .transaction-item {
     margin-top: 20px;
   }
