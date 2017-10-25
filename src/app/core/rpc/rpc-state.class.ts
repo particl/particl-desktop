@@ -16,6 +16,7 @@ export class RPCStateClass {
     this.lastBlockTimeState();
     this.blockLoop();
     this.walletLockedState();
+    this.coldStakeLoop();
     this.initWalletState();
   }
 
@@ -38,20 +39,43 @@ export class RPCStateClass {
 
   private blockLoop() {
     if (this.rpc.state.get('blocks') === 0) {
-      setTimeout(this.blockLoop, 1000);
+      setTimeout(this.blockLoop.bind(this), 1000);
     }
     this.rpc.stateCall('getblockchaininfo');
   }
 
   private walletLockedState() {
     this.rpc.state.observe('encryptionstatus')
-      .subscribe(status => this.rpc.state
-        .set('locked', ['Locked', 'Unlocked, staking only'].includes(status)));
+    .subscribe(status => this.rpc.state
+      .set('locked', ['Locked', 'Unlocked, staking only'].includes(status)));
   }
 
-  private initWalletState() {
+  private coldStakeLoop() {
+    this.log.d('coldStakeLoop');
+    if(this.rpc.state.get('locked') === false) {
+      // only available if unlocked
+      this.rpc.call('walletsettings', ['changeaddress'])
+      .subscribe(
+        response => {
+        // check if account is active
+        if (response.changeaddress === 'default') {
+          this.log.d('coldstaking disabled');
+          this.rpc.state.set('coldstaking', false);
+        } else if(response.changeaddress.coldstakingaddress !== undefined) {
+          this.log.d('coldstaking enabled');
+          this.rpc.state.set('coldstaking', true);
+        }
+      },
+      error => this.log.er('walletsettings changeaddress, returned an error', error));
 
-    this.rpc.state.observe('encryptionstatus').take(1)
+    }
+
+    setTimeout(this.coldStakeLoop.bind(this), 1000);
+  }
+
+    private initWalletState() {
+
+      this.rpc.state.observe('encryptionstatus').take(1)
       .subscribe(
         status => {
           const locked = this.rpc.state.get('locked');
@@ -62,8 +86,8 @@ export class RPCStateClass {
           }
 
           this.rpc.call('extkey', ['list'])
-            .subscribe(
-              response => {
+          .subscribe(
+            response => {
                 // check if account is active
                 if (response.result === 'No keys to list.') {
                   this.rpc.state.set('walletInitialized', false);
@@ -73,5 +97,5 @@ export class RPCStateClass {
               },
               error => this.log.er('RPC Call returned an error', error));
         });
+    }
   }
-}

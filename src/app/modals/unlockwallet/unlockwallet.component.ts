@@ -30,7 +30,7 @@ export class UnlockwalletComponent {
 
   unlock(encryptionStatus: string) {
     // unlock actually happened in password.component.ts
-    this.log.d('Unlock signal emitted!');
+    this.log.d('Unlock signal emitted! = ' + encryptionStatus );
 
     if (encryptionStatus.indexOf('Unlocked') !== -1) {
       if (!!this.callback) {
@@ -50,7 +50,7 @@ export class UnlockwalletComponent {
   * setData sets the callback information for when the wallet unlocks.
   */
   setData(data: any) {
-    this.log.d('setting data');
+    this.log.d('setting callback, timeout & showStakeOnly data');
     this.callback = data.callback;
     if (Number.isInteger(data.timeout)) {
       this.timeout = data.timeout;
