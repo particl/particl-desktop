@@ -5,6 +5,7 @@ import { ModalsModule } from '../modals.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { RpcModule } from '../../core/rpc/rpc.module';
+import {MdDialogModule, MdDialogRef, MdSnackBarModule} from '@angular/material';
 
 
 describe('UnlockwalletComponent', () => {
@@ -16,8 +17,11 @@ describe('UnlockwalletComponent', () => {
       imports: [
         SharedModule,
         ModalsModule,
-        RpcModule.forRoot()
-      ]
+        RpcModule.forRoot(),
+        MdDialogModule,
+        MdSnackBarModule
+      ],
+      providers: [ { provide: MdDialogRef } ]
     })
     .compileComponents();
   }));
@@ -29,6 +33,6 @@ describe('UnlockwalletComponent', () => {
   });
 
   it('should be created', () => {
-    expect(component).toBeTruthy();
+     expect(component).toBeTruthy();
   });
 });

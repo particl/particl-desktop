@@ -7,6 +7,9 @@ import { WalletModule } from '../wallet.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { ModalsService } from '../../modals/modals.service';
+import { FlashNotificationService } from '../../services/flash-notification.service';
+import { MdDialogRef, MdSnackBarModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -15,13 +18,19 @@ describe('SendComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-         SharedModule,
-         WalletModule.forRoot(),
-         RpcModule.forRoot()
+        SharedModule,
+        WalletModule.forRoot(),
+        RpcModule.forRoot(),
+        MdSnackBarModule,
+        BrowserAnimationsModule
       ],
-      providers: [ModalsService]
+      providers: [
+        { provide: MdDialogRef },
+        ModalsService,
+        FlashNotificationService
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -41,13 +50,13 @@ describe('SendComponent', () => {
     });
   */
   it('should send tab', () => {
-    component.selectTab('sendPayment');
-    expect(component.type).toBe('sendPayment');
+    component.selectTab(1);
+    expect(component.type).toBe('balanceTransfer');
   });
 
   it('should verify amount no balance service', () => {
     component.send.amount = 555.555555;
-    expect(component.checkAmount()).toBe(false);
+    expect(component.checkAmount()).toBeFalsy();
   });
 /*
 
@@ -111,9 +120,6 @@ describe('SendComponent', () => {
     expect(component.send).toBeTruthy();
   });
 */
-  it('should get addressLookup property', () => {
-    expect(component.addressLookup).toBeDefined();
-  });
 
   it('should get advanced', () => {
     expect(component.advanced).toBe(false);

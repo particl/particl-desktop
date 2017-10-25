@@ -1,69 +1,46 @@
-<div class="container-fluid">
-  <div class="row balance-bg">
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="total_balance"></app-balance>
-    </div>
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="balance"></app-balance>
-    </div>
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="blind_balance"></app-balance>
-    </div>
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="anon_balance"></app-balance>
-    </div>
-    <div class="col-sm-6 col-md-2 padding-25">
-      <app-balance type="staked_balance"></app-balance>
-    </div>
+<md-card class="balance-overview" fxLayoutWrap fxLayoutGap="3%">
+  <!-- https://github.com/angular/flex-layout/wiki/API-Documentation#html-api-declarative -->
+  <div class="balance-item" fxFlex="20">
+    <app-balance type="total_balance"></app-balance>
   </div>
-</div>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6">
-      <app-header>
-        <ul class="header-nav">
-          <li>Recent Transactions</li>
-        </ul>
-        <ul class="header-nav pull-right">
-          <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
-        </ul>
-      </app-header>
-      <transaction-table
-        [display]="{'txDisplayAmount': 6, 'header': false, 'internalHeader': true, 'category': false, 'confirmations': false}">
-      </transaction-table>
-    </div>
-    <div class="col-md-6">
-      <div class="row">
-        <div class="col-xs-12">
-          <app-header>
-            <ul class="header-nav">
-              <li>Widget Section 2</li>
-            </ul>
-            <ul class="header-nav pull-right">
-              <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
-            </ul>
-          </app-header>
-          <div class="reserved-area">
-
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <app-header>
-            <ul class="header-nav">
-              <li>Widget Section 3</li>
-            </ul>
-            <ul class="header-nav pull-right">
-              <!-- <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li> -->
-            </ul>
-          </app-header>
-          <div class="reserved-area">
-
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="balance"></app-balance>
   </div>
-</div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="blind_balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="anon_balance"></app-balance>
+  </div>
+  <div class="balance-item" fxFlex="17">
+    <app-balance type="staked_balance"></app-balance>
+  </div>
+</md-card>
+
+
+<div class="overview-content" fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutGap="5%">
+
+  <div class="recent-transactions" fxFlex="65" fxFlexOrder.lt-lg="2">
+    <app-header>
+      <ul class="header-nav">
+        <li>Recent Transactions</li>
+      </ul>
+      <!--ul class="header-nav pull-right">
+        <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li>
+      </ul-->
+    </app-header>
+    <transaction-table
+      [display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': true, 'confirmations': true}">
+    </transaction-table>
+  </div><!-- .recent-transactions -->
+
+
+  <div class="overview-sidebar" fxFlex="30" fxLayoutWrap fxFlexOrder.lt-lg="1" fxLayoutGap.lt-lg="3%">
+
+    <app-stakinginfo fxFlex.gt-lg="100" fxFlex.lt-lg="48.5"></app-stakinginfo>
+    <app-coldstake fxFlex.gt-lg="100" fxFlex.lt-lg="48.5"></app-coldstake>
+    
+  </div><!-- .overview-sidebar -->
+
+
+</div><!-- .overview-content -->

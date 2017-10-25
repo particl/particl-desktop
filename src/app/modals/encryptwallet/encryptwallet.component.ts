@@ -1,14 +1,11 @@
-import {
-  Component, ComponentRef, Inject,
-  forwardRef, ElementRef, ViewChild
-} from '@angular/core';
+import {Component, forwardRef, Inject, ViewChild} from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { ModalsService } from 'app/modals/modals.service';
 import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
-import { AlertComponent } from '../shared/alert/alert.component';
 import { IPassword } from '../shared/password/password.interface';
+import { FlashNotificationService } from '../../services/flash-notification.service';
+import { ModalsService } from '../modals.service';
 
 @Component({
   selector: 'app-encryptwallet',
@@ -23,13 +20,11 @@ export class EncryptwalletComponent {
   @ViewChild('passwordElement')
   passwordElement: PasswordComponent;
 
-  @ViewChild('alertBox')
-  alertBox: AlertComponent;
-
-  constructor(
-    private _rpc: RPCService,
-    @Inject(forwardRef(() => ModalsService))
-    private _modalsService: ModalsService) { }
+  constructor(private _rpc: RPCService,
+              private flashNotification: FlashNotificationService,
+              @Inject(forwardRef(() => ModalsService))
+              private _modalsService: ModalsService) {
+  }
 
   encryptwallet(password: IPassword) {
     if (this.password) {
@@ -43,7 +38,7 @@ export class EncryptwalletComponent {
           .subscribe(
             response => {
               this._rpc.toggleState(false);
-              this.alertBox.open(response, 'Wallet');
+              this.flashNotification.open(response);
 
               if (this._rpc.isElectron) {
                 this._rpc.call('restart-daemon')
@@ -59,11 +54,11 @@ export class EncryptwalletComponent {
             },
             // Handle error appropriately
             error => {
-              this.alertBox.open('Wallet failed to encrypt properly!', 'Wallet');
+              this.flashNotification.open('Wallet failed to encrypt properly!');
               this.log.er('error encrypting wallet', error)
             });
       } else {
-        this.alertBox.open('The passwords do not match!', 'Wallet');
+        this.flashNotification.open('The passwords do not match!');
       }
 
     } else {

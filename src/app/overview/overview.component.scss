@@ -1,14 +1,16 @@
-.reserved-area {
-    height: 250px;
-    border-style: dashed;
-    border-width: 2px;
-    border-color: #EBEBEB;
-    background-color: #F7F7F7;
-    margin-bottom: 15px;
+@import 'widgets/shared/shared.scss';
+
+.balance-overview { // list of balances
+    padding: 24px 50px;
+    .balance-item {
+        border-right: 1px solid $bg-shadow;
+        &:last-of-type {
+            border: none; margin: none;
+        }
+    }
 }
-.balance-bg {
-    background: #fff;
-    padding-bottom: 30px;
-    padding-top: 20px;
-    border-bottom: 1px solid #EAEAEA;
+
+.overview-content { // area with widgets
+    padding: 10px 50px;
 }
+

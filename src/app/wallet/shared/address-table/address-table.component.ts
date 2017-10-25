@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
@@ -6,7 +6,12 @@ import { AddressService } from '../address.service';
 import { Address } from '../address.model';
 
 import { RPCService } from '../../../core/rpc/rpc.module';
+import { MdDialog } from '@angular/material';
+import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
+import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
+import { FlashNotificationService } from '../../../services/flash-notification.service';
 import { ModalsService } from '../../../modals/modals.service';
+import { ModalsComponent } from '../../../modals/modals.component';
 
 @Component({
   selector: 'address-table',
@@ -32,15 +37,11 @@ export class AddressTableComponent implements OnInit {
   @Input() displayIsMine: boolean = false;
 
   @Output() editLabelEmitter: EventEmitter<string> = new EventEmitter<string>();
-  openQrModal: boolean = false;
 
   // Search query
   @Input() query: string;
 
-  @ViewChild('qrCode') qrElementView: ElementRef;
-
   // Data storage
-
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
   public singleAddress: any = {
@@ -57,6 +58,8 @@ export class AddressTableComponent implements OnInit {
   constructor(
     public _addressService: AddressService,
     private _rpc: RPCService,
+    public dialog: MdDialog,
+    public flashNotification: FlashNotificationService,
     private _modals: ModalsService
   ) {
 
@@ -113,15 +116,12 @@ export class AddressTableComponent implements OnInit {
     return this.addressDisplayAmount;
   }
 
-  public getQrSize() {
-    return this.qrElementView.nativeElement.offsetWidth - 40;
-  }
-
   /** Delete address */
 
   public deleteAddress(label: string, address: string) {
-    if (confirm(`Are you sure you want to delete ${label}: ${address}`)) {
-      // this._rpc.call(this, 'manageaddressbook', ['del', address], this.rpc_deleteAddress_success);
+    const dialogRef = this.dialog.open(DeleteConfirmationModalComponent);
+    dialogRef.componentInstance.dialogContent = `${label}: ${address}`;
+    dialogRef.componentInstance.onDelete.subscribe(() => {
       if (this._rpc.state.get('locked')) {
         // unlock wallet and send transaction
         this._modals.open('unlock', {
@@ -131,7 +131,7 @@ export class AddressTableComponent implements OnInit {
         // wallet already unlocked
         this.deleteAddressCallBack(address);
       }
-    }
+    });
   }
 
   private deleteAddressCallBack(address: string) {
@@ -143,7 +143,7 @@ export class AddressTableComponent implements OnInit {
   }
 
   private rpc_deleteAddress_success(json: Object) {
-    alert(`Succesfully deleted ${json['address']}`);
+    this.flashNotification.open(`Succesfully deleted ${json['address']}`);
     this._rpc.specialPoll();
   }
 
@@ -155,23 +155,13 @@ export class AddressTableComponent implements OnInit {
 
   /** Open QR Code Modal */
   openQrCodeModal(address: Object) {
+    const dialogRef = this.dialog.open(QrCodeModalComponent);
+    dialogRef.componentInstance.singleAddress = address;
     this.log.d(`qrcode, address: ${JSON.stringify(address)}`);
-    this.openQrModal = true;
-    this.singleAddress = address
-  }
-
-  closeQrModal() {
-    this.openQrModal = false;
   }
 
   showAddress(address: string) {
     return  address.match(/.{1,4}/g);
   }
-  @HostListener('window:keydown', ['$event'])
-    keyDownEvent(event: any) {
-      if (event.key.toLowerCase() === 'escape') {
-        this.openQrModal = false;
-      }
-    }
 }
 

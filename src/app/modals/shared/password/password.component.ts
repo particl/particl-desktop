@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { IPassword } from './password.interface';
 
 import { RPCService } from '../../../core/rpc/rpc.module';
+import { FlashNotificationService } from '../../../services/flash-notification.service';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class PasswordComponent {
   @Input() unlockTimeout: number = 60;
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;
+  @Input() isButtonDisable: boolean = false;
 
   /**
     * The password emitter will send over an object with the password and stakingOnly info.
@@ -42,7 +44,9 @@ export class PasswordComponent {
 
   log: any = Log.create('password.component');
 
-  constructor (private _rpc: RPCService) { }
+  constructor(private _rpc: RPCService,
+              private flashNotification: FlashNotificationService) {
+  }
 
   /** Get the input type - password or text */
   getInputType(): string {
@@ -113,8 +117,7 @@ export class PasswordComponent {
         },
         error => {
           this.log.i('rpc_unlock_failed: unlock failed - wrong password?', error);
-          // TODO: Use modals instead of alerts..
-          alert('Unlock failed - password was incorrect.');
+          this.flashNotification.open('Unlock failed - password was incorrect');
         });
   }
 

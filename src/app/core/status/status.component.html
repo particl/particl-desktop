@@ -1,40 +1,24 @@
-<ng-template #networkTooltip>
-  <b>Peers:</b> {{ peerListCount }}
-</ng-template>
-
-<ng-template #encryptionTooltip>
-  <b>{{ encryptionStatus }}</b>
-</ng-template>
-
-<ng-template #coldStakeTooltip>
-  <b>Cold</b>
-</ng-template>
-
-<span
-  [tooltip]="networkTooltip"
-  placement="left"
-  container="body"
-  class="icon">
-    <img src="assets/icons/network/connect_{{ getIconNumber() }}.png" />
+<span class="cursor-pointer" mdTooltip="{{'Peers: '+ peerListCount}}">
+    <img src="assets/icons/network/connect_{{ getIconNumber() }}.png"/>
 </span>
 
 <span
-  class="icon"
-  [tooltip]="encryptionTooltip"
+  class="cursor-pointer icon"
+  mdTooltip="{{encryptionStatus}}"
   placement="left"
   container="body"
   (click)="toggle()"
   [class.pointer]="">
-    <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png" />
+    <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png"/>
 </span>
 
 <span
-  class="icon"
-  [tooltip]="coldStakeTooltip"
+  class="icon cursor-pointer blue cold-icon"
+  mdTooltip="Cold"
   placement="left"
   container="body"
   (click)="openColdStakeModal()"
   [class.pointer]="">
-    <i class="fa fa-snowflake-o blue" aria-hidden="true"></i>
-    <!-- <i class="fa fa-key red" aria-hidden="true"></i> -->
+    <md-icon fontSet="faIcon" fontIcon="fa-snowflake-o"></md-icon>
+  <!-- <i class="fa fa-key red" aria-hidden="true"></i> -->
 </span>

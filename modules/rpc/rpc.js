@@ -6,7 +6,7 @@ const rxIpc = require('rx-ipc-electron/lib/main').default;
 const cookie = require('./cookie');
 const daemon = require('./daemon');
 
-let TIMEOUT = 10000;
+let TIMEOUT = 15000;
 let HOSTNAME;
 let PORT;
 let rpcOptions;
@@ -122,7 +122,7 @@ function init(options) {
 function checkDaemon(options) {
   return new Promise((resolve, reject) => {
     const _timeout = TIMEOUT;
-    TIMEOUT = 200;
+    TIMEOUT = 150;
     rpcCall(
       'getnetworkinfo', null, cookie.getAuth(options), (error, response) => {
         rxIpc.removeListeners();

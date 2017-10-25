@@ -1,69 +1,33 @@
-<!--ng-template *ngIf="stateOfPassphrase === 'generate'">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12 text-center">
-        <h4>Write your wallet recovery phrase</h4>
-        <!
-        <div style="color: #ec4b50;">
-          Lorem ipsum
-        </div>
-
-      </div>
+<div fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
+  <div class="container form_block" fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <div fxFlex="30%">
+      <label class="wallet-name-label">YOUR 24 WORD RECOVERY PHRASE</label>
     </div>
-  </div>
-
-  <hr class="margin-top-40px">
-</ng-template!-->
-
-<!--ng-template *ngIf="stateOfPassphrase === 'verify'">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12 text-center">
-        <h4>Confirm your wallet recovery phrase</h4>
-        <div *ngIf="isValid === false" class="verify-error">
-          Recovery phrase was not valid!
+    <div fxFlex="70%" class="containerX" fxFlex.sm="100%" fxFlex.xs="100%">
+      <div fxLayout="row wrap">
+        <div fxFlex="16.66%" *ngFor="let k of Arr(24).fill(); let i = index">
+          <md-form-field class="row_input_gap">
+            <input
+              mdInput
+              [appFocusElement]="i === focused"
+              [(ngModel)]="words[i]" type="text" name="recovery"
+              [readonly]="readOnly"
+              [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
+              (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)"/>
+          </md-form-field>
         </div>
       </div>
-    </div>
-  </div>
-
-  <hr class="margin-top-40px">
-</ng-template>
-
-<ng-template *ngIf="stateOfPassphrase === 'recovery'">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12 text-center">
-        <h4>Please enter your <b>24 word recovery phrase</b> and <b>password</b> below.</h4>
+      <div fxLayoutAlign="end center" *ngIf="!isDisabled && !partialDisable">
+        <md-icon *ngIf="generate" class="cursor-pointer icon"
+                 mdTooltip="Copy" fontSet="ncIcon" fontIcon="nc-copy-2"
+                 (click)="copyToClipBoard()" ngxClipboard
+                 [cbContent]="words.join(' ')">
+        </md-icon>
+        <md-icon class="cursor-pointer icon" *ngIf="!generate"
+                 mdTooltip="Paste" fontSet="faIcon" fontIcon="fa-clipboard">
+        </md-icon>
       </div>
-    </div>
-  </div>
-
-  <hr class="margin-top-100px">
-</ng-template-->
-
-
-<div class="container">
-  <div class="col-md-3 text-right">
-    <label>YOUR 24 WORD RECOVERY PHRASE</label>
-  </div>
-  <div class="col-md-9" >
-    <div class="col-md-2 col-sm-3 col-xs-4" *ngFor="let k of Arr(24).fill(); let i = index">
-      <input
-        [appFocusElement]="i === focused"
-        [(ngModel)]="words[i]" type="text" name="recovery"
-        [readonly]="readOnly"
-        [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
-        class="form-control recovery-word" (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)" />
-    </div>
-    <div *ngIf="!isDisabled && !partialDisable" class="col-xs-12">
-      <span class="pull-right icon nc-icon nc-copy-2"
-        tooltip="Copy recovery phrase to clipboard"
-        placement="left"
-        container="body"
-        ngxClipboard [cbContent]="words.join(' ')">
-      </span>
     </div>
   </div>
 </div>
-<hr>
+<hr class="hr-light">

@@ -1,0 +1,28 @@
+<div class="containerX">
+  <h2 md-dialog-title>
+    {{singleAddress.label}}
+  </h2>
+  <div fxLayout.lg="row">
+    <div>
+      <label>Address</label>
+      <div>
+        <div class="details-address" fxLayout="row" layout-padding fxLayoutGap="10px">
+          <div *ngFor="let word of showAddress(singleAddress.address)"  class="address-word" fxFlex="28%">
+            {{ word }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div #qrCode class="card qr">
+        <qr-code [level]="'H'"
+          value="particl:{{ singleAddress.address }}">
+        </qr-code>
+      </div>
+    </div>
+  </div>
+  <md-dialog-actions fxLayoutAlign="end center">
+    <button md-button md-dialog-close>Close</button>
+  </md-dialog-actions>
+</div>

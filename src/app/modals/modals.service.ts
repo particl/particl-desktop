@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
@@ -11,6 +11,8 @@ import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
+import { MdDialog } from '@angular/material';
+import { ModalsComponent } from './modals.component';
 
 @Injectable()
 export class ModalsService {
@@ -41,7 +43,8 @@ export class ModalsService {
 
   constructor (
     private _blockStatusService: BlockStatusService,
-    private _rpcService: RPCService
+    private _rpc: RPCService,
+    private dialog: MdDialog
   ) {
     // open syncing modal
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
@@ -52,7 +55,7 @@ export class ModalsService {
     this.openInitialCreateWallet();
 
     // open daemon model on error
-    this._rpcService.modalUpdates.asObservable().subscribe(status => {
+    this._rpc.modalUpdates.asObservable().subscribe(status => {
       if (status.error) {
         this.enableClose = true;
         this.open('daemon', status);
@@ -69,6 +72,7 @@ export class ModalsService {
     * @param {any} data       Optional - data to pass through to the modal.
     */
   open(modal: string, data?: any): void {
+    const dialogRef = this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     if (modal in this.messages) {
       if (
         (data && data.forceOpen)
@@ -77,9 +81,13 @@ export class ModalsService {
         if (!this.wasAlreadyOpen(modal)) {
           this.log.d(`next modal: ${modal}`);
           this.modal = this.messages[modal];
-          this.message.next({modal: this.modal, data: data});
+          dialogRef.componentInstance.open(this.modal, {data: data});
+          // this.message.next({modal: this.modal, data: data});
           this.isOpen = true;
-          this.enableClose = true;
+          dialogRef.componentInstance.enableClose = true;
+          dialogRef.afterClosed().subscribe(() => {
+            this.close();
+          });
         }
       }
     } else {
@@ -149,35 +157,15 @@ export class ModalsService {
 
   /** Initial wallet creation */
   openInitialCreateWallet() {
-    if (this.initializedWallet) {
-      return;
-    }
-
-    // Use 'encryptionstatus' as 'locked' isn't replaying due to no connections...
-    this._rpcService.state.observe('encryptionstatus').take(1)
+    this._rpc.state.observe('walletInitialized')
       .subscribe(
-        status => {
-          const locked = this._rpcService.state.get('locked');
-          if (locked) {
-            this.initializedWallet = true;
-            this.log.d('Wallet already initialized.');
+        state => {
+          this.initializedWallet = state;
+          if (state) {
+            this.log.i('Wallet already initialized.');
             return;
           }
-          this._rpcService.call('extkey', ['list'])
-            .subscribe(
-              response => {
-                // check if account is active
-                if (response.result === 'No keys to list.') {
-                  this.open('createWallet', {forceOpen: true});
-                } else {
-                  this.log.d('Already has imported their keys.');
-                  this.initializedWallet = true;
-                }
-              },
-              error => {
-                // maybe wallet is locked?
-                this.log.er('RPC Call returned an error', error);
-              });
+          this.open('createWallet', {forceOpen: true});
         });
   }
 

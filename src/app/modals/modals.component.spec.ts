@@ -9,6 +9,8 @@ import { BlockStatusService } from '../core/rpc/blockstatus.service';
 
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { ModalsComponent } from './modals.component';
+import { MdDialogModule, MdDialogRef, MdSnackBarModule } from '@angular/material';
+import { ModalsService } from './modals.service';
 
 
 describe('ModalsComponent', () => {
@@ -18,13 +20,17 @@ describe('ModalsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        MdDialogModule,
         ModalsModule,
         ModalModule.forRoot(),
         SharedModule,
-        RpcModule.forRoot()
+        RpcModule.forRoot(),
+        MdSnackBarModule
       ],
       providers: [
         BlockStatusService,
+        ModalsService,
+        { provide: MdDialogRef }
       ]
     })
     .compileComponents();
@@ -40,26 +46,21 @@ describe('ModalsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update progress', () => {
-    component.updateProgress(5);
-    expect(component.syncPercentage).toBe(5);
-  });
-
   it('should open and close', () => {
     component.open(UnlockwalletComponent, {forceOpen: true});
     expect(component.modal).toBeDefined();
-    component.close();
+    // component.close();
   });
 
   it('should get closeOnEscape', () => {
-    expect(component.closeOnEscape).toBe(true);
+    expect(component.closeOnEscape).toBeTruthy()
   });
 
   it('should get hasScrollY', () => {
-    expect(component.hasScrollY).toBe(false);
+    expect(component.hasScrollY).toBeFalsy();
   });
 
   it('should get modal', () => {
-    expect(component.modal).toBe(undefined);
+    expect(component.modal).toBeUndefined()
   });
 });

@@ -5,7 +5,8 @@ import { Log } from 'ng2-logger';
 import { ModalsService } from '../../modals/modals.service';
 import { StateService } from '../state/state.service';
 
-import { PeerService, RPCService, BlockStatusService } from '../rpc/rpc.module';
+import { RPCService } from '../rpc/rpc.module';
+import { MdDialog} from '@angular/material';
 
 @Component({
   selector: 'app-status',
@@ -82,6 +83,6 @@ export class StatusComponent implements OnInit {
   }
 
   openColdStakeModal() {
-    this._modalsService.open('coldStake', {forceOpen: true});
+    this._modalsService.open('coldStake', {'forceOpen': true});
   }
 }

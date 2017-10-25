@@ -17,6 +17,7 @@ export class TransactionService {
   txCount: number = 0;
   currentPage: number = 0;
   totalPageCount: number = 0;
+  loading: boolean = false;
 
 
   /* How many transactions do we display per page and keep in memory at all times.
@@ -29,11 +30,13 @@ export class TransactionService {
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.rpc.state.observe('txcount')
-      .subscribe(txcount => {
-        this.txCount = txcount;
-        this.currentPage = 0;
-        this.rpc_update();
-      });
+      .subscribe(
+        txcount => {
+          this.txCount = txcount;
+          this.currentPage = 0;
+          this.loading = true;
+          this.rpc_update();
+        });
   }
 
 
@@ -42,6 +45,7 @@ export class TransactionService {
       return;
     }
     page--;
+    this.loading = true;
     this.currentPage = page;
     this.deleteTransactions();
     this.rpc_update();
@@ -70,6 +74,7 @@ export class TransactionService {
         txResponse.forEach((tx) => {
           this.addTransaction(tx);
         });
+        this.loading = false;
       });
   }
 

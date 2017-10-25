@@ -1,32 +1,29 @@
 <div [@flyInOut]="animationState" class="col-xs-12">
 
   <ng-template [ngIf]="step === 0">
-    <div class="col-xs-12 text-center">
-      <p><b>Welcome</b>, read the instructions very carefully!</p>
-      <p>
-        <b>Hot wallet:</b>
-        Selecting this option will turn this computer into a staking node.
-        It will be <b>unable to spend the coins</b> but is <b>allowed to stake them</b>. <br/>
-      </p>
-      <p>
-        <b>Cold wallet:</b>
-        Selecting this option will turn this computer into a cold storage node.
-        It is <b>able to spend</b> the coins but is <b>not allowed to stake them</b>.<br />
-        Note: this will create a special transaction with a dust output of 0.00001 and a transaction fee.
-      </p>
-    </div>
+    <div class="container" fxFlex="100%">
+      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
+        <p><b>Welcome</b>, read the instructions very carefully!</p>
+        <p>
+          <b>Hot wallet:</b>
+          Selecting this option will turn this computer into a staking node.
+          It will be <b>unable to spend the coins</b> but is <b>allowed to stake them</b>. <br/>
+        </p>
+        <p>
+          <b>Cold wallet:</b>
+          Selecting this option will turn this computer into a cold storage node.
+          It is <b>able to spend</b> the coins but is <b>not allowed to stake them</b>.<br/>
+          Note: this will create a special transaction with a dust output of 0.00001 and a transaction fee.
+        </p>
+      </div>
 
-    <hr class="margin-top-100px">
-
-    <div class="container">
-      <div class="row wallet-buttons-container">
-        <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control red-bg" (click)="create('hot');">
+      <hr class="hr-light">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
+        <div class="button-row align-center">
+          <button md-raised-button class="create-wallet-action-button" color="warn" (click)="create('hot');">
             Create hot wallet
           </button>
-        </div>
-        <div class="col-sm-6 col-xs-12 text-left">
-          <button class="control blue-bg" (click)="create('cold');">
+          <button md-raised-button class="create-wallet-action-button" color="primary" (click)="create('cold');">
             Create cold wallet
           </button>
         </div>
@@ -36,90 +33,98 @@
 
   <!-- BOTH WALLETS -->
   <ng-template [ngIf]="[1,3].includes(step)">
+    <div class="container" fxFlex="100%">
+      <app-unlockwallet
+        (unlockEmitter)="unlockWallet($event)" [autoClose]="false">
+      </app-unlockwallet>
 
-    <app-unlockwallet
-      (unlockEmitter)="unlockWallet($event)" [autoClose]="false">
-    </app-unlockwallet>
-
-    <div class="col-sm-12 col-xs-12 text-center">
-      <button class="control" (click)="prevStep();">
-        Back
-      </button>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
+        <div class="button-row align-center">
+          <button md-raised-button class="control" (click)="prevStep();">
+            Back
+          </button>
+        </div>
+      </div>
     </div>
   </ng-template><!-- Step 1,3 HOT (,and COLD) -->
 
   <ng-template [ngIf]="step === 2 && type === 'hot'">
-    <div class="col-xs-12 text-center">
+    <div class="container" fxFlex="100%">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
       <p>
         <b>Hot wallet:</b>
         Copy this and enter this into the cold wallet.
       </p>
     </div>
 
-    <hr class="margin-top-100px">
+    <hr class="hr-light">
 
     <div class="container">
-      <div class="row">
-        <div class="col-xs-11">
-          <input class="form-control" value="{{hotStakeAddress}}" disabled readonly />
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
+        <div class="input-gap">
+          <md-form-field>
+          <input mdInput value="{{hotStakeAddress}}" disabled readonly/>
+          </md-form-field>
         </div>
-        <div class="col-xs-1">
-          <span class="icon nc-icon nc-copy-2"
-            tooltip="Copy address to clipboard"
-            placement="top"
-            container="body"
-            ngxClipboard [cbContent]="hotStakeAddress">
+        <div class="input-gap">
+          <span class="icon nc-icon nc-copy-2 cursor-pointer"
+                tooltip="Copy address to clipboard"
+                placement="top"
+                container="body"
+                ngxClipboard [cbContent]="hotStakeAddress">
           </span>
         </div>
       </div>
 
-      <div class="margin-top-100px row wallet-buttons-container">
-        <div class="col-sm-6 col-xs-12 text-right">
-          <button class="control" (click)="prevStep();">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
+        <div class="button-row align-center">
+          <button md-raised-button color="primary" class="create-wallet-action-button" (click)="prevStep();">
             Back
           </button>
-        </div>
-        <div class="col-sm-6 col-xs-12 text-left">
-          <button class="control red-bg" (click)="close();">
+          <button md-raised-button color="warn" class="create-wallet-action-button" (click)="close()">
             Close
           </button>
         </div>
       </div>
     </div>
+    </div>
   </ng-template><!-- /Step 2 HOT -->
 
   <ng-template [ngIf]="step === 2 && type === 'cold'">
-    <div class="col-xs-12 text-center">
+    <div class="container" fxFlex="100%">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
       <p>
         <b>Please enter the address generated by the hot wallet.</b>
       </p>
     </div>
 
-    <hr class="margin-top-100px">
+    <hr class="hr-light">
 
-    <div class="container">
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
       <div class="row wallet-buttons-container">
-        <div class="center text-center" >
-          <input class="form-control width-100" [(ngModel)]="coldStakeAddress"
-          placeholder="Enter the hot wallet address..." />
+        <div class="center text-center">
+          <md-form-field>
+          <input mdInput class="form-control width-100" [(ngModel)]="coldStakeAddress"
+                 placeholder="Enter the hot wallet address..."/>
+          </md-form-field>
         </div>
       </div>
-      <br />
+      <br/>
 
-      <div class="col-sm-12 col-xs-12 text-center">
-        <button class="control blue-bg" (click)="nextStep();">
+      <div class="button-row align-center">
+        <button md-raised-button class="create-wallet-action-button"  color="primary" (click)="nextStep();">
           Enable cold staking
         </button>
       </div>
     </div>
-
+    </div>
   </ng-template><!-- /Step 2 COLD -->
 
   <ng-template [ngIf]="step === 4 && type === 'cold'">
-    <div class="col-xs-12 text-center">
-      <p>
+    <div  class="container" fxFlex="100%">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
         <b>{{finalMessage}}</b>
-      </p>
+      </div>
     </div>
   </ng-template><!-- Step 4 COLD -->
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Log } from 'ng2-logger';
 
@@ -8,6 +8,11 @@ import { RPCService } from '../../core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
+import { MdDialog } from '@angular/material';
+import { AddressLookUpCopy } from '../models/address-look-up-copy';
+import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
+import { FlashNotificationService } from '../../services/flash-notification.service';
+import { ModalsComponent } from '../../modals/modals.component';
 
 @Component({
   selector: 'app-send',
@@ -17,6 +22,7 @@ import { AddressLookupComponent } from '../addresslookup/addresslookup.component
 })
 export class SendComponent {
 
+
   /*
     General
   */
@@ -25,11 +31,10 @@ export class SendComponent {
   /*
     UI logic
   */
-  @ViewChild('addressLookup')
-  public addressLookup: AddressLookupComponent;
 
   type: string = 'sendPayment';
   advanced: boolean = false;
+  progress: number = 10;
   advancedText: string = 'Show Recipient Address'
   // TODO: Create proper Interface / type
   send: any = {
@@ -41,7 +46,7 @@ export class SendComponent {
     validAmount: undefined,
     isMine: undefined,
     currency: 'part',
-    privacy: 50
+    privacy: 8
   };
 
   /*
@@ -55,13 +60,16 @@ export class SendComponent {
   constructor(
     private sendService: SendService,
     private _rpc: RPCService,
-    private _modals: ModalsService
+    private _modals: ModalsService,
+    private dialog: MdDialog,
+    private flashNotification: FlashNotificationService
   ) {
+    this.progress = 50;
   }
 
   /** Select tab */
-  selectTab(type: string) {
-    this.type = type;
+  selectTab(tabIndex: number) {
+    this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
     this.send.input = 'balance';
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
@@ -141,15 +149,12 @@ export class SendComponent {
       if (!!response.ismine) {
         this.send.isMine = response.ismine;
       }
-    }
+    };
 
     this._rpc.call('validateaddress', [this.send.toAddress])
-      .subscribe(response => {
-        validateAddressCB(response)
-      },
-      error => {
-        this.log.er('verifyAddress: validateAddressCB failed');
-      });
+      .subscribe(
+        response => validateAddressCB(response),
+        error => this.log.er('verifyAddress: validateAddressCB failed'));
   }
 
   /** Clear the send object. */
@@ -170,21 +175,21 @@ export class SendComponent {
     this.send.validAddress = undefined;
   }
 
-  /** Validation modal */
-  openValidate() {
-    document.getElementById('validate').classList.remove('hide');
-  }
+  onSubmit(): void {
+    const dialogRef = this.dialog.open(SendConfirmationModalComponent);
+    dialogRef.componentInstance.dialogContent = `Do you really want to send
+      ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.getAddress()} ?`;
 
-  closeValidate() {
-    document.getElementById('validate').classList.add('hide');
+    dialogRef.componentInstance.onConfirm.subscribe(() => {
+      dialogRef.close();
+      this.pay();
+    })
   }
 
   /** Payment function */
   pay() {
-    this.closeValidate();
-
     if (this.send.input === '' ) {
-      alert('You need to select an input type (public, blind or anon)!');
+      this.flashNotification.open('You need to select an input type (public, blind or anon)!');
       return;
     }
 
@@ -195,8 +200,8 @@ export class SendComponent {
       this.send.output = this.send.input;
 
       // Check if stealth address if output is private
-      if (this.send.output === 'anon_balance' && this.send.toAddress.length < 35) {
-        alert('Stealth address required for private transactions!');
+      if (this.send.output === 'private' && this.send.toAddress.length < 35) {
+        this.flashNotification.open('Stealth address required for private transactions!');
         return;
       }
 
@@ -204,18 +209,20 @@ export class SendComponent {
     } else if (this.type === 'balanceTransfer') {
 
       if (this.send.output === '') {
-        alert('You need to select an output type (public, blind or anon)!');
+        this.flashNotification.open('You need to select an output type (public, blind or anon)!');
         return;
       }
 
       if (this.send.input === this.send.output) {
-        alert('You have selected "' + this.send.input + '"" twice!\n Balance transfers can only happen between two different types.');
+        this.flashNotification.open(`You have selected ${this.send.input}
+          twice!\n Balance transfers can only happen between two different types.`);
+
         return;
       }
 
     }
 
-    if (['Locked', 'Unlocked, staking only'].indexOf(this._rpc.state.get('encryptionstatus')) !== -1) {
+    if (this._rpc.state.get('locked')) {
       // unlock wallet and send transaction
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
     } else {
@@ -225,7 +232,6 @@ export class SendComponent {
   }
 
   private sendTransaction(): void {
-
     if (this.type === 'sendPayment') {
       // edit label of address
       this.addLabelToAddress();
@@ -239,25 +245,30 @@ export class SendComponent {
       this.sendService.transferBalance(
         this.send.input, this.send.output, this.send.toAddress,
         this.send.amount, this.send.privacy, 1);
-
     }
-
     this.clear();
   }
+  /*
+    AddressLookup Modal + set details
+  */
 
-  // AddressLookup Modal + set details
-  openLookup(type: string) {
-    this.addressLookup.show(type);
+  openLookup() {
+    const dialogRef = this.dialog.open(AddressLookupComponent);
+    dialogRef.componentInstance.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
+    dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
+      this.selectAddress(response);
+      dialogRef.close();
+    });
   }
 
   /** Select an address, set the appropriate models
     * @param address The address to send to
     * @param label The label for the address.
     */
-  selectAddress(address: string, label: string) {
-    this.send.toAddress = address;
-    this.send.toLabel = label;
-    this.addressLookup.hide();
+  selectAddress(copyObject: AddressLookUpCopy) {
+    this.send.toAddress = copyObject.address;
+    this.send.toLabel = copyObject.label;
+    // this.addressLookup.hide();
     this.verifyAddress();
   }
 
@@ -279,6 +290,11 @@ export class SendComponent {
       .subscribe(
         response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
         error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
+  }
+
+  setPrivacy(level: number, prog: number) {
+    this.send.privacy = level;
+    this.progress = prog;
   }
 
 }

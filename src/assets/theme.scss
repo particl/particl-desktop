@@ -1,0 +1,388 @@
+@import "theme/partgui-theme";
+@import "./src/assets/_config"; // import shared colors etc.
+
+/**
+ * Side bar Menu.
+ */
+
+ .mat-sidenav {
+  .logo-area {
+    .mat-toolbar-row {
+      justify-content: center;
+      height: 110px;
+    }
+  }
+  .mat-list {
+    .mat-list-item { // menu item (text w/ icon)
+      &:hover {
+        background: darken(#222828, 1.5%);
+        .mat-icon {
+          color: lighten(#4B4A4F, 10%) !important;
+        }
+      }
+      .mat-list-item-content {
+        height: auto !important;
+      }
+    }
+    &.sidesubmenu {
+      a {
+        text-decoration: none;
+      }
+      .mat-list-item-content {
+        text-transform: uppercase;
+        min-height: 40px;
+      }
+    }
+  }
+  .mat-expansion-panel-body { // accordion menu
+    padding: 0;
+  }
+}
+
+
+.header-main {
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+}
+
+/*
+.active > md-list-item > div > md-icon {
+  color: #41ECC2 !important;
+}
+*/
+
+.containerX {
+  width: 100%;
+}
+
+.header-icons .material-icons {
+  margin: 0 5px;
+}
+
+.md-expansion-menu > md-expansion-panel {
+  color: #ffffff;
+  background-color: #222828;
+}
+
+.mat-expansion-indicator.ng-tns-c7-2.ng-trigger.ng-trigger-indicatorRotate::after {
+  color: #41ECC2
+}
+
+.md-expansion-menu span {
+  color: #938f8f;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.details-address {
+  flex-wrap: wrap;
+}
+
+/**
+ * Cards
+ */
+ md-card.mat-card { // FIXME: remove the !important and solve overwriting
+  font-family: $font;
+  box-shadow: 0 1px 0 $bg-shadow !important;
+}
+
+
+/**
+ *list
+ */
+.icon-input {
+  input.mat-input-element {
+    height: 29px;
+  }
+  .mat-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+  }
+  .mat-form-field-underline {
+    background-color: #ddd;
+  }
+  &:after {
+    content: '';
+    height: 30px;
+    width: 1px;
+    position: absolute;
+    left: -10px;
+    top: 10px;
+    background: #ddd;
+  }
+
+}
+
+.list-data {
+  .mat-list-item {
+    font-size: 14px;
+    word-wrap: break-word;
+    line-height: 22px;
+  }
+  .mat-subheader {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .mat-divider {
+    margin: 15px 0;
+  }
+}
+
+/**
+ * Form Design
+ */
+input[type="text"] {
+  border: none;
+}
+
+.md-list-radio {
+  .mat-radio-button {
+    margin-bottom: 12px;
+  }
+  h5 {
+    margin-top: 0;
+  }
+}
+
+.md-reduce-button {
+  margin-bottom: 0 !important;
+  padding-left: 8px !important;
+}
+
+.address, .address-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: transparent;
+  transition: background .3s;
+  white-space: nowrap;
+}
+
+.md-left-border {
+  border-left: 1px solid #ddd;
+}
+
+.container-block {
+  padding: 20px;
+}
+
+/**
+ * History List
+ */
+
+.history_longAddress {
+  overflow: hidden;
+  flex-wrap: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block !important;
+}
+
+.history_txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-list .mat-content {
+  max-width: 100%;
+  width: 100%;
+  margin-bottom: 0;
+  align-items: center;
+}
+
+
+.history-list {
+  .history_cat_icon {
+    .mat-icon {
+      margin-right: 8px;
+    }
+  }
+  .history_container {
+    > div {
+      min-height: 25px;
+      > div {
+        margin-right: 10px;
+      }
+      .highlight {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.md-right {
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 18px;
+}
+.cold-icon {
+  font-size: 1em !important;
+}
+
+/**
+ * Dialog style
+ */
+.mat-dialog-container {
+  max-width: 100% !important;
+  background: transparent !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  position: relative;
+  .close_button {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    background: transparent;
+    color: #999;
+    min-width: 50px;
+    &:hover {
+      color: #222;
+    }
+  }
+  .md-wallet-content {
+    max-height: 100% !important;
+  }
+}
+
+.create-wallet-action-button {
+  min-width: 145px !important;
+  margin: 12px !important;
+}
+.form_block {
+  width: 60%;
+  .mat-form-field {
+    width: 100%;
+    display: block;
+  }
+  .row_input_gap {
+    width: 80% !important;
+  }
+  .button-row {
+    text-align: center;
+    margin-top: 30px;
+  }
+  .wallet-name-label {
+    padding-top: 14px;
+    display: inline-block;
+    font-weight: 700;
+  }
+  button {
+    margin: 0 10px;
+    text-transform: uppercase;
+  }
+}
+
+.error {
+  color: #ec4b50;
+}
+
+.hr-light {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  margin: 20px 0;
+}
+input[type="text"].md-bg-transparent {
+  background-color: transparent !important;
+}
+
+.md-send-list {
+  .mat-select-trigger{ height: 37px; }
+}
+
+.header-nav {
+  list-style-type: none;
+  padding: 0;
+  li {
+    font-size: 16px;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+}
+panel-header-title {
+  display: block;
+}
+
+.percentage-bar-bottom {
+  .progress-bar-bottom {
+    height: 20px !important;
+  }
+  .percentage-bar-text {
+    position: absolute;
+    z-index: 99999;
+  }
+}
+
+
+@media (max-width: 1280px) {
+  .qrcode {
+    text-align: center;
+    img {
+      width: 127px;
+      height: 127px;
+    }
+  }
+  .md-left-border {
+    border-left: none;
+    justify-content: flex-start !important;
+  }
+}
+
+@media (max-width: 960px) {
+  .mat-form-field {
+    width: 100%;
+  }
+  .history-list {
+    .history_container {
+      > div {
+        min-height: 50px;
+        div {
+          min-height: 25px;
+          align-items: center;
+          .highlight, .md-right {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+  }
+  .md-send-list {
+    .mat-form-field {
+      width: 100%;
+    }
+    .mat-list {
+      .mat-divider {
+        margin: 4px 0;
+      }
+    }
+  }
+
+
+}
+
+
+
+@media (max-width: 768px) {
+  .form_block {
+    flex-direction: column !important;
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 640px) {
+  .qrcode {
+    text-align: center;
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+  }
+}
