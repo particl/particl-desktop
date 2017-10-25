@@ -11,8 +11,6 @@ import {
 } from '@angular/core';
 import { Log } from 'ng2-logger'
 
-import { ModalsService } from './modals.service';
-
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
@@ -20,6 +18,7 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { MdDialogRef } from '@angular/material';
+import { StateService } from '../core/state/state.service';
 
 @Component({
   selector: 'app-modals',
@@ -36,50 +35,29 @@ import { MdDialogRef } from '@angular/material';
 })
 export class ModalsComponent implements DoCheck, OnInit {
 
-  // @ViewChild('staticModal')
-  // public staticModal: ModalDirective;
-
   @ViewChild('modalContainer', { read: ViewContainerRef })
   private modalContainer: ViewContainerRef;
 
   modal: ComponentRef<Component>;
   hasScrollY: boolean = false;
-  syncPercentage: number = 0;
-  syncString: string;
   closeOnEscape: boolean = true;
   enableClose: boolean;
 
   private logger: any = Log.create('modals.component');
 
-  constructor (
+  constructor(
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
-    private _modalService: ModalsService,
-    public _dialogRef: MdDialogRef<ModalsComponent>
-  ) {
-    // update new modal, open it
-    this._modalService.getMessage().subscribe(
-      message => {
-        if (message.close) {
-          this.close();
-        } else {
-          this.open(message.modal, message.data);
-        }
-      }
-    );
-
-    // update progress bar blockstatus
-    this._modalService.getProgress().subscribe(
-      progress => this.updateProgress(<number>progress)
-    );
+    public _dialogRef: MdDialogRef<ModalsComponent>,
+    private state: StateService) {
   }
 
   ngOnInit() {
-    this.enableClose = this._modalService.enableClose;
+    this.state.observe('modal:fullWidth:enableClose')
+      .subscribe(status => this.enableClose = status);
   }
 
   ngDoCheck() {
-    this.enableClose = this._modalService.enableClose;
     if (this._element) {
       const element = this._element.nativeElement;
       const style = element.ownerDocument.defaultView.getComputedStyle(element, undefined);
@@ -103,7 +81,6 @@ export class ModalsComponent implements DoCheck, OnInit {
   close() {
     this._dialogRef.close();
     // remove and destroy message
-    this._modalService.close();
     this.modalContainer.remove();
     this.modal.destroy();
   }
@@ -111,20 +88,9 @@ export class ModalsComponent implements DoCheck, OnInit {
   // close window on escape
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
-    if (this.closeOnEscape && this._modalService.enableClose
-        && event.key.toLowerCase() === 'escape' && this.modal) {
-        this.close();
+    if (this.closeOnEscape && this.enableClose
+      && event.key.toLowerCase() === 'escape' && this.modal) {
+      this.close();
     }
-  }
-
-  /**
-    * Update sync progress
-    * @param {number} number  The sync percentage
-    */
-  updateProgress(progress: number) {
-    this.syncPercentage = progress;
-    this.syncString = progress === 100
-      ? 'blockchain fully synced'
-      : `${progress.toFixed(2)} %`
   }
 }

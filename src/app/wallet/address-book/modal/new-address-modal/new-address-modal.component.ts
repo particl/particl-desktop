@@ -94,7 +94,6 @@ export class NewAddressModalComponent implements OnInit {
     if (this.label !== undefined && this.label.trim() && !this.isMine) {
       if (this._rpc.state.get('locked')) {
         // unlock wallet and send transaction
-        this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
         this._modals.open('unlock', {
           forceOpen: true, timeout: 3, callback: this.addressCallBack.bind(this)
         });

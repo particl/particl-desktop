@@ -1,6 +1,4 @@
-$color: #02E8B0; // primary green-ish color
-
-$bg-shadow: #E9E9E9; // lines under titles etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 .mat-expansion-panel {
     margin-bottom: 12px;
@@ -15,12 +13,52 @@ $bg-shadow: #E9E9E9; // lines under titles etc.
     background: inherit;
   }
 
+  // TX date/time
+  .history_date {
+    font-size: 13px;
+    color: $text-muted;
+  }
+
+  // TX icon
+  .history_cat_icon {
+      .mat-icon {
+        height: auto;
+        width: auto;
+        font-size: 15px;
+      }
+  }
+
+  // confirmations
+  .confirmations {
+      color: $color;
+      height: auto;
+      width: auto;
+      margin-right: 5px;
+  }
+
+  // TX amount
+  .history_amount {
+      text-align: right;
+      display: block;
+      .amount {
+          font-weight: 600;
+      }
+  }
+
   .mat-expansion-panel {
     .mat-expanded {
-      border-bottom: none !important;
+        border-bottom: none !important;
     }
   }
 }
+
+// detail item of TX info
+.tx-detail-item {
+    padding: 5px 0;
+    color: $text-muted;
+    font-size: 13px;
+}
+
 // @TODO conver css to scss
 md-expansion-panel.mat-expansion-panel.mat-expanded md-expansion-panel-header {
   border-bottom: none !important;

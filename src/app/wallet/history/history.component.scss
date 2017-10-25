@@ -1,3 +1,5 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
 .center-vertical {
   position: relative;
   top: 50%;
@@ -100,15 +102,9 @@ table.transaction-table {
     background-color: #FFF;
     border-bottom: 1px solid #EBEBEB;
   }
-  .category-col {}
-  .address-col {}
-
 }
 
 .transaction-list {
-  & {
-
-  }
   .transaction-item + .transaction-item {
     margin-top: 20px;
   }
