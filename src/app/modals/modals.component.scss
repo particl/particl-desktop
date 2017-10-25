@@ -69,7 +69,7 @@
 
 img.logo {
   max-height: 295px;
-  width: 100%;
+  width: 19%;
   height: 100%;
   margin-bottom: 45px;
 }
@@ -77,4 +77,8 @@ img.logo {
 .close_button {
   border: none !important;
   box-shadow: none !important;
+}
+
+md-spinner.mat-spinner.mat-progress-spinner.mat-primary {
+  padding-left: 46%;
 }

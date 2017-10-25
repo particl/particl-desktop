@@ -153,18 +153,21 @@ export class CreateWalletComponent {
   }
 
   public importMnemonicCallback() {
+    this.state.set('spinner', true);
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {
           this.animationState = 'next';
           this.step = 5;
           this.state.set('activeWallet', true);
+          this.state.set('spinner', false);
           this.log.i('Mnemonic imported successfully');
         },
         error => {
           this.log.er(error);
           this.errorString = error.message;
           this._modalsService.enableClose = true;
+          this.state.set('spinner', false);
           this.state.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');
         });
