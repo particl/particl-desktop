@@ -9,6 +9,7 @@ import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
 import { StateService } from '../../core/state/state.service';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class CreateWalletComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _passphraseService: PassphraseService,
-    private state: StateService
+    private state: StateService,
+    private flasNotification: FlashNotificationService
   ) {
     this.reset();
   }
@@ -162,10 +164,10 @@ export class CreateWalletComponent {
           this.log.i('Mnemonic imported successfully');
         },
         error => {
+          this.flasNotification.open(error.message);
+          this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
-          this._modalsService.enableClose = true;
-          this.state.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');
         });
   }
