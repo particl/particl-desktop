@@ -45,41 +45,24 @@
           </div>
 
           <!-- Actions/controls -->
-          <div fxLayout.sm="row" fxLayout.lt-sm="row" fxLayout.lt-xs="column" fxFlex="20" fxFlex.md="50"
-                fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end center" *ngIf="displayToolsMenu"
-                class="md-left-border">
-            <div fxFlex="100%" class="" fxLayoutAlign="end center">
-              <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%"
-                    fxFlex.xs="33.33%">
-                <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy" ngxClipboard
-                        [cbContent]="address.address">
-                </md-icon>
-              </span>
-              <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
-                <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer"
-                          mdTooltip="Verify message" ngxClipboard>
-                </md-icon>
-              </span>
-              <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
-                <md-icon color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"
-                          (click)="deleteAddress(address.label, address.address)"
-                          mdTooltip="Delete">
-                </md-icon>
-              </span>
-            </div>
+          <div fxLayout.gt-xs="row" fxLayout.lt-xs="column" fxFlex="20" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end center" *ngIf="displayToolsMenu" class="address-actions">
+            <!-- ICO: copy address -->
+            <span fxFlex="20" fxFlex.lt-lg="33.33">
+              <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address"></md-icon>
+            </span>
+            <!-- ICO: verify message -->
+            <span fxFlex="20" fxFlex.lt-lg="33.33">
+              <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer" mdTooltip="Verify message" ngxClipboard></md-icon>
+            </span>
+            <!-- ICO: delete -->
+            <span fxFlex="20" fxFlex.lt-lg="33.33">
+              <md-icon color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove" (click)="deleteAddress(address.label, address.address)" mdTooltip="Delete address"></md-icon>
+            </span>
           </div>
 
           <!-- display QR code -->
-          <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="5" fxFlex.md="50"
-                fxFlex.sm="50" fxFlex.xs="100" *ngIf="!displayQrMenu" fxLayoutAlign="end center"
-                class="md-left-border">
-            <div class="grid-cell divider text-center">
-              <div class="inline-toolbar qrcode-menu" fxFlex="100%" fxLayoutAlign.md="center end"
-                    fxLayoutAlign.lt-md="center end" fxLayoutAlign.lt-sm="center end" fxLayoutAlign="end center"
-                    (click)="openQrCodeModal(address)" mdTooltip="Show QR code">
-                <i class="fa fa-qrcode fa-2x" aria-hidden="true"></i>
-              </div>
-            </div>
+          <div fxFlex="5" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" *ngIf="!displayQrMenu" class="qrcode-menu" fxLayoutAlign="center center">
+            <i class="fa fa-qrcode" aria-hidden="true" mdTooltip="Show QR code" (click)="openQrCodeModal(address)"></i>
           </div>
 
         </md-card>

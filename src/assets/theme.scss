@@ -90,31 +90,24 @@
 
 
 /**
- *list
+ * list
  */
-.icon-input {
+.icon-input { // input with icon (eg. Search in Address Book)
   input.mat-input-element {
-    height: 29px;
+    height: 20px;
   }
   .mat-icon {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 2px;
+    width: auto;
+    height: auto;
+    font-size: 21px;
     cursor: pointer;
   }
   .mat-form-field-underline {
-    background-color: #ddd;
+    background-color: $bg-shadow;
   }
-  &:after {
-    content: '';
-    height: 30px;
-    width: 1px;
-    position: absolute;
-    left: -10px;
-    top: 10px;
-    background: #ddd;
-  }
-
 }
 
 .list-data {
