@@ -1,9 +1,9 @@
 <md-sidenav-container fullscreen>
-  <md-sidenav #sidenav mode="side" opened="true" [ngClass]="{'md-sidenav-left': !isPinned}"
+  <md-sidenav #sidenav mode="side" opened="true" [ngClass]="{'md-sidenav-left': !isPinned && !window.isXS, 'hide-sidnav': window.isXS && showNav}"
     (mouseenter)="!window.isXS && toggle('enter')"
     (mouseleave)="!window.isXS && toggle('leave')"> 
     <md-toolbar class="logo-area">
-    <span flex *ngIf="!window.isXS" class="toggle-pinned fa" [ngClass]="{'fa-dot-circle-o': !sideMenu, 'fa-circle': sideMenu}" (click)="toggle('toggle')">
+    <span flex  mdTooltip="{{unPin}}" class="toggle-pinned cursor-pointer fa" [ngClass]="{'fa-circle': !sideMenu, 'fa-dot-circle-o': sideMenu}" (click)="toggle('toggle')">
       </span>
       <span class="logo"></span>
     </md-toolbar>
@@ -100,7 +100,7 @@
   </md-sidenav>
 
   <md-toolbar class="header-main">
-    <button *ngIf="window.isXS" fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()" fxHide.lg>
+    <button *ngIf="window.isXS" fxLayout="row" fxLayoutAlign="center end" md-button (click)="toggleSideNav(false, sidenav)" fxHide.lg>
       <md-icon>menu</md-icon>
     </button>
     {{ title }}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { MdDialog, MdIconRegistry } from '@angular/material';
+import { MdDialog, MdIconRegistry, MdSidenavModule, MdSidenav } from '@angular/material';
 
 import { WindowService } from './core/window.service';
 
@@ -33,6 +33,8 @@ export class AppComponent implements OnInit {
   walletError: string = '';
   isPinned: boolean = true;
   sideMenu: boolean = true;
+  unPin: string = 'Hide Menu';
+  showNav: boolean = true;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -83,13 +85,21 @@ export class AppComponent implements OnInit {
   }
 
   toggle(value: string) {
-    if (value === 'toggle') {
+    if (value === 'toggle' && !this.window.isXS) {
       this.sideMenu = !this.sideMenu;
+      this.unPin = this.sideMenu ? 'Hide Menu' : 'Show Menu';
       return;
     }
     if (!this.sideMenu) {
       this.isPinned = value === 'enter';
     }
+  }
+
+  toggleSideNav(val: boolean, sidNav: MdSidenav) {
+    this.showNav = !this.showNav;
+    this.isPinned = true;
+    this.sideMenu = true;
+    sidNav.toggle(true);
   }
 
   createWallet() {

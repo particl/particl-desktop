@@ -77,7 +77,9 @@ $color-alert: #EE494D;
   top: 10px;
   right: 20px;
   color: #595D5E;
+  font-size: 12px;
 }
+
 .md-sidenav-left md-list-item span {
   display:none;
 }
@@ -88,6 +90,22 @@ $color-alert: #EE494D;
 
 .md-sidenav-left {
   width : 7.5em;
+}
+
+.md-sidenav-right {
+  display:block;
+}
+
+.mat-drawer.mat-drawer-side {
+  -webkit-transition: all 300ms;
+  -moz-transition: all 300ms;
+  -ms-transition: all 300ms;
+  -o-transition: all 300ms;
+  transition: all 300ms;
+}
+
+.hide-sidnav {
+  display:none;
 }
 
 /deep/ .verify-sucess {
