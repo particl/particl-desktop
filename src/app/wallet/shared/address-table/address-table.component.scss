@@ -1,16 +1,63 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+md-card.address-entry {
+  margin-bottom: 12px;
+}
+
 .title {
   text-transform: uppercase;
   font-weight: bold;
 }
+
+/*
 app-header {
   li.add-address .icon {
     font-size: 28px;
     margin-right: 5px;
   }
 }
+*/
 
+.address {
+  .title {
+    color: $text-muted;
+    font-weight: normal;
+    @media (max-width: 960px) {
+      display: none;
+    }
+  }
+}
+
+.address-actions { // copy, verify, delete & QR
+  @media (max-width: 960px) {
+    margin-top: 7px;
+  }
+  .mat-icon {
+    width: auto;
+    height: auto;
+    font-size: 14px;
+    @media (max-width: 960px) {
+      font-size: 16px;
+    }
+  }
+  .qrcode-menu {
+    margin-left: 20px;
+    @media (max-width: 960px) {
+      margin: 0;
+    }
+    .fa-qrcode {
+      font-size: 37px;
+      margin: -10px 0;
+      @media (max-width: 960px) {
+        font-size: 23px;
+        margin: 0;
+      }
+    }
+  }
+}
+
+
+/*
 #qr-modal {
   position: absolute;
   z-index: 100000;
@@ -73,3 +120,4 @@ app-header {
 #qr-modal .modal-content-header {
   font-weight: 600;
 }
+*/
