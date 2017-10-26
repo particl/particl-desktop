@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
@@ -21,7 +22,8 @@ describe('ColdstakeComponent', () => {
         ModalsModule
       ],
       providers: [
-        { provide: MdDialogRef}
+        { provide: MdDialogRef},
+        FlashNotificationService
       ]
     })
     .compileComponents();

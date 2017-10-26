@@ -5,7 +5,7 @@
     </ul>
   </app-header>
 
-  <md-card class="multiple staking-node" *ngIf="isColdStakingEnabled() === undefined">
+  <md-card *ngIf="isColdStakingEnabled() === undefined" (click)="openUnlockWalletModal()" class="multiple staking-node" >
     <div class="title">
       <!--md-icon fontSet="faIcon" class="cs-icon" fontIcon="fa-snowflake-o"></md-icon-->
       Cold Staking Node <span class="status inactive">Unlock to check state</span>
@@ -15,7 +15,7 @@
     </button>
   </md-card>
 
-  <md-card class="multiple staking-node" *ngIf="isColdStakingEnabled() === false">
+  <md-card *ngIf="isColdStakingEnabled() === false" (click)="openColdStakeModal()" class="multiple staking-node" >
     <div class="title">
       <!--md-icon fontSet="faIcon" class="cs-icon" fontIcon="fa-snowflake-o"></md-icon-->
       Cold Staking Node <span class="status inactive">inactive</span>
@@ -25,7 +25,7 @@
     </button>
   </md-card>
 
-  <md-card class="multiple staking-node" *ngIf="isColdStakingEnabled()">
+  <md-card *ngIf="isColdStakingEnabled()"  (click)="openColdStakeModal()" class="multiple staking-node">
     <div class="title">
       <!--md-icon fontSet="faIcon" class="cs-icon" fontIcon="fa-snowflake-o"></md-icon-->
       Cold Staking Node <span class="status active">active</span>
