@@ -97,17 +97,22 @@
         </div>
       </md-list>
 
-      <pagination
-        [boundaryLinks]="true"
-        (pageChanged)="pageChanged($event)"
-        [totalItems]="getTotalCountForPagination()"
-        [maxSize]="5" [rotate]="false"
-        [(ngModel)]="page"
-        class="pagination-sm center"
-        previousText="&lsaquo;" nextText="&rsaquo;"
-        firstText="&laquo;" lastText="&raquo;"
-        [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
-      </pagination>
+      <!-- use two paginator for reset pagination after tab change. -->
+      <div class="receive-pagination">
+        <md-paginator
+          *ngIf="type == 'private'"
+          [length]="getTotalCountForPagination()"
+          [pageSize]="MAX_ADDRESSES_PER_PAGE"
+          (page)="pageChanged($event)">
+        </md-paginator>
+
+        <md-paginator
+          *ngIf="type == 'public'"
+          [length]="getTotalCountForPagination()"
+          [pageSize]="MAX_ADDRESSES_PER_PAGE"
+          (page)="pageChanged($event)">
+        </md-paginator>
+      </div>
     </div>
 
     <div fxFlex="20%" *ngIf="selected">

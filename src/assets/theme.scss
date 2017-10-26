@@ -318,6 +318,16 @@ panel-header-title {
   }
 }
 
+// Pagination
+.mat-paginator-navigation-next.mat-icon-button:hover {
+  background-color: #1aeab8;
+  border-radius: 0px;
+}
+
+.mat-paginator-navigation-previous.mat-icon-button:hover {
+  background-color: #1aeab8;
+  border-radius: 0px;
+}
 
 @media (max-width: 1280px) {
   .qrcode {

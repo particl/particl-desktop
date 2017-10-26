@@ -17,7 +17,7 @@ export class ReceiveComponent implements OnInit {
   @ViewChild('qrCode') qrElementView: ElementRef;
 
   /* UI State */
-  private type: string = 'public';
+  public type: string = 'public';
   public query: string = '';
   // public tabsTitle
   defaultAddress: Object = {
@@ -116,8 +116,9 @@ export class ReceiveComponent implements OnInit {
 
   /** Called to change the page. */
   pageChanged(event: any) {
-    if (event.page !== undefined) {
-      this.log.d(`pageChanged, changing receive page to: ${event.page}`);
+    if (event.pageIndex !== undefined) {
+      this.page = event.pageIndex + 1;
+      this.log.d(event.pageIndex);
     }
   }
 
@@ -157,6 +158,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   changeTab(tab: number) {
+    this.page = 1;
     if (tab) {
       this.setAddressType('private');
     } else {
