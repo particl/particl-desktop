@@ -107,7 +107,7 @@ export class AppComponent implements OnInit {
           left = this.showNav ? 100 : 0;
           this.showNav = left === 0;
         } else {
-           left = !this.isPinned ? 100 : 250;
+          left = !this.isPinned ? 100 : 250;
         }
     } else {
         left = this.showNav ? 0 : 250;
