@@ -5,16 +5,10 @@ const { app, dialog } = require('electron');
 const got = require('got');
 const path = require('path');
 const EventEmitter = require('events').EventEmitter;
+const log = require('electron-log');
 
 const ClientBinariesManager = require('../clientBinaries/clientBinariesManager').Manager;
 const rpc = require('../rpc/rpc');
-
-const log = {
-  info: console.log,
-  warn: console.log,
-  debug: console.log,
-  error: console.log
-};
 
 let options;
 

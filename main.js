@@ -55,7 +55,7 @@ app.on('browser-window-created',function(e, window) {
 });
 
 electron.app.on('quit', function (event, exitCode) {
-  console.log('stopping')
+  log.info('stopping')
   electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
   // daemon.stop();
   if (exitCode === 991) {
@@ -71,26 +71,12 @@ function init() {
   rpc.init(_options);
 
   daemon.check()
-    .then(() => console.log('daemon already started'))
+    .then(() => log.info('daemon already started'))
     .catch(() => daemonManager.init())
     .then(() => multiwallet.get())
     .then(wallets => wallets /* TODO: prompt user which wallet */)
     .then(chosenWallets => daemon.start(chosenWallets))
-    .then(console.log('daemon started'));
-
-  // Daemon already running... Start window
-  // rpc.checkDaemon(_options)
-  //   .then(callback)
-  //   .catch(_ => {
-  //     log.debug('Daemon not running. It will be started by the daemon manager');
-  //     startDaemon(false, callback);
-  //   });
-
-  const _launchDaemon = (options) => {
-    // launch daemon;
-    console.log("launchdaemon options" + options)
-  };
-
+    .then(log.info('daemon started'));
 }
 
 /*
