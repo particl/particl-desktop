@@ -148,7 +148,7 @@ function stopDaemon() {
 
 electron.app.on('quit', function (event, exitCode) {
   console.log('stopping')
-  electron.ipcMain.removeAllListeners(['rpc']); // Remove all ipc listeners
+  electron.ipcMain.removeAllListeners(['rpc-channel']); // Remove all ipc listeners
   // kill the particl daemon if initiated on launch
   if (daemon && !daemon.exitCode) {
     stopDaemon()
