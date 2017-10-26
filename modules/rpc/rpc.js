@@ -89,7 +89,7 @@ function rpcCall (method, params, auth, callback) {
 /*******************************/
 
 /*
-** prepares `backend-rpccall` to receive RPC calls from the renderer
+** prepares `rpc` to receive RPC calls from the renderer
 */
 function init(options) {
   HOSTNAME = options.rpcbind || 'localhost';
@@ -116,7 +116,7 @@ function init(options) {
       }
     });
   }
-  rxIpc.registerListener('backend-rpccall', createObservable);
+  rxIpc.registerListener('rpc', createObservable);
 }
 
 function checkDaemon(options) {

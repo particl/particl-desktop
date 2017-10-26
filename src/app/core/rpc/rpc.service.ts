@@ -84,7 +84,7 @@ export class RPCService {
   call(method: string, params?: Array<any> | null): Observable<any> {
 
     if (this.isElectron) {
-      return this.rpx.runCommand('backend-rpccall', null, method, params)
+      return this.rpx.runCommand('rpc', null, method, params)
         .map(response => response && response.result ? response.result : response);
 
     } else {
