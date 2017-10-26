@@ -1,8 +1,5 @@
 const electron = require('electron');
-// Module to control application life.
 const app = electron.app;
-
-// Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
 const path = require('path');
@@ -15,31 +12,94 @@ log.transports.file.file = log.transports.file
   .findLogPath(log.transports.file.appName)
   .replace('log.log', 'partgui.log');
 
-const daemon = require('./modules/rpc/daemon');
+const options = require('./modules/options/options');
+const rpc = require('./modules/rpc/rpc');
+const multiwallet = require('./modules/multiwallet/multiwallet');
+const daemonManager = require('./modules/daemon/daemonManager');
+const daemon = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-let options;
+let _options;
 
 let openDevTools = false;
 
-function createWindow () {
-  const _initWindow = () => {
-    if (!mainWindow) {
-      initMainWindow(makeTray());
-    }
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', init);
+
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+});
+
+app.on('activate', function () {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    initMainWindow()
+  }
+});
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.
+app.on('browser-window-created',function(e, window) {
+  window.setMenu(null);
+});
+
+electron.app.on('quit', function (event, exitCode) {
+  console.log('stopping')
+  electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
+  // daemon.stop();
+  if (exitCode === 991) {
+    throw Error('Could not connect to daemon.');
+  }
+});
+
+function init() {
+
+  _options = options.parse();
+
+  initMainWindow();
+  rpc.init(_options);
+
+  daemon.check()
+    .then(() => console.log('daemon already started'))
+    .catch(() => daemonManager.init())
+    .then(() => multiwallet.get())
+    .then(wallets => wallets /* TODO: prompt user which wallet */)
+    .then(chosenWallets => daemon.start(chosenWallets))
+    .then(console.log('daemon started'));
+
+  // Daemon already running... Start window
+  // rpc.checkDaemon(_options)
+  //   .then(callback)
+  //   .catch(_ => {
+  //     log.debug('Daemon not running. It will be started by the daemon manager');
+  //     startDaemon(false, callback);
+  //   });
+
+  const _launchDaemon = (options) => {
+    // launch daemon;
+    console.log("launchdaemon options" + options)
   };
 
-  daemon.init(_initWindow);
-  options = daemon.getOptions();
 }
 
 /*
 ** initiates the Main Window
 */
-function initMainWindow(trayImage) {
+function initMainWindow() {
+
+  let trayImage = makeTray();
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -54,7 +114,7 @@ function initMainWindow(trayImage) {
   });
 
   // and load the index.html of the app.
-  if (options.dev) {
+  if (_options.dev) {
     mainWindow.loadURL('http://localhost:4200');
   } else {
     mainWindow.loadURL(url.format({
@@ -65,7 +125,7 @@ function initMainWindow(trayImage) {
   }
 
   // Open the DevTools.
-  if (openDevTools || options.devtools) {
+  if (openDevTools || _options.devtools) {
     mainWindow.webContents.openDevTools()
   }
 
@@ -175,31 +235,3 @@ function makeTray() {
 
   return trayImage;
 }
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
-
-// Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-});
-
-app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-app.on('browser-window-created',function(e, window) {
-  window.setMenu(null);
-});

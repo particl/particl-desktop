@@ -3,8 +3,9 @@ const log = require('electron-log');
 const http = require('http');
 const Observable = require('rxjs/Observable').Observable;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
+
 const cookie = require('./cookie');
-const daemon = require('./daemon');
+const daemon = require('../daemon/daemon');
 
 let TIMEOUT = 15000;
 let HOSTNAME;
@@ -14,7 +15,7 @@ let rpcOptions;
 /*
 ** execute RPC call
 */
-function rpcCall (method, params, auth, callback) {
+exports.call = function(method, params, auth, callback) {
 
   const postData = JSON.stringify({
     method: method,
@@ -84,14 +85,20 @@ function rpcCall (method, params, auth, callback) {
   request.end();
 }
 
+exports.setTimeout = function(timeout) {
+  TIMEOUT = timeout;
+}
+
 /*******************************/
 /****** Public functions *******/
 /*******************************/
 
+// TODO: rxipc methods
+
 /*
 ** prepares `backend-rpccall` to receive RPC calls from the renderer
 */
-function init(options) {
+exports.init = function(options) {
   HOSTNAME = options.rpcbind || 'localhost';
   PORT = options.port;
 
@@ -103,10 +110,10 @@ function init(options) {
         const callback = () => {
           observer.next(true);
         };
-        daemon.startDaemon(true, callback);
+        daemon.start(true, callback);
 
       } else {
-        rpcCall(method, params, auth, (error, response) => {
+        exports.call(method, params, auth, (error, response) => {
           if (error) {
             observer.error(error);
             return;
@@ -118,24 +125,3 @@ function init(options) {
   }
   rxIpc.registerListener('backend-rpccall', createObservable);
 }
-
-function checkDaemon(options) {
-  return new Promise((resolve, reject) => {
-    const _timeout = TIMEOUT;
-    TIMEOUT = 150;
-    rpcCall(
-      'getnetworkinfo', null, cookie.getAuth(options), (error, response) => {
-        rxIpc.removeListeners();
-        if (error) {
-          // console.log('ERROR:', error);
-          reject();
-        } else if (response) {
-          resolve();
-        }
-      });
-    TIMEOUT = _timeout;
-  });
-}
-
-exports.init = init;
-exports.checkDaemon = checkDaemon;

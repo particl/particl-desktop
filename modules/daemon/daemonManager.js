@@ -5,9 +5,8 @@ const { app, dialog } = require('electron');
 const got = require('got');
 const path = require('path');
 const EventEmitter = require('events').EventEmitter;
-const spawn = require('child_process').spawn;
 
-const ClientBinaryManager = require('./clientBinariesManager').Manager;
+const ClientBinariesManager = require('../clientBinaries/clientBinariesManager').Manager;
 const rpc = require('../rpc/rpc');
 
 const log = {
@@ -24,51 +23,23 @@ const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/master/mod
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
-class Manager extends EventEmitter {
+class DaemonManager extends EventEmitter {
   constructor() {
     super();
     this._availableClients = {};
   }
 
-  init(restart, _options) {
+  getPath() {
+    return this._availableClients['particld'].binPath;
+  }
+
+  init(_options) {
     log.info('Initializing...');
     options = _options;
     // check every hour
-    setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
+    // setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
     this._resolveBinPath();
-    return this._checkForNewConfig(restart);
-  }
-
-  /*
-  ** Checks if particld is already running, starts it in case not running.
-  ** returns the daemon's process to be killed when application exits
-  ** or undefined if the daemon was not launched
-  */
-  startDaemon() {
-
-    return (new Promise((resolve, reject) => {
-
-      const daemon = options.customdaemon
-        ? options.customdaemon
-        : this._availableClients['particld'].binPath;
-
-      rpc.checkDaemon(options).then(() => {
-        log.info('daemon already started');
-        resolve(undefined);
-      }).catch(() => {
-        log.info(`starting daemon ${daemon}`);
-        const child = spawn(daemon, process.argv).on('close', code => {
-          if (code !== 0) {
-            reject();
-            log.error(`daemon exited with code ${code}.\n${daemon}\n${process.argv}`);
-          } else {
-            log.info('daemon exited successfully');
-          }
-        });
-        resolve(child);
-      });
-
-    }));
+    return this._checkForNewConfig();
   }
 
   getClient(clientId) {
@@ -84,7 +55,7 @@ class Manager extends EventEmitter {
     );
   }
 
-  _checkForNewConfig(restart) {
+  _checkForNewConfig() {
     const nodeType = 'particld';
     let binariesDownloaded = false;
     let nodeInfo;
@@ -226,7 +197,7 @@ class Manager extends EventEmitter {
     .then((localConfig) => {
 
       if (!localConfig) {
-        log.info('No config for the ClientBinaryManager could be loaded, using local clientBinaries.json.');
+        log.info('No config for the ClientBinariesManager could be loaded, using local clientBinaries.json.');
 
         const localConfigPath = path.join(app.getPath('userData'), 'clientBinaries.json');
         localConfig = (fs.existsSync(localConfigPath))
@@ -235,7 +206,7 @@ class Manager extends EventEmitter {
       }
 
       // scan for node
-      const mgr = new ClientBinaryManager(localConfig);
+      const mgr = new ClientBinariesManager(localConfig);
       mgr.logger = log;
 
       this._emit('scanning', 'Scanning for binaries');
@@ -283,15 +254,15 @@ class Manager extends EventEmitter {
         });
 
         // restart if it downloaded while running
-        if (restart && binariesDownloaded) {
-          log.info('Restarting app ...');
-          app.relaunch();
-          app.quit();
-        }
+        // if (restart && binariesDownloaded) {
+        //   log.info('Restarting app ...');
+        //   app.relaunch();
+        //   app.quit();
+        // }
 
         this._emit('done');
 
-        return this.startDaemon();
+        // return this.startDaemon();
       });
     })
     .catch((err) => {
@@ -317,10 +288,10 @@ class Manager extends EventEmitter {
     });
   }
 
+    // TODO: emit to GUI
 
   _emit(status, msg) {
     log.debug(`Status: ${status} - ${msg}`);
-
     this.emit('status', status, msg);
   }
 
@@ -353,4 +324,4 @@ class Manager extends EventEmitter {
   }
 }
 
-module.exports = new Manager();
+module.exports = new DaemonManager();
