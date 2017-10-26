@@ -134,7 +134,7 @@ export class RPCService {
                 response: success,
                 electron: this.isElectron
               });
-              
+
               // re-start loop after timeout
               setTimeout(_call, timeout);
             },

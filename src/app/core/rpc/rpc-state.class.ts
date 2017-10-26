@@ -51,7 +51,7 @@ export class RPCStateClass {
   }
 
   private coldStakeLoop() {
-    if(this.rpc.state.get('locked') === false) {
+    if (this.rpc.state.get('locked') === false) {
       // only available if unlocked
       this.rpc.call('walletsettings', ['changeaddress'])
       .subscribe(
@@ -59,7 +59,7 @@ export class RPCStateClass {
         // check if account is active
         if (response.changeaddress === 'default') {
           this.rpc.state.set('coldstaking', false);
-        } else if(response.changeaddress.coldstakingaddress !== undefined) {
+        } else if (response.changeaddress.coldstakingaddress !== undefined) {
           this.rpc.state.set('coldstaking', true);
         }
       },

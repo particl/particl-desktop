@@ -151,7 +151,6 @@ export class ColdstakeComponent {
   setColdStakingAddress(): void {
     if (this.prevColdStakeAddress === this.coldStakeAddress) {
       if (this.step === 3) {
-        //this.nextStep();
         this.finalMessage = 'Cold staking address is the same - no changes required.';
         this._flashNotificationService.open('Cold staking key is exactly the same as before!: ', '', 1000);
       }
@@ -184,7 +183,7 @@ export class ColdstakeComponent {
           this.log.er('resetColdStakeAddress: ', error);
           this._flashNotificationService.open('Failed to deactivate cold staking, error: ' + error.message, '', 1000);
           this.finalMessage = 'Failed to deactivate cold staking.. ' + error.message;
-        });  
+        });
   }
 
   close() {
@@ -192,7 +191,7 @@ export class ColdstakeComponent {
   }
 
   setData(data: any) {
-    if(data.type !== undefined) {
+    if (data.type !== undefined) {
       this.create(data.type);
     }
   }
