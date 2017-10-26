@@ -49,7 +49,7 @@ class SafeIpcRenderer {
 
 window.ipc = new SafeIpcRenderer([
   'rpc',
-  'rx-ipc-check-reply:backend-rpccall',
+  'rx-ipc-check-reply:rpc',
   'rx-ipc-check-listener'
 ]);
 
