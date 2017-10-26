@@ -12,6 +12,10 @@
   margin-bottom: 25px;
 }
 
+.qrcode {
+  text-align: center;
+}
+
 /**
  * Side bar Menu.
  */
@@ -324,13 +328,6 @@ panel-header-title {
 
 
 @media (max-width: 1280px) {
-  .qrcode {
-    text-align: center;
-    img {
-      width: 127px;
-      height: 127px;
-    }
-  }
   .md-left-border {
     border-left: none;
     justify-content: flex-start !important;
@@ -382,11 +379,4 @@ panel-header-title {
 }
 
 @media (max-width: 640px) {
-  .qrcode {
-    text-align: center;
-    img {
-      height: auto;
-      max-width: 100%;
-    }
-  }
 }
