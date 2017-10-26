@@ -1,6 +1,12 @@
 @import "theme/partgui-theme";
 @import "./src/assets/_config"; // import shared colors etc.
 
+
+.TODO { 
+  box-shadow: 0 0 3px hotpink; 
+} 
+
+
 /**
  * Side bar Menu.
  */

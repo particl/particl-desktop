@@ -39,6 +39,41 @@
   outline: none;
 }
 
+
+/* ------------------------ *\ 
+    Search Addresses 
+\* ------------------------ */ 
+ 
+.search-address { 
+  margin-top: 9px; 
+  .mat-input-element { 
+    height: 20px; 
+    margin-left: 0; 
+  } 
+  .mat-icon { 
+    top: 1px; 
+    right: 18px; 
+  } 
+} 
+ 
+ 
+/* ------------------------ *\ 
+    Address list 
+\* ------------------------ */ 
+ 
+.address-title { // section title
+  font-weight: normal;
+  text-transform: uppercase;
+  color: $text-muted;
+}
+
+.address-info { // address "card" 
+  margin-bottom: 12px; 
+}
+
+
+
+/*
 .card {
   background-color: white;
   padding: 20px;
@@ -56,7 +91,7 @@
 .qr {
   margin-top: 60px;
 }
-
+*/
 .receive {
   margin: 0 30px 0 40px !important;
 }
@@ -65,11 +100,6 @@
   margin-top: 59px;
 }
 
-.address-title {
-  text-transform: uppercase;
-  color: #7b8891;
-  margin: 20px 0 20px 0;
-}
 
 .address-id {
   color: #7b8891;
