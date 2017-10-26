@@ -27,7 +27,7 @@
   <div fxFlex="0 0 200px" *ngIf="selected">
     <md-card class="qr-card">
       <div #qrCode class="qrcode">
-        <qr-code [size]="getQrSize()" [level]="H" value="particl:{{ selected.address }}">
+        <qr-code [size]="getQrSize()" [level]="'H'" value="particl:{{ selected.address }}">
         </qr-code>
       </div><!-- qrcode -->
 
