@@ -57,7 +57,7 @@ app.on('browser-window-created',function(e, window) {
 electron.app.on('quit', function (event, exitCode) {
   log.info('stopping')
   electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
-  // daemon.stop();
+  daemon.stop();
   if (exitCode === 991) {
     throw Error('Could not connect to daemon.');
   }
