@@ -3,9 +3,14 @@
 
 
 .TODO { 
-  box-shadow: 0 0 3px hotpink; 
+  box-shadow: 0 0 3px 1px hotpink; 
 } 
 
+.widget-help { // help description
+  color: grey;
+  font-size: 11px;
+  margin-bottom: 25px;
+}
 
 /**
  * Side bar Menu.
