@@ -1,5 +1,13 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+/* ------------------------------- *\
+    Todo: cleanup
+\* ------------------------------- */ 
+
+/* ------------------------------- *\
+    Layout
+\* ------------------------------- */ 
+
 .formTableFullWidth {
   width: 100%;
 }
@@ -10,12 +18,131 @@ input[type="text"] {
 
 .mat-list {
   .mat-divider {
-    margin: 20px 0;
+    margin: 0px 0;
     border-color: transparent;
-  }
-
+ }
 }
 
 .mat-select-trigger {
   padding-top: 21px !important;
+}
+
+.mat-expansion-panel {
+  box-shadow: none;
+}
+
+.mat-card {
+  background: transparent;
+  padding: 25px 20px 0 20px;
+  border-bottom: 0px solid $bg-shadow;
+}
+
+.mat-card h5 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.mat-input-element {
+  width: calc(100% - 8px);
+}
+
+.mat-select {
+  padding-top: 4px;
+}
+
+md-card.mat-card {
+  box-shadow: 0 0px 0 #E9E9E9 !important;
+}
+
+.md-list-item {
+  padding: 25px;
+}
+
+.md-list-radio h5 {
+  margin-top: 15px;
+}
+
+.md-radio-group {
+  background: #fff;
+}
+
+.md-send-card {
+  padding: 20px;
+  min-height: 14vh;
+  height: auto;
+}
+
+.md-radio-button-center, .md-balance-center {
+  padding-top: 12px;
+}
+
+.md-tab-right {
+  float: right;
+}
+
+.no-bg {
+  background:transparent;
+}
+
+.button-line {
+  border-bottom: 1px solid $bg-shadow;
+}
+
+.nc-circle-remove, .nc-copy-2, .nc-multiple-19 {
+  width: auto;
+  height: auto;
+  font-size: 16px;
+}
+
+.balance-label {
+  font-weight: bold;
+}
+
+/* ------------------------------- *\
+    Buttons
+\* ------------------------------- */ 
+
+app-header {
+button {
+    background-color: #fafafa;
+    border: none;
+    padding: 1px 15px 0 15px ;
+    margin: 5px 10px 0 0; 
+    font-size: 13px;
+    border-bottom: 0px solid $bg-shadow;
+    float:right;
+    font-weight:normal;
+    color: #232728;
+}
+.button-line {
+    border-bottom: 1px solid $bg-shadow;
+} 
+   button.show-address {
+      md-icon {
+         font-size: 20px;
+         width: auto;
+         height: auto;
+         margin-right: 6px;
+         line-height: 1.5;
+         color: $color;
+         background:transparent;
+     }
+      span {
+         color: $text;
+         text-transform: uppercase;
+         font-size: 13px;
+      }
+   }
+}
+
+.button-send {
+  background-color: white;
+  border: none;
+  padding: 0;
+  margin: 15px 20px 0 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.9;
+  border-bottom: 1px solid #F1F1F1;
 }
