@@ -1,4 +1,4 @@
-<md-sidenav-container fullscreen>
+<md-sidenav-container fullscreen [ngClass]="{'menu-right': !sideMenu && !window.isXS, 'menu-left':window.isXS && showNav}">
   <md-sidenav #sidenav mode="side" opened="true" [ngClass]="{'md-sidenav-left': !isPinned && !window.isXS, 'hide-sidnav': window.isXS && showNav}"
     (mouseenter)="!window.isXS && toggle('enter')"
     (mouseleave)="!window.isXS && toggle('leave')"> 
@@ -56,7 +56,7 @@
               <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-card-add" ></md-icon>
-                  <span class="menu-item">Add Acount</span>
+                  <span class="menu-item">Add Account</span>
                 </md-list-item>
               </a>
             </md-list>
@@ -100,7 +100,7 @@
   </md-sidenav>
 
   <md-toolbar class="header-main">
-    <button *ngIf="window.isXS" fxLayout="row" fxLayoutAlign="center end" md-button (click)="toggleSideNav(false, sidenav)" fxHide.lg>
+    <button *ngIf="window.isXS" fxLayout="row" fxLayoutAlign="center end" md-button (click)="toggleSideNav( sidenav)" fxHide.lg>
       <md-icon>menu</md-icon>
     </button>
     {{ title }}

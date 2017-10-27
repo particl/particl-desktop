@@ -88,7 +88,6 @@ export class AppComponent implements OnInit {
     if (value === 'toggle' && !this.window.isXS) {
       this.sideMenu = !this.sideMenu;
       this.unPin = this.sideMenu ? 'Hide Menu' : 'Show Menu';
-      this.resizeMenu('toggle');
       return;
     }
     if (!this.sideMenu) {
@@ -96,30 +95,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  resizeMenu(type: string) {
-    const elem = document.getElementsByClassName('mat-drawer-content') as HTMLCollectionOf<HTMLElement>;
-    let left;
-    if (type === 'toggle') {
-      left = elem[0].offsetLeft === 100 ? 250 : 100;
-    } else if (type === 'resize') {
-        if (this.window.isXS) {
-          this.showNav = false;
-          left = this.showNav ? 100 : 0;
-          this.showNav = left === 0;
-        } else {
-          left = !this.isPinned ? 100 : 250;
-        }
-    } else {
-        left = this.showNav ? 0 : 250;
-    }
-    elem[0].setAttribute('style' , 'margin-left: ' + left + 'px;');
-  }
-
-  toggleSideNav(val: boolean, sidNav: MdSidenav) {
+  toggleSideNav(sidNav: MdSidenav) {
     this.showNav = !this.showNav;
     this.isPinned = true;
     this.sideMenu = true;
-    this.resizeMenu('toggleNav');
     sidNav.toggle(true);
   }
 
@@ -127,9 +106,4 @@ export class AppComponent implements OnInit {
     // this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     this._modalsService.open('createWallet', {forceOpen: true});
   }
-
-  @HostListener('window:resize', ['$event'])
-    onResize(event: any) {
-      this.resizeMenu('resize');
-    }
 }

@@ -322,6 +322,17 @@ panel-header-title {
   }
 }
 
+.mat-drawer-transition .mat-drawer-content {
+  margin-left:250px !important;
+}
+
+.menu-right.mat-drawer-transition .mat-drawer-content {
+  margin-left: 90px !important;
+}
+
+.menu-left.mat-drawer-transition .mat-drawer-content {
+  margin-left: 0px !important;
+}
 
 @media (max-width: 1280px) {
   .qrcode {
