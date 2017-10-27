@@ -56,7 +56,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     this.state.observe('modal:fullWidth:enableClose')
       .subscribe(status => this.enableClose = status);
 
-    this.state.observe('spinner')
+    this.state.observe('ui:spinner')
       .subscribe(status => this.loadSpinner = status);
   }
 
