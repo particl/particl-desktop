@@ -1,4 +1,5 @@
 @import 'assets/common/helper';
+@import "./src/assets/_config"; // import shared colors etc.
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -15,18 +16,18 @@ body {
 
 .verify-error,
 .warning-text {
-  color: #ec4b50;
+  color: $color-alert;
 }
 
 input.verify-error,
 input.verify-error::placeholder {
-  color: #ec4b50;
-  border-color: #ec4b50;
+  color: $color-alert;
+  border-color: $color-alert;
 }
 
 input.verify-sucess {
-  color: #4f8a10;
-  background-color: #dff2bf;
+  color: $color-success;
+  //background-color: #dff2bf;
 }
 
 .margin-40px-0 {
