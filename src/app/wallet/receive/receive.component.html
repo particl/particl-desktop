@@ -125,6 +125,7 @@
         *ngIf="type == 'private'"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
+        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
         (page)="pageChanged($event)">
       </md-paginator>
 
@@ -132,6 +133,7 @@
         *ngIf="type == 'public'"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
+        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
         (page)="pageChanged($event)">
       </md-paginator>
     </div>
