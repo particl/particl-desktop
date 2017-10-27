@@ -103,9 +103,8 @@ export class AppComponent implements OnInit {
       left = elem[0].offsetLeft === 100 ? 250 : 100;
     } else if (type === 'resize') {
         if (this.window.isXS) {
-          this.showNav = false;
-          left = this.showNav ? 100 : 0;
-          this.showNav = left === 0;
+          this.showNav = true;
+          left = 0;
         } else {
           left = !this.isPinned ? 100 : 250;
         }
