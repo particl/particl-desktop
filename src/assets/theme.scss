@@ -329,6 +329,19 @@ panel-header-title {
   border-radius: 0px;
 }
 
+.mat-paginator {
+  border-bottom: 1px solid $bg-shadow;
+  font-family: $font;
+  .mat-icon-button {
+    &:hover {
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: white;
+      }
+    }
+  }
+}
+
 @media (max-width: 1280px) {
   .qrcode {
     text-align: center;
