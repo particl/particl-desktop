@@ -266,29 +266,36 @@ input[type="text"] {
   font-size: 1em !important;
 }
 
-/**
- * Dialog style
- */
-.mat-dialog-container {
-  max-width: 100% !important;
-  background: transparent !important;
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  position: relative;
-  .close_button {
-    position: absolute;
-    right: 0px;
-    top: 5px;
-    background: transparent;
-    color: #999;
-    min-width: 50px;
-    &:hover {
-      color: #222;
+/* ------------------------------- *\
+    Dialogs
+\* ------------------------------- */
+
+.cdk-overlay-container {
+  .mat-dialog-container {
+    position: relative;
+    top: 24px;
+    left: calc((100% - 900px) / 2);
+    bottom: 0;
+    max-width: 900px;
+    padding-top: 0;
+    .close_button {
+      position: absolute;
+      right: 24px;
+      top: 24px;
+      background: transparent;
+      color: $text-muted;
+      min-width: 50px;
+      &:hover {
+        color: white;
+      }
+    }
+    .md-wallet-content {
+      max-height: 100% !important;
     }
   }
-  .md-wallet-content {
-    max-height: 100% !important;
-  }
 }
+
+
 
 .create-wallet-action-button {
   min-width: 145px !important;

@@ -1,15 +1,21 @@
-<div class="container" fxFlex="100%">
-  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-    <div *ngIf="!password">
-      <h4>Please enter <b>a password</b> to encrypt your wallet.</h4>
-      <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
-    </div>
-
-    <div *ngIf="password">
-      <h4>Please enter <b>your password again</b> to confirm that you've typed the right password.</h4>
-      <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
-    </div>
+<div class="modal-header">
+  <div class="modal-title">
+    Encrypt Wallet
   </div>
+</div>
+
+
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
+  <div *ngIf="!password">
+    <h4>Please enter <b>a password</b> to encrypt your wallet.</h4>
+    <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
+  </div>
+
+  <div *ngIf="password">
+    <h4>Please enter <b>your password again</b> to confirm that you've typed the right password.</h4>
+    <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
+  </div>
+</div>
 
 <app-password
   #passwordElement
@@ -18,14 +24,14 @@
   [unlockTimeout]="0"
   [showStakeOnly]="false"
   [emitPassword]="true">
-  </app-password>
+</app-password>
 
-  <div *ngIf="password" fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
-    <div md-raised-button class="create-wallet-action-button">
-    <button md-raised-button class="create-wallet-action-button" (click)="clearPassword()">
-      BACK
-    </button>
-    </div>
+<div *ngIf="password" fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
+  <div md-raised-button class="create-wallet-action-button">
+  <button md-raised-button class="create-wallet-action-button" (click)="clearPassword()">
+    BACK
+  </button>
   </div>
 </div>
+
 <!--<app-alert #alertBox ></app-alert>-->

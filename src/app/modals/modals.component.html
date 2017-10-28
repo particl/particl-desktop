@@ -1,12 +1,18 @@
-<button  md-raised-button class="close_button pull-right" (click)="close()" *ngIf="enableClose">
+<button md-raised-button class="close_button pull-right" (click)="close()" *ngIf="enableClose">
   <md-icon>close</md-icon>
 </button>
+
+
 <div md-dialog-content class="md-wallet-content">
-  <div class="row">
-    <img class="logo img-responsive" src="assets/particl-logo-white-bg.svg">
-  </div>
+
+  <!--div class="modal-header">
+    <img class="logo" src="assets/particl-logo.svg">
+  </div-->
+
   <ng-template #modalContainer></ng-template>
+
 </div>
+
 
 <div class="modal-footer-info">
   <app-percentage-bar></app-percentage-bar>

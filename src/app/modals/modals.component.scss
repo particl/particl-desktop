@@ -1,8 +1,36 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
 .modal.in .modal-dialog {
   width: 100%;
-  height:100%;
+  height: 100%;
   margin: 0;
 }
+
+/* ------------------------------- *\
+    Modal header
+\* ------------------------------- */
+/*
+.modal-header {
+  margin: 0 -24px 60px;
+  padding: 40px 24px;
+  background: $bg-black;
+  .logo {
+    margin: 0 auto;
+    width: 170px;
+    height: auto;
+    display: block;
+  }
+}
+*/
+.modal-footer-info {
+  position: fixed;
+  bottom: 0;
+  left: calc((100% - 900px) / 2);
+  width: 900px;
+  height: 20px;
+  text-align: center;
+}
+
 
 .modal-content {
   border-radius: 0;
@@ -20,16 +48,6 @@
 
 .close {
   padding: 15px;
-}
-
-.modal-footer-info {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 20px;
-  font-weight: bold;
-  text-align: center;
 }
 
 .statusText {
@@ -55,7 +73,7 @@
   top: 0;
   bottom: 0;
   transition: width .2s;
-  background-color: #02e8b0;
+  background-color: $color;
   color: #212121;
   height: 100%;
   overflow: hidden;
@@ -63,7 +81,7 @@
 
 .inverted-bar {
   background-color: #212121 !important;
-  color: #02e8b0 !important;
+  color: $color !important;
   right: 0 !important;
 }
 
