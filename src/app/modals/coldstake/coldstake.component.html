@@ -4,38 +4,75 @@
   </div>
 </div>
 
-<div [@flyInOut]="animationState" class="col-xs-12">
+<div [@flyInOut]="animationState">
 
+  <!-- STEP 0: Choose hot/cold wallet -->
   <ng-template [ngIf]="step === 0">
-    <div class="container" fxFlex="100%">
-      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-        <p><b>Welcome</b>, read the instructions very carefully!</p>
-        <p>
-          <b>Hot wallet:</b>
-          Selecting this option will turn this computer into a staking node.
-          It will be <b>unable to spend the coins</b> but is <b>allowed to stake them</b>. <br/>
+    <div class="container">
+      <div class="content">
+        <div class="title">Cold Staking setup</div>
+        <p class="warning">
+            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            Please, read these instructions very carefully!
         </p>
-        <p>
-          <b>Cold wallet:</b>
-          Selecting this option will turn this computer into a cold storage node.
-          It is <b>able to spend</b> the coins but is <b>not allowed to stake them</b>.<br/>
-          Note: this will create a special transaction with a dust output of 0.00001 and a transaction fee.
-        </p>
-      </div>
+        <hr class="hr-light">
 
-      <hr class="hr-light">
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
-        <div class="button-row align-center">
-          <button md-raised-button class="create-wallet-action-button" color="warn" (click)="create('hot');">
-            Create hot wallet
-          </button>
-          <button md-raised-button class="create-wallet-action-button" color="primary" (click)="create('cold');">
-            Create cold wallet
-          </button>
-        </div>
-      </div>
-    </div>
-  </ng-template><!-- Step 0 -->
+        <div fxLayout="row">
+
+          <!-- Hot wallet -->
+          <div class="hot-wallet" fxFlex="50">
+            <h2 class="subtitle">Hot wallet</h2>
+            <p>
+              Selecting this option will turn this computer into a staking node.
+            </p>
+            <ul>
+              <li>Hot wallet <b>can stake</b> coins</li>
+              <li>Hot wallet <b>cannot spend</b> coins</li>
+            </ul>
+          </div><!-- .hot-wallet -->
+
+          <!-- Cold wallet -->
+          <div class="cold-wallet" fxFlex="50">
+            <h2 class="subtitle">Cold wallet</h2>
+            <p>
+              Selecting this option will turn this computer into a cold storage node.
+            </p>
+            <ul>
+              <li>Cold wallet <b>cannot stake</b> coins</li>
+              <li>Cold wallet <b>can spend</b> coins</li>
+            </ul>
+            <small>
+              <strong>Note:</strong> this will create a special transaction with a dust output of 0.00001 and a transaction fee.
+            </small>
+          </div><!-- .cold-wallet -->
+
+        </div><!-- row -->
+        <div fxLayout="row">
+
+          <div class="hot-wallet" fxFlex="50">
+            <div class="actions">
+              <button md-raised-button color="warn" (click)="create('hot');">
+                <md-icon fontSet="faIcon" fontIcon="fa-fire"></md-icon>
+                Create hot wallet
+              </button>
+            </div><!-- .actions -->
+          </div><!-- .hot-wallet -->
+
+          <div class="cold-wallet" fxFlex="50">
+            <div class="actions">
+              <button md-raised-button color="primary" (click)="create('cold');">
+                <md-icon fontSet="faIcon" fontIcon="fa-snowflake-o"></md-icon>
+                Create cold wallet
+              </button>
+            </div><!-- .actions -->
+          </div><!-- .cold-wallet -->
+          
+        </div><!-- row -->
+
+      </div><!-- .content -->
+    </div><!-- .container -->
+  </ng-template>
+
 
   <!-- BOTH WALLETS -->
   <ng-template [ngIf]="[1,3].includes(step)">
