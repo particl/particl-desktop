@@ -9,6 +9,7 @@ button {
   }
 }
 
+/*
 .modal-header {
   margin: 0 -24px 70px;
   padding: 20px 24px;
@@ -35,13 +36,13 @@ button {
     }
   }
 }
-
+*/
 
 .container {
   display: flex;
   position: absolute;
-  top: 90px;
-  bottom: 45px;
+  top: 80px;
+  bottom: 70px;
   left: 0;
   right: 0;
   .content {
@@ -67,6 +68,9 @@ button {
     .actions { // container for action buttons
       text-align: center;
       margin: 20px 0 30px;
+      &.text-left {
+        text-align: left;
+      }
     }
   }
 }
@@ -86,4 +90,9 @@ p {
       margin-right: 10px;
     }
   }
+}
+
+small {
+  color: $text-muted;
+  font-size: 90%;
 }

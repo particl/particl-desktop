@@ -2,9 +2,22 @@
 
 @import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
 
-.input-gap {
-  margin: 12px !important;
+
+.hot-stake-address {
+  width: 100%;
+  font-family: monospace;
 }
+
+.cold-stake-address {
+  width: 100%;
+  margin: 15px 0 0;
+  font-family: monospace;
+}
+
+
+
+
+
 
 @media only screen and (max-width: 480px) {
   .wallet-buttons-container button {

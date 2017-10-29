@@ -273,11 +273,9 @@ input[type="text"] {
 .cdk-overlay-container {
   .mat-dialog-container {
     position: relative;
-    top: 24px;
-    left: calc((100% - 900px) / 2);
-    bottom: 0;
-    max-width: 900px;
-    padding-top: 0;
+    max-width: 800px;
+    height: calc(100% - 24px);
+    margin: 24px auto auto auto;
     .close_button {
       position: absolute;
       right: 0;
