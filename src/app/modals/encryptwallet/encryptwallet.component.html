@@ -5,33 +5,47 @@
 </div>
 
 
-<div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-  <div *ngIf="!password">
-    <h4>Please enter <b>a password</b> to encrypt your wallet.</h4>
-    <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
-  </div>
+<div class="container">
+  <div class="content">
 
-  <div *ngIf="password">
-    <h4>Please enter <b>your password again</b> to confirm that you've typed the right password.</h4>
-    <h4><b>Do NOT forget this password or you will be unable to access your coins.</b></h4>
-  </div>
+    <div *ngIf="!password" class="section enter-password">
+      <div class="title">Choose a password</div>
+      <p>
+        Please enter a password to encrypt your wallet.
+      </p>
+      <p class="warning">
+        <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon> Do NOT forget this password or you will be unable to access your coins
+      </p>
+    </div><!-- !password -->
+
+
+    <!-- @TODO: Do we really need a confirmation for the password with "show password" option? -->
+    <div *ngIf="password" class="section enter-password">
+      <div class="title">Choose a password</div>
+      <p>
+        Please enter your chosen password again to confirm it.
+      </p>
+      <p class="warning">
+        <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon> Do NOT forget this password or you will be unable to access your coins
+      </p>
+    </div><!-- !password -->
+
+
+    <app-password
+      #passwordElement
+      buttonText="Encrypt Wallet"
+      (passwordEmitter)="encryptwallet($event)"
+      [unlockTimeout]="0"
+      [showStakeOnly]="false"
+      [emitPassword]="true">
+    </app-password>
+    
+    <div *ngIf="password" class="section go-back">
+      <button md-button (click)="clearPassword()">Back</button>
+    </div>
+
+  </div><!-- .content -->
 </div>
 
-<app-password
-  #passwordElement
-  buttonText="ENCRYPT WALLET"
-  (passwordEmitter)="encryptwallet($event)"
-  [unlockTimeout]="0"
-  [showStakeOnly]="false"
-  [emitPassword]="true">
-</app-password>
-
-<div *ngIf="password" fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
-  <div md-raised-button class="create-wallet-action-button">
-  <button md-raised-button class="create-wallet-action-button" (click)="clearPassword()">
-    BACK
-  </button>
-  </div>
-</div>
 
 <!--<app-alert #alertBox ></app-alert>-->

@@ -4,41 +4,56 @@
   </div>
 </div>
 
-<div [@flyInOut]="animationState" class="col-xs-12">
+<div [@flyInOut]="animationState">
+
+  <!-- STEP 0: Choose action -->
   <ng-template [ngIf]="step === 0">
-    <div class="container" fxFlex="100%">
-      <div class="align-center">
-        <b>Welcome</b>, please select one of the options below.
-        <div *ngIf="!isCrypted" class="warning-text margin-top-30px">
-          It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any
-          possible key fragments lying around.
-        </div>
-      </div>
-      <div class="gap50"></div>
+    <div class="container">
+      <div class="content">
 
-      <div class="button-row align-center">
-        <button *ngIf="!isCrypted" md-raised-button color="primary" class="create-wallet-action-button"
-                (click)="initialize(0);">
-          Encrypt Wallet
-        </button>
-        <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
-          Create new wallet
-        </button>
-        <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
-          Restore wallet
-        </button>
-      </div>
-    </div>
-  </ng-template><!-- Step 0 -->
+        <div *ngIf="!isCrypted" class="section encrypt-first">
+          <div class="title">Encrypt wallet first</div>
+          <p>
+            It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
+          </p>
+          <div class="actions">
+            <button *ngIf="!isCrypted" md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(0);">
+              <md-icon fontSet="faIcon" fontIcon="fa-lock"></md-icon>
+              Encrypt Wallet
+            </button>
+          </div>
+          <hr class="hr-light">
+        </div><!-- !isCrypted .section -->
+
+        <div class="section create-restore">
+          <div class="title">Create or Restore wallet</div>
+          <p class="TODO">
+            Create a new wallet or restore your old wallet using your Recovery Passphrase.
+          </p>
+          <div class="actions">
+            <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
+              <md-icon fontSet="faIcon" fontIcon="fa-plus"></md-icon>
+              Create new wallet
+            </button>
+            <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
+              <md-icon fontSet="faIcon" fontIcon="fa-repeat"></md-icon>
+              Restore wallet
+            </button>
+          </div>
+        </div><!-- .wallet-actions -->
+
+      </div><!-- .content -->
+    </div><!-- .container -->
+  </ng-template>
 
 
+  <!-- STEP 1: Create/restore wallet -->
   <ng-template [ngIf]="step === 1">
-    <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
-      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
+    <div class="container">
+
+      <div class="content" fxFlex>
         <b>Let's create a new wallet</b><!-- TODO: Dynamic text create / restore -->
       </div>
-
-      <!--<div class="gap50"></div>-->
 
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
         <form #nameForm="ngForm" fxLayout="column" fxLayoutAlign="center center" fxFlex="100%" (ngSubmit)="nextStep()">
@@ -82,7 +97,7 @@
         </form>
       </div>
     </div>
-  </ng-template><!-- Step 1 -->
+  </ng-template>
 
   <ng-template [ngIf]="[2,3,4].indexOf(step) != -1 && !isRestore">
     <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>

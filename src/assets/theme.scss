@@ -280,13 +280,23 @@ input[type="text"] {
     padding-top: 0;
     .close_button {
       position: absolute;
-      right: 24px;
-      top: 24px;
+      right: 0;
+      top: 0;
+      padding: 25px 38px;
       background: transparent;
       color: $text-muted;
       min-width: 50px;
-      &:hover {
+      .mat-icon {
+        background: rgba($color-alert, 0.5);
+        border-radius: 50%;
+        font-size: 18px;
+        line-height: 1.4;
         color: white;
+      }
+      &:hover {
+        .mat-icon {
+          background: $color-alert;
+        }
       }
     }
     .md-wallet-content {
@@ -297,10 +307,6 @@ input[type="text"] {
 
 
 
-.create-wallet-action-button {
-  min-width: 145px !important;
-  margin: 12px !important;
-}
 .form_block {
   width: 60%;
   .mat-form-field {
@@ -326,14 +332,15 @@ input[type="text"] {
 }
 
 .error {
-  color: #ec4b50;
+  color: $color-alert;
 }
 
 .hr-light {
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid $bg-shadow;
   margin: 20px 0;
 }
+
 input[type="text"].md-bg-transparent {
   background-color: transparent !important;
 }
