@@ -354,7 +354,7 @@ export class ReceiveComponent implements OnInit {
     }
   }
   openNewAddress(): void {
-    const dialogRef = this.dialog.open(AddAddressLabelComponent);
+    const dialogRef = this.dialog.open(AddAddressLabelComponent, {panelClass: 'small-modal'});
     dialogRef.componentInstance.type = this.type;
     dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
       this.rpc_update();
