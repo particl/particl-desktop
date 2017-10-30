@@ -9,6 +9,7 @@ import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
 import { MdDialogRef } from '@angular/material';
 import { ModalsComponent } from '../modals.component';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 @Component({
   selector: 'app-coldstake',
@@ -42,11 +43,12 @@ export class ColdstakeComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _rpc: RPCService,
+    private flashNotificationService: FlashNotificationService,
     public dialogRef: MdDialogRef<ModalsComponent>
   ) { }
 
   nextStep () {
-    this.log.d(`Going to step: ${this.step + 1}`)
+    this.log.d(`Going to step: ${this.step + 1}`);
     this.step++;
     this.animationState = 'next';
     setTimeout(() => this.animationState = '', 300);
@@ -80,7 +82,14 @@ export class ColdstakeComponent {
     this._rpc.call('extkey', ['account'])
     .subscribe(
       success => this.rpc_filterHotListOfAccounts(success),
-      error => this.log.er('rpc_retrieveHotWallet: ', error));
+      error => this.onHotWalletError());
+  }
+
+  onHotWalletError(): void {
+    this.log.er('rpc_retrieveHotWallet: ');
+    this.dialogRef.close();
+    this._modalsService.open('createWallet', {forceOpen: true});
+    this.flashNotificationService.open('Restricted from the Hot Wallet function until a Wallet exists');
   }
 
   rpc_filterHotListOfAccounts(response: any) {

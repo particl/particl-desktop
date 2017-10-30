@@ -20,7 +20,7 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
 import {
-  MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule, MdProgressBarModule,
+  MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule, MdProgressBarModule, MdSnackBarModule,
   MdTooltipModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -44,7 +44,8 @@ import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.c
     MdTooltipModule,
     MdProgressBarModule,
     TooltipModule,
-    ClipboardModule
+    ClipboardModule,
+    MdSnackBarModule
   ],
   declarations: [
     FocusDirective,
