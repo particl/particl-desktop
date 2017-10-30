@@ -13,7 +13,7 @@
               [(ngModel)]="words[i]" type="text" name="recovery"
               [readonly]="readOnly"
               [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
-              (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)"/>
+              (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)" class="words"/>
           </md-form-field>
         </div>
       </div>
@@ -24,7 +24,7 @@
                  [cbContent]="words.join(' ')">
         </md-icon>
         <md-icon class="cursor-pointer icon" *ngIf="!generate"
-                 mdTooltip="Paste" fontSet="faIcon" fontIcon="fa-clipboard">
+                 mdTooltip="Paste" fontSet="faIcon" fontIcon="fa-clipboard" (mousedown)="pasteContent()">
         </md-icon>
       </div>
     </div>

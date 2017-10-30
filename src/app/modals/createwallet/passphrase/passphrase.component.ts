@@ -48,7 +48,7 @@ export class PassphraseComponent implements  OnChanges {
   }
 
   splitAndFill(index: number): void {
-    if (this.partialDisable || this.words[index].indexOf(' ') === -1) {
+    if (this.partialDisable || this.words[index].indexOf(' ') === -1 || index !== 0) {
       return;
     }
 
@@ -57,6 +57,7 @@ export class PassphraseComponent implements  OnChanges {
     words.forEach((word, i) => {
       if (i + index < MAX_WORDS) {
         this.words[i + index] = this.validateWord(word, -1) ? word : 'INVALID';
+        console.log(this.words[i + index]);
       }
     });
   }
@@ -83,5 +84,10 @@ export class PassphraseComponent implements  OnChanges {
 
   copyToClipBoard(): void {
     this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.', '', 1000);
+  }
+
+  pasteContent() {
+    document.execCommand('Paste');
+    return false;
   }
 }
