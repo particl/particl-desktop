@@ -188,8 +188,8 @@
         [generate]="false">
       </app-passphrase>
 
-      <div *ngIf="!!errorString"
-           [@slideDown] class="container alert alert-danger margin-top-5px">
+      <div *ngIf="!!errorString" fxLayoutAlign="center center"
+           [@slideDown] class="error margin-top-5px">
         {{ errorString }}
       </div>
 
