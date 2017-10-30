@@ -19,6 +19,8 @@ export class AddAddressLabelComponent implements OnInit {
   public addLableForm: FormGroup;
   public type: string;
   public label: string;
+  public textLabel: string;
+  public address: string;
   log: any = Log.create('receive.component');
 
   constructor(
@@ -51,15 +53,23 @@ export class AddAddressLabelComponent implements OnInit {
   }
 
   addNewLabel(): void {
-    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    let call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    let callParams = [this.label];
+    let msg = `New ${this.type} address lable added !!`;
+    if (this.address !== '') {
+      call = 'manageaddressbook';
+      callParams = ['newsend', this.address, this.label];
+      msg = `Update ${this.type} address lable successfully !!`;
+    }
+
     this.log.d(call, 'newAddress: successfully retrieved new address');
     if (!!call) {
-      this.rpc.call(call, [this.label])
+      this.rpc.call(call, callParams)
         .subscribe(response => {
           this.log.d(call, 'newAddress: successfully retrieved new address');
           this.onAddressAdd.emit(response);
           this.dialogRef.close();
-          this.flashNotificationService.open(`New ${this.type} address lable added !!`)
+          this.flashNotificationService.open(msg)
         });
     }
   }
