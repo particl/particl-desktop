@@ -164,6 +164,7 @@ export class CreateWalletComponent {
           this.log.i('Mnemonic imported successfully');
         },
         error => {
+          this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
           this._modalsService.enableClose = true;
