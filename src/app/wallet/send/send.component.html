@@ -56,7 +56,7 @@
       </md-card>
       <md-card *ngIf="type === 'balanceTransfer'">
         <md-list-item>
-            <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
+          <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
             <md-radio-group class="md-send-card" name="sendOutput" [(ngModel)]="send.output" fxFlex="100" fxLayoutAlign="center center">
               <h5 fxFlex="16.6">To Account</h5>
               <md-radio-button value="balance" disabled="{{ send.input === 'balance' }}" fxFlex="16.6">Public</md-radio-button>
@@ -71,91 +71,95 @@
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
-      <md-card class="md-send-list " *ngIf="type === 'sendPayment' || advanced">
+      <md-card class="md-send-list" *ngIf="type === 'sendPayment' || advanced">
         <md-list-item>
           <div class="md-send-card md-line mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
             <h5 fxFlex="15"> Pay to</h5>
             <md-form-field fxFlex="100">
-             <!-- fix success input -->
+              <!-- fix success input -->
               <input name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
             </md-form-field>
-              <div fxFlex="100" fxLayoutGap="20px">
-                <md-form-field fxFlex="100">
-                  <input class="md-bg-transparent" name="toLabel" mdInput type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
-                  </md-form-field>                
-                    <div fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutGap="20px">                    
-                    <span fxFlex="16.6">
-                      <md-icon class="cursor-pointer zindex" flex="100" mdTooltip="Address Lookup" (click)="openLookup()" fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
-                    </span>
-                    <span fxFlex="16.6">
-                      <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
-                    </span>
-                    <span fxFlex="16.6">
-                      <md-icon flex="100" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"></md-icon>
-                    </span>
-                  </div>
-                </div>
+            <div fxFlex="100" fxLayoutGap="20px">
+              <md-form-field fxFlex="100">
+                <input class="md-bg-transparent" name="toLabel" mdInput type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
+              </md-form-field>                
+              <div fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutGap="20px">
+                <span fxFlex="16.6">
+                  <md-icon class="cursor-pointer zindex" flex="100" mdTooltip="Address Lookup" (click)="openLookup()" fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
+                </span>
+                <span fxFlex="16.6">
+                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
+                </span>
+                <span fxFlex="16.6">
+                  <md-icon flex="100" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"></md-icon>
+                </span>
               </div>
-            </md-list-item>
-            <md-divider></md-divider>
-          </md-card>
-          <md-card class="md-send-list">
-            <md-list-item>
-              <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
-                <h5 fxFlex="15">Narration</h5>
-                <md-form-field fxFlex="100">
-                  <input type="text" mdInput name="sendNote" placeholder="Optional: enter a short note to send with a payment" maxlength="24"[(ngModel)]="send.note">
-                  </md-form-field>
-                </div>
-              </md-list-item>
-              <md-divider></md-divider>
-            </md-card>
-            <md-card class="md-send-list">
-              <md-list-item>
-                <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
-                  <h5 fxFlex="15">Amount</h5>
-                  <md-form-field fxFlex="100">
-                    <input mdInput type="text" name="sendAmount" placeholder="0.00000000"[(ngModel)]="send.amount" (input)="verifyAmount()"
-                     [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
-                     oninput="validity.valid||(value='');" step="any">
-                    </md-form-field>
-                    <md-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
-                      <md-option value="part">PART</md-option>
-                    </md-select>
-                  </div>
-                </md-list-item>
-                <md-divider></md-divider>
-              </md-card>
-              <md-card *ngIf="send.input === 'anon_balance'">
-                <md-list-item>
-                  <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
-                    <h5 fxFlex="15"> Privacy level </h5>
-                    <div fxFlex="'column'" fxLayoutWrap>
-                      <div class="privacy-labels" fxFlex="100">
-                        <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"(click)="setPrivacy(4,10)">Low</span>
-                        <span fxFlex="" fxLayoutAlign="center center" class="privacy-label cursor-pointer" (click)="setPrivacy(8,50)">Medium</span>
-                        <span fxFlex="" fxLayoutAlign="end center" class="privacy-label cursor-pointer" (click)="setPrivacy(16,100)">High</span>
-                      </div>
-                      <md-progress-bar class="example-margin" [color]="'primary'" [bufferValue]="send.privacy" [mode]="'determinate'" [value]="progress"> </md-progress-bar>
-                    </div>
-                  </div>
-                </md-list-item>
-                <md-list-item>
-                  <md-divider></md-divider>
-                </md-list-item>
-              </md-card>
-              <md-card>
-              <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
-                  <button md-raised-button color="primary" (click)="clear()">
-                    <md-icon>clear</md-icon>
-                    Clear all
-                  </button>
-                  <button md-raised-button color="disabled" class="validate" (click)="onSubmit()"[disabled]="!checkAddress() || !checkAmount()">
-                   <md-icon>send</md-icon>
-                   Make payment
-                 </button>
-              </div>
-              </md-card>
-            </form>
+            </div>
           </div>
+        </md-list-item>
+        <md-divider></md-divider>
+      </md-card>
+      <md-card class="md-send-list">
+        <md-list-item>
+          <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <h5 fxFlex="15">Narration</h5>
+            <md-form-field fxFlex="100">
+            <input type="text" mdInput name="sendNote" 
+             placeholder="Optional: enter a short note to send with a payment" 
+             maxlength="24"
+            [(ngModel)]="send.note" >
+            </md-form-field>
+          </div>
+        </md-list-item>
+        <md-divider></md-divider>
+      </md-card>
+      <md-card class="md-send-list">
+        <md-list-item>
+          <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <h5 fxFlex="15">Amount</h5>
+            <md-form-field fxFlex="100">
+              <input mdInput type="text" name="sendAmount" 
+placeholder="0.00000000"
+[(ngModel)]="send.amount" (input)="verifyAmount()" 
+[ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }" 
+oninput="validity.valid||(value='');" step="any">
+            </md-form-field>
+            <md-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
+              <md-option value="part">PART</md-option>
+            </md-select>
+          </div>
+        </md-list-item>
+        <md-divider></md-divider>
+      </md-card>
+      <md-card *ngIf="send.input === 'anon_balance'">
+        <md-list-item>
+          <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <h5 fxFlex="15"> Privacy level </h5>
+            <div fxFlex="'column'" fxLayoutWrap>
+              <div class="privacy-labels" fxFlex="100">
+                <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"
+(click)="setPrivacy(4,10)">Low</span>
+                <span fxLayoutAlign="center center" class="privacy-label cursor-pointer" 
+(click)="setPrivacy(8,50)">Medium</span>
+                <span fxLayoutAlign="end center" class="privacy-label cursor-pointer" 
+(click)="setPrivacy(16,100)">High</span>
+              </div>
+              <md-progress-bar class="example-margin" [color]="'primary'" [bufferValue]="send.privacy" [mode]="'determinate'" [value]="progress"></md-progress-bar>
+            </div>
+          </div>
+        </md-list-item>
+        <md-list-item>
+          <md-divider></md-divider>
+        </md-list-item>
+      </md-card>
+      <md-card>
+        <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
+          <button md-raised-button color="primary" (click)="clear()"><md-icon>clear</md-icon>Clear all</button>
+          <button md-raised-button color="disabled" class="validate" 
+(click)="onSubmit()"
+[disabled]="!checkAddress() || !checkAmount()"><md-icon>send</md-icon>Make payment</button>
         </div>
+      </md-card>
+    </form>
+  </div>
+</div>
