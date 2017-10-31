@@ -2,9 +2,9 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 
-.TODO { 
-  box-shadow: 0 0 3px 1px hotpink; 
-} 
+.TODO {
+  box-shadow: 0 0 3px 1px hotpink;
+}
 
 .widget-help { // help description
   color: grey;
@@ -369,6 +369,14 @@ panel-header-title {
   }
 }
 
+.syncing_header_text{
+  width: 65%;
+  text-align: center;
+}
+
+.text-center {
+  text-align: center;
+}
 
 @media (max-width: 1280px) {
   .md-left-border {

@@ -6,6 +6,7 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet.component';
 import { ModalsModule } from '../modals.module';
+import { MdSnackBarModule } from '@angular/material';
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -18,7 +19,8 @@ describe('CreateWalletComponent', () => {
         BrowserAnimationsModule,
         SharedModule,
         RpcModule.forRoot(),
-        ModalsModule
+        ModalsModule,
+        MdSnackBarModule
       ]
     })
     .compileComponents();

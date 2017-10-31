@@ -23,34 +23,34 @@
 
   <hr class="margin-top-100px">
 
-  <div class="container">
+  <div fxLayoutAlign="center center" fxLayout="row" fxLayout.lt-lg="column" fxLayoutWrap>
     <div class="row text-center">
-      <div class="col-md-3 col-xs-6">
+      <div fxFlex="25%" fxFlex.md="100%" fxFlex.sm="50%">
         <h4>AMOUNT OF BLOCKS LEFT</h4>
-        <br />
+        <br/>
         {{ syncPercentage ? remainder : 'loading...' }}
       </div>
-      <div class="col-md-3 col-xs-6">
+      <div fxFlex="25%" fxFlex.md="100%" fxFlex.sm="50%">
         <h4>LAST BLOCK TIME</h4>
-        <br />
+        <br/>
         {{ syncPercentage ? lastBlockTime : 'loading...' }}
       </div>
-      <div class="col-md-3 col-xs-6">
+      <div fxFlex="25%" fxFlex.md="100%" fxFlex.sm="50%">
         <h4>PROGRESS INCREASE PER MINUTE</h4>
-        <br />
+        <br/>
         {{ syncPercentage ? increasePerMinute : 'loading...' }}
       </div>
-      <div class="col-md-3 col-xs-6">
+      <div fxFlex="25%" fxFlex.md="100%" fxFlex.sm="50%">
         <h4>ESTIMATED TIME LEFT UNTIL SYNCED</h4>
-        <br />
+        <br/>
         {{ syncPercentage ? estimatedTimeLeft : 'loading...' }}
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="!syncPercentage">
-  <div class="center">
+<div *ngIf="!syncPercentage"  fxFlex="100%" fxLayout="column" fxLayoutWrap>
+  <div class="center" fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
     <img src="assets/loading.svg" id="loading">
   </div>
   <div id="quote" class="center">
