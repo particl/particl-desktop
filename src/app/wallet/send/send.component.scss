@@ -29,6 +29,10 @@ input[type="text"] {
   border-bottom: 0px solid $bg-shadow;
 }
 
+.mat-card .send {
+  padding: 0px 0px 20px 0px;
+}
+
 .mat-card h5 {
   text-transform: uppercase;
   font-weight: bold;
@@ -67,11 +71,6 @@ md-card.mat-card {
 
 .md-tab-right {
   float: right;
-}
-
-.no-bg {
-  background:transparent;
-  margin-bottom: 20px;
 }
 
 .nc-circle-remove, .nc-copy-2, .nc-multiple-19 {
@@ -127,19 +126,42 @@ button {
      }
       span {
          color: $text;
-         text-transform: uppercase;
          font-size: 13px;
       }
    }
 }
 
-.button-send {
-  background-color: white;
-  border: none;
-  padding: 0;
-  margin: 15px 20px 0 0;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.9;
-  border-bottom: 1px solid #F1F1F1;
+.mat-raised-button {
+    box-sizing: border-box;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    outline: 0;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin: 0;
+    min-width: 88px;
+    line-height: 36px;
+    padding: 0 16px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+}
+
+.mat-icon {
+    margin-right: 5px;
+    width: auto;
+    height: auto;
+    font-size: 16px;
+    position: relative;
+    top: -1px;
 }

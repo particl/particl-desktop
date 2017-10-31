@@ -32,7 +32,6 @@ button {
   border: none;
   padding: 8px 30px;
   margin: 0 5px 20px 5px;
-  text-transform: uppercase;
   font-weight: bold;
   font-size: 0.8em;
   border-bottom: 1px solid #F1F1F1;
@@ -44,12 +43,10 @@ button:active {
 .warning {
   color: white;
   background-color: #ED4B4D;
-  border-bottom: 2px solid #B64446;
 }
 .validate {
   color: white;
   background-color: #03E8B0;
-  border-bottom: 1px solid #07B98D;
 }
 
 /* Particl inputs */

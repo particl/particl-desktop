@@ -40,7 +40,7 @@
                 <span class="balance-amount">{{getBalance(send.input)}} PART</span>
               </div>
             </md-radio-group>
-            <md-radio-group class="md-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxFlex="100%" fxLayoutAlign="center center">
+            <md-radio-group class="md-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
               <h5 fxFlex="16.6">From Account</h5>
               <md-radio-button value="balance" disabled="{{ send.output === 'balance' }}" checked="checked" fxFlex="16.6">Public</md-radio-button>
               <md-radio-button value="blind_balance" disabled="{{ send.output === 'blind_balance' }}" fxFlex="16.6">Blind</md-radio-button>
@@ -119,7 +119,6 @@
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                      oninput="validity.valid||(value='');" step="any">
                     </md-form-field>
-                    <!-- todo fix styling of currency select -->
                     <md-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
                       <md-option value="part">PART</md-option>
                     </md-select>
@@ -145,10 +144,18 @@
                   <md-divider></md-divider>
                 </md-list-item>
               </md-card>
-              <div class="md-line mat-expansion-panel no-bg" fxLayoutAlign="end end">
-                <button md-button (click)="clear()" class="button-send">Clear all</button>
-                <button md-button color="primary" class="validate button-send" (click)="onSubmit()"[disabled]="!checkAddress() || !checkAmount()">Make payment</button>
+              <md-card>
+              <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
+                  <button md-raised-button color="primary" (click)="clear()">
+                    <md-icon>clear</md-icon>
+                    Clear all
+                  </button>
+                  <button md-raised-button color="disabled" class="validate" (click)="onSubmit()"[disabled]="!checkAddress() || !checkAmount()">
+                   <md-icon>send</md-icon>
+                   Make payment
+                 </button>
               </div>
+              </md-card>
             </form>
           </div>
         </div>
