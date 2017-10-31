@@ -16,7 +16,7 @@ export class ColdstakeComponent implements OnInit {
     private _modals: ModalsService,
     private _rpc: RPCService
   ) {
-    this._rpc.state.observe('coldstaking').subscribe(status => this.coldStakingEnabled = status);
+    this._rpc.state.observe('ui:coldstaking').subscribe(status => this.coldStakingEnabled = status);
   }
 
   ngOnInit() {
