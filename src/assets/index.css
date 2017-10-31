@@ -37,7 +37,7 @@ $bg-shadow: #dcdcdc; // lines, box shadows etc.
 .logo {
   width: 240px;
   height: auto;
-  margin-bottom: 40px;
+  margin: 20px 0 40px;
 }
 
 .quote {
@@ -50,5 +50,6 @@ $bg-shadow: #dcdcdc; // lines, box shadows etc.
 }
 
 .loading {
-  margin-top: 30px;
+  width: 100%;
+  max-width: 100px;
 }
