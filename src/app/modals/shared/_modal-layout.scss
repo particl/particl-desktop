@@ -9,35 +9,6 @@ button {
   }
 }
 
-/*
-.modal-header {
-  margin: 0 -24px 70px;
-  padding: 20px 24px;
-  background: $bg-black;
-  color: white;
-  .modal-title {
-    margin: 0 30px 0 70px;
-    border-left: 1px solid black;
-    box-shadow: -1px 0 lighten($bg-black, 10%);
-    padding: 9px 0 11px 25px;
-    font-size: 20px;
-    text-transform: uppercase;
-    font-weight: 600;
-    &::before {
-      content: "";
-      position: absolute;
-      left: 41px;
-      top: 30px;
-      width: 26px;
-      height: 26px;
-      display: block;
-      background: url("/assets/particl-logo-symbol.svg") no-repeat 50% 50%;
-      background-size: contain;
-    }
-  }
-}
-*/
-
 .container {
   display: flex;
   position: absolute;
