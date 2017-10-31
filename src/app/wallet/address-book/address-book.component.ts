@@ -16,12 +16,12 @@ export class AddressBookComponent {
   }
 
   openNewAddress(): void {
-    const dialogRef = this.dialog.open(NewAddressModalComponent, {panelClass: 'small-modal'});
+    const dialogRef = this.dialog.open(NewAddressModalComponent, {panelClass: 'small-dialog'});
   }
 
   editLabel(address: string): void {
     this.log.d(`editLabel, address: ${address}`);
-    const dialogRef = this.dialog.open(NewAddressModalComponent, {panelClass: 'small-modal'});
+    const dialogRef = this.dialog.open(NewAddressModalComponent, {panelClass: 'small-dialog'});
     dialogRef.componentInstance.address = address;
     dialogRef.componentInstance.isEdit = true;
   }

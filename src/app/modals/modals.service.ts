@@ -73,7 +73,7 @@ export class ModalsService {
     */
   open(modal: string, data?: any): void {
     const dialogRef = this.dialog.open(ModalsComponent, {
-      panelClass: 'full-width-modal',
+      panelClass: 'full-width-dialog',
       disableClose: true,
       width: '100%',
       height: '100%'

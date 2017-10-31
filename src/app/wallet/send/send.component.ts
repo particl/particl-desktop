@@ -176,7 +176,7 @@ export class SendComponent {
   }
 
   onSubmit(): void {
-    const dialogRef = this.dialog.open(SendConfirmationModalComponent, {panelClass: 'small-modal'});
+    const dialogRef = this.dialog.open(SendConfirmationModalComponent, {panelClass: 'small-dialog'});
     dialogRef.componentInstance.dialogContent = `Do you really want to send
       ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.getAddress()} ?`;
 
@@ -253,7 +253,7 @@ export class SendComponent {
   */
 
   openLookup() {
-    const dialogRef = this.dialog.open(AddressLookupComponent, {panelClass: 'small-modal'});
+    const dialogRef = this.dialog.open(AddressLookupComponent, {panelClass: 'small-dialog'});
     dialogRef.componentInstance.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
