@@ -36,7 +36,7 @@
       &:hover {
         background: darken(#222828, 1.5%);
         .mat-icon {
-          color: lighten(#4B4A4F, 10%) !important;
+          color: lighten(#4B4A4F, 10%);
         }
       }
       .mat-list-item-content {
@@ -51,6 +51,23 @@
       .mat-list-item-content {
         text-transform: uppercase;
         min-height: 40px;
+      }
+      &.error { // daemon/wallet error messages
+        .mat-list-item:hover {
+          background: none;
+          .mat-icon {
+            color: $color-alert;
+          }
+        }
+        .mat-list-item-content {
+          color: white;
+          font-size: 11px;
+          padding: 24px 16px;
+        }
+        .mat-icon {
+          color: $color-alert;
+          margin: 0 14px 0 0;
+        }
       }
     }
   }

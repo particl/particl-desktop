@@ -82,7 +82,7 @@
     </md-content-->
 
     <md-content layout-padding *ngIf="!!daemonError || !!walletError">
-      <md-list class="sidesubmenu">
+      <md-list class="sidesubmenu error">
         <md-list-item *ngIf="daemonError">
           <md-icon>error</md-icon>
           {{daemonError}}

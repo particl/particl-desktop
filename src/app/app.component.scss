@@ -68,7 +68,14 @@
   width: 144px;
 }
 
-/deep/ .verify-sucess {
-  color: #4F8A10;
-  background-color: #DFF2BF !important;
+
+/deep/ input {
+  &.verify-sucess {
+    color: darken($color, 7%) !important; // #57a800
+    background-color: rgba($color, 0.07) !important; // #edfad7
+  }
+  &.verify-error {
+    color: darken($color-alert, 5%);
+    background: rgba($color-alert, 0.1) !important;
+  }
 }
