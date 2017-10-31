@@ -150,7 +150,7 @@ export class ReceiveComponent implements OnInit {
       this.type = type;
     }
     if (this.addresses[type].length === 0) {
-      this.openNewAddress('add', '', '')
+      this.openNewAddress()
     } else {
       this.selectAddress(this.addresses[type][0]);
     }
@@ -211,7 +211,7 @@ export class ReceiveComponent implements OnInit {
 
       setTimeout(() => {
         if (this._modalService.initializedWallet) {
-          this.openNewAddress('add', '', '');
+          this.openNewAddress();
         }
       }, 200);
 
@@ -353,12 +353,10 @@ export class ReceiveComponent implements OnInit {
       error => this.log.er('error'));
     }
   }
-  openNewAddress(callType: string, text: string, add: string): void {
+  openNewAddress(address?: string): void {
     const dialogRef = this.dialog.open(AddAddressLabelComponent);
     dialogRef.componentInstance.type = this.type;
-    dialogRef.componentInstance.textLabel = callType === 'add' ? 'Add Label' : 'Update Label';
-    dialogRef.componentInstance.label = text;
-    dialogRef.componentInstance.address = add;
+    dialogRef.componentInstance.address = address ? address : '';
     dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
       this.rpc_update();
     });

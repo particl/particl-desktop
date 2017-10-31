@@ -44,8 +44,6 @@ function initMainWindow(trayImage) {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
-    minWidth: 961,
-    maxWidth: 1920,
     icon: trayImage,
     webPreferences: {
       nodeIntegration: false,

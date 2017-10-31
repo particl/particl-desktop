@@ -19,7 +19,6 @@ export class AddAddressLabelComponent implements OnInit {
   public addLableForm: FormGroup;
   public type: string;
   public label: string;
-  public textLabel: string;
   public address: string;
   log: any = Log.create('receive.component');
 

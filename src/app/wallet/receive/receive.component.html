@@ -43,7 +43,7 @@
             {{ word }}
           </div>
         </div>
-        <button md-raised-button color="primary" (click)="openNewAddress('add', '', '')">New {{ getAddressType() }} address</button>
+        <button md-raised-button color="primary" (click)="openNewAddress()">New {{ getAddressType() }} address</button>
       </div><!-- .address-details -->
     </md-card>
   </div>
@@ -57,7 +57,7 @@
       <md-card class="address-info">
         <div fxFlex="100%" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" layout-padding>
           <div fxFlex="15%" class="address-id"> /{{ getUnusedAddress().id }}</div>
-          <div fxFlex="20%" class="address-label" (click)="openNewAddress('edit', getUnusedAddress().label, getUnusedAddress().address)"> {{ getUnusedAddress().label }}</div>
+          <div fxFlex="20%" class="address-label" (click)="openNewAddress(getUnusedAddress().address)"> {{ getUnusedAddress().label }}</div>
           <div fxFlex="50%" class="address">
             {{ getUnusedAddress().address }}
             <!--div class="total"><span>Total received: </span>
@@ -93,7 +93,7 @@
         <md-card class="address-info"> 
           <div fxFlex="100%" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" layout-padding> 
             <div fxFlex="15%" class="address-id">/{{ address.id }}</div> 
-            <div fxFlex="20%" class="address-label" (click)="openNewAddress('edit', address.label, address.address)">{{ address.label }}</div>
+            <div fxFlex="20%" class="address-label" (click)="openNewAddress(address.address)">{{ address.label }}</div>
             <div fxFlex="50%" class="address">
               {{ address.address }}
               <div class="total"><span>Total received: </span>
