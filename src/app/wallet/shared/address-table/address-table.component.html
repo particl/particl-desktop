@@ -1,5 +1,6 @@
 <div class="containerX">
-  <div fxLayout="'row'" class="coloredContainerX box">
+  <div fxLayout="row" class="coloredContainerX box">
+
     <div class="grid-row grid-header" *ngIf="displayHeader">
       <md-list class="list-data" fxFlex="100%">
         <div *ngFor="let address of getSinglePage()">
@@ -16,67 +17,55 @@
       <div *ngIf="displayQrMenu">QR Code</div>
     </div>
 
-    <md-list class="list-data" fxFlex="100%">
+    <md-list class="list-data" fxFlex="100">
       <div *ngFor="let address of getSinglePage()">
-        <md-list-item>
-          <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
-               fxlayout.lt-xs="column" fxLayoutGap="10px" layout-padding>
-            <div fxFlex="20%" class="title" *ngIf="displayLabel" >
-              <span  class="cursor-pointer" (click)="editLabel(address.address)" mdTooltip="Edit">{{address.label }}</span>
-            </div>
-            <div fxFlex="50%" class="address">
-              <span class="title" *ngIf="displayAddress">Address: </span>
-              {{ address.address }}
-            </div>
 
-            <div fxFlex="25%" class="grid-cell" *ngIf="displayPublicKey">
-              <span class="title">Public Key</span>
-              {{ address.publicKey }}
-            </div>
+        <md-card class="address-entry" fxLayout.gt-lg="50" fxLayout.gt-sm="row" fxLayout.lt-md="column" fxLayoutGap="10px" layout-padding>
 
-            <div fxFlex="25%" clas="grid-cell" *ngIf="displayType">
-              <span class="title">Type</span>
-              <span class="text-uppercase">{{ address.type }}</span>
-            </div>
+          <!-- Label -->
+          <div fxFlex="1 0 150px" fxFlex.lt-md="100" class="title cursor-pointer" *ngIf="displayLabel" (click)="editLabel(address.address)" mdTooltip="Edit Address label">
+            {{ address.label }}
+          </div>
 
-            <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="15%" fxFlex.md="50%"
-                 fxFlex.sm="50%" fxFlex.xs="100%" fxLayoutAlign="end center" *ngIf="displayToolsMenu"
-                 class="md-left-border">
-              <div fxFlex="100%" class="" fxLayoutAlign="end center">
-                <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%"
-                      fxFlex.xs="33.33%">
-                  <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy" ngxClipboard
-                          [cbContent]="address.address">
-                  </md-icon>
-                </span>
-                <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
-                  <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer"
-                           mdTooltip="Verify message" ngxClipboard>
-                  </md-icon>
-                </span>
-                <span fxFlex="20%" fxFlex.md="33.33%" fxFlex.sm="33.33%" fxFlex.xs="33.33%">
-                  <md-icon class="cursor-pointer" color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"
-                           (click)="deleteAddress(address.label, address.address)"
-                           mdTooltip="Delete">
-                  </md-icon>
-                </span>
-              </div>
-            </div>
-            <div fxlayout.sm="row" fxlayout.lt-sm="row" fxlayout.lt-xs="column" fxFlex="10%" fxFlex.md="50%"
-                 fxFlex.sm="50%" fxFlex.xs="100%" *ngIf="!displayQrMenu" fxLayoutAlign="end center"
-                 class="md-left-border">
-              <div class="grid-cell divider text-center">
-                <div class="inline-toolbar qrcode-menu" fxFlex="100%" fxLayoutAlign.md="center end"
-                     fxLayoutAlign.lt-md="center end" fxLayoutAlign.lt-sm="center end" fxLayoutAlign="end center"
-                     (click)="openQrCodeModal(address)">
-                  <i class="fa fa-qrcode fa-3x cursor-pointer"  aria-hidden="true"></i>
-                  <!--<span class="nc-icon nc-barcode-qr fa-5x"></span>-->
-                </div>
-              </div>
+          <!-- Address -->
+          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress">
+            <span class="title">Address&emsp;</span>{{ address.address }}
+          </div>
+
+          <!-- Pubkey -->
+          <div fxFlex="25" class="grid-cell" *ngIf="displayPublicKey">
+            <span class="title">Public Key</span>
+            {{ address.publicKey }}
+          </div>
+
+          <!-- Type -->
+          <div fxFlex="25" clas="grid-cell" *ngIf="displayType">
+            <span class="title">Type</span>
+            <span class="text-uppercase">{{ address.type }}</span>
+          </div>
+
+          <!-- Actions/controls -->
+          <div fxLayout="row" fxFlex="0 0 160px" fxFlex.lt-md="0 0 20px" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start center" fxLayoutGap="10px" *ngIf="displayToolsMenu" class="address-actions">
+            <!-- ICO: copy address -->
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
+              <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address"></md-icon>
+            </span>
+            <!-- ICO: verify message -->
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
+              <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer" mdTooltip="Verify message" ngxClipboard></md-icon>
+            </span>
+            <!-- ICO: delete -->
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
+              <md-icon color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove" (click)="deleteAddress(address.label, address.address)" mdTooltip="Delete address"></md-icon>
+            </span>
+            <!-- display QR code -->
+            <div fxFlex="0 0 20px" fxLayoutAlign="center center" *ngIf="!displayQrMenu" class="qrcode-menu">
+              <i class="fa fa-qrcode" aria-hidden="true" mdTooltip="Show QR code" (click)="openQrCodeModal(address)"></i>
             </div>
           </div>
-        </md-list-item>
-        <md-divider></md-divider>
+
+        </md-card>
+
       </div>
     </md-list>
   </div>
