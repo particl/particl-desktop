@@ -9,11 +9,12 @@
           <md-form-field class="row_input_gap">
             <input
               mdInput
+              #textInput
               [appFocusElement]="i === focused"
               [(ngModel)]="words[i]" type="text" name="recovery"
               [readonly]="readOnly"
               [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
-              (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)" class="words"/>
+              (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)" class="words" (focus)="getIndexOnFocus(i)" id="text-input-{{i}}"/>
           </md-form-field>
         </div>
       </div>
@@ -24,7 +25,7 @@
                  [cbContent]="words.join(' ')">
         </md-icon>
         <md-icon class="cursor-pointer icon" *ngIf="!generate"
-                 mdTooltip="Paste" fontSet="faIcon" fontIcon="fa-clipboard" (mousedown)="pasteContent()">
+                 mdTooltip="Paste" fontSet="faIcon" fontIcon="fa-clipboard" (click)="pasteContent()">
         </md-icon>
       </div>
     </div>

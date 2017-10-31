@@ -42,12 +42,14 @@ export class PassphraseComponent implements  OnChanges {
   }
 
   checkFocus(event: KeyboardEvent, index: number) {
+    console.log(index);
     if (event.key === ' ') {
       this.focused = index + 1;
     }
   }
 
   splitAndFill(index: number): void {
+
     if (this.partialDisable || this.words[index].indexOf(' ') === -1 || index !== 0) {
       return;
     }
@@ -86,8 +88,13 @@ export class PassphraseComponent implements  OnChanges {
     this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.', '', 1000);
   }
 
+  getIndexOnFocus(index: number) {
+    this.focused = index;
+  }
+
   pasteContent() {
+    // Directive doesn't get reflect if we make focused = 0
+    document.getElementById('text-input-' + this.focused).focus();
     document.execCommand('Paste');
-    return false;
   }
 }
