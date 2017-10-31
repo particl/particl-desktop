@@ -1,56 +1,62 @@
 <div *ngIf="syncPercentage">
   <div class="container">
-    <div class="row">
-      <div class="col-xs-12 text-center">
-        The displayed information may be out of date. Your wallet automatically synchronizes with the Particl network after a connection is established,
-        but this process has not completed yet. This means that recent transactions will not be visible, and the balance may not be up-to-date until this
-        process has completed.
-        <div class="alert">
-          <b>SPENDING PARTICL MAY NOT BE POSSIBLE DURING THAT PHASE!</b><!-- TODO: Red bold text (Information / Alert / Warning class?) -->
+    <div class="content">
+
+
+      <div class="section wallet-syncing">
+        <div class="title">Wallet is syncing</div>
+        <p>
+          Your wallet automatically synchronizes with the Particl network after a connection is established, but this process has not completed yet. This means that recent transactions will not be visible, and the balance may not be up-to-date until this process has completed.
+        </p>
+        <p>
+          Spending Particl may not be possible during this phase
+        </p>
+        <p *ngIf="nPeers < 1" class="warning">
+          <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+          Warning: No peers connected. Please check your internet connection
+        </p>
+      </div><!-- .wallet-syncing -->  
+
+
+      <div class="section sync-stats" fxLayout="row" fxLayoutWrap>
+        <div fxFlex="30" class="big item">
+          <span class="value">
+            {{ syncPercentage ? remainder : 'loading...' }}
+          </span>
+          <div class="description">Blocks to sync</div>
         </div>
-        <div *ngIf="nPeers < 1" class="alert">
-          Warning : no peers connected. Please check your Internet connection.
+        <div fxFlex="70" class="big item">
+          <span class="value">
+            {{ syncPercentage ? estimatedTimeLeft : 'loading...' }}
+          </span>
+          <div class="description">Estimated time left</div>
         </div>
-      </div>
-    </div>
-  </div>
+        <div fxFlex="100" class="small item">
+          <span class="value">
+            {{ syncPercentage ? lastBlockTime : 'loading...' }}
+          </span>
+          <div class="description">Last Block time</div>
+        </div>
+      </div><!-- .sync-stats -->
 
-  <hr class="margin-top-100px">
+      
+    </div><!-- .content -->
+  </div><!-- .container -->
+</div><!-- if syncPercentage -->
 
-  <div fxLayoutAlign="center center" fxLayout="row" fxLayout.lt-lg="column" fxLayoutWrap>
-    <div class="row text-center">
-      <div fxFlex="25%" fxFlex.md="100%" fxFlex.sm="50%">
-        <h4>AMOUNT OF BLOCKS LEFT</h4>
-        <br/>
-        {{ syncPercentage ? remainder : 'loading...' }}
-      </div>
-      <div fxFlex="25%" fxFlex.md="100%" fxFlex.sm="50%">
-        <h4>LAST BLOCK TIME</h4>
-        <br/>
-        {{ syncPercentage ? lastBlockTime : 'loading...' }}
-      </div>
-      <div fxFlex="25%" fxFlex.md="100%" fxFlex.sm="50%">
-        <h4>PROGRESS INCREASE PER MINUTE</h4>
-        <br/>
-        {{ syncPercentage ? increasePerMinute : 'loading...' }}
-      </div>
-      <div fxFlex="25%" fxFlex.md="100%" fxFlex.sm="50%">
-        <h4>ESTIMATED TIME LEFT UNTIL SYNCED</h4>
-        <br/>
-        {{ syncPercentage ? estimatedTimeLeft : 'loading...' }}
-      </div>
-    </div>
-  </div>
-</div>
 
-<div *ngIf="!syncPercentage"  fxFlex="100%" fxLayout="column" fxLayoutWrap>
-  <div class="center" fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-    <img src="assets/loading.svg" id="loading">
-  </div>
-  <div id="quote" class="center">
-    "to hide the signal you must generate noise".
-  </div>
-  <div id="quote-author" class="center">
-    -Ido Kaiser
-  </div>
-</div>
+<div *ngIf="!syncPercentage">
+  <div class="container">
+    <div class="content">
+
+      <div class="section intro">
+        <img src="assets/loading.svg" id="loading">
+        <blockquote class="quote">
+          <p>To hide the signal you must generate noise.</p>
+          <footer class="author">Ido Kaiser</footer>
+        </blockquote>
+      </div><!-- .intro -->
+
+    </div><!-- .content -->
+  </div><!-- .container -->  
+</div><!-- if !syncPercentage -->
