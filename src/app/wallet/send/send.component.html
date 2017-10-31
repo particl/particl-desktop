@@ -1,8 +1,7 @@
 <app-header>
   <div class="container-fluid" >
-    <div fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column"
-         fxLayout.xs="column">
-      <div fxFlex="80%">
+    <div fxLayout.lg="row">
+      <div fxFlex="50">
         <md-tab-group (selectChange)="selectTab($event.index)">
           <md-tab>
             <ng-template md-tab-label>
@@ -16,10 +15,9 @@
           </md-tab>
         </md-tab-group>
       </div>
-      <div fxFlex="20%" fxFlex.lt-md="60%" fxFlex.lt-sm="100%" disableTouchRipple="true" class="button-line">
+      <div fxFlex="50" disableTouchRipple="true" class="bottom-line">
         <button md-button color="primary" (click)="toggleAdvanced()" *ngIf="type === 'balanceTransfer'" class="show-address">
-          <md-icon>{{(advanced)? 'add_circle': 'add_circle'}}</md-icon>
-          <!-- todo: add-min-sign-icon -->
+          <md-icon>{{(advanced)? 'remove_circle': 'add_circle'}}</md-icon>
           <span>{{advancedText}}</span>
         </button>
       </div>
@@ -28,26 +26,26 @@
 </app-header>
 <div class="container-fluid">
   <div>
-    <form class="example-form" name="walletSendForm">
-      <md-card class="md-list-radio">
+    <form name="walletSendForm">
+      <md-card>
         <md-list-item>
-          <div class="md-line mat-expansion-panel" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
-            <md-radio-group class="md-send-card" *ngIf="type === 'sendPayment'" name="sendInput" [(ngModel)]="send.input" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
-              <h5 fxFlex="33.3%" fxFlex.md="50%" fxFlex.lt-md="50%">From Account</h5>
-              <md-radio-button class="md-radio-button-center" value="balance" checked="checked" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Public</md-radio-button>
-              <md-radio-button class="md-radio-button-center" value="blind_balance" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Blind</md-radio-button>
-              <md-radio-button class="md-radio-button-center" value="anon_balance" fxFlex.md="50%" fxFlex.lt-md="100%" fxFlex="33.3%">Private</md-radio-button>
-              <div fxFlex="33.3%" fxFlex.gt-sm="100%" fxLayoutAlign="start center" fxLayoutAlign.lt-md="start center" fxLayoutGap="10px">
+          <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
+            <md-radio-group class="md-send-card" *ngIf="type === 'sendPayment'" name="sendInput" [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
+              <h5 fxFlex="16.6">From Account</h5>
+              <md-radio-button value="balance" checked="checked" fxFlex="16.6">Public</md-radio-button>
+              <md-radio-button value="blind_balance" fxFlex="16.6">Blind</md-radio-button>
+              <md-radio-button value="anon_balance" fxFlex="16.6">Private</md-radio-button>
+              <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
                 <span class="balance-amount">{{getBalance(send.input)}} PART</span>
               </div>
             </md-radio-group>
-            <md-radio-group class="md-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
-              <h5 fxFlex="33.3%" fxFlex.md="50%" fxFlex.lt-md="50%">From Account</h5>
-              <md-radio-button class="md-radio-button-center" value="balance" disabled="{{ send.output === 'balance' }}" checked="checked" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Public</md-radio-button>
-              <md-radio-button class="md-radio-button-center" value="blind_balance" disabled="{{ send.output === 'blind_balance' }}" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Blind</md-radio-button>
-              <md-radio-button class="md-radio-button-center" value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex.md="50%" fxFlex.lt-md="100%" fxFlex="33.3%">Private</md-radio-button>
-              <div fxFlex="33.3%" fxFlex.gt-sm="100%" fxLayoutAlign="start center" fxLayoutAlign.lt-md="start center" fxLayoutGap="10px">
+            <md-radio-group class="md-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxFlex="100%" fxLayoutAlign="center center">
+              <h5 fxFlex="16.6">From Account</h5>
+              <md-radio-button value="balance" disabled="{{ send.output === 'balance' }}" checked="checked" fxFlex="16.6">Public</md-radio-button>
+              <md-radio-button value="blind_balance" disabled="{{ send.output === 'blind_balance' }}" fxFlex="16.6">Blind</md-radio-button>
+              <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6">Private</md-radio-button>
+              <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
                 <span class="balance-amount">{{getBalance(send.input)}} PART</span>
               </div>
@@ -58,13 +56,13 @@
       </md-card>
       <md-card *ngIf="type === 'balanceTransfer'">
         <md-list-item>
-          <div class="md-line mat-expansion-panel" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
-            <md-radio-group class="md-send-card" name="sendOutput" [(ngModel)]="send.output" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
-              <h5 fxFlex="33.3%" fxFlex.md="50%" fxFlex.lt-md="50%">To Account</h5>
-              <md-radio-button class="md-radio-button-center" value="balance" disabled="{{ send.input === 'balance' }}" fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Public</md-radio-button>
-              <md-radio-button class="md-radio-button-center" value="blind_balance" disabled="{{ send.input === 'blind_balance' }}"fxFlex.md="50%" fxFlex.lt-md="50%" fxFlex="33.3%">Blind</md-radio-button>
-              <md-radio-button class="md-radio-button-center" value="anon_balance" disabled="{{ send.input === 'anon_balance' }}" fxFlex.md="50%" fxFlex.lt-md="100%" fxFlex="33.3%">Private </md-radio-button>
-              <div fxFlex="33.3%" fxFlex.gt-sm="100%" fxLayoutAlign="start center" fxLayoutAlign.lt-md="start center" fxLayoutGap="10px">
+            <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
+            <md-radio-group class="md-send-card" name="sendOutput" [(ngModel)]="send.output" fxFlex="100" fxLayoutAlign="center center">
+              <h5 fxFlex="16.6">To Account</h5>
+              <md-radio-button value="balance" disabled="{{ send.input === 'balance' }}" fxFlex="16.6">Public</md-radio-button>
+              <md-radio-button value="blind_balance" disabled="{{ send.input === 'blind_balance' }}" fxFlex="16.6">Blind</md-radio-button>
+              <md-radio-button value="anon_balance" disabled="{{ send.input === 'anon_balance' }}" fxFlex="16.6">Private</md-radio-button>
+              <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
                 <span class="balance-amount">{{getBalance(send.input)}} PART</span>
               </div>
@@ -75,23 +73,24 @@
       </md-card>
       <md-card class="md-send-list " *ngIf="type === 'sendPayment' || advanced">
         <md-list-item>
-          <div class="md-send-card md-line mat-expansion-panel" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
-            <h5 fxFlex="100%" fxFlex.gt-sm="10%"> Pay to</h5>
-            <md-form-field fxFlex="100%" fxFlex.gt-sm="43%">
+          <div class="md-send-card md-line mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <h5 fxFlex="15"> Pay to</h5>
+            <md-form-field fxFlex="100">
+             <!-- fix success input -->
               <input name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
-              </md-form-field>
-              <div fxFlex="100%" fxFlex.gt-sm="100%" fxLayout.lg="row" fxlayout.lt-sm="row" fxLayout.sm="row" fxlayout.lt-xs="row" fxLayout.xs="row" fxLayoutGap="10px">
-                <md-form-field fxFlex="100%" fxFlex.gt-sm="85%">
+            </md-form-field>
+              <div fxFlex="100" fxLayoutGap="20px">
+                <md-form-field fxFlex="100">
                   <input class="md-bg-transparent" name="toLabel" mdInput type="text" placeholder="Enter a label" [(ngModel)]="send.toLabel">
-                  </md-form-field>
-                  <div fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
-                    <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="33.33%">
+                  </md-form-field>                
+                    <div fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutGap="20px">                    
+                    <span fxFlex="16.6">
                       <md-icon class="cursor-pointer zindex" flex="100" mdTooltip="Address Lookup" (click)="openLookup()" fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
                     </span>
-                    <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="33.33%">
+                    <span fxFlex="16.6">
                       <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
                     </span>
-                    <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+                    <span fxFlex="16.6">
                       <md-icon flex="100" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"></md-icon>
                     </span>
                   </div>
@@ -102,10 +101,10 @@
           </md-card>
           <md-card class="md-send-list">
             <md-list-item>
-              <div class="md-line md-send-card mat-expansion-panel" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
-                <h5 fxFlex="100%" fxFlex.gt-sm="10%"> Narration</h5>
-                <md-form-field fxFlex fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  <input type="text" mdInput name="sendNote" placeholder="Enter a short note to send with a payment" maxlength="24"[(ngModel)]="send.note">
+              <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+                <h5 fxFlex="15">Narration</h5>
+                <md-form-field fxFlex="100">
+                  <input type="text" mdInput name="sendNote" placeholder="Optional: enter a short note to send with a payment" maxlength="24"[(ngModel)]="send.note">
                   </md-form-field>
                 </div>
               </md-list-item>
@@ -113,14 +112,15 @@
             </md-card>
             <md-card class="md-send-list">
               <md-list-item>
-                <div class="md-line md-send-card mat-expansion-panel" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
-                  <h5 fxFlex="100%" fxFlex.gt-sm="10%"> Amount </h5>
-                  <md-form-field fxFlex="100%" fxFlex.gt-sm="50%">
+                <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+                  <h5 fxFlex="15">Amount</h5>
+                  <md-form-field fxFlex="100">
                     <input mdInput type="text" name="sendAmount" placeholder="0.00000000"[(ngModel)]="send.amount" (input)="verifyAmount()"
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                      oninput="validity.valid||(value='');" step="any">
                     </md-form-field>
-                    <md-select fxFlex="100%" fxFlex.gt-sm="46%" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
+                    <!-- todo fix styling of currency select -->
+                    <md-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
                       <md-option value="part">PART</md-option>
                     </md-select>
                   </div>
@@ -129,10 +129,10 @@
               </md-card>
               <md-card *ngIf="send.input === 'anon_balance'">
                 <md-list-item>
-                  <div class="md-line md-send-card mat-expansion-panel" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
-                    <h5 fxFlex="10%"> Privacy level </h5>
+                  <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+                    <h5 fxFlex="15"> Privacy level </h5>
                     <div fxFlex="'column'" fxLayoutWrap>
-                      <div class="privacy-labels" fxFlex="100%">
+                      <div class="privacy-labels" fxFlex="100">
                         <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"(click)="setPrivacy(4,10)">Low</span>
                         <span fxFlex="" fxLayoutAlign="center center" class="privacy-label cursor-pointer" (click)="setPrivacy(8,50)">Medium</span>
                         <span fxFlex="" fxLayoutAlign="end center" class="privacy-label cursor-pointer" (click)="setPrivacy(16,100)">High</span>

@@ -42,6 +42,7 @@
       .mat-list-item-content {
         height: auto !important;
       }
+
     }
     &.sidesubmenu {
       a {
@@ -58,17 +59,14 @@
   }
 }
 
+.active > md-list-item > div > md-icon {
+  color: $color !important;
+}
 
 .header-main {
   border-bottom: 1px solid #ddd;
   background: #fff;
 }
-
-/*
-.active > md-list-item > div > md-icon {
-  color: #41ECC2 !important;
-}
-*/
 
 .containerX {
   width: 100%;
