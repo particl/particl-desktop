@@ -3,6 +3,10 @@
 @import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
 
 
+.actions {
+  margin-bottom: 80px;
+}
+
 /* ------------------------------- *\
     Step 0: Choose action
 \* ------------------------------- */
@@ -18,6 +22,18 @@
     margin-bottom: 20px;
   }
 }
+
+
+/* ------------------------------- *\
+    Step 1: Create/Restore
+\* ------------------------------- */
+
+
+/* ------------------------------- *\
+    Step 2: Recovery Phrase
+\* ------------------------------- */
+
+
 
 
 
