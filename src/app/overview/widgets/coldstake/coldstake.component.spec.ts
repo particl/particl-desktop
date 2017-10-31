@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ColdstakeComponent } from './coldstake.component';
-import { SharedModule } from '../../../shared/shared.module';
 import { ModalsModule } from '../../../modals/modals.module';
+import { SharedModule } from '../../../shared/shared.module';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdCardModule } from '@angular/material';
@@ -16,6 +17,7 @@ describe('ColdstakeComponent', () => {
       imports: [
         SharedModule,
         ModalsModule,
+        RpcModule.forRoot(),
         FlexLayoutModule,
         MdCardModule
       ],

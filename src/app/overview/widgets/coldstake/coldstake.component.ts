@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { StateService } from '../../../core/state/state.service';
+import { RPCService } from '../../../core/rpc/rpc.service';
 import { ModalsService } from '../../../modals/modals.service';
 
 @Component({
@@ -13,11 +13,10 @@ export class ColdstakeComponent implements OnInit {
   private coldStakingEnabled: boolean = undefined;
 
   constructor(
-    private _state: StateService,
     private _modals: ModalsService,
-    // private _rpc: RPCService
+    private _rpc: RPCService
   ) {
-    this._state.observe('coldstaking').subscribe(status => {this.coldStakingEnabled = status;     console.log(status); });
+    this._rpc.state.observe('coldstaking').subscribe(status => this.coldStakingEnabled = status);
   }
 
   ngOnInit() {
