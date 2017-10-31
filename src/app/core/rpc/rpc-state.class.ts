@@ -55,15 +55,10 @@ export class RPCStateClass {
       // only available if unlocked
       this.rpc.call('walletsettings', ['changeaddress'])
       .subscribe(
-        response => {
-        // check if account is active
-        if (response.changeaddress === 'default') {
-          this.rpc.state.set('coldstaking', false);
-        } else if (response.changeaddress.coldstakingaddress !== undefined) {
-          this.rpc.state.set('coldstaking', true);
-        }
-      },
-      error => this.log.er('walletsettings changeaddress, returned an error', error));
+        response => this.rpc.state.set('coldstaking',
+          response.changeaddress === 'default' ? false : !!response.changeaddress.coldstakingaddress
+        ),
+        error => this.log.er('walletsettings changeaddress, returned an error', error));
 
     }
 
