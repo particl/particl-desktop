@@ -87,7 +87,6 @@ export class AppComponent implements OnInit {
   toggle(value: string) {
     if (value === 'toggle' && !this.window.isXS) {
       this.sideMenu = !this.sideMenu;
-      this.unPin = this.sideMenu ? 'Hide Menu' : 'Show Menu';
       return;
     }
     if (!this.sideMenu) {
