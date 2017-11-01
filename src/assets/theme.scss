@@ -12,6 +12,7 @@
   margin-bottom: 25px;
 }
 
+/* doesn't need it's own class... */
 .qrcode {
   text-align: center;
 }
@@ -20,10 +21,10 @@
   background: white;
 }
 
-/**
- * Side bar Menu.
- */
 
+/* ------------------------------- *\
+    Sidebar menu (not sure where ends)
+\* ------------------------------- */
 
  .mat-sidenav {
   .logo-area {
@@ -78,6 +79,18 @@
 }
 
 
+.mat-drawer-transition .mat-drawer-content {
+  margin-left:250px !important;
+}
+
+.menu-right.mat-drawer-transition .mat-drawer-content {
+  margin-left: 90px !important;
+}
+
+.menu-left.mat-drawer-transition .mat-drawer-content {
+  margin-left: 0px !important;
+}
+
 .active > md-list-item > div > md-icon {
   color: $color !important;
 }
@@ -116,18 +129,19 @@
   flex-wrap: wrap;
 }
 
-/**
- * Cards
- */
+/* ------------------------------- *\
+    Cards
+\* ------------------------------- */
  md-card.mat-card { // FIXME: remove the !important and solve overwriting
   font-family: $font;
   box-shadow: 0 1px 0 $bg-shadow !important;
 }
 
 
-/**
- * list
- */
+
+/* ------------------------------- *\
+    List
+\* ------------------------------- */
 .icon-input { // input with icon (eg. Search in Address Book)
   input.mat-input-element {
     height: 20px;
@@ -161,9 +175,10 @@
   }
 }
 
-/**
- * Form Design
- */
+/* ------------------------------- *\
+    Form design
+\* ------------------------------- */
+
 input[type="text"] {
   border: none;
 }
@@ -198,9 +213,10 @@ input[type="text"] {
   padding: 20px;
 }
 
-/**
- * Scrollbars
- */
+
+/* ------------------------------- *\
+    Scrollbars
+\* ------------------------------- */
  
 /* pseudo elements
 ::-webkit-scrollbar              {}
@@ -227,9 +243,10 @@ input[type="text"] {
   background-color: $color;
 }
 
-/**
- * History List
- */
+
+/* ------------------------------- *\
+    History List
+\* ------------------------------- */
 
 .history_longAddress {
   overflow: hidden;
@@ -389,19 +406,10 @@ panel-header-title {
   }
 }
 
-.mat-drawer-transition .mat-drawer-content {
-  margin-left:250px !important;
-}
 
-.menu-right.mat-drawer-transition .mat-drawer-content {
-  margin-left: 90px !important;
-}
-
-.menu-left.mat-drawer-transition .mat-drawer-content {
-  margin-left: 0px !important;
-}
-
-// Pagination
+/* ------------------------------- *\
+    Pagination
+\* ------------------------------- */
 .mat-paginator-navigation-next.mat-icon-button:hover {
   background-color: #1aeab8;
   border-radius: 0px;
@@ -424,7 +432,8 @@ panel-header-title {
     }
   }
 
-
+/* ------------------------------- */
+ 
 
 .syncing_header_text{
   width: 65%;
