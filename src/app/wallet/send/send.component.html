@@ -1,5 +1,5 @@
 <app-header>
-  <div class="container-fluid" >
+  <div class="container-fluid">
     <div fxLayout.lg="row">
       <div fxFlex="50">
         <md-tab-group (selectChange)="selectTab($event.index)">
@@ -24,9 +24,12 @@
     </div>
   </div>  
 </app-header>
-<div class="container-fluid">
+
+<div class="container-fluid container-block">
   <div>
     <form name="walletSendForm">
+
+
       <md-card>
         <md-list-item>
           <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
@@ -54,6 +57,8 @@
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card *ngIf="type === 'balanceTransfer'">
         <md-list-item>
           <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
@@ -71,6 +76,8 @@
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card class="md-send-list" *ngIf="type === 'sendPayment' || advanced">
         <md-list-item>
           <div class="md-send-card md-line mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
@@ -99,6 +106,8 @@
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card class="md-send-list">
         <md-list-item>
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
@@ -113,6 +122,8 @@
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card class="md-send-list">
         <md-list-item>
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
@@ -131,18 +142,17 @@ oninput="validity.valid||(value='');" step="any">
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card *ngIf="send.input === 'anon_balance'">
         <md-list-item>
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
             <h5 fxFlex="15"> Privacy level </h5>
             <div fxFlex="'column'" fxLayoutWrap>
-              <div class="privacy-labels" fxFlex="100">
-                <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"
-(click)="setPrivacy(4,10)">Low</span>
-                <span fxLayoutAlign="center center" class="privacy-label cursor-pointer" 
-(click)="setPrivacy(8,50)">Medium</span>
-                <span fxLayoutAlign="end center" class="privacy-label cursor-pointer" 
-(click)="setPrivacy(16,100)">High</span>
+              <div class="privacy-labels" fxFlex="100" fxLayoutAlign="start center">
+                <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)">Low</span>
+                <span fxFlex class="privacy-label medium" (click)="setPrivacy(8,50)">Medium</span>
+                <span fxFlex class="privacy-label high" (click)="setPrivacy(16,100)">High</span>
               </div>
               <md-progress-bar class="example-margin" [color]="'primary'" [bufferValue]="send.privacy" [mode]="'determinate'" [value]="progress"></md-progress-bar>
             </div>
@@ -152,14 +162,20 @@ oninput="validity.valid||(value='');" step="any">
           <md-divider></md-divider>
         </md-list-item>
       </md-card>
-      <md-card>
+
+
+      <div class="actions">
         <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
-          <button md-raised-button color="primary" (click)="clear()"><md-icon>clear</md-icon>Clear all</button>
-          <button md-raised-button color="disabled" class="validate" 
-(click)="onSubmit()"
-[disabled]="!checkAddress() || !checkAmount()"><md-icon>send</md-icon>Make payment</button>
+          <button md-raised-button color="primary" (click)="clear()">
+            <md-icon>clear</md-icon>Clear all
+          </button>
+          <button md-raised-button color="disabled" class="validate" (click)="onSubmit()" [disabled]="!checkAddress() || !checkAmount()">
+            <md-icon>send</md-icon>Make payment
+          </button>
         </div>
-      </md-card>
+      </div><!-- .actions -->
+
+
     </form>
   </div>
 </div>
