@@ -1,5 +1,6 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+@import "./src/app/layouts/side-nav/side-nav.component"; // import sidebar (partially)
 
 // ----------- GENERAL ----------- //
 
@@ -14,102 +15,7 @@ body {
   transform: translateY(-50%);
 }
 
-.mat-expansion-panel { // accordion submenu
-  border-bottom: 1px solid #15191A;
-  box-shadow: 0 1px 0 #333 !important;
-  .mat-expansion-panel-header { // submenu toggle
-    font-family: $font;
-    font-size: 11.5px;
-    color: #646869;
-    text-transform: uppercase;
-    padding: 0 24px 0 38px;
-  }
-  .sidesubmenu { // submenu content
-    padding-top: 0;
-  }
-}
-
-
-.mat-list { // menu item (whole)
-  .mat-list-item { 
-    padding: 0 24px;
-  }
-  .mat-icon { // all icons in menu
-    margin: 8px 10px 0 0;
-    color: #4B4A4F;
-  }
-  .menu-item { // menu-item (name only)
-    font-family: $font;
-    font-size: 11.5px;
-    font-weight: 600;
-    color: white;
-  }
-}
-
-.mat-divider { // section divider
-  border-bottom: 1px solid #333;
-  border-top: 1px solid #15191A;
-}
-
-
-// ----------- SPECIFIC ----------- //
-
-.mat-sidenav { // nav container
-  width: 250px;
-  background-color: #222828;
-  color: #fff;
-  .mat-toolbar {
-    background: transparent;
-  }
-}
-
-.logo {
-  display: inline-block;
-  background-image: url("/assets/particl-logo.svg");
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  background-size: 144px 60px;
-  height: 60px;
-  width: 144px;
-}
-
-.toggle-pinned {
-  cursor: pointer;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  color: #595D5E;
-  font-size: 12px;
-}
-
-.md-sidenav-left md-list-item span {
-  display:none;
-}
-
-.md-sidenav-left md-expansion-panel-header {
-  display:none;
-}
-
-.md-sidenav-left {
-  width : 7.5em;
-}
-
-.md-sidenav-right {
-  display:block;
-}
-
-.mat-drawer.mat-drawer-side {
-  -webkit-transition: all 300ms;
-  -moz-transition: all 300ms;
-  -ms-transition: all 300ms;
-  -o-transition: all 300ms;
-  transition: all 300ms;
-}
-
-.hide-sidnav {
-  display:none;
-}
-
+/* duplicate with ./src/assets/themes.scss */
 /deep/ input {
   &.verify-sucess {
     color: darken($color, 7%) !important; // #57a800

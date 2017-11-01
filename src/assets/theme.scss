@@ -24,6 +24,7 @@
  * Side bar Menu.
  */
 
+
  .mat-sidenav {
   .logo-area {
     .mat-toolbar-row {
@@ -75,6 +76,7 @@
     padding: 0;
   }
 }
+
 
 .active > md-list-item > div > md-icon {
   color: $color !important;
@@ -372,6 +374,7 @@ input[type="text"].md-bg-transparent {
     color: $text-muted;
   }
 }
+
 panel-header-title {
   display: block;
 }

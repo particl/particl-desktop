@@ -19,12 +19,14 @@ body {
   color: $color-alert;
 }
 
+/* duplicate with app.component.scss */
 input.verify-error,
 input.verify-error::placeholder {
   color: $color-alert;
   border-color: $color-alert;
 }
 
+/* duplicate with app.component.scss */
 input.verify-sucess {
   color: $color-success;
   //background-color: #dff2bf;

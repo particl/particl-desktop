@@ -1,9 +1,9 @@
-<md-sidenav-container fullscreen [ngClass]="{'menu-right': !sideMenu && !window.isXS, 'menu-left':window.isXS && showNav}">
-  <md-sidenav #sidenav mode="side" opened="true" [ngClass]="{'md-sidenav-left': !isPinned && !window.isXS, 'hide-sidnav': window.isXS && showNav}"
+<md-sidenav-container fullscreen [ngClass]="{'menu-right': (!sideMenu && !window.isXS), 'menu-left': (window.isXS && showNav)}">
+  <md-sidenav #sidenav mode="side" opened="true" [ngClass]="{'md-sidenav-left': (!isPinned && !window.isXS), 'hide-sidnav': (window.isXS && showNav)}"
     (mouseenter)="!window.isXS && toggle('enter')"
     (mouseleave)="!window.isXS && toggle('leave')"> 
     <md-toolbar class="logo-area">
-    <span flex  mdTooltip="{{sideMenu ? 'Hide Menu' : 'Show Menu'}}" class="toggle-pinned cursor-pointer fa" [ngClass]="{'fa-circle': !sideMenu, 'fa-dot-circle-o': sideMenu}" (click)="toggle('toggle')">
+    <span flex  mdTooltip="{{sideMenu ? 'Hide Menu' : 'Show Menu'}}" class="toggle-pinned cursor-pointer fa" [ngClass]="{'fa-circle': (!sideMenu && isPinned), 'fa-dot-circle-o': sideMenu}" (click)="toggle('toggle')">
       </span>
       <span class="logo"></span>
     </md-toolbar>

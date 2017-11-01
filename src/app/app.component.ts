@@ -23,18 +23,27 @@ import { ModalsComponent } from './modals/modals.component';
   ]
 })
 export class AppComponent implements OnInit {
-  isCollapsed: boolean = true;
-  isFixed: boolean = false;
-  title: string = '';
+
   log: any = Log.create('app.component');
+  title: string = '';
+  
   walletInitialized: boolean = false;
   daemonRunning: boolean = false;
   daemonError: string = '';
   walletError: string = '';
+
+  /* Wallet menu */
   isPinned: boolean = true;
   sideMenu: boolean = true;
   unPin: string = 'Hide Menu';
   showNav: boolean = true;
+
+  /* Old bootstrap menu, remove? */
+  isCollapsed: boolean = true;
+  isFixed: boolean = false;
+
+
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
