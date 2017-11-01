@@ -84,6 +84,8 @@ function initMainWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1280,
+    minWidth: 961,
+    maxWidth: 1920,
     height: 720,
     icon: trayImage,
     webPreferences: {

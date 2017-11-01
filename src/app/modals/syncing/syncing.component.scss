@@ -1,16 +1,31 @@
-.center {
-  text-align: center;
-}
+@import "./src/assets/_config"; // import shared colors etc.
 
-.margin-top-100px {
-	margin-top: 100px;
-}
+@import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
 
-.syncing-blocks h4 {
-  font-weight: 700;
-  font-size: 14px;
-}
-  
+ 
 .alert {
-  color: #f44336;
+  color: $color-alert;
+}
+
+
+.sync-stats {
+  .item {
+    text-align: center;
+    margin-bottom: 45px;
+    &.big {
+      .value {
+        font-size: 30px;
+      }
+    }
+    &.small {
+      .value {
+        font-size: 16px;
+      }
+    }
+    .description {
+      text-transform: uppercase;
+      color: $text-muted;
+      margin-top: 5px;
+    }
+  }
 }

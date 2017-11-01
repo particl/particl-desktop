@@ -22,7 +22,8 @@ import { AddressLookupComponent } from './addresslookup/addresslookup.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule,
-  MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdProgressBarModule,
+  MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdPaginatorModule,
+  MdProgressBarModule,
   MdProgressSpinnerModule,
   MdRadioModule,
   MdSelectModule,
@@ -72,7 +73,8 @@ const routes: Routes = [
     MdInputModule,
     MdCheckboxModule,
     MdRadioModule,
-    MdProgressSpinnerModule
+    MdProgressSpinnerModule,
+    MdPaginatorModule
   ],
   declarations: [
     TransactionsTableComponent,

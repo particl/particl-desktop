@@ -96,7 +96,7 @@ exports.setTimeout = function(timeout) {
 // TODO: rxipc methods
 
 /*
-** prepares `backend-rpccall` to receive RPC calls from the renderer
+** prepares `rpc-channel` to receive RPC calls from the renderer
 */
 exports.init = function(options) {
   HOSTNAME = options.rpcbind || 'localhost';
@@ -123,5 +123,5 @@ exports.init = function(options) {
       }
     });
   }
-  rxIpc.registerListener('backend-rpccall', createObservable);
+  rxIpc.registerListener('rpc-channel', createObservable);
 }

@@ -20,16 +20,16 @@
     <md-list class="list-data" fxFlex="100">
       <div *ngFor="let address of getSinglePage()">
 
-        <md-card class="address-entry" fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutGap="10px" layout-padding>
+        <md-card class="address-entry" fxLayout.gt-lg="50" fxLayout.gt-sm="row" fxLayout.lt-md="column" fxLayoutGap="10px" layout-padding>
 
           <!-- Label -->
-          <div fxFlex="20" class="title cursor-pointer" *ngIf="displayLabel" (click)="editLabel(address.address)" mdTooltip="Edit Address label">
+          <div fxFlex="1 0 150px" fxFlex.lt-md="100" class="title cursor-pointer" *ngIf="displayLabel" (click)="editLabel(address.address)" mdTooltip="Edit Address label">
             {{ address.label }}
           </div>
 
           <!-- Address -->
-          <div fxFlex="55" class="address">
-            <span class="title" *ngIf="displayAddress">Address</span>&emsp;{{ address.address }}
+          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress">
+            <span class="title">Address&emsp;</span>{{ address.address }}
           </div>
 
           <!-- Pubkey -->
@@ -45,24 +45,23 @@
           </div>
 
           <!-- Actions/controls -->
-          <div fxLayout.gt-xs="row" fxLayout.lt-xs="column" fxFlex="20" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end center" *ngIf="displayToolsMenu" class="address-actions">
+          <div fxLayout="row" fxFlex="0 0 160px" fxFlex.lt-md="0 0 20px" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start center" fxLayoutGap="10px" *ngIf="displayToolsMenu" class="address-actions">
             <!-- ICO: copy address -->
-            <span fxFlex="20" fxFlex.lt-lg="33.33">
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
               <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address"></md-icon>
             </span>
             <!-- ICO: verify message -->
-            <span fxFlex="20" fxFlex.lt-lg="33.33">
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
               <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer" mdTooltip="Verify message" ngxClipboard></md-icon>
             </span>
             <!-- ICO: delete -->
-            <span fxFlex="20" fxFlex.lt-lg="33.33">
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
               <md-icon color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove" (click)="deleteAddress(address.label, address.address)" mdTooltip="Delete address"></md-icon>
             </span>
-          </div>
-
-          <!-- display QR code -->
-          <div fxFlex="5" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" *ngIf="!displayQrMenu" class="qrcode-menu" fxLayoutAlign="center center">
-            <i class="fa fa-qrcode" aria-hidden="true" mdTooltip="Show QR code" (click)="openQrCodeModal(address)"></i>
+            <!-- display QR code -->
+            <div fxFlex="0 0 20px" fxLayoutAlign="center center" *ngIf="!displayQrMenu" class="qrcode-menu">
+              <i class="fa fa-qrcode" aria-hidden="true" mdTooltip="Show QR code" (click)="openQrCodeModal(address)"></i>
+            </div>
           </div>
 
         </md-card>
