@@ -3,6 +3,11 @@
 
 // ----------- GENERAL ----------- //
 
+
+body {
+    display: none;
+}
+
 .center-vertical {
   position: relative;
   top: 50%;
@@ -68,6 +73,42 @@
   width: 144px;
 }
 
+.toggle-pinned {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: #595D5E;
+  font-size: 12px;
+}
+
+.md-sidenav-left md-list-item span {
+  display:none;
+}
+
+.md-sidenav-left md-expansion-panel-header {
+  display:none;
+}
+
+.md-sidenav-left {
+  width : 7.5em;
+}
+
+.md-sidenav-right {
+  display:block;
+}
+
+.mat-drawer.mat-drawer-side {
+  -webkit-transition: all 300ms;
+  -moz-transition: all 300ms;
+  -ms-transition: all 300ms;
+  -o-transition: all 300ms;
+  transition: all 300ms;
+}
+
+.hide-sidnav {
+  display:none;
+}
 
 /deep/ input {
   &.verify-sucess {
@@ -79,3 +120,4 @@
     background: rgba($color-alert, 0.1) !important;
   }
 }
+

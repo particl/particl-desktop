@@ -386,6 +386,18 @@ panel-header-title {
   }
 }
 
+.mat-drawer-transition .mat-drawer-content {
+  margin-left:250px !important;
+}
+
+.menu-right.mat-drawer-transition .mat-drawer-content {
+  margin-left: 90px !important;
+}
+
+.menu-left.mat-drawer-transition .mat-drawer-content {
+  margin-left: 0px !important;
+}
+
 .syncing_header_text{
   width: 65%;
   text-align: center;
