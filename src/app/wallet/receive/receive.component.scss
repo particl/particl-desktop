@@ -1,26 +1,26 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 /* ------------------------------- *\
-    Search Addresses 
-\* ------------------------------- */ 
- 
-.search-address { 
+    Search Addresses
+\* ------------------------------- */
+
+.search-address {
   margin-top: 9px;
   .mat-input-element {
     width: calc(100% - 50px);
-    height: 20px; 
-    margin-left: 0; 
+    height: 20px;
+    margin-left: 0;
     padding-right: 50px;
-  } 
-  .mat-icon { 
-    top: 1px; 
-    right: 18px; 
-  } 
-} 
+  }
+  .mat-icon {
+    top: 1px;
+    right: 18px;
+  }
+}
 
-/* ------------------------------- *\ 
+/* ------------------------------- *\
     QR code & address details
-\* ------------------------------- */ 
+\* ------------------------------- */
 
 .qr-card {
   padding: 24px 10px;
@@ -65,7 +65,7 @@
   color: $text-muted;
 }
 
-.address-info { // address "card" 
+.address-info { // address "card"
   margin-bottom: 12px;
   .address-id {
     color: #7b8891;

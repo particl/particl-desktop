@@ -386,6 +386,31 @@ panel-header-title {
   }
 }
 
+
+// Pagination
+.mat-paginator-navigation-next.mat-icon-button:hover {
+  background-color: #1aeab8;
+  border-radius: 0px;
+}
+
+.mat-paginator-navigation-previous.mat-icon-button:hover {
+  background-color: #1aeab8;
+  border-radius: 0px;
+}
+
+.mat-paginator {
+  border-bottom: 1px solid $bg-shadow;
+  font-family: $font;
+  .mat-icon-button {
+    &:hover {
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: white;
+      }
+    }
+  }
+}
+
 .syncing_header_text{
   width: 65%;
   text-align: center;
@@ -432,8 +457,6 @@ panel-header-title {
       }
     }
   }
-
-
 }
 
 
@@ -443,7 +466,6 @@ panel-header-title {
     flex-direction: column !important;
     width: 100%;
   }
-
 }
 
 @media (max-width: 640px) {
