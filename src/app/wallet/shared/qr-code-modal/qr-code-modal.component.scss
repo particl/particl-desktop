@@ -1,0 +1,17 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.qr-modal {
+  text-align: center;
+  min-width: 250px;
+}
+
+.address-string {
+  width: 170px;
+  margin: 0 auto 10px;
+  .details-address {
+    .address-word {
+      font-family: monospace;
+      font-size: 13px;
+    }
+  }
+}
