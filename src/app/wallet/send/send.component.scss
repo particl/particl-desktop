@@ -24,8 +24,8 @@ input[type="text"] {
 }
 
 .mat-card {
-  background: transparent;
-  padding: 25px 20px 0 20px;
+  padding: 0;
+  margin-bottom: 12px;
   border-bottom: 0px solid $bg-shadow;
 }
 
@@ -67,6 +67,7 @@ md-card.mat-card {
   padding: 10px 30px 10px 30px;
   min-height: 14vh;
   height: auto;
+  font-family: $font;
 }
 
 .md-tab-right {
@@ -92,6 +93,17 @@ md-card.mat-card {
 .privacy-label {
   font-weight:bold;
   padding-bottom: 10px;
+  cursor: pointer;
+  &.medium {
+    text-align: center;
+  }
+  &.high {
+    text-align: right;
+  }
+}
+
+.actions {
+  margin: 25px 0 15px 0;
 }
 
 /* ------------------------------- *\
