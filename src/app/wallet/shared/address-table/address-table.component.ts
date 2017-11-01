@@ -119,7 +119,7 @@ export class AddressTableComponent implements OnInit {
   /** Delete address */
 
   public deleteAddress(label: string, address: string) {
-    const dialogRef = this.dialog.open(DeleteConfirmationModalComponent);
+    const dialogRef = this.dialog.open(DeleteConfirmationModalComponent, {panelClass: 'small-dialog'});
     dialogRef.componentInstance.dialogContent = `${label}: ${address}`;
     dialogRef.componentInstance.onDelete.subscribe(() => {
       if (this._rpc.state.get('locked')) {
@@ -155,7 +155,7 @@ export class AddressTableComponent implements OnInit {
 
   /** Open QR Code Modal */
   openQrCodeModal(address: Object) {
-    const dialogRef = this.dialog.open(QrCodeModalComponent);
+    const dialogRef = this.dialog.open(QrCodeModalComponent, {panelClass: 'small-dialog'});
     dialogRef.componentInstance.singleAddress = address;
     this.log.d(`qrcode, address: ${JSON.stringify(address)}`);
   }
