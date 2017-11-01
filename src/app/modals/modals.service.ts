@@ -81,7 +81,7 @@ export class ModalsService {
         if (!this.wasAlreadyOpen(modal)) {
           this.log.d(`next modal: ${modal}`);
           this.modal = this.messages[modal];
-          dialogRef.componentInstance.open(this.modal, {data: data});
+          dialogRef.componentInstance.open(this.modal, data);
           // this.message.next({modal: this.modal, data: data});
           this.isOpen = true;
           dialogRef.componentInstance.enableClose = true;
