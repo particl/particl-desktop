@@ -89,7 +89,7 @@ export class CreateWalletComponent {
     this.validating = true;
 
     /* Recovery password entered */
-    if(this.step === 2) {
+    if (this.step === 2) {
       this.passwordElement.sendPassword();
     }
 
