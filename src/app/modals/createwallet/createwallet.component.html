@@ -126,16 +126,26 @@
         <!--md-form-field class="wallet-name">
           <input mdInput [(ngModel)]="name" placeholder="Wallet name" readonly />
         </md-form-field-->
+        <div *ngIf="step === 2">
+          <app-password
+            #passwordElement
+            label="Recovery Password (optional)"
+            [emitPassword]="true"
+            (passwordEmitter)="passwordFromEmitter($event)"
+            [showStakeOnly]="false">
+          </app-password>
+        </div>
 
-        <!-- @TODO: can we hide this from step 3? -->
-        <app-password
-          #passwordComponent
-          label="Recovery Password (optional)"
-          [emitPassword]="true"
-          [isDisabled]="[3,4].indexOf(step) != -1"
-          (passwordEmitter)="passwordFromEmitter($event)"
-          [showStakeOnly]="false">
-        </app-password>
+        <!--
+          <app-password
+            #passwordComponent
+            label="Recovery Password (optional)"
+            [emitPassword]="true"
+            [isDisabled]="[3,4].indexOf(step) != -1"
+            (passwordEmitter)="passwordFromEmitter($event)"
+            [showStakeOnly]="false">
+          </app-password> -->
+
 
         <ng-template [ngIf]="[3,4].indexOf(step) != -1">
           <app-passphrase
@@ -155,7 +165,7 @@
           <button md-button (click)="prevStep()">
             Back
           </button>
-          <button md-raised-button color="primary" (click)="step === 2 && passwordComponent.sendPassword(); nextStep()"> <!-- TODO: Move sendPassword to .ts -->
+          <button md-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
             Next
           </button>
         </div><!-- .actions -->

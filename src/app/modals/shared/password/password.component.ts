@@ -74,10 +74,10 @@ export class PasswordComponent {
   clear() {
     this.password = undefined;
   }
-  /*
-    Emit password!
-  */
 
+  /**
+  * Emit password only!
+  */
   sendPassword() {
     const pass: IPassword = {
       password: this.password,
