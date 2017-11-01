@@ -1,5 +1,5 @@
 <app-header>
-  <div fxLayout="row" fxlayout.lt-sm="column"> 
+  <div fxLayout="row" fxlayout.lt-sm="column">
     <div fxFlex="1 1 70%">
       <md-tab-group (selectChange)="changeTab($event.index)">
         <md-tab>
@@ -14,7 +14,7 @@
         </md-tab>
       </md-tab-group>
     </div>
-    <md-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()"> 
+    <md-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
       <input mdInput type="text" class="header-input" id="searchbar" [(ngModel)]="query" placeholder="Search receive addresses">
       <md-icon>search</md-icon>
     </md-form-field>
@@ -123,19 +123,25 @@
       </div>
     </md-list><!-- .list-data -->
 
-    <pagination
-      [boundaryLinks]="true"
-      (pageChanged)="pageChanged($event)"
-      [totalItems]="getTotalCountForPagination()"
-      [maxSize]="5" [rotate]="false"
-      [(ngModel)]="page"
-      class="pagination-sm center"
-      previousText="&lsaquo;" nextText="&rsaquo;"
-      firstText="&laquo;" lastText="&raquo;"
-      [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
-    </pagination>
+    <!-- use two paginator for reset pagination after tab change. -->
+    <div class="receive-pagination">
+      <md-paginator
+        *ngIf="type == 'private'"
+        [length]="getTotalCountForPagination()"
+        [pageSize]="MAX_ADDRESSES_PER_PAGE"
+        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+        (page)="pageChanged($event)">
+      </md-paginator>
+
+      <md-paginator
+        *ngIf="type == 'public'"
+        [length]="getTotalCountForPagination()"
+        [pageSize]="MAX_ADDRESSES_PER_PAGE"
+        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+        (page)="pageChanged($event)">
+      </md-paginator>
+    </div>
   </div>
 
-  
 
 </div>

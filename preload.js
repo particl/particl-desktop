@@ -48,8 +48,8 @@ class SafeIpcRenderer {
 }
 
 window.ipc = new SafeIpcRenderer([
-  'backend-rpccall',
-  'rx-ipc-check-reply:backend-rpccall',
+  'rpc-channel',
+  'rx-ipc-check-reply:rpc-channel',
   'rx-ipc-check-listener'
 ]);
 

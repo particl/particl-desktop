@@ -1,11 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MdCardModule } from '@angular/material';
+
 import { StakinginfoComponent } from './stakinginfo.component';
 import { StateService } from '../../../core/state/state.service';
 import { SharedModule } from '../../../shared/shared.module';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdCardModule } from '@angular/material';
+import { Amount, Duration } from './util';
 
 describe('StakinginfoComponent', () => {
   let component: StakinginfoComponent;
