@@ -29,6 +29,9 @@
 .address-details {
   text-align: center;
   margin-top: 15px;
+  @media (max-width: 960px) {
+    text-align: left;
+  }
   .details-title {
     font-weight: bold;
     text-transform: uppercase;
@@ -39,18 +42,24 @@
     text-transform: uppercase;
     color: #515153;
     margin: 10px 0 25px;
+    @media (max-width: 960px) {
+      margin: 10px 0 20px;
+    }
   }
   .details-address {
     font-family: monospace;
     margin: 0 25px 20px;
+    @media (max-width: 960px) {
+      margin: 0 0 20px;
+    }
   }
 }
-
-/* ------------------------------- *\
-    Address list
-\* ------------------------------- */
-
-.address-title { // section title
+ 
+/* ------------------------------- *\ 
+    Address list 
+\* ------------------------------- */ 
+ 
+.address-title { // section title (used/unused)
   font-weight: normal;
   text-transform: uppercase;
   color: $text-muted;
@@ -71,15 +80,25 @@
   .address {
     overflow: hidden;
     text-overflow: ellipsis;
+    font-family: monospace;
     background: transparent;
     transition: background .3s;
     .total {
       font-size: 0.8em;
+      font-family: $font;
+      color: $text-muted;
       margin-top: 5px;
       .received-amount {
         color: $color;
+        font-weight: 600;
       }
     }
   }
-
+  .address-actions { // copy, sign, ...
+    .mat-icon {
+      width: auto;
+      height: auto;
+      font-size: 16px;
+    }
+  }
 }

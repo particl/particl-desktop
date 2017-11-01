@@ -21,29 +21,32 @@
   </div>
 </app-header>
 
-<div class="container-block" fxLayout="row" fxLayoutGap="40px">
-  <!-- QR code -->
-  <div fxFlex="0 0 200px" *ngIf="selected">
-    <md-card class="qr-card">
-      <div #qrCode class="qrcode">
+<div class="container-block" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
+
+  <!-- Address details & QR code -->
+  <div fxFlex="0 0 200px" fxFlex.lt-md="100" *ngIf="selected">
+    <md-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px">
+
+      <div #qrCode class="qrcode" fxFlex fxFlex.lt-md="0 0 200px">
         <qr-code [size]="getQrSize()" [level]="'H'" value="particl:{{ selected.address }}">
         </qr-code>
       </div><!-- qrcode -->
 
-      <div class="address-details">
+      <div class="address-details" fxFlex fxFlex.lt-md="1 1 calc(100% - 220px)">
         <div class="details-title">
           {{ getAddressType() }} address
         </div>
         <div class="details-label">
           {{ selected.label }}
         </div>
-        <div class="details-address" fxLayoutWrap layout-padding fxLayoutAlign="center center">
-          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="33">
+        <div class="details-address" fxLayoutWrap layout-padding fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start">
+          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="33" fxFlex.lt-md="37px">
             {{ word }}
           </div>
         </div>
         <button md-raised-button color="primary" (click)="openNewAddress()">New {{ getAddressType() }} address</button>
       </div><!-- .address-details -->
+
     </md-card>
   </div>
 
@@ -54,26 +57,27 @@
       <div md-subheader class="address-title">Unused address</div>
 
       <md-card class="address-info">
-        <div fxFlex="100%" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" layout-padding>
-          <div fxFlex="15%" class="address-id"> /{{ getUnusedAddress().id }}</div>
-          <div fxFlex="20%" class="address-label"> {{ getUnusedAddress().label }}</div>
-          <div fxFlex="50%" class="address">
+        <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
+          <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id"> /{{ getUnusedAddress().id }}</div>
+          <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label"> {{ getUnusedAddress().label }}</div>
+          <div fxFlex="1 1 80%" fxFlex.lt-md="100" class="address">
             {{ getUnusedAddress().address }}
+            <!-- Received amount in unused address doesn't make sense -->
             <!--div class="total"><span>Total received: </span>
               <span class="received-amount">{{ getUnusedAddress().balance }}</span>
             </div-->
           </div>
-          <div fxFlex="15%" fxLayoutAlign="end center">
+          <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
             <!-- Copy address -->
-            <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+            <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
               <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="getUnusedAddress().address" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
             </span>
             <!-- Sign message (?) -->
-            <div fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+            <div fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
               <md-icon fontSet="ncIcon" fontIcon="nc-a-check" mdTooltip="Sign (????) message" class="TODO"></md-icon>
             </div>
             <!-- Select address -->
-            <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+            <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
               <md-icon class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address" (click)="selectAddress(addresses[getAddressType()][0])"></md-icon>
             </span>
           </div>
@@ -89,27 +93,27 @@
       <div md-subheader class="address-title">Previous addresses</div>
       <div *ngFor="let address of getSinglePage()">
 
-        <md-card class="address-info">
-          <div fxFlex="100%" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" layout-padding>
-            <div fxFlex="15%" class="address-id">/{{ address.id }}</div>
-            <div fxFlex="20%" class="address-label">{{ address.label }}</div>
-            <div fxFlex="50%" class="address">
+        <md-card class="address-info"> 
+            <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
+            <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id">/{{ address.id }}</div> 
+            <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label">{{ address.label }}</div>
+            <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address">
               {{ address.address }}
               <div class="total"><span>Total received: </span>
                 <span class="received-amount TODO">{{ address.balance }}</span>
               </div>
             </div>
-            <div fxFlex="15%" fxLayoutAlign="end center">
+            <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->
-              <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
                 <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address"></md-icon>
               </span>
               <!-- Sign message (?) -->
-              <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
                 <md-icon fontSet="ncIcon" fontIcon="nc-a-check" mdTooltip="Sign (????) message" class="cursor-pointer TODO" ngxClipboard></md-icon>
               </span>
               <!-- Select address -->
-              <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
+              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
                 <md-icon class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address" (click)="selectAddress(address)"></md-icon>
               </span>
             </div>
@@ -138,7 +142,6 @@
       </md-paginator>
     </div>
   </div>
-
 
 
 </div>
