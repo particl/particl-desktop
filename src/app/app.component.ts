@@ -23,6 +23,7 @@ import { ModalsComponent } from './modals/modals.component';
   ]
 })
 export class AppComponent implements OnInit {
+
   isCollapsed: boolean = true;
   isFixed: boolean = false;
   title: string = '';
@@ -31,6 +32,8 @@ export class AppComponent implements OnInit {
   daemonRunning: boolean = false;
   daemonError: string = '';
   walletError: string = '';
+  multiWallet: any = [];
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -40,7 +43,6 @@ export class AppComponent implements OnInit {
     private dialog: MdDialog,
     private iconRegistry: MdIconRegistry
   ) {
-
     iconRegistry
       .registerFontClassAlias('ncIcon', 'nc-icon')
       .registerFontClassAlias('faIcon', 'fa');
@@ -69,17 +71,16 @@ export class AppComponent implements OnInit {
 
     this._rpc.modalUpdates.asObservable().subscribe(status => {
       this.daemonRunning = !status.error;
-      this.daemonError = this.daemonRunning ? '' : 'Connection Refused, Daemon is not connected';
+      this.daemonError = this.daemonRunning ? ''
+        : 'Connection Refused, Daemon is not connected';
     });
 
-    this._rpc.state.observe('walletInitialized')
-      .subscribe(
-        status => {
-          this.walletInitialized = status;
-          this.walletError = status ? '' : 'Please create wallet first to access other tabs';
-      });
+    this._rpc.state.observe('walletInitialized').subscribe(status => {
+      this.walletInitialized = status;
+      this.walletError = status ? ''
+        : 'Please create wallet first to access other tabs';
+    });
   }
-
 
   createWallet() {
     // this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});

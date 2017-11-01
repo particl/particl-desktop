@@ -5,8 +5,6 @@ const log = require('electron-log');
 
 function getWalletsPath() {
   const platform = process.platform
-    .replace('darwin', 'mac')
-    .replace('win32', 'win')
     .replace('freebsd', 'linux')
     .replace('sunos', 'linux');
   if (platform == 'linux') {

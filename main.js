@@ -29,7 +29,27 @@ let openDevTools = false;
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', init);
+app.on('ready', () => {
+  _options = options.parse();
+  initMainWindow();
+  rpc.init(_options);
+  daemon.check()
+    .then(() => log.info('daemon already started'))
+    .catch(() => daemonManager.init())
+    .then(() => multiwallet.get())
+    .then(wallets => wallets /* TODO: prompt user which wallet */)
+    .then(chosenWallets => daemon.start(chosenWallets))
+    .then(log.info('daemon started'));
+});
+
+app.on('quit', function (event, exitCode) {
+  log.info('stopping')
+  electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
+  daemon.stop();
+  if (exitCode === 991) {
+    throw Error('Could not connect to daemon.');
+  }
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -53,31 +73,6 @@ app.on('activate', function () {
 app.on('browser-window-created',function(e, window) {
   window.setMenu(null);
 });
-
-electron.app.on('quit', function (event, exitCode) {
-  log.info('stopping')
-  electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
-  daemon.stop();
-  if (exitCode === 991) {
-    throw Error('Could not connect to daemon.');
-  }
-});
-
-function init() {
-
-  _options = options.parse();
-
-  initMainWindow();
-  rpc.init(_options);
-
-  daemon.check()
-    .then(() => log.info('daemon already started'))
-    .catch(() => daemonManager.init())
-    .then(() => multiwallet.get())
-    .then(wallets => wallets /* TODO: prompt user which wallet */)
-    .then(chosenWallets => daemon.start(chosenWallets))
-    .then(log.info('daemon started'));
-}
 
 /*
 ** initiates the Main Window
