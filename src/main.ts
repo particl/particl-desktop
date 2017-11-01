@@ -21,4 +21,5 @@ const log: any = Log.create('main');
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .then(success => log.d('Ready. (env: ' + environment.envName + ')'))
-  .catch(err => console.error(err));
+  .catch(err => console.error(err))
+  .then(() => console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))

@@ -1,21 +1,23 @@
-const { ipcMain } = require('electron');
-const log = require('electron-log');
-const http = require('http');
-const Observable = require('rxjs/Observable').Observable;
-const rxIpc = require('rx-ipc-electron/lib/main').default;
-
-const cookie = require('./cookie');
-const daemon = require('../daemon/daemon');
+const log         = require('electron-log');
+const http        = require('http');
+const cookie      = require('./cookie');
 
 let TIMEOUT = 15000;
 let HOSTNAME;
 let PORT;
 let rpcOptions;
+let auth;
+
+exports.init = function(options) {
+  HOSTNAME = options.rpcbind || 'localhost';
+  PORT     = options.port;
+  auth     = cookie.getAuth(options);
+}
 
 /*
 ** execute RPC call
 */
-exports.call = function(method, params, auth, callback) {
+exports.call = function(method, params, callback) {
 
   const postData = JSON.stringify({
     method: method,
@@ -25,12 +27,10 @@ exports.call = function(method, params, auth, callback) {
   if (!rpcOptions) {
     rpcOptions = {
       hostname: HOSTNAME,
-      port: PORT,
-      path: '/',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      port:     PORT,
+      path:     '/',
+      method:   'POST',
+      headers:  { 'Content-Type': 'application/json' }
     }
   }
 
@@ -45,6 +45,7 @@ exports.call = function(method, params, auth, callback) {
     response.setEncoding('utf8');
     response.on('data', chunk => data += chunk);
     response.on('end', () => {
+
       if (response.statusCode === 401) {
         callback({
           status: 401,
@@ -52,6 +53,7 @@ exports.call = function(method, params, auth, callback) {
         });
         return ;
       }
+
       try {
         data = JSON.parse(data);
       } catch(e) {
@@ -63,6 +65,7 @@ exports.call = function(method, params, auth, callback) {
         callback(data);
         return;
       }
+
       callback(null, data);
     });
   });
@@ -81,47 +84,11 @@ exports.call = function(method, params, auth, callback) {
   request.setTimeout(TIMEOUT, error => {
     return request.abort();
   });
+
   request.write(postData);
   request.end();
 }
 
-exports.setTimeout = function(timeout) {
+exports.setTimeoutDelay = function(timeout) {
   TIMEOUT = timeout;
-}
-
-/*******************************/
-/****** Public functions *******/
-/*******************************/
-
-// TODO: rxipc methods
-
-/*
-** prepares `rpc-channel` to receive RPC calls from the renderer
-*/
-exports.init = function(options) {
-  HOSTNAME = options.rpcbind || 'localhost';
-  PORT = options.port;
-
-  // This is a factory function that returns an Observable
-  function createObservable(event, method, params) {
-    let auth = cookie.getAuth(options);
-    return Observable.create(observer => {
-      if (['restart-daemon'].includes(method)) {
-        const callback = () => {
-          observer.next(true);
-        };
-        daemon.start(true, callback);
-
-      } else {
-        exports.call(method, params, auth, (error, response) => {
-          if (error) {
-            observer.error(error);
-            return;
-          }
-          observer.next(response);
-        });
-      }
-    });
-  }
-  rxIpc.registerListener('rpc-channel', createObservable);
 }

@@ -1,10 +1,10 @@
 const electron = require('electron');
-const log = require('electron-log');
-const spawn = require('child_process').spawn;
-const rxIpc = require('rx-ipc-electron/lib/main').default;
-const options = require('../options/options');
+const log      = require('electron-log');
+const spawn    = require('child_process').spawn;
+const rxIpc    = require('rx-ipc-electron/lib/main').default;
 
-const rpc = require('../rpc/rpc');
+const options       = require('../options/options');
+const rpc           = require('../rpc/rpc');
 const daemonManager = require('./../daemon/daemonManager');
 
 let daemon;
@@ -14,8 +14,8 @@ exports.start = function(wallets, callback) {
 
     let _options = options.get();
     const daemonPath = _options.customdaemon
-    ? _options.customdaemon
-    : daemonManager.getPath();
+                     ? _options.customdaemon
+                     : daemonManager.getPath();
 
     exports.check().then(() => {
       log.info('daemon already started');
@@ -80,7 +80,7 @@ exports.wait = function(wallets, callback) {
 exports.check = function() {
   return new Promise((resolve, reject) => {
     const _timeout = rpc.timeout;
-    rpc.timeout = 150;
+    rpc.setTimeoutDelay(150);
     rpc.call(
       'getnetworkinfo', null, cookie.getAuth(options.get()), (error, response) => {
         rxIpc.removeListeners();
@@ -90,7 +90,7 @@ exports.check = function() {
           resolve();
         }
       });
-    rpc.timeout = _timeout;
+    rpc.setTimeoutDelay(_timeout);
   });
 }
 

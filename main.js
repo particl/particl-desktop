@@ -1,50 +1,54 @@
-const electron = require('electron');
-const app = electron.app;
+const electron      = require('electron');
+const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-const path = require('path');
-const url = require('url');
-const platform = require('os').platform();
-const log = require('electron-log');
+const path          = require('path');
+const url           = require('url');
+const platform      = require('os').platform();
+const log           = require('electron-log');
 
 log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
 log.transports.file.file = log.transports.file
-  .findLogPath(log.transports.file.appName)
-  .replace('log.log', 'partgui.log');
+   .findLogPath(log.transports.file.appName)
+   .replace('log.log', 'partgui.log');
 
-const options = require('./modules/options/options');
-const rpc = require('./modules/rpc/rpc');
-const multiwallet = require('./modules/multiwallet/multiwallet');
+const _options      = require('./modules/options/options');
+const rpc           = require('./modules/rpc/rpc');
+const ipc           = require('./modules/ipc/ipc');
+const daemon        = require('./modules/daemon/daemon');
 const daemonManager = require('./modules/daemon/daemonManager');
-const daemon = require('./modules/daemon/daemon');
+const multiwallet   = require('./modules/multiwallet/multiwallet');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-let _options;
+let options;
 
-let openDevTools = false;
+let openDevTools = true;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  _options = options.parse();
+
+  options = _options.parse();
   initMainWindow();
-  rpc.init(_options);
+
+  rpc.init(options);
+  ipc.init();
+
   daemon.check()
-    .then(() => log.info('daemon already started'))
-    .catch(() => daemonManager.init())
-    .then(() => multiwallet.get())
-    .then(wallets => wallets /* TODO: prompt user which wallet */)
-    .then(chosenWallets => daemon.start(chosenWallets))
-    .then(log.info('daemon started'));
+    .then(()            => log.info('daemon already started'))
+    .catch(()           => daemonManager.init())
+    .then(()            => multiwallet.get())
+    .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
+    .then(chosenWallets => daemon.start(chosenWallets, () => log.info('daemon started')))
 });
 
 app.on('quit', function (event, exitCode) {
   log.info('stopping')
-  electron.ipcMain.removeAllListeners(['backend-rpccall']); // Remove all ipc listeners
+  electron.ipcMain.removeAllListeners(['backend-rpccall']);
   daemon.stop();
   if (exitCode === 991) {
     throw Error('Could not connect to daemon.');
@@ -83,32 +87,32 @@ function initMainWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1280,
+    width:    1280,
     minWidth: 961,
     maxWidth: 1920,
-    height: 720,
-    icon: trayImage,
+    height:   720,
+    icon:     trayImage,
     webPreferences: {
-      nodeIntegration: false,
-      sandbox: true,
+      nodeIntegration:  false,
+      sandbox:          true,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      preload:          path.join(__dirname, 'preload.js')
     },
   });
 
   // and load the index.html of the app.
-  if (_options.dev) {
+  if (options.dev) {
     mainWindow.loadURL('http://localhost:4200');
   } else {
     mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
-      slashes: true
+      pathname: path.join(__dirname, 'dist/index.html'),
+      slashes:  true
     }));
   }
 
   // Open the DevTools.
-  if (openDevTools || _options.devtools) {
+  if (openDevTools || options.devtools) {
     mainWindow.webContents.openDevTools()
   }
 
