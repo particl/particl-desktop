@@ -1,249 +1,251 @@
-<div [@flyInOut]="animationState" class="col-xs-12">
+<div [@flyInOut]="animationState">
+
+  <!-- STEP 0: Choose action -->
   <ng-template [ngIf]="step === 0">
-    <div class="container" fxFlex="100%">
-      <div class="align-center">
-        <b>Welcome</b>, please select one of the options below.
-        <div *ngIf="!isCrypted" class="warning-text margin-top-30px">
-          It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any
-          possible key fragments lying around.
-        </div>
-      </div>
-      <div class="gap50"></div>
+    <div class="container">
+      <div class="content">
 
-      <div class="button-row align-center">
-        <button *ngIf="!isCrypted" md-raised-button color="primary" class="create-wallet-action-button"
-                (click)="initialize(0);">
-          Encrypt Wallet
-        </button>
-        <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
-          Create new wallet
-        </button>
-        <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
-          Restore wallet
-        </button>
-      </div>
-    </div>
-  </ng-template><!-- Step 0 -->
+        <div *ngIf="!isCrypted" class="section encrypt-first">
+          <div class="title">Encrypt wallet first</div>
+          <p>
+            It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
+          </p>
+          <div class="actions">
+            <button *ngIf="!isCrypted" md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(0);">
+              <md-icon fontSet="faIcon" fontIcon="fa-lock"></md-icon>
+              Encrypt Wallet
+            </button>
+          </div>
+          <hr class="hr-light">
+        </div><!-- !isCrypted .section -->
+
+        <div class="section create-restore">
+          <div class="title">Create or Restore wallet</div>
+          <p class="TODO">
+            Create a new wallet or restore your old wallet using your Recovery Passphrase.
+          </p>
+          <div class="actions">
+            <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
+              <md-icon fontSet="faIcon" fontIcon="fa-plus"></md-icon>
+              Create new wallet
+            </button>
+            <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
+              <md-icon fontSet="faIcon" fontIcon="fa-repeat"></md-icon>
+              Restore wallet
+            </button>
+          </div>
+        </div><!-- .wallet-actions -->
+
+      </div><!-- .content -->
+    </div><!-- .container -->
+  </ng-template>
 
 
+  <!-- STEP 1: Create/restore wallet -->
   <ng-template [ngIf]="step === 1">
-    <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
-      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-        <b>Let's create a new wallet</b><!-- TODO: Dynamic text create / restore -->
-      </div>
+    <div class="container">
+      <div class="content">
 
-      <!--<div class="gap50"></div>-->
+        <div class="title TODO">Name your wallet</div><!-- TODO: Dynamic text create / restore -->        
+        <p class="TODO">
+          Choose a name for your wallet (e.g. Personal wallet, Shop income, Savings, &hellip;)
+        </p>
+        
+        <form #nameForm="ngForm" (ngSubmit)="nextStep()">
+          <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)"
+          [@slideDown]>
+            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            <span [hidden]="!validation.errors.required">
+              Wallet Name is required
+            </span>
+            <span [hidden]="!validation.errors.maxlength">
+              Wallet Name cannot be more than 32 characters long.
+            </span>
+          </p><!-- validation errors -->
 
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutWrap>
-        <form #nameForm="ngForm" fxLayout="column" fxLayoutAlign="center center" fxFlex="100%" (ngSubmit)="nextStep()">
+          <md-form-field>
+            <input mdInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
+          </md-form-field>
 
-          <div class="container form_block" fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%" fxlayout.sm="column"
-               fxlayout.lt-sm="column"
-               fxlayout.lt-xs="column" fxlayout.xs="column">
-            <div fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
-              <label class="wallet-name-label">YOUR WALLET NAME</label>
-            </div>
+          <div class="actions">
+            <button md-button (click)="prevStep()">
+              Back
+            </button>
+            <button md-raised-button color="primary" type="submit" [disabled]="!nameForm.form.valid">
+              Next
+            </button>
+          </div><!-- .actions -->
 
-            <div fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
-              <div class="col-md-12">
-                <md-form-field>
-                  <input mdInput #nameField #validation="ngModel" class="form-control width-100" [(ngModel)]="name"
-                         name="name" placeholder="Enter Wallet Name here" required maxlength="32"
-                         [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
-                </md-form-field>
-
-                <div *ngIf="validation.errors && (validation.dirty || validation.touched)"
-                     [@slideDown] class="error">
-                  <div [hidden]="!validation.errors.required">
-                    Wallet Name is required
-                  </div>
-                  <div [hidden]="!validation.errors.maxlength">
-                    Wallet Name cannot be more than 32 characters long.
-                  </div>
-                </div>
-              </div>
-              <div class="button-row capitalize">
-                <button md-raised-button class="create-wallet-action-button" (click)="prevStep()">
-                  BACK
-                </button>
-                <button md-raised-button class="create-wallet-action-button" color="primary" type="submit"
-                        [disabled]="!nameForm.form.valid">
-                  NEXT STEP
-                </button>
-              </div>
-            </div>
-          </div>
         </form>
-      </div>
-    </div>
-  </ng-template><!-- Step 1 -->
+      </div><!-- .content -->
+    </div><!-- .container -->
+  </ng-template>
 
+
+  <!-- STEP 2-4 (Create): Recovery Phrase -->
   <ng-template [ngIf]="[2,3,4].indexOf(step) != -1 && !isRestore">
-    <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
-      <!-- header text -->
-      <div class="header-text" fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-      <span *ngIf="step === 2" fxLayout="column" fxLayoutAlign="center center">
-        <b>Generate your wallet recovery phrase</b>
-      </span>
-        <span *ngIf="step === 3" fxLayout="column" fxLayoutAlign="center center">
-        <b>Write down your wallet recovery phrase</b><br/>
-        <div class="">
-          It is very important to write down your recovery phrase and to remember your password.
-          You will not be able to restore your wallet without them.
-        </div>
-      </span>
-        <span *ngIf="step === 4" fxLayout="column" fxLayoutAlign="center center">
-        <b>Enter your wallet recovery phrase</b><br/>
-        <div class="warning-text margin-top-5px">
-          Fill in the missing words of the recovery passphrase.
-        </div>
-      </span>
+    <div class="container">
+      <div class="content">
 
-        <hr class="margin-top-100px">
-      </div>
-      <div fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
-        <div class="container form_block" fxFlex="70%">
-          <div fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <label class="wallet-name-label">YOUR WALLET NAME</label>
-          </div>
 
-          <div fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <div class="col-md-12">
-              <md-form-field>
-                <input mdInput class="form-control width-100" [(ngModel)]="name" placeholder="Enter Wallet Name here"
-                       readonly/>
-              </md-form-field>
-            </div>
-          </div>
-        </div>
-      </div>
-      <app-password
-        #passwordComponent
-        label="RECOVERYPHRASE PASSWORD (OPTIONAL)"
-        [emitPassword]="true"
-        [isDisabled]="[3,4].indexOf(step) != -1"
-        (passwordEmitter)="passwordFromEmitter($event)"
-        [showStakeOnly]="false">
-      </app-password>
+        <!-- STEP 2: Recovery Password -->
+        <div *ngIf="step === 2">
+          <div class="title TODO">Choose a Recovery Password <small>(optional)</small></div>
+          <p class="TODO">
+            You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
+          </p>
+          <p class="warning">
+            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            Warning: if you lose Recovery Phrase OR Recovery Password, you won't be able to access your coins!
+          </p>
+        </div><!-- step == 2 -->
 
-      <ng-template [ngIf]="[3,4].indexOf(step) != -1">
-        <app-passphrase
-          #passphraseComponent
-          [readOnly]="step === 3"
-          [words]="words"
-          [partialDisable]="step === 4"
-          (wordsEmitter)="wordsFromEmitter($event)"
-          [generate]="true">
-        </app-passphrase>
-      </ng-template>
-      <div class="button-row capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
-        <div *ngIf="!!errorString"
-             [@slideDown] class="container alert alert-danger margin-top-5px">
-          {{ errorString }}
-        </div>
-        <div fxFlex="70%" fxFlexOffset="0px">
-          <button md-raised-button class="create-wallet-action-button" (click)="prevStep()">
-            BACK
+
+        <!-- STEP 3: Recovery Passphrase -->
+        <div *ngIf="step === 3">
+          <div class="title">Recovery Phrase</div>
+          <p class="TODO">
+            Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
+          </p>
+          <p class="warning TODO">
+            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            You must write it down and keep it safe or you'll lose access to your coins!
+          </p>
+        </div><!-- step == 3 -->
+
+
+        <!-- STEP 4: Recovery Password -->
+        <div *ngIf="step === 4">
+          <div class="title">Enter your wallet recovery phrase</div>
+          <p class="TODO">
+            Confirm that you backed up your Recovery Phrase by filling in the missing words:
+          </p>
+        </div><!-- step == 4 -->
+
+
+        <!--md-form-field class="wallet-name">
+          <input mdInput [(ngModel)]="name" placeholder="Wallet name" readonly />
+        </md-form-field-->
+
+        <!-- @TODO: can we hide this from step 3? -->
+        <app-password
+          #passwordComponent
+          label="Recovery Password (optional)"
+          [emitPassword]="true"
+          [isDisabled]="[3,4].indexOf(step) != -1"
+          (passwordEmitter)="passwordFromEmitter($event)"
+          [showStakeOnly]="false">
+        </app-password>
+
+        <ng-template [ngIf]="[3,4].indexOf(step) != -1">
+          <app-passphrase
+            #passphraseComponent
+            [readOnly]="step === 3"
+            [words]="words"
+            [partialDisable]="step === 4"
+            (wordsEmitter)="wordsFromEmitter($event)"
+            [generate]="true">
+          </app-passphrase>
+        </ng-template>
+  
+        <div class="actions">
+          <p *ngIf="!!errorString" [@slideDown] class="warning">
+            {{ errorString }}
+          </p>
+          <button md-button (click)="prevStep()">
+            Back
           </button>
-          <button md-raised-button class="create-wallet-action-button" color="primary"
-                  (click)="step === 2 && passwordComponent.sendPassword();
-             nextStep()"> <!-- TODO: Move sendPassword to .ts -->
-            NEXT STEP
+          <button md-raised-button color="primary" (click)="step === 2 && passwordComponent.sendPassword(); nextStep()"> <!-- TODO: Move sendPassword to .ts -->
+            Next
           </button>
-        </div>
-      </div>
-    </div>
+        </div><!-- .actions -->
+
+      </div><!-- .content -->
+    </div><!-- .container -->
   </ng-template><!-- Step 2,3 & 4 -->
 
+
+  <!-- STEP 2-4 (Restore) -->
   <ng-template [ngIf]="step === 4 && isRestore">
-    <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
-      <div fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
-      <span *ngIf="step === 4">
-        Please enter your <b>24 word recovery phrase</b> and optional recovery passphrase below.
-      </span>
+    <div class="container">
+      <div class="content">
 
-        <!--<hr class="margin-top-100px">-->
-      </div>
-      <div fxLayout="column" fxLayoutWrap fxLayoutAlign="center center" fxFlexOffset="40px">
-        <div class="container form_block" fxFlex="70%">
-          <div fxFlex="30%">
-            <label>YOUR WALLET NAME</label>
-          </div>
+        <div class="title">Wallet Recovery</div>
+        <!--md-form-field>
+          <input mdInput [(ngModel)]="name" placeholder="Wallet name" readonly />
+        </md-form-field-->
 
-          <div fxFlex="70%">
-            <div>
-              <md-form-field>
-                <input mdInput [(ngModel)]="name" placeholder="Enter Wallet Name here" readonly/>
-              </md-form-field>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--<hr>-->
+        <div class="section recovery-phrase">
+          <p class="TODO">
+            Enter your 24 word Recovery Phrase:
+          </p>
+          <app-passphrase
+            #passphraseComponent
+            [words]="words"
+            (wordsEmitter)="wordsFromEmitter($event)"
+            [generate]="false">
+          </app-passphrase>
+  
+          <p *ngIf="!!errorString" [@slideDown] class="warning">
+            {{ errorString }}
+          </p>
+        </div><!-- .recovery-phrase -->
+        
+        <div class="section recovery-password">
+          <div class="subtitle">Recovery Password</div>
+          <p class="TODO">
+            If you set up a Recovery Password during wallet creation as well, enter it below:
+          </p>
+          <!--
+            @TODO/@FIXME: "Restore Wallet" button isn't active when input is empty => those who didn't chose any Recovery Pass can't restore wallet!
+            On the other hand if you fill some Recovery Pass and DON'T fill any of the Recovery Phrase words, you can still click the "Restore Wallet" and end up on blank white page.
+          -->
+          <app-password class="TODO"
+            label="Recovery Password"
+            buttonText="Restore Wallet"
+            [showStakeOnly]="false"
+            [emitPassword]="true"
+            (passwordEmitter)="passwordFromEmitter($event);nextStep()">
+          </app-password>
+        </div><!-- .recovery-password -->
 
-      <app-passphrase
-        #passphraseComponent
-        [words]="words"
-        (wordsEmitter)="wordsFromEmitter($event)"
-        [generate]="false">
-      </app-passphrase>
+        <div class="actions">
+          <button md-button (click)="prevStep();initialize(2)">Back</button>
+        </div><!-- .actions -->
 
-      <div *ngIf="!!errorString" fxLayoutAlign="center center"
-           [@slideDown] class="error margin-top-5px">
-        {{ errorString }}
-      </div>
-
-      <app-password
-        label="RECOVERY PASSPHRASE"
-        buttonText="RESTORE WALLET"
-        [showStakeOnly]="false"
-        [emitPassword]="true"
-        (passwordEmitter)="passwordFromEmitter($event);nextStep()">
-      </app-password>
-
-      <div class="buttons margin-top-30px">
-        <div class="row wallet-buttons-container">
-          <div class="capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
-            <div fxFlex="70%" fxFlexOffset="0px">
-              <button md-raised-button (click)="prevStep();initialize(2)">
-                BACK
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
+      </div><!-- .content -->
+    </div><!-- .container -->
   </ng-template><!-- Step 2,3 & 4 -->
 
+
+  <!-- STEP 5: Gratz -->
   <ng-template [ngIf]="step === 5">
-    <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWra>
-      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutWrap>
-        <h4>Congratulations with your new wallet</h4>
-        <div fxFlexOffset="20px">
-          Your new wallet has been set as the default wallet, you can now generate new addresses on your wallet.
-        </div>
-      </div>
-      <hr class="margin-top-60px">
+    <div class="container">
+      <div class="content">
 
-      <div class="buttons text-center" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">
-        <div fxFlex="70%" fxFlexOffset="0px">
-          <button md-raised-button class="create-wallet-action-button" (click)="close()">close</button>
+        <div class="title">Congratulations!</div>
+        <p class="TODO">
+          Your new wallet was created successfully and set as the default wallet!
+        </p>
+        <div class="actions">
+          <button md-raised-button color="warn" (click)="close()">Close</button>
         </div>
-      </div>
-    </div>
+
+      </div><!-- .content -->
+    </div><!-- .container -->
   </ng-template>
 
+
+  <!-- STEP 6 -->
   <ng-template [ngIf]="step === 6">
-    <div class="container" fxFlex="100%" fxLayout="column" fxLayoutWrap>
-      <app-unlockwallet
-        (unlockEmitter)="importMnemonicCallback($event)" [autoClose]="false">
-      </app-unlockwallet>
-      <!--<div class="capitalize" fxLayout="column" fxLayoutWrap fxLayoutAlign="center center">-->
-        <!--<button md-raised-button class="create-wallet-action-button" (click)="prevStep()">-->
-          <!--BACK-->
-        <!--</button>-->
-      <!--</div>-->
-    </div>
+    <div class="container">
+      <div class="content">
+        
+        <app-unlockwallet (unlockEmitter)="importMnemonicCallback($event)" [autoClose]="false">
+        </app-unlockwallet>
+
+      </div><!-- .content -->
+    </div><!-- .container -->
   </ng-template>
+
 </div>
