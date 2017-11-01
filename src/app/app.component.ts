@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
 
   log: any = Log.create('app.component');
   title: string = '';
-  
+
   walletInitialized: boolean = false;
   daemonRunning: boolean = false;
   daemonError: string = '';
