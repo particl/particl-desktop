@@ -1,9 +1,10 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 @import "./src/assets/theme"; // there is a lot of sidebar stuff imported here..
-
-
-
+/*
+  The above import has a lot of sidebar related things that are conflicting with the css below,
+  we'll need to handpick them and merge both files.
+*/
 
 
 
