@@ -24,27 +24,25 @@
           <md-expansion-panel-header>Wallet</md-expansion-panel-header>
           <md-content layout-padding class="submenuarea">
             <md-list class="sidesubmenu">
-              <a routerLinkActive="active" routerLink="/wallet/receive">
-              <!-- Todo: fix walletInitialized in combination with active -->
-              <!--<a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/receive' : null">-->
+              <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/receive' : null">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-simple-right"></md-icon>
                   <span class="menu-item">Receive</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" routerLink="/wallet/send">
+              <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/send' : null">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-simple-left"></md-icon>
                   <span class="menu-item">Send</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" routerLink="/wallet/history">
+              <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/history' : null">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-time-3"></md-icon>
                   <span class="menu-item">History</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" routerLink="/wallet/address-book">
+              <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/address-book' : null">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
                   <span class="menu-item">Address Book</span>
