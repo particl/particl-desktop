@@ -1,6 +1,8 @@
 const log         = require('electron-log');
 const http        = require('http');
+
 const cookie      = require('./cookie');
+const _options    = require('../options/options');
 
 let TIMEOUT = 15000;
 let HOSTNAME;
@@ -8,16 +10,26 @@ let PORT;
 let rpcOptions;
 let auth;
 
-exports.init = function(options) {
+exports.init = function() {
+  let options = _options.get();
+
   HOSTNAME = options.rpcbind || 'localhost';
   PORT     = options.port;
-  auth     = cookie.getAuth(options);
+  auth     = cookie.getAuth(_options.get());
 }
 
 /*
 ** execute RPC call
 */
 exports.call = function(method, params, callback) {
+
+  if (!auth) {
+    exports.init()
+  }
+
+  if (!callback) {
+    callback = function (){};
+  }
 
   const postData = JSON.stringify({
     method: method,
@@ -63,7 +75,7 @@ exports.call = function(method, params, callback) {
 
       if (data.error !== null) {
         callback(data);
-        return;
+        return ;
       }
 
       callback(null, data);
@@ -92,3 +104,5 @@ exports.call = function(method, params, callback) {
 exports.setTimeoutDelay = function(timeout) {
   TIMEOUT = timeout;
 }
+
+exports.getTimeoutDelay = () => { return TIMEOUT }

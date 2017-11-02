@@ -43,7 +43,6 @@ app.on('ready', () => {
     .then(()            => multiwallet.get())
     .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
     .then(chosenWallets => daemon.start(chosenWallets, () => log.info('daemon started')))
-    .then(()            => rpc.init(options));
 });
 
 app.on('quit', function (event, exitCode) {

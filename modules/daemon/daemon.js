@@ -5,14 +5,16 @@ const rxIpc    = require('rx-ipc-electron/lib/main').default;
 
 const _options      = require('../options/options');
 const rpc           = require('../rpc/rpc');
+const cookie        = require('../rpc/cookie');
 const daemonManager = require('./../daemon/daemonManager');
 
 let daemon;
+let exitCode = 0;
 
 exports.start = function(wallets, callback) {
   return (new Promise((resolve, reject) => {
 
-    let   options   = options.get();
+    let   options    = _options.get();
     const daemonPath = options.customdaemon
                      ? options.customdaemon
                      : daemonManager.getPath();
@@ -36,64 +38,72 @@ exports.start = function(wallets, callback) {
       });
 
       daemon = child;
-      exports.wait(wallets, resolve);
+      exports.wait(wallets, callback).then(() => resolve());
     });
 
   }));
 }
 
 exports.wait = function(wallets, callback) {
-  const maxRetries = 10; // Some slow computers...
-  let retries = 0;
-  let errorString = '';
+  return new Promise((resolve, reject) => {
 
-  const daemonStartup = () => {
-    exports.check()
-      .then(callback)
+    const maxRetries  = 10; // Some slow computers...
+    let   retries     = 0;
+    let   errorString = '';
+
+    const daemonStartup = () => {
+      exports.check()
+      .then(() => { callback(); resolve(); })
       .catch(() => {
-        if (daemon.exitCode == 0 && retries < maxRetries) {
+        if (exitCode == 0 && retries < maxRetries) {
           setTimeout(daemonStartup, 1000);
         }
       });
-    retries++;
-    if (daemon.exitCode || retries >= maxRetries) {
-      // Rebuild block and transaction indexes
-      if (errorString.includes('-reindex')) {
-        log.info('Corrupted block database detected, '
-               + 'restarting the daemon with the -reindex flag.');
-        process.argv.push('-reindex');
-        daemon.exitCode = 0; // Hack a bit here...
-        // We don't want it to exit at this stage if start was called..
-        // it will probably error again if it has to.
-        exports.start(wallets, callback);
-        return ;
-      }
-      electron.app.exit(991);
-    }
-  }
 
-  if (daemon && daemon.exitCode == 0) {
-    daemon.stderr.on('data', data => {
-      errorString = data.toString('utf8');
-    });
-    setTimeout(daemonStartup, 1000);
-  }
+      retries++;
+      if (exitCode || retries >= maxRetries) {
+        // Rebuild block and transaction indexes
+        if (errorString.includes('-reindex')) {
+          log.info('Corrupted block database detected, '
+          + 'restarting the daemon with the -reindex flag.');
+          process.argv.push('-reindex');
+          exitCode = 0; // Hack a bit here...
+          // We don't want it to exit at this stage if start was called..
+          // it will probably error again if it has to.
+          exports.start(wallets, callback);
+          return ;
+        }
+        electron.app.exit(991);
+        reject();
+      }
+    } /* daemonStartup */
+
+    if (daemon && exitCode === 0) {
+      daemon.stderr.on('data', data => {
+        errorString = data.toString('utf8');
+      });
+      setTimeout(daemonStartup, 1000);
+    }
+
+  });
 }
 
 exports.check = function() {
   return new Promise((resolve, reject) => {
-    const _timeout = rpc.timeout;
+
+    const _timeout = rpc.getTimeoutDelay();
+    let auth = cookie.getAuth(_options.get());
     rpc.setTimeoutDelay(150);
-    rpc.call(
-      'getnetworkinfo', null, cookie.getAuth(options.get()), (error, response) => {
-        rxIpc.removeListeners();
-        if (error) {
-          reject();
-        } else if (response) {
-          resolve();
-        }
-      });
+    rpc.call('getnetworkinfo', null, (error, response) => {
+      rxIpc.removeListeners();
+      if (error) {
+        reject();
+      } else if (response) {
+        resolve();
+      }
+    });
     rpc.setTimeoutDelay(_timeout);
+
   });
 }
 

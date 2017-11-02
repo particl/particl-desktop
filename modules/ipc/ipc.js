@@ -13,7 +13,6 @@ const rpc    = require('../rpc/rpc.js');
 exports.promptWalletChoosing = function(wallets, webContents) {
   return new Promise ((resolve, reject) => {
 
-    console.log(wallets);
     if (wallets.length === 0) {
       log.warn('No walet found in userData.');
       reject();
@@ -30,7 +29,6 @@ exports.promptWalletChoosing = function(wallets, webContents) {
             observer.next(false);
             reject(wallets);
           }
-          console.log('received wallets: ' + wallets);
           observer.next(true);
           resolve(chosenWallets);
         }
