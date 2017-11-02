@@ -1,6 +1,7 @@
 import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener } from '@angular/core';
 import { Log } from 'ng2-logger';
 
+import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
 
 import { flyInOut, slideDown } from '../../core/core.animations';
@@ -37,6 +38,7 @@ export class CreateWalletComponent {
   words: string[];
 
   @ViewChild('passphraseComponent') passphraseComponent: ComponentRef<PassphraseComponent>;
+  @ViewChild('passwordElement') passwordElement: PasswordComponent;
 
   // Used for verification
   private wordsVerification: string[];
@@ -86,6 +88,11 @@ export class CreateWalletComponent {
   nextStep() {
     this.validating = true;
 
+    /* Recovery password entered */
+    if (this.step === 2) {
+      this.passwordElement.sendPassword();
+    }
+
     if (this.validate()) {
       this.animationState = 'next';
       this.validating = false;
@@ -94,6 +101,7 @@ export class CreateWalletComponent {
       this.doStep();
     }
 
+    this.log.d(`moving to step: ${this.step}`);
   }
 
   prevStep() {
@@ -180,10 +188,17 @@ export class CreateWalletComponent {
     return true;
   }
 
+  /**
+  * Triggered when the password is emitted from PasswordComponent
+  */
   passwordFromEmitter(pass: IPassword) {
     this.password = pass.password;
+    this.log.d(`passwordFromEmitter: ${this.password}`);
   }
 
+  /**
+  * Triggered when the password is emitted from PassphraseComponent
+  */
   wordsFromEmitter(words: string) {
     this.words = words.split(',');
   }
