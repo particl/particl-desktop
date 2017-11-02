@@ -46,15 +46,17 @@ export class ModalsService {
     private _rpc: RPCService,
     private _dialog: MdDialog
   ) {
-    // open syncing modal
+
+    /* Hook BlockStatus -> open syncing modal */
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
       this.openSyncModal(status);
     });
 
+    /* Hook wallet initialized -> open createwallet modal */
     this.openInitialCreateWallet();
 
-    // open daemon model on error
+    /* Hook daemon errors -> open daemon modal */
     this._rpc.modalUpdates.asObservable().subscribe(status => {
       if (status.error) {
         this.enableClose = true;
