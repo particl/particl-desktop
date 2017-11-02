@@ -1,6 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
+import { Log } from 'ng2-logger';
 
 import { StateService } from '../state/state.service';
 import { PeerService } from './peer.service';
@@ -8,10 +9,20 @@ import { PeerService } from './peer.service';
 @Injectable()
 export class BlockStatusService {
 
+  private log: any = Log.create('blockstatus.service');
+
+  /* Block variables */
   private highestBlockHeightNetwork: number = -1;
   private highestBlockHeightInternal: number = -1;
   private startingBlockCount: number = -1;
   private totalRemainder: number = -1;
+
+  /* Last time we had a change in block count */
+  private lastUpdateTime: number; // used to calculate the estimatedTimeLeft
+
+  /* The last five hundred estimatedTimeLeft results, averaging this out for stable result */
+  private arrayLastEstimatedTimeLefts: Array<number> = [];
+  private amountToAverage: number = 50;
 
   public statusUpdates: Subject<any> = new Subject<any>();
 
@@ -31,20 +42,30 @@ export class BlockStatusService {
     private _state: StateService
   ) {
     // Get internal block height and calculate syncing details (ETA)
+    this.log.d('constructor blockstatus');
     this._state.observe('blocks')
       .subscribe(
         height => {
+          this.log.d('constructor state block height: ', height);
           const lastBlockTime = new Date(this._state.get('lastblocktime')) ||
             new Date(+this._state.get('mediantime') * 1000);
+
           this.calculateSyncingDetails(lastBlockTime, height);
+
+          // must be after calculateSyncingDetails
+          if (this.highestBlockHeightInternal < height) {
+            this.lastUpdateTime = Date.now();
+          }
+
           this.highestBlockHeightInternal = height;
           this.status.internalBH = height;
           this.status.lastBlockTime = lastBlockTime;
+
           if (this.startingBlockCount === -1) {
             this.startingBlockCount = height;
           }
         },
-        error => console.log('SyncingComponent subscription error:' + error));
+        error => console.log('constructor blockstatus: state blocks subscription error:' + error));
 
     // Get heighest block count of peers and calculate remainerders.
     this._peerService.getBlockCountNetwork()
@@ -56,12 +77,13 @@ export class BlockStatusService {
             this.totalRemainder = height - this.startingBlockCount;
           }
         },
-        error => console.log('SyncingComponent subscription error:' + error));
+        error => console.log('constructor blockstatus: getBlockCountNetwork() subscription error:' + error));
   }
 
 
   /** Calculates the details (percentage of synchronised, estimated time left, ..) */
   private calculateSyncingDetails(newTime: Date, newHeight: number) {
+
 
     const internalBH = this.highestBlockHeightInternal;
     const networkBH = this.highestBlockHeightNetwork;
@@ -80,7 +102,8 @@ export class BlockStatusService {
       this.status.syncPercentage = 100;
     }
 
-    const timeDiff: number = newTime.getTime() - this.status.lastBlockTime.getTime();
+    /* Time & block diff between updates, "how much blocks did it sync since last time we ran this function" */
+    const timeDiff: number = Date.now() - this.lastUpdateTime; // in milliseconds
     const blockDiff: number = newHeight - this.highestBlockHeightInternal;
 
     // increasePerMinute
@@ -116,7 +139,7 @@ export class BlockStatusService {
 
     let returnString = '';
 
-    const secs = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000),
+    const secs = this.averageTimeLeft(Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000)),
           seconds = Math.floor(secs % 60),
           minutes = Math.floor((secs / 60) % 60),
           hours = Math.floor((secs / 3600) % 3600);
@@ -136,4 +159,26 @@ export class BlockStatusService {
 
     this.status.estimatedTimeLeft = returnString;
   }
+
+
+  private averageTimeLeft(estimatedTimeLeft: number): number {
+
+    const length = this.arrayLastEstimatedTimeLefts.push(estimatedTimeLeft);
+
+    if (length > this.amountToAverage) {
+      this.arrayLastEstimatedTimeLefts.shift();
+    }
+
+    /* sum array */
+    function add(a: number, b: number) {
+      return a + b;
+    }
+
+    const sum = this.arrayLastEstimatedTimeLefts.reduce(add, 0);
+    const averageEstimatedTimeLeft = Math.floor(sum / length);
+
+    this.log.d(`averageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
+    return averageEstimatedTimeLeft;
+  }
+
 }

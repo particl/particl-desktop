@@ -25,6 +25,7 @@ export class RPCStateClass {
     this.rpc.state.observe('mediantime').subscribe(
       mediantime => {
         const lastblocktime = new Date(mediantime * 1000);
+        this.log.d(`lastBlockTimeState(): lastblocktime ${lastblocktime}`);
 
         this.rpc.state.set('lastblocktime', lastblocktime);
         if (!_checkLastBlock && new Date().getTime() - (4 * 60 * 1000) > lastblocktime.getTime()) {

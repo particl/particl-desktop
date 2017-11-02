@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer, Subscription } from 'rxjs'; // use this for testing atm
+import { Log } from 'ng2-logger';
 
 import { RPCService } from './rpc.service';
 
 @Injectable()
 export class PeerService {
+
+  private log: any = Log.create('peer.service');
+
   // TODO: Peer interface
   private _peerList: Observable<Array<Object>>;
   private _observerPeerList: Observer<Array<Object>>;
@@ -37,10 +41,13 @@ export class PeerService {
 
     // Subscribe to connections state
     this._rpc.state.observe('connections')
-      .subscribe(_ => this._rpc.call('getpeerinfo')
-        .subscribe((peerinfo: Array<Object>) => {
-          this.setPeerList(peerinfo);
-        }));
+      .subscribe(_ => {
+        this.log.d('connections update!');
+        this._rpc.call('getpeerinfo')
+          .subscribe((peerinfo: Array<Object>) => {
+            this.setPeerList(peerinfo);
+          })
+      });
   }
 
   private setPeerList(peerList: Array<Object>) {
