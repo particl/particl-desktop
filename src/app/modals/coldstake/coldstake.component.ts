@@ -2,6 +2,7 @@ import { Component, Inject, forwardRef } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { flyInOut, slideDown } from '../../core/core.animations';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 import { ModalsService } from '../modals.service';
 import { RPCService } from '../../core/rpc/rpc.module';
@@ -42,6 +43,7 @@ export class ColdstakeComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _rpc: RPCService,
+    private _flashNotificationService: FlashNotificationService,
     public dialogRef: MdDialogRef<ModalsComponent>
   ) { }
 
@@ -149,7 +151,8 @@ export class ColdstakeComponent {
   setColdStakingAddress(): void {
     if (this.prevColdStakeAddress === this.coldStakeAddress) {
       if (this.step === 3) {
-        this.nextStep();
+        this.finalMessage = 'Cold staking address is the same - no changes required.';
+        this._flashNotificationService.open('Cold staking key is exactly the same as before!: ', '', 1000);
       }
       return;
     }
@@ -158,16 +161,41 @@ export class ColdstakeComponent {
       .subscribe(
         success => {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
-          this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
+          this._flashNotificationService.open('Successfully activated cold staking!', '', 1000);
+          // this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
+          this.close();
         },
         error => {
           this.log.er('setColdStakingAddress: ', error);
+          this._flashNotificationService.open('Failed to activate cold staking, ' + error.message, '', 1000);
           this.finalMessage = 'Failed to activate cold staking.. ' + error.message;
+        });
+  }
+
+  resetColdStakingAddress(): void {
+    this._rpc.call('walletsettings', ['changeaddress', {}])
+      .subscribe(
+        success => {
+          this.log.d(`resetColdStakeAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
+          this._flashNotificationService.open('Successfully deactivated cold staking!', '', 1000);
+          // this.finalMessage = 'Successfully deactivated cold staking! ' + success.changeaddress.coldstakingaddress;
+          this.close();
+        },
+        error => {
+          this.log.er('resetColdStakeAddress: ', error);
+          this._flashNotificationService.open('Failed to deactivate cold staking, ' + error.message, '', 1000);
+          this.finalMessage = 'Failed to deactivate cold staking.. ' + error.message;
         });
   }
 
   close() {
     this.dialogRef.componentInstance.close();
+  }
+
+  setData(data: any) {
+    if (data.type !== undefined) {
+      this.create(data.type);
+    }
   }
 
   /**

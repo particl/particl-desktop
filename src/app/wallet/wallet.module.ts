@@ -1,7 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angular2-qrcode';
-import { ModalModule } from 'ngx-bootstrap';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -22,7 +21,8 @@ import { AddressLookupComponent } from './addresslookup/addresslookup.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule,
-  MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdProgressBarModule,
+  MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdPaginatorModule,
+  MdProgressBarModule,
   MdProgressSpinnerModule,
   MdRadioModule,
   MdSelectModule,
@@ -53,7 +53,6 @@ const routes: Routes = [
     BrowserAnimationsModule,
     RouterModule.forChild(routes),
     SharedModule,
-    ModalModule.forRoot(),
     QRCodeModule,
     FormsModule,
     ReactiveFormsModule,
@@ -72,7 +71,8 @@ const routes: Routes = [
     MdInputModule,
     MdCheckboxModule,
     MdRadioModule,
-    MdProgressSpinnerModule
+    MdProgressSpinnerModule,
+    MdPaginatorModule
   ],
   declarations: [
     TransactionsTableComponent,

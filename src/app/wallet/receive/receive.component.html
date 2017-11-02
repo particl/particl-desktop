@@ -1,7 +1,6 @@
 <app-header>
-  <div [fxLayout]="'row'" fxLayout.lg="row" fxlayout.lt-sm="column" fxLayout.sm="column" fxlayout.lt-xs="column"
-       fxLayout.xs="column">
-    <div fxFlex="80%">
+  <div fxLayout="row" fxlayout.lt-sm="column">
+    <div fxFlex="1 1 70%">
       <md-tab-group (selectChange)="changeTab($event.index)">
         <md-tab>
           <ng-template md-tab-label>
@@ -15,124 +14,134 @@
         </md-tab>
       </md-tab-group>
     </div>
-    <md-form-field class="icon-input" fxFlex.lt-sm="100%" fxFlex.sm="100%" (click)="selectInput()">
-      <input mdInput type="text" class="header-input" id="searchbar" [(ngModel)]="query" placeholder="Search receive">
+    <md-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
+      <input mdInput type="text" class="header-input" id="searchbar" [(ngModel)]="query" placeholder="Search receive addresses">
       <md-icon>search</md-icon>
     </md-form-field>
   </div>
 </app-header>
 
-<div class="container-block">
-  <div fxLayout.lt-md="row" fxLayout.md="row" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="row"
-       fxlayout.lt-xs="row" class="coloredContainerX box">
-    <div fxFlex="80%" *ngIf="getUnusedAddress()">
+<div class="container-block" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
 
-      <md-list class="list-data" *ngIf="inSearchMode() === false">
-        <div md-subheader class="address-title">Unused address</div>
-        <md-list-item>
-          <div xLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
-               fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px" layout-padding>
-            <div fxFlex="15%" class="address-id"> /{{ getUnusedAddress().id }}</div>
-            <div fxFlex="20%" class="address-label"> {{ getUnusedAddress().label }}</div>
-            <div fxFlex="50%" class="address">
-              {{ getUnusedAddress().address }}
-              <div class="total"><span>Total received: </span>
-                <span>+{{ getUnusedAddress().balance }}</span>
-              </div>
-            </div>
-            <div fxFlex="15%" fxLayoutAlign="end center">
-                  <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                    <md-icon class="cursor-pointer" mdTooltip="Copy" ngxClipboard
-                             [cbContent]="getUnusedAddress().address" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
-                    <!--<md-icon class="cursor-pointer" mdTooltip="Copy" ngxClipboard-->
-                    <!--[cbContent]="getUnusedAddress().address">-->
-                    <!--content_copy-->
-                    <!--</md-icon>-->
-                  </span>
-              <div fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                <md-icon fontSet="ncIcon" fontIcon="nc-a-check"></md-icon>
-              </div>
-              <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                  <i class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
-                     (click)="selectAddress(addresses[getAddressType()][0])"></i>
-                    </span>
-            </div>
-          </div>
-        </md-list-item>
-        <md-divider></md-divider>
-      </md-list>
+  <!-- Address details & QR code -->
+  <div fxFlex="0 0 200px" fxFlex.lt-md="100" *ngIf="selected">
+    <md-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px">
 
-      <md-list *ngIf="getSinglePage().length" class="list-data">
-        <div md-subheader class="address-title">Previous addresses</div>
-        <div *ngFor="let address of getSinglePage()">
-          <md-list-item>
-            <div fxLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
-                 fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column" fxLayoutGap="10px"
-                 layout-padding>
-              <div fxFlex="15%" class="address-id"> /{{ address.id }}</div>
-              <div fxFlex="20%" class="address-label"> {{ address.label }}</div>
-              <div fxFlex="50%" class="address">
-                {{ address.address }}
-                <div class="total"><span>Total received: </span>
-                  <span>+{{  address.balance }}</span>
-                </div>
-              </div>
-              <div fxFlex="15%" fxLayoutAlign="end center">
-                <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                  <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy" ngxClipboard
-                           [cbContent]="address.address"></md-icon>
-                </span>
-
-                <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                  <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer" ngxClipboard></md-icon>
-                </span>
-                <span fxFlex="20%" fxFlex.md="100%" fxFlex.sm="33.33%">
-                  <md-icon class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address"
-                           (click)="selectAddress(address)"></md-icon>
-                  </span>
-              </div>
-            </div>
-          </md-list-item>
-          <md-divider></md-divider>
-        </div>
-      </md-list>
-
-      <pagination
-        [boundaryLinks]="true"
-        (pageChanged)="pageChanged($event)"
-        [totalItems]="getTotalCountForPagination()"
-        [maxSize]="5" [rotate]="false"
-        [(ngModel)]="page"
-        class="pagination-sm center"
-        previousText="&lsaquo;" nextText="&rsaquo;"
-        firstText="&laquo;" lastText="&raquo;"
-        [itemsPerPage]="MAX_ADDRESSES_PER_PAGE">
-      </pagination>
-    </div>
-
-    <div fxFlex="20%" *ngIf="selected">
-
-      <div #qrCode class="card qr qrcode">
-        <qr-code [size]="getQrSize()" [level]="'H'"
-                 value="particl:{{ selected.address }}">
+      <div #qrCode class="qrcode" fxFlex fxFlex.lt-md="0 0 200px">
+        <qr-code [size]="getQrSize()" [level]="'H'" value="particl:{{ selected.address }}">
         </qr-code>
-      </div>
+      </div><!-- qrcode -->
 
-      <div class="card address-details">
+      <div class="address-details" fxFlex fxFlex.lt-md="1 1 calc(100% - 220px)">
         <div class="details-title">
           {{ getAddressType() }} address
         </div>
         <div class="details-label">
           {{ selected.label }}
         </div>
-        <div class="details-address" fxLayout="row" layout-padding fxLayoutGap="10px">
-          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="28%">
+        <div class="details-address" fxLayoutWrap layout-padding fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start">
+          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="33" fxFlex.lt-md="37px">
             {{ word }}
           </div>
         </div>
-        <button (click)="openNewAddress()">new {{ getAddressType() }} address</button>
-      </div>
+        <button md-raised-button color="primary" (click)="openNewAddress()">New {{ getAddressType() }} address</button>
+      </div><!-- .address-details -->
 
+    </md-card>
+  </div>
+
+  <!-- Address list -->
+  <div fxFlex="1 1 calc(100% - 240px)" *ngIf="getUnusedAddress()">
+
+    <md-list class="list-data" *ngIf="inSearchMode() === false">
+      <div md-subheader class="address-title">Unused address</div>
+
+      <md-card class="address-info">
+        <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
+          <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id"> /{{ getUnusedAddress().id }}</div>
+          <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label"> {{ getUnusedAddress().label }}</div>
+          <div fxFlex="1 1 80%" fxFlex.lt-md="100" class="address">
+            {{ getUnusedAddress().address }}
+            <!-- Received amount in unused address doesn't make sense -->
+            <!--div class="total"><span>Total received: </span>
+              <span class="received-amount">{{ getUnusedAddress().balance }}</span>
+            </div-->
+          </div>
+          <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
+            <!-- Copy address -->
+            <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+              <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="getUnusedAddress().address" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
+            </span>
+            <!-- Sign message (?) -->
+            <div fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+              <md-icon fontSet="ncIcon" fontIcon="nc-a-check" mdTooltip="Sign (????) message" class="TODO"></md-icon>
+            </div>
+            <!-- Select address -->
+            <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+              <md-icon class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address" (click)="selectAddress(addresses[getAddressType()][0])"></md-icon>
+            </span>
+          </div>
+        </div>
+      </md-card>
+      <div class="widget-help">
+        <span class="TODO">@FIXME:</span> It is advised to use new addresses for each Public transaction (or person) for greater privacy.
+      </div>
+    </md-list><!-- .list-data -->
+
+
+    <md-list *ngIf="getSinglePage().length" class="list-data">
+      <div md-subheader class="address-title">Previous addresses</div>
+      <div *ngFor="let address of getSinglePage()">
+
+        <md-card class="address-info"> 
+            <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
+            <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id">/{{ address.id }}</div> 
+            <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label">{{ address.label }}</div>
+            <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address">
+              {{ address.address }}
+              <div class="total"><span>Total received: </span>
+                <span class="received-amount TODO">{{ address.balance }}</span>
+              </div>
+            </div>
+            <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
+              <!-- Copy address -->
+              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+                <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address"></md-icon>
+              </span>
+              <!-- Sign message (?) -->
+              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+                <md-icon fontSet="ncIcon" fontIcon="nc-a-check" mdTooltip="Sign (????) message" class="cursor-pointer TODO" ngxClipboard></md-icon>
+              </span>
+              <!-- Select address -->
+              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+                <md-icon class="material-icons cursor-pointer nc-icon nc-barcode-qr" mdTooltip="Select Address" (click)="selectAddress(address)"></md-icon>
+              </span>
+            </div>
+          </div>
+        </md-card>
+
+      </div>
+    </md-list><!-- .list-data -->
+
+    <!-- use two paginator for reset pagination after tab change. -->
+    <div class="receive-pagination">
+      <md-paginator
+        *ngIf="type == 'private'"
+        [length]="getTotalCountForPagination()"
+        [pageSize]="MAX_ADDRESSES_PER_PAGE"
+        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+        (page)="pageChanged($event)">
+      </md-paginator>
+
+      <md-paginator
+        *ngIf="type == 'public'"
+        [length]="getTotalCountForPagination()"
+        [pageSize]="MAX_ADDRESSES_PER_PAGE"
+        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+        (page)="pageChanged($event)">
+      </md-paginator>
     </div>
   </div>
+
+
 </div>
