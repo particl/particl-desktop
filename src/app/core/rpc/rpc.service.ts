@@ -267,7 +267,7 @@ declare global {
           if (errorCB) {
             errorCB.call(instance, error.target ? error.target : error);
           }
-          this.log.er('RPC Call returned an error', error);
+          this.log.er(`oldCall: RPC Call returned an error`, error);
         });
     }
 
