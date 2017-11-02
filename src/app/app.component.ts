@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   daemonError: string = '';
   walletError: string = '';
 
-  
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,

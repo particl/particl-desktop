@@ -85,45 +85,56 @@ declare global {
     * ```
     * TODO: Response interface
     */
-    call(method: string, params?: Array<any> | null): Observable<any> {
 
-      if (this.isElectron) {
-        return this._rpx.runCommand('rpc-channel', null, method, params)
-        .map(response => response && response.result ? response.result : response);
+  call(method: string, params?: Array<any> | null): Observable<any> {
 
-      } else {
-        const postData = JSON.stringify({
-          method: method,
-          params: params,
-          id: 1
-        }),
-        headers = new Headers();
+     if (this.isElectron) {
+       return this._rpx.runCommand('rpc-channel', null, method, params)
+       .map(response => response && response.result ? response.result : response);
 
-        headers.append('Content-Type', 'application/json');
-        headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
-        headers.append('Accept', 'application/json');
+     } else {
+       // Running in browser, delete?
+       const postData = JSON.stringify({
+         method: method,
+         params: params,
+         id: 1
+      });
 
-        return this._http
-        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
-          .map(response => response.json().result)
-          .catch(error => Observable.throw(
-            typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
-        }
-      }
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
+      headers.append('Accept', 'application/json');
 
-      stateCall(method: string, withMethod?: boolean): void {
-        if (!this._enableState) {
-          return;
-        }
-        this.call(method)
-        .subscribe(
-          this.stateCallSuccess.bind(this, withMethod ? method : false),
-          this.stateCallError  .bind(this, withMethod ? method : false));
-      }
+      return this._http
+      .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+        .map(response => response.json().result)
+        .catch(error => Observable.throw(
+          typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
+    }
+  }
 
-      registerStateCall(method: string, timeout?: number, params?: Array<any> | null): void {
-        if (timeout) {
-          let firstError = true;
+
+
+
+  /* state related stuff, maybe we move this to rpc-state.class.ts? */
+
+  /** Perform stateCall */
+  stateCall(method: string, withMethod?: boolean): void {
+
+    if (!this._enableState) {
+      return;
+    }
+
+    this.call(method)
+    .subscribe(
+      this.stateCallSuccess.bind(this, withMethod ? method : false),
+      this.stateCallError  .bind(this, withMethod ? method : false, false));
+  }
+
+  /** Register a state call, executes every X seconds (timeout) */
+  registerStateCall(method: string, timeout?: number, params?: Array<any> | null): void {
+    if (timeout) {
+      let firstError = true;
 
       // loop procedure
       const _call = () => {
@@ -134,7 +145,7 @@ declare global {
         .subscribe(
           success => {
             this.stateCallSuccess(success);
-              /* No need to show modals 
+              /* No need to show modals
               */
               /*
               this.modalUpdates.next({
@@ -161,6 +172,7 @@ declare global {
     }
   }
 
+  /** Updates the state whenever a state call succeeds */
   private stateCallSuccess(success: any, method?: string | boolean) {
     if (method) {
       if (success) {
@@ -175,14 +187,15 @@ declare global {
     if (success) {
       Object.keys(success).forEach(key => this.state.set(key, success[key]))
     } else {
-      this.log.er('Should not be null, ever!', success, method);
+      this.log.er('stateCallSuccess(): Should not be null, ever!', success, method);
     }
   }
 
+  /** Updates the state when the state call errors */
   private stateCallError(error: any, method: string, firstError: boolean) {
     this.log.er(`stateCallError(): RPC Call ${method} returned an error: ${error}`);
 
-    // if not first error, pop up error box
+    // if not first error, show modal
     if (!firstError) {
       this.errorsStateCall.next({
         error: error.target ? error.target : error,
@@ -208,6 +221,55 @@ declare global {
 
   /* Old stuff - address service still relies on register */
 
+
+  /**
+    * The call function will perform a single call to the particld daemon and perform a callback to
+    * the instance through the function as defined in the params.
+    *
+    * @param {Injectable} instance  The instance in which the callback functions reside.
+    * @param {string} method  The JSON-RPC method to call, see ```./particld help```
+    * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
+    * The content of the array is of type any (ints, strings, booleans etc)
+    * @param {Function} successCB  The function to callback (in instance) when the RPC request was successful.
+    * @param {Function} errorCB  The function to callback (in instance) when the RPC request failed.
+    *
+    * @example
+    * ```JavaScript
+    * this._rpc.call(this, 'listtransactions', [0, 20], this.rpc_loadTwentyTxs_success, this.rpc_loadTwentyTxs_failed);
+    * ```
+    * ```JavaScript
+    * rpc_loadTwentyTxs_success(json: Object) {
+    *   console.log("Loaded transactions!");
+    *   console.log(json);
+    * }
+    * ```
+    */
+    oldCall(
+      instance: Injectable,
+      method: string,
+      params: Array<any> | null,
+      successCB: Function,
+      errorCB?: Function,
+      isPoll?: boolean,
+      isLast?: boolean
+      ): void {
+      this.call(method, params)
+      .subscribe(
+        response => {
+          successCB.call(instance, response);
+          if (isPoll && isLast) {
+            this._callOnPoll.forEach((func) => func());
+            this._callOnNextPoll.forEach((func) => func());
+            this._callOnNextPoll = [];
+          }
+        },
+        error => {
+          if (errorCB) {
+            errorCB.call(instance, error.target ? error.target : error);
+          }
+          this.log.er('RPC Call returned an error', error);
+        });
+    }
 
 
   /**
@@ -238,28 +300,28 @@ declare global {
     *
     * @returns      void
     */
-  register(
-    instance: Injectable,
-    method: string,
-    params: Array<any> | Function | null,
-    successCB: Function,
-    when: string,
-    errorCB?: Function
-  ): void {
-    let valid = false;
-    const _call = {
-      instance: instance,
-      method: method,
-      params: params,
-      successCB: successCB,
-      errorCB: errorCB
-    };
+    register(
+      instance: Injectable,
+      method: string,
+      params: Array<any> | Function | null,
+      successCB: Function,
+      when: string,
+      errorCB?: Function
+      ): void {
+      let valid = false;
+      const _call = {
+        instance: instance,
+        method: method,
+        params: params,
+        successCB: successCB,
+        errorCB: errorCB
+      };
 
-    if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
-      this._callOnAddress.push(_call);
-      valid = true;
+      if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
+        this._callOnAddress.push(_call);
+        valid = true;
+      }
     }
-  }
 
 
   // TODO: Model / interface..
