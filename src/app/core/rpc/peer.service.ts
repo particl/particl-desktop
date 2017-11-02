@@ -39,20 +39,24 @@ export class PeerService {
 
     this._highestBlockHeightNetwork.subscribe().unsubscribe();
 
-    // Subscribe to connections state
-    this._rpc.state.observe('connections')
-      .subscribe(_ => {
-        this.log.d('connections update!');
-        this._rpc.call('getpeerinfo')
-          .subscribe((peerinfo: Array<Object>) => {
-            this.setPeerList(peerinfo);
-          })
-      });
+    /* Initiate peer list loop */
+    this.updatePeerListLoop();
+
+  }
+
+  /** A loop that will update the peerlist, required for blockstatus */
+  private updatePeerListLoop() {
+    this.log.d(`updatePeerListLoop(): updating peerlist`);
+
+    this._rpc.call('getpeerinfo')
+      .subscribe((peerinfo: Array<Object>) => this.setPeerList(peerinfo));
+
+    setTimeout(this.updatePeerListLoop.bind(this), 10000);
   }
 
   private setPeerList(peerList: Array<Object>) {
 
-    // hook network block height changes
+    // update network block height changes
     this._observerHighestBlockHeightNetwork.next(this.calculateBlockCountNetwork(peerList));
 
     this._observerPeerList.next(peerList);

@@ -46,11 +46,9 @@ export class BlockStatusService {
     this._state.observe('blocks')
       .subscribe(
         height => {
-          this.log.d('constructor state block height: ', height);
-          const lastBlockTime = new Date(this._state.get('lastblocktime')) ||
-            new Date(+this._state.get('mediantime') * 1000);
 
-          this.calculateSyncingDetails(lastBlockTime, height);
+          this.status.lastBlockTime = new Date(+this._state.get('mediantime') * 1000);
+          this.calculateSyncingDetails(height);
 
           // must be after calculateSyncingDetails
           if (this.highestBlockHeightInternal < height) {
@@ -59,7 +57,6 @@ export class BlockStatusService {
 
           this.highestBlockHeightInternal = height;
           this.status.internalBH = height;
-          this.status.lastBlockTime = lastBlockTime;
 
           if (this.startingBlockCount === -1) {
             this.startingBlockCount = height;
@@ -67,6 +64,7 @@ export class BlockStatusService {
         },
         error => console.log('constructor blockstatus: state blocks subscription error:' + error));
 
+    //todo can't rely on 
     // Get heighest block count of peers and calculate remainerders.
     this._peerService.getBlockCountNetwork()
       .subscribe(
@@ -82,7 +80,7 @@ export class BlockStatusService {
 
 
   /** Calculates the details (percentage of synchronised, estimated time left, ..) */
-  private calculateSyncingDetails(newTime: Date, newHeight: number) {
+  private calculateSyncingDetails(newHeight: number) {
 
 
     const internalBH = this.highestBlockHeightInternal;
@@ -102,9 +100,12 @@ export class BlockStatusService {
       this.status.syncPercentage = 100;
     }
 
-    /* Time & block diff between updates, "how much blocks did it sync since last time we ran this function" */
+    /* 
+      Time & block diff between updates.
+      "how much blocks did it sync since last time we ran this function" 
+    */
     const timeDiff: number = Date.now() - this.lastUpdateTime; // in milliseconds
-    const blockDiff: number = newHeight - this.highestBlockHeightInternal;
+    const blockDiff: number = newHeight - internalBH;
 
     // increasePerMinute
     if (timeDiff > 0 && this.totalRemainder > 0) {
@@ -121,7 +122,7 @@ export class BlockStatusService {
       this.estimateTimeLeft(blockDiff, timeDiff);
     }
 
-    // update
+    // updates for modal
     this.statusUpdates.next(this.status);
   }
 
@@ -160,24 +161,28 @@ export class BlockStatusService {
     this.status.estimatedTimeLeft = returnString;
   }
 
-
+  /** Inserts estimatedTimeLeft into private array and returns an averaged result to create more consistent result. */
   private averageTimeLeft(estimatedTimeLeft: number): number {
 
+    /* add element to averaging array */
     const length = this.arrayLastEstimatedTimeLefts.push(estimatedTimeLeft);
 
+    /* if length > allowed length, pop first element */
     if (length > this.amountToAverage) {
       this.arrayLastEstimatedTimeLefts.shift();
     }
 
-    /* sum array */
+    /* sum all elements in array */
     function add(a: number, b: number) {
       return a + b;
     }
 
     const sum = this.arrayLastEstimatedTimeLefts.reduce(add, 0);
+
+    /* Average = summation / amount of elements */
     const averageEstimatedTimeLeft = Math.floor(sum / length);
 
-    this.log.d(`averageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
+    // this.log.d(`averageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
     return averageEstimatedTimeLeft;
   }
 
