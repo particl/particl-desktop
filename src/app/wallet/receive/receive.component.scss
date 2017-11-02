@@ -53,6 +53,19 @@
       margin: 0 0 20px;
     }
   }
+  .actions {
+    button.copy {
+      margin-bottom: 10px;
+    }
+    .mat-icon {
+      margin-right: 7px;
+      width: auto;
+      height: auto;
+      font-size: 14px;
+      position: relative;
+      top: -1px;
+    }
+  }
 }
  
 /* ------------------------------- *\ 
