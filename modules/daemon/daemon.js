@@ -3,7 +3,7 @@ const log      = require('electron-log');
 const spawn    = require('child_process').spawn;
 const rxIpc    = require('rx-ipc-electron/lib/main').default;
 
-const options       = require('../options/options');
+const _options      = require('../options/options');
 const rpc           = require('../rpc/rpc');
 const daemonManager = require('./../daemon/daemonManager');
 
@@ -12,17 +12,19 @@ let daemon;
 exports.start = function(wallets, callback) {
   return (new Promise((resolve, reject) => {
 
-    let _options = options.get();
-    const daemonPath = _options.customdaemon
-                     ? _options.customdaemon
+    let   options   = options.get();
+    const daemonPath = options.customdaemon
+                     ? options.customdaemon
                      : daemonManager.getPath();
 
     exports.check().then(() => {
       log.info('daemon already started');
       resolve(undefined);
+
     }).catch(() => {
       log.info(`starting daemon ${daemonPath}`);
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
+
       const child = spawn(daemonPath, [...process.argv, ...wallets])
       .on('close', code => {
         if (code !== 0) {
@@ -32,6 +34,7 @@ exports.start = function(wallets, callback) {
           log.info('daemon exited successfully');
         }
       });
+
       daemon = child;
       exports.wait(wallets, resolve);
     });

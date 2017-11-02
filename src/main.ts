@@ -19,7 +19,11 @@ if (environment.envName === 'dev') {
 
 const log: any = Log.create('main');
 
+function registerMultiwalletListener ( ) {
+
+};
+
 platformBrowserDynamic().bootstrapModule(AppModule)
   .then(success => log.d('Ready. (env: ' + environment.envName + ')'))
   .catch(err => console.error(err))
-  .then(() => console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
+  .then(registerMultiwalletListener);

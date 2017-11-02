@@ -1,11 +1,12 @@
-const _ = require('lodash');
-const Q = require('bluebird');
-const fs = require('fs');
 const { app, dialog } = require('electron');
-const got = require('got');
+const EventEmitter    = require('events').EventEmitter;
+
+const _    = require('lodash');
+const Q    = require('bluebird');
+const fs   = require('fs');
+const got  = require('got');
 const path = require('path');
-const EventEmitter = require('events').EventEmitter;
-const log = require('electron-log');
+const log  = require('electron-log');
 
 const ClientBinariesManager = require('../clientBinaries/clientBinariesManager').Manager;
 const rpc = require('../rpc/rpc');
@@ -30,6 +31,7 @@ class DaemonManager extends EventEmitter {
   init(_options) {
     log.info('Initializing...');
     options = _options;
+    // TODO: use an update to test & fix
     // check every hour
     // setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
     this._resolveBinPath();

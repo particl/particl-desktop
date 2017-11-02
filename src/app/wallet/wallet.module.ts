@@ -1,7 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angular2-qrcode';
-import { ModalModule } from 'ngx-bootstrap';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -54,7 +53,6 @@ const routes: Routes = [
     BrowserAnimationsModule,
     RouterModule.forChild(routes),
     SharedModule,
-    ModalModule.forRoot(),
     QRCodeModule,
     FormsModule,
     ReactiveFormsModule,

@@ -35,7 +35,6 @@ app.on('ready', () => {
   options = _options.parse();
   initMainWindow();
 
-  rpc.init(options);
   ipc.init();
 
   daemon.check()
@@ -44,6 +43,7 @@ app.on('ready', () => {
     .then(()            => multiwallet.get())
     .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
     .then(chosenWallets => daemon.start(chosenWallets, () => log.info('daemon started')))
+    .then(()            => rpc.init(options));
 });
 
 app.on('quit', function (event, exitCode) {
@@ -87,11 +87,12 @@ function initMainWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width:    1280,
-    minWidth: 961,
-    maxWidth: 1920,
-    height:   720,
-    icon:     trayImage,
+    width:     1280,
+    height:    720,
+    minWidth:  961,
+    maxWidth:  1920,
+    icon:      trayImage,
+    resizable: false,
     webPreferences: {
       nodeIntegration:  false,
       sandbox:          true,
