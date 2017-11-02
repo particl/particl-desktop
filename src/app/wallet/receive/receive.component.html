@@ -70,7 +70,7 @@
           <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
             <!-- Copy address -->
             <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
-              <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="getUnusedAddress().address" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
+              <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="getUnusedAddress().address" (click)="copyToClipBoard()" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
             </span>
             <!-- Sign message (?) -->
             <div fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
@@ -106,7 +106,7 @@
             <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->
               <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
-                <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address"></md-icon>
+                <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></md-icon>
               </span>
               <!-- Sign message (?) -->
               <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">

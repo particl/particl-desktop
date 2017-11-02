@@ -297,4 +297,9 @@ export class SendComponent {
     this.progress = prog;
   }
 
+  pasteAddress() {
+    document.getElementById('address').focus();
+    document.execCommand('Paste');
+  }
+
 }

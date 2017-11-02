@@ -173,5 +173,9 @@ export class AddressTableComponent implements OnInit {
       this.log.d(event.pageIndex);
     }
   }
+
+  copyToClipBoard() {
+    this.flashNotification.open('Address copied to clipboard.', '', 1000);
+  }
 }
 

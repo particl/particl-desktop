@@ -8,9 +8,10 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { ReceiveComponent } from './receive.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdPaginatorModule, MdTabsModule } from '@angular/material';
+import { MdPaginatorModule, MdTabsModule, MdSnackBarModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalsService } from '../../modals/modals.service';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 describe('ReceiveComponent', () => {
   let component: ReceiveComponent;
@@ -27,12 +28,14 @@ describe('ReceiveComponent', () => {
         RpcModule.forRoot(),
         FlexLayoutModule,
         MdTabsModule,
+        MdSnackBarModule,
         BrowserAnimationsModule,
         MdPaginatorModule,
         RpcModule.forRoot()
       ],
       providers: [
-        ModalsService
+        ModalsService,
+        FlashNotificationService
       ]
     })
     .compileComponents();

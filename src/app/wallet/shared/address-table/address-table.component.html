@@ -52,7 +52,7 @@
             <!-- ICO: copy address -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
               <md-icon fontSet="ncIcon" fontIcon="nc-copy-2" class="cursor-pointer" mdTooltip="Copy address"
-                       ngxClipboard [cbContent]="address.address"></md-icon>
+                       ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></md-icon>
             </span>
             <!-- ICO: verify message -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">

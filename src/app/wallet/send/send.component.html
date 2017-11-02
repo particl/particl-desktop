@@ -77,7 +77,7 @@
             <h5 fxFlex="15"> Pay to</h5>
             <md-form-field fxFlex="100">
               <!-- fix success input -->
-              <input name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
+              <input id="address" name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
             </md-form-field>
             <div fxFlex="100" fxLayoutGap="20px">
               <md-form-field fxFlex="100">
@@ -88,7 +88,7 @@
                   <md-icon class="cursor-pointer zindex" flex="100" mdTooltip="Address Lookup" (click)="openLookup()" fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
                 </span>
                 <span fxFlex="16.6">
-                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
+                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="ncIcon" fontIcon="nc-copy-2" (click)="pasteAddress()"></md-icon>
                 </span>
                 <span fxFlex="16.6">
                   <md-icon flex="100" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"></md-icon>
@@ -104,10 +104,11 @@
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
             <h5 fxFlex="15">Narration</h5>
             <md-form-field fxFlex="100">
-            <input type="text" mdInput name="sendNote" 
+            <input #narration type="text" mdInput name="sendNote" 
              placeholder="Optional: enter a short note to send with a payment" 
              maxlength="24"
             [(ngModel)]="send.note" >
+            <md-hint align="end">{{narration.value.length}} / 24</md-hint>
             </md-form-field>
           </div>
         </md-list-item>

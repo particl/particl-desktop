@@ -6,6 +6,7 @@ import { AddAddressLabelComponent } from './modals/add-address-label/add-address
 import { MdDialog } from '@angular/material';
 import { ModalsService } from '../../modals/modals.service';
 import { ModalsComponent } from '../../modals/modals.component';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 @Component({
   selector: 'app-receive',
@@ -58,7 +59,8 @@ export class ReceiveComponent implements OnInit {
 
   constructor(private rpc: RPCService,
               public dialog: MdDialog,
-              public _modalService: ModalsService) {
+              public _modalService: ModalsService,
+              private flashNotificationService: FlashNotificationService) {
   }
 
   ngOnInit() {
@@ -363,6 +365,10 @@ export class ReceiveComponent implements OnInit {
     dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
       this.rpc_update();
     });
+  }
+
+  copyToClipBoard() {
+    this.flashNotificationService.open('Address copied to clipboard.', '', 1000);
   }
 
   selectInput() {
