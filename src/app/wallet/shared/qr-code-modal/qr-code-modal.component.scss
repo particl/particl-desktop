@@ -9,9 +9,22 @@
   width: 170px;
   margin: 0 auto 10px;
   .details-address {
+    margin-bottom: 15px;    
     .address-word {
       font-family: monospace;
       font-size: 13px;
+      color: $text-muted;
     }
+  }
+}
+
+.actions {
+  .mat-icon {
+    margin-right: 7px;
+    width: auto;
+    height: auto;
+    font-size: 14px;
+    position: relative;
+    top: -1px;
   }
 }

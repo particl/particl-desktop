@@ -16,7 +16,7 @@ input[type="text"] {
   .mat-divider {
     margin: 0px 0;
     border-color: transparent;
- }
+  }
 }
 
 .mat-expansion-panel {
@@ -87,7 +87,7 @@ md-card.mat-card {
 }
 
 .md-list-radio .mat-radio-button {
-    margin-bottom: 0px;
+  margin-bottom: 0px;
 }
 
 .privacy-label {
@@ -111,69 +111,69 @@ md-card.mat-card {
 \* ------------------------------- */ 
 
 app-header {
-button {
+  button {
     background-color: #fafafa;
     border: none;
-    padding: 1px 15px 0 15px ;
-    margin: 5px 10px 0 0; 
-    font-size: 13px;
+    padding: 3px 15px;
+    margin: 3px 10px 0 0;
     border-bottom: 0px solid $bg-shadow;
-    float:right;
-    font-weight:normal;
-    color: #232728;
-    font-weight:bold;
-}
-.bottom-line {
+    float: right;
+    font-weight: 500;
+    color: $text;
+  }
+  .bottom-line {
     border-bottom: 1px solid $bg-shadow;
-} 
-   button.show-address {
-      md-icon {
-         font-size: 20px;
-         width: auto;
-         height: auto;
-         margin-right: 6px;
-         line-height: 1.5;
-         color: $color;
-         background:transparent;
-     }
-      span {
-         color: $text;
-         font-size: 13px;
-      }
-   }
+  } 
+  button.show-address {
+    md-icon {
+      font-size: 23px;
+      width: auto;
+      height: auto;
+      margin-right: 6px;
+      line-height: 1.5;
+      color: $color;
+      background: transparent;
+      top: 1px;
+    }
+    span {
+      color: $text;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+  }
 }
 
 .mat-raised-button {
-    box-sizing: border-box;
-    position: relative;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    outline: 0;
-    border: none;
-    -webkit-tap-highlight-color: transparent;
-    display: inline-block;
-    white-space: nowrap;
-    text-decoration: none;
-    vertical-align: baseline;
-    text-align: center;
-    margin: 0;
-    min-width: 88px;
-    line-height: 36px;
-    padding: 0 16px;
-    border-radius: 2px;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: none;
+  box-sizing: border-box;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: 0;
+  min-width: 88px;
+  line-height: 36px;
+  padding: 0 16px;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
 }
 
 .mat-icon {
-    margin-right: 5px;
-    width: auto;
-    height: auto;
-    font-size: 16px;
-    position: relative;
-    top: -1px;
+  margin-right: 5px;
+  width: auto;
+  height: auto;
+  font-size: 16px;
+  position: relative;
+  top: -1px;
 }

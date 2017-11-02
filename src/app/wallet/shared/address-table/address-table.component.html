@@ -20,8 +20,7 @@
     <md-list class="list-data" fxFlex="100">
       <div *ngFor="let address of getSinglePage()">
 
-        <md-card class="address-entry" fxLayout.gt-lg="50" fxLayout.gt-sm="row" fxLayout.lt-md="column"
-                 fxLayoutGap="10px" layout-padding>
+        <md-card class="address-entry" fxLayout.gt-sm="row" fxLayout.lt-md="column" fxLayoutGap="10px" layout-padding>
 
           <!-- Label -->
           <div fxFlex="1 0 150px" fxFlex.lt-md="100" class="title cursor-pointer" *ngIf="displayLabel"
@@ -55,7 +54,7 @@
                        ngxClipboard [cbContent]="address.address"></md-icon>
             </span>
             <!-- ICO: verify message -->
-            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center" class="TODO">
               <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer" mdTooltip="Verify message"
                        ngxClipboard></md-icon>
             </span>

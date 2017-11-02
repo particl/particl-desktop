@@ -77,6 +77,10 @@
   font-weight: normal;
   text-transform: uppercase;
   color: $text-muted;
+  &.first {
+    padding-top: 0;
+    height: auto;
+  }
 }
 
 .address-info { // address "card"

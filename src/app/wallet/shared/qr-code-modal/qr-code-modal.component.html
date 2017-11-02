@@ -10,13 +10,20 @@
       </div>
     </div><!-- .qr-code -->
     
-    <div class="address-string" fxLayoutAlign="center center">
+    <div class="address-string">
       <div class="details-address" fxLayoutWrap layout-padding>
         <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
           {{ word }}
         </div>
       </div>
+
+      <div class="actions">
+        <button md-button class="copy" ngxClipboard [cbContent]="singleAddress.address">
+          <md-icon fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>Copy to clipboard
+        </button>
+      </div>
     </div><!-- .address-string -->
+    
 
   </div>
   <md-dialog-actions fxLayoutAlign="center center">
