@@ -85,7 +85,6 @@ declare global {
     * ```
     * TODO: Response interface
     */
-
   call(method: string, params?: Array<any> | null): Observable<any> {
 
      if (this.isElectron) {
