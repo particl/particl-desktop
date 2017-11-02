@@ -55,7 +55,7 @@ export class ModalsService {
     this.openInitialCreateWallet();
 
     // open daemon model on error
-    this._rpc.modalUpdates.asObservable().subscribe(status => {
+    this._rpc.errorsStateCall.asObservable().subscribe(status => {
       if (status.error) {
         this.enableClose = true;
         this.open('daemon', status);

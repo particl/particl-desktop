@@ -31,6 +31,8 @@ export class AppComponent implements OnInit {
   daemonRunning: boolean = false;
   daemonError: string = '';
   walletError: string = '';
+
+  
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -62,16 +64,29 @@ export class AppComponent implements OnInit {
       .flatMap(route => route.data)
       .subscribe(data => this.title = data['title']);
 
+    /* Test logging, can away? */
     this.log.er('error!');
     this.log.w('warn!');
     this.log.i('info');
     this.log.d('debug');
 
-    this._rpc.modalUpdates.asObservable().subscribe(status => {
+    /* Display errors in sidenav when required */
+    this.observeDaemonErrors();
+    this.observeWalletInitialized();
+
+  }
+
+
+  /** Updates the error box in the sidenav whenever a stateCall returns an error. */
+  observeDaemonErrors() {
+    this._rpc.errorsStateCall.asObservable().subscribe(status => {
       this.daemonRunning = !status.error;
       this.daemonError = this.daemonRunning ? '' : 'Connection Refused, Daemon is not connected';
     });
+  }
 
+  /** Updates the error box in the sidenav if wallet is not initialized. */
+  observeWalletInitialized() {
     this._rpc.state.observe('walletInitialized')
       .subscribe(
         status => {
@@ -80,7 +95,7 @@ export class AppComponent implements OnInit {
       });
   }
 
-
+  /** Open createwallet modal when clicking on error in sidenav*/
   createWallet() {
     // this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     this._modalsService.open('createWallet', {forceOpen: true});
