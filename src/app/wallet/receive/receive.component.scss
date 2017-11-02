@@ -48,6 +48,7 @@
   }
   .details-address {
     font-family: monospace;
+    color: $text-muted;
     margin: 0 25px 20px;
     @media (max-width: 960px) {
       margin: 0 0 20px;
