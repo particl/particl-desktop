@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   daemonRunning: boolean = false;
   daemonError: string = '';
   walletError: string = '';
-  multiWallet: any = [];
+  multiwallet: any = [];
 
   constructor(
     private _router: Router,
@@ -64,10 +64,10 @@ export class AppComponent implements OnInit {
       .flatMap(route => route.data)
       .subscribe(data => this.title = data['title']);
 
-    this.log.er('error!');
-    this.log.w('warn!');
-    this.log.i('info');
-    this.log.d('debug');
+    // this.log.er('error!');
+    // this.log.w('warn!');
+    // this.log.i('info');
+    // this.log.d('debug');
 
     this._rpc.modalUpdates.asObservable().subscribe(status => {
       this.daemonRunning = !status.error;

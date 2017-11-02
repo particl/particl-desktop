@@ -1,5 +1,6 @@
 const Observable  = require('rxjs/Observable').Observable;
 const rxIpc       = require('rx-ipc-electron/lib/main').default;
+const log         = require('electron-log');
 
 const daemon = require('../daemon/daemon');
 const rpc    = require('../rpc/rpc.js');
@@ -20,23 +21,14 @@ exports.promptWalletChoosing = function(wallets, webContents) {
       resolve(wallets);
     }
 
-    rxIpc.registerListener('multiwallet', (method, wallets) => {
-      return Observable.create(observer => {
-
-        if (method === 'chosenWallets') {
-          if (wallets.length === 0) {
-            log.error('GUI returned no chosen walllet !');
-            observer.next(false);
-            reject(wallets);
-          }
-          observer.next(true);
-          resolve(chosenWallets);
-        }
-
-      })
-    });
-
-    rxIpc.runCommand('multiwallet', null, 'chooseWallets', wallets);
+    rxIpc.runCommand('multiwallet', webContents, wallets).subscribe(chosen => {
+      if (chosen.length === 0) {
+        log.error('GUI returned no chosen walllet !');
+        reject(chosen);
+      } else {
+        resolve(chosen);
+      }
+    }, err => log.error(err));
 
   }).catch(error => log.error(error))
 }
