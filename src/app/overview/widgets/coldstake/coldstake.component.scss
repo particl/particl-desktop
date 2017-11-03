@@ -2,38 +2,39 @@
 @import '../shared/shared.scss';
 
 .cold-staking {
-    .staking-node {
-        padding: 24px 24px 30px;
-        /*.cs-icon { // snowflake
-            font-size: 40px;
-            color: $bg-shadow;
-            position: relative;
-            top: 9px;
-            width: auto;
-            height: auto;
-            margin: -11px 15px 0 0;
-        }*/
-        .title {
-            display: inline-block;
-            text-transform: uppercase;
-            font-weight: bold;
-            & > .active { color: $color; }
-            & > .inactive { color: $text-muted; }
-        }
-        .status {
-            display: block;
-        }
-        button {
-            font-size: 12px;
-            text-transform: uppercase;
-            min-width: 0;
-            padding: 0 10px;
-            margin-right: 20px;
-            border: 1px solid transparent;
-            top: -1px;
-            &.secondary {
-                border-color: $bg-shadow;
-            }
-        }
+  @extend .disable-select;
+  .staking-node {
+    padding: 24px 24px 30px;
+    /*.cs-icon { // snowflake
+      font-size: 40px;
+      color: $bg-shadow;
+      position: relative;
+      top: 9px;
+      width: auto;
+      height: auto;
+      margin: -11px 15px 0 0;
+    }*/
+    .title {
+      display: inline-block;
+      text-transform: uppercase;
+      font-weight: bold;
+      & > .active { color: $color; }
+      & > .inactive { color: $text-muted; }
     }
+    .status {
+      display: block;
+    }
+    button {
+      font-size: 12px;
+      text-transform: uppercase;
+      min-width: 0;
+      padding: 0 10px;
+      margin-right: 20px;
+      border: 1px solid transparent;
+      top: -1px;
+      &.secondary {
+        border-color: $bg-shadow;
+      }
+    }
+  }
 }
