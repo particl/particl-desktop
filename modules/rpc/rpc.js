@@ -83,13 +83,22 @@ exports.call = function(method, params, callback) {
   });
 
   request.on('error', error => {
-    if (error.code === 'ECONNRESET') {
-      callback({
-        status: 0,
-        message: 'Timeout'
-      });
-    } else {
-      callback(error);
+    switch (error.code) {
+      case 'ECONNRESET':
+        callback({
+          status: 0,
+          message: 'Timeout'
+        });
+        break;
+      case 'ECONNREFUSED':
+        callback({
+          status: 502,
+          message: 'Connection Refused',
+          _error: error
+        });
+        break;
+      default:
+        callback(error);
     }
   });
 
