@@ -19,12 +19,10 @@ export class StakinginfoComponent {
   /*  UI   */
   public dynamicStakingReward: Amount = new Amount(0);
   public ownPercentageOfActiveStakingSupply: Amount = new Amount(0);
-
+  public curStakeReward: Amount = new Amount(0);
   public expectedtime: Duration = new Duration(0);
 
   /*  RPC   */
-  private curStakeReward: number = 0;
-
   public weight: number = 1;
   public netstakeweight: number = 1;
   private moneysupply: number = 0;
@@ -39,7 +37,7 @@ export class StakinginfoComponent {
     .subscribe(
       success => {
         this.log.d(`setting curStakeReward ${success}`);
-        this.curStakeReward = success;
+        this.curStakeReward = new Amount(success, 2);
         this.calculateDynamicStakingReward();
       },
       error => this.log.er('Constructor, percentyearreward error:' + error));
@@ -81,8 +79,8 @@ export class StakinginfoComponent {
   }
 
   private calculateDynamicStakingReward() {
-    this.ownPercentageOfActiveStakingSupply = new Amount((this.weight / this.netstakeweight) * 100);
-    this.dynamicStakingReward = new Amount(this.curStakeReward * (this.moneysupply / (this.netstakeweight / 10000000)));
+    this.ownPercentageOfActiveStakingSupply = new Amount((this.weight / this.netstakeweight) * 1000, 5);
+    this.dynamicStakingReward = new Amount(this.curStakeReward.getAmount() * (this.moneysupply / (this.netstakeweight / 10000000)), 2);
 
     this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
   }

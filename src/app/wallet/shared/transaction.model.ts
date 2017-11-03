@@ -57,11 +57,20 @@ export class Transaction implements Deserializable {
     return this.txid + this.getAmountObject().getAmount() + this.category;
   }
 
+  /** Calculates the actual amount that was transfered, including the fee */
+  /* todo: fee is not defined in normal receive tx, wut? */
   public getNetAmount() {
     const amount: number = +this.getAmountObject().getAmount();
-    if (amount < 0) { // sent
+
+    /* If fee undefined then just return amount */
+    if (this.fee === undefined) {
+      return amount;
+    /* sent */
+    } else if (amount < 0) {
       return amount + this.fee;
-    } else { // received
+    /* received */
+    } else {
+      console.log(`getNetAmount(): amount ${amount} fee ${this.fee} subtr ${amount - (+this.fee)}`);
       return amount - (+this.fee);
     }
   }

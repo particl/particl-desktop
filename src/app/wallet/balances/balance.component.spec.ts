@@ -6,6 +6,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
 import { StateService } from '../../core/state/state.service';
 
+import { Amount } from '../../shared/util/utils';
+
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
   let fixture: ComponentFixture<BalanceComponent>;
@@ -32,8 +34,8 @@ describe('BalanceComponent', () => {
   });
 
   it('should get balance before point', () => {
-    component.getBalanceBeforePoint();
-    expect(component.getBalanceBeforePoint.length).toBe(0);
+    component.balance.getIntegerPart();
+    expect(component.balance.getIntegerPart).toBe(0);
   });
 /*
   it('should get balance point', () => {

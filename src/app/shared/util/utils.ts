@@ -1,28 +1,84 @@
 export class Amount {
 
-  constructor(private amount: number) {
-
+  constructor(private amount: number, private maxRoundingDigits: number = 8) {
+    this.amount = this.truncateToDecimals(amount, maxRoundingDigits);
   }
 
   public getAmount() {
     return this.amount;
   }
 
+  /**
+   * Returns integer part.
+   * e.g:
+   * -25.9 -> '-25'
+   * 25 -> '25'
+   * 25.9 -> '25'
+   */
   public getIntegerPart(): number {
-    return +this.splitAmountByDot(this.amount);
-  }
-  // e.g  25.69323 -> 69323
-  public getFractionalPart(): number {
-    return +this.splitAmountByDot(this.amount, true);
+    return Math.floor(this.amount);
   }
 
-  public splitAmountByDot(int: number, afterDot?: boolean): String {
-    if ((int.toString()).indexOf('.') !== -1) {
-      return (int.toString()).split('.')[+(!!afterDot)]; // undefined -> 1 -> 0
-    } else if (int > 0) {
-      return int.toString();
+  /**
+   * Returns fractional part.
+   * e.g:
+   * -25.9 -> '9'
+   * 25 -> '0'
+   * 25.9 -> '9'
+   */
+  public getFractionalPart(): number {
+    if (this.ifDotExist()) {
+      return +(this.getAmount().toString()).split('.')[1];
     }
-    return '0';
+    return 0;
+  }
+
+  /**
+   * Returns zero if negative value.
+   * Else return input value.
+   * e.g:
+   * -25.9 -> '0'
+   * 25 -> '25'
+   * 25.9 -> '25.9'
+   */
+  public positiveOrZero(int?: number) {
+    if (int === undefined) {
+      int = this.getAmount();
+    }
+
+    if (int < 0) {
+      return '0';
+    }
+
+    return int;
+  }
+
+  /**
+   * Returns a dot only when it exists in the number.
+   * e.g:
+   * -25.9 -> '.'
+   * 25 -> ''
+   * 25.9 -> '.'
+   */
+  dot(): string {
+    return  this.ifDotExist() ? '.' : '';
+  }
+
+  ifDotExist(): boolean {
+    return (this.getAmount().toString()).indexOf('.') !== -1;
+  }
+
+
+  /**
+   * Properly truncates the value.
+   * e.g:
+   * -25.99999 with dec=2 -> '-25.99'
+   * 25 -> ''
+   * 25.9 with dec=8 -> '25.9'
+   */
+  truncateToDecimals(int: number, dec: number) {
+    const calcDec = Math.pow(10, dec);
+    return Math.trunc(int * calcDec) / calcDec;
   }
 
 }

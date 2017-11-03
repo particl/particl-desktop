@@ -39,6 +39,7 @@ export class TransactionService {
           this.rpc_update();
         });
 
+    /* check if testnet -> block explorer url */
     this.rpc.state.observe('chain').take(1)
     .subscribe(chain => this.testnet = chain === 'test');
   }
