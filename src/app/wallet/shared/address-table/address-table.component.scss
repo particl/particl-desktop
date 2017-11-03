@@ -10,12 +10,16 @@ md-card.address-entry {
 }
 
 .address {
+  cursor: pointer;
   .title {
     color: $text-muted;
     font-weight: normal;
     @media (max-width: 960px) {
       display: none;
     }
+  }
+  .address-string {
+    font-family: monospace;
   }
 }
 

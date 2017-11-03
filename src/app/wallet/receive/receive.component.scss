@@ -1,5 +1,9 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+.container-block {
+  padding: calc(20px - 1.25em) 20px 20px 20px; // offset padding from search input
+}
+
 /* ------------------------------- *\
     Search Addresses
 \* ------------------------------- */
@@ -24,6 +28,10 @@
 
 .qr-card {
   padding: 24px 10px;
+  .qrcode {
+    width: 180px;
+    margin: 0 auto;
+  }
 }
 
 .address-details {

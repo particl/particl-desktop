@@ -29,20 +29,21 @@
           </div>
 
           <!-- Address -->
-          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress">
-            <span class="title">Address&emsp;</span>{{ address.address }}
+          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)">
+            <span class="title">Address&emsp;</span>
+            <span class="address-string">{{ address.address }}</span>
           </div>
 
           <!-- Pubkey -->
           <div fxFlex="25" class="grid-cell" *ngIf="displayPublicKey">
             <span class="title">Public Key</span>
-            {{ address.publicKey }}
+            <span class="pubkey">{{ address.publicKey }}</span>
           </div>
 
           <!-- Type -->
           <div fxFlex="25" clas="grid-cell" *ngIf="displayType">
             <span class="title">Type</span>
-            <span class="text-uppercase">{{ address.type }}</span>
+            <span class="type">{{ address.type }}</span>
           </div>
 
           <!-- Actions/controls -->
