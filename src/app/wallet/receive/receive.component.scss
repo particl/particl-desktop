@@ -1,5 +1,9 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+.container-block {
+  padding: calc(20px - 1.25em) 20px 20px 20px; // offset padding from search input
+}
+
 /* ------------------------------- *\
     Search Addresses
 \* ------------------------------- */
@@ -24,6 +28,10 @@
 
 .qr-card {
   padding: 24px 10px;
+  .qrcode {
+    width: 180px;
+    margin: 0 auto;
+  }
 }
 
 .address-details {
@@ -48,9 +56,23 @@
   }
   .details-address {
     font-family: monospace;
+    color: $text-muted;
     margin: 0 25px 20px;
     @media (max-width: 960px) {
       margin: 0 0 20px;
+    }
+  }
+  .actions {
+    button.copy {
+      margin-bottom: 10px;
+    }
+    .mat-icon {
+      margin-right: 7px;
+      width: auto;
+      height: auto;
+      font-size: 14px;
+      position: relative;
+      top: -1px;
     }
   }
 }
@@ -63,6 +85,10 @@
   font-weight: normal;
   text-transform: uppercase;
   color: $text-muted;
+  &.first {
+    padding-top: 0;
+    height: auto;
+  }
 }
 
 .address-info { // address "card"

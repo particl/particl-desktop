@@ -121,7 +121,7 @@
     "@compodoc/compodoc": "^1.0.0-beta.12",
     "@types/jasmine": "^2.6.1",
     "@types/node": "^8.0.47",
-    "codelyzer": "^3.2.2",
+    "codelyzer": "^4.0.0",
     "coveralls": "^3.0.0",
     "electron": "1.7.9",
     "electron-builder": "^19.41.0",
@@ -140,6 +140,6 @@
     "ts-node": "~3.3.0",
     "tslint": "~5.8.0",
     "tslint-microsoft-contrib": "^5.0.1",
-    "typescript": "~2.5.3"
+    "typescript": "~2.6.1"
   }
 }

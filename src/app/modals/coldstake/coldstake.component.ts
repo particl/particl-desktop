@@ -152,7 +152,7 @@ export class ColdstakeComponent {
     if (this.prevColdStakeAddress === this.coldStakeAddress) {
       if (this.step === 3) {
         this.finalMessage = 'Cold staking address is the same - no changes required.';
-        this._flashNotificationService.open('Cold staking key is exactly the same as before!: ', '', 1000);
+        this._flashNotificationService.open('Cold staking key is exactly the same as before!', '', 1000);
       }
       return;
     }
