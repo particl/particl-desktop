@@ -56,7 +56,7 @@ export class Transaction implements Deserializable {
   }
 
   public getNetAmount() {
-    const amount : number = +this.getAmount();
+    const amount: number = +this.getAmount();
     if (amount < 0) { // sent
       return amount + this.fee;
     } else { // received
