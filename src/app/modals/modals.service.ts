@@ -28,7 +28,6 @@ export class ModalsService {
 
   /* True if user already has a wallet (imported seed or created wallet) */
   public initializedWallet: boolean = false;
-
   private data: string;
 
   private log: any = Log.create('modals.service');

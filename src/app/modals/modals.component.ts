@@ -42,7 +42,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   hasScrollY: boolean = false;
   closeOnEscape: boolean = true;
   enableClose: boolean;
-
+  loadSpinner: boolean;
   private logger: any = Log.create('modals.component');
 
   constructor(
@@ -55,6 +55,9 @@ export class ModalsComponent implements DoCheck, OnInit {
   ngOnInit() {
     this.state.observe('modal:fullWidth:enableClose')
       .subscribe(status => this.enableClose = status);
+
+    this.state.observe('ui:spinner')
+      .subscribe(status => this.loadSpinner = status);
   }
 
   ngDoCheck() {
