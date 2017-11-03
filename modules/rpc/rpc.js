@@ -67,13 +67,22 @@ function rpcCall (method, params, auth, callback) {
   });
 
   request.on('error', error => {
-    if (error.code === 'ECONNRESET') {
-      callback({
-        status: 0,
-        message: 'Timeout'
-      });
-    } else {
-      callback(error);
+    switch (error.code) {
+      case 'ECONNRESET':
+        callback({
+          status: 0,
+          message: 'Timeout'
+        });
+        break;
+      case 'ECONNREFUSED':
+        callback({
+          status: 502,
+          message: 'Connection Refused',
+          _error: error
+        });
+        break;
+      default:
+        callback(error);
     }
   });
 
@@ -89,7 +98,7 @@ function rpcCall (method, params, auth, callback) {
 /*******************************/
 
 /*
-** prepares `backend-rpccall` to receive RPC calls from the renderer
+** prepares `rpc-channel` to receive RPC calls from the renderer
 */
 function init(options) {
   HOSTNAME = options.rpcbind || 'localhost';
@@ -116,7 +125,7 @@ function init(options) {
       }
     });
   }
-  rxIpc.registerListener('backend-rpccall', createObservable);
+  rxIpc.registerListener('rpc-channel', createObservable);
 }
 
 function checkDaemon(options) {

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalModule, TooltipModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { ModalsService } from './modals.service';
@@ -41,10 +40,8 @@ import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.c
     MdInputModule,
     MdCheckboxModule,
     MdProgressSpinnerModule,
-    ModalModule,
     MdTooltipModule,
     MdProgressBarModule,
-    TooltipModule,
     ClipboardModule
   ],
   declarations: [
