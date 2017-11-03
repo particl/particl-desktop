@@ -15,7 +15,8 @@ export class BalanceComponent {
   private _sub: Subscription;
 
   get balance() {
-    return new Amount(this._state.get(this.type) || 0, 10);
+    // Round to 4 digits
+    return new Amount(this._state.get(this.type) || 0, 4);
   }
 
   constructor(private _state: StateService) { }

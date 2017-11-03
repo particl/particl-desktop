@@ -98,25 +98,50 @@ export class Duration {
     return this.formatTime(this.duration);
   }
 
-    // seconds into readable format
-    private formatTime(seconds: number): String {
-      const years: number = Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hour*/ * 365/*days*/));
-      const months: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hours*/ * 30.5/*months*/)) - years * 12;
-      const days: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24/*hours*/)) - months * 30.5;
-      const hours: number =  Math.floor(seconds / (60 /*s*/ * 60/*min*/)) - days * 24;
-      const minutes: number =  Math.floor(seconds / (60/*s*/)) - hours * 60;
+  public getShortReadableDuration(): String {
+    return this.shortFormatTime(this.duration);
+  }
 
-      if (years > 0) {
-        return  years + ' years' + (months > 0 ? ' and ' + Math.ceil(months) + ' months' : '');
-      } else if (months > 0) {
-        return  months + ' months' + (days > 0 ? ' and ' + Math.ceil(days) + ' days' : '');
-      } else if (days > 0) {
-        return  days + ' days' + (hours > 0 ? ' and ' + Math.ceil(hours) + ' hours' : '');
-      } else if (hours > 0) {
-        return  hours + ' hours' + (minutes > 0 ? ' and ' + Math.ceil(minutes) + ' minutes' : '');
-      } else if (minutes > 0) {
-        return  minutes + ' minutes';
-      }
+  // seconds into readable format
+  private formatTime(seconds: number): String {
+    const years: number = Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hour*/ * 365/*days*/));
+    const months: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hours*/ * 30.5/*months*/)) - years * 12;
+    const days: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24/*hours*/)) - months * 30.5;
+    const hours: number =  Math.floor(seconds / (60 /*s*/ * 60/*min*/)) - days * 24;
+    const minutes: number =  Math.floor(seconds / (60/*s*/)) - hours * 60;
+
+    if (years > 0) {
+      return  years + ' years' + (months > 0 ? ' and ' + Math.ceil(months) + ' months' : '');
+    } else if (months > 0) {
+      return  months + ' months' + (days > 0 ? ' and ' + Math.ceil(days) + ' days' : '');
+    } else if (days > 0) {
+      return  days + ' days' + (hours > 0 ? ' and ' + Math.ceil(hours) + ' hours' : '');
+    } else if (hours > 0) {
+      return  hours + ' hours' + (minutes > 0 ? ' and ' + Math.ceil(minutes) + ' minutes' : '');
+    } else if (minutes > 0) {
+      return  minutes + ' minutes';
     }
+  }
+
+  // seconds into short & readable format
+  private shortFormatTime(seconds: number): String {
+    const years: number = Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hour*/ * 365/*days*/));
+    const months: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hours*/ * 30.5/*months*/)) - years * 12;
+    const days: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24/*hours*/)) - months * 30.5;
+    const hours: number =  Math.floor(seconds / (60 /*s*/ * 60/*min*/)) - days * 24;
+    const minutes: number =  Math.floor(seconds / (60/*s*/)) - hours * 60;
+
+    if (years > 0) {
+      return  years + ' years';
+    } else if (months > 0) {
+      return  months + ' months';
+    } else if (days > 0) {
+      return  days + ' days';
+    } else if (hours > 0) {
+      return  hours + ' hours';
+    } else if (minutes > 0) {
+      return  minutes + ' minutes';
+    }
+  }
 
   }
