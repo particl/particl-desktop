@@ -59,15 +59,13 @@ export class ModalsService {
     this.openInitialCreateWallet();
 
     /* Hook daemon errors -> open daemon modal */
-    this._rpc.modalUpdates.asObservable().subscribe(status => {
-      if (status.error) {
-        this.enableClose = true;
-        this.open('daemon', status);
-        // no error and daemon model open -> close it
-      } else if (this.wasAlreadyOpen('daemon')) {
-        this.close();
-      }
-    });
+    this._rpc.errorsStateCall.asObservable()
+    .subscribe(
+      status => this.wasAlreadyOpen('daemon') && this.close(),
+      error => {
+          this.enableClose = true;
+          this.open('daemon', error);
+      });
   }
 
   /**
