@@ -54,6 +54,22 @@ export class Transaction implements Deserializable {
     return this.txid + this.getAmount() + this.category;
   }
 
+  public getNetAmount() {
+    const amount : number = +this.getAmount();
+    if (amount < 0) { // sent
+      return amount + this.fee;
+    } else { // received
+      return amount - (+this.fee);
+    }
+  }
+
+  public getConfirmationCount(confirmations: number): string {
+    if (this.confirmations > 12) {
+      return '12+';
+    }
+    return this.confirmations.toString();
+  }
+
   private dateFormatter(d: Date) {
     return (
       d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + '-' +

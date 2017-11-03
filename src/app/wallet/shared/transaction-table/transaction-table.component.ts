@@ -79,18 +79,4 @@ export class TransactionsTableComponent implements OnInit {
     return (this.expandedTransactionID === tx.getExpandedTransactionID());
   }
 
-  public calculateNetAmount(fee: number, amount: number) {
-    if (amount < 0) { // sent
-      return amount + fee;
-    } else { // received
-      return amount - fee;
-    }
-  }
-
-  public getConfirmationCount(confirmations: number): string {
-    if (confirmations > 12) {
-      return '12+';
-    }
-    return confirmations.toString();
-  }
 }
