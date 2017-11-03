@@ -51,10 +51,10 @@ class SafeIpcRenderer {
 }
 
 window.ipc = new SafeIpcRenderer([
-  'multiwallet',
+  'front-choosewallet',
   'rpc-channel',
   'rx-ipc-check-reply:rpc-channel',
-  'rx-ipc-check-reply:multiwallet',
+  'rx-ipc-check-reply:front-choosewallet',
   'rx-ipc-check-listener'
 ]);
 
