@@ -57,7 +57,7 @@
 
         <!-- Confirmations -->
         <md-panel-title fxFlex.lg="10" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
-          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.confirmations }}</span>
+          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
         </md-panel-title>
 
         <!-- Amount -->
@@ -92,7 +92,7 @@
           <!-- Net amount (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
             <b>Net amount:</b>
-            <span class="md-right">{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART</span>
+            <span class="md-right">{{ tx.getNetAmount()}} PART</span>
           </div>
         </div>
 

@@ -78,4 +78,5 @@ export class TransactionsTableComponent implements OnInit {
   public checkExpandDetails(tx: Transaction) {
     return (this.expandedTransactionID === tx.getExpandedTransactionID());
   }
+
 }
