@@ -27,8 +27,16 @@ export class RPXService {
   constructor(
     public zone: NgZone,
   ) {
+    window.ipc.on('rx-ipc-check-listener', (event, channel) => {
+      const replyChannel = 'rx-ipc-check-reply:' + channel;
+      if (this.listeners[channel]) {
+        event.sender.send(replyChannel, true);
+      } else {
+        event.sender.send(replyChannel, false);
+      }
+    });
 
-    window.ipc.on('multiwallet', (method, wallets) => {
+    window.ipc.on('front-choosewallet', (method, wallets) => {
       return Observable.create(observer => {
 
         if (wallets.length === 0) {

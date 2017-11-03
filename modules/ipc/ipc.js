@@ -21,23 +21,14 @@ exports.promptWalletChoosing = function(wallets, webContents) {
       resolve(wallets);
     }
 
-    console.log('test')
-    rxIpc.checkRemoteListener('multiwallet', webContents)
-    .then(() => {
-      console.log('then')
-      rxIpc.runCommand('multiwallet', webContents, wallets).subscribe(chosen => {
-        console.log('got response')
-        if (chosen.length === 0) {
-          log.error('GUI returned no chosen walllet !');
-          reject(chosen);
-        } else {
-          console.log(chosen)
-          resolve(chosen);
-        }
-      }, err => log.error(err));
-    }).catch(() => {
-      console.log('checking...');
-    });
+    rxIpc.runCommand('front-choosewallet', webContents, wallets).subscribe(chosen => {
+      if (chosen.length === 0) {
+        log.error('GUI returned no chosen walllet !');
+        reject(chosen);
+      } else {
+        resolve(chosen);
+      }
+    }, err => log.error(err));
 
   }).catch(error => log.error(error))
 }

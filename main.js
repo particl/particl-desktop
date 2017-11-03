@@ -12,12 +12,10 @@ log.transports.file.file = log.transports.file
    .findLogPath(log.transports.file.appName)
    .replace('log.log', 'partgui.log');
 
-const _options      = require('./modules/options/options');
+const _options      = require('./modules/options');
+const init          = require('./modules/init');
 const rpc           = require('./modules/rpc/rpc');
-const ipc           = require('./modules/ipc/ipc');
 const daemon        = require('./modules/daemon/daemon');
-const daemonManager = require('./modules/daemon/daemonManager');
-const multiwallet   = require('./modules/multiwallet/multiwallet');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -31,27 +29,9 @@ let openDevTools = true;
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-
   options = _options.parse();
   initMainWindow();
-
-  ipc.init();
-
-  daemon.check()
-    .then(()            => log.info('daemon already started'))
-    .catch(()           => daemonManager.init())
-    .then(()            => multiwallet.get())
-    .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
-    .then(chosenWallets => daemon.start(chosenWallets, () => log.info('daemon started')))
-});
-
-app.on('quit', function (event, exitCode) {
-  log.info('stopping')
-  electron.ipcMain.removeAllListeners(['backend-rpccall']);
-  daemon.stop();
-  if (exitCode === 991) {
-    throw Error('Could not connect to daemon.');
-  }
+  init.start(mainWindow);
 });
 
 // Quit when all windows are closed.

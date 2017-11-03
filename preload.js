@@ -54,6 +54,7 @@ window.ipc = new SafeIpcRenderer([
   'multiwallet',
   'rpc-channel',
   'rx-ipc-check-reply:rpc-channel',
+  'rx-ipc-check-reply:multiwallet',
   'rx-ipc-check-listener'
 ]);
 

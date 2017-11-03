@@ -3,10 +3,10 @@ const log      = require('electron-log');
 const spawn    = require('child_process').spawn;
 const rxIpc    = require('rx-ipc-electron/lib/main').default;
 
-const _options      = require('../options/options');
+const _options      = require('../options');
 const rpc           = require('../rpc/rpc');
 const cookie        = require('../rpc/cookie');
-const daemonManager = require('./../daemon/daemonManager');
+const daemonManager = require('../daemon/daemonManager');
 
 let daemon;
 let exitCode = 0;

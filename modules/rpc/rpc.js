@@ -2,7 +2,7 @@ const log         = require('electron-log');
 const http        = require('http');
 
 const cookie      = require('./cookie');
-const _options    = require('../options/options');
+const _options    = require('../options');
 
 let TIMEOUT = 15000;
 let HOSTNAME;
