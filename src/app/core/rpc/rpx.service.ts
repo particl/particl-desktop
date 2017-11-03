@@ -1,15 +1,12 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-// multiwallet
-// import rxIpc from 'rx-ipc-electron/lib/renderer';
-// import { ModalsService } from '../../modals/modals.service';
-
 // RxIPC related stuffs
 
 declare global {
   interface Window {
     electron: boolean;
+    require: any;
     ipc: {
       on:                 (channel:  string, listener:   Function) => void;
       once:               (channel:  string, listener:   Function) => void;
@@ -17,7 +14,6 @@ declare global {
       sendSync:           (channel:  string, arguments?: {}      ) => void;
       sendToHost:         (channel:  string, arguments?: {}      ) => void;
       removeListener:     (channel:  string, listener:   Function) => void;
-      registerListener:   (channel:  string, listener:   Function) => void;
       removeAllListeners: (channel?: string                      ) => void;
     }
   }
@@ -30,13 +26,10 @@ export class RPXService {
 
   constructor(
     public zone: NgZone,
-    // private _modalsService: ModalsService
   ) {
 
-    window.ipc.registerListener('multiwallet', (method, wallets) => {
-      console.log('test1')
+    window.ipc.on('multiwallet', (method, wallets) => {
       return Observable.create(observer => {
-        console.log('test2')
 
         if (wallets.length === 0) {
           // this.log.error('Electron process could not find wallets');

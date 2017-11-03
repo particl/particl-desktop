@@ -111,7 +111,6 @@
     "ngx-clipboard": "^8.0.3",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.2",
-    "protractor": "^5.2.0",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "5.5.0",
     "tmp": "0.0.33",

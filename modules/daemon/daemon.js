@@ -18,6 +18,7 @@ exports.start = function(wallets, callback) {
     const daemonPath = options.customdaemon
                      ? options.customdaemon
                      : daemonManager.getPath();
+    console.log(wallets);
 
     exports.check().then(() => {
       log.info('daemon already started');
