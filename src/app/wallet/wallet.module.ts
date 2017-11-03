@@ -35,6 +35,8 @@ import { NewAddressModalComponent } from './address-book/modal/new-address-modal
 import { QrCodeModalComponent } from './shared/qr-code-modal/qr-code-modal.component';
 import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SignatureAddressModalComponent } from './shared/signature-address-modal/signature-address-modal.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 const routes: Routes = [
   {
@@ -50,6 +52,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forChild(routes),
     SharedModule,
@@ -86,7 +89,8 @@ const routes: Routes = [
     AddAddressLabelComponent,
     NewAddressModalComponent,
     QrCodeModalComponent,
-    SendConfirmationModalComponent
+    SendConfirmationModalComponent,
+    SignatureAddressModalComponent
   ],
   exports: [
     TransactionsTableComponent,
@@ -98,7 +102,8 @@ const routes: Routes = [
     NewAddressModalComponent,
     QrCodeModalComponent,
     AddressLookupComponent,
-    SendConfirmationModalComponent
+    SendConfirmationModalComponent,
+    SignatureAddressModalComponent
   ],
   providers: []
 })
