@@ -370,7 +370,6 @@ export class ReceiveComponent implements OnInit {
   }
 
   openSignatureModal(address: string): void {
-    this.log.d('>>>>>>>>>>>>>>>>>>>>>>>>>>>', address);
     const dialogRef = this.dialog.open(SignatureAddressModalComponent);
     dialogRef.componentInstance.formData.address = address;
   }

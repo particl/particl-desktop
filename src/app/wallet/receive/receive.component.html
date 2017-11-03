@@ -90,7 +90,8 @@
                        [cbContent]="getUnusedAddress().address" fontSet="partIcon"
                        fontIcon="part-single-copy-04"></md-icon>
             </span>
-            <div fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+            <!-- Sign message -->
+            <div fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px" *ngIf="type == 'public'" >
               <md-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-a-check"
                        (click)="openSignatureModal(getUnusedAddress().address)"
                        mdTooltip="Sign / Verify message"></md-icon>
@@ -138,7 +139,8 @@
                          mdTooltip="Copy address"
                          ngxClipboard [cbContent]="address.address"></md-icon>
               </span>
-              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+              <!-- Sign/Verify public address only  -->
+              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
                 <md-icon fontSet="partIcon" fontIcon="part-a-check" mdTooltip="Sign / Verify message"
                          (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></md-icon>
               </span>
