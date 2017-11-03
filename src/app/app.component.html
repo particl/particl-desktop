@@ -79,15 +79,15 @@
       </md-accordion>
     </md-content-->
 
-    <md-content layout-padding *ngIf="!!daemonError || !!walletError">
+    <md-content layout-padding *ngIf="!daemonRunning || !walletInitialized">
       <md-list class="sidesubmenu error">
-        <md-list-item *ngIf="daemonError">
+        <md-list-item *ngIf="!daemonRunning">
           <md-icon>error</md-icon>
-          {{daemonError}}
+          Connection Refused, Daemon is not connected
         </md-list-item>
-        <md-list-item *ngIf="walletError">
+        <md-list-item *ngIf="!walletInitialized">
           <md-icon>error</md-icon>
-          {{walletError}}
+          Please create wallet first to access other tabs
         </md-list-item>
       </md-list>
     </md-content>
