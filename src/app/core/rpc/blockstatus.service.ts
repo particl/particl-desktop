@@ -43,7 +43,8 @@ export class BlockStatusService {
   ) {
     // Get internal block height and calculate syncing details (ETA)
     this.log.d('constructor blockstatus');
-    this._state.observe('blocks')
+    // this._state.observe('blocks')
+    this._peerService.getBlockCount()
       .subscribe(
         height => {
 
@@ -64,7 +65,6 @@ export class BlockStatusService {
         },
         error => console.log('constructor blockstatus: state blocks subscription error:' + error));
 
-    //todo can't rely on 
     // Get heighest block count of peers and calculate remainerders.
     this._peerService.getBlockCountNetwork()
       .subscribe(
@@ -81,7 +81,6 @@ export class BlockStatusService {
 
   /** Calculates the details (percentage of synchronised, estimated time left, ..) */
   private calculateSyncingDetails(newHeight: number) {
-
 
     const internalBH = this.highestBlockHeightInternal;
     const networkBH = this.highestBlockHeightNetwork;
@@ -100,9 +99,9 @@ export class BlockStatusService {
       this.status.syncPercentage = 100;
     }
 
-    /* 
+    /*
       Time & block diff between updates.
-      "how much blocks did it sync since last time we ran this function" 
+      "how much blocks did it sync since last time we ran this function"
     */
     const timeDiff: number = Date.now() - this.lastUpdateTime; // in milliseconds
     const blockDiff: number = newHeight - internalBH;
@@ -150,10 +149,13 @@ export class BlockStatusService {
     }
     if (minutes > 0) {
       returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `
+    } else if (hours === 0 && seconds > 0) {
+      returnString += `Any minute now!`;
     }
+    /*
     if (seconds > 0) {
       returnString += `${seconds} ${seconds > 1 ? 'seconds' : 'second'}`
-    }
+    }*/
     if (returnString === '') {
       returnString = '∞';
     }
@@ -182,7 +184,7 @@ export class BlockStatusService {
     /* Average = summation / amount of elements */
     const averageEstimatedTimeLeft = Math.floor(sum / length);
 
-    // this.log.d(`averageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
+    this.log.d(`averageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
     return averageEstimatedTimeLeft;
   }
 
