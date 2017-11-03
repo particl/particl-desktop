@@ -64,9 +64,10 @@
         <md-panel-title fxFlex.lg="30" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
           <span md-line>
             <span class="amount"> 
-              <span="big-amount">{{ tx.getAmountObject().getIntegerPart() }}</span> 
-              <span="dot">{{ tx.getAmountObject().dot() }}</span> 
-              <span="small-amount">{{ tx.getAmountObject().getFractionalPart() }}</span> PART
+              <span class="big-amount">{{ tx.getAmountObject().getIntegerPart() }}</span> 
+              <span class="dot">{{ tx.getAmountObject().dot() }}</span> 
+              <span class="small-amount">{{ tx.getAmountObject().getFractionalPart() || '' }}</span> PART
+            </span>
           </span>
         </md-panel-title>
 
