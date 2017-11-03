@@ -243,32 +243,32 @@ declare global {
     * }
     * ```
     */
-    oldCall(
-      instance: Injectable,
-      method: string,
-      params: Array<any> | null,
-      successCB: Function,
-      errorCB?: Function,
-      isPoll?: boolean,
-      isLast?: boolean
-      ): void {
-      this.call(method, params)
-      .subscribe(
-        response => {
-          successCB.call(instance, response);
-          if (isPoll && isLast) {
-            this._callOnPoll.forEach((func) => func());
-            this._callOnNextPoll.forEach((func) => func());
-            this._callOnNextPoll = [];
-          }
-        },
-        error => {
-          if (errorCB) {
-            errorCB.call(instance, error.target ? error.target : error);
-          }
-          this.log.er(`oldCall: RPC Call returned an error`, error);
-        });
-    }
+  oldCall(
+    instance: Injectable,
+    method: string,
+    params: Array<any> | null,
+    successCB: Function,
+    errorCB?: Function,
+    isPoll?: boolean,
+    isLast?: boolean
+  ): void {
+    this.call(method, params).subscribe(
+      response => {
+        successCB.call(instance, response);
+         if (isPoll && isLast) {
+          this._callOnPoll.forEach((func) => func());
+          this._callOnNextPoll.forEach((func) => func());
+          this._callOnNextPoll = [];
+        }
+      },
+      error => {
+        if (errorCB) {
+          errorCB.call(instance, error.target ? error.target : error);
+        }
+        this.log.er(`oldCall: RPC Call returned an error`, error);
+      }
+    );
+  }
 
 
   /**
@@ -299,28 +299,28 @@ declare global {
     *
     * @returns      void
     */
-    register(
-      instance: Injectable,
-      method: string,
-      params: Array<any> | Function | null,
-      successCB: Function,
-      when: string,
-      errorCB?: Function
-      ): void {
-      let valid = false;
-      const _call = {
-        instance: instance,
-        method: method,
-        params: params,
-        successCB: successCB,
-        errorCB: errorCB
-      };
+  register(
+    instance: Injectable,
+    method: string,
+    params: Array<any> | Function | null,
+    successCB: Function,
+    when: string,
+    errorCB?: Function
+  ): void {
+    let valid = false;
+    const _call = {
+      instance: instance,
+      method: method,
+      params: params,
+      successCB: successCB,
+      errorCB: errorCB
+    };
 
-      if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
-        this._callOnAddress.push(_call);
-        valid = true;
-      }
+    if (when.indexOf('address') !== -1 || when.indexOf('both') !== -1) {
+      this._callOnAddress.push(_call);
+      valid = true;
     }
+  }
 
 
   // TODO: Model / interface..
@@ -342,7 +342,7 @@ declare global {
     * Do one poll for _address table_: execute all the registered calls.
     * Triggered from within the GUI!
     */
-    specialPoll(): void {
+  specialPoll(): void {
     // A poll only for address changes, triggered from the GUI!
 
     this._callOnAddress.forEach(this._pollCall.bind(this));
