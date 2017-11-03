@@ -4,6 +4,10 @@ export class Amount {
 
   }
 
+  public getAmount() {
+    return this.amount;
+  }
+
   public getIntegerPart(): number {
     return +this.splitAmountByDot(this.amount);
   }

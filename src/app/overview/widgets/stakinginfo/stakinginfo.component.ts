@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { StateService } from '../../../core/state/state.service';
-import { Amount, Duration } from './util';
+import { Amount, Duration } from '../../../shared/util/utils';
 
 @Component({
   selector: 'app-stakinginfo',

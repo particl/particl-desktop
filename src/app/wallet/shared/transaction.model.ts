@@ -1,3 +1,4 @@
+import { Amount } from '../../shared/util/utils';
 
 interface Deserializable {
     getTypes(): Object;
@@ -32,11 +33,12 @@ export class Transaction implements Deserializable {
     return {};
   }
 
-  getAmount(): string {
+  getAmountObject(): Amount {
     if (this.category === 'stake') {
-      return this.reward.toFixed(8);
+      return new Amount(+this.reward.toFixed(8));
+    } else {
+      return new Amount(+this.amount.toFixed(8));
     }
-    return this.amount.toFixed(8);
   }
 
   getAddress(): string {
@@ -51,7 +53,7 @@ export class Transaction implements Deserializable {
   }
 
   getExpandedTransactionID(): string {
-    return this.txid + this.getAmount() + this.category;
+    return this.txid + this.getAmountObject().getAmount() + this.category;
   }
 
   private dateFormatter(d: Date) {
