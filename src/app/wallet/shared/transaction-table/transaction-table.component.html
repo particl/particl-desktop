@@ -25,17 +25,17 @@
 
         <!-- Category icon -->
         <md-panel-title fxFlex.lg="25" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
-          <span *ngSwitchCase="'stake'">
-            <md-icon fontSet="faIcon" fontIcon="fa-plus" color="primary"></md-icon> Staked
+          <span *ngSwitchCase="'stake'" class="tx-type staked">
+            <md-icon fontSet="faIcon" fontIcon="fa-plus"></md-icon>Staked
           </span>
-          <span *ngSwitchCase="'orphaned_stake'">
-            <md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon> Orphaned Stake
+          <span *ngSwitchCase="'orphaned_stake'" class="tx-type orphan">
+            <md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon>Orphaned Stake
           </span>
-          <span *ngSwitchCase="'send'">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="warn"></md-icon> Sent
+          <span *ngSwitchCase="'send'" class="tx-type sent">
+            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left" color="warn"></md-icon>Sent
           </span>
-          <span *ngSwitchCase="'receive'">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left"></md-icon> Received
+          <span *ngSwitchCase="'receive'" class="tx-type received">
+            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="primary"></md-icon>Received
           </span>
         </md-panel-title>
 
@@ -74,13 +74,12 @@
           <!-- To/from (detail) -->
           <div class="tx-detail-item" fxFlex>
             <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">To/from:</b>
-            <input class="md-right" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" value="{{ tx.getAddress() }}" placeholder="To/from">
+            <input class="to-from-address" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" value="{{ tx.getAddress() }}" placeholder="To/from">
           </div>
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
             <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">Transaction ID:</b>
-            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight"
-               href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank">{{tx.txid}}</a>
+            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight" href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank" mdTooltip="Show on block explorer">{{tx.txid}}</a>
           </div>
         </div>
 

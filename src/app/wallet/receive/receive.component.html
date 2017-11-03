@@ -24,11 +24,11 @@
 <div class="container-block" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
 
   <!-- Address details & QR code -->
-  <div fxFlex="0 0 200px" fxFlex.lt-md="100" *ngIf="selected">
+  <div fxFlex="0 0 220px" fxFlex.lt-md="100" *ngIf="selected">
     <md-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px">
 
       <div #qrCode class="qrcode" fxFlex fxFlex.lt-md="0 0 200px">
-        <qr-code [size]="getQrSize()" [level]="'H'" value="particl:{{ selected.address }}">
+        <qr-code size="180" [level]="'H'" value="particl:{{ selected.address }}">
         </qr-code>
       </div><!-- qrcode -->
 
@@ -44,17 +44,25 @@
             {{ word }}
           </div>
         </div>
-        <button md-raised-button color="primary" (click)="openNewAddress()">New {{ getAddressType() }} address</button>
-      </div><!-- .address-details -->
 
+        <div class="actions">
+          <button md-button class="copy" ngxClipboard [cbContent]="selected.address">
+            <md-icon fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>Copy address
+          </button>
+          <button md-raised-button color="primary" (click)="openNewAddress()" class="generate-new">
+            <md-icon fontSet="faIcon" fontIcon="fa-plus"></md-icon>New {{ getAddressType() }} address
+          </button>
+        </div><!-- .actions -->
+
+      </div><!-- .address-details -->
     </md-card>
   </div>
 
   <!-- Address list -->
-  <div fxFlex="1 1 calc(100% - 240px)" *ngIf="getUnusedAddress()">
+  <div fxFlex="1 1 calc(100% - 260px)" *ngIf="getUnusedAddress()">
 
     <md-list class="list-data" *ngIf="inSearchMode() === false">
-      <div md-subheader class="address-title">Unused address</div>
+      <div md-subheader class="address-title first">Unused address</div>
 
       <md-card class="address-info">
         <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
@@ -84,7 +92,7 @@
         </div>
       </md-card>
       <div class="widget-help">
-        <span class="TODO">@FIXME:</span> It is advised to use new addresses for each Public transaction (or person) for greater privacy.
+        It is advised that you generate and use a new address for each public transaction (or person) to increase your privacy.
       </div>
     </md-list><!-- .list-data -->
 

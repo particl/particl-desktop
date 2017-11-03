@@ -7,7 +7,7 @@
 }
 
 .widget-help { // help description
-  color: grey;
+  color: $text-muted;
   font-size: 11px;
   margin-bottom: 25px;
 }
@@ -25,6 +25,7 @@
  */
 
  .mat-sidenav {
+   user-select: none;
   .logo-area {
     .mat-toolbar-row {
       justify-content: center;
@@ -47,6 +48,7 @@
     &.sidesubmenu {
       a {
         text-decoration: none;
+        outline: none;
       }
       .mat-list-item-content {
         text-transform: uppercase;
@@ -387,29 +389,36 @@ panel-header-title {
 }
 
 
-// Pagination
-.mat-paginator-navigation-next.mat-icon-button:hover {
-  background-color: #1aeab8;
-  border-radius: 0px;
-}
-
-.mat-paginator-navigation-previous.mat-icon-button:hover {
-  background-color: #1aeab8;
-  border-radius: 0px;
-}
+/* ------------------------------- *\
+    Pagination
+\* ------------------------------- */ 
 
 .mat-paginator {
+  margin-top: 40px;
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
     &:hover {
+      background-color: $color;
+      border-radius: $radius;
       .mat-paginator-increment,
       .mat-paginator-decrement {
         border-color: white;
       }
     }
+    &[disabled] {
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: $bg-shadow;
+      }
+      &:hover {
+        background-color: transparent;
+      }
+    }
   }
 }
+
+
 
 .syncing_header_text{
   width: 65%;
