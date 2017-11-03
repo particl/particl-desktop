@@ -107,8 +107,9 @@ export class SignatureAddressModalComponent implements OnInit {
 
   signVerifyMessage(): void {
     const address: string = this.formData.address;
-    const message: string = (this.formData.message) ? this.formData.message : '';
+    const message: string = (this.formData.message !== undefined) ? this.formData.message : '';
     const signature: string = this.formData.signature;
+
     if (this.type === 'sign') {
       this._rpc.call('signmessage', [address, message])
         .subscribe(response => {
@@ -118,23 +119,23 @@ export class SignatureAddressModalComponent implements OnInit {
           error => {
           // @TODO add generic message
             this.flashNotification.open(error.message);
-            this.log.er('Sign Message Failed', error.message);
+            this.log.er(`signVerifyMessage, RPC returned an error when signing message. ${error.message}`);
           });
     } else {
       this._rpc.call('verifymessage', [address, signature, message])
         .subscribe(response => {
-            console.log(response);
-            if(response.result) {
-              //this.log.d(`message verification response value = ${response}`);
+            if (response) {
               this.flashNotification.open('Message verified.');
             } else {
-              this.flashNotification.open('Message verification failed:\n the supplied signature and/or message were invalid for this address!');
+              this.flashNotification.open(
+                `Message verification failed:\n
+                the supplied signature and/or message were invalid for this address!`);
             }
           },
           error => {
             // @TODO add generic message
             this.flashNotification.open(error.message);
-            this.log.er('Verify Message Failed', error.message);
+            this.log.er(`signVerifyMessage, RPC returned an error when verifying message. ${error.message}`);
           });
     }
   }
