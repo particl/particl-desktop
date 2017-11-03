@@ -33,9 +33,18 @@ describe('BalanceComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get balance before point', () => {
+  it('should return a balance equal to 0 (getIntegerPart)', () => {
     expect(component.balance.getIntegerPart()).toBe(0);
   });
+
+  it('should return a balance equal to 0 (getFractionalPart)', () => {
+    expect(component.balance.getFractionalPart()).toBe(0);
+  });
+
+  it('should not return a dot because its just 0, not 0.0 ', () => {
+    expect(component.balance.dot()).toBe('');
+  });
+
 /*
   it('should get balance point', () => {
     component.getBalancePoint();
