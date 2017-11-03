@@ -80,7 +80,7 @@ export class TransactionsTableComponent implements OnInit {
   }
 
   public calculateNetAmount(fee: number, amount: number) {
-    if(amount < 0) { // sent
+    if (amount < 0) { // sent
       return amount + fee;
     } else { // received
       return amount - fee;
