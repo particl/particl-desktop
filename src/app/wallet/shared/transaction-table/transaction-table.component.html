@@ -79,7 +79,8 @@
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
             <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">Transaction ID:</b>
-            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight" href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" target="_blank">{{tx.txid}}</a>
+            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight"
+               href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank">{{tx.txid}}</a>
           </div>
         </div>
 
