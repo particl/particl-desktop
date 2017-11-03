@@ -4,14 +4,10 @@ import { Log } from 'ng2-logger';
 import { MdDialog, MdIconRegistry, MdSidenavModule, MdSidenav } from '@angular/material';
 
 import { WindowService } from './core/window.service';
-
 import { SettingsService } from './settings/settings.service';
-
-import { RPCService } from './core/rpc/rpc.service';
+import { RPCService, BlockStatusService } from './core/rpc/rpc.module';
 import { ModalsService } from './modals/modals.service';
 
-// Syncing example
-import { BlockStatusService } from './core/rpc/blockstatus.service';
 import { ModalsComponent } from './modals/modals.component';
 
 @Component({
@@ -29,6 +25,7 @@ export class AppComponent implements OnInit {
 
   walletInitialized: boolean = false;
   daemonRunning: boolean = false;
+
   daemonError: string = '';
   walletError: string = '';
 
@@ -41,6 +38,7 @@ export class AppComponent implements OnInit {
   /* Old bootstrap menu, remove? */
   isCollapsed: boolean = true;
   isFixed: boolean = false;
+
 
 
 
@@ -75,22 +73,22 @@ export class AppComponent implements OnInit {
       .flatMap(route => route.data)
       .subscribe(data => this.title = data['title']);
 
+    // Show logging colors
     this.log.er('error!');
     this.log.w('warn!');
     this.log.i('info');
     this.log.d('debug');
 
-    this._rpc.modalUpdates.asObservable().subscribe(status => {
-      this.daemonRunning = !status.error;
-      this.daemonError = this.daemonRunning ? '' : 'Connection Refused, Daemon is not connected';
-    });
+    // Display errors in sidenav when required */
 
+    // Updates the error box in the sidenav whenever a stateCall returns an error.
+    this._rpc.errorsStateCall.asObservable()
+    .subscribe(status => this.daemonRunning = true,
+               error => this.daemonRunning = [0, 502].includes(error.status));
+
+    // Updates the error box in the sidenav if wallet is not initialized.
     this._rpc.state.observe('walletInitialized')
-      .subscribe(
-        status => {
-          this.walletInitialized = status;
-          this.walletError = status ? '' : 'Please create wallet first to access other tabs';
-      });
+    .subscribe(status => this.walletInitialized = status);
   }
 
   toggle(value: string) {
@@ -110,8 +108,9 @@ export class AppComponent implements OnInit {
     sidNav.toggle(true);
   }
 
+
+  /** Open createwallet modal when clicking on error in sidenav */
   createWallet() {
-    // this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     this._modalsService.open('createWallet', {forceOpen: true});
   }
 }

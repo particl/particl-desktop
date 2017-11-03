@@ -46,6 +46,7 @@ function initMainWindow(trayImage) {
     minWidth: 961,
     maxWidth: 1920,
     height: 720,
+    resizable: false,
     icon: trayImage,
     webPreferences: {
       nodeIntegration: false,
