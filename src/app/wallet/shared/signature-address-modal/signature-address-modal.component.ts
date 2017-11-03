@@ -24,7 +24,8 @@ export class SignatureAddressModalComponent implements OnInit {
   public isAddressLookup: boolean = false;
   public tabIndex: number = 1;
 
-  log: any = Log.create('SignatureAddressModalComponent');
+  log: any = Log.create('SignatureAddressModalComponent.component');
+
   constructor(
     private dialog: MdDialog,
     private _rpc: RPCService,
@@ -122,7 +123,13 @@ export class SignatureAddressModalComponent implements OnInit {
     } else {
       this._rpc.call('verifymessage', [address, signature, message])
         .subscribe(response => {
-            this.flashNotification.open('Verify message successfully');
+            console.log(response);
+            if(response.result) {
+              //this.log.d(`message verification response value = ${response}`);
+              this.flashNotification.open('Message verified.');
+            } else {
+              this.flashNotification.open('Message verification failed:\n the supplied signature and/or message were invalid for this address!');
+            }
           },
           error => {
             // @TODO add generic message
@@ -137,7 +144,7 @@ export class SignatureAddressModalComponent implements OnInit {
   }
 
   onCopyAddress(): void {
-    this.flashNotification.open('Address copy to clipboard');
+    this.flashNotification.open('Copied address to clipboard!');
   }
 
   pasteAddress(): void {
