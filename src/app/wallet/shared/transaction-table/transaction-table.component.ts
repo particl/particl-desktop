@@ -86,4 +86,11 @@ export class TransactionsTableComponent implements OnInit {
       return amount - fee;
     }
   }
+
+  public getConfirmationCount(confirmations: number) : string {
+    if(confirmations > 12) {
+      return "12+";
+    }
+    return confirmations.toString();
+  }
 }

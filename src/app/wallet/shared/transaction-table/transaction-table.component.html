@@ -57,7 +57,7 @@
 
         <!-- Confirmations -->
         <md-panel-title fxFlex.lg="10" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
-          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.confirmations }}</span>
+          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ getConfirmationCount(tx.confirmations) }}</span>
         </md-panel-title>
 
         <!-- Amount -->
