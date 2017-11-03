@@ -70,7 +70,7 @@ export class RPCService {
   }
 
   /**
-    * The call function will perform a single call to the particld daemon and perform a callback to
+    * The call method will perform a single call to the particld daemon and perform a callback to
     * the instance through the function as defined in the params.
     *
     * @param {string} method  The JSON-RPC method to call, see ```./particld help```
@@ -112,12 +112,20 @@ export class RPCService {
     }
   }
 
-
-
-
-  /* state related stuff, maybe we move this to rpc-state.class.ts? */
-
-  /** Perform stateCall */
+  /**
+    * Make an RPC Call that saves the response in the state service.
+    *
+    * @param {string} method  The JSON-RPC method to call, see ```./particld help```
+    * @param {boolean>} withMethod  Should the state be saved under the method name.
+    *   i.e.: {rpcMethod: response}
+    *
+    * The rpc call and state update will only take place while `this._enableState` is `true`
+    *
+    * @example
+    * ```JavaScript
+    * this._rpc.stateCall('getwalletinfo');
+    * ```
+    */
   stateCall(method: string, withMethod?: boolean): void {
 
     if (!this._enableState) {
@@ -138,19 +146,14 @@ export class RPCService {
       // loop procedure
       const _call = () => {
         if (!this._enableState) {
+          // re-start loop after timeout - keep the loop going
+          setTimeout(_call, timeout);
           return;
         }
         this.call(method, params)
-        .subscribe(
-          success => {
-            this.stateCallSuccess(success);
-              /* No need to show modals
-              */
-              /*
-              this.modalUpdates.next({
-                response: success,
-                electron: this.isElectron
-              }); */
+          .subscribe(
+            success => {
+              this.stateCallSuccess(success);
 
               // re-start loop after timeout
               setTimeout(_call, timeout);
@@ -164,7 +167,6 @@ export class RPCService {
       }
       // initiate loop
       _call();
-
     } else {
       this.state.observe('blocks') .subscribe(success => this.stateCall(method, true));
       this.state.observe('txcount').subscribe(success => this.stateCall(method, true));
@@ -173,6 +175,8 @@ export class RPCService {
 
   /** Updates the state whenever a state call succeeds */
   private stateCallSuccess(success: any, method?: string | boolean) {
+    this.errorsStateCall.next(true); // Let's keep it simple
+
     if (method) {
       if (success) {
         const obj = {};
@@ -192,16 +196,15 @@ export class RPCService {
 
   /** Updates the state when the state call errors */
   private stateCallError(error: any, method: string, firstError: boolean) {
-    this.log.er(`stateCallError(): RPC Call ${method} returned an error: ${error}`);
+    this.log.er(`stateCallError(): RPC Call ${method} returned an error:`, error);
 
     // if not first error, show modal
     if (!firstError) {
-      this.errorsStateCall.next({
+      this.errorsStateCall.error({
         error: error.target ? error.target : error,
         electron: this.isElectron
       });
     }
-
   }
 
   toggleState(enable?: boolean): void {
@@ -212,14 +215,7 @@ export class RPCService {
     }
   }
 
-
-
-
-
-
-
-  /* Old stuff - address service still relies on register */
-
+  // Old stuff - TODO: address service still relies on register
 
   /**
     * The call function will perform a single call to the particld daemon and perform a callback to
@@ -270,7 +266,6 @@ export class RPCService {
     );
   }
 
-
   /**
     * The register function will register a call to the particld daemon
     * which is executed whenever the trigger happens (new block, new transactions through ZMQ)
@@ -296,8 +291,6 @@ export class RPCService {
     *     console.log(response);
     *   });
     * ```
-    *
-    * @returns      void
     */
   register(
     instance: Injectable,
@@ -322,7 +315,6 @@ export class RPCService {
     }
   }
 
-
   // TODO: Model / interface..
   private _pollCall (element: any, index: number, arr: Array<any>): void {
     this.oldCall(
@@ -337,17 +329,13 @@ export class RPCService {
       index === arr.length - 1);
   }
 
-
   /**
     * Do one poll for _address table_: execute all the registered calls.
     * Triggered from within the GUI!
     */
   specialPoll(): void {
     // A poll only for address changes, triggered from the GUI!
-
     this._callOnAddress.forEach(this._pollCall.bind(this));
   }
-
-
 }
 
