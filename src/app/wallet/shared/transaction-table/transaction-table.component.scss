@@ -69,7 +69,18 @@
     text-align: right;
     display: block;
     .amount {
-      //font-weight: 600;
+      .big {
+        font-weight: 500;        
+      }
+      .point {
+        color: $text-muted;
+      }
+      small {
+        color: $text-muted;
+      }
+      .currency {
+        color: $text;
+      }
     }
   }
 
