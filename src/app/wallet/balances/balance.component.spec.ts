@@ -34,8 +34,7 @@ describe('BalanceComponent', () => {
   });
 
   it('should get balance before point', () => {
-    component.balance.getIntegerPart();
-    expect(component.balance.getIntegerPart).toBe(0);
+    expect(component.balance.getIntegerPart()).toBe(0);
   });
 /*
   it('should get balance point', () => {
