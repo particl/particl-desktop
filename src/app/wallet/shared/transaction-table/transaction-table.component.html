@@ -63,7 +63,7 @@
         <!-- Amount -->
         <md-panel-title fxFlex.lg="30" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
           <span md-line>
-            <span class="amount"> 
+            <span class="amount" [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }"> 
               <span class="big number">{{ tx.getAmountObject().getIntegerPart() }}</span><!-- inline element comment hack
               --><span class="point">{{ tx.getAmountObject().dot() }}</span><!--
               --><small class="small number">{{ tx.getAmountObject().getFractionalPart() || '' }}</small>

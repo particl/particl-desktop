@@ -82,6 +82,12 @@
         color: $text;
       }
     }
+    .positive {
+      color: $color;
+    }
+    .negative {
+      color: $color-alert;
+    }
   }
 
   .mat-expansion-panel {
