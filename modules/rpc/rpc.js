@@ -132,8 +132,8 @@ function checkDaemon(options) {
   return new Promise((resolve, reject) => {
     const _timeout = TIMEOUT;
     TIMEOUT = 150;
-    rpcCall(
-      'getnetworkinfo', null, cookie.getAuth(options), (error, response) => {
+    rpcCall('getnetworkinfo', null, cookie.getAuth(options),
+      (error, response) => {
         rxIpc.removeListeners();
         if (error) {
           // console.log('ERROR:', error);
