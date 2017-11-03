@@ -87,9 +87,9 @@ export class TransactionsTableComponent implements OnInit {
     }
   }
 
-  public getConfirmationCount(confirmations: number) : string {
-    if(confirmations > 12) {
-      return "12+";
+  public getConfirmationCount(confirmations: number): string {
+    if (confirmations > 12) {
+      return '12+';
     }
     return confirmations.toString();
   }
