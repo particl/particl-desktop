@@ -131,9 +131,6 @@ export class BlockStatusService {
     return (diff < 0 ? 0 : diff);
   }
 
-  // TODO: average out the estimated time left to stop random shifting when slowed down.
-  // and localize
-
   /** Calculates how much time is left to be fully synchronised. */
   private estimateTimeLeft(blockDiff: number, timeDiff: number) {
 
