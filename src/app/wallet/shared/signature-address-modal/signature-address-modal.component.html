@@ -3,7 +3,7 @@
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onFormSubmit()">
     <div md-dialog-container>
-      <md-tab-group (selectChange)="selectTab($event.index)">
+      <md-tab-group (selectChange)="selectTab($event.index)" [(selectedIndex)]="tabIndex">
         <md-tab label="Sign Message">
           <p>You can sign messages/agreements with your address to prove you can receive particl sent to them. Be
             careful
@@ -26,14 +26,16 @@
       <div class="signature-address-modal-form">
 
         <md-form-field>
-          <input mdInput formControlName="address" [(ngModel)]="formData.address"
-                 placeholder="Enter a Particl address (e.g. PuMnFoGouqFkFZ1rs2PmVDUqp9psfQssre)">
+          <input mdInput formControlName="address" [(ngModel)]="formData.address" id="signVerifyAdd"
+                 [ngClass]="{'verify-sucess': validAddress === true, 'verify-error': validAddress === false }"
+                 placeholder="Enter a Particl address (e.g. PuMnFoGouqFkFZ1rs2PmVDUqp9psfQssre)"
+                 (input)="verifyAddress()">
         </md-form-field>
 
-        <md-icon class="cursor-pointer" mdTooltip="Address Lookup" (click)="openLookup()"
+        <md-icon *ngIf="isAddressLookup" class="cursor-pointer" mdTooltip="Address Lookup" (click)="openLookup()"
                  fontSet="ncIcon"
                  fontIcon="nc-multiple-19"></md-icon>
-        <md-icon class="cursor-pointer" mdTooltip="Paste" fontSet="faIcon"
+        <md-icon class="cursor-pointer" mdTooltip="Paste" fontSet="faIcon" (click)="pasteAddress()"
                  fontIcon="fa-clipboard"></md-icon>
 
         <md-form-field>
@@ -42,7 +44,8 @@
 
         <md-form-field>
           <input mdInput formControlName="signature" [(ngModel)]="formData.signature"
-                 placeholder="Click 'Sign Message' to generate signature">
+                 [disabled]="isDisbaled"
+                 placeholder="{{(type == 'sign')? 'Click `Sign Message` to generate signature': 'Signature'}}">
         </md-form-field>
         <md-icon *ngIf="type == 'sign' && formData.signature" class="cursor-pointer" (click)="onCopyAddress()"
                  mdTooltip="Copy address" ngxClipboard
@@ -51,7 +54,7 @@
     </div>
     <!-- @TODO: icon will be replace with old theme icon  -->
     <md-dialog-actions fxLayoutAlign="end center">
-      <button md-raised-button color="primary" type="submit" [disabled]="!addressForm.valid">
+      <button md-raised-button color="primary" class="uc-first" type="submit" [disabled]="!addressForm.valid">
         <md-icon>{{ (type == "verify" ? 'verified_user': 'edit') }}</md-icon>
         <!-- <md-icon fontSet="faIcon" fontIcon="fa-pencil"></md-icon>-->
         {{type}} Message
