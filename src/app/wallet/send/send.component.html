@@ -58,6 +58,9 @@
         <md-divider></md-divider>
       </md-card>
 
+      <p class="widget-help" *ngIf="type === 'balanceTransfer'">
+        Balance transfer helps you move PART between your Public and Private addresses.
+      </p>
 
       <md-card *ngIf="type === 'balanceTransfer'">
         <md-list-item>
