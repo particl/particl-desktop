@@ -13,10 +13,26 @@ export class RPCStateClass {
     this.rpc.registerStateCall('getnetworkinfo', 10000);
     this.rpc.registerStateCall('getstakinginfo', 10000);
 
+    this.lastBlockTimeState();
     this.blockLoop();
     this.walletLockedState();
     this.coldStakeHook();
     this.initWalletState();
+  }
+
+  private lastBlockTimeState() {
+    let _checkLastBlock = false;
+    this.rpc.state.observe('mediantime').subscribe(
+      mediantime => {
+        const lastblocktime = new Date(mediantime * 1000);
+        if (!_checkLastBlock && new Date().getTime() - (4 * 60 * 1000) > lastblocktime.getTime()) {
+          setTimeout(() => {
+            _checkLastBlock = false;
+            this.rpc.stateCall('getblockchaininfo');
+          }, 100);
+          _checkLastBlock = true;
+        }
+      });
   }
 
   private blockLoop() {
