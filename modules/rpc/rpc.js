@@ -67,13 +67,22 @@ function rpcCall (method, params, auth, callback) {
   });
 
   request.on('error', error => {
-    if (error.code === 'ECONNRESET') {
-      callback({
-        status: 0,
-        message: 'Timeout'
-      });
-    } else {
-      callback(error);
+    switch (error.code) {
+      case 'ECONNRESET':
+        callback({
+          status: 0,
+          message: 'Timeout'
+        });
+        break;
+      case 'ECONNREFUSED':
+        callback({
+          status: 502,
+          message: 'Connection Refused',
+          _error: error
+        });
+        break;
+      default:
+        callback(error);
     }
   });
 
@@ -123,8 +132,8 @@ function checkDaemon(options) {
   return new Promise((resolve, reject) => {
     const _timeout = TIMEOUT;
     TIMEOUT = 150;
-    rpcCall(
-      'getnetworkinfo', null, cookie.getAuth(options), (error, response) => {
+    rpcCall('getnetworkinfo', null, cookie.getAuth(options),
+      (error, response) => {
         rxIpc.removeListeners();
         if (error) {
           // console.log('ERROR:', error);

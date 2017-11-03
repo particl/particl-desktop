@@ -20,7 +20,7 @@ import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component'
 import { AlertComponent } from './shared/alert/alert.component';
 import {
   MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule, MdProgressBarModule,
-  MdTooltipModule
+  MdTooltipModule, MdProgressSpinnerModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FlashNotificationService } from '../services/flash-notification.service';
@@ -39,6 +39,7 @@ import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.c
     MdIconModule,
     MdInputModule,
     MdCheckboxModule,
+    MdProgressSpinnerModule,
     MdTooltipModule,
     MdProgressBarModule,
     ClipboardModule
