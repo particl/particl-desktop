@@ -14,7 +14,8 @@
     <div class="cell-amount" *ngIf="display.amount">amount</div>
   </div>
   <ng-container *ngFor="let tx of txService.txs let i=index">
-    <md-expansion-panel class="history-list" *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)">
+    <!-- <md-expansion-panel class="history-list" *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)"> -->
+    <md-expansion-panel class="history-list" (click)="showExpandedTransactionDetail(tx)">
 
       <md-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
 
@@ -113,7 +114,6 @@
     <!--firstText="&laquo;" lastText="&raquo;"-->
     <!--[itemsPerPage]="txService.MAX_TXS_PER_PAGE">-->
   <!--</pagination>-->
-
   <md-paginator
     *ngIf="display.pagination"
     [length]="txService.txCount"
