@@ -29,8 +29,8 @@ declare global {
  * It has two important functions: call and register.
  */
 
- @Injectable()
- export class RPCService {
+@Injectable()
+export class RPCService {
   /**
   * IP/URL for daemon (default = localhost)
   */
@@ -63,7 +63,7 @@ declare global {
     private _http: Http,
     private _rpx: RPXService,
     public state: StateService
-    ) {
+  ) {
     this.isElectron = window.electron;
 
     this.toggleState(true);
@@ -87,16 +87,16 @@ declare global {
     */
   call(method: string, params?: Array<any> | null): Observable<any> {
 
-     if (this.isElectron) {
-       return this._rpx.runCommand('rpc-channel', null, method, params)
-       .map(response => response && response.result ? response.result : response);
+    if (this.isElectron) {
+      return this._rpx.runCommand('rpc-channel', null, method, params)
+      .map(response => response && response.result ? response.result : response);
 
-     } else {
-       // Running in browser, delete?
-       const postData = JSON.stringify({
-         method: method,
-         params: params,
-         id: 1
+    } else {
+      // Running in browser, delete?
+      const postData = JSON.stringify({
+        method: method,
+        params: params,
+        id: 1
       });
 
       const headers = new Headers();
