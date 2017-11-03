@@ -12,6 +12,7 @@ export class Transaction implements Deserializable {
   type: string;
   category: string;
   amount: number;
+  fee: number;
   reward: number;
   blockhash: string;
   blockindex: number;
