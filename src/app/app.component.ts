@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { MdDialog, MdIconRegistry } from '@angular/material';
+import { MdDialog, MdIconRegistry, MdSidenavModule, MdSidenav } from '@angular/material';
 
 import { WindowService } from './core/window.service';
 import { SettingsService } from './settings/settings.service';
@@ -19,12 +19,28 @@ import { ModalsComponent } from './modals/modals.component';
   ]
 })
 export class AppComponent implements OnInit {
-  isCollapsed: boolean = true;
-  isFixed: boolean = false;
-  title: string = '';
+
   log: any = Log.create('app.component');
+  title: string = '';
+
   walletInitialized: boolean = false;
   daemonRunning: boolean = false;
+
+  daemonError: string = '';
+  walletError: string = '';
+
+  /* Wallet menu */
+  isPinned: boolean = true;
+  sideMenu: boolean = true;
+  unPin: string = 'Hide Menu';
+  showNav: boolean = true;
+
+  /* Old bootstrap menu, remove? */
+  isCollapsed: boolean = true;
+  isFixed: boolean = false;
+
+
+
 
   constructor(
     private _router: Router,
@@ -74,6 +90,24 @@ export class AppComponent implements OnInit {
     this._rpc.state.observe('walletInitialized')
     .subscribe(status => this.walletInitialized = status);
   }
+
+  toggle(value: string) {
+    if (value === 'toggle' && !this.window.isXS) {
+      this.sideMenu = !this.sideMenu;
+      return;
+    }
+    if (!this.sideMenu) {
+      this.isPinned = value === 'enter';
+    }
+  }
+
+  toggleSideNav(sidNav: MdSidenav) {
+    this.showNav = !this.showNav;
+    this.isPinned = true;
+    this.sideMenu = true;
+    sidNav.toggle(true);
+  }
+
 
   /** Open createwallet modal when clicking on error in sidenav */
   createWallet() {
