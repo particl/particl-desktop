@@ -59,8 +59,8 @@
             </span>
             <!-- ICO: verify message -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <md-icon fontSet="partIcon" fontIcon="part-a-check" class="cursor-pointer"
-                       mdTooltip="Sign / Verify message"
+              <md-icon fontSet="partIcon" fontIcon="part-a-check" (click)="openSignatureModal(address.address)"
+                       class="cursor-pointer" mdTooltip="Sign / Verify message"
                        ngxClipboard></md-icon>
             </span>
             <!-- ICO: delete -->
