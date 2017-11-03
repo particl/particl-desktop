@@ -34,27 +34,35 @@ export class Transaction implements Deserializable {
     return {};
   }
 
-  getAmountObject(): Amount {
-    if (this.category === 'stake') {
-      return new Amount(+this.reward.toFixed(8));
-    } else {
-      return new Amount(+this.amount.toFixed(8));
-    }
-  }
-
-  getAddress(): string {
+  public getAddress(): string {
     if (this.stealth_address === undefined) {
       return this.address;
     }
     return this.stealth_address;
   }
 
-  getDate(): string {
-    return this.dateFormatter(new Date(this.time * 1000));
+
+  public getExpandedTransactionID(): string {
+    return this.txid + this.getAmountObject().getAmount() + this.category;
   }
 
-  getExpandedTransactionID(): string {
-    return this.txid + this.getAmountObject().getAmount() + this.category;
+
+  public getConfirmationCount(confirmations: number): string {
+    if (this.confirmations > 12) {
+      return '12+';
+    }
+    return this.confirmations.toString();
+  }
+
+
+  /* Amount stuff */
+  /** Turns amount into an Amount Object */
+  public getAmountObject(): Amount {
+    if (this.category === 'stake') {
+      return new Amount(+this.reward);
+    } else {
+      return new Amount(+this.amount);
+    }
   }
 
   /** Calculates the actual amount that was transfered, including the fee */
@@ -70,16 +78,15 @@ export class Transaction implements Deserializable {
       return amount + this.fee;
     /* received */
     } else {
-      console.log(`getNetAmount(): amount ${amount} fee ${this.fee} subtr ${amount - (+this.fee)}`);
       return amount - (+this.fee);
     }
   }
 
-  public getConfirmationCount(confirmations: number): string {
-    if (this.confirmations > 12) {
-      return '12+';
-    }
-    return this.confirmations.toString();
+
+
+  /* Date stuff */
+  public getDate(): string {
+    return this.dateFormatter(new Date(this.time * 1000));
   }
 
   private dateFormatter(d: Date) {
@@ -92,6 +99,8 @@ export class Transaction implements Deserializable {
       (d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
     );
   }
+
+
 }
 
 /*
