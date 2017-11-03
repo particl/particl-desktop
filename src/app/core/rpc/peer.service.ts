@@ -48,8 +48,10 @@ export class PeerService {
   private updatePeerListLoop() {
     this.log.d(`updatePeerListLoop(): updating peerlist`);
 
-    this._rpc.call('getpeerinfo')
-      .subscribe((peerinfo: Array<Object>) => this.setPeerList(peerinfo));
+    this._rpc.call('getpeerinfo').subscribe(
+      (peerinfo: Array<Object>) => this.setPeerList(peerinfo),
+      error => this.log.er(`updatePeerListLoop(): getpeerinfo error ${error}`)
+    );
 
     setTimeout(this.updatePeerListLoop.bind(this), 10000);
   }
