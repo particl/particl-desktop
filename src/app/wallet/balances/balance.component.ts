@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { StateService } from '../../core/state/state.service';
 import { Subscription } from 'rxjs/Subscription';
 
+import { Amount } from '../../shared/util/utils';
+
 @Component({
   selector: 'app-balance',
   templateUrl: './balance.component.html',
@@ -13,7 +15,8 @@ export class BalanceComponent {
   private _sub: Subscription;
 
   get balance() {
-    return this._state.get(this.type) || 0;
+    // Round to 4 digits
+    return new Amount(this._state.get(this.type) || 0, 4);
   }
 
   constructor(private _state: StateService) { }
@@ -23,21 +26,6 @@ export class BalanceComponent {
     * 1. round down balance after point (for example 0.956246232656 => 0.956)
     * 2. same as 1 but for large balances (500 000 -> 500K)
     */
-  getBalanceBeforePoint(): number {
-    return Math.floor(this.balance);
-  }
-
-  getBalancePoint(): string {
-    return +this.getBalanceAfterPoint(true) === 0 ? '' : '.';
-  }
-
-  getBalanceAfterPoint(retzero?: boolean): string {
-    if ((this.balance + '').indexOf('.') >= 0) {
-      return (this.balance + '').split('.')[1];
-    } else {
-      return (retzero) ? '0' : '';
-    }
-  }
 
   getTypeOfBalance(): string {
 
