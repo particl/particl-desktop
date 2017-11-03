@@ -92,7 +92,7 @@
           <!-- Net amount (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
             <b>Net amount:</b>
-            <span class="md-right">{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART</span>
+            <span class="md-right">{{calculateNetAmount(tx.fee, tx.getAmount())}} PART</span>
           </div>
         </div>
 
