@@ -1,0 +1,12 @@
+.signature-address-container {
+  max-width: 600px;
+}
+.signature-address-modal-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+.signature-address-modal-form > * {
+  width: 100%;
+}
