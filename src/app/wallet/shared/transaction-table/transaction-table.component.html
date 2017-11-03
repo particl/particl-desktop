@@ -1,4 +1,4 @@
-<!-- @TODO add empty result box if no result found. & Hide progress bar if no result forund-->
+<!-- @TODO add empty result box if no result found. & Hide progress bar if no result found-->
 <md-progress-bar mode="indeterminate" *ngIf="!txService.txs.length && txService.loading"></md-progress-bar>
 <!--<div fxLayoutAlign="center center" *ngIf="!txService.txs.length > 0">-->
   <!--<md-spinner></md-spinner>-->
@@ -79,7 +79,8 @@
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
             <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">Transaction ID:</b>
-            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight" href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" target="_blank">{{tx.txid}}</a>
+            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight"
+               href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank">{{tx.txid}}</a>
           </div>
         </div>
 
