@@ -16,12 +16,15 @@ import { ModalsService } from '../../../modals/modals.service';
 })
 export class SignatureAddressModalComponent implements OnInit {
 
-  public type: string = 'sign';
+  public type: string;
   public formData: SignVerifyMessage = new SignVerifyMessage();
-  public validAddress: string;
+  public validAddress: boolean;
   public addressForm: FormGroup;
-  log: any = Log.create('SignatureAddressModalComponent');
+  public isDisbaled: boolean = true;
+  public isAddressLookup: boolean = false;
+  public tabIndex: number = 1;
 
+  log: any = Log.create('SignatureAddressModalComponent');
   constructor(
     private dialog: MdDialog,
     private _rpc: RPCService,
@@ -32,25 +35,33 @@ export class SignatureAddressModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.type === 'verify') {
+      this.tabIndex = 1;
+      this.isDisbaled = false;
+    } else {
+      this.tabIndex = 0;
+      this.type = 'sign';
+    }
     this.buildForm();
   }
 
   buildForm(): void {
     this.addressForm = this.formBuilder.group({
       address: this.formBuilder.control(null, [Validators.required]),
-      signature: this.formBuilder.control({value: null, disabled: true}),
+      signature: this.formBuilder.control({value: null, disabled: this.isDisbaled}, [Validators.required]),
       message: this.formBuilder.control(null),
     });
   }
 
   selectTab(index: number): void {
-    this.resetForm();
     this.type = (index) ? 'verify' : 'sign';
+    this.isDisbaled = (this.type !== 'verify');
+    this.buildForm();
   }
 
   openLookup() {
     const dialogRef = this.dialog.open(AddressLookupComponent);
-    // @TODO confirm lookup type wit ryno
+    // @TODO confirm lookup type
     dialogRef.componentInstance.type = 'receive';
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
@@ -60,8 +71,7 @@ export class SignatureAddressModalComponent implements OnInit {
 
   selectAddress(copyObject: AddressLookUpCopy) {
     this.formData.address = copyObject.address;
-    // this.formData.address = copyObject.address;
-    // this.verifyAddress();
+    this.verifyAddress();
   }
 
   // copy code start
@@ -69,16 +79,12 @@ export class SignatureAddressModalComponent implements OnInit {
   /** verifyAddress: calls RPC to validate it. */
   verifyAddress() {
     if (!this.formData.address) {
-      // this.formData.validAddress = undefined;
+      this.validAddress = undefined;
       return;
     }
 
     const validateAddressCB = (response) => {
        this.validAddress = response.isvalid;
-
-      if (!!response.account) {
-        // this.formData.toLabel = response.account;
-      }
     };
 
     this._rpc.call('validateaddress', [this.formData.address])
@@ -101,19 +107,28 @@ export class SignatureAddressModalComponent implements OnInit {
   signVerifyMessage(): void {
     const address: string = this.formData.address;
     const message: string = (this.formData.message) ? this.formData.message : '';
-    if (this.type = 'sign') {
+    const signature: string = this.formData.signature;
+    if (this.type === 'sign') {
       this._rpc.call('signmessage', [address, message])
         .subscribe(response => {
             this.formData.signature = response;
-            this.flashNotification.open('signmessage message successfully');
+            this.flashNotification.open('Message Sign Successfully');
           },
-          error => this.log.er('signmessage failed', error));
+          error => {
+          // @TODO add generic message
+            this.flashNotification.open(error.message);
+            this.log.er('Sign Message Failed', error.message);
+          });
     } else {
-      this._rpc.call('verifymessage', [this.formData])
+      this._rpc.call('verifymessage', [address, signature, message])
         .subscribe(response => {
-            this.flashNotification.open('verifymessage message successfully');
+            this.flashNotification.open('Verify message successfully');
           },
-          error => this.log.er('verifymessage failed'));
+          error => {
+            // @TODO add generic message
+            this.flashNotification.open(error.message);
+            this.log.er('Verify Message Failed', error.message);
+          });
     }
   }
 
@@ -123,5 +138,10 @@ export class SignatureAddressModalComponent implements OnInit {
 
   onCopyAddress(): void {
     this.flashNotification.open('Address copy to clipboard');
+  }
+
+  pasteAddress(): void {
+    document.getElementById('signVerifyAdd').focus();
+    document.execCommand('paste');
   }
 }
