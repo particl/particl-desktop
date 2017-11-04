@@ -64,7 +64,7 @@ export class AddAddressLabelComponent implements OnInit {
     if (!!call) {
       this.rpc.call(call, callParams)
         .subscribe(response => {
-          this.log.d(call, `addNewLabel: successfully executed ${this.call} ${this.callParams}`);
+          this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
           this.onAddressAdd.emit(response);
           this.dialogRef.close();
           this.flashNotificationService.open(msg)
