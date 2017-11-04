@@ -42,7 +42,6 @@ export class PassphraseComponent implements  OnChanges {
   }
 
   checkFocus(event: KeyboardEvent, index: number) {
-    console.log(index);
     if (event.key === ' ') {
       this.focused = index + 1;
     }
@@ -59,7 +58,6 @@ export class PassphraseComponent implements  OnChanges {
     words.forEach((word, i) => {
       if (i + index < MAX_WORDS) {
         this.words[i + index] = this.validateWord(word, -1) ? word : 'INVALID';
-        console.log(this.words[i + index]);
       }
     });
   }

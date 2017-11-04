@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyncingComponent } from './syncing.component';
+import { MdIconModule } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
@@ -15,6 +16,7 @@ describe('SyncingComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
+        MdIconModule,
         RpcModule.forRoot()
        ],
       declarations: [ SyncingComponent ]

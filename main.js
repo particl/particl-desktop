@@ -23,7 +23,7 @@ let mainWindow;
 let tray;
 let options;
 
-let openDevTools = false;
+let openDevTools = true;
 
 function createWindow () {
   const _initWindow = () => {
@@ -43,7 +43,10 @@ function initMainWindow(trayImage) {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1280,
+    minWidth: 961,
+    maxWidth: 1920,
     height: 720,
+    resizable: false,
     icon: trayImage,
     webPreferences: {
       nodeIntegration: false,

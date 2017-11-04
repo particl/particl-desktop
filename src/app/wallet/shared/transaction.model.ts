@@ -1,3 +1,4 @@
+import { Amount } from '../../shared/util/utils';
 
 interface Deserializable {
     getTypes(): Object;
@@ -12,6 +13,7 @@ export class Transaction implements Deserializable {
   type: string;
   category: string;
   amount: number;
+  fee: number;
   reward: number;
   blockhash: string;
   blockindex: number;
@@ -32,26 +34,59 @@ export class Transaction implements Deserializable {
     return {};
   }
 
-  getAmount(): string {
-    if (this.category === 'stake') {
-      return this.reward.toFixed(8);
-    }
-    return this.amount.toFixed(8);
-  }
-
-  getAddress(): string {
+  public getAddress(): string {
     if (this.stealth_address === undefined) {
       return this.address;
     }
     return this.stealth_address;
   }
 
-  getDate(): string {
-    return this.dateFormatter(new Date(this.time * 1000));
+
+  public getExpandedTransactionID(): string {
+    return this.txid + this.getAmountObject().getAmount() + this.category;
   }
 
-  getExpandedTransactionID(): string {
-    return this.txid + this.getAmount() + this.category;
+
+  public getConfirmationCount(confirmations: number): string {
+    if (this.confirmations > 12) {
+      return '12+';
+    }
+    return this.confirmations.toString();
+  }
+
+
+  /* Amount stuff */
+  /** Turns amount into an Amount Object */
+  public getAmountObject(): Amount {
+    if (this.category === 'stake') {
+      return new Amount(+this.reward);
+    } else {
+      return new Amount(+this.amount);
+    }
+  }
+
+  /** Calculates the actual amount that was transfered, including the fee */
+  /* todo: fee is not defined in normal receive tx, wut? */
+  public getNetAmount() {
+    const amount: number = +this.getAmountObject().getAmount();
+
+    /* If fee undefined then just return amount */
+    if (this.fee === undefined) {
+      return amount;
+    /* sent */
+    } else if (amount < 0) {
+      return amount + this.fee;
+    /* received */
+    } else {
+      return amount - (+this.fee);
+    }
+  }
+
+
+
+  /* Date stuff */
+  public getDate(): string {
+    return this.dateFormatter(new Date(this.time * 1000));
   }
 
   private dateFormatter(d: Date) {
@@ -64,6 +99,8 @@ export class Transaction implements Deserializable {
       (d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
     );
   }
+
+
 }
 
 /*

@@ -8,7 +8,7 @@ import { RpcModule } from '../../core/rpc/rpc.module';
 
 import { ReceiveComponent } from './receive.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdTabsModule } from '@angular/material';
+import { MdPaginatorModule, MdTabsModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalsService } from '../../modals/modals.service';
 
@@ -28,6 +28,7 @@ describe('ReceiveComponent', () => {
         FlexLayoutModule,
         MdTabsModule,
         BrowserAnimationsModule,
+        MdPaginatorModule,
         RpcModule.forRoot()
       ],
       providers: [

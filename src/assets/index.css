@@ -1,23 +1,55 @@
-.logo-index {
-  height: 200px;
-  max-width: 35%;
-  margin: auto;
-  margin: 60px auto 60px;
-}
+/*
 
-.center-index {
+// main colors
+$color: #02E8B0; // primary green-ish color
+$color-success: #4f8a10;
+$color-alert: #ec4b50;
+
+// text colors
+$text: #232728; // default text color
+$text-muted: #7E8790; // grey (for section titles, descriptions etc.)
+
+// bg/element colors
+$bg-black: #222828; // sidebar
+$bg-shadow: #dcdcdc; // lines, box shadows etc.
+
+*/
+
+.intro {
+  background: #222828;
+  color: white;
   text-align: center;
+  font-family: "Open Sans", sans-serif;
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
-#loading {
-margin: 0 auto;
+.intro > .content {
+  margin: auto;
+  width: 100%;
+  max-width: 600px;
 }
 
-#quote {
-  font-size: 1.3em;
+.logo {
+  width: 240px;
+  height: auto;
+  margin: 20px 0 40px;
 }
 
-#quote-author {
-  font-style: italic;
-  color: #9ca09f;
+.quote {
+  font-size: 17px;
+}
+
+.author {
+  font-size: 13px;
+  color: #7E8790;
+}
+
+.loading {
+  width: 100%;
+  max-width: 100px;
 }

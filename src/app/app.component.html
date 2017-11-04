@@ -22,37 +22,36 @@
       <md-accordion displayMode="flat" [multi]="'multi'" class="md-expansion-menu">
         <md-expansion-panel #panel1 expanded="true">
           <md-expansion-panel-header>Wallet</md-expansion-panel-header>
-
           <md-content layout-padding class="submenuarea">
             <md-list class="sidesubmenu">
-              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/receive' : null">
+              <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/receive' : null">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-simple-right"></md-icon>
                   <span class="menu-item">Receive</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/send' : null">
+              <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/send' : null">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-simple-left"></md-icon>
                   <span class="menu-item">Send</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/history' : null">
+              <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/history' : null">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-time-3"></md-icon>
                   <span class="menu-item">History</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/wallet/address-book' : null">
+              <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/address-book' : null">
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
                   <span class="menu-item">Address Book</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
+              <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-card-add" ></md-icon>
-                  <span class="menu-item">Add Acount</span>
+                  <span class="menu-item">Add Account</span>
                 </md-list-item>
               </a>
             </md-list>
@@ -80,15 +79,15 @@
       </md-accordion>
     </md-content-->
 
-    <md-content layout-padding *ngIf="!!daemonError || !!walletError">
-      <md-list class="sidesubmenu">
-        <md-list-item *ngIf="daemonError">
+    <md-content layout-padding *ngIf="!daemonRunning || !walletInitialized">
+      <md-list class="sidesubmenu error">
+        <md-list-item *ngIf="!daemonRunning">
           <md-icon>error</md-icon>
-          {{daemonError}}
+          Connection Refused, Daemon is not connected
         </md-list-item>
-        <md-list-item *ngIf="walletError">
+        <md-list-item *ngIf="!walletInitialized">
           <md-icon>error</md-icon>
-          {{walletError}}
+          Please create wallet first to access other tabs
         </md-list-item>
       </md-list>
     </md-content>

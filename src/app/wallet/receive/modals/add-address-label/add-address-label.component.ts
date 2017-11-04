@@ -19,6 +19,7 @@ export class AddAddressLabelComponent implements OnInit {
   public addLableForm: FormGroup;
   public type: string;
   public label: string;
+  public address: string;
   log: any = Log.create('receive.component');
 
   constructor(
@@ -43,7 +44,11 @@ export class AddAddressLabelComponent implements OnInit {
   onSubmitForm(): void {
     if (this.rpc.state.get('locked')) {
       // unlock wallet
-      this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addNewLabel.bind(this)});
+      if (this.type === 'private') {
+        this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addNewLabel.bind(this)});
+      } else {
+        this.addNewLabel();
+      }
     } else {
       // wallet already unlocked
       this.addNewLabel();
@@ -51,15 +56,22 @@ export class AddAddressLabelComponent implements OnInit {
   }
 
   addNewLabel(): void {
-    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
-    this.log.d(call, 'newAddress: successfully retrieved new address');
+    let call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    let callParams = [this.label];
+    let msg = `New ${this.type} address generated, with label ${this.label}!`;
+    if (this.address !== '') {
+      call = 'manageaddressbook';
+      callParams = ['newsend', this.address, this.label];
+      msg = `Updated label of ${this.address} to ${this.label}`;
+    }
+
     if (!!call) {
-      this.rpc.call(call, [this.label])
+      this.rpc.call(call, callParams)
         .subscribe(response => {
-          this.log.d(call, 'newAddress: successfully retrieved new address');
+          this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
           this.onAddressAdd.emit(response);
           this.dialogRef.close();
-          this.flashNotificationService.open(`New ${this.type} address lable added !!`)
+          this.flashNotificationService.open(msg)
         });
     }
   }

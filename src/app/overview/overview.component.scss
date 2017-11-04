@@ -1,16 +1,18 @@
 @import 'widgets/shared/shared.scss';
 
 .balance-overview { // list of balances
-    padding: 24px 50px;
-    .balance-item {
-        border-right: 1px solid $bg-shadow;
-        &:last-of-type {
-            border: none; margin: none;
-        }
+  @extend .disable-select;
+  padding: 24px 35px;
+  .balance-item {
+    border-right: 1px solid $bg-shadow;
+    &:last-of-type {
+      border: none;
+      margin: none;
     }
+  }
 }
 
 .overview-content { // area with widgets
-    padding: 10px 50px;
+  padding: 0 35px;
 }
 
