@@ -356,9 +356,10 @@ export class ReceiveComponent implements OnInit {
       error => this.log.er('error'));
     }
   }
-  openNewAddress(): void {
+  openNewAddress(address?: string): void {
     const dialogRef = this.dialog.open(AddAddressLabelComponent);
     dialogRef.componentInstance.type = this.type;
+    dialogRef.componentInstance.address = address ? address : '';
     dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
       this.rpc_update();
     });

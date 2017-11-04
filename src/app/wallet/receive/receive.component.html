@@ -67,7 +67,7 @@
       <md-card class="address-info">
         <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
           <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id"> /{{ getUnusedAddress().id }}</div>
-          <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label"> {{ getUnusedAddress().label }}</div>
+          <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label" (click)="openNewAddress(getUnusedAddress().address)"> {{ getUnusedAddress().label }}</div>
           <div fxFlex="1 1 80%" fxFlex.lt-md="100" class="address enable-select">
             {{ getUnusedAddress().address }}
             <!-- Received amount in unused address doesn't make sense -->
@@ -105,9 +105,9 @@
       <div *ngFor="let address of getSinglePage()">
 
         <md-card class="address-info"> 
-            <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
+          <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
             <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id">/{{ address.id }}</div> 
-            <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label">{{ address.label }}</div>
+            <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label" (click)="openNewAddress(address.address)">{{ address.label }}</div>
             <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address enable-select">
               {{ address.address }}
               <!--div class="total"><span>Total received: </span>
