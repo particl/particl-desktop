@@ -22,16 +22,16 @@
 
         <div class="address-field" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
           <md-form-field fxFlex="1 1 100%">
-            <input mdInput formControlName="address" [(ngModel)]="formData.address" id="signVerifyAdd"
+            <input mdInput formControlName="address" [(ngModel)]="formData.address" #addressInput
                     [ngClass]="{'verify-sucess': validAddress === true, 'verify-error': validAddress === false }"
                     placeholder="Enter a Particl address (e.g. PuMnFoGouqFkFZ1rs2PmVDUqp9psfQssre)"
                     (input)="verifyAddress()">
           </md-form-field>
-  
-          <button md-button fxFlex="0 0 60px" *ngIf="isAddressLookup" mdTooltip="Address Lookup" (click)="openLookup()">
+
+          <button md-button  type="button" fxFlex="0 0 60px" *ngIf="isAddressLookup" mdTooltip="Address Lookup" (click)="openLookup()">
             <md-icon class="icon cursor-pointer" fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
           </button>
-          <button md-button fxFlex="0 0 60px" mdTooltip="Paste" (click)="pasteAddress()">
+          <button type="button" md-button fxFlex="0 0 60px" mdTooltip="Paste" (click)="pasteAddress()">
             <md-icon class="icon cursor-pointer" fontSet="faIcon" fontIcon="fa-clipboard"></md-icon>
           </button>
         </div><!-- .address-field -->
@@ -42,7 +42,7 @@
 
         <md-form-field>
           <input mdInput formControlName="signature" [(ngModel)]="formData.signature"
-                 [disabled]="isDisbaled"
+                 [disabled]="isDisabled"
                  placeholder="{{(type == 'sign')? 'Click `Sign Message` to generate signature': 'Signature'}}">
         </md-form-field>
         <md-icon *ngIf="type == 'sign' && formData.signature" class="cursor-pointer" (click)="onCopyAddress()"

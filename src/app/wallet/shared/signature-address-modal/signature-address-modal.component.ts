@@ -1,13 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { AddressLookUpCopy } from '../../models/address-look-up-copy';
-import { AddressLookupComponent } from '../../addresslookup/addresslookup.component';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MdDialog } from '@angular/material';
+
 import { RPCService } from '../../../core/rpc/rpc.service';
+import { ModalsService } from '../../../modals/modals.service';
+import { FlashNotificationService } from '../../../services/flash-notification.service';
+
 import { Log } from 'ng2-logger';
 import { SignVerifyMessage } from '../../models/sign-verify-message';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ModalsService } from '../../../modals/modals.service';
+
+import { AddressLookUpCopy } from '../../models/address-look-up-copy';
+import { AddressLookupComponent } from '../../addresslookup/addresslookup.component';
+
+
 
 @Component({
   selector: 'app-signature-address-modal',
@@ -20,11 +25,13 @@ export class SignatureAddressModalComponent implements OnInit {
   public formData: SignVerifyMessage = new SignVerifyMessage();
   public validAddress: boolean;
   public addressForm: FormGroup;
-  public isDisbaled: boolean = true;
+  public isDisabled: boolean = true;
   public isAddressLookup: boolean = false;
   public tabIndex: number = 1;
 
   log: any = Log.create('SignatureAddressModalComponent.component');
+
+  @ViewChild('addressInput') addressInput: ElementRef;
 
   constructor(
     private dialog: MdDialog,
@@ -38,7 +45,7 @@ export class SignatureAddressModalComponent implements OnInit {
   ngOnInit() {
     if (this.type === 'verify') {
       this.tabIndex = 1;
-      this.isDisbaled = false;
+      this.isDisabled = false;
     } else {
       this.tabIndex = 0;
       this.type = 'sign';
@@ -49,14 +56,14 @@ export class SignatureAddressModalComponent implements OnInit {
   buildForm(): void {
     this.addressForm = this.formBuilder.group({
       address: this.formBuilder.control(null, [Validators.required]),
-      signature: this.formBuilder.control({value: null, disabled: this.isDisbaled}, [Validators.required]),
+      signature: this.formBuilder.control({value: null, disabled: this.isDisabled}, [Validators.required]),
       message: this.formBuilder.control(null),
     });
   }
 
   selectTab(index: number): void {
     this.type = (index) ? 'verify' : 'sign';
-    this.isDisbaled = (this.type !== 'verify');
+    this.isDisabled = (this.type !== 'verify');
     this.buildForm();
   }
 
@@ -149,7 +156,7 @@ export class SignatureAddressModalComponent implements OnInit {
   }
 
   pasteAddress(): void {
-    document.getElementById('signVerifyAdd').focus();
+    this.addressInput.nativeElement.focus();
     document.execCommand('paste');
   }
 }
