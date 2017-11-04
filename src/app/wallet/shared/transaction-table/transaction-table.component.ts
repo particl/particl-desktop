@@ -42,7 +42,7 @@ export class TransactionsTableComponent implements OnInit {
   pageEvent: PageEvent;
 
   /*
-    This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmount() + tx.category).
+    This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmountObject().getAmount() + tx.category).
     If the unique identifier is present, then the details will be expanded.
   */
   private expandedTransactionID: string = undefined;

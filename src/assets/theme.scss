@@ -7,10 +7,13 @@
 }
 
 .widget-help { // help description
+  @extend .disable-select;
   color: $text-muted;
   font-size: 11px;
   margin-bottom: 25px;
+  cursor: help;
 }
+
 
 .qrcode {
   text-align: center;
@@ -92,9 +95,12 @@
   color: $color !important;
 }
 
-.header-main {
-  border-bottom: 1px solid #ddd;
+.header-main { // top header (page title with status icons)
+  @extend .disable-select;
+  border-bottom: 1px solid $bg-shadow;
   background: #fff;
+  padding-left: 35px !important;
+  padding-right: 26px !important;
 }
 
 .containerX {
@@ -204,8 +210,8 @@ input[type="text"] {
   border-left: 1px solid #ddd;
 }
 
-.container-block {
-  padding: 20px;
+.container-block { // main container for content
+  padding: 35px;
 }
 
 /**
@@ -371,19 +377,11 @@ input[type="text"].md-bg-transparent {
 }
 
 .md-send-list {
-  .mat-select-trigger{ height: 23px; }
-}
-
-.header-nav {
-  list-style-type: none;
-  padding: 0;
-  li {
-    font-size: 16px;
-    font-weight: normal;
-    text-transform: uppercase;
-    color: $text-muted;
+  .mat-select-trigger{
+    height: 23px;
   }
 }
+
 panel-header-title {
   display: block;
 }

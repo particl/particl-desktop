@@ -17,7 +17,7 @@
       <div *ngIf="displayQrMenu">QR Code</div>
     </div>
 
-    <md-list class="list-data" fxFlex="100">
+    <md-list class="list-data disable-select" fxFlex="100">
       <div class="no-results" *ngIf="getSinglePage().length === 0">
         No matching addresses found
       </div>
@@ -34,13 +34,13 @@
           <!-- Address -->
           <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)">
             <span class="title">Address&emsp;</span>
-            <span class="address-string">{{ address.address }}</span>
+            <span class="address-string enable-select">{{ address.address }}</span>
           </div>
 
           <!-- Pubkey -->
           <div fxFlex="25" class="grid-cell" *ngIf="displayPublicKey">
             <span class="title">Public Key</span>
-            <span class="pubkey">{{ address.publicKey }}</span>
+            <span class="pubkey enable-select">{{ address.publicKey }}</span>
           </div>
 
           <!-- Type -->

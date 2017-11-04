@@ -31,14 +31,13 @@
     }
     .tx-type {
       &.staked {
-        color: $text-muted;
         md-icon {
-          color: $bg-shadow;
+          color: $color-warning;
         }
       }
       &.orphan {
         md-icon {
-          color: $color-alert;
+          color: mix($bg-shadow, $text-muted);
         }
       }
       &.sent {
@@ -58,7 +57,7 @@
 
   // confirmations
   .confirmations {
-    color: $color;
+    color: darken($bg-shadow, 10%);
     height: auto;
     width: auto;
     margin-right: 5px;
@@ -69,7 +68,21 @@
     text-align: right;
     display: block;
     .amount {
-      //font-weight: 600;
+      .big {
+        font-weight: 500;        
+      }
+      .point {
+        color: $text-muted;
+      }
+      small {
+        color: $text-muted;
+      }
+      .currency {
+        color: $text;
+      }
+    }
+    .negative {
+      color: $color-alert;
     }
   }
 
@@ -94,6 +107,10 @@
     border: none;
     outline: none;
     padding: 0 5px;
+    &:focus {
+      background: lighten($bg-black, 10%);
+      color: white;
+    }
   }
 }
 

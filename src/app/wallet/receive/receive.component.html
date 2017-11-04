@@ -1,4 +1,4 @@
-<app-header>
+<app-header class="disable-select">
   <div fxLayout="row" fxlayout.lt-sm="column">
     <div fxFlex="1 1 70%">
       <md-tab-group (selectChange)="changeTab($event.index)">
@@ -21,7 +21,7 @@
   </div>
 </app-header>
 
-<div class="container-block" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
+<div class="container-block disable-select" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
 
   <!-- Address details & QR code -->
   <div fxFlex="0 0 220px" fxFlex.lt-md="100" *ngIf="selected">
@@ -39,7 +39,7 @@
         <div class="details-label">
           {{ selected.label }}
         </div>
-        <div class="details-address" fxLayoutWrap layout-padding fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start">
+        <div class="details-address enable-select" fxLayoutWrap layout-padding fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start">
           <div *ngFor="let word of selected.readable" class="address-word" fxFlex="33" fxFlex.lt-md="37px">
             {{ word }}
           </div>
@@ -68,7 +68,7 @@
         <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
           <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id"> /{{ getUnusedAddress().id }}</div>
           <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label"> {{ getUnusedAddress().label }}</div>
-          <div fxFlex="1 1 80%" fxFlex.lt-md="100" class="address">
+          <div fxFlex="1 1 80%" fxFlex.lt-md="100" class="address enable-select">
             {{ getUnusedAddress().address }}
             <!-- Received amount in unused address doesn't make sense -->
             <!--div class="total"><span>Total received: </span>
@@ -108,11 +108,11 @@
             <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
             <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id">/{{ address.id }}</div> 
             <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label">{{ address.label }}</div>
-            <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address">
+            <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address enable-select">
               {{ address.address }}
-              <div class="total"><span>Total received: </span>
+              <!--div class="total"><span>Total received: </span>
                 <span class="received-amount TODO">{{ address.balance }}</span>
-              </div>
+              </div-->
             </div>
             <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->
