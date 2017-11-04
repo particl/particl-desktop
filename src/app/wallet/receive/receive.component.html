@@ -96,7 +96,7 @@
       </div>
     </md-list><!-- .list-data -->
 
-    <md-list *ngIf="getSinglePage().length === 0">
+    <md-list *ngIf="(getSinglePage().length === 0) && (inSearchMode() === true)">
         NO RESULTS
     </md-list>
 
