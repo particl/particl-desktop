@@ -77,7 +77,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     this.modal = this.modalContainer.createComponent(factory);
     const dynamicModal = this.modal as any;
     if (data !== undefined && dynamicModal.instance.setData !== undefined) {
-      dynamicModal.instance.setData(data.data);
+      dynamicModal.instance.setData(data);
     }
   }
 
