@@ -54,18 +54,17 @@ export class AddAddressLabelComponent implements OnInit {
   addNewLabel(): void {
     let call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
     let callParams = [this.label];
-    let msg = `New ${this.type} address lable added !!`;
+    let msg = `New ${this.type} address generated, with label ${this.label}!`;
     if (this.address !== '') {
       call = 'manageaddressbook';
       callParams = ['newsend', this.address, this.label];
-      msg = `Update ${this.type} address lable successfully !!`;
+      msg = `Updated label of ${this.address} to ${this.label}`;
     }
 
-    this.log.d(call, 'newAddress: successfully retrieved new address');
     if (!!call) {
       this.rpc.call(call, callParams)
         .subscribe(response => {
-          this.log.d(call, 'newAddress: successfully retrieved new address');
+          this.log.d(call, `addNewLabel: successfully executed ${this.call} ${this.callParams}`);
           this.onAddressAdd.emit(response);
           this.dialogRef.close();
           this.flashNotificationService.open(msg)
