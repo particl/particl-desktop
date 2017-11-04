@@ -40,7 +40,7 @@ export class NewAddressModalComponent implements OnInit {
       this.verifyAddress();
       this.modalTitle = 'Edit address';
     } else {
-      this.modalTitle = 'Add new address to addresbook';
+      this.modalTitle = 'Add new address to Address book';
     }
     this.buildForm();
   }
@@ -87,7 +87,7 @@ export class NewAddressModalComponent implements OnInit {
     }
 
     if (this.isMine) {
-      this.flashNotificationService.open('This is your own address - can not be added to addressbook!');
+      this.flashNotificationService.open('This is your own address - can not be added to Address book!');
       return;
     }
 
@@ -118,8 +118,8 @@ export class NewAddressModalComponent implements OnInit {
   rpc_addAddressToBook_success(json: Object): void {
     if (json['result'] === 'success') {
       this.closeModal();
-      const mesage: string = (this.isEdit) ? 'Address successfully updated to the addressbook!'
-        : 'Address successfully added to the addressbook!';
+      const mesage: string = (this.isEdit) ? 'Address successfully updated to the Address book'
+        : 'Address successfully added to the Address book';
 
       this.flashNotificationService.open(mesage);
       // TODO: remove specialPoll! (updates the address table)

@@ -1,4 +1,4 @@
-<div class="containerX qr-modal">
+<div class="containerX qr-modal disable-select">
   <h2 md-dialog-title class="title">
     {{singleAddress.label}}
   </h2>
@@ -11,7 +11,7 @@
     </div><!-- .qr-code -->
     
     <div class="address-string">
-      <div class="details-address" fxLayoutWrap layout-padding>
+      <div class="details-address enable-select" fxLayoutWrap layout-padding>
         <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
           {{ word }}
         </div>

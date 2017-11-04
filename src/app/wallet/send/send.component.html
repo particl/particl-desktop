@@ -1,4 +1,4 @@
-<app-header>
+<app-header class="disable-select">
   <div class="container-fluid">
     <div fxLayout.lg="row">
       <div fxFlex="50">
@@ -25,10 +25,9 @@
   </div>  
 </app-header>
 
-<div class="container-fluid container-block">
+<div class="container-fluid container-block disable-select">
   <div>
     <form name="walletSendForm">
-
 
       <md-card>
         <md-list-item>
@@ -40,7 +39,8 @@
               <md-radio-button value="anon_balance" fxFlex="16.6">Private</md-radio-button>
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
-                <span class="balance-amount">{{getBalance(send.input)}} PART</span>
+                <span class="balance-amount enable-select">{{ getBalance(send.input) }}</span>
+                <span class="currency">PART</span>
               </div>
             </md-radio-group>
             <md-radio-group class="md-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
@@ -50,7 +50,8 @@
               <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6">Private</md-radio-button>
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
-                <span class="balance-amount">{{getBalance(send.input)}} PART</span>
+                <span class="balance-amount enable-select">{{ getBalance(send.input )}}</span>
+                <span class="currency">PART</span>
               </div>
             </md-radio-group>
           </div>
@@ -58,6 +59,9 @@
         <md-divider></md-divider>
       </md-card>
 
+      <p class="widget-help" *ngIf="type === 'balanceTransfer'">
+        Balance transfer helps you move PART between your Public and Private addresses.
+      </p>
 
       <md-card *ngIf="type === 'balanceTransfer'">
         <md-list-item>
@@ -69,7 +73,8 @@
               <md-radio-button value="anon_balance" disabled="{{ send.input === 'anon_balance' }}" fxFlex="16.6">Private</md-radio-button>
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
-                <span class="balance-amount">{{getBalance(send.input)}} PART</span>
+                <span class="balance-amount enable-select">{{ getBalance(send.input) }}</span>
+                <span class="currency">PART</span>
               </div>
             </md-radio-group>
           </div>
@@ -81,7 +86,7 @@
       <md-card class="md-send-list" *ngIf="type === 'sendPayment' || advanced">
         <md-list-item>
           <div class="md-send-card md-line mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
-            <h5 fxFlex="15"> Pay to</h5>
+            <h5 fxFlex="15">Pay to</h5>
             <md-form-field fxFlex="100">
               <!-- fix success input -->
               <input name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
