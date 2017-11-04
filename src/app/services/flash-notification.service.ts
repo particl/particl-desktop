@@ -9,7 +9,7 @@ export class FlashNotificationService {
 
   open(message: string, action?: string, duration?: number): void {
     const config = new MdSnackBarConfig();
-    config.duration = duration ? duration : 10000;
+    config.duration = duration ? duration : 2000;
     this.snackBar.open(message, action ? action : 'Dismiss', config);
   }
 

@@ -152,7 +152,7 @@ export class ColdstakeComponent {
     if (this.prevColdStakeAddress === this.coldStakeAddress) {
       if (this.step === 3) {
         this.finalMessage = 'Cold staking address is the same - no changes required.';
-        this._flashNotificationService.open('Cold staking key is exactly the same as before!', '', 1000);
+        this._flashNotificationService.open('Cold staking key is exactly the same as before!', '');
       }
       return;
     }
@@ -161,13 +161,13 @@ export class ColdstakeComponent {
       .subscribe(
         success => {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
-          this._flashNotificationService.open('Successfully activated cold staking!', '', 1000);
+          this._flashNotificationService.open('Successfully activated cold staking!', '');
           // this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
           this.close();
         },
         error => {
           this.log.er('setColdStakingAddress: ', error);
-          this._flashNotificationService.open('Failed to activate cold staking, ' + error.message, '', 1000);
+          this._flashNotificationService.open('Failed to activate cold staking, ' + error.message, '');
           this.finalMessage = 'Failed to activate cold staking.. ' + error.message;
         });
   }
@@ -177,13 +177,13 @@ export class ColdstakeComponent {
       .subscribe(
         success => {
           this.log.d(`resetColdStakeAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
-          this._flashNotificationService.open('Successfully deactivated cold staking!', '', 1000);
+          this._flashNotificationService.open('Successfully deactivated cold staking!', '');
           // this.finalMessage = 'Successfully deactivated cold staking! ' + success.changeaddress.coldstakingaddress;
           this.close();
         },
         error => {
           this.log.er('resetColdStakeAddress: ', error);
-          this._flashNotificationService.open('Failed to deactivate cold staking, ' + error.message, '', 1000);
+          this._flashNotificationService.open('Failed to deactivate cold staking, ' + error.message, '');
           this.finalMessage = 'Failed to deactivate cold staking.. ' + error.message;
         });
   }
