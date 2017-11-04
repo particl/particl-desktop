@@ -18,6 +18,9 @@
     </div>
 
     <md-list class="list-data disable-select" fxFlex="100">
+      <div class="no-results" *ngIf="getSinglePage().length === 0">
+        No matching addresses found
+      </div>
       <div *ngFor="let address of getSinglePage()">
 
         <md-card class="address-entry" fxLayout.gt-sm="row" fxLayout.lt-md="column" fxLayoutGap="10px" layout-padding>
@@ -72,8 +75,8 @@
           </div>
 
         </md-card>
-
       </div>
+
     </md-list>
   </div>
 </div>
