@@ -7,6 +7,8 @@ import { Log } from 'ng2-logger';
 import { ModalsService } from '../../../../modals/modals.service';
 import { ModalsComponent } from '../../../../modals/modals.component';
 
+import { AddressService } from '../../../shared/address.service';
+
 @Component({
   selector: 'app-new-address-modal',
   templateUrl: './new-address-modal.component.html',
@@ -32,7 +34,8 @@ export class NewAddressModalComponent implements OnInit {
               private _rpc: RPCService,
               private flashNotificationService: FlashNotificationService,
               private _modals: ModalsService,
-              private dialog: MdDialog) {
+              private dialog: MdDialog,
+              private _addressService: AddressService) {
   }
 
   ngOnInit(): void {
@@ -123,7 +126,8 @@ export class NewAddressModalComponent implements OnInit {
 
       this.flashNotificationService.open(mesage);
       // TODO: remove specialPoll! (updates the address table)
-      this._rpc.specialPoll();
+      // this._rpc.specialPoll();
+      this._addressService.updateAddressList();
     }
   }
 
@@ -136,7 +140,8 @@ export class NewAddressModalComponent implements OnInit {
     this.log.er('rpc_addAddressToBook_failed');
     this.log.er(json);
     // TODO: remove specialPoll! (updates the address table)
-    this._rpc.specialPoll();
+    // this._rpc.specialPoll();
+    this._addressService.updateAddressList();
   }
 
   /*

@@ -15,7 +15,8 @@ export class AddressService {
   // Stores address objects.
   private _addresses: Observable<Array<Address>>;
   private _observerAddresses: Observer<Array<Address>>;
-  // Settings
+
+  // Type
   addressType: string = 'send'; // "receive","send", "total"
 
   /**
@@ -36,22 +37,27 @@ export class AddressService {
   constructor(private _rpc: RPCService) {
     this._addresses = Observable.create(observer => this._observerAddresses = observer).publishReplay(1).refCount();
 
-    this._rpc.register(this, 'filteraddresses', [-1], this.rpc_loadAddressCount_success, 'address');
-    this._rpc.specialPoll();
+    this.updateAddressList();
+  }
+
+  updateAddressList() {
+    this.log.d(`updateAddressList() old length: ${this.addressCount}`);
+    this._rpc.call('filteraddresses', [-1]).subscribe(
+      success => this.rpc_loadAddressCount_success(success));
   }
 
   getAddresses(): Observable<Array<Address>> {
     return this._addresses;
   }
 
-  private rpc_loadAddressCount_success(response: Object): void {
+  private rpc_loadAddressCount_success(response: any): void {
     if (this.typeOfAddresses === 'receive') {
-      this.addressCount = response['num_receive'];
+      this.addressCount = response.num_receive;
     } else if (this.typeOfAddresses === 'send') {
-      this.addressCount = response['num_send'];
+      this.addressCount = response.num_send;
       this.log.d(`rpc_loadAddressCount_success, num_send: ${this.addressCount}`);
     } else {
-      this.addressCount = response['total'];
+      this.addressCount = response.total;
     }
 
     if (this.addressCount > 0) {
@@ -60,6 +66,9 @@ export class AddressService {
           (success: Array<Object>) => {
             this.rpc_loadAddresses(success);
           });
+    } else {
+      const addresses: Address[] = [];
+      this._observerAddresses.next(addresses);
     }
   }
 
