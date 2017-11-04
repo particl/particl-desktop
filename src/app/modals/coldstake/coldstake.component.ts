@@ -167,7 +167,8 @@ export class ColdstakeComponent {
         },
         error => {
           this.log.er('setColdStakingAddress: ', error);
-          this._flashNotificationService.open('Failed to activate cold staking, ' + error.message, '');
+          // We are displaying the message on the screen already
+          // this._flashNotificationService.open('Failed to activate cold staking, ' + error.message, '', '', 'err');
           this.finalMessage = 'Failed to activate cold staking.. ' + error.message;
         });
   }
@@ -183,7 +184,8 @@ export class ColdstakeComponent {
         },
         error => {
           this.log.er('resetColdStakeAddress: ', error);
-          this._flashNotificationService.open('Failed to deactivate cold staking, ' + error.message, '');
+          // We are displaying the message on the screen already
+          // this._flashNotificationService.open('Failed to deactivate cold staking, ' + error.message, '');
           this.finalMessage = 'Failed to deactivate cold staking.. ' + error.message;
         });
   }

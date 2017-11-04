@@ -122,7 +122,7 @@ export class SendService {
   }
 
   rpc_send_failed(json: any) {
-    this.flashNotification.open(`Transaction Failed ${json.message}`);
+    this.flashNotification.open(`Transaction Failed ${json.message}`, '', 0, 'err');
     this.log.er('rpc_send_failed, failed to execute transactions!');
     this.log.er(json);
   }
