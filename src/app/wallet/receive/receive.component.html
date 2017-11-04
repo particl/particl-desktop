@@ -96,6 +96,9 @@
       </div>
     </md-list><!-- .list-data -->
 
+    <md-list *ngIf="getSinglePage().length === 0">
+        NO RESULTS
+    </md-list>
 
     <md-list *ngIf="getSinglePage().length" class="list-data">
       <div md-subheader class="address-title">Previous addresses</div>
