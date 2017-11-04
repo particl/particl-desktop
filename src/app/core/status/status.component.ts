@@ -11,7 +11,7 @@ import { MdDialog} from '@angular/material';
 @Component({
   selector: 'app-status',
   templateUrl: './status.component.html',
-  styleUrls: ['./status.component.css']
+  styleUrls: ['./status.component.scss']
 })
 export class StatusComponent implements OnInit {
 

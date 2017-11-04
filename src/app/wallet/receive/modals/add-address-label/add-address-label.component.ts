@@ -43,7 +43,11 @@ export class AddAddressLabelComponent implements OnInit {
   onSubmitForm(): void {
     if (this.rpc.state.get('locked')) {
       // unlock wallet
-      this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addNewLabel.bind(this)});
+      if (this.type === 'private') {
+        this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addNewLabel.bind(this)});
+      } else {
+        this.addNewLabel();
+      }
     } else {
       // wallet already unlocked
       this.addNewLabel();
