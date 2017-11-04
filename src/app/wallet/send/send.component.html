@@ -1,5 +1,5 @@
-<app-header>
-  <div class="container-fluid" >
+<app-header class="disable-select">
+  <div class="container-fluid">
     <div fxLayout.lg="row">
       <div fxFlex="50">
         <md-tab-group (selectChange)="selectTab($event.index)">
@@ -17,16 +17,18 @@
       </div>
       <div fxFlex="50" disableTouchRipple="true" class="bottom-line">
         <button md-button color="primary" (click)="toggleAdvanced()" *ngIf="type === 'balanceTransfer'" class="show-address">
-          <md-icon>{{(advanced)? 'remove_circle': 'add_circle'}}</md-icon>
-          <span>{{advancedText}}</span>
+          <md-icon>{{ (advanced) ? 'remove_circle': 'add_circle' }}</md-icon>
+          <span>{{ advancedText }}</span>
         </button>
       </div>
     </div>
   </div>  
 </app-header>
-<div class="container-fluid">
+
+<div class="container-fluid container-block disable-select">
   <div>
     <form name="walletSendForm">
+
       <md-card>
         <md-list-item>
           <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
@@ -37,7 +39,8 @@
               <md-radio-button value="anon_balance" fxFlex="16.6">Private</md-radio-button>
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
-                <span class="balance-amount">{{getBalance(send.input)}} PART</span>
+                <span class="balance-amount enable-select">{{ getBalance(send.input) }}</span>
+                <span class="currency">PART</span>
               </div>
             </md-radio-group>
             <md-radio-group class="md-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
@@ -47,13 +50,19 @@
               <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6">Private</md-radio-button>
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
-                <span class="balance-amount">{{getBalance(send.input)}} PART</span>
+                <span class="balance-amount enable-select">{{ getBalance(send.input )}}</span>
+                <span class="currency">PART</span>
               </div>
             </md-radio-group>
           </div>
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+      <p class="widget-help" *ngIf="type === 'balanceTransfer'">
+        Balance transfer helps you move PART between your Public and Private addresses.
+      </p>
+
       <md-card *ngIf="type === 'balanceTransfer'">
         <md-list-item>
           <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
@@ -64,20 +73,23 @@
               <md-radio-button value="anon_balance" disabled="{{ send.input === 'anon_balance' }}" fxFlex="16.6">Private</md-radio-button>
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
-                <span class="balance-amount">{{getBalance(send.output)}} PART</span>
+                <span class="balance-amount enable-select">{{ getBalance(send.output) }}</span>
+                <span class="currency">PART</span>
               </div>
             </md-radio-group>
           </div>
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card class="md-send-list" *ngIf="type === 'sendPayment' || advanced">
         <md-list-item>
           <div class="md-send-card md-line mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
-            <h5 fxFlex="15"> Pay to</h5>
+            <h5 fxFlex="15">Pay to</h5>
             <md-form-field fxFlex="100">
               <!-- fix success input -->
-              <input id="address" name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
+              <input #address name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
             </md-form-field>
             <div fxFlex="100" fxLayoutGap="20px">
               <md-form-field fxFlex="100">
@@ -99,6 +111,8 @@
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card class="md-send-list">
         <md-list-item>
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
@@ -114,6 +128,8 @@
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card class="md-send-list">
         <md-list-item>
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
@@ -132,18 +148,17 @@ oninput="validity.valid||(value='');" step="any">
         </md-list-item>
         <md-divider></md-divider>
       </md-card>
+
+
       <md-card *ngIf="send.input === 'anon_balance'">
         <md-list-item>
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
             <h5 fxFlex="15"> Privacy level </h5>
             <div fxFlex="'column'" fxLayoutWrap>
-              <div class="privacy-labels" fxFlex="100">
-                <span fxFlex="" fxLayoutAlign="start center" class="privacy-label cursor-pointer"
-(click)="setPrivacy(4,10)">Low</span>
-                <span fxLayoutAlign="center center" class="privacy-label cursor-pointer" 
-(click)="setPrivacy(8,50)">Medium</span>
-                <span fxLayoutAlign="end center" class="privacy-label cursor-pointer" 
-(click)="setPrivacy(16,100)">High</span>
+              <div class="privacy-labels" fxFlex="100" fxLayoutAlign="start center">
+                <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)">Low</span>
+                <span fxFlex class="privacy-label medium" (click)="setPrivacy(8,50)">Medium</span>
+                <span fxFlex class="privacy-label high" (click)="setPrivacy(16,100)">High</span>
               </div>
               <md-progress-bar class="example-margin" [color]="'primary'" [bufferValue]="send.privacy" [mode]="'determinate'" [value]="progress"></md-progress-bar>
             </div>
@@ -153,14 +168,20 @@ oninput="validity.valid||(value='');" step="any">
           <md-divider></md-divider>
         </md-list-item>
       </md-card>
-      <md-card>
+
+
+      <div class="actions">
         <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
-          <button md-raised-button color="primary" (click)="clear()"><md-icon>clear</md-icon>Clear all</button>
-          <button md-raised-button color="disabled" class="validate" 
-(click)="onSubmit()"
-[disabled]="!checkAddress() || !checkAmount()"><md-icon>send</md-icon>Make payment</button>
+          <button md-raised-button color="primary" (click)="clear()">
+            <md-icon>clear</md-icon>Clear all
+          </button>
+          <button md-raised-button color="disabled" class="validate" (click)="onSubmit()" [disabled]="!checkAddress() || !checkAmount()">
+            <md-icon>send</md-icon>Make payment
+          </button>
         </div>
-      </md-card>
+      </div><!-- .actions -->
+
+
     </form>
   </div>
 </div>

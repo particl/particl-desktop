@@ -79,7 +79,6 @@ export class ReceiveComponent implements OnInit {
       type = 'query';
 
       this.addresses.query = this.addresses[this.type].filter(el => {
-        this.log.d(`pageChanged, changing receive page to: ${JSON.stringify(el)}`);
         if (el) {
           return (
             el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||

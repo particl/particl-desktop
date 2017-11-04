@@ -1,8 +1,13 @@
-<!-- @TODO add empty result box if no result found. & Hide progress bar if no result forund-->
+<!-- @TODO add empty result box if no result found. & Hide progress bar if no result found-->
 <md-progress-bar mode="indeterminate" *ngIf="!txService.txs.length && txService.loading"></md-progress-bar>
 <!--<div fxLayoutAlign="center center" *ngIf="!txService.txs.length > 0">-->
   <!--<md-spinner></md-spinner>-->
 <!--</div>-->
+
+<div class="no-results" *ngIf="txService.txs.length === 0 && !txService.loading">
+  No transactions yet
+</div>
+
 <app-grid>
   <div class="grid-row grid-header" *ngIf="display.header">
     <div class="cell-date" *ngIf="display.date">date</div>
@@ -14,8 +19,9 @@
     <div class="cell-amount" *ngIf="display.amount">amount</div>
   </div>
   <ng-container *ngFor="let tx of txService.txs let i=index">
+
     <!-- <md-expansion-panel class="history-list" *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)"> -->
-    <md-expansion-panel class="history-list" (click)="showExpandedTransactionDetail(tx)">
+    <md-expansion-panel class="history-list disable-select" *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)">
 
       <md-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
 
@@ -26,17 +32,17 @@
 
         <!-- Category icon -->
         <md-panel-title fxFlex.lg="25" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
-          <span *ngSwitchCase="'stake'">
-            <md-icon fontSet="faIcon" fontIcon="fa-plus" color="primary"></md-icon> Staked
+          <span *ngSwitchCase="'stake'" class="tx-type staked">
+            <md-icon fontSet="faIcon" fontIcon="fa-stop-circle"></md-icon>Staked
           </span>
-          <span *ngSwitchCase="'orphaned_stake'">
-            <md-icon fontSet="faIcon" fontIcon="fa-remove" color="warn"></md-icon> Orphaned Stake
+          <span *ngSwitchCase="'orphaned_stake'" class="tx-type orphan">
+            <md-icon fontSet="faIcon" fontIcon="fa-times-circle" color="warn"></md-icon>Orphaned Stake
           </span>
-          <span *ngSwitchCase="'send'">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="warn"></md-icon> Sent
+          <span *ngSwitchCase="'send'" class="tx-type sent">
+            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left" color="warn"></md-icon>Sent
           </span>
-          <span *ngSwitchCase="'receive'">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left"></md-icon> Received
+          <span *ngSwitchCase="'receive'" class="tx-type received">
+            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="primary"></md-icon>Received
           </span>
         </md-panel-title>
 
@@ -58,12 +64,19 @@
 
         <!-- Confirmations -->
         <md-panel-title fxFlex.lg="10" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
-          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.confirmations }}</span>
+          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
         </md-panel-title>
 
         <!-- Amount -->
         <md-panel-title fxFlex.lg="30" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
-          <span md-line><span class="amount">{{ tx.getAmount() }}</span> PART</span>
+          <span md-line>
+            <span class="amount" [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }"> 
+              <span class="big number">{{ tx.getAmountObject().getIntegerPart() }}</span><!-- inline element comment hack
+              --><span class="point">{{ tx.getAmountObject().dot() }}</span><!--
+              --><small class="small number">{{ tx.getAmountObject().getFractionalPart() || '' }}</small>
+              <small class="currency">PART</small>
+            </span>
+          </span>
         </md-panel-title>
 
       </md-expansion-panel-header>
@@ -74,26 +87,26 @@
         <div fxLayout="column" fxFlex="55">
           <!-- To/from (detail) -->
           <div class="tx-detail-item" fxFlex>
-            <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">To/from:</b>
-            <input class="md-right" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" value="{{ tx.getAddress() }}" placeholder="To/from">
+            <span fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">To/from:</span>
+            <input class="to-from-address" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" value="{{ tx.getAddress() }}" placeholder="To/from">
           </div>
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
-            <b fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">Transaction ID:</b>
-            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight" href="https://explorer-testnet.particl.io/tx/{{tx.txid}}" target="_blank">{{tx.txid}}</a>
+            <span fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">TXID:</span>
+            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight" href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank" mdTooltip="Show on Block Explorer">{{tx.txid}}</a>
           </div>
         </div>
 
         <div fxLayout="column" fxFlex="45">
           <!-- TX fee (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
-            <b>Transaction fee:</b>
+            <span>Fee:</span>
             <span class="md-right">{{tx.fee ? tx.fee : 0}} PART</span>
           </div>
           <!-- Net amount (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
-            <b>Net amount:</b>
-            <span class="md-right">{{tx.fee ? tx.getAmount() - tx.fee : 0}} PART</span>
+            <span>Net amount:</span>
+            <span class="md-right">{{ tx.getNetAmount()}} PART</span>
           </div>
         </div>
 

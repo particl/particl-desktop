@@ -1,4 +1,4 @@
-<app-header>
+<app-header class="disable-select">
   <div fxLayout="row" fxlayout.lt-sm="column">
     <div fxFlex="1 1 70%">
       <md-tab-group (selectChange)="changeTab($event.index)">
@@ -21,14 +21,14 @@
   </div>
 </app-header>
 
-<div class="container-block" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
+<div class="container-block disable-select" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
 
   <!-- Address details & QR code -->
-  <div fxFlex="0 0 200px" fxFlex.lt-md="100" *ngIf="selected">
+  <div fxFlex="0 0 220px" fxFlex.lt-md="100" *ngIf="selected">
     <md-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px">
 
       <div #qrCode class="qrcode" fxFlex fxFlex.lt-md="0 0 200px">
-        <qr-code [size]="getQrSize()" [level]="'H'" value="particl:{{ selected.address }}">
+        <qr-code size="180" [level]="'H'" value="particl:{{ selected.address }}">
         </qr-code>
       </div><!-- qrcode -->
 
@@ -39,28 +39,36 @@
         <div class="details-label">
           {{ selected.label }}
         </div>
-        <div class="details-address" fxLayoutWrap layout-padding fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start">
+        <div class="details-address enable-select" fxLayoutWrap layout-padding fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start">
           <div *ngFor="let word of selected.readable" class="address-word" fxFlex="33" fxFlex.lt-md="37px">
             {{ word }}
           </div>
         </div>
-        <button md-raised-button color="primary" (click)="openNewAddress()">New {{ getAddressType() }} address</button>
-      </div><!-- .address-details -->
 
+        <div class="actions">
+          <button md-button class="copy" ngxClipboard [cbContent]="selected.address">
+            <md-icon fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>Copy address
+          </button>
+          <button md-raised-button color="primary" (click)="openNewAddress()" class="generate-new">
+            <md-icon fontSet="faIcon" fontIcon="fa-plus"></md-icon>New {{ getAddressType() }} address
+          </button>
+        </div><!-- .actions -->
+
+      </div><!-- .address-details -->
     </md-card>
   </div>
 
   <!-- Address list -->
-  <div fxFlex="1 1 calc(100% - 240px)" *ngIf="getUnusedAddress()">
+  <div fxFlex="1 1 calc(100% - 260px)" *ngIf="getUnusedAddress()">
 
     <md-list class="list-data" *ngIf="inSearchMode() === false">
-      <div md-subheader class="address-title">Unused address</div>
+      <div md-subheader class="address-title first">Unused address</div>
 
       <md-card class="address-info">
         <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
           <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id"> /{{ getUnusedAddress().id }}</div>
           <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label"> {{ getUnusedAddress().label }}</div>
-          <div fxFlex="1 1 80%" fxFlex.lt-md="100" class="address">
+          <div fxFlex="1 1 80%" fxFlex.lt-md="100" class="address enable-select">
             {{ getUnusedAddress().address }}
             <!-- Received amount in unused address doesn't make sense -->
             <!--div class="total"><span>Total received: </span>
@@ -84,10 +92,13 @@
         </div>
       </md-card>
       <div class="widget-help">
-        <span class="TODO">@FIXME:</span> It is advised to use new addresses for each Public transaction (or person) for greater privacy.
+        It is advised that you generate and use a new address for each public transaction (or person) to increase your privacy.
       </div>
     </md-list><!-- .list-data -->
 
+    <div class="no-results" *ngIf="(getSinglePage().length === 0) && (inSearchMode() === true)">
+      No addresses found
+    </div>
 
     <md-list *ngIf="getSinglePage().length" class="list-data">
       <div md-subheader class="address-title">Previous addresses</div>
@@ -97,11 +108,11 @@
             <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md fxLayoutGap="10px" layout-padding>
             <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id">/{{ address.id }}</div> 
             <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label">{{ address.label }}</div>
-            <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address">
+            <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address enable-select">
               {{ address.address }}
-              <div class="total"><span>Total received: </span>
+              <!--div class="total"><span>Total received: </span>
                 <span class="received-amount TODO">{{ address.balance }}</span>
-              </div>
+              </div-->
             </div>
             <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->

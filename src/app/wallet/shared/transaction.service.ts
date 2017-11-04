@@ -18,6 +18,7 @@ export class TransactionService {
   currentPage: number = 0;
   totalPageCount: number = 0;
   loading: boolean = false;
+  testnet: boolean = false;
 
 
   /* How many transactions do we display per page and keep in memory at all times.
@@ -37,6 +38,10 @@ export class TransactionService {
           this.loading = true;
           this.rpc_update();
         });
+
+    /* check if testnet -> block explorer url */
+    this.rpc.state.observe('chain').take(1)
+    .subscribe(chain => this.testnet = chain === 'test');
   }
 
 

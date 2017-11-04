@@ -7,10 +7,13 @@
 }
 
 .widget-help { // help description
-  color: grey;
+  @extend .disable-select;
+  color: $text-muted;
   font-size: 11px;
   margin-bottom: 25px;
+  cursor: help;
 }
+
 
 .qrcode {
   text-align: center;
@@ -20,11 +23,22 @@
   background: white;
 }
 
+.no-results { // search: no results
+  font-size: 18px;
+  color: darken($bg-shadow, 15%);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 170px 0;
+  border: 2px dashed $bg-shadow;
+  background: rgba(white, 0.5);
+}
+
 /**
  * Side bar Menu.
  */
 
  .mat-sidenav {
+   user-select: none;
   .logo-area {
     .mat-toolbar-row {
       justify-content: center;
@@ -47,6 +61,7 @@
     &.sidesubmenu {
       a {
         text-decoration: none;
+        outline: none;
       }
       .mat-list-item-content {
         text-transform: uppercase;
@@ -80,9 +95,12 @@
   color: $color !important;
 }
 
-.header-main {
-  border-bottom: 1px solid #ddd;
+.header-main { // top header (page title with status icons)
+  @extend .disable-select;
+  border-bottom: 1px solid $bg-shadow;
   background: #fff;
+  padding-left: 35px !important;
+  padding-right: 26px !important;
 }
 
 .containerX {
@@ -192,8 +210,8 @@ input[type="text"] {
   border-left: 1px solid #ddd;
 }
 
-.container-block {
-  padding: 20px;
+.container-block { // main container for content
+  padding: 35px;
 }
 
 /**
@@ -359,19 +377,11 @@ input[type="text"].md-bg-transparent {
 }
 
 .md-send-list {
-  .mat-select-trigger{ height: 23px; }
-}
-
-.header-nav {
-  list-style-type: none;
-  padding: 0;
-  li {
-    font-size: 16px;
-    font-weight: normal;
-    text-transform: uppercase;
-    color: $text-muted;
+  .mat-select-trigger{
+    height: 23px;
   }
 }
+
 panel-header-title {
   display: block;
 }
@@ -387,29 +397,36 @@ panel-header-title {
 }
 
 
-// Pagination
-.mat-paginator-navigation-next.mat-icon-button:hover {
-  background-color: #1aeab8;
-  border-radius: 0px;
-}
-
-.mat-paginator-navigation-previous.mat-icon-button:hover {
-  background-color: #1aeab8;
-  border-radius: 0px;
-}
+/* ------------------------------- *\
+    Pagination
+\* ------------------------------- */ 
 
 .mat-paginator {
+  margin-top: 40px;
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
     &:hover {
+      background-color: $color;
+      border-radius: $radius;
       .mat-paginator-increment,
       .mat-paginator-decrement {
         border-color: white;
       }
     }
+    &[disabled] {
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: $bg-shadow;
+      }
+      &:hover {
+        background-color: transparent;
+      }
+    }
   }
 }
+
+
 
 .syncing_header_text{
   width: 65%;

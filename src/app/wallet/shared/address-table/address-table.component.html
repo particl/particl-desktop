@@ -17,11 +17,13 @@
       <div *ngIf="displayQrMenu">QR Code</div>
     </div>
 
-    <md-list class="list-data" fxFlex="100">
+    <md-list class="list-data disable-select" fxFlex="100">
+      <div class="no-results" *ngIf="getSinglePage().length === 0">
+        No matching addresses found
+      </div>
       <div *ngFor="let address of getSinglePage()">
 
-        <md-card class="address-entry" fxLayout.gt-lg="50" fxLayout.gt-sm="row" fxLayout.lt-md="column"
-                 fxLayoutGap="10px" layout-padding>
+        <md-card class="address-entry" fxLayout.gt-sm="row" fxLayout.lt-md="column" fxLayoutGap="10px" layout-padding>
 
           <!-- Label -->
           <div fxFlex="1 0 150px" fxFlex.lt-md="100" class="title cursor-pointer" *ngIf="displayLabel"
@@ -30,20 +32,21 @@
           </div>
 
           <!-- Address -->
-          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress">
-            <span class="title">Address&emsp;</span>{{ address.address }}
+          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)">
+            <span class="title">Address&emsp;</span>
+            <span class="address-string enable-select">{{ address.address }}</span>
           </div>
 
           <!-- Pubkey -->
           <div fxFlex="25" class="grid-cell" *ngIf="displayPublicKey">
             <span class="title">Public Key</span>
-            {{ address.publicKey }}
+            <span class="pubkey enable-select">{{ address.publicKey }}</span>
           </div>
 
           <!-- Type -->
           <div fxFlex="25" clas="grid-cell" *ngIf="displayType">
             <span class="title">Type</span>
-            <span class="text-uppercase">{{ address.type }}</span>
+            <span class="type">{{ address.type }}</span>
           </div>
 
           <!-- Actions/controls -->
@@ -55,7 +58,7 @@
                        ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></md-icon>
             </span>
             <!-- ICO: verify message -->
-            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center" class="TODO">
               <md-icon fontSet="ncIcon" fontIcon="nc-a-check" class="cursor-pointer" mdTooltip="Verify message"
                        ngxClipboard></md-icon>
             </span>
@@ -72,8 +75,8 @@
           </div>
 
         </md-card>
-
       </div>
+
     </md-list>
   </div>
 </div>

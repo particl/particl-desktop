@@ -7,7 +7,7 @@ import { StakinginfoComponent } from './stakinginfo.component';
 import { StateService } from '../../../core/state/state.service';
 import { SharedModule } from '../../../shared/shared.module';
 
-import { Amount, Duration } from './util';
+import { Amount, Duration } from '../../../shared/util/utils';
 
 describe('StakinginfoComponent', () => {
   let component: StakinginfoComponent;

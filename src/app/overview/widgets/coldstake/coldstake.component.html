@@ -8,7 +8,7 @@
   <md-card *ngIf="isColdStakingEnabled() === undefined" (click)="openUnlockWalletModal()" class="multiple staking-node" >
     <div class="title">
       <!--md-icon fontSet="faIcon" class="cs-icon" fontIcon="fa-snowflake-o"></md-icon-->
-      Cold Staking Node <span class="status inactive">Unlock to check state</span>
+      Cold Staking Node <span class="status inactive">Unlock to check</span>
     </div>
     <button class="mat-raised-button mat-primary pull-left" mdTooltip="Unlock wallet to enable cold staking">
       <md-icon fontSet="faIcon" fontIcon="fa-lock"></md-icon>
@@ -36,6 +36,6 @@
   </md-card>
 
   <p class="widget-help">
-    <span class="TODO">@FIXME:</span> Cold Staking lets you spend from one machine and stake from another. This greatly increases safety of your coins.
+    Cold staking allows you to spend from one machine and stake from another, this greatly increases the safety of your coins.
   </p>
 </div><!-- .cold-staking -->

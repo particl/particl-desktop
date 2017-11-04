@@ -1,6 +1,36 @@
-.address {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background: transparent;
-  transition: background .3s;
+@import "./src/assets/_config"; // import shared colors etc.
+
+.title {
+  font-family: $font;
+  font-weight: 600;
+}
+
+.search-address {
+  margin-top: 12px;
+}
+
+.mat-list {
+  .mat-list-item {
+    .mat-list-item-content {
+      font-family: $font;
+      font-size: 13px;
+      height: 20px;
+    }
+  }
+}
+
+.address-entry {
+  cursor: pointer;
+  font-size: 13px;
+  .label {
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .address {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: monospace;
+    background: transparent;
+    transition: background .3s;
+  }
 }

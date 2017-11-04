@@ -1,28 +1,32 @@
-<div class="containerX">
-  <h2 md-dialog-title>
+<div class="containerX qr-modal disable-select">
+  <h2 md-dialog-title class="title">
     {{singleAddress.label}}
   </h2>
-  <div fxLayout.lg="row">
-    <div>
-      <label>Address</label>
-      <div>
-        <div class="details-address" fxLayout="row" layout-padding fxLayoutGap="10px">
-          <div *ngFor="let word of showAddress(singleAddress.address)"  class="address-word" fxFlex="28%">
-            {{ word }}
-          </div>
+  <div fxLayout="column" fxLayoutGap="30px">
+
+    <div class="qr-code">
+      <div #qrCode class="card qr">
+        <qr-code [level]="'H'" size="150" value="particl:{{ singleAddress.address }}"></qr-code>
+      </div>
+    </div><!-- .qr-code -->
+    
+    <div class="address-string">
+      <div class="details-address enable-select" fxLayoutWrap layout-padding>
+        <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
+          {{ word }}
         </div>
       </div>
-    </div>
 
-    <div>
-      <div #qrCode class="card qr">
-        <qr-code [level]="'H'"
-          value="particl:{{ singleAddress.address }}">
-        </qr-code>
+      <div class="actions">
+        <button md-button class="copy" ngxClipboard [cbContent]="singleAddress.address">
+          <md-icon fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>Copy to clipboard
+        </button>
       </div>
-    </div>
+    </div><!-- .address-string -->
+    
+
   </div>
-  <md-dialog-actions fxLayoutAlign="end center">
+  <md-dialog-actions fxLayoutAlign="center center">
     <button md-button md-dialog-close>Close</button>
   </md-dialog-actions>
 </div>

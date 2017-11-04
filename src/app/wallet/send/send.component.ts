@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 import { Log } from 'ng2-logger';
 
@@ -31,7 +31,7 @@ export class SendComponent {
   /*
     UI logic
   */
-
+  @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
   advanced: boolean = false;
   progress: number = 10;
@@ -53,7 +53,6 @@ export class SendComponent {
     RPC logic
   */
   lookup: string;
-
   private _sub: Subscription;
   private _balance: any;
 
@@ -298,7 +297,8 @@ export class SendComponent {
   }
 
   pasteAddress() {
-    document.getElementById('address').focus();
+    // document.getElementById('address').focus();
+    this.address.nativeElement.focus();
     document.execCommand('Paste');
   }
 
