@@ -1,3 +1,5 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
 .icon {
   display: inline-block;
   padding: 1px;
@@ -10,7 +12,7 @@
 }
 
 .red {
-  color: red;
+  color: $color-alert;
   text-shadow: 1px 1px 1px #ccc;
   font-size: 1.1em;
 }

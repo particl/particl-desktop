@@ -1,10 +1,10 @@
-<button  md-raised-button class="close_button pull-right" (click)="close()" *ngIf="enableClose">
+<button md-raised-button class="close_button pull-right" (click)="close()" *ngIf="enableClose">
   <md-icon>close</md-icon>
 </button>
+
 <div md-dialog-content class="md-wallet-content">
-  <div class="row">
-    <img class="logo img-responsive" src="assets/particl-logo-white-bg.svg">
-  </div>
+  <md-spinner mode="indeterminate" *ngIf="loadSpinner"></md-spinner>
+
   <ng-template #modalContainer></ng-template>
 </div>
 

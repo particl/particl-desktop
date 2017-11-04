@@ -6,6 +6,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
 import { StateService } from '../../core/state/state.service';
 
+import { Amount } from '../../shared/util/utils';
+
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
   let fixture: ComponentFixture<BalanceComponent>;
@@ -31,10 +33,18 @@ describe('BalanceComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get balance before point', () => {
-    component.getBalanceBeforePoint();
-    expect(component.getBalanceBeforePoint.length).toBe(0);
+  it('should return a balance equal to 0 (getIntegerPart)', () => {
+    expect(component.balance.getIntegerPart()).toBe(0);
   });
+
+  it('should return a balance equal to 0 (getFractionalPart)', () => {
+    expect(component.balance.getFractionalPart()).toBe(0);
+  });
+
+  it('should not return a dot because its just 0, not 0.0 ', () => {
+    expect(component.balance.dot()).toBe('');
+  });
+
 /*
   it('should get balance point', () => {
     component.getBalancePoint();

@@ -18,11 +18,13 @@ export class TransactionService {
   currentPage: number = 0;
   totalPageCount: number = 0;
   loading: boolean = false;
+  testnet: boolean = false;
 
 
   /* How many transactions do we display per page and keep in memory at all times.
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
+  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
 
   constructor(private rpc: RPCService) {
   }
@@ -33,18 +35,20 @@ export class TransactionService {
       .subscribe(
         txcount => {
           this.txCount = txcount;
-          this.currentPage = 0;
           this.loading = true;
           this.rpc_update();
         });
+
+    /* check if testnet -> block explorer url */
+    this.rpc.state.observe('chain').take(1)
+    .subscribe(chain => this.testnet = chain === 'test');
   }
 
 
   changePage(page: number) {
-    if (page <= 0) {
+    if (page < 0) {
       return;
     }
-    page--;
     this.loading = true;
     this.currentPage = page;
     this.deleteTransactions();

@@ -1,6 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
+import { Log } from 'ng2-logger';
 
 import { StateService } from '../state/state.service';
 import { PeerService } from './peer.service';
@@ -8,10 +9,20 @@ import { PeerService } from './peer.service';
 @Injectable()
 export class BlockStatusService {
 
+  private log: any = Log.create('blockstatus.service');
+
+  /* Block variables */
   private highestBlockHeightNetwork: number = -1;
   private highestBlockHeightInternal: number = -1;
   private startingBlockCount: number = -1;
   private totalRemainder: number = -1;
+
+  /* Last time we had a change in block count */
+  private lastUpdateTime: number; // used to calculate the estimatedTimeLeft
+
+  /* The last five hundred estimatedTimeLeft results, averaging this out for stable result */
+  private arrayLastEstimatedTimeLefts: Array<number> = [];
+  private amountToAverage: number = 50;
 
   public statusUpdates: Subject<any> = new Subject<any>();
 
@@ -31,20 +42,28 @@ export class BlockStatusService {
     private _state: StateService
   ) {
     // Get internal block height and calculate syncing details (ETA)
-    this._state.observe('blocks')
+    this.log.d('constructor blockstatus');
+    // this._state.observe('blocks')
+    this._peerService.getBlockCount()
       .subscribe(
         height => {
-          const lastBlockTime = new Date(this._state.get('lastblocktime')) ||
-            new Date(+this._state.get('mediantime') * 1000);
-          this.calculateSyncingDetails(lastBlockTime, height);
+
+          this.status.lastBlockTime = new Date(+this._state.get('mediantime') * 1000);
+          this.calculateSyncingDetails(height);
+
+          // must be after calculateSyncingDetails
+          if (this.highestBlockHeightInternal < height) {
+            this.lastUpdateTime = Date.now();
+          }
+
           this.highestBlockHeightInternal = height;
           this.status.internalBH = height;
-          this.status.lastBlockTime = lastBlockTime;
+
           if (this.startingBlockCount === -1) {
             this.startingBlockCount = height;
           }
         },
-        error => console.log('SyncingComponent subscription error:' + error));
+        error => console.log('constructor blockstatus: state blocks subscription error:' + error));
 
     // Get heighest block count of peers and calculate remainerders.
     this._peerService.getBlockCountNetwork()
@@ -56,12 +75,12 @@ export class BlockStatusService {
             this.totalRemainder = height - this.startingBlockCount;
           }
         },
-        error => console.log('SyncingComponent subscription error:' + error));
+        error => console.log('constructor blockstatus: getBlockCountNetwork() subscription error:' + error));
   }
 
 
   /** Calculates the details (percentage of synchronised, estimated time left, ..) */
-  private calculateSyncingDetails(newTime: Date, newHeight: number) {
+  private calculateSyncingDetails(newHeight: number) {
 
     const internalBH = this.highestBlockHeightInternal;
     const networkBH = this.highestBlockHeightNetwork;
@@ -80,8 +99,12 @@ export class BlockStatusService {
       this.status.syncPercentage = 100;
     }
 
-    const timeDiff: number = newTime.getTime() - this.status.lastBlockTime.getTime();
-    const blockDiff: number = newHeight - this.highestBlockHeightInternal;
+    /*
+      Time & block diff between updates.
+      "how much blocks did it sync since last time we ran this function"
+    */
+    const timeDiff: number = Date.now() - this.lastUpdateTime; // in milliseconds
+    const blockDiff: number = newHeight - internalBH;
 
     // increasePerMinute
     if (timeDiff > 0 && this.totalRemainder > 0) {
@@ -98,7 +121,7 @@ export class BlockStatusService {
       this.estimateTimeLeft(blockDiff, timeDiff);
     }
 
-    // update
+    // updates for modal
     this.statusUpdates.next(this.status);
   }
 
@@ -108,15 +131,12 @@ export class BlockStatusService {
     return (diff < 0 ? 0 : diff);
   }
 
-  // TODO: average out the estimated time left to stop random shifting when slowed down.
-  // and localize
-
   /** Calculates how much time is left to be fully synchronised. */
   private estimateTimeLeft(blockDiff: number, timeDiff: number) {
 
     let returnString = '';
 
-    const secs = Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000),
+    const secs = this.averageTimeLeft(Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000)),
           seconds = Math.floor(secs % 60),
           minutes = Math.floor((secs / 60) % 60),
           hours = Math.floor((secs / 3600) % 3600);
@@ -126,14 +146,43 @@ export class BlockStatusService {
     }
     if (minutes > 0) {
       returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `
+    } else if (hours === 0 && seconds > 0) {
+      returnString += `Any minute now!`;
     }
+    /*
     if (seconds > 0) {
       returnString += `${seconds} ${seconds > 1 ? 'seconds' : 'second'}`
-    }
+    }*/
     if (returnString === '') {
       returnString = '∞';
     }
 
     this.status.estimatedTimeLeft = returnString;
   }
+
+  /** Inserts estimatedTimeLeft into private array and returns an averaged result to create more consistent result. */
+  private averageTimeLeft(estimatedTimeLeft: number): number {
+
+    /* add element to averaging array */
+    const length = this.arrayLastEstimatedTimeLefts.push(estimatedTimeLeft);
+
+    /* if length > allowed length, pop first element */
+    if (length > this.amountToAverage) {
+      this.arrayLastEstimatedTimeLefts.shift();
+    }
+
+    /* sum all elements in array */
+    function add(a: number, b: number) {
+      return a + b;
+    }
+
+    const sum = this.arrayLastEstimatedTimeLefts.reduce(add, 0);
+
+    /* Average = summation / amount of elements */
+    const averageEstimatedTimeLeft = Math.floor(sum / length);
+
+    this.log.d(`averageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
+    return averageEstimatedTimeLeft;
+  }
+
 }
