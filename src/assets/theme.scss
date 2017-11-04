@@ -20,6 +20,16 @@
   background: white;
 }
 
+.no-results { // search: no results
+  font-size: 18px;
+  color: darken($bg-shadow, 15%);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 170px 0;
+  border: 2px dashed $bg-shadow;
+  background: rgba(white, 0.5);
+}
+
 /**
  * Side bar Menu.
  */

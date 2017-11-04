@@ -4,7 +4,9 @@
   <!--<md-spinner></md-spinner>-->
 <!--</div>-->
 
-<div *ngIf="txService.txs.length === 0 && !txService.loading">NO RESULTS</div>
+<div class="no-results" *ngIf="txService.txs.length === 0 && !txService.loading">
+  No transactions yet
+</div>
 
 <app-grid>
   <div class="grid-row grid-header" *ngIf="display.header">

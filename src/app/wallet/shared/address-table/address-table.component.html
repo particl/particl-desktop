@@ -18,8 +18,8 @@
     </div>
 
     <md-list class="list-data" fxFlex="100">
-      <div *ngIf="getSinglePage().length === 0">
-        NO RESULTS
+      <div class="no-results" *ngIf="getSinglePage().length === 0">
+        No matching addresses found
       </div>
       <div *ngFor="let address of getSinglePage()">
 
