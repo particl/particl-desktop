@@ -67,7 +67,7 @@ export class Transaction implements Deserializable {
 
   /** Calculates the actual amount that was transfered, including the fee */
   /* todo: fee is not defined in normal receive tx, wut? */
-  public getNetAmount() : number {
+  public getNetAmount(): number {
     const amount: number = +this.getAmountObject().getAmount();
 
     /* If fee undefined then just return amount */
