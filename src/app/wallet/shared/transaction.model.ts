@@ -76,7 +76,6 @@ export class Transaction implements Deserializable {
     /* sent */
     } else if (amount < 0) {
       return new Amount(+amount + (+this.fee)).getAmount();
-      //return net;
     } else {
       return new Amount(+amount - (+this.fee)).getAmount();
     }
