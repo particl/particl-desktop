@@ -6,6 +6,7 @@
       <md-form-field>
         <input
           mdInput
+          class="enable-select"
           [appFocusElement]="i === focused"
           [(ngModel)]="words[i]" type="text" name="recovery"
           [readonly]="readOnly"
@@ -21,9 +22,10 @@
       <md-icon fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon> Copy to Clipboard
     </button>
 
-    <button md-button *ngIf="!generate" class="paste TODO">
+    <!-- @TODO: Uncomment Paste button when it's working! -->
+    <!--button md-button *ngIf="!generate" class="paste">
       <md-icon fontSet="faIcon" fontIcon="fa-clipboard"></md-icon> Paste
-    </button>
+    </button-->
 
   </div><!-- .actions -->
 </div><!-- .passphrase -->

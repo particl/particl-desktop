@@ -24,6 +24,7 @@
 }
 
 .no-results { // search: no results
+  @extend .disable-select;
   font-size: 18px;
   color: darken($bg-shadow, 15%);
   text-transform: uppercase;
@@ -31,6 +32,23 @@
   padding: 170px 0;
   border: 2px dashed $bg-shadow;
   background: rgba(white, 0.5);
+}
+
+button {
+  .mat-icon {
+    width: auto;
+    height: auto;
+    font-size: 16px;
+    margin-right: 5px;
+    position: relative;
+    top: -1px;
+  }
+}
+
+.actions {
+  button {
+    margin: 0 10px;
+  }
 }
 
 /**
@@ -318,6 +336,7 @@ input[type="text"] {
       color: $text-muted;
       min-width: 50px;
       .mat-icon {
+        width: 25px;
         background: rgba($color-alert, 0.5);
         border-radius: 50%;
         font-size: 18px;
