@@ -43,7 +43,8 @@ export class AddressService {
   updateAddressList() {
     this.log.d(`updateAddressList() old length: ${this.addressCount}`);
     this._rpc.call('filteraddresses', [-1]).subscribe(
-      success => this.rpc_loadAddressCount_success(success));
+      success => this.rpc_loadAddressCount_success(success),
+      error => this.log.er(`updateAddressList, failed with error ${error}`));
   }
 
   getAddresses(): Observable<Array<Address>> {
