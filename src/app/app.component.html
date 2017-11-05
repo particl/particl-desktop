@@ -48,7 +48,7 @@
                   <span class="menu-item">Address Book</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+              <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" *ngIf="walletInitialized === false" >
                 <md-list-item>
                   <md-icon fontSet="ncIcon" fontIcon="nc-card-add" ></md-icon>
                   <span class="menu-item">Add Account</span>
