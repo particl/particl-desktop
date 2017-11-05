@@ -16,11 +16,7 @@ export class Amount {
    * 25.9 -> '25'
    */
   public getIntegerPart(): number {
-    /* Math floor is crazy.
-     * Math.floor(-0.2) -> -1.2, so fix it by adding 1 if negative &
-     * Math.floor(-9) -> -9, so only add 1 if no dot exists.
-     */
-    return Math.floor(this.amount) + Number(this.amount < 0 && this.ifDotExist());
+    return Math.trunc(this.amount);
   }
 
   /**
