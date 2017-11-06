@@ -12,7 +12,7 @@
           </p>
           <div class="actions">
             <button *ngIf="!isCrypted" md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(0);">
-              <md-icon fontSet="faIcon" fontIcon="fa-lock"></md-icon>
+              <md-icon fontSet="partIcon" fontIcon="part-lock"></md-icon>
               Encrypt Wallet
             </button>
           </div>
@@ -26,11 +26,11 @@
           </p>
           <div class="actions">
             <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
-              <md-icon fontSet="faIcon" fontIcon="fa-plus"></md-icon>
+              <md-icon fontSet="partIcon" fontIcon="part-simple-add"></md-icon>
               Create new wallet
             </button>
             <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
-              <md-icon fontSet="faIcon" fontIcon="fa-repeat"></md-icon>
+              <md-icon fontSet="partIcon" fontIcon="part-refresh-01"></md-icon>
               Restore wallet
             </button>
           </div>
@@ -54,7 +54,7 @@
         <form #nameForm="ngForm" (ngSubmit)="nextStep()">
           <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)"
           [@slideDown]>
-            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
             <span [hidden]="!validation.errors.required">
               Wallet Name is required
             </span>
@@ -95,7 +95,7 @@
             You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
           </p>
           <p class="warning">
-            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
             Warning: if you lose Recovery Phrase OR Recovery Password, you won't be able to access your coins!
           </p>
         </div><!-- step == 2 -->
@@ -108,7 +108,7 @@
             Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
           </p>
           <p class="warning">
-            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
             You must write this Recovery Phrase down and keep it safe or you'll lose access to your coins!
           </p>
         </div><!-- step == 3 -->

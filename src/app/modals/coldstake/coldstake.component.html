@@ -7,7 +7,7 @@
 
         <div class="title">Cold Staking setup</div>
         <p class="warning">
-            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
             Please, read these instructions very carefully!
         </p>
         <hr class="hr-light">
@@ -47,7 +47,7 @@
           <div class="hot-wallet" fxFlex="50">
             <div class="actions">
               <button md-raised-button color="warn" (click)="create('hot');">
-                <md-icon fontSet="faIcon" fontIcon="fa-fire"></md-icon>
+                <md-icon fontSet="partIcon" fontIcon="part-flash-21"></md-icon>
                 Create hot wallet
               </button>
             </div><!-- .actions -->
@@ -56,7 +56,7 @@
           <div class="cold-wallet" fxFlex="50">
             <div class="actions">
               <button md-raised-button color="primary" (click)="create('cold');">
-                <md-icon fontSet="faIcon" fontIcon="fa-snowflake-o"></md-icon>
+                <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
                 Create cold wallet
               </button>
             </div><!-- .actions -->
@@ -105,7 +105,7 @@
 
         <div class="actions text-left">
           <button md-raised-button color="primary" ngxClipboard [cbContent]="hotStakeAddress">
-            <md-icon fontSet="faIcon" fontIcon="fa-clipboard"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon>
             <!--span class="icon nc-icon nc-copy-2 cursor-pointer" placement="top" container="body"></span-->
             Copy to clipboard
           </button>
@@ -135,12 +135,12 @@
 
         <div class="actions">
           <button md-raised-button color="primary" (click)="nextStep();">
-            <md-icon fontSet="faIcon" fontIcon="fa-snowflake-o"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
             Enable cold staking
           </button>
 
           <button md-raised-button color="warn" (click)="resetColdStakingAddress()();">
-            <md-icon fontSet="faIcon" fontIcon="fa-ban"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-ban"></md-icon>
             Disable cold staking
           </button>
         </div><!-- .actions -->

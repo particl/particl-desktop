@@ -19,12 +19,12 @@
   <div class="actions" fxLayoutAlign="center center" *ngIf="!isDisabled && !partialDisable">
 
     <button md-button *ngIf="generate" (click)="copyToClipBoard()" ngxClipboard [cbContent]="words.join(' ')" class="copy">
-      <md-icon fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon> Copy to Clipboard
+      <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon> Copy to Clipboard
     </button>
 
     <!-- @TODO: Uncomment Paste button when it's working! -->
     <!--button md-button *ngIf="!generate" class="paste">
-      <md-icon fontSet="faIcon" fontIcon="fa-clipboard"></md-icon> Paste
+      <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon> Paste
     </button-->
 
   </div><!-- .actions -->

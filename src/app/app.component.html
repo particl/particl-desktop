@@ -11,7 +11,7 @@
       <md-list class="sidesubmenu">
         <a routerLinkActive="active" routerLink="/overview">
           <md-list-item>
-            <md-icon fontSet="ncIcon" fontIcon="nc-grid-48"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-grid-48"></md-icon>
             <span class="menu-item">Overview</span>
           </md-list-item>
         </a>
@@ -26,31 +26,31 @@
             <md-list class="sidesubmenu">
               <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/receive' : null">
                 <md-list-item>
-                  <md-icon fontSet="ncIcon" fontIcon="nc-simple-right"></md-icon>
+                  <md-icon fontSet="partIcon" fontIcon="part-tail-right"></md-icon>
                   <span class="menu-item">Receive</span>
                 </md-list-item>
               </a>
               <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/send' : null">
                 <md-list-item>
-                  <md-icon fontSet="ncIcon" fontIcon="nc-simple-left"></md-icon>
+                  <md-icon fontSet="partIcon" fontIcon="part-tail-left"></md-icon>
                   <span class="menu-item">Send</span>
                 </md-list-item>
               </a>
               <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/history' : null">
                 <md-list-item>
-                  <md-icon fontSet="ncIcon" fontIcon="nc-time-3"></md-icon>
+                  <md-icon fontSet="partIcon" fontIcon="part-time-3"></md-icon>
                   <span class="menu-item">History</span>
                 </md-list-item>
               </a>
               <a routerLinkActive="{{ walletInitialized ? 'active' : null }}" [routerLink]="walletInitialized ? '/wallet/address-book' : null">
                 <md-list-item>
-                  <md-icon fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
+                  <md-icon fontSet="partIcon" fontIcon="part-multiple-19"></md-icon>
                   <span class="menu-item">Address Book</span>
                 </md-list-item>
               </a>
               <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
                 <md-list-item>
-                  <md-icon fontSet="ncIcon" fontIcon="nc-card-add" ></md-icon>
+                  <md-icon fontSet="partIcon" fontIcon="part-card-add" ></md-icon>
                   <span class="menu-item">Add Account</span>
                 </md-list-item>
               </a>
@@ -69,7 +69,7 @@
             <md-list class="sidesubmenu">
               <a routerLinkActive="active" [routerLink]="walletInitialized ? '/settings' : null">
                 <md-list-item>
-                  <md-icon fontSet="ncIcon" fontIcon="nc-grid-48"></md-icon>
+                  <md-icon fontSet="partIcon" fontIcon="nc-grid-48"></md-icon>
                   <span class="menu-item">Settings</span>
                 </md-list-item>
               </a>

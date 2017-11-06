@@ -31,16 +31,16 @@
         <!-- Category icon -->
         <md-panel-title fxFlex.lg="25" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
           <span *ngSwitchCase="'stake'" class="tx-type staked">
-            <md-icon fontSet="faIcon" fontIcon="fa-stop-circle"></md-icon>Staked
+            <md-icon fontSet="partIcon" fontIcon="part-coins"></md-icon>Staked
           </span>
           <span *ngSwitchCase="'orphaned_stake'" class="tx-type orphan">
-            <md-icon fontSet="faIcon" fontIcon="fa-times-circle" color="warn"></md-icon>Orphaned Stake
+            <md-icon fontSet="partIcon" fontIcon="part-alert-circle-exc" color="warn"></md-icon>Orphaned Stake
           </span>
           <span *ngSwitchCase="'send'" class="tx-type sent">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left" color="warn"></md-icon>Sent
+            <md-icon fontSet="partIcon" fontIcon="part-tail-left" color="warn"></md-icon>Sent
           </span>
           <span *ngSwitchCase="'receive'" class="tx-type received">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="primary"></md-icon>Received
+            <md-icon fontSet="partIcon" fontIcon="part-tail-right" color="primary"></md-icon>Received
           </span>
         </md-panel-title>
 
@@ -62,7 +62,7 @@
 
         <!-- Confirmations -->
         <md-panel-title fxFlex.lg="10" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
-          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
+          <span md-line mdTooltip="Confirmations"><md-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
         </md-panel-title>
 
         <!-- Amount -->
