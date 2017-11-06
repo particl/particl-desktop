@@ -33,6 +33,16 @@ exports.promptWalletChoosing = function(wallets, webContents) {
   }).catch(error => log.error(error))
 }
 
+exports.daemonReady = function(webContents) {
+  return new Promise ((resolve, reject) => {
+
+    rxIpc.runCommand('front-walletready', webContents).subscribe(() => {
+      resolve(chosen);
+    }, err => log.error(err));
+
+  }).catch(error => log.error(error))
+}
+
 /*
 ** prepares `rpc-channel` to receive RPC calls from the renderer
 */

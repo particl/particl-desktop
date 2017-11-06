@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { ModalsService } from '../../modals/modals.service'
 
 // RxIPC related stuffs
 
@@ -26,7 +27,9 @@ export class RPXService {
 
   constructor(
     public zone: NgZone,
+    private _modalsService: ModalsService
   ) {
+
     window.ipc.on('rx-ipc-check-listener', (event, channel) => {
       const replyChannel = 'rx-ipc-check-reply:' + channel;
       if (this.listeners[channel]) {
@@ -44,7 +47,7 @@ export class RPXService {
           observer.next(false);
         }
 
-        // this._modalsService.open('multiwallet', {forceOpen: true});
+        this._modalsService.open('multiwallet', {forceOpen: true});
         observer.next(wallets);
 
       });
