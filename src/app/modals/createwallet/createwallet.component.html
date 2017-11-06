@@ -11,7 +11,7 @@
             It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
           </p>
           <div class="actions">
-            <button *ngIf="!isCrypted" md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(0);">
+            <button *ngIf="!isCrypted" md-raised-button color="warn" class="create-wallet-action-button" (click)="initialize(0);">
               <md-icon fontSet="partIcon" fontIcon="part-lock"></md-icon>
               Encrypt Wallet
             </button>
