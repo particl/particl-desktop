@@ -335,16 +335,15 @@ input[type="text"] {
       color: $text-muted;
       min-width: 50px;
       .mat-icon {
-        width: 25px;
-        background: rgba($color-alert, 0.5);
+        color: rgba($color-alert, 0.5);
         border-radius: 50%;
-        font-size: 18px;
+        font-size: 24px;
         line-height: 1.4;
-        color: white;
+        margin: 0;
       }
       &:hover {
         .mat-icon {
-          background: $color-alert;
+          color: $color-alert;
         }
       }
     }
