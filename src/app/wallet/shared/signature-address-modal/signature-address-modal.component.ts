@@ -7,7 +7,7 @@ import { ModalsService } from '../../../modals/modals.service';
 import { FlashNotificationService } from '../../../services/flash-notification.service';
 
 import { Log } from 'ng2-logger';
-import { SignVerifyMessage } from '../../models/sign-verify-message';
+import { SignVerifyMessage } from './sign-verify-message.model';
 
 import { AddressLookUpCopy } from '../../models/address-look-up-copy';
 import { AddressLookupComponent } from '../../addresslookup/addresslookup.component';
