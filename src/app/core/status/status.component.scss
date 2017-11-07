@@ -1,18 +1,25 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 .icon {
-  display: inline-block;
+  cursor: pointer;
   padding: 1px;
+  .mat-icon {
+    width: auto;
+    height: auto;
+  }
+
+  // Peers
+  &.status {
+    cursor: default;
+  }
+
+  // Staking icon
+  &.staking {
+    font-size: 0.8em;
+  }
 }
+
 
 .blue {
-  color: #0b45d2;
-  text-shadow: 1px 1px 1px #ccc;
-  font-size: 1.2em;
-}
-
-.red {
-  color: $color-alert;
-  text-shadow: 1px 1px 1px #ccc;
-  font-size: 1.1em;
+  color: $color-info;
 }

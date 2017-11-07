@@ -35,7 +35,7 @@ export class SendComponent {
   type: string = 'sendPayment';
   advanced: boolean = false;
   progress: number = 10;
-  advancedText: string = 'Show Recipient Address'
+  advancedText: string = 'Show Advanced options'
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
@@ -80,9 +80,9 @@ export class SendComponent {
   /** Toggle advanced controls and settings */
   toggleAdvanced() {
     if (this.advanced) {
-      this.advancedText = 'Show Recipient Address';
+      this.advancedText = 'Show Advanced options';
     } else {
-      this.advancedText = 'Hide Recipient Address';
+      this.advancedText = 'Hide Advanced options';
     }
     this.advanced = !this.advanced;
   }

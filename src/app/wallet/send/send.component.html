@@ -16,8 +16,7 @@
         </md-tab-group>
       </div>
       <div fxFlex="23" disableTouchRipple="true" class="bottom-line" fxLayoutAlign="left center">
-        <button md-button color="primary" (click)="toggleAdvanced()" *ngIf="type === 'balanceTransfer'"
-                class="show-address">
+        <button md-button color="primary" (click)="toggleAdvanced()" class="advanced-options"><!-- *ngIf="type === 'balanceTransfer'" -->
           <md-icon fontSet="partIcon"
                    fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></md-icon>
           <span>{{ advancedText }}</span>
@@ -66,7 +65,6 @@
             </md-radio-group>
           </div>
         </md-list-item>
-        <md-divider></md-divider>
       </md-card>
 
       <p class="widget-help" *ngIf="type === 'balanceTransfer'">
@@ -95,7 +93,6 @@
             </md-radio-group>
           </div>
         </md-list-item>
-        <md-divider></md-divider>
       </md-card>
 
 
@@ -106,7 +103,7 @@
             <h5 fxFlex="15">Pay to</h5>
             <md-form-field fxFlex="100">
               <!-- fix success input -->
-              <input name="toAddress" mdInput
+              <input name="toAddress" mdInput class="address-input"
                      [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
                      type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress"
                      (input)="verifyAddress()">
@@ -133,11 +130,10 @@
             </div>
           </div>
         </md-list-item>
-        <md-divider></md-divider>
       </md-card>
 
 
-      <md-card class="md-send-list">
+      <md-card class="md-send-list" *ngIf="advanced">
         <md-list-item>
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
                fxLayoutAlign="center center">
@@ -150,7 +146,6 @@
             </md-form-field>
           </div>
         </md-list-item>
-        <md-divider></md-divider>
       </md-card>
 
 
@@ -171,7 +166,6 @@
             </md-select>
           </div>
         </md-list-item>
-        <md-divider></md-divider>
       </md-card>
 
 
@@ -179,7 +173,7 @@
         <md-list-item>
           <div class="md-line md-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
                fxLayoutAlign="center center">
-            <h5 fxFlex="15"> Privacy level </h5>
+            <h5 fxFlex="15">Privacy level</h5>
             <div fxFlex="'column'" fxLayoutWrap>
               <div class="privacy-labels" fxFlex="100" fxLayoutAlign="start center">
                 <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)">Low</span>
@@ -191,10 +185,10 @@
             </div>
           </div>
         </md-list-item>
-        <md-list-item>
-          <md-divider></md-divider>
-        </md-list-item>
       </md-card>
+      <p class="widget-help" *ngIf="send.input === 'anon_balance'">
+        Choose your privacy level. Higher privacy levels have higher fees, but offers increased privacy.
+      </p>
 
 
       <div class="actions">

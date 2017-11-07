@@ -263,7 +263,7 @@ input[type="text"] {
 /**
  * History List
  */
-
+/*
 .history_longAddress {
   overflow: hidden;
   flex-wrap: nowrap;
@@ -285,35 +285,13 @@ input[type="text"] {
   align-items: center;
 }
 
-
-.history-list {
-  .history_cat_icon {
-    .mat-icon {
-      margin-right: 8px;
-    }
-  }
-  .history_container {
-    > div {
-      min-height: 25px;
-      > div {
-        margin-right: 10px;
-      }
-      .highlight {
-        text-align: right;
-      }
-    }
-  }
-}
-
+*/
 .md-right {
   text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   height: 18px;
-}
-.cold-icon {
-  font-size: 0.8em !important;
 }
 
 /* ------------------------------- *\
