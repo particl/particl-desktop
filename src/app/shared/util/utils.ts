@@ -16,7 +16,7 @@ export class Amount {
    * 25.9 -> '25'
    */
   public getIntegerPart(): number {
-    return Math.floor(this.amount);
+    return Math.trunc(this.amount);
   }
 
   /**

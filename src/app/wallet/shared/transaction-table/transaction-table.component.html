@@ -26,23 +26,28 @@
       <md-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
 
         <!-- Date -->
-        <md-panel-title fxFlex.lg="25" fxFlex.lt-lg="100" *ngIf="display.date" class="history_date">
+        <md-panel-title fxFlex.lg="0 0 140px" fxFlex.lt-lg="100" *ngIf="display.date" class="history_date">
           {{ tx.getDate() }}
         </md-panel-title>
 
+        <!-- Confirmations -->
+        <md-panel-title fxFlex.lg="1 0 60px" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
+          <span md-line mdTooltip="Confirmations"><md-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
+        </md-panel-title>
+
         <!-- Category icon -->
-        <md-panel-title fxFlex.lg="25" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
+        <md-panel-title fxFlex.lg="1 0 160px" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
           <span *ngSwitchCase="'stake'" class="tx-type staked">
-            <md-icon fontSet="faIcon" fontIcon="fa-stop-circle"></md-icon>Staked
+            <md-icon fontSet="partIcon" fontIcon="part-coins"></md-icon>Staked
           </span>
           <span *ngSwitchCase="'orphaned_stake'" class="tx-type orphan">
-            <md-icon fontSet="faIcon" fontIcon="fa-times-circle" color="warn"></md-icon>Orphaned Stake
+            <md-icon fontSet="partIcon" fontIcon="part-alert-circle-exc" color="warn"></md-icon>Orphaned Stake
           </span>
           <span *ngSwitchCase="'send'" class="tx-type sent">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-left" color="warn"></md-icon>Sent
+            <md-icon fontSet="partIcon" fontIcon="part-tail-left" color="warn"></md-icon>Sent
           </span>
           <span *ngSwitchCase="'receive'" class="tx-type received">
-            <md-icon fontSet="faIcon" fontIcon="fa-arrow-right" color="primary"></md-icon>Received
+            <md-icon fontSet="partIcon" fontIcon="part-tail-right" color="primary"></md-icon>Received
           </span>
         </md-panel-title>
 
@@ -62,13 +67,8 @@
           <span md-line>Blockindex {{ tx.blockindex }}</span>
         </md-panel-title>
 
-        <!-- Confirmations -->
-        <md-panel-title fxFlex.lg="10" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
-          <span md-line mdTooltip="Confirmations"><md-icon fontSet="faIcon" fontIcon="fa-check-circle" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
-        </md-panel-title>
-
         <!-- Amount -->
-        <md-panel-title fxFlex.lg="30" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
+        <md-panel-title fxFlex.lg="1 0 160px" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
           <span md-line>
             <span class="amount" [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }"> 
               <span class="big number">{{ tx.getAmountObject().getIntegerPart() }}</span><!-- inline element comment hack

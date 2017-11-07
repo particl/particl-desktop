@@ -146,7 +146,8 @@ export class AddressTableComponent implements OnInit {
 
   private rpc_deleteAddress_success(json: Object) {
     this.flashNotification.open(`Succesfully deleted ${json['address']}`);
-    this._rpc.specialPoll();
+    // this._rpc.specialPoll();
+    this._addressService.updateAddressList();
   }
 
   /** Edit label address */

@@ -1,7 +1,7 @@
 <app-header class="disable-select">
   <div class="container-fluid">
     <div fxLayout.lg="row">
-      <div fxFlex="50">
+      <div fxFlex="77">
         <md-tab-group (selectChange)="selectTab($event.index)">
           <md-tab>
             <ng-template md-tab-label>
@@ -15,9 +15,9 @@
           </md-tab>
         </md-tab-group>
       </div>
-      <div fxFlex="50" disableTouchRipple="true" class="bottom-line">
+      <div fxFlex="23" disableTouchRipple="true" class="bottom-line" fxLayoutAlign="left center">
         <button md-button color="primary" (click)="toggleAdvanced()" *ngIf="type === 'balanceTransfer'" class="show-address">
-          <md-icon>{{ (advanced) ? 'remove_circle': 'add_circle' }}</md-icon>
+          <md-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></md-icon>
           <span>{{ advancedText }}</span>
         </button>
       </div>
@@ -97,13 +97,13 @@
               </md-form-field>                
               <div fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutGap="20px">
                 <span fxFlex="16.6">
-                  <md-icon class="cursor-pointer zindex" flex="100" mdTooltip="Address Lookup" (click)="openLookup()" fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
+                  <md-icon class="cursor-pointer zindex" flex="100" mdTooltip="Address Lookup" (click)="openLookup()" fontSet="partIcon" fontIcon="part-multiple-19"></md-icon>
                 </span>
                 <span fxFlex="16.6">
-                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="ncIcon" fontIcon="nc-copy-2" (click)="pasteAddress()"></md-icon>
+                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="partIcon" fontIcon="part-single-copy-04" (click)="pasteAddress()"></md-icon>
                 </span>
                 <span fxFlex="16.6">
-                  <md-icon flex="100" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="ncIcon" fontIcon="nc-circle-remove"></md-icon>
+                  <md-icon flex="100" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="partIcon" fontIcon="part-circle-remove"></md-icon>
                 </span>
               </div>
             </div>
@@ -173,10 +173,10 @@ oninput="validity.valid||(value='');" step="any">
       <div class="actions">
         <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
           <button md-raised-button color="primary" (click)="clear()">
-            <md-icon>clear</md-icon>Clear all
+            <md-icon fontSet="partIcon" fontIcon="part-simple-remove"></md-icon>Clear all
           </button>
           <button md-raised-button color="disabled" class="validate" (click)="onSubmit()" [disabled]="!checkAddress() || !checkAmount()">
-            <md-icon>send</md-icon>Make payment
+            <md-icon fontSet="partIcon" fontIcon="part-stre-right"></md-icon>Make payment
           </button>
         </div>
       </div><!-- .actions -->

@@ -1,13 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
 
 import { NewAddressModalComponent } from './new-address-modal.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { SharedModule } from '../../../../shared/shared.module';
 import { RpcModule } from '../../../../core/rpc/rpc.module';
-import { BrowserModule } from '@angular/platform-browser';
-import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
+
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
 import { ModalsService } from '../../../../modals/modals.service';
+import { AddressService } from '../../../shared/address.service';
 
 describe('NewAddressModalComponent', () => {
   let component: NewAddressModalComponent;
@@ -16,21 +19,26 @@ describe('NewAddressModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
-        RpcModule.forRoot(),
+        /* deps */
         BrowserModule,
         ReactiveFormsModule,
         FormsModule,
         MdFormFieldModule,
         MdDialogModule,
         MdSnackBarModule,
-        MdInputModule
+        MdInputModule,
+        /* own */
+        SharedModule,
+        RpcModule.forRoot()
       ],
       declarations: [ NewAddressModalComponent ],
       providers: [
+        /* deps */
+        { provide: MdDialogRef},
+        /* own */
         FlashNotificationService,
         ModalsService,
-        { provide: MdDialogRef}
+        AddressService
         ]
     })
     .compileComponents();
