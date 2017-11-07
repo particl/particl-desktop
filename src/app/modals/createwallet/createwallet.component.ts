@@ -73,7 +73,7 @@ export class CreateWalletComponent {
     this.reset();
 
     switch (type) {
-      case 0:
+      case 0: // Encrypt wallet
         this._modalsService.open('encrypt', {forceOpen: true});
         return;
       case 1: // Create
@@ -140,7 +140,7 @@ export class CreateWalletComponent {
           this.step = 6
         } else {
           // wallet already unlocked
-          this.importMnemonicCallback();
+          this.importMnemonicSeed();
         }
 
         break;
@@ -148,6 +148,7 @@ export class CreateWalletComponent {
     this._modalsService.enableClose = (this.step === 0);
     this.state.set('modal:fullWidth:enableClose', (this.step === 0));
   }
+
 
   private mnemonicCallback(response: Object) {
     const words = response['mnemonic'].split(' ');
@@ -160,16 +161,18 @@ export class CreateWalletComponent {
     this.log.d(`word string: ${this.words.join(' ')}`);
   }
 
-  public importMnemonicCallback() {
+  public importMnemonicSeed() {
     this.state.set('ui:spinner', true);
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {
+          this._passphraseService.generateDefaultAddresses();
           this.animationState = 'next';
           this.step = 5;
           this.state.set('activeWallet', true);
           this.state.set('ui:spinner', false);
           this.log.i('Mnemonic imported successfully');
+
         },
         error => {
           this.step = 4;
