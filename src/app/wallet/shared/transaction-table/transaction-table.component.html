@@ -20,7 +20,6 @@
   </div>
   <ng-container *ngFor="let tx of txService.txs let i=index">
 
-    <!-- <md-expansion-panel class="history-list" *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)"> -->
     <md-expansion-panel class="history-list disable-select" *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)">
 
       <md-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
