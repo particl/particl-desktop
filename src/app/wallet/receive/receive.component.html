@@ -40,9 +40,9 @@
         <div class="details-label">
           {{ selected.label }}
         </div>
-        <div class="details-address enable-select" fxLayoutWrap layout-padding fxLayoutAlign="center center"
+        <div class="details-address enable-select" fxLayoutWrap layout-padding fxLayoutAlign="start center"
              fxLayoutAlign.lt-md="start start">
-          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="33" fxFlex.lt-md="37px">
+          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="33.333" fxFlex.lt-md="37px">
             {{ word }}
           </div>
         </div>
@@ -82,7 +82,7 @@
               <span class="received-amount">{{ getUnusedAddress().balance }}</span>
             </div-->
           </div>
-          <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center"
+          <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="end center"
                fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
             <!-- Copy address -->
             <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
@@ -98,15 +98,13 @@
             </div>
             <!-- Select address -->
             <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
-              <md-icon class="cursor-pointer" mdTooltip="Select Address" fontSet="partIcon" fontIcon="part-select"
-                       (click)="selectAddress(addresses[getAddressType()][0])"></md-icon>
+              <md-icon class="cursor-pointer" mdTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(addresses[getAddressType()][0])"></md-icon>
             </span>
           </div>
         </div>
       </md-card>
       <div class="widget-help">
-        It is advised that you generate and use a new address for each public transaction (or person) to increase your
-        privacy.
+        It is advised that you generate and use a new address for each public transaction (or person) to increase your privacy.
       </div>
     </md-list><!-- .list-data -->
 
@@ -131,7 +129,7 @@
                 <span class="received-amount TODO">{{ address.balance }}</span>
               </div-->
             </div>
-            <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center"
+            <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="end center"
                  fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->
               <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
@@ -146,9 +144,7 @@
               </span>
               <!-- Select address -->
               <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
-                <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer"
-                         mdTooltip="Select Address"
-                         (click)="selectAddress(address)"></md-icon>
+                <md-icon class="cursor-pointer" mdTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(address)"></md-icon>
               </span>
             </div>
           </div>
