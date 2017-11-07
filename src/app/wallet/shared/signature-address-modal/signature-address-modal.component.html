@@ -50,15 +50,13 @@
                  [cbContent]="formData.signature" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
       </div><!-- .signature-address-modal-form -->
     </div>
-    <!-- @TODO: icon will be replace with old theme icon  -->
     <md-dialog-actions fxLayoutAlign="end center">
       <button type="reset" md-button (click)="resetForm()">
-        <md-icon>clear</md-icon>
+        <md-icon fontSet="partIcon" fontIcon="part-circle-remove"></md-icon>
         Clear All
       </button>
       <button md-raised-button color="primary" class="uc-first" type="submit" [disabled]="!addressForm.valid">
-        <md-icon>{{ (type == "verify" ? 'verified_user': 'edit') }}</md-icon>
-        <!-- <md-icon fontSet="faIcon" fontIcon="fa-pencil"></md-icon>-->
+        <md-icon fontSet="partIcon" fontIcon="{{ (type == 'verify' ? 'part-a-check': 'part-pen-01') }}"></md-icon>
         {{type}} Message
       </button>
     </md-dialog-actions>
