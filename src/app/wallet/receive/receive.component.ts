@@ -5,8 +5,8 @@ import { Log } from 'ng2-logger';
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { MdDialog } from '@angular/material';
 import { ModalsService } from '../../modals/modals.service';
-import { ModalsComponent } from '../../modals/modals.component';
 import { FlashNotificationService } from '../../services/flash-notification.service';
+import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
 
 @Component({
   selector: 'app-receive',
@@ -373,5 +373,10 @@ export class ReceiveComponent implements OnInit {
 
   selectInput() {
     (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
+  }
+
+  openSignatureModal(address: string): void {
+    const dialogRef = this.dialog.open(SignatureAddressModalComponent);
+    dialogRef.componentInstance.formData.address = address;
   }
 }

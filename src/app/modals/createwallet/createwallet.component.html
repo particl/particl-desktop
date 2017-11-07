@@ -200,8 +200,8 @@
             On the other hand if you fill some Recovery Pass and DON'T fill any of the Recovery Phrase words, you can still click the "Restore Wallet" and end up on blank white page.
           -->
           <app-password
-            label="Recovery Password"
-            buttonText="Restore Wallet"
+            #passwordRestoreElement
+            label="Recovery Password (optional)"
             [showStakeOnly]="false"
             [emitPassword]="true"
             (passwordEmitter)="passwordFromEmitter($event);nextStep()">
@@ -210,6 +210,7 @@
 
         <div class="actions">
           <button md-button (click)="prevStep();initialize(2)">Back</button>
+          <button md-raised-button color="primary" (click)="restoreWallet()" [disabled]="getCountOfWordsEntered() !== 24">Next</button>
         </div><!-- .actions -->
 
       </div><!-- .content -->

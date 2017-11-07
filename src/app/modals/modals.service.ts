@@ -146,7 +146,7 @@ export class ModalsService {
     * Open the Createwallet modal if wallet is not initialized
     */
   openInitialCreateWallet() {
-    this._rpc.state.observe('walletInitialized')
+    this._rpc.state.observe('ui:walletInitialized')
       .subscribe(
         state => {
           this.initializedWallet = state;

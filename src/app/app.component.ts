@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
                error => this.daemonRunning = [0, 502].includes(error.status));
 
     // Updates the error box in the sidenav if wallet is not initialized.
-    this._rpc.state.observe('walletInitialized')
+    this._rpc.state.observe('ui:walletInitialized')
     .subscribe(status => this.walletInitialized = status);
   }
 
