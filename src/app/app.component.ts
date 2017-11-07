@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
   ) {
 
     iconRegistry
-      .registerFontClassAlias('ncIcon', 'nc-icon')
+      .registerFontClassAlias('partIcon', 'part-icon')
       .registerFontClassAlias('faIcon', 'fa');
   }
 

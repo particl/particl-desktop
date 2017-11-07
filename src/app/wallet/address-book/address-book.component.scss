@@ -20,3 +20,11 @@ app-header {
 .container-block {
   padding-top: 20px; // offset button and search form
 }
+
+.search-address {
+  .mat-icon {
+    top: 4px;
+    right: 18px;
+    font-size:14px;
+  }
+}

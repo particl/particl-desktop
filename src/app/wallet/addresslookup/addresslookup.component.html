@@ -21,20 +21,20 @@
   <md-list class="list-data">
 
     <md-list-item class="list-header">
-      <div fxFlex="row" fxLayoutGap="10px" layout-padding>
-        <div fxFlex="20%">Label</div>
-        <div fxFlex="70%">Address</div>
-        <div fxFlex="10%">Type</div>
+      <div class="address-list-header" fxFlex="row" fxLayoutGap="10px" layout-padding>
+        <div fxFlex="1 0 150px">Label</div>
+        <div fxFlex="1 1 300px">Address</div>
+        <div fxFlex="0 0 70px" class="text-right">Type</div>
       </div>
     </md-list-item>
 
     <div *ngFor="let address of page()">
       <md-divider></md-divider>
       <md-list-item class="address-entry" (click)="onSelectAddress(address.getAddress(), address.getLabel())">
-        <div fxFlex="row" fxLayoutGap="10px" layout-padding>
-          <div fxFlex="20%" class="label">{{address.getLabel()}}</div>
-          <div fxFlex="70%" class="address">{{address.getAddress()}}</div>
-          <div fxFlex="10%" class="type">{{cheatPublicAddress(address.getAddress())}}</div>
+        <div class="address-list" fxFlex="row" fxLayoutGap="10px" layout-padding>
+          <div fxFlex="1 0 150px" class="label">{{address.getLabel()}}</div>
+          <div fxFlex="1 1 300px" class="address">{{address.getAddress()}}</div>
+          <div fxFlex="0 0 70px" class="type text-right">{{cheatPublicAddress(address.getAddress())}}</div>
         </div>
       </md-list-item>
     </div>
