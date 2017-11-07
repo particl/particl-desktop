@@ -152,7 +152,7 @@ export class ColdstakeComponent {
     if (this.prevColdStakeAddress === this.coldStakeAddress) {
       if (this.step === 3) {
         this.finalMessage = 'Cold staking address is the same - no changes required.';
-        this._flashNotificationService.open('Cold staking key is exactly the same as before!', '');
+        this._flashNotificationService.open('Cold staking key is exactly the same as before!', 'warn');
       }
       return;
     }
@@ -161,7 +161,7 @@ export class ColdstakeComponent {
       .subscribe(
         success => {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
-          this._flashNotificationService.open('Successfully activated cold staking!', '');
+          this._flashNotificationService.open('Successfully activated cold staking!', 'info');
           // this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
           this.close();
         },
@@ -178,14 +178,14 @@ export class ColdstakeComponent {
       .subscribe(
         success => {
           this.log.d(`resetColdStakeAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
-          this._flashNotificationService.open('Successfully deactivated cold staking!', '');
+          this._flashNotificationService.open('Successfully deactivated cold staking!', 'info');
           // this.finalMessage = 'Successfully deactivated cold staking! ' + success.changeaddress.coldstakingaddress;
           this.close();
         },
         error => {
           this.log.er('resetColdStakeAddress: ', error);
           // We are displaying the message on the screen already
-          // this._flashNotificationService.open('Failed to deactivate cold staking, ' + error.message, '');
+          // this._flashNotificationService.open('Failed to deactivate cold staking, ' + error.message, 'info');
           this.finalMessage = 'Failed to deactivate cold staking.. ' + error.message;
         });
   }
