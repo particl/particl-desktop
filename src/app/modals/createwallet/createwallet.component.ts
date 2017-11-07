@@ -39,7 +39,7 @@ export class CreateWalletComponent {
 
   @ViewChild('passphraseComponent') passphraseComponent: ComponentRef<PassphraseComponent>;
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
- @ViewChild('passwordRestoreElement') passwordRestoreElement: PasswordComponent;
+  @ViewChild('passwordRestoreElement') passwordRestoreElement: PasswordComponent;
 
   // Used for verification
   private wordsVerification: string[];
