@@ -237,17 +237,17 @@ input.verify-sucess {
   base class definition
 -------------------------*/
 
-.nc-icon {
+.part-icon {
   & {
     display: inline-block;
     font: normal normal normal 14px/1 'part';
     font-size: inherit;
     speak: none;
     text-transform: none;
-    /* Better Font Rendering */
-
+    /* Better Font Rendering
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+     */
   }
   /*------------------------
   change icon size
@@ -280,30 +280,26 @@ input.verify-sucess {
   list icons
 -------------------------*/
 
-.nc-icon-ul {
+.part-icon-ul {
   padding-left: 0;
   margin-left: 2.14285714em;
   list-style-type: none;
 }
-
-.nc-icon-ul > li {
+.part-icon-ul > li {
   position: relative;
 }
-
-.nc-icon-ul > li > .nc-icon {
+.part-icon-ul > li > .part-icon {
   position: absolute;
   left: -1.57142857em;
   top: 0.14285714em;
   text-align: center;
 }
-
-.nc-icon-ul > li > .nc-icon.lg {
+.part-icon-ul > li > .part-icon.lg {
   top: 0;
   left: -1.35714286em;
 }
-
-.nc-icon-ul > li > .nc-icon.circle,
-.nc-icon-ul > li > .nc-icon.square {
+.part-icon-ul > li > .part-icon.circle,
+.part-icon-ul > li > .part-icon.square {
   top: -0.19047619em;
   left: -1.9047619em;
 }
@@ -312,13 +308,12 @@ input.verify-sucess {
   spinning icons
 -------------------------*/
 
-.nc-icon.spin {
-  -webkit-animation: nc-icon-spin 2s infinite linear;
-  -moz-animation: nc-icon-spin 2s infinite linear;
-  animation: nc-icon-spin 2s infinite linear;
+.part-icon.spin {
+  -webkit-animation: part-icon-spin 2s infinite linear;
+  -moz-animation: part-icon-spin 2s infinite linear;
+  animation: part-icon-spin 2s infinite linear;
 }
-
-@-webkit-keyframes nc-icon-spin {
+@-webkit-keyframes part-icon-spin {
   0% {
     -webkit-transform: rotate(0deg);
   }
@@ -326,8 +321,7 @@ input.verify-sucess {
     -webkit-transform: rotate(360deg);
   }
 }
-
-@-moz-keyframes nc-icon-spin {
+@-moz-keyframes part-icon-spin {
   0% {
     -moz-transform: rotate(0deg);
   }
@@ -335,8 +329,7 @@ input.verify-sucess {
     -moz-transform: rotate(360deg);
   }
 }
-
-@keyframes nc-icon-spin {
+@keyframes part-icon-spin {
   0% {
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -357,96 +350,240 @@ input.verify-sucess {
   font icons
 -------------------------*/
 
-.nc-a-check::before {
-  content: '\ea01';
+.part-barcode-qr::before {
+    content: "\ea02";
 }
 
-.nc-barcode-qr::before {
-  content: '\ea02';
+.part-lock::before {
+    content: "\ea03";
 }
 
-.nc-card-add::before {
-  content: '\ea03';
+.part-snow-2::before {
+    content: "\ea05";
 }
 
-.nc-circle-remove::before {
-  content: '\ea04';
+.part-chart-bar-52::before {
+    content: "\ea06";
 }
 
-.nc-copy-2::before {
-  content: '\ea05';
+.part-time-3::before {
+    content: "\ea07";
 }
 
-.nc-eye-17::before {
-  content: '\ea06';
+.part-multiple-19::before {
+    content: "\ea08";
 }
 
-.nc-grid-48::before {
-  content: '\ea07';
+.part-card-add::before {
+    content: "\ea0b";
 }
 
-.nc-lock::before {
-  content: '\ea08';
+.part-grid-48::before {
+    content: "\ea0c";
 }
 
-.nc-multiple-19::before {
-  content: '\ea09';
+.part-layout-11::before {
+    content: "\ea0d";
 }
 
-.nc-preferences::before {
-  content: '\ea0a';
+.part-shape-oval::before {
+    content: "\ea12";
 }
 
-.nc-settings-gear-65::before {
-  content: '\ea0b';
+.part-coins::before {
+    content: "\ea13";
 }
 
-.nc-share-2::before {
-  content: '\ea0c';
+.part-stre-left::before {
+    content: "\ea14";
 }
 
-.nc-simple-add::before {
-  content: '\ea0d';
+.part-stre-right::before {
+    content: "\ea15";
 }
 
-.nc-simple-delete::before {
-  content: '\ea0e';
+.part-stre-down::before {
+    content: "\ea16";
 }
 
-.nc-simple-left::before {
-  content: '\ea0f';
+.part-stre-up::before {
+    content: "\ea17";
 }
 
-.nc-simple-right::before {
-  content: '\ea10';
+.part-simple-add::before {
+    content: "\ea19";
 }
 
-.nc-square-add-11::before {
-  content: '\ea11';
+.part-circle-remove::before {
+    content: "\ea1b";
 }
 
-.nc-swap-horizontal::before {
-  content: '\ea12';
+.part-tail-right::before {
+    content: "\ea1c";
 }
 
-.nc-tag-add::before {
-  content: '\ea13';
+.part-tail-left::before {
+    content: "\ea1d";
 }
 
-.nc-tail-triangle-left::before {
-  content: '\ea14';
+.part-tail-down::before {
+    content: "\ea1e";
 }
 
-.nc-tail-triangle-right::before {
-  content: '\ea15';
+.part-tail-up::before {
+    content: "\ea1f";
 }
 
-.nc-time-3::before {
-  content: '\ea16';
+.part-alert-circle-exc::before {
+    content: "\ea20";
 }
 
-.nc-zoom-bold::before {
-  content: '\ea17';
+.part-alert-circle-que::before {
+    content: "\ea21";
+}
+
+.part-check-circle-08::before {
+    content: "\ea22";
+}
+
+.part-circle-delete-2::before {
+    content: "\ea23";
+}
+
+.part-circle-add-2::before {
+    content: "\ea24";
+}
+
+.part-copy-2::before {
+    content: "\ea25";
+}
+
+.part-simple-delete::before {
+    content: "\ea27";
+}
+
+.part-small-triangle-up::before {
+    content: "\ea28";
+}
+
+.part-small-triangle-right::before {
+    content: "\ea29";
+}
+
+.part-small-triangle-down::before {
+    content: "\ea2a";
+}
+
+.part-small-triangle-left::before {
+    content: "\ea2b";
+}
+
+.part-a-check::before {
+    content: "\ea2c";
+}
+
+.part-plate::before {
+    content: "\ea31";
+}
+
+.part-select::before {
+    content: "\ea32";
+}
+
+.part-single-copy-04::before {
+    content: "\ea33";
+}
+
+.part-menu-bold::before {
+    content: "\ea34";
+}
+
+.part-favourite-28::before {
+    content: "\ea35";
+}
+
+.part-lock-open::before {
+    content: "\ea37";
+}
+
+.part-ban::before {
+    content: "\ea38";
+}
+
+.part-refresh-01::before {
+    content: "\ea39";
+}
+
+.part-alert::before {
+    content: "\ea3a";
+}
+
+.part-simple-remove::before {
+    content: "\ea3b";
+}
+
+.part-small-remove::before {
+    content: "\ea3c";
+}
+
+.part-small-add::before {
+    content: "\ea3d";
+}
+
+.part-small-delete::before {
+    content: "\ea3e";
+}
+
+.part-zoom-bold-in::before {
+    content: "\ea3f";
+}
+
+.part-zoom-bold-out::before {
+    content: "\ea40";
+}
+
+.part-zoom-bold::before {
+    content: "\ea41";
+}
+
+.part-eye-17::before {
+    content: "\ea42";
+}
+
+.part-eye-ban-18::before {
+    content: "\ea43";
+}
+
+.part-bug::before {
+    content: "\ea44";
+}
+
+.part-small-up::before {
+    content: "\ea45";
+}
+
+.part-small-left::before {
+    content: "\ea46";
+}
+
+.part-small-right::before {
+    content: "\ea47";
+}
+
+.part-small-down::before {
+    content: "\ea48";
+}
+
+.part-pen-01::before {
+    content: "\ea49";
+}
+
+.part-settings-gear-64::before {
+    content: "\ea4a";
+}
+
+.part-flash-21::before {
+    content: "\ea4b";
 }
 
 a.highlight {
