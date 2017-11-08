@@ -85,19 +85,19 @@
           <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="end center"
                fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
             <!-- Copy address -->
-            <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+            <span fxFlex="20%" fxFlex.lt-md="25px">
               <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard
                        [cbContent]="getUnusedAddress().address" fontSet="partIcon"
                        fontIcon="part-single-copy-04"></md-icon>
             </span>
             <!-- Sign message -->
-            <div fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px" *ngIf="type == 'public'" >
+            <div fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'" >
               <md-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-a-check"
                        (click)="openSignatureModal(getUnusedAddress().address)"
                        mdTooltip="Sign / Verify message"></md-icon>
             </div>
             <!-- Select address -->
-            <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+            <span fxFlex="20%" fxFlex.lt-md="25px">
               <md-icon class="cursor-pointer" mdTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(addresses[getAddressType()][0])"></md-icon>
             </span>
           </div>
@@ -126,24 +126,24 @@
             <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address enable-select">
               {{ address.address }}
               <!--div class="total"><span>Total received: </span>
-                <span class="received-amount TODO">{{ address.balance }}</span>
+                <span class="received-amount">{{ address.balance }}</span>
               </div-->
             </div>
             <div class="address-actions" fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="end center"
                  fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->
-              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+              <span fxFlex="20%" fxFlex.lt-md="25px">
                 <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer"
                          mdTooltip="Copy address"
                          ngxClipboard [cbContent]="address.address"></md-icon>
               </span>
               <!-- Sign/Verify public address only  -->
-              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
+              <span fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
                 <md-icon fontSet="partIcon" fontIcon="part-a-check" mdTooltip="Sign / Verify message"
                          (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></md-icon>
               </span>
               <!-- Select address -->
-              <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
+              <span fxFlex="20%" fxFlex.lt-md="25px">
                 <md-icon class="cursor-pointer" mdTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(address)"></md-icon>
               </span>
             </div>
