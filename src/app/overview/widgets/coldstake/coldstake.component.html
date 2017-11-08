@@ -5,30 +5,29 @@
     </ul>
   </app-header>
 
-  <md-card *ngIf="isColdStakingEnabled() === undefined" (click)="openUnlockWalletModal()" class="multiple staking-node" >
+  <md-card *ngIf="isColdStakingEnabled() === undefined" class="staking-node" >
     <div class="title">
-
       Cold Staking Node <span class="status inactive">Unlock to check</span>
     </div>
-    <button class="mat-raised-button mat-primary pull-left" mdTooltip="Unlock wallet to enable cold staking">
+    <button class="mat-raised-button mat-primary pull-left" (click)="openUnlockWalletModal()" mdTooltip="Unlock wallet to enable cold staking">
       <md-icon fontSet="partIcon" fontIcon="part-lock"></md-icon>
     </button>
   </md-card>
 
-  <md-card *ngIf="isColdStakingEnabled() === false" (click)="openColdStakeModal()" class="multiple staking-node" >
+  <md-card *ngIf="isColdStakingEnabled() === false" class="staking-node" >
     <div class="title">
       Cold Staking Node <span class="status inactive">inactive</span>
     </div>
-    <button class="mat-raised-button mat-primary pull-left" mdTooltip="Add Cold Staking node key">
+    <button class="mat-raised-button mat-primary pull-left" (click)="openColdStakeModal()" mdTooltip="Add Cold Staking node key">
       <md-icon fontSet="partIcon" fontIcon="part-simple-add"></md-icon>
     </button>
   </md-card>
 
-  <md-card *ngIf="isColdStakingEnabled()"  (click)="openColdStakeModal()" class="multiple staking-node">
+  <md-card *ngIf="isColdStakingEnabled()" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status active">active</span>
     </div>
-    <button class="mat-button secondary pull-left" mdTooltip="Edit Cold Staking node key">
+    <button class="mat-button secondary pull-left" (click)="openColdStakeModal()" mdTooltip="Edit Cold Staking node key">
       <md-icon fontSet="partIcon" fontIcon="part-pen-01"></md-icon>
     </button>
   </md-card>
