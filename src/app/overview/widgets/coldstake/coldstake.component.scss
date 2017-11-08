@@ -5,12 +5,17 @@
   @extend .disable-select;
   .staking-node {
     padding: 24px 24px 30px;
+    margin-bottom: 20px;
     .title {
       display: inline-block;
       text-transform: uppercase;
       font-weight: bold;
-      & > .active { color: $color; }
-      & > .inactive { color: $text-muted; }
+      & > .active {
+        color: $color;
+      }
+      & > .inactive {
+        color: $text-muted;
+      }
     }
     .status {
       display: block;

@@ -1,5 +1,5 @@
 <div class="containerX signature-address-container">
-  <h2 md-dialog-title>Signatures &ndash; Sign/Verify message</h2>
+  <!--<h2 md-dialog-title>Signatures</h2>-->
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onFormSubmit()">
     <div md-dialog-container>
@@ -28,12 +28,13 @@
                     (input)="verifyAddress()">
           </md-form-field>
 
-          <button md-button  type="button" fxFlex="0 0 60px" *ngIf="isAddressLookup" mdTooltip="Address Lookup" (click)="openLookup()">
-            <md-icon class="icon cursor-pointer" fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
-          </button>
-          <button type="button" md-button fxFlex="0 0 60px" mdTooltip="Paste" (click)="pasteAddress()">
-            <md-icon class="icon cursor-pointer" fontSet="faIcon" fontIcon="fa-clipboard"></md-icon>
-          </button>
+          <span fxFlex="0 0 20px" mdTooltip="Address Lookup" (click)="openLookup()">
+            <md-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-multiple-19"></md-icon>
+          </span>
+          <span fxFlex="0 0 20px" mdTooltip="Paste" (click)="pasteAddress()">
+            <md-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon>
+          </span>
+
         </div><!-- .address-field -->
 
         <md-form-field>
@@ -45,18 +46,18 @@
                  [disabled]="isDisabled"
                  placeholder="{{(type == 'sign')? 'Click `Sign Message` to generate signature': 'Signature'}}">
         </md-form-field>
-        <md-icon *ngIf="type == 'sign' && formData.signature" class="cursor-pointer" (click)="onCopyAddress()"
+        <!-- todo: <md-icon *ngIf="type == 'sign' && formData.signature" class="cursor-pointer" (click)="onCopyAddress()"
                  mdTooltip="Copy address" ngxClipboard
-                 [cbContent]="formData.signature" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
+                 [cbContent]="formData.signature" fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon>-->
       </div><!-- .signature-address-modal-form -->
     </div>
     <md-dialog-actions fxLayoutAlign="end center">
       <button type="reset" md-button (click)="resetForm()">
-        <md-icon fontSet="partIcon" fontIcon="part-circle-remove"></md-icon>
+        <md-icon fontSet="partIcon" fontIcon="part-filter-remove"></md-icon>
         Clear All
       </button>
       <button md-raised-button color="primary" class="uc-first" type="submit" [disabled]="!addressForm.valid">
-        <md-icon fontSet="partIcon" fontIcon="{{ (type == 'verify' ? 'part-a-check': 'part-pen-01') }}"></md-icon>
+        <md-icon fontSet="partIcon" fontIcon="{{ (type == 'verify' ? 'part-a-check': 'part-pen-23') }}"></md-icon>
         {{type}} Message
       </button>
     </md-dialog-actions>
