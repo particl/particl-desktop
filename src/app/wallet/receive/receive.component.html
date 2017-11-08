@@ -86,9 +86,7 @@
                fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
             <!-- Copy address -->
             <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
-              <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard
-                       [cbContent]="getUnusedAddress().address" fontSet="partIcon"
-                       fontIcon="part-single-copy-04"></md-icon>
+              <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="getUnusedAddress().address" (click)="copyToClipBoard()" fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon>
             </span>
             <!-- Sign message -->
             <div fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px" *ngIf="type == 'public'" >
@@ -133,9 +131,7 @@
                  fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->
               <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px">
-                <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer"
-                         mdTooltip="Copy address"
-                         ngxClipboard [cbContent]="address.address"></md-icon>
+                <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></md-icon>
               </span>
               <!-- Sign/Verify public address only  -->
               <span fxFlex="20%" fxFlex.md="100%" fxFlex.lt-md="25px" *ngIf="type == 'public'">

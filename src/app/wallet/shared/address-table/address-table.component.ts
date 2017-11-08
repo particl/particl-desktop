@@ -175,6 +175,10 @@ export class AddressTableComponent implements OnInit {
     }
   }
 
+  copyToClipBoard() {
+    this.flashNotification.open('Address copied to clipboard.', '', 1000);
+  }
+
   openSignatureModal(address: string): void {
     const dialogRef = this.dialog.open(SignatureAddressModalComponent);
     dialogRef.componentInstance.formData.address = address;

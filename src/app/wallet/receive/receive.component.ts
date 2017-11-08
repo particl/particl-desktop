@@ -5,6 +5,7 @@ import { Log } from 'ng2-logger';
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { MdDialog } from '@angular/material';
 import { ModalsService } from '../../modals/modals.service';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
 
 @Component({
@@ -58,7 +59,8 @@ export class ReceiveComponent implements OnInit {
 
   constructor(private rpc: RPCService,
               public dialog: MdDialog,
-              public _modalService: ModalsService) {
+              public _modalService: ModalsService,
+              private flashNotificationService: FlashNotificationService) {
   }
 
   ngOnInit() {
@@ -363,6 +365,10 @@ export class ReceiveComponent implements OnInit {
     dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
       this.rpc_update();
     });
+  }
+
+  copyToClipBoard() {
+    this.flashNotificationService.open('Address copied to clipboard.', '', 1000);
   }
 
   selectInput() {
