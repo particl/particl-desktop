@@ -54,12 +54,12 @@
                fxLayoutAlign.lt-md="start center" fxLayoutGap="10px" *ngIf="displayToolsMenu" class="address-actions">
             <!-- ICO: copy address -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer" mdTooltip="Copy address"
-                       ngxClipboard [cbContent]="address.address"></md-icon>
+              <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></md-icon>
             </span>
             <!-- ICO: verify message -->
-            <span fxFlex="0 0 20px" fxLayoutAlign="center center" class="TODO">
-              <md-icon fontSet="partIcon" fontIcon="part-a-check" class="cursor-pointer" mdTooltip="Verify message"
+            <span fxFlex="0 0 20px" fxLayoutAlign="center center">
+              <md-icon fontSet="partIcon" fontIcon="part-a-check" (click)="openSignatureModal(address.address)"
+                       class="cursor-pointer" mdTooltip="Sign / Verify message"
                        ngxClipboard></md-icon>
             </span>
             <!-- ICO: delete -->

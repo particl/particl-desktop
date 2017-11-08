@@ -19,22 +19,23 @@
     <div class="cell-amount" *ngIf="display.amount">amount</div>
   </div>
   <ng-container *ngFor="let tx of txService.txs let i=index">
+
     <md-expansion-panel class="history-list disable-select" *ngIf="i < display.txDisplayAmount" (click)="showExpandedTransactionDetail(tx)">
 
       <md-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
 
         <!-- Date -->
-        <md-panel-title fxFlex.lg="0 0 140px" fxFlex.lt-lg="100" *ngIf="display.date" class="history_date">
+        <md-panel-title fxFlex="0 0 140px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
           {{ tx.getDate() }}
         </md-panel-title>
 
         <!-- Confirmations -->
-        <md-panel-title fxFlex.lg="1 0 60px" fxFlex.lt-lg="100" *ngIf="display.confirmations" class="history_confirmation">
+        <md-panel-title fxFlex="1 0 60px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation">
           <span md-line mdTooltip="Confirmations"><md-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
         </md-panel-title>
 
         <!-- Category icon -->
-        <md-panel-title fxFlex.lg="1 0 160px" fxFlex.lt-lg="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
+        <md-panel-title fxFlex="1 0 160px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
           <span *ngSwitchCase="'stake'" class="tx-type staked">
             <md-icon fontSet="partIcon" fontIcon="part-coins"></md-icon>Staked
           </span>
@@ -50,29 +51,29 @@
         </md-panel-title>
 
         <!-- Address -->
-        <!--md-panel-title fxFlex.lg="57" fxFlex.lt-lg="100" *ngIf="display.senderAddress" class="history_longAddress">
+        <!--md-panel-title fxFlex.lg="57" fxFlex.lt-md="100" *ngIf="display.senderAddress" class="history_longAddress">
           {{ tx.getAddress() }}
         </md-panel-title-->
 
-        <md-panel-title fxFlex.lg="20" fxFlex.lt-lg="100" *ngIf="display.txid" class="history_txt">
+        <md-panel-title fxFlex="20" fxFlex.lt-md="100" *ngIf="display.txid" class="history_txt">
           <span md-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row">
             <span fxFlex="10"><b>TxId</b></span>
             <span fxFlex="80">{{ tx.txid }} </span>
           </span>
         </md-panel-title>
 
-        <md-panel-title fxFlex.lg="20" fxFlex.lt-lg="100" *ngIf="display.blockIndex" class="history_blockIndex">
+        <md-panel-title fxFlex="20" fxFlex.lt-md="100" *ngIf="display.blockIndex" class="history_blockIndex">
           <span md-line>Blockindex {{ tx.blockindex }}</span>
         </md-panel-title>
 
         <!-- Amount -->
-        <md-panel-title fxFlex.lg="1 0 160px" fxFlex.lt-lg="100" *ngIf="display.amount" class="history_amount">
+        <md-panel-title fxFlex="1 0 160px" fxFlex.lt-md="100" *ngIf="display.amount" class="history_amount">
           <span md-line>
             <span class="amount" [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }"> 
               <span class="big number">{{ tx.getAmountObject().getIntegerPart() }}</span><!-- inline element comment hack
               --><span class="point">{{ tx.getAmountObject().dot() }}</span><!--
               --><small class="small number">{{ tx.getAmountObject().getFractionalPart() || '' }}</small>
-              <small class="currency">PART</small>
+              <span class="currency">PART</span>
             </span>
           </span>
         </md-panel-title>
@@ -85,13 +86,13 @@
         <div fxLayout="column" fxFlex="55">
           <!-- To/from (detail) -->
           <div class="tx-detail-item" fxFlex>
-            <span fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">To/from:</span>
-            <input class="to-from-address" fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" value="{{ tx.getAddress() }}" placeholder="To/from">
+            <span fxFlex="30">To/from:</span>
+            <input class="to-from-address" fxFlex="70" value="{{ tx.getAddress() }}" placeholder="To/from">
           </div>
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
-            <span fxFlex.lg="30" fxFlex.md="40" fxFlex.lt-md="100">TXID:</span>
-            <a fxFlex.lg="70" fxFlex.md="60" fxFlex.lt-md="100" class="md-right highlight" href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank" mdTooltip="Show on Block Explorer">{{tx.txid}}</a>
+            <span fxFlex="30">TXID:</span>
+            <a class="md-right highlight" fxFlex="70" href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank" mdTooltip="Show on Block Explorer">{{tx.txid}}</a>
           </div>
         </div>
 
@@ -125,7 +126,6 @@
     <!--firstText="&laquo;" lastText="&raquo;"-->
     <!--[itemsPerPage]="txService.MAX_TXS_PER_PAGE">-->
   <!--</pagination>-->
-
   <md-paginator
     *ngIf="display.pagination"
     [length]="txService.txCount"

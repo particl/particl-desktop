@@ -78,7 +78,7 @@ export class RPCStateClass {
         const locked = this.rpc.state.get('locked');
 
         if (locked) {
-          this.rpc.state.set('walletInitialized', true);
+          this.rpc.state.set('ui:walletInitialized', true);
           return;
         }
 
@@ -87,9 +87,9 @@ export class RPCStateClass {
           response => {
                 // check if account is active
                 if (response.result === 'No keys to list.') {
-                  this.rpc.state.set('walletInitialized', false);
+                  this.rpc.state.set('ui:walletInitialized', false);
                 } else {
-                  this.rpc.state.set('walletInitialized', true);
+                  this.rpc.state.set('ui:walletInitialized', true);
                 }
               },
               error => this.log.er('RPC Call returned an error', error));

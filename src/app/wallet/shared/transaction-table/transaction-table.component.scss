@@ -7,13 +7,13 @@
   &.history-list {
     &.mat-expanded { // when TX detail is opened
       margin: 20px 0;
-      //box-shadow: 0 3px 15px rgba($bg-shadow, 0.3);
     }
   }
 }
 
 .mat-expansion-panel-header {
   min-height: 67px !important;
+  font-size: 13px;
   &:hover {
     background: inherit;
   }
@@ -23,7 +23,6 @@
 
   // TX date/time
   .history_date {
-    font-size: 13px;
     color: $text-muted;
     border-right: 1px solid lighten($text-muted, 35%);
   }
@@ -31,7 +30,6 @@
   // confirmations
   .history_confirmation {
     color: $text-muted;
-    font-size: 13px;
     .confirmations { // icon
       height: auto;
       width: auto;
@@ -48,7 +46,10 @@
     .mat-icon {
       height: auto;
       width: auto;
-      font-size: 12px;
+      font-size: 15px;
+      position: relative;
+      top: 3px;
+      margin-right: 12px;
     }
     .tx-type {
       &.staked {
@@ -62,13 +63,13 @@
         }
       }
       &.sent {
-        font-weight: 500;
+        font-weight: bold;
         md-icon {
           color: $color-alert;
         }
       }
       &.received {
-        font-weight: 500;
+        font-weight: bold;
         md-icon {
           color: $color;
         }
@@ -82,20 +83,19 @@
     display: block;
     .amount {
       .big {
-        font-weight: 500;        
+        font-weight: bold;        
       }
-      .point {
+      .point,
+      .small {
         color: $text-muted;
-      }
-      small {
-        color: $text-muted;
-      }
-      .currency {
-        color: $text;
       }
     }
     .negative {
       color: $color-alert;
+      .point,
+      .small {
+        color: mix(white, $color-alert, 30%);
+      }
     }
   }
 }
@@ -117,136 +117,6 @@
     &:focus {
       background: lighten($bg-black, 10%);
       color: white;
-    }
-  }
-}
-
-
-/*
-    @TODO: clean-up code below (is it used?)
-*/
-
-// @TODO conver css to scss
-md-expansion-panel.mat-expansion-panel.mat-expanded md-expansion-panel-header {
-  border-bottom: none !important;
-}
-
-.btn-round-lg{
-  border-radius: 22.5px;
-}
-.btn-round{
-  border-radius: 17px;
-}
-.btn-round-sm{
-  border-radius: 15px;
-}
-.btn-round-xs{
-  border-radius: 11px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.category-button {
-  padding: 10px;
-}
-
-.category-button > .icon-sign {
-  margin-left: 5px;
-}
-
-.background-hack {
-  background-color: #FBFBFB !important;
-}
-
-.border-reset-hack {
-  border-bottom: 0px solid !important;
-}
-
-.padding-reset-hack {
-  padding: 0 0 0 0 !important;
-}
-
-.cell-date {
-  flex-basis: 12em;
-  font-weight:bold;
-}
-
-.padding-reset-hack {
-  padding: 0 0 0 0 !important;
-}
-
-.cell-senderAddress {
-  flex-grow: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  width: 33vw;
-}
-
-.cell-confirmations {
-  flex-basis: 26em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cell-amount {
-  flex-grow: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  flex-basis: 20em;
-  min-width: 80px;
-}
-
-.cell-expand {
-  width: 42px;
-  padding-left: 0 !important;
-  padding-right: 30px !important;
-}
-
-.cell-expanded-row {
-  padding-bottom: 22px;
-}
-
-.transaction-details {
-  display: flex;
-  flex-flow: column nowrap;
-  & > section {
-    flex-basis: 2em;
-  }
-}
-
-.transaction-details-row {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-
-  & > div {
-    word-break: break-all;
-    flex-basis: 40%;
-    padding-right: 1em;
-    text-align: right;
-  }
-  & > div:first-child {
-    padding-left: 1em;
-    padding-right: 0;
-  }
-  & > .transaction-details-label {
-    flex-basis: 6em;
-    text-align: left;
-    word-break: normal;
-  }
-  & > .label-duble-size {
-    flex-basis: 12em;
-  }
-}
-
-@media (max-width: 767px) {
-  .transaction-details-row {
-    flex-flow: column wrap;
-    & > div, & > .transaction-details-label {
-      flex-basis: 100% !important;
-      padding: 0 !important;
     }
   }
 }

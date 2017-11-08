@@ -5,7 +5,8 @@ import { Log } from 'ng2-logger';
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { MdDialog } from '@angular/material';
 import { ModalsService } from '../../modals/modals.service';
-import { ModalsComponent } from '../../modals/modals.component';
+import { FlashNotificationService } from '../../services/flash-notification.service';
+import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
 
 @Component({
   selector: 'app-receive',
@@ -20,23 +21,8 @@ export class ReceiveComponent implements OnInit {
   public type: string = 'public';
   public query: string = '';
   // public tabsTitle
-  defaultAddress: Object = {
-    id: 0,
-    label: 'Empty label',
-    address: 'Empty address',
-    balance: 0,
-    readable: ['Empty']
-  };
 
-  selected: any = {
-    id: 0,
-    label: 'Empty label',
-    address: 'Empty address',
-    balance: 0,
-    readable: ['empty']
-  };
-
-  qrSize: number = 380;
+  selected: any;
 
   /* UI Pagination */
   addresses: any = {
@@ -58,7 +44,8 @@ export class ReceiveComponent implements OnInit {
 
   constructor(private rpc: RPCService,
               public dialog: MdDialog,
-              public _modalService: ModalsService) {
+              public _modalService: ModalsService,
+              private flashNotificationService: FlashNotificationService) {
   }
 
   ngOnInit() {
@@ -242,9 +229,6 @@ export class ReceiveComponent implements OnInit {
       }
     });
 
-    // I need to get the count of the addresses seperate in public/private first,
-    // because this.addresses[type] can never be empty,
-    // we need to delete our default address before doing addAddress..
     if (pub.length > 0) {
       this.addresses.public = [];
     }
@@ -365,7 +349,16 @@ export class ReceiveComponent implements OnInit {
     });
   }
 
+  copyToClipBoard() {
+    this.flashNotificationService.open('Address copied to clipboard.', '');
+  }
+
   selectInput() {
     (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
+  }
+
+  openSignatureModal(address: string): void {
+    const dialogRef = this.dialog.open(SignatureAddressModalComponent);
+    dialogRef.componentInstance.formData.address = address;
   }
 }

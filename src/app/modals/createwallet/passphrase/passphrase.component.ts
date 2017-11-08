@@ -83,7 +83,7 @@ export class PassphraseComponent implements  OnChanges {
   }
 
   copyToClipBoard(): void {
-    this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.', '', 1000);
+    this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.');
   }
 
   getIndexOnFocus(index: number) {

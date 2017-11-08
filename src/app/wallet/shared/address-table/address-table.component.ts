@@ -11,7 +11,7 @@ import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { FlashNotificationService } from '../../../services/flash-notification.service';
 import { ModalsService } from '../../../modals/modals.service';
-import { ModalsComponent } from '../../../modals/modals.component';
+import { SignatureAddressModalComponent } from '../signature-address-modal/signature-address-modal.component';
 
 @Component({
   selector: 'address-table',
@@ -173,6 +173,16 @@ export class AddressTableComponent implements OnInit {
       this.currentPage = event.pageIndex + 1;
       this.log.d(event.pageIndex);
     }
+  }
+
+  copyToClipBoard() {
+    this.flashNotification.open('Address copied to clipboard.', '');
+  }
+
+  openSignatureModal(address: string): void {
+    const dialogRef = this.dialog.open(SignatureAddressModalComponent);
+    dialogRef.componentInstance.formData.address = address;
+    dialogRef.componentInstance.type = 'verify';
   }
 }
 
