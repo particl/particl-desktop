@@ -586,6 +586,14 @@ input.verify-sucess {
     content: "\ea4b";
 }
 
+.part-filter-remove::before {
+    content: "\ea4d";
+}
+
+.part-pen-23::before {
+    content: "\ea4e";
+}
+
 a.highlight {
   color: $color;
   text-decoration: none;

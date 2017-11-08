@@ -1,4 +1,3 @@
-<!-- @TODO add empty result box if no result found. & Hide progress bar if no result found-->
 <md-progress-bar mode="indeterminate" *ngIf="!txService.txs.length && txService.loading"></md-progress-bar>
 <!--<div fxLayoutAlign="center center" *ngIf="!txService.txs.length > 0">-->
   <!--<md-spinner></md-spinner>-->
@@ -18,6 +17,7 @@
     <div class="cell-confirmations" *ngIf="display.confirmations">confirmations</div>
     <div class="cell-amount" *ngIf="display.amount">amount</div>
   </div>
+
   <ng-container *ngFor="let tx of txService.txs">
     <md-expansion-panel class="history-list disable-select" (click)="showExpandedTransactionDetail(tx)">
 
@@ -125,7 +125,6 @@
     <!--firstText="&laquo;" lastText="&raquo;"-->
     <!--[itemsPerPage]="txService.MAX_TXS_PER_PAGE">-->
   <!--</pagination>-->
-
   <md-paginator
     *ngIf="display.pagination"
     [length]="txService.txCount"

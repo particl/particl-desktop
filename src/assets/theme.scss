@@ -2,7 +2,7 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 
-.TODO {
+.TO_DO {
   box-shadow: 0 0 3px 1px hotpink;
 }
 
@@ -105,6 +105,16 @@ button {
   }
   .mat-expansion-panel-body { // accordion menu
     padding: 0;
+  }
+  .mat-expansion-panel {
+    .mat-expansion-indicator::after {
+      color: $text-muted;
+    }
+    &.mat-expanded {
+      .mat-expansion-indicator::after {
+        color: $color;
+      }
+    }
   }
 }
 

@@ -1,25 +1,25 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 .icon {
-  cursor: pointer;
   padding: 1px;
   .mat-icon {
     width: auto;
     height: auto;
   }
 
-  // Peers
-  &.status {
-    cursor: default;
+  // Encryption
+  &.encryption {
+    cursor: pointer;
   }
 
   // Staking icon
   &.staking {
     font-size: 0.8em;
+    &.enabled {
+      color: $color-info;
+    }
+    &.disabled {
+      color: darken($bg-shadow, 15%);
+    }
   }
-}
-
-
-.blue {
-  color: $color-info;
 }

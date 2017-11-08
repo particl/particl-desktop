@@ -87,7 +87,7 @@
               </md-radio-button>
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
-                <span class="balance-amount enable-select">{{ getBalance(send.input) }}</span>
+                <span class="balance-amount enable-select">{{ getBalance(send.output) }}</span>
                 <span class="currency">PART</span>
               </div>
             </md-radio-group>
@@ -103,10 +103,7 @@
             <h5 fxFlex="15">Pay to</h5>
             <md-form-field fxFlex="100">
               <!-- fix success input -->
-              <input name="toAddress" mdInput class="address-input"
-                     [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
-                     type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress"
-                     (input)="verifyAddress()">
+              <input #address name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
             </md-form-field>
             <div fxFlex="100" fxLayoutGap="20px">
               <md-form-field fxFlex="100">
@@ -119,8 +116,7 @@
                            fontSet="partIcon" fontIcon="part-multiple-19"></md-icon>
                 </span>
                 <span fxFlex="16.6">
-                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="partIcon"
-                           fontIcon="part-single-copy-04"></md-icon>
+                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="partIcon" fontIcon="part-single-copy-04" (click)="pasteAddress()"></md-icon>
                 </span>
                 <span fxFlex="16.6">
                   <md-icon flex="100" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="partIcon"
@@ -139,10 +135,11 @@
                fxLayoutAlign="center center">
             <h5 fxFlex="15">Narration</h5>
             <md-form-field fxFlex="100">
-              <input type="text" mdInput name="sendNote"
-                     placeholder="Optional: enter a short note to send with a payment"
-                     maxlength="24"
-                     [(ngModel)]="send.note">
+            <input #narration type="text" mdInput name="sendNote" 
+             placeholder="Optional: enter a short note to send with a payment" 
+             maxlength="24"
+            [(ngModel)]="send.note" >
+            <md-hint align="end">{{narration.value.length}} / 24</md-hint>
             </md-form-field>
           </div>
         </md-list-item>
