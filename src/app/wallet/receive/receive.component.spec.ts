@@ -86,6 +86,7 @@ describe('ReceiveComponent', () => {
   });
 
   it('should get selected', () => {
+    component.selectAddress('selectedAddress');
     expect(component.selected).toBeDefined();
   });
     /* We will come back to RPC at a later stage
