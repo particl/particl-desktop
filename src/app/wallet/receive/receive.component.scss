@@ -103,6 +103,7 @@
     color: $text-muted;
     background: transparent;
     transition: background .3s;
+    /*
     .total {
       font-size: 0.8em;
       font-family: $font;
@@ -113,6 +114,7 @@
         font-weight: 600;
       }
     }
+    */
   }
   .address-actions { // copy, sign, ...
     .mat-icon {

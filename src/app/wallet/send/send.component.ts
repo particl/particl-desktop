@@ -177,7 +177,7 @@ export class SendComponent {
   onSubmit(): void {
     const dialogRef = this.dialog.open(SendConfirmationModalComponent);
     dialogRef.componentInstance.dialogContent = `Do you really want to send
-      ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.getAddress()} ?`;
+      ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.getAddress()}?`;
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       dialogRef.close();
