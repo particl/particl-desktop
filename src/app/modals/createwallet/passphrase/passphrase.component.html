@@ -6,6 +6,7 @@
       <md-form-field>
         <input
           mdInput
+          class="enable-select"
           [appFocusElement]="i === focused"
           [(ngModel)]="words[i]" type="text" name="recovery"
           [readonly]="readOnly"
@@ -17,12 +18,14 @@
 
   <div class="actions" fxLayoutAlign="center center" *ngIf="!isDisabled && !partialDisable">
 
+    <!-- generating -->
     <button md-button *ngIf="generate" (click)="copyToClipBoard()" ngxClipboard [cbContent]="words.join(' ')" class="copy">
-      <md-icon fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon> Copy to Clipboard
+      <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon> Copy to Clipboard
     </button>
-
+    
+    <!-- restoring -->
     <button md-button *ngIf="!generate" class="paste" (click)="pasteContent()">
-      <md-icon fontSet="faIcon" fontIcon="fa-clipboard"></md-icon> Paste
+      <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon> Paste
     </button>
 
   </div><!-- .actions -->
