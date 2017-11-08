@@ -20,23 +20,8 @@ export class ReceiveComponent implements OnInit {
   public type: string = 'public';
   public query: string = '';
   // public tabsTitle
-  defaultAddress: Object = {
-    id: 0,
-    label: 'Empty label',
-    address: 'Empty address',
-    balance: 0,
-    readable: ['Empty']
-  };
 
-  selected: any = {
-    id: 0,
-    label: 'Empty label',
-    address: 'Empty address',
-    balance: 0,
-    readable: ['empty']
-  };
-
-  qrSize: number = 380;
+  selected: any;
 
   /* UI Pagination */
   addresses: any = {
@@ -242,9 +227,6 @@ export class ReceiveComponent implements OnInit {
       }
     });
 
-    // I need to get the count of the addresses seperate in public/private first,
-    // because this.addresses[type] can never be empty,
-    // we need to delete our default address before doing addAddress..
     if (pub.length > 0) {
       this.addresses.public = [];
     }
