@@ -3,14 +3,18 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angular2-qrcode';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MdPaginatorModule, MdTabsModule, MdSnackBarModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+/* own */
+import { ReceiveComponent } from './receive.component';
+
 import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
-import { ReceiveComponent } from './receive.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdPaginatorModule, MdTabsModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalsService } from '../../modals/modals.service';
+import { FlashNotificationService } from '../../services/flash-notification.service';
 
 describe('ReceiveComponent', () => {
   let component: ReceiveComponent;
@@ -20,19 +24,22 @@ describe('ReceiveComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ReceiveComponent ],
       imports: [
+        /* deps */
         FormsModule,
         ReactiveFormsModule,
-        SharedModule,
         QRCodeModule,
-        RpcModule.forRoot(),
         FlexLayoutModule,
         MdTabsModule,
+        MdSnackBarModule,
         BrowserAnimationsModule,
         MdPaginatorModule,
+        /* own */
+        SharedModule,
         RpcModule.forRoot()
       ],
       providers: [
-        ModalsService
+        ModalsService,
+        FlashNotificationService
       ]
     })
     .compileComponents();

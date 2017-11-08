@@ -87,7 +87,7 @@
             <!-- Copy address -->
             <span fxFlex="20%" fxFlex.lt-md="25px">
               <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard
-                       [cbContent]="getUnusedAddress().address" fontSet="partIcon"
+                       [cbContent]="getUnusedAddress().address" (click)="copyToClipBoard()" fontSet="partIcon"
                        fontIcon="part-single-copy-04"></md-icon>
             </span>
             <!-- Sign message -->
@@ -134,7 +134,7 @@
               <!-- Copy address -->
               <span fxFlex="20%" fxFlex.lt-md="25px">
                 <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer"
-                         mdTooltip="Copy address"
+                         mdTooltip="Copy address" (click)="copyToClipBoard()"
                          ngxClipboard [cbContent]="address.address"></md-icon>
               </span>
               <!-- Sign/Verify public address only  -->
