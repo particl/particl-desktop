@@ -182,7 +182,7 @@ export class ReceiveComponent implements OnInit {
   selectInput() {
     (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
   }
-  
+
   copyToClipBoard() {
     this.flashNotificationService.open('Address copied to clipboard.');
   }
