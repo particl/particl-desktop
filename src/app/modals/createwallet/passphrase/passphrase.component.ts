@@ -49,7 +49,7 @@ export class PassphraseComponent implements  OnChanges {
 
   splitAndFill(index: number): void {
 
-    if (this.partialDisable || this.words[index].indexOf(' ') === -1 || index !== 0) {
+    if (this.partialDisable || this.words[index].indexOf(' ') === -1) {
       return;
     }
 
