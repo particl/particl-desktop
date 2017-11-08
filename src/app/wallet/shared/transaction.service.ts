@@ -51,7 +51,6 @@ export class TransactionService {
     }
     this.loading = true;
     this.currentPage = page;
-    this.deleteTransactions();
     this.rpc_update();
   }
 
@@ -61,6 +60,9 @@ export class TransactionService {
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update() {
+
+    this.deleteTransactions();
+
     this.rpc.call('listtransactions', [
       '*', +this.MAX_TXS_PER_PAGE,
       (this.currentPage * this.MAX_TXS_PER_PAGE)
