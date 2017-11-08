@@ -176,7 +176,7 @@ export class AddressTableComponent implements OnInit {
   }
 
   copyToClipBoard() {
-    this.flashNotification.open('Address copied to clipboard.', '', 1000);
+    this.flashNotification.open('Address copied to clipboard.', '');
   }
 
   openSignatureModal(address: string): void {

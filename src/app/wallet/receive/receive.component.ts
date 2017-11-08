@@ -368,7 +368,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   copyToClipBoard() {
-    this.flashNotificationService.open('Address copied to clipboard.', '', 1000);
+    this.flashNotificationService.open('Address copied to clipboard.', '');
   }
 
   selectInput() {
