@@ -1,10 +1,10 @@
 <div class="status-icon disable-select">
-  <span class="cursor-pointer" mdTooltip="{{'Peers: '+ peerListCount}}">
+  <span class="status icon" mdTooltip="{{'Peers: '+ peerListCount}}">
     <img src="assets/icons/network/connect_{{ getIconNumber() }}.png"/>
   </span>
 
   <span
-    class="cursor-pointer icon"
+    class="encryption icon"
     mdTooltip="{{encryptionStatus}}"
     placement="left"
     container="body"
@@ -14,13 +14,12 @@
   </span>
 
   <span
-    class="icon cursor-pointer blue cold-icon"
+    class="staking icon blue"
     mdTooltip="Cold"
     placement="left"
     container="body"
     (click)="openColdStakeModal()"
     [class.pointer]="">
-      <md-icon fontSet="faIcon" fontIcon="fa-snowflake-o"></md-icon>
-    <!-- <i class="fa fa-key red" aria-hidden="true"></i> -->
+      <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
   </span>
 </div><!-- .status-icons -->

@@ -47,10 +47,6 @@ input[type="text"] {
   padding-top: 4px;
 }
 
-md-card.mat-card {
-  box-shadow: 0 0px 0 #E9E9E9 !important;
-}
-
 .md-list-item {
   padding: 25px;
 }
@@ -124,7 +120,7 @@ app-header {
   .bottom-line {
     border-bottom: 1px solid $bg-shadow;
   } 
-  button.show-address {
+  button.advanced-options { // show/hide advanced options
     md-icon {
       font-size: 23px;
       width: auto;

@@ -17,8 +17,9 @@
     padding-right: 50px;
   }
   .mat-icon {
-    top: 1px;
+    top: 4px;
     right: 18px;
+    font-size:14px;
   }
 }
 
@@ -66,14 +67,6 @@
     button.copy {
       margin-bottom: 10px;
     }
-    .mat-icon {
-      margin-right: 7px;
-      width: auto;
-      height: auto;
-      font-size: 14px;
-      position: relative;
-      top: -1px;
-    }
   }
 }
  
@@ -107,6 +100,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: monospace;
+    color: $text-muted;
     background: transparent;
     transition: background .3s;
     .total {

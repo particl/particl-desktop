@@ -1,0 +1,31 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.signature-address-container {
+  max-width: 600px;
+}
+
+.signature-address-modal-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  .address-field {
+    .icon {
+      font-size: 16px;
+    }
+  }
+}
+
+.signature-address-modal-form > * {
+  width: 100%;
+}
+
+.mat-dialog-actions {
+  .mat-icon {
+    font-size: 16px;
+    width: auto;
+    height: auto;
+    position: relative;
+    top: -1px;
+    margin-right: 2px;
+  }
+}

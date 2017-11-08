@@ -1,0 +1,64 @@
+<div class="containerX signature-address-container">
+  <h2 md-dialog-title>Signatures &ndash; Sign/Verify message</h2>
+
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onFormSubmit()">
+    <div md-dialog-container>
+      <md-tab-group (selectChange)="selectTab($event.index)" [(selectedIndex)]="tabIndex">
+        <md-tab label="Sign Message">
+          <p>
+            You can sign messages/agreements with your address to prove you can receive Particl sent to them. Be
+            careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.
+          </p>
+        </md-tab>
+        <md-tab label="Verify Message">
+          <p>
+            Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs etc. exactly) and
+            signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!
+          </p>
+        </md-tab>
+      </md-tab-group>
+
+      <div class="signature-address-modal-form">
+
+        <div class="address-field" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+          <md-form-field fxFlex="1 1 100%">
+            <input mdInput formControlName="address" [(ngModel)]="formData.address" #addressInput
+                    [ngClass]="{'verify-sucess': validAddress === true, 'verify-error': validAddress === false }"
+                    placeholder="Enter a Particl address (e.g. PuMnFoGouqFkFZ1rs2PmVDUqp9psfQssre)"
+                    (input)="verifyAddress()">
+          </md-form-field>
+
+          <button md-button  type="button" fxFlex="0 0 60px" *ngIf="isAddressLookup" mdTooltip="Address Lookup" (click)="openLookup()">
+            <md-icon class="icon cursor-pointer" fontSet="ncIcon" fontIcon="nc-multiple-19"></md-icon>
+          </button>
+          <button type="button" md-button fxFlex="0 0 60px" mdTooltip="Paste" (click)="pasteAddress()">
+            <md-icon class="icon cursor-pointer" fontSet="faIcon" fontIcon="fa-clipboard"></md-icon>
+          </button>
+        </div><!-- .address-field -->
+
+        <md-form-field>
+          <textarea mdInput formControlName="message" [(ngModel)]="formData.message" rows="10" cols="100" placeholder="Enter message to sign/verify"></textarea>
+        </md-form-field>
+
+        <md-form-field>
+          <input mdInput formControlName="signature" [(ngModel)]="formData.signature"
+                 [disabled]="isDisabled"
+                 placeholder="{{(type == 'sign')? 'Click `Sign Message` to generate signature': 'Signature'}}">
+        </md-form-field>
+        <md-icon *ngIf="type == 'sign' && formData.signature" class="cursor-pointer" (click)="onCopyAddress()"
+                 mdTooltip="Copy address" ngxClipboard
+                 [cbContent]="formData.signature" fontSet="ncIcon" fontIcon="nc-copy-2"></md-icon>
+      </div><!-- .signature-address-modal-form -->
+    </div>
+    <md-dialog-actions fxLayoutAlign="end center">
+      <button type="reset" md-button (click)="resetForm()">
+        <md-icon fontSet="partIcon" fontIcon="part-circle-remove"></md-icon>
+        Clear All
+      </button>
+      <button md-raised-button color="primary" class="uc-first" type="submit" [disabled]="!addressForm.valid">
+        <md-icon fontSet="partIcon" fontIcon="{{ (type == 'verify' ? 'part-a-check': 'part-pen-01') }}"></md-icon>
+        {{type}} Message
+      </button>
+    </md-dialog-actions>
+  </form>
+</div>

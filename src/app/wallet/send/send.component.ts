@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 import { Log } from 'ng2-logger';
 
@@ -31,11 +31,11 @@ export class SendComponent {
   /*
     UI logic
   */
-
+  @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
   advanced: boolean = false;
   progress: number = 10;
-  advancedText: string = 'Show Recipient Address'
+  advancedText: string = 'Show Advanced options'
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
@@ -53,7 +53,6 @@ export class SendComponent {
     RPC logic
   */
   lookup: string;
-
   private _sub: Subscription;
   private _balance: any;
 
@@ -80,9 +79,9 @@ export class SendComponent {
   /** Toggle advanced controls and settings */
   toggleAdvanced() {
     if (this.advanced) {
-      this.advancedText = 'Show Recipient Address';
+      this.advancedText = 'Show Advanced options';
     } else {
-      this.advancedText = 'Hide Recipient Address';
+      this.advancedText = 'Hide Advanced options';
     }
     this.advanced = !this.advanced;
   }
@@ -295,6 +294,12 @@ export class SendComponent {
   setPrivacy(level: number, prog: number) {
     this.send.privacy = level;
     this.progress = prog;
+  }
+
+  pasteAddress() {
+    // document.getElementById('address').focus();
+    this.address.nativeElement.focus();
+    document.execCommand('Paste');
   }
 
 }
