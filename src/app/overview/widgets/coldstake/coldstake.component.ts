@@ -14,8 +14,8 @@ import { Amount } from '../../../shared/util/utils';
 export class ColdstakeComponent implements OnInit {
 
   /*  General   */
-  private log: any = Log.create('send.component');
-  private coldStakingEnabled: boolean = undefined;
+  private log: any = Log.create('coldstake.component');
+  coldStakingEnabled: boolean = undefined;
 
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
@@ -24,7 +24,12 @@ export class ColdstakeComponent implements OnInit {
     private _modals: ModalsService,
     private _rpc: RPCService
   ) {
-    this._rpc.state.observe('ui:coldstaking').subscribe(status => this.coldStakingEnabled = status);
+    this._rpc.state.observe('ui:coldstaking')
+    .subscribe(status => this.coldStakingEnabled = status);
+    this._rpc.state.observe('locked')
+    .subscribe(status => this.coldStakingEnabled = (
+      this.coldStakingEnabled ? this.coldStakingEnabled : (
+        status ? undefined : this._rpc.state.get('ui:coldstaking'))));
 
     this.rpc_progressLoop();
   }
@@ -41,7 +46,6 @@ export class ColdstakeComponent implements OnInit {
         let totalCount = 0;
 
         response.forEach((output) => {
-          console.log(output.amount);
           totalCount += output.amount;
 
           if (output.coldstaking_address !== undefined) {
@@ -57,10 +61,6 @@ export class ColdstakeComponent implements OnInit {
     if (this.coldstakeProgress < 100) {
       setTimeout(this.rpc_progressLoop.bind(this), 1000);
     }
-  }
-
-  isColdStakingEnabled() {
-    return this.coldStakingEnabled;
   }
 
   openUnlockWalletModal() {
