@@ -20,8 +20,6 @@ export class ColdstakeComponent implements OnInit {
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
 
-
-
   constructor(
     private _modals: ModalsService,
     private _rpc: RPCService
@@ -36,7 +34,7 @@ export class ColdstakeComponent implements OnInit {
 
   /** calls listunspent, then calculate progress. */
   private rpc_progressLoop() {
-  this._rpc.call('listunspent')
+    this._rpc.call('listunspent')
     .subscribe(
       (response: Array<any>) => {
         let activeCount = 0;
