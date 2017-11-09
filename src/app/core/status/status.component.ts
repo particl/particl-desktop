@@ -65,8 +65,8 @@ export class StatusComponent implements OnInit {
     }
   }
 
-  getIconColdstaking() {
-    return (this.coldStakingStatus) ? 'blue' : 'gray';
+  getColdstakingStatus() {
+    return (this.coldStakingStatus) ? 'enabled' : 'disabled';
   }
 
   toggle() {

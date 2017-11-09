@@ -13,11 +13,10 @@
       <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png"/>
   </span>
 
-  <!-- TODO: change class "disabled" to "enabled" + tooltip "Cold staking disabled" to "Cold staking enabled" when cold staking is active: -->
   <span
-    class="staking icon disabled"
-    mdTooltip="Cold staking disabled"
+    mdTooltip="{{'Cold staking '+getColdstakingStatus()}}"
     placement="left"
+    [ngClass]="['staking icon',getColdstakingStatus()]"
     container="body"
     [class.pointer]="">
       <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
