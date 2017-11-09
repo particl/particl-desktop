@@ -14,9 +14,11 @@ exports.start = function (mainWindow) {
     .then(()            => log.info('daemon already started'))
     .catch(()           => daemonManager.init())
     .then(()            => multiwallet.get())
+    // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
     .then(chosenWallets => daemon.start(chosenWallets, () => log.info('daemon started')))
-    .then(()            => ipc.daemonReady(mainWindow.webContents))
+    // TODO: activate for daemon ready
+    // .then(()            => ipc.daemonReady(mainWindow.webContents))
 }
 
 electron.app.on('quit', function (event, exitCode) {

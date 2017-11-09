@@ -8,7 +8,6 @@ declare global {
     electron: boolean;
     require: any;
     ipc: {
-      on:                 (channel:  string, listener:   Function) => void;
       once:               (channel:  string, listener:   Function) => void;
       send:               (channel:  string, arguments?: {}      ) => void;
       sendSync:           (channel:  string, arguments?: {}      ) => void;
@@ -27,32 +26,6 @@ export class RPXService {
   constructor(
     public zone: NgZone,
   ) {
-
-    window.ipc.on('rx-ipc-check-listener', (event, channel) => {
-      const replyChannel = 'rx-ipc-check-reply:' + channel;
-      if (this.listeners[channel]) {
-        event.sender.send(replyChannel, true);
-      } else {
-        event.sender.send(replyChannel, false);
-      }
-    });
-
-    window.ipc.on('front-choosewallet', (method, wallets) => {
-      return Observable.create(observer => {
-
-        console.log(wallets);
-
-        if (wallets.length === 0) {
-          // this.log.error('Electron process could not find wallets');
-          observer.next(false);
-        }
-
-        // this._modalsService.open('multiwallet', {forceOpen: true});
-        observer.next(wallets);
-
-      });
-    });
-
   }
 
   checkRemoteListener(channel: string) {

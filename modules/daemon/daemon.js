@@ -72,7 +72,7 @@ exports.wait = function(wallets, callback) {
         // Rebuild block and transaction indexes
         if (errorString.includes('-reindex')) {
           log.info('Corrupted block database detected, '
-          + 'restarting the daemon with the -reindex flag.');
+                 + 'restarting the daemon with the -reindex flag.');
           process.argv.push('-reindex');
           exitCode = 0; // Hack a bit here...
           // We don't want it to exit at this stage if start was called..
