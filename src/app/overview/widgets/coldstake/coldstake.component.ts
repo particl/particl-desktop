@@ -35,28 +35,32 @@ export class ColdstakeComponent implements OnInit {
 
   /** calls listunspent, then calculate progress. */
   private rpc_progressLoop() {
-    this._rpc.call('listunspent')
-    .subscribe(
-      (response: Array<any>) => {
-        let activeCount = 0;
-        let totalCount = 0;
+    
+    if(this.coldStakingEnabled){
+      this._rpc.call('listunspent')
+        .subscribe(
+          (response: Array<any>) => {
+            let activeCount = 0;
+            let totalCount = 0;
 
-        response.forEach((output) => {
-          totalCount += output.amount;
+            response.forEach((output) => {
+              totalCount += output.amount;
 
-          if (output.coldstaking_address !== undefined) {
-            activeCount += output.amount;
-          }
-          this.log.d(`activeCount=${activeCount} totalCount=${totalCount}`);
-          this.progress = new Amount((activeCount / totalCount) * 100, 2);
-        });
-      },
+              if (output.coldstaking_address !== undefined) {
+                activeCount += output.amount;
+              }
+              this.log.d(`activeCount=${activeCount} totalCount=${totalCount}`);
+              this.progress = new Amount((activeCount / totalCount) * 100, 2);
+           });
+         },
       // TODO: Handle error appropriately
       error => this.log.er('rpc_progressLoop: listunspent failed', error));
-
+    }
+    
     if (this.coldstakeProgress < 100) {
       setTimeout(this.rpc_progressLoop.bind(this), 1000);
     }
+    
   }
 
   openUnlockWalletModal() {
