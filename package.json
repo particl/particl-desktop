@@ -43,6 +43,13 @@
       "buildResources": "resources",
       "output": "packages"
     },
+    "files": [
+      "main.js",
+      "preload.js",
+      "modules/**",
+      "dist/**",
+      "resources/**"
+    ],
     "mac": {
       "category": "public.app-category.wallet",
       "target": [
@@ -78,7 +85,8 @@
         "Categories": "P2P;eCommerce;Development;"
       },
       "category": "ecommerce",
-      "packageCategory": "wallet"
+      "packageCategory": "wallet",
+      "icon": "resources/linux"
     },
     "asar": true
   },
