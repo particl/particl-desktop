@@ -161,7 +161,7 @@ export class RPCService {
             error => {
               this.stateCallError(error, method, firstError);
 
-              setTimeout(_call, firstError ? 150 : error.status === 0 ? 500 : 10000);
+              setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
               firstError = false;
             });
       }
