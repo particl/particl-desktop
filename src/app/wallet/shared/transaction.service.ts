@@ -17,6 +17,8 @@ export class TransactionService {
   txCount: number = 0;
   currentPage: number = 0;
   totalPageCount: number = 0;
+
+  /* states */
   loading: boolean = false;
   testnet: boolean = false;
 
@@ -31,14 +33,18 @@ export class TransactionService {
 
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
+    this.log.d(`postconstructor  called txs array: ${this.txs.length}`);
+    // TODO: why is this being called twice after executing a tx?
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
           this.txCount = txcount;
           this.loading = true;
+          this.log.d(`observing txcount, txs array: ${this.txs.length}`);
           this.rpc_update();
         });
 
+    /* check if testnet -> block explorer url */
     this.rpc.state.observe('chain').take(1)
     .subscribe(chain => this.testnet = chain === 'test');
   }
@@ -50,7 +56,6 @@ export class TransactionService {
     }
     this.loading = true;
     this.currentPage = page;
-    this.deleteTransactions();
     this.rpc_update();
   }
 
@@ -60,6 +65,7 @@ export class TransactionService {
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update() {
+
     this.rpc.call('listtransactions', [
       '*', +this.MAX_TXS_PER_PAGE,
       (this.currentPage * this.MAX_TXS_PER_PAGE)
@@ -74,11 +80,15 @@ export class TransactionService {
           this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
         }
 
+        this.deleteTransactions();
+
         txResponse.forEach((tx) => {
           this.addTransaction(tx);
         });
         this.loading = false;
+        this.log.d(`rpc_update, txs array: ${this.txs.length}`);
       });
+
   }
 
   // Deserializes JSON objects to Transaction classes.

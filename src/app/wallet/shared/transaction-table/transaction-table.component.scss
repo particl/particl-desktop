@@ -1,185 +1,122 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 .mat-expansion-panel {
-    margin-bottom: 12px;
-    box-shadow: none;
-    border-bottom: 1px solid $bg-shadow;
+  margin-bottom: 9px;
+  box-shadow: none;
+  border-bottom: 1px solid $bg-shadow;
+  &.history-list {
+    &.mat-expanded { // when TX detail is opened
+      margin: 20px 0;
+    }
+  }
 }
 
 .mat-expansion-panel-header {
   min-height: 67px !important;
-  font-size: 14px;
+  font-size: 13px;
   &:hover {
     background: inherit;
+  }
+  .mat-expansion-panel-header-title {
+    text-transform: uppercase;
   }
 
   // TX date/time
   .history_date {
-    font-size: 13px;
     color: $text-muted;
+    border-right: 1px solid lighten($text-muted, 35%);
+  }
+
+  // confirmations
+  .history_confirmation {
+    color: $text-muted;
+    .confirmations { // icon
+      height: auto;
+      width: auto;
+      margin-right: 3px;
+      font-size: 12px;
+      color: lighten($text-muted, 20%);
+      position: relative;
+      top: 1px;
+    }
   }
 
   // TX icon
   .history_cat_icon {
-      .mat-icon {
-        height: auto;
-        width: auto;
-        font-size: 15px;
-      }
-  }
-
-  // confirmations
-  .confirmations {
-      color: $color;
+    .mat-icon {
       height: auto;
       width: auto;
-      margin-right: 5px;
+      font-size: 15px;
+      position: relative;
+      top: 3px;
+      margin-right: 12px;
+    }
+    .tx-type {
+      &.staked {
+        md-icon {
+          color: $color-warning;
+        }
+      }
+      &.orphan {
+        md-icon {
+          color: mix($bg-shadow, $text-muted);
+        }
+      }
+      &.sent {
+        font-weight: bold;
+        md-icon {
+          color: $color-alert;
+        }
+      }
+      &.received {
+        font-weight: bold;
+        md-icon {
+          color: $color;
+        }
+      }
+    }
   }
 
   // TX amount
   .history_amount {
-      text-align: right;
-      display: block;
-      .amount {
-          font-weight: 600;
+    text-align: right;
+    display: block;
+    .amount {
+      .big {
+        font-weight: bold;        
       }
-  }
-
-  .mat-expansion-panel {
-    .mat-expanded {
-        border-bottom: none !important;
+      .point,
+      .small {
+        color: $text-muted;
+      }
+    }
+    .negative {
+      color: $color-alert;
+      .point,
+      .small {
+        color: mix(white, $color-alert, 30%);
+      }
     }
   }
 }
 
 // detail item of TX info
 .tx-detail-item {
-    padding: 5px 0;
-    color: $text-muted;
-    font-size: 13px;
-}
-
-// @TODO conver css to scss
-md-expansion-panel.mat-expansion-panel.mat-expanded md-expansion-panel-header {
-  border-bottom: none !important;
-}
-
-.btn-round-lg{
-  border-radius: 22.5px;
-}
-.btn-round{
-  border-radius: 17px;
-}
-.btn-round-sm{
-  border-radius: 15px;
-}
-.btn-round-xs{
-  border-radius: 11px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.category-button {
-  padding: 10px;
-}
-
-.category-button > .icon-sign {
-  margin-left: 5px;
-}
-
-.background-hack {
-  background-color: #FBFBFB !important;
-}
-
-.border-reset-hack {
-  border-bottom: 0px solid !important;
-}
-
-.padding-reset-hack {
-  padding: 0 0 0 0 !important;
-}
-
-.cell-date {
-    flex-basis: 12em;
-    font-weight:bold;
-}
-
-.padding-reset-hack {
-    padding: 0 0 0 0 !important;
-}
-
-.cell-senderAddress {
-    flex-grow: 1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    width: 33vw;
-}
-
-.cell-confirmations {
-    flex-basis: 26em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.cell-amount {
-    flex-grow: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    flex-basis: 20em;
-    min-width: 80px;
-}
-
-.cell-expand {
-    width: 42px;
-    padding-left: 0 !important;
-    padding-right: 30px !important;
-}
-
-.cell-expanded-row {
-    padding-bottom: 22px;
-}
-
-.transaction-details {
-    display: flex;
-    flex-flow: column nowrap;
-    & > section {
-        flex-basis: 2em;
+  padding: 5px 0;
+  color: $text-muted;
+  font-size: 13px;
+  // to/from address
+  .to-from-address {
+    font-family: monospace;
+    color: lighten($text, 10%);
+    background: lighten($bg-shadow, 10%);
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    padding: 0 5px;
+    &:focus {
+      background: lighten($bg-black, 10%);
+      color: white;
     }
-}
-
-.transaction-details-row {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-
-    & > div {
-        word-break: break-all;
-        flex-basis: 40%;
-        padding-right: 1em;
-        text-align: right;
-    }
-    & > div:first-child {
-        padding-left: 1em;
-        padding-right: 0;
-    }
-    & > .transaction-details-label {
-        flex-basis: 6em;
-        text-align: left;
-        word-break: normal;
-    }
-    & > .label-duble-size {
-        flex-basis: 12em;
-    }
-}
-
-@media (max-width: 767px) {
-    .transaction-details-row {
-        flex-flow: column wrap;
-        & > div, & > .transaction-details-label {
-            flex-basis: 100% !important;
-            padding: 0 !important;
-        }
-    }
+  }
 }

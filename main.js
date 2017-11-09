@@ -66,11 +66,13 @@ function initMainWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width:     1280,
-    height:    720,
+    // on Win, the width of app is few px smaller than it should be.
+    // this triggers smaller breakpoints
+    // this size should cause the same layout results on all OSes
+    width:     1270,
     minWidth:  961,
     maxWidth:  1920,
-    icon:      trayImage,
+    height:    720,
     resizable: false,
     webPreferences: {
       nodeIntegration:  false,
@@ -199,6 +201,11 @@ function makeTray() {
   // Set the tray icon
   tray.setToolTip('Particl ' + app.getVersion());
   tray.setContextMenu(contextMenu)
+
+  // Always show window when tray icon clicked
+  tray.on('click',function() {
+    mainWindow.show();
+  });
 
   return trayImage;
 }

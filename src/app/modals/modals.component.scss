@@ -9,19 +9,7 @@
 /* ------------------------------- *\
     Modal header
 \* ------------------------------- */
-/*
-.modal-header {
-  margin: 0 -24px 60px;
-  padding: 40px 24px;
-  background: $bg-black;
-  .logo {
-    margin: 0 auto;
-    width: 170px;
-    height: auto;
-    display: block;
-  }
-}
-*/
+
 .modal-footer-info {
   position: fixed;
   bottom: 0;
@@ -102,18 +90,18 @@ md-spinner.mat-spinner.mat-progress-spinner.mat-primary {
 }
 
 md-spinner.mat-spinner.mat-progress-spinner.mat-primary[_ngcontent-c20]:before {
-    content: "";
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.6);
-    z-index: 0;
+  content: "";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 0;
 }
 
 md-spinner.mat-spinner.mat-progress-spinner.mat-primary[_ngcontent-c20] {
-    z-index: 555;
-    position: relative;
+  z-index: 555;
+  position: relative;
 }

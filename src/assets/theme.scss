@@ -2,15 +2,18 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 
-.TODO {
+.TO_DO {
   box-shadow: 0 0 3px 1px hotpink;
 }
 
 .widget-help { // help description
-  color: grey;
+  @extend .disable-select;
+  color: $text-muted;
   font-size: 11px;
   margin-bottom: 25px;
+  cursor: help;
 }
+
 
 .qrcode {
   text-align: center;
@@ -20,11 +23,39 @@
   background: white;
 }
 
+.no-results { // search: no results
+  @extend .disable-select;
+  font-size: 18px;
+  color: darken($bg-shadow, 15%);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 170px 0;
+  border: 2px dashed $bg-shadow;
+  background: rgba(white, 0.5);
+}
+
+button {
+  .mat-icon {
+    width: auto;
+    height: auto;
+    margin-right: 5px;
+    position: relative;
+    top: -1px;
+  }
+}
+
+.actions {
+  button {
+    margin: 0 10px;
+  }
+}
+
 /**
  * Side bar Menu.
  */
 
  .mat-sidenav {
+   user-select: none;
   .logo-area {
     .mat-toolbar-row {
       justify-content: center;
@@ -47,6 +78,7 @@
     &.sidesubmenu {
       a {
         text-decoration: none;
+        outline: none;
       }
       .mat-list-item-content {
         text-transform: uppercase;
@@ -74,15 +106,28 @@
   .mat-expansion-panel-body { // accordion menu
     padding: 0;
   }
+  .mat-expansion-panel {
+    .mat-expansion-indicator::after {
+      color: $text-muted;
+    }
+    &.mat-expanded {
+      .mat-expansion-indicator::after {
+        color: $color;
+      }
+    }
+  }
 }
 
 .active > md-list-item > div > md-icon {
   color: $color !important;
 }
 
-.header-main {
-  border-bottom: 1px solid #ddd;
+.header-main { // top header (page title with status icons)
+  @extend .disable-select;
+  border-bottom: 1px solid $bg-shadow;
   background: #fff;
+  padding-left: 35px !important;
+  padding-right: 26px !important;
 }
 
 .containerX {
@@ -192,8 +237,8 @@ input[type="text"] {
   border-left: 1px solid #ddd;
 }
 
-.container-block {
-  padding: 20px;
+.container-block { // main container for content
+  padding: 35px;
 }
 
 /**
@@ -228,7 +273,7 @@ input[type="text"] {
 /**
  * History List
  */
-
+/*
 .history_longAddress {
   overflow: hidden;
   flex-wrap: nowrap;
@@ -250,35 +295,13 @@ input[type="text"] {
   align-items: center;
 }
 
-
-.history-list {
-  .history_cat_icon {
-    .mat-icon {
-      margin-right: 8px;
-    }
-  }
-  .history_container {
-    > div {
-      min-height: 25px;
-      > div {
-        margin-right: 10px;
-      }
-      .highlight {
-        text-align: right;
-      }
-    }
-  }
-}
-
+*/
 .md-right {
   text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   height: 18px;
-}
-.cold-icon {
-  font-size: 1em !important;
 }
 
 /* ------------------------------- *\
@@ -300,15 +323,15 @@ input[type="text"] {
       color: $text-muted;
       min-width: 50px;
       .mat-icon {
-        background: rgba($color-alert, 0.5);
+        color: rgba($color-alert, 0.5);
         border-radius: 50%;
-        font-size: 18px;
+        font-size: 24px;
         line-height: 1.4;
-        color: white;
+        margin: 0;
       }
       &:hover {
         .mat-icon {
-          background: $color-alert;
+          color: $color-alert;
         }
       }
     }
@@ -359,19 +382,11 @@ input[type="text"].md-bg-transparent {
 }
 
 .md-send-list {
-  .mat-select-trigger{ height: 23px; }
-}
-
-.header-nav {
-  list-style-type: none;
-  padding: 0;
-  li {
-    font-size: 16px;
-    font-weight: normal;
-    text-transform: uppercase;
-    color: $text-muted;
+  .mat-select-trigger{
+    height: 23px;
   }
 }
+
 panel-header-title {
   display: block;
 }
@@ -387,29 +402,36 @@ panel-header-title {
 }
 
 
-// Pagination
-.mat-paginator-navigation-next.mat-icon-button:hover {
-  background-color: #1aeab8;
-  border-radius: 0px;
-}
-
-.mat-paginator-navigation-previous.mat-icon-button:hover {
-  background-color: #1aeab8;
-  border-radius: 0px;
-}
+/* ------------------------------- *\
+    Pagination
+\* ------------------------------- */ 
 
 .mat-paginator {
+  margin-top: 40px;
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
     &:hover {
+      background-color: $color;
+      border-radius: $radius;
       .mat-paginator-increment,
       .mat-paginator-decrement {
         border-color: white;
       }
     }
+    &[disabled] {
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: $bg-shadow;
+      }
+      &:hover {
+        background-color: transparent;
+      }
+    }
   }
 }
+
+
 
 .syncing_header_text{
   width: 65%;

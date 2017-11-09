@@ -7,7 +7,7 @@
 
         <div class="title">Cold Staking setup</div>
         <p class="warning">
-            <md-icon fontSet="faIcon" fontIcon="fa-exclamation-triangle"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
             Please, read these instructions very carefully!
         </p>
         <hr class="hr-light">
@@ -47,7 +47,7 @@
           <div class="hot-wallet" fxFlex="50">
             <div class="actions">
               <button md-raised-button color="warn" (click)="create('hot');">
-                <md-icon fontSet="faIcon" fontIcon="fa-fire"></md-icon>
+                <md-icon fontSet="partIcon" fontIcon="part-flash-21"></md-icon>
                 Create hot wallet
               </button>
             </div><!-- .actions -->
@@ -56,7 +56,7 @@
           <div class="cold-wallet" fxFlex="50">
             <div class="actions">
               <button md-raised-button color="primary" (click)="create('cold');">
-                <md-icon fontSet="faIcon" fontIcon="fa-snowflake-o"></md-icon>
+                <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
                 Create cold wallet
               </button>
             </div><!-- .actions -->
@@ -95,8 +95,8 @@
         <p>
           Copy this address and enter it into your cold wallet.
         </p>
-        <p class="TODO">
-          When you're finished, you can close this dialog safely.
+        <p>
+          You may safely close this dialog once you are done.
         </p>
         
         <md-form-field class="hot-stake-address">
@@ -105,7 +105,7 @@
 
         <div class="actions text-left">
           <button md-raised-button color="primary" ngxClipboard [cbContent]="hotStakeAddress">
-            <md-icon fontSet="faIcon" fontIcon="fa-clipboard"></md-icon>
+            <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon>
             <!--span class="icon nc-icon nc-copy-2 cursor-pointer" placement="top" container="body"></span-->
             Copy to clipboard
           </button>
@@ -133,13 +133,18 @@
           <input mdInput [(ngModel)]="coldStakeAddress" placeholder="Enter the hot wallet address"/>
         </md-form-field>
 
-        <div class="actions text-left">
-          <button md-raised-button color="primary" (click)="nextStep();">Enable cold staking</button>
-        </div>
+        <div class="actions">
+          <button md-raised-button color="primary" (click)="nextStep();">
+            <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
+            Enable cold staking
+          </button>
+
+          <button md-raised-button color="warn" (click)="resetColdStakingAddress()();">
+            <md-icon fontSet="partIcon" fontIcon="part-ban"></md-icon>
+            Disable cold staking
+          </button>
+        </div><!-- .actions -->
         
-        <div class="actions text-left">
-          <button md-raised-button color="warn" (click)="resetColdStakingAddress()();">Disable cold staking</button>
-        </div>
       </div><!-- .content -->
     </div><!-- .container -->
   </ng-template><!-- /Step 2 COLD -->

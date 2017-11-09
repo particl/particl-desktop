@@ -4,7 +4,7 @@
   </div>
   <div *ngIf="message && message.error">
     <div *ngIf="message.error.status === 0">
-      Couldn't connect to Particl Daemon : connection refused
+      Couldn't connect to Particl Daemon: connection refused
     </div>
     <div *ngIf="message.error.status !== 0">
       Error {{ message.error.status }}: {{ message.error.message }}

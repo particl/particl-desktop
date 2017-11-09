@@ -89,7 +89,7 @@ export class RPCService {
 
     if (this.isElectron) {
       return this._rpx.runCommand('rpc-channel', null, method, params)
-      .map(response => response && response.result ? response.result : response);
+      .map(response => response && (response.result !== undefined) ? response.result : response);
 
     } else {
       // Running in browser, delete?

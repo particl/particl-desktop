@@ -11,7 +11,7 @@
     <table class="staking-overview">
       <tr>
         <th>Next reward</th>
-        <td>~{{expectedtime.getReadableDuration()}}</td>
+        <td>~{{expectedtime.getShortReadableDuration()}}</td>
       </tr>
       <tr>
         <th>Your Stake weight</th>
@@ -20,20 +20,10 @@
       </tr>
       <tr>
         <th>Stake percentage</th>
-        <td>{{dynamicStakingReward.getIntegerPart()}}.<small>{{dynamicStakingReward.getFractionalPart()}}</small>&nbsp;%</td>
+        <td>{{curStakeReward.getIntegerPart()}}.<small>{{curStakeReward.getFractionalPart()}}</small>&nbsp;%</td>
       </tr>
-      <!--
-      <tr>
-        <th>Stake reward</th>
-        <td class="TODO">1.<small>494</small>&nbsp;PART</td>
-      </tr>
-      -->
     </table>
     <!-- .staking-overview -->
   </md-card>
 </div>
 <!-- .staking-info -->
-<!-- @TODO: remove these -->
-<!--h4>Staking reward: ~{{dynamicStakingReward}}%</h4>
-  <h4>Network weight: ~{{curWeight}}</h4-->
-
