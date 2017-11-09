@@ -52,6 +52,7 @@ class SafeIpcRenderer {
 
 window.ipc = new SafeIpcRenderer([
   'front-choosewallet',
+  'front-walletready',
   'rpc-channel',
   'rx-ipc-check-reply:rpc-channel',
   'rx-ipc-check-reply:front-choosewallet',
