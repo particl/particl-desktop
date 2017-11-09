@@ -34,7 +34,7 @@ class Manager extends EventEmitter {
     log.info('Initializing...');
     options = _options;
     // check every hour
-    setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
+    // setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
     this._resolveBinPath();
     return this._checkForNewConfig(restart);
   }
