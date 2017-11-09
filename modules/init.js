@@ -24,6 +24,7 @@ electron.app.on('quit', function (event, exitCode) {
   electron.ipcMain.removeAllListeners(['backend-rpccall']);
   daemon.stop();
   if (exitCode === 991) {
+    log.error('Could not connect to daemon.')
     throw Error('Could not connect to daemon.');
   }
 });

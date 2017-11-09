@@ -31,7 +31,7 @@ class DaemonManager extends EventEmitter {
   init(_options) {
     log.info('Initializing...');
     options = _options;
-    // TODO: use an update to test & fix
+    // TODO: reactivate when prompt user in GUI works
     // check every hour
     // setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
     this._resolveBinPath();

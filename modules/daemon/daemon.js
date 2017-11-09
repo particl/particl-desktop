@@ -18,15 +18,15 @@ exports.start = function(wallets, callback) {
     const daemonPath = options.customdaemon
                      ? options.customdaemon
                      : daemonManager.getPath();
-    console.log(wallets);
 
     exports.check().then(() => {
       log.info('daemon already started');
       resolve(undefined);
 
     }).catch(() => {
-      log.info(`starting daemon ${daemonPath}`);
+
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
+      log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
       const child = spawn(daemonPath, [...process.argv, ...wallets])
       .on('close', code => {
@@ -36,6 +36,12 @@ exports.start = function(wallets, callback) {
         } else {
           log.info('daemon exited successfully');
         }
+      })
+      child.stdout.on('data', data => {
+        log.info('daemon: ' + data.toString().replace(/[\n\r]/g, ""))
+      })
+      child.stderr.on('data', data => {
+        log.error('daemon: ' + data.toString().replace(/[\n\r]/g, ""))
       });
 
       daemon = child;

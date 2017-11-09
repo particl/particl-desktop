@@ -14,6 +14,10 @@ const rpc    = require('../rpc/rpc.js');
 exports.promptWalletChoosing = function(wallets, webContents) {
   return new Promise ((resolve, reject) => {
 
+    // TODO: change to user prompt in GUI
+    resolve(["wallet.dat"]);
+    return ;
+
     if (wallets.length === 0) {
       log.warn('No walet found in userData.');
       reject();

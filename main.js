@@ -23,7 +23,7 @@ let mainWindow;
 let tray;
 let options;
 
-let openDevTools = true;
+let openDevTools = false;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
