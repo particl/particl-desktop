@@ -1,25 +1,23 @@
 <div class="status-icon disable-select">
-  <span class="status icon" mdTooltip="{{'Peers: '+ peerListCount}}">
+  <span class="status icon" mdTooltip="Peers: {{ peerListCount }}">
     <img src="assets/icons/network/connect_{{ getIconNumber() }}.png"/>
   </span>
 
   <span
-    class="encryption icon"
-    mdTooltip="{{encryptionStatus}}"
+    class="encryption icon pointer"
+    mdTooltip="{{ encryptionStatus }}"
     placement="left"
     container="body"
-    (click)="toggle()"
-    [class.pointer]="">
+    (click)="toggle()">
       <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png"/>
   </span>
 
-  <!-- TODO: change class "disabled" to "enabled" + tooltip "Cold staking disabled" to "Cold staking enabled" when cold staking is active: -->
   <span
-    class="staking icon disabled"
-    mdTooltip="Cold staking disabled"
+    class="staking icon"
+    mdTooltip="Cold staking {{ getColdStakingStatus() }}"
     placement="left"
-    container="body"
-    [class.pointer]="">
+    [ngClass]="getColdStakingStatus()"
+    container="body">
       <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
   </span>
 </div><!-- .status-icons -->

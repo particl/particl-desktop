@@ -16,7 +16,7 @@ import { MdDialog} from '@angular/material';
 export class StatusComponent implements OnInit {
 
   peerListCount: number = 0;
-
+  public coldStakingStatus: boolean;
   public encryptionStatus: string = 'Locked';
   private _sub: Subscription;
 
@@ -34,6 +34,9 @@ export class StatusComponent implements OnInit {
 
     this._rpc.state.observe('encryptionstatus')
       .subscribe(status => this.encryptionStatus = status);
+
+    this._rpc.state.observe('ui:coldstaking')
+      .subscribe(status => this.coldStakingStatus = status);
   }
 
   getIconNumber(): number {
@@ -62,6 +65,10 @@ export class StatusComponent implements OnInit {
     }
   }
 
+  getColdStakingStatus() {
+    return (this.coldStakingStatus) ? 'enabled' : 'disabled';
+  }
+
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
@@ -80,9 +87,5 @@ export class StatusComponent implements OnInit {
       default:
         break;
     }
-  }
-
-  openColdStakeModal() {
-    this._modalsService.open('coldStake', {'forceOpen': true});
   }
 }
