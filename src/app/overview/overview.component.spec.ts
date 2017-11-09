@@ -8,7 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { RpcModule } from '../core/rpc/rpc.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdCardModule } from '@angular/material';
+import { MdCardModule, MdProgressBarModule } from '@angular/material';
 
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
@@ -22,7 +22,8 @@ describe('OverviewComponent', () => {
         RpcModule.forRoot(),
         ModalsModule,
         FlexLayoutModule,
-        MdCardModule
+        MdCardModule,
+        MdProgressBarModule
       ],
       declarations: [
         OverviewComponent,
