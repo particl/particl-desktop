@@ -75,7 +75,7 @@
       ],
       "desktop": {
         "Comment": "Particl, P2P Privacy project",
-        "Exec": "/opt/particl/partgui %U",
+        "Exec": "/opt/particl/particl %U",
         "Icon": "Particl",
         "Name": "Particl",
         "Path": "/opt/particl/",
