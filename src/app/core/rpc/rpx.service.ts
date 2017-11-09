@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ModalsService } from '../../modals/modals.service'
+// import { ModalsService } from '../../modals/modals.service'
 
 // RxIPC related stuffs
 
@@ -27,7 +27,7 @@ export class RPXService {
 
   constructor(
     public zone: NgZone,
-    private _modalsService: ModalsService
+    // private _modalsService: ModalsService
   ) {
 
     window.ipc.on('rx-ipc-check-listener', (event, channel) => {
@@ -42,12 +42,14 @@ export class RPXService {
     window.ipc.on('front-choosewallet', (method, wallets) => {
       return Observable.create(observer => {
 
+        console.log(wallets);
+
         if (wallets.length === 0) {
           // this.log.error('Electron process could not find wallets');
           observer.next(false);
         }
 
-        this._modalsService.open('multiwallet', {forceOpen: true});
+        // this._modalsService.open('multiwallet', {forceOpen: true});
         observer.next(wallets);
 
       });

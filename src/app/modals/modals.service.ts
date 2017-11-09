@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
 import { BlockStatusService } from '../core/rpc/rpc.module';
-// import { RPCService } from '../core/rpc/rpc.module';
+import { RPCService } from '../core/rpc/rpc.module';
 
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
@@ -44,7 +44,7 @@ export class ModalsService {
 
   constructor (
     private _blockStatusService: BlockStatusService,
-    // private _rpc: RPCService,
+    private _rpc: RPCService,
     private _dialog: MdDialog
   ) {
 
@@ -58,13 +58,13 @@ export class ModalsService {
     this.openInitialCreateWallet();
 
     /* Hook daemon errors -> open daemon modal */
-    // this._rpc.errorsStateCall.asObservable()
-    // .subscribe(
-    //   status => this.wasAlreadyOpen('daemon') && this.close(),
-    //   error => {
-    //       this.enableClose = true;
-    //       this.open('daemon', error);
-    //   });
+    this._rpc.errorsStateCall.asObservable()
+    .subscribe(
+      status => this.wasAlreadyOpen('daemon') && this.close(),
+      error => {
+          this.enableClose = true;
+          this.open('daemon', error);
+      });
   }
 
   /**
@@ -148,16 +148,16 @@ export class ModalsService {
     * Open the Createwallet modal if wallet is not initialized
     */
   openInitialCreateWallet() {
-    // this._rpc.state.observe('walletInitialized')
-    //   .subscribe(
-    //     state => {
-    //       this.initializedWallet = state;
-    //       if (state) {
-    //         this.log.i('Wallet already initialized.');
-    //         return;
-    //       }
-    //       this.open('createWallet', {forceOpen: true});
-    //     });
+    this._rpc.state.observe('walletInitialized')
+      .subscribe(
+        state => {
+          this.initializedWallet = state;
+          if (state) {
+            this.log.i('Wallet already initialized.');
+            return;
+          }
+          this.open('createWallet', {forceOpen: true});
+        });
   }
 
 }
