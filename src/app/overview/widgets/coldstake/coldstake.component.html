@@ -23,16 +23,38 @@
     </button>
   </md-card>
 
-  <md-card *ngIf="isColdStakingEnabled()" class="staking-node">
+<!-- Edit cold stake key, might be useful for later.
+  <md-card *ngIf="false" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status active">active</span>
     </div>
     <button class="mat-button secondary pull-left" (click)="openColdStakeModal()" mdTooltip="Edit Cold Staking node key">
       <md-icon fontSet="partIcon" fontIcon="part-pen-01"></md-icon>
     </button>
+  </md-card> -->
+
+  <md-card *ngIf="isColdStakingEnabled()" class="staking-node">
+    <div class="title">
+      Cold Staking Progress <span class="status active">{{coldstakeProgress}}%</span>
+    </div>
+    <md-progress-bar
+      class="progress-bar-bottom"
+      [color]="'primary'"
+      [bufferValue]="coldstakeProgress"
+      [mode]="'determinate'"
+      [value]="coldstakeProgress">
+    </md-progress-bar>
+
   </md-card>
 
-  <p class="widget-help">
+
+  <p class="widget-help" *ngIf="!isColdStakingEnabled()">
     Cold staking allows you to spend from one machine and stake from another, this greatly increases the safety of your coins.
   </p>
+
+  <p class="widget-help" *ngIf="isColdStakingEnabled()">
+    It takes a bit of time transfer all the existing outputs in a private way. Please make sure your node is staking.<br />
+    A more rapid manner is to send all your coins to your own address.
+  </p>
+
 </div><!-- .cold-staking -->
