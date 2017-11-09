@@ -1,6 +1,6 @@
 {
   "name": "particl",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "GPL-2.0",
   "description": "Particl Electron GUI - The source for the Particl GUI.",
   "keywords": [
@@ -37,7 +37,7 @@
   },
   "productName": "Particl Wallet",
   "build": {
-    "electronVersion": "1.7.5",
+    "electronVersion": "1.7.9",
     "appId": "io.particl.partgui",
     "directories": {
       "buildResources": "resources",
@@ -75,7 +75,7 @@
       ],
       "desktop": {
         "Comment": "Particl, P2P Privacy project",
-        "Exec": "/opt/particl/partgui %U",
+        "Exec": "/opt/particl/particl %U",
         "Icon": "Particl",
         "Name": "Particl",
         "Path": "/opt/particl/",
