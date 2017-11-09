@@ -138,6 +138,7 @@ export class ReceiveComponent implements OnInit {
     if (['public', 'private'].includes(type)) {
       this.type = type;
     }
+    /* @TODO: can be removed */
     if (this.addresses[type].length === 0) {
       this.openNewAddress()
     } else {
@@ -159,22 +160,36 @@ export class ReceiveComponent implements OnInit {
   }
 
   /**
-    * Selected address stuff + QRcode
+    * Selected address stuff
     * @param address The address to select
     */
   selectAddress(address: string) {
     this.selected = address;
   }
 
-  /** Get the QR Code size */
-  getQrSize() {
-    // this is just a cheaty way of getting the tests to pass
-    if (this.qrElementView && this.initialized) {
-      return this.qrElementView.nativeElement.offsetWidth - 40;
-    } else {
-      // return 380;
-      return 206;
-    }
+ /**
+   * Opens a dialog when creating a new address.
+   */
+  openNewAddress(address?: string): void {
+    const dialogRef = this.dialog.open(AddAddressLabelComponent);
+    dialogRef.componentInstance.type = this.type;
+    dialogRef.componentInstance.address = address ? address : '';
+
+    // update receive page after adding address
+    dialogRef.componentInstance.onAddressAdd.subscribe(result => this.rpc_update());
+  }
+
+  selectInput() {
+    (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
+  }
+
+  copyToClipBoard() {
+    this.flashNotificationService.open('Address copied to clipboard.');
+  }
+
+  openSignatureModal(address: string): void {
+    const dialogRef = this.dialog.open(SignatureAddressModalComponent);
+    dialogRef.componentInstance.formData.address = address;
   }
 
   /* ---- RPC LOGIC -------------------------------------------------------- */
@@ -193,20 +208,11 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any) {
     const count = response.num_receive;
-    if ([0, 1].includes(count)) {
-      // @TODO remove two service calling for create wallet
-      if (!this._modalService.initializedWallet) {
-        this._modalService.openInitialCreateWallet();
-      }
-
-      setTimeout(() => {
-        if (this._modalService.initializedWallet) {
-          this.openNewAddress();
-        }
-      }, 200);
-
+/*    if (count ===) {
+      console.log('openNewAddress()')
+      this.openNewAddress();
       return;
-    }
+    }*/
     this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
       .subscribe(
         (resp: Array<any>) => this.rpc_loadAddresses_success(resp),
@@ -339,26 +345,5 @@ export class ReceiveComponent implements OnInit {
       },
       error => this.log.er('error'));
     }
-  }
-  openNewAddress(address?: string): void {
-    const dialogRef = this.dialog.open(AddAddressLabelComponent);
-    dialogRef.componentInstance.type = this.type;
-    dialogRef.componentInstance.address = address ? address : '';
-    dialogRef.componentInstance.onAddressAdd.subscribe((result) => {
-      this.rpc_update();
-    });
-  }
-
-  copyToClipBoard() {
-    this.flashNotificationService.open('Address copied to clipboard.', '');
-  }
-
-  selectInput() {
-    (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
-  }
-
-  openSignatureModal(address: string): void {
-    const dialogRef = this.dialog.open(SignatureAddressModalComponent);
-    dialogRef.componentInstance.formData.address = address;
   }
 }

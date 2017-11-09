@@ -42,7 +42,7 @@ function createWindow () {
 function initMainWindow(trayImage) {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1280,
+    width: 1270, // on Win, the width of app is few px smaller than it should be => triggers smaller breakpoints; this size should cause the same layout results on all OSes
     minWidth: 961,
     maxWidth: 1920,
     height: 720,

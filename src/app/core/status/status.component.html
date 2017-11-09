@@ -13,12 +13,12 @@
       <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png"/>
   </span>
 
+  <!-- TODO: change class "disabled" to "enabled" + tooltip "Cold staking disabled" to "Cold staking enabled" when cold staking is active: -->
   <span
-    class="staking icon blue"
-    mdTooltip="Cold"
+    class="staking icon disabled"
+    mdTooltip="Cold staking disabled"
     placement="left"
     container="body"
-    (click)="openColdStakeModal()"
     [class.pointer]="">
       <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
   </span>
