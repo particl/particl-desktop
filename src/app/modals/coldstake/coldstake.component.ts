@@ -82,7 +82,7 @@ export class ColdstakeComponent {
     this._rpc.call('extkey', ['account'])
     .subscribe(
       success => this.rpc_filterHotListOfAccounts(success),
-      error => this.log.er('rpc_retrieveHotWallet: ', error));
+      error => this.onHotWalletError());
   }
 
   rpc_filterHotListOfAccounts(response: any) {
@@ -194,6 +194,12 @@ export class ColdstakeComponent {
     if (data.type !== undefined) {
       this.create(data.type);
     }
+  }
+
+  onHotWalletError(): void {
+    this.dialogRef.close();
+    this._modalsService.open('createWallet', {forceOpen: true});
+    this._flashNotificationService.open('Restricted from the Hot Wallet function until a Wallet exists', 'info');
   }
 
   /**
