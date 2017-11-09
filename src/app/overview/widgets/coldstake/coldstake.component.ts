@@ -36,7 +36,7 @@ export class ColdstakeComponent implements OnInit {
   /** calls listunspent, then calculate progress. */
   private rpc_progressLoop() {
     
-    if(this.coldStakingEnabled){
+    if (this.coldStakingEnabled) {
       this._rpc.call('listunspent')
         .subscribe(
           (response: Array<any>) => {
@@ -60,7 +60,6 @@ export class ColdstakeComponent implements OnInit {
     if (this.coldstakeProgress < 100) {
       setTimeout(this.rpc_progressLoop.bind(this), 1000);
     }
-    
   }
 
   openUnlockWalletModal() {
