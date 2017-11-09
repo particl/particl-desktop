@@ -94,13 +94,15 @@ function mkDir(dirPath, root) {
 ** RPC cookie is regenerated at every particld startup
 */
 function getAuth(options) {
+
   if (options.rpcuser && options.rpcpassword) {
     return options.rpcuser + ':' + options.rpcpassword;
   }
 
-  // const COOKIE_FILE = findCookiePath() + `${options.testnet ? '/testnet' : ''}/.cookie`;
-  const COOKIE_FILE = findCookiePath() + (options.testnet ? '/testnet' : '') + '/.cookie';
   let auth;
+  const COOKIE_FILE = findCookiePath()
+                    + (options.testnet ? '/testnet' : '')
+                    + '/.cookie';
 
   if (fs.existsSync(COOKIE_FILE)) {
     auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();

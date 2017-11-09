@@ -11,6 +11,7 @@ import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
+import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 import { MdDialog } from '@angular/material';
 import { ModalsComponent } from './modals.component';
 
@@ -37,7 +38,8 @@ export class ModalsService {
     daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent,
-    encrypt: EncryptwalletComponent
+    encrypt: EncryptwalletComponent,
+    multiwallet: MultiwalletComponent
   };
 
   constructor (
