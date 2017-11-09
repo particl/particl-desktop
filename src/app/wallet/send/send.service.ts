@@ -106,19 +106,22 @@ export class SendService {
     this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
 
     // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
-    this._rpc.call('send' + rpcCall, params)
-      .subscribe(
-        success => this.rpc_send_success(success),
-        error => this.rpc_send_failed(error));
+    this._rpc.call('send' + rpcCall, params).subscribe(
+      success => this.rpc_send_success(success),
+      error => this.rpc_send_failed(error));
   }
 
 
   rpc_send_success(json: any) {
     this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
-    this.flashNotification.open(`Succesfully sent ${this.amount} PART to ${this.address}!\nTransaction id: ${json}`);
+
+    // Truncate the address to 16 characters only
+    const trimAddress = this.address.substring(0, 16) + '...';
+    this.flashNotification.open(`Succesfully sent ${this.amount} PART to ${trimAddress}!\nTransaction id: ${json}`, 'warn');
   }
 
   rpc_send_failed(json: any) {
+    this.flashNotification.open(`Transaction Failed ${json.message}`, 'err');
     this.log.er('rpc_send_failed, failed to execute transactions!');
     this.log.er(json);
   }

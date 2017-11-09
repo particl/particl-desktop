@@ -32,11 +32,12 @@ export class EncryptwalletComponent {
       this.log.d(`check password equality: ${password.password === this.password}`);
 
       if (this.password === password.password) {
-
+        this._rpc.state.set('ui:spinner', true);
         this.log.d(`Encrypting wallet! password: ${this.password}`);
         this._rpc.call('encryptwallet', [password.password])
           .subscribe(
             response => {
+              this._rpc.state.set('ui:spinner', false);
               this._rpc.toggleState(false);
               this.flashNotification.open(response);
 
@@ -54,11 +55,13 @@ export class EncryptwalletComponent {
             },
             // Handle error appropriately
             error => {
-              this.flashNotification.open('Wallet failed to encrypt properly!');
+              this._rpc.state.set('ui:spinner', false);
+              this.flashNotification.open('Wallet failed to encrypt properly!', 'err');
               this.log.er('error encrypting wallet', error)
             });
       } else {
-        this.flashNotification.open('The passwords do not match!');
+        this._rpc.state.set('ui:spinner', false);
+        this.flashNotification.open('The passwords do not match!', 'err');
       }
 
     } else {

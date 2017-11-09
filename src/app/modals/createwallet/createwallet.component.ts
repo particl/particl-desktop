@@ -1,6 +1,7 @@
 import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener } from '@angular/core';
 import { Log } from 'ng2-logger';
 
+import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
 
 import { flyInOut, slideDown } from '../../core/core.animations';
@@ -37,6 +38,8 @@ export class CreateWalletComponent {
   words: string[];
 
   @ViewChild('passphraseComponent') passphraseComponent: ComponentRef<PassphraseComponent>;
+  @ViewChild('passwordElement') passwordElement: PasswordComponent;
+  @ViewChild('passwordRestoreElement') passwordRestoreElement: PasswordComponent;
 
   // Used for verification
   private wordsVerification: string[];
@@ -71,7 +74,7 @@ export class CreateWalletComponent {
     this.reset();
 
     switch (type) {
-      case 0:
+      case 0: // Encrypt wallet
         this._modalsService.open('encrypt', {forceOpen: true});
         return;
       case 1: // Create
@@ -86,6 +89,11 @@ export class CreateWalletComponent {
   nextStep() {
     this.validating = true;
 
+    /* Recovery password entered */
+    if (this.step === 2) {
+      this.passwordElement.sendPassword();
+    }
+
     if (this.validate()) {
       this.animationState = 'next';
       this.validating = false;
@@ -94,6 +102,7 @@ export class CreateWalletComponent {
       this.doStep();
     }
 
+    this.log.d(`moving to step: ${this.step}`);
   }
 
   prevStep() {
@@ -132,7 +141,7 @@ export class CreateWalletComponent {
           this.step = 6
         } else {
           // wallet already unlocked
-          this.importMnemonicCallback();
+          this.importMnemonicSeed();
         }
 
         break;
@@ -140,6 +149,7 @@ export class CreateWalletComponent {
     this._modalsService.enableClose = (this.step === 0);
     this.state.set('modal:fullWidth:enableClose', (this.step === 0));
   }
+
 
   private mnemonicCallback(response: Object) {
     const words = response['mnemonic'].split(' ');
@@ -152,19 +162,25 @@ export class CreateWalletComponent {
     this.log.d(`word string: ${this.words.join(' ')}`);
   }
 
-  public importMnemonicCallback() {
+  public importMnemonicSeed() {
+    this.state.set('ui:spinner', true);
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {
+          this._passphraseService.generateDefaultAddresses();
           this.animationState = 'next';
           this.step = 5;
-          this.state.set('activeWallet', true);
+          this.state.set('ui:walletInitialized', true);
+          this.state.set('ui:spinner', false);
           this.log.i('Mnemonic imported successfully');
+
         },
         error => {
+          this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
           this._modalsService.enableClose = true;
+          this.state.set('ui:spinner', false);
           this.state.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');
         });
@@ -181,10 +197,34 @@ export class CreateWalletComponent {
     return true;
   }
 
-  passwordFromEmitter(pass: IPassword) {
-    this.password = pass.password;
+  /**
+  *  Returns how many words were entered in passphrase component.
+  */
+  getCountOfWordsEntered(): number {
+    const count = this.words.filter((value: string) => value).length;
+    this.log.d(`allWordsEntered() ${count} were entered!`);
+    return count;
   }
 
+  /**
+  *  Trigger password emit from restore password component
+  *  Which in turn will trigger the next step (see html)
+  */
+  restoreWallet() {
+    this.passwordRestoreElement.sendPassword();
+  }
+
+  /**
+  * Triggered when the password is emitted from PasswordComponent
+  */
+  passwordFromEmitter(pass: IPassword) {
+    this.password = pass.password;
+    this.log.d(`passwordFromEmitter: ${this.password}`);
+  }
+
+  /**
+  * Triggered when the password is emitted from PassphraseComponent
+  */
   wordsFromEmitter(words: string) {
     this.words = words.split(',');
   }

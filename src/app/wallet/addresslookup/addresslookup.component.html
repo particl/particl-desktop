@@ -1,42 +1,43 @@
-<h4 md-dialog-title> Address lookup </h4>
+<div md-dialog-title class="title">Address lookup</div>
 <div md-dialog-content>
-  <div class="containerX">
-    <form name="addressLookupfilter">
-      <div xLayout.lt-md="column" fxLayout.md="column" fxFlex="100%" fxLayout.lg="row" fxlayout.lt-sm="column"
-           fxLayout.sm="column" fxlayout.lt-xs="column" fxLayout.xs="column">
-        <md-form-field fxFlex="50%">
-          <input mdInput type="text" name="query"
-                 placeholder="Filter by label or address..."
-                 [(ngModel)]="query">
-        </md-form-field>
-        <md-select fxFlex="50%" name="filter" [(ngModel)]="filter" class="capitalize">
-          <md-option class="capitalize" *ngFor="let addressType of addressTypes" [value]="addressType">
-            {{ addressType }}
-          </md-option>
-        </md-select>
-      </div>
-    </form>
 
-    <md-list class="list-data">
-      <md-list-item class="list-header">
-        <div fxFlex="row" fxLayoutGap="10px" layout-padding >
-          <div fxFlex="20%"> Label</div>
-          <div fxFlex="60%">Address</div>
-          <div fxFlex="30%">Address Type</div>
+  <form name="addressLookupfilter">
+    <div fxLayout="row" fxLayoutGap="20px">
+
+      <md-form-field fxFlex="50" class="search-address">
+        <input mdInput type="text" name="query" placeholder="Filter by label or address..." [(ngModel)]="query">
+      </md-form-field>
+      
+      <md-select fxFlex="50" name="filter" [(ngModel)]="filter" class="address-type">
+        <md-option class="capitalize" *ngFor="let addressType of addressTypes" [value]="addressType">
+          {{ addressType }}
+        </md-option>
+      </md-select>
+
+    </div>
+  </form>
+
+  
+  <md-list class="list-data">
+
+    <md-list-item class="list-header">
+      <div class="address-list-header" fxFlex="row" fxLayoutGap="10px" layout-padding>
+        <div fxFlex="1 0 150px">Label</div>
+        <div fxFlex="1 1 300px">Address</div>
+        <div fxFlex="0 0 70px" class="text-right">Type</div>
+      </div>
+    </md-list-item>
+
+    <div *ngFor="let address of page()">
+      <md-divider></md-divider>
+      <md-list-item class="address-entry" (click)="onSelectAddress(address.getAddress(), address.getLabel())">
+        <div class="address-list" fxFlex="row" fxLayoutGap="10px" layout-padding>
+          <div fxFlex="1 0 150px" class="label">{{address.getLabel()}}</div>
+          <div fxFlex="1 1 300px" class="address">{{address.getAddress()}}</div>
+          <div fxFlex="0 0 70px" class="type text-right">{{cheatPublicAddress(address.getAddress())}}</div>
         </div>
       </md-list-item>
+    </div>
 
-      <div *ngFor="let address of page()">
-        <md-list-item class="cursor-pointer" (click)="onSelectAddress(address.getAddress(), address.getLabel())">
-          <div  fxFlex="row" fxLayoutGap="10px"
-               layout-padding>
-            <div fxFlex="20%">{{address.getLabel()}}</div>
-            <div fxFlex="60%" class="address">{{address.getAddress()}}</div>
-            <div fxFlex="30%">{{cheatPublicAddress(address.getAddress())}}</div>
-          </div>
-        </md-list-item>
-        <md-divider></md-divider>
-      </div>
-    </md-list>
-  </div>
+  </md-list>
 </div>

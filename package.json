@@ -1,6 +1,6 @@
 {
   "name": "particl",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "GPL-2.0",
   "description": "Particl Electron GUI - The source for the Particl GUI.",
   "keywords": [
@@ -22,8 +22,10 @@
     "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/packages/** && sass-lint -v",
     "e2e": "ng e2e",
     "build:electron:prod": "ng build --base-href=./ --env=prod",
+    "build:electron:fast": "ng build --base-href=./ --sourcemap=false",
     "build:electron": "ng build --base-href=./",
     "start:electron:dev": "electron . --dev",
+    "start:electron:fast": "npm run build:electron:fast && electron .",
     "start:electron": "npm run build:electron && electron .",
     "package:mac": "npm run build:electron:prod && electron-builder -m",
     "package:linux": "npm run build:electron:prod && electron-builder -l",
@@ -35,12 +37,19 @@
   },
   "productName": "Particl Wallet",
   "build": {
-    "electronVersion": "1.7.5",
+    "electronVersion": "1.7.9",
     "appId": "io.particl.partgui",
     "directories": {
       "buildResources": "resources",
       "output": "packages"
     },
+    "files": [
+      "main.js",
+      "preload.js",
+      "modules/**",
+      "dist/**",
+      "resources/**"
+    ],
     "mac": {
       "category": "public.app-category.wallet",
       "target": [
@@ -66,17 +75,18 @@
       ],
       "desktop": {
         "Comment": "Particl, P2P Privacy project",
-        "Exec": "/opt/particl/partgui %U",
-        "Icon": "Particl",
+        "Exec": "/opt/particl/particl %U",
+        "Icon": "particl",
         "Name": "Particl",
         "Path": "/opt/particl/",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
-        "Categories": "P2P;eCommerce;Development;"
+        "Categories": "P2P;Development;Finance"
       },
       "category": "ecommerce",
-      "packageCategory": "wallet"
+      "packageCategory": "wallet",
+      "icon": "resources/linux"
     },
     "asar": true
   },
@@ -95,7 +105,6 @@
     "@angular/router": "^4.4.6",
     "angular2-qrcode": "^2.0.1",
     "bluebird": "^3.4.7",
-    "bootstrap": "^3.3.7",
     "buffered-spawn": "^3.3.2",
     "core-js": "^2.4.1",
     "electron-log": "^2.2.10",
@@ -107,11 +116,9 @@
     "lodash.isempty": "^4.4.0",
     "lodash.values": "^4.3.0",
     "ng2-logger": "^1.0.3",
-    "ngx-bootstrap": "^1.8.0",
     "ngx-clipboard": "^8.0.3",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.2",
-    "protractor": "^5.2.0",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "5.5.0",
     "tmp": "0.0.33",

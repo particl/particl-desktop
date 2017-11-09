@@ -1,11 +1,61 @@
 @import "theme/partgui-theme";
 @import "./src/assets/_config"; // import shared colors etc.
 
+
+.TO_DO {
+  box-shadow: 0 0 3px 1px hotpink;
+}
+
+.widget-help { // help description
+  @extend .disable-select;
+  color: $text-muted;
+  font-size: 11px;
+  margin-bottom: 25px;
+  cursor: help;
+}
+
+
+.qrcode {
+  text-align: center;
+}
+
+.mat-select-panel { // select box fix
+  background: white;
+}
+
+.no-results { // search: no results
+  @extend .disable-select;
+  font-size: 18px;
+  color: darken($bg-shadow, 15%);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 170px 0;
+  border: 2px dashed $bg-shadow;
+  background: rgba(white, 0.5);
+}
+
+button {
+  .mat-icon {
+    width: auto;
+    height: auto;
+    margin-right: 5px;
+    position: relative;
+    top: -1px;
+  }
+}
+
+.actions {
+  button {
+    margin: 0 10px;
+  }
+}
+
 /**
  * Side bar Menu.
  */
 
  .mat-sidenav {
+   user-select: none;
   .logo-area {
     .mat-toolbar-row {
       justify-content: center;
@@ -17,39 +67,68 @@
       &:hover {
         background: darken(#222828, 1.5%);
         .mat-icon {
-          color: lighten(#4B4A4F, 10%) !important;
+          color: lighten(#4B4A4F, 10%);
         }
       }
       .mat-list-item-content {
         height: auto !important;
       }
+
     }
     &.sidesubmenu {
       a {
         text-decoration: none;
+        outline: none;
       }
       .mat-list-item-content {
         text-transform: uppercase;
         min-height: 40px;
+      }
+      &.error { // daemon/wallet error messages
+        .mat-list-item:hover {
+          background: none;
+          .mat-icon {
+            color: $color-alert;
+          }
+        }
+        .mat-list-item-content {
+          color: white;
+          font-size: 11px;
+          padding: 24px 16px;
+        }
+        .mat-icon {
+          color: $color-alert;
+          margin: 0 14px 0 0;
+        }
       }
     }
   }
   .mat-expansion-panel-body { // accordion menu
     padding: 0;
   }
+  .mat-expansion-panel {
+    .mat-expansion-indicator::after {
+      color: $text-muted;
+    }
+    &.mat-expanded {
+      .mat-expansion-indicator::after {
+        color: $color;
+      }
+    }
+  }
 }
 
-
-.header-main {
-  border-bottom: 1px solid #ddd;
-  background: #fff;
-}
-
-/*
 .active > md-list-item > div > md-icon {
-  color: #41ECC2 !important;
+  color: $color !important;
 }
-*/
+
+.header-main { // top header (page title with status icons)
+  @extend .disable-select;
+  border-bottom: 1px solid $bg-shadow;
+  background: #fff;
+  padding-left: 35px !important;
+  padding-right: 26px !important;
+}
 
 .containerX {
   width: 100%;
@@ -90,31 +169,24 @@
 
 
 /**
- *list
+ * list
  */
-.icon-input {
+.icon-input { // input with icon (eg. Search in Address Book)
   input.mat-input-element {
-    height: 29px;
+    height: 20px;
   }
   .mat-icon {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 2px;
+    width: auto;
+    height: auto;
+    font-size: 21px;
     cursor: pointer;
   }
   .mat-form-field-underline {
-    background-color: #ddd;
+    background-color: $bg-shadow;
   }
-  &:after {
-    content: '';
-    height: 30px;
-    width: 1px;
-    position: absolute;
-    left: -10px;
-    top: 10px;
-    background: #ddd;
-  }
-
 }
 
 .list-data {
@@ -165,14 +237,43 @@ input[type="text"] {
   border-left: 1px solid #ddd;
 }
 
-.container-block {
-  padding: 20px;
+.container-block { // main container for content
+  padding: 35px;
+}
+
+/**
+ * Scrollbars
+ */
+ 
+/* pseudo elements
+::-webkit-scrollbar              {}
+::-webkit-scrollbar-button       {}
+::-webkit-scrollbar-track        {}
+::-webkit-scrollbar-track-piece  {}
+::-webkit-scrollbar-thumb        {}
+::-webkit-scrollbar-corner       {}
+::-webkit-resizer                {}
+*/
+ 
+::-webkit-scrollbar-track {
+  border-radius: 15px;
+  background-color: #e9e9e9;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  width: 6px;
+  border-radius: 15px;
+  background-color: $color;
 }
 
 /**
  * History List
  */
-
+/*
 .history_longAddress {
   overflow: hidden;
   flex-wrap: nowrap;
@@ -194,26 +295,7 @@ input[type="text"] {
   align-items: center;
 }
 
-
-.history-list {
-  .history_cat_icon {
-    .mat-icon {
-      margin-right: 8px;
-    }
-  }
-  .history_container {
-    > div {
-      min-height: 25px;
-      > div {
-        margin-right: 10px;
-      }
-      .highlight {
-        text-align: right;
-      }
-    }
-  }
-}
-
+*/
 .md-right {
   text-align: right;
   text-overflow: ellipsis;
@@ -221,38 +303,46 @@ input[type="text"] {
   overflow: hidden;
   height: 18px;
 }
-.cold-icon {
-  font-size: 1em !important;
-}
 
-/**
- * Dialog style
- */
-.mat-dialog-container {
-  max-width: 100% !important;
-  background: transparent !important;
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  position: relative;
-  .close_button {
-    position: absolute;
-    right: 0px;
-    top: 5px;
-    background: transparent;
-    color: #999;
-    min-width: 50px;
-    &:hover {
-      color: #222;
+/* ------------------------------- *\
+    Dialogs
+\* ------------------------------- */
+
+.cdk-overlay-container {
+  .mat-dialog-container {
+    position: relative;
+    max-width: 800px;
+    height: calc(100% - 24px);
+    margin: 24px auto auto auto;
+    .close_button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 25px 38px;
+      background: transparent;
+      color: $text-muted;
+      min-width: 50px;
+      .mat-icon {
+        color: rgba($color-alert, 0.5);
+        border-radius: 50%;
+        font-size: 24px;
+        line-height: 1.4;
+        margin: 0;
+      }
+      &:hover {
+        .mat-icon {
+          color: $color-alert;
+        }
+      }
+    }
+    .md-wallet-content {
+      max-height: 100% !important;
     }
   }
-  .md-wallet-content {
-    max-height: 100% !important;
-  }
 }
 
-.create-wallet-action-button {
-  min-width: 145px !important;
-  margin: 12px !important;
-}
+
+
 .form_block {
   width: 60%;
   .mat-form-field {
@@ -278,32 +368,25 @@ input[type="text"] {
 }
 
 .error {
-  color: #ec4b50;
+  color: $color-alert;
 }
 
 .hr-light {
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid $bg-shadow;
   margin: 20px 0;
 }
+
 input[type="text"].md-bg-transparent {
   background-color: transparent !important;
 }
 
 .md-send-list {
-  .mat-select-trigger{ height: 37px; }
-}
-
-.header-nav {
-  list-style-type: none;
-  padding: 0;
-  li {
-    font-size: 16px;
-    font-weight: normal;
-    text-transform: uppercase;
-    color: $text-muted;
+  .mat-select-trigger{
+    height: 23px;
   }
 }
+
 panel-header-title {
   display: block;
 }
@@ -319,14 +402,47 @@ panel-header-title {
 }
 
 
-@media (max-width: 1280px) {
-  .qrcode {
-    text-align: center;
-    img {
-      width: 127px;
-      height: 127px;
+/* ------------------------------- *\
+    Pagination
+\* ------------------------------- */ 
+
+.mat-paginator {
+  margin-top: 40px;
+  border-bottom: 1px solid $bg-shadow;
+  font-family: $font;
+  .mat-icon-button {
+    &:hover {
+      background-color: $color;
+      border-radius: $radius;
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: white;
+      }
+    }
+    &[disabled] {
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: $bg-shadow;
+      }
+      &:hover {
+        background-color: transparent;
+      }
     }
   }
+}
+
+
+
+.syncing_header_text{
+  width: 65%;
+  text-align: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+@media (max-width: 1280px) {
   .md-left-border {
     border-left: none;
     justify-content: flex-start !important;
@@ -363,8 +479,6 @@ panel-header-title {
       }
     }
   }
-
-
 }
 
 
@@ -374,15 +488,7 @@ panel-header-title {
     flex-direction: column !important;
     width: 100%;
   }
-
 }
 
 @media (max-width: 640px) {
-  .qrcode {
-    text-align: center;
-    img {
-      height: auto;
-      max-width: 100%;
-    }
-  }
 }

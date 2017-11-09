@@ -42,8 +42,11 @@ function createWindow () {
 function initMainWindow(trayImage) {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1280,
+    width: 1270, // on Win, the width of app is few px smaller than it should be => triggers smaller breakpoints; this size should cause the same layout results on all OSes
+    minWidth: 961,
+    maxWidth: 1920,
     height: 720,
+    resizable: false,
     icon: trayImage,
     webPreferences: {
       nodeIntegration: false,
@@ -90,7 +93,8 @@ function initMainWindow(trayImage) {
 function makeTray() {
 
   // Default tray image + icon
-  let trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
+  let trayImage = path.join(__dirname, 'resources/icon.png');
+
 
   // Determine appropriate icon for platform
   // if (platform === 'darwin') {
@@ -172,6 +176,11 @@ function makeTray() {
   // Set the tray icon
   tray.setToolTip('Particl ' + app.getVersion());
   tray.setContextMenu(contextMenu)
+
+  // Always show window when tray icon clicked
+  tray.on('click',function() {
+    mainWindow.show();
+  });
 
   return trayImage;
 }

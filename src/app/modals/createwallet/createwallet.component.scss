@@ -1,3 +1,39 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+@import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
+
+
+.actions {
+  margin-bottom: 80px;
+}
+
+/* ------------------------------- *\
+    Step 0: Choose action
+\* ------------------------------- */
+
+.section {
+  &.encrypt-first {
+    text-align: center;
+  }
+  &.create-restore {
+    text-align: center;
+  }
+  &.go-back {
+    margin-bottom: 20px;
+  }
+}
+
+
+/* ------------------------------- *\
+    Step 1: Create/Restore
+\* ------------------------------- */
+
+
+/* ------------------------------- *\
+    Step 2: Recovery Phrase
+\* ------------------------------- */
+
+
 /deep/ app-password > div {
   margin-top: 20px;
 }
@@ -6,31 +42,3 @@
   max-width: 100%;
 }
 
-.alert {
-  margin-bottom: 0;
-}
-
-.align-center {
-  text-align: center;
-}
-
-.create-wallet-action-button {
-  margin: 3px;
-}
-
-.mat-dialog-content {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.gap50 {
-  height: 50px;
-}
-
-@media only screen and (max-width: 480px) {
-  .wallet-buttons-container button {
-    float: none;
-    display: block;
-    margin: 10px auto 0;
-  }
-}

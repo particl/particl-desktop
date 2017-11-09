@@ -11,7 +11,7 @@ import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { FlashNotificationService } from '../../../services/flash-notification.service';
 import { ModalsService } from '../../../modals/modals.service';
-import { ModalsComponent } from '../../../modals/modals.component';
+import { SignatureAddressModalComponent } from '../signature-address-modal/signature-address-modal.component';
 
 @Component({
   selector: 'address-table',
@@ -52,6 +52,8 @@ export class AddressTableComponent implements OnInit {
   // Pagination
   currentPage: number = 1;
   @Input() addressDisplayAmount: number = 5;
+  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  MAX_ADDRESSES_PER_PAGE: number = 5;
 
   log: any = Log.create('address-table.component');
 
@@ -144,7 +146,8 @@ export class AddressTableComponent implements OnInit {
 
   private rpc_deleteAddress_success(json: Object) {
     this.flashNotification.open(`Succesfully deleted ${json['address']}`);
-    this._rpc.specialPoll();
+    // this._rpc.specialPoll();
+    this._addressService.updateAddressList();
   }
 
   /** Edit label address */
@@ -162,6 +165,24 @@ export class AddressTableComponent implements OnInit {
 
   showAddress(address: string) {
     return  address.match(/.{1,4}/g);
+  }
+
+  pageChanged(event: any) {
+    if (event.pageIndex !== undefined) {
+      this.MAX_ADDRESSES_PER_PAGE = event.pageSize;
+      this.currentPage = event.pageIndex + 1;
+      this.log.d(event.pageIndex);
+    }
+  }
+
+  copyToClipBoard() {
+    this.flashNotification.open('Address copied to clipboard.', '');
+  }
+
+  openSignatureModal(address: string): void {
+    const dialogRef = this.dialog.open(SignatureAddressModalComponent);
+    dialogRef.componentInstance.formData.address = address;
+    dialogRef.componentInstance.type = 'verify';
   }
 }
 

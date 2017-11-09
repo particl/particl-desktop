@@ -1,7 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angular2-qrcode';
-import { ModalModule } from 'ngx-bootstrap';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -22,7 +21,8 @@ import { AddressLookupComponent } from './addresslookup/addresslookup.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule,
-  MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdProgressBarModule,
+  MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule, MdListModule, MdPaginatorModule,
+  MdProgressBarModule,
   MdProgressSpinnerModule,
   MdRadioModule,
   MdSelectModule,
@@ -35,6 +35,8 @@ import { NewAddressModalComponent } from './address-book/modal/new-address-modal
 import { QrCodeModalComponent } from './shared/qr-code-modal/qr-code-modal.component';
 import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SignatureAddressModalComponent } from './shared/signature-address-modal/signature-address-modal.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 const routes: Routes = [
   {
@@ -50,10 +52,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forChild(routes),
     SharedModule,
-    ModalModule.forRoot(),
     QRCodeModule,
     FormsModule,
     ReactiveFormsModule,
@@ -72,7 +74,8 @@ const routes: Routes = [
     MdInputModule,
     MdCheckboxModule,
     MdRadioModule,
-    MdProgressSpinnerModule
+    MdProgressSpinnerModule,
+    MdPaginatorModule
   ],
   declarations: [
     TransactionsTableComponent,
@@ -86,7 +89,8 @@ const routes: Routes = [
     AddAddressLabelComponent,
     NewAddressModalComponent,
     QrCodeModalComponent,
-    SendConfirmationModalComponent
+    SendConfirmationModalComponent,
+    SignatureAddressModalComponent
   ],
   exports: [
     TransactionsTableComponent,
@@ -98,7 +102,8 @@ const routes: Routes = [
     NewAddressModalComponent,
     QrCodeModalComponent,
     AddressLookupComponent,
-    SendConfirmationModalComponent
+    SendConfirmationModalComponent,
+    SignatureAddressModalComponent
   ],
   providers: []
 })

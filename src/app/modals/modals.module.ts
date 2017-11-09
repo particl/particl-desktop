@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalModule, TooltipModule } from 'ngx-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { ModalsService } from './modals.service';
@@ -21,7 +20,7 @@ import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component'
 import { AlertComponent } from './shared/alert/alert.component';
 import {
   MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule, MdProgressBarModule,
-  MdTooltipModule
+  MdTooltipModule, MdProgressSpinnerModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FlashNotificationService } from '../services/flash-notification.service';
@@ -40,10 +39,9 @@ import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.c
     MdIconModule,
     MdInputModule,
     MdCheckboxModule,
-    ModalModule,
+    MdProgressSpinnerModule,
     MdTooltipModule,
     MdProgressBarModule,
-    TooltipModule,
     ClipboardModule
   ],
   declarations: [

@@ -1,10 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ColdstakeComponent } from './coldstake.component';
+import { ModalsModule } from '../../../modals/modals.module';
 import { SharedModule } from '../../../shared/shared.module';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdCardModule } from '@angular/material';
+import { MdCardModule, MdProgressBarModule } from '@angular/material';
 
 describe('ColdstakeComponent', () => {
   let component: ColdstakeComponent;
@@ -13,9 +15,14 @@ describe('ColdstakeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
+        /* deps */
         FlexLayoutModule,
-        MdCardModule
+        MdCardModule,
+        MdProgressBarModule,
+        /* own */
+        SharedModule,
+        ModalsModule,
+        RpcModule.forRoot()
       ],
       declarations: [ ColdstakeComponent ]
     })

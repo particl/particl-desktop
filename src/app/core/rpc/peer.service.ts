@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer, Subscription } from 'rxjs'; // use this for testing atm
+import { Log } from 'ng2-logger';
 
 import { RPCService } from './rpc.service';
 
 @Injectable()
 export class PeerService {
+
+  private log: any = Log.create('peer.service');
+
   // TODO: Peer interface
   private _peerList: Observable<Array<Object>>;
   private _observerPeerList: Observer<Array<Object>>;
@@ -28,24 +32,31 @@ export class PeerService {
 
     // setup observable for network block height
     this._highestBlockHeightNetwork = Observable.create(
-      observer => {
-        this._observerHighestBlockHeightNetwork = observer
-      }
+      observer => this._observerHighestBlockHeightNetwork = observer
     ).publishReplay(1).refCount();
 
     this._highestBlockHeightNetwork.subscribe().unsubscribe();
 
-    // Subscribe to connections state
-    this._rpc.state.observe('connections')
-      .subscribe(_ => this._rpc.call('getpeerinfo')
-        .subscribe((peerinfo: Array<Object>) => {
-          this.setPeerList(peerinfo);
-        }));
+    /* Initiate peer list loop */
+    this.updatePeerListLoop();
+
+  }
+
+  /** A loop that will update the peerlist, required for blockstatus */
+  private updatePeerListLoop() {
+    this.log.d(`updatePeerListLoop(): updating peerlist`);
+
+    this._rpc.call('getpeerinfo').subscribe(
+      (peerinfo: Array<Object>) => this.setPeerList(peerinfo),
+      error => this.log.er(`updatePeerListLoop(): getpeerinfo error ${error}`)
+    );
+
+    setTimeout(this.updatePeerListLoop.bind(this), 10000);
   }
 
   private setPeerList(peerList: Array<Object>) {
 
-    // hook network block height changes
+    // update network block height changes
     this._observerHighestBlockHeightNetwork.next(this.calculateBlockCountNetwork(peerList));
 
     this._observerPeerList.next(peerList);

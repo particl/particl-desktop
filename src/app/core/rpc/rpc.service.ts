@@ -54,12 +54,14 @@ export class RPCService {
 
   private log: any = Log.create('rpc.service');
 
-  public modalUpdates: Subject<any> = new Subject<any>();
+  /** errors gets updated everytime the stateCall RPC requests return an error */
+  public errorsStateCall: Subject<any> = new Subject<any>();
+
   private _rpcState: RPCStateClass;
 
   constructor(
-    private http: Http,
-    private rpx: RPXService,
+    private _http: Http,
+    private _rpx: RPXService,
     public state: StateService
   ) {
     this.isElectron = window.electron;
@@ -68,7 +70,7 @@ export class RPCService {
   }
 
   /**
-    * The call function will perform a single call to the particld daemon and perform a callback to
+    * The call method will perform a single call to the particld daemon and perform a callback to
     * the instance through the function as defined in the params.
     *
     * @param {string} method  The JSON-RPC method to call, see ```./particld help```
@@ -77,77 +79,93 @@ export class RPCService {
     *
     * @example
     * ```JavaScript
-    * this._rpc.call('listtransactions', [0, 20]);
+    * this._rpc.call('listtransactions', [0, 20]).subscribe(
+    *              success => ...,
+    *              error => ...);
     * ```
     * TODO: Response interface
     */
   call(method: string, params?: Array<any> | null): Observable<any> {
 
     if (this.isElectron) {
-      return this.rpx.runCommand('backend-rpccall', null, method, params)
-        .map(response => response && response.result ? response.result : response);
+      return this._rpx.runCommand('rpc-channel', null, method, params)
+      .map(response => response && (response.result !== undefined) ? response.result : response);
 
     } else {
+      // Running in browser, delete?
       const postData = JSON.stringify({
         method: method,
         params: params,
         id: 1
-      }),
-      headers = new Headers();
+      });
 
+      const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
       headers.append('Accept', 'application/json');
 
-      return this.http
-        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+      return this._http
+      .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
         .map(response => response.json().result)
         .catch(error => Observable.throw(
           typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
     }
   }
 
+  /**
+    * Make an RPC Call that saves the response in the state service.
+    *
+    * @param {string} method  The JSON-RPC method to call, see ```./particld help```
+    * @param {boolean>} withMethod  Should the state be saved under the method name.
+    *   i.e.: {rpcMethod: response}
+    *
+    * The rpc call and state update will only take place while `this._enableState` is `true`
+    *
+    * @example
+    * ```JavaScript
+    * this._rpc.stateCall('getwalletinfo');
+    * ```
+    */
   stateCall(method: string, withMethod?: boolean): void {
+
     if (!this._enableState) {
       return;
     }
+
     this.call(method)
-      .subscribe(
-        this.stateCallSuccess.bind(this, withMethod ? method : false),
-        this.stateCallError  .bind(this, withMethod ? method : false));
+    .subscribe(
+      this.stateCallSuccess.bind(this, withMethod ? method : false),
+      this.stateCallError  .bind(this, withMethod ? method : false, false));
   }
 
+  /** Register a state call, executes every X seconds (timeout) */
   registerStateCall(method: string, timeout?: number, params?: Array<any> | null): void {
     if (timeout) {
-      let first = true;
+      let firstError = true;
+
+      // loop procedure
       const _call = () => {
         if (!this._enableState) {
+          // re-start loop after timeout - keep the loop going
+          setTimeout(_call, timeout);
           return;
         }
         this.call(method, params)
           .subscribe(
             success => {
               this.stateCallSuccess(success);
-              this.modalUpdates.next({
-                response: success,
-                electron: this.isElectron
-              });
+
+              // re-start loop after timeout
               setTimeout(_call, timeout);
             },
             error => {
-              this.stateCallError(error);
+              this.stateCallError(error, method, firstError);
 
-              // if not first error, pop up error box
-              if (!first) {
-                this.modalUpdates.next({
-                  error: error.target ? error.target : error,
-                  electron: this.isElectron
-                });
-              }
-              setTimeout(_call, first ? 150 : error.status === 0 ? 500 : 10000);
-              first = false;
+              setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
+              firstError = false;
             });
       }
+      // initiate loop
       _call();
     } else {
       this.state.observe('blocks') .subscribe(success => this.stateCall(method, true));
@@ -155,7 +173,10 @@ export class RPCService {
     }
   }
 
+  /** Updates the state whenever a state call succeeds */
   private stateCallSuccess(success: any, method?: string | boolean) {
+    this.errorsStateCall.next(true); // Let's keep it simple
+
     if (method) {
       if (success) {
         const obj = {};
@@ -169,13 +190,32 @@ export class RPCService {
     if (success) {
       Object.keys(success).forEach(key => this.state.set(key, success[key]))
     } else {
-      this.log.er('Should not be null, ever!', success, method);
+      this.log.er('stateCallSuccess(): Should not be null, ever!', success, method);
     }
   }
 
-  private stateCallError(error: Object, method?: string) {
-    this.log.er('RPC Call returned an error', error);
+  /** Updates the state when the state call errors */
+  private stateCallError(error: any, method: string, firstError: boolean) {
+    this.log.er(`stateCallError(): RPC Call ${method} returned an error:`, error);
+
+    // if not first error, show modal
+    if (!firstError) {
+      this.errorsStateCall.error({
+        error: error.target ? error.target : error,
+        electron: this.isElectron
+      });
+    }
   }
+
+  toggleState(enable?: boolean): void {
+    this._enableState = enable ? enable : !this._enableState;
+    if (this._enableState) {
+      // We just execute it.. Might convert it to a service later on
+      this._rpcState = new RPCStateClass(this);
+    }
+  }
+
+  // Old stuff - TODO: address service still relies on register
 
   /**
     * The call function will perform a single call to the particld daemon and perform a callback to
@@ -208,22 +248,22 @@ export class RPCService {
     isPoll?: boolean,
     isLast?: boolean
   ): void {
-    this.call(method, params)
-      .subscribe(
-        response => {
-          successCB.call(instance, response);
-          if (isPoll && isLast) {
-            this._callOnPoll.forEach((func) => func());
-            this._callOnNextPoll.forEach((func) => func());
-            this._callOnNextPoll = [];
-          }
-        },
-        error => {
-          if (errorCB) {
-            errorCB.call(instance, error.target ? error.target : error);
-          }
-          this.log.er('RPC Call returned an error', error);
-        });
+    this.call(method, params).subscribe(
+      response => {
+        successCB.call(instance, response);
+         if (isPoll && isLast) {
+          this._callOnPoll.forEach((func) => func());
+          this._callOnNextPoll.forEach((func) => func());
+          this._callOnNextPoll = [];
+        }
+      },
+      error => {
+        if (errorCB) {
+          errorCB.call(instance, error.target ? error.target : error);
+        }
+        this.log.er(`oldCall: RPC Call returned an error`, error);
+      }
+    );
   }
 
   /**
@@ -251,8 +291,6 @@ export class RPCService {
     *     console.log(response);
     *   });
     * ```
-    *
-    * @returns      void
     */
   register(
     instance: Injectable,
@@ -297,16 +335,7 @@ export class RPCService {
     */
   specialPoll(): void {
     // A poll only for address changes, triggered from the GUI!
-
     this._callOnAddress.forEach(this._pollCall.bind(this));
-  }
-
-  toggleState(enable?: boolean): void {
-    this._enableState = enable ? enable : !this._enableState;
-    if (this._enableState) {
-      // We just execute it.. Might convert it to a service later on
-      this._rpcState = new RPCStateClass(this);
-    }
   }
 }
 

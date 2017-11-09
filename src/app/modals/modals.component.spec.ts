@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ModalModule } from 'ngx-bootstrap';
 
 import { ModalsModule } from './modals.module';
 import { RpcModule } from '../core/rpc/rpc.module';
@@ -22,7 +21,6 @@ describe('ModalsComponent', () => {
       imports: [
         MdDialogModule,
         ModalsModule,
-        ModalModule.forRoot(),
         SharedModule,
         RpcModule.forRoot(),
         MdSnackBarModule

@@ -4,6 +4,7 @@ import { TransactionService } from '../transaction.service';
 import { Transaction } from '../transaction.model';
 
 import { slideDown } from '../../../core/core.animations';
+import { PageEvent } from '@angular/material';
 
 @Component({
   selector: 'transaction-table',
@@ -37,9 +38,11 @@ export class TransactionsTableComponent implements OnInit {
 
   @Input() display: any;
 
+  // MatPaginator Output
+  pageEvent: PageEvent;
 
   /*
-    This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmount() + tx.category).
+    This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmountObject().getAmount() + tx.category).
     If the unique identifier is present, then the details will be expanded.
   */
   private expandedTransactionID: string = undefined;
@@ -57,11 +60,10 @@ export class TransactionsTableComponent implements OnInit {
   }
 
   public pageChanged(event: any): void {
-    this.txService.changePage(event.page);
-
-    this.log.d('Page changed to:', event.page);
-    this.log.d('Number items per page:', event.itemsPerPage);
-
+    this.log.d('pageChanged:', event);
+    this.txService.MAX_TXS_PER_PAGE = event.pageSize;
+    // increase page index because its start from 0
+    this.txService.changePage(event.pageIndex++);
   }
 
   public showExpandedTransactionDetail(tx: Transaction) {
@@ -76,4 +78,5 @@ export class TransactionsTableComponent implements OnInit {
   public checkExpandDetails(tx: Transaction) {
     return (this.expandedTransactionID === tx.getExpandedTransactionID());
   }
+
 }

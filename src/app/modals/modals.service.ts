@@ -25,9 +25,8 @@ export class ModalsService {
   private isOpen: boolean = false;
   private manuallyClosed: any[] = [];
 
-  // Is true if user already has a wallet (imported seed or created wallet)
+  /* True if user already has a wallet (imported seed or created wallet) */
   public initializedWallet: boolean = false;
-
   private data: string;
 
   private log: any = Log.create('modals.service');
@@ -44,26 +43,26 @@ export class ModalsService {
   constructor (
     private _blockStatusService: BlockStatusService,
     private _rpc: RPCService,
-    private dialog: MdDialog
+    private _dialog: MdDialog
   ) {
-    // open syncing modal
+
+    /* Hook BlockStatus -> open syncing modal */
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
       this.openSyncModal(status);
     });
 
+    /* Hook wallet initialized -> open createwallet modal */
     this.openInitialCreateWallet();
 
-    // open daemon model on error
-    this._rpc.modalUpdates.asObservable().subscribe(status => {
-      if (status.error) {
-        this.enableClose = true;
-        this.open('daemon', status);
-        // no error and daemon model open -> close it
-      } else if (this.wasAlreadyOpen('daemon')) {
-        this.close();
-      }
-    });
+    /* Hook daemon errors -> open daemon modal */
+    this._rpc.errorsStateCall.asObservable()
+    .subscribe(
+      status => this.wasAlreadyOpen('daemon') && this.close(),
+      error => {
+          this.enableClose = true;
+          this.open('daemon', error);
+      });
   }
 
   /**
@@ -72,7 +71,7 @@ export class ModalsService {
     * @param {any} data       Optional - data to pass through to the modal.
     */
   open(modal: string, data?: any): void {
-    const dialogRef = this.dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
+    const dialogRef = this._dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
     if (modal in this.messages) {
       if (
         (data && data.forceOpen)
@@ -81,7 +80,7 @@ export class ModalsService {
         if (!this.wasAlreadyOpen(modal)) {
           this.log.d(`next modal: ${modal}`);
           this.modal = this.messages[modal];
-          dialogRef.componentInstance.open(this.modal, {data: data});
+          dialogRef.componentInstance.open(this.modal, data);
           // this.message.next({modal: this.modal, data: data});
           this.isOpen = true;
           dialogRef.componentInstance.enableClose = true;
@@ -118,23 +117,11 @@ export class ModalsService {
     return this.manuallyClosed.includes(modal);
   }
 
-  getMessage() {
-    return (this.message.asObservable());
-  }
-
+  /** Check if the modal is already open */
   wasAlreadyOpen(modalName: string) {
     return (this.modal === this.messages[modalName]);
   }
 
-  storeData(data: any) {
-    this.data = data;
-  }
-
-  getData() {
-    const data: any = this.data;
-    this.data = undefined;
-    return (data);
-   }
 
   /** Get progress set by block status */
   getProgress() {
@@ -155,9 +142,11 @@ export class ModalsService {
     }
   }
 
-  /** Initial wallet creation */
+  /**
+    * Open the Createwallet modal if wallet is not initialized
+    */
   openInitialCreateWallet() {
-    this._rpc.state.observe('walletInitialized')
+    this._rpc.state.observe('ui:walletInitialized')
       .subscribe(
         state => {
           this.initializedWallet = state;

@@ -74,10 +74,10 @@ export class PasswordComponent {
   clear() {
     this.password = undefined;
   }
-  /*
-    Emit password!
-  */
 
+  /**
+  * Emit password only!
+  */
   sendPassword() {
     const pass: IPassword = {
       password: this.password,
@@ -117,7 +117,7 @@ export class PasswordComponent {
         },
         error => {
           this.log.i('rpc_unlock_failed: unlock failed - wrong password?', error);
-          this.flashNotification.open('Unlock failed - password was incorrect');
+          this.flashNotification.open('Unlock failed - password was incorrect', 'err');
         });
   }
 
