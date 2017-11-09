@@ -16,7 +16,7 @@ import { MdDialog} from '@angular/material';
 export class StatusComponent implements OnInit {
 
   peerListCount: number = 0;
-  public coldStakingStatus: string;
+  public coldStakingStatus: boolean;
   public encryptionStatus: string = 'Locked';
   private _sub: Subscription;
 
@@ -65,7 +65,7 @@ export class StatusComponent implements OnInit {
     }
   }
 
-  getColdstakingStatus() {
+  getColdStakingStatus() {
     return (this.coldStakingStatus) ? 'enabled' : 'disabled';
   }
 
