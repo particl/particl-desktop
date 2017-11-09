@@ -26,10 +26,6 @@ export class ColdstakeComponent implements OnInit {
   ) {
     this._rpc.state.observe('ui:coldstaking')
     .subscribe(status => this.coldStakingEnabled = status);
-    this._rpc.state.observe('locked')
-    .subscribe(status => this.coldStakingEnabled = (
-      this.coldStakingEnabled ? this.coldStakingEnabled : (
-        status ? undefined : this._rpc.state.get('ui:coldstaking'))));
 
     this.rpc_progressLoop();
   }
