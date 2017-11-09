@@ -15,7 +15,8 @@
   <span
     mdTooltip="Cold staking {{ getColdStakingStatus() }}"
     placement="left"
-    [ngClass]="{'staking icon': getColdStakingStatus()}"
+    class='staking icon'
+    [ngClass]="getColdStakingStatus()"
     container="body">
       <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
   </span>
