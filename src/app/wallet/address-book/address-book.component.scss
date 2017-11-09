@@ -2,12 +2,14 @@
 
 app-header {
   button.add-address {
+    padding: 3px 16px;
     md-icon {
-      font-size: 28px;
+      font-size: 20px;
       width: auto;
       height: auto;
       margin-right: 6px;
       line-height: 1.5;
+      top: 0;
     }
     span {
       color: $text;
