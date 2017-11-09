@@ -101,7 +101,8 @@ function getAuth(options) {
 
   let auth;
   const COOKIE_FILE = findCookiePath()
-                    + options.testnet ? '/testnet' : '' + '/.cookie';
+                    + (options.testnet ? '/testnet' : '')
+                    + '/.cookie';
 
   if (fs.existsSync(COOKIE_FILE)) {
     auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();

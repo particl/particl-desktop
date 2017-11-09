@@ -14,7 +14,7 @@ exports.start = function (mainWindow) {
     .then(()            => log.info('daemon already started'))
     .catch(()           => daemonManager.init())
     .then(()            => multiwallet.get())
-    .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
+    // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
     .then(chosenWallets => daemon.start(chosenWallets, () => log.info('daemon started')))
     .then(()            => ipc.daemonReady(mainWindow.webContents))
 }
