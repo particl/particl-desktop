@@ -27,16 +27,14 @@ input[type="text"] {
   padding: 0;
   margin-bottom: 12px;
   border-bottom: 0px solid $bg-shadow;
-}
-
-.mat-card .send {
-  padding: 0px 0px 20px 0px;
-}
-
-.mat-card h5 {
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 12px;
+  .send {
+    padding: 0 0 20px 0;
+  }
+  h5 {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+  }
 }
 
 .mat-input-element {
@@ -64,16 +62,6 @@ input[type="text"] {
   min-height: 14vh;
   height: auto;
   font-family: $font;
-}
-
-.md-tab-right {
-  float: right;
-}
-
-.nc-circle-remove, .nc-copy-2, .nc-multiple-19 {
-  width: auto;
-  height: auto;
-  font-size: 16px;
 }
 
 .balance-label {
