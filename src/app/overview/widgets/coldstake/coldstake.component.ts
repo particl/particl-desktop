@@ -35,7 +35,7 @@ export class ColdstakeComponent implements OnInit {
 
   /** calls listunspent, then calculate progress. */
   private rpc_progressLoop() {
-    
+
     if (this.coldStakingEnabled) {
       this._rpc.call('listunspent')
         .subscribe(
@@ -56,7 +56,7 @@ export class ColdstakeComponent implements OnInit {
       // TODO: Handle error appropriately
       error => this.log.er('rpc_progressLoop: listunspent failed', error));
     }
-    
+
     if (this.coldstakeProgress < 100) {
       setTimeout(this.rpc_progressLoop.bind(this), 1000);
     }
