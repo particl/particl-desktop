@@ -5,7 +5,7 @@
     </ul>
   </app-header>
 
-  <md-card *ngIf="isColdStakingEnabled() === undefined" class="staking-node" >
+  <md-card *ngIf="coldStakingEnabled === undefined" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status inactive">Unlock to check</span>
     </div>
@@ -14,7 +14,7 @@
     </button>
   </md-card>
 
-  <md-card *ngIf="isColdStakingEnabled() === false" class="staking-node" >
+  <md-card *ngIf="coldStakingEnabled === false" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status inactive">inactive</span>
     </div>
@@ -23,16 +23,52 @@
     </button>
   </md-card>
 
-  <md-card *ngIf="isColdStakingEnabled()" class="staking-node">
+  <p class="widget-help" *ngIf="!coldStakingEnabled">
+    Cold staking allows you to spend from one machine and stake from another, this greatly increases the safety of your coins.
+  </p>
+
+  <!-- Edit cold stake key, might be useful for later.
+  <md-card *ngIf="false" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status active">active</span>
     </div>
     <button class="mat-button secondary pull-left" (click)="openColdStakeModal()" mdTooltip="Edit Cold Staking node key">
       <md-icon fontSet="partIcon" fontIcon="part-pen-01"></md-icon>
     </button>
+  </md-card> -->
+
+
+  <!-- if cold staking is under 100% progress -->
+  <md-card *ngIf="coldStakingEnabled" class="staking-node">
+    <div class="title">
+      Cold Staking Progress <span class="status active">{{coldstakeProgress}}%</span>
+    </div>
+    <md-progress-bar
+      class="progress-bar-bottom"
+      [color]="'primary'"
+      [bufferValue]="coldstakeProgress"
+      [mode]="'determinate'"
+      [value]="coldstakeProgress">
+    </md-progress-bar>
+
+    <p class="widget-help" *ngIf="coldStakingEnabled">
+      Please keep this wallet online until the cold staking activation process is complete.
+    </p>
   </md-card>
 
+
+  <!-- if Cold staking is at 100% show Disable button etc.
+  <md-card *ngIf="????" class="staking-node">
+    <div class="title">
+      Cold Staking Node <span class="status inactive">active</span>
+    </div>
+    <button class="mat-raised-button mat-primary pull-left" (click)="??????" mdTooltip="Disable Cold Staking">
+      <md-icon fontSet="partIcon" fontIcon="part-simple-delete"></md-icon>
+    </button>
+  </md-card>
   <p class="widget-help">
-    Cold staking allows you to spend from one machine and stake from another, this greatly increases the safety of your coins.
-  </p>
+    You can now turn of this wallet as cold staking is fully activated.
+  </p-->
+
+
 </div><!-- .cold-staking -->
