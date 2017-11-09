@@ -76,13 +76,13 @@
       "desktop": {
         "Comment": "Particl, P2P Privacy project",
         "Exec": "/opt/particl/particl %U",
-        "Icon": "Particl",
+        "Icon": "particl",
         "Name": "Particl",
         "Path": "/opt/particl/",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
-        "Categories": "P2P;eCommerce;Development;"
+        "Categories": "P2P;Development;Finance"
       },
       "category": "ecommerce",
       "packageCategory": "wallet",
