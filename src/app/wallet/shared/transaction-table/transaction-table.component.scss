@@ -19,6 +19,7 @@
   }
   .mat-expansion-panel-header-title {
     text-transform: uppercase;
+    font-family: $font;
   }
 
   // TX date/time
@@ -105,6 +106,7 @@
   padding: 5px 0;
   color: $text-muted;
   font-size: 13px;
+  font-family: $font;
   // to/from address
   .to-from-address {
     font-family: monospace;
