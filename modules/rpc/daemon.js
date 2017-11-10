@@ -138,8 +138,10 @@ function stopDaemon() {
   return new Promise((resolve, reject) => {
     rpcCall('stop', null, null, (error, response) => {
       if (error) {
+        log.debug('Daemon stopped gracefully');
         reject();
       } else {
+        log.error('Calling SIGINT!');
         resolve();
       }
     });
