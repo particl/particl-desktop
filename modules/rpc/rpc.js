@@ -148,3 +148,4 @@ function checkDaemon(options) {
 
 exports.init = init;
 exports.checkDaemon = checkDaemon;
+exports.rpcCall = rpcCall;
