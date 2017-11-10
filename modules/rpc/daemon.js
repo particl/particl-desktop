@@ -136,24 +136,35 @@ function getOptions() {
 
 function stopDaemon() {
   return new Promise((resolve, reject) => {
-    rpcCall('stop', null, null, (error, response) => {
+    rpc.rpcCall('stop', null, null, (error, response) => {
       if (error) {
+        log.error('Calling SIGINT!');
         reject();
       } else {
+        log.debug('Daemon stopped gracefully');
         resolve();
       }
     });
   });
 }
 
-electron.app.on('quit', function (event, exitCode) {
-  console.log('stopping')
+electron.app.on('before-quit', function beforeQuit(event, exitCode) {
   electron.ipcMain.removeAllListeners(['rpc-channel']); // Remove all ipc listeners
-  // kill the particl daemon if initiated on launch
+
+  // stop the particl daemon if initiated on launch
   if (daemon && !daemon.exitCode) {
+    event.preventDefault();
+    electron.app.removeListener('before-quit', beforeQuit);
     stopDaemon()
-      .catch(() => daemon.kill('SIGINT'));
+      .then(electron.app.quit)
+      .catch(() => {
+        daemon.kill('SIGINT');
+        electron.app.quit();
+      });
   }
+});
+
+electron.app.on('quit', function(event, exitCode) {
   if (exitCode === 991) {
     throw Error('Could not connect to daemon.');
   }
