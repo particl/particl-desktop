@@ -54,6 +54,9 @@ button {
  * Side bar Menu.
  */
 
+.mat-drawer-content {
+  overflow-y: scroll !important; // scroll on by default, so the content doesn't jump on larger pages
+}
  .mat-sidenav {
    user-select: none;
   .logo-area {
