@@ -24,17 +24,17 @@
       <md-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
 
         <!-- Date -->
-        <md-panel-title fxFlex="0 0 140px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
+        <md-panel-title fxFlex="0 0 137px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
           {{ tx.getDate() }}
         </md-panel-title>
 
         <!-- Confirmations -->
-        <md-panel-title fxFlex="1 0 60px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation">
+        <md-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation">
           <span md-line mdTooltip="Confirmations"><md-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
         </md-panel-title>
 
         <!-- Category icon -->
-        <md-panel-title fxFlex="1 0 160px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
+        <md-panel-title fxFlex="1 0 165px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
           <span *ngSwitchCase="'stake'" class="tx-type staked">
             <md-icon fontSet="partIcon" fontIcon="part-coins"></md-icon>Staked
           </span>
