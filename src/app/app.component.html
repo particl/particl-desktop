@@ -104,6 +104,11 @@
       </md-list>
     </md-content>
 
+    <md-content layout-padding (click)="syncScreen()">
+      <!-- reused from syncing dialog -->
+      <app-percentage-bar #progress [sidebar]="true"></app-percentage-bar>
+    </md-content>
+
   </md-sidenav>
 
   <md-toolbar class="header-main">

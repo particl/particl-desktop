@@ -60,7 +60,8 @@ import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.c
     PercentageBarComponent
   ],
   exports: [
-    ModalsComponent
+    ModalsComponent,
+    PercentageBarComponent
   ],
   providers: [
     ModalsService,

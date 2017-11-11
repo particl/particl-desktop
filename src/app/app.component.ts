@@ -79,4 +79,10 @@ export class AppComponent implements OnInit {
   createWallet() {
     this._modalsService.open('createWallet', {forceOpen: true});
   }
+
+  /** Open createwallet modal when clicking on error in sidenav */
+  syncScreen() {
+    this._modalsService.open('syncing', {forceOpen: true});
+  }
+
 }
