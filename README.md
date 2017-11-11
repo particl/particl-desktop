@@ -33,6 +33,7 @@ npm install
 ```
 
 ### Development with Electron
+* Run `ng serve` to start the dev server.
 * Run `npm run start:electron:dev -- -testnet` to start the electron application. Daemon will be updated and launched automatically.
 
 ### Development with a Browser
