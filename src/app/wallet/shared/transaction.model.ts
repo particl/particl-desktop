@@ -1,38 +1,60 @@
 import { Amount } from '../../shared/util/utils';
 
-export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake';
+export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake' | 'internal_transfer';
 
 export class Transaction {
-  txid: string;
-  address: string;
-  stealth_address: string;
+
   type: string;
-  category: string;
-  amount: number;
-  fee: number;
-  reward: number;
-  blockhash: string;
-  blockindex: number;
-  confirmations: number;
-  time: number;
-  comment: string;
-  vout: number;
-  walletconflicts: Object[];
 
-  outputs: any[];
+    txid: string;
+    address:string ;
+    stealth_address: string;
+    label: string;
+    category: string;
+    amount: number;
+    reward: number;
+    fee: number;
+    time: number;
+    comment: string;
 
-  constructor(
-    txid: string,
-    address: string,
-    category: string,
-    amount: number,
-    reward: number,
-    fee: number,
-    blockhash: string,
-    blockindex: number,
-    confirmations: number,
-    time: number, 
-    comment: string) { }
+    ouputs: any[];
+
+    /* conflicting txs */
+    walletconflicts: any[];
+
+    /* block info */
+    blockhash: string;
+    blockindex: number;
+    blocktime: number;
+    confirmations: number;
+
+  constructor(json: any) {
+    console.log("tx model constructed");
+    /* transactions */
+    this.txid = json.txid;
+    if(json.outputs !== undefined) {
+      this.address = json.outputs[0].address;
+      this.stealth_address = json.outputs[0].stealth_address;
+      this.label = json.outputs[0].label;
+    }
+    this.category = json.category;
+    this.amount = json.amount;
+    this.reward = json.reward;
+    this.fee = json.fee;
+    this.time = json.time;
+    this.comment = json.comment;
+
+    this.ouputs = json.outputs;
+
+    /* conflicting txs */
+    this.walletconflicts = json.walletconflicts;
+
+    /* block info */
+    this.blockhash = json.blockhash;
+    this.blockindex = json.blockindex;
+    this.blocktime = json.blocktime;
+    this.confirmations = json.confirmations;
+  }
 
   public getAddress(): string {
     if (this.stealth_address === undefined) {
@@ -102,42 +124,4 @@ export class Transaction {
 
 }
 
-/*
-    Deserialize JSON and cast it to a class of "type".
-*/
 
-export function deserialize(json: any): Transaction {
-  /*
-  txid: string,
-    address: string,
-    category: string,
-    amount: number,
-    reward: number,
-    blockhash: string,
-    blockindex: number,
-    confirmations: number,
-    time: number, 
-    comment: string
-  */
-
-  /* transactions */
-  const txid: string = json.txid;
-  const address: string = json.outputs[0].address;
-  const stealth_address: string = json.outputs[0].stealth_address;
-  const label: string = json.outputs[0].label;
-  const category: string = json.category;
-  const amount: number = json.amount;
-  const reward: number = json.reward;
-  const time: number = json.time;
-  const comment: string
-
-  /* block info */
-  const blockhash: string = json.blockhash;
-  const blockindex: number = json.blockindex;
-  const blocktime: number = json.blocktime;
-  const confirmations: number = json.confirmations;
-
-  const instance: Transaction = new Transaction();
-
-  return instance;
-}

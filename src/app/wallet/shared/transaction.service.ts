@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger'
 
-import { Transaction, deserialize, TEST_TXS_JSON, TEST_ARRAY_TXS_JSON_PAGE_0, TEST_ARRAY_TXS_JSON_PAGE_1 } from './transaction.model';
+import { Transaction } from './transaction.model';
 
 import { RPCService } from '../../core/rpc/rpc.service';
 
@@ -66,10 +66,8 @@ export class TransactionService {
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update() {
 
-    this.rpc.call('listtransactions', [
-      '*', +this.MAX_TXS_PER_PAGE,
-      (this.currentPage * this.MAX_TXS_PER_PAGE)
-    ])
+    const options = { "count" : +this.MAX_TXS_PER_PAGE, "skip": this.currentPage * this.MAX_TXS_PER_PAGE };
+    this.rpc.call('filtertransactions', [options])
     .subscribe(
       (txResponse: Array<Object>) => {
         // The callback will send over an array of JSON transaction objects.
@@ -93,10 +91,10 @@ export class TransactionService {
 
   // Deserializes JSON objects to Transaction classes.
   addTransaction(json: Object): void {
-    const instance: Transaction = deserialize(json);
+    const instance: Transaction = new Transaction(json);
 
-    // this.txs.push(instance);
-    this.txs.unshift(instance);
+    this.txs.push(instance);
+    //this.txs.unshift(instance);
   }
 
 }
