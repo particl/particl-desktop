@@ -34,24 +34,16 @@ npm install
 
 ### Development with Electron
 * Run `ng serve` to start the dev server.
-* Run `npm run start:electron:dev -- -testnet` to start the electron application. Daemon will be updated and launched automatically.
+* Run `npm run start:electron:dev -- -testnet -debug` to start the electron application. Daemon will be updated and launched automatically.
 
-### Development with a Browser
+### Development with a Browser (deprecating)
 * Run `ng serve`. Daemon will not launch automatically.
 * Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-#### Start the particl-core daemon
-```
-./particld -daemon -debug -rpcuser=test -rpcpassword=test -rpccorsdomain=http://localhost:4200 -printtoconsole
-```
-
-#### Stop particl-core daemon
-```
-./particl-cli -rpcuser=test -rpcpassword=test stop
-```
 #### Interact with particl-core daemon
+You can directly interact with the daemon ran by the Electron version.
 ```
-./particl-cli -rpcuser=test -rpcpassword=test getblockchaininfo
+./particl-cli -testnet getblockchaininfo
 ```
 
 ## Running
