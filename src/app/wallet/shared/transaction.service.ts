@@ -92,12 +92,8 @@ export class TransactionService {
   }
 
   // Deserializes JSON objects to Transaction classes.
-  // This does not enforce statically typed stuff at runtime tho, there is one lib called TypedJSON that does.
   addTransaction(json: Object): void {
-    const instance: Transaction = deserialize(json, Transaction);
-    if (typeof instance.txid === 'undefined') {
-      return;
-    }
+    const instance: Transaction = deserialize(json);
 
     // this.txs.push(instance);
     this.txs.unshift(instance);
