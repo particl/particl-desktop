@@ -7,7 +7,7 @@ export class Transaction {
   type: string;
 
     txid: string;
-    address:string ;
+    address: string ;
     stealth_address: string;
     label: string;
     category: string;
@@ -17,7 +17,7 @@ export class Transaction {
     time: number;
     comment: string;
 
-    ouputs: any[];
+    outputs: any[];
 
     /* conflicting txs */
     walletconflicts: any[];
@@ -29,10 +29,9 @@ export class Transaction {
     confirmations: number;
 
   constructor(json: any) {
-    console.log("tx model constructed");
     /* transactions */
     this.txid = json.txid;
-    if(json.outputs !== undefined) {
+    if (json.outputs !== undefined) {
       this.address = json.outputs[0].address;
       this.stealth_address = json.outputs[0].stealth_address;
       this.label = json.outputs[0].label;
@@ -44,7 +43,7 @@ export class Transaction {
     this.time = json.time;
     this.comment = json.comment;
 
-    this.ouputs = json.outputs;
+    this.outputs = json.outputs;
 
     /* conflicting txs */
     this.walletconflicts = json.walletconflicts;
@@ -78,13 +77,42 @@ export class Transaction {
 
 
   /* Amount stuff */
+  public getAmount(): number {
+    if (this.category === 'stake') {
+      return +this.reward;
+    } else if (this.category === 'internal_transfer') {
+      // add all elements in output array ( but exclude vout === 65535)
+      // todo: check assumption that we own all outputs?
+      /*
+      const add = function (a: any, b: any) { return a + (b.vout === 65535 ? 0 : b.amount); }
+      return this.outputs.reduce(add, 0);
+      */
+
+/*
+      const blindStealthOutputCount = this.outputs.reduce(function (a: any, b: any) {
+        return a + (b.vout !== 65535 ? (b.stealth_address !== undefined ? 1 : 0) : 0);
+      }, 0);
+      console.log("blind_stealth_address count: " + blindStealthOutputCount);
+
+      // blind -> blind (own)
+      if(blindStealthOutputCount === 1) {
+        console.log("length should equal 2 =" + this.outputs.length);
+        const add = function (a: any, b: any) { return a + (b.stealth_address !== undefined ? b.amount : 0); }
+        console.log("returning shoud be 0.5 =  " + this.outputs.reduce(add, 0));
+        return this.outputs.reduce(add, 0);
+      } */
+
+      // only use fake output to determine internal transfer
+      const fakeOutput = function (a: any, b: any) { return a - (b.vout === 65535 ? b.amount : 0); }
+      return this.outputs.reduce(fakeOutput, 0);
+    } else {
+      return +this.amount;
+    }
+  }
+
   /** Turns amount into an Amount Object */
   public getAmountObject(): Amount {
-    if (this.category === 'stake') {
-      return new Amount(+this.reward);
-    } else {
-      return new Amount(+this.amount);
-    }
+    return new Amount(this.getAmount());
   }
 
   /** Calculates the actual amount that was transfered, including the fee */

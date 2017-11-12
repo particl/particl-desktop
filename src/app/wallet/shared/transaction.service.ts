@@ -66,7 +66,7 @@ export class TransactionService {
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update() {
 
-    const options = { "count" : +this.MAX_TXS_PER_PAGE, "skip": this.currentPage * this.MAX_TXS_PER_PAGE };
+    const options = { 'count' : +this.MAX_TXS_PER_PAGE, 'skip': this.currentPage * this.MAX_TXS_PER_PAGE };
     this.rpc.call('filtertransactions', [options])
     .subscribe(
       (txResponse: Array<Object>) => {
@@ -91,10 +91,7 @@ export class TransactionService {
 
   // Deserializes JSON objects to Transaction classes.
   addTransaction(json: Object): void {
-    const instance: Transaction = new Transaction(json);
-
-    this.txs.push(instance);
-    //this.txs.unshift(instance);
+    this.txs.push(new Transaction(json));
   }
 
 }
