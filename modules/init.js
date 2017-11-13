@@ -21,12 +21,15 @@ exports.start = function (mainWindow) {
     // .then(()            => ipc.daemonReady(mainWindow.webContents))
 }
 
-electron.app.on('quit', function (event, exitCode) {
-  log.info('stopping')
-  electron.ipcMain.removeAllListeners(['backend-rpccall']);
+electron.app.on('before-quit', function beforeQuit(event) {
+  event.preventDefault();
+  electron.ipcMain.removeAllListeners(['rpc-channel']);
+  electron.app.removeListener('before-quit', beforeQuit);
   daemon.stop();
+});
+
+electron.app.on('quit', (event, exitCode) => {
   if (exitCode === 991) {
     log.error('Could not connect to daemon.')
-    throw Error('Could not connect to daemon.');
   }
 });

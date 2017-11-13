@@ -16,9 +16,8 @@
         </md-tab-group>
       </div>
       <div fxFlex="23" disableTouchRipple="true" class="bottom-line" fxLayoutAlign="left center">
-        <button md-button color="primary" (click)="toggleAdvanced()" class="advanced-options"><!-- *ngIf="type === 'balanceTransfer'" -->
-          <md-icon fontSet="partIcon"
-                   fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></md-icon>
+        <button md-button (click)="toggleAdvanced()" class="advanced-options"><!-- *ngIf="type === 'balanceTransfer'" -->
+          <md-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></md-icon>
           <span>{{ advancedText }}</span>
         </button>
       </div>
@@ -38,7 +37,7 @@
               <h5 fxFlex="16.6">From Account</h5>
               <md-radio-button value="balance" checked="checked" fxFlex="16.6">Public</md-radio-button>
               <md-radio-button value="blind_balance" fxFlex="16.6">Blind</md-radio-button>
-              <md-radio-button value="anon_balance" fxFlex="16.6">Private</md-radio-button>
+              <!-- <md-radio-button value="anon_balance" fxFlex="16.6">Private</md-radio-button> -->
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
                 <span class="balance-amount enable-select">{{ getBalance(send.input) }}</span>
@@ -54,9 +53,9 @@
               <md-radio-button value="blind_balance" disabled="{{ send.output === 'blind_balance' }}" fxFlex="16.6">
                 Blind
               </md-radio-button>
-              <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6">
+              <!-- <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6"> 
                 Private
-              </md-radio-button>
+              </md-radio-button>-->
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
                 <span class="balance-amount enable-select">{{ getBalance(send.input )}}</span>
@@ -82,9 +81,9 @@
               <md-radio-button value="blind_balance" disabled="{{ send.input === 'blind_balance' }}" fxFlex="16.6">
                 Blind
               </md-radio-button>
-              <md-radio-button value="anon_balance" disabled="{{ send.input === 'anon_balance' }}" fxFlex="16.6">
+              <!-- <md-radio-button value="anon_balance" disabled="{{ send.input === 'anon_balance' }}" fxFlex="16.6">
                 Private
-              </md-radio-button>
+              </md-radio-button> -->
               <div fxFlex="50">
                 <span class="balance-label">Balance: </span>
                 <span class="balance-amount enable-select">{{ getBalance(send.output) }}</span>

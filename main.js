@@ -2,20 +2,20 @@ const electron      = require('electron');
 const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-const path          = require('path');
-const url           = require('url');
-const platform      = require('os').platform();
-const log           = require('electron-log');
+const path     = require('path');
+const url      = require('url');
+const platform = require('os').platform();
+const log      = require('electron-log');
 
 log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
 log.transports.file.file = log.transports.file
    .findLogPath(log.transports.file.appName)
    .replace('log.log', 'partgui.log');
 
-const _options      = require('./modules/options');
-const init          = require('./modules/init');
-const rpc           = require('./modules/rpc/rpc');
-const daemon        = require('./modules/daemon/daemon');
+const _options = require('./modules/options');
+const init     = require('./modules/init');
+const rpc      = require('./modules/rpc/rpc');
+const daemon   = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -119,7 +119,7 @@ function initMainWindow() {
 function makeTray() {
 
   // Default tray image + icon
-  let trayImage = path.join(__dirname, 'src/assets/icons/logo.png');
+  let trayImage = path.join(__dirname, 'resources/icon.png');
 
   // Determine appropriate icon for platform
   // if (platform === 'darwin') {

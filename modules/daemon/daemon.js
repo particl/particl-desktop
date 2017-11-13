@@ -36,6 +36,7 @@ exports.start = function(wallets, callback) {
         } else {
           log.info('daemon exited successfully');
         }
+        electron.app.quit();
       })
       child.stdout.on('data', data => {
         log.info('daemon: ' + data.toString().replace(/[\n\r]/g, ""))
@@ -115,15 +116,19 @@ exports.check = function() {
 }
 
 exports.stop = function() {
-  if (daemon && !daemon.exitCode) {
-    new Promise((resolve, reject) => {
-      rpcCall('stop', null, null, (error, response) => {
+  return new Promise((resolve, reject) => {
+
+    if (daemon && !daemon.exitCode) {
+      rpc.call('stop', null, (error, response) => {
         if (error) {
+          log.error('Calling SIGINT!');
           reject();
         } else {
+          log.debug('Daemon stopping gracefully');
           resolve();
         }
       });
-    }).catch(() => daemon.kill('SIGINT'));
-  }
+    } else resolve();
+
+  }).catch(() => daemon.kill('SIGINT'));
 }

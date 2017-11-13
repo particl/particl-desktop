@@ -110,8 +110,7 @@ exports.call = function(method, params, callback) {
   request.end();
 }
 
+exports.getTimeoutDelay = () => { return TIMEOUT }
 exports.setTimeoutDelay = function(timeout) {
   TIMEOUT = timeout;
 }
-
-exports.getTimeoutDelay = () => { return TIMEOUT }
