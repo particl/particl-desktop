@@ -11,6 +11,10 @@ const daemonManager = require('../daemon/daemonManager');
 let daemon;
 let exitCode = 0;
 
+function daemonData(data, logger) {
+  logger(data.toString().replace(/[\n\r]/g, ""));
+}
+
 exports.start = function(wallets, callback) {
   return (new Promise((resolve, reject) => {
 
@@ -38,12 +42,9 @@ exports.start = function(wallets, callback) {
         }
         electron.app.quit();
       })
-      child.stdout.on('data', data => {
-        log.info('daemon: ' + data.toString().replace(/[\n\r]/g, ""))
-      })
-      child.stderr.on('data', data => {
-        log.error('daemon: ' + data.toString().replace(/[\n\r]/g, ""))
-      });
+
+      child.stdout.on('data', data => daemonData(data, console.log));
+      child.stderr.on('data', data => daemonData(data, console.log));
 
       daemon = child;
       exports.wait(wallets, callback).then(() => resolve());
@@ -63,7 +64,7 @@ exports.wait = function(wallets, callback) {
       exports.check()
       .then(() => { callback(); resolve(); })
       .catch(() => {
-        if (exitCode == 0 && retries < maxRetries) {
+        if (exitCode === 0 && retries < maxRetries) {
           setTimeout(daemonStartup, 1000);
         }
       });
