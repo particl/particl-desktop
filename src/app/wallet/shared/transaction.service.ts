@@ -40,6 +40,9 @@ export class TransactionService {
         txcount => {
           this.txCount = txcount;
           this.loading = true;
+          if (this.txs.length > 0 && this.txs[0].category === 'receive') {
+            this.rpc.sendNotification('Received Transaction', 'You have received new transactions')
+          }
           this.log.d(`observing txcount, txs array: ${this.txs.length}`);
           this.rpc_update();
         });

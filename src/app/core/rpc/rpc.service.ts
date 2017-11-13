@@ -86,7 +86,6 @@ export class RPCService {
     * TODO: Response interface
     */
   call(method: string, params?: Array<any> | null): Observable<any> {
-
     if (this.isElectron) {
       return this._rpx.runCommand('rpc-channel', null, method, params)
       .map(response => response && (response.result !== undefined) ? response.result : response);
@@ -336,6 +335,13 @@ export class RPCService {
   specialPoll(): void {
     // A poll only for address changes, triggered from the GUI!
     this._callOnAddress.forEach(this._pollCall.bind(this));
+  }
+
+  /** Send Notification to the backend */
+  sendNotification(title: string, desc: string) {
+    if (this.isElectron) {
+      this._rpx.runNotification('rx-ipc-message', title, desc);
+    }
   }
 }
 

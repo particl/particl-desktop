@@ -65,5 +65,14 @@ export class RPXService {
     });
   }
 
+  runNotification(channel: string, ...args: any[]): Observable<any> {
+    window.ipc.send(channel, 'message', ...args);
+    return new Observable((observer) => {
+      window.ipc.once('message', function listener() {
+        observer.complete();
+      });
+    })
+  }
+
 }
 
