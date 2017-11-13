@@ -10,13 +10,20 @@
   </md-progress-bar>
 </div>
 
+
 <!-- side bar -->
-<div class="sidebar-percentage-bar" *ngIf="initialized && sidebar && !(syncPercentage === 100)">
+<div class="sync-progress-wrapper" *ngIf="initialized && sidebar && !(syncPercentage === 100)" mdTooltip="{{ syncString }}" matTooltipPosition="above">
+
+  <p class="sync-info">
+    Syncing with the network
+  </p>
+
   <md-progress-bar
-    class="sidebar-percentage-bar"
+    class="sync-bar"
     [color]="'primary'"
     [bufferValue]="syncPercentage"
     [mode]="'determinate'"
     [value]="syncPercentage">
   </md-progress-bar>
+
 </div>

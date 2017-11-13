@@ -41,7 +41,7 @@ export class PercentageBarComponent implements OnInit {
     this.initialized = true;
     this.syncPercentage = progress;
     this.syncString = progress === 100
-      ? 'blockchain fully synced'
+      ? 'Fully synced'
       : `${progress.toFixed(2)} %`
   }
 }

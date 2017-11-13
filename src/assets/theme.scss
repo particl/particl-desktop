@@ -54,18 +54,23 @@ button {
  * Side bar Menu.
  */
 
- .mat-sidenav {
-   user-select: none;
-  .logo-area {
-    .mat-toolbar-row {
-      justify-content: center;
-      height: 110px;
+.sidebar {
+  // Sync progress bar
+  .sync-bar {
+    .mat-progress-bar-buffer {
+      background: lighten($bg-black, 15%);
+    }
+    .mat-progress-bar-fill::after {
+      background-color: $color;
     }
   }
+}
+.mat-sidenav {
+  user-select: none;
   .mat-list {
     .mat-list-item { // menu item (text w/ icon)
       &:hover {
-        background: darken(#222828, 1.5%);
+        background: darken($bg-black, 1.5%);
         .mat-icon {
           color: lighten(#4B4A4F, 10%);
         }
@@ -73,7 +78,6 @@ button {
       .mat-list-item-content {
         height: auto !important;
       }
-
     }
     &.sidesubmenu {
       a {
