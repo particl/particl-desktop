@@ -28,4 +28,9 @@ export class RpcModule {
   }
 }
 
+
 export { RpcService } from './rpc.service';
+
+export { BlockStatusService } from './blockstatus/blockstatus.service'
+export { PeerService } from './peer/peer.service';
+export { StateService } from '../state/state.service';

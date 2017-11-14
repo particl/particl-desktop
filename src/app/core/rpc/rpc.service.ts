@@ -89,7 +89,7 @@ export class RpcService {
       return this._ipc.runCommand('rpc-channel', null, method, params)
       .map(response => response && (response.result !== undefined) ? response.result : response);
 
-    } 
+    }
   }
 
 

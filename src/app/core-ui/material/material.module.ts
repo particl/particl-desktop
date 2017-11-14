@@ -31,7 +31,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MdGridListModule,
     MdCardModule,
     MdToolbarModule
-  ], 
+  ],
   exports: [
     CommonModule,
     FlexLayoutModule, /* Flex layout here too */

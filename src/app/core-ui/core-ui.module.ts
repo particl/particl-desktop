@@ -9,8 +9,10 @@ import { MaterialModule } from './material/material.module';
     MaterialModule
   ],
   exports: [
-  	MaterialModule
+    MaterialModule
   ],
   declarations: []
 })
 export class CoreUiModule { }
+
+export { MaterialModule } from './material/material.module';

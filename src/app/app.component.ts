@@ -8,7 +8,7 @@ import { RpcService, WindowService } from './core/core.module';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'], //'./app.component.controls.scss'
+  styleUrls: ['./app.component.scss'], // './app.component.controls.scss'
 })
 export class AppComponent implements OnInit {
   log: any = Log.create('app.component');

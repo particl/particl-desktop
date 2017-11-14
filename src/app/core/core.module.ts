@@ -2,7 +2,14 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { IpcService } from './ipc/ipc.service';
+
 import { RpcModule } from './rpc/rpc.module';
+
+import { RpcService } from './rpc/rpc.service';
+import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
+import { PeerService } from './rpc/peer/peer.service';
+
+import { StateService } from './state/state.service';
 import { WindowService } from './window/window.service';
 
   /*
@@ -28,4 +35,9 @@ export class CoreModule {
 }
 
 export { WindowService } from './window/window.service';
-export { RpcService } from './rpc/rpc.module';
+
+export { RpcService } from './rpc/rpc.service';
+export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
+export { PeerService } from './rpc/peer/peer.service';
+
+export { StateService } from './state/state.service';

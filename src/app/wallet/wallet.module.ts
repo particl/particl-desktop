@@ -1,10 +1,62 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+
+import { WalletViewsComponent } from './wallet.component';
+import { CoreModule } from '../core/core.module';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+
+import { SharedModule } from './shared/shared.module';
+import { SidebarModule } from './core/sidebar/sidebar.module';
+
+import { WalletModule } from './wallet/wallet.module';
+import { ModalsModule } from './modals/modals.module';
+
+import { StatusComponent } from './core/status/status.component';
+import { OverviewComponent } from './overview/overview.component';
+import { SettingsComponent } from './settings/settings.component';
+import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
+import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
+
+import 'hammerjs';
+import { FlashNotificationService } from './services/flash-notification.service';
+
+
+const routes: Routes = [
+  { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
+  { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
+  { path: '**', redirectTo: 'overview', pathMatch: 'full' } // Catch all route
+];
 
 @NgModule({
-  imports: [
-    CommonModule
+  declarations: [
+    WalletViewsComponent,
+    StatusComponent,
+    OverviewComponent,
+    SettingsComponent,
+    StakinginfoComponent,
+    ColdstakeComponent
   ],
-  declarations: []
+  imports: [
+    RouterModule.forRoot(routes), // TODO: multiple routes
+    CommonModule,
+    SharedModule,
+    SidebarModule.forRoot(),
+    WalletModule.forRoot(),
+    // CoreModule.forRoot(),
+    ModalsModule,
+    CoreUiModule
+  ],
+  exports: [
+    WalletViewsComponent
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    FlashNotificationService
+  ], /*
+  bootstrap: [ AppComponent ] */
 })
-export class WalletModule { }
+export class WalletViewsModule {
+  constructor() {
+  }
+}
