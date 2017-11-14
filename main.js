@@ -23,7 +23,7 @@ let mainWindow;
 let tray;
 let options;
 
-let openDevTools = false;
+let openDevTools = true;
 
 function createWindow () {
   const _initWindow = () => {
