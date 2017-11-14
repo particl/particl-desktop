@@ -2,9 +2,9 @@ import { TestBed, inject } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
 
 import { RpcModule } from './rpc.module';
-import { RpcService } from './rpc.service';
+import { RPCService } from './rpc.service';
 
-describe('RpcService', () => {
+describe('RPCService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -14,7 +14,7 @@ describe('RpcService', () => {
     });
   });
 
-  it('should be created', inject([RpcService], (service: RpcService) => {
+  it('should be created', inject([RPCService], (service: RPCService) => {
     expect(service).toBeTruthy();
   }));
 });
