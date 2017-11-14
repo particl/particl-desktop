@@ -19,6 +19,10 @@ function getWalletsPath() {
 exports.get = function () {
   return new Promise((resolve, reject) => {
 
+    // TODO remove when other platforms tested
+    resolve([]);
+    return;
+
     spawn('ls', [ getWalletsPath() ]).then(files => {
 
       files = files.stdout.split('\n');

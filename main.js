@@ -10,7 +10,9 @@ const log      = require('electron-log');
 log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
 log.transports.file.file = log.transports.file
    .findLogPath(log.transports.file.appName)
-   .replace('log.log', 'partgui.log');
+   .replace('log.log', 'particl.log');
+log.debug(`console log level: ${log.transports.console.level}`);
+log.debug(   `file log level: ${log.transports.file.level   }`);
 
 const _options = require('./modules/options');
 const init     = require('./modules/init');
@@ -29,6 +31,7 @@ let openDevTools = false;
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  log.debug('app ready')
   options = _options.parse();
   initMainWindow();
   init.start(mainWindow);

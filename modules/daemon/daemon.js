@@ -11,6 +11,7 @@ const daemonManager = require('../daemon/daemonManager');
 let daemon;
 let exitCode = 0;
 
+// TODO: log properly on console and to file [ -- -printtoconsole ]
 function daemonData(data, logger) {
   logger(data.toString().replace(/[\n\r]/g, ""));
 }
@@ -28,6 +29,9 @@ exports.start = function(wallets, callback) {
       resolve(undefined);
 
     }).catch(() => {
+
+      // TODO: only for some debug levels
+      process.argv.push('-printtoconsole');
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
@@ -66,11 +70,11 @@ exports.wait = function(wallets, callback) {
       .catch(() => {
         if (exitCode === 0 && retries < maxRetries) {
           setTimeout(daemonStartup, 1000);
+          return;
         }
       });
 
-      retries++;
-      if (exitCode || retries >= maxRetries) {
+      if (exitCode || ++retries >= maxRetries) {
         // Rebuild block and transaction indexes
         if (errorString.includes('-reindex')) {
           log.info('Corrupted block database detected, '
@@ -80,17 +84,16 @@ exports.wait = function(wallets, callback) {
           // We don't want it to exit at this stage if start was called..
           // it will probably error again if it has to.
           exports.start(wallets, callback);
-          return ;
+          return;
         }
-        electron.app.exit(991);
+        log.error('Could not connect to daemon.')
+        electron.app.exit();
         reject();
       }
     } /* daemonStartup */
 
     if (daemon && exitCode === 0) {
-      daemon.stderr.on('data', data => {
-        errorString = data.toString('utf8');
-      });
+      daemon.stderr.on('data', data => errorString = data.toString('utf8'));
       setTimeout(daemonStartup, 1000);
     }
 
