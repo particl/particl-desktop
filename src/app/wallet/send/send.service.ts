@@ -173,7 +173,7 @@ export class SendService {
   getSendParams(
     anon: boolean, address: string, amount: number, comment: string,
     narration: string, ringsize: number, numsignatures: number) {
-    const params: Array<any> = [address, amount, '', '', false];
+    const params: Array<any> = [address, amount, '', '', true];
 
     params.push(!!narration ? narration : '');
 

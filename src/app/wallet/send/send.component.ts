@@ -302,4 +302,8 @@ export class SendComponent {
     document.execCommand('Paste');
   }
 
+  sendAllBlance(): void {
+    this.send.amount = this.getBalance(this.send.input);
+  }
+
 }

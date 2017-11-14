@@ -53,7 +53,7 @@
               <md-radio-button value="blind_balance" (click)="send.output = 'balance'" fxFlex="16.6">
                 Blind
               </md-radio-button>
-              <!-- <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6"> 
+              <!-- <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6">
                 Private
               </md-radio-button>-->
               <div fxFlex="50">
@@ -134,8 +134,8 @@
                fxLayoutAlign="center center">
             <h5 fxFlex="15">Narration</h5>
             <md-form-field fxFlex="100">
-            <input #narration type="text" mdInput name="sendNote" 
-             placeholder="Optional: enter a short note to send with a payment" 
+            <input #narration type="text" mdInput name="sendNote"
+             placeholder="Optional: enter a short note to send with a payment"
              maxlength="24"
             [(ngModel)]="send.note" >
             <md-hint align="end">{{narration.value.length}} / 24</md-hint>
@@ -157,6 +157,7 @@
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                      oninput="validity.valid||(value='');" step="any">
             </md-form-field>
+            <button (click)="sendAllBlance()"> Send All </button>
             <md-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
               <md-option value="part">PART</md-option>
             </md-select>
