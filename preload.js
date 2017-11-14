@@ -51,7 +51,7 @@ window.ipc = new SafeIpcRenderer([
   'rpc-channel',
   'rx-ipc-check-reply:rpc-channel',
   'rx-ipc-check-listener',
-  'rx-ipc-message'
+  'rx-ipc-notification'
 ]);
 
 window.electron = true;

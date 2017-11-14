@@ -340,7 +340,7 @@ export class RPCService {
   /** Send Notification to the backend */
   sendNotification(title: string, desc: string) {
     if (this.isElectron) {
-      this._rpx.runNotification('rx-ipc-message', title, desc);
+      this._rpx.runNotification(title, desc);
     }
   }
 }

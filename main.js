@@ -227,7 +227,7 @@ app.on('browser-window-created',function(e, window) {
     maxVisibleNotifications: 1
   });
 
-  rxIpc.registerListener('rx-ipc-message', function(title, desc, params) {
+  rxIpc.registerListener('rx-ipc-notification', function(title, desc, params) {
 
     eNotify.notify({ title: title, text: desc });
     return Observable.create(observer => {

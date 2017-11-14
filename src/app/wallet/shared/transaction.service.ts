@@ -35,13 +35,16 @@ export class TransactionService {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.log.d(`postconstructor  called txs array: ${this.txs.length}`);
     // TODO: why is this being called twice after executing a tx?
+    // SomeTimes tx has previous value in zero position
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
           this.txCount = txcount;
           this.loading = true;
-          if (this.txs.length > 0 && this.txs[0].category === 'receive') {
-            this.rpc.sendNotification('Received Transaction', 'You have received new transactions')
+          if (this.txs.length > 0  && this.txs[0].category === 'receive') {
+            this.rpc.sendNotification('WoW!!!', 'You have received new transactions')
+          } else if (this.txs.length > 0  && this.txs[0].category === 'stake') {
+            this.rpc.sendNotification('WoW!!!', 'You have received new stake reward')
           }
           this.log.d(`observing txcount, txs array: ${this.txs.length}`);
           this.rpc_update();
