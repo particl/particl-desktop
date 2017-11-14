@@ -1,0 +1,13 @@
+<div class="center">
+  <div *ngIf="message && !message.electron">
+    Warning: You are using Particl through a browser.
+  </div>
+  <div *ngIf="message && message.error">
+    <div *ngIf="message.error.status === 0">
+      Couldn't connect to Particl Daemon: connection refused
+    </div>
+    <div *ngIf="message.error.status !== 0">
+      Error {{ message.error.status }}: {{ message.error.message }}
+    </div>
+  </div>
+</div>

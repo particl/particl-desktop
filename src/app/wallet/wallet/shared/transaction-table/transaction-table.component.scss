@@ -1,0 +1,124 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.mat-expansion-panel {
+  margin-bottom: 9px;
+  box-shadow: none;
+  border-bottom: 1px solid $bg-shadow;
+  &.history-list {
+    &.mat-expanded { // when TX detail is opened
+      //margin: 20px 0;
+    }
+  }
+}
+
+.mat-expansion-panel-header {
+  min-height: 67px !important;
+  font-size: 13px;
+  &:hover {
+    background: inherit;
+  }
+  .mat-expansion-panel-header-title {
+    text-transform: uppercase;
+    font-family: $font;
+  }
+
+  // TX date/time
+  .history_date {
+    color: $text-muted;
+    border-right: 1px solid lighten($text-muted, 35%);
+  }
+
+  // confirmations
+  .history_confirmation {
+    color: $text-muted;
+    .confirmations { // icon
+      height: auto;
+      width: auto;
+      margin-right: 3px;
+      font-size: 12px;
+      color: lighten($text-muted, 20%);
+      position: relative;
+      top: 1px;
+    }
+  }
+
+  // TX icon
+  .history_cat_icon {
+    .mat-icon {
+      height: auto;
+      width: auto;
+      font-size: 15px;
+      position: relative;
+      top: 3px;
+      margin-right: 12px;
+    }
+    .tx-type {
+      &.staked {
+        md-icon {
+          color: $color-warning;
+        }
+      }
+      &.orphan {
+        md-icon {
+          color: mix($bg-shadow, $text-muted);
+        }
+      }
+      &.sent {
+        font-weight: bold;
+        md-icon {
+          color: $color-alert;
+        }
+      }
+      &.received {
+        font-weight: bold;
+        md-icon {
+          color: $color;
+        }
+      }
+    }
+  }
+
+  // TX amount
+  .history_amount {
+    text-align: right;
+    display: block;
+    .amount {
+      .big {
+        font-weight: bold;        
+      }
+      .point,
+      .small {
+        color: $text-muted;
+      }
+    }
+    .negative {
+      color: $color-alert;
+      .point,
+      .small {
+        color: mix(white, $color-alert, 30%);
+      }
+    }
+  }
+}
+
+// detail item of TX info
+.tx-detail-item {
+  padding: 5px 0;
+  color: $text-muted;
+  font-size: 13px;
+  font-family: $font;
+  // to/from address
+  .to-from-address {
+    font-family: monospace;
+    color: lighten($text, 10%);
+    background: lighten($bg-shadow, 10%);
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    padding: 0 5px;
+    &:focus {
+      background: lighten($bg-black, 10%);
+      color: white;
+    }
+  }
+}

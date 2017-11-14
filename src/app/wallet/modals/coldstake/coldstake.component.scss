@@ -1,0 +1,23 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+@import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
+
+
+.hot-stake-address {
+  width: 100%;
+  font-family: monospace;
+}
+
+.cold-stake-address {
+  width: 100%;
+  margin: 15px 0 0;
+  font-family: monospace;
+}
+
+@media only screen and (max-width: 480px) {
+  .wallet-buttons-container button {
+    float: none;
+    display: block;
+    margin: 10px auto 0;
+  }
+}

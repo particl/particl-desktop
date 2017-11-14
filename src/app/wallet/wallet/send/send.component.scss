@@ -1,0 +1,166 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+/* ------------------------------- *\
+    Layout
+\* ------------------------------- */ 
+
+.formTableFullWidth {
+  width: 100%;
+}
+
+input[type="text"] {
+  border: none !important;
+}
+
+.mat-list {
+  .mat-divider {
+    margin: 0px 0;
+    border-color: transparent;
+  }
+}
+
+.mat-expansion-panel {
+  box-shadow: none;
+}
+
+.mat-card {
+  padding: 0;
+  margin-bottom: 12px;
+  border-bottom: 0px solid $bg-shadow;
+  .send {
+    padding: 0 0 20px 0;
+  }
+  h5 {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+  }
+}
+
+.mat-input-element {
+  width: calc(100% - 8px);
+}
+
+.mat-select {
+  padding-top: 4px;
+}
+
+.md-list-item {
+  padding: 25px;
+}
+
+.md-list-radio h5 {
+  margin-top: 15px;
+}
+
+.md-radio-group {
+  background: #fff;
+}
+
+.md-send-card {
+  padding: 10px 30px 10px 30px;
+  min-height: 14vh;
+  height: auto;
+  font-family: $font;
+}
+
+.balance-label {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.md-list-radio .mat-radio-button {
+  margin-bottom: 0px;
+}
+
+.privacy-label {
+  font-weight:bold;
+  padding-bottom: 10px;
+  cursor: pointer;
+  &.medium {
+    text-align: center;
+  }
+  &.high {
+    text-align: right;
+  }
+}
+
+.actions {
+  margin: 25px 0 15px 0;
+}
+
+/* ------------------------------- *\
+    Buttons
+\* ------------------------------- */ 
+
+app-header {
+  button {
+    background-color: #fafafa;
+    border: none;
+    padding: 3px 15px;
+    margin: 0 10px 0 0;
+    border-bottom: 0px solid $bg-shadow;
+    float: right;
+    font-weight: 500;
+    color: $text;
+  }
+  .bottom-line {
+    border-bottom: 1px solid $bg-shadow;
+  } 
+  button.advanced-options { // show/hide advanced options
+    color: $text-muted;
+    &:hover {
+      color: $text;
+    }
+    md-icon {
+      font-size: 16px;
+      width: auto;
+      height: auto;
+      margin-right: 5px;
+      line-height: 1.5;
+      background: transparent;
+      top: 0;
+    }
+    span {
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: normal;
+    }
+  }
+}
+
+.mat-raised-button {
+  box-sizing: border-box;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: 0;
+  min-width: 88px;
+  line-height: 36px;
+  padding: 0 16px;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.mat-icon {
+  margin-right: 5px;
+  width: auto;
+  height: auto;
+  font-size: 16px;
+  position: relative;
+  top: -1px;
+}

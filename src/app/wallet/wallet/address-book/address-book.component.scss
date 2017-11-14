@@ -1,0 +1,32 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+app-header {
+  button.add-address {
+    padding: 3px 16px;
+    md-icon {
+      font-size: 20px;
+      width: auto;
+      height: auto;
+      margin-right: 6px;
+      line-height: 1.5;
+      top: 0;
+    }
+    span {
+      color: $text;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+  }
+}
+
+.container-block {
+  padding-top: 20px; // offset button and search form
+}
+
+.search-address {
+  .mat-icon {
+    top: 4px;
+    right: 18px;
+    font-size:14px;
+  }
+}

@@ -1,0 +1,125 @@
+<md-sidenav-container fullscreen>
+  <md-sidenav #sidenav mode="side" opened="true" disableClose="true">
+
+    <md-toolbar class="logo-area">
+      <span class="logo"></span>
+    </md-toolbar>
+
+    <md-divider></md-divider>
+
+    <md-content layout-padding>
+      <md-list class="sidesubmenu">
+        <a routerLinkActive="active" routerLink="/overview">
+          <md-list-item>
+            <md-icon fontSet="partIcon" fontIcon="part-grid-48"></md-icon>
+            <span class="menu-item">Overview</span>
+          </md-list-item>
+        </a>
+      </md-list>
+    </md-content>
+
+    <md-content layout-padding *ngIf="walletInitialized">
+      <md-accordion displayMode="flat" [multi]="'multi'" class="md-expansion-menu">
+        <md-expansion-panel #panel1 expanded="true">
+          <md-expansion-panel-header>Wallet</md-expansion-panel-header>
+          <md-content layout-padding class="submenuarea">
+            <md-list class="sidesubmenu">
+              <a routerLinkActive="active" [routerLink]="'/wallet/receive'">
+                <md-list-item>
+                  <md-icon fontSet="partIcon" fontIcon="part-tail-right"></md-icon>
+                  <span class="menu-item">Receive</span>
+                </md-list-item>
+              </a>
+              <a routerLinkActive="active" [routerLink]="'/wallet/send'">
+                <md-list-item>
+                  <md-icon fontSet="partIcon" fontIcon="part-tail-left"></md-icon>
+                  <span class="menu-item">Send</span>
+                </md-list-item>
+              </a>
+              <a routerLinkActive="active" [routerLink]="'/wallet/history'">
+                <md-list-item>
+                  <md-icon fontSet="partIcon" fontIcon="part-time-3"></md-icon>
+                  <span class="menu-item">History</span>
+                </md-list-item>
+              </a>
+              <a routerLinkActive="active" [routerLink]="'/wallet/address-book'">
+                <md-list-item>
+                  <md-icon fontSet="partIcon" fontIcon="part-multiple-19"></md-icon>
+                  <span class="menu-item">Address Book</span>
+                </md-list-item>
+              </a>
+            </md-list>
+          </md-content>
+        </md-expansion-panel>
+      </md-accordion>
+    </md-content>
+
+    <md-content layout-padding *ngIf="walletInitialized === false">
+      <md-accordion displayMode="flat" [multi]="'multi'" class="md-expansion-menu">
+        <md-expansion-panel #panel1 expanded="true">
+          <md-expansion-panel-header>Wallet</md-expansion-panel-header>
+          <md-content layout-padding class="submenuarea">
+            <md-list class="sidesubmenu">
+              <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+                <md-list-item>
+                  <md-icon fontSet="partIcon" fontIcon="part-card-add" ></md-icon>
+                  <span class="menu-item">Add Account</span>
+                </md-list-item>
+              </a>
+            </md-list>
+          </md-content>
+        </md-expansion-panel>
+      </md-accordion>
+    </md-content>
+
+    <!--md-content layout-padding>
+      <md-accordion displayMode="flat" [multi]="'multi'" class="md-expansion-menu">
+        <md-expansion-panel #panel1 expanded="true">
+          <md-expansion-panel-header>Settings</md-expansion-panel-header>
+
+          <md-content layout-padding class="submenuarea">
+            <md-list class="sidesubmenu">
+              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/settings' : null">
+                <md-list-item>
+                  <md-icon fontSet="partIcon" fontIcon="nc-grid-48"></md-icon>
+                  <span class="menu-item">Settings</span>
+                </md-list-item>
+              </a>
+            </md-list>
+          </md-content>
+        </md-expansion-panel>
+      </md-accordion>
+    </md-content-->
+
+    <md-content layout-padding *ngIf="!daemonRunning || !walletInitialized">
+      <md-list class="sidesubmenu error">
+        <md-list-item *ngIf="!daemonRunning">
+          <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+          Connection Refused, Daemon is not connected
+        </md-list-item>
+        <md-list-item *ngIf="!walletInitialized">
+          <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+          Please create wallet first to access other tabs
+        </md-list-item>
+      </md-list>
+    </md-content>
+
+  </md-sidenav>
+
+  <md-toolbar class="header-main">
+    <button fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()" fxHide.gt-sm>
+      <md-icon fontSet="partIcon" fontIcon="part-menu-bold"></md-icon>
+    </button>
+    {{ title }}
+    <div class="containerX">
+      <div fxLayout="row" fxFlex fxLayoutAlign="end center" fxcolor="accent" class="header-icons">
+        <app-status></app-status>
+      </div>
+    </div>
+  </md-toolbar>
+
+  <div class="margin-left-right-50">
+    <router-outlet></router-outlet>
+  </div>
+
+</md-sidenav-container>

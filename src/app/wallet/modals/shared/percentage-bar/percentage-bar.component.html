@@ -1,0 +1,10 @@
+<div class="percentage-bar-bottom">
+  <span class="percentage-bar-text">{{syncString }}</span>
+  <md-progress-bar
+    class="progress-bar-bottom"
+    [color]="'primary'"
+    [bufferValue]="syncPercentage"
+    [mode]="'determinate'"
+    [value]="syncPercentage">
+  </md-progress-bar>
+</div>

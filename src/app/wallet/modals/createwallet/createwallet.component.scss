@@ -1,0 +1,44 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+@import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
+
+
+.actions {
+  margin-bottom: 80px;
+}
+
+/* ------------------------------- *\
+    Step 0: Choose action
+\* ------------------------------- */
+
+.section {
+  &.encrypt-first {
+    text-align: center;
+  }
+  &.create-restore {
+    text-align: center;
+  }
+  &.go-back {
+    margin-bottom: 20px;
+  }
+}
+
+
+/* ------------------------------- *\
+    Step 1: Create/Restore
+\* ------------------------------- */
+
+
+/* ------------------------------- *\
+    Step 2: Recovery Phrase
+\* ------------------------------- */
+
+
+/deep/ app-password > div {
+  margin-top: 20px;
+}
+
+/deep/ input.recovery-word {
+  max-width: 100%;
+}
+

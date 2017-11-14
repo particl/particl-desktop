@@ -1,0 +1,16 @@
+<h4 md-dialog-title>Confirm transaction</h4>
+
+<div mat-dialog-content>
+  {{dialogContent}}
+</div>
+
+<md-dialog-actions fxLayoutAlign="end center">
+  <button md-raised-button md-dialog-close>
+    <md-icon fontSet="partIcon" fontIcon="part-simple-remove"></md-icon>
+    Cancel
+  </button>
+  <button md-raised-button color="primary" md-dialog-close (click)="confirm()">
+    <md-icon fontSet="partIcon" fontIcon="part-stre-right"></md-icon>
+    Confirm
+  </button>
+</md-dialog-actions>
