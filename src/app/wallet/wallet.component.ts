@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { MdDialog, MdIconRegistry } from '@angular/material';
+import { MdDialog } from '@angular/material';
 
 import { WindowService } from '../core/core.module';
 import { SettingsService } from './settings/settings.service';
@@ -33,12 +33,7 @@ export class WalletViewsComponent implements OnInit {
     private _rpc: RpcService,
     private _modalsService: ModalsService,
     private dialog: MdDialog,
-    private iconRegistry: MdIconRegistry
   ) {
-
-    iconRegistry
-      .registerFontClassAlias('partIcon', 'part-icon')
-      .registerFontClassAlias('faIcon', 'fa');
   }
 
   ngOnInit() {

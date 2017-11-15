@@ -38,6 +38,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SignatureAddressModalComponent } from './shared/signature-address-modal/signature-address-modal.component';
 import { BrowserModule } from '@angular/platform-browser';
 
+/*
 const routes: Routes = [
   {
     path: 'wallet',
@@ -49,12 +50,13 @@ const routes: Routes = [
     ]
   }
 ];
+*/
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    RouterModule.forChild(routes),
+    // RouterModule.forChild(routes),
     SharedModule,
     QRCodeModule,
     FormsModule,

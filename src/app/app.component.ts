@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { MdIconRegistry } from '@angular/material'; // TODO: move to material module?
 import { Log } from 'ng2-logger';
 
 import { RpcService, WindowService } from './core/core.module';
@@ -20,20 +21,15 @@ export class AppComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     public window: WindowService,
-    private _test: RpcService
+    private _iconRegistry: MdIconRegistry
   ) {
-
-
+    _iconRegistry
+      .registerFontClassAlias('partIcon', 'part-icon')
+      .registerFontClassAlias('faIcon', 'fa');
   }
 
   ngOnInit() {
 
-  }
-
-  pollBlocks() {
-    this._test.call('getblockcount').subscribe(
-                    success => this.blocks = success,
-                    error => this.error = error);
   }
 
 }

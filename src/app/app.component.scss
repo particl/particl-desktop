@@ -1,2 +1,38 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+/*
+ * Wallet sidenavigation
+ */
+.logo {
+  display: inline-block;
+  background-image: url("../assets/particl-logo.svg");
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 144px 60px;
+  height: 60px;
+}
+
+.mat-sidenav { // nav container
+  width: 250px;
+  background-color: #222828;
+  color: #fff;
+  .mat-toolbar {
+    background: transparent;
+  }
+}
+
+.mat-list { // menu item (whole)
+  .mat-list-item { 
+    padding: 0 24px;
+  }
+  .mat-icon { // all icons in menu
+    margin: 8px 10px 0 0;
+    color: #4B4A4F;
+  }
+  .menu-item { // menu-item (name only)
+    font-family: $font;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: white;
+  }
+}
