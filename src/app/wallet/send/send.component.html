@@ -16,8 +16,10 @@
         </md-tab-group>
       </div>
       <div fxFlex="23" disableTouchRipple="true" class="bottom-line" fxLayoutAlign="left center">
-        <button md-button (click)="toggleAdvanced()" class="advanced-options"><!-- *ngIf="type === 'balanceTransfer'" -->
-          <md-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></md-icon>
+        <button md-button (click)="toggleAdvanced()" class="advanced-options">
+          <!-- *ngIf="type === 'balanceTransfer'" -->
+          <md-icon fontSet="partIcon"
+                   fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></md-icon>
           <span>{{ advancedText }}</span>
         </button>
       </div>
@@ -102,7 +104,10 @@
             <h5 fxFlex="15">Pay to</h5>
             <md-form-field fxFlex="100">
               <!-- fix success input -->
-              <input #address name="toAddress" mdInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
+              <input #address name="toAddress" mdInput
+                     [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
+                     type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress"
+                     (input)="verifyAddress()">
             </md-form-field>
             <div fxFlex="100" fxLayoutGap="20px">
               <md-form-field fxFlex="100">
@@ -115,7 +120,8 @@
                            fontSet="partIcon" fontIcon="part-multiple-19"></md-icon>
                 </span>
                 <span fxFlex="16.6">
-                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="partIcon" fontIcon="part-single-copy-04" (click)="pasteAddress()"></md-icon>
+                  <md-icon flex="100" class="cursor-pointer" mdTooltip="Paste" fontSet="partIcon"
+                           fontIcon="part-single-copy-04" (click)="pasteAddress()"></md-icon>
                 </span>
                 <span fxFlex="16.6">
                   <md-icon flex="100" mdTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="partIcon"
@@ -134,11 +140,11 @@
                fxLayoutAlign="center center">
             <h5 fxFlex="15">Narration</h5>
             <md-form-field fxFlex="100">
-            <input #narration type="text" mdInput name="sendNote"
-             placeholder="Optional: enter a short note to send with a payment"
-             maxlength="24"
-            [(ngModel)]="send.note" >
-            <md-hint align="end">{{narration.value.length}} / 24</md-hint>
+              <input #narration type="text" mdInput name="sendNote"
+                     placeholder="Optional: enter a short note to send with a payment"
+                     maxlength="24"
+                     [(ngModel)]="send.note">
+              <md-hint align="end">{{narration.value.length}} / 24</md-hint>
             </md-form-field>
           </div>
         </md-list-item>
@@ -155,9 +161,13 @@
                      placeholder="0.00000000"
                      [(ngModel)]="send.amount" (input)="verifyAmount()"
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
-                     oninput="validity.valid||(value='');" step="any">
+                     oninput="validity.valid||(value='');" step="any"
+                     [disabled]="isSendAll">
             </md-form-field>
-            <button md-button (click)="sendAllBlance()" class="send-all">Send All</button>
+            <md-checkbox name="send_all" [(ngModel)]="isSendAll" (click)="sendAllBlance()" class="send-all">
+              Send All
+            </md-checkbox>
+            <!--<button md-button (click)="sendAllBlance()" class="send-all">Send All</button>-->
             <md-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
               <md-option value="part">PART</md-option>
             </md-select>

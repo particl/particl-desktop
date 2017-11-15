@@ -48,6 +48,7 @@ export class SendComponent {
     currency: 'part',
     privacy: 8
   };
+  public isSendAll: boolean = false;
 
   /*
     RPC logic
@@ -166,6 +167,7 @@ export class SendComponent {
       currency: 'part',
       privacy: 50
     };
+    this.isSendAll = false;
   }
 
   clearReceiver() {
@@ -303,7 +305,8 @@ export class SendComponent {
   }
 
   sendAllBlance(): void {
-    this.send.amount = this.getBalance(this.send.input);
+    this.sendService.isSubstractfeefromamount = (!this.isSendAll);
+    this.send.amount = (!this.isSendAll) ? this.getBalance(this.send.input) : null;
   }
 
 }
