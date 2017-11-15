@@ -7,7 +7,7 @@ import { CoreModule } from '../core/core.module';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 
 import { SharedModule } from './shared/shared.module';
-import { SidebarModule } from './core/sidebar/sidebar.module';
+// import { SidebarModule } from './core/sidebar/sidebar.module';
 
 import { WalletModule } from './wallet/wallet.module';
 import { ModalsModule } from './modals/modals.module';
@@ -41,7 +41,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes), // TODO: multiple routes
     CommonModule,
     SharedModule,
-    SidebarModule.forRoot(),
+    // SidebarModule.forRoot(),
     WalletModule.forRoot(),
     // CoreModule.forRoot(),
     ModalsModule,
