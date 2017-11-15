@@ -28,7 +28,10 @@ export class PeerService {
     this._peerList.subscribe().unsubscribe();
 
     // setup observable for internal block height
-    this._highestBlockHeightInternal = this._rpc.state.observe('blocks');
+    this._highestBlockHeightInternal = Observable.create(
+      observer => this._observerHighestBlockHeightInternal = observer
+    ).publishReplay(1).refCount();
+    this._highestBlockHeightInternal.subscribe().unsubscribe();
 
     // setup observable for network block height
     this._highestBlockHeightNetwork = Observable.create(
@@ -49,6 +52,11 @@ export class PeerService {
     this._rpc.call('getpeerinfo').subscribe(
       (peerinfo: Array<Object>) => this.setPeerList(peerinfo),
       error => this.log.er(`updatePeerListLoop(): getpeerinfo error ${error}`)
+    );
+
+    this._rpc.call('getblockcount').subscribe(
+      blockcount => this._observerHighestBlockHeightInternal.next(blockcount),
+      error => this.log.er(`updatePeerListLoop(): getblockcount error ${error}`)
     );
 
     setTimeout(this.updatePeerListLoop.bind(this), 10000);

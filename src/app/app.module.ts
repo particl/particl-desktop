@@ -26,13 +26,15 @@ import { AppComponent } from './app.component';
 
 import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
-import { SettingsComponent } from './settings/settings.component';
+// todo move widgets into module?
+import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
 import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
+import { SettingsComponent } from './settings/settings.component';
 
 import 'hammerjs';
 import { FlashNotificationService } from './services/flash-notification.service';
 import { BlockStatusService } from './core/rpc/blockstatus.service';
-import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
+
 
 const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -53,16 +55,18 @@ const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(routes),
+    /* own modules */
     SharedModule,
     SidebarModule.forRoot(),
     WalletModule.forRoot(),
     RpcModule.forRoot(),
     ModalsModule,
+    /* material */
+    FlexLayoutModule,
     MdButtonModule,
     MdCheckboxModule,
     MdListModule,
     MdExpansionModule,
-    FlexLayoutModule,
     MdTooltipModule,
     MdSnackBarModule,
     MdMenuModule,

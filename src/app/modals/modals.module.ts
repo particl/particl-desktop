@@ -62,7 +62,8 @@ import { MultiwalletComponent } from './multiwallet/multiwallet.component';
     MultiwalletComponent
   ],
   exports: [
-    ModalsComponent
+    ModalsComponent,
+    PercentageBarComponent
   ],
   providers: [
     ModalsService,
