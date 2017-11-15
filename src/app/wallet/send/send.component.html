@@ -190,11 +190,11 @@
 
       <div class="actions">
         <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
-          <button md-raised-button color="primary" (click)="clear()">
+          <button md-raised-button color="warn" (click)="clear()">
             <md-icon fontSet="partIcon" fontIcon="part-simple-remove"></md-icon>
             Clear all
           </button>
-          <button md-raised-button color="disabled" class="validate" (click)="onSubmit()"
+          <button md-raised-button color="primary" class="validate" (click)="onSubmit()"
                   [disabled]="!checkAddress() || !checkAmount()">
             <md-icon fontSet="partIcon" fontIcon="part-stre-right"></md-icon>
             Make payment
