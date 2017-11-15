@@ -157,7 +157,7 @@
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                      oninput="validity.valid||(value='');" step="any">
             </md-form-field>
-            <button (click)="sendAllBlance()"> Send All </button>
+            <button md-button (click)="sendAllBlance()" class="send-all">Send All</button>
             <md-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
               <md-option value="part">PART</md-option>
             </md-select>

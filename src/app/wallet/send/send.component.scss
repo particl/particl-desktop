@@ -130,7 +130,17 @@ app-header {
   }
 }
 
-.mat-icon {
+.send-all { // button
+  font-size: 12px;
+  font-weight: normal;
+  color: $text-muted;
+  min-width: auto;
+  &:hover {
+    color: $text;
+  }
+}
+
+.mat-icon { // addy lookup, copy, delete
   margin-right: 5px;
   width: auto;
   height: auto;
