@@ -1,60 +1,108 @@
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
 
-// Module to create native browser window.
+const electron      = require('electron');
+const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-const path = require('path');
-const url = require('url');
+const path     = require('path');
+const url      = require('url');
 const platform = require('os').platform();
-const log = require('electron-log');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs/Observable').Observable;
+const log      = require('electron-log');
 
 log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
 log.transports.file.file = log.transports.file
-  .findLogPath(log.transports.file.appName)
-  .replace('log.log', 'partgui.log');
+   .findLogPath(log.transports.file.appName)
+   .replace('log.log', 'particl.log');
+log.debug(`console log level: ${log.transports.console.level}`);
+log.debug(   `file log level: ${log.transports.file.level   }`);
 
-const daemon = require('./modules/rpc/daemon');
+const _options = require('./modules/options');
+const init     = require('./modules/init');
+const rpc      = require('./modules/rpc/rpc');
+const daemon   = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
 let options;
-let eNotify;
+
 let openDevTools = false;
 
-function createWindow () {
-  const _initWindow = () => {
-    if (!mainWindow) {
-      initMainWindow(makeTray());
-    }
-  };
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', () => {
+  log.debug('app ready')
+  options = _options.parse();
+  initMainWindow();
+  init.start(mainWindow);
+});
 
-  daemon.init(_initWindow);
-  options = daemon.getOptions();
-}
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+});
+
+app.on('activate', function () {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    initMainWindow()
+  }
+});
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.
+app.on('browser-window-created',function(e, window) {
+  eNotify = require('electron-notify');
+  eNotify.setConfig({
+    appIcon: path.join(__dirname, 'src/assets/icons/notification.png'),
+    displayTime: 6000,
+    defaultStyleText: {
+      color: '#FF0000',
+      fontWeight: 'bold'
+    },
+    maxVisibleNotifications: 1
+  });
+
+  rxIpc.registerListener('rx-ipc-notification', function(title, desc, params) {
+
+    eNotify.notify({ title: title, text: desc });
+    return Observable.create(observer => {
+      observer.complete(true);
+    });
+  });
+  window.setMenu(null);
+});
 
 /*
 ** initiates the Main Window
 */
-function initMainWindow(trayImage) {
+function initMainWindow() {
+
+  let trayImage = makeTray();
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1270, // on Win, the width of app is few px smaller than it should be => triggers smaller breakpoints; this size should cause the same layout results on all OSes
-    minWidth: 961,
-    maxWidth: 1920,
-    height: 720,
+    // on Win, the width of app is few px smaller than it should be.
+    // this triggers smaller breakpoints
+    // this size should cause the same layout results on all OSes
+    width:     1270,
+    minWidth:  961,
+    maxWidth:  1920,
+    height:    720,
     resizable: false,
-    icon: trayImage,
     webPreferences: {
-      nodeIntegration: false,
-      sandbox: true,
+      nodeIntegration:  false,
+      sandbox:          true,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      preload:          path.join(__dirname, 'preload.js')
     },
   });
 
@@ -63,9 +111,9 @@ function initMainWindow(trayImage) {
     mainWindow.loadURL('http://localhost:4200');
   } else {
     mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
-      slashes: true
+      pathname: path.join(__dirname, 'dist/index.html'),
+      slashes:  true
     }));
   }
 
@@ -96,7 +144,6 @@ function makeTray() {
 
   // Default tray image + icon
   let trayImage = path.join(__dirname, 'resources/icon.png');
-
 
   // Determine appropriate icon for platform
   // if (platform === 'darwin') {
@@ -186,54 +233,3 @@ function makeTray() {
 
   return trayImage;
 }
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
-
-// Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-});
-
-app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
-});
-
-
-  
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-app.on('browser-window-created',function(e, window) {
-  // Gives issues when require initially
-  eNotify = require('electron-notify');
-  eNotify.setConfig({
-    appIcon: path.join(__dirname, 'src/assets/icons/notification.png'),
-    displayTime: 6000,
-    defaultStyleText: {
-      color: '#FF0000',
-      fontWeight: 'bold'
-    },
-    maxVisibleNotifications: 1
-  });
-
-  rxIpc.registerListener('rx-ipc-notification', function(title, desc, params) {
-
-    eNotify.notify({ title: title, text: desc });
-    return Observable.create(observer => {
-      observer.complete(true);
-    });
-  });
-
-  window.setMenu(null);
-});

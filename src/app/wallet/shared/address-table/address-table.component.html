@@ -82,7 +82,7 @@
 </div>
 
 <md-paginator
-  *ngIf="displayPagination"
+  *ngIf="displayPagination && getSinglePage().length>0"
   [length]="getTotalAddressCount()"
   [pageSize]="getMaxAddressesPerPage()"
   [pageSizeOptions]="PAGE_SIZE_OPTIONS"
