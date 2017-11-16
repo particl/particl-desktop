@@ -49,14 +49,14 @@ const routes: Routes = [
       { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } }
     ]
   }
-];
-*/
+];*/
+
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    // RouterModule.forChild(routes),
+    //RouterModule.forChild(routes),
     SharedModule,
     QRCodeModule,
     FormsModule,
@@ -97,7 +97,13 @@ const routes: Routes = [
   exports: [
     TransactionsTableComponent,
     AddressTableComponent,
-    BalanceComponent
+    BalanceComponent,
+    /* sidebar lazy load*/
+    ReceiveComponent,
+    SendComponent,
+    HistoryComponent,
+    AddressBookComponent
+
   ],
   entryComponents: [
     AddAddressLabelComponent,

@@ -22,12 +22,25 @@ import 'hammerjs';
 import { FlashNotificationService } from './services/flash-notification.service';
 
 
-const routes: Routes = [
+/*const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
   { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
   { path: '**', redirectTo: 'overview', pathMatch: 'full' } // Catch all route
 ];
+*/
 
+const routes: Routes = 0[
+  { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
+  {
+    path: 'wallet',
+    children: [
+      { path: 'receive', component: ReceiveComponent, data: { title: 'Receive' } },
+      { path: 'send', component: SendComponent, data: { title: 'Send' } },
+      { path: 'history', component: HistoryComponent, data: { title: 'History' } },
+      { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } }
+    ]
+  }
+];
 @NgModule({
   declarations: [
     WalletViewsComponent,

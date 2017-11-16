@@ -11,12 +11,19 @@ import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.modu
 import { WalletViewsModule } from './wallet/wallet.module';
 
 import { AppComponent } from './app.component';
-
-
+/*
 const routes: Routes = [
   { path: 'overview', component: TestComponent, data: { title: 'Overview' } },
   { path: 'settings', component: TestComponent, data: { title: 'Settings' } },
   { path: '**', redirectTo: 'overview', pathMatch: 'full' } // Catch all route
+];*/
+
+const routes: Routes = [
+  { 
+    path: 'overview', 
+    component: TestComponent, 
+    data: { title: 'Overview' } 
+  }
 ];
 
 @NgModule({
@@ -31,7 +38,7 @@ const routes: Routes = [
     CoreModule.forRoot(),
     CoreUiModule,
     MultiwalletModule,
-    WalletViewsModule
+    // WalletViewsModule
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
