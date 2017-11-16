@@ -31,15 +31,31 @@ $radius: 4px; // default border-radius
 
 
 /* ------------------------------- *\
-    Helper classes
+    Placeholder selectors
+    http://thesassway.com/intermediate/understanding-placeholder-selectors
 \* ------------------------------- */
 
+%subtitle { // section titles / H2's
+  @extend %disable-select;
+  font-size: 15px;
+  font-family: $font;
+  font-weight: normal;
+  text-transform: uppercase;
+  color: $text-muted;
+  border-bottom: 1px solid $bg-shadow;
+  padding: 0 0 8px;
+  margin: 30px 0 25px;
+}
+
+
 // enable/disable text selection
-.disable-select {
+.disable-select,
+%disable-select {
   user-select: none;
   cursor: default;
 }
-.enable-select {
+.enable-select,
+%enable-select {
   user-select: auto;
   cursor: text;
 }

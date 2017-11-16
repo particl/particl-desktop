@@ -78,10 +78,12 @@
   font-weight: normal;
   text-transform: uppercase;
   color: $text-muted;
+  /*
   &.first {
     padding-top: 0;
     height: auto;
   }
+  */
 }
 
 .address-info { // address "card"
@@ -103,18 +105,6 @@
     color: $text-muted;
     background: transparent;
     transition: background .3s;
-    /*
-    .total {
-      font-size: 0.8em;
-      font-family: $font;
-      color: $text-muted;
-      margin-top: 5px;
-      .received-amount {
-        color: $color;
-        font-weight: 600;
-      }
-    }
-    */
   }
   .address-actions { // copy, sign, ...
     .mat-icon {
