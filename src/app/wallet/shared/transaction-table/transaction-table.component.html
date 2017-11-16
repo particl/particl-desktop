@@ -26,7 +26,10 @@
 
         <!-- Confirmations -->
         <md-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation">
-          <span md-line mdTooltip="Confirmations" matTooltipPosition="before"><md-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
+          <span md-line mdTooltip="Confirmations" matTooltipPosition="before">
+            <md-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></md-icon>
+            {{ tx.getConfirmationCount() }}
+          </span>
         </md-panel-title>
 
         <!-- Category icon -->
@@ -40,13 +43,13 @@
           </span>
           <span *ngSwitchCase="'send'" class="tx-type sent">
             <md-icon fontSet="partIcon" fontIcon="part-tail-left" color="warn"></md-icon>Sent
-            <!-- TODO: if TX cointains narration, display the following icon: -->
-            <md-icon class="narration" fontSet="partIcon" fontIcon="part-pen-23" mdTooltip="Narration included" matTooltipPosition="after"></md-icon>
+            <md-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-23"
+                     mdTooltip="Narration included" matTooltipPosition="after"></md-icon>
           </span>
           <span *ngSwitchCase="'receive'" class="tx-type received">
             <md-icon fontSet="partIcon" fontIcon="part-tail-right" color="primary"></md-icon>Received
-            <!-- TODO: if TX cointains narration, display the following icon: -->
-            <md-icon class="narration" fontSet="partIcon" fontIcon="part-pen-23" mdTooltip="Narration included" matTooltipPosition="after"></md-icon>
+            <md-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-23"
+                     mdTooltip="Narration included" matTooltipPosition="after"></md-icon>
           </span>
         </md-panel-title>
 
@@ -84,13 +87,6 @@
 
       <div class="container history_container" fxLayoutWrap layout-padding>
 
-        <!-- Narration -->
-        <!-- TODO: display only when it's included in the TX: -->
-        <div class="tx-detail-item" fxFlex="1 1 100%">
-          <span fxFlex="0 0 80px">Narration:</span>
-          <input fxFlex="1 1 calc(100% - 80px)" value=">> Narration content here <<" class="TO_DO narration input">
-        </div>
-
         <div fxFlex="1 1 calc(100% - 260px)" fxLayout="column">
           <!-- To/from (detail) -->
           <div class="tx-detail-item" fxFlex>
@@ -100,7 +96,10 @@
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
             <span fxFlex="0 0 80px">TXID:</span>
-            <a fxFlex="1 1 calc(100% - 80px)" class="tx-detail-link" href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank" mdTooltip="Show on Block Explorer">{{tx.txid}}</a>
+            <a fxFlex="1 1 calc(100% - 80px)" class="tx-detail-link"
+               href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}"
+               target="_blank" mdTooltip="Show on Block Explorer">
+              {{tx.txid}}</a>
           </div>
         </div>
 
@@ -115,6 +114,12 @@
             <span>Net amount:</span>
             <span class="md-right">{{ tx.getNetAmount()}} PART</span>
           </div>
+        </div>
+
+        <!-- Narration -->
+        <div class="tx-detail-item" fxFlex="1 1 100%" *ngIf="tx.getNarration()">
+          <span fxFlex="0 0 80px">Narration:</span>
+          <input fxFlex="1 1 calc(100% - 80px)" value="{{tx.getNarration()}}" class="narration input">
         </div>
 
       </div><!-- .history_cointainer -->
