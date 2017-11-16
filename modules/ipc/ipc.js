@@ -51,7 +51,12 @@ exports.daemonReady = function(webContents) {
 ** prepares `rpc-channel` to receive RPC calls from the renderer
 */
 exports.init = function() {
-
+  
+  // Make sure that rpc-channel has no active listeners. 
+  // Better safe than sorry.
+  rxIpc.removeListeners('rpc-channel');
+  
+  // Register new listener
   rxIpc.registerListener('rpc-channel', (event, method, params) => {
     return Observable.create(observer => {
 
