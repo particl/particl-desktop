@@ -102,7 +102,7 @@
     "@angular/material": "2.0.0-beta.9",
     "@angular/platform-browser": "^4.4.6",
     "@angular/platform-browser-dynamic": "^4.4.6",
-    "@angular/router": "^4.4.6",
+    "@angular/router": "^5.0.2",
     "angular2-qrcode": "^2.0.1",
     "bluebird": "^3.4.7",
     "buffered-spawn": "^3.3.2",
