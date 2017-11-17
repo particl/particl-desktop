@@ -6,6 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 
 import { SendService } from './send.service';
 import { FlashNotificationService } from '../../services/flash-notification.service';
+import { IpcService } from '../../../core/ipc/ipc.service';
 
 
 describe('SendService', () => {
@@ -16,7 +17,7 @@ describe('SendService', () => {
         RpcModule.forRoot(),
         MdSnackBarModule
       ],
-      providers: [SendService, FlashNotificationService]
+      providers: [SendService, FlashNotificationService, IpcService]
     });
   });
 

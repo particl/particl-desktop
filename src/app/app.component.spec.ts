@@ -8,7 +8,7 @@ import { RpcService } from './core/core.module';
 
 import { AppComponent } from './app.component';
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
 
   let component: AppComponent;
 

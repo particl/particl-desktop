@@ -5,11 +5,12 @@ import { MdPaginatorModule, MdTabsModule, MdSnackBarModule } from '@angular/mate
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { QRCodeModule } from 'angular2-qrcode';
-import {RpcModule} from "../../../core/rpc/rpc.module";
+import { RpcModule } from '../../../core/rpc/rpc.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { ModalsService } from '../../modals/modals.service';
 import { FlashNotificationService } from '../../services/flash-notification.service';
+import { IpcService } from '../../../core/ipc/ipc.service';
 
 import { ReceiveComponent } from './receive.component';
 
@@ -36,7 +37,8 @@ describe('ReceiveComponent', () => {
       ],
       providers: [
         ModalsService,
-        FlashNotificationService
+        FlashNotificationService,
+        IpcService
       ]
     })
     .compileComponents();

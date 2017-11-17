@@ -11,6 +11,7 @@ import { ModalsService } from '../../../../modals/modals.service';
 import { AddressService } from '../../../shared/address.service';
 
 import { NewAddressModalComponent } from './new-address-modal.component';
+import { IpcService } from '../../../../../core/ipc/ipc.service';
 
 describe('NewAddressModalComponent', () => {
   let component: NewAddressModalComponent;
@@ -38,7 +39,8 @@ describe('NewAddressModalComponent', () => {
         /* own */
         FlashNotificationService,
         ModalsService,
-        AddressService
+        AddressService,
+        IpcService
         ]
     })
     .compileComponents();

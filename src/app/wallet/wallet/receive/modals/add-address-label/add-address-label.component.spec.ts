@@ -11,6 +11,7 @@ import { FlashNotificationService } from '../../../../services/flash-notificatio
 import { ModalsService } from '../../../../modals/modals.service';
 
 import { AddAddressLabelComponent } from './add-address-label.component';
+import { IpcService } from '../../../../../core/ipc/ipc.service';
 
 describe('AddAddressLabelComponent', () => {
   let component: AddAddressLabelComponent;
@@ -32,7 +33,8 @@ describe('AddAddressLabelComponent', () => {
       providers: [
         ModalsService,
         FlashNotificationService,
-        { provide: MdDialogRef}
+        { provide: MdDialogRef},
+        IpcService
       ]
     })
       .compileComponents();

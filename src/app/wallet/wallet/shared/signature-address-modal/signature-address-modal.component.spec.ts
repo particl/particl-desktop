@@ -7,9 +7,10 @@ import { WalletModule } from '../../wallet.module';
 import { SharedModule } from '../../../shared/shared.module';
 
 import { ModalsService } from '../../../modals/modals.service';
+import { IpcService } from '../../../../core/ipc/ipc.service';
+
 
 import { SignatureAddressModalComponent } from './signature-address-modal.component';
-
 
 describe('SignatureAddressModalComponent', () => {
   let component: SignatureAddressModalComponent;
@@ -23,7 +24,7 @@ describe('SignatureAddressModalComponent', () => {
         RpcModule.forRoot(),
         MdSnackBarModule
       ],
-      providers: [FlashNotificationService, ModalsService]
+      providers: [FlashNotificationService, ModalsService, IpcService]
     })
       .compileComponents();
   }));

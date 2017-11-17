@@ -3,10 +3,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdDialogRef, MdSnackBarModule } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
-import {RpcModule} from "../../../core/rpc/rpc.module";
+import { RpcModule } from '../../../core/rpc/rpc.module';
 import { ModalsModule } from '../modals.module';
 
 import { FlashNotificationService } from '../../services/flash-notification.service';
+import { IpcService } from '../../../core/ipc/ipc.service';
 
 import { ColdstakeComponent } from './coldstake.component';
 
@@ -25,7 +26,8 @@ describe('ColdstakeComponent', () => {
       ],
       providers: [
         { provide: MdDialogRef},
-        FlashNotificationService
+        FlashNotificationService,
+        IpcService
       ]
     })
     .compileComponents();

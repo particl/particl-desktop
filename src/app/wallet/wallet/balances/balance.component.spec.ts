@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
 
-import {StateService} from "../../../core/state/state.service";
+import { StateService } from '../../../core/state/state.service';
 
 import { BalanceComponent } from './balance.component';
 

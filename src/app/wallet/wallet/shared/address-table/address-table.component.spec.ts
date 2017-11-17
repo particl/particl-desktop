@@ -9,6 +9,7 @@ import { FlashNotificationService } from '../../../services/flash-notification.s
 import { ModalsService } from '../../../modals/modals.service';
 
 import { AddressTableComponent } from './address-table.component';
+import { IpcService } from '../../../../core/ipc/ipc.service';
 
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
@@ -22,7 +23,7 @@ describe('AddressTableComponent', () => {
         RpcModule.forRoot(),
         MdSnackBarModule
       ],
-      providers: [ FlashNotificationService, ModalsService ]
+      providers: [ FlashNotificationService, ModalsService, IpcService ]
     })
       .compileComponents();
   }));

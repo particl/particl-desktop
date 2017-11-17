@@ -3,6 +3,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
 
+import { IpcService } from '../../../core/ipc/ipc.service';
 import { TransactionService } from './transaction.service';
 
 describe('TransactionService', () => {
@@ -12,7 +13,7 @@ describe('TransactionService', () => {
         SharedModule,
         RpcModule.forRoot()
       ],
-      providers: [TransactionService]
+      providers: [TransactionService, IpcService]
     });
   });
 
