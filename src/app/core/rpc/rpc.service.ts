@@ -89,6 +89,24 @@ export class RpcService {
       return this._ipc.runCommand('rpc-channel', null, method, params)
       .map(response => response && (response.result !== undefined) ? response.result : response);
 
+    } else {
+      // Running in browser, delete?
+      const postData = JSON.stringify({
+        method: method,
+        params: params,
+        id: 1
+      });
+
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
+      headers.append('Accept', 'application/json');
+
+      return this._http
+      .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+        .map(response => response.json().result)
+        .catch(error => Observable.throw(
+          typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
     }
   }
 
