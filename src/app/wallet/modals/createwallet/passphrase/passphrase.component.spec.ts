@@ -1,16 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MdDialogRef, MdIconModule, MdSnackBarModule } from '@angular/material';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { CoreModule } from '../../../../core/core.module';
 
 import { PassphraseService } from './passphrase.service';
+import { FlashNotificationService } from '../../../services/flash-notification.service';
 
-import { FormsModule } from '@angular/forms';
 import { FocusDirective } from '../../modals.directives';
 import { PassphraseComponent } from './passphrase.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdDialogRef, MdIconModule, MdInputModule, MdSnackBarModule } from '@angular/material';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
 
 
 describe('PassphraseComponent', () => {

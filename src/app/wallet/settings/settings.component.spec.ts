@@ -1,13 +1,12 @@
+import { Location } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { Location, LocationStrategy } from '@angular/common';
+import { SharedModule } from '../shared/shared.module';
 
-import { SettingsComponent } from './settings.component';
 import { SettingsService } from './settings.service';
 
-import { SharedModule } from '../shared/shared.module';
+import { SettingsComponent } from './settings.component';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;

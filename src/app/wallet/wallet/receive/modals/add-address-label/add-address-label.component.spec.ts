@@ -1,13 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddAddressLabelComponent } from './add-address-label.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
-import { RpcModule } from '../../../../core/rpc/rpc.module';
+
+import { RpcModule } from '../../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../../shared/shared.module';
+
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
 import { ModalsService } from '../../../../modals/modals.service';
+
+import { AddAddressLabelComponent } from './add-address-label.component';
 
 describe('AddAddressLabelComponent', () => {
   let component: AddAddressLabelComponent;

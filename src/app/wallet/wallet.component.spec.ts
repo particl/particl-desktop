@@ -1,12 +1,10 @@
 import { TestBed, async } from '@angular/core/testing';
 import { APP_BASE_HREF } from '@angular/common';
-
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { WalletViewsModule } from './wallet.module';
-import { WalletViewsComponent } from './wallet.component';
+import {AppModule} from "../app.module";
 
-import { WindowService } from './core/window.service';
+import { WalletViewsComponent } from './wallet.component';
 
 describe('WalletViewsComponent', () => {
 

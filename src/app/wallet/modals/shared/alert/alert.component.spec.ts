@@ -1,13 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AlertComponent } from './alert.component';
+import { MdDialogModule, MdDialogRef } from '@angular/material';
 
 import { ModalsModule } from '../../modals.module';
-
 import { SharedModule } from '../../../shared/shared.module';
 import { CoreModule } from '../../../../core/core.module';
-import {MdDialogModule, MdDialogRef} from '@angular/material';
 
+import { AlertComponent } from './alert.component';
 
 describe('AlertComponent', () => {
   let component: AlertComponent;

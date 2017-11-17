@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { RpcModule } from '../rpc.module';
-import { SharedModule } from '../../shared/shared.module';
+import {SharedModule} from "../../../wallet/shared/shared.module";
 
 import { BlockStatusService } from './blockstatus.service';
 

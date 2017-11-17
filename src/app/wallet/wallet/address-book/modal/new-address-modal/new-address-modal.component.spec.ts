@@ -3,14 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
 
-import { NewAddressModalComponent } from './new-address-modal.component';
-
+import { RpcModule } from '../../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../../shared/shared.module';
-import { RpcModule } from '../../../../core/rpc/rpc.module';
 
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
 import { ModalsService } from '../../../../modals/modals.service';
 import { AddressService } from '../../../shared/address.service';
+
+import { NewAddressModalComponent } from './new-address-modal.component';
 
 describe('NewAddressModalComponent', () => {
   let component: NewAddressModalComponent;

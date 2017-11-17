@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DeleteConfirmationModalComponent } from './delete-confirmation-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MdDialogModule, MdDialogRef } from '@angular/material';
+
+import { DeleteConfirmationModalComponent } from './delete-confirmation-modal.component';
 
 describe('DeleteConfirmationModalComponent', () => {
   let component: DeleteConfirmationModalComponent;

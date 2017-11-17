@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RpcModule } from '../../../../core/rpc/rpc.module';
 
-import { TransactionsTableComponent } from './transaction-table.component';
-import { RpcModule } from '../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
+
+import { TransactionsTableComponent } from './transaction-table.component';
 
 describe('TransactionTableComponent', () => {
   let component: TransactionsTableComponent;

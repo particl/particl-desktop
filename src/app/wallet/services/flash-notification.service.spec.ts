@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
-import {FlashNotificationService} from './flash-notification.service';
 import { MdSnackBarModule } from '@angular/material';
 
+import { FlashNotificationService } from './flash-notification.service';
 
 describe('FlashNotificationServiceService', () => {
   beforeEach(() => {

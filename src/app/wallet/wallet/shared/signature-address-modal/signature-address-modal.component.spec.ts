@@ -1,12 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SignatureAddressModalComponent } from './signature-address-modal.component';
-import { WalletModule } from '../../wallet.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import { SharedModule } from '../../../shared/shared.module';
 import { FlashNotificationService } from '../../../services/flash-notification.service';
 import { MdSnackBarModule } from '@angular/material';
+
+import { RpcModule } from '../../../../core/rpc/rpc.module';
+import { WalletModule } from '../../wallet.module';
+import { SharedModule } from '../../../shared/shared.module';
+
 import { ModalsService } from '../../../modals/modals.service';
+
+import { SignatureAddressModalComponent } from './signature-address-modal.component';
+
 
 describe('SignatureAddressModalComponent', () => {
   let component: SignatureAddressModalComponent;

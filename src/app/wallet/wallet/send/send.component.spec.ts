@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SendComponent } from './send.component';
+import { MdDialogRef, MdSnackBarModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 
 import { ModalsService } from '../../modals/modals.service';
 import { FlashNotificationService } from '../../services/flash-notification.service';
-import { MdDialogRef, MdSnackBarModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { SendComponent } from './send.component';
 
 describe('SendComponent', () => {
   let component: SendComponent;

@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SyncingComponent } from './syncing.component';
 import { MdIconModule } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
-
 import { CoreModule } from '../../../core/core.module';
+
+import { SyncingComponent } from './syncing.component';
 
 describe('SyncingComponent', () => {
   let component: SyncingComponent;

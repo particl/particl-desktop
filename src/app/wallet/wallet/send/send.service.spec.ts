@@ -1,11 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { MdSnackBarModule } from '@angular/material';
 
-import { RpcModule } from '../../core/rpc/rpc.module';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 import { SharedModule } from '../../shared/shared.module';
 
 import { SendService } from './send.service';
 import { FlashNotificationService } from '../../services/flash-notification.service';
-import { MdSnackBarModule } from '@angular/material';
+
 
 describe('SendService', () => {
   beforeEach(() => {

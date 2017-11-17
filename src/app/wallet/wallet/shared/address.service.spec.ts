@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { RpcModule } from '../../core/rpc/rpc.module';
 import { SharedModule } from '../../shared/shared.module';
+import { RpcModule } from '../../../core/rpc/rpc.module';
 
 import { AddressService } from './address.service';
 
