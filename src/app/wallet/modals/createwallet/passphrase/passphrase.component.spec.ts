@@ -1,17 +1,23 @@
+/* modules (deps) */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MdDialogRef, MdIconModule, MdSnackBarModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+/* modules (own) */
 import { SharedModule } from '../../../shared/shared.module';
 import { CoreModule } from '../../../../core/core.module';
 
+/* services (own) */
 import { PassphraseService } from './passphrase.service';
-
-import { FormsModule } from '@angular/forms';
-import { FocusDirective } from '../../modals.directives';
-import { PassphraseComponent } from './passphrase.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdDialogRef, MdIconModule, MdInputModule, MdSnackBarModule } from '@angular/material';
 import { FlashNotificationService } from '../../../services/flash-notification.service';
 
+/* components & directives (own) */
+import { FocusDirective } from '../../modals.directives';
+import { PassphraseComponent } from './passphrase.component';
+
+
+/* delete any unused imports! */
 
 describe('PassphraseComponent', () => {
   let component: PassphraseComponent;
@@ -20,9 +26,11 @@ describe('PassphraseComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FormsModule,
+       /* own */
         SharedModule,
         CoreModule.forRoot(),
+        /* deps */
+        FormsModule,
         BrowserAnimationsModule,
         MdIconModule,
         MdSnackBarModule
