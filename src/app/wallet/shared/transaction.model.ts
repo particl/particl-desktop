@@ -1,31 +1,54 @@
 import { Amount } from '../../shared/util/utils';
 
+// TODO: move to Deserializable.ts
 interface Deserializable {
-    getTypes(): Object;
+  getTypes(): Object;
 }
 
-export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake';
+export type TransactionCategory = 'all'
+                                | 'send'
+                                | 'orphan'
+                                | 'immature'
+                                | 'coinbase'
+                                | 'receive'
+                                | 'orphaned_stake'
+                                | 'stake'
+                                | 'internal_transfer';
 
 export class Transaction implements Deserializable {
-  txid: string;
-  address: string;
-  stealth_address: string;
-  type: string;
-  category: string;
   amount: number;
-  fee: number;
-  reward: number;
   blockhash: string;
   blockindex: number;
+  category: string;
   confirmations: number;
   time: number;
-  comment: string;
-  vout: number;
-  walletconflicts: Object[];
+  txid: string;
 
-  constructor(txid: string, address: string, category: string, amount: number, reward: number,
-              blockhash: string, blockindex: number, confirmations: number,
-              time: number, comment: string, vout: number) { }
+  // address: string;
+  // vout: number;
+
+  // stealth_address: string;
+  // type: string;
+
+  // fee: number;
+  // reward: number;
+  // comment: string;
+  // walletconflicts: Object[];
+
+  constructor(
+    // amount: number,
+    // blockhash: string,
+    // blockindex: number,
+    // category: string,
+    // confirmations: number,
+    // time: number,
+    // txid: string,
+
+    // address: string,
+    // reward: number,
+    // comment: string,
+    // vout: number
+  ) { }
 
 
   getTypes() {
@@ -35,10 +58,11 @@ export class Transaction implements Deserializable {
   }
 
   public getAddress(): string {
-    if (this.stealth_address === undefined) {
-      return this.address;
-    }
-    return this.stealth_address;
+    // if (this.stealth_address === undefined) {
+    //   return this.address;
+    // }
+    // return this.stealth_address;
+    return undefined;
   }
 
 
@@ -58,11 +82,12 @@ export class Transaction implements Deserializable {
   /* Amount stuff */
   /** Turns amount into an Amount Object */
   public getAmountObject(): Amount {
-    if (this.category === 'stake') {
-      return new Amount(+this.reward);
-    } else {
-      return new Amount(+this.amount);
-    }
+    // if (this.category === 'stake') {
+    //   return new Amount(+this.reward);
+    // } else {
+    //   return new Amount(+this.amount);
+    // }
+    return new Amount(0);
   }
 
   /** Calculates the actual amount that was transfered, including the fee */
@@ -70,25 +95,24 @@ export class Transaction implements Deserializable {
   public getNetAmount(): number {
     const amount: number = +this.getAmountObject().getAmount();
 
-    /* If fee undefined then just return amount */
-    if (this.fee === undefined) {
-      return amount;
-    /* sent */
-    } else if (amount < 0) {
-      return new Amount(+amount + (+this.fee)).getAmount();
-    } else {
-      return new Amount(+amount - (+this.fee)).getAmount();
-    }
+    // /* If fee undefined then just return amount */
+    // if (this.fee === undefined) {
+    //   return amount;
+    // /* sent */
+    // } else if (amount < 0) {
+    //   return new Amount(+amount + (+this.fee)).getAmount();
+    // } else {
+    //   return new Amount(+amount - (+this.fee)).getAmount();
+    // }
+    return 0;
   }
 
-
-
-  /* Date stuff */
   public getDate(): string {
     return this.dateFormatter(new Date(this.time * 1000));
   }
 
   private dateFormatter(d: Date) {
+    // TODO: format string
     return (
       d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + '-' +
       ((d.getMonth() + 1) < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + '-' +
@@ -103,11 +127,14 @@ export class Transaction implements Deserializable {
 }
 
 /*
-    Deserialize JSON and cast it to a class of "type".
+   Deserialize JSON and cast it to a class of "type".
+   This does not enforce statically typed stuff at runtime tho, there is one lib called TypedJSON that does.
 */
-
 export function deserialize(json: Object, type: any): Transaction {
+  console.log(type);
+  console.log(json);
   const instance = new type();
+  // const instance = new Transaction();
   const types = instance.getTypes();
 
   for (const prop in json) {
@@ -115,9 +142,10 @@ export function deserialize(json: Object, type: any): Transaction {
       continue;
     }
     // Note: disabled for walletconflicts, which is an empty array.
-    if (typeof json[prop] === 'object' && prop !== 'walletconflicts') {
-      instance[prop] = deserialize(json[prop], types[prop]);
-    } else {
+    // if (typeof json[prop] === 'object' && prop !== 'walletconflicts') {
+    //   instance[prop] = deserialize(json[prop], types[prop]);
+    // } else {
+    if (typeof json[prop] === 'object') {
       instance[prop] = json[prop];
     }
   }

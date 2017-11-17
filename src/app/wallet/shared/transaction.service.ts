@@ -22,14 +22,12 @@ export class TransactionService {
   loading: boolean = false;
   testnet: boolean = false;
 
-
   /* How many transactions do we display per page and keep in memory at all times.
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
   PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
 
-  constructor(private rpc: RPCService) {
-  }
+  constructor(private rpc: RPCService) {}
 
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
@@ -49,7 +47,6 @@ export class TransactionService {
     .subscribe(chain => this.testnet = chain === 'test');
   }
 
-
   changePage(page: number) {
     if (page < 0) {
       return;
@@ -64,44 +61,33 @@ export class TransactionService {
   }
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
-  rpc_update() {
+  rpc_update(config?: any) {
 
-    this.rpc.call('listtransactions', [
-      '*', +this.MAX_TXS_PER_PAGE,
-      (this.currentPage * this.MAX_TXS_PER_PAGE)
-    ])
-    .subscribe(
-      (txResponse: Array<Object>) => {
-        // The callback will send over an array of JSON transaction objects.
-        this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
-        this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
+    if (!config)
+      config = {};
 
-        if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
-          this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
-        }
+    config.count = +this.MAX_TXS_PER_PAGE;
+    config.skip  = +this.MAX_TXS_PER_PAGE * this.currentPage;
 
-        this.deleteTransactions();
+    this.rpc.call('filtertransactions', [ config ])
+    // this.rpc.call('listtransactions', [ '*', config.count, config.skip ])
+    .subscribe((txResponse: Array<Transaction>) => {
 
-        txResponse.forEach((tx) => {
-          this.addTransaction(tx);
-        });
-        this.loading = false;
-        this.log.d(`rpc_update, txs array: ${this.txs.length}`);
-      });
+      // TODO: remove
+      this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
+      this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
+      if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
+        this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
+      }
+
+      console.log(txResponse);
+      this.deleteTransactions();
+      txResponse.forEach(tx => this.txs.push(deserialize(tx, Transaction)));
+      console.log(this.txs);
+
+      this.loading = false;
+      this.log.d(`rpc_update, txs array: ${this.txs.length}`);
+    });
 
   }
-
-  // Deserializes JSON objects to Transaction classes.
-  // This does not enforce statically typed stuff at runtime tho, there is one lib called TypedJSON that does.
-  addTransaction(json: Object): void {
-    const instance: Transaction = deserialize(json, Transaction);
-    if (typeof instance.txid === 'undefined') {
-      return;
-    }
-
-    // this.txs.push(instance);
-    this.txs.unshift(instance);
-  }
-
 }
-
