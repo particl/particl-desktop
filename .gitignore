@@ -44,3 +44,6 @@ Thumbs.db
 
 
 package-lock\.json
+
+# packages
+/packages

@@ -110,7 +110,7 @@ export class RpcService {
           typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
     }
   }
-  
+
 // TODO; MOVE rpc-state stuff into own services, clouding it up here
   /**
    * Make an RPC Call that saves the response in the state service.
