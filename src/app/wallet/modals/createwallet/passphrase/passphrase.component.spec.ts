@@ -40,9 +40,11 @@ describe('PassphraseComponent', () => {
         PassphraseComponent
       ],
       providers: [
-        { provide: MdDialogRef},
+        /* own */
         PassphraseService,
-        FlashNotificationService
+        FlashNotificationService,
+        /* deps */
+        { provide: MdDialogRef},
       ]
     })
     .compileComponents();
