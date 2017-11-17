@@ -59,6 +59,7 @@ export class RpcService {
   private _rpcState: RpcStateClass;
 
   constructor(
+    private _http: Http,
     private _ipc: IpcService,
     public state: StateService
   ) {
