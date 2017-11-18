@@ -8,7 +8,7 @@ import { TestComponent } from './test/test.component';
   ],
   declarations: [TestComponent],
   exports: [
-  	TestComponent
+    TestComponent
   ]
 })
 export class MultiwalletModule { }

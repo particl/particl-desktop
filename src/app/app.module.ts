@@ -1,5 +1,5 @@
-// import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+// import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
@@ -13,22 +13,17 @@ import { WalletViewsModule } from './wallet/wallet.module';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
-/*
-const routes: Routes = [
-  { path: 'wallet', loadChildren: './wallet/wallet.module#WalletViewsModule' }
-];*/
+
 
 @NgModule({
   declarations: [
     AppComponent,
   ],
   imports: [
-    CommonModule,
-    //BrowserModule,
+    //CommonModule,
+    BrowserModule,
     BrowserAnimationsModule,
-    // RouterModule.forRoot(routes),
     routing,
-
     /* own */
     CoreModule.forRoot(),
     CoreUiModule,
