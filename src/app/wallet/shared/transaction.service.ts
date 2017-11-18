@@ -81,7 +81,6 @@ export class TransactionService {
         }
 
         this.deleteTransactions();
-
         txResponse.forEach((tx) => {
           this.addTransaction(tx);
         });

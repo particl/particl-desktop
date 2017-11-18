@@ -1,5 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger'
+
+import { Observable } from 'rxjs/Observable';
+
 import { TransactionService } from '../transaction.service';
 import { Transaction } from '../transaction.model';
 
@@ -14,7 +17,7 @@ import { PageEvent } from '@angular/material';
   animations: [slideDown()]
 })
 
-export class TransactionsTableComponent implements OnInit {
+export class TransactionsTableComponent implements OnInit, OnDestroy {
   /* Determines what fields are displayed in the Transaction Table. */
     /* header and utils */
 
@@ -49,7 +52,7 @@ export class TransactionsTableComponent implements OnInit {
 
 
   log: any = Log.create('transaction-table.component');
-
+  timer: any;
   constructor(public txService: TransactionService) {
   }
 
@@ -57,6 +60,8 @@ export class TransactionsTableComponent implements OnInit {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);
+    this.timer = Observable.interval(10000)
+      .subscribe(() => this.txService.postConstructor(this.display.txDisplayAmount))
   }
 
   public pageChanged(event: any): void {
@@ -77,6 +82,11 @@ export class TransactionsTableComponent implements OnInit {
 
   public checkExpandDetails(tx: Transaction) {
     return (this.expandedTransactionID === tx.getExpandedTransactionID());
+  }
+
+  // Destroy timer when leaving the component
+  ngOnDestroy() {
+    this.timer.unsubscribe();
   }
 
 }
