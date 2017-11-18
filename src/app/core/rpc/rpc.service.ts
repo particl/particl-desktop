@@ -51,7 +51,7 @@ export class RPCService {
   private _enableState: boolean = true;
 
   public isElectron: boolean = false;
-
+  public notify: boolean = false;
   private log: any = Log.create('rpc.service');
 
   /** errors gets updated everytime the stateCall RPC requests return an error */

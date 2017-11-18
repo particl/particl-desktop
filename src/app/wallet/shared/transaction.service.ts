@@ -17,7 +17,6 @@ export class TransactionService {
   txCount: number = 0;
   currentPage: number = 0;
   totalPageCount: number = 0;
-  count: number = 0;
   /* states */
   loading: boolean = false;
   testnet: boolean = false;
@@ -34,14 +33,16 @@ export class TransactionService {
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.log.d(`postconstructor  called txs array: ${this.txs.length}`);
-    console.log(this.count);
     // TODO: why is this being called twice after executing a tx?
-    // SomeTimes tx has previous value in zero position
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
           this.loading = true;
           this.txCount = txcount;
+          if (this.txCount > 0 && this.rpc.notify) {
+            this.filterTransactions();
+          }
+          this.rpc.notify = true;
           this.log.d(`observing txcount, txs array: ${this.txs.length}`);
           this.rpc_update();
         });
@@ -87,14 +88,6 @@ export class TransactionService {
         txResponse.forEach((tx) => {
           this.addTransaction(tx);
         });
-        if (this.count !== this.txCount) {
-          if (txResponse[txResponse.length - 1]['category'] === 'receive') {
-            this.rpc.sendNotification('WoW!!!', 'You have received new transactions');
-          } else if (txResponse [txResponse.length - 1] ['category'] === 'stake') {
-            this.rpc.sendNotification('WoW!!!', 'You have received new stake reward');
-          }
-        }
-        this.count = this.txCount;
         this.loading = false;
         this.log.d(`rpc_update, txs array: ${this.txs.length}`);
       });
@@ -111,6 +104,18 @@ export class TransactionService {
 
     // this.txs.push(instance);
     this.txs.unshift(instance);
+  }
+
+  filterTransactions() {
+    this.rpc.call('filtertransactions')
+      .subscribe(
+        (tx: Array<Object>) => {
+          if (tx[0]['category'] === 'receive') {
+              this.rpc.sendNotification('WoW!!!', 'You have received new transactions');
+          } else if (tx[0]['category'] === 'stake') {
+              this.rpc.sendNotification('WoW!!!', 'You have received new stake reward');
+          }
+        });
   }
 
 }
