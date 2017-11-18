@@ -3,7 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AddAddressLabelComponent } from './add-address-label.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
-import { BrowserModule } from '@angular/platform-browser';
+//import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { RpcModule } from '../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../../shared/shared.module';
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
@@ -17,7 +18,8 @@ describe('AddAddressLabelComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        BrowserModule,
+        // BrowserModule,
+        CommonModule,
         ReactiveFormsModule,
         MdDialogModule,
         FormsModule,

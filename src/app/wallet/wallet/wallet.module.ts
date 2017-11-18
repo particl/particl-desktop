@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angular2-qrcode';
+import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -34,9 +35,9 @@ import { AddAddressLabelComponent } from './receive/modals/add-address-label/add
 import { NewAddressModalComponent } from './address-book/modal/new-address-modal/new-address-modal.component';
 import { QrCodeModalComponent } from './shared/qr-code-modal/qr-code-modal.component';
 import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SignatureAddressModalComponent } from './shared/signature-address-modal/signature-address-modal.component';
-import { BrowserModule } from '@angular/platform-browser';
+//import { BrowserModule } from '@angular/platform-browser';
 
 /*
 const routes: Routes = [
@@ -54,8 +55,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
+    //BrowserModule,
+    CommonModule,
+    //BrowserAnimationsModule,
     //RouterModule.forChild(routes),
     SharedModule,
     QRCodeModule,
@@ -127,3 +129,10 @@ export class WalletModule {
     };
   }
 }
+
+
+export { AddressBookComponent } from './address-book/address-book.component';
+export { ReceiveComponent } from './receive/receive.component';
+export { SendComponent } from './send/send.component';
+export { BalanceComponent } from './balances/balance.component';
+export { HistoryComponent } from './history/history.component';

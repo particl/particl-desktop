@@ -1,4 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
@@ -11,29 +12,23 @@ import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.modu
 import { WalletViewsModule } from './wallet/wallet.module';
 
 import { AppComponent } from './app.component';
+import { routing } from './app.routing';
 /*
 const routes: Routes = [
-  { path: 'overview', component: TestComponent, data: { title: 'Overview' } },
-  { path: 'settings', component: TestComponent, data: { title: 'Settings' } },
-  { path: '**', redirectTo: 'overview', pathMatch: 'full' } // Catch all route
+  { path: 'wallet', loadChildren: './wallet/wallet.module#WalletViewsModule' }
 ];*/
-
-const routes: Routes = [
-  { 
-    path: 'overview', 
-    component: TestComponent, 
-    data: { title: 'Overview' } 
-  }
-];
 
 @NgModule({
   declarations: [
     AppComponent,
   ],
   imports: [
-    BrowserModule,
+    CommonModule,
+    //BrowserModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(routes),
+    // RouterModule.forRoot(routes),
+    routing,
+
     /* own */
     CoreModule.forRoot(),
     CoreUiModule,

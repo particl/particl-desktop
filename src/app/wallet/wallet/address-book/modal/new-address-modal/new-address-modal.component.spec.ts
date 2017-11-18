@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
 
@@ -20,7 +21,8 @@ describe('NewAddressModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         /* deps */
-        BrowserModule,
+        // BrowserModule,
+        CommonModule,
         ReactiveFormsModule,
         FormsModule,
         MdFormFieldModule,

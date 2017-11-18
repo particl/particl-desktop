@@ -13,7 +13,7 @@ import { GridComponent } from './grid/grid.component';
 import { MdButtonModule, MdDialogModule, MdExpansionModule, MdIconModule, MdInputModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -23,7 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MdExpansionModule,
     MdInputModule,
     MdIconModule,
-    BrowserAnimationsModule,
+//    BrowserAnimationsModule,
     MdButtonModule,
     FlexLayoutModule
   ],

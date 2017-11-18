@@ -9,7 +9,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { SharedModule } from './shared/shared.module';
 // import { SidebarModule } from './core/sidebar/sidebar.module';
 
-import { WalletModule } from './wallet/wallet.module';
+import { WalletModule, ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
 import { ModalsModule } from './modals/modals.module';
 
 import { StatusComponent } from './core/status/status.component';
@@ -21,6 +21,7 @@ import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.compo
 import 'hammerjs';
 import { FlashNotificationService } from './services/flash-notification.service';
 
+import { routing } from './wallet.routing';
 
 /*const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
@@ -29,18 +30,8 @@ import { FlashNotificationService } from './services/flash-notification.service'
 ];
 */
 
-const routes: Routes = 0[
-  { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
-  {
-    path: 'wallet',
-    children: [
-      { path: 'receive', component: ReceiveComponent, data: { title: 'Receive' } },
-      { path: 'send', component: SendComponent, data: { title: 'Send' } },
-      { path: 'history', component: HistoryComponent, data: { title: 'History' } },
-      { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } }
-    ]
-  }
-];
+
+
 @NgModule({
   declarations: [
     WalletViewsComponent,
@@ -51,7 +42,8 @@ const routes: Routes = 0[
     ColdstakeComponent
   ],
   imports: [
-    RouterModule.forRoot(routes), // TODO: multiple routes
+    // RouterModule.forChild(routes), // TODO: multiple routes
+    routing,
     CommonModule,
     SharedModule,
     // SidebarModule.forRoot(),

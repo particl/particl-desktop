@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MdDialogModule, MdDialogRef, MdFormFieldModule } from '@angular/material';
-import { BrowserModule } from '@angular/platform-browser'
+//import { BrowserModule } from '@angular/platform-browser'
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
@@ -13,7 +14,8 @@ describe('SendConfirmationModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         MdDialogModule,
-        BrowserModule,
+        // BrowserModule,
+        CommonModule,
         ReactiveFormsModule,
         FormsModule,
         MdFormFieldModule
