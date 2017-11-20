@@ -19,12 +19,14 @@ import { ModalsComponent } from './modals/modals.component';
   ]
 })
 export class AppComponent implements OnInit {
+
   isCollapsed: boolean = true;
   isFixed: boolean = false;
   title: string = '';
   log: any = Log.create('app.component');
   walletInitialized: boolean = false;
   daemonRunning: boolean = false;
+  multiwallet: any = [];
 
   constructor(
     private _router: Router,
@@ -35,7 +37,6 @@ export class AppComponent implements OnInit {
     private dialog: MdDialog,
     private iconRegistry: MdIconRegistry
   ) {
-
     iconRegistry
       .registerFontClassAlias('partIcon', 'part-icon')
       .registerFontClassAlias('faIcon', 'fa');
@@ -58,12 +59,12 @@ export class AppComponent implements OnInit {
       .subscribe(data => this.title = data['title']);
 
     // Show logging colors
-    this.log.er('error!');
-    this.log.w('warn!');
-    this.log.i('info');
-    this.log.d('debug');
+    // this.log.er('error!');
+    // this.log.w('warn!');
+    // this.log.i('info');
+    // this.log.d('debug');
 
-    // Display errors in sidenav when required */
+    // Display errors in sidenav when required
 
     // Updates the error box in the sidenav whenever a stateCall returns an error.
     this._rpc.errorsStateCall.asObservable()
@@ -79,4 +80,10 @@ export class AppComponent implements OnInit {
   createWallet() {
     this._modalsService.open('createWallet', {forceOpen: true});
   }
+
+  /** Open createwallet modal when clicking on error in sidenav */
+  syncScreen() {
+    this._modalsService.open('syncing', {forceOpen: true});
+  }
+
 }
