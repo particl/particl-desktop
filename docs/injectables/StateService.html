@@ -48,8 +48,8 @@
                                   <a href="../index.html" ><span class="fa fa-file-text-o"></span>README</a>
                                 </li>
                                 <li class="link">
-                                    <a href="./license.html"
-                                        >
+                                        <a href="../license.html"
+                                    >
                                         <span class="fa fa-file-text-o"></span>LICENSE
                                     </a>
                                 </li>
@@ -348,6 +348,7 @@
                         </ul>
                     </li>
             
+            
                     <li class="chapter">
                         <div class="simple menu-toggler" data-toggle="collapse"
                                 data-target="#xs-interfaces-links"
@@ -373,6 +374,12 @@
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/InternalStateType.html" >InternalStateType</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/Window.html" >Window</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/Window.html" >Window</a>
                                 </li>
                         </ul>
                     </li>
@@ -451,8 +458,8 @@
                                          <a href="../index.html" ><span class="fa fa-file-text-o"></span>README</a>
                                        </li>
                                        <li class="link">
-                                           <a href="./license.html"
-                                               >
+                                               <a href="../license.html"
+                                           >
                                                <span class="fa fa-file-text-o"></span>LICENSE
                                            </a>
                                        </li>
@@ -751,6 +758,7 @@
                                </ul>
                            </li>
                    
+                   
                            <li class="chapter">
                                <div class="simple menu-toggler" data-toggle="collapse"
                                        data-target="#interfaces-links"
@@ -776,6 +784,12 @@
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/InternalStateType.html" >InternalStateType</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/Window.html" >Window</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/Window.html" >Window</a>
                                        </li>
                                </ul>
                            </li>
@@ -873,9 +887,6 @@
                                     <li>
                                         <span class="modifier">Private</span> <a href="#_state">_state</a>
                                     </li>
-                                    <li>
-                                         <a href="#state">state</a>
-                                    </li>
                                 </ul>
                             </td>
                         </tr>
@@ -901,6 +912,20 @@
                                     </li>
                                     <li>
                                          <a href="#set">set</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <h6><b>Accessors</b></h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <ul class="index-list">
+                                    <li>
+                                         <a href="#state">state</a>
                                     </li>
                                 </ul>
                             </td>
@@ -1315,34 +1340,79 @@
             
                         </tbody>
                     </table>
+            </section>
+
+            <section>
+                <h3 id="accessors">
+                    Accessors
+                </h3>
                     <table class="table table-sm table-bordered">
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
                                     <a name="state"></a>
-                                    <span class="name"><b> state</b><a href="#state"><span class="fa fa-link"></span></a></span>
+                                    <span class="name"><b>state</b><a href="#state"><span class="fa fa-link"></span></a></span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>state:     <code></code>
-            </code>
-                                </td>
-                            </tr>
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/core/state/state.service.ts:27</a></div>
-                                        </td>
-                                    </tr>
             
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-description"><p>return a clone of the current state 
-            never allow mutation </p>
+                                    <span class="accessor"><b>get</b><code>state()</code></span>
+                                </td>
+                            </tr>
+                                        <tr>
+                                            <td class="col-md-4">
+                                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/core/state/state.service.ts:27</a></div>
+                                            </td>
+                                        </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="accessor"><b>set</b><code>state(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code></span>
+                                </td>
+                            </tr>
+                                        <tr>
+                                            <td class="col-md-4">
+                                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/core/state/state.service.ts:32</a></div>
+                                            </td>
+                                        </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                            <div class="io-description"><p>never allow mutation </p>
             </div>
-                                </td>
-                            </tr>
             
+                                            <div class="io-description">
+                                                    <b>Parameters :</b>
+                                                    <table class="params">
+                                                        <thead>
+                                                            <tr>
+                                                                <td>Name</td>
+                                                                <td>Type</td>
+                                                                <td>Optional</td>
+                                                                <td>Description</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                                <tr>
+                                                                  <td>value</td>
+                                                                  <td>
+                                                                          <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                                  </td>
+                                                                  <td>
+                                                                  </td>
+                                                                  <td></td>
+                                                                </tr>
+                                                        </tbody>
+                                                    </table>
+                                            </div>
+                                            <div>
+                                            </div>
+                                            <div class="io-description">
+                                                <b>Returns : </b>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+            
+                                            </div>
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
             </section>
@@ -1432,6 +1502,7 @@ export class StateService {
 </code></pre>
     </div>
 </div>
+
 
 
 
