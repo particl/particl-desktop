@@ -19,7 +19,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/packages/** && sass-lint -v",
+    "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/docs/**,**/packages/** && sass-lint -v",
     "e2e": "ng e2e",
     "build:electron:prod": "ng build --base-href=./ --env=prod",
     "build:electron:fast": "ng build --base-href=./ --sourcemap=false",
@@ -32,7 +32,7 @@
     "package:win": "npm run build:electron:prod && electron-builder --win --x64",
     "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
-    "compdoc": "compodoc -p tsconfig.json",
+    "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
   },
   "productName": "Particl Wallet",
