@@ -120,12 +120,13 @@
     border: none;
     outline: none;
     padding: 0 5px;
-  }
-  // narration content
-  .narration {
+    &.narration {
+      padding: 0;
+    }
   }
   // to/from address
   .to-from-address {
+    width: 100%;
     font-family: monospace;   
     color: lighten($text, 10%);
     background: lighten($bg-shadow, 10%);
@@ -137,6 +138,7 @@
   }
   // explorer link
   .tx-detail-link {
+    width: 100%;
     color: $text-muted;
     font-family: monospace;
     text-decoration: none;
