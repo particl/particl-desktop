@@ -21,7 +21,7 @@ export class TransactionService {
   /* states */
   loading: boolean = false;
   testnet: boolean = false;
-
+  txCheck: boolean = false;
 
   /* How many transactions do we display per page and keep in memory at all times.
      When loading more transactions they are fetched JIT and added to txs. */
@@ -31,8 +31,9 @@ export class TransactionService {
   constructor(private rpc: RPCService) {
   }
 
-  postConstructor(MAX_TXS_PER_PAGE: number) {
+  postConstructor(MAX_TXS_PER_PAGE: number, txCheck: boolean) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
+    this.txCheck = txCheck;
     this.log.d(`postconstructor  called txs array: ${this.txs.length}`);
     // TODO: why is this being called twice after executing a tx?
     this.rpc.state.observe('txcount')
@@ -50,11 +51,12 @@ export class TransactionService {
   }
 
 
-  changePage(page: number) {
+  changePage(page: number, txCheck: boolean) {
     if (page < 0) {
       return;
     }
     this.loading = true;
+    this.txCheck = txCheck;
     this.currentPage = page;
     this.rpc_update();
   }
@@ -65,7 +67,6 @@ export class TransactionService {
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update() {
-
     this.rpc.call('listtransactions', [
       '*', +this.MAX_TXS_PER_PAGE,
       (this.currentPage * this.MAX_TXS_PER_PAGE)
@@ -79,11 +80,14 @@ export class TransactionService {
         if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
           this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
         }
-
-        this.deleteTransactions();
-        txResponse.forEach((tx) => {
-          this.addTransaction(tx);
-        });
+        if (this.txCheck) {
+          this.compareTransactionResponse(this.txs, txResponse);
+        } else {
+          this.deleteTransactions();
+          txResponse.forEach((tx) => {
+            this.addTransaction(tx);
+          });
+        }
         this.loading = false;
         this.log.d(`rpc_update, txs array: ${this.txs.length}`);
       });
@@ -100,6 +104,16 @@ export class TransactionService {
 
     // this.txs.push(instance);
     this.txs.unshift(instance);
+  }
+
+  compareTransactionResponse(oldTxs: any, newTxs: any) {
+    newTxs.forEach((newtx) => {
+      oldTxs.forEach((oldtx) => {
+        if (oldtx.txid === newtx.txid && oldtx.confirmations !== newtx.confirmations) {
+          oldtx.confirmations = newtx.confirmations;
+        }
+      });
+    });
   }
 
 }

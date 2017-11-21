@@ -58,12 +58,12 @@ export class TransactionsTableComponent implements OnInit {
   ngOnInit() {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
-    this.txService.postConstructor(this.display.txDisplayAmount);
+    this.txService.postConstructor(this.display.txDisplayAmount, false);
     this.state.observe('blocks')
       .subscribe(
         block => {
           if (block > this.block && this.block !== 0) {
-            this.txService.postConstructor(this.display.txDisplayAmount);
+            this.txService.postConstructor(this.display.txDisplayAmount, true);
           }
           this.block = block;
         });
@@ -73,7 +73,7 @@ export class TransactionsTableComponent implements OnInit {
     this.log.d('pageChanged:', event);
     this.txService.MAX_TXS_PER_PAGE = event.pageSize;
     // increase page index because its start from 0
-    this.txService.changePage(event.pageIndex++);
+    this.txService.changePage(event.pageIndex++, false);
   }
 
   public showExpandedTransactionDetail(tx: Transaction) {
