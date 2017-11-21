@@ -12,12 +12,16 @@ import {
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 /* A unified module that will simply manage all our Material imports (and export them again) */
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule, /* Flex layout here too */
+    FormsModule, /* forms */
+    ReactiveFormsModule, /* forms */
     MdButtonModule,
     MdCheckboxModule,
     MdListModule,
@@ -33,8 +37,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MdToolbarModule
   ],
   exports: [
-    CommonModule,
     FlexLayoutModule, /* Flex layout here too */
+    FormsModule, /* forms */
+    ReactiveFormsModule, /* forms */
     MdButtonModule,
     MdCheckboxModule,
     MdListModule,

@@ -34,7 +34,7 @@ import { routing } from './wallet.routing';
     routing,
     SharedModule,
     WalletModule.forRoot(),
-    CoreUiModule // needed?
+    CoreUiModule
   ],
   exports: [
     WalletViewsComponent
