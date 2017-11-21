@@ -108,12 +108,8 @@ function init(options) {
   function createObservable(event, method, params) {
     let auth = cookie.getAuth(options);
     return Observable.create(observer => {
-      if (['restart-daemon'].includes(method)) {
-        const callback = () => {
-          observer.next(true);
-        };
-        daemon.startDaemon(true, callback);
-
+      if ('restart-daemon' === method) {
+        daemon.startDaemon(true, () => observer.next(true));
       } else {
         rpcCall(method, params, auth, (error, response) => {
           if (error) {
