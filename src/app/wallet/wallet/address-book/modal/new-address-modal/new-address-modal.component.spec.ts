@@ -9,8 +9,8 @@ import { NewAddressModalComponent } from './new-address-modal.component';
 import { SharedModule } from '../../../../shared/shared.module';
 import { RpcModule } from '../../../../core/rpc/rpc.module';
 
-import { FlashNotificationService } from '../../../../services/flash-notification.service';
-import { ModalsService } from '../../../../modals/modals.service';
+import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
+import { ModalsService } from '../../../../../modals/modals.service';
 import { AddressService } from '../../../shared/address.service';
 
 describe('NewAddressModalComponent', () => {
@@ -38,7 +38,7 @@ describe('NewAddressModalComponent', () => {
         /* deps */
         { provide: MdDialogRef},
         /* own */
-        FlashNotificationService,
+        SnackbarService,
         ModalsService,
         AddressService
         ]

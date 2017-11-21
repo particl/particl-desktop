@@ -5,10 +5,10 @@ import { AddressTableComponent } from './address-table.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 import { MdSnackBarModule } from '@angular/material';
 
-import { ModalsService } from '../../../modals/modals.service';
+import { ModalsService } from '../../../../modals/modals.service';
 
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
@@ -22,7 +22,7 @@ describe('AddressTableComponent', () => {
         RpcModule.forRoot(),
         MdSnackBarModule
       ],
-      providers: [ FlashNotificationService, ModalsService ]
+      providers: [ SnackbarService, ModalsService ]
     })
       .compileComponents();
   }));

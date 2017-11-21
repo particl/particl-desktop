@@ -4,9 +4,9 @@ import { SignatureAddressModalComponent } from './signature-address-modal.compon
 import { WalletModule } from '../../wallet.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../shared/shared.module';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 import { MdSnackBarModule } from '@angular/material';
-import { ModalsService } from '../../../modals/modals.service';
+import { ModalsService } from '../../../../modals/modals.service';
 
 describe('SignatureAddressModalComponent', () => {
   let component: SignatureAddressModalComponent;
@@ -20,7 +20,7 @@ describe('SignatureAddressModalComponent', () => {
         RpcModule.forRoot(),
         MdSnackBarModule
       ],
-      providers: [FlashNotificationService, ModalsService]
+      providers: [SnackbarService, ModalsService]
     })
       .compileComponents();
   }));

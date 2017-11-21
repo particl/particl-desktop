@@ -6,8 +6,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
-import { ModalsService } from '../../modals/modals.service';
-import { FlashNotificationService } from '../../services/flash-notification.service';
+import { ModalsService } from '../../../modals/modals.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { MdDialogRef, MdSnackBarModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -27,7 +27,7 @@ describe('SendComponent', () => {
       providers: [
         { provide: MdDialogRef },
         ModalsService,
-        FlashNotificationService
+        SnackbarService
       ]
     })
       .compileComponents();

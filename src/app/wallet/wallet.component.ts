@@ -6,9 +6,7 @@ import { MdDialog } from '@angular/material';
 import { WindowService } from '../core/core.module';
 import { SettingsService } from './settings/settings.service';
 import { RpcService, BlockStatusService } from '../core/rpc/rpc.module';
-import { ModalsService } from './modals/modals.service';
-
-import { ModalsComponent } from './modals/modals.component';
+import { ModalsService } from '../modals/modals.service';
 
 @Component({
   selector: 'app-wallet',

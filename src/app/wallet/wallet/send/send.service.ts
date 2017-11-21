@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger'
 
 import { RpcService } from '../../../core/core.module';
-import { FlashNotificationService } from '../../services/flash-notification.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 
 @Injectable()
@@ -25,7 +25,7 @@ export class SendService {
   */
 
   constructor(public _rpc: RpcService,
-              private flashNotification: FlashNotificationService) {
+              private flashNotification: SnackbarService) {
     // this._rpc.oldCall(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
     this._rpc.call('liststealthaddresses', null)
       .subscribe(response => {

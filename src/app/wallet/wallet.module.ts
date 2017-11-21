@@ -10,16 +10,16 @@ import { SharedModule } from './shared/shared.module';
 // import { SidebarModule } from './core/sidebar/sidebar.module';
 
 import { WalletModule, ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
-import { ModalsModule } from './modals/modals.module';
+// import { ModalsModule } from './modals/modals.module';
 
-import { StatusComponent } from './core/status/status.component';
+//import { StatusComponent } from './core/status/status.component';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
 import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
 
 import 'hammerjs';
-import { FlashNotificationService } from './services/flash-notification.service';
+//import { SnackbarService } from './services/flash-notification.service';
 
 import { routing } from './wallet.routing';
 
@@ -35,7 +35,7 @@ import { routing } from './wallet.routing';
 @NgModule({
   declarations: [
     WalletViewsComponent,
-    StatusComponent,
+    // StatusComponent,
     OverviewComponent,
     SettingsComponent,
     StakinginfoComponent,
@@ -49,7 +49,7 @@ import { routing } from './wallet.routing';
     // SidebarModule.forRoot(),
     WalletModule.forRoot(),
     // CoreModule.forRoot(),
-    ModalsModule,
+    // ModalsModule,
     CoreUiModule
   ],
   exports: [
@@ -57,7 +57,7 @@ import { routing } from './wallet.routing';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-    FlashNotificationService
+    //SnackbarService
   ], /*
   bootstrap: [ AppComponent ] */
 })

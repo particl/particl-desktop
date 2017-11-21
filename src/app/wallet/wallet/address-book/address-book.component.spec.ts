@@ -5,10 +5,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { RpcModule } from '../../core/rpc/rpc.module';
 
-import { ModalsService } from '../../modals/modals.service';
+import { ModalsService } from '../../../modals/modals.service';
 
 import { AddressBookComponent } from './address-book.component';
-import { FlashNotificationService } from '../../services/flash-notification.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { MdSnackBarModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -26,7 +26,7 @@ describe('AddressBookComponent', () => {
         BrowserAnimationsModule
       ],
       declarations: [ ],
-      providers: [ FlashNotificationService, ModalsService ]
+      providers: [ SnackbarService, ModalsService ]
     })
     .compileComponents();
   }));
