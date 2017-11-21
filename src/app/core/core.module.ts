@@ -10,6 +10,7 @@ import { IpcService } from './ipc/ipc.service';
 import { PeerService } from './rpc/peer/peer.service';
 import { StateService } from './state/state.service';
 import { WindowService } from './window/window.service';
+import { SnackbarService } from './snackbar/snackbar.service';
 
   /*
 	Loading the core library will intialize IPC & RPC
@@ -30,7 +31,8 @@ export class CoreModule {
       ngModule: CoreModule,
       providers: [
         IpcService,
-        WindowService
+        WindowService,
+        SnackbarService
       ]
     };
   }

@@ -1,17 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
-import { BrowserModule } from '@angular/platform-browser';
 
-import { RpcModule } from '../../../../../core/rpc/rpc.module';
+import { RpcModule } from '../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../../shared/shared.module';
-
-import { FlashNotificationService } from '../../../../services/flash-notification.service';
-import { ModalsService } from '../../../../modals/modals.service';
+import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
+import { ModalsService } from '../../../../../../modals/modals.service';
 
 import { AddAddressLabelComponent } from './add-address-label.component';
-import { IpcService } from '../../../../../core/ipc/ipc.service';
 
 describe('AddAddressLabelComponent', () => {
   let component: AddAddressLabelComponent;
@@ -20,21 +17,21 @@ describe('AddAddressLabelComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
-        BrowserModule,
+        CommonModule,
         ReactiveFormsModule,
         MdDialogModule,
         FormsModule,
         MdFormFieldModule,
         MdSnackBarModule,
         MdInputModule,
-        RpcModule.forRoot()],
+        CoreModule.forRoot(),
+        SharedModule
+      ],
       declarations: [AddAddressLabelComponent],
       providers: [
         ModalsService,
-        FlashNotificationService,
-        { provide: MdDialogRef},
-        IpcService
+        SnackbarService,
+        { provide: MdDialogRef}
       ]
     })
       .compileComponents();

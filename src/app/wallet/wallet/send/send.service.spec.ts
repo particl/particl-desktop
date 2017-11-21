@@ -1,13 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { MdSnackBarModule } from '@angular/material';
 
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import { SharedModule } from '../../shared/shared.module';
+import { CoreModule } from '../../../core/core.module';
+import { SharedModule } from '../../shared/shared.module'; // is this even needed?
 
 import { SendService } from './send.service';
-import { FlashNotificationService } from '../../services/flash-notification.service';
-import { IpcService } from '../../../core/ipc/ipc.service';
-
 
 describe('SendService', () => {
   beforeEach(() => {
@@ -17,7 +14,8 @@ describe('SendService', () => {
         RpcModule.forRoot(),
         MdSnackBarModule
       ],
-      providers: [SendService, FlashNotificationService, IpcService]
+      providers: [SendService]
+
     });
   });
 

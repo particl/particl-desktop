@@ -4,10 +4,9 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../../../core/core.module';
-import { FlashNotificationService } from '../../../../services/flash-notification.service';
+import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 
-import { ModalsService } from '../../../../modals/modals.service';
-import { ModalsComponent } from '../../../../modals/modals.component';
+import { ModalsService } from '../../../../../modals/modals.service';
 
 import { AddressService } from '../../../shared/address.service';
 
@@ -34,7 +33,7 @@ export class NewAddressModalComponent implements OnInit {
   constructor(public dialogRef: MdDialogRef<NewAddressModalComponent>,
               private formBuilder: FormBuilder,
               private _rpc: RpcService,
-              private flashNotificationService: FlashNotificationService,
+              private flashNotificationService: SnackbarService,
               private _modals: ModalsService,
               private dialog: MdDialog,
               private _addressService: AddressService) {

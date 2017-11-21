@@ -6,8 +6,8 @@ import { Log } from 'ng2-logger';
 import { SignVerifyMessage } from './sign-verify-message.model';
 
 import { RpcService } from '../../../../core/core.module';
-import { ModalsService } from '../../../modals/modals.service';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { ModalsService } from '../../../../modals/modals.service';
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
 
 import { AddressLookUpCopy } from '../../models/address-look-up-copy';
@@ -37,7 +37,7 @@ export class SignatureAddressModalComponent implements OnInit {
   constructor(
     private dialog: MdDialog,
     private _rpc: RpcService,
-    private flashNotification: FlashNotificationService,
+    private flashNotification: SnackbarService,
     private formBuilder: FormBuilder,
     private _modals: ModalsService
   ) {

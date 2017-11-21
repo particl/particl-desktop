@@ -1,35 +1,36 @@
 import { BrowserModule } from '@angular/platform-browser';
+// import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { RouterModule, Routes } from '@angular/router';
-
+import { RouterModule, Routes } from '@angular/router';
 
 import { CoreModule } from './core/core.module';
 import { CoreUiModule } from './core-ui/core-ui.module';
+import { ModalsModule } from './modals/modals.module';
 
+// import { MainViewModule } from './main/main-view.module';
+import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.module';
 import { WalletViewsModule } from './wallet/wallet.module';
 
 import { AppComponent } from './app.component';
+import { routing } from './app.routing';
 
-/*
-const routes: Routes = [
-  { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
-  { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
-  { path: '**', redirectTo: 'overview', pathMatch: 'full' } // Catch all route
-]; */
 
 @NgModule({
   declarations: [
     AppComponent,
   ],
   imports: [
+    //CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
-    // RouterModule.forRoot(routes),
+    routing,
     /* own */
     CoreModule.forRoot(),
     CoreUiModule,
-    WalletViewsModule
+    ModalsModule.forRoot(),
+    MultiwalletModule,
+    // WalletViewsModule
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

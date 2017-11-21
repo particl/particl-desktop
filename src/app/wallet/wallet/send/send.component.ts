@@ -6,14 +6,13 @@ import { Log } from 'ng2-logger';
 import { SendService } from './send.service';
 
 import { RpcService } from '../../../core/core.module';
-import { ModalsService } from '../../modals/modals.service';
+import { ModalsService } from '../../../modals/modals.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
-import { FlashNotificationService } from '../../services/flash-notification.service';
-import { ModalsComponent } from '../../modals/modals.component';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-send',
@@ -62,7 +61,7 @@ export class SendComponent {
     private _rpc: RpcService,
     private _modals: ModalsService,
     private dialog: MdDialog,
-    private flashNotification: FlashNotificationService
+    private flashNotification: SnackbarService
   ) {
     this.progress = 50;
   }

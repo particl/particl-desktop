@@ -7,8 +7,8 @@ import { AddressService } from '../address.service';
 import { Address } from '../address.model';
 
 import { RpcService } from '../../../../core/core.module';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
-import { ModalsService } from '../../../modals/modals.service';
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
+import { ModalsService } from '../../../../modals/modals.service';
 
 import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
@@ -62,7 +62,7 @@ export class AddressTableComponent implements OnInit {
     public _addressService: AddressService,
     private _rpc: RpcService,
     public dialog: MdDialog,
-    public flashNotification: FlashNotificationService,
+    public flashNotification: SnackbarService,
     private _modals: ModalsService
   ) {
 

@@ -3,13 +3,13 @@ import { MdSnackBarModule } from '@angular/material';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
-import { RpcModule } from '../../../../core/rpc/rpc.module';
+import { CoreModule } from '../../../core/core.module';
 
-import { FlashNotificationService } from '../../../services/flash-notification.service';
-import { ModalsService } from '../../../modals/modals.service';
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
+import { ModalsService } from '../../../../modals/modals.service';
+
 
 import { AddressTableComponent } from './address-table.component';
-import { IpcService } from '../../../../core/ipc/ipc.service';
 
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
@@ -18,12 +18,12 @@ describe('AddressTableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
-        WalletModule.forRoot(),
-        RpcModule.forRoot(),
-        MdSnackBarModule
+        SharedModule,  // is this even needed?
+        WalletModule.forRoot(),  // is this even needed?
+        CoreModule.forRoot(),
+        MdSnackBarModule  // is this even needed, Core-UI?
       ],
-      providers: [ FlashNotificationService, ModalsService, IpcService ]
+      providers: [ SnackbarService, ModalsService ]
     })
       .compileComponents();
   }));

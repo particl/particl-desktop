@@ -5,10 +5,8 @@ import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../../../core/core.module';
 
-import { FlashNotificationService } from '../../../../services/flash-notification.service';
-
-import { ModalsComponent } from '../../../../modals/modals.component';
-import { ModalsService } from '../../../../modals/modals.service';
+import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
+import { ModalsService } from '../../../../../modals/modals.service';
 
 @Component({
   selector: 'app-add-address-label',
@@ -29,7 +27,7 @@ export class AddAddressLabelComponent implements OnInit {
     public dialogRef: MdDialogRef<AddAddressLabelComponent>,
     private formBuilder: FormBuilder,
     private rpc: RpcService,
-    private flashNotificationService: FlashNotificationService,
+    private flashNotificationService: SnackbarService,
     private dialog: MdDialog,
     private _modals: ModalsService) {
   }

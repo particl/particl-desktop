@@ -29,12 +29,9 @@ export class TransactionService {
   PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
 
   constructor(private rpc: RpcService) {
-  }
+    this.log.d(`Constructor(): called`);
+    this.postConstructor(this.MAX_TXS_PER_PAGE);
 
-  postConstructor(MAX_TXS_PER_PAGE: number) {
-    this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
-    this.log.d(`postconstructor  called txs array: ${this.txs.length}`);
-    // TODO: why is this being called twice after executing a tx?
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
@@ -47,6 +44,13 @@ export class TransactionService {
     /* check if testnet -> block explorer url */
     this.rpc.state.observe('chain').take(1)
     .subscribe(chain => this.testnet = chain === 'test');
+  }
+
+  postConstructor(MAX_TXS_PER_PAGE: number) {
+    this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
+    this.log.d(`postconstructor  called txs array: ${this.txs.length}`);
+    // TODO: why is this being called twice after executing a tx?
+
   }
 
 

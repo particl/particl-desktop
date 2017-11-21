@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../../core/rpc/rpc.module';
-import { ModalsService } from '../../../modals/modals.service';
+import { ModalsService } from '../../../../modals/modals.service';
 
 import { Amount } from '../../../shared/util/utils';
 
