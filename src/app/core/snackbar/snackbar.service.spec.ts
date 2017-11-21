@@ -1,6 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
-import {SnackbarService} from './flash-notification.service';
-import { MdSnackBarModule } from '@angular/material';
+import { MdSnackBarModule } from '@angular/material'; // needed?
+
+import {SnackbarService} from './snackbar.service';
 
 
 describe('SnackbarServiceService', () => {

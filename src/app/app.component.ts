@@ -5,13 +5,12 @@ import { Log } from 'ng2-logger';
 
 import { RpcService, WindowService } from './core/core.module';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'], // './app.component.controls.scss'
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   log: any = Log.create('app.component');
 
   blocks: number = 0;
@@ -31,5 +30,4 @@ export class AppComponent implements OnInit {
   ngOnInit() {
 
   }
-
 }

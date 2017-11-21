@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BalanceComponent } from './balance.component';
-
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
-import { StateService } from '../../core/state/state.service';
 
-import { Amount } from '../../shared/util/utils';
+import { StateService } from '../../../core/state/state.service';
+
+import { BalanceComponent } from './balance.component';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;

@@ -43,6 +43,7 @@ export class IpcService {
     const subChannel = channel + ':' + this.listenerCount;
     this.listenerCount++;
 
+    // @TODO by Kirti: invalid number of arguments, expected 1,2
     window.ipc.send(channel, subChannel, ...args);
     return new Observable((observer) => {
       this.checkRemoteListener(channel)

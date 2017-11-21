@@ -31,13 +31,13 @@ declare global {
 @Injectable()
 export class RpcService {
   /**
-  * IP/URL for daemon (default = localhost)
-  */
+   * IP/URL for daemon (default = localhost)
+   */
   private hostname: String = HOSTNAME; // TODO: URL Flag / Settings
 
   /**
-  * Port number of of daemon (default = 51935)
-  */
+   * Port number of of daemon (default = 51935)
+   */
   private port: number = TESTNET_PORT; // TODO: Mainnet / testnet flag...
 
   private username: string = 'test';
@@ -59,6 +59,7 @@ export class RpcService {
   private _rpcState: RpcStateClass;
 
   constructor(
+    private _http: Http,
     private _ipc: IpcService,
     public state: StateService
   ) {
@@ -68,57 +69,63 @@ export class RpcService {
   }
 
   /**
-    * The call method will perform a single call to the particld daemon and perform a callback to
-    * the instance through the function as defined in the params.
-    *
-    * @param {string} method  The JSON-RPC method to call, see ```./particld help```
-    * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
-    * The content of the array is of type any (ints, strings, booleans etc)
-    *
-    * @example
-    * ```JavaScript
-    * this._rpc.call('listtransactions', [0, 20]).subscribe(
-    *              success => ...,
-    *              error => ...);
-    * ```
-    * TODO: Response interface
-    */
+   * The call method will perform a single call to the particld daemon and perform a callback to
+   * the instance through the function as defined in the params.
+   *
+   * @param {string} method  The JSON-RPC method to call, see ```./particld help```
+   * @param {Array<Any>} params  The parameters to pass along with the JSON-RPC request.
+   * The content of the array is of type any (ints, strings, booleans etc)
+   *
+   * @example
+   * ```JavaScript
+   * this._rpc.call('listtransactions', [0, 20]).subscribe(
+   *              success => ...,
+   *              error => ...);
+   * ```
+   * TODO: Response interface
+   */
   call(method: string, params?: Array<any> | null): Observable<any> {
 
     if (this.isElectron) {
       return this._ipc.runCommand('rpc-channel', null, method, params)
-      .map(response => response && (response.result !== undefined) ? response.result : response);
+        .map(response => response && (response.result !== undefined) ? response.result : response);
 
+    } else {
+      // Running in browser, delete?
+      const postData = JSON.stringify({
+        method: method,
+        params: params,
+        id: 1
+      });
+
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
+      headers.append('Accept', 'application/json');
+
+      return this._http
+        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+        .map(response => response.json().result)
+        .catch(error => Observable.throw(
+          typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
     }
   }
 
-
-
-
-
-
-
-
 // TODO; MOVE rpc-state stuff into own services, clouding it up here
-
-
-
-
-
   /**
-    * Make an RPC Call that saves the response in the state service.
-    *
-    * @param {string} method  The JSON-RPC method to call, see ```./particld help```
-    * @param {boolean>} withMethod  Should the state be saved under the method name.
-    *   i.e.: {rpcMethod: response}
-    *
-    * The rpc call and state update will only take place while `this._enableState` is `true`
-    *
-    * @example
-    * ```JavaScript
-    * this._rpc.stateCall('getwalletinfo');
-    * ```
-    */
+   * Make an RPC Call that saves the response in the state service.
+   *
+   * @param {string} method  The JSON-RPC method to call, see ```./particld help```
+   * @param {boolean>} withMethod  Should the state be saved under the method name.
+   *   i.e.: {rpcMethod: response}
+   *
+   * The rpc call and state update will only take place while `this._enableState` is `true`
+   *
+   * @example
+   * ```JavaScript
+   * this._rpc.stateCall('getwalletinfo');
+   * ```
+   */
   stateCall(method: string, withMethod?: boolean): void {
 
     if (!this._enableState) {
@@ -126,9 +133,9 @@ export class RpcService {
     }
 
     this.call(method)
-    .subscribe(
-      this.stateCallSuccess.bind(this, withMethod ? method : false),
-      this.stateCallError  .bind(this, withMethod ? method : false, false));
+      .subscribe(
+        this.stateCallSuccess.bind(this, withMethod ? method : false),
+        this.stateCallError  .bind(this, withMethod ? method : false, false));
   }
 
   /** Register a state call, executes every X seconds (timeout) */
@@ -157,7 +164,7 @@ export class RpcService {
               setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
               firstError = false;
             });
-      }
+      };
       // initiate loop
       _call();
     } else {
@@ -209,4 +216,3 @@ export class RpcService {
   }
 
 }
-

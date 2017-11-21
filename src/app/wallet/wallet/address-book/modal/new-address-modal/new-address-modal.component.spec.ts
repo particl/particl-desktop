@@ -4,14 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
 
-import { NewAddressModalComponent } from './new-address-modal.component';
-
+import { RpcModule } from '../../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../../shared/shared.module';
-import { RpcModule } from '../../../../core/rpc/rpc.module';
 
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { ModalsService } from '../../../../../modals/modals.service';
 import { AddressService } from '../../../shared/address.service';
+
+import { NewAddressModalComponent } from './new-address-modal.component';
+import { IpcService } from '../../../../../core/ipc/ipc.service';
 
 describe('NewAddressModalComponent', () => {
   let component: NewAddressModalComponent;
@@ -40,7 +41,8 @@ describe('NewAddressModalComponent', () => {
         /* own */
         SnackbarService,
         ModalsService,
-        AddressService
+        AddressService,
+        IpcService
         ]
     })
     .compileComponents();

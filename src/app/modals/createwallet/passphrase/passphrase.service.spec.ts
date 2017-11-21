@@ -1,9 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import { SharedModule } from '../../..//shared/shared.module';
+import { SharedModule } from '../../../shared/shared.module';
+import { RpcModule } from '../../../../core/rpc/rpc.module';
 
 import { PassphraseService } from './passphrase.service';
+import { IpcService } from '../../../../core/ipc/ipc.service';
 
 describe('PassphraseService', () => {
   beforeEach(() => {
@@ -12,7 +13,7 @@ describe('PassphraseService', () => {
         SharedModule,
         RpcModule.forRoot()
       ],
-      providers: [PassphraseService]
+      providers: [PassphraseService, IpcService]
     });
   });
 

@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MdDialogModule } from '@angular/material';
 
 import { CoreModule } from '../../../core/core.module';
+import { ModalsModule } from '../../modals.module';
+import { SharedModule } from '../../../shared/shared.module'; // fix
 
 import { PercentageBarComponent } from './percentage-bar.component';
-import { MdDialogModule } from '@angular/material';
-import { ModalsModule } from '../../modals.module';
 
-import { SharedModule } from '../../../shared/shared.module';
 
 describe('PercentageBarComponent', () => {
   let component: PercentageBarComponent;

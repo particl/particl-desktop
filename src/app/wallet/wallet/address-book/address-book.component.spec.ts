@@ -1,16 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MdSnackBarModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
+import { CoreModule } from '../../../core/core.module';
 
 import { ModalsService } from '../../../modals/modals.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { AddressBookComponent } from './address-book.component';
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
-import { MdSnackBarModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 describe('AddressBookComponent', () => {
   let component: AddressBookComponent;
@@ -21,7 +21,7 @@ describe('AddressBookComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        RpcModule.forRoot(),
+        CoreModule.forRoot(),
         MdSnackBarModule,
         BrowserAnimationsModule
       ],

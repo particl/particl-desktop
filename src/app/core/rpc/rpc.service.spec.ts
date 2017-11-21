@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http';
 
 import { RpcModule } from './rpc.module';
 import { RpcService } from './rpc.service';
+import { IpcService } from '../ipc/ipc.service';
 
 describe('RpcService', () => {
   beforeEach(() => {
@@ -10,7 +11,10 @@ describe('RpcService', () => {
       imports: [
         HttpModule,
         RpcModule.forRoot()
-      ]
+      ],
+      providers: [
+      IpcService
+    ]
     });
   });
 

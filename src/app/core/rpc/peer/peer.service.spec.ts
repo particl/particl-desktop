@@ -1,7 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { SharedModule } from '../../shared/shared.module';
-import { RpcModule, PeerService } from './rpc.module';
+import { SharedModule } from '../../../wallet/shared/shared.module';
+import { RpcModule } from '../rpc.module';
+
+import { PeerService } from './peer.service';
+import { IpcService } from '../../ipc/ipc.service';
 
 
 describe('PeerService', () => {
@@ -10,6 +13,9 @@ describe('PeerService', () => {
       imports: [
         SharedModule,
         RpcModule.forRoot()
+      ],
+      providers: [
+        IpcService
       ]
     });
   });

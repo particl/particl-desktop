@@ -4,7 +4,7 @@ import { StatusComponent } from './status.component';
 
 import { ModalsModule } from '../../modals/modals.module';
 import { SharedModule } from '../../shared/shared.module';
-import { CoreModule } from '../../core/core.module';
+import { CoreModule } from '../../../core/core.module';
 import { MdTooltipModule } from '@angular/material';
 
 describe('StatusComponent', () => {

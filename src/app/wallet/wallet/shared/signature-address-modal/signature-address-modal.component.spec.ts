@@ -1,12 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { MdSnackBarModule } from '@angular/material';
+
+import { RpcModule } from '../../../../core/rpc/rpc.module';
+import { WalletModule } from '../../wallet.module';
+import { SharedModule } from '../../../shared/shared.module';
+
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
+import { ModalsService } from '../../../../modals/modals.service';
 
 import { SignatureAddressModalComponent } from './signature-address-modal.component';
-import { WalletModule } from '../../wallet.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import { SharedModule } from '../../../shared/shared.module';
-import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
-import { MdSnackBarModule } from '@angular/material';
-import { ModalsService } from '../../../../modals/modals.service';
 
 describe('SignatureAddressModalComponent', () => {
   let component: SignatureAddressModalComponent;
@@ -15,10 +18,10 @@ describe('SignatureAddressModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
-        WalletModule,
-        RpcModule.forRoot(),
-        MdSnackBarModule
+        SharedModule,  // is this even needed?
+        WalletModule, // is this even needed?
+        CoreModule.forRoot(),
+        MdSnackBarModule  // is this even needed, import Core-UI instead?
       ],
       providers: [SnackbarService, ModalsService]
     })

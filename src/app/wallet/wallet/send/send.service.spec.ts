@@ -1,11 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { MdSnackBarModule } from '@angular/material';
 
-import { RpcModule } from '../../core/rpc/rpc.module';
-import { SharedModule } from '../../shared/shared.module';
+import { CoreModule } from '../../../core/core.module';
+import { SharedModule } from '../../shared/shared.module'; // is this even needed?
 
 import { SendService } from './send.service';
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
-import { MdSnackBarModule } from '@angular/material';
 
 describe('SendService', () => {
   beforeEach(() => {
@@ -15,7 +14,8 @@ describe('SendService', () => {
         RpcModule.forRoot(),
         MdSnackBarModule
       ],
-      providers: [SendService, SnackbarService]
+      providers: [SendService]
+
     });
   });
 

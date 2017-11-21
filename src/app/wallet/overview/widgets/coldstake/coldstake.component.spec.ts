@@ -1,14 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ColdstakeComponent } from './coldstake.component';
-import { ModalsModule } from '../../../modals/modals.module';
-import { SharedModule } from '../../../shared/shared.module';
-
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdCardModule, MdProgressBarModule } from '@angular/material';
 
-/* new */
+import { ModalsModule } from '../../../modals/modals.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { CoreModule } from '../../../../core/core.module';
+
+import { ColdstakeComponent } from './coldstake.component';
 
 describe('ColdstakeComponent', () => {
   let component: ColdstakeComponent;

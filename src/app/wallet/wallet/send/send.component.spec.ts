@@ -1,15 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SendComponent } from './send.component';
-
-import { SharedModule } from '../../shared/shared.module';
-import { WalletModule } from '../wallet.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
-
-import { ModalsService } from '../../../modals/modals.service';
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { MdDialogRef, MdSnackBarModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { SharedModule } from '../../shared/shared.module'; // is this even needed?
+import { WalletModule } from '../wallet.module';
+import { RpcModule } from '../../../core/rpc/rpc.module';
+import { ModalsModule } from '../../../modals/modals.module';
+
+import { SendComponent } from './send.component';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -25,9 +23,7 @@ describe('SendComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: MdDialogRef },
-        ModalsService,
-        SnackbarService
+        { provide: MdDialogRef }
       ]
     })
       .compileComponents();
