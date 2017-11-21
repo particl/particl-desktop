@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MdIconModule } from '@angular/material';
 
-import { SharedModule } from '../../shared/shared.module'; // fix 
+import { SharedModule } from '../../shared/shared.module'; // fix
 import { CoreModule } from '../../core/core.module';
 
 import { SyncingComponent } from './syncing.component';

@@ -18,7 +18,7 @@ import { WalletModule } from '../../wallet/wallet/wallet.module';
     WalletModule
   ],
   exports: [
-  	MainViewComponent,
+    MainViewComponent,
     // StatusComponent,
   ],
   declarations: [

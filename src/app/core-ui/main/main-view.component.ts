@@ -29,14 +29,14 @@ export class MainViewComponent implements OnInit {
   daemonRunning: boolean = undefined;
 
   constructor(
-  	private _router: Router,
+    private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
     private _modals: ModalsService
   ) { }
 
   ngOnInit() {
-  	// Change the header title derived from route data
+    // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
       .filter(event => event instanceof NavigationEnd)

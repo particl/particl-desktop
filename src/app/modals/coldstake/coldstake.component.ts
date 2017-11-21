@@ -4,7 +4,6 @@ import { Log } from 'ng2-logger';
 
 import { PasswordComponent } from '../shared/password/password.component';
 import { flyInOut, slideDown } from '../../core-ui/core.animations';
-//import { ModalsComponent } from '../modals.component';
 
 import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../modals.service';
@@ -38,8 +37,7 @@ export class ColdstakeComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _rpc: RpcService,
-    private _flashNotificationService: SnackbarService,
-    //public dialogRef: MdDialogRef<ModalsComponent>
+    private _flashNotificationService: SnackbarService
   ) {
     this.nextStep();
   }
@@ -143,7 +141,6 @@ export class ColdstakeComponent {
   }
 
   close() {
-    //this.dialogRef.componentInstance.close();
     this._modalsService.close();
   }
 
