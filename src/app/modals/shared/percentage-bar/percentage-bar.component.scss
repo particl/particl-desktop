@@ -24,4 +24,12 @@
     margin: 0 0 8px;
     color: $text-muted;
   }
+  .sync-spinner.mat-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin: 0 7px 0 0;
+    position: relative;
+    top: 3px;
+  }
 }
