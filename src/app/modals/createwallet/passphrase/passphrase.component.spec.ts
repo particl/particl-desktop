@@ -7,7 +7,6 @@ import { SharedModule } from '../../../shared/shared.module';
 import { CoreModule } from '../../../core/core.module';
 
 import { PassphraseService } from './passphrase.service';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
 
 import { FocusDirective } from '../../modals.directives';
 import { PassphraseComponent } from './passphrase.component';

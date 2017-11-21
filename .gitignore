@@ -44,10 +44,7 @@ Thumbs.db
 
 
 package-lock\.json
-<<<<<<< HEAD
-/packages
-=======
 
 # packages
 /packages
->>>>>>> restructure-particl
+

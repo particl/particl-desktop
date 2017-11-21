@@ -1,5 +1,4 @@
 import { BrowserModule } from '@angular/platform-browser';
-// import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
@@ -8,7 +7,6 @@ import { CoreModule } from './core/core.module';
 import { CoreUiModule } from './core-ui/core-ui.module';
 import { ModalsModule } from './modals/modals.module';
 
-// import { MainViewModule } from './main/main-view.module';
 import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.module';
 import { WalletViewsModule } from './wallet/wallet.module';
 
@@ -21,16 +19,15 @@ import { routing } from './app.routing';
     AppComponent,
   ],
   imports: [
-    //CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     routing,
     /* own */
     CoreModule.forRoot(),
-    CoreUiModule,
+    CoreUiModule.forRoot(),
     ModalsModule.forRoot(),
     MultiwalletModule,
-    // WalletViewsModule
+
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

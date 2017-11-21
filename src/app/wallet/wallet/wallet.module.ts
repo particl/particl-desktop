@@ -1,8 +1,7 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angular2-qrcode';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '../shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
@@ -34,10 +33,8 @@ import { SignatureAddressModalComponent } from './shared/signature-address-modal
   imports: [
     CommonModule,
     SharedModule,
-    CoreUiModule,
-    QRCodeModule,
-    FormsModule,
-    ReactiveFormsModule,
+    CoreUiModule.forRoot(),
+    QRCodeModule
 
   ],
   declarations: [
@@ -74,7 +71,8 @@ import { SignatureAddressModalComponent } from './shared/signature-address-modal
     SendConfirmationModalComponent,
     SignatureAddressModalComponent
   ],
-  providers: []
+  providers: [],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class WalletModule {
   static forRoot(): ModuleWithProviders {

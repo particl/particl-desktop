@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 import { MdDialog } from '@angular/material';
 
 import { WindowService } from '../core/core.module';
-import { SettingsService } from './settings/settings.service';
+// import { SettingsService } from './settings/settings.service';
 import { RpcService, BlockStatusService } from '../core/rpc/rpc.module';
 import { ModalsService } from '../modals/modals.service';
 
@@ -13,7 +13,7 @@ import { ModalsService } from '../modals/modals.service';
   templateUrl: './wallet.component.html',
   styleUrls: ['./wallet.component.scss', './wallet.component.controls.scss'],
   providers: [
-    SettingsService
+    // SettingsService
   ]
 })
 export class WalletViewsComponent implements OnInit {

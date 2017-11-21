@@ -10,7 +10,7 @@ import { RpcService, WindowService } from './core/core.module';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   log: any = Log.create('app.component');
 
   blocks: number = 0;

@@ -4,8 +4,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { OverviewComponent } from './overview/overview.component';
 import { ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
 
+//   { path: '', redirectTo: '/wallet/overview', pathMatch: 'full' },
 const routes: Routes = [
-  { path: '', redirectTo: '/wallet/overview', pathMatch: 'full' },
+  { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
   { path: 'receive', component: ReceiveComponent, data: { title: 'Receive' } },
   { path: 'send', component: SendComponent, data: { title: 'Send' } },
