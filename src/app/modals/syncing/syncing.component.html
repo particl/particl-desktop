@@ -22,7 +22,7 @@
           <span class="value">
             {{ remainder }}
             <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-              <md-spinner class="sync-spinner"></md-spinner>
+                <md-spinner class="sync-spinner"></md-spinner>
             </div>
           </span>
 
@@ -31,18 +31,18 @@
       <div fxFlex="70" class="big item">
           <span class="value">
             {{ estimatedTimeLeft }}
-             <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-               <md-spinner class="sync-spinner"></md-spinner>
-             </div>
+            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+                <md-spinner class="sync-spinner"></md-spinner>
+            </div>
           </span>
         <div class="description">Estimated time left</div>
       </div>
       <div fxFlex="100" class="small item">
           <span class="value">
             {{ lastBlockTime }}
-             <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-               <md-spinner class="sync-spinner"></md-spinner>
-             </div>
+            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+                <md-spinner class="sync-spinner"></md-spinner>
+            </div>
           </span>
         <div class="description">Last Block time</div>
       </div>
