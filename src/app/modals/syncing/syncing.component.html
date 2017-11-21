@@ -1,7 +1,5 @@
 <div class="container">
   <div class="content">
-
-
     <div class="section wallet-syncing">
       <div class="title">Wallet is syncing</div>
       <p>
@@ -23,7 +21,9 @@
       <div fxFlex="30" class="big item">
           <span class="value">
             {{ remainder }}
-            <md-spinner *ngIf="!syncPercentage"></md-spinner>
+            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+              <md-spinner class="sync-spinner"></md-spinner>
+            </div>
           </span>
 
         <div class="description">Blocks to sync</div>
@@ -31,18 +31,21 @@
       <div fxFlex="70" class="big item">
           <span class="value">
             {{ estimatedTimeLeft }}
-            <md-spinner *ngIf="!syncPercentage"></md-spinner>
+             <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+               <md-spinner class="sync-spinner"></md-spinner>
+             </div>
           </span>
         <div class="description">Estimated time left</div>
       </div>
       <div fxFlex="100" class="small item">
           <span class="value">
             {{ lastBlockTime }}
-            <md-spinner *ngIf="!syncPercentage"></md-spinner>
+             <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+               <md-spinner class="sync-spinner"></md-spinner>
+             </div>
           </span>
         <div class="description">Last Block time</div>
       </div>
     </div><!-- .sync-stats -->
-
   </div><!-- .content -->
 </div><!-- .container -->
