@@ -20,6 +20,7 @@ import { ModalsComponent } from './modals/modals.component';
   ]
 })
 export class AppComponent implements OnInit {
+
   isCollapsed: boolean = true;
   isFixed: boolean = false;
   title: string = '';
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit {
   daemonRunning: boolean = false;
   daemonVersion: string;
   clientVersion: string = environment.version;
+  multiwallet: any = [];
 
   constructor(
     private _router: Router,
@@ -38,7 +40,6 @@ export class AppComponent implements OnInit {
     private dialog: MdDialog,
     private iconRegistry: MdIconRegistry
   ) {
-
     iconRegistry
       .registerFontClassAlias('partIcon', 'part-icon')
       .registerFontClassAlias('faIcon', 'fa');
@@ -61,12 +62,12 @@ export class AppComponent implements OnInit {
       .subscribe(data => this.title = data['title']);
 
     // Show logging colors
-    this.log.er('error!');
-    this.log.w('warn!');
-    this.log.i('info');
-    this.log.d('debug');
+    // this.log.er('error!');
+    // this.log.w('warn!');
+    // this.log.i('info');
+    // this.log.d('debug');
 
-    // Display errors in sidenav when required */
+    // Display errors in sidenav when required
 
     // Updates the error box in the sidenav whenever a stateCall returns an error.
     this._rpc.errorsStateCall.asObservable()

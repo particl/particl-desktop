@@ -1,8 +1,7 @@
 <md-progress-bar mode="indeterminate" *ngIf="!txService.txs.length && txService.loading"></md-progress-bar>
 <!--<div fxLayoutAlign="center center" *ngIf="!txService.txs.length > 0">-->
-  <!--<md-spinner></md-spinner>-->
+<!--<md-spinner></md-spinner>-->
 <!--</div>-->
-
 <div class="no-results" *ngIf="txService.txs.length === 0 && !txService.loading">
   No transactions yet
 </div>
@@ -30,11 +29,13 @@
 
         <!-- Confirmations -->
         <md-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation">
-          <span md-line mdTooltip="Confirmations"><md-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
+          <span md-line mdTooltip="Confirmations"><md-icon fontSet="partIcon" fontIcon="part-check-circle-08"
+                                                           class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
         </md-panel-title>
 
         <!-- Category icon -->
-        <md-panel-title fxFlex="1 0 165px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon" [ngSwitch]="tx.category">
+        <md-panel-title fxFlex="1 0 165px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon"
+                        [ngSwitch]="tx.category">
           <span *ngSwitchCase="'stake'" class="tx-type staked">
             <md-icon fontSet="partIcon" fontIcon="part-coins"></md-icon>Staked
           </span>
@@ -68,7 +69,8 @@
         <!-- Amount -->
         <md-panel-title fxFlex="1 0 160px" fxFlex.lt-md="100" *ngIf="display.amount" class="history_amount">
           <span md-line>
-            <span class="amount" [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }"> 
+            <span class="amount"
+                  [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }">
               <span class="big number">{{ tx.getAmountObject().getIntegerPart() }}</span><!-- inline element comment hack
               --><span class="point">{{ tx.getAmountObject().dot() }}</span><!--
               --><small class="small number">{{ tx.getAmountObject().getFractionalPart() || '' }}</small>
@@ -91,7 +93,9 @@
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
             <span fxFlex="30">TXID:</span>
-            <a class="md-right highlight" fxFlex="70" href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank" mdTooltip="Show on Block Explorer">{{tx.txid}}</a>
+            <a class="md-right highlight" fxFlex="70"
+               href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank"
+               mdTooltip="Show on Block Explorer">{{tx.txid}}</a>
           </div>
         </div>
 
@@ -112,21 +116,8 @@
     </md-expansion-panel>
   </ng-container>
 
-  <!--<pagination-->
-    <!--*ngIf="display.pagination && (txService.txs.length > 0||txService.currentPage>1)"-->
-    <!--[hidden]="!txService.txs.length"-->
-    <!--[boundaryLinks]="true"-->
-    <!--(pageChanged)="pageChanged($event)"-->
-    <!--[totalItems]="txService.txCount"-->
-    <!--[maxSize]="5" [rotate]="false"-->
-    <!--[(ngModel)]="txService.currentPage"-->
-    <!--class="pagination-sm center"-->
-    <!--previousText="&lsaquo;" nextText="&rsaquo;"-->
-    <!--firstText="&laquo;" lastText="&raquo;"-->
-    <!--[itemsPerPage]="txService.MAX_TXS_PER_PAGE">-->
-  <!--</pagination>-->
   <md-paginator
-    *ngIf="display.pagination"
+    *ngIf="display.pagination && txService.txs.length > 0"
     [length]="txService.txCount"
     [pageSize]="txService.MAX_TXS_PER_PAGE"
     [pageSizeOptions]="txService.PAGE_SIZE_OPTIONS"

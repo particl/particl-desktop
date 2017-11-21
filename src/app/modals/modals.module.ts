@@ -26,6 +26,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FlashNotificationService } from '../services/flash-notification.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.component';
+import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.c
     EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
-    PercentageBarComponent
+    PercentageBarComponent,
+    MultiwalletComponent
   ],
   exports: [
     ModalsComponent,
