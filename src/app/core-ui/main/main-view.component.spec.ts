@@ -1,5 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CoreUiModule } from '../core-ui.module';
+import { MainViewModule } from './main-view.module';
+
 import { MainViewComponent } from './main-view.component';
 
 describe('MainViewComponent', () => {
@@ -8,7 +11,10 @@ describe('MainViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MainViewComponent ]
+      imports: [
+        CoreUiModule.forRoot(),
+        MainViewModule
+      ]
     })
     .compileComponents();
   }));

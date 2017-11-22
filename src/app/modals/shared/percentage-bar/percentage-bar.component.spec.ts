@@ -3,9 +3,10 @@ import { MdDialogModule } from '@angular/material';
 
 import { CoreModule } from '../../../core/core.module';
 import { ModalsModule } from '../../modals.module';
-import { SharedModule } from '../../../shared/shared.module'; // fix
+import { SharedModule } from '../../../wallet/shared/shared.module';
 
 import { PercentageBarComponent } from './percentage-bar.component';
+
 
 
 describe('PercentageBarComponent', () => {

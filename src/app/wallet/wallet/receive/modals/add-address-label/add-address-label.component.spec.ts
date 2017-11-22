@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdDialogModule, MdDialogRef, MdFormFieldModule, MdInputModule, MdSnackBarModule } from '@angular/material';
 
-import { RpcModule } from '../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../../shared/shared.module';
-import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
-import { ModalsService } from '../../../../../../modals/modals.service';
+import { CoreModule, SnackbarService } from '../../../../../core/core.module';
+import { CoreUiModule } from '../../../../../core-ui/core-ui.module';
+import { ModalsModule, ModalsService } from '../../../../../modals/modals.module';
 
 import { AddAddressLabelComponent } from './add-address-label.component';
+
+
 
 describe('AddAddressLabelComponent', () => {
   let component: AddAddressLabelComponent;
@@ -25,6 +27,8 @@ describe('AddAddressLabelComponent', () => {
         MdSnackBarModule,
         MdInputModule,
         CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
+        ModalsModule.forRoot(),
         SharedModule
       ],
       declarations: [AddAddressLabelComponent],

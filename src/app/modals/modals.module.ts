@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from '../core-ui/material/material.module';
 
@@ -33,7 +33,7 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
   imports: [
     CommonModule,
     FormsModule,
-    // BrowserAnimationsModule,
+    BrowserAnimationsModule,
     ClipboardModule,
     /* own */
     MaterialModule
@@ -84,3 +84,4 @@ export class ModalsModule {
 }
 
 export { ModalsService } from './modals.service';
+export { PassphraseService } from './createwallet/passphrase/passphrase.service';

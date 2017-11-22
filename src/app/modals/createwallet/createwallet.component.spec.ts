@@ -1,12 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ModalsModule } from '../modals.module';
 import { MdSnackBarModule } from '@angular/material';
 
-import { SharedModule } from '../../shared/shared.module';
+import { ModalsModule } from '../modals.module';
 import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { CreateWalletComponent } from './createwallet.component';
+
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -20,6 +22,7 @@ describe('CreateWalletComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
+        CoreUiModule.forRoot(),
         MdSnackBarModule
       ]
     })

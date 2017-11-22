@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MdSnackBarModule } from '@angular/material';
 
-import { SharedModule } from '../../shared/shared.module';
 import { CoreModule } from '../../core/core.module';
 import { ModalsModule } from '../modals.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { EncryptwalletComponent } from './encryptwallet.component';
 
@@ -18,6 +19,7 @@ describe('EncryptwalletComponent', () => {
         SharedModule,
         ModalsModule,
         CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
         MdSnackBarModule
       ]
     })

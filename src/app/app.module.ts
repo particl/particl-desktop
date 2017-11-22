@@ -25,6 +25,7 @@ import { routing } from './app.routing';
     CoreModule.forRoot(),
     CoreUiModule.forRoot(),
     ModalsModule.forRoot(),
+    WalletViewsModule,
     MultiwalletModule,
   ],
   bootstrap: [ AppComponent ],

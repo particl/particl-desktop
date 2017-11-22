@@ -3,10 +3,12 @@ import { MdDialogModule, MdDialogRef } from '@angular/material';
 
 import { ModalsModule } from '../../modals.module';
 import { CoreModule } from '../../../core/core.module';
-
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '../../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 import { AlertComponent } from './alert.component';
+
+
 
 describe('AlertComponent', () => {
   let component: AlertComponent;
@@ -18,7 +20,8 @@ describe('AlertComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        MdDialogModule
+        MdDialogModule,
+        CoreUiModule.forRoot()
       ],
       providers: [ { provide: MdDialogRef } ]
     })

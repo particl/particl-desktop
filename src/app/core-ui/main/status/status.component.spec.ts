@@ -1,11 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatusComponent } from './status.component';
-
-import { ModalsModule } from '../../modals/modals.module';
-import { SharedModule } from '../../shared/shared.module';
-import { CoreModule } from '../../../core/core.module';
 import { MdTooltipModule } from '@angular/material';
+
+import { CoreModule } from '../../../core/core.module';
+import { SharedModule } from '../../../wallet/shared/shared.module';
+import { ModalsModule } from '../../../modals/modals.module';
+import { CoreUiModule } from '../../core-ui.module';
+
+import { StatusComponent } from './status.component';
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
@@ -13,11 +15,11 @@ describe('StatusComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StatusComponent ],
       imports: [
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
+        CoreUiModule.forRoot(),
         MdTooltipModule
       ]
     })
