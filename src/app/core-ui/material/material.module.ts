@@ -6,7 +6,7 @@ import {
   MdMenuModule,
   MdProgressBarModule,
   MdSidenavModule,
-  MdSnackBarModule, MdTabsModule, MdToolbarModule, MdRadioModule,
+  MdSnackBarModule, MdTabsModule, MdToolbarModule, MdRadioModule, MdInputModule,
   MdTooltipModule,
   MdSelectModule
 } from '@angular/material';
@@ -39,7 +39,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MdCardModule,
     MdToolbarModule,
     MdRadioModule,
-    MdSelectModule
+    MdSelectModule,
+    MdInputModule,
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -60,7 +61,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MdCardModule,
     MdToolbarModule,
     MdRadioModule,
-    MdSelectModule
+    MdSelectModule,
+    MdInputModule,
   ],
   declarations: []
 })
