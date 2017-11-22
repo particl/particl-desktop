@@ -11,7 +11,7 @@ import { ModalsService } from '../modals/modals.service';
 @Component({
   selector: 'app-wallet',
   templateUrl: './wallet.component.html',
-  styleUrls: ['./wallet.component.scss', './wallet.component.controls.scss'],
+  styleUrls: ['./wallet.component.scss'],
   providers: [
     // SettingsService
   ]
