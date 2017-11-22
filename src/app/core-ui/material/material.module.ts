@@ -6,9 +6,11 @@ import {
   MdMenuModule,
   MdProgressBarModule,
   MdSidenavModule,
-  MdSnackBarModule, MdTabsModule, MdToolbarModule,
-  MdTooltipModule
+  MdSnackBarModule, MdTabsModule, MdToolbarModule, MdRadioModule, MdInputModule,
+  MdTooltipModule,
+  MdSelectModule
 } from '@angular/material';
+
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -27,6 +29,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MdListModule,
     MdExpansionModule,
     MdTooltipModule,
+    MdTabsModule,
     MdSnackBarModule,
     MdMenuModule,
     MdProgressBarModule,
@@ -34,7 +37,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MdSidenavModule,
     MdGridListModule,
     MdCardModule,
-    MdToolbarModule
+    MdToolbarModule,
+    MdRadioModule,
+    MdSelectModule,
+    MdInputModule,
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -45,6 +51,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MdListModule,
     MdExpansionModule,
     MdTooltipModule,
+    MdTabsModule,
     MdSnackBarModule,
     MdMenuModule,
     MdProgressBarModule,
@@ -52,7 +59,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MdSidenavModule,
     MdGridListModule,
     MdCardModule,
-    MdToolbarModule
+    MdToolbarModule,
+    MdRadioModule,
+    MdSelectModule,
+    MdInputModule,
   ],
   declarations: []
 })
