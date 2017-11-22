@@ -53,17 +53,91 @@
 /* Wallet sidenavigation: end */
 
 
-/* 
-  Input visual validation 
-  Hmm in main-view?
-  */
-/deep/ input {
-  &.verify-sucess {
-    color: darken($color, 7%) !important; // #57a800
-    background-color: rgba($color, 0.07) !important; // #edfad7
+
+
+
+
+
+
+
+/* formerly in theme.scss */
+
+.sidebar {
+  // Sync progress bar
+  .sync-bar {
+    .mat-progress-bar-buffer {
+      background: lighten($bg-black, 15%);
+    }
+    .mat-progress-bar-fill::after {
+      background-color: $color;
+    }
   }
-  &.verify-error {
-    color: darken($color-alert, 5%);
-    background: rgba($color-alert, 0.1) !important;
+}
+.mat-sidenav {
+  user-select: none;
+  .mat-list {
+    .mat-list-item { // menu item (text w/ icon)
+      &:hover {
+        background: darken($bg-black, 1.5%);
+        .mat-icon {
+          color: lighten(#4B4A4F, 10%);
+        }
+      }
+      .mat-list-item-content {
+        height: auto !important;
+      }
+    }
+    &.sidesubmenu {
+      a {
+        text-decoration: none;
+        outline: none;
+      }
+      .mat-list-item-content {
+        text-transform: uppercase;
+        min-height: 40px;
+      }
+      &.error { // daemon/wallet error messages
+        .mat-list-item:hover {
+          background: none;
+          .mat-icon {
+            color: $color-alert;
+          }
+        }
+        .mat-list-item-content {
+          color: white;
+          font-size: 11px;
+          padding: 24px 16px;
+        }
+        .mat-icon {
+          color: $color-alert;
+          margin: 0 14px 0 0;
+        }
+      }
+    }
   }
+  .mat-expansion-panel-body { // accordion menu
+    padding: 0;
+  }
+  .mat-expansion-panel {
+    .mat-expansion-indicator::after {
+      color: $text-muted;
+    }
+    &.mat-expanded {
+      .mat-expansion-indicator::after {
+        color: $color;
+      }
+    }
+  }
+}
+.active > md-list-item > div > md-icon {
+  color: $color !important;
+}
+
+.md-expansion-menu > md-expansion-panel {
+  color: white;
+  background-color: $bg-black;
+}
+
+.mat-expansion-indicator.ng-tns-c7-2.ng-trigger.ng-trigger-indicatorRotate::after {
+  color: $color;
 }
