@@ -52,17 +52,17 @@ md-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 
 // ------ TABS ------ //
-
+/*
 .mat-tab-group {
   .mat-tab-header {
-    //background: white; // needs to fix the search bg first
+    background: white; // needs to fix the search bg first
   }
 }
+*/
 
+// ------ NO RESULTS (no TXs, no addresses, ..) ------ //
 
-// ------ NO RESULTS ------ //
-
-.no-results { // search: no results
+.no-results {
   @extend %disable-select;
   font-size: 18px;
   color: darken($bg-shadow, 15%);
