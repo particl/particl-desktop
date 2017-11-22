@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { CoreModule } from './core/core.module';
@@ -12,7 +12,6 @@ import { WalletViewsModule } from './wallet/wallet.module';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
-
 
 @NgModule({
   declarations: [
@@ -27,7 +26,6 @@ import { routing } from './app.routing';
     CoreUiModule.forRoot(),
     ModalsModule.forRoot(),
     MultiwalletModule,
-
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -12,6 +12,20 @@
   height: 60px;
 }
 
+// "footer" content
+.pin-to-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  // Sync progress
+  .sync-progress {
+    padding: 0 20px;
+  }
+
+}
+
 .mat-sidenav { // nav container
   width: 250px;
   background-color: #222828;
@@ -37,3 +51,19 @@
   }
 }
 /* Wallet sidenavigation: end */
+
+
+/* 
+  Input visual validation 
+  Hmm in main-view?
+  */
+/deep/ input {
+  &.verify-sucess {
+    color: darken($color, 7%) !important; // #57a800
+    background-color: rgba($color, 0.07) !important; // #edfad7
+  }
+  &.verify-error {
+    color: darken($color-alert, 5%);
+    background: rgba($color-alert, 0.1) !important;
+  }
+}
