@@ -69,7 +69,7 @@ export class MainViewComponent implements OnInit {
 
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
   syncScreen() {
-    this._modalsService.open('syncing', {forceOpen: true});
+    this._modals.open('syncing', {forceOpen: true});
   }
 
 }

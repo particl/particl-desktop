@@ -8,7 +8,7 @@ import {
   MdSidenavModule,
   MdSnackBarModule, MdTabsModule, MdToolbarModule, MdRadioModule, MdInputModule,
   MdTooltipModule,
-  MdSelectModule
+  MdSelectModule, MdPaginatorModule
 } from '@angular/material';
 
 
@@ -41,6 +41,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MdRadioModule,
     MdSelectModule,
     MdInputModule,
+    MdPaginatorModule,
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -63,6 +64,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MdRadioModule,
     MdSelectModule,
     MdInputModule,
+    MdPaginatorModule
   ],
   declarations: []
 })
