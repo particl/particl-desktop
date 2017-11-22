@@ -11,10 +11,11 @@ import { RpcService, WindowService } from './core/core.module';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+
   log: any = Log.create('app.component');
 
-  blocks: number = 0;
-  error: string = '';
+  // multiwallet: any = [];
+
 
   constructor(
     private _router: Router,

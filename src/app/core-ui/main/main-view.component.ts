@@ -67,4 +67,9 @@ export class MainViewComponent implements OnInit {
     this._modals.open('createWallet', {forceOpen: true});
   }
 
+  /** Open syncingdialog modal when clicking on progresbar in sidenav */
+  syncScreen() {
+    this._modalsService.open('syncing', {forceOpen: true});
+  }
+
 }
