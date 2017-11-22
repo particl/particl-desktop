@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdDialogModule, MdDialogRef, MdFormFieldModule } from '@angular/material';
-//import { BrowserModule } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MdDialogRef, MdFormFieldModule } from '@angular/material';
+
+import { CoreModule } from '../../../../core/core.module';
+import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
 
@@ -13,12 +14,10 @@ describe('SendConfirmationModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MdDialogModule,
-        // BrowserModule,
         CommonModule,
-        ReactiveFormsModule,
-        FormsModule,
-        MdFormFieldModule
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
+        MdFormFieldModule // check if this is required. If so, move into CoreUi.
       ],
       declarations: [ SendConfirmationModalComponent ],
       providers: [
