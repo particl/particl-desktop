@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { AppModule } from './app.module';
 
-import { RpcService } from './core/core.module';
+// import { RpcService } from './core/core.module';
 
 import { AppComponent } from './app.component';
 
@@ -18,7 +18,9 @@ describe('AppComponent', () => {
         RouterTestingModule,
         AppModule
       ],
-      providers: [RpcService, {provide: APP_BASE_HREF, useValue: '/'}]
+      providers: [
+        {provide: APP_BASE_HREF, useValue: '/'}
+      ]
     }).compileComponents();
   }));
 
