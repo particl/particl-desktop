@@ -1,5 +1,6 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+
 // Dialog
 .dialog-percentage-bar {
   .percentage-bar-text {
@@ -17,7 +18,9 @@
 
 // Sidebar
 .sync-progress-wrapper {
-  padding: 5px 20px;
+  padding: 15px 24px 0;
+  border-top: 1px solid #15191A; // simulate sidebar divider
+  box-shadow: 0 1px 0 #333 inset;
   .sync-info {
     font-size: 11px;
     text-transform: uppercase;

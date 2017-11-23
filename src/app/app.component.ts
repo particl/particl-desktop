@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MdDialog, MdIconRegistry } from '@angular/material';
+import { environment } from '../environments/environment';
 
 import { WindowService } from './core/window.service';
 import { SettingsService } from './settings/settings.service';
@@ -26,6 +27,8 @@ export class AppComponent implements OnInit {
   log: any = Log.create('app.component');
   walletInitialized: boolean = false;
   daemonRunning: boolean = false;
+  daemonVersion: string;
+  clientVersion: string = environment.version;
   multiwallet: any = [];
 
   constructor(
@@ -74,6 +77,11 @@ export class AppComponent implements OnInit {
     // Updates the error box in the sidenav if wallet is not initialized.
     this._rpc.state.observe('ui:walletInitialized')
     .subscribe(status => this.walletInitialized = status);
+
+    // Obtains the current daemon version
+    this._rpc.state.observe('subversion')
+    .subscribe(
+      subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
   }
 
   /** Open createwallet modal when clicking on error in sidenav */

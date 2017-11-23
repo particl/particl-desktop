@@ -86,6 +86,19 @@
     padding: 0 20px;
   }
 
+  // Versions
+  .client-version {
+    @extend .enable-select;
+    padding: 0 24px;
+    display: block;
+    font-size: 11px;
+    line-height: 1.6;
+    color: $text-muted;
+    .version {
+      color: lighten($text-muted, 15%);
+      margin-left: 2px;
+    }
+  }
 }
 
 
