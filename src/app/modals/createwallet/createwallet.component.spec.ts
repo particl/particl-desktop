@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdSnackBarModule } from '@angular/material';
 
 import { ModalsModule } from '../modals.module';
 import { CoreModule } from '../../core/core.module';
@@ -22,8 +21,7 @@ describe('CreateWalletComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        CoreUiModule.forRoot(),
-        MdSnackBarModule
+        CoreUiModule.forRoot()
       ]
     })
     .compileComponents();

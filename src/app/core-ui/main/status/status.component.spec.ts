@@ -1,7 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MdTooltipModule } from '@angular/material';
-
 import { CoreModule } from '../../../core/core.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 import { ModalsModule } from '../../../modals/modals.module';
@@ -19,8 +17,7 @@ describe('StatusComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        CoreUiModule.forRoot(),
-        MdTooltipModule
+        CoreUiModule.forRoot()
       ]
     })
     .compileComponents();

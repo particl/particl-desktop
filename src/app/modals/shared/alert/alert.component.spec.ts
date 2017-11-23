@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdDialogModule, MdDialogRef } from '@angular/material';
+import { MdDialogRef } from '@angular/material';
 
 import { ModalsModule } from '../../modals.module';
 import { CoreModule } from '../../../core/core.module';
@@ -7,7 +7,6 @@ import { SharedModule } from '../../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 import { AlertComponent } from './alert.component';
-
 
 
 describe('AlertComponent', () => {
@@ -20,7 +19,6 @@ describe('AlertComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        MdDialogModule,
         CoreUiModule.forRoot()
       ],
       providers: [ { provide: MdDialogRef } ]

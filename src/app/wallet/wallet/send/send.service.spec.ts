@@ -1,5 +1,4 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { MdSnackBarModule } from '@angular/material';
 
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { CoreModule } from '../../../core/core.module';
@@ -14,8 +13,7 @@ describe('SendService', () => {
       imports: [
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot(),
-        MdSnackBarModule
+        CoreUiModule.forRoot()
       ],
       providers: [SendService]
 

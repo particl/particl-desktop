@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdSnackBarModule } from '@angular/material';
 
 import { ModalsModule } from '../../modals.module';
 import { CoreModule } from '../../../core/core.module';
@@ -19,8 +18,7 @@ describe('PasswordComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        CoreUiModule.forRoot(),
-        MdSnackBarModule
+        CoreUiModule.forRoot()
       ]
     })
     .compileComponents();

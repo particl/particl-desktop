@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
 import { MdDialogRef } from '@angular/material';
 
 import { SharedModule } from '../../../../shared/shared.module';
@@ -9,8 +8,6 @@ import { ModalsModule } from '../../../../../modals/modals.module';
 
 import { AddAddressLabelComponent } from './add-address-label.component';
 
-
-
 describe('AddAddressLabelComponent', () => {
   let component: AddAddressLabelComponent;
   let fixture: ComponentFixture<AddAddressLabelComponent>;
@@ -18,7 +15,6 @@ describe('AddAddressLabelComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        CommonModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),

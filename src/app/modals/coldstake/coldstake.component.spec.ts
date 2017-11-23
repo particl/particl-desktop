@@ -1,10 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdDialogRef, MdSnackBarModule } from '@angular/material';
+import { MdDialogRef } from '@angular/material';
 
 import { ModalsModule } from '../modals.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
-import { CoreModule, SnackbarService, IpcService } from '../../core/core.module';
+import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
 
 import { ColdstakeComponent } from './coldstake.component';
@@ -17,17 +16,13 @@ describe('ColdstakeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
         SharedModule,
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
-        ModalsModule,
-        MdSnackBarModule
+        ModalsModule
       ],
       providers: [
-        { provide: MdDialogRef },
-        SnackbarService,
-        IpcService
+        { provide: MdDialogRef }
       ]
     })
     .compileComponents();

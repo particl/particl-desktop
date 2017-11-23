@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdDialogModule, MdDialogRef, MdSnackBarModule } from '@angular/material';
+import { MdDialogRef } from '@angular/material';
 
 import { CoreModule, BlockStatusService } from '../core/core.module';
 // TODO;: ^why blockstatus & providing it?
@@ -19,12 +19,10 @@ describe('ModalsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MdDialogModule,
         ModalsModule.forRoot(),
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot(),
-        MdSnackBarModule
+        CoreUiModule.forRoot()
       ],
       providers: [
         BlockStatusService,
