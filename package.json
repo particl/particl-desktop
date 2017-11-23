@@ -110,7 +110,6 @@
     "buffered-spawn": "^3.3.2",
     "core-js": "^2.4.1",
     "electron-log": "^2.2.10",
-    "electron-notify": "^0.1.0",
     "font-awesome": "^4.7.0",
     "got": "^7.1.0",
     "hammerjs": "^2.0.8",
