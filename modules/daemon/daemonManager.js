@@ -13,8 +13,13 @@ const rpc = require('../rpc/rpc');
 
 let options;
 
-// should be 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
-const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
+// master
+// const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
+
+// dev
+// const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/develop/modules/clientBinaries/clientBinaries.json';
+
+const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/develop/modules/clientBinaries/clientBinaries.json';
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
