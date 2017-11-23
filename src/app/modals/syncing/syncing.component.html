@@ -1,45 +1,51 @@
-<div *ngIf="syncPercentage">
-  <div class="container">
-    <div class="content">
+<div class="container">
+  <div class="content">
+    <div class="section wallet-syncing">
+      <div class="title">Wallet is syncing</div>
+      <p>
+        Your wallet automatically synchronizes with the Particl network after a connection is established, but this
+        process has not completed yet. This means that recent transactions will not be visible, and the balance may not
+        be up-to-date until this process has completed.
+      </p>
+      <p>
+        Spending Particl may not be possible during this phase
+      </p>
+      <p *ngIf="nPeers < 1" class="warning">
+        <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+        Warning: No peers connected. Please check your internet connection
+      </p>
+    </div><!-- .wallet-syncing -->
 
-
-      <div class="section wallet-syncing">
-        <div class="title">Wallet is syncing</div>
-        <p>
-          Your wallet automatically synchronizes with the Particl network after a connection is established, but this process has not completed yet. This means that recent transactions will not be visible, and the balance may not be up-to-date until this process has completed.
-        </p>
-        <p>
-          Spending Particl may not be possible during this phase
-        </p>
-        <p *ngIf="nPeers < 1" class="warning">
-          <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
-          Warning: No peers connected. Please check your internet connection
-        </p>
-      </div><!-- .wallet-syncing -->  
-
-
-      <div class="section sync-stats" fxLayout="row" fxLayoutWrap>
-        <div fxFlex="30" class="big item">
+    <!-- @TODO: resize and align spinner  -->
+    <div class="section sync-stats" fxLayout="row" fxLayoutWrap>
+      <div fxFlex="30" class="big item">
           <span class="value">
-            {{ syncPercentage ? remainder : 'loading...' }}
+            {{ remainder }}
+            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+                <md-spinner class="sync-spinner"></md-spinner>
+            </div>
           </span>
-          <div class="description">Blocks to sync</div>
-        </div>
-        <div fxFlex="70" class="big item">
-          <span class="value">
-            {{ syncPercentage ? estimatedTimeLeft : 'loading...' }}
-          </span>
-          <div class="description">Estimated time left</div>
-        </div>
-        <div fxFlex="100" class="small item">
-          <span class="value">
-            {{ syncPercentage ? lastBlockTime : 'loading...' }}
-          </span>
-          <div class="description">Last Block time</div>
-        </div>
-      </div><!-- .sync-stats -->
 
-      
-    </div><!-- .content -->
-  </div><!-- .container -->
-</div><!-- if syncPercentage -->
+        <div class="description">Blocks to sync</div>
+      </div>
+      <div fxFlex="70" class="big item">
+          <span class="value">
+            {{ estimatedTimeLeft }}
+            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+                <md-spinner class="sync-spinner"></md-spinner>
+            </div>
+          </span>
+        <div class="description">Estimated time left</div>
+      </div>
+      <div fxFlex="100" class="small item">
+          <span class="value">
+            {{ lastBlockTime }}
+            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+                <md-spinner class="sync-spinner"></md-spinner>
+            </div>
+          </span>
+        <div class="description">Last Block time</div>
+      </div>
+    </div><!-- .sync-stats -->
+  </div><!-- .content -->
+</div><!-- .container -->
