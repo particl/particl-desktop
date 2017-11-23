@@ -8,7 +8,7 @@ import { CoreUiModule } from './core-ui/core-ui.module';
 import { ModalsModule } from './modals/modals.module';
 
 import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.module';
-// import { WalletViewsModule } from './wallet/wallet.module';
+import { WalletViewsModule } from './wallet/wallet.module';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
@@ -25,7 +25,7 @@ import { routing } from './app.routing';
     CoreModule.forRoot(),
     CoreUiModule.forRoot(),
     ModalsModule.forRoot(),
-    // WalletViewsModule, // shouldn't be needed?
+    WalletViewsModule, // shouldn't be needed?
     MultiwalletModule,
   ],
   bootstrap: [ AppComponent ],

@@ -2,7 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { WalletViewsComponent } from './wallet.component';
 import { CoreModule } from '../core/core.module';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 
@@ -23,7 +22,6 @@ import { routing } from './wallet.routing';
 
 @NgModule({
   declarations: [
-    WalletViewsComponent,
     OverviewComponent,
     SettingsComponent,
     StakinginfoComponent,
@@ -36,9 +34,7 @@ import { routing } from './wallet.routing';
     WalletModule.forRoot(),
     CoreUiModule
   ],
-  exports: [
-    WalletViewsComponent
-  ],
+  exports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
   ],

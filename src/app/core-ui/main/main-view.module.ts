@@ -1,6 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterTestingModule } from '@angular/router/testing';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MaterialModule } from '../material/material.module';
@@ -14,10 +13,7 @@ import { StatusComponent } from './status/status.component';
   imports: [
     CommonModule,
     RouterModule,
-    MaterialModule,
-    ModalsModule,
-    RouterTestingModule,
-    CoreModule.forRoot()
+    MaterialModule
   ],
   exports: [
     MainViewComponent,

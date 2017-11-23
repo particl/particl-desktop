@@ -18,7 +18,8 @@ describe('SyncingComponent', () => {
         MdIconModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
-       ]
+       ],
+       declarations: [SyncingComponent]
     })
     .compileComponents();
   }));

@@ -1,9 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import { CoreUiModule } from '../core-ui.module';
+
+import { CoreModule } from '../../core/core.module';
 import { MainViewModule } from './main-view.module';
-
+// should be declared in module^
 import { MainViewComponent } from './main-view.component';
+import { ModalsModule } from '../../modals/modals.module';
+
+import { MdDialogModule, MdDialogRef } from '@angular/material';
+import { MdDialog } from '@angular/material'; // TODO: move to material
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -12,8 +18,15 @@ describe('MainViewComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        CoreUiModule.forRoot(),
-        MainViewModule
+        // CoreUiModule.forRoot(),
+        MainViewModule,
+        RouterTestingModule,
+        CoreModule.forRoot(),
+        ModalsModule.forRoot(),
+        MdDialogModule
+      ],
+      providers: [
+        MdDialog
       ]
     })
     .compileComponents();
