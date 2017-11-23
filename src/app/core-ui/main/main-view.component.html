@@ -7,114 +7,126 @@
 
     <md-divider></md-divider>
 
-    <md-content layout-padding>
-      <md-list class="sidesubmenu">
-        <a routerLinkActive="active" routerLink="/wallet/overview">
-          <md-list-item>
-            <md-icon fontSet="partIcon" fontIcon="part-grid-48"></md-icon>
-            <span class="menu-item">Overview</span>
+    <md-content class="sidebar-section">
+      <md-list class="sidebar-item-group">
+        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/overview">
+          <md-list-item class="sidebar-item">
+            <md-icon class="icon" fontSet="partIcon" fontIcon="part-grid-48"></md-icon>
+            <span class="text">Overview</span>
           </md-list-item>
         </a>
-      </md-list>
-    </md-content>
+      </md-list><!-- .sidebar-item-group -->
+    </md-content><!-- .sidebar-section -->
 
-    <md-content layout-padding *ngIf="true">
-      <md-accordion displayMode="flat" [multi]="'multi'" class="md-expansion-menu">
+    <md-content class="sidebar-section" *ngIf="true">
+      <md-accordion [multi]="'multi'">
         <md-expansion-panel #panel1 expanded="true">
           <md-expansion-panel-header>Wallet</md-expansion-panel-header>
-          <md-content layout-padding class="submenuarea">
-            <md-list class="sidesubmenu">
-              <a routerLinkActive="active" [routerLink]="'/wallet/receive'">
-                <md-list-item>
-                  <md-icon fontSet="partIcon" fontIcon="part-tail-right"></md-icon>
-                  <span class="menu-item">Receive</span>
+          <md-content>
+            <md-list class="sidebar-item-group">
+
+              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/receive'">
+                <md-list-item class="sidebar-item">
+                  <md-icon class="icon" fontSet="partIcon" fontIcon="part-tail-right"></md-icon>
+                  <span class="text">Receive</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" [routerLink]="'/wallet/send'">
-                <md-list-item>
-                  <md-icon fontSet="partIcon" fontIcon="part-tail-left"></md-icon>
-                  <span class="menu-item">Send</span>
+              
+              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/send'">
+                <md-list-item class="sidebar-item">
+                  <md-icon class="icon" fontSet="partIcon" fontIcon="part-tail-left"></md-icon>
+                  <span class="text">Send</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" [routerLink]="'/wallet/history'">
-                <md-list-item>
-                  <md-icon fontSet="partIcon" fontIcon="part-time-3"></md-icon>
-                  <span class="menu-item">History</span>
+              
+              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/history'">
+                <md-list-item class="sidebar-item">
+                  <md-icon class="icon" fontSet="partIcon" fontIcon="part-time-3"></md-icon>
+                  <span class="text">History</span>
                 </md-list-item>
               </a>
-              <a routerLinkActive="active" [routerLink]="'/wallet/address-book'">
-                <md-list-item>
-                  <md-icon fontSet="partIcon" fontIcon="part-multiple-19"></md-icon>
-                  <span class="menu-item">Address Book</span>
+              
+              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/address-book'">
+                <md-list-item class="sidebar-item">
+                  <md-icon class="icon" fontSet="partIcon" fontIcon="part-multiple-19"></md-icon>
+                  <span class="text">Address Book</span>
                 </md-list-item>
               </a>
-            </md-list>
+
+            </md-list><!-- .sidebar-item-group -->
           </md-content>
         </md-expansion-panel>
       </md-accordion>
-    </md-content>
+    </md-content><!-- .sidebar-section -->
 
-    <md-content layout-padding *ngIf="walletInitialized === false">
-      <md-accordion displayMode="flat" [multi]="'multi'" class="md-expansion-menu">
+    <md-content class="sidebar-section" *ngIf="walletInitialized === false">
+      <md-accordion [multi]="'multi'">
         <md-expansion-panel #panel1 expanded="true">
           <md-expansion-panel-header>Wallet</md-expansion-panel-header>
-          <md-content layout-padding class="submenuarea">
-            <md-list class="sidesubmenu">
-              <a routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
-                <md-list-item>
-                  <md-icon fontSet="partIcon" fontIcon="part-card-add" ></md-icon>
-                  <span class="menu-item">Add Account</span>
+          <md-content>
+            <md-list class="sidebar-item-group">
+
+              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+                <md-list-item class="sidebar-item">
+                  <md-icon class="icon" fontSet="partIcon" fontIcon="part-card-add" ></md-icon>
+                  <span class="text">Add Account</span>
                 </md-list-item>
               </a>
-            </md-list>
+
+            </md-list><!-- .sidebar-item-group -->
           </md-content>
         </md-expansion-panel>
       </md-accordion>
-    </md-content>
+    </md-content><!-- .sidebar-section -->
 
-    <!--md-content layout-padding>
-      <md-accordion displayMode="flat" [multi]="'multi'" class="md-expansion-menu">
+
+    <!--md-content class="sidebar-section">
+      <md-accordion [multi]="'multi'">
         <md-expansion-panel #panel1 expanded="true">
           <md-expansion-panel-header>Settings</md-expansion-panel-header>
-
-          <md-content layout-padding class="submenuarea">
-            <md-list class="sidesubmenu">
-              <a routerLinkActive="active" [routerLink]="walletInitialized ? '/settings' : null">
-                <md-list-item>
-                  <md-icon fontSet="partIcon" fontIcon="nc-grid-48"></md-icon>
-                  <span class="menu-item">Settings</span>
+          <md-content>
+            <md-list class="sidebar-item-group">
+              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="walletInitialized ? '/settings' : null">
+                <md-list-item class="sidebar-item">
+                  <md-icon class="icon" fontSet="partIcon" fontIcon="nc-grid-48"></md-icon>
+                  <span class="text">Settings</span>
                 </md-list-item>
               </a>
             </md-list>
           </md-content>
         </md-expansion-panel>
       </md-accordion>
-    </md-content-->
+    </md-content--><!-- .sidebar-section -->
+
 
     <footer class="pin-to-bottom">
 
-      <md-content layout-padding *ngIf="!daemonRunning || !walletInitialized">
-        <md-list class="sidesubmenu error">
-          <md-list-item *ngIf="!daemonRunning">
-            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
-            Connection Refused, Daemon is not connected
+      <md-content *ngIf="!daemonRunning || !walletInitialized">
+        <md-list class="error sidebar-item-group">
+          <md-list-item class="sidebar-item" *ngIf="!daemonRunning">
+            <md-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></md-icon>
+            <span class="text">Connection Refused, Daemon is not connected</span>
           </md-list-item>
-          <md-list-item *ngIf="!walletInitialized">
-            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
-            Please create wallet first to access other tabs
+          <md-list-item class="sidebar-item" *ngIf="!walletInitialized">
+            <md-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></md-icon>
+            <span class="text">Please create wallet first to access other tabs</span>
           </md-list-item>
-        </md-list>
+        </md-list><!-- .error.sidebar-item-group -->
       </md-content>
   
-      <md-content class="sync-progress cursor-pointer" layout-padding (click)="syncScreen()">
+      <md-content class="sync-progress cursor-pointer" (click)="syncScreen()">
         <!-- reused from syncing dialog -->
         <app-percentage-bar #progress [sidebar]="true"></app-percentage-bar>
       </md-content>
 
     </footer><!-- .pin-to-bottom -->
 
-  </md-sidenav>
 
+  </md-sidenav><!-- .sidebar -->
+
+
+
+  <!-- Page header -->
   <md-toolbar class="header-main">
     <button fxLayout="row" fxLayoutAlign="center end" md-button (click)="sidenav.toggle()" fxHide.gt-sm>
       <md-icon fontSet="partIcon" fontIcon="part-menu-bold"></md-icon>
@@ -125,10 +137,12 @@
         <app-status></app-status>
       </div>
     </div>
-  </md-toolbar>
+  </md-toolbar><!-- .header-main -->
 
   <div class="margin-left-right-50">
     <router-outlet></router-outlet>
   </div>
+
+
 
 </md-sidenav-container>

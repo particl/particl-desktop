@@ -59,3 +59,9 @@ $radius: 4px; // default border-radius
   user-select: auto;
   cursor: text;
 }
+
+
+// Transition effects
+%tfx {
+  transition: all 0.17s;
+}
