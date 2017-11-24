@@ -12,20 +12,6 @@
   height: 60px;
 }
 
-// "footer" content
-.pin-to-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  // Sync progress
-  .sync-progress {
-    padding: 0 20px;
-  }
-
-}
-
 .mat-sidenav { // nav container
   width: 250px;
   background-color: #222828;
@@ -50,6 +36,36 @@
     color: white;
   }
 }
+
+// "footer" content
+.pin-to-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  // Sync progress
+  .sync-progress {
+    padding: 0 20px;
+  }
+
+  // Versions
+  .client-version {
+    @extend .enable-select;
+    padding: 0 24px;
+    display: block;
+    font-size: 11px;
+    line-height: 1.6;
+    color: $text-muted;
+    .version {
+      color: lighten($text-muted, 15%);
+      margin-left: 2px;
+    }
+  }
+  
+
+}
+
 /* Wallet sidenavigation: end */
 
 

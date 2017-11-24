@@ -24,9 +24,13 @@ export class MainViewComponent implements OnInit {
 
   title: string = '';
 
-  /* show errors */
+  /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
+
+  /* version */
+  daemonVersion: string;
+  clientVersion: string = environment.version;
 
   constructor(
     private _router: Router,
@@ -52,6 +56,7 @@ export class MainViewComponent implements OnInit {
       .subscribe(data => this.title = data['title']);
 
 
+    /* errors */
     // Updates the error box in the sidenav whenever a stateCall returns an error.
     this._rpc.errorsStateCall.asObservable()
     .subscribe(status => this.daemonRunning = true,
@@ -60,6 +65,13 @@ export class MainViewComponent implements OnInit {
     // Updates the error box in the sidenav if wallet is not initialized.
     this._rpc.state.observe('ui:walletInitialized')
     .subscribe(status => this.walletInitialized = status);
+
+
+    /* versions */
+    // Obtains the current daemon version
+    this._rpc.state.observe('subversion')
+    .subscribe(
+      subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
   }
 
   /** Open createwallet modal when clicking on error in sidenav */

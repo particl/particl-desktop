@@ -93,6 +93,7 @@
 
     <footer class="pin-to-bottom">
 
+      <!-- Errors -->
       <md-content layout-padding *ngIf="!daemonRunning || !walletInitialized">
         <md-list class="sidesubmenu error">
           <md-list-item *ngIf="!daemonRunning">
@@ -106,6 +107,17 @@
         </md-list>
       </md-content>
   
+      <!-- Versions | TODO: move to separate component? -->
+      <md-content class="client-version">
+        <div class="client item">
+          Client <span class="version">{{ clientVersion }}</span>
+        </div>
+        <div class="daemon item">
+          Daemon <span class="version">{{ daemonVersion }}</span>
+        </div>
+      </md-content>
+
+      <!-- Sync progress -->
       <md-content class="sync-progress cursor-pointer" layout-padding (click)="syncScreen()">
         <!-- reused from syncing dialog -->
         <app-percentage-bar #progress [sidebar]="true"></app-percentage-bar>
