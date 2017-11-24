@@ -313,8 +313,46 @@ input[type="text"] {
 }
 
 
+// ------ MODIFIERS (Tweaks/hacks to material stuff) ------ //
 
+.mat-expansion-panel {
+  // sidebar/menu: no padding for panel's content (used in the sidebar)
+  &.no-padding {
+    .mat-expansion-panel-body {
+      padding: 0;
+    }
+  }
+  // sidebar/menu: color panel's arrow
+  &.arrow-colored {
+    .mat-expansion-indicator::after {
+      color: $text-muted;
+    }
+    // when expanded..
+    &.mat-expanded {
+      .mat-expansion-indicator::after {
+        color: $color;
+      }
+    }
+  }
+}
 
+.mat-list {
+  // sidebar/menu: smaller vertical padding of child lists
+  &.sidebar-item-group {
+    .mat-list-item .mat-list-item-content {
+      height: 42px;
+    }
+  }
+}
+
+.mat-progress-bar {
+  // sidebar/sync: dark buffer background for progress bar
+  &.dark-buffer {
+    .mat-progress-bar-buffer {
+      background: lighten($bg-black, 15%);
+    }
+  }
+}
 
 
 

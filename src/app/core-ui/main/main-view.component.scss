@@ -28,34 +28,16 @@
   border-bottom: 1px solid darken($bg-black, 5%);
   box-shadow: 0 1px 0 lighten($bg-black, 5%) !important;
   background: $bg-black;
-  /*
-  .mat-expansion-indicator::after {
-    //---- NOT WORKING (needs to be moved to theme.scss) ----
-    color: $text-muted;
-  }
-  // when expanded..
-  &.mat-expanded {
-    //---- NOT WORKING (needs to be moved to theme.scss) ----
-    .mat-expansion-indicator::after {
-      color: $color;
-    }
-  }
-  */
   // submenu toggle
   .mat-expansion-panel-header {
     font-family: $font;
     font-size: 11.5px;
     color: lighten($text-muted, 5%);
     text-transform: uppercase;
-    padding: 0 24px 0 38px;
+    padding: 0 32px 0 38px;
   }
 }
-/*
-.mat-expansion-indicator::after { // arrow
-  //---- NOT WORKING (needs to be moved to theme.scss) ----
-  //color: $color;
-}
-*/
+
 
 // ------ MENU ITEM (Single) ------ //
 
@@ -150,10 +132,6 @@ a.sidebar-item-link {
 // ------ SYNC PROGRESS BAR ------ //
 
 .sync-bar {
-  .mat-progress-bar-buffer {
-    //---- NOT WORKING (needs to be moved to theme.scss) ----
-    //background: lighten($bg-black, 15%);
-  }
   .mat-progress-bar-fill::after {
     background-color: $color;
   }

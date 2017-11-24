@@ -20,7 +20,7 @@
 
     <md-content class="sidebar-section" *ngIf="true">
       <md-accordion [multi]="'multi'">
-        <md-expansion-panel #panel1 expanded="true">
+        <md-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
           <md-expansion-panel-header>Wallet</md-expansion-panel-header>
           <md-content>
             <md-list class="sidebar-item-group">
@@ -61,7 +61,7 @@
 
     <md-content class="sidebar-section" *ngIf="walletInitialized === false">
       <md-accordion [multi]="'multi'">
-        <md-expansion-panel #panel1 expanded="true">
+        <md-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
           <md-expansion-panel-header>Wallet</md-expansion-panel-header>
           <md-content>
             <md-list class="sidebar-item-group">
@@ -82,7 +82,7 @@
 
     <!--md-content class="sidebar-section">
       <md-accordion [multi]="'multi'">
-        <md-expansion-panel #panel1 expanded="true">
+        <md-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
           <md-expansion-panel-header>Settings</md-expansion-panel-header>
           <md-content>
             <md-list class="sidebar-item-group">
