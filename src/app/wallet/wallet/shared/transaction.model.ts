@@ -16,6 +16,8 @@ export class Transaction {
     fee: number;
     time: number;
     comment: string;
+    n0: string;
+    n1: string;
 
     outputs: any[];
 
@@ -42,6 +44,8 @@ export class Transaction {
     this.fee = json.fee;
     this.time = json.time;
     this.comment = json.comment;
+    this.n0 = json.n0;
+    this.n1 = json.n1;
 
     this.outputs = json.outputs;
 
@@ -148,6 +152,19 @@ export class Transaction {
       (d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
     );
   }
+
+
+
+  /* Narration */
+  public getNarration() { 
+    if (this.n0) { 
+      return this.n0; 
+    } else if (this.n1) { 
+      return this.n1; 
+    } else { 
+      return false 
+    } 
+  } 
 
 
 }
