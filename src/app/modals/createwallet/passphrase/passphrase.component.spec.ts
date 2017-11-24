@@ -7,8 +7,8 @@ import { ModalsModule, PassphraseService } from '../../modals.module';
 
 /* modules (own) */
 import { SharedModule } from '../../../wallet/shared/shared.module';
-import { CoreModule } from '../../../../core/core.module';
-import { CoreUiModule } from '../../../../core-ui/core-ui.module';
+import { CoreModule } from '../../../core/core.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 /* components & directives (own) */
 import { FocusDirective } from '../../modals.directives';
