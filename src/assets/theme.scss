@@ -192,7 +192,7 @@ input[type="text"] {
 
 ::-webkit-scrollbar-track {
   border-radius: 15px;
-  background-color: #e9e9e9;
+  background-color: $bg-shadow;
 }
 
 ::-webkit-scrollbar {
@@ -201,10 +201,12 @@ input[type="text"] {
 
 ::-webkit-scrollbar-thumb:vertical {
   width: 6px;
-  border-radius: 15px;
-  background-color: $color;
+  //border-radius: 15px;
+  background-color: darken($bg-shadow, 20%);
 }
-
+.mat-drawer-container {
+  background: $bg;
+}
 // scroll on by default, so the content doesn't jump on larger pages
 .mat-drawer-content {
   overflow-y: scroll !important;
@@ -323,6 +325,7 @@ input[type="text"] {
   // sidebar/menu: color panel's arrow
   &.arrow-colored {
     .mat-expansion-indicator::after {
+      @extend %tfx;
       color: $text-muted;
     }
     // when expanded..
@@ -339,6 +342,7 @@ input[type="text"] {
   &.sidebar-item-group {
     .mat-list-item .mat-list-item-content {
       height: 42px;
+      padding: 0 10px;
     }
   }
 }

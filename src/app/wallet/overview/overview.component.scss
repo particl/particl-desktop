@@ -1,7 +1,7 @@
 @import 'widgets/shared/shared.scss';
 
 .balance-overview { // list of balances
-  @extend .disable-select;
+  @extend %disable-select;
   padding: 24px 35px;
   .balance-item {
     border-right: 1px solid $bg-shadow;

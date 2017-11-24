@@ -2,7 +2,7 @@
 @import '../shared/shared.scss';
 
 .cold-staking {
-  @extend .disable-select;
+  @extend %disable-select;
   .staking-node {
     padding: 24px 24px 30px;
     margin-bottom: 20px;

@@ -4,7 +4,7 @@
 }
 
 .balance {
-  @extend .enable-select;
+  @extend %enable-select;
   padding-top: 7px;
   & > .number {
     color: $text;
@@ -26,7 +26,7 @@
     }
   }
   & > .description {
-    @extend .disable-select;
+    @extend %disable-select;
     color: $text-muted;
     text-transform: uppercase;
     margin-top: 6px;
