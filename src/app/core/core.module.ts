@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 
 import { RpcModule } from './rpc/rpc.module';
 
+import { IpcService } from './ipc/ipc.service';
 import { RpcService } from './rpc/rpc.service';
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 import { IpcService } from './ipc/ipc.service';
@@ -21,7 +22,8 @@ import { SnackbarService } from './snackbar/snackbar.service';
     RpcModule.forRoot() // TODO: should be here?
   ],
   exports: [
-        HttpModule
+    HttpModule
+
   ],
   declarations: []
 })

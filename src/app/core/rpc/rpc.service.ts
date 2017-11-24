@@ -104,7 +104,7 @@ export class RpcService {
       headers.append('Accept', 'application/json');
 
       return this._http
-        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+      .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
         .map(response => response.json().result)
         .catch(error => Observable.throw(
           typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
