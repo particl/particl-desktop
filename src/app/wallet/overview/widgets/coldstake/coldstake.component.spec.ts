@@ -2,11 +2,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdCardModule, MdProgressBarModule } from '@angular/material';
 
-import { ModalsModule } from '../../../modals/modals.module';
 import { SharedModule } from '../../../shared/shared.module';
 import { CoreModule } from '../../../../core/core.module';
+import { ModalsModule } from '../../../../modals/modals.module';
+import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 
 import { ColdstakeComponent } from './coldstake.component';
+
+
 
 describe('ColdstakeComponent', () => {
   let component: ColdstakeComponent;
@@ -21,8 +24,9 @@ describe('ColdstakeComponent', () => {
         MdProgressBarModule,
         /* own */
         SharedModule,
-        ModalsModule,
-        CoreModule.forRoot()
+        ModalsModule.forRoot(),
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
       ],
       declarations: [ ColdstakeComponent ]
     })

@@ -1,11 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdPaginatorModule, MdTabsModule, MdSnackBarModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { QRCodeModule } from 'angular2-qrcode';
 
 import { CoreModule } from '../../../core/core.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../modals/modals.module';
 
 import { SharedModule } from '../../shared/shared.module';  // is this even needed?
@@ -21,17 +19,13 @@ describe('ReceiveComponent', () => {
       declarations: [ ReceiveComponent ],
       imports: [
         /* deps */
-        FormsModule,
-        ReactiveFormsModule,
         QRCodeModule,
-        FlexLayoutModule,
-        MdTabsModule,
-        MdSnackBarModule,
         BrowserAnimationsModule,
-        MdPaginatorModule,  // is this even needed, Core-ui?
+        // MdPaginatorModule,  // is this even needed, Core-ui?
         /* own */
         SharedModule,  // is this even needed?
         CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
         ModalsModule.forRoot()
       ],
       providers: [ ]

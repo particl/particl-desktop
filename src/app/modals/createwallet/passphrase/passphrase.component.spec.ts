@@ -3,17 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdDialogRef, MdIconModule, MdSnackBarModule } from '@angular/material';
 
-import { SharedModule } from '../../../shared/shared.module';
-import { CoreModule } from '../../../core/core.module';
+import { CoreModule, SnackbarService } from '../../../core/core.module';
+import { SharedModule } from '../../../wallet/shared/shared.module';
+import { ModalsModule, PassphraseService } from '../../modals.module';
 
-import { PassphraseService } from './passphrase.service';
-
-import { FocusDirective } from '../../modals.directives';
 import { PassphraseComponent } from './passphrase.component';
-
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
-
-
 
 describe('PassphraseComponent', () => {
   let component: PassphraseComponent;
@@ -25,14 +19,11 @@ describe('PassphraseComponent', () => {
         FormsModule,
         SharedModule,
         CoreModule.forRoot(),
+        ModalsModule.forRoot(),
         BrowserAnimationsModule,
         MdIconModule,
         MdSnackBarModule
        ],
-      declarations: [
-        FocusDirective,
-        PassphraseComponent
-      ],
       providers: [
         { provide: MdDialogRef},
         PassphraseService,

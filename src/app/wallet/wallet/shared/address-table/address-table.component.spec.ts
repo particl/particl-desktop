@@ -1,13 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdSnackBarModule } from '@angular/material';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
-import { CoreModule } from '../../../core/core.module';
-
-import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
-import { ModalsService } from '../../../../modals/modals.service';
-
+import { CoreModule } from '../../../../core/core.module';
+import { CoreUiModule } from '../../../../core-ui/core-ui.module';
+import { ModalsModule } from '../../../../modals/modals.module';
 
 import { AddressTableComponent } from './address-table.component';
 
@@ -21,9 +18,9 @@ describe('AddressTableComponent', () => {
         SharedModule,  // is this even needed?
         WalletModule.forRoot(),  // is this even needed?
         CoreModule.forRoot(),
-        MdSnackBarModule  // is this even needed, Core-UI?
+        CoreUiModule.forRoot(),
+        ModalsModule.forRoot()
       ],
-      providers: [ SnackbarService, ModalsService ]
     })
       .compileComponents();
   }));

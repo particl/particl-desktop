@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdIconModule } from '@angular/material';
 
-import { SharedModule } from '../../shared/shared.module'; // fix
 import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { SyncingComponent } from './syncing.component';
 
@@ -14,10 +14,10 @@ describe('SyncingComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        MdIconModule,
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
        ],
-      declarations: [ SyncingComponent ]
+       declarations: [SyncingComponent]
     })
     .compileComponents();
   }));

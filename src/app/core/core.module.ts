@@ -43,5 +43,6 @@ export { WindowService } from './window/window.service';
 export { RpcService } from './rpc/rpc.service';
 export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 export { PeerService } from './rpc/peer/peer.service';
-
+export { SnackbarService } from './snackbar/snackbar.service';
 export { StateService } from './state/state.service';
+export { IpcService } from './ipc/ipc.service';

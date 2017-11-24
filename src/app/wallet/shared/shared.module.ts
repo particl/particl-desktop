@@ -23,7 +23,7 @@ import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/de
     MdExpansionModule,
     MdInputModule,
     MdIconModule,
-//    BrowserAnimationsModule,
+    // BrowserAnimationsModule,
     MdButtonModule,
     FlexLayoutModule
   ],
