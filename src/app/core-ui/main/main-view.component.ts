@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 
-import { StatusComponent } from './status/status.component';
+import { environment } from '../../../environments/environment';
 
 import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../../modals/modals.module';
+
+import { StatusComponent } from './status/status.component';
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
