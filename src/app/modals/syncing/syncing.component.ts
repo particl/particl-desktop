@@ -14,7 +14,7 @@ import { Log } from 'ng2-logger';
 })
 export class SyncingComponent {
 
-  log: any = Log.create('alertbox.component');
+  log: any = Log.create('syncing.component');
 
   remainder: any;
   lastBlockTime: Date;

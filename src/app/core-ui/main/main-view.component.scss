@@ -64,6 +64,7 @@
     }
   }
 }
+
 a.sidebar-item-link {
   text-decoration: none;
   text-transform: uppercase;
@@ -72,6 +73,7 @@ a.sidebar-item-link {
     color: $color !important;
   }
 }
+
 
 
 // ------ ERROR MESSAGES ------ //
@@ -124,6 +126,21 @@ a.sidebar-item-link {
     bottom: 0;
     left: 0;
     right: 0;
+
+    // Versions
+    .client-version {
+      @extend .enable-select;
+      padding: 0 24px;
+      display: block;
+      font-size: 11px;
+      line-height: 1.6;
+      color: $text-muted;
+      .version {
+        color: lighten($text-muted, 15%);
+        margin-left: 2px;
+      }
+    }
+
   }
 
 }

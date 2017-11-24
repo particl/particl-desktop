@@ -175,12 +175,10 @@ input[type="text"] {
 }
 
 
-
-
-
 /* ------------------------------- *\
     Scrollbars
 \* ------------------------------- */
+
 
 /* pseudo elements
 ::-webkit-scrollbar              {}
@@ -191,7 +189,7 @@ input[type="text"] {
 ::-webkit-scrollbar-corner       {}
 ::-webkit-resizer                {}
 */
- 
+
 ::-webkit-scrollbar-track {
   border-radius: 15px;
   background-color: #e9e9e9;
@@ -440,12 +438,10 @@ panel-header-title {
   }
 }
 
-
 .syncing_header_text{
   width: 65%;
   text-align: center;
 }
-
 
 @media (max-width: 1280px) {
   .md-left-border {

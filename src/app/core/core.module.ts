@@ -4,9 +4,9 @@ import { HttpModule } from '@angular/http';
 
 import { RpcModule } from './rpc/rpc.module';
 
+import { IpcService } from './ipc/ipc.service';
 import { RpcService } from './rpc/rpc.service';
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
-import { IpcService } from './ipc/ipc.service';
 import { PeerService } from './rpc/peer/peer.service';
 import { StateService } from './state/state.service';
 import { WindowService } from './window/window.service';
@@ -21,7 +21,8 @@ import { SnackbarService } from './snackbar/snackbar.service';
     RpcModule.forRoot() // TODO: should be here?
   ],
   exports: [
-        HttpModule
+    HttpModule
+
   ],
   declarations: []
 })
@@ -40,8 +41,10 @@ export class CoreModule {
 
 export { WindowService } from './window/window.service';
 
+export { IpcService } from './ipc/ipc.service';
 export { RpcService } from './rpc/rpc.service';
 export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 export { PeerService } from './rpc/peer/peer.service';
-
+export { SnackbarService } from './snackbar/snackbar.service';
 export { StateService } from './state/state.service';
+

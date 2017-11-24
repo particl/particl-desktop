@@ -1,13 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdDialogRef, MdSnackBarModule } from '@angular/material';
+import { MdDialogRef } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { CoreModule } from '../../../core/core.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
+import { ModalsModule } from '../../../modals/modals.module';
 
 import { SharedModule } from '../../shared/shared.module'; // is this even needed?
 import { WalletModule } from '../wallet.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import { ModalsModule } from '../../../modals/modals.module';
+
 
 import { SendComponent } from './send.component';
+
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -17,9 +21,10 @@ describe('SendComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        WalletModule.forRoot(),
-        RpcModule.forRoot(),
-        MdSnackBarModule,
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
+        ModalsModule.forRoot(),
+        WalletModule.forRoot(), // a bit circular here..
         BrowserAnimationsModule
       ],
       providers: [

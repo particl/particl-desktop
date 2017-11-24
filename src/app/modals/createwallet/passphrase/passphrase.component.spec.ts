@@ -1,19 +1,20 @@
+/* modules (deps) */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdDialogRef, MdIconModule, MdSnackBarModule } from '@angular/material';
+import { MdDialogRef, MdIconModule } from '@angular/material';
 
-import { SharedModule } from '../../../shared/shared.module';
+import { ModalsModule, PassphraseService } from '../../modals.module';
+
+/* modules (own) */
+import { SharedModule } from '../../../wallet/shared/shared.module';
 import { CoreModule } from '../../../core/core.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
-import { PassphraseService } from './passphrase.service';
-
+/* components & directives (own) */
 import { FocusDirective } from '../../modals.directives';
 import { PassphraseComponent } from './passphrase.component';
 
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
-
-
+/* delete any unused imports! */
 
 describe('PassphraseComponent', () => {
   let component: PassphraseComponent;
@@ -22,21 +23,20 @@ describe('PassphraseComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FormsModule,
+       /* own */
         SharedModule,
         CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
+        ModalsModule.forRoot(),
+        /* deps */
         BrowserAnimationsModule,
         MdIconModule,
-        MdSnackBarModule
        ],
-      declarations: [
-        FocusDirective,
-        PassphraseComponent
-      ],
       providers: [
-        { provide: MdDialogRef},
+        /* own */
         PassphraseService,
-        SnackbarService
+        /* deps */
+        { provide: MdDialogRef},
       ]
     })
     .compileComponents();

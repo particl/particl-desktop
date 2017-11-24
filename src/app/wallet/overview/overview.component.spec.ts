@@ -1,17 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MdCardModule, MdProgressBarModule } from '@angular/material';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ModalsModule } from '../modals/modals.module';
+import { ModalsModule } from '../../modals/modals.module';
 import { SharedModule } from '../shared/shared.module';
 import { WalletModule } from '../wallet/wallet.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
-
-import { IpcService } from '../../core/ipc/ipc.service';
+import { CoreModule } from '../../core/core.module';
 
 import { OverviewComponent } from './overview.component';
 import { StakinginfoComponent } from './widgets/stakinginfo/stakinginfo.component';
 import { ColdstakeComponent } from './widgets/coldstake/coldstake.component';
+
 
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
@@ -22,9 +20,8 @@ describe('OverviewComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        RpcModule.forRoot(),
-        ModalsModule,
-        FlexLayoutModule,
+        CoreModule.forRoot(),
+        ModalsModule.forRoot(),
         MdCardModule,
         MdProgressBarModule
       ],
@@ -32,9 +29,6 @@ describe('OverviewComponent', () => {
         OverviewComponent,
         StakinginfoComponent,
         ColdstakeComponent
-      ],
-      providers: [
-        IpcService
       ]
     })
       .compileComponents();

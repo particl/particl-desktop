@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MdDialogRef } from '@angular/material';
 
 import { CoreModule, BlockStatusService } from '../core/core.module';
 // TODO;: ^why blockstatus & providing it?
-
-import { ModalsModule } from './modals.module';
-import { SharedModule } from '../shared/shared.module';
+import { ModalsModule, ModalsService } from './modals.module';
+import { SharedModule } from '../wallet/shared/shared.module';
+import { CoreUiModule } from '../core-ui/core-ui.module';
 
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { ModalsComponent } from './modals.component';
-import { MdDialogModule, MdDialogRef, MdSnackBarModule } from '@angular/material';
-import { ModalsService } from './modals.service';
+
 
 
 describe('ModalsComponent', () => {
@@ -19,11 +19,10 @@ describe('ModalsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MdDialogModule,
-        ModalsModule,
+        ModalsModule.forRoot(),
         SharedModule,
         CoreModule.forRoot(),
-        MdSnackBarModule
+        CoreUiModule.forRoot()
       ],
       providers: [
         BlockStatusService,

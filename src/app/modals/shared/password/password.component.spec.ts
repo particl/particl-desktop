@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdSnackBarModule } from '@angular/material';
 
 import { ModalsModule } from '../../modals.module';
 import { CoreModule } from '../../../core/core.module';
-
-import { SharedModule } from '../../../shared/shared.module'; // fix
+import { SharedModule } from '../../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 import { PasswordComponent } from './password.component';
+
 
 describe('PasswordComponent', () => {
   let component: PasswordComponent;
@@ -18,7 +18,7 @@ describe('PasswordComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        MdSnackBarModule
+        CoreUiModule.forRoot()
       ]
     })
     .compileComponents();

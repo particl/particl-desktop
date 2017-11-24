@@ -15,7 +15,7 @@
 <div class="sync-progress-wrapper" *ngIf="initialized && sidebar && !(syncPercentage === 100)" mdTooltip="{{ syncString }}" matTooltipPosition="above">
 
   <p class="sync-info">
-    Syncing with the network
+    <md-spinner class="sync-spinner" color="accent"></md-spinner>Syncing with the network
   </p>
 
   <md-progress-bar

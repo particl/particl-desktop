@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MaterialModule } from '../material/material.module';
 import { ModalsModule } from '../../modals/modals.module';
+import { CoreModule } from '../../core/core.module';
 
 import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
@@ -12,8 +13,7 @@ import { StatusComponent } from './status/status.component';
   imports: [
     CommonModule,
     RouterModule,
-    MaterialModule,
-    ModalsModule
+    MaterialModule
   ],
   exports: [
     MainViewComponent,
