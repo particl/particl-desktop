@@ -2,7 +2,7 @@
 @import '../shared/shared.scss';
 
 .staking-overview { // listing of staking stats
-  @extend .disable-select;
+  @extend %disable-select;
   th {
     text-align: left;
     padding-right: 20px;

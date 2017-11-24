@@ -2,12 +2,14 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 
-.TO_DO {
-  box-shadow: 0 0 3px 1px hotpink;
-}
+/* ------------------------------- *\
+    UI Elements
+\* ------------------------------- */
 
-.widget-help { // help description
-  @extend .disable-select;
+// ------ HELP DESCRIPTION ------ //
+
+.widget-help {
+  @extend %disable-select;
   color: $text-muted;
   font-size: 11px;
   margin-bottom: 25px;
@@ -15,23 +17,12 @@
 }
 
 
-.qrcode {
-  text-align: center;
-}
+// ------ BUTTONS ------ //
 
-.mat-select-panel { // select box fix
-  background: white;
-}
-
-.no-results { // search: no results
-  @extend .disable-select;
-  font-size: 18px;
-  color: darken($bg-shadow, 15%);
-  text-transform: uppercase;
-  text-align: center;
-  padding: 170px 0;
-  border: 2px dashed $bg-shadow;
-  background: rgba(white, 0.5);
+.actions {
+  button {
+    margin: 0 10px;
+  }
 }
 
 button {
@@ -44,140 +35,77 @@ button {
   }
 }
 
-.actions {
-  button {
-    margin: 0 10px;
-  }
+
+// ------ SELECT BOX FIX ------ //
+
+.mat-select-panel {
+  background: white;
 }
 
-/**
- * Side bar Menu.
- */
 
-.mat-drawer-content {
-  overflow-y: scroll !important; // scroll on by default, so the content doesn't jump on larger pages
-}
-.sidebar {
-  // Sync progress bar
-  .sync-bar {
-    .mat-progress-bar-buffer {
-      background: lighten($bg-black, 15%);
-    }
-    .mat-progress-bar-fill::after {
-      background-color: $color;
-    }
-  }
-}
-.mat-sidenav {
-  user-select: none;
-  .mat-list {
-    .mat-list-item { // menu item (text w/ icon)
-      &:hover {
-        background: darken($bg-black, 1.5%);
-        .mat-icon {
-          color: lighten(#4B4A4F, 10%);
-        }
-      }
-      .mat-list-item-content {
-        height: auto !important;
-      }
-    }
-    &.sidesubmenu {
-      a {
-        text-decoration: none;
-        outline: none;
-      }
-      .mat-list-item-content {
-        text-transform: uppercase;
-        min-height: 40px;
-      }
-      &.error { // daemon/wallet error messages
-        .mat-list-item:hover {
-          background: none;
-          .mat-icon {
-            color: $color-alert;
-          }
-        }
-        .mat-list-item-content {
-          color: white;
-          font-size: 11px;
-          padding: 24px 16px;
-        }
-        .mat-icon {
-          color: $color-alert;
-          margin: 0 14px 0 0;
-        }
-      }
-    }
-  }
-  .mat-expansion-panel-body { // accordion menu
-    padding: 0;
-  }
-  .mat-expansion-panel {
-    .mat-expansion-indicator::after {
-      color: $text-muted;
-    }
-    &.mat-expanded {
-      .mat-expansion-indicator::after {
-        color: $color;
-      }
-    }
-  }
-}
+// ------ CARDS ------ //
 
-.active > md-list-item > div > md-icon {
-  color: $color !important;
-}
-
-.header-main { // top header (page title with status icons)
-  @extend .disable-select;
-  border-bottom: 1px solid $bg-shadow;
-  background: #fff;
-  padding-left: 35px !important;
-  padding-right: 26px !important;
-}
-
-.containerX {
-  width: 100%;
-}
-
-.header-icons .material-icons {
-  margin: 0 5px;
-}
-
-.md-expansion-menu > md-expansion-panel {
-  color: #ffffff;
-  background-color: #222828;
-}
-
-.mat-expansion-indicator.ng-tns-c7-2.ng-trigger.ng-trigger-indicatorRotate::after {
-  color: #41ECC2
-}
-
-.md-expansion-menu span {
-  color: #938f8f;
-}
-
-.capitalize {
-  text-transform: capitalize;
-}
-
-.details-address {
-  flex-wrap: wrap;
-}
-
-/**
- * Cards
- */
- md-card.mat-card { // FIXME: remove the !important and solve overwriting
+md-card.mat-card { // FIXME: remove the !important and solve overwriting
   font-family: $font;
   box-shadow: 0 1px 0 $bg-shadow !important;
 }
 
 
-/**
- * list
- */
+// ------ TABS ------ //
+/*
+.mat-tab-group {
+  .mat-tab-header {
+    background: white; // needs to fix the search bg first
+  }
+}
+*/
+
+// ------ NO RESULTS (no TXs, no addresses, ..) ------ //
+
+.no-results {
+  @extend %disable-select;
+  font-size: 18px;
+  color: darken($bg-shadow, 15%);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 170px 0;
+  border: 2px dashed $bg-shadow;
+  background: rgba(white, 0.5);
+}
+
+
+// ------ INPUT VISUAL VALIDATION ------ //
+
+input {
+  &.verify-sucess {
+    color: darken($color, 7%) !important; // #57a800
+    background-color: rgba($color, 0.07) !important; // #edfad7
+  }
+  &.verify-error {
+    color: darken($color-alert, 5%);
+    background: rgba($color-alert, 0.1) !important;
+  }
+}
+
+
+/* ------------------------------- *\
+    Page subtitles (H2)
+\* ------------------------------- */
+
+.mat-list.list-data .mat-subheader { // "H2" subtitles in pages (e.g. "(un)used addresses" in Receive
+  @extend %subtitle;
+  height: auto;
+  margin: 10px 0 25px !important;
+  &.first {
+    margin-top: -10px !important;
+  }
+}
+
+
+/* ------------------------------- *\
+    Lists
+\* ------------------------------- */
+
 .icon-input { // input with icon (eg. Search in Address Book)
   input.mat-input-element {
     height: 20px;
@@ -211,9 +139,11 @@ button {
   }
 }
 
-/**
- * Form Design
- */
+
+/* ------------------------------- *\
+    Forms
+\* ------------------------------- */
+
 input[type="text"] {
   border: none;
 }
@@ -244,13 +174,11 @@ input[type="text"] {
   border-left: 1px solid #ddd;
 }
 
-.container-block { // main container for content
-  padding: 35px;
-}
 
-/**
- * Scrollbars
- */
+/* ------------------------------- *\
+    Scrollbars
+\* ------------------------------- */
+
 
 /* pseudo elements
 ::-webkit-scrollbar              {}
@@ -264,7 +192,7 @@ input[type="text"] {
 
 ::-webkit-scrollbar-track {
   border-radius: 15px;
-  background-color: #e9e9e9;
+  background-color: $bg-shadow;
 }
 
 ::-webkit-scrollbar {
@@ -273,43 +201,17 @@ input[type="text"] {
 
 ::-webkit-scrollbar-thumb:vertical {
   width: 6px;
-  border-radius: 15px;
-  background-color: $color;
+  //border-radius: 15px;
+  background-color: darken($bg-shadow, 20%);
+}
+.mat-drawer-container {
+  background: $bg;
+}
+// scroll on by default, so the content doesn't jump on larger pages
+.mat-drawer-content {
+  overflow-y: scroll !important;
 }
 
-/**
- * History List
- */
-/*
-.history_longAddress {
-  overflow: hidden;
-  flex-wrap: nowrap;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: block !important;
-}
-
-.history_txt {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.history-list .mat-content {
-  max-width: 100%;
-  width: 100%;
-  margin-bottom: 0;
-  align-items: center;
-}
-
-*/
-.md-right {
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  height: 18px;
-}
 
 /* ------------------------------- *\
     Dialogs
@@ -348,6 +250,138 @@ input[type="text"] {
   }
 }
 
+
+
+/* ------------------------------- *\
+    Pagination
+\* ------------------------------- */ 
+
+.mat-paginator {
+  margin-top: 40px;
+  border-bottom: 1px solid $bg-shadow;
+  font-family: $font;
+  .mat-icon-button {
+    &:hover {
+      background-color: $color;
+      border-radius: $radius;
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: white;
+      }
+    }
+    &[disabled] {
+      .mat-paginator-increment,
+      .mat-paginator-decrement {
+        border-color: $bg-shadow;
+      }
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+
+/* ------------------------------- *\
+    Helper classes
+\* ------------------------------- */
+
+.TO_DO {
+  box-shadow: 0 0 3px 1px hotpink;
+}
+
+
+// ------ LAYOUT ------ //
+
+.containerX {
+  width: 100%;
+}
+
+.container-block { // main container for content
+  padding: 35px;
+}
+
+
+// ------ TEXT/FONTS ------ //
+
+.text-center {
+  text-align: center;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+
+// ------ MODIFIERS (Tweaks/hacks to material stuff) ------ //
+
+.mat-expansion-panel {
+  // sidebar/menu: no padding for panel's content (used in the sidebar)
+  &.no-padding {
+    .mat-expansion-panel-body {
+      padding: 0;
+    }
+  }
+  // sidebar/menu: color panel's arrow
+  &.arrow-colored {
+    .mat-expansion-indicator::after {
+      @extend %tfx;
+      color: $text-muted;
+    }
+    // when expanded..
+    &.mat-expanded {
+      .mat-expansion-indicator::after {
+        color: $color;
+      }
+    }
+  }
+}
+
+.mat-list {
+  // sidebar/menu: smaller vertical padding of child lists
+  &.sidebar-item-group {
+    .mat-list-item .mat-list-item-content {
+      height: 42px;
+      padding: 0 10px;
+    }
+  }
+}
+
+.mat-progress-bar {
+  // sidebar/sync: dark buffer background for progress bar
+  &.dark-buffer {
+    .mat-progress-bar-buffer {
+      background: lighten($bg-black, 15%);
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ------------------------------- *\
+    Probably not needed styles:
+\* ------------------------------- */
+
+.md-right { // still needed for TX details
+  text-align: right; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  height: 18px; 
+} 
+
+
+.details-address {
+  flex-wrap: wrap;
+}
 
 
 .form_block {
@@ -408,48 +442,8 @@ panel-header-title {
   }
 }
 
-
-/* ------------------------------- *\
-    Pagination
-\* ------------------------------- */
-
-.mat-paginator {
-  margin-top: 40px;
-  border-bottom: 1px solid $bg-shadow;
-  font-family: $font;
-  .mat-icon-button {
-    &:hover {
-      background-color: $color;
-      border-radius: $radius;
-      .mat-paginator-increment,
-      .mat-paginator-decrement {
-        border-color: white;
-      }
-    }
-    &[disabled] {
-      .mat-paginator-increment,
-      .mat-paginator-decrement {
-        border-color: $bg-shadow;
-      }
-      &:hover {
-        background-color: transparent;
-      }
-    }
-  }
-}
-
-
-
 .syncing_header_text{
   width: 65%;
-  text-align: center;
-}
-
-.sync-spinner{
-  max-height: 30px;
-}
-
-.text-center {
   text-align: center;
 }
 

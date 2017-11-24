@@ -1,20 +1,11 @@
+@import "./src/assets/_config"; // import shared colors etc.
 /*
   Values shared among widgets
 */
-@import "./src/assets/_config"; // import shared colors etc.
 
-.header-nav { // section titles
-  @extend .disable-select;
-  padding: 0 0 12px;
-  margin: 30px 0 25px;
-  border-bottom: 1px solid $bg-shadow;
+.header-nav { // overview section titles
+  @extend %subtitle;
   list-style-type: none;
-  li {
-    font-size: 16px;
-    font-weight: normal;
-    text-transform: uppercase;
-    color: $text-muted;
-  }
 }
 
 /*
