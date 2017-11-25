@@ -330,6 +330,7 @@ input[type="text"] {
     }
     // when expanded..
     &.mat-expanded {
+      //background: darken($bg-black, 2%); // darken "submenu" background to more visually separate from the rest
       .mat-expansion-indicator::after {
         color: $color;
       }

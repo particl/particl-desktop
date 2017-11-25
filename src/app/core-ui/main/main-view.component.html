@@ -81,21 +81,14 @@
 
 
     <!--md-content class="sidebar-section">
-      <md-accordion [multi]="'multi'">
-        <md-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
-          <md-expansion-panel-header>Settings</md-expansion-panel-header>
-          <md-content>
-            <md-list class="sidebar-item-group">
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="walletInitialized ? '/settings' : null">
-                <md-list-item class="sidebar-item">
-                  <md-icon class="icon" fontSet="partIcon" fontIcon="nc-grid-48"></md-icon>
-                  <span class="text">Settings</span>
-                </md-list-item>
-              </a>
-            </md-list>
-          </md-content>
-        </md-expansion-panel>
-      </md-accordion>
+      <md-list class="sidebar-item-group">
+        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/settings">
+          <md-list-item class="sidebar-item">
+            <md-icon class="icon" fontSet="partIcon" fontIcon="part-settings-gear-64"></md-icon>
+            <span class="text">Settings</span>
+          </md-list-item>
+        </a>
+      </md-list>
     </md-content--><!-- .sidebar-section -->
 
 
