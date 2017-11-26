@@ -1,24 +1,24 @@
 <app-header class="disable-select">
   <div fxLayout="row" fxlayout.lt-sm="column">
     <div fxFlex="1 1 70%">
-      <md-tab-group (selectChange)="changeTab($event.index)">
-        <md-tab>
-          <ng-template md-tab-label>
+      <mat-tab-group (selectChange)="changeTab($event.index)">
+        <mat-tab>
+          <ng-template mat-tab-label>
             Public
           </ng-template>
-        </md-tab>
-        <md-tab>
-          <ng-template md-tab-label>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
             Private
           </ng-template>
-        </md-tab>
-      </md-tab-group>
+        </mat-tab>
+      </mat-tab-group>
     </div>
-    <md-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
-      <input mdInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
+    <mat-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
+      <input matInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
              placeholder="Search receive addresses">
-      <md-icon fontSet="partIcon" fontIcon="part-zoom-bold"></md-icon>
-    </md-form-field>
+      <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold"></mat-icon>
+    </mat-form-field>
   </div>
 </app-header>
 
@@ -26,7 +26,7 @@
 
   <!-- Address details & QR code -->
   <div fxFlex="0 0 220px" fxFlex.lt-md="100" *ngIf="selected">
-    <md-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px">
+    <mat-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px">
 
       <div #qrCode class="qrcode" fxFlex fxFlex.lt-md="0 0 200px">
         <qr-code size="180" [level]="'H'" value="particl:{{ selected.address }}">
@@ -48,31 +48,31 @@
         </div>
 
         <div class="actions">
-          <button md-button class="copy" ngxClipboard [cbContent]="selected.address">
-            <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon>
+          <button mat-button class="copy" ngxClipboard [cbContent]="selected.address">
+            <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon>
             Copy address
           </button>
-          <button md-raised-button color="primary" (click)="openNewAddress()">
-            <md-icon fontSet="partIcon" fontIcon="part-simple-add"></md-icon>
+          <button mat-raised-button color="primary" (click)="openNewAddress()">
+            <mat-icon fontSet="partIcon" fontIcon="part-simple-add"></mat-icon>
             New {{ getAddressType() }} address
           </button>
         </div><!-- .actions -->
 
       </div><!-- .address-details -->
-    </md-card>
+    </mat-card>
   </div>
 
   <!-- Address list -->
   <div fxFlex="1 1 calc(100% - 260px)" *ngIf="getUnusedAddress()">
 
-    <md-list class="list-data" *ngIf="inSearchMode() === false">
-      <div md-subheader class="address-title first">Unused address</div>
+    <mat-list class="list-data" *ngIf="inSearchMode() === false">
+      <div mat-subheader class="address-title first">Unused address</div>
 
-      <md-card class="address-info">
+      <mat-card class="address-info">
         <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md
              fxLayoutGap="10px" layout-padding>
           <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id"> /{{ getUnusedAddress().id }}</div>
-          <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label cursor-pointer" mdTooltip="Edit Label"
+          <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label cursor-pointer" matTooltip="Edit Label"
                (click)="openNewAddress(getUnusedAddress().address)"> {{ getUnusedAddress().label }}
           </div>
           <div fxFlex="1 1 80%" fxFlex.lt-md="100" class="address enable-select">
@@ -86,41 +86,41 @@
                fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
             <!-- Copy address -->
             <span fxFlex="20%" fxFlex.lt-md="25px">
-              <md-icon class="cursor-pointer" mdTooltip="Copy address" ngxClipboard
+              <mat-icon class="cursor-pointer" matTooltip="Copy address" ngxClipboard
                        [cbContent]="getUnusedAddress().address" (click)="copyToClipBoard()" fontSet="partIcon"
-                       fontIcon="part-single-copy-04"></md-icon>
+                       fontIcon="part-single-copy-04"></mat-icon>
             </span>
             <!-- Sign message -->
             <div fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'" >
-              <md-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-a-check"
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-a-check"
                        (click)="openSignatureModal(getUnusedAddress().address)"
-                       mdTooltip="Sign / Verify message"></md-icon>
+                       matTooltip="Sign / Verify message"></mat-icon>
             </div>
             <!-- Select address -->
             <span fxFlex="20%" fxFlex.lt-md="25px">
-              <md-icon class="cursor-pointer" mdTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(addresses[getAddressType()][0])"></md-icon>
+              <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(addresses[getAddressType()][0])"></mat-icon>
             </span>
           </div>
         </div>
-      </md-card>
+      </mat-card>
       <div class="widget-help">
         It is advised that you generate and use a new address for each public transaction (or person) to increase your privacy.
       </div>
-    </md-list><!-- .list-data -->
+    </mat-list><!-- .list-data -->
 
     <div class="no-results" *ngIf="(getSinglePage().length === 0) && (inSearchMode() === true)">
       No addresses found
     </div>
 
-    <md-list *ngIf="getSinglePage().length" class="list-data">
-      <div md-subheader class="address-title">Previous addresses</div>
+    <mat-list *ngIf="getSinglePage().length" class="list-data">
+      <div mat-subheader class="address-title">Previous addresses</div>
       <div *ngFor="let address of getSinglePage()">
 
-        <md-card class="address-info">
+        <mat-card class="address-info">
           <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md
                fxLayoutGap="10px" layout-padding>
             <div fxFlex="0 0 45px" fxFlex.lt-md="100" fxHide.lt-md class="address-id">/{{ address.id }}</div>
-            <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label cursor-pointer" mdTooltip="Edit Label"
+            <div fxFlex="1 1 20%" fxFlex.lt-md="100" class="address-label cursor-pointer" matTooltip="Edit Label"
                  (click)="openNewAddress(address.address)">{{ address.label }}
             </div>
             <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address enable-select">
@@ -133,43 +133,43 @@
                  fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->
               <span fxFlex="20%" fxFlex.lt-md="25px">
-                <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer"
-                         mdTooltip="Copy address" (click)="copyToClipBoard()"
-                         ngxClipboard [cbContent]="address.address"></md-icon>
+                <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer"
+                         matTooltip="Copy address" (click)="copyToClipBoard()"
+                         ngxClipboard [cbContent]="address.address"></mat-icon>
               </span>
               <!-- Sign/Verify public address only  -->
               <span fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
-                <md-icon fontSet="partIcon" fontIcon="part-a-check" mdTooltip="Sign / Verify message"
-                         (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></md-icon>
+                <mat-icon fontSet="partIcon" fontIcon="part-a-check" matTooltip="Sign / Verify message"
+                         (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></mat-icon>
               </span>
               <!-- Select address -->
               <span fxFlex="20%" fxFlex.lt-md="25px">
-                <md-icon class="cursor-pointer" mdTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(address)"></md-icon>
+                <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(address)"></mat-icon>
               </span>
             </div>
           </div>
-        </md-card>
+        </mat-card>
 
       </div>
-    </md-list><!-- .list-data -->
+    </mat-list><!-- .list-data -->
 
     <!-- use two paginator for reset pagination after tab change. -->
     <div class="receive-pagination">
-      <md-paginator
+      <mat-paginator
         *ngIf="type == 'private' && getSinglePage().length > 0"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
         [pageSizeOptions]="PAGE_SIZE_OPTIONS"
         (page)="pageChanged($event)">
-      </md-paginator>
+      </mat-paginator>
 
-      <md-paginator
+      <mat-paginator
         *ngIf="type == 'public' && getSinglePage().length > 0"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
         [pageSizeOptions]="PAGE_SIZE_OPTIONS"
         (page)="pageChanged($event)">
-      </md-paginator>
+      </mat-paginator>
     </div>
   </div>
 

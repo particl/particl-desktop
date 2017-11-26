@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
-import { MdDialogRef, MdFormFieldModule } from '@angular/material';
+import { MatDialogRef, MatFormFieldModule } from '@angular/material';
 
 import { CoreModule } from '../../../../core/core.module';
 import { CoreUiModule } from '../../../../core-ui/core-ui.module';
@@ -17,11 +17,11 @@ describe('SendConfirmationModalComponent', () => {
         CommonModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        MdFormFieldModule // check if this is required. If so, move into CoreUi.
+        MatFormFieldModule // check if this is required. If so, move into CoreUi.
       ],
       declarations: [ SendConfirmationModalComponent ],
       providers: [
-        { provide: MdDialogRef}
+        { provide: MatDialogRef}
       ]
     })
     .compileComponents();

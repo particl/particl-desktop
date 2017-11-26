@@ -1,7 +1,7 @@
 /* modules (deps) */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdDialogRef, MdIconModule } from '@angular/material';
+import { MatDialogRef, MatIconModule } from '@angular/material';
 
 import { ModalsModule, PassphraseService } from '../../modals.module';
 
@@ -30,13 +30,13 @@ describe('PassphraseComponent', () => {
         ModalsModule.forRoot(),
         /* deps */
         BrowserAnimationsModule,
-        MdIconModule,
+        MatIconModule,
        ],
       providers: [
         /* own */
         PassphraseService,
         /* deps */
-        { provide: MdDialogRef},
+        { provide: MatDialogRef},
       ]
     })
     .compileComponents();

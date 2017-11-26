@@ -2,15 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import {
-  MdButtonModule, MdCardModule, MdCheckboxModule, MdExpansionModule, MdGridListModule, MdIconModule, MdListModule,
-  MdMenuModule,
-  MdProgressBarModule,
-  MdSidenavModule,
-  MdSnackBarModule, MdTabsModule, MdToolbarModule, MdRadioModule, MdInputModule,
-  MdTooltipModule,
-  MdSelectModule, MdPaginatorModule
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatGridListModule, MatIconModule, MatListModule,
+  MatMenuModule,
+  MatProgressBarModule,
+  MatSidenavModule,
+  MatSnackBarModule, MatTabsModule, MatToolbarModule, MatRadioModule, MatInputModule,
+  MatTooltipModule,
+  MatSelectModule, MatPaginatorModule
 } from '@angular/material';
-
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -24,47 +23,47 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FlexLayoutModule, /* Flex layout here too */
     FormsModule, /* forms */
     ReactiveFormsModule, /* forms */
-    MdButtonModule,
-    MdCheckboxModule,
-    MdListModule,
-    MdExpansionModule,
-    MdTooltipModule,
-    MdTabsModule,
-    MdSnackBarModule,
-    MdMenuModule,
-    MdProgressBarModule,
-    MdIconModule,
-    MdSidenavModule,
-    MdGridListModule,
-    MdCardModule,
-    MdToolbarModule,
-    MdRadioModule,
-    MdSelectModule,
-    MdInputModule,
-    MdPaginatorModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatListModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatTabsModule,
+    MatSnackBarModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatGridListModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatInputModule,
+    MatPaginatorModule,
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
     FormsModule, /* forms */
     ReactiveFormsModule, /* forms */
-    MdButtonModule,
-    MdCheckboxModule,
-    MdListModule,
-    MdExpansionModule,
-    MdTooltipModule,
-    MdTabsModule,
-    MdSnackBarModule,
-    MdMenuModule,
-    MdProgressBarModule,
-    MdIconModule,
-    MdSidenavModule,
-    MdGridListModule,
-    MdCardModule,
-    MdToolbarModule,
-    MdRadioModule,
-    MdSelectModule,
-    MdInputModule,
-    MdPaginatorModule
+    MatButtonModule,
+    MatCheckboxModule,
+    MatListModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatTabsModule,
+    MatSnackBarModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatGridListModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatInputModule,
+    MatPaginatorModule
   ],
   declarations: []
 })

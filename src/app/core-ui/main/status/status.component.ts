@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
-import { MdDialog} from '@angular/material';
+import { MatDialog} from '@angular/material';
 
 import { ModalsService } from '../../../modals/modals.service';
 

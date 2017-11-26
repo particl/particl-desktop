@@ -1,11 +1,11 @@
 <div class="status-icon disable-select">
-  <span class="status icon" mdTooltip="Peers: {{ peerListCount }}">
+  <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
     <img src="assets/icons/network/connect_{{ getIconNumber() }}.png"/>
   </span>
 
   <span
     class="encryption icon pointer"
-    mdTooltip="{{ encryptionStatus }}"
+    matTooltip="{{ encryptionStatus }}"
     placement="left"
     container="body"
     (click)="toggle()">
@@ -14,10 +14,10 @@
 
   <span
     class="staking icon"
-    mdTooltip="Cold staking {{ getColdStakingStatus() }}"
+    matTooltip="Cold staking {{ getColdStakingStatus() }}"
     placement="left"
     [ngClass]="getColdStakingStatus()"
     container="body">
-      <md-icon fontSet="partIcon" fontIcon="part-snow-2"></md-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-snow-2"></mat-icon>
   </span>
 </div><!-- .status-icons -->

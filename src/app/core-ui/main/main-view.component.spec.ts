@@ -8,8 +8,8 @@ import { MainViewModule } from './main-view.module';
 import { MainViewComponent } from './main-view.component';
 import { ModalsModule } from '../../modals/modals.module';
 
-import { MdDialogModule, MdDialogRef } from '@angular/material';
-import { MdDialog } from '@angular/material'; // TODO: move to material
+import { MatDialogModule, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material'; // TODO: move to material
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -23,10 +23,10 @@ describe('MainViewComponent', () => {
         RouterTestingModule,
         CoreModule.forRoot(),
         ModalsModule.forRoot(),
-        MdDialogModule
+        MatDialogModule
       ],
       providers: [
-        MdDialog
+        MatDialog
       ]
     })
     .compileComponents();

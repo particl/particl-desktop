@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 
 @Injectable()
 export class SnackbarService {
 
-  constructor(private snackBar: MdSnackBar) {
+  constructor(private snackBar: MatSnackBar) {
   }
 
   open(message: string, type?: string, action?: string): void {
-    const config = new MdSnackBarConfig();
+    const config = new MatSnackBarConfig();
 
     if (['err', 'warn'].includes(type)) { // tx, cold stake
       config.duration = 10000;

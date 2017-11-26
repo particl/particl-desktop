@@ -1,13 +1,13 @@
-<h2 md-dialog-title>Label for new {{ type }} address</h2>
+<h2 mat-dialog-title>Label for new {{ type }} address</h2>
 <form [formGroup]="addLableForm" (ngSubmit)="onSubmitForm()" novalidate>
-  <md-form-field>
-    <input mdInput type="text" formControlName="label" class="form-control" [(ngModel)]="label"
+  <mat-form-field>
+    <input matInput type="text" formControlName="label" class="form-control" [(ngModel)]="label"
            placeholder="Enter label..." required>
-  </md-form-field>
-  <md-dialog-actions>
-    <button md-button md-dialog-close>Cancel</button>
-    <button md-button [disabled]="!addLableForm.valid" md-raised-button color="primary">
+  </mat-form-field>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [disabled]="!addLableForm.valid" mat-raised-button color="primary">
       {{address ? 'Update Label' : 'Add Label'}}
     </button>
-  </md-dialog-actions>
+  </mat-dialog-actions>
 </form>

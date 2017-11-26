@@ -13,7 +13,7 @@ import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { ModalsComponent } from './modals.component';
 
 @Injectable()
@@ -46,7 +46,7 @@ export class ModalsService {
   constructor (
     private _rpc: RpcService,
     private _blockStatusService: BlockStatusService,
-    private _dialog: MdDialog
+    private _dialog: MatDialog
   ) {
 
     /* Hook BlockStatus -> open syncing modal */

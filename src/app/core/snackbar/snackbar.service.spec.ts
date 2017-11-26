@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { MdSnackBarModule } from '@angular/material'; // needed?
+import { MatSnackBarModule } from '@angular/material'; // needed?
 
 import {SnackbarService} from './snackbar.service';
 
@@ -8,7 +8,7 @@ describe('SnackbarServiceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        MdSnackBarModule
+        MatSnackBarModule
       ],
       providers: [SnackbarService]
     });

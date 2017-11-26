@@ -45,19 +45,19 @@ input[type="text"] {
   padding-top: 4px;
 }
 
-.md-list-item {
+.mat-list-item {
   padding: 25px;
 }
 
-.md-list-radio h5 {
+.mat-list-radio h5 {
   margin-top: 15px;
 }
 
-.md-radio-group {
+.mat-radio-group {
   background: #fff;
 }
 
-.md-send-card {
+.mat-send-card {
   padding: 10px 30px 10px 30px;
   min-height: 14vh;
   height: auto;
@@ -70,7 +70,7 @@ input[type="text"] {
   font-size: 12px;
 }
 
-.md-list-radio .mat-radio-button {
+.mat-list-radio .mat-radio-button {
   margin-bottom: 0px;
 }
 
@@ -113,7 +113,7 @@ app-header {
     &:hover {
       color: $text;
     }
-    md-icon {
+    mat-icon {
       font-size: 16px;
       width: auto;
       height: auto;

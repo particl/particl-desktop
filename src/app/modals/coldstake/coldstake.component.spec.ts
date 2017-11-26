@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 
 import { ModalsModule } from '../modals.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
@@ -22,7 +22,7 @@ describe('ColdstakeComponent', () => {
         ModalsModule
       ],
       providers: [
-        { provide: MdDialogRef }
+        { provide: MatDialogRef }
       ]
     })
     .compileComponents();

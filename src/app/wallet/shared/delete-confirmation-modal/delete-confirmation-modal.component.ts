@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-delete-confirmation-modal',
@@ -12,7 +12,7 @@ export class DeleteConfirmationModalComponent implements OnInit {
 
   @Output() onDelete: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private diloagRef: MdDialogRef<DeleteConfirmationModalComponent>) { }
+  constructor(private diloagRef: MatDialogRef<DeleteConfirmationModalComponent>) { }
 
   ngOnInit(): void {
     this.dialogContent = (this.dialogContent) ? this.dialogContent : 'This item';

@@ -1,5 +1,5 @@
 import { Component, Inject, forwardRef } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { PasswordComponent } from '../shared/password/password.component';

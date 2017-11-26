@@ -5,67 +5,67 @@
     </ul>
   </app-header>
 
-  <md-card *ngIf="coldStakingEnabled === undefined" class="staking-node">
+  <mat-card *ngIf="coldStakingEnabled === undefined" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status inactive">Unlock to check</span>
     </div>
-    <button class="mat-raised-button mat-primary pull-left" (click)="openUnlockWalletModal()" mdTooltip="Unlock wallet to enable cold staking">
-      <md-icon fontSet="partIcon" fontIcon="part-lock"></md-icon>
+    <button class="mat-raised-button mat-primary pull-left" (click)="openUnlockWalletModal()" matTooltip="Unlock wallet to enable cold staking">
+      <mat-icon fontSet="partIcon" fontIcon="part-lock"></mat-icon>
     </button>
-  </md-card>
+  </mat-card>
 
-  <md-card *ngIf="coldStakingEnabled === false" class="staking-node">
+  <mat-card *ngIf="coldStakingEnabled === false" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status inactive">inactive</span>
     </div>
-    <button class="mat-raised-button mat-primary pull-left" (click)="openColdStakeModal()" mdTooltip="Add Cold Staking node key">
-      <md-icon fontSet="partIcon" fontIcon="part-simple-add"></md-icon>
+    <button class="mat-raised-button mat-primary pull-left" (click)="openColdStakeModal()" matTooltip="Add Cold Staking node key">
+      <mat-icon fontSet="partIcon" fontIcon="part-simple-add"></mat-icon>
     </button>
-  </md-card>
+  </mat-card>
 
   <p class="widget-help" *ngIf="!coldStakingEnabled">
     Cold staking allows you to spend from one machine and stake from another, this greatly increases the safety of your coins.
   </p>
 
   <!-- Edit cold stake key, might be useful for later.
-  <md-card *ngIf="false" class="staking-node">
+  <mat-card *ngIf="false" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status active">active</span>
     </div>
-    <button class="mat-button secondary pull-left" (click)="openColdStakeModal()" mdTooltip="Edit Cold Staking node key">
-      <md-icon fontSet="partIcon" fontIcon="part-pen-01"></md-icon>
+    <button class="mat-button secondary pull-left" (click)="openColdStakeModal()" matTooltip="Edit Cold Staking node key">
+      <mat-icon fontSet="partIcon" fontIcon="part-pen-01"></mat-icon>
     </button>
-  </md-card> -->
+  </mat-card> -->
 
 
   <!-- if cold staking is under 100% progress -->
-  <md-card *ngIf="coldStakingEnabled" class="staking-node">
+  <mat-card *ngIf="coldStakingEnabled" class="staking-node">
     <div class="title">
       Cold Staking Progress <span class="status active">{{coldstakeProgress}}%</span>
     </div>
-    <md-progress-bar
+    <mat-progress-bar
       class="progress-bar-bottom"
       [color]="'primary'"
       [bufferValue]="coldstakeProgress"
       [mode]="'determinate'"
       [value]="coldstakeProgress">
-    </md-progress-bar>
+    </mat-progress-bar>
 
     <p class="widget-help" *ngIf="coldStakingEnabled">
       Please keep this wallet online until the cold staking activation process is complete.
     </p>
-  </md-card>
+  </mat-card>
 
 
   <!-- if Cold staking is at 100% show Disable button etc.
-  <md-card *ngIf="????" class="staking-node">
+  <mat-card *ngIf="????" class="staking-node">
     <div class="title">
       Cold Staking Node <span class="status inactive">active</span>
     </div>
-    <button class="mat-raised-button mat-primary pull-left" (click)="??????" mdTooltip="Disable Cold Staking">
-      <md-icon fontSet="partIcon" fontIcon="part-simple-delete"></md-icon>
+    <button class="mat-raised-button mat-primary pull-left" (click)="??????" matTooltip="Disable Cold Staking">
+      <mat-icon fontSet="partIcon" fontIcon="part-simple-delete"></mat-icon>
     </button>
-  </md-card>
+  </mat-card>
   <p class="widget-help">
     You can now turn of this wallet as cold staking is fully activated.
   </p-->

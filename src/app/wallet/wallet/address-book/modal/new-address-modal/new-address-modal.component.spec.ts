@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 // import { BrowserModule } from '@angular/platform-browser';
 
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 
 import { CoreModule } from '../../../../../core/core.module';
 import { SharedModule } from '../../../../shared/shared.module';
@@ -27,7 +27,7 @@ describe('NewAddressModalComponent', () => {
       declarations: [ NewAddressModalComponent ],
       providers: [
         /* deps */
-        { provide: MdDialogRef},
+        { provide: MatDialogRef},
         /* own */
         AddressService
         ]

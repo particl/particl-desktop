@@ -11,8 +11,8 @@
             It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
           </p>
           <div class="actions">
-            <button *ngIf="!isCrypted" md-raised-button color="warn" class="create-wallet-action-button" (click)="initialize(0);">
-              <md-icon fontSet="partIcon" fontIcon="part-lock"></md-icon>
+            <button *ngIf="!isCrypted" mat-raised-button color="warn" class="create-wallet-action-button" (click)="initialize(0);">
+              <mat-icon fontSet="partIcon" fontIcon="part-lock"></mat-icon>
               Encrypt Wallet
             </button>
           </div>
@@ -25,12 +25,12 @@
             Create a new wallet or restore your old wallet using your Recovery Passphrase.
           </p>
           <div class="actions">
-            <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
-              <md-icon fontSet="partIcon" fontIcon="part-simple-add"></md-icon>
+            <button mat-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
+              <mat-icon fontSet="partIcon" fontIcon="part-simple-add"></mat-icon>
               Create new wallet
             </button>
-            <button md-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
-              <md-icon fontSet="partIcon" fontIcon="part-refresh-01"></md-icon>
+            <button mat-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
+              <mat-icon fontSet="partIcon" fontIcon="part-refresh-01"></mat-icon>
               Restore wallet
             </button>
           </div>
@@ -54,7 +54,7 @@
         <form #nameForm="ngForm" (ngSubmit)="nextStep()">
           <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)"
           [@slideDown]>
-            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span [hidden]="!validation.errors.required">
               Wallet Name is required
             </span>
@@ -63,15 +63,15 @@
             </span>
           </p><!-- validation errors -->
 
-          <md-form-field>
-            <input mdInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
-          </md-form-field>
+          <mat-form-field>
+            <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
+          </mat-form-field>
 
           <div class="actions">
-            <button md-button (click)="prevStep()">
+            <button mat-button (click)="prevStep()">
               Back
             </button>
-            <button md-raised-button color="primary" type="submit" [disabled]="!nameForm.form.valid">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!nameForm.form.valid">
               Next
             </button>
           </div><!-- .actions -->
@@ -95,7 +95,7 @@
             You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
           </p>
           <p class="warning">
-            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             Warning: if you lose Recovery Phrase OR Recovery Password, you won't be able to access your coins!
           </p>
         </div><!-- step == 2 -->
@@ -108,7 +108,7 @@
             Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
           </p>
           <p class="warning">
-            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             You must write this Recovery Phrase down and keep it safe or you'll lose access to your coins!
           </p>
         </div><!-- step == 3 -->
@@ -123,9 +123,9 @@
         </div><!-- step == 4 -->
 
 
-        <!--md-form-field class="wallet-name">
-          <input mdInput [(ngModel)]="name" placeholder="Wallet name" readonly />
-        </md-form-field-->
+        <!--mat-form-field class="wallet-name">
+          <input matInput [(ngModel)]="name" placeholder="Wallet name" readonly />
+        </mat-form-field-->
         <div *ngIf="step === 2">
           <app-password
             #passwordElement
@@ -151,10 +151,10 @@
           <p *ngIf="!!errorString" [@slideDown] class="warning">
             {{ errorString }}
           </p>
-          <button md-button (click)="prevStep()">
+          <button mat-button (click)="prevStep()">
             Back
           </button>
-          <button md-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
+          <button mat-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
             Next
           </button>
         </div><!-- .actions -->
@@ -170,9 +170,9 @@
       <div class="content">
 
         <div class="title">Wallet Recovery</div>
-        <!--md-form-field>
-          <input mdInput [(ngModel)]="name" placeholder="Wallet name" readonly />
-        </md-form-field-->
+        <!--mat-form-field>
+          <input matInput [(ngModel)]="name" placeholder="Wallet name" readonly />
+        </mat-form-field-->
 
         <div class="section recovery-phrase">
           <p>
@@ -209,8 +209,8 @@
         </div><!-- .recovery-password -->
 
         <div class="actions">
-          <button md-button (click)="prevStep();initialize(2)">Back</button>
-          <button md-raised-button color="primary" (click)="restoreWallet()" [disabled]="countWords(getCountOfWordsEntered())">Next</button>
+          <button mat-button (click)="prevStep();initialize(2)">Back</button>
+          <button mat-raised-button color="primary" (click)="restoreWallet()" [disabled]="countWords(getCountOfWordsEntered())">Next</button>
         </div><!-- .actions -->
 
       </div><!-- .content -->
@@ -228,7 +228,7 @@
           Your new wallet was created successfully and set as the default wallet!
         </p>
         <div class="actions">
-          <button md-raised-button color="warn" (click)="close()">Close</button>
+          <button mat-raised-button color="warn" (click)="close()">Close</button>
         </div>
 
       </div><!-- .content -->

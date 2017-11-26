@@ -1,27 +1,27 @@
-<h2 md-dialog-title>{{modalTitle}}</h2>
+<h2 mat-dialog-title>{{modalTitle}}</h2>
 <form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
-  <div md-dialog-content>
-    <md-form-field>
-      <input mdInput type="text" formControlName="address" [(ngModel)]="address"
+  <div mat-dialog-content>
+    <mat-form-field>
+      <input matInput type="text" formControlName="address" [(ngModel)]="address"
              placeholder="Enter Address"
              [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
              (input)="verifyAddress()"
              #addressInput
              required>
-    </md-form-field>
+    </mat-form-field>
     <!-- @TODO: CRZ please replace copy icon to paste icon-->
-    <span mdTooltip="Paste" (click)="pasteAddress()">
-      <md-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon>
+    <span matTooltip="Paste" (click)="pasteAddress()">
+      <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon>
     </span>
-    <md-form-field>
-      <input mdInput type="text" placeholder="Enter Label" name="label" formControlName="label" [(ngModel)]="label"
+    <mat-form-field>
+      <input matInput type="text" placeholder="Enter Label" name="label" formControlName="label" [(ngModel)]="label"
              required>
-    </md-form-field>
+    </mat-form-field>
   </div>
-  <md-dialog-actions fxLayoutAlign="end center">
-    <button md-button md-dialog-close>Cancel</button>
-    <button md-button md-raised-button color="primary" [disabled]="(!label || !label.trim())||!validAddress||isMine">
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button mat-raised-button color="primary" [disabled]="(!label || !label.trim())||!validAddress||isMine">
       Add Label
     </button>
-  </md-dialog-actions>
+  </mat-dialog-actions>
 </form>

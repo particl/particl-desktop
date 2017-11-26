@@ -17,7 +17,7 @@ import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 import { StateService } from '../core/core.module';
 
 @Component({
@@ -48,7 +48,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   constructor(
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
-    public _dialogRef: MdDialogRef<ModalsComponent>,
+    public _dialogRef: MatDialogRef<ModalsComponent>,
     private state: StateService) {
   }
 

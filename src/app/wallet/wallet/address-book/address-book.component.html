@@ -3,15 +3,15 @@
   <app-header>
     <div fxLayout="row">
       <div fxFlex="75" fxFlex.lt-md="60" fxFlex.lt-sm="100">
-        <button md-button color="primary" (click)="openNewAddress()" class="add-address">
-          <md-icon fontSet="partIcon" fontIcon="part-circle-add-2"></md-icon>
+        <button mat-button color="primary" (click)="openNewAddress()" class="add-address">
+          <mat-icon fontSet="partIcon" fontIcon="part-circle-add-2"></mat-icon>
           <span>Save Address</span>
         </button>
       </div>
-      <md-form-field class="icon-input search-address" fxFlex="25" fxFlex.lt-md="40" fxFlex.lt-sm="100">
-        <input mdInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search Addresses">
-        <md-icon fontSet="partIcon" fontIcon="part-zoom-bold" fxHide.lt-md></md-icon>
-      </md-form-field>
+      <mat-form-field class="icon-input search-address" fxFlex="25" fxFlex.lt-md="40" fxFlex.lt-sm="100">
+        <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search Addresses">
+        <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" fxHide.lt-md></mat-icon>
+      </mat-form-field>
     </div>
   </app-header>
 

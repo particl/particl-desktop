@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdCardModule } from '@angular/material';
+import { CoreModule } from '../../../../core/core.module';
+import { CoreUiModule } from '../../../../core-ui/core-ui.module';
+import { SharedModule } from '../../../shared/shared.module';
 
 import { StakinginfoComponent } from './stakinginfo.component';
-import { StateService } from '../../../../core/core.module';
-import { SharedModule } from '../../../shared/shared.module';
 
 import { Amount, Duration } from '../../../shared/util/utils';
 
@@ -17,11 +16,11 @@ describe('StakinginfoComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        FlexLayoutModule,
-        MdCardModule
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
       ],
       declarations: [ StakinginfoComponent ],
-      providers: [StateService]
+      providers: []
     })
     .compileComponents();
   }));

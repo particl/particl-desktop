@@ -21,7 +21,6 @@ describe('ReceiveComponent', () => {
         /* deps */
         QRCodeModule,
         BrowserAnimationsModule,
-        // MdPaginatorModule,  // is this even needed, Core-ui?
         /* own */
         SharedModule,  // is this even needed?
         CoreModule.forRoot(),

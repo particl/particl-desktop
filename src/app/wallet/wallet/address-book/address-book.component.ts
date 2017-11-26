@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { NewAddressModalComponent } from './modal/new-address-modal/new-address-modal.component';
@@ -13,7 +13,7 @@ export class AddressBookComponent {
 
   log: any = Log.create('address-book.component');
   public query: string;
-  constructor(private dialog: MdDialog) {
+  constructor(private dialog: MatDialog) {
   }
 
   openNewAddress(): void {

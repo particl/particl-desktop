@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../core/core.module';
@@ -45,7 +45,7 @@ export class ReceiveComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   constructor(private rpc: RpcService,
-              public dialog: MdDialog,
+              public dialog: MatDialog,
               public _modalService: ModalsService,
               private flashNotificationService: SnackbarService) {
   }

@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../../../core/core.module';
@@ -31,12 +31,12 @@ export class NewAddressModalComponent implements OnInit {
   public isMine: boolean = undefined;
   @ViewChild('addressInput') addressInput: ElementRef;
 
-  constructor(public dialogRef: MdDialogRef<NewAddressModalComponent>,
+  constructor(public dialogRef: MatDialogRef<NewAddressModalComponent>,
               private formBuilder: FormBuilder,
               private _rpc: RpcService,
               private flashNotificationService: SnackbarService,
               private _modals: ModalsService,
-              private dialog: MdDialog,
+              private dialog: MatDialog,
               private _addressService: AddressService) {
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { AddressService } from '../address.service';
@@ -61,7 +61,7 @@ export class AddressTableComponent implements OnInit {
   constructor(
     public _addressService: AddressService,
     private _rpc: RpcService,
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     public flashNotification: SnackbarService,
     private _modals: ModalsService
   ) {

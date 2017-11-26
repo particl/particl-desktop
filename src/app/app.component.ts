@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { MdIconRegistry } from '@angular/material'; // TODO: move to material module?
+import { MatIconRegistry } from '@angular/material'; // TODO: move to material module?
 import { Log } from 'ng2-logger';
 
 @Component({
@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   // multiwallet: any = [];
 
   constructor(
-    private _iconRegistry: MdIconRegistry
+    private _iconRegistry: MatIconRegistry
   ) {
     _iconRegistry
       .registerFontClassAlias('partIcon', 'part-icon')

@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { SendService } from './send.service';
@@ -60,7 +60,7 @@ export class SendComponent {
     private sendService: SendService,
     private _rpc: RpcService,
     private _modals: ModalsService,
-    private dialog: MdDialog,
+    private dialog: MatDialog,
     private flashNotification: SnackbarService
   ) {
     this.progress = 50;

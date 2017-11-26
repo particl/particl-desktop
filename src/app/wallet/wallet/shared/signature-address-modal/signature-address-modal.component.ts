@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { SignVerifyMessage } from './sign-verify-message.model';
@@ -35,7 +35,7 @@ export class SignatureAddressModalComponent implements OnInit {
   @ViewChild('addressInput') addressInput: ElementRef;
 
   constructor(
-    private dialog: MdDialog,
+    private dialog: MatDialog,
     private _rpc: RpcService,
     private flashNotification: SnackbarService,
     private formBuilder: FormBuilder,

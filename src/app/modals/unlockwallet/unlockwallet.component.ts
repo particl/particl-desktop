@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../core/core.module';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 import { ModalsComponent } from '../modals.component';
 
 
@@ -25,7 +25,7 @@ export class UnlockwalletComponent {
   showStakeOnly: boolean = false;
 
   constructor(private _rpc: RpcService,
-              public dialogRef: MdDialogRef<ModalsComponent>) {
+              public dialogRef: MatDialogRef<ModalsComponent>) {
   }
 
   unlock(encryptionStatus: string) {

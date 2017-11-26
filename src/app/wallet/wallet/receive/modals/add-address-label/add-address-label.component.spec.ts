@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 
 import { SharedModule } from '../../../../shared/shared.module';
 import { CoreModule } from '../../../../../core/core.module';
@@ -22,7 +22,7 @@ describe('AddAddressLabelComponent', () => {
       ],
       declarations: [AddAddressLabelComponent],
       providers: [
-        { provide: MdDialogRef}
+        { provide: MatDialogRef}
       ]
     })
       .compileComponents();

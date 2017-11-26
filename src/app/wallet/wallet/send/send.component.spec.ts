@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreModule } from '../../../core/core.module';
@@ -28,7 +28,7 @@ describe('SendComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: MdDialogRef }
+        { provide: MatDialogRef }
       ]
     })
       .compileComponents();

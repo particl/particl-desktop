@@ -45,7 +45,7 @@ button {
 
 // ------ CARDS ------ //
 
-md-card.mat-card { // FIXME: remove the !important and solve overwriting
+mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   font-family: $font;
   box-shadow: 0 1px 0 $bg-shadow !important;
 }
@@ -148,7 +148,7 @@ input[type="text"] {
   border: none;
 }
 
-.md-list-radio {
+.mat-list-radio {
   .mat-radio-button {
     margin-bottom: 12px;
   }
@@ -157,7 +157,7 @@ input[type="text"] {
   }
 }
 
-.md-reduce-button {
+.mat-reduce-button {
   margin-bottom: 0 !important;
   padding-left: 8px !important;
 }
@@ -170,7 +170,7 @@ input[type="text"] {
   white-space: nowrap;
 }
 
-.md-left-border {
+.mat-left-border {
   border-left: 1px solid #ddd;
 }
 
@@ -244,7 +244,7 @@ input[type="text"] {
         }
       }
     }
-    .md-wallet-content {
+    .mat-wallet-content {
       max-height: 100% !important;
     }
   }
@@ -371,7 +371,7 @@ input[type="text"] {
     Probably not needed styles:
 \* ------------------------------- */
 
-.md-right { // still needed for TX details
+.mat-right { // still needed for TX details
   text-align: right; 
   text-overflow: ellipsis; 
   white-space: nowrap; 
@@ -419,11 +419,11 @@ input[type="text"] {
   margin: 20px 0;
 }
 
-input[type="text"].md-bg-transparent {
+input[type="text"].mat-bg-transparent {
   background-color: transparent !important;
 }
 
-.md-send-list {
+.mat-send-list {
   .mat-select-trigger{
     height: 23px;
   }
@@ -449,7 +449,7 @@ panel-header-title {
 }
 
 @media (max-width: 1280px) {
-  .md-left-border {
+  .mat-left-border {
     border-left: none;
     justify-content: flex-start !important;
   }
@@ -466,7 +466,7 @@ panel-header-title {
         div {
           min-height: 25px;
           align-items: center;
-          .highlight, .md-right {
+          .highlight, .mat-right {
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -475,7 +475,7 @@ panel-header-title {
       }
     }
   }
-  .md-send-list {
+  .mat-send-list {
     .mat-form-field {
       width: 100%;
     }

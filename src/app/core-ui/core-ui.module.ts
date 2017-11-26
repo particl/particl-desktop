@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from './material/material.module';
 import { MainViewModule } from './main/main-view.module';
 
-import { MdDialogModule, MdDialogRef } from '@angular/material';
-import { MdDialog } from '@angular/material'; // TODO: move to material
+import { MatDialogModule, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material'; // TODO: move to material
 
 @NgModule({
   declarations: [],
@@ -13,7 +13,7 @@ import { MdDialog } from '@angular/material'; // TODO: move to material
     CommonModule,
     MaterialModule,
     MainViewModule,
-    MdDialogModule // todo move
+    MatDialogModule // todo move
   ],
   exports: [
     MaterialModule,
@@ -25,7 +25,7 @@ export class CoreUiModule {
     return {
       ngModule: CoreUiModule,
       providers: [
-        MdDialog
+        MatDialog
       ]
     };
   }

@@ -2,12 +2,12 @@
   <div fxLayout="row" class="coloredContainerX box">
 
     <div class="grid-row grid-header" *ngIf="displayHeader">
-      <md-list class="list-data" fxFlex="100%">
+      <mat-list class="list-data" fxFlex="100%">
         <div *ngFor="let address of getSinglePage()">
-          <md-list-item>
-          </md-list-item>
+          <mat-list-item>
+          </mat-list-item>
         </div>
-      </md-list>
+      </mat-list>
       <div *ngIf="displayLabel">Label</div>
       <div *ngIf="displayAddress">Address</div>
       <div *ngIf="displayPublicKey">Public Key</div>
@@ -17,17 +17,17 @@
       <div *ngIf="displayQrMenu">QR Code</div>
     </div>
 
-    <md-list class="list-data disable-select" fxFlex="100">
+    <mat-list class="list-data disable-select" fxFlex="100">
       <div class="no-results" *ngIf="getSinglePage().length === 0">
         No matching addresses found
       </div>
       <div *ngFor="let address of getSinglePage()">
 
-        <md-card class="address-entry" fxLayout.gt-sm="row" fxLayout.lt-md="column" fxLayoutGap="10px" layout-padding>
+        <mat-card class="address-entry" fxLayout.gt-sm="row" fxLayout.lt-md="column" fxLayoutGap="10px" layout-padding>
 
           <!-- Label -->
           <div fxFlex="1 0 150px" fxFlex.lt-md="100" class="title cursor-pointer" *ngIf="displayLabel"
-               (click)="editLabel(address.address)" mdTooltip="Edit Address label">
+               (click)="editLabel(address.address)" matTooltip="Edit Address label">
             {{ address.label }}
           </div>
 
@@ -54,37 +54,37 @@
                fxLayoutAlign.lt-md="start center" fxLayoutGap="10px" *ngIf="displayToolsMenu" class="address-actions">
             <!-- ICO: copy address -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <md-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer" mdTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></md-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
             </span>
             <!-- ICO: verify message -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <md-icon fontSet="partIcon" fontIcon="part-a-check" (click)="openSignatureModal(address.address)"
-                       class="cursor-pointer" mdTooltip="Sign / Verify message"
-                       ngxClipboard></md-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-a-check" (click)="openSignatureModal(address.address)"
+                       class="cursor-pointer" matTooltip="Sign / Verify message"
+                       ngxClipboard></mat-icon>
             </span>
             <!-- ICO: delete -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <md-icon color="warn" fontSet="partIcon" fontIcon="part-circle-remove"
-                       (click)="deleteAddress(address.label, address.address)" mdTooltip="Delete address"></md-icon>
+              <mat-icon color="warn" fontSet="partIcon" fontIcon="part-circle-remove"
+                       (click)="deleteAddress(address.label, address.address)" matTooltip="Delete address"></mat-icon>
             </span>
             <!-- display QR code -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center" *ngIf="!displayQrMenu" class="qrcode-menu">
-              <md-icon fontSet="partIcon" fontIcon="part-barcode-qr" mdTooltip="Show QR code"
-                       (click)="openQrCodeModal(address)"></md-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-barcode-qr" matTooltip="Show QR code"
+                       (click)="openQrCodeModal(address)"></mat-icon>
             </span>
           </div>
 
-        </md-card>
+        </mat-card>
       </div>
 
-    </md-list>
+    </mat-list>
   </div>
 </div>
 
-<md-paginator
+<mat-paginator
   *ngIf="displayPagination && getSinglePage().length>0"
   [length]="getTotalAddressCount()"
   [pageSize]="getMaxAddressesPerPage()"
   [pageSizeOptions]="PAGE_SIZE_OPTIONS"
   (page)="pageChanged($event)">
-</md-paginator>
+</mat-paginator>

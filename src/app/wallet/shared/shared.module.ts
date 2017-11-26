@@ -10,7 +10,7 @@ import { AccordionModule } from './accordion/accordion.module';
 import { HeaderComponent } from './header/header.component';
 import { TableComponent } from './table/table.component';
 import { GridComponent } from './grid/grid.component';
-import { MdButtonModule, MdDialogModule, MdExpansionModule, MdIconModule, MdInputModule } from '@angular/material';
+import { MatButtonModule, MatDialogModule, MatExpansionModule, MatIconModule, MatInputModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,12 +19,12 @@ import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/de
   imports: [
     CommonModule,
     AccordionModule,
-    MdDialogModule,
-    MdExpansionModule,
-    MdInputModule,
-    MdIconModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatInputModule,
+    MatIconModule,
     // BrowserAnimationsModule,
-    MdButtonModule,
+    MatButtonModule,
     FlexLayoutModule
   ],
   declarations: [

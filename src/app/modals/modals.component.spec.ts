@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 
 import { CoreModule, BlockStatusService } from '../core/core.module';
 // TODO;: ^why blockstatus & providing it?
@@ -27,7 +27,7 @@ describe('ModalsComponent', () => {
       providers: [
         BlockStatusService,
         ModalsService,
-        { provide: MdDialogRef }
+        { provide: MatDialogRef }
       ]
     })
     .compileComponents();

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../../../core/core.module';
@@ -24,11 +24,11 @@ export class AddAddressLabelComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   constructor(
-    public dialogRef: MdDialogRef<AddAddressLabelComponent>,
+    public dialogRef: MatDialogRef<AddAddressLabelComponent>,
     private formBuilder: FormBuilder,
     private rpc: RpcService,
     private flashNotificationService: SnackbarService,
-    private dialog: MdDialog,
+    private dialog: MatDialog,
     private _modals: ModalsService) {
   }
 
