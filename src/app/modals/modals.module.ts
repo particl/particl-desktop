@@ -1,16 +1,17 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MaterialModule } from '../core-ui/material/material.module';
 
 import { ModalsService } from './modals.service';
-import { PassphraseService } from './createwallet/passphrase/passphrase.service';
+
 import { ModalsComponent } from './modals.component';
 import { FocusDirective, FocusTimeoutDirective } from './modals.directives';
 
-import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
-import { PasswordComponent } from './shared/password/password.component';
-
+/* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
@@ -18,32 +19,24 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
-import {
-  MdButtonModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule, MdProgressBarModule,
-  MdTooltipModule, MdProgressSpinnerModule
-} from '@angular/material';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { FlashNotificationService } from '../services/flash-notification.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+/* shared in modals */
+import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
+import { PassphraseService } from './createwallet/passphrase/passphrase.service';
+import { PasswordComponent } from './shared/password/password.component';
 import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
+
+import { SnackbarService } from '../core/snackbar/snackbar.service';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    ClipboardModule,
-    MdDialogModule,
-    FlexLayoutModule,
     BrowserAnimationsModule,
-    MdButtonModule,
-    MdIconModule,
-    MdInputModule,
-    MdCheckboxModule,
-    MdProgressSpinnerModule,
-    MdTooltipModule,
-    MdProgressBarModule,
-    ClipboardModule
+    ClipboardModule,
+    /* own */
+    MaterialModule
   ],
   declarations: [
     FocusDirective,
@@ -63,12 +56,13 @@ import { MultiwalletComponent } from './multiwallet/multiwallet.component';
   ],
   exports: [
     ModalsComponent,
-    PercentageBarComponent
+    PercentageBarComponent,
+    ClipboardModule
   ],
   providers: [
     ModalsService,
     PassphraseService,
-    FlashNotificationService
+    SnackbarService
   ],
   entryComponents: [
     ModalsComponent,
@@ -79,4 +73,16 @@ import { MultiwalletComponent } from './multiwallet/multiwallet.component';
     AlertComponent
   ],
 })
-export class ModalsModule { }
+export class ModalsModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: ModalsModule,
+      providers: [
+        ModalsService
+      ]
+    };
+  }
+}
+
+export { ModalsService } from './modals.service';
+export { PassphraseService } from './createwallet/passphrase/passphrase.service';

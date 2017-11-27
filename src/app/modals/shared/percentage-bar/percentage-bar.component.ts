@@ -27,6 +27,7 @@ export class PercentageBarComponent implements OnInit {
     this.log.d('initiated percentage-bar');
     /* Hook BlockStatus -> open syncing modal */
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
+      this.log.d(`updating percentage-bar`);
       this.updateProgress(status.syncPercentage);
     });
   }

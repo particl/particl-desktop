@@ -85,11 +85,11 @@ img.logo {
   box-shadow: none !important;
 }
 
-md-spinner.mat-spinner.mat-progress-spinner.mat-primary {
+mat-spinner.mat-spinner.mat-progress-spinner.mat-primary {
   padding-left: 46%;
 }
 
-md-spinner.mat-spinner.mat-progress-spinner.mat-primary[_ngcontent-c20]:before {
+mat-spinner.mat-spinner.mat-progress-spinner.mat-primary[_ngcontent-c20]:before {
   content: "";
   display: block;
   position: fixed;
@@ -101,7 +101,7 @@ md-spinner.mat-spinner.mat-progress-spinner.mat-primary[_ngcontent-c20]:before {
   z-index: 0;
 }
 
-md-spinner.mat-spinner.mat-progress-spinner.mat-primary[_ngcontent-c20] {
+mat-spinner.mat-spinner.mat-progress-spinner.mat-primary[_ngcontent-c20] {
   z-index: 555;
   position: relative;
 }

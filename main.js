@@ -28,7 +28,7 @@ let mainWindow;
 let tray;
 let options;
 
-let openDevTools = false;
+let openDevTools = true;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -59,24 +59,14 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-app.on('browser-window-created',function(e, window) {
-  // eNotify = require('electron-notify');
-  // eNotify.setConfig({
-  //   appIcon: path.join(__dirname, 'src/assets/icons/notification.png'),
-  //   displayTime: 6000,
-  //   defaultStyleText: {
-  //     color: '#FF0000',
-  //     fontWeight: 'bold'
-  //   },
-  //   maxVisibleNotifications: 1
-  // });
-   
+app.on('browser-window-created',function(e, window) { 
   rxIpc.registerListener('rx-ipc-notification', function(title, desc, params) {
-    // eNotify.notify({ title: title, text: desc });
-    let myNotification = new notification(title, {
-      body : desc,
-      icon: path.join(__dirname, 'src/assets/icons/notification.png')
+    let myNotification = new notification({
+      'title': title,
+      'body': desc,
+      'icon': path.join(__dirname, 'src/assets/icons/notification.png')
     })
+    myNotification.show()
     return Observable.create(observer => {
       observer.complete(true);
     });

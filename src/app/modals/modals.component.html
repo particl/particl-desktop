@@ -1,9 +1,9 @@
-<button md-raised-button class="close_button pull-right" (click)="close()" *ngIf="enableClose">
-  <md-icon fontSet="partIcon" fontIcon="part-circle-remove"></md-icon>
+<button mat-raised-button class="close_button pull-right" (click)="close()" *ngIf="enableClose">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-<div md-dialog-content class="md-wallet-content">
-  <md-spinner mode="indeterminate" *ngIf="loadSpinner"></md-spinner>
+<div mat-dialog-content class="mat-wallet-content">
+  <mat-spinner mode="indeterminate" *ngIf="loadSpinner"></mat-spinner>
 
   <ng-template #modalContainer></ng-template>
 </div>

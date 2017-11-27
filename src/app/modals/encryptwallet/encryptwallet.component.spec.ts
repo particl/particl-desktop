@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SharedModule } from '../../shared/shared.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
+import { CoreModule } from '../../core/core.module';
+import { ModalsModule } from '../modals.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { EncryptwalletComponent } from './encryptwallet.component';
-import { ModalsModule } from '../modals.module';
-import { MdSnackBarModule } from '@angular/material';
 
 
 describe('EncryptwalletComponent', () => {
@@ -17,8 +17,8 @@ describe('EncryptwalletComponent', () => {
       imports: [
         SharedModule,
         ModalsModule,
-        RpcModule.forRoot(),
-        MdSnackBarModule
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
       ]
     })
     .compileComponents();

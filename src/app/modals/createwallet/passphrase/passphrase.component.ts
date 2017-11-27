@@ -4,7 +4,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { PassphraseService } from './passphrase.service';
 
 import { Log } from 'ng2-logger';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 const MAX_WORDS = 24;
 
@@ -34,7 +34,7 @@ export class PassphraseComponent implements  OnChanges {
 
   constructor(
     private _passphraseService: PassphraseService,
-    private flashNotificationService: FlashNotificationService) {
+    private flashNotificationService: SnackbarService) {
   }
 
   ngOnChanges(): void {

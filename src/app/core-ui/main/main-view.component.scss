@@ -1,0 +1,175 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+/* ------------------------------- *\
+    UI Elements
+\* ------------------------------- */
+
+
+// ------ DIVIDER ------ //
+
+.mat-divider { // section divider
+  border-bottom: 1px solid lighten($bg-black, 5%);
+  border-top: 1px solid darken($bg-black, 5%);
+}
+
+
+// ------ SECTIONS & ITEM GROUPS ------ //
+
+.sidebar-section {
+  .sidebar-item-group {
+    padding-top: 0;
+  }
+}
+
+
+// ------ SUBMENUS (Accordion) ------ //
+
+.mat-expansion-panel {
+  border-bottom: 1px solid darken($bg-black, 5%);
+  box-shadow: 0 1px 0 lighten($bg-black, 5%) !important;
+  background: $bg-black;
+  // submenu toggle
+  .mat-expansion-panel-header {
+    font-family: $font;
+    font-size: 11.5px;
+    color: lighten($text-muted, 5%);
+    text-transform: uppercase;
+    padding: 0 32px;
+  }
+}
+
+
+// ------ MENU ITEM (Single) ------ //
+
+.sidebar-item {
+  @extend %tfx;
+  padding: 0 24px;
+  .icon {
+    @extend %tfx;
+    width: auto;
+    height: auto;
+    margin: 0 16px 0 0;
+    color: lighten($bg-black, 15%);
+  }
+  .text {
+    font-family: $font;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: white;
+  }
+  &:hover {
+    background: darken($bg-black, 1.5%);
+    .icon {
+      color: lighten($bg-black, 30%);
+    }
+  }
+}
+
+a.sidebar-item-link {
+  text-decoration: none;
+  text-transform: uppercase;
+  outline: none;
+  &.active > .sidebar-item .icon { // highlight active menu item
+    color: $color !important;
+  }
+}
+
+
+
+// ------ ERROR MESSAGES ------ //
+
+.error {
+  .sidebar-item {
+    .icon {
+      color: $color-alert;
+      margin: 0 14px 0 0;
+    }
+    .text {
+      color: white;
+      font-size: 11px;
+      padding: 24px 16px;
+    }
+    &:hover {
+      background: none;
+      .icon {
+        color: $color-alert;
+      }
+    }
+  }
+}
+
+
+/* ------------------------------- *\
+    LAYOUT
+\* ------------------------------- */
+
+// ------ SIDEBAR ------ //
+
+.sidebar { // AKA .mat-sidenav
+  @extend %disable-select;
+  width: 250px;
+  background-color: $bg-black;
+  color: white;
+
+  .logo {
+    display: block;
+    background: url("../../../assets/particl-logo.svg") no-repeat 0 0;
+    background-size: 144px 60px;
+    height: 60px;
+    width: 144px;
+    margin: 30px auto;
+  }
+
+  // widgets stuck to the bottom (sidebar's footer)
+  .pin-to-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    // Versions
+    .client-version {
+      @extend %enable-select;
+      padding: 0 24px;
+      display: block;
+      font-size: 11px;
+      line-height: 1.6;
+      color: $text-muted;
+      .version {
+        color: lighten($text-muted, 15%);
+        margin-left: 2px;
+      }
+    }
+
+  }
+
+}
+
+
+// ------ SYNC PROGRESS BAR ------ //
+
+.sync-bar {
+  .mat-progress-bar-fill::after {
+    background-color: $color;
+  }
+}
+.sync-progress {
+  padding: 0 20px;
+}
+
+
+/* ----------------------------------- *\
+    Page header (with status icons)
+\* ----------------------------------- */
+
+.header-main {
+  @extend %disable-select;
+  border-bottom: 1px solid $bg-shadow;
+  background: #fff;
+  padding-left: 35px;
+  padding-right: 26px;
+  font-family: $font;
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 700;
+}

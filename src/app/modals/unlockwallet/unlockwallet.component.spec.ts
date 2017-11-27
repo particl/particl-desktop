@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material';
+
+import { ModalsModule } from '../modals.module';
+import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { UnlockwalletComponent } from './unlockwallet.component';
-import { ModalsModule } from '../modals.module';
-import { SharedModule } from '../../shared/shared.module';
-
-import { RpcModule } from '../../core/rpc/rpc.module';
-import {MdDialogModule, MdDialogRef, MdSnackBarModule} from '@angular/material';
 
 
 describe('UnlockwalletComponent', () => {
@@ -17,11 +18,10 @@ describe('UnlockwalletComponent', () => {
       imports: [
         SharedModule,
         ModalsModule,
-        RpcModule.forRoot(),
-        MdDialogModule,
-        MdSnackBarModule
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
       ],
-      providers: [ { provide: MdDialogRef } ]
+      providers: [ { provide: MatDialogRef } ]
     })
     .compileComponents();
   }));
