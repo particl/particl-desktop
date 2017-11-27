@@ -1,7 +1,4 @@
 <md-progress-bar mode="indeterminate" *ngIf="!txService.txs.length && txService.loading"></md-progress-bar>
-<!--<div fxLayoutAlign="center center" *ngIf="!txService.txs.length > 0">-->
-<!--<md-spinner></md-spinner>-->
-<!--</div>-->
 <div class="no-results" *ngIf="txService.txs.length === 0 && !txService.loading">
   No transactions yet
 </div>
@@ -29,8 +26,10 @@
 
         <!-- Confirmations -->
         <md-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation">
-          <span md-line mdTooltip="Confirmations"><md-icon fontSet="partIcon" fontIcon="part-check-circle-08"
-                                                           class="confirmations"></md-icon> {{ tx.getConfirmationCount() }}</span>
+          <span md-line mdTooltip="Confirmations" matTooltipPosition="before">
+            <md-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></md-icon>
+            {{ tx.getConfirmationCount() }}
+          </span>
         </md-panel-title>
 
         <!-- Category icon -->
@@ -44,9 +43,13 @@
           </span>
           <span *ngSwitchCase="'send'" class="tx-type sent">
             <md-icon fontSet="partIcon" fontIcon="part-tail-left" color="warn"></md-icon>Sent
+            <md-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-23"
+                     mdTooltip="Narration included" matTooltipPosition="after"></md-icon>
           </span>
           <span *ngSwitchCase="'receive'" class="tx-type received">
             <md-icon fontSet="partIcon" fontIcon="part-tail-right" color="primary"></md-icon>Received
+            <md-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-23"
+                     mdTooltip="Narration included" matTooltipPosition="after"></md-icon>
           </span>
         </md-panel-title>
 
@@ -82,24 +85,25 @@
       </md-expansion-panel-header>
 
 
-      <div class="container history_container" fxLayout="row" fxLayoutGap="10px" layout-padding>
+      <div class="container history_container" fxLayoutWrap layout-padding>
 
-        <div fxLayout="column" fxFlex="55">
+        <div fxFlex="1 1 calc(100% - 260px)" fxLayout="column">
           <!-- To/from (detail) -->
           <div class="tx-detail-item" fxFlex>
-            <span fxFlex="30">To/from:</span>
-            <input class="to-from-address" fxFlex="70" value="{{ tx.getAddress() }}" placeholder="To/from">
+            <span fxFlex="0 0 80px">To/from:</span>
+            <input fxFlex="1 1 calc(100% - 80px)" value="{{ tx.getAddress() }}" class="to-from-address input">
           </div>
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
-            <span fxFlex="30">TXID:</span>
-            <a class="md-right highlight" fxFlex="70"
-               href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}" target="_blank"
-               mdTooltip="Show on Block Explorer">{{tx.txid}}</a>
+            <span fxFlex="0 0 80px">TXID:</span>
+            <a fxFlex="1 1 calc(100% - 80px)" class="tx-detail-link"
+               href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}"
+               target="_blank" mdTooltip="Show on Block Explorer">
+              {{tx.txid}}</a>
           </div>
         </div>
 
-        <div fxLayout="column" fxFlex="45">
+        <div fxFlex="0 0 260px" fxLayout="column">
           <!-- TX fee (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
             <span>Fee:</span>
@@ -110,6 +114,12 @@
             <span>Net amount:</span>
             <span class="md-right">{{ tx.getNetAmount()}} PART</span>
           </div>
+        </div>
+
+        <!-- Narration -->
+        <div class="tx-detail-item" fxFlex="1 1 100%" *ngIf="tx.getNarration()">
+          <span fxFlex="0 0 80px">Narration:</span>
+          <input fxFlex="1 1 calc(100% - 80px)" value="{{tx.getNarration()}}" class="narration input">
         </div>
 
       </div><!-- .history_cointainer -->
