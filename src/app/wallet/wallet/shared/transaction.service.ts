@@ -30,7 +30,7 @@ export class TransactionService {
   constructor(private rpc: RpcService) {
     this.log.d(`Constructor(): called`);
     this.postConstructor(this.MAX_TXS_PER_PAGE);
-    this.rpc.sendNotification('WoW!!!', 'You have received new transactions');
+    this.rpc.sendNotification('Incoming transaction', '120 PART received');
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
@@ -106,9 +106,9 @@ export class TransactionService {
       .subscribe(
         (tx: Array<Object>) => {
           if (tx[0]['category'] === 'receive') {
-              this.rpc.sendNotification('WoW!!!', 'You have received new transactions');
+              this.rpc.sendNotification('Incoming transaction', '120 PART received');
           } else if (tx[0]['category'] === 'stake') {
-              this.rpc.sendNotification('WoW!!!', 'You have received new stake reward');
+              this.rpc.sendNotification('New stake reward', '1.50377877 PART received');
           }
         });
   }
