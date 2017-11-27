@@ -21,6 +21,8 @@
     "test": "ng test",
     "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/docs/**,**/packages/** && sass-lint -v",
     "e2e": "ng e2e",
+    "generate:versions": "node modules/clientBinaries/generateVersions.js",
+    "generate:documentation": "",
     "build:electron:prod": "ng build --base-href=./ --env=prod",
     "build:electron:fast": "ng build --base-href=./ --sourcemap=false",
     "build:electron": "ng build --base-href=./",
