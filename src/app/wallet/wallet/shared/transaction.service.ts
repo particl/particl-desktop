@@ -18,6 +18,8 @@ export class TransactionService {
   currentPage: number = 0;
   totalPageCount: number = 0;
 
+  /* Blocks */
+  block: number = 0;
   /* states */
   loading: boolean = false;
   testnet: boolean = false;
@@ -38,7 +40,15 @@ export class TransactionService {
           this.txCount = txcount;
           this.loading = true;
           this.log.d(`observing txcount, txs array: ${this.txs.length}`);
-          this.rpc_update();
+          this.rpc_update(false);
+        });
+    this.rpc.state.observe('blocks')
+      .subscribe(
+        block => {
+          if (block > this.block && this.block !== 0) {
+            this.rpc_update(true);
+          }
+          this.block = block;
         });
 
     /* check if testnet -> block explorer url */
@@ -60,7 +70,7 @@ export class TransactionService {
     }
     this.loading = true;
     this.currentPage = page;
-    this.rpc_update();
+    this.rpc_update(false);
   }
 
   deleteTransactions() {
@@ -68,7 +78,7 @@ export class TransactionService {
   }
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
-  rpc_update() {
+  rpc_update(txCheck: boolean) {
 
     const options = { 'count' : +this.MAX_TXS_PER_PAGE, 'skip': this.currentPage * this.MAX_TXS_PER_PAGE };
     this.rpc.call('filtertransactions', [options])
@@ -82,11 +92,14 @@ export class TransactionService {
           this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
         }
 
-        this.deleteTransactions();
-
-        txResponse.forEach((tx) => {
-          this.addTransaction(tx);
-        });
+        if (txCheck) {
+          this.compareTransactionResponse(this.txs, txResponse);
+        } else {
+          this.deleteTransactions();
+          txResponse.forEach((tx) => {
+            this.addTransaction(tx);
+          });
+        }
         this.loading = false;
         this.log.d(`rpc_update, txs array: ${this.txs.length}`);
       });
@@ -98,5 +111,15 @@ export class TransactionService {
     this.txs.push(new Transaction(json));
   }
 
-}
+  // Compare old and new transactions to find out updated confirmations
+  compareTransactionResponse(oldTxs: any, newTxs: any) {
+    newTxs.forEach((newtx) => {
+      oldTxs.forEach((oldtx) => {
+        if (oldtx.txid === newtx.txid && oldtx.confirmations !== newtx.confirmations) {
+          oldtx.confirmations = newtx.confirmations;
+        }
+      });
+    });
+  }
 
+}
