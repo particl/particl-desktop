@@ -4,12 +4,12 @@ import { Log } from 'ng2-logger';
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
 
-import { flyInOut, slideDown } from '../../core/core.animations';
+import { StateService } from '../../core/core.module';
+import { flyInOut, slideDown } from '../../core-ui/core.animations';
 
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
-import { StateService } from '../../core/state/state.service';
 
 
 @Component({
@@ -233,6 +233,13 @@ export class CreateWalletComponent {
     this.reset();
     document.body.dispatchEvent(
       new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  }
+
+  public countWords (count: number) {
+    if ([12, 15, 18, 24].indexOf(count) !== -1) {
+      return false;
+    }
+    return true;
   }
 
   // capture the enter button

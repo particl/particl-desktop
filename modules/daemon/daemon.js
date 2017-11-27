@@ -31,7 +31,7 @@ exports.start = function(wallets, callback) {
     }).catch(() => {
 
       // TODO: only for some debug levels
-      process.argv.push('-printtoconsole');
+      // process.argv.push('-printtoconsole');
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
