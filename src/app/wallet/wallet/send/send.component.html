@@ -105,7 +105,7 @@
             <h5 fxFlex="15">Pay to</h5>
             <mat-form-field fxFlex="100">
               <!-- fix success input -->
-              <input #address name="toAddress" matInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="The address to send the payment to" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
+              <input #address name="toAddress" matInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="Recipient's address" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
             </mat-form-field>
             <div fxFlex="100" fxLayoutGap="20px">
               <mat-form-field fxFlex="100">
@@ -151,16 +151,16 @@
       <mat-card class="mat-send-list">
         <mat-list-item>
           <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
-               fxLayoutAlign="center center">
-            <h5 fxFlex="15">Amount</h5>
-            <mat-form-field fxFlex="100">
+               fxLayoutAlign="start center">
+            <h5 fxFlex="0 0 15%">Amount</h5>
+            <mat-form-field fxFlex="0 0 130px">
               <input matInput type="text" name="sendAmount"
-                     placeholder="0.00000000"
+                     placeholder="Amount to send"
                      [(ngModel)]="send.amount" (input)="verifyAmount()"
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                      oninput="validity.valid||(value='');" step="any">
             </mat-form-field>
-            <mat-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
+            <mat-select fxFlex="0 0 80px" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
               <mat-option value="part">PART</mat-option>
             </mat-select>
           </div>
