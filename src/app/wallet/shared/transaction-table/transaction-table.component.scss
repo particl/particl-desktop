@@ -51,35 +51,27 @@
       position: relative;
       top: 3px;
       margin-right: 12px;
-      // narration icon
-      &.narration {
-        margin: 0 0 0 2px;
-        font-size: 12px;
-        color: lighten($text-muted, 20%) !important;
-        padding: 3px;
-        top: 1px;
-      }
     }
     .tx-type {
       &.staked {
-        .mat-icon {
+        md-icon {
           color: $color-warning;
         }
       }
       &.orphan {
-        .mat-icon {
+        md-icon {
           color: mix($bg-shadow, $text-muted);
         }
       }
       &.sent {
         font-weight: bold;
-        .mat-icon {
+        md-icon {
           color: $color-alert;
         }
       }
       &.received {
         font-weight: bold;
-        .mat-icon {
+        md-icon {
           color: $color;
         }
       }
@@ -115,38 +107,18 @@
   color: $text-muted;
   font-size: 13px;
   font-family: $font;
-  // shared across inputs
-  .input {
-    border: none;
-    outline: none;
-    padding: 0 5px;
-    &.narration {
-      padding: 0;
-    }
-  }
   // to/from address
   .to-from-address {
-    width: 100%;
-    font-family: monospace;   
+    font-family: monospace;
     color: lighten($text, 10%);
     background: lighten($bg-shadow, 10%);
     border-radius: 4px;
+    border: none;
+    outline: none;
+    padding: 0 5px;
     &:focus {
       background: lighten($bg-black, 10%);
       color: white;
-    }
-  }
-  // explorer link
-  .tx-detail-link {
-    width: 100%;
-    color: $text-muted;
-    font-family: monospace;
-    text-decoration: none;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    &:hover {
-      color: $color;
     }
   }
 }

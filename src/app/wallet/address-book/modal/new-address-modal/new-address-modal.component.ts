@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FlashNotificationService } from '../../../../services/flash-notification.service';
 import { RPCService } from '../../../../core/rpc/rpc.service';
@@ -28,7 +28,6 @@ export class NewAddressModalComponent implements OnInit {
    */
   public validAddress: boolean = undefined;
   public isMine: boolean = undefined;
-  @ViewChild('addressInput') addressInput: ElementRef;
 
   constructor(public dialogRef: MdDialogRef<NewAddressModalComponent>,
               private formBuilder: FormBuilder,
@@ -180,8 +179,5 @@ export class NewAddressModalComponent implements OnInit {
     }
   }
 
-  pasteAddress(): void {
-    this.addressInput.nativeElement.focus();
-    document.execCommand('paste');
-  }
+
 }

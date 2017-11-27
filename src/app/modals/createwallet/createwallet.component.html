@@ -210,7 +210,7 @@
 
         <div class="actions">
           <button md-button (click)="prevStep();initialize(2)">Back</button>
-          <button md-raised-button color="primary" (click)="restoreWallet()" [disabled]="countWords(getCountOfWordsEntered())">Next</button>
+          <button md-raised-button color="primary" (click)="restoreWallet()" [disabled]="getCountOfWordsEntered() !== 24">Next</button>
         </div><!-- .actions -->
 
       </div><!-- .content -->

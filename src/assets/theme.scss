@@ -57,23 +57,18 @@ button {
 .mat-drawer-content {
   overflow-y: scroll !important; // scroll on by default, so the content doesn't jump on larger pages
 }
-.sidebar {
-  // Sync progress bar
-  .sync-bar {
-    .mat-progress-bar-buffer {
-      background: lighten($bg-black, 15%);
-    }
-    .mat-progress-bar-fill::after {
-      background-color: $color;
+ .mat-sidenav {
+   user-select: none;
+  .logo-area {
+    .mat-toolbar-row {
+      justify-content: center;
+      height: 110px;
     }
   }
-}
-.mat-sidenav {
-  user-select: none;
   .mat-list {
     .mat-list-item { // menu item (text w/ icon)
       &:hover {
-        background: darken($bg-black, 1.5%);
+        background: darken(#222828, 1.5%);
         .mat-icon {
           color: lighten(#4B4A4F, 10%);
         }
@@ -81,6 +76,7 @@ button {
       .mat-list-item-content {
         height: auto !important;
       }
+
     }
     &.sidesubmenu {
       a {
@@ -251,7 +247,7 @@ input[type="text"] {
 /**
  * Scrollbars
  */
-
+ 
 /* pseudo elements
 ::-webkit-scrollbar              {}
 ::-webkit-scrollbar-button       {}
@@ -261,7 +257,7 @@ input[type="text"] {
 ::-webkit-scrollbar-corner       {}
 ::-webkit-resizer                {}
 */
-
+ 
 ::-webkit-scrollbar-track {
   border-radius: 15px;
   background-color: #e9e9e9;
@@ -411,7 +407,7 @@ panel-header-title {
 
 /* ------------------------------- *\
     Pagination
-\* ------------------------------- */
+\* ------------------------------- */ 
 
 .mat-paginator {
   margin-top: 40px;
@@ -443,10 +439,6 @@ panel-header-title {
 .syncing_header_text{
   width: 65%;
   text-align: center;
-}
-
-.sync-spinner{
-  max-height: 30px;
 }
 
 .text-center {

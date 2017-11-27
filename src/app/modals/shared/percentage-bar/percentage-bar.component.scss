@@ -1,38 +1,12 @@
-@import "./src/assets/_config"; // import shared colors etc.
-
-
-// Dialog
-.dialog-percentage-bar {
-  .percentage-bar-text {
-    position: absolute;
-    top: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 99999;
-    font-size: 11px;
-    font-weight: normal;
-    text-transform: uppercase;
-  }
-}
-
-
-// Sidebar
-.sync-progress-wrapper {
-  padding: 15px 24px 0;
-  border-top: 1px solid #15191A; // simulate sidebar divider
-  box-shadow: 0 1px 0 #333 inset;
-  .sync-info {
-    font-size: 11px;
-    text-transform: uppercase;
-    margin: 0 0 8px;
-    color: $text-muted;
-  }
-  .sync-spinner.mat-spinner {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin: 0 7px 0 0;
-    position: relative;
-    top: 3px;
-  }
-}
+.percentage-bar-bottom {
+   .percentage-bar-text {
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99999;
+      font-size: 11px;
+      font-weight: normal;
+      text-transform: uppercase;
+   }
+ }

@@ -8,8 +8,7 @@ const got = require('got'),
   tmp = require('tmp'),
   mkdirp = require('mkdirp'),
   unzip = require('node-unzip-2'),
-  spawn = require('buffered-spawn'),
-  log = require('electron-log');
+  spawn = require('buffered-spawn');
 
 
 function copyFile(src, dst) {
@@ -48,6 +47,13 @@ function checksum(filePath, algorithm) {
   });
 }
 
+const DUMMY_LOGGER = {
+  debug: function() {},
+  info: function() {},
+  warn: function() {},
+  error: function() {}
+};
+
 class Manager {
   /**
    * Construct a new instance.
@@ -58,7 +64,7 @@ class Manager {
   constructor (config) {
     this._config = config;
 
-    this._logger = log;
+    this._logger = DUMMY_LOGGER;
   }
 
   /**
@@ -67,6 +73,21 @@ class Manager {
    */
   get config () {
     return this._config;
+  }
+
+  /**
+   * Set the logger.
+   * @param {Object} val Should have same methods as global `console` object.
+   */
+  set logger (val) {
+    this._logger = {};
+
+    for (let key in DUMMY_LOGGER) {
+      this._logger[key] = (val && typeof val[key] === 'function')
+        ? val[key].bind(val)
+        : DUMMY_LOGGER[key]
+      ;
+    }
   }
 
   /**

@@ -49,7 +49,6 @@
 
 // ----------- SPECIFIC ----------- //
 
-
 .mat-sidenav { // nav container
   width: 250px;
   background-color: #222828;
@@ -59,50 +58,17 @@
   }
 }
 
-// logo
-.logo-area {
-  justify-content: center;
-  .logo {
-    display: block;
-    background-image: url("../assets/particl-logo.svg");
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    background-size: 144px 60px;
-    height: 60px;
-    width: 144px;
-    margin: 35px auto;
-  }
-}
-
-// "footer" content
-.pin-to-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  // Sync progress
-  .sync-progress {
-    padding: 0 20px;
-  }
-
-  // Versions
-  .client-version {
-    @extend .enable-select;
-    padding: 0 24px;
-    display: block;
-    font-size: 11px;
-    line-height: 1.6;
-    color: $text-muted;
-    .version {
-      color: lighten($text-muted, 15%);
-      margin-left: 2px;
-    }
-  }
+.logo {
+  display: inline-block;
+  background-image: url("../assets/particl-logo.svg");
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 144px 60px;
+  height: 60px;
+  width: 144px;
 }
 
 
-// input visual validation
 /deep/ input {
   &.verify-sucess {
     color: darken($color, 7%) !important; // #57a800

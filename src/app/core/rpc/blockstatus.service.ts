@@ -22,7 +22,7 @@ export class BlockStatusService {
 
   /* The last five hundred estimatedTimeLeft results, averaging this out for stable result */
   private arrayLastEstimatedTimeLefts: Array<number> = [];
-  private amountToAverage: number = 100;
+  private amountToAverage: number = 50;
 
   public statusUpdates: Subject<any> = new Subject<any>();
 
@@ -47,7 +47,7 @@ export class BlockStatusService {
     this._peerService.getBlockCount()
       .subscribe(
         height => {
-          this.log.d('getBlockCount(): triggered');
+
           this.status.lastBlockTime = new Date(+this._state.get('mediantime') * 1000);
           this.calculateSyncingDetails(height);
 
@@ -69,7 +69,6 @@ export class BlockStatusService {
     this._peerService.getBlockCountNetwork()
       .subscribe(
         height => {
-          this.log.d(`getBlockCountNetwork(): new height ${height}`);
           this.highestBlockHeightNetwork = height;
           this.status.networkBH = height;
           if (this.totalRemainder === -1 && this.startingBlockCount !== -1) {
@@ -137,7 +136,7 @@ export class BlockStatusService {
 
     let returnString = '';
 
-    const secs = this.exponentialMovingAverageTimeLeft(Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000)),
+    const secs = this.averageTimeLeft(Math.floor((this.getRemainder() / blockDiff * timeDiff) / 1000)),
           seconds = Math.floor(secs % 60),
           minutes = Math.floor((secs / 60) % 60),
           hours = Math.floor((secs / 3600) % 3600);
@@ -183,32 +182,6 @@ export class BlockStatusService {
     const averageEstimatedTimeLeft = Math.floor(sum / length);
 
     this.log.d(`averageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
-    return averageEstimatedTimeLeft;
-  }
-
-  /** Inserts estimatedTimeLeft into private array and returns an exponential moving average result to create more consistent result. */
-  private exponentialMovingAverageTimeLeft(estimatedTimeLeft: number): number {
-
-    /* add element to averaging array */
-    const length = this.arrayLastEstimatedTimeLefts.push(estimatedTimeLeft);
-
-    /* if length > allowed length, pop first element */
-    if (length > this.amountToAverage) {
-      this.arrayLastEstimatedTimeLefts.shift();
-    }
-
-    // smooth factor k = 2 / (N -1) where N > 1
-    const k = 2 / (length - ( length > 1 ? 1 : 0))
-
-    let EMA = 0;
-    // EMA = array[i] * K + EMA(previous) * (1 - K)
-    this.arrayLastEstimatedTimeLefts.forEach((time, i) => {
-      EMA = time * k + EMA * (1 - k);
-    });
-
-    const averageEstimatedTimeLeft = Math.floor(EMA);
-
-    this.log.d(`exponentialMovingAverageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
     return averageEstimatedTimeLeft;
   }
 

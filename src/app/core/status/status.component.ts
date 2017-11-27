@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';

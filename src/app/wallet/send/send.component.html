@@ -47,10 +47,10 @@
             <md-radio-group class="md-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput"
                             [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
               <h5 fxFlex="16.6">From Account</h5>
-              <md-radio-button value="balance" (click)="send.output = 'blind_balance'" checked="checked"
+              <md-radio-button value="balance" disabled="{{ send.output === 'balance' }}" checked="checked"
                                fxFlex="16.6">Public
               </md-radio-button>
-              <md-radio-button value="blind_balance" (click)="send.output = 'balance'" fxFlex="16.6">
+              <md-radio-button value="blind_balance" disabled="{{ send.output === 'blind_balance' }}" fxFlex="16.6">
                 Blind
               </md-radio-button>
               <!-- <md-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6"> 
@@ -76,9 +76,9 @@
             <md-radio-group class="md-send-card" name="sendOutput" [(ngModel)]="send.output" fxFlex="100"
                             fxLayoutAlign="center center">
               <h5 fxFlex="16.6">To Account</h5>
-              <md-radio-button value="balance" (click)="send.input = 'blind_balance'" fxFlex="16.6">Public
+              <md-radio-button value="balance" disabled="{{ send.input === 'balance' }}" fxFlex="16.6">Public
               </md-radio-button>
-              <md-radio-button value="blind_balance" (click)="send.input = 'balance'" fxFlex="16.6">
+              <md-radio-button value="blind_balance" disabled="{{ send.input === 'blind_balance' }}" fxFlex="16.6">
                 Blind
               </md-radio-button>
               <!-- <md-radio-button value="anon_balance" disabled="{{ send.input === 'anon_balance' }}" fxFlex="16.6">

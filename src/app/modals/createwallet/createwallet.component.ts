@@ -235,13 +235,6 @@ export class CreateWalletComponent {
       new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   }
 
-  public countWords (count: number) {
-    if ([12, 15, 18, 24].indexOf(count) !== -1) {
-      return false;
-    }
-    return true;
-  }
-
   // capture the enter button
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {

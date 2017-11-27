@@ -22,12 +22,10 @@ export class Transaction implements Deserializable {
   comment: string;
   vout: number;
   walletconflicts: Object[];
-  n0: string;
-  n1: string;
 
   constructor(txid: string, address: string, category: string, amount: number, reward: number,
               blockhash: string, blockindex: number, confirmations: number,
-              time: number, comment: string, vout: number, n0: string, n1: string) { }
+              time: number, comment: string, vout: number) { }
 
 
   getTypes() {
@@ -101,15 +99,6 @@ export class Transaction implements Deserializable {
     );
   }
 
-  public getNarration() {
-    if (this.n0) {
-      return this.n0;
-    } else if (this.n1) {
-      return this.n1;
-    } else {
-      return false
-    }
-  }
 
 }
 

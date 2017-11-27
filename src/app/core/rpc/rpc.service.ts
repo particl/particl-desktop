@@ -338,3 +338,4 @@ export class RPCService {
     this._callOnAddress.forEach(this._pollCall.bind(this));
   }
 }
+

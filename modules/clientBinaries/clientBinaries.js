@@ -1,46 +1,74 @@
+const _ = require('lodash');
+const Q = require('bluebird');
+const fs = require('fs');
 const { app, dialog } = require('electron');
-const EventEmitter    = require('events').EventEmitter;
-
-const _    = require('lodash');
-const Q    = require('bluebird');
-const fs   = require('fs');
-const got  = require('got');
+const got = require('got');
 const path = require('path');
-const log  = require('electron-log');
+const EventEmitter = require('events').EventEmitter;
+const spawn = require('child_process').spawn;
 
-const ClientBinariesManager = require('../clientBinaries/clientBinariesManager').Manager;
+const ClientBinaryManager = require('./clientBinariesManager').Manager;
 const rpc = require('../rpc/rpc');
+
+const log = {
+  info: console.log,
+  warn: console.log,
+  debug: console.log,
+  error: console.log
+};
 
 let options;
 
-// master
-// const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
-
-// dev
-// const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/develop/modules/clientBinaries/clientBinaries.json';
-
-const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/develop/modules/clientBinaries/clientBinaries.json';
+// should be 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
+const BINARY_URL = 'https://raw.githubusercontent.com/particl/partgui/master/modules/clientBinaries/clientBinaries.json';
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
-class DaemonManager extends EventEmitter {
+class Manager extends EventEmitter {
   constructor() {
     super();
     this._availableClients = {};
   }
 
-  getPath() {
-    return this._availableClients['particld'].binPath;
-  }
-
-  init(_options) {
+  init(restart, _options) {
     log.info('Initializing...');
     options = _options;
-    // TODO: reactivate when prompt user in GUI works
     // check every hour
     // setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
     this._resolveBinPath();
-    return this._checkForNewConfig();
+    return this._checkForNewConfig(restart);
+  }
+
+  /*
+  ** Checks if particld is already running, starts it in case not running.
+  ** returns the daemon's process to be killed when application exits
+  ** or undefined if the daemon was not launched
+  */
+  startDaemon() {
+
+    return (new Promise((resolve, reject) => {
+
+      const daemon = options.customdaemon
+        ? options.customdaemon
+        : this._availableClients['particld'].binPath;
+
+      rpc.checkDaemon(options).then(() => {
+        log.info('daemon already started');
+        resolve(undefined);
+      }).catch(() => {
+        log.info(`starting daemon ${daemon}`);
+        const child = spawn(daemon, process.argv).on('close', code => {
+          if (code !== 0) {
+            reject();
+            log.error(`daemon exited with code ${code}.\n${daemon}\n${process.argv}`);
+          } else {
+            log.info('daemon exited successfully');
+          }
+        });
+        resolve(child);
+      });
+
+    }));
   }
 
   getClient(clientId) {
@@ -56,7 +84,7 @@ class DaemonManager extends EventEmitter {
     );
   }
 
-  _checkForNewConfig() {
+  _checkForNewConfig(restart) {
     const nodeType = 'particld';
     let binariesDownloaded = false;
     let nodeInfo;
@@ -198,7 +226,7 @@ class DaemonManager extends EventEmitter {
     .then((localConfig) => {
 
       if (!localConfig) {
-        log.info('No config for the ClientBinariesManager could be loaded, using local clientBinaries.json.');
+        log.info('No config for the ClientBinaryManager could be loaded, using local clientBinaries.json.');
 
         const localConfigPath = path.join(app.getPath('userData'), 'clientBinaries.json');
         localConfig = (fs.existsSync(localConfigPath))
@@ -207,7 +235,7 @@ class DaemonManager extends EventEmitter {
       }
 
       // scan for node
-      const mgr = new ClientBinariesManager(localConfig);
+      const mgr = new ClientBinaryManager(localConfig);
       mgr.logger = log;
 
       this._emit('scanning', 'Scanning for binaries');
@@ -255,15 +283,15 @@ class DaemonManager extends EventEmitter {
         });
 
         // restart if it downloaded while running
-        // if (restart && binariesDownloaded) {
-        //   log.info('Restarting app ...');
-        //   app.relaunch();
-        //   app.quit();
-        // }
+        if (restart && binariesDownloaded) {
+          log.info('Restarting app ...');
+          app.relaunch();
+          app.quit();
+        }
 
         this._emit('done');
 
-        // return this.startDaemon();
+        return this.startDaemon();
       });
     })
     .catch((err) => {
@@ -289,10 +317,10 @@ class DaemonManager extends EventEmitter {
     });
   }
 
-    // TODO: emit to GUI
 
   _emit(status, msg) {
     log.debug(`Status: ${status} - ${msg}`);
+
     this.emit('status', status, msg);
   }
 
@@ -325,4 +353,4 @@ class DaemonManager extends EventEmitter {
   }
 }
 
-module.exports = new DaemonManager();
+module.exports = new Manager();
