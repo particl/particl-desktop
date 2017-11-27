@@ -5,7 +5,7 @@
            placeholder="Enter label..." required>
   </mat-form-field>
   <mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="button" (click)="dialogClose()" mat-button mat-dialog-close>Cancel</button>
     <button mat-button [disabled]="!addLableForm.valid" mat-raised-button color="primary">
       {{address ? 'Update Label' : 'Add Label'}}
     </button>

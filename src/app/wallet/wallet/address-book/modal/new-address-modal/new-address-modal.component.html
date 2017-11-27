@@ -20,7 +20,7 @@
     </mat-form-field>
   </div>
   <mat-dialog-actions fxLayoutAlign="end center">
-    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="button" mat-button mat-dialog-close (click)="closeModal()">Cancel</button>
     <button mat-button mat-raised-button color="primary" [disabled]="(!label || !label.trim())||!validAddress||isMine">
       Add Label
     </button>
