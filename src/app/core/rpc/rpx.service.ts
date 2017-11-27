@@ -6,14 +6,14 @@ import { Observable } from 'rxjs/Observable';
 declare global {
   interface Window {
     electron: boolean;
+    require: any;
     ipc: {
-      on: (channel: string, listener: Function) => void;
-      once: (channel: string, listener: Function) => void;
-      send: (channel: string, arguments?: {}) => void;
-      sendSync: (channel: string, arguments?: {}) => void;
-      sendToHost: (channel: string, arguments?: {}) => void;
-      removeListener: (channel: string, listener: Function) => void;
-      removeAllListeners: (channel?: string) => void;
+      once:               (channel:  string, listener:   Function) => void;
+      send:               (channel:  string, arguments?: {}      ) => void;
+      sendSync:           (channel:  string, arguments?: {}      ) => void;
+      sendToHost:         (channel:  string, arguments?: {}      ) => void;
+      removeListener:     (channel:  string, listener:   Function) => void;
+      removeAllListeners: (channel?: string                      ) => void;
     }
   }
 }
@@ -23,7 +23,10 @@ export class RPXService {
   private listenerCount: number = 0;
   listeners: { [id: string]: boolean } = {};
 
-  constructor(public zone: NgZone) { }
+  constructor(
+    public zone: NgZone,
+  ) {
+  }
 
   checkRemoteListener(channel: string) {
     return new Promise((resolve, reject) => {
@@ -45,10 +48,11 @@ export class RPXService {
 
     window.ipc.send(channel, subChannel, ...args);
     return new Observable((observer) => {
-      this.checkRemoteListener(channel)
-        .catch((error) => observer.error('Invalid channel: ' + channel + '\nError: ' + error));
 
-      window.ipc.once(subChannel, function listener(event: Event, type: string, data: Object) {
+      this.checkRemoteListener(channel)
+        .catch(error => observer.error(`Invalid channel: ${channel}\nError: ${error}`));
+
+      window.ipc.once(subChannel, (event: Event, type: string, data: Object) => {
         self.zone.run(() => {
           switch (type) {
             case 'n':
@@ -62,8 +66,8 @@ export class RPXService {
           }
         });
       });
+
     });
   }
 
 }
-

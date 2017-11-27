@@ -1,9 +1,9 @@
 <md-sidenav-container fullscreen>
-  <md-sidenav #sidenav mode="side" opened="true" disableClose="true">
+  <md-sidenav class="sidebar" #sidenav mode="side" opened="true" disableClose="true">
 
-    <md-toolbar class="logo-area">
-      <span class="logo"></span>
-    </md-toolbar>
+    <div class="logo-area">
+      <div class="logo"></div>
+    </div>
 
     <md-divider></md-divider>
 
@@ -91,18 +91,38 @@
       </md-accordion>
     </md-content-->
 
-    <md-content layout-padding *ngIf="!daemonRunning || !walletInitialized">
-      <md-list class="sidesubmenu error">
-        <md-list-item *ngIf="!daemonRunning">
-          <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
-          Connection Refused, Daemon is not connected
-        </md-list-item>
-        <md-list-item *ngIf="!walletInitialized">
-          <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
-          Please create wallet first to access other tabs
-        </md-list-item>
-      </md-list>
-    </md-content>
+    <footer class="pin-to-bottom">
+
+      <!-- Errors -->
+      <md-content layout-padding *ngIf="!daemonRunning || !walletInitialized">
+        <md-list class="sidesubmenu error">
+          <md-list-item *ngIf="!daemonRunning">
+            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+            Connection Refused, Daemon is not connected
+          </md-list-item>
+          <md-list-item *ngIf="!walletInitialized">
+            <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+            Please create wallet first to access other tabs
+          </md-list-item>
+        </md-list>
+      </md-content>
+
+      <!-- Versions | TODO: move to separate component? -->
+      <md-content class="client-version">
+        <div class="client item">
+          Client <span class="version">{{ clientVersion }}</span>
+        </div>
+        <div class="daemon item">
+          Daemon <span class="version">{{ daemonVersion }}</span>
+        </div>
+      </md-content>
+
+      <!-- Sync progress -->
+      <md-content class="sync-progress cursor-pointer" layout-padding (click)="syncScreen()">
+        <app-percentage-bar #progress [sidebar]="true"></app-percentage-bar>
+      </md-content>
+
+    </footer><!-- .pin-to-bottom -->
 
   </md-sidenav>
 
