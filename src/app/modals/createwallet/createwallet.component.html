@@ -48,7 +48,7 @@
       <p>
         Choose a name for your wallet (e.g. Personal wallet, Shop income, Savings, &hellip;)
       </p>
-      
+
       <form #nameForm="ngForm" (ngSubmit)="nextStep()">
         <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)"
         [@slideDown]>
@@ -187,7 +187,7 @@
           {{ errorString }}
         </p>
       </div><!-- .recovery-phrase -->
-      
+
       <div class="section recovery-password">
         <div class="subtitle">Recovery Password</div>
         <p>
@@ -238,7 +238,7 @@
 <ng-template [ngIf]="step === 6">
   <div class="container disable-select">
     <div class="content">
-      
+
       <app-unlockwallet (unlockEmitter)="importMnemonicSeed($event)" [autoClose]="false">
       </app-unlockwallet>
 
