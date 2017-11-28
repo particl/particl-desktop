@@ -30,11 +30,8 @@ export class AddressBookComponent {
   @HostListener('document:paste', ['$event'])
   onPaste(event: any) {
     const address = event.clipboardData.getData('text');
-    if (/^[pPTt][a-km-zA-HJ-NP-Z1-9]{25,}$/.test(address)) {
-      if (this.dialog.openDialogs.length) {
-        this.dialog.openDialogs[0].componentInstance.address = address;
-        this.dialog.openDialogs[0].componentInstance.isEdit = false;
-      } else {
+    if (/^[pPrRTt][a-km-zA-HJ-NP-Z1-9]{25,}$/.test(address)) {
+      if (!this.dialog.openDialogs.length) {
         this.editLabel(address);
         this.dialog.openDialogs[0].componentInstance.isEdit = false;
       }
