@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger'
 import { Transaction } from './transaction.model';
 
 import { RpcService } from '../../../core/core.module';
+import { NotificationService } from '../../../core/core.module';
 
 @Injectable()
 export class TransactionService {
@@ -30,25 +31,30 @@ export class TransactionService {
   MAX_TXS_PER_PAGE: number = 10;
   PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50, 100, 250];
 
-  constructor(private rpc: RpcService) {
+  constructor(private rpc: RpcService, private notification: NotificationService) {
     this.log.d(`Constructor(): called`);
     this.postConstructor(this.MAX_TXS_PER_PAGE);
+
+    this.txCount = this.rpc.state.get('txcount');
+    this.block = this.rpc.state.get('blocks');
 
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
-          this.txCount = txcount;
           this.loading = true;
+          if (txcount > this.txCount) {
+            this.newTransaction();
+          }
           this.log.d(`observing txcount, txs array: ${this.txs.length}`);
           this.rpc_update(false);
         });
+
     this.rpc.state.observe('blocks')
       .subscribe(
         block => {
-          if (block > this.block && this.block !== 0) {
+          if (block > this.block) {
             this.rpc_update(true);
           }
-          this.block = block;
         });
 
     /* check if testnet -> block explorer url */
@@ -111,6 +117,7 @@ export class TransactionService {
     this.txs.push(new Transaction(json));
   }
 
+
   // Compare old and new transactions to find out updated confirmations
   compareTransactionResponse(oldTxs: any, newTxs: any) {
     newTxs.forEach((newtx) => {
@@ -120,6 +127,18 @@ export class TransactionService {
         }
       });
     });
+  }
+
+  newTransaction() {
+    this.rpc.call('filtertransactions')
+      .subscribe(
+        (tx: Array<Object>) => {
+          if (tx[0]['category'] === 'receive') {
+              this.notification.sendNotification('Incoming transaction', tx[0]['amount'] + ' PART received');
+          } else if (tx[0]['category'] === 'stake') {
+              this.notification.sendNotification('New stake reward', tx[0]['amount'] + ' PART received');
+          }
+        });
   }
 
 }

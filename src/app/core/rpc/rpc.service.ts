@@ -50,7 +50,6 @@ export class RpcService {
   private _enableState: boolean = true;
 
   public isElectron: boolean = false;
-  public notify: boolean = false;
   private log: any = Log.create('rpc.service');
 
   /** errors gets updated everytime the stateCall RPC requests return an error */
@@ -211,13 +210,6 @@ export class RpcService {
     if (this._enableState) {
       // We just execute it.. Might convert it to a service later on
       this._rpcState = new RpcStateClass(this);
-    }
-  }
-
-  /** Send Notification to the backend */
-  sendNotification(title: string, desc: string) {
-    if (this.isElectron) {
-      this._ipc.runNotification(title, desc);
     }
   }
 
