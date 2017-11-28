@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -25,5 +25,16 @@ export class AddressBookComponent {
     const dialogRef = this.dialog.open(NewAddressModalComponent);
     dialogRef.componentInstance.address = address;
     dialogRef.componentInstance.isEdit = true;
+  }
+
+  @HostListener('document:paste', ['$event'])
+  onPaste(event) {
+    const address = event.clipboardData.getData('text');
+    if (/^[pPrRTt][a-km-zA-HJ-NP-Z1-9]{25,}$/.test(address)) {
+      if (!this.dialog.openDialogs.length) {
+        this.editLabel(address);
+        this.dialog.openDialogs[0].componentInstance.isEdit = false;
+      }
+    }
   }
 }

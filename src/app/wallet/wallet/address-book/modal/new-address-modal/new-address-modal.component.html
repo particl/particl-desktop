@@ -1,14 +1,14 @@
 <h2 mat-dialog-title>{{modalTitle}}</h2>
 <form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
   <div mat-dialog-content>
-    <mat-form-field>
-      <input matInput type="text" formControlName="address" [(ngModel)]="address"
+    <md-form-field>
+      <input mdInput type="text" formControlName="address"
+             [ngModel]="address" (ngModelChange)="verifyAddress()"
              placeholder="Enter Address"
              [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
-             (input)="verifyAddress()"
              #addressInput
              required>
-    </mat-form-field>
+    </md-form-field>
     <!-- @TODO: CRZ please replace copy icon to paste icon-->
     <span matTooltip="Paste" (click)="pasteAddress()">
       <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon>
