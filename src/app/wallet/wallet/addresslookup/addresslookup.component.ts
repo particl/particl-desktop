@@ -16,11 +16,11 @@ export class AddressLookupComponent implements OnInit {
 
   log: any = Log.create('addresslookup.component');
 
-  filter: string = 'Filter address types';
+  filter: string = 'All types';
   query: string = '';
 
   public type: string = 'send';
-  public addressTypes: Array<string> = ['Filter address types', 'Public', 'Private'];
+  public addressTypes: Array<string> = ['All types', 'Public', 'Private'];
 
   private _addressCount: number;
   addressStore: Contact[] = [];
@@ -39,7 +39,7 @@ export class AddressLookupComponent implements OnInit {
         (  el.getLabel().toLowerCase().indexOf(query.toLowerCase()) !== -1
         || el.getAddress().toLowerCase().indexOf(query.toLowerCase()) !== -1)
         && ((this.filter === this.cheatPublicAddress(el.getAddress()))
-        || (this.filter === 'Filter address types'))
+        || (this.filter === 'All types'))
       )
     )
   }
