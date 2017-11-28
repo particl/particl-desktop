@@ -2,10 +2,10 @@
 <form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
   <div md-dialog-content>
     <md-form-field>
-      <input mdInput type="text" formControlName="address" [(ngModel)]="address"
+      <input mdInput type="text" formControlName="address"
+             [ngModel]="address" (ngModelChange)="verifyAddress()"
              placeholder="Enter Address"
              [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
-             (input)="verifyAddress()"
              #addressInput
              required>
     </md-form-field>
