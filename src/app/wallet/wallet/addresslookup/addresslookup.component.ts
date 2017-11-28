@@ -18,13 +18,18 @@ export class AddressLookupComponent implements OnInit {
 
   filter: string = 'all';
   query: string = '';
+  searchResult: Contact[];
 
   public type: string = 'send';
   public addressTypes: Array<string> = ['all', 'public', 'private'];
 
   private _addressCount: number;
-  addressStore: Contact[] = [];
+  addressLookups: Contact[] = [];
 
+  // @TODO: Move static pagination prams into global variable
+  MAX_ADDRESSES_PER_PAGE: number = 5;
+  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  current_page: number = 1;
   constructor(private _rpc: RpcService) {
   }
 
@@ -32,16 +37,34 @@ export class AddressLookupComponent implements OnInit {
     this.show();
   }
 
-  /** Returns a filtered addressStore (query and filter) */
-  page() {
+  /** Returns a filtered addressLookups (query and filter) */
+  getPageData(): Array<Object> {
     const query: string = this.query;
-    return this.addressStore.filter(el => (
+    this.searchResult = this.addressLookups.filter(el => (
         (  el.getLabel().toLowerCase().indexOf(query.toLowerCase()) !== -1
         || el.getAddress().toLowerCase().indexOf(query.toLowerCase()) !== -1)
         && ((this.filter === this.cheatPublicAddress(el.getAddress()))
         || (this.filter === 'all'))
       )
-    )
+    );
+    return this.searchResult.slice(
+      0 + ((this.current_page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.current_page * this.MAX_ADDRESSES_PER_PAGE);
+  }
+
+  pageChanged(event: any) {
+    if (event.pageIndex !== undefined) {
+      this.MAX_ADDRESSES_PER_PAGE = event.pageSize;
+      this.current_page = event.pageIndex + 1;
+      this.log.d(event.pageIndex);
+    }
+  }
+
+  getTotalCountForPagination() {
+    return this.searchResult.length;
+  }
+
+  inSearchMode(): boolean {
+    return !!this.query;
   }
 
   // needs to change..
@@ -70,16 +93,16 @@ export class AddressLookupComponent implements OnInit {
             this._rpc.call('filteraddresses', [0, this._addressCount, '0', '', typeInt])
               .subscribe(
                 (success: any) => {
-                  this.addressStore = [];
+                  this.addressLookups = [];
                   success.forEach((contact) => {
                     if (this.type === 'send' || contact.address.length > 35) {
-                      this.addressStore.push(new Contact(contact.label, contact.address));
+                      this.addressLookups.push(new Contact(contact.label, contact.address));
                     }
                   })
                 },
                 error => this.log.er('error!'));
           } else {
-            this.addressStore = [];
+            this.addressLookups = [];
           }
 
         },
