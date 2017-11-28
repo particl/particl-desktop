@@ -26,7 +26,7 @@ export class TransactionService {
   /* How many transactions do we display per page and keep in memory at all times.
      When loading more transactions they are fetched JIT and added to txs. */
   MAX_TXS_PER_PAGE: number = 10;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50, 100, 250];
 
   constructor(private rpc: RPCService) {
   }
