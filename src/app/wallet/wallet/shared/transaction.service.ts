@@ -17,6 +17,9 @@ export class TransactionService {
   txCount: number = 0;
   currentPage: number = 0;
   totalPageCount: number = 0;
+
+  /* Blocks */
+  block: number = 0;
   /* states */
   loading: boolean = false;
   testnet: boolean = false;
@@ -30,18 +33,22 @@ export class TransactionService {
   constructor(private rpc: RpcService) {
     this.log.d(`Constructor(): called`);
     this.postConstructor(this.MAX_TXS_PER_PAGE);
-    this.rpc.sendNotification('WoW!!!', 'You have received new transactions');
+
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
-          this.loading = true;
           this.txCount = txcount;
-          if (this.txCount > 0 && this.rpc.notify) {
-            this.filterTransactions();
-          }
-          this.rpc.notify = true;
+          this.loading = true;
           this.log.d(`observing txcount, txs array: ${this.txs.length}`);
-          this.rpc_update();
+          this.rpc_update(false);
+        });
+    this.rpc.state.observe('blocks')
+      .subscribe(
+        block => {
+          if (block > this.block && this.block !== 0) {
+            this.rpc_update(true);
+          }
+          this.block = block;
         });
 
     /* check if testnet -> block explorer url */
@@ -63,7 +70,7 @@ export class TransactionService {
     }
     this.loading = true;
     this.currentPage = page;
-    this.rpc_update();
+    this.rpc_update(false);
   }
 
   deleteTransactions() {
@@ -71,7 +78,7 @@ export class TransactionService {
   }
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
-  rpc_update() {
+  rpc_update(txCheck: boolean) {
 
     const options = { 'count' : +this.MAX_TXS_PER_PAGE, 'skip': this.currentPage * this.MAX_TXS_PER_PAGE };
     this.rpc.call('filtertransactions', [options])
@@ -85,11 +92,14 @@ export class TransactionService {
           this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
         }
 
-        this.deleteTransactions();
-
-        txResponse.forEach((tx) => {
-          this.addTransaction(tx);
-        });
+        if (txCheck) {
+          this.compareTransactionResponse(this.txs, txResponse);
+        } else {
+          this.deleteTransactions();
+          txResponse.forEach((tx) => {
+            this.addTransaction(tx);
+          });
+        }
         this.loading = false;
         this.log.d(`rpc_update, txs array: ${this.txs.length}`);
       });
@@ -101,17 +111,15 @@ export class TransactionService {
     this.txs.push(new Transaction(json));
   }
 
-  filterTransactions() {
-    this.rpc.call('filtertransactions')
-      .subscribe(
-        (tx: Array<Object>) => {
-          if (tx[0]['category'] === 'receive') {
-              this.rpc.sendNotification('WoW!!!', 'You have received new transactions');
-          } else if (tx[0]['category'] === 'stake') {
-              this.rpc.sendNotification('WoW!!!', 'You have received new stake reward');
-          }
-        });
+  // Compare old and new transactions to find out updated confirmations
+  compareTransactionResponse(oldTxs: any, newTxs: any) {
+    newTxs.forEach((newtx) => {
+      oldTxs.forEach((oldtx) => {
+        if (oldtx.txid === newtx.txid && oldtx.confirmations !== newtx.confirmations) {
+          oldtx.confirmations = newtx.confirmations;
+        }
+      });
+    });
   }
 
 }
-
