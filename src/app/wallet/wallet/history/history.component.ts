@@ -7,10 +7,13 @@ import { TransactionCategory } from '../shared/transaction.model';
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss']
 })
-export class HistoryComponent {
 
+export class HistoryComponent {
+  
   category: TransactionCategory = 'all';
   tabsTtitles: Array<any> = ['all', 'send', 'receive', 'stake', 'orphaned Stake'];
+  type_filter = ['Received', 'Sent', 'Staked', 'Orphaned stakes', 'Balance transfer'];
+  narration_filter = ['With narration', 'Without narration'];
 
   constructor() { }
 

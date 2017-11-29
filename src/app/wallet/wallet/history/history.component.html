@@ -1,24 +1,70 @@
-<app-header>
-  <div class="container-fluid">
-    <!--ul class="header-nav">
-      <li [class.active]="category == 'all'"><a href="javascript:void(0)" (click)="filterByCategory('all')">All</a></li>
-      <li [class.active]="category == 'send'"><a href="javascript:void(0)" (click)="filterByCategory('send')">Send</a></li>
-      <li [class.active]="category == 'receive'"><a href="javascript:void(0)" (click)="filterByCategory('receive')">Receive</a></li>
-      <li [class.active]="category == 'stake'"><a href="javascript:void(0)" (click)="filterByCategory('stake')">Stake</a></li>
-      <li [class.active]="category == 'orphaned_stake'"><a href="javascript:void(0)" (click)="filterByCategory('orphaned_stake')">Orphan</a></li>
-    </ul>
-    <form class="header-form pull-right">
-      <input type="text" placeholder="Search history">
-      <button class="btn" type="submit" name="button">
-        <span class="fa fa-search"></span>
-      </button>
-    </form-->
-  </div>
+<app-header class="disable-select">
+  <!--mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>All transactions</ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>Received</ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>Sent</ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>Staked</ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>Balance transfer</ng-template>
+    </mat-tab>
+  </mat-tab-group-->
 </app-header>
 
-<div class="container-fluid container-block">
-  <transaction-table
-    [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
-  </transaction-table>
+
+<div fxLayout="row" fxLayoutGap="30px" class="container-block">
+
+  <div class="filter" fxFlex="0 0 200px">
+
+    <div class="section filter-by-type">
+      <div class="subtitle">Filter by type</div>
+      <mat-card class="filter-card">
+        <mat-selection-list #types dense class="filter-list no-padding">
+          <mat-list-option class="filter-option" *ngFor="let filter of type_filter">
+            {{ filter }}
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-card><!-- .filter-type -->
+    </div><!-- .filter-by-type -->
+
+    <p class="widget-help">
+      Transaction filter gives you the most granular control over displayed transactions.
+    </p>
+
+    <div class="section filter-by-narration">
+      <div class="subtitle">Filter by narrations</div>
+      <mat-card class="filter-card">
+        <mat-selection-list #narrations dense class="filter-list no-padding">
+          <mat-list-option class="filter-option" *ngFor="let filter of narration_filter">
+            {{ filter }}
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-card><!-- .filter-type -->
+    </div><!-- .filter-by-narration -->
+
+    <button mat-button color="primary" color="warn" class="clear-filters">
+      <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter -->
+
+
+  <div class="tx-list" fxFlex="1 1 100%">
+    <transaction-table
+      [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
+    </transaction-table>
+  </div><!-- .tx-list -->
+
 </div>
+
+
+
 

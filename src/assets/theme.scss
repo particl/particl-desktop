@@ -338,12 +338,26 @@ input[type="text"] {
   }
 }
 
+.mat-list-item,
+.mat-list-option {
+  font-family: $font; // overwrite material's font by ours
+}
+
 .mat-list {
   // sidebar/menu: smaller vertical padding of child lists
   &.sidebar-item-group {
     .mat-list-item .mat-list-item-content {
       height: 42px;
       padding: 0 10px;
+    }
+  }
+}
+
+.mat-selection-list {
+  // history/filter: remove padding from options with checkbox
+  &.no-padding {
+    .mat-list-item .mat-list-item-content .mat-list-text {
+      padding-left: 0;
     }
   }
 }
