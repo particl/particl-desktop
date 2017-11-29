@@ -1,11 +1,14 @@
+
 const electron      = require('electron');
 const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-
-const path     = require('path');
-const url      = require('url');
-const platform = require('os').platform();
-const log      = require('electron-log');
+const Notification  = electron.Notification;
+const path          = require('path');
+const url           = require('url');
+const platform      = require('os').platform();
+const rxIpc         = require('rx-ipc-electron/lib/main').default;
+const Observable    = require('rxjs/Observable').Observable;
+const log           = require('electron-log');
 
 log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
 log.transports.file.file = log.transports.file
@@ -57,6 +60,17 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 app.on('browser-window-created',function(e, window) {
+  rxIpc.registerListener('rx-ipc-notification', function(title, desc, params) {
+    let notification = new Notification({
+      'title': title,
+      'body': desc,
+      'icon': path.join(__dirname, 'src/assets/icons/notification.png')
+    })
+    notification.show()
+    return Observable.create(observer => {
+      observer.complete(true);
+    });
+  });
   window.setMenu(null);
 });
 

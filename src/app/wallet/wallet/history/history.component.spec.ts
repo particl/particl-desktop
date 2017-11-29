@@ -3,10 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
-
-import { IpcService } from '../../../core/ipc/ipc.service';
+import { CoreModule } from '../../../core/core.module';
 
 import { HistoryComponent } from './history.component';
+
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
@@ -17,10 +17,8 @@ describe('HistoryComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        RpcModule.forRoot()
-      ],
-      providers: [
-        IpcService
+        RpcModule.forRoot(),
+        CoreModule.forRoot()
       ]
     })
     .compileComponents();

@@ -3,10 +3,11 @@ import { RpcModule } from '../../../../core/rpc/rpc.module';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
-
-import { IpcService } from '../../../../core/ipc/ipc.service';
+import { CoreModule } from '../../../../core/core.module';
 
 import { TransactionsTableComponent } from './transaction-table.component';
+
+
 
 describe('TransactionTableComponent', () => {
   let component: TransactionsTableComponent;
@@ -17,10 +18,8 @@ describe('TransactionTableComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        RpcModule.forRoot()
-      ],
-      providers: [
-        IpcService
+        RpcModule.forRoot(),
+        CoreModule.forRoot()
       ]
     })
     .compileComponents();

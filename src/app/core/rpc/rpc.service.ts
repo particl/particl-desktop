@@ -50,7 +50,6 @@ export class RpcService {
   private _enableState: boolean = true;
 
   public isElectron: boolean = false;
-
   private log: any = Log.create('rpc.service');
 
   /** errors gets updated everytime the stateCall RPC requests return an error */
@@ -85,7 +84,6 @@ export class RpcService {
    * TODO: Response interface
    */
   call(method: string, params?: Array<any> | null): Observable<any> {
-
     if (this.isElectron) {
       return this._ipc.runCommand('rpc-channel', null, method, params)
         .map(response => response && (response.result !== undefined)
