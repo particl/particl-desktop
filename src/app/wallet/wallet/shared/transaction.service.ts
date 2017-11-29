@@ -58,7 +58,7 @@ export class TransactionService {
 
   postConstructor(MAX_TXS_PER_PAGE: number) {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
-    this.log.d(`postconstructor  called txs array: ${this.txs.length}`);
+    this.log.d(`postconstructor called txs array: ${this.txs.length}`);
     // TODO: why is this being called twice after executing a tx?
 
   }
@@ -80,7 +80,10 @@ export class TransactionService {
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
   rpc_update(txCheck: boolean) {
 
-    const options = { 'count' : +this.MAX_TXS_PER_PAGE, 'skip': this.currentPage * this.MAX_TXS_PER_PAGE };
+    const options = {
+      'count': +this.MAX_TXS_PER_PAGE,
+      'skip': this.currentPage * this.MAX_TXS_PER_PAGE
+    };
     this.rpc.call('filtertransactions', [options])
     .subscribe(
       (txResponse: Array<Object>) => {
