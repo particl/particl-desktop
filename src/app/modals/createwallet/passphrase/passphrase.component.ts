@@ -60,7 +60,7 @@ export class PassphraseComponent implements  OnChanges {
         return;
     }
 
-    const words = this.words[index].split(' ')
+    const words = this.words[index].split(' ');
 
     words.forEach((word, i) => {
       if (i + index < MAX_WORDS) {
