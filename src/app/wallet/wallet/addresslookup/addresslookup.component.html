@@ -2,9 +2,9 @@
 <div mat-dialog-content>
 
   <form name="addressLookupfilter">
-    <div fxLayout="row" fxLayoutGap="20px">
+    <div fxLayout="row" fxLayoutGap="35px">
 
-      <mat-form-field fxFlex="50" class="search-address">
+      <mat-form-field fxFlex="1 1 100%" class="search-address">
         <input matInput type="text" name="query" placeholder="Filter by label or address..." [(ngModel)]="query">
       </mat-form-field>
 
@@ -23,8 +23,8 @@
     <mat-list-item class="list-header">
       <div class="address-list-header" fxFlex="row" fxLayoutGap="10px" layout-padding>
         <div fxFlex="1 0 150px">Label</div>
-        <div fxFlex="1 1 300px">Address</div>
-        <div fxFlex="0 0 70px" class="text-right">Type</div>
+        <div fxFlex="1 1 470px">Address</div>
+        <div fxFlex="0 0 80px" class="text-right">Type</div>
       </div>
     </mat-list-item>
 
@@ -33,8 +33,8 @@
       <mat-list-item class="address-entry" (click)="onSelectAddress(address.getAddress(), address.getLabel())">
         <div class="address-list" fxFlex="row" fxLayoutGap="10px" layout-padding>
           <div fxFlex="1 0 150px" class="label">{{address.getLabel()}}</div>
-          <div fxFlex="1 1 300px" class="address">{{address.getAddress()}}</div>
-          <div fxFlex="0 0 70px" class="type text-right">{{cheatPublicAddress(address.getAddress())}}</div>
+          <div fxFlex="1 1 470px" class="address">{{address.getAddress()}}</div>
+          <div fxFlex="0 0 80px" class="type text-right">{{cheatPublicAddress(address.getAddress())}}</div>
         </div>
       </mat-list-item>
     </div>

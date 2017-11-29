@@ -49,7 +49,7 @@ describe('AddressLookupComponent', () => {
   });
 */
   it('should get filterAddress', () => {
-    expect(component.filter).toBe('all');
+    expect(component.filter).toBe('All types');
   });
 
   // it('should get staticLookup', () => {
