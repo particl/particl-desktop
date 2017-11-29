@@ -1,0 +1,61 @@
+/*
+$font: "Open Sans", sans-serif;
+
+// main colors
+$color: #02E8B0; // primary green-ish color
+$color-success: #4f8a10;
+$color-alert: #ec4b50;
+$color-warning: #f1cc00; // yellow-ish
+$color-info: #108cda; // blue-ish (e.g. status cold staking icon)
+
+// text colors
+$text: #232728; // default text color
+$text-muted: #7E8790; // grey (for section titles, descriptions etc.)
+
+// bg/element colors
+$bg: #fafafa; // light grey bg color
+$bg-black: #222828; // sidebar
+$bg-shadow: #dcdcdc; // lines, box shadows etc.
+
+// UI
+$radius: 4px; // default border-radius
+*/
+
+.intro {
+  background: #222828;
+  color: white;
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.intro > .content {
+  margin: auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+.logo {
+  width: 240px;
+  height: auto;
+  margin: 20px 0 40px;
+}
+
+.quote {
+  font-size: 17px;
+}
+
+.author {
+  font-size: 13px;
+  color: #7E8790;
+}
+
+.loading {
+  width: 100%;
+  max-width: 100px;
+}
