@@ -3,13 +3,19 @@
 .title {
   font-family: $font;
   font-weight: 600;
+  font-size: 20px;
 }
 
-.search-address {
-  margin-top: 12px;
+.search-address { // address/label search
+  margin-top: 15px;
+}
+
+.address-type { // address type filter (select)
+  margin-top: 25px;
 }
 
 .mat-list {
+  margin: 0 -24px;
   .mat-list-item {
     &:not(.list-header):hover {
       background: rgba($color, 0.04);
@@ -17,22 +23,30 @@
         color: darken($color, 5%);
       }
     }
-    .mat-list-item-content {
-      font-family: $font;
-      font-size: 13px;
-      height: 20px;
-    }
   }
   .mat-divider {
     margin: 0;
   }
 }
 
-.address-entry {
+.list-header {
+  padding: 0 8px;
+  .address-list-header { // list column labels
+    font-family: $font;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400;
+    color: $text-muted;
+  }
+}
+
+.address-entry { // single address item
   cursor: pointer;
   font-size: 13px;
+  padding: 0 8px;
+  font-family: $font;
   .label {
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
   }
   .address {

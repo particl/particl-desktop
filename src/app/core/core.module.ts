@@ -6,6 +6,7 @@ import { RpcModule } from './rpc/rpc.module';
 
 import { IpcService } from './ipc/ipc.service';
 import { RpcService } from './rpc/rpc.service';
+import { NotificationService } from './notification/notification.service';
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 import { PeerService } from './rpc/peer/peer.service';
 import { StateService } from './state/state.service';
@@ -33,7 +34,8 @@ export class CoreModule {
       providers: [
         IpcService,
         WindowService,
-        SnackbarService
+        SnackbarService,
+        NotificationService
       ]
     };
   }
@@ -43,6 +45,7 @@ export { WindowService } from './window/window.service';
 
 export { IpcService } from './ipc/ipc.service';
 export { RpcService } from './rpc/rpc.service';
+export { NotificationService } from './notification/notification.service';
 export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 export { PeerService } from './rpc/peer/peer.service';
 export { SnackbarService } from './snackbar/snackbar.service';

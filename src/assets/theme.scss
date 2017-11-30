@@ -60,6 +60,18 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 }
 */
 
+
+// ------ EXPANSION PANELS ------ //
+
+.mat-expansion-panel {
+  .mat-expansion-panel-header {
+    &:hover {
+      background: inherit !important; // disable darker bg on hover by default
+    }
+  }
+}
+
+
 // ------ NO RESULTS (no TXs, no addresses, ..) ------ //
 
 .no-results {
@@ -319,7 +331,7 @@ input[type="text"] {
   // sidebar/menu: no padding for panel's content (used in the sidebar)
   &.no-padding {
     .mat-expansion-panel-body {
-      padding: 0;
+      margin: 0;
     }
   }
   // sidebar/menu: color panel's arrow
@@ -370,7 +382,7 @@ input[type="text"] {
 /* ------------------------------- *\
     Probably not needed styles:
 \* ------------------------------- */
-
+/*
 .mat-right { // still needed for TX details
   text-align: right; 
   text-overflow: ellipsis; 
@@ -421,12 +433,6 @@ input[type="text"] {
 
 input[type="text"].mat-bg-transparent {
   background-color: transparent !important;
-}
-
-.mat-send-list {
-  .mat-select-trigger{
-    height: 23px;
-  }
 }
 
 panel-header-title {
@@ -498,3 +504,4 @@ panel-header-title {
 
 @media (max-width: 640px) {
 }
+*/
