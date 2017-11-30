@@ -20,5 +20,10 @@ export class DeleteConfirmationModalComponent implements OnInit {
 
   onConfirmDelete(): void {
     this.onDelete.emit();
+    this.dialogClose();
+  }
+
+  dialogClose(): void {
+    this.diloagRef.close();
   }
 }

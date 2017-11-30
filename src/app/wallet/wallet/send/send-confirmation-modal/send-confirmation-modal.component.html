@@ -5,8 +5,8 @@
 </div>
 
 <mat-dialog-actions fxLayoutAlign="end center">
-  <button mat-raised-button mat-dialog-close>
-    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  <button mat-raised-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
     Cancel
   </button>
   <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
