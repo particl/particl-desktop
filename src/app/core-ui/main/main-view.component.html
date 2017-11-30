@@ -1,129 +1,147 @@
 <mat-sidenav-container fullscreen>
-  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
+  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar" fxLayout="row" fxLayoutAlign="start stretch">
 
-    <div class="logo-area">
-      <div class="logo"></div>
-    </div>
 
-    <mat-divider></mat-divider>
-
-    <mat-content class="sidebar-section">
-      <mat-list class="sidebar-item-group">
-        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/overview">
-          <mat-list-item class="sidebar-item">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-grid-48"></mat-icon>
-            <span class="text">Overview</span>
-          </mat-list-item>
+    <div class="multiwallet" fxFlex="0 0 60px">
+      <mat-nav-list class="no-padding">
+        <a mat-list-item href="#" class="item">
+          <!-- TODO: add `.active` class to currently selected wallet -->
+          <!-- TODO: replace tooltip's content by wallets' names -->
+          <button mat-raised-button color="primary" class="active" matTooltip="main.dat" matTooltipPosition="after">1</button>
         </a>
-      </mat-list><!-- .sidebar-item-group -->
-    </mat-content><!-- .sidebar-section -->
-
-    <mat-content class="sidebar-section" *ngIf="true">
-      <mat-accordion [multi]="'multi'">
-        <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
-          <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
-          <mat-content>
-            <mat-list class="sidebar-item-group">
-
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/receive'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-tail-right"></mat-icon>
-                  <span class="text">Receive</span>
-                </mat-list-item>
-              </a>
-              
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/send'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-tail-left"></mat-icon>
-                  <span class="text">Send</span>
-                </mat-list-item>
-              </a>
-              
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/history'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-time-3"></mat-icon>
-                  <span class="text">History</span>
-                </mat-list-item>
-              </a>
-              
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/address-book'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-multiple-19"></mat-icon>
-                  <span class="text">Address Book</span>
-                </mat-list-item>
-              </a>
-
-            </mat-list><!-- .sidebar-item-group -->
-          </mat-content>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-content><!-- .sidebar-section -->
-
-    <mat-content class="sidebar-section" *ngIf="walletInitialized === false">
-      <mat-accordion [multi]="'multi'">
-        <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
-          <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
-          <mat-content>
-            <mat-list class="sidebar-item-group">
-
-              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-card-add" ></mat-icon>
-                  <span class="text">Add Account</span>
-                </mat-list-item>
-              </a>
-
-            </mat-list><!-- .sidebar-item-group -->
-          </mat-content>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-content><!-- .sidebar-section -->
-
-
-    <!--mat-content class="sidebar-section">
-      <mat-list class="sidebar-item-group">
-        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/settings">
-          <mat-list-item class="sidebar-item">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-settings-gear-64"></mat-icon>
-            <span class="text">Settings</span>
-          </mat-list-item>
+        <a mat-list-item href="#" class="item">
+          <button mat-raised-button color="primary" matTooltip="work.dat" matTooltipPosition="after">2</button>
         </a>
-      </mat-list>
-    </mat-content--><!-- .sidebar-section -->
+        <a mat-list-item href="#" class="item">
+          <button mat-raised-button color="primary" matTooltip="Add new Wallet" matTooltipPosition="after">+</button>
+        </a>
+      </mat-nav-list>           
+    </div><!-- .multiwallet -->
 
 
-    <footer class="pin-to-bottom">
+    <div class="sidebar-menu" fxFlex="1 1 100%">
+      <div class="logo-area">
+        <div class="logo"></div>
+      </div>
+  
+      <mat-divider></mat-divider>
+  
+      <mat-content class="sidebar-section">
+        <mat-list class="sidebar-item-group">
+          <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/overview">
+            <mat-list-item class="sidebar-item">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-grid-48"></mat-icon>
+              <span class="text">Overview</span>
+            </mat-list-item>
+          </a>
+        </mat-list><!-- .sidebar-item-group -->
+      </mat-content><!-- .sidebar-section -->
+  
+      <mat-content class="sidebar-section" *ngIf="true">
+        <mat-accordion [multi]="'multi'">
+          <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
+            <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
+            <mat-content>
+              <mat-list class="sidebar-item-group">
+  
+                <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/receive'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-tail-right"></mat-icon>
+                    <span class="text">Receive</span>
+                  </mat-list-item>
+                </a>
+                
+                <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/send'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-tail-left"></mat-icon>
+                    <span class="text">Send</span>
+                  </mat-list-item>
+                </a>
+                
+                <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/history'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-time-3"></mat-icon>
+                    <span class="text">History</span>
+                  </mat-list-item>
+                </a>
+                
+                <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/address-book'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-multiple-19"></mat-icon>
+                    <span class="text">Address Book</span>
+                  </mat-list-item>
+                </a>
+  
+              </mat-list><!-- .sidebar-item-group -->
+            </mat-content>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-content><!-- .sidebar-section -->
+  
+      <mat-content class="sidebar-section" *ngIf="walletInitialized === false">
+        <mat-accordion [multi]="'multi'">
+          <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
+            <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
+            <mat-content>
+              <mat-list class="sidebar-item-group">
+  
+                <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-card-add" ></mat-icon>
+                    <span class="text">Add Account</span>
+                  </mat-list-item>
+                </a>
+  
+              </mat-list><!-- .sidebar-item-group -->
+            </mat-content>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-content><!-- .sidebar-section -->
 
-      <mat-content *ngIf="!daemonRunning || !walletInitialized">
-        <mat-list class="error sidebar-item-group">
-          <mat-list-item class="sidebar-item" *ngIf="!daemonRunning">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-            <span class="text">Connection Refused, Daemon is not connected</span>
-          </mat-list-item>
-          <mat-list-item class="sidebar-item" *ngIf="!walletInitialized">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-            <span class="text">Please create wallet first to access other tabs</span>
-          </mat-list-item>
-        </mat-list><!-- .error.sidebar-item-group -->
-      </mat-content>
-
-      <!-- Versions | TODO: move to separate component? -->
-      <mat-content class="client-version">
-        <div class="client item">
-          Client <span class="version">{{ clientVersion }}</span>
-        </div>
-        <div class="daemon item">
-          Daemon <span class="version">{{ daemonVersion }}</span>
-        </div>
-      </mat-content>
-
-      <!-- Sync progress -->
-      <mat-content class="sync-progress cursor-pointer" (click)="syncScreen()">
-        <!-- reused from syncing dialog -->
-        <app-percentage-bar #progress [sidebar]="true"></app-percentage-bar>
-      </mat-content>
-
-    </footer><!-- .pin-to-bottom -->
+      <!--mat-content class="sidebar-section">
+        <mat-list class="sidebar-item-group">
+          <a class="sidebar-item-link" routerLinkActive="active" routerLink="/settings">
+            <mat-list-item class="sidebar-item">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-settings-gear-64"></mat-icon>
+              <span class="text">Settings</span>
+            </mat-list-item>
+          </a>
+        </mat-list>
+      </mat-content--><!-- .sidebar-section -->
+  
+      <footer class="pin-to-bottom">
+  
+        <mat-content *ngIf="!daemonRunning || !walletInitialized">
+          <mat-list class="error sidebar-item-group">
+            <mat-list-item class="sidebar-item" *ngIf="!daemonRunning">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+              <span class="text">Connection Refused, Daemon is not connected</span>
+            </mat-list-item>
+            <mat-list-item class="sidebar-item" *ngIf="!walletInitialized">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+              <span class="text">Please create wallet first to access other tabs</span>
+            </mat-list-item>
+          </mat-list><!-- .error.sidebar-item-group -->
+        </mat-content>
+  
+        <!-- Versions | TODO: move to separate component? -->
+        <mat-content class="client-version">
+          <div class="client item">
+            Client <span class="version">{{ clientVersion }}</span>
+          </div>
+          <div class="daemon item">
+            Daemon <span class="version">{{ daemonVersion }}</span>
+          </div>
+        </mat-content>
+  
+        <!-- Sync progress -->
+        <mat-content class="sync-progress cursor-pointer" (click)="syncScreen()">
+          <!-- reused from syncing dialog -->
+          <app-percentage-bar #progress [sidebar]="true"></app-percentage-bar>
+        </mat-content>
+  
+      </footer><!-- .pin-to-bottom -->
+    </div><!-- .sidebar-menu -->
 
 
   </mat-sidenav><!-- .sidebar -->
