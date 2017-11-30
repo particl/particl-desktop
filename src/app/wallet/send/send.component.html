@@ -164,10 +164,9 @@
                      oninput="validity.valid||(value='');" step="any"
                      [disabled]="isSendAll">
             </md-form-field>
-            <md-checkbox name="send_all" [(ngModel)]="isSendAll" (click)="sendAllBlance()" class="send-all">
+            <md-checkbox name="send_all" [(ngModel)]="isSendAll" (click)="sendAllBalance()" class="send-all">
               Send All
             </md-checkbox>
-            <!--<button md-button (click)="sendAllBlance()" class="send-all">Send All</button>-->
             <md-select fxFlex="30" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
               <md-option value="part">PART</md-option>
             </md-select>
@@ -211,7 +210,6 @@
           </button>
         </div>
       </div><!-- .actions -->
-
 
     </form>
   </div>

@@ -304,7 +304,7 @@ export class SendComponent {
     document.execCommand('Paste');
   }
 
-  sendAllBlance(): void {
+  sendAllBalance(): void {
     this.sendService.isSubstractfeefromamount = (!this.isSendAll);
     this.send.amount = (!this.isSendAll) ? this.getBalance(this.send.input) : null;
   }
