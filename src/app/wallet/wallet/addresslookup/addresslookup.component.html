@@ -1,5 +1,5 @@
 <div mat-dialog-title class="title">Address lookup</div>
-<div mat-dialog-content>
+<div mat-dialog-content class="modal-content">
 
   <form name="addressLookupfilter">
     <div fxLayout="row" fxLayoutGap="35px">
@@ -8,8 +8,8 @@
         <input matInput type="text" name="query" placeholder="Filter by label or address..." [(ngModel)]="query">
       </mat-form-field>
 
-      <mat-select fxFlex="50" name="filter" [(ngModel)]="filter" class="address-type uc-first">
-        <mat-option class="capitalize" *ngFor="let addressType of addressTypes" [value]="addressType">
+      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type uc-first">
+        <mat-option *ngFor="let addressType of addressTypes" [value]="addressType">
           {{ addressType }}
         </mat-option>
       </mat-select>
