@@ -1,8 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MdDialogRef } from '@angular/material';
+
+import { WalletModule } from '../../wallet.module';
+
+import { FlashNotificationService } from '../../../services/flash-notification.service';
 
 import { QrCodeModalComponent } from './qr-code-modal.component';
-import { WalletModule } from '../../wallet.module';
-import { MdDialogRef } from '@angular/material';
 
 describe('QrCodeModalComponent', () => {
   let component: QrCodeModalComponent;
@@ -12,7 +15,7 @@ describe('QrCodeModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [ WalletModule ],
       providers: [
-        { provide: MdDialogRef}
+        { provide: MdDialogRef}, FlashNotificationService
       ]
     })
     .compileComponents();
