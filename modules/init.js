@@ -8,6 +8,11 @@ const multiwallet   = require('./multiwallet');
 
 // TODO move to a proper place
 function daemonStarted() { log.info('daemon started'); }
+// function daemonStarted() {
+//   setTimeout(() => {
+//     daemon.restart(() => console.log('YISSS!'))
+//   }, 10000);
+// }
 
 exports.start = function (mainWindow) {
 

@@ -6,6 +6,7 @@ const daemon = require('../daemon/daemon');
 const rpc    = require('../rpc/rpc.js');
 
 /*
+** TODO: move to multiwallet
 ** Prompt wallet choosing
 ** instructs the GUI to display a multiwallet choosing modal
 ** resolves the wallets that the user chose or the wallet if there was just one
@@ -51,18 +52,17 @@ exports.daemonReady = function(webContents) {
 ** prepares `rpc-channel` to receive RPC calls from the renderer
 */
 exports.init = function() {
-  
-  // Make sure that rpc-channel has no active listeners. 
+
+  // Make sure that rpc-channel has no active listeners.
   // Better safe than sorry.
   rxIpc.removeListeners('rpc-channel');
-  
+
   // Register new listener
   rxIpc.registerListener('rpc-channel', (event, method, params) => {
     return Observable.create(observer => {
 
       if (['restart-daemon'].includes(method)) {
-        daemon.start(true, () => observer.next(true));
-
+        daemon.restart(() => observer.next(true));
       } else {
         rpc.call(method, params, (error, response) => {
           error ? observer.error(error) : observer.next(response);
