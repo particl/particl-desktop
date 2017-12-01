@@ -93,7 +93,7 @@
   "dependencies": {
     "@angular/animations": "^4.4.6",
     "@angular/cdk": "2.0.0-beta.9",
-    "@angular/common": "^4.4.6",
+    "@angular/common": "^5.0.4",
     "@angular/compiler": "^4.4.6",
     "@angular/core": "^4.4.6",
     "@angular/flex-layout": "^2.0.0-beta.9",
