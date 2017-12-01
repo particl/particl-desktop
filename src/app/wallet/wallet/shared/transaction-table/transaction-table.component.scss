@@ -30,15 +30,30 @@
 
   // confirmations
   .history_confirmation {
+    @extend %tfx;
     color: $text-muted;
     .confirmations { // icon
       height: auto;
       width: auto;
       margin-right: 3px;
       font-size: 12px;
-      color: lighten($text-muted, 20%);
       position: relative;
       top: 1px;
+    }
+    &.confirm-none { // unconfirmed TXs
+      color: mix($color-alert, $color-warning, 100%);
+    }
+    &.confirm-1 { // 1-4 confirmations
+      color: mix($color-alert, $color-warning, 66%);
+    }
+    &.confirm-2 { // 5-8 conf.
+      color: mix($color-alert, $color-warning, 33%);
+    }
+    &.confirm-3 { // 9-12 conf.
+      color: mix($color-alert, $color-warning, 0%);
+    }
+    &.confirm-ok {
+      color: lighten($text-muted, 20%);
     }
   }
 
