@@ -70,7 +70,8 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
-    AlertComponent
+    AlertComponent,
+    MultiwalletComponent
   ],
 })
 export class ModalsModule {
