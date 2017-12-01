@@ -78,8 +78,9 @@ app.on('browser-window-created',function(e, window) {
 ** initiates the Main Window
 */
 function initMainWindow() {
-
-  let trayImage = makeTray();
+  if (platform !== "darwin") {
+    let trayImage = makeTray();
+  }
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
