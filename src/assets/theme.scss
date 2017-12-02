@@ -290,10 +290,15 @@ input[type="text"] {
 
 /* ------------------------------- *\
     Pagination
-\* ------------------------------- */ 
+\* ------------------------------- */
 
 .mat-paginator {
   margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 56px;
+  padding: 0 8px;
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
@@ -428,12 +433,12 @@ input[type="text"] {
 \* ------------------------------- */
 /*
 .mat-right { // still needed for TX details
-  text-align: right; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  height: 18px; 
-} 
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 18px;
+}
 
 
 .details-address {
