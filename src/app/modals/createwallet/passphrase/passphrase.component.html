@@ -5,6 +5,7 @@
     <div fxFlex="15%" *ngFor="let k of Arr(24).fill(); let i = index">
       <md-form-field>
         <input
+          #phrase
           mdInput
           class="enable-select"
           [appFocusElement]="i === focused"
@@ -20,14 +21,15 @@
 
   <div class="actions" fxLayoutAlign="center center" *ngIf="!isDisabled && !partialDisable">
 
+    <!-- generating -->
     <button md-button *ngIf="generate" (click)="copyToClipBoard()" ngxClipboard [cbContent]="words.join(' ')" class="copy">
       <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon> Copy to Clipboard
     </button>
-
-    <!-- @TODO: Uncomment Paste button when it's working! -->
-    <!--button md-button *ngIf="!generate" class="paste">
+    
+    <!-- restoring -->
+    <button md-button *ngIf="!generate" class="paste" (click)="pasteContent()">
       <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon> Paste
-    </button-->
+    </button>
 
   </div><!-- .actions -->
 </div><!-- .passphrase -->
