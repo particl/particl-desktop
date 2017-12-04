@@ -17,13 +17,19 @@
           <button mat-raised-button color="primary" matTooltip="Add new Wallet" matTooltipPosition="after">+</button>
         </a>
       </mat-nav-list><!-- .multiwallet-list -->
-      <mat-nav-list fxFlex="0 0 60px" class="feedback no-padding">
+
+      <mat-nav-list fxFlex="0 0 110px" class="feedback no-padding">
         <a mat-list-item href="https://github.com/particl/partgui/issues" target="_blank" class="item">
-          <button mat-button color="warn" matTooltip="Send feedback" matTooltipPosition="after">
+          <button mat-button class="report-bug" matTooltip="Report bugs/issues" matTooltipPosition="after">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bug"></mat-icon>
+          </button>
+        </a>
+        <a mat-list-item href="####" class="item">
+          <button mat-button class="donate" color="warn" matTooltip="Donate & support!" matTooltipPosition="after">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-favourite-28"></mat-icon>
           </button>
         </a>
-      </mat-nav-list>
+      </mat-nav-list><!-- .feedback -->
     </div><!-- .multiwallet -->
 
 

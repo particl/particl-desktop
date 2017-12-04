@@ -172,6 +172,11 @@ a.sidebar-item-link {
     .mat-icon {
       margin: 0;
     }
+    .report-bug {
+      .mat-icon {
+        color: $text-muted;
+      }
+    }
   }
 }
 
