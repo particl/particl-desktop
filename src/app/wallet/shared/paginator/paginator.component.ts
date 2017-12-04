@@ -1,22 +1,23 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { PageEvent } from './page-event-model';
 
 @Component({
   selector: 'app-paginator',
   templateUrl: './paginator.component.html',
-  styleUrls: ['./paginator.component.scss'],
-  host: {'class': 'mat-paginator'}
+  styleUrls: ['./paginator.component.scss']
 })
 
 
 
 export class PaginatorComponent implements OnInit {
 
-  pageIndex: number= 0;
-  @Input() length: number;
-  @Input() pageSize: number;
-  @Input() pageSizeOptions: number[];
-  @Output() page = new EventEmitter<PageEvent>();
+  pageIndex: number = 0;
+  @Input() length: number = 0;
+  @Input() pageSize: number = 0;
+  @Input() pageSizeOptions: number[] = [];
+  @Output() page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
+
+  @HostBinding('class.mat-paginator')
 
   public _intl: Object = {
     itemsPerPageLabel: 'Items per page:',
