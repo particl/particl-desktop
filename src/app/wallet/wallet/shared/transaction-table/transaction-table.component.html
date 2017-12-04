@@ -20,7 +20,7 @@
       <mat-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
 
         <!-- Date -->
-        <mat-panel-title fxFlex="0 0 137px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
+        <mat-panel-title fxFlex="0 0 137px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date" matTooltip="Date & Time" matTooltipPosition="right">
           {{ tx.getDate() }}
         </mat-panel-title>
 
@@ -73,7 +73,8 @@
         </mat-panel-title>
 
         <!-- Amount -->
-        <mat-panel-title fxFlex="1 0 160px" fxFlex.lt-md="100" *ngIf="display.amount" class="history_amount">
+        <mat-panel-title fxFlex="1 0 160px" fxFlex.lt-md="100" *ngIf="display.amount" class="history_amount" 
+                          matTooltip="Expand" matTooltipPosition="after">
           <span mat-line>
             <span class="amount"
                   [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }">
