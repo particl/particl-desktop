@@ -2,8 +2,8 @@
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar" fxLayout="row" fxLayoutAlign="start stretch">
 
 
-    <div class="multiwallet" fxFlex="0 0 60px">
-      <mat-nav-list class="no-padding">
+    <div class="multiwallet" fxFlex="0 0 60px" fxLayout="column">
+      <mat-nav-list fxFlex="1 1 100%" class="multiwallet-list no-padding">
         <a mat-list-item href="#" class="item">
           <!-- TODO: add `.active` class to currently selected wallet -->
           <!-- TODO: replace tooltip's content by wallets' names -->
@@ -16,7 +16,14 @@
         <a mat-list-item href="#" class="item">
           <button mat-raised-button color="primary" matTooltip="Add new Wallet" matTooltipPosition="after">+</button>
         </a>
-      </mat-nav-list>           
+      </mat-nav-list><!-- .multiwallet-list -->
+      <mat-nav-list fxFlex="0 0 60px" class="feedback no-padding">
+        <a mat-list-item href="#" class="item">
+          <button mat-button color="warn" matTooltip="Send feedback" matTooltipPosition="after">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-favourite-28"></mat-icon>
+          </button>
+        </a>
+      </mat-nav-list>
     </div><!-- .multiwallet -->
 
 
