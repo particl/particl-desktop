@@ -107,7 +107,7 @@
               <!-- fix success input -->
               <input #address name="toAddress"
                      matInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
-                     type="text" placeholder="The address to send the payment to"
+                     type="text" placeholder="Recipient's address"
                      [(ngModel)]="send.toAddress" (ngModelChange)="verifyAddress()" />
             </mat-form-field>
             <div fxFlex="100" fxLayoutGap="20px">
