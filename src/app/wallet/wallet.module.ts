@@ -26,6 +26,7 @@ import {
   MdProgressSpinnerModule,
   MdRadioModule,
   MdSelectModule,
+  MdSnackBarModule,
   MdTabsModule,
   MdTooltipModule
 } from '@angular/material';
@@ -75,7 +76,8 @@ const routes: Routes = [
     MdCheckboxModule,
     MdRadioModule,
     MdProgressSpinnerModule,
-    MdPaginatorModule
+    MdPaginatorModule,
+    MdSnackBarModule
   ],
   declarations: [
     TransactionsTableComponent,
