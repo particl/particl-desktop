@@ -21,7 +21,7 @@
     </mat-form-field> 
   </div> 
 </app-header> 
- 
+
 <div class="container-block disable-select" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px"> 
  
   <!-- Address details & QR code --> 
@@ -46,7 +46,7 @@
             {{ word }} 
           </div> 
         </div> 
- 
+
         <div class="actions"> 
           <button mat-button class="copy" ngxClipboard [cbContent]="selected.address"> 
             <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon> 
@@ -61,13 +61,13 @@
       </div><!-- .address-details --> 
     </mat-card> 
   </div> 
- 
+
   <!-- Address list --> 
   <div fxFlex="1 1 calc(100% - 260px)" *ngIf="getUnusedAddress()"> 
- 
+
     <mat-list class="list-data" *ngIf="inSearchMode() === false"> 
       <div mat-subheader class="address-title first">Unused address</div> 
- 
+
       <mat-card class="address-info"> 
         <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md 
              fxLayoutGap="10px" layout-padding> 
@@ -107,15 +107,15 @@
         It is advised that you generate and use a new address for each public transaction (or person) to increase your privacy. 
       </div> 
     </mat-list><!-- .list-data --> 
- 
+
     <div class="no-results" *ngIf="(getSinglePage().length === 0) && (inSearchMode() === true)"> 
       No addresses found 
     </div> 
- 
+
     <mat-list *ngIf="getSinglePage().length" class="list-data"> 
       <div mat-subheader class="address-title">Previous addresses</div> 
       <div *ngFor="let address of getSinglePage()"> 
- 
+
         <mat-card class="address-info"> 
           <div fxFlex="100%" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md 
                fxLayoutGap="10px" layout-padding> 
@@ -149,10 +149,10 @@
             </div> 
           </div> 
         </mat-card> 
- 
+
       </div> 
     </mat-list><!-- .list-data --> 
- 
+
     <!-- use two paginator for reset pagination after tab change. --> 
     <div class="receive-pagination"> 
       <mat-paginator 
@@ -162,7 +162,7 @@
         [pageSizeOptions]="PAGE_SIZE_OPTIONS" 
         (page)="pageChanged($event)"> 
       </mat-paginator> 
- 
+
       <mat-paginator 
         *ngIf="type == 'public' && getSinglePage().length > 0" 
         [length]="getTotalCountForPagination()" 
@@ -172,6 +172,6 @@
       </mat-paginator> 
     </div> 
   </div> 
- 
- 
+
+
 </div> 

@@ -3,28 +3,28 @@
     {{singleAddress.label}} 
   </h2> 
   <div fxLayout="column" fxLayoutGap="30px"> 
- 
+
     <div class="qr-code"> 
       <div #qrCode class="card qr"> 
         <qr-code [level]="'H'" size="150" value="particl:{{ singleAddress.address }}"></qr-code> 
       </div> 
     </div><!-- .qr-code --> 
-     
+
     <div class="address-string"> 
       <div class="details-address enable-select" fxLayoutWrap layout-padding> 
         <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33"> 
           {{ word }} 
         </div> 
       </div> 
- 
+
       <div class="actions"> 
         <button mat-button class="copy" ngxClipboard [cbContent]="singleAddress.address"> 
           <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon>Copy to clipboard 
         </button> 
       </div> 
     </div><!-- .address-string --> 
-     
- 
+
+
   </div> 
   <mat-dialog-actions fxLayoutAlign="center center"> 
     <button mat-button mat-dialog-close>Close</button> 
