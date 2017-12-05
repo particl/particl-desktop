@@ -1,4 +1,7 @@
 <div class="containerX signature-address-container">
+  <button mat-raised-button class="small-close_button pull-right" (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  </button>
   <!--<h2 mat-dialog-title>Signatures</h2>-->
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onFormSubmit()">
