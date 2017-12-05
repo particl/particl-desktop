@@ -101,7 +101,7 @@ export class TransactionService {
           txResponse.forEach((tx) => {
             this.addTransaction(tx);
           });
-        
+
         this.loading = false;
         this.log.d(`rpc_update, txs array: ${this.txs.length}`);
       });
