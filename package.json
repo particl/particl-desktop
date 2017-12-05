@@ -133,7 +133,7 @@
     "codelyzer": "^4.0.0",
     "coveralls": "^3.0.0",
     "electron": "1.7.9",
-    "electron-builder": "^19.41.0",
+    "electron-builder": "^19.48.2",
     "htmlhint": "^0.9.13",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.0",
