@@ -162,7 +162,7 @@ export class SignatureAddressModalComponent implements OnInit {
     document.execCommand('paste');
   }
 
-  dialogClose(): void{
+  dialogClose(): void {
     this.dialogRef.close();
   }
 }

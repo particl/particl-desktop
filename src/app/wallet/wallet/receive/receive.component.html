@@ -17,7 +17,8 @@
     <mat-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
       <input matInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
              placeholder="Search receive addresses">
-      <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" matTooltip="Search For Address"
+                matTooltipPosition="after"></mat-icon>
     </mat-form-field>
   </div>
 </app-header>
@@ -86,6 +87,7 @@
             <!-- Copy address -->
             <span fxFlex="20%" fxFlex.lt-md="25px">
               <mat-icon class="cursor-pointer" matTooltip="Copy address" ngxClipboard
+<<<<<<< 08fea2c1557459128cc39bebdb767640284e9505
                        [cbContent]="getUnusedAddress().address" (click)="copyToClipBoard()" fontSet="partIcon"
                        fontIcon="part-copy"></mat-icon>
             </span>
@@ -94,16 +96,28 @@
               <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-person-check"
                        (click)="openSignatureModal(getUnusedAddress().address)"
                        matTooltip="Sign / Verify message"></mat-icon>
+=======
+                        [cbContent]="getUnusedAddress().address" (click)="copyToClipBoard()" fontSet="partIcon"
+                        fontIcon="part-single-copy-04"></mat-icon>
+            </span>
+            <!-- Sign message -->
+            <div fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-a-check"
+                        (click)="openSignatureModal(getUnusedAddress().address)"
+                        matTooltip="Sign / Verify message"></mat-icon>
+>>>>>>> Resolve ng lint issue
             </div>
             <!-- Select address -->
             <span fxFlex="20%" fxFlex.lt-md="25px">
-              <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(addresses[getAddressType()][0])"></mat-icon>
+              <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select"
+                        (click)="selectAddress(addresses[getAddressType()][0])"></mat-icon>
             </span>
           </div>
         </div>
       </mat-card>
       <div class="widget-help">
-        It is advised that you generate and use a new address for each public transaction (or person) to increase your privacy. 
+        It is advised that you generate and use a new address for each public transaction (or person) to increase your
+        privacy.
       </div>
     </mat-list><!-- .list-data -->
 
@@ -132,6 +146,7 @@
                  fxLayoutAlign.lt-md="start start" fxLayoutGap="10px">
               <!-- Copy address -->
               <span fxFlex="20%" fxFlex.lt-md="25px">
+<<<<<<< 08fea2c1557459128cc39bebdb767640284e9505
                 <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer"
                          matTooltip="Copy address" (click)="copyToClipBoard()"
                          ngxClipboard [cbContent]="address.address"></mat-icon>
@@ -140,10 +155,21 @@
               <span fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
                 <mat-icon fontSet="partIcon" fontIcon="part-person-check" matTooltip="Sign / Verify message"
                          (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></mat-icon>
+=======
+                <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer"
+                          matTooltip="Copy address" (click)="copyToClipBoard()"
+                          ngxClipboard [cbContent]="address.address"></mat-icon>
+              </span>
+              <!-- Sign/Verify public address only  -->
+              <span fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
+                <mat-icon fontSet="partIcon" fontIcon="part-a-check" matTooltip="Sign / Verify message"
+                          (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></mat-icon>
+>>>>>>> Resolve ng lint issue
               </span>
               <!-- Select address -->
               <span fxFlex="20%" fxFlex.lt-md="25px">
-                <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(address)"></mat-icon>
+                <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select"
+                          (click)="selectAddress(address)"></mat-icon>
               </span>
             </div>
           </div>
@@ -171,5 +197,4 @@
       </app-paginator>
     </div>
   </div>
-
 </div>

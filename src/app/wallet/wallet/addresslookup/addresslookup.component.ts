@@ -34,7 +34,7 @@ export class AddressLookupComponent implements OnInit {
   current_page: number = 1;
 
   constructor(private _rpc: RpcService,
-              private dialogRef: MatDialogRef) {
+              private dialogRef: MatDialogRef<AddressLookupComponent>) {
   }
 
   ngOnInit() {
@@ -119,7 +119,7 @@ export class AddressLookupComponent implements OnInit {
     this.selectAddressCallback.emit(emitData);
   }
 
-  dialogClose(): void{
+  dialogClose(): void {
     this.dialogRef.close();
   }
 

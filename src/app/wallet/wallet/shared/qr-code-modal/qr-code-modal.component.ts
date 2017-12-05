@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { SnackbarService } from '../../../../core/core.module';
-import {MatDialogRef} from "@angular/material";
 
 @Component({
   selector: 'app-qr-code-modal',
