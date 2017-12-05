@@ -11,8 +11,10 @@
           [(ngModel)]="words[i]" type="text" name="recovery"
           [readonly]="readOnly"
           [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
-          (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)"/>
-      </mat-form-field>
+          [class.verify-error]="words[i].length > 1 && !validateWord(words[i], i)"
+          (keyup)="checkFocus($event, i)" (paste)="splitAndFill(i)"
+          (blur)="onBlur(i)" (focus)="focused = i" />
+      </md-form-field>
     </div>
   </div><!-- .word-list -->
 

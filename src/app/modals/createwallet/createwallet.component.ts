@@ -4,8 +4,7 @@ import { Log } from 'ng2-logger';
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
 
-import { StateService } from '../../core/core.module';
-import { flyInOut, slideDown } from '../../core-ui/core.animations';
+import { slideDown } from '../../core/core.animations';
 
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
@@ -16,16 +15,11 @@ import { PassphraseService } from './passphrase/passphrase.service';
   selector: 'modal-createwallet',
   templateUrl: './createwallet.component.html',
   styleUrls: ['./createwallet.component.scss'],
-  animations: [
-    flyInOut(),
-    slideDown()
-  ]
+  animations: [slideDown()]
 })
 export class CreateWalletComponent {
 
   log: any = Log.create('createwallet.component');
-
-  animationState: string;
 
   step: number = 0;
   isRestore: boolean = false;
@@ -65,7 +59,6 @@ export class CreateWalletComponent {
     this.password = '';
     this.errorString = '';
     this.step = 0;
-    this.animationState = '';
     this.state.observe('encryptionstatus').take(2)
       .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
@@ -95,10 +88,8 @@ export class CreateWalletComponent {
     }
 
     if (this.validate()) {
-      this.animationState = 'next';
       this.validating = false;
       this.step++;
-      setTimeout(() => this.animationState = '', 300);
       this.doStep();
     }
 
@@ -106,9 +97,8 @@ export class CreateWalletComponent {
   }
 
   prevStep() {
-    this.animationState = 'prev';
     this.step--;
-    setTimeout(() => this.animationState = '', 300);
+    this.errorString = '';
     this.doStep();
   }
 
@@ -133,7 +123,6 @@ export class CreateWalletComponent {
         }
         break;
       case 5:
-        this.animationState = '';
         this.step = 4;
         this.errorString = '';
         if (this.state.get('locked')) {
@@ -168,7 +157,6 @@ export class CreateWalletComponent {
       .subscribe(
         success => {
           this._passphraseService.generateDefaultAddresses();
-          this.animationState = 'next';
           this.step = 5;
           this.state.set('ui:walletInitialized', true);
           this.state.set('ui:spinner', false);
@@ -191,7 +179,10 @@ export class CreateWalletComponent {
       return !!this.name;
     }
     if (this.validating && this.step === 4 && !this.isRestore) {
-      return !this.words.filter((value, index) => this.wordsVerification[index] !== value).length;
+      const valid = !this.words.filter(
+        (value, index) => this.wordsVerification[index] !== value).length;
+      this.errorString = valid ? '' : 'You have entered an invalid recovery phrase';
+      return valid;
     }
 
     return true;
