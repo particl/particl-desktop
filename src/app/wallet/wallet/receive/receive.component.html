@@ -23,16 +23,16 @@
 </app-header> 
 
 <div class="container-block disable-select" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px"> 
- 
+
   <!-- Address details & QR code --> 
   <div fxFlex="0 0 220px" fxFlex.lt-md="100" *ngIf="selected"> 
     <mat-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px"> 
- 
+
       <div #qrCode class="qrcode" fxFlex fxFlex.lt-md="0 0 200px"> 
         <qr-code size="180" [level]="'H'" value="particl:{{ selected.address }}"> 
         </qr-code> 
       </div><!-- qrcode --> 
- 
+
       <div class="address-details" fxFlex fxFlex.lt-md="1 1 calc(100% - 220px)"> 
         <div class="details-title"> 
           {{ getAddressType() }} address 
@@ -57,7 +57,7 @@
             New {{ getAddressType() }} address 
           </button> 
         </div><!-- .actions --> 
- 
+
       </div><!-- .address-details --> 
     </mat-card> 
   </div> 
