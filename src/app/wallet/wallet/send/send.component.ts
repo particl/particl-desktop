@@ -126,6 +126,12 @@ export class SendComponent {
 
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
+    const publicRegex: RegExp = /^[pPrRTt][a-km-zA-HJ-NP-Z1-9]{25,35}$/;
+    // TODO: use addresHelper after merge
+    if (this.send.input !== 'balance' && publicRegex.test(this.send.toAddress)) {
+      return false;
+    }
+
     // use default transferBalance address or custom address.
     return (this.type === 'balanceTransfer' && !this.send.toAddress) || this.send.validAddress;
   }
