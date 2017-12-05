@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
+
+import { SnackbarService } from '../../../../core/core.module';
 
 @Component({
   selector: 'app-qr-code-modal',
@@ -16,7 +17,7 @@ export class QrCodeModalComponent {
 
   @ViewChild('qrCode') qrElementView: ElementRef;
 
-  constructor(private flashNotification: FlashNotificationService) {
+  constructor(private snackbar: SnackbarService) {
   }
 
   getQrSize() {
@@ -28,7 +29,7 @@ export class QrCodeModalComponent {
   }
 
   copyToClipBoard() {
-    this.flashNotification.open('Address copied to clipboard.', '');
+    this.snackbar.open('Address copied to clipboard.', '');
   }
 
 }

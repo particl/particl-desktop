@@ -14,7 +14,7 @@
           [class.verify-error]="words[i].length > 1 && !validateWord(words[i], i)"
           (keyup)="checkFocus($event, i)" (paste)="splitAndFill(i)"
           (blur)="onBlur(i)" (focus)="focused = i" />
-      </md-form-field>
+      </mat-form-field>
     </div>
   </div><!-- .word-list -->
 

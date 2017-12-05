@@ -4,12 +4,13 @@ import { Log } from 'ng2-logger';
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
 
-import { slideDown } from '../../core/core.animations';
+import { slideDown } from '../../core-ui/core.animations';
 
 import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
 
+import { StateService } from '../../core/core.module';
 
 @Component({
   selector: 'modal-createwallet',
