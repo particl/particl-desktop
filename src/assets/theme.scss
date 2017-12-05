@@ -259,6 +259,26 @@ input[type="text"] {
     max-width: 800px;
     height: calc(100% - 24px);
     margin: 24px auto auto auto;
+    .small-close_button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: transparent;
+      color: $text-muted;
+      min-width: 50px;
+      .mat-icon {
+        color: rgba($color-alert, 0.5);
+        border-radius: 50%;
+        font-size: 22px;
+        line-height: 1.4;
+        margin: 0;
+      }
+      &:hover {
+        .mat-icon {
+          color: $color-alert;
+        }
+      }
+    }
     .close_button {
       position: absolute;
       right: 0;
