@@ -1,4 +1,7 @@
-<h2 mat-dialog-title>{{ modalTitle }}</h2>
+<h2 mat-dialog-title>{{modalTitle}}</h2>
+<button mat-raised-button class="small-close_button pull-right" (click)="closeModal()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
 
 <form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
   <div mat-dialog-content>

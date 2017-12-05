@@ -1,6 +1,9 @@
 <div mat-dialog-title class="title">Address lookup</div>
-<div mat-dialog-content class="modal-content">
+<button mat-raised-button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
 
+<div mat-dialog-content class="modal-content">
   <form name="addressLookupfilter">
     <div fxLayout="row" fxLayoutGap="35px">
 

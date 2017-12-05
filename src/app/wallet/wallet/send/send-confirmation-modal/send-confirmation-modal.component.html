@@ -1,5 +1,7 @@
 <h4 mat-dialog-title>Confirm transaction</h4>
-
+<button mat-raised-button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
 <div mat-dialog-content>
   {{dialogContent}}
 </div>

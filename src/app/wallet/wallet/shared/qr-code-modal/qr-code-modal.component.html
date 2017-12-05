@@ -2,6 +2,10 @@
   <h2 mat-dialog-title class="title">
     {{singleAddress.label}}
   </h2>
+  <button mat-raised-button class="small-close_button pull-right" (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  </button>
+
   <div fxLayout="column" fxLayoutGap="30px">
 
     <div class="qr-code">

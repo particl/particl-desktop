@@ -1,5 +1,7 @@
-<!-- @TODO-by Kirti: mat-dialog-close is not working in new materila version.-->
 <h4 mat-dialog-title>Are you sure you want to delete ?</h4>
+<button mat-raised-button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
 
 <div mat-dialog-content>
   {{dialogContent}}
