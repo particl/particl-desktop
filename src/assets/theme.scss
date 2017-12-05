@@ -266,6 +266,7 @@ input[type="text"] {
       background: transparent;
       color: $text-muted;
       min-width: 50px;
+      box-shadow: none;
       .mat-icon {
         color: rgba($color-alert, 0.5);
         border-radius: 50%;
