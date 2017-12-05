@@ -8,7 +8,7 @@
         <input matInput type="text" name="query" placeholder="Filter by label or address..." [(ngModel)]="query">
       </mat-form-field>
 
-      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type uc-first">
+      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type uc-first" *ngIf="allowFilter">
         <mat-option *ngFor="let addressType of addressTypes" [value]="addressType">
           {{ addressType }}
         </mat-option>

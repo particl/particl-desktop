@@ -17,6 +17,7 @@ export class AddressLookupComponent implements OnInit {
   log: any = Log.create('addresslookup.component');
 
   filter: string = 'All types';
+  allowFilter: boolean: = true;
   query: string = '';
   searchResult: Contact[];
 
@@ -35,6 +36,7 @@ export class AddressLookupComponent implements OnInit {
 
   ngOnInit() {
     this.show();
+    this.allowFilter = (this.filter === 'All types');
   }
 
   /** Returns a filtered addressLookups (query and filter) */

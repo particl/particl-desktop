@@ -254,6 +254,8 @@ export class SendComponent {
   openLookup() {
     const dialogRef = this.dialog.open(AddressLookupComponent);
     dialogRef.componentInstance.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
+    dialogRef.componentInstance.filter = (
+      ['anon_balance', 'blind_balance'].includes(this.send.input) ? 'Private' : 'All types');
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
       dialogRef.close();
