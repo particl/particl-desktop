@@ -17,13 +17,12 @@
     <mat-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
       <input matInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
              placeholder="Search receive addresses">
-      <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" matTooltip="Search For Address" matTooltipPosition="after"></mat-icon>
     </mat-form-field>
   </div>
 </app-header>
 
 <div class="container-block disable-select" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
-
   <!-- Address details & QR code -->
   <div fxFlex="0 0 220px" fxFlex.lt-md="100" *ngIf="selected">
     <mat-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px">
@@ -172,6 +171,5 @@
       </mat-paginator>
     </div>
   </div>
-
 
 </div>

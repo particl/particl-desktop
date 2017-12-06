@@ -58,13 +58,13 @@ export class PassphraseComponent implements  OnChanges {
     setTimeout(() => { // Paste event is called before input (modal change)
       if (this.partialDisable || this.words[index].indexOf(' ') === -1) {
         return;
-    }
+      }
 
-    const words = this.words[index].split(' ');
+      const words = this.words[index].split(' ');
 
-    words.forEach((word, i) => {
-      if (i + index < MAX_WORDS) {
-        this.words[i + index] = this.validateWord(word.trim(), -1) ? word.trim() : 'INVALID';
+      words.forEach((word, i) => {
+        if (i + index < MAX_WORDS) {
+          this.words[i + index] = this.validateWord(word.trim(), -1) ? word.trim() : 'INVALID';
         }
       });
     }, 1);
@@ -84,8 +84,8 @@ export class PassphraseComponent implements  OnChanges {
 
   sendWords(): void {
     this.wordsEmitter.emit(
-        this.words.map(Function.prototype.call, String.prototype.trim)
-          .join(' '));
+      this.words.map(Function.prototype.call, String.prototype.trim)
+      .join(' '));
   }
 
   clear() {

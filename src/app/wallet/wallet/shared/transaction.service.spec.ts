@@ -2,18 +2,20 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { SharedModule } from '../../shared/shared.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
+import { CoreModule } from '../../../core/core.module';
 
-import { IpcService } from '../../../core/ipc/ipc.service';
 import { TransactionService } from './transaction.service';
+
 
 describe('TransactionService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule.forRoot()
+        RpcModule.forRoot(),
+        CoreModule.forRoot()
       ],
-      providers: [TransactionService, IpcService]
+      providers: [TransactionService]
     });
   });
 

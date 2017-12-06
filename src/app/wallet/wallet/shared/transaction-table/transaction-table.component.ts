@@ -82,4 +82,18 @@ export class TransactionsTableComponent implements OnInit {
     return (this.expandedTransactionID === tx.getExpandedTransactionID());
   }
 
+  public styleConfimations(confirm: number) {
+    if (confirm <= 0) {
+      return 'confirm-none';
+    } else if (confirm >= 1 && confirm <= 4) {
+      return 'confirm-1';
+    } else if (confirm >= 5 && confirm <= 8) {
+      return 'confirm-2';
+    } else if (confirm >= 9 && confirm <= 12) {
+      return 'confirm-3'
+    } else {
+      return 'confirm-ok';
+    }
+  }
+
 }
