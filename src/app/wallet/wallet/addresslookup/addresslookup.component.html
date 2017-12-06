@@ -1,5 +1,5 @@
 <div mat-dialog-title class="title">Address lookup</div>
-<div mat-dialog-content>
+<div mat-dialog-content class="modal-content">
 
   <form name="addressLookupfilter">
     <div fxLayout="row" fxLayoutGap="35px">
@@ -7,8 +7,8 @@
       <mat-form-field fxFlex="1 1 100%" class="search-address">
         <input matInput type="text" name="query" placeholder="Filter by label or address..." [(ngModel)]="query">
       </mat-form-field>
-      
-      <mat-select fxFlex="1 0 100px" name="filter" [(ngModel)]="filter" class="address-type">
+
+      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type uc-first">
         <mat-option *ngFor="let addressType of addressTypes" [value]="addressType">
           {{ addressType }}
         </mat-option>
@@ -17,7 +17,7 @@
     </div>
   </form>
 
-  
+
   <mat-list class="list-data">
 
     <mat-list-item class="list-header">
@@ -28,7 +28,7 @@
       </div>
     </mat-list-item>
 
-    <div *ngFor="let address of page()">
+    <div *ngFor="let address of getPageData()">
       <mat-divider></mat-divider>
       <mat-list-item class="address-entry" (click)="onSelectAddress(address.getAddress(), address.getLabel())">
         <div class="address-list" fxFlex="row" fxLayoutGap="10px" layout-padding>
@@ -40,4 +40,11 @@
     </div>
 
   </mat-list>
+
+  <mat-paginator
+    [length]="getTotalCountForPagination()"
+    [pageSize]="MAX_ADDRESSES_PER_PAGE"
+    [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+    (page)="pageChanged($event)">
+  </mat-paginator>
 </div>

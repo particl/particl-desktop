@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger'
+import { Observable } from 'rxjs/Observable';
 
 import { Transaction } from './transaction.model';
 
 import { RpcService } from '../../../core/core.module';
+import { NotificationService } from '../../../core/core.module';
+
 
 @Injectable()
 export class TransactionService {
@@ -30,26 +33,25 @@ export class TransactionService {
   MAX_TXS_PER_PAGE: number = 10;
   PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50, 100, 250];
 
-  constructor(private rpc: RpcService) {
+  constructor(private rpc: RpcService, private notification: NotificationService) {
     this.log.d(`Constructor(): called`);
     this.postConstructor(this.MAX_TXS_PER_PAGE);
+
+    this.txCount = this.rpc.state.get('txcount');
+    this.block = this.rpc.state.get('blocks');
 
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
-          this.txCount = txcount;
           this.loading = true;
-          this.log.d(`observing txcount, txs array: ${this.txs.length}`);
-          this.rpc_update(false);
-        });
-    this.rpc.state.observe('blocks')
-      .subscribe(
-        block => {
-          if (block > this.block && this.block !== 0) {
-            this.rpc_update(true);
+          if (txcount > this.txCount) {
+            this.newTransaction();
           }
-          this.block = block;
+          this.log.d(`observing txcount, txs array: ${this.txs.length}`);
+          this.rpc_update();
         });
+
+    this.rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/)).subscribe(block =>  this.rpc_update());
 
     /* check if testnet -> block explorer url */
     this.rpc.state.observe('chain').take(1)
@@ -70,7 +72,7 @@ export class TransactionService {
     }
     this.loading = true;
     this.currentPage = page;
-    this.rpc_update(false);
+    this.rpc_update();
   }
 
   deleteTransactions() {
@@ -78,7 +80,7 @@ export class TransactionService {
   }
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
-  rpc_update(txCheck: boolean) {
+  rpc_update() {
 
     const options = {
       'count': +this.MAX_TXS_PER_PAGE,
@@ -95,14 +97,11 @@ export class TransactionService {
           this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
         }
 
-        if (txCheck) {
-          this.compareTransactionResponse(this.txs, txResponse);
-        } else {
           this.deleteTransactions();
           txResponse.forEach((tx) => {
             this.addTransaction(tx);
           });
-        }
+
         this.loading = false;
         this.log.d(`rpc_update, txs array: ${this.txs.length}`);
       });
@@ -114,15 +113,17 @@ export class TransactionService {
     this.txs.push(new Transaction(json));
   }
 
-  // Compare old and new transactions to find out updated confirmations
-  compareTransactionResponse(oldTxs: any, newTxs: any) {
-    newTxs.forEach((newtx) => {
-      oldTxs.forEach((oldtx) => {
-        if (oldtx.txid === newtx.txid && oldtx.confirmations !== newtx.confirmations) {
-          oldtx.confirmations = newtx.confirmations;
-        }
-      });
-    });
+
+  newTransaction() {
+    this.rpc.call('filtertransactions')
+      .subscribe(
+        (tx: Array<Object>) => {
+          if (tx[0]['category'] === 'receive') {
+              this.notification.sendNotification('Incoming transaction', tx[0]['amount'] + ' PART received');
+          } else if (tx[0]['category'] === 'stake') {
+              this.notification.sendNotification('New stake reward', tx[0]['amount'] + ' PART received');
+          }
+        });
   }
 
 }

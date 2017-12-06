@@ -58,3 +58,9 @@
     transition: background .3s;
   }
 }
+
+.mat-paginator {
+  border-bottom: 0;
+  border-top: 1px solid $bg-shadow;
+  margin: 0 -24px -24px;
+}
