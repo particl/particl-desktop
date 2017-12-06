@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MaterialModule } from '../../../core-ui/material/material.module';
 
 import { PaginatorComponent } from './paginator.component';
+import { MaterialModule } from '../material/material.module';
 
 describe('PaginatorComponent', () => {
   let component: PaginatorComponent;
