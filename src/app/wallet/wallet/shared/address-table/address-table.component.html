@@ -32,7 +32,8 @@
           </div>
 
           <!-- Address -->
-          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)">
+          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)"
+                matTooltip="Show Address" matTooltipPosition="above">
             <span class="title">Address&emsp;</span>
             <span class="address-string enable-select">{{ address.address }}</span>
           </div>

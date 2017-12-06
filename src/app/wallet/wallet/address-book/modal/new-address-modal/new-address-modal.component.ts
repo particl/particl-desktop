@@ -31,13 +31,14 @@ export class NewAddressModalComponent implements OnInit {
   public isMine: boolean = undefined;
   @ViewChild('addressInput') addressInput: ElementRef;
 
-  constructor(public dialogRef: MatDialogRef<NewAddressModalComponent>,
-              private formBuilder: FormBuilder,
-              private _rpc: RpcService,
-              private flashNotificationService: SnackbarService,
-              private _modals: ModalsService,
-              private dialog: MatDialog,
-              private _addressService: AddressService) {
+  constructor(
+    public dialogRef: MatDialogRef<NewAddressModalComponent>,
+    private formBuilder: FormBuilder,
+    private _rpc: RpcService,
+    private flashNotificationService: SnackbarService,
+    private _modals: ModalsService,
+    private dialog: MatDialog,
+    private _addressService: AddressService) {
   }
 
   ngOnInit(): void {
@@ -62,7 +63,6 @@ export class NewAddressModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-
   /**
    * Returns if the entered address is valid or not AND if it is not ours (isMine).
    */
@@ -71,16 +71,8 @@ export class NewAddressModalComponent implements OnInit {
   }
 
   /*
-
    RPC Logic
-
    */
-
-
-  /*
-   Add address to addressbook
-   */
-
 
   /**
    * Adds the address to the addressbook if address is valid & has label (in UI textbox) AND is not one of our own addresses.
@@ -120,13 +112,13 @@ export class NewAddressModalComponent implements OnInit {
   /**
    * Address was added succesfully to the address book.
    */
-  rpc_addAddressToBook_success(json: Object): void {
-    if (json['result'] === 'success') {
+  rpc_addAddressToBook_success(json: any): void {
+    if (json.result === 'success') {
       this.closeModal();
-      const mesage: string = (this.isEdit) ? 'Address successfully updated to the Address book'
+      const message: string = (this.isEdit) ? 'Address successfully updated to the Address book'
         : 'Address successfully added to the Address book';
 
-      this.flashNotificationService.open(mesage);
+      this.flashNotificationService.open(message);
       // TODO: remove specialPoll! (updates the address table)
       // this._rpc.specialPoll();
       this._addressService.updateAddressList();
@@ -161,24 +153,21 @@ export class NewAddressModalComponent implements OnInit {
     }
 
     this._rpc.call('validateaddress', [this.address])
-      .subscribe(response => {
-          this.rpc_verifyAddress_success(response)
-        },
-        error => {
-          this.log.er('rpc_validateaddress_failed');
-        });
-    return;
-  }
+      .subscribe(
+        response => {
+          this.validAddress = response.isvalid;
+          this.isMine = response.ismine;
+          if (response.account !== undefined) {
+            this.label = response.account;
+          }
 
-  /**
-   * Callback of verifyAddress, sets state.
-   */
-  rpc_verifyAddress_success(json: Object): void {
-    this.validAddress = json['isvalid'];
-    this.isMine = json['ismine'];
-    if (json['account'] !== undefined) {
-      this.label = json['account'];
-    }
+          if (this.isMine) {
+            this.flashNotificationService
+            .open('This is your own address - can not be added to Address book!', 'err');
+          }
+        },
+        error => this.log.er('rpc_validateaddress_failed'));
+    return;
   }
 
   pasteAddress(): void {
