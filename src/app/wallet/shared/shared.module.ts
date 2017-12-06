@@ -4,46 +4,25 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import { ClipboardModule } from 'ngx-clipboard';
-
+import { MaterialModule } from '../../core-ui/material/material.module';
 import { AccordionModule } from './accordion/accordion.module';
 
 import { HeaderComponent } from './header/header.component';
 import { TableComponent } from './table/table.component';
 import { GridComponent } from './grid/grid.component';
-import {
-  MatButtonModule,
-  MatDialogModule,
-  MatExpansionModule,
-  MatIconModule,
-  MatInputModule,
-  MatSelectModule,
-  MatTooltipModule
-} from '@angular/material';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
-import { PaginatorComponent } from './paginator/paginator.component';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     CommonModule,
     AccordionModule,
-    MatDialogModule,
-    MatExpansionModule,
-    MatInputModule,
-    MatIconModule,
-    // BrowserAnimationsModule,
-    MatButtonModule,
-    FlexLayoutModule,
-    MatSelectModule,
-    MatTooltipModule
+    MaterialModule
   ],
   declarations: [
     HeaderComponent,
     TableComponent,
     GridComponent,
-    DeleteConfirmationModalComponent,
-    PaginatorComponent
+    DeleteConfirmationModalComponent
   ],
   exports: [
     CommonModule,
@@ -53,8 +32,7 @@ import { PaginatorComponent } from './paginator/paginator.component';
     HeaderComponent,
     TableComponent,
     GridComponent,
-    AccordionModule,
-    PaginatorComponent
+    AccordionModule
   ],
   entryComponents: [
     DeleteConfirmationModalComponent
