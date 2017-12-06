@@ -11,6 +11,8 @@ import {
   MatSelectModule, MatPaginatorModule
 } from '@angular/material';
 
+import {A11yModule} from '@angular/cdk/a11y';
+
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -23,6 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FlexLayoutModule, /* Flex layout here too */
     FormsModule, /* forms */
     ReactiveFormsModule, /* forms */
+    A11yModule, /* focus monitor */
     MatButtonModule,
     MatCheckboxModule,
     MatListModule,
@@ -46,6 +49,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FlexLayoutModule, /* Flex layout here too */
     FormsModule, /* forms */
     ReactiveFormsModule, /* forms */
+    A11yModule, /* focus monitor */
     MatButtonModule,
     MatCheckboxModule,
     MatListModule,

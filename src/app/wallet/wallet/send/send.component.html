@@ -178,9 +178,9 @@
             <h5 fxFlex="15">Privacy level</h5>
             <div fxFlex="'column'" fxLayoutWrap>
               <div class="privacy-labels" fxFlex="100" fxLayoutAlign="start center">
-                <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)">Low</span>
-                <span fxFlex class="privacy-label medium" (click)="setPrivacy(8,50)">Medium</span>
-                <span fxFlex class="privacy-label high" (click)="setPrivacy(16,100)">High</span>
+                <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Set Low" matTooltipPosition="below">Low</span>
+                <span fxFlex class="privacy-label medium" (click)="setPrivacy(8,50)" matTooltip="Set Medium" matTooltipPosition="below">Medium</span>
+                <span fxFlex class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="Set High" matTooltipPosition="below">High</span>
               </div>
               <mat-progress-bar class="example-margin" [color]="'primary'" [bufferValue]="send.privacy"
                                [mode]="'determinate'" [value]="progress"></mat-progress-bar>
