@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService } from './settings.service';
+import { MatDialog } from '@angular/material';
 import { Location } from '@angular/common';
 
+import { SettingsService } from './settings.service';
+
+import { ConsoleModalComponent } from './modal/help-modal/console-modal.component';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -18,7 +21,8 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private _settingsService: SettingsService,
-    private _location: Location
+    private _location: Location,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -32,6 +36,9 @@ export class SettingsComponent implements OnInit {
 
   settingsTab(tab: string) {
     this.tab = tab;
+    if (tab === 'help') {
+      const dialogRef = this.dialog.open(ConsoleModalComponent);
+    }
   }
 
   apply() {
