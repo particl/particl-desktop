@@ -118,7 +118,7 @@ export class SendComponent {
 
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
-    if (this.send.input !== 'balance' && this.addressHelper.testAddress(this.send.toAddress)) {
+    if (this.send.input !== 'balance' && this.addressHelper.testAddress(this.send.toAddress, 'public')) {
       return false;
     }
 
