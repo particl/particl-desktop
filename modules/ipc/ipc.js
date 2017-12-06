@@ -65,7 +65,7 @@ exports.init = function() {
         daemon.restart(() => observer.next(true));
       } else {
         rpc.call(method, params, (error, response) => {
-          error ? observer.error(error) : observer.next(response);
+          error ? observer.error(error) : observer.next(response || undefined);
         });
       }
 

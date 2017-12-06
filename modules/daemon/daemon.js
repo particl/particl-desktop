@@ -12,40 +12,38 @@ const multiwallet   = require('../multiwallet');
 let daemon;
 let exitCode = 0;
 let restarting = false;
+let chosenWallets = [];
 
 // TODO: log properly on console and to file [ -- -printtoconsole ]
 function daemonData(data, logger) {
-  logger(data.toString().replace(/[\n\r]/g, ""));
+  logger(data.toString().replace(/\r/g, ""));
 }
 
-exports.restart = function(cb) {
+exports.restart = function (cb) {
   log.info('restarting daemon...')
   restarting = true;
-  multiwallet.get().then(wallets => {
 
-    exports.stop().then(function waitForShutdown() {
-      log.debug('waiting for daemon shutdown...')
-      exports.check().then(waitForShutdown).catch((err) => {
-        if (err.status == 502) { /* daemon's net module shutdown  */
-          log.debug('daemon stopped betwork, waiting 10s before restarting...');
-          setTimeout(() => {     /* wait for full daemon shutdown */
+  return exports.stop().then(function waitForShutdown() {
+    log.debug('waiting for daemon shutdown...')
 
-            restarting = false;
-            exports.start(wallets, cb)
-              .then(() => log.info('daemon restarted.'))
-              .catch(error => log.error(error));
+    exports.check().then(waitForShutdown).catch((err) => {
+      if (err.status == 502) { /* daemon's net module shutdown  */
+        log.debug('daemon stopped network, waiting 10s before restarting...');
+        setTimeout(() => {     /* wait for full daemon shutdown */
 
-          }, 10 * 1000);
-        } else {
-          waitForShutdown();
-        }
-      });
+          exports.start(chosenWallets, cb)
+            .then(() => restarting = false)
+            .catch(error => log.error(error));
+
+        }, 10 * 1000);
+      } else {
+        waitForShutdown();
+      }
     });
-
-  }).catch(error => log.error(error)); /* multiwallet.get */
+  });
 }
 
-exports.start = function(wallets, callback) {
+exports.start = function (wallets, callback) {
   return (new Promise((resolve, reject) => {
 
     let   options    = _options.get();
@@ -53,6 +51,7 @@ exports.start = function(wallets, callback) {
                      ? options.customdaemon
                      : daemonManager.getPath();
 
+    chosenWallets = wallets;
     rpc.init();
     exports.check().then(() => {
       log.info('daemon already started');
@@ -61,8 +60,8 @@ exports.start = function(wallets, callback) {
     }).catch(() => {
 
       // TODO: only for some debug levels
-      // TODO: pushed twice when restarting
-      process.argv.push('-printtoconsole');
+      if (!restarting)
+        process.argv.push('-printtoconsole');
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
@@ -80,11 +79,13 @@ exports.start = function(wallets, callback) {
           electron.app.quit();
       })
 
+      // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
       child.stderr.on('data', data => daemonData(data, console.log));
 
       daemon = child;
-      exports.wait(wallets, callback).then(() => resolve());
+      callback = callback ? callback : () => { log.info('no callback specified') };
+      exports.wait(wallets, callback).then(resolve).catch(reject);
     });
 
   }));
@@ -99,15 +100,13 @@ exports.wait = function(wallets, callback) {
 
     const daemonStartup = () => {
       exports.check()
-      .then(() => { callback(); resolve(); })
-      .catch(() => {
-        if (exitCode === 0 && retries < maxRetries) {
-          setTimeout(daemonStartup, 1000);
-          return;
-        }
-      });
+        .then(() => { callback(); resolve(); })
+        .catch(() => {
+          if (exitCode === 0 && retries < maxRetries)
+            setTimeout(daemonStartup, 1000);
+        });
 
-      if (exitCode || ++retries >= maxRetries) {
+      if (exitCode !== 0 || ++retries >= maxRetries) {
         // Rebuild block and transaction indexes
         if (errorString.includes('-reindex')) {
           log.info('Corrupted block database detected, '
@@ -120,8 +119,8 @@ exports.wait = function(wallets, callback) {
           return;
         }
         log.error('Could not connect to daemon.')
-        electron.app.exit();
         reject();
+        electron.app.exit();
       }
     } /* daemonStartup */
 

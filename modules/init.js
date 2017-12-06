@@ -8,11 +8,6 @@ const multiwallet   = require('./multiwallet');
 
 // TODO move to a proper place
 function daemonStarted() { log.info('daemon started'); }
-// function daemonStarted() {
-//   setTimeout(() => {
-//     daemon.restart(() => console.log('YISSS!'))
-//   }, 10000);
-// }
 
 exports.start = function (mainWindow) {
 
@@ -24,7 +19,8 @@ exports.start = function (mainWindow) {
     .then(()            => multiwallet.get())
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
-    .then(chosenWallets => daemon.start(chosenWallets, daemonStarted));
+    .then(chosenWallets => daemon.start(chosenWallets, daemonStarted))
+    .then(() => setTimeout(daemon.restart, 5 * 1000));
     // TODO: activate for daemon ready IPC message to RPCService
     // .then(()            => ipc.daemonReady(mainWindow.webContents))
 }
