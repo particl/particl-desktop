@@ -1,33 +1,33 @@
-<div class="container-block address-book disable-select"> 
- 
-  <app-header> 
-    <div fxLayout="row"> 
-      <div fxFlex="75" fxFlex.lt-md="60" fxFlex.lt-sm="100"> 
-        <button mat-button color="primary" (click)="openNewAddress()" class="add-address"> 
-          <mat-icon fontSet="partIcon" fontIcon="part-circle-add-2"></mat-icon> 
-          <span>Save Address</span> 
-        </button> 
-      </div> 
-      <mat-form-field class="icon-input search-address" fxFlex="25" fxFlex.lt-md="40" fxFlex.lt-sm="100"> 
-        <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search Addresses"> 
-        <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" fxHide.lt-md></mat-icon> 
-      </mat-form-field> 
-    </div> 
-  </app-header> 
- 
-  <div class="container-fluid"> 
-    <address-table 
-      [query]="query" 
-      [displayHeader]="false" 
-      [displayInternalHeader]="true" 
-      [displayPagination]="true" 
-      [displayLabel]="true" 
-      [displayAddress]="true" 
-      [displayPurpose]="true" 
-      [displayToolsMenu]="true" 
-      [displayQrMenu]="false" 
-      (editLabelEmitter)="editLabel($event)"> 
-    </address-table> 
-  </div> 
- 
-</div> 
+<div class="container-block address-book disable-select">
+
+  <app-header>
+    <div fxLayout="row">
+      <div fxFlex="75" fxFlex.lt-md="60" fxFlex.lt-sm="100">
+        <button mat-button color="primary" (click)="openNewAddress()" class="add-address">
+          <mat-icon fontSet="partIcon" fontIcon="part-circle-add-2"></mat-icon>
+          <span>Save Address</span>
+        </button>
+      </div>
+      <mat-form-field class="icon-input search-address" fxFlex="25" fxFlex.lt-md="40" fxFlex.lt-sm="100">
+        <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search Addresses">
+        <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" fxHide.lt-md matTooltip="Search For Address" matTooltipPosition="before"></mat-icon>
+      </mat-form-field>
+    </div>
+  </app-header>
+
+  <div class="container-fluid">
+    <address-table
+      [query]="query"
+      [displayHeader]="false"
+      [displayInternalHeader]="true"
+      [displayPagination]="true"
+      [displayLabel]="true"
+      [displayAddress]="true"
+      [displayPurpose]="true"
+      [displayToolsMenu]="true"
+      [displayQrMenu]="false"
+      (editLabelEmitter)="editLabel($event)">
+    </address-table>
+  </div>
+
+</div>
