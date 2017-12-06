@@ -145,3 +145,21 @@ export class Duration {
   }
 
   }
+
+export class AddressHelper {
+  addressRegex: RegExp = /^[pPrRTt][a-km-zA-HJ-NP-Z1-9]{25,}$/;
+
+  testAddress(address: string): boolean {
+    return this.addressRegex.test(address);
+  }
+
+  getAddress(address: string): string {
+    const match = address.match(this.addressRegex);
+    return match ? match[0] : null;
+  }
+
+  addressFromPaste(event: any): string {
+    return ['input', 'textarea'].includes(event.target.tagName.toLowerCase()) ?
+      '' : this.getAddress(event.clipboardData.getData('text'));
+  }
+}
