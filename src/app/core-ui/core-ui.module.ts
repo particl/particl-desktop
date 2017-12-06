@@ -5,10 +5,14 @@ import { MaterialModule } from './material/material.module';
 import { MainViewModule } from './main/main-view.module';
 
 import { MatDialogModule, MatDialogRef } from '@angular/material';
-import { MatDialog } from '@angular/material'; // TODO: move to material
+import { MatDialog } from '@angular/material';
+import { PaginatorComponent } from './paginator/paginator.component';
+// TODO: move to material
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    PaginatorComponent
+  ],
   imports: [
     CommonModule,
     MaterialModule,
@@ -17,7 +21,8 @@ import { MatDialog } from '@angular/material'; // TODO: move to material
   ],
   exports: [
     MaterialModule,
-    MainViewModule
+    MainViewModule,
+    PaginatorComponent
   ]
 })
 export class CoreUiModule {
