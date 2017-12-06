@@ -147,7 +147,7 @@ export class Duration {
   }
 
 export class AddressHelper {
-  addressRegex: RegExp = /^[pPrRTt][a-km-zA-HJ-NP-Z1-9]{25,}$/;
+  addressRegex: RegExp = /^[pPrRTt][a-km-zA-HJ-NP-Z1-9]{25,35}$/;
 
   testAddress(address: string): boolean {
     return this.addressRegex.test(address);
