@@ -17,7 +17,7 @@ export class AddressLookupComponent implements OnInit {
   log: any = Log.create('addresslookup.component');
 
   filter: string = 'All types';
-  allowFilter: boolean: = true;
+  allowFilter: boolean = true;
   query: string = '';
   searchResult: Contact[];
 
