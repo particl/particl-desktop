@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from './material/material.module';
 import { MainViewModule } from './main/main-view.module';
 
-import { MatDialogModule, MatDialogRef } from '@angular/material';
+import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
 // TODO: move to material
