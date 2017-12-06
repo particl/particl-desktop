@@ -14,20 +14,20 @@
       </mat-form-field> 
     </div> 
   </app-header> 
- 
+  
   <div class="container-fluid"> 
     <address-table 
-      [query]="query" 
-      [displayHeader]="false" 
-      [displayInternalHeader]="true" 
-      [displayPagination]="true" 
-      [displayLabel]="true" 
-      [displayAddress]="true" 
-      [displayPurpose]="true" 
-      [displayToolsMenu]="true" 
-      [displayQrMenu]="false" 
-      (editLabelEmitter)="editLabel($event)"> 
-    </address-table> 
-  </div> 
- 
+    [query]="query" 
+    [displayHeader]="false" 
+    [displayInternalHeader]="true" 
+    [displayPagination]="true" 
+    [displayLabel]="true" 
+    [displayAddress]="true" 
+    [displayPurpose]="true" 
+    [displayToolsMenu]="true" 
+    [displayQrMenu]="false" 
+    (editLabelEmitter)="editLabel($event)"> 
+  </address-table> 
+</div> 
+
 </div> 
