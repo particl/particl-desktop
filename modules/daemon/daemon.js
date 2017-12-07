@@ -166,5 +166,8 @@ exports.stop = function() {
       });
     } else resolve();
 
-  }).catch(() => daemon.kill('SIGINT'));
+  }).catch(() => {
+    if (daemon)
+      daemon.kill('SIGINT')
+  });
 }
