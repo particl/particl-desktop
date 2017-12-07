@@ -27,8 +27,10 @@ const daemon   = require('./modules/daemon/daemon');
 let mainWindow;
 let tray;
 let options;
-
 let openDevTools = false;
+
+if (process.argv.includes('-opendevtools'))
+  openDevTools = true;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
