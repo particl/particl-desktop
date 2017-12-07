@@ -8,6 +8,7 @@ import { CoreModule } from '../../core/core.module';
 
 import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
+import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,10 @@ import { StatusComponent } from './status/status.component';
   declarations: [
     MainViewComponent,
     StatusComponent,
+    ConsoleModalComponent
+  ],
+  entryComponents: [
+    ConsoleModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

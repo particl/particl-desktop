@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'send', component: SendComponent, data: { title: 'Send' } },
   { path: 'history', component: HistoryComponent, data: { title: 'History' } },
   { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } },
-  { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
+  // { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);

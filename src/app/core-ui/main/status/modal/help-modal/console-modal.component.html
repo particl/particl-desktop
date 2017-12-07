@@ -13,7 +13,9 @@
             </div>
             <div  fxFlex="80">
               <p>
-                <span>Welcome to the Particl Core RPC console.Use up and down arrows to navigate history, and Ctrl-L to clear screen.Type help for an overview of available commands.</span><br>
+                <span>Welcome to the Particl Core RPC console.Use up and down arrows to navigate history, and Ctrl-L to clear screen.Type help for an overview of available commands.</span>
+              </p>
+              <p>
                 <span class="warn-text">WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</span>
               </p>
             </div>
@@ -46,7 +48,7 @@
           </span>
           <span matTooltip="Clear">
             <!-- @Todo Need to change icon -->
-            <mat-icon fontSet="faIcon" fontIcon="fa-times-circle-o" (click)="clearCommands()"></mat-icon>
+            <mat-icon fontSet="faIcon" fontIcon="fa-times-circle-o" color="warn" (click)="clearCommands()"></mat-icon>
           </span>
         </div>
       </mat-tab>
