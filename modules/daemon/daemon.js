@@ -16,7 +16,7 @@ let chosenWallets = [];
 
 // TODO: log properly on console and to file [ -- -printtoconsole ]
 function daemonData(data, logger) {
-  logger(data.toString().replace(/\r/g, ""));
+  logger(data.toString().trim());
 }
 
 exports.restart = function (cb) {
