@@ -41,11 +41,12 @@
     <div class="section filter-by-narration">
       <div class="subtitle">Filter by narrations</div>
       <mat-card class="filter-card">
-        <mat-selection-list #narrations dense class="filter-list no-padding">
-          <mat-list-option class="filter-option" *ngFor="let filter of narration_filter">
+        <mat-radio-group class="radio-group">
+          <!-- TODO: unselect them by default (no idea where to define it, tbh): -->
+          <mat-radio-button class="filter-option" *ngFor="let filter of narration_filter" [value]="season">
             {{ filter }}
-          </mat-list-option>
-        </mat-selection-list>
+          </mat-radio-button>
+        </mat-radio-group>
       </mat-card><!-- .filter-type -->
     </div><!-- .filter-by-narration -->
 
