@@ -29,7 +29,7 @@ export class MainViewComponent implements OnInit {
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
-
+  daemonError: string;
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
@@ -62,7 +62,10 @@ export class MainViewComponent implements OnInit {
     // Updates the error box in the sidenav whenever a stateCall returns an error.
     this._rpc.errorsStateCall.asObservable()
     .subscribe(status => this.daemonRunning = true,
-               error => this.daemonRunning = ![0, 502].includes(error.status));
+                error => {
+                  this.daemonRunning = ![0, 502].includes(error.status);
+                  this.daemonError = error;
+                });
 
     // Updates the error box in the sidenav if wallet is not initialized.
     this._rpc.state.observe('ui:walletInitialized')
