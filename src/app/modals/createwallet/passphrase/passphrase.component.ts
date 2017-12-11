@@ -4,7 +4,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { PassphraseService } from './passphrase.service';
 
 import { Log } from 'ng2-logger';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 const MAX_WORDS = 24;
 
@@ -34,7 +34,7 @@ export class PassphraseComponent implements  OnChanges {
 
   constructor(
     private _passphraseService: PassphraseService,
-    private flashNotificationService: FlashNotificationService) {
+    private flashNotificationService: SnackbarService) {
   }
 
   ngOnChanges(): void {
@@ -44,21 +44,30 @@ export class PassphraseComponent implements  OnChanges {
   checkFocus(event: KeyboardEvent, index: number) {
     if (event.key === ' ') {
       this.focused = index + 1;
+      while (this.partialDisable && this.validateWord(this.words[this.focused], this.focused)) {
+        this.focused++;
+      }
     }
   }
 
+  onBlur(index: number) {
+    this.words[index] = this.words[index].trim();
+  }
+
   splitAndFill(index: number): void {
-    if (this.partialDisable || this.words[index].indexOf(' ') === -1) {
-      return;
-    }
-
-    const words = this.words[index].split(' ');
-
-    words.forEach((word, i) => {
-      if (i + index < MAX_WORDS) {
-        this.words[i + index] = this.validateWord(word, -1) ? word : 'INVALID';
+    setTimeout(() => { // Paste event is called before input (modal change)
+      if (this.partialDisable || this.words[index].indexOf(' ') === -1) {
+        return;
       }
-    });
+
+      const words = this.words[index].split(' ');
+
+      words.forEach((word, i) => {
+        if (i + index < MAX_WORDS) {
+          this.words[i + index] = this.validateWord(word.trim(), -1) ? word.trim() : 'INVALID';
+        }
+      });
+    }, 1);
   }
 
   validateWord(word: string, index: number): boolean {
@@ -74,7 +83,9 @@ export class PassphraseComponent implements  OnChanges {
   }
 
   sendWords(): void {
-    this.wordsEmitter.emit(this.words.join(' '));
+    this.wordsEmitter.emit(
+      this.words.map(Function.prototype.call, String.prototype.trim)
+      .join(' '));
   }
 
   clear() {

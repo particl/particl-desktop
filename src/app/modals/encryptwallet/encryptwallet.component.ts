@@ -1,10 +1,11 @@
 import {Component, forwardRef, Inject, ViewChild} from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
-import { FlashNotificationService } from '../../services/flash-notification.service';
+
+import { RpcService } from '../../core/core.module';
+import { SnackbarService } from '../../core/snackbar/snackbar.service'; // TODO; import from module
 import { ModalsService } from '../modals.service';
 
 @Component({
@@ -20,8 +21,8 @@ export class EncryptwalletComponent {
   @ViewChild('passwordElement')
   passwordElement: PasswordComponent;
 
-  constructor(private _rpc: RPCService,
-              private flashNotification: FlashNotificationService,
+  constructor(private _rpc: RpcService,
+              private flashNotification: SnackbarService,
               @Inject(forwardRef(() => ModalsService))
               private _modalsService: ModalsService) {
   }

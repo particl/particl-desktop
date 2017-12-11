@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AlertComponent } from './alert.component';
+import { MatDialogRef } from '@angular/material';
 
 import { ModalsModule } from '../../modals.module';
+import { CoreModule } from '../../../core/core.module';
+import { SharedModule } from '../../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
-import { SharedModule } from '../../../shared/shared.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import {MdDialogModule, MdDialogRef} from '@angular/material';
+import { AlertComponent } from './alert.component';
 
 
 describe('AlertComponent', () => {
@@ -17,11 +17,11 @@ describe('AlertComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule.forRoot(),
+        CoreModule.forRoot(),
         ModalsModule,
-        MdDialogModule
+        CoreUiModule.forRoot()
       ],
-      providers: [ { provide: MdDialogRef } ]
+      providers: [ { provide: MatDialogRef } ]
     })
       .compileComponents();
   }));

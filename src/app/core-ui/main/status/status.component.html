@@ -1,0 +1,23 @@
+<div class="status-icon disable-select">
+  <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
+    <img src="assets/icons/network/connect_{{ getIconNumber() }}.png"/>
+  </span>
+
+  <span
+    class="encryption icon pointer"
+    matTooltip="{{ encryptionStatus }}"
+    placement="left"
+    container="body"
+    (click)="toggle()">
+      <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png"/>
+  </span>
+
+  <span
+    class="staking icon"
+    matTooltip="Cold staking {{ getColdStakingStatus() }}"
+    placement="left"
+    [ngClass]="getColdStakingStatus()"
+    container="body">
+      <mat-icon fontSet="partIcon" fontIcon="part-snow-2"></mat-icon>
+  </span>
+</div><!-- .status-icons -->

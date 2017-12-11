@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PercentageBarComponent } from './percentage-bar.component';
-import { MdDialogModule } from '@angular/material';
+import { CoreModule } from '../../../core/core.module';
 import { ModalsModule } from '../../modals.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '../../../wallet/shared/shared.module';
+
+import { PercentageBarComponent } from './percentage-bar.component';
 
 describe('PercentageBarComponent', () => {
   let component: PercentageBarComponent;
@@ -14,9 +14,8 @@ describe('PercentageBarComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule.forRoot(),
-        ModalsModule,
-        MdDialogModule
+        CoreModule.forRoot(),
+        ModalsModule
       ]
     })
     .compileComponents();

@@ -1,0 +1,21 @@
+@import "./src/assets/_config"; // import shared colors etc.
+/*
+  Values shared among widgets
+*/
+
+.header-nav { // overview section titles
+  @extend %subtitle;
+  list-style-type: none;
+}
+
+/*
+  Shared among widgets
+*/
+
+span.point {
+  color: $color;
+}
+
+mat-card.multiple {
+  margin-bottom: 20px;
+}

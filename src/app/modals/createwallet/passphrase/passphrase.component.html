@@ -3,28 +3,30 @@
 
   <div fxLayoutWrap fxLayoutGap="1.66%" class="word-list">
     <div fxFlex="15%" *ngFor="let k of Arr(24).fill(); let i = index">
-      <md-form-field>
+      <mat-form-field>
         <input
-          mdInput
+          matInput
           class="enable-select"
           [appFocusElement]="i === focused"
           [(ngModel)]="words[i]" type="text" name="recovery"
           [readonly]="readOnly"
           [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
-          (keypress)="checkFocus($event, i)" (input)="splitAndFill(i)"/>
-      </md-form-field>
+          [class.verify-error]="words[i].length > 1 && !validateWord(words[i], i)"
+          (keyup)="checkFocus($event, i)" (paste)="splitAndFill(i)"
+          (blur)="onBlur(i)" (focus)="focused = i" />
+      </mat-form-field>
     </div>
   </div><!-- .word-list -->
 
   <div class="actions" fxLayoutAlign="center center" *ngIf="!isDisabled && !partialDisable">
 
-    <button md-button *ngIf="generate" (click)="copyToClipBoard()" ngxClipboard [cbContent]="words.join(' ')" class="copy">
-      <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon> Copy to Clipboard
+    <button mat-button *ngIf="generate" (click)="copyToClipBoard()" ngxClipboard [cbContent]="words.join(' ')" class="copy">
+      <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon> Copy to Clipboard
     </button>
 
     <!-- @TODO: Uncomment Paste button when it's working! -->
-    <!--button md-button *ngIf="!generate" class="paste">
-      <md-icon fontSet="partIcon" fontIcon="part-single-copy-04"></md-icon> Paste
+    <!--button mat-button *ngIf="!generate" class="paste">
+      <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon> Paste
     </button-->
 
   </div><!-- .actions -->

@@ -17,8 +17,8 @@ import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
-import { MdDialogRef } from '@angular/material';
-import { StateService } from '../core/state/state.service';
+import { MatDialogRef } from '@angular/material';
+import { StateService } from '../core/core.module';
 
 @Component({
   selector: 'app-modals',
@@ -43,12 +43,12 @@ export class ModalsComponent implements DoCheck, OnInit {
   closeOnEscape: boolean = true;
   enableClose: boolean;
   loadSpinner: boolean;
-  private logger: any = Log.create('modals.component');
+  private log: any = Log.create('modals.component');
 
   constructor(
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
-    public _dialogRef: MdDialogRef<ModalsComponent>,
+    public _dialogRef: MatDialogRef<ModalsComponent>,
     private state: StateService) {
   }
 
@@ -61,6 +61,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   }
 
   ngDoCheck() {
+    // TODO: undocumented hack?
     if (this._element) {
       const element = this._element.nativeElement;
       const style = element.ownerDocument.defaultView.getComputedStyle(element, undefined);
@@ -71,7 +72,7 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   // open modal
   open(message: any, data?: any) {
-    this.logger.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
+    this.log.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
     this.modalContainer.clear();
     const factory = this._resolver.resolveComponentFactory(message);
     this.modal = this.modalContainer.createComponent(factory);

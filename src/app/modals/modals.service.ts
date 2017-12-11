@@ -2,16 +2,18 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
-import { BlockStatusService } from '../core/rpc/rpc.module';
-import { RPCService } from '../core/rpc/rpc.module';
+import { RpcService, BlockStatusService } from '../core/core.module';
 
+/* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
-import { MdDialog } from '@angular/material';
+import { MultiwalletComponent } from './multiwallet/multiwallet.component';
+
+import { MatDialog } from '@angular/material';
 import { ModalsComponent } from './modals.component';
 
 @Injectable()
@@ -37,13 +39,14 @@ export class ModalsService {
     daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent,
-    encrypt: EncryptwalletComponent
+    encrypt: EncryptwalletComponent,
+    multiwallet: MultiwalletComponent
   };
 
   constructor (
+    private _rpc: RpcService,
     private _blockStatusService: BlockStatusService,
-    private _rpc: RPCService,
-    private _dialog: MdDialog
+    private _dialog: MatDialog
   ) {
 
     /* Hook BlockStatus -> open syncing modal */

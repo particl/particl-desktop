@@ -1,12 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
+
 import { SyncingComponent } from './syncing.component';
-import { MdIconModule } from '@angular/material';
-
-import { SharedModule } from '../../shared/shared.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
-
-import { BlockStatusService } from '../../core/rpc/blockstatus.service';
 
 describe('SyncingComponent', () => {
   let component: SyncingComponent;
@@ -16,10 +14,10 @@ describe('SyncingComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        MdIconModule,
-        RpcModule.forRoot()
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
        ],
-      declarations: [ SyncingComponent ]
+       declarations: [SyncingComponent]
     })
     .compileComponents();
   }));
