@@ -3,8 +3,8 @@ import { Log } from 'ng2-logger';
 
 import { IPassword } from './password.interface';
 
-import { RPCService } from '../../../core/rpc/rpc.module';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { RpcService } from '../../../core/core.module';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 
 @Component({
@@ -44,8 +44,8 @@ export class PasswordComponent {
 
   log: any = Log.create('password.component');
 
-  constructor(private _rpc: RPCService,
-              private flashNotification: FlashNotificationService) {
+  constructor(private _rpc: RpcService,
+              private flashNotification: SnackbarService) {
   }
 
   /** Get the input type - password or text */

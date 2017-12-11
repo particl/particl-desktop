@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { RPCService } from '../../core/rpc/rpc.service';
-import { MdDialogRef } from '@angular/material';
+import { RpcService } from '../../core/core.module';
+import { MatDialogRef } from '@angular/material';
 import { ModalsComponent } from '../modals.component';
 
 
@@ -24,8 +24,8 @@ export class UnlockwalletComponent {
   timeout: number = this.DEFAULT_TIMEOUT;
   showStakeOnly: boolean = false;
 
-  constructor(private _rpc: RPCService,
-              public dialogRef: MdDialogRef<ModalsComponent>) {
+  constructor(private _rpc: RpcService,
+              public dialogRef: MatDialogRef<ModalsComponent>) {
   }
 
   unlock(encryptionStatus: string) {

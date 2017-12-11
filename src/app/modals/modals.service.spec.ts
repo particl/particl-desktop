@@ -1,10 +1,11 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { ModalsModule } from './modals.module';
-import { RpcModule } from '../core/rpc/rpc.module';
-import { SharedModule } from '../shared/shared.module';
+import { CoreModule } from '../core/core.module';
+import { SharedModule } from '../wallet/shared/shared.module';
 
 import { ModalsService } from './modals.service';
+
 
 describe('ModalsService', () => {
   beforeEach(() => {
@@ -12,7 +13,7 @@ describe('ModalsService', () => {
       imports: [
         SharedModule,
         ModalsModule,
-        RpcModule.forRoot()
+        CoreModule.forRoot()
       ]
     });
   });

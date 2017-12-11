@@ -2,8 +2,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { ModalsService } from '../modals.service';
-import { BlockStatusService } from '../../core/rpc/blockstatus.service';
-import { StateService } from '../../core/state/state.service';
+
+import { StateService, BlockStatusService } from '../../core/core.module';
 
 import { Log } from 'ng2-logger';
 
@@ -14,7 +14,7 @@ import { Log } from 'ng2-logger';
 })
 export class SyncingComponent {
 
-  log: any = Log.create('alertbox.component');
+  log: any = Log.create('syncing.component');
 
   remainder: any;
   lastBlockTime: Date;

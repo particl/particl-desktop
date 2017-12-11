@@ -27,6 +27,9 @@
     margin: 0 0 8px;
     color: $text-muted;
   }
+  .sync-spinner{
+    max-height: 30px;
+  }
   .sync-spinner.mat-spinner {
     display: inline-block;
     width: 14px;

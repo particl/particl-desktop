@@ -1,3 +1,4 @@
+
 <div class="container">
   <div class="content">
     <div class="section wallet-syncing">
@@ -11,10 +12,11 @@
         Spending Particl may not be possible during this phase
       </p>
       <p *ngIf="nPeers < 1" class="warning">
-        <md-icon fontSet="partIcon" fontIcon="part-alert"></md-icon>
+        <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
         Warning: No peers connected. Please check your internet connection
       </p>
     </div><!-- .wallet-syncing -->
+
 
     <!-- @TODO: resize and align spinner  -->
     <div class="section sync-stats" fxLayout="row" fxLayoutWrap>
@@ -22,7 +24,7 @@
           <span class="value">
             {{ remainder }}
             <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-                <md-spinner class="sync-spinner"></md-spinner>
+                <mat-spinner class="sync-spinner"></mat-spinner>
             </div>
           </span>
 
@@ -32,7 +34,7 @@
           <span class="value">
             {{ estimatedTimeLeft }}
             <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-                <md-spinner class="sync-spinner"></md-spinner>
+                <mat-spinner class="sync-spinner"></mat-spinner>
             </div>
           </span>
         <div class="description">Estimated time left</div>
@@ -41,7 +43,7 @@
           <span class="value">
             {{ lastBlockTime }}
             <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-                <md-spinner class="sync-spinner"></md-spinner>
+                <mat-spinner class="sync-spinner"></mat-spinner>
             </div>
           </span>
         <div class="description">Last Block time</div>

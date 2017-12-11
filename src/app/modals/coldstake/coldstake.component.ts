@@ -1,15 +1,13 @@
 import { Component, Inject, forwardRef } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { flyInOut, slideDown } from '../../core/core.animations';
-import { FlashNotificationService } from '../../services/flash-notification.service';
-
-import { ModalsService } from '../modals.service';
-import { RPCService } from '../../core/rpc/rpc.module';
-
 import { PasswordComponent } from '../shared/password/password.component';
-import { MdDialogRef } from '@angular/material';
-import { ModalsComponent } from '../modals.component';
+import { flyInOut, slideDown } from '../../core-ui/core.animations';
+
+import { RpcService } from '../../core/core.module';
+import { ModalsService } from '../modals.service';
+import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-coldstake',
@@ -38,9 +36,8 @@ export class ColdstakeComponent {
   constructor(
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
-    private _rpc: RPCService,
-    private _flashNotificationService: FlashNotificationService,
-    public dialogRef: MdDialogRef<ModalsComponent>
+    private _rpc: RpcService,
+    private _flashNotificationService: SnackbarService
   ) {
     this.nextStep();
   }
@@ -144,7 +141,7 @@ export class ColdstakeComponent {
   }
 
   close() {
-    this.dialogRef.componentInstance.close();
+    this._modalsService.close();
   }
 
   /**
