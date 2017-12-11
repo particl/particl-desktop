@@ -25,53 +25,73 @@
   </div>
 </app-header>
 
+
+<div class="container-block" fxLayout="row" fxLayoutGap="30px">
+
+  <mat-card class="from-box" fxFlex="0 0 300px">
+    <div class="subtitle">Pay from</div>
+
+    <mat-radio-group class="from-balance-type" *ngIf="type === 'sendPayment'" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
+      <mat-radio-button class="balance" value="balance" checked="checked" fxFlex>
+        <div class="name">Public</div>
+        <!-- TODO: fix amounts, display separately -->
+        <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+      </mat-radio-button>
+      <mat-radio-button class="balance" value="blind_balance" fxFlex>
+        <div class="name">Blind</div>
+        <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+      </mat-radio-button>
+      <mat-radio-button class="balance" value="anon_balance" fxFlex>
+        <div class="name">Anon</div>
+        <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+      </mat-radio-button>
+    </mat-radio-group><!-- .from-balance-type -->
+
+    <mat-radio-group class="from-balance-type" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
+      <mat-radio-button class="balance" value="balance" (click)="send.output = 'blind_balance'" checked="checked" fxFlex>
+        <div class="name">Public</div>
+        <!-- TODO: fix amounts, display separately -->
+        <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+      </mat-radio-button>
+      <mat-radio-button class="balance" value="blind_balance" (click)="send.output = 'balance'" fxFlex>
+        <div class="name">Blind</div>
+        <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+      </mat-radio-button>
+      <mat-radio-button class="balance" value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex>
+        <div class="name">Anon</div>
+        <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+      </mat-radio-button>
+    </mat-radio-group><!-- .from-balance-type -->
+
+    <!-- TODO: if "public" selected: -->
+    <p class="widget-help" *ngIf="type === 'sendPayment'">
+      In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver addresses.
+    </p>
+    <p class="widget-help" *ngIf="type === 'balanceTransfer'">
+      Balance transfer helps you move PART between your Public and Private addresses.
+    </p>
+
+  </mat-card><!-- .from-box -->
+
+  <mat-card class="to-box" fxFlex="1 1 100%">
+    <div class="subtitle">Pay to</div>
+    <form name="walletSendForm">
+    </form><!-- walletSendForm -->
+  </mat-card><!-- .to-box -->
+
+</div><!-- .container -->
+
+
+
+
+
+
+
 <div class="container-fluid container-block disable-select">
   <div>
     <form name="walletSendForm">
 
-      <mat-card>
-        <mat-list-item>
-          <div class="mat-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
-            <!-- send payment tab -->
-            <mat-radio-group class="mat-send-card" *ngIf="type === 'sendPayment'" name="sendInput"
-                            [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
-              <h5 fxFlex="16.6">From Account</h5>
-              <mat-radio-button value="balance" checked="checked" fxFlex="16.6">Public</mat-radio-button>
-              <mat-radio-button value="blind_balance" fxFlex="16.6">Blind</mat-radio-button>
-              <mat-radio-button value="anon_balance" fxFlex="16.6">Private</mat-radio-button>
-              <div fxFlex="50">
-                <span class="balance-label">Balance: </span>
-                <span class="balance-amount enable-select">{{ getBalance(send.input) }}</span>
-                <span class="currency">PART</span>
-              </div>
-            </mat-radio-group>
-
-            <!-- balance transfer tab -->
-            <mat-radio-group class="mat-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput"
-                            [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
-              <h5 fxFlex="16.6">From Account</h5>
-              <mat-radio-button value="balance" (click)="send.output = 'blind_balance'" checked="checked" fxFlex="16.6">Public
-              </mat-radio-button>
-              <mat-radio-button value="blind_balance" (click)="send.output = 'balance'" fxFlex="16.6">
-                Blind
-              </mat-radio-button>
-              <!-- fix inconsistency here -->
-              <mat-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6">
-                Private
-              </mat-radio-button>
-              <div fxFlex="50">
-                <span class="balance-label">Balance: </span>
-                <span class="balance-amount enable-select">{{ getBalance(send.input )}}</span>
-                <span class="currency">PART</span>
-              </div>
-            </mat-radio-group>
-          </div>
-        </mat-list-item>
-      </mat-card>
-
-      <p class="widget-help" *ngIf="type === 'balanceTransfer'">
-        Balance transfer helps you move PART between your Public and Private addresses.
-      </p>
+      
 
       <mat-card *ngIf="type === 'balanceTransfer'">
         <mat-list-item>
