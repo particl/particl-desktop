@@ -29,9 +29,10 @@
 <div class="container-block" fxLayout="row" fxLayoutGap="30px">
 
   <mat-card class="from-box" fxFlex="0 0 300px">
-    <div class="subtitle">Pay from</div>
+    <div class="title">Pay from</div>
 
-    <mat-radio-group class="from-balance-type" *ngIf="type === 'sendPayment'" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
+    <!-- Select "FROM" balance/account (for Send payment) -->
+    <mat-radio-group class="from-balance-type block-radio" *ngIf="type === 'sendPayment'" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
       <mat-radio-button class="balance" value="balance" checked="checked" fxFlex>
         <div class="name">Public</div>
         <!-- TODO: fix amounts, display separately -->
@@ -47,7 +48,8 @@
       </mat-radio-button>
     </mat-radio-group><!-- .from-balance-type -->
 
-    <mat-radio-group class="from-balance-type" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
+    <!-- Select "FROM" balance/account (for Balance transfer) -->
+    <mat-radio-group class="from-balance-type block-radio" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
       <mat-radio-button class="balance" value="balance" (click)="send.output = 'blind_balance'" checked="checked" fxFlex>
         <div class="name">Public</div>
         <!-- TODO: fix amounts, display separately -->
@@ -63,9 +65,28 @@
       </mat-radio-button>
     </mat-radio-group><!-- .from-balance-type -->
 
-    <!-- TODO: if "public" selected: -->
-    <p class="widget-help" *ngIf="type === 'sendPayment'">
+    <!-- Show privacy slider if anonymous TX -->
+    <div *ngIf="send.input === 'anon_balance'">
+      <div class="subtitle">Privacy level</div>
+      <div class="privacy-level">
+        <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
+          <span fxFlex="0 0 50px" class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Low privacy" matTooltipPosition="below">Low</span>
+          <span fxFlex="0 0 50px" class="privacy-label medium" (click)="setPrivacy(8,50)" matTooltip="Standard privacy" matTooltipPosition="below">Normal</span>
+          <span fxFlex="0 0 50px" class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="High privacy" matTooltipPosition="below">High</span>
+        </div><!-- .privacy-labels -->
+        <mat-progress-bar [color]="'primary'" [bufferValue]="send.privacy" [mode]="'determinate'" [value]="progress"></mat-progress-bar>
+      </div><!-- .privacy-level -->
+    </div><!-- /if Anon -->
+
+    <!-- TX info help -->
+    <p class="widget-help" *ngIf="type === 'sendPayment' && send.input === 'balance'">
       In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver addresses.
+    </p>
+    <p class="widget-help" *ngIf="type === 'sendPayment' && send.input === 'blind_balance'">
+      Blinded transactions hide transaction amounts, but the sender and receiver addresses are still visible.
+    </p>
+    <p class="widget-help" *ngIf="type === 'sendPayment' && send.input === 'anon_balance'">
+      Anon transaction offer the highest privacy &ndash; transaction amounts and not even sender and receiver addresses are publicly visible. You can further adjust the privacy level to your needs ("Normal" privacy level is fine for most users). The higher privacy level is, the larger fee needs to be paid.
     </p>
     <p class="widget-help" *ngIf="type === 'balanceTransfer'">
       Balance transfer helps you move PART between your Public and Private addresses.
@@ -80,7 +101,7 @@
     <form name="walletSendForm">
 
       <div *ngIf="type === 'balanceTransfer'">
-        <mat-radio-group class="from-balance-type" *ngIf="type === 'balanceTransfer'" name="sendOutput" [(ngModel)]="send.output" fxLayout="column" fxLayoutGap="10px">
+        <mat-radio-group class="to-balance-type block-radio" *ngIf="type === 'balanceTransfer'" name="sendOutput" [(ngModel)]="send.output" fxLayout="column" fxLayoutGap="10px">
           <mat-radio-button class="balance" value="balance" (click)="send.input = 'blind_balance'" checked="checked" fxFlex>
             <div class="name">Public</div>
             <!-- TODO: fix amounts, display separately -->
@@ -184,7 +205,7 @@
       </mat-card>
 
 
-      <mat-card *ngIf="send.input === 'anon_balance'">
+      <!--mat-card *ngIf="send.input === 'anon_balance'">
         <mat-list-item>
           <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
                fxLayoutAlign="center center">
@@ -203,7 +224,7 @@
       </mat-card>
       <p class="widget-help" *ngIf="send.input === 'anon_balance'">
         Choose your privacy level. Higher privacy levels have higher fees, but offers increased privacy.
-      </p>
+      </p-->
 
 
       <div class="actions">

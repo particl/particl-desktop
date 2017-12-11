@@ -373,7 +373,14 @@ input[type="text"] {
   }
 }
 
-
+.mat-radio-group {
+  // send: full-width clickable radios
+  &.block-radio {
+    .mat-radio-button .mat-radio-label {
+      width: 100%;
+    }
+  }
+}
 
 
 

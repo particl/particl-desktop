@@ -1,5 +1,10 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+
+
+// -------------- old below ---------------- //
+
+
 /* ------------------------------- *\
     Layout
 \* ------------------------------- */ 
@@ -24,7 +29,7 @@ input[type="text"] {
 }
 
 .mat-card {
-  padding: 0;
+  //padding: 0;
   margin-bottom: 12px;
   border-bottom: 0px solid $bg-shadow;
   .send {
