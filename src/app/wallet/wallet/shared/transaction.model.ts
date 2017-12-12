@@ -1,4 +1,4 @@
-import { Amount } from '../../shared/util/utils';
+import { Amount, DateFormatter } from '../../shared/util/utils';
 
 export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake' | 'internal_transfer';
 
@@ -137,21 +137,8 @@ export class Transaction {
 
   /* Date stuff */
   public getDate(): string {
-    return this.dateFormatter(new Date(this.time * 1000));
+    return new DateFormatter(new Date(this.time * 1000)).dateFormatter();
   }
-
-  private dateFormatter(d: Date) {
-    return (
-      d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + '-' +
-      ((d.getMonth() + 1) < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + '-' +
-      (d.getFullYear() < 10 ? '0' + d.getFullYear() : d.getFullYear()) + ' ' +
-      (d.getHours() < 10 ? '0' + d.getHours() : d.getHours()) + ':' +
-      (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()) + ':' +
-      (d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
-    );
-  }
-
-
 
   /* Narration */
   public getNarration() {

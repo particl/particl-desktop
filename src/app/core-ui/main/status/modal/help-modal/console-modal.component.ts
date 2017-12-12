@@ -2,6 +2,8 @@ import {Component, OnInit, HostListener } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
+import { DateFormatter } from '../../../../../wallet/shared/util/utils';
+
 import { RpcService } from '../../../../../core/core.module';
 import { Command } from './command.model';
 
@@ -42,15 +44,15 @@ export class ConsoleModalComponent implements OnInit {
     } else {
       respText = response;
     }
-    this.commandList.push(new Command(1, this.command, this.dateFormatter(new Date())),
-      new Command(2, respText, this.dateFormatter(new Date()), 200));
+    this.commandList.push(new Command(1, this.command, this.getDateFormat()),
+      new Command(2, respText, this.getDateFormat(), 200));
     this.command = '';
   }
 
   formatErrorResponse(error: any) {
     if (error.code === -1) {
-      this.commandList.push(new Command(1, this.command, this.dateFormatter(new Date())),
-        new Command(2, error.message, this.dateFormatter(new Date()), -1));
+      this.commandList.push(new Command(1, this.command, this.getDateFormat()),
+        new Command(2, error.message, this.getDateFormat(), -1));
       this.command = '';
     }
   }
@@ -61,15 +63,11 @@ export class ConsoleModalComponent implements OnInit {
 
     /* Time stuff */
   getCurrentTime() {
-    this.currentTime = this.dateFormatter(new Date());
+    this.currentTime = this.getDateFormat();
   }
 
-  private dateFormatter(d: Date) {
-    return (
-      (d.getHours() < 10 ? '0' + d.getHours() : d.getHours()) + ':' +
-      (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()) + ':' +
-      (d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds())
-    )
+  getDateFormat() {
+    return new DateFormatter(new Date()).hourSecFormatter();
   }
 
   // capture the enter button
