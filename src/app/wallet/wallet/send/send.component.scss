@@ -11,6 +11,23 @@ mat-form-field {
   top: -1px;
 }
 
+.actions {
+  text-align: right;
+  margin: 0;
+  button {
+    margin: 0 0 0 12px;
+  }
+}
+
+.section {
+  &.advanced { // "advanced options" fields
+    background: mix(white, $bg);
+    border-top: 1px dashed darken($bg, 7%);
+    margin: 0 -24px -24px !important;
+    padding: 8px 24px;
+  }
+}
+
 // -------------- old below ---------------- //
 
 
@@ -92,9 +109,6 @@ input[type="text"] {
   }
 }
 
-.actions {
-  margin: 25px 0 15px 0;
-}
 
 /* ------------------------------- *\
     Buttons
