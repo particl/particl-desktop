@@ -155,15 +155,15 @@
         <mat-list-item>
           <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
                fxLayoutAlign="start center">
-            <h5 fxFlex="0 0 15%">Amount</h5>
-            <mat-form-field fxFlex="0 0 130px">
+            <h5 fxFlex="15">Amount</h5>
+            <mat-form-field fxFlex="70%">
               <input matInput type="text" name="sendAmount"
                      placeholder="Amount to send"
                      [(ngModel)]="send.amount" (input)="verifyAmount()"
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                      oninput="validity.valid||(value='');" step="any">
             </mat-form-field>
-            <mat-select fxFlex="0 0 80px" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
+            <mat-select class="underliningSelect" fxFlex="30%" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
               <mat-option value="part">PART</mat-option>
             </mat-select>
           </div>
