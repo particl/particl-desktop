@@ -26,9 +26,9 @@
 </app-header>
 
 
-<div class="container-block" fxLayout="row" fxLayoutGap="35px">
+<div class="container-block disable-select" fxLayout="row" fxLayoutGap="35px">
 
-  <mat-card class="from-box" fxFlex="0 0 350px">
+  <mat-card class="from-box" fxFlex="0 0 320px">
     <div class="title">Pay from</div>
 
     <!-- Select "FROM" balance/account (for Send payment) -->
@@ -139,97 +139,44 @@
           <input name="toLabel" matInput type="text" placeholder="Receiver's address label" [(ngModel)]="send.toLabel">
         </mat-form-field>
         <p class="widget-help">
-          You can optionally save receiver's address to your Address book by labeling it here.
+          You can optionally save Receiver's address to your Address book by labeling it here.
         </p>
       </div><!-- .receiver-address.section -->
+
+      <!-- Narrations -->
+      <div class="section narration" *ngIf="advanced">
+        <mat-form-field class="full-width">
+          <input #narration type="text" matInput name="sendNote" placeholder="Optional narration – send a short note with you payment" maxlength="24" [(ngModel)]="send.note" >
+          <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
+        </mat-form-field>
+        <p class="widget-help">
+          Keep in mind that when sending to Public addresses, the narrations will be recorded and publicly visible on the blockchain. Blind & Anon transactions make narrations visible only for Sender and Receiver.
+        </p>
+      </div><!-- .narration.section -->
+
+      <!-- Send amount -->
+      <div class="section send-amount" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
+        <mat-form-field fxFlex="0 0 150px">
+          <input matInput type="text" name="sendAmount" placeholder="Amount to send" [(ngModel)]="send.amount" (input)="verifyAmount()" [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }" oninput="validity.valid||(value='');" step="any">
+        </mat-form-field>
+        <mat-select class="underliningSelect" fxFlex="0 0 70px" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
+          <mat-option value="part">PART</mat-option>
+        </mat-select>
+      </div><!-- .send-amount.section -->
+
+      <!-- Send button -->
+      <div class="actions">
+        <button mat-button (click)="clear()">
+          <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
+          Clear all
+        </button>
+        <button mat-raised-button color="primary" class="validate" (click)="onSubmit()" [disabled]="!checkAddress() || !checkAmount()">
+          <mat-icon fontSet="partIcon" fontIcon="part-stre-right"></mat-icon>
+          Make payment
+        </button>
+      </div><!-- .actions -->
 
     </form><!-- walletSendForm -->
   </mat-card><!-- .to-box -->
 
 </div><!-- .container -->
-
-
-<!-- =============================================================== -->
-
-
-<div class="container-fluid container-block disable-select">
-  <div>
-    <form name="walletSendForm">
-
-      <mat-card class="mat-send-list" *ngIf="advanced">
-        <mat-list-item>
-          <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
-               fxLayoutAlign="center center">
-            <h5 fxFlex="15">Narration</h5>
-            <mat-form-field fxFlex="100">
-            <input #narration type="text" matInput name="sendNote"
-             placeholder="Optional: enter a short note to send with a payment"
-             maxlength="24"
-            [(ngModel)]="send.note" >
-            <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
-            </mat-form-field>
-          </div>
-        </mat-list-item>
-      </mat-card>
-
-
-      <mat-card class="mat-send-list">
-        <mat-list-item>
-          <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
-               fxLayoutAlign="start center">
-            <h5 fxFlex="15">Amount</h5>
-            <mat-form-field fxFlex="70%">
-              <input matInput type="text" name="sendAmount"
-                     placeholder="Amount to send"
-                     [(ngModel)]="send.amount" (input)="verifyAmount()"
-                     [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
-                     oninput="validity.valid||(value='');" step="any">
-            </mat-form-field>
-            <mat-select class="underliningSelect" fxFlex="30%" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
-              <mat-option value="part">PART</mat-option>
-            </mat-select>
-          </div>
-        </mat-list-item>
-      </mat-card>
-
-
-      <!--mat-card *ngIf="send.input === 'anon_balance'">
-        <mat-list-item>
-          <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
-               fxLayoutAlign="center center">
-            <h5 fxFlex="15">Privacy level</h5>
-            <div fxFlex="'column'" fxLayoutWrap>
-              <div class="privacy-labels" fxFlex="100" fxLayoutAlign="start center">
-                <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Set Low" matTooltipPosition="below">Low</span>
-                <span fxFlex class="privacy-label medium" (click)="setPrivacy(8,50)" matTooltip="Set Medium" matTooltipPosition="below">Medium</span>
-                <span fxFlex class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="Set High" matTooltipPosition="below">High</span>
-              </div>
-              <mat-progress-bar class="example-margin" [color]="'primary'" [bufferValue]="send.privacy"
-                               [mode]="'determinate'" [value]="progress"></mat-progress-bar>
-            </div>
-          </div>
-        </mat-list-item>
-      </mat-card>
-      <p class="widget-help" *ngIf="send.input === 'anon_balance'">
-        Choose your privacy level. Higher privacy levels have higher fees, but offers increased privacy.
-      </p-->
-
-
-      <div class="actions">
-        <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
-          <button mat-raised-button color="primary" (click)="clear()">
-            <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
-            Clear all
-          </button>
-          <button mat-raised-button color="disabled" class="validate" (click)="onSubmit()"
-                  [disabled]="!checkAddress() || !checkAmount()">
-            <mat-icon fontSet="partIcon" fontIcon="part-stre-right"></mat-icon>
-            Make payment
-          </button>
-        </div>
-      </div><!-- .actions -->
-
-
-    </form>
-  </div>
-</div>
