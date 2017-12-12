@@ -12,7 +12,7 @@ export class DeleteConfirmationModalComponent implements OnInit {
 
   @Output() onDelete: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private diloagRef: MatDialogRef<DeleteConfirmationModalComponent>) { }
+  constructor(private dialogRef: MatDialogRef<DeleteConfirmationModalComponent>) { }
 
   ngOnInit(): void {
     this.dialogContent = (this.dialogContent) ? this.dialogContent : 'This item';
@@ -24,6 +24,6 @@ export class DeleteConfirmationModalComponent implements OnInit {
   }
 
   dialogClose(): void {
-    this.diloagRef.close();
+    this.dialogRef.close();
   }
 }
