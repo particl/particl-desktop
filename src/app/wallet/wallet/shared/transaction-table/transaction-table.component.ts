@@ -27,13 +27,6 @@ export class TransactionsTableComponent implements OnInit {
     pagination: false,
     txDisplayAmount: 10,
     category: true,
-    /* API */
-    categoryName: undefined,
-    watchonly: undefined,
-    search: undefined,
-    type: undefined,
-    sort: undefined,
-    /* API */
     date: true,
     amount: true,
     confirmations: true,
@@ -67,6 +60,11 @@ export class TransactionsTableComponent implements OnInit {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);
+  }
+
+  public filter(filters: any) {
+    console.log('transaction-table got filters', filters)
+    this.txService.filter(filters);
   }
 
   public pageChanged(event: any): void {

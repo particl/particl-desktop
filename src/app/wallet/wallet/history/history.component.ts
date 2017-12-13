@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
+// TODO: remove ?
 import { TransactionCategory } from '../shared/transaction.model';
 
 @Component({
@@ -11,6 +12,7 @@ import { TransactionCategory } from '../shared/transaction.model';
 export class HistoryComponent implements OnInit {
 
   // @ViewChild('filterList') filterList: any;
+  @ViewChild('transactions') transactions: any;
 
   categories:    Array<any> = [
     { title: 'All transactions',  value: 'all'               },
@@ -40,7 +42,8 @@ export class HistoryComponent implements OnInit {
   //{ title: 'Sort by TXID',           value: 'txid'              } // hide: honestly, will this use someone?
   ];
 
-  category: string = 'all';
+  category: string;
+
 
   constructor() {
     this.default();
@@ -60,11 +63,20 @@ export class HistoryComponent implements OnInit {
     // this.filterList.deselectAll();
   }
 
+  filter() {
+    this.dump();
+    console.log('transactions component', this.transactions)
+    this.transactions.filter({
+      category: this.category,
+    });
+  }
+
   dump() {
     console.log('category', this.category);
   }
 
   clear() {
     this.default();
+    this.filter();
   }
 }

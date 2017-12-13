@@ -95,6 +95,20 @@
       </mat-card>
     </div>
 
+    <!-- TODO: remove, just for testing purposes -->
+    <div class="section filter-by-narration">
+      <div class="subtitle">Filter by category</div>
+      <mat-card class="filter-card">
+        <mat-radio-group class="radio-group"
+                          [(ngModel)]="category" (change)="filter()">
+          <mat-radio-button class="filter-option" value="{{ category.value }}"
+                            *ngFor="let category of categories">
+            {{ category.title }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div>
+
     <button mat-button color="warn" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
       Clear all filters
@@ -104,7 +118,7 @@
 
 
   <div class="tx-list" fxFlex="1 1 100%">
-    <transaction-table
+    <transaction-table #transactions
       [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
     </transaction-table>
   </div><!-- .tx-list -->

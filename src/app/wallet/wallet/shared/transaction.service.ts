@@ -17,9 +17,16 @@ export class TransactionService {
   txs: Transaction[] = [];
 
   /* Pagination stuff */
-  txCount: number = 0;
-  currentPage: number = 0;
+  txCount:        number = 0;
+  currentPage:    number = 0;
   totalPageCount: number = 0;
+
+  /* filtertransactions */
+  watchonly: boolean = undefined;
+  category:  string  = undefined;
+  search:    string  = undefined;
+  type:      string  = undefined;
+  sort:      string  = undefined;
 
   /* Blocks */
   block: number = 0;
@@ -65,6 +72,17 @@ export class TransactionService {
 
   }
 
+  filter(filters: any) {
+    console.log('txservice got filters', filters);
+    Object.keys(filters).map(filter => this[filter] = filters[filter]);
+    console.log('watchonly', this.watchonly);
+    console.log('category', this.category);
+    console.log('search', this.search);
+    console.log('type', this.type);
+    console.log('sort', this.sort);
+    this.rpc_update();
+  }
+
   changePage(page: number) {
     if (page < 0) {
       return;
@@ -82,9 +100,15 @@ export class TransactionService {
   rpc_update() {
 
     const options = {
-      'count': +this.MAX_TXS_PER_PAGE,
-      'skip': this.currentPage * this.MAX_TXS_PER_PAGE
+      'count':            +this.MAX_TXS_PER_PAGE,
+      'skip':             +this.MAX_TXS_PER_PAGE * this.currentPage,
+      'include_watchonly': this.watchonly !== undefined ? this.watchonly : undefined,
+      'category':          this.category  !== undefined ? this.category  : undefined,
+      'search':            this.search    !== undefined ? this.search    : undefined,
+      'type':              this.type      !== undefined ? this.type      : undefined,
+      'sort':              this.sort      !== undefined ? this.sort      : undefined
     };
+    console.log('filtertransaction options', options)
     this.rpc.call('filtertransactions', [options])
     .subscribe(
       (txResponse: Array<Object>) => {
@@ -111,7 +135,6 @@ export class TransactionService {
   addTransaction(json: Object): void {
     this.txs.push(new Transaction(json));
   }
-
 
   newTransaction() {
     this.rpc.call('filtertransactions')
