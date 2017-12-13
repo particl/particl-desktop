@@ -7,14 +7,15 @@
     <div class="section filter-by-type">
       <div class="subtitle">Filter by type</div>
       <mat-card class="filter-card">
-        <mat-selection-list #types dense class="filter-list no-padding">
+        <mat-selection-list #filterList dense class="filter-list no-padding"
+        [ngModel]="filter" (change)="dump()">
           <mat-list-option class="filter-option"
-          *ngFor="let filter of type_filter" [value]="filter">
-            {{ filter }}
+          *ngFor="let filterOption of filtersOptions" value="{{ filterOption }}">
+            {{ filterOption }}
           </mat-list-option>
         </mat-selection-list>
-      </mat-card><!-- .filter-type -->
-    </div><!-- .filter-by-type -->
+      </mat-card>
+    </div>
 
     <p class="widget-help">
       Transaction filter gives you the most granular control over displayed transactions.
@@ -23,22 +24,22 @@
     <div class="section filter-by-narration">
       <div class="subtitle">Filter by narrations</div>
       <mat-card class="filter-card">
-        <mat-radio-group class="radio-group">
-          <!-- TODO: unselect them by default (no idea where to define it, tbh): -->
+        <mat-radio-group class="radio-group"
+        [(ngModel)]="narration" (change)="dump()">
           <mat-radio-button class="filter-option"
-          *ngFor="let filter of narration_filter" [value]="narration">
-            {{ filter }}
+          *ngFor="let narrationChoice of narrationChoices" [value]="narrationChoice">
+            {{ narrationChoice }}
           </mat-radio-button>
         </mat-radio-group>
-      </mat-card><!-- .filter-type -->
-    </div><!-- .filter-by-narration -->
+      </mat-card>
+    </div>
 
-    <button mat-button color="warn" class="clear-filters">
+    <button mat-button color="warn" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
       Clear all filters
     </button>
 
-  </div><!-- .filter -->
+  </div>
 
 
   <div class="tx-list" fxFlex="1 1 100%">

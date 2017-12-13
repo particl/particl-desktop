@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
 import { TransactionCategory } from '../shared/transaction.model';
 
@@ -10,8 +10,12 @@ import { TransactionCategory } from '../shared/transaction.model';
 
 export class HistoryComponent {
 
-  narration_filter: Array<string> = ['With narration', 'Without narration'];
-  type_filter:      Array<string> = [
+  narration: string = 'Both';
+  filter:    string;
+
+  // TODO : key-value
+  narrationChoices: Array<string> = ['With narration', 'Without narration', 'Both'];
+  filterOptions:    Array<string> = [
     'Received',
     'Sent',
     'Staked',
@@ -19,6 +23,17 @@ export class HistoryComponent {
     'Balance transfer'
   ];
 
+  @ViewChild('filterList') filterList: any;
+
   constructor() { }
 
+  dump() {
+    console.log(this.narration, this.filter);
+  }
+
+  clear() {
+    console.log("clear");
+    this.narration = 'Both';
+    this.filterList.deselectAll();
+  }
 }
