@@ -56,13 +56,24 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 
 // ------ TABS ------ //
-/*
+
 .mat-tab-group {
-  .mat-tab-header {
-    background: white; // needs to fix the search bg first
+  .mat-tab-label {
+    &.mat-tab-label-active { // keep active tabs black (not grey)
+      opacity: 1;
+      .mat-icon { opacity: 0.9; }
+    }
+    .mat-icon {
+      @extend %tfx;
+      font-size: 14px;
+      margin-right: 8px;
+      position: relative;
+      top: 0.02em;
+      opacity: 0.5;
+    }
   }
 }
-*/
+
 
 
 // ------ EXPANSION PANELS ------ //

@@ -1,5 +1,37 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+
+// ------ UI ------ //
+
+.section {
+  &.advanced { // "advanced options" fields
+    background: mix(white, $bg);
+    border-top: 1px dashed darken($bg, 7%);
+    margin: 0 -24px -24px !important;
+    padding: 8px 24px;
+  }
+}
+
+.title { // box titles
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+// ------ LAYOUT ------ //
+
+.actions {
+  text-align: right;
+  margin: 0;
+  button {
+    margin: 0 0 0 12px;
+  }
+}
+
+
+// ------ FORMS ------ //
+
 mat-form-field {
   &.full-width {
     width: 100%;
@@ -11,22 +43,6 @@ mat-form-field {
   top: -1px;
 }
 
-.actions {
-  text-align: right;
-  margin: 0;
-  button {
-    margin: 0 0 0 12px;
-  }
-}
-
-.section {
-  &.advanced { // "advanced options" fields
-    background: mix(white, $bg);
-    border-top: 1px dashed darken($bg, 7%);
-    margin: 0 -24px -24px !important;
-    padding: 8px 24px;
-  }
-}
 
 // -------------- old below ---------------- //
 
