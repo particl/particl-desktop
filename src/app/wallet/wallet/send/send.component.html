@@ -17,7 +17,7 @@
       </div>
       <div fxFlex="23" disableTouchRipple="true" class="bottom-line" fxLayoutAlign="left center">
         <button mat-button (click)="toggleAdvanced()" class="advanced-options"><!-- *ngIf="type === 'balanceTransfer'" -->
-          <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></mat-icon>
+          <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
           <span>{{ advancedText }}</span>
         </button>
       </div>
@@ -115,10 +115,10 @@
               <div fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutGap="20px">
                 <span fxFlex="16.6">
                   <mat-icon class="cursor-pointer zindex" flex="100" matTooltip="Address Lookup" (click)="openLookup()"
-                           fontSet="partIcon" fontIcon="part-multiple-19"></mat-icon>
+                           fontSet="partIcon" fontIcon="part-people"></mat-icon>
                 </span>
                 <span fxFlex="16.6">
-                  <mat-icon flex="100" class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-single-copy-04" (click)="pasteAddress()"></mat-icon>
+                  <mat-icon flex="100" class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-copy" (click)="pasteAddress()"></mat-icon>
                 </span>
                 <span fxFlex="16.6">
                   <mat-icon flex="100" matTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="partIcon"
@@ -193,12 +193,12 @@
       <div class="actions">
         <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
           <button mat-raised-button color="primary" (click)="clear()">
-            <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
             Clear all
           </button>
           <button mat-raised-button color="disabled" class="validate" (click)="onSubmit()"
                   [disabled]="!checkAddress() || !checkAmount()">
-            <mat-icon fontSet="partIcon" fontIcon="part-stre-right"></mat-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-next-single-right"></mat-icon>
             Make payment
           </button>
         </div>

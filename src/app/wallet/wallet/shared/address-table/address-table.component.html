@@ -54,11 +54,11 @@
                fxLayoutAlign.lt-md="start center" fxLayoutGap="10px" *ngIf="displayToolsMenu" class="address-actions">
             <!-- ICO: copy address -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
             </span>
             <!-- ICO: verify message -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <mat-icon fontSet="partIcon" fontIcon="part-a-check" (click)="openSignatureModal(address.address)"
+              <mat-icon fontSet="partIcon" fontIcon="part-person-check" (click)="openSignatureModal(address.address)"
                        class="cursor-pointer" matTooltip="Sign / Verify message"
                        ngxClipboard></mat-icon>
             </span>
@@ -69,7 +69,7 @@
             </span>
             <!-- display QR code -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center" *ngIf="!displayQrMenu" class="qrcode-menu">
-              <mat-icon fontSet="partIcon" fontIcon="part-barcode-qr" matTooltip="Show QR code"
+              <mat-icon fontSet="partIcon" fontIcon="part-qr" matTooltip="Show QR code"
                        (click)="openQrCodeModal(address)"></mat-icon>
             </span>
           </div>

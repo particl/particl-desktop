@@ -19,12 +19,12 @@
   <div class="actions" fxLayoutAlign="center center" *ngIf="!isDisabled && !partialDisable">
 
     <button mat-button *ngIf="generate" (click)="copyToClipBoard()" ngxClipboard [cbContent]="words.join(' ')" class="copy">
-      <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon> Copy to Clipboard
+      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon> Copy to Clipboard
     </button>
 
     <!-- @TODO: Uncomment Paste button when it's working! -->
     <!--button mat-button *ngIf="!generate" class="paste">
-      <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon> Paste
+      <mat-icon fontSet="partIcon" fontIcon="part-past"></mat-icon> Paste
     </button-->
 
   </div><!-- .actions -->
