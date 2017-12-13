@@ -27,6 +27,13 @@ export class TransactionsTableComponent implements OnInit {
     pagination: false,
     txDisplayAmount: 10,
     category: true,
+    /* API */
+    categoryName: undefined,
+    watchonly: undefined,
+    search: undefined,
+    type: undefined,
+    sort: undefined,
+    /* API */
     date: true,
     amount: true,
     confirmations: true,

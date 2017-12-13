@@ -13,16 +13,20 @@ export class HistoryComponent implements OnInit {
   @ViewChild('filterList') filterList: any;
 
   narrationChoices: Array<any> = [
-    { title: 'With narration',    value: 'narrationOnly'    },
-    { title: 'Without narration', value: 'noNarration'      },
-    { title: 'Both',              value: 'any'              }
+    { title: 'With narration',    value: 'narrationOnly'     },
+    { title: 'Without narration', value: 'noNarration'       },
+    { title: 'Both',              value: 'any'               }
   ];
   filterOptions:    Array<any> = [
-    { title: 'Received',          value: "received"         },
-    { title: 'Sent',              value: "sent"             },
-    { title: 'Staked',            value: "stake"            },
-    { title: 'Orphaned stakes',   value: "orphaned_stake"   },
-    { title: 'Balance transfer',  value: "balance_transfer" }
+    { title: 'All',               value: "all"               },
+    { title: 'Send',              value: "send"              },
+    { title: 'Orphan',            value: "orphan"            },
+    { title: 'Immature',          value: "immature"          },
+    { title: 'Coinbase',          value: "coinbase"          },
+    { title: 'Receive',           value: "receive"           },
+    { title: 'Orphaned stake',    value: "orphaned_stake"    },
+    { title: 'Stake',             value: "stake"             },
+    { title: 'Internal transfer', value: "internal_transfer" }
   ];
 
   narration: string = 'any';
