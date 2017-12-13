@@ -9,23 +9,16 @@ import { TransactionCategory } from '../shared/transaction.model';
 })
 
 export class HistoryComponent {
-  
-  category: TransactionCategory = 'all';
-  tabsTtitles: Array<any> = ['all', 'send', 'receive', 'stake', 'orphaned Stake'];
-  type_filter = ['Received', 'Sent', 'Staked', 'Orphaned stakes', 'Balance transfer'];
-  narration_filter = ['With narration', 'Without narration'];
+
+  narration_filter: Array<string> = ['With narration', 'Without narration'];
+  type_filter:      Array<string> = [
+    'Received',
+    'Sent',
+    'Staked',
+    'Orphaned stakes',
+    'Balance transfer'
+  ];
 
   constructor() { }
 
-  filterByCategory(category: TransactionCategory) {
-    this.category = category;
-  }
-
-  changeTab(tabIndex: number): void {
-    if (tabIndex === 4) {
-      this.filterByCategory(this.tabsTtitles['orphaned_stake']);
-    } else {
-      this.filterByCategory(this.tabsTtitles[tabIndex]);
-    }
-  }
 }

@@ -1,23 +1,4 @@
-<app-header class="disable-select">
-  <!--mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>All transactions</ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>Received</ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>Sent</ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>Staked</ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>Balance transfer</ng-template>
-    </mat-tab>
-  </mat-tab-group-->
-</app-header>
-
+<app-header class="disable-select"></app-header>
 
 <div fxLayout="row" fxLayoutGap="30px" class="container-block">
 
@@ -27,7 +8,8 @@
       <div class="subtitle">Filter by type</div>
       <mat-card class="filter-card">
         <mat-selection-list #types dense class="filter-list no-padding">
-          <mat-list-option class="filter-option" *ngFor="let filter of type_filter">
+          <mat-list-option class="filter-option"
+          *ngFor="let filter of type_filter" [value]="filter">
             {{ filter }}
           </mat-list-option>
         </mat-selection-list>
@@ -43,7 +25,8 @@
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group">
           <!-- TODO: unselect them by default (no idea where to define it, tbh): -->
-          <mat-radio-button class="filter-option" *ngFor="let filter of narration_filter" [value]="season">
+          <mat-radio-button class="filter-option"
+          *ngFor="let filter of narration_filter" [value]="narration">
             {{ filter }}
           </mat-radio-button>
         </mat-radio-group>
@@ -65,7 +48,3 @@
   </div><!-- .tx-list -->
 
 </div>
-
-
-
-
