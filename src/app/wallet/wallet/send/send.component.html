@@ -36,33 +36,32 @@
       <mat-radio-group class="from-balance-type block-radio" *ngIf="type === 'sendPayment'" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
         <mat-radio-button class="balance" value="balance" checked="checked" fxFlex>
           <div class="name">Public</div>
-          <!-- TODO: fix amounts, display separately -->
-          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('balance') }}</div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="blind_balance" fxFlex>
           <div class="name">Blind</div>
-          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('blind_balance') }}</div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="anon_balance" fxFlex>
           <div class="name">Anon</div>
-          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('anon_balance') }}</div>
         </mat-radio-button>
       </mat-radio-group><!-- .from-balance-type -->
 
       <!-- Select "FROM" balance/account (for Balance transfer) -->
+      <!-- TODO: duplicate ? -->
       <mat-radio-group class="from-balance-type block-radio" *ngIf="type === 'balanceTransfer'" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
         <mat-radio-button class="balance" value="balance" (click)="send.output = 'blind_balance'" checked="checked" fxFlex>
           <div class="name">Public</div>
-          <!-- TODO: fix amounts, display separately -->
-          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('balance') }}</div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="blind_balance" (click)="send.output = 'balance'" fxFlex>
           <div class="name">Blind</div>
-          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('blind_balance') }}</div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="anon_balance" disabled fxFlex>
           <div class="name">Anon</div>
-          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.input) }}</div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('anon_balance') }}</div>
         </mat-radio-button>
       </mat-radio-group><!-- .from-balance-type -->
 
@@ -105,16 +104,15 @@
         <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output" fxLayout="column" fxLayoutGap="10px">
           <mat-radio-button class="balance" value="balance" (click)="send.input = 'blind_balance'" checked="checked" fxFlex>
             <div class="name">Public</div>
-            <!-- TODO: fix amounts, display separately -->
-            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.output) }}</div>
+            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('balance') }}</div>
           </mat-radio-button>
           <mat-radio-button class="balance" value="blind_balance" (click)="send.input = 'balance'" fxFlex>
             <div class="name">Blind</div>
-            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.output) }}</div>
+            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('blind_balance') }}</div>
           </mat-radio-button>
           <mat-radio-button class="balance" value="anon_balance" disabled fxFlex>
             <div class="name">Anon</div>
-            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance(send.output) }}</div>
+            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('anon_balance') }}</div>
           </mat-radio-button>
         </mat-radio-group><!-- .from-balance-type -->
       </mat-card><!-- .to-balance-type.section -->
