@@ -44,9 +44,9 @@ export class HistoryComponent implements OnInit {
 
   filters: any = {
     category: undefined,
-    search: undefined,
-    sort: undefined,
-    type: undefined
+    search:   undefined,
+    sort:     undefined,
+    type:     undefined
   }
 
   constructor() {
@@ -54,14 +54,15 @@ export class HistoryComponent implements OnInit {
   }
 
   ngOnInit() {
+    /* may be used if we concatenate some filters */
   }
 
   default() {
     this.filters = {
       category: 'all',
-      search: '',
-      sort: 'time',
-      type: 'all'
+      type:     'all',
+      sort:     'time',
+      search:   ''
     };
   }
 
