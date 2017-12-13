@@ -10,41 +10,45 @@ import { TransactionCategory } from '../shared/transaction.model';
 
 export class HistoryComponent implements OnInit {
 
-  @ViewChild('filterList') filterList: any;
+  // @ViewChild('filterList') filterList: any;
 
-  narrationChoices: Array<any> = [
-    { title: 'With narration',    value: 'narrationOnly'     },
-    { title: 'Without narration', value: 'noNarration'       },
-    { title: 'Both',              value: 'any'               }
-  ];
-  filterOptions:    Array<any> = [
-    { title: 'All',               value: "all"               },
-    { title: 'Send',              value: "send"              },
-    { title: 'Orphan',            value: "orphan"            },
-    { title: 'Immature',          value: "immature"          },
-    { title: 'Coinbase',          value: "coinbase"          },
-    { title: 'Receive',           value: "receive"           },
-    { title: 'Orphaned stake',    value: "orphaned_stake"    },
-    { title: 'Stake',             value: "stake"             },
-    { title: 'Internal transfer', value: "internal_transfer" }
+  categories:    Array<any> = [
+    { title: 'All',               value: 'all'               },
+    { title: 'Send',              value: 'send'              },
+    { title: 'Orphan',            value: 'orphan'            },
+    { title: 'Immature',          value: 'immature'          },
+    { title: 'Coinbase',          value: 'coinbase'          },
+    { title: 'Receive',           value: 'receive'           },
+    { title: 'Orphaned stake',    value: 'orphaned_stake'    },
+    { title: 'Stake',             value: 'stake'             },
+    { title: 'Internal transfer', value: 'internal_transfer' }
   ];
 
-  narration: string = 'any';
-  filters: Array<string> = [];
+  category: string = 'all';
 
-  constructor() { }
+  constructor() {
+    this.default();
+  }
 
   ngOnInit() {
-    this.filterList.selectedOptions.onChange.subscribe(item => {
-      item.added.map(added => this.filters.push(added.value));
-      item.removed.map(removed => this.filters = this.filters.filter(val => {
-        return val !== removed.value;
-      }));
-    });
+    // this.filterList.selectedOptions.onChange.subscribe(item => {
+    //   item.added.map(added => this.filters.push(added.value));
+    //   item.removed.map(removed => this.filters = this.filters.filter(val => {
+    //     return val !== removed.value;
+    //   }));
+    // });
+  }
+
+  default() {
+    this.category = 'all';
+    // this.filterList.deselectAll();
+  }
+
+  dump() {
+    console.log('category', this.category);
   }
 
   clear() {
-    this.narration = 'any';
-    this.filterList.deselectAll();
+    this.default();
   }
 }

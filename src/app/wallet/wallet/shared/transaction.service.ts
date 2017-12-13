@@ -65,7 +65,6 @@ export class TransactionService {
 
   }
 
-
   changePage(page: number) {
     if (page < 0) {
       return;

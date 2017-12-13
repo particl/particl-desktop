@@ -4,6 +4,7 @@
 
   <div class="filter" fxFlex="0 0 200px">
 
+    <!--
     <div class="section filter-by-type">
       <div class="subtitle">Filter by type</div>
       <mat-card class="filter-card">
@@ -16,18 +17,21 @@
         </mat-selection-list>
       </mat-card>
     </div>
+    -->
 
     <p class="widget-help">
       Transaction filter gives you the most granular control over displayed transactions.
     </p>
 
+    <!-- TODO: change class name  -->
     <div class="section filter-by-narration">
-      <div class="subtitle">Filter by narrations</div>
+      <div class="subtitle">Filter by category</div>
       <mat-card class="filter-card">
-        <mat-radio-group class="radio-group" [(ngModel)]="narration">
-          <mat-radio-button class="filter-option" value="{{ choice.value }}"
-                            *ngFor="let choice of narrationChoices">
-            {{ choice.title }}
+        <mat-radio-group class="radio-group"
+                         [(ngModel)]="category" (change)="dump()">
+          <mat-radio-button class="filter-option" value="{{ category.value }}"
+                            *ngFor="let category of categories">
+            {{ category.title }}
           </mat-radio-button>
         </mat-radio-group>
       </mat-card>
