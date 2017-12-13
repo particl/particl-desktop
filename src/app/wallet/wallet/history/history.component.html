@@ -8,9 +8,9 @@
       <div class="subtitle">Filter by type</div>
       <mat-card class="filter-card">
         <mat-selection-list #filterList dense class="filter-list no-padding"
-        [(ngModel)]="filter" (change)="dump()" name="filterList" ngDefaultControl>
-          <mat-list-option class="filter-option"
-          *ngFor="let option of filterOptions" value="{{ option.value }}">
+          [(ngModel)]="filter" name="filterList" ngDefaultControl>
+          <mat-list-option class="filter-option" value="{{ option.value }}"
+                           *ngFor="let option of filterOptions">
             {{ option.title }}
           </mat-list-option>
         </mat-selection-list>
@@ -24,10 +24,9 @@
     <div class="section filter-by-narration">
       <div class="subtitle">Filter by narrations</div>
       <mat-card class="filter-card">
-        <mat-radio-group class="radio-group"
-        [(ngModel)]="narration" (change)="dump()">
-          <mat-radio-button class="filter-option"
-          *ngFor="let choice of narrationChoices" [value]="choice.value">
+        <mat-radio-group class="radio-group" [(ngModel)]="narration">
+          <mat-radio-button class="filter-option" value="{{ choice.value }}"
+                            *ngFor="let choice of narrationChoices">
             {{ choice.title }}
           </mat-radio-button>
         </mat-radio-group>
