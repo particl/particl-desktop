@@ -19,6 +19,29 @@
   margin-bottom: 18px;
 }
 
+.balance { // balance selection radio buttons
+  @extend %tfx;
+  padding: 8px 24px;
+  margin: 0 -24px !important;
+  font-family: $font;
+  &:hover {
+    background: mix($bg, white, 70%);
+  }
+  .name { // balance type
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .desc { // available balance
+    color: $text-muted;
+    font-size: 11px;
+    .amount {
+      color: $color;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+  }
+}
+
 // ------ LAYOUT ------ //
 
 .actions {
