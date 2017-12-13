@@ -19,6 +19,21 @@
   padding: 0;
   margin-bottom: 16px;
 
+  // search & sorting
+  .search-sorting & {
+    padding: 10px 20px;
+    .filter-input {
+      width: 100%;
+    }
+    .icon-input {
+      .mat-icon {
+        top: 5px;
+        right: 2px;
+        font-size: 14px;
+      }
+    }
+  }
+
   // selection list
   .filter-list {
     padding-top: 0;
@@ -26,11 +41,12 @@
 
   // filter options
   .filter-option {
+    /* Checkboxes:
     .mat-list-item-content {
       .mat-list-text {
         padding: 0 16px 0 0 !important;
       }
-    }
+    }*/
   }
 
   // radio buttons
@@ -39,7 +55,8 @@
     padding: 8px 16px;
     display: block;
     .filter-option {
-      margin: 4px 0;
+      width: 100%;
+      margin: 5px 0;
       font-family: $font;
     }
   }
