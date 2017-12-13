@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
+import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../../environments/environment';
 
@@ -29,7 +30,7 @@ export class MainViewComponent implements OnInit {
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
-
+  daemonError: string;
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
@@ -61,8 +62,12 @@ export class MainViewComponent implements OnInit {
     /* errors */
     // Updates the error box in the sidenav whenever a stateCall returns an error.
     this._rpc.errorsStateCall.asObservable()
+    .throttle(val => Observable.interval(30000/*ms*/))
     .subscribe(status => this.daemonRunning = true,
-               error => this.daemonRunning = ![0, 502].includes(error.status));
+                error => {
+                  this.daemonRunning = ![0, 502].includes(error.status);
+                  this.daemonError = error;
+                });
 
     // Updates the error box in the sidenav if wallet is not initialized.
     this._rpc.state.observe('ui:walletInitialized')

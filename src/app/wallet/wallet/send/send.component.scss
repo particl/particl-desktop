@@ -41,14 +41,6 @@ input[type="text"] {
   width: calc(100% - 8px);
 }
 
-.mat-select {
-  padding-top: 4px;
-}
-
-.mat-list-item {
-  padding: 25px;
-}
-
 .mat-list-radio h5 {
   margin-top: 15px;
 }
@@ -59,7 +51,7 @@ input[type="text"] {
 
 .mat-send-card {
   padding: 10px 30px 10px 30px;
-  min-height: 14vh;
+  min-height: 100px;
   height: auto;
   font-family: $font;
 }
@@ -96,7 +88,7 @@ input[type="text"] {
 
 app-header {
   button {
-    background-color: #fafafa;
+    background-color: $bg;
     border: none;
     padding: 3px 15px;
     margin: 0 10px 0 0;

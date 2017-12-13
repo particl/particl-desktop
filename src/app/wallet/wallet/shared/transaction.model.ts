@@ -82,9 +82,7 @@ export class Transaction {
 
   /* Amount stuff */
   public getAmount(): number {
-    if (this.category === 'stake') {
-      return +this.reward;
-    } else if (this.category === 'internal_transfer') {
+   if (this.category === 'internal_transfer') {
       // add all elements in output array ( but exclude vout === 65535)
       // todo: check assumption that we own all outputs?
       /*

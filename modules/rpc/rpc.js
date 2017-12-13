@@ -57,11 +57,18 @@ exports.call = function(method, params, callback) {
     response.setEncoding('utf8');
     response.on('data', chunk => data += chunk);
     response.on('end', () => {
-
+      // TODO: more appropriate error handling
       if (response.statusCode === 401) {
         callback({
           status: 401,
           message: 'Unauthorized'
+        });
+        return ;
+      }
+      if (response.statusCode === 503) {
+        callback({
+          status: 503,
+          message: 'Service Unavailable',
         });
         return ;
       }

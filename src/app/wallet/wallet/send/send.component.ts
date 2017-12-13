@@ -1,18 +1,18 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { SendService } from './send.service';
-
-import { RpcService } from '../../../core/core.module';
 import { ModalsService } from '../../../modals/modals.service';
+import { RpcService } from '../../../core/core.module';
+import { SendService } from './send.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+import { AddressHelper } from '../../shared/util/utils';
 
 @Component({
   selector: 'app-send',
@@ -23,14 +23,11 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 export class SendComponent {
 
 
-  /*
-    General
-  */
+  // General
   log: any = Log.create('send.component');
+  private addressHelper: AddressHelper;
 
-  /*
-    UI logic
-  */
+  // UI logic
   @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
   advanced: boolean = false;
@@ -49,9 +46,7 @@ export class SendComponent {
     privacy: 8
   };
 
-  /*
-    RPC logic
-  */
+  // RPC logic
   lookup: string;
   private _sub: Subscription;
   private _balance: any;
@@ -64,6 +59,7 @@ export class SendComponent {
     private flashNotification: SnackbarService
   ) {
     this.progress = 50;
+    this.addressHelper = new AddressHelper();
   }
 
   /** Select tab */
@@ -78,11 +74,7 @@ export class SendComponent {
 
   /** Toggle advanced controls and settings */
   toggleAdvanced() {
-    if (this.advanced) {
-      this.advancedText = 'Show Advanced options';
-    } else {
-      this.advancedText = 'Hide Advanced options';
-    }
+    this.advancedText = (this.advanced ? 'show' : 'hide') + ' Advanced options';
     this.advanced = !this.advanced;
   }
 
@@ -126,6 +118,10 @@ export class SendComponent {
 
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
+    if (this.send.input !== 'balance' && this.addressHelper.testAddress(this.send.toAddress, 'public')) {
+      return false;
+    }
+
     // use default transferBalance address or custom address.
     return (this.type === 'balanceTransfer' && !this.send.toAddress) || this.send.validAddress;
   }
@@ -254,6 +250,8 @@ export class SendComponent {
   openLookup() {
     const dialogRef = this.dialog.open(AddressLookupComponent);
     dialogRef.componentInstance.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
+    dialogRef.componentInstance.filter = (
+      ['anon_balance', 'blind_balance'].includes(this.send.input) ? 'Private' : 'All types');
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
       dialogRef.close();
@@ -302,4 +300,10 @@ export class SendComponent {
     document.execCommand('Paste');
   }
 
+  @HostListener('document:paste', ['$event'])
+  onPaste(event: any) {
+    if (this.addressHelper.addressFromPaste(event)) {
+      this.address.nativeElement.focus();
+    }
+  }
 }

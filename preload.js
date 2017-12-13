@@ -55,8 +55,9 @@ window.ipc = new SafeIpcRenderer([
   'front-walletready',
   'rpc-channel',
   'rx-ipc-check-reply:rpc-channel',
-  'rx-ipc-check-reply:front-choosewallet',
-  'rx-ipc-check-listener'
+  'rx-ipc-check-listener',
+  'rx-ipc-notification',
+  'rx-ipc-check-reply:front-choosewallet'
 ]);
 
 window.electron = true;
