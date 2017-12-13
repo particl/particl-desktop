@@ -11,6 +11,7 @@ export class SendService {
   // success alert box
   private address: string = '';
   private amount: number = 0;
+  public isSubstractfeefromamount: boolean = false;
 
   // stealth address used for all balance transfers
   private defaultStealthAddressForBalanceTransfer: string;
@@ -78,7 +79,6 @@ export class SendService {
       narration, ringsize, numsignatures);
 
     this.setTransactionDetails(address, amount);
-
     // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
     this._rpc.call('send' + rpcCall, params)
       .subscribe(
@@ -173,7 +173,8 @@ export class SendService {
   getSendParams(
     anon: boolean, address: string, amount: number, comment: string,
     narration: string, ringsize: number, numsignatures: number) {
-    const params: Array<any> = [address, amount, '', '', false];
+    const substractfeefromamount: boolean = this.isSubstractfeefromamount;
+    const params: Array<any> = [address, amount, '', '', substractfeefromamount];
 
     params.push(!!narration ? narration : '');
 

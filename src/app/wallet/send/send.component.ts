@@ -48,6 +48,7 @@ export class SendComponent {
     currency: 'part',
     privacy: 8
   };
+  public isSendAll: boolean = false;
 
   /*
     RPC logic
@@ -74,6 +75,7 @@ export class SendComponent {
       this.send.toAddress = '';
       this.verifyAddress();
     }
+    this.updateAmount();
   }
 
   /** Toggle advanced controls and settings */
@@ -166,6 +168,7 @@ export class SendComponent {
       currency: 'part',
       privacy: 50
     };
+    this.isSendAll = false;
   }
 
   clearReceiver() {
@@ -300,6 +303,15 @@ export class SendComponent {
     // document.getElementById('address').focus();
     this.address.nativeElement.focus();
     document.execCommand('Paste');
+  }
+
+  sendAllBalance(): void {
+    this.sendService.isSubstractfeefromamount = (!this.isSendAll);
+    this.send.amount = (!this.isSendAll) ? this.getBalance(this.send.input) : null;
+  }
+
+  updateAmount() {
+    this.send.amount = (this.isSendAll) ? this.getBalance(this.send.input) : null;
   }
 
 }
