@@ -33,7 +33,7 @@ export class HistoryComponent implements OnInit {
   ngOnInit() {
     this.filterList.selectedOptions.onChange.subscribe(item => {
       item.added.map(added => this.filters.push(added.value));
-      item.removed.map(removed => this.filters = this.filters.filter((val: any) => {
+      item.removed.map(removed => this.filters = this.filters.filter(val => {
         return val !== removed.value;
       }));
     });
