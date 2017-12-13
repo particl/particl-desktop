@@ -1,33 +1,13 @@
-<!--app-header class="disable-select"></app-header-->
-
-<!-- TODO: this is my proposition on how to filter categories; the hidden ones will be still accessible via "all transactions" tab -->
 <app-header class="disable-select">
   <div class="container-fluid">
     <mat-tab-group>
-      <mat-tab>
-        <ng-template mat-tab-label>All transactions</ng-template>
+
+      <mat-tab *ngFor="let category of categories" (click)="dump()">
+        <ng-template mat-tab-label>
+          {{ category.title }}
+        </ng-template>
       </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>Sent</ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>Received</ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>Immature</ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>Staked</ng-template>
-      </mat-tab>
-      <!--mat-tab>
-        <ng-template mat-tab-label>Orphaned stake</ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>Orphan</ng-template>
-      </mat-tab-->
-      <mat-tab>
-        <ng-template mat-tab-label>Balance transfer</ng-template>
-      </mat-tab>
+
     </mat-tab-group>
   </div>
 </app-header>
@@ -36,75 +16,42 @@
 
   <div class="filter" fxFlex="0 0 230px">
 
-    <!--div class="section filter-by-category">
-      <div class="subtitle">Filter by category</div>
-      <mat-card class="filter-card">
-          <mat-radio-group class="radio-group"
-          [(ngModel)]="category" (change)="dump()">
-          <mat-radio-button class="filter-option" value="{{ category.value }}"
-          *ngFor="let category of categories">
-            {{ category.title }}
-          </mat-radio-button>
-        </mat-radio-group>
-      </mat-card>
-    </div-->
-
-    <!-- TODO: Switch to checkboxes when we can select multiple categories at once -->
-    <!--div class="section filter-by-type">
-      <div class="subtitle">Filter by type</div>
-      <mat-card class="filter-card">
-        <mat-selection-list #filterList dense class="filter-list no-padding"
-          [(ngModel)]="filter" name="filterList" ngDefaultControl>
-          <mat-list-option class="filter-option" value="{{ option.value }}"
-                           *ngFor="let option of filterOptions">
-            {{ option.title }}
-          </mat-list-option>
-        </mat-selection-list>
-      </mat-card>
-    </div-->
-
     <div class="section search-sorting">
       <div class="subtitle">Search &amp; sort</div>
       <mat-card class="filter-card">
-        <mat-form-field class="icon-input filter-input" (click)="selectInput()" floatPlaceholder="never">
-          <input matInput type="text" class="header-input" placeholder="Search transactions">
+
+        <mat-form-field class="icon-input filter-input"
+          (click)="selectInput()" floatPlaceholder="never">
+          <input matInput type="text" class="header-input"
+            placeholder="Search transactions">
           <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold"></mat-icon>
         </mat-form-field>
+
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort results">
-            <mat-option *ngFor="let sorting of sortings" [value]="sorting">{{ sorting.title }}</mat-option>
+            <mat-option *ngFor="let sorting of sortings" [value]="sorting">
+              {{ sorting.title }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
+
       </mat-card>
     </div>
 
     <p class="widget-help">
       Transaction filter gives you the most granular control over displayed transactions.
     </p>
-    
+
     <div class="section filter-by-type">
       <div class="subtitle">Filter by type</div>
       <mat-card class="filter-card">
-        <mat-radio-group class="radio-group"
-                          [(ngModel)]="type" (change)="dump()">
+        <mat-radio-group class="radio-group" [(ngModel)]="type" (change)="dump()">
+
           <mat-radio-button class="filter-option" value="{{ type.value }}"
-                            *ngFor="let type of types">
+            *ngFor="let type of types">
             {{ type.title }}
           </mat-radio-button>
-        </mat-radio-group>
-      </mat-card>
-    </div>
 
-    <!-- TODO: remove, just for testing purposes -->
-    <div class="section filter-by-narration">
-      <div class="subtitle">Filter by category</div>
-      <mat-card class="filter-card">
-        <mat-radio-group class="radio-group"
-                          [(ngModel)]="category" (change)="filter()">
-          <mat-radio-button class="filter-option" value="{{ category.value }}"
-                            *ngFor="let category of categories">
-            {{ category.title }}
-          </mat-radio-button>
         </mat-radio-group>
       </mat-card>
     </div>
@@ -115,7 +62,6 @@
     </button>
 
   </div>
-
 
   <div class="tx-list" fxFlex="1 1 100%">
     <transaction-table #transactions

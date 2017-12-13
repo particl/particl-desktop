@@ -17,66 +17,51 @@ export class HistoryComponent implements OnInit {
   categories:    Array<any> = [
     { title: 'All transactions',  value: 'all'               },
     { title: 'Send',              value: 'send'              },
-    { title: 'Orphan',            value: 'orphan'            },
-    { title: 'Immature',          value: 'immature'          },
-  //{ title: 'Coinbase',          value: 'coinbase'          },
     { title: 'Receive',           value: 'receive'           },
-    { title: 'Orphaned stake',    value: 'orphaned_stake'    },
+    { title: 'Immature',          value: 'immature'          },
     { title: 'Stake',             value: 'stake'             },
-    { title: 'Internal transfer', value: 'internal_transfer' }
+    { title: 'Balance transfer',  value: 'internal_transfer' }
+    // { title: 'Orphan',            value: 'orphan'            },
+    // { title: 'Coinbase',          value: 'coinbase'          },
+    // { title: 'Orphaned stake',    value: 'orphaned_stake'    },
   ];
 
-  types:    Array<any> = [
-    { title: 'All transactions',  value: 'all'               },
-    { title: 'Public',            value: 'public'            },
-    { title: 'Blind',             value: 'blind'             },
-    { title: 'Anon',              value: 'anon'              }
-  ];
-
-  sortings:    Array<any> = [
-    { title: 'Sort by date',           value: 'time'              },
-    { title: 'Sort by address',        value: 'address'           },
-    { title: 'Sort by category',       value: 'category'          },
-    { title: 'Sort by amount',         value: 'amount'            },
-  //{ title: 'Sort by confirmations',  value: 'confirmations'     }, // hide: basically the same as "time"
-  //{ title: 'Sort by TXID',           value: 'txid'              } // hide: honestly, will this use someone?
-  ];
-
-  category: string;
-
+  filters: any = {
+    category: undefined
+  }
 
   constructor() {
     this.default();
   }
 
   ngOnInit() {
-    // this.filterList.selectedOptions.onChange.subscribe(item => {
-    //   item.added.map(added => this.filters.push(added.value));
-    //   item.removed.map(removed => this.filters = this.filters.filter(val => {
-    //     return val !== removed.value;
-    //   }));
-    // });
   }
 
   default() {
-    this.category = 'all';
-    // this.filterList.deselectAll();
+    this.filters = {
+      category: 'all'
+    };
+  }
+
+  changeCategory(category: string) {
+    console.log('changeCategory', category);
+    this.filters.category = category;
+    this.filter();
   }
 
   filter() {
     this.dump();
-    console.log('transactions component', this.transactions)
-    this.transactions.filter({
-      category: this.category,
-    });
+    console.log('transactions component', this.transactions);
+    this.transactions.filter(this.filters);
   }
 
   dump() {
-    console.log('category', this.category);
+    console.log('filters', this.filters);
   }
 
   clear() {
-    this.default();
-    this.filter();
+    this.dump();
+    // this.default();
+    // this.filter();
   }
 }
