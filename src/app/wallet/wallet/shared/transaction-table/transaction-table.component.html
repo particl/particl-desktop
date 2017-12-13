@@ -28,7 +28,7 @@
         <mat-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation">
           <span mat-line matTooltip="Confirmations" matTooltipPosition="before">
             <mat-icon fontSet="partIcon" fontIcon="part-circle-check" class="confirmations"></mat-icon>
-            <span [ngClass]="styleConfimations(tx.getConfirmationCount())">{{ tx.getConfirmationCount() }}</span>
+            {{ tx.getConfirmationCount() }}
           </span>
         </mat-panel-title>
 
