@@ -75,6 +75,7 @@ export class SendComponent {
       this.send.toAddress = '';
       this.verifyAddress();
     }
+    this.updateAmount();
   }
 
   /** Toggle advanced controls and settings */
@@ -307,6 +308,10 @@ export class SendComponent {
   sendAllBalance(): void {
     this.sendService.isSubstractfeefromamount = (!this.isSendAll);
     this.send.amount = (!this.isSendAll) ? this.getBalance(this.send.input) : null;
+  }
+
+  updateAmount() {
+    this.send.amount = (this.isSendAll) ? this.getBalance(this.send.input) : null;
   }
 
 }

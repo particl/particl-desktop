@@ -34,7 +34,7 @@
         <md-list-item>
           <div class="md-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
             <md-radio-group class="md-send-card" *ngIf="type === 'sendPayment'" name="sendInput"
-                            [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
+                            [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center" (change)="updateAmount()">
               <h5 fxFlex="16.6">From Account</h5>
               <md-radio-button value="balance" checked="checked" fxFlex="16.6">Public</md-radio-button>
               <md-radio-button value="blind_balance" fxFlex="16.6">Blind</md-radio-button>
@@ -46,7 +46,7 @@
               </div>
             </md-radio-group>
             <md-radio-group class="md-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput"
-                            [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
+                            [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center" (change)="updateAmount()">
               <h5 fxFlex="16.6">From Account</h5>
               <md-radio-button value="balance" (click)="send.output = 'blind_balance'" checked="checked"
                                fxFlex="16.6">Public
