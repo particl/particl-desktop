@@ -244,11 +244,11 @@ input.verify-sucess {
 }
 
 .part-arrow-down::before {
-    content: "\ea04";
+    content: "\ea05";
 }
 
 .part-arrow-left::before {
-    content: "\ea05";
+    content: "\ea04";
 }
 
 .part-arrow-right::before {
@@ -256,243 +256,239 @@ input.verify-sucess {
 }
 
 .part-arrow-up::before {
-    content: "\ea07";
-}
-
-.part-attach::before {
-    content: "\ea09";
-}
-
-.part-bitcoin::before {
     content: "\ea08";
 }
 
+.part-attach::before {
+    content: "\ea07";
+}
+
 .part-blind::before {
-    content: "\ea0a";
+    content: "\ea09";
 }
 
 .part-bug::before {
-    content: "\ea0b";
+    content: "\ea0a";
 }
 
 .part-check::before {
-    content: "\ea0c";
+    content: "\ea0b";
 }
 
 .part-circle-alert::before {
-    content: "\ea0d";
+    content: "\ea0c";
 }
 
 .part-circle-check::before {
-    content: "\ea0e";
+    content: "\ea0d";
 }
 
 .part-circle-minus::before {
-    content: "\ea0f";
+    content: "\ea0e";
 }
 
 .part-circle-plus::before {
-    content: "\ea10";
+    content: "\ea0f";
 }
 
 .part-circle-question::before {
-    content: "\ea11";
+    content: "\ea10";
 }
 
 .part-circle-remove::before {
-    content: "\ea12";
+    content: "\ea11";
 }
 
 .part-clear-all::before {
-    content: "\ea13";
+    content: "\ea12";
 }
 
 .part-cog::before {
-    content: "\ea14";
+    content: "\ea13";
 }
 
 .part-console::before {
-    content: "\ea15";
+    content: "\ea14";
 }
 
 .part-copy::before {
-    content: "\ea16";
+    content: "\ea15";
 }
 
 .part-cross::before {
+    content: "\ea16";
+}
+
+.part-cryptocurrency-bitcoin::before {
     content: "\ea17";
 }
 
-.part-currency-dollar::before {
+.part-cryptocurrency-particl::before {
     content: "\ea18";
 }
 
-.part-currency-euro::before {
+.part-currency-dollar::before {
     content: "\ea19";
 }
 
-.part-currency-pound::before {
+.part-currency-euro::before {
     content: "\ea1a";
 }
 
-.part-currency-yen::before {
+.part-currency-pound::before {
     content: "\ea1b";
 }
 
-.part-date::before {
+.part-currency-yen::before {
     content: "\ea1c";
 }
 
-.part-error::before {
+.part-date::before {
     content: "\ea1d";
 }
 
-.part-globe::before {
+.part-error::before {
     content: "\ea1e";
 }
 
-.part-hamburger::before {
+.part-globe::before {
     content: "\ea1f";
 }
 
-.part-heart::before {
+.part-hamburger::before {
     content: "\ea20";
 }
 
-.part-label::before {
+.part-heart::before {
     content: "\ea21";
 }
 
-.part-lightning::before {
+.part-label::before {
     content: "\ea22";
 }
 
-.part-lock-open::before {
+.part-lightning::before {
     content: "\ea23";
 }
 
-.part-lock::before {
+.part-lock-open::before {
     content: "\ea24";
 }
 
-.part-minus::before {
+.part-lock::before {
     content: "\ea25";
 }
 
-.part-next-double-right::before {
+.part-minus::before {
     content: "\ea26";
 }
 
-.part-next-single-right::before {
+.part-next-double::before {
     content: "\ea27";
 }
 
-.part-notification-bell::before {
+.part-next-single::before {
     content: "\ea28";
 }
 
-.part-notification-speaker::before {
+.part-notification-bell::before {
     content: "\ea29";
 }
 
-.part-overview::before {
+.part-notification-speaker::before {
     content: "\ea2a";
 }
 
-.part-particl-1::before {
+.part-overview::before {
     content: "\ea2b";
 }
 
-.part-particl-2::before {
+.part-past::before {
     content: "\ea2c";
 }
 
-.part-past::before {
+.part-pen-1::before {
     content: "\ea2d";
 }
 
-.part-pen-1::before {
+.part-pen-2::before {
     content: "\ea2e";
 }
 
-.part-pen-2::before {
+.part-people::before {
     content: "\ea2f";
 }
 
-.part-people::before {
+.part-person-add::before {
     content: "\ea30";
 }
 
-.part-person-add::before {
+.part-person-check::before {
     content: "\ea31";
 }
 
-.part-person-check::before {
+.part-person-edit::before {
     content: "\ea32";
 }
 
-.part-person-edit::before {
+.part-person-heart::before {
     content: "\ea33";
 }
 
-.part-person-heart::before {
+.part-person-remove::before {
     content: "\ea34";
 }
 
-.part-person-remove::before {
-    content: "\ea35";
-}
-
 .part-person::before {
-    content: "\ea37";
+    content: "\ea35";
 }
 
 .part-plus::before {
     content: "\ea36";
 }
 
-.part-previous-double-left::before {
+.part-previous-double::before {
+    content: "\ea37";
+}
+
+.part-previous-single::before {
     content: "\ea38";
 }
 
-.part-previous-single-right::before {
+.part-public::before {
     content: "\ea39";
 }
 
-.part-public::before {
+.part-qr::before {
     content: "\ea3a";
 }
 
-.part-qr::before {
+.part-receive::before {
     content: "\ea3b";
 }
 
-.part-receive::before {
+.part-refresh::before {
     content: "\ea3c";
 }
 
-.part-refresh::before {
+.part-search::before {
     content: "\ea3d";
 }
 
-.part-search::before {
+.part-select::before {
     content: "\ea3e";
 }
 
-.part-select::before {
+.part-send::before {
     content: "\ea3f";
 }
 
-.part-send::before {
+.part-small-cross::before {
     content: "\ea40";
 }
 
-.part-small-cross::before {
-    content: "\ea41";
-}
-
 .part-small-minus::before {
-    content: "\ea42";
+    content: "\ea41";
 }
 
 .part-small-plus::before {
@@ -500,35 +496,35 @@ input.verify-sucess {
 }
 
 .part-snowflake::before {
-    content: "\ea44";
+    content: "\ea42";
 }
 
 .part-stake::before {
-    content: "\ea45";
+    content: "\ea44";
 }
 
 .part-swap::before {
-    content: "\ea46";
+    content: "\ea45";
 }
 
 .part-transfer::before {
-    content: "\ea47";
+    content: "\ea46";
 }
 
 .part-triangle-down::before {
-    content: "\ea48";
+    content: "\ea47";
 }
 
 .part-triangle-left::before {
-    content: "\ea49";
+    content: "\ea48";
 }
 
 .part-triangle-right::before {
-    content: "\ea4a";
+    content: "\ea49";
 }
 
 .part-triangle-up::before {
-    content: "\ea4b";
+    content: "\ea4a";
 }
 
 a.highlight {
