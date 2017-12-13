@@ -28,7 +28,7 @@
       <div class="subtitle">Filter by category</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group"
-                         [(ngModel)]="category" (change)="dump()">
+                         [(ngModel)]="category" (change)="filter()">
           <mat-radio-button class="filter-option" value="{{ category.value }}"
                             *ngFor="let category of categories">
             {{ category.title }}
@@ -46,7 +46,7 @@
 
 
   <div class="tx-list" fxFlex="1 1 100%">
-    <transaction-table
+    <transaction-table #transactions
       [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
     </transaction-table>
   </div><!-- .tx-list -->
