@@ -29,10 +29,10 @@
           </mat-form-field>
 
           <span fxFlex="0 0 20px" matTooltip="Address Lookup" (click)="openLookup()">
-            <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-multiple-19"></mat-icon>
+            <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-people"></mat-icon>
           </span>
           <span fxFlex="0 0 20px" matTooltip="Paste" (click)="pasteAddress()">
-            <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon>
+            <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
           </span>
 
         </div><!-- .address-field -->
@@ -48,16 +48,16 @@
         </mat-form-field>
         <!-- todo: <mat-icon *ngIf="type == 'sign' && formData.signature" class="cursor-pointer" (click)="onCopyAddress()"
                  matTooltip="Copy address" ngxClipboard
-                 [cbContent]="formData.signature" fontSet="partIcon" fontIcon="part-single-copy-04"></mat-icon>-->
+                 [cbContent]="formData.signature" fontSet="partIcon" fontIcon="part-copy"></mat-icon>-->
       </div><!-- .signature-address-modal-form -->
     </div>
     <mat-dialog-actions fxLayoutAlign="end center">
       <button type="reset" mat-button (click)="resetForm()">
-        <mat-icon fontSet="partIcon" fontIcon="part-filter-remove"></mat-icon>
+        <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
         Clear All
       </button>
       <button mat-raised-button color="primary" class="uc-first" type="submit" [disabled]="!addressForm.valid">
-        <mat-icon fontSet="partIcon" fontIcon="{{ (type == 'verify' ? 'part-a-check': 'part-pen-23') }}"></mat-icon>
+        <mat-icon fontSet="partIcon" fontIcon="{{ (type == 'verify' ? 'part-check': 'part-pen-2') }}"></mat-icon>
         {{type}} Message
       </button>
     </mat-dialog-actions>
