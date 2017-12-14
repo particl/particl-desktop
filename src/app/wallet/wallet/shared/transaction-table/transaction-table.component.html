@@ -27,8 +27,8 @@
         <!-- Confirmations -->
         <mat-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation" [ngClass]="styleConfimations(tx.getConfirmationCount())">
           <span mat-line matTooltip="Confirmations" matTooltipPosition="before">
-            <mat-icon fontSet="partIcon" fontIcon="part-check-circle-08" class="confirmations"></mat-icon>
-            <span [ngClass]="styleConfimations(tx.getConfirmationCount())">{{ tx.getConfirmationCount() }}</span>
+            <mat-icon fontSet="partIcon" fontIcon="part-circle-check" class="confirmations"></mat-icon>
+            {{ tx.getConfirmationCount() }}
           </span>
         </mat-panel-title>
 
@@ -36,23 +36,23 @@
         <mat-panel-title fxFlex="1 0 165px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon"
                         [ngSwitch]="tx.category">
           <span *ngSwitchCase="'stake'" class="tx-type staked">
-            <mat-icon fontSet="partIcon" fontIcon="part-coins"></mat-icon>Staked
+            <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>Staked
           </span>
           <span *ngSwitchCase="'orphaned_stake'" class="tx-type orphan">
-            <mat-icon fontSet="partIcon" fontIcon="part-alert-circle-exc" color="warn"></mat-icon>Orphaned Stake
+            <mat-icon fontSet="partIcon" fontIcon="part-alert" color="warn"></mat-icon>Orphaned Stake
           </span>
           <span *ngSwitchCase="'send'" class="tx-type sent">
-            <mat-icon fontSet="partIcon" fontIcon="part-tail-left" color="warn"></mat-icon>Sent
-            <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-23"
+            <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>Sent
+            <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
                      matTooltip="Narration included" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'receive'" class="tx-type received">
-            <mat-icon fontSet="partIcon" fontIcon="part-tail-right" color="primary"></mat-icon>Received
-            <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-23"
+            <mat-icon fontSet="partIcon" fontIcon="part-receive" color="primary"></mat-icon>Received
+            <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
                      matTooltip="Narration included" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
-            <mat-icon fontSet="partIcon" fontIcon="part-tail-right" color="primary"></mat-icon>Balance transfer
+            <mat-icon fontSet="partIcon" fontIcon="part-swap" color="primary"></mat-icon>Balance transfer
           </span>
         </mat-panel-title>
 

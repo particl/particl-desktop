@@ -7,16 +7,43 @@ const _options      = require('../options');
 const rpc           = require('../rpc/rpc');
 const cookie        = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
+const multiwallet   = require('../multiwallet');
 
 let daemon;
 let exitCode = 0;
+let restarting = false;
+let chosenWallets = [];
 
 // TODO: log properly on console and to file [ -- -printtoconsole ]
 function daemonData(data, logger) {
-  logger(data.toString().replace(/[\n\r]/g, ""));
+  logger(data.toString().trim());
 }
 
-exports.start = function(wallets, callback) {
+exports.restart = function (cb) {
+  log.info('restarting daemon...')
+  restarting = true;
+
+  return exports.stop().then(function waitForShutdown() {
+    log.debug('waiting for daemon shutdown...')
+
+    exports.check().then(waitForShutdown).catch((err) => {
+      if (err.status == 502) { /* daemon's net module shutdown  */
+        log.debug('daemon stopped network, waiting 10s before restarting...');
+        setTimeout(() => {     /* wait for full daemon shutdown */
+
+          exports.start(chosenWallets, cb)
+            .then(() => restarting = false)
+            .catch(error => log.error(error));
+
+        }, 10 * 1000);
+      } else {
+        waitForShutdown();
+      }
+    });
+  });
+}
+
+exports.start = function (wallets, callback) {
   return (new Promise((resolve, reject) => {
 
     let   options    = _options.get();
@@ -24,6 +51,8 @@ exports.start = function(wallets, callback) {
                      ? options.customdaemon
                      : daemonManager.getPath();
 
+    chosenWallets = wallets;
+    rpc.init();
     exports.check().then(() => {
       log.info('daemon already started');
       resolve(undefined);
@@ -31,27 +60,32 @@ exports.start = function(wallets, callback) {
     }).catch(() => {
 
       // TODO: only for some debug levels
-      // process.argv.push('-printtoconsole');
+      // if (!restarting)
+        // process.argv.push('-printtoconsole');
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
       const child = spawn(daemonPath, [...process.argv, ...wallets])
       .on('close', code => {
+        daemon = undefined;
         if (code !== 0) {
           reject();
           log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
         } else {
           log.info('daemon exited successfully');
         }
-        electron.app.quit();
+        if (!restarting)
+          electron.app.quit();
       })
 
+      // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
       child.stderr.on('data', data => daemonData(data, console.log));
 
       daemon = child;
-      exports.wait(wallets, callback).then(() => resolve());
+      callback = callback ? callback : () => { log.info('no callback specified') };
+      exports.wait(wallets, callback).then(resolve).catch(reject);
     });
 
   }));
@@ -66,15 +100,13 @@ exports.wait = function(wallets, callback) {
 
     const daemonStartup = () => {
       exports.check()
-      .then(() => { callback(); resolve(); })
-      .catch(() => {
-        if (exitCode === 0 && retries < maxRetries) {
-          setTimeout(daemonStartup, 1000);
-          return;
-        }
-      });
+        .then(() => { callback(); resolve(); })
+        .catch(() => {
+          if (exitCode === 0 && retries < maxRetries)
+            setTimeout(daemonStartup, 1000);
+        });
 
-      if (exitCode || ++retries >= maxRetries) {
+      if (exitCode !== 0 || ++retries >= maxRetries) {
         // Rebuild block and transaction indexes
         if (errorString.includes('-reindex')) {
           log.info('Corrupted block database detected, '
@@ -87,8 +119,8 @@ exports.wait = function(wallets, callback) {
           return;
         }
         log.error('Could not connect to daemon.')
-        electron.app.exit();
         reject();
+        electron.app.exit();
       }
     } /* daemonStartup */
 
@@ -109,9 +141,9 @@ exports.check = function() {
     rpc.call('getnetworkinfo', null, (error, response) => {
       rxIpc.removeListeners();
       if (error) {
-        reject();
+        reject(error);
       } else if (response) {
-        resolve();
+        resolve(response);
       }
     });
     rpc.setTimeoutDelay(_timeout);
@@ -122,17 +154,20 @@ exports.check = function() {
 exports.stop = function() {
   return new Promise((resolve, reject) => {
 
-    if (daemon && !daemon.exitCode) {
+    if (daemon) {
       rpc.call('stop', null, (error, response) => {
         if (error) {
           log.error('Calling SIGINT!');
           reject();
         } else {
-          log.debug('Daemon stopping gracefully');
+          log.debug('Daemon stopping gracefully...');
           resolve();
         }
       });
     } else resolve();
 
-  }).catch(() => daemon.kill('SIGINT'));
+  }).catch(() => {
+    if (daemon)
+      daemon.kill('SIGINT')
+  });
 }

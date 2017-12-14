@@ -19,7 +19,7 @@
       </div>
       <div fxFlex="23" disableTouchRipple="true" class="bottom-line" fxLayoutAlign="left center">
         <button mat-button (click)="toggleAdvanced()" class="advanced-options"><!-- *ngIf="type === 'balanceTransfer'" -->
-          <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></mat-icon>
+          <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
           <span>{{ advancedText }}</span>
         </button>
       </div>
@@ -129,10 +129,13 @@
               <input #address name="toAddress" matInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="Recipient's address" [(ngModel)]="send.toAddress" (ngModelChange)="verifyAddress()" />
             </mat-form-field>
             <span fxFlex="0 0 20px">
-              <mat-icon class="cursor-pointer zindex" matTooltip="Address Lookup" (click)="openLookup()" fontSet="partIcon" fontIcon="part-multiple-19"></mat-icon>
+              <mat-icon class="cursor-pointer zindex" matTooltip="Address Lookup" (click)="openLookup()" fontSet="partIcon" fontIcon="part-people"></mat-icon>
             </span>
             <span fxFlex="0 0 20px">
-              <mat-icon class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-single-copy-04" (click)="pasteAddress()"></mat-icon>
+              <mat-icon class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-copy" (click)="pasteAddress()"></mat-icon>
+            </span>
+            <span fxFlex="0 0 20px">
+              <mat-icon matTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
             </span>
           </div>
           <mat-form-field class="full-width">

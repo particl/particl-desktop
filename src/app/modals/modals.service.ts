@@ -64,7 +64,7 @@ export class ModalsService {
       status => this.wasAlreadyOpen('daemon') && this.close(),
       error => {
           this.enableClose = true;
-          this.open('daemon', error);
+          // this.open('daemon', error);
       });
   }
 
