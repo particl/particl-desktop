@@ -27,8 +27,10 @@ const daemon   = require('./modules/daemon/daemon');
 let mainWindow;
 let tray;
 let options;
+let openDevTools = false;
 
-let openDevTools = true;
+if (process.argv.includes('-opendevtools'))
+  openDevTools = true;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -78,8 +80,9 @@ app.on('browser-window-created',function(e, window) {
 ** initiates the Main Window
 */
 function initMainWindow() {
-
-  let trayImage = makeTray();
+  if (platform !== "darwin") {
+    let trayImage = makeTray();
+  }
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -89,7 +92,7 @@ function initMainWindow() {
     width:     1270,
     minWidth:  961,
     maxWidth:  1920,
-    height:    720,
+    height:    675,
     resizable: false,
     webPreferences: {
       nodeIntegration:  false,

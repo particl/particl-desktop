@@ -56,7 +56,7 @@
                 Blind
               </mat-radio-button>
               <!-- fix inconsistency here -->
-              <mat-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6"> 
+              <mat-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6">
                 Private
               </mat-radio-button>
               <div fxFlex="50">
@@ -105,7 +105,10 @@
             <h5 fxFlex="15">Pay to</h5>
             <mat-form-field fxFlex="100">
               <!-- fix success input -->
-              <input #address name="toAddress" matInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="Recipient's address" [(ngModel)]="send.toAddress" (input)="verifyAddress()">
+              <input #address name="toAddress"
+                     matInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
+                     type="text" placeholder="Recipient's address"
+                     [(ngModel)]="send.toAddress" (ngModelChange)="verifyAddress()" />
             </mat-form-field>
             <div fxFlex="100" fxLayoutGap="20px">
               <mat-form-field fxFlex="100">
@@ -137,8 +140,8 @@
                fxLayoutAlign="center center">
             <h5 fxFlex="15">Narration</h5>
             <mat-form-field fxFlex="100">
-            <input #narration type="text" matInput name="sendNote" 
-             placeholder="Optional: enter a short note to send with a payment" 
+            <input #narration type="text" matInput name="sendNote"
+             placeholder="Optional: enter a short note to send with a payment"
              maxlength="24"
             [(ngModel)]="send.note" >
             <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
@@ -152,15 +155,15 @@
         <mat-list-item>
           <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
                fxLayoutAlign="start center">
-            <h5 fxFlex="0 0 15%">Amount</h5>
-            <mat-form-field fxFlex="0 0 130px">
+            <h5 fxFlex="15">Amount</h5>
+            <mat-form-field fxFlex="70%">
               <input matInput type="text" name="sendAmount"
                      placeholder="Amount to send"
                      [(ngModel)]="send.amount" (input)="verifyAmount()"
                      [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                      oninput="validity.valid||(value='');" step="any">
             </mat-form-field>
-            <mat-select fxFlex="0 0 80px" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
+            <mat-select class="underliningSelect" fxFlex="30%" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
               <mat-option value="part">PART</mat-option>
             </mat-select>
           </div>
@@ -175,9 +178,9 @@
             <h5 fxFlex="15">Privacy level</h5>
             <div fxFlex="'column'" fxLayoutWrap>
               <div class="privacy-labels" fxFlex="100" fxLayoutAlign="start center">
-                <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)">Low</span>
-                <span fxFlex class="privacy-label medium" (click)="setPrivacy(8,50)">Medium</span>
-                <span fxFlex class="privacy-label high" (click)="setPrivacy(16,100)">High</span>
+                <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Set Low" matTooltipPosition="below">Low</span>
+                <span fxFlex class="privacy-label medium" (click)="setPrivacy(8,50)" matTooltip="Set Medium" matTooltipPosition="below">Medium</span>
+                <span fxFlex class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="Set High" matTooltipPosition="below">High</span>
               </div>
               <mat-progress-bar class="example-margin" [color]="'primary'" [bufferValue]="send.privacy"
                                [mode]="'determinate'" [value]="progress"></mat-progress-bar>

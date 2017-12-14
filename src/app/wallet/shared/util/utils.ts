@@ -145,3 +145,24 @@ export class Duration {
   }
 
   }
+
+export class AddressHelper {
+  addressPublicRegex: RegExp = /^[pPrR][a-km-zA-HJ-NP-Z1-9]{25,35}$/;
+  addressPrivateRegex: RegExp = /^[Tt][a-km-zA-HJ-NP-Z1-9]{60,}$/
+  addressBothRegex: RegExp = /^[pPrRtT][a-km-zA-HJ-NP-Z1-9]{25,}$/;
+
+  testAddress(address: string, type?: string): boolean {
+    return this[(type ? type === 'public'
+    ? 'addressPublicRegex' : 'addressPrivateRegex' : 'addressBothRegex')].test(address);
+  }
+
+  getAddress(address: string): string {
+    const match = address.match(this.addressBothRegex);
+    return match ? match[0] : null;
+  }
+
+  addressFromPaste(event: any): string {
+    return ['input', 'textarea'].includes(event.target.tagName.toLowerCase()) ?
+      '' : this.getAddress(event.clipboardData.getData('text'));
+  }
+}

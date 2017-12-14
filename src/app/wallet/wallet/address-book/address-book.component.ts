@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { NewAddressModalComponent } from './modal/new-address-modal/new-address-modal.component';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+import { AddressHelper } from '../../shared/util/utils';
+
+import { SendComponent } from '../send/send.component';
 
 @Component({
   selector: 'app-address-book',
@@ -13,7 +17,11 @@ export class AddressBookComponent {
 
   log: any = Log.create('address-book.component');
   public query: string;
-  constructor(private dialog: MatDialog) {
+  private addressHelper: AddressHelper;
+  constructor(
+    private dialog: MatDialog,
+    private flashNotificationService: SnackbarService) {
+    this.addressHelper = new AddressHelper();
   }
 
   openNewAddress(): void {
@@ -25,5 +33,17 @@ export class AddressBookComponent {
     const dialogRef = this.dialog.open(NewAddressModalComponent);
     dialogRef.componentInstance.address = address;
     dialogRef.componentInstance.isEdit = true;
+  }
+
+  @HostListener('document:paste', ['$event'])
+  onPaste(event: any) {
+    if (!this.dialog.openDialogs.length) {
+      const address = this.addressHelper.addressFromPaste(event);
+      if (!address) {
+        return;
+      }
+      this.editLabel(address);
+      this.dialog.openDialogs[0].componentInstance.isEdit = false;
+    }
   }
 }
