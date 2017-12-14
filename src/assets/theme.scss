@@ -171,6 +171,15 @@ input {
     Forms
 \* ------------------------------- */
 
+.mat-form-field {
+  font-family: $font;
+  &:not(:first-child) {
+    .mat-input-infix {
+      border-top: none; // remove the big gap vertical between 2+ inputs
+    }
+  }
+}
+
 input[type="text"] {
   border: none;
 }
@@ -393,6 +402,11 @@ input[type="text"] {
   }
 }
 
+.mat-form-field {
+  &.larger { // larger inputs
+    font-size: 14px;
+  }
+}
 
 
 

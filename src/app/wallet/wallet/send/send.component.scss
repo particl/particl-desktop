@@ -7,7 +7,7 @@
   &.advanced { // "advanced options" fields
     background: mix(white, $bg);
     border-top: 1px dashed darken($bg, 7%);
-    margin: 0 -24px -24px !important;
+    margin: 0 -24px 0 !important;
     padding: 8px 24px;
   }
 }
@@ -16,7 +16,13 @@
   text-transform: uppercase;
   font-weight: bold;
   font-size: 13px;
-  margin-bottom: 18px;
+  margin: -4px 0 16px !important;
+}
+
+.subtitle { // subtitles (eg. "privacy level" in anon
+  text-transform: uppercase;
+  margin: 20px 0 10px;
+  color: grey;
 }
 
 .balance { // balance selection radio buttons
@@ -25,7 +31,7 @@
   margin: 0 -24px !important;
   font-family: $font;
   &:hover {
-    background: mix($bg, white, 70%);
+    background: $bg-hover;
   }
   .name { // balance type
     font-weight: bold;
@@ -43,6 +49,30 @@
 }
 
 // ------ LAYOUT ------ //
+
+.privacy-level { // slider in Anon TXs
+  margin: 0 0 20px;
+  .privacy-label {
+    font-weight: bold;
+    padding-bottom: 10px;
+    cursor: pointer;
+    &.medium {
+      text-align: center;
+    }
+    &.high {
+      text-align: right;
+    }
+  }
+}
+
+.pay-to { // whole "pay to" card
+  padding-bottom: 1px;
+
+  .receiver-address { // recipient's addy & label
+    margin-bottom: 30px !important;
+  }
+
+}
 
 .actions {
   text-align: right;
@@ -63,7 +93,7 @@ mat-form-field {
 
 .underliningSelect {
   position: relative;
-  top: -1px;
+  //top: -1px;
 }
 
 
@@ -136,17 +166,7 @@ input[type="text"] {
   margin-bottom: 0px;
 }
 
-.privacy-label {
-  font-weight:bold;
-  padding-bottom: 10px;
-  cursor: pointer;
-  &.medium {
-    text-align: center;
-  }
-  &.high {
-    text-align: right;
-  }
-}
+
 
 
 /* ------------------------------- *\
