@@ -3,8 +3,7 @@
 
     <div class="logo-area">
       <div class="logo">
-        <!-- TODO: switch to "particl-logo-testnet.svg" when on testnet -->
-        <img src="../../assets/particl-logo.svg" alt="Particl">
+        <img src="./assets/particl-logo{{txService.testnet ? '-testnet' : ''}}.svg" alt="Particl">
       </div>
     </div>
 
@@ -34,21 +33,21 @@
                   <span class="text">Receive</span>
                 </mat-list-item>
               </a>
-              
+
               <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/send'">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-send"></mat-icon>
                   <span class="text">Send</span>
                 </mat-list-item>
               </a>
-              
+
               <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/history'">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-date"></mat-icon>
                   <span class="text">History</span>
                 </mat-list-item>
               </a>
-              
+
               <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/address-book'">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-people"></mat-icon>
