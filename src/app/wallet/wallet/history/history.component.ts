@@ -75,6 +75,7 @@ export class HistoryComponent implements OnInit {
     this.transactions.filter(this.filters);
   }
 
+  // @TODO remove it if no needed
   sortList(event): void {
     this.filters.sort = event.value;
     this.filter();
