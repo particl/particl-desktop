@@ -8,12 +8,13 @@ import { CoreModule } from '../../core/core.module';
 
 import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
+import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    MaterialModule
+    MaterialModule,
   ],
   exports: [
     MainViewComponent,
@@ -21,6 +22,9 @@ import { StatusComponent } from './status/status.component';
   declarations: [
     MainViewComponent,
     StatusComponent,
+  ],
+  providers: [
+    TransactionService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

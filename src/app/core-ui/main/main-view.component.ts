@@ -7,8 +7,7 @@ import { environment } from '../../../environments/environment';
 
 import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../../modals/modals.module';
-
-import { StatusComponent } from './status/status.component';
+import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -39,7 +38,8 @@ export class MainViewComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
-    private _modals: ModalsService
+    private _modals: ModalsService,
+    public txService: TransactionService
   ) { }
 
   ngOnInit() {
