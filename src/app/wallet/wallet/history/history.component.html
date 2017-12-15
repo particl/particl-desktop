@@ -17,7 +17,7 @@
   <div class="filter" fxFlex="0 0 230px">
 
     <div class="section search-sorting">
-      <div class="subtitle">Search &amp; sort</div>
+      <div class="subtitle first">Search &amp; sort</div>
       <mat-card class="filter-card">
 
         <mat-form-field class="icon-input filter-input"
@@ -68,7 +68,9 @@
 
   </div>
 
-  <div class="tx-list" fxFlex="1 1 100%">
+  <div class="tx-list section" fxFlex="1 1 100%">
+    <!-- TODO: insert number of matching results -->
+    <div class="subtitle first">Listing [number] transactions</div>
     <transaction-table #transactions
       [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
     </transaction-table>
