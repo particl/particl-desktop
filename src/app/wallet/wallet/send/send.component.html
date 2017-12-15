@@ -1,27 +1,17 @@
 <app-header class="disable-select">
   <div class="container-fluid">
-    <div fxLayout.lg="row">
-      <div fxFlex="77">
-        <mat-tab-group (selectChange)="selectTab($event.index)">
-          <mat-tab>
-            <ng-template mat-tab-label>
-              Send payment
-            </ng-template>
-          </mat-tab>
-          <mat-tab>
-            <ng-template mat-tab-label>
-              Balance transfer
-            </ng-template>
-          </mat-tab>
-        </mat-tab-group>
-      </div>
-      <div fxFlex="23" disableTouchRipple="true" class="bottom-line" fxLayoutAlign="left center">
-        <button mat-button (click)="toggleAdvanced()" class="advanced-options"><!-- *ngIf="type === 'balanceTransfer'" -->
-          <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
-          <span>{{ advancedText }}</span>
-        </button>
-      </div>
-    </div>
+    <mat-tab-group (selectChange)="selectTab($event.index)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Send payment
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Balance transfer
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </app-header>
 
@@ -71,6 +61,11 @@
       <p class="widget-help" *ngIf="send.input === 'anon_balance'">
         Anon transaction offer the highest privacy &ndash; transaction amounts and not even sender and receiver addresses are publicly visible. You can further adjust the privacy level to your needs ("Normal" privacy level is fine for most users). The higher privacy level is, the larger fee needs to be paid.
       </p>
+
+      <!--button mat-button (click)="toggleAdvanced()" class="small advanced-options">
+        <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
+        <span>{{ advancedText }}</span>
+      </button-->
     </mat-card>
   </div><!-- .from-box -->
 
@@ -80,7 +75,13 @@
 
       <!-- Select "TO" balance/account (ONLY for Balance transfer) -->
       <mat-card class="section to-balance-type" *ngIf="type === 'balanceTransfer'">
-        <div class="title">Convert to</div>
+        <div class="title">
+          Convert to
+          <button mat-button (click)="toggleAdvanced()" class="small advanced-options">
+            <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
+            <span>{{ advancedText }}</span>
+          </button>
+        </div>
         <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output" fxLayout="column" fxLayoutGap="10px">
           <mat-radio-button class="balance" value="balance" checked="checked" fxFlex>
             <div class="name">Public</div>
@@ -101,7 +102,13 @@
       </mat-card><!-- .to-balance-type.section -->
 
       <mat-card class="pay-to" *ngIf="type === 'sendPayment' || advanced">
-        <div class="title">Pay to</div>
+        <div class="title">
+          Pay to
+          <button mat-button (click)="toggleAdvanced()" *ngIf="type === 'sendPayment'" class="small advanced-options">
+            <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
+            <span>{{ advancedText }}</span>
+          </button>
+        </div>
 
         <!-- Receiver's address/label -->
         <div class="section receiver-address">
@@ -152,11 +159,11 @@
         <!-- Send buttons -->
         <div class="actions" fxFlex="1 1 100%">
           <button mat-button (click)="clear()">
-            <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
             Clear all
           </button>
           <button mat-raised-button color="primary" class="validate" (click)="onSubmit()" [disabled]="!checkAddress() || !checkAmount()">
-            <mat-icon fontSet="partIcon" fontIcon="part-stre-right"></mat-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
             Make payment
           </button>
         </div><!-- .actions -->

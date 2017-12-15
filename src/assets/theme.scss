@@ -408,6 +408,14 @@ input[type="text"] {
   }
 }
 
+.mat-button {
+  &.small { // smaller buttons
+    min-width: auto;
+    line-height: 29px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
 
 
 
