@@ -12,6 +12,10 @@
   }
 }
 
+.mat-card {
+  margin-bottom: 20px;
+}
+
 .title { // box titles
   text-transform: uppercase;
   font-weight: bold;
@@ -48,6 +52,13 @@
   }
 }
 
+.mat-icon {
+  width: auto;
+  height: auto;
+  font-size: 16px;
+}
+
+
 // ------ LAYOUT ------ //
 
 .privacy-level { // slider in Anon TXs
@@ -70,6 +81,9 @@
 
   .receiver-address { // recipient's addy & label
     margin-bottom: 30px !important;
+  }
+  .widget-help {
+    margin-top: 0;
   }
 
 }
@@ -101,92 +115,13 @@ mat-form-field {
 
 
 /* ------------------------------- *\
-    Layout
-\* ------------------------------- */ 
-
-.formTableFullWidth {
-  width: 100%;
-}
-
-input[type="text"] {
-  border: none !important;
-}
-
-.mat-list {
-  .mat-divider {
-    margin: 0px 0;
-    border-color: transparent;
-  }
-}
-
-.mat-expansion-panel {
-  box-shadow: none;
-}
-
-.mat-card {
-  //padding: 0;
-  margin-bottom: 12px;
-  border-bottom: 0px solid $bg-shadow;
-  .send {
-    padding: 0 0 20px 0;
-  }
-  h5 {
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 12px;
-  }
-}
-
-.mat-input-element {
-  width: calc(100% - 8px);
-}
-
-.mat-list-radio h5 {
-  margin-top: 15px;
-}
-
-.mat-radio-group {
-  background: #fff;
-}
-
-.mat-send-card {
-  padding: 10px 30px 10px 30px;
-  min-height: 100px;
-  height: auto;
-  font-family: $font;
-}
-
-.balance-label {
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 12px;
-}
-
-.mat-list-radio .mat-radio-button {
-  margin-bottom: 0px;
-}
-
-
-
-
-/* ------------------------------- *\
     Buttons
 \* ------------------------------- */ 
 
 app-header {
-  button {
-    background-color: $bg;
-    border: none;
-    padding: 3px 15px;
-    margin: 0 10px 0 0;
-    border-bottom: 0px solid $bg-shadow;
-    float: right;
-    font-weight: 500;
-    color: $text;
-  }
-  .bottom-line {
+  .bottom-line { // line under tabs
     border-bottom: 1px solid $bg-shadow;
-  } 
+  }
   button.advanced-options { // show/hide advanced options
     color: $text-muted;
     &:hover {
@@ -209,13 +144,3 @@ app-header {
   }
 }
 
-
-
-.mat-icon {
-  margin-right: 5px;
-  width: auto;
-  height: auto;
-  font-size: 16px;
-  position: relative;
-  top: -1px;
-}
