@@ -20,7 +20,7 @@
 
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
           <input matInput type="text" class="header-input"
-                 placeholder="Search transactions" [(ngModel)]="filters.search" (keyup.enter)="filter()">
+                 placeholder="Search transactions" [(ngModel)]="filters.search" (keyup.enter)="filter()" (keyup.escape)="filters.search = ''">
           <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" (click)="filter()">
           </mat-icon>
         </mat-form-field>
@@ -63,8 +63,6 @@
   </div>
 
   <div class="tx-list section" fxFlex="1 1 100%">
-    <!-- TODO: insert number of matching results -->
-    <div class="subtitle first">Listing [number] transactions</div>
     <transaction-table #transactions
                        [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
     </transaction-table>

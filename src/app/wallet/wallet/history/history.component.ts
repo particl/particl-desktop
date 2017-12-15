@@ -15,12 +15,12 @@ export class HistoryComponent implements OnInit {
     { title: 'All transactions', value: 'all'               },
     { title: 'Send',             value: 'send'              },
     { title: 'Receive',          value: 'receive'           },
-    { title: 'Immature',         value: 'immature'          },
     { title: 'Stake',            value: 'stake'             },
-    { title: 'Balance transfer', value: 'internal_transfer' }
-    // { title: 'Orphan',            value: 'orphan'            },
-    // { title: 'Coinbase',          value: 'coinbase'          },
-    // { title: 'Orphaned stake',    value: 'orphaned_stake'    },
+    { title: 'Balance transfer', value: 'internal_transfer' },
+    // { title: 'Immature',         value: 'immature'          },
+    // { title: 'Orphan',           value: 'orphan'            },
+    // { title: 'Coinbase',         value: 'coinbase'          },
+    // { title: 'Orphaned stake',   value: 'orphaned_stake'    },
   ];
 
   sortings: Array<any> = [
@@ -51,7 +51,7 @@ export class HistoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    /* may be used if we concatenate some filters */
+    /* may be used if we concatenate some filters http://bit.ly/2Buav9B */
   }
 
   default() {
@@ -64,28 +64,20 @@ export class HistoryComponent implements OnInit {
   }
 
   changeCategory(index: number) {
-    this.filters.category = this.categories[index];
+    this.filters.category = this.categories[index].value;
     this.filter();
   }
 
   filter() {
-    this.dump();
-    console.log('transactions component', this.transactions);
     this.transactions.filter(this.filters);
   }
 
-  // @TODO remove it if no needed
   sortList(event): void {
     this.filters.sort = event.value;
     this.filter();
   }
 
-  dump() {
-    console.log('filters', this.filters);
-  }
-
   clear() {
-    this.dump();
     this.default();
     this.filter();
   }
