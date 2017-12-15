@@ -74,7 +74,7 @@ export class SendComponent {
 
   /** Toggle advanced controls and settings */
   toggleAdvanced() {
-    this.advancedText = ' Advanced options'; // (this.advanced ? 'show' : 'hide') + 
+    this.advancedText = ' Advanced options';
     this.advanced = !this.advanced;
   }
 
