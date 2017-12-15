@@ -75,6 +75,11 @@ export class HistoryComponent implements OnInit {
     this.transactions.filter(this.filters);
   }
 
+  sortList(event): void {
+    this.filters.sort = event.value;
+    this.filter();
+  }
+
   dump() {
     console.log('filters', this.filters);
   }
