@@ -1,7 +1,7 @@
 <app-header class="disable-select">
   <div class="container-fluid">
-    <mat-tab-group>
-      <mat-tab *ngFor="let category of categories" (click)="dump()">
+    <mat-tab-group (selectChange)="changeCategory($event.index)">
+      <mat-tab *ngFor="let category of categories">
         <ng-template mat-tab-label>
           {{ category.title }}
         </ng-template>

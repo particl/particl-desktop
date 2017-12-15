@@ -63,9 +63,8 @@ export class HistoryComponent implements OnInit {
     };
   }
 
-  changeCategory(category: string) {
-    console.log('changeCategory', category);
-    this.filters.category = category;
+  changeCategory(index: number) {
+    this.filters.category = this.categories[index];
     this.filter();
   }
 
