@@ -1,7 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-
-// TODO: remove ?
-import { TransactionCategory } from '../shared/transaction.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-history',
@@ -47,7 +44,7 @@ export class HistoryComponent implements OnInit {
     search:   undefined,
     sort:     undefined,
     type:     undefined
-  }
+  };
 
   constructor() {
     this.default();

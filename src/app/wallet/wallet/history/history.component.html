@@ -1,13 +1,11 @@
 <app-header class="disable-select">
   <div class="container-fluid">
     <mat-tab-group>
-
       <mat-tab *ngFor="let category of categories" (click)="dump()">
         <ng-template mat-tab-label>
           {{ category.title }}
         </ng-template>
       </mat-tab>
-
     </mat-tab-group>
   </div>
 </app-header>
@@ -20,24 +18,20 @@
       <div class="subtitle first">Search &amp; sort</div>
       <mat-card class="filter-card">
 
-        <mat-form-field class="icon-input filter-input"
-          (click)="selectInput()" floatPlaceholder="never">
-
+        <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
           <input matInput type="text" class="header-input"
-            placeholder="Search transactions" [(ngModel)]="filters.search">
+                 placeholder="Search transactions" [(ngModel)]="filters.search" (keyup.enter)="filter()">
           <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" (click)="filter()">
           </mat-icon>
-
         </mat-form-field>
-        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
 
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort results"
-            [(ngModel)]="filter.sort" (change)="filter()">
+                      [(ngModel)]="filter.sort" (change)="filter()">
             <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>
           </mat-select>
-
         </mat-form-field>
       </mat-card>
     </div>
@@ -50,10 +44,10 @@
       <div class="subtitle">Filter by type</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group"
-          [(ngModel)]="filters.type" (change)="filter()">
+                         [(ngModel)]="filters.type" (change)="filter()">
 
           <mat-radio-button class="filter-option" value="{{ type.value }}"
-            *ngFor="let type of types">
+                            *ngFor="let type of types">
             {{ type.title }}
           </mat-radio-button>
 
@@ -72,7 +66,7 @@
     <!-- TODO: insert number of matching results -->
     <div class="subtitle first">Listing [number] transactions</div>
     <transaction-table #transactions
-      [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
+                       [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
     </transaction-table>
   </div><!-- .tx-list -->
 
