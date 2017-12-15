@@ -1,5 +1,6 @@
 import {Component, forwardRef, Inject, ViewChild} from '@angular/core';
 import { Log } from 'ng2-logger';
+import { MatDialogRef } from '@angular/material';
 
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
@@ -24,7 +25,8 @@ export class EncryptwalletComponent {
   constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService,
               @Inject(forwardRef(() => ModalsService))
-              private _modalsService: ModalsService) {
+              private _modalsService: ModalsService,
+              public _dialogRef: MatDialogRef<EncryptwalletComponent>) {
   }
 
   encryptwallet(password: IPassword) {
@@ -47,10 +49,12 @@ export class EncryptwalletComponent {
                   .subscribe(() => {
                     if (!this._modalsService.initializedWallet) {
                       this._modalsService.open('createWallet', {forceOpen: true});
-                      this._rpc.toggleState(true);
                     } else {
                       this._modalsService.close();
+                      // ForceFully Close Encrupt Modal
+                      this._dialogRef.close();
                     }
+                    this._rpc.toggleState(true);
                   });
               }
             },

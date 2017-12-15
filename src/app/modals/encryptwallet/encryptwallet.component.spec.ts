@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material';
 
 import { CoreModule } from '../../core/core.module';
 import { ModalsModule } from '../modals.module';
@@ -19,6 +20,9 @@ describe('EncryptwalletComponent', () => {
         ModalsModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
+      ],
+      providers: [
+        { provide: MatDialogRef }
       ]
     })
     .compileComponents();
