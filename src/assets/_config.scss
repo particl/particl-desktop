@@ -18,6 +18,7 @@ $text-muted: #7E8790; // grey (for section titles, descriptions etc.)
 
 // bg/element colors
 $bg: #fafafa; // light grey bg color
+$bg-hover: darken($bg, 2%);
 $bg-black: #222828; // sidebar
 $bg-shadow: #dcdcdc; // lines, box shadows etc.
 
