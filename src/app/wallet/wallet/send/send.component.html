@@ -23,19 +23,18 @@
       <div class="title">Pay from</div>
 
       <!-- Select "FROM" balance/account -->
-      <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" fxLayout="column"
-                       fxLayoutGap="10px" (change)="updateAmount()">
-        <mat-radio-button class="balance" value="balance" checked="checked" fxFlex>
+      <mat-radio-group class="from-balance-type block-radio"  name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
+        <mat-radio-button class="balance" value="balance" checked="checked" (click)="send.output = 'blind_balance'" fxFlex>
           <div class="name">Public</div>
-          <div class="desc">Balance:<span class="amount">{{ getBalance('balance') }}</span></div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('balance') }}</div>
         </mat-radio-button>
-        <mat-radio-button class="balance" value="blind_balance" fxFlex>
+        <mat-radio-button class="balance" value="blind_balance" fxFlex (click)="send.output = 'balance'">
           <div class="name">Blind</div>
-          <div class="desc">Balance:<span class="amount">{{ getBalance('blind_balance') }}</span></div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('blind_balance') }}</div>
         </mat-radio-button>
-        <mat-radio-button class="balance" value="anon_balance" fxFlex>
+        <mat-radio-button class="balance" value="anon_balance" fxFlex [disabled]="type === 'balanceTransfer'">
           <div class="name">Anon</div>
-          <div class="desc">Balance:<span class="amount">{{ getBalance('anon_balance') }}</span></div>
+          <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('anon_balance') }}</div>
         </mat-radio-button>
       </mat-radio-group><!-- .from-balance-type -->
 
@@ -83,32 +82,21 @@
 
       <!-- Select "TO" balance/account (ONLY for Balance transfer) -->
       <mat-card class="section to-balance-type" *ngIf="type === 'balanceTransfer'">
-        <div class="title">
-          Convert to
-          <button mat-button (click)="toggleAdvanced()" class="small advanced-options">
-            <mat-icon fontSet="partIcon"
-                      fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
-            <span>{{ advancedText }}</span>
-          </button>
-        </div>
-        <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output"
-                         fxLayout="column" fxLayoutGap="10px">
-          <mat-radio-button class="balance" value="balance" checked="checked" fxFlex>
+        <div class="title">Receive to</div>
+        <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output" fxLayout="column" fxLayoutGap="10px">
+          <mat-radio-button class="balance" value="balance" (click)="send.input = 'blind_balance'" checked="checked" fxFlex>
             <div class="name">Public</div>
-            <div class="desc">Balance:<span class="amount">{{ getBalance('balance') }}</span></div>
+            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('balance') }}</div>
           </mat-radio-button>
-          <mat-radio-button class="balance" value="blind_balance" fxFlex>
+          <mat-radio-button class="balance" value="blind_balance" (click)="send.input = 'balance'" fxFlex>
             <div class="name">Blind</div>
-            <div class="desc">Balance:<span class="amount">{{ getBalance('blind_balance') }}</span></div>
+            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('blind_balance') }}</div>
           </mat-radio-button>
           <mat-radio-button class="balance" value="anon_balance" disabled fxFlex>
             <div class="name">Anon</div>
-            <div class="desc">Balance:<span class="amount">{{ getBalance('anon_balance') }}</span></div>
+            <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('anon_balance') }}</div>
           </mat-radio-button>
         </mat-radio-group><!-- .from-balance-type -->
-        <p class="widget-help">
-          Balance transfer helps you convert your PART between Public and Private balances.
-        </p>
       </mat-card><!-- .to-balance-type.section -->
 
       <mat-card class="pay-to" *ngIf="type === 'sendPayment' || advanced">
