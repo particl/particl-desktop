@@ -19,7 +19,8 @@ exports.start = function (mainWindow) {
     .then(()            => multiwallet.get())
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
-    .then(chosenWallets => daemon.start(chosenWallets, daemonStarted));
+    .then(chosenWallets => daemon.start(chosenWallets, daemonStarted))
+    .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
     // .then(()            => ipc.daemonReady(mainWindow.webContents))
 }

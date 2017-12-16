@@ -1,213 +1,176 @@
 <app-header class="disable-select">
   <div class="container-fluid">
-    <div fxLayout.lg="row">
-      <div fxFlex="77">
-        <mat-tab-group (selectChange)="selectTab($event.index)">
-          <mat-tab>
-            <ng-template mat-tab-label>
-              Send payment
-            </ng-template>
-          </mat-tab>
-          <mat-tab>
-            <ng-template mat-tab-label>
-              Balance transfer
-            </ng-template>
-          </mat-tab>
-        </mat-tab-group>
-      </div>
-      <div fxFlex="23" disableTouchRipple="true" class="bottom-line" fxLayoutAlign="left center">
-        <button mat-button (click)="toggleAdvanced()" class="advanced-options"><!-- *ngIf="type === 'balanceTransfer'" -->
-          <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-delete-2': 'part-circle-add-2' }}"></mat-icon>
-          <span>{{ advancedText }}</span>
-        </button>
-      </div>
-    </div>
+    <mat-tab-group (selectChange)="selectTab($event.index)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Send payment
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Balance transfer
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </app-header>
 
-<div class="container-fluid container-block disable-select">
-  <div>
+
+<div class="container-block disable-select" fxLayout="row" fxLayoutGap="35px">
+
+  <div class="from-box" fxFlex="0 0 320px">
+    <mat-card>
+      <div class="title">Pay from</div>
+
+      <!-- Select "FROM" balance/account -->
+      <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px">
+        <mat-radio-button class="balance" value="balance" checked="checked" fxFlex>
+          <div class="name">Public</div>
+          <div class="desc">Balance:<span class="amount">{{ getBalance('balance') }}</span></div>
+        </mat-radio-button>
+        <mat-radio-button class="balance" value="blind_balance" fxFlex>
+          <div class="name">Blind</div>
+          <div class="desc">Balance:<span class="amount">{{ getBalance('blind_balance') }}</span></div>
+        </mat-radio-button>
+        <mat-radio-button class="balance" value="anon_balance" fxFlex>
+          <div class="name">Anon</div>
+          <div class="desc">Balance:<span class="amount">{{ getBalance('anon_balance') }}</span></div>
+        </mat-radio-button>
+      </mat-radio-group><!-- .from-balance-type -->
+
+      <!-- Show privacy slider if anonymous TX -->
+      <div *ngIf="send.input === 'anon_balance'">
+        <div class="subtitle">Select privacy level</div>
+        <div class="privacy-level">
+          <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
+            <span fxFlex="0 0 50px" class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Low privacy" matTooltipPosition="below">Low</span>
+            <span fxFlex="0 0 50px" class="privacy-label medium" (click)="setPrivacy(8,50)" matTooltip="Standard privacy" matTooltipPosition="below">Normal</span>
+            <span fxFlex="0 0 50px" class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="High privacy" matTooltipPosition="below">High</span>
+          </div><!-- .privacy-labels -->
+          <mat-progress-bar [color]="'primary'" [bufferValue]="send.privacy" [mode]="'determinate'" [value]="progress"></mat-progress-bar>
+        </div><!-- .privacy-level -->
+      </div><!-- /if Anon -->
+
+      <!-- TX info help -->
+      <p class="widget-help" *ngIf="send.input === 'balance'">
+        In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver addresses.
+      </p>
+      <p class="widget-help" *ngIf="send.input === 'blind_balance'">
+        Blinded transactions hide transaction amounts, but the sender and receiver addresses are still visible.
+      </p>
+      <p class="widget-help" *ngIf="send.input === 'anon_balance'">
+        Anon transaction offer the highest privacy &ndash; transaction amounts and not even sender and receiver addresses are publicly visible. You can further adjust the privacy level to your needs ("Normal" privacy level is fine for most users). The higher privacy level is, the larger fee needs to be paid.
+      </p>
+
+      <!--button mat-button (click)="toggleAdvanced()" class="small advanced-options">
+        <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
+        <span>{{ advancedText }}</span>
+      </button-->
+    </mat-card>
+  </div><!-- .from-box -->
+
+
+  <div class="to-box" fxFlex="1 1 100%">
     <form name="walletSendForm">
 
-      <mat-card>
-        <mat-list-item>
-          <div class="mat-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
-            <!-- send payment tab -->
-            <mat-radio-group class="mat-send-card" *ngIf="type === 'sendPayment'" name="sendInput"
-                            [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
-              <h5 fxFlex="16.6">From Account</h5>
-              <mat-radio-button value="balance" checked="checked" fxFlex="16.6">Public</mat-radio-button>
-              <mat-radio-button value="blind_balance" fxFlex="16.6">Blind</mat-radio-button>
-              <mat-radio-button value="anon_balance" fxFlex="16.6">Private</mat-radio-button>
-              <div fxFlex="50">
-                <span class="balance-label">Balance: </span>
-                <span class="balance-amount enable-select">{{ getBalance(send.input) }}</span>
-                <span class="currency">PART</span>
-              </div>
-            </mat-radio-group>
-
-            <!-- balance transfer tab -->
-            <mat-radio-group class="mat-send-card" *ngIf="type === 'balanceTransfer'" name="sendInput"
-                            [(ngModel)]="send.input" fxFlex="100" fxLayoutAlign="center center">
-              <h5 fxFlex="16.6">From Account</h5>
-              <mat-radio-button value="balance" (click)="send.output = 'blind_balance'" checked="checked" fxFlex="16.6">Public
-              </mat-radio-button>
-              <mat-radio-button value="blind_balance" (click)="send.output = 'balance'" fxFlex="16.6">
-                Blind
-              </mat-radio-button>
-              <!-- fix inconsistency here -->
-              <mat-radio-button value="anon_balance" disabled="{{ send.output === 'anon_balance' }}" fxFlex="16.6">
-                Private
-              </mat-radio-button>
-              <div fxFlex="50">
-                <span class="balance-label">Balance: </span>
-                <span class="balance-amount enable-select">{{ getBalance(send.input )}}</span>
-                <span class="currency">PART</span>
-              </div>
-            </mat-radio-group>
-          </div>
-        </mat-list-item>
-      </mat-card>
-
-      <p class="widget-help" *ngIf="type === 'balanceTransfer'">
-        Balance transfer helps you move PART between your Public and Private addresses.
-      </p>
-
-      <mat-card *ngIf="type === 'balanceTransfer'">
-        <mat-list-item>
-          <div class="mat-line mat-expansion-panel" fxLayout="row" fxLayoutGap="20">
-            <mat-radio-group class="mat-send-card" name="sendOutput" [(ngModel)]="send.output" fxFlex="100"
-                            fxLayoutAlign="center center">
-              <h5 fxFlex="16.6">To Account</h5>
-              <mat-radio-button value="balance" (click)="send.input = 'blind_balance'" fxFlex="16.6">Public
-              </mat-radio-button>
-              <mat-radio-button value="blind_balance" (click)="send.input = 'balance'" fxFlex="16.6">
-                Blind
-              </mat-radio-button>
-              <mat-radio-button value="anon_balance" disabled="{{ send.input === 'anon_balance' }}" fxFlex="16.6">
-                Private
-              </mat-radio-button>
-              <div fxFlex="50">
-                <span class="balance-label">Balance: </span>
-                <span class="balance-amount enable-select">{{ getBalance(send.output) }}</span>
-                <span class="currency">PART</span>
-              </div>
-            </mat-radio-group>
-          </div>
-        </mat-list-item>
-      </mat-card>
-
-
-      <mat-card class="mat-send-list" *ngIf="type === 'sendPayment' || advanced">
-        <mat-list-item>
-          <div class="mat-send-card mat-line mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
-               fxLayoutAlign="center center">
-            <h5 fxFlex="15">Pay to</h5>
-            <mat-form-field fxFlex="100">
-              <!-- fix success input -->
-              <input #address name="toAddress"
-                     matInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
-                     type="text" placeholder="Recipient's address"
-                     [(ngModel)]="send.toAddress" (ngModelChange)="verifyAddress()" />
-            </mat-form-field>
-            <div fxFlex="100" fxLayoutGap="20px">
-              <mat-form-field fxFlex="100">
-                <input class="mat-bg-transparent" name="toLabel" matInput type="text" placeholder="Enter a label"
-                       [(ngModel)]="send.toLabel">
-              </mat-form-field>
-              <div fxFlex="0 0 100px" fxFlex.lt-md="100" fxLayoutAlign="center center" fxLayoutGap="20px">
-                <span fxFlex="16.6">
-                  <mat-icon class="cursor-pointer zindex" flex="100" matTooltip="Address Lookup" (click)="openLookup()"
-                           fontSet="partIcon" fontIcon="part-multiple-19"></mat-icon>
-                </span>
-                <span fxFlex="16.6">
-                  <mat-icon flex="100" class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-single-copy-04" (click)="pasteAddress()"></mat-icon>
-                </span>
-                <span fxFlex="16.6">
-                  <mat-icon flex="100" matTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="partIcon"
-                           fontIcon="part-circle-remove"></mat-icon>
-                </span>
-              </div>
-            </div>
-          </div>
-        </mat-list-item>
-      </mat-card>
-
-
-      <mat-card class="mat-send-list" *ngIf="advanced">
-        <mat-list-item>
-          <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
-               fxLayoutAlign="center center">
-            <h5 fxFlex="15">Narration</h5>
-            <mat-form-field fxFlex="100">
-            <input #narration type="text" matInput name="sendNote"
-             placeholder="Optional: enter a short note to send with a payment"
-             maxlength="24"
-            [(ngModel)]="send.note" >
-            <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
-            </mat-form-field>
-          </div>
-        </mat-list-item>
-      </mat-card>
-
-
-      <mat-card class="mat-send-list">
-        <mat-list-item>
-          <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
-               fxLayoutAlign="start center">
-            <h5 fxFlex="0 0 15%">Amount</h5>
-            <mat-form-field fxFlex="0 0 130px">
-              <input matInput type="text" name="sendAmount"
-                     placeholder="Amount to send"
-                     [(ngModel)]="send.amount" (input)="verifyAmount()"
-                     [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
-                     oninput="validity.valid||(value='');" step="any">
-            </mat-form-field>
-            <mat-select fxFlex="0 0 80px" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
-              <mat-option value="part">PART</mat-option>
-            </mat-select>
-          </div>
-        </mat-list-item>
-      </mat-card>
-
-
-      <mat-card *ngIf="send.input === 'anon_balance'">
-        <mat-list-item>
-          <div class="mat-line mat-send-card mat-expansion-panel" fxFlex="100" fxLayout="row" fxLayoutGap="20px"
-               fxLayoutAlign="center center">
-            <h5 fxFlex="15">Privacy level</h5>
-            <div fxFlex="'column'" fxLayoutWrap>
-              <div class="privacy-labels" fxFlex="100" fxLayoutAlign="start center">
-                <span fxFlex class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Set Low" matTooltipPosition="below">Low</span>
-                <span fxFlex class="privacy-label medium" (click)="setPrivacy(8,50)" matTooltip="Set Medium" matTooltipPosition="below">Medium</span>
-                <span fxFlex class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="Set High" matTooltipPosition="below">High</span>
-              </div>
-              <mat-progress-bar class="example-margin" [color]="'primary'" [bufferValue]="send.privacy"
-                               [mode]="'determinate'" [value]="progress"></mat-progress-bar>
-            </div>
-          </div>
-        </mat-list-item>
-      </mat-card>
-      <p class="widget-help" *ngIf="send.input === 'anon_balance'">
-        Choose your privacy level. Higher privacy levels have higher fees, but offers increased privacy.
-      </p>
-
-
-      <div class="actions">
-        <div class="send" fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
-          <button mat-raised-button color="primary" (click)="clear()">
-            <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
-            Clear all
-          </button>
-          <button mat-raised-button color="disabled" class="validate" (click)="onSubmit()"
-                  [disabled]="!checkAddress() || !checkAmount()">
-            <mat-icon fontSet="partIcon" fontIcon="part-stre-right"></mat-icon>
-            Make payment
+      <!-- Select "TO" balance/account (ONLY for Balance transfer) -->
+      <mat-card class="section to-balance-type" *ngIf="type === 'balanceTransfer'">
+        <div class="title">
+          Convert to
+          <button mat-button (click)="toggleAdvanced()" class="small advanced-options">
+            <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
+            <span>{{ advancedText }}</span>
           </button>
         </div>
-      </div><!-- .actions -->
+        <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output" fxLayout="column" fxLayoutGap="10px">
+          <mat-radio-button class="balance" value="balance" checked="checked" fxFlex>
+            <div class="name">Public</div>
+            <div class="desc">Balance:<span class="amount">{{ getBalance('balance') }}</span></div>
+          </mat-radio-button>
+          <mat-radio-button class="balance" value="blind_balance" fxFlex>
+            <div class="name">Blind</div>
+            <div class="desc">Balance:<span class="amount">{{ getBalance('blind_balance') }}</span></div>
+          </mat-radio-button>
+          <mat-radio-button class="balance" value="anon_balance" disabled fxFlex>
+            <div class="name">Anon</div>
+            <div class="desc">Balance:<span class="amount">{{ getBalance('anon_balance') }}</span></div>
+          </mat-radio-button>
+        </mat-radio-group><!-- .from-balance-type -->
+        <p class="widget-help">
+          Balance transfer helps you convert your PART between Public and Private balances.
+        </p>
+      </mat-card><!-- .to-balance-type.section -->
+
+      <mat-card class="pay-to" *ngIf="type === 'sendPayment' || advanced">
+        <div class="title">
+          Pay to
+          <button mat-button (click)="toggleAdvanced()" *ngIf="type === 'sendPayment'" class="small advanced-options">
+            <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
+            <span>{{ advancedText }}</span>
+          </button>
+        </div>
+
+        <!-- Receiver's address/label -->
+        <div class="section receiver-address">
+          <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
+            <mat-form-field fxFlex="1 1 100%" class="full-width larger">
+              <input #address name="toAddress" matInput [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }" type="text" placeholder="Recipient's address" [(ngModel)]="send.toAddress" (ngModelChange)="verifyAddress()" />
+            </mat-form-field>
+            <span fxFlex="0 0 20px">
+              <mat-icon class="cursor-pointer zindex" matTooltip="Address Lookup" (click)="openLookup()" fontSet="partIcon" fontIcon="part-people"></mat-icon>
+            </span>
+            <span fxFlex="0 0 20px">
+              <mat-icon class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-copy" (click)="pasteAddress()"></mat-icon>
+            </span>
+            <span fxFlex="0 0 20px">
+              <mat-icon matTooltip="Clear" (click)="clearReceiver()" color="warn" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+            </span>
+          </div>
+          <mat-form-field class="full-width larger" floatPlaceholder="never">
+            <input name="toLabel" matInput type="text" placeholder="Receiver's name (optional)" [(ngModel)]="send.toLabel">
+          </mat-form-field>
+          <p class="widget-help">
+            You can save Receiver's address to your Address book by labeling it here.
+          </p>
+        </div><!-- .receiver-address.section -->
+
+        <!-- Narrations -->
+        <div class="section narration advanced" *ngIf="advanced">
+          <mat-form-field class="full-width larger" floatPlaceholder="never">
+            <input #narration type="text" matInput name="sendNote" placeholder="Narration (optional)" maxlength="24" [(ngModel)]="send.note">
+            <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
+          </mat-form-field>
+          <p class="widget-help">
+            Send a short note with your payment. Keep in mind that when sending to Public addresses, the narrations will be recorded and publicly visible on the blockchain. Blind & Anon transactions make narrations visible only for Sender and Receiver.
+          </p>
+        </div><!-- .narration.section -->
+      </mat-card><!-- .pay-to -->
+
+      <!-- Send amount % buttons -->
+      <mat-card class="send-amount" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
+        <mat-form-field fxFlex="0 0 150px">
+          <!-- Send amount -->
+          <input matInput type="text" name="sendAmount" placeholder="Amount to send" [(ngModel)]="send.amount" (input)="verifyAmount()" [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }" oninput="validity.valid||(value='');" step="any">
+        </mat-form-field>
+        <!-- Choose currency -->
+        <mat-select class="underliningSelect" fxFlex="0 0 70px" name="currency" [(ngModel)]="send.currency" placeholder="Currency">
+          <mat-option value="part">PART</mat-option>
+        </mat-select>
+        <!-- Send buttons -->
+        <div class="actions" fxFlex="1 1 100%">
+          <button mat-button (click)="clear()">
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Clear all
+          </button>
+          <button mat-raised-button color="primary" class="validate" (click)="onSubmit()" [disabled]="!checkAddress() || !checkAmount()">
+            <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+            Make payment
+          </button>
+        </div><!-- .actions -->
+      </mat-card><!-- .send-amount -->
 
 
-    </form>
-  </div>
-</div>
+    </form><!-- walletSendForm -->
+  </div><!-- .to-box -->
+
+</div><!-- .container -->

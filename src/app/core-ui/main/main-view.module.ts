@@ -10,11 +10,14 @@ import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
 
+import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
+
+
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    MaterialModule
+    MaterialModule,
   ],
   exports: [
     MainViewComponent,
@@ -26,6 +29,9 @@ import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.c
   ],
   entryComponents: [
     ConsoleModalComponent
+  ],
+  providers: [
+    TransactionService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -32,7 +32,7 @@ export class SendComponent {
   type: string = 'sendPayment';
   advanced: boolean = false;
   progress: number = 10;
-  advancedText: string = 'Show Advanced options'
+  advancedText: string = 'Advanced options'
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
@@ -74,7 +74,7 @@ export class SendComponent {
 
   /** Toggle advanced controls and settings */
   toggleAdvanced() {
-    this.advancedText = (this.advanced ? 'show' : 'hide') + ' Advanced options';
+    this.advancedText = ' Advanced options';
     this.advanced = !this.advanced;
   }
 
@@ -118,6 +118,10 @@ export class SendComponent {
 
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
+    if (this.send.input !== 'balance' && this.addressHelper.testAddress(this.send.toAddress, 'public')) {
+      return false;
+    }
+
     // use default transferBalance address or custom address.
     return (this.type === 'balanceTransfer' && !this.send.toAddress) || this.send.validAddress;
   }
@@ -246,6 +250,8 @@ export class SendComponent {
   openLookup() {
     const dialogRef = this.dialog.open(AddressLookupComponent);
     dialogRef.componentInstance.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
+    dialogRef.componentInstance.filter = (
+      ['anon_balance', 'blind_balance'].includes(this.send.input) ? 'Private' : 'All types');
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
       dialogRef.close();
