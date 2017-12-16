@@ -14,21 +14,21 @@
 <button mat-icon-button type="button" class="mat-paginator-navigation-previous" (click)="firstPage()"
         [matTooltip]="_intl.firstPageLable"
         [matTooltipPosition]="'above'" [disabled]="!hasPreviousPage()">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="chevron-double-left"></mat-icon>
+  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-double"></mat-icon>
 </button>
 <button mat-icon-button type="button" class="mat-paginator-navigation-previous" (click)="previousPage()"
         [matTooltip]="_intl.previousPageLabel"
         [matTooltipPosition]="'above'" [disabled]="!hasPreviousPage()">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="chevron-single-left"></mat-icon>
+  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
 </button>
 
 <button mat-icon-button type="button" class="mat-paginator-navigation-next" (click)="nextPage()"
         [matTooltip]="_intl.nextPageLabel" [matTooltipPosition]="'above'"
         [disabled]="!hasNextPage()">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="chevron-single-next"></mat-icon>
+  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
 </button>
 <button mat-icon-button type="button" class="mat-paginator-navigation-next" (click)="lastPage()"
         [matTooltip]="_intl.lastPageLable" [matTooltipPosition]="'above'"
         [disabled]="!hasNextPage()">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="chevron-double-right"></mat-icon>
+  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-double"></mat-icon>
 </button>
