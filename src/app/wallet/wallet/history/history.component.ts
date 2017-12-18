@@ -68,7 +68,7 @@ export class HistoryComponent implements OnInit {
     this.filter();
   }
 
-  sortList(event): void {
+  sortList(event: any): void {
     this.filters.sort = event.value;
     this.filter();
   }
