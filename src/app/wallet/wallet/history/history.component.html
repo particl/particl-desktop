@@ -1,6 +1,7 @@
 <app-header class="disable-select">
   <div class="container-fluid">
-    <mat-tab-group (selectChange)="changeCategory($event.index)">
+    <mat-tab-group (selectChange)="changeCategory($event.index)"
+      [(selectedIndex)]="categories.indexOf(filters.category)">
       <mat-tab *ngFor="let category of categories">
         <ng-template mat-tab-label>
           {{ category.title }}
@@ -20,14 +21,15 @@
 
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
           <input matInput type="text" class="header-input"
-                 placeholder="Search transactions" [(ngModel)]="filters.search" (keyup.enter)="filter()" (keyup.escape)="filters.search = ''">
+            placeholder="Search transactions" [(ngModel)]="filters.search"
+            (keyup.enter)="filter()" (keyup.escape)="filters.search = ''">
           <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" (click)="filter()">
           </mat-icon>
         </mat-form-field>
 
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort results"
-                      [(ngModel)]="filters.sort" (change)="filter()">
+            [(ngModel)]="filters.sort" (change)="filter()">
             <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>
@@ -44,10 +46,10 @@
       <div class="subtitle">Filter by type</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group"
-                         [(ngModel)]="filters.type" (change)="filter()">
+          [(ngModel)]="filters.type" (change)="filter()">
 
-          <mat-radio-button class="filter-option" value="{{ type.value }}"
-                            *ngFor="let type of types">
+          <mat-radio-button class="filter-option"
+            *ngFor="let type of types" value="{{ type.value }}">
             {{ type.title }}
           </mat-radio-button>
 
@@ -63,8 +65,7 @@
   </div>
 
   <div class="tx-list section" fxFlex="1 1 100%">
-    <transaction-table #transactions
-                       [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
+    <transaction-table #transactions [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
     </transaction-table>
   </div><!-- .tx-list -->
 

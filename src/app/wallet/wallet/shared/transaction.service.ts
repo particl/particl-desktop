@@ -110,24 +110,23 @@ export class TransactionService {
     };
     console.log('filtertransaction options', options)
     this.rpc.call('filtertransactions', [options])
-    .subscribe(
-      (txResponse: Array<Object>) => {
-        // The callback will send over an array of JSON transaction objects.
-        this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
-        this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
+    .subscribe((txResponse: Array<Object>) => {
+      // The callback will send over an array of JSON transaction objects.
+      this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
+      this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
 
-        if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
-          this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
-        }
+      if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
+        this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
+      }
 
-          this.deleteTransactions();
-          txResponse.forEach((tx) => {
-            this.addTransaction(tx);
-          });
-
-        this.loading = false;
-        this.log.d(`rpc_update, txs array: ${this.txs.length}`);
+      this.deleteTransactions();
+      txResponse.forEach((tx) => {
+        this.addTransaction(tx);
       });
+
+      this.loading = false;
+      this.log.d(`rpc_update, txs array: ${this.txs.length}`);
+    });
 
   }
 

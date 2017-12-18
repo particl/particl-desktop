@@ -18,8 +18,8 @@ export class HistoryComponent implements OnInit {
     { title: 'Stake',            value: 'stake'             },
     { title: 'Balance transfer', value: 'internal_transfer' },
     // { title: 'Immature',         value: 'immature'          },
-    // { title: 'Orphan',           value: 'orphan'            },
     // { title: 'Coinbase',         value: 'coinbase'          },
+    // { title: 'Orphan',           value: 'orphan'            },
     // { title: 'Orphaned stake',   value: 'orphaned_stake'    },
   ];
 
@@ -68,13 +68,13 @@ export class HistoryComponent implements OnInit {
     this.filter();
   }
 
-  filter() {
-    this.transactions.filter(this.filters);
-  }
-
   sortList(event): void {
     this.filters.sort = event.value;
     this.filter();
+  }
+
+  filter() {
+    this.transactions.filter(this.filters);
   }
 
   clear() {
