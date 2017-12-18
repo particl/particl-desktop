@@ -22,7 +22,7 @@
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
           <input matInput type="text" class="header-input"
             placeholder="Search transactions" [(ngModel)]="filters.search"
-            (keyup.enter)="filter()" (keyup.escape)="filters.search = ''">
+            (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
           <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" (click)="filter()">
           </mat-icon>
         </mat-form-field>

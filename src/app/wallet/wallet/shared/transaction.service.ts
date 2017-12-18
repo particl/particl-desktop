@@ -69,17 +69,10 @@ export class TransactionService {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.log.d(`postconstructor called txs array: ${this.txs.length}`);
     // TODO: why is this being called twice after executing a tx?
-
   }
 
   filter(filters: any) {
-    console.log('txservice got filters', filters);
     Object.keys(filters).map(filter => this[filter] = filters[filter]);
-    console.log('watchonly', this.watchonly);
-    console.log('category', this.category);
-    console.log('search', this.search);
-    console.log('type', this.type);
-    console.log('sort', this.sort);
     this.rpc_update();
   }
 
@@ -108,7 +101,7 @@ export class TransactionService {
       'type':              this.type      !== undefined ? this.type      : undefined,
       'sort':              this.sort      !== undefined ? this.sort      : undefined
     };
-    console.log('filtertransaction options', options)
+
     this.rpc.call('filtertransactions', [options])
     .subscribe((txResponse: Array<Object>) => {
       // The callback will send over an array of JSON transaction objects.
@@ -140,9 +133,11 @@ export class TransactionService {
       .subscribe(
         (tx: Array<Object>) => {
           if (tx[0]['category'] === 'receive') {
-              this.notification.sendNotification('Incoming transaction', tx[0]['amount'] + ' PART received');
+              this.notification.sendNotification(
+                'Incoming transaction', tx[0]['amount'] + ' PART received');
           } else if (tx[0]['category'] === 'stake') {
-              this.notification.sendNotification('New stake reward', tx[0]['amount'] + ' PART received');
+              this.notification.sendNotification(
+                'New stake reward', tx[0]['amount'] + ' PART received');
           }
         });
   }

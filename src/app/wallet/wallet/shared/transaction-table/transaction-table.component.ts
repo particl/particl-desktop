@@ -7,8 +7,6 @@ import { slideDown } from '../../../../core-ui/core.animations';
 import { Transaction } from '../transaction.model';
 import { TransactionService } from '../transaction.service';
 
-
-
 @Component({
   selector: 'transaction-table',
   templateUrl: './transaction-table.component.html',
@@ -63,7 +61,6 @@ export class TransactionsTableComponent implements OnInit {
   }
 
   public filter(filters: any) {
-    console.log('transaction-table got filters', filters)
     this.txService.filter(filters);
   }
 
