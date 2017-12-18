@@ -16,6 +16,14 @@
   cursor: help;
 }
 
+.widget-help-alert {
+  @extend %disable-select;
+  color: red;
+  font-size: 12px;
+  margin-bottom: 1px;
+  cursor: help;
+}
+
 
 // ------ BUTTONS ------ //
 
