@@ -41,13 +41,13 @@ export class EncryptwalletComponent {
         this._rpc.call('encryptwallet', [password.password])
           .subscribe(
             response => {
-              this._rpc.state.set('ui:spinner', false);
               this._rpc.toggleState(false);
               this.flashNotification.open(response);
 
               if (this._rpc.isElectron) {
                 this._rpc.call('restart-daemon')
                   .subscribe(() => {
+                    this._rpc.state.set('ui:spinner', false);
                     if (!this._modalsService.initializedWallet) {
                       this._modalsService.open('createWallet', {forceOpen: true});
                     } else {

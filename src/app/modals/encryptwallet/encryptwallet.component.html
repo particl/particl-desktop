@@ -7,7 +7,8 @@
         Please enter a password to encrypt your wallet.
       </p>
       <p class="warning">
-        <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon> Do NOT forget this password or you will be unable to access your coins
+        <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+        Do NOT forget this password or you will be unable to access your coins
       </p>
     </div><!-- !password -->
 
@@ -19,7 +20,8 @@
         Please enter your chosen password again to confirm it.
       </p>
       <p class="warning">
-        <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon> Do NOT forget this password or you will be unable to access your coins
+        <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+        Do NOT forget this password or you will be unable to access your coins
       </p>
     </div><!-- !password -->
 
@@ -32,13 +34,10 @@
       [showStakeOnly]="false"
       [emitPassword]="true">
     </app-password>
-    
+
     <div *ngIf="password" class="section go-back">
       <button mat-button (click)="clearPassword()">Back</button>
     </div>
 
   </div><!-- .content -->
 </div>
-
-
-<!--<app-alert #alertBox ></app-alert>-->
