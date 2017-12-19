@@ -133,6 +133,16 @@
           [showStakeOnly]="false">
         </app-password>
       </div>
+      <!--Confirmation of password-->
+      <div *ngIf="step === 2">
+          <app-password
+            #passwordElementVerify
+            label="Verify Password"
+            [emitPassword]="true"
+            (passwordEmitter)="passwordFromEmitter($event, true)"
+            [showStakeOnly]="false">
+          </app-password>
+        </div>
 
       <ng-template [ngIf]="[3,4].indexOf(step) != -1">
         <app-passphrase
@@ -223,7 +233,8 @@
 
       <div class="title">Congratulations!</div>
       <p>
-        Your new wallet was created successfully and set as the default wallet!
+        Your new wallet was created successfully and set as the default wallet!<br>
+        <b>Please ensure that your Passphrase is written down and stored in a sequre location!</b>
       </p>
       <div class="actions">
         <button mat-raised-button color="warn" (click)="close()">Close</button>
