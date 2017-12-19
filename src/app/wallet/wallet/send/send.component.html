@@ -94,8 +94,7 @@
         </div>
         <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output"
                          fxLayout="column" fxLayoutGap="10px">
-          <mat-radio-button class="balance" value="balance" (click)="send.input = 'blind_balance'" checked="checked"
-                            fxFlex>
+          <mat-radio-button class="balance" value="balance" (click)="send.input = 'blind_balance'" checked="checked" fxFlex>
             <div class="name">Public</div>
             <div class="desc">Balance:<span class="amount">{{ getBalance('balance') }}</span></div>
           </mat-radio-button>
@@ -188,10 +187,6 @@
         </mat-select>
         <!-- Send buttons -->
         <div class="actions" fxFlex="1 1 100%">
-          <button mat-button (click)="clear()">
-            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-            Clear all
-          </button>
           <button mat-raised-button color="primary" class="validate" (click)="onSubmit()"
                   [disabled]="!checkAddress() || !checkAmount()">
             <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
