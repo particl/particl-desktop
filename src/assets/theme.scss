@@ -16,12 +16,27 @@
   cursor: help;
 }
 
-.widget-help-alert {
+.widget-disabled-alert {
   @extend %disable-select;
   color: red;
   font-size: 12px;
   margin-bottom: 1px;
-  cursor: help;
+}
+
+.widget-disabled-title-alert {
+  @extend %disable-select;
+  color: red;
+  font-size: 24px;
+  margin-bottom: 20px;
+  line-height: 1.3em;
+}
+
+.widget-running-title-process {
+  @extend %disable-select;
+  color:rgb(49, 223, 49);
+  font-size: 24px;
+  margin-bottom: 20px;
+  line-height: 1.3em;
 }
 
 
