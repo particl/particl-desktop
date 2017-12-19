@@ -44,12 +44,12 @@
           <span *ngSwitchCase="'send'" class="tx-type sent">
             <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>Sent
             <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
-                     matTooltip="Narration included" matTooltipPosition="after"></mat-icon>
+                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'receive'" class="tx-type received">
             <mat-icon fontSet="partIcon" fontIcon="part-receive" color="primary"></mat-icon>Received
             <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
-                     matTooltip="Narration included" matTooltipPosition="after"></mat-icon>
+                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
             <mat-icon fontSet="partIcon" fontIcon="part-swap" color="primary"></mat-icon>Balance transfer
