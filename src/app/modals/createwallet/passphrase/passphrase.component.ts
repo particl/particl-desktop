@@ -1,4 +1,4 @@
-import { Component, Input,  OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input,  OnChanges, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { PassphraseService } from './passphrase.service';
@@ -20,6 +20,7 @@ export class PassphraseComponent implements  OnChanges {
   focused: number = 0;
   public editable: number[] = [];
 
+  @ViewChild('phrase') phrase: ElementRef;
   @Input() words: string[] = Array(MAX_WORDS).fill('');
 
   @Input() readOnly: boolean = false;
@@ -94,5 +95,11 @@ export class PassphraseComponent implements  OnChanges {
 
   copyToClipBoard(): void {
     this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.');
+  }
+
+  pasteContent() {
+    // Directive doesn't get reflect if we make focused = 0
+    this.phrase.nativeElement.focus();
+    document.execCommand('Paste');
   }
 }
