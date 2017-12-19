@@ -6,20 +6,32 @@
   .staking-node {
     padding: 24px 24px 30px;
     margin-bottom: 20px;
+    &.active .subtitle {
+      color: $color;
+    }
+    &.inactive .subtitle {
+      color: $text-muted;
+    }
+    &.warning .subtitle {
+      color: $color-alert;
+    }
     .title {
       display: inline-block;
       text-transform: uppercase;
       font-weight: bold;
-      & > .active {
-        color: $color;
+    }
+    .subtitle {
+      display: block;
+      margin-top: 2px;
+      &.in-progress {
+        margin: 10px 0 5px;
       }
-      & > .inactive {
-        color: $text-muted;
+      .progress {
+        float: right;
       }
     }
-    .status {
-      display: block;
-      text-align: center;
+    .progress-bar {
+      margin: 5px 0 15px;
     }
     button {
       font-size: 12px;
