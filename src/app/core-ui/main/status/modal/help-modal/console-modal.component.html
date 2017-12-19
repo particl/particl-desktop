@@ -2,7 +2,7 @@
   <div mat-dialog-container>
     <mat-tab-group>
       <mat-tab label="Console">
-        <div class="console-modal-form">
+        <div #debug class="console-modal-form" (scroll)="onScroll()">
           <div  fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
             <div  fxFlex="10">
               {{currentTime}}
@@ -13,7 +13,7 @@
             </div>
             <div  fxFlex="80">
               <p>
-                <span>Welcome to the Particl Core RPC console.Use up and down arrows to navigate history, and Ctrl-L to clear screen.Type help for an overview of available commands.</span>
+                <span>Welcome to the Particl Core RPC console.Use up and down arrows to navigate history, and Ctrl-L to clear screen.Type <b>help</b> for an overview of available commands.</span>
               </p>
               <p>
                 <span class="warn-text">WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</span>
@@ -27,20 +27,20 @@
             </div>
             <div  fxFlex="10" fxLayoutAlign="top top">
               <!-- @Todo Need to change icon -->
-              <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-h" *ngIf="list.getType() === 1"></mat-icon>
+              <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-h" *ngIf="list.type === 1"></mat-icon>
               <!-- @Todo Need to change icon -->
-              <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-v" *ngIf="list.getType() === 2"></mat-icon>
+              <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-v" *ngIf="list.type === 2"></mat-icon>
             </div>
             <div  fxFlex="80">
-              <p [ngClass]="{'warn-text': list.getCode() === -1, 'space-text': list.getType() === 2 }">
-                {{list.getText()}}
+              <p [ngClass]="{'warn-text': list.getCode === -1, 'space-text': list.type === 2 }">
+                {{list.text}}
               </p>
             </div>
           </div>
         </div>
         <div  fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
           <mat-form-field fxFlex="1 1 100%">
-            <input matInput [(ngModel)]="command">
+            <input matInput [(ngModel)]="command" placeholder="Enter help to get more commands">
           </mat-form-field>
           <span matTooltip="Enter">
             <!-- @Todo Need to change icon -->

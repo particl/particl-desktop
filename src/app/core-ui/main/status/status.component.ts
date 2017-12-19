@@ -96,6 +96,6 @@ export class StatusComponent implements OnInit {
 
   /* Open Debug Console Window */
   openConsoleWindow() {
-    const dialogRef = this.dialog.open(ConsoleModalComponent);
+    this.dialog.open(ConsoleModalComponent);
   }
 }
