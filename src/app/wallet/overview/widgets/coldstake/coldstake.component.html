@@ -51,11 +51,11 @@
       [mode]="'determinate'"
       [value]="coldstakeProgress">
     </mat-progress-bar>
-    <span class="status inactive" style="text-align: center">{{coldstakeProgress}}%</span>
+    <span class="status inactive">{{coldstakeProgress}}%</span>
 
     <p class="widget-help" *ngIf="coldStakingEnabled">
       <b>{{coldstakeProgress}}%</b> of your balance is now safely staking on your staking node.
-       Please keep this wallet online unitl the cold staking activation process is complete
+      Please keep this wallet online unitl the cold staking activation process is complete
     </p>
   </mat-card>
 
@@ -72,7 +72,7 @@
       [mode]="'determinate'"
       [value]="coldstakeProgress">
     </mat-progress-bar>
-    <span class="status inactive" style="text-align: center">{{coldstakeProgress}}%</span>
+    <span class="status inactive">{{coldstakeProgress}}%</span>
 
     <p class="widget-disabled-alert" *ngIf="coldStakingEnabled">
       <b>WALLET LOCKED!</b>
@@ -80,7 +80,7 @@
 
     <p class="widget-help" *ngIf="coldStakingEnabled">
       The cold staking activation is paused, <b>"unlock for staking"</b> to continue the process.
-       Whilst "pasued", <b>{{coldstakeProgress}}%</b> of your balance that has already converted
+      Whilst "pasued", <b>{{coldstakeProgress}}%</b> of your balance that has already converted
       will continue to stake on your staking node.
     </p>
   </mat-card>
