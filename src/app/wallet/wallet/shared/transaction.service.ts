@@ -51,6 +51,7 @@ export class TransactionService {
       .subscribe(
         txcount => {
           this.loading = true;
+          this.txCount = txcount;
           if (txcount > this.txCount) {
             this.newTransaction();
           }
