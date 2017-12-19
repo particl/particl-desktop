@@ -46,6 +46,9 @@ export class HistoryComponent implements OnInit {
     type:     undefined
   };
 
+  // default tab is zero
+  public selectedTab: number = 0;
+
   constructor() {
     this.default();
   }
