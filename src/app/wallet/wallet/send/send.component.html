@@ -23,10 +23,8 @@
       <div class="title">Pay from</div>
 
       <!-- Select "FROM" balance/account -->
-      <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" fxLayout="column"
-                       fxLayoutGap="10px">
-        <mat-radio-button class="balance" value="balance" checked="checked" (click)="send.output = 'blind_balance'"
-                          fxFlex>
+      <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
+        <mat-radio-button class="balance" value="balance" checked="checked" (click)="send.output = 'blind_balance'" fxFlex>
           <div class="name">Public</div>
           <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('balance') }}</div>
         </mat-radio-button>
@@ -92,8 +90,7 @@
             <span>{{ advancedText }}</span>
           </button>
         </div>
-        <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output"
-                         fxLayout="column" fxLayoutGap="10px">
+        <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output" fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
           <mat-radio-button class="balance" value="balance" (click)="send.input = 'blind_balance'" checked="checked" fxFlex>
             <div class="name">Public</div>
             <div class="desc">Balance:<span class="amount">{{ getBalance('balance') }}</span></div>
