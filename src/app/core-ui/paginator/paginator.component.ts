@@ -1,13 +1,18 @@
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { PageEvent } from './page-event-model';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 
 @Component({
   selector: 'app-paginator',
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss']
 })
-
-
 
 export class PaginatorComponent implements OnInit {
 
@@ -68,6 +73,7 @@ export class PaginatorComponent implements OnInit {
   hasPreviousPage() {
     return this.pageIndex >= 1 && this.pageSize !== 0;
   };
+
   /**
    * Whether there is a next page.
    * @return {?}
@@ -84,9 +90,9 @@ export class PaginatorComponent implements OnInit {
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     // If the start index exceeds the list length, do not try and fix the end index to the end.
-    const endIndex = startIndex < length ?
-      Math.min(startIndex + pageSize, length) :
-      startIndex + pageSize;
+    const endIndex = startIndex < length
+      ? Math.min(startIndex + pageSize, length)
+      : startIndex + pageSize;
     return startIndex + 1 + ' - ' + endIndex + ' of ' + length;
   }
 
