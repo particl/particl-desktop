@@ -68,6 +68,7 @@ export class HistoryComponent implements OnInit {
   }
 
   changeCategory(index: number) {
+    this.selectedTab = index;
     this.filters.category = this.categories[index].value;
     this.filter();
   }
