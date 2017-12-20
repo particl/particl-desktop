@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CoreModule } from '../../../core/core.module';
-import { ModalsModule } from '../../modals.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 
 import { PercentageBarComponent } from './percentage-bar.component';
@@ -15,7 +15,7 @@ describe('PercentageBarComponent', () => {
       imports: [
         SharedModule,
         CoreModule.forRoot(),
-        ModalsModule
+        CoreUiModule.forRoot()
       ]
     })
     .compileComponents();

@@ -21,31 +21,30 @@
     <!-- @TODO: resize and align spinner  -->
     <div class="section sync-stats" fxLayout="row" fxLayoutWrap>
       <div fxFlex="30" class="big item">
-          <span class="value">
-            {{ remainder }}
-            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-                <mat-spinner class="sync-spinner"></mat-spinner>
-            </div>
-          </span>
-
+        <span class="value">
+          {{ remainder }}
+          <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+            <mat-spinner class="sync-spinner"></mat-spinner>
+          </div>
+        </span>
         <div class="description">Blocks to sync</div>
       </div>
       <div fxFlex="70" class="big item">
-          <span class="value">
-            {{ estimatedTimeLeft }}
-            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-                <mat-spinner class="sync-spinner"></mat-spinner>
-            </div>
-          </span>
+        <span class="value">
+          {{ estimatedTimeLeft }}
+          <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+            <mat-spinner class="sync-spinner"></mat-spinner>
+          </div>
+        </span>
         <div class="description">Estimated time left</div>
       </div>
       <div fxFlex="100" class="small item">
-          <span class="value">
-            {{ lastBlockTime }}
-            <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-                <mat-spinner class="sync-spinner"></mat-spinner>
-            </div>
-          </span>
+        <span class="value">
+          {{ lastBlockTime }}
+          <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
+            <mat-spinner class="sync-spinner"></mat-spinner>
+          </div>
+        </span>
         <div class="description">Last Block time</div>
       </div>
     </div><!-- .sync-stats -->

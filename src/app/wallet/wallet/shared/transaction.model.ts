@@ -142,13 +142,12 @@ export class Transaction {
 
   /* Narration */
   public getNarration() {
-    if (this.n0) {
-      return this.n0;
-    } else if (this.n1) {
-      return this.n1;
-    } else {
-      return false
+    for (const key in this.outputs) {
+      if (this.outputs[key] && this.outputs[key].narration) {
+        return this.outputs[key].narration;
+      }
     }
+    return false
   }
 
 
