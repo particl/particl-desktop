@@ -136,8 +136,9 @@ exports.check = function() {
   return new Promise((resolve, reject) => {
 
     const _timeout = rpc.getTimeoutDelay();
-    let auth = cookie.getAuth(_options.get());
-    rpc.setTimeoutDelay(150);
+    // let auth = cookie.getAuth(_options.get());
+    rpc.init();
+    // rpc.setTimeoutDelay(150);
     rpc.call('getnetworkinfo', null, (error, response) => {
       rxIpc.removeListeners();
       if (error) {
