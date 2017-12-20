@@ -54,7 +54,6 @@ export class AddressTableComponent implements OnInit {
   currentPage: number = 1;
   @Input() addressDisplayAmount: number = 5;
   PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
-  MAX_ADDRESSES_PER_PAGE: number = 5;
 
   log: any = Log.create('address-table.component');
 
@@ -170,7 +169,7 @@ export class AddressTableComponent implements OnInit {
 
   pageChanged(event: any) {
     if (event.pageIndex !== undefined) {
-      this.MAX_ADDRESSES_PER_PAGE = event.pageSize;
+      this.addressDisplayAmount = event.pageSize;
       this.currentPage = event.pageIndex + 1;
       this.log.d(event.pageIndex);
     }
