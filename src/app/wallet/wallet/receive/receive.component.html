@@ -154,21 +154,21 @@
 
     <!-- use two paginator for reset pagination after tab change. -->
     <div class="receive-pagination">
-      <mat-paginator
+      <app-paginator
         *ngIf="type == 'private' && getSinglePage().length > 0"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
         [pageSizeOptions]="PAGE_SIZE_OPTIONS"
         (page)="pageChanged($event)">
-      </mat-paginator>
+      </app-paginator>
 
-      <mat-paginator
+      <app-paginator
         *ngIf="type == 'public' && getSinglePage().length > 0"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
         [pageSizeOptions]="PAGE_SIZE_OPTIONS"
         (page)="pageChanged($event)">
-      </mat-paginator>
+      </app-paginator>
     </div>
   </div>
 

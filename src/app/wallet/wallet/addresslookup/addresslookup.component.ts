@@ -29,7 +29,7 @@ export class AddressLookupComponent implements OnInit {
 
   // @TODO: Move static pagination prams into global variable
   MAX_ADDRESSES_PER_PAGE: number = 5;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  // PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
   current_page: number = 1;
   constructor(private _rpc: RpcService) {
   }
