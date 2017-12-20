@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { Location } from '@angular/common';
 
 import { SettingsService } from './settings.service';
@@ -20,8 +19,7 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private _settingsService: SettingsService,
-    private _location: Location,
-    private dialog: MatDialog
+    private _location: Location
   ) { }
 
   ngOnInit() {

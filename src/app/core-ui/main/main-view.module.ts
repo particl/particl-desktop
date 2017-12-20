@@ -27,14 +27,11 @@ import { TransactionService } from '../../wallet/wallet/shared/transaction.servi
   declarations: [
     MainViewComponent,
     StatusComponent,
-<<<<<<< HEAD
+    PercentageBarComponent,
     ConsoleModalComponent
   ],
   entryComponents: [
     ConsoleModalComponent
-=======
-    PercentageBarComponent
->>>>>>> eebb39c1aa625bafa29920ab0dd561519a68dc89
   ],
   providers: [
     TransactionService
