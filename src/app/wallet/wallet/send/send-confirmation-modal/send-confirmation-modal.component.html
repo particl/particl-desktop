@@ -1,18 +1,18 @@
-<h4 mat-dialog-title>Confirm transaction</h4>
-<button mat-raised-button class="small-close_button pull-right" (click)="dialogClose()">
+<div mat-dialog-title>Confirm transaction</div>
+<button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
-<div mat-dialog-content>
+<div mat-dialog-content class="dialog-content">
   {{dialogContent}}
 </div>
 
 <mat-dialog-actions fxLayoutAlign="end center">
-  <button mat-raised-button mat-dialog-close (click)="dialogClose()">
-    <mat-icon fontSet="partIcon" fontIcon="part-simple-remove"></mat-icon>
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
   <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
-    <mat-icon fontSet="partIcon" fontIcon="part-next-single-right"></mat-icon>
-    Confirm
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Confirm &amp; Send
   </button>
 </mat-dialog-actions>

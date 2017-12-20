@@ -1,30 +1,28 @@
-<div class="containerX qr-modal disable-select">
-  <h2 mat-dialog-title class="title">
-    {{singleAddress.label}}
-  </h2>
-  <button mat-raised-button class="small-close_button pull-right" (click)="dialogClose()">
-    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
-  </button>
-  <div fxLayout="column" fxLayoutGap="30px">
+<div mat-dialog-title>{{singleAddress.label}}</div>
 
-    <div class="qr-code">
-      <div #qrCode class="card qr">
-        <qr-code [level]="'H'" size="150" value="particl:{{ singleAddress.address }}"></qr-code>
-      </div>
-    </div><!-- .qr-code -->
+<button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
 
-    <div class="address-string">
-      <div class="details-address enable-select" fxLayoutWrap layout-padding>
-        <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
-          {{ word }}
-        </div>
-      </div>
+<div mat-dialog-content class="dialog-content">
 
-      <div class="actions">
-        <button mat-button class="copy" ngxClipboard [cbContent]="singleAddress.address">
-          <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>Copy to clipboard
-        </button>
-      </div>
-    </div><!-- .address-string -->
+  <div class="qr-code">
+    <div #qrCode class="card qr">
+      <qr-code [level]="'H'" size="150" value="particl:{{ singleAddress.address }}"></qr-code>
+    </div>
   </div>
-</div>
+
+  <div class="address-string">
+    <div class="details-address enable-select" fxLayoutWrap layout-padding>
+      <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
+        {{ word }}
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button mat-button class="copy" ngxClipboard [cbContent]="singleAddress.address">
+      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>Copy to clipboard
+    </button>
+  </div>
+</div><!-- .dialog-content -->

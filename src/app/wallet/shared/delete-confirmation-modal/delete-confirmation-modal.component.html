@@ -1,13 +1,13 @@
-<h4 mat-dialog-title>Are you sure you want to delete ?</h4>
-<button mat-raised-button class="small-close_button pull-right" (click)="dialogClose()">
+<div mat-dialog-title>Are you sure you want to delete?</div>
+<button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-<div mat-dialog-content>
+<div mat-dialog-content class="dialog-content">
   {{dialogContent}}
 </div>
 
 <mat-dialog-actions fxLayoutAlign="end center">
-  <button mat-raised-button color="primary" mat-dialog-close (click)="onConfirmDelete()">Yes</button>
-  <button mat-raised-button mat-dialog-close (click)="dialogClose()">No</button>
+  <button mat-button mat-dialog-close (click)="dialogClose()">Cancel</button>
+  <button mat-raised-button color="warn" mat-dialog-close (click)="onConfirmDelete()">Yes, delete</button>
 </mat-dialog-actions>
