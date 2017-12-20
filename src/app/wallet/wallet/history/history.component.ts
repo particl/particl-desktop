@@ -58,6 +58,7 @@ export class HistoryComponent implements OnInit {
   }
 
   default() {
+    this.selectedTab = 0;
     this.filters = {
       category: 'all',
       type:     'all',
