@@ -25,7 +25,8 @@
         </mat-panel-title>
 
         <!-- Confirmations -->
-        <mat-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation" [ngClass]="styleConfimations(tx.getConfirmationCount())">
+        <mat-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation"
+                         [ngClass]="styleConfimations(tx.getConfirmationCount())">
           <span mat-line matTooltip="Confirmations" matTooltipPosition="before">
             <mat-icon fontSet="partIcon" fontIcon="part-circle-check" class="confirmations"></mat-icon>
             {{ tx.getConfirmationCount() }}
@@ -34,7 +35,7 @@
 
         <!-- Category icon -->
         <mat-panel-title fxFlex="1 0 165px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon"
-                        [ngSwitch]="tx.category">
+                         [ngSwitch]="tx.category">
           <span *ngSwitchCase="'stake'" class="tx-type staked">
             <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>Staked
           </span>
@@ -44,12 +45,12 @@
           <span *ngSwitchCase="'send'" class="tx-type sent">
             <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>Sent
             <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
-                     matTooltip="Narration included" matTooltipPosition="after"></mat-icon>
+                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'receive'" class="tx-type received">
             <mat-icon fontSet="partIcon" fontIcon="part-receive" color="primary"></mat-icon>Received
             <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
-                     matTooltip="Narration included" matTooltipPosition="after"></mat-icon>
+                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
             <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>Balance transfer
@@ -129,13 +130,12 @@
     </mat-expansion-panel>
   </ng-container>
 
-  <mat-paginator
+  <app-paginator
     *ngIf="display.pagination && txService.txs.length > 0"
     [length]="txService.txCount"
     [pageSize]="txService.MAX_TXS_PER_PAGE"
     [pageSizeOptions]="txService.PAGE_SIZE_OPTIONS"
     (page)="pageChanged($event)">
-  </mat-paginator>
-
+  </app-paginator>
 
 </app-grid>

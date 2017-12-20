@@ -41,10 +41,9 @@
 
   </mat-list>
 
-  <mat-paginator
+  <app-paginator
     [length]="getTotalCountForPagination()"
     [pageSize]="MAX_ADDRESSES_PER_PAGE"
-    [pageSizeOptions]="PAGE_SIZE_OPTIONS"
     (page)="pageChanged($event)">
-  </mat-paginator>
+  </app-paginator>
 </div>

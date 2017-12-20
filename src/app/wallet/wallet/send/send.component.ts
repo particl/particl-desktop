@@ -32,7 +32,7 @@ export class SendComponent {
   type: string = 'sendPayment';
   advanced: boolean = false;
   progress: number = 10;
-  advancedText: string = 'Show Advanced options'
+  advancedText: string = 'Advanced options'
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
@@ -74,7 +74,7 @@ export class SendComponent {
 
   /** Toggle advanced controls and settings */
   toggleAdvanced() {
-    this.advancedText = (this.advanced ? 'show' : 'hide') + ' Advanced options';
+    this.advancedText = ' Advanced options';
     this.advanced = !this.advanced;
   }
 

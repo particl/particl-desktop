@@ -56,13 +56,24 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 
 // ------ TABS ------ //
-/*
+
 .mat-tab-group {
-  .mat-tab-header {
-    background: white; // needs to fix the search bg first
+  .mat-tab-label {
+    &.mat-tab-label-active { // keep active tabs black (not grey)
+      opacity: 1;
+      .mat-icon { opacity: 0.9; }
+    }
+    .mat-icon {
+      @extend %tfx;
+      font-size: 14px;
+      margin-right: 8px;
+      position: relative;
+      top: 0.02em;
+      opacity: 0.5;
+    }
   }
 }
-*/
+
 
 
 // ------ EXPANSION PANELS ------ //
@@ -95,11 +106,11 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 input {
   &.verify-sucess {
     color: darken($color, 7%) !important; // #57a800
-    background-color: rgba($color, 0.07) !important; // #edfad7
+    //background-color: rgba($color, 0.07) !important; // #edfad7
   }
   &.verify-error {
     color: darken($color-alert, 5%);
-    background: rgba($color-alert, 0.1) !important;
+    //background: rgba($color-alert, 0.1) !important;
   }
 }
 
@@ -159,6 +170,15 @@ input {
 /* ------------------------------- *\
     Forms
 \* ------------------------------- */
+
+.mat-form-field {
+  font-family: $font;
+  &:not(:first-child) {
+    .mat-input-infix {
+      border-top: none; // remove the big gap vertical between 2+ inputs
+    }
+  }
+}
 
 input[type="text"] {
   border: none;
@@ -270,10 +290,15 @@ input[type="text"] {
 
 /* ------------------------------- *\
     Pagination
-\* ------------------------------- */ 
+\* ------------------------------- */
 
 .mat-paginator {
   margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 56px;
+  padding: 0 8px;
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
@@ -387,9 +412,29 @@ input[type="text"] {
   }
 }
 
+.mat-radio-group {
+  // send: full-width clickable radios
+  &.block-radio {
+    .mat-radio-button .mat-radio-label {
+      width: 100%;
+    }
+  }
+}
 
+.mat-form-field {
+  &.larger { // larger inputs
+    font-size: 14px;
+  }
+}
 
-
+.mat-button {
+  &.small { // smaller buttons
+    min-width: auto;
+    line-height: 29px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
 
 
 
@@ -402,12 +447,12 @@ input[type="text"] {
 \* ------------------------------- */
 /*
 .mat-right { // still needed for TX details
-  text-align: right; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  height: 18px; 
-} 
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 18px;
+}
 
 
 .details-address {
