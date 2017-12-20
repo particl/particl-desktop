@@ -22,12 +22,13 @@ export class EncryptwalletComponent {
   @ViewChild('passwordElement')
   passwordElement: PasswordComponent;
 
-  constructor(private _rpc: RpcService,
-              private flashNotification: SnackbarService,
-              @Inject(forwardRef(() => ModalsService))
-              private _modalsService: ModalsService,
-              public _dialogRef: MatDialogRef<EncryptwalletComponent>) {
-  }
+  constructor(
+    @Inject(forwardRef(() => ModalsService))
+    private _modalsService: ModalsService,
+    private _rpc: RpcService,
+    private flashNotification: SnackbarService,
+    public _dialogRef: MatDialogRef<EncryptwalletComponent>
+  ) { }
 
   encryptwallet(password: IPassword) {
     if (this.password) {
@@ -51,7 +52,7 @@ export class EncryptwalletComponent {
                       this._modalsService.open('createWallet', {forceOpen: true});
                     } else {
                       this._modalsService.close();
-                      // ForceFully Close Encrupt Modal
+                      // force-close encrypt modal
                       this._dialogRef.close();
                     }
                     this._rpc.toggleState(true);
