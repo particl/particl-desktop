@@ -4,7 +4,7 @@
   <div mat-dialog-content>
     <mat-form-field>
       <input matInput type="text" formControlName="address"
-             [ngModel]="address" (ngModelChange)="verifyAddress()"
+             [(ngModel)]="address" (ngModelChange)="verifyAddress()"
              placeholder="Enter Address"
              [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
              #addressInput
