@@ -50,11 +50,10 @@ export class EncryptwalletComponent {
                     this._rpc.state.set('ui:spinner', false);
                     if (!this._modalsService.initializedWallet) {
                       this._modalsService.open('createWallet', {forceOpen: true});
-                    } else {
-                      this._modalsService.close();
-                      // force-close encrypt modal
-                      this._dialogRef.close();
                     }
+                    // force-close encrypt modal
+                    this._dialogRef.close();
+                    this._modalsService.close();
                     this._rpc.toggleState(true);
                   });
               }
