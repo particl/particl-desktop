@@ -259,6 +259,43 @@ input[type="text"] {
     max-width: 800px;
     height: calc(100% - 24px);
     margin: 24px auto auto auto;
+
+    // Dialogs (small)
+    .dialog-content {
+      margin: 20px 0 25px;
+    }
+    [mat-dialog-title] { // dialog title
+      font-family: $font;
+      font-weight: 600;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .small-close_button {
+      position: absolute;
+      right: 10px; // align with modal's content padding
+      top: 22px;
+      z-index: 10;
+      background: transparent;
+      color: $text-muted;
+      min-width: 50px;
+      padding: 0;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      .mat-icon {
+        color: rgba($color-alert, 0.5);
+        border-radius: 50%;
+        font-size: 22px;
+        line-height: 1.4;
+        margin: 0;
+      }
+      &:hover {
+        .mat-icon {
+          color: $color-alert;
+        }
+      }
+    }
     .close_button {
       position: absolute;
       right: 0;
@@ -290,10 +327,15 @@ input[type="text"] {
 
 /* ------------------------------- *\
     Pagination
-\* ------------------------------- */ 
+\* ------------------------------- */
 
 .mat-paginator {
   margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 56px;
+  padding: 0 8px;
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
@@ -428,12 +470,12 @@ input[type="text"] {
 \* ------------------------------- */
 /*
 .mat-right { // still needed for TX details
-  text-align: right; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  height: 18px; 
-} 
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 18px;
+}
 
 
 .details-address {

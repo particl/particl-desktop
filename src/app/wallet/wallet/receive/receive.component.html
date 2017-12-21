@@ -17,7 +17,8 @@
     <mat-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
       <input matInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
              placeholder="Search receive addresses">
-      <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-zoom-bold" matTooltip="Search For Address"
+                matTooltipPosition="after"></mat-icon>
     </mat-form-field>
   </div>
 </app-header>
@@ -97,13 +98,15 @@
             </div>
             <!-- Select address -->
             <span fxFlex="20%" fxFlex.lt-md="25px">
-              <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(addresses[getAddressType()][0])"></mat-icon>
+              <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select"
+                        (click)="selectAddress(addresses[getAddressType()][0])"></mat-icon>
             </span>
           </div>
         </div>
       </mat-card>
       <div class="widget-help">
-        It is advised that you generate and use a new address for each public transaction (or person) to increase your privacy. 
+        It is advised that you generate and use a new address for each public transaction (or person) to increase your
+        privacy.
       </div>
     </mat-list><!-- .list-data -->
 
@@ -143,7 +146,8 @@
               </span>
               <!-- Select address -->
               <span fxFlex="20%" fxFlex.lt-md="25px">
-                <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select" (click)="selectAddress(address)"></mat-icon>
+                <mat-icon class="cursor-pointer" matTooltip="Select Address" fontSet="partIcon" fontIcon="part-select"
+                          (click)="selectAddress(address)"></mat-icon>
               </span>
             </div>
           </div>
@@ -154,22 +158,21 @@
 
     <!-- use two paginator for reset pagination after tab change. -->
     <div class="receive-pagination">
-      <mat-paginator
+      <app-paginator
         *ngIf="type == 'private' && getSinglePage().length > 0"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
         [pageSizeOptions]="PAGE_SIZE_OPTIONS"
         (page)="pageChanged($event)">
-      </mat-paginator>
+      </app-paginator>
 
-      <mat-paginator
+      <app-paginator
         *ngIf="type == 'public' && getSinglePage().length > 0"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
         [pageSizeOptions]="PAGE_SIZE_OPTIONS"
         (page)="pageChanged($event)">
-      </mat-paginator>
+      </app-paginator>
     </div>
   </div>
-
 </div>

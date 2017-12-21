@@ -4,6 +4,7 @@ import { RpcService } from '../../../core/core.module';
 import { Contact } from './contact.model';
 import { Log } from 'ng2-logger';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-addresslookup',
@@ -29,9 +30,11 @@ export class AddressLookupComponent implements OnInit {
 
   // @TODO: Move static pagination prams into global variable
   MAX_ADDRESSES_PER_PAGE: number = 5;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  // PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
   current_page: number = 1;
-  constructor(private _rpc: RpcService) {
+
+  constructor(private _rpc: RpcService,
+              private dialogRef: MatDialogRef<AddressLookupComponent>) {
   }
 
   ngOnInit() {
@@ -114,6 +117,10 @@ export class AddressLookupComponent implements OnInit {
   onSelectAddress(address: string, label: string) {
     const emitData: AddressLookUpCopy = {address: address, label: label};
     this.selectAddressCallback.emit(emitData);
+  }
+
+  dialogClose(): void {
+    this.dialogRef.close();
   }
 
 }

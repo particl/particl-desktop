@@ -12,24 +12,18 @@ import {
 } from '@angular/material';
 
 import { ClipboardModule } from 'ngx-clipboard';
-
+import { MaterialModule } from '../../core-ui/material/material.module';
 import { AccordionModule } from './accordion/accordion.module';
 import { HeaderComponent } from './header/header.component';
 import { TableComponent } from './table/table.component';
 import { GridComponent } from './grid/grid.component';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatInputModule,
-    AccordionModule
+    AccordionModule,
+    MaterialModule
   ],
   declarations: [
     HeaderComponent,
