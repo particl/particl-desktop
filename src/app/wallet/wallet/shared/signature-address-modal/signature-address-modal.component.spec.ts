@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material';
 
 import { CoreModule } from '../../../../core/core.module';
 import { WalletModule } from '../../wallet.module';
@@ -20,6 +21,9 @@ describe('SignatureAddressModalComponent', () => {
         CoreModule.forRoot(),
         ModalsModule.forRoot(),
         CoreUiModule.forRoot()
+      ],
+      providers: [
+        { provide: MatDialogRef }
       ]
     })
       .compileComponents();

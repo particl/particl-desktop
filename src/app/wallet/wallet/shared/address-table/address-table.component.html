@@ -82,10 +82,10 @@
   </div>
 </div>
 
-<mat-paginator
+<app-paginator
   *ngIf="displayPagination && getSinglePage().length>0"
   [length]="getTotalAddressCount()"
   [pageSize]="getMaxAddressesPerPage()"
   [pageSizeOptions]="PAGE_SIZE_OPTIONS"
   (page)="pageChanged($event)">
-</mat-paginator>
+</app-paginator>
