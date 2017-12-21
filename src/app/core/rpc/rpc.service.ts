@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { Headers, Http, Response } from '@angular/http';
+// import { Headers, Http } from '@angular/http';
+// import { Observable } from 'rxjs/Observable';
+
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { Log } from 'ng2-logger';
 
@@ -58,7 +64,7 @@ export class RpcService {
   private _rpcState: RpcStateClass;
 
   constructor(
-    private _http: Http,
+    private _http: HttpClient,
     private _ipc: IpcService,
     public state: StateService
   ) {
@@ -104,9 +110,17 @@ export class RpcService {
 
       return this._http
       .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
-        .map(response => response.json().result)
-        .catch(error => Observable.throw(
-          typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
+        .pipe(
+          map(response => response.json().result),
+          tap(h => {
+            const outcome = h ? `fetched` : `did not find`;
+            this.log(`${outcome} hero id=${id}`);
+          }),
+          catchError(error => Observable.throw(typeof error._body === 'object' ? error._body : JSON.parse(error._body)))
+        )
+        // .map(response => response.json().result)
+        // .catch(error => Observable.throw(
+        //   typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
     }
   }
 

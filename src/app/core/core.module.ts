@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { RpcModule } from './rpc/rpc.module';
 
@@ -19,11 +20,11 @@ import { SnackbarService } from './snackbar/snackbar.service';
 @NgModule({
   imports: [
     CommonModule,
-    RpcModule.forRoot() // TODO: should be here?
+    RpcModule.forRoot(), // TODO: should be here?
+    HttpClientModule
   ],
   exports: [
     HttpModule
-
   ],
   declarations: []
 })
