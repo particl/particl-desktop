@@ -1,6 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 
 import { RpcModule } from './rpc/rpc.module';
@@ -21,10 +20,9 @@ import { SnackbarService } from './snackbar/snackbar.service';
   imports: [
     CommonModule,
     RpcModule.forRoot(), // TODO: should be here?
-    HttpClientModule
   ],
   exports: [
-    HttpModule
+    HttpClientModule
   ],
   declarations: []
 })
@@ -51,4 +49,3 @@ export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 export { PeerService } from './rpc/peer/peer.service';
 export { SnackbarService } from './snackbar/snackbar.service';
 export { StateService } from './state/state.service';
-
