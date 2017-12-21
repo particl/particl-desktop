@@ -275,6 +275,7 @@ input[type="text"] {
       position: absolute;
       right: 10px; // align with modal's content padding
       top: 22px;
+      z-index: 10;
       background: transparent;
       color: $text-muted;
       min-width: 50px;
