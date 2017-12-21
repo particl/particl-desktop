@@ -2,7 +2,8 @@
 <!-- Sidebar sync progress -->
 <div class="sync-progress-wrapper" *ngIf="initialized && !(syncPercentage === 100)" matTooltip="{{ syncString }}" matTooltipPosition="above">
 
-  <p class="sync-info">
+  <!--@TODO no need of spinner ? -->
+  <p class="sync-info" *ngIf="!sidebar">
     <mat-spinner class="sync-spinner" color="accent"></mat-spinner>Syncing with the network
   </p>
 
