@@ -229,15 +229,19 @@ export class CreateWalletComponent {
 
   /** verify if passwords match */
   verifyPasswords() {
+    if (!this.validating) {
+      return;
+    }
+
     if (this.password !== this.passwordVerify) {
       this.flashNotification.open('Passwords Do Not Match!', 'warning');
-      this.passwordVerify = undefined;
     } else {
       // We should probably make this a function because it isn't reusing code??
       this.validating = false;
       this.step++;
       this.doStep();
     }
+    this.passwordVerify = undefined;
   }
 
   /** Triggered when the password is emitted from PassphraseComponent */
