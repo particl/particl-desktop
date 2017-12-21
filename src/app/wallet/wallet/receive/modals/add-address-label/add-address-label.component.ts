@@ -73,4 +73,8 @@ export class AddAddressLabelComponent implements OnInit {
     }
   }
 
+  dialogClose(): void {
+    this.dialogRef.close();
+  }
+
 }

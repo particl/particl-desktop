@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-send-confirmation-modal',
@@ -11,11 +12,16 @@ export class SendConfirmationModalComponent {
 
   public dialogContent: string;
 
-  constructor() {
+  constructor(private diloagRef: MatDialogRef<SendConfirmationModalComponent>) {
   }
 
   confirm(): void {
     this.onConfirm.emit();
+    this.dialogClose();
+  }
+
+  dialogClose(): void {
+    this.diloagRef.close();
   }
 
 }
