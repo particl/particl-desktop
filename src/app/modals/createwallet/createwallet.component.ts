@@ -124,15 +124,18 @@ export class CreateWalletComponent {
         break;
       case 3:
         this._passphraseService.generateMnemonic(this.mnemonicCallback.bind(this), this.password);
-        this.flashNotification.open('Please remember to write down your recovery-passphrase', 'warning');
+        this.flashNotification.open(
+          'Please remember to write down your recovery passphrase',
+          'warning');
         break;
       case 4:
         while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
           const k = Math.floor(Math.random() * 23);
-
           this.words[k] = '';
         }
-        this.flashNotification.open('Please remember to write down your recovery-passphrase', 'warning');
+        this.flashNotification.open(
+          'Please remember to write down your recovery passphrase',
+          'warning');
         break;
       case 5:
         this.step = 4;
