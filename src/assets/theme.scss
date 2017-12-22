@@ -354,6 +354,7 @@ input {
       position: absolute;
       right: 0;
       top: 0;
+      z-index: 10;
       padding: 25px 38px;
       background: transparent;
       color: $text-muted;
