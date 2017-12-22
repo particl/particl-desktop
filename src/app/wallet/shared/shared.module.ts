@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {
@@ -23,7 +23,8 @@ import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/de
   imports: [
     CommonModule,
     AccordionModule,
-    MaterialModule
+    MaterialModule,
+    HttpClientModule
   ],
   declarations: [
     HeaderComponent,
@@ -34,7 +35,6 @@ import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/de
   exports: [
     CommonModule,
     FormsModule,
-    HttpClient,
     ClipboardModule,
     AccordionModule,
     HeaderComponent,
