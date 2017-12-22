@@ -109,6 +109,7 @@
     "angular2-qrcode": "^2.0.1",
     "bluebird": "^3.4.7",
     "buffered-spawn": "^3.3.2",
+    "cli-progress": "^1.6.1",
     "core-js": "^2.4.1",
     "electron-log": "^2.2.11",
     "font-awesome": "^4.7.0",
