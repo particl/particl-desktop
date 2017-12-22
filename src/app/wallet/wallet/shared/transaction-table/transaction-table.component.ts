@@ -2,8 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { Log } from 'ng2-logger'
 
-import { slideDown } from '../../../../core-ui/core.animations';
-
+import { slideDown } from 'app/core-ui/core.animations';
 import { Transaction } from '../transaction.model';
 import { TransactionService } from '../transaction.service';
 
@@ -16,9 +15,11 @@ import { TransactionService } from '../transaction.service';
 })
 
 export class TransactionsTableComponent implements OnInit {
-  /* Determines what fields are displayed in the Transaction Table. */
-    /* header and utils */
 
+  @Input() display: any;
+
+  /* Determines what fields are displayed in the Transaction Table. */
+  /* header and utils */
   private _defaults: any = {
     header: true,
     internalHeader: false,
@@ -37,18 +38,12 @@ export class TransactionsTableComponent implements OnInit {
     expand: false
   };
 
-  @Input() display: any;
-
-  // MatPaginator Output
-  pageEvent: PageEvent;
-
   /*
     This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmountObject().getAmount() + tx.category).
     If the unique identifier is present, then the details will be expanded.
   */
   private expandedTransactionID: string = undefined;
-
-
+  pageEvent: PageEvent; /* MatPaginator output */
   log: any = Log.create('transaction-table.component');
 
   constructor(public txService: TransactionService) {

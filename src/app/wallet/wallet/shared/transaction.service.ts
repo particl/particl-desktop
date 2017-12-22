@@ -21,12 +21,13 @@ export class TransactionService {
   currentPage:    number = 0;
   totalPageCount: number = 0;
 
-  /* filtertransactions */
-  watchonly: boolean = undefined;
-  category:  string  = undefined;
-  search:    string  = undefined;
-  type:      string  = undefined;
-  sort:      string  = undefined;
+  filters: any = {
+    watchonly: undefined,
+    category:  undefined,
+    search:    undefined,
+    type:      undefined,
+    sort:      undefined
+  }
 
   /* Blocks */
   block: number = 0;
@@ -73,7 +74,9 @@ export class TransactionService {
   }
 
   filter(filters: any) {
-    Object.keys(filters).map(filter => this[filter] = filters[filter]);
+    this.loading = true;
+    this.filters = filters;
+    this.rpc_update(true); /* count transactions before getting this page */
     this.rpc_update();
   }
 
@@ -91,20 +94,29 @@ export class TransactionService {
   }
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
-  rpc_update() {
+  rpc_update(justCount?: boolean) {
 
     const options = {
-      'count':            +this.MAX_TXS_PER_PAGE,
-      'skip':             +this.MAX_TXS_PER_PAGE * this.currentPage,
-      'include_watchonly': this.watchonly !== undefined ? this.watchonly : undefined,
-      'category':          this.category  !== undefined ? this.category  : undefined,
-      'search':            this.search    !== undefined ? this.search    : undefined,
-      'type':              this.type      !== undefined ? this.type      : undefined,
-      'sort':              this.sort      !== undefined ? this.sort      : undefined
+      'count': +this.MAX_TXS_PER_PAGE,
+      'skip':  +this.MAX_TXS_PER_PAGE * this.currentPage,
     };
+    Object.keys(this.filters).map(filter => options[filter] = this.filters[filter]);
 
+    if (justCount) {
+      options.count = 0;
+      delete options.skip;
+    }
+
+    this.log.d(`call filtertransactions: ${JSON.stringify(options)}`);
     this.rpc.call('filtertransactions', [options])
     .subscribe((txResponse: Array<Object>) => {
+
+      if (justCount) {
+        this.log.d(`number of transactions after filter: ${txResponse.length}`);
+        // TODO: update paginator length with txResponse.length
+        return ;
+      }
+
       // The callback will send over an array of JSON transaction objects.
       this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
       this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
@@ -114,7 +126,7 @@ export class TransactionService {
       }
 
       this.deleteTransactions();
-      txResponse.forEach((tx) => {
+      txResponse.map(tx => {
         this.addTransaction(tx);
       });
 
