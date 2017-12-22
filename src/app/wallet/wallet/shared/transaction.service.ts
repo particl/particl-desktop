@@ -103,7 +103,9 @@ export class TransactionService {
     Object.keys(this.filters).map(filter => options[filter] = this.filters[filter]);
 
     if (justCount) {
-      options.count = 0;
+      // TODO: change for next release of daemon
+      // options.count = 0;
+      options.count = 999999;
       delete options.skip;
     }
 
