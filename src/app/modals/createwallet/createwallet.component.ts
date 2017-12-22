@@ -134,7 +134,7 @@ export class CreateWalletComponent {
           this.words[k] = '';
         }
         this.flashNotification.open(
-          'Please remember to write down your recovery passphrase',
+          'Did you write your password at the previous step ?',
           'warning');
         break;
       case 5:
