@@ -23,7 +23,6 @@ import { AlertComponent } from './shared/alert/alert.component';
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PassphraseService } from './createwallet/passphrase/passphrase.service';
 import { PasswordComponent } from './shared/password/password.component';
-import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
@@ -51,12 +50,10 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
     EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
-    PercentageBarComponent,
     MultiwalletComponent
   ],
   exports: [
     ModalsComponent,
-    PercentageBarComponent,
     ClipboardModule
   ],
   providers: [
