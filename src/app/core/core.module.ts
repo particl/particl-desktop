@@ -19,7 +19,7 @@ import { SnackbarService } from './snackbar/snackbar.service';
 @NgModule({
   imports: [
     CommonModule,
-    RpcModule.forRoot(), // TODO: should be here?
+    RpcModule.forRoot() // TODO: should be here?
   ],
   exports: [
     HttpClientModule
