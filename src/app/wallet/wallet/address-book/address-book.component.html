@@ -1,5 +1,4 @@
 <div class="container-block address-book disable-select">
-
   <app-header>
     <div fxLayout="row">
       <div fxFlex="75" fxFlex.lt-md="60" fxFlex.lt-sm="100">
@@ -9,12 +8,13 @@
         </button>
       </div>
       <mat-form-field class="icon-input search-address" fxFlex="25" fxFlex.lt-md="40" fxFlex.lt-sm="100">
-        <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}" placeholder="Search Addresses">
-        <mat-icon fontSet="partIcon" fontIcon="part-search" fxHide.lt-md matTooltip="Search For Address" matTooltipPosition="before"></mat-icon>
+        <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}"
+               placeholder="Search Addresses">
+        <mat-icon fontSet="partIcon" fontIcon="part-search" fxHide.lt-md matTooltip="Search For Address"
+                  matTooltipPosition="before"></mat-icon>
       </mat-form-field>
     </div>
   </app-header>
-
   <div class="container-fluid">
     <address-table
       [query]="query"
