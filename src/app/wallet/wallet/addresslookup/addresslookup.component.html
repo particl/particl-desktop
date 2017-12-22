@@ -1,6 +1,9 @@
 <div mat-dialog-title class="title">Address lookup</div>
-<div mat-dialog-content class="modal-content">
+<button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
 
+<div mat-dialog-content class="modal-content">
   <form name="addressLookupfilter">
     <div fxLayout="row" fxLayoutGap="35px">
 
@@ -41,10 +44,9 @@
 
   </mat-list>
 
-  <mat-paginator
+  <app-paginator
     [length]="getTotalCountForPagination()"
     [pageSize]="MAX_ADDRESSES_PER_PAGE"
-    [pageSizeOptions]="PAGE_SIZE_OPTIONS"
     (page)="pageChanged($event)">
-  </mat-paginator>
+  </app-paginator>
 </div>

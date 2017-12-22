@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { RpcModule } from './rpc.module';
 import { RpcService } from './rpc.service';
@@ -9,8 +9,8 @@ describe('RpcService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpModule,
-        RpcModule.forRoot()
+        RpcModule.forRoot(),
+        HttpClientModule
       ],
       providers: [
       IpcService

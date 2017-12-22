@@ -8,6 +8,8 @@ import { CoreModule } from '../../core/core.module';
 
 import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
+import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
+
 import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
 
 @NgModule({
@@ -18,10 +20,12 @@ import { TransactionService } from '../../wallet/wallet/shared/transaction.servi
   ],
   exports: [
     MainViewComponent,
+    PercentageBarComponent
   ],
   declarations: [
     MainViewComponent,
     StatusComponent,
+    PercentageBarComponent
   ],
   providers: [
     TransactionService
