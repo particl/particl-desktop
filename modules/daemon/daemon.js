@@ -14,9 +14,17 @@ let exitCode = 0;
 let restarting = false;
 let chosenWallets = [];
 
-// TODO: log properly on console and to file [ -- -printtoconsole ]
+// TODO: for proper logging, parse data to single line entries without date.
 function daemonData(data, logger) {
-  logger(data.toString().trim());
+  data = data.toString().trim();
+  // data = data.split(' ').splice(2);
+  // data.map(chunk => {
+  //   while (newline = chunk.indexOf('\n')) {
+  //     let out = splice(0, newline);
+  //     log.info(out);
+  //   }
+  // })
+  logger(data);
 }
 
 exports.restart = function (cb) {
@@ -59,9 +67,8 @@ exports.start = function (wallets, callback) {
 
     }).catch(() => {
 
-      // TODO: only for some debug levels
-      // if (!restarting)
-        // process.argv.push('-printtoconsole');
+      if (!restarting && ['debug', 'silly'].includes(log.transports.console.level))
+        process.argv.push('-printtoconsole');
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
