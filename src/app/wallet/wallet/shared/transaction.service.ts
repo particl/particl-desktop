@@ -27,7 +27,7 @@ export class TransactionService {
     search:    undefined,
     type:      undefined,
     sort:      undefined
-  }
+  };
 
   /* Blocks */
   block: number = 0;
@@ -115,7 +115,7 @@ export class TransactionService {
 
       if (justCount) {
         this.log.d(`number of transactions after filter: ${txResponse.length}`);
-        // TODO: update paginator length with txResponse.length
+        this.txCount = txResponse.length;
         return ;
       }
 
