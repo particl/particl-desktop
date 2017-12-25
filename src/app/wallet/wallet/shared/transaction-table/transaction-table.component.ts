@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { PageEvent } from '@angular/material';
+import {Component, OnInit, Input, ViewChild} from '@angular/core';
+import {MatPaginator, PageEvent} from '@angular/material';
 import { Log } from 'ng2-logger'
 
 import { slideDown } from 'app/core-ui/core.animations';
@@ -17,6 +17,7 @@ import { TransactionService } from '../transaction.service';
 export class TransactionsTableComponent implements OnInit {
 
   @Input() display: any;
+  @ViewChild('paginator') paginator: MatPaginator;
 
   /* Determines what fields are displayed in the Transaction Table. */
   /* header and utils */
@@ -90,6 +91,13 @@ export class TransactionsTableComponent implements OnInit {
       return 'confirm-3'
     } else {
       return 'confirm-ok';
+    }
+  }
+
+  public resetPagination() {
+    if (this.paginator && this.paginator.pageIndex) {
+      this.paginator.pageIndex = 0;
+      this.txService.changePage(0);
     }
   }
 
