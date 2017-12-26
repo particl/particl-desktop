@@ -1,5 +1,6 @@
 import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener } from '@angular/core';
 import { Log } from 'ng2-logger';
+import { MatDialogRef } from '@angular/material';
 
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
@@ -46,7 +47,8 @@ export class CreateWalletComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _passphraseService: PassphraseService,
-    private state: StateService
+    private state: StateService,
+    private dialogRef: MatDialogRef<CreateWalletComponent>
   ) {
     this.reset();
   }
@@ -69,6 +71,7 @@ export class CreateWalletComponent {
 
     switch (type) {
       case 0: // Encrypt wallet
+        this.dialogRef.close();
         this._modalsService.open('encrypt', {forceOpen: true});
         return;
       case 1: // Create
