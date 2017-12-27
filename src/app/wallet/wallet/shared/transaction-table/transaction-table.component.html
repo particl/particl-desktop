@@ -53,7 +53,7 @@
                      matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
-            <mat-icon fontSet="partIcon" fontIcon="part-swap" color="primary"></mat-icon>Balance transfer
+            <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>Balance transfer
           </span>
         </mat-panel-title>
 
@@ -131,6 +131,7 @@
   </ng-container>
 
   <app-paginator
+    #paginator
     *ngIf="display.pagination && txService.txs.length > 0"
     [length]="txService.txCount"
     [pageSize]="txService.MAX_TXS_PER_PAGE"

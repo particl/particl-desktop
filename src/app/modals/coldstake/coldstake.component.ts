@@ -46,7 +46,8 @@ export class ColdstakeComponent {
     this.log.d(`Going to step: ${this.step + 1}`)
     this.step++;
     this.animationState = 'next';
-    setTimeout(() => this.animationState = '', 300);
+    // TODO why used setTimeout and empty the state?
+    // setTimeout(() => this.animationState = '', 300);
     if ([0, 2].includes(this.step)) {
       const encryptionstatus = this._rpc.state.get('encryptionstatus').trim();
       if (['Unlocked', 'Unencrypted'].includes(encryptionstatus)) {
