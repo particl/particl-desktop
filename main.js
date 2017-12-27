@@ -9,11 +9,29 @@ const platform      = require('os').platform();
 const rxIpc         = require('rx-ipc-electron/lib/main').default;
 const Observable    = require('rxjs/Observable').Observable;
 const log           = require('electron-log');
-
-log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
-log.transports.file.file = log.transports.file
+/*
+ * Logger config
+ */
+log.transports.file.appName  = (process.platform == 'linux' ? '.particl' : 'Particl');
+log.transports.file.file     = log.transports.file
    .findLogPath(log.transports.file.appName)
    .replace('log.log', 'particl.log');
+
+log.transports.console.level = 'info';
+log.transports.file.level = 'debug';
+
+if (process.argv.includes('-v')) {
+  log.transports.console.level = 'debug'; /* most messages */
+  process.argv.push('-printtoconsole');   /* daemon output */
+}
+
+if (process.argv.includes('-vv')) {
+  log.transports.console.level = 'silly'; /* all messages      */
+  process.argv.push('-debug');            /* daemon debug mode */
+}
+log.daemon = log.info;
+console.log(log);
+
 log.debug(`console log level: ${log.transports.console.level}`);
 log.debug(   `file log level: ${log.transports.file.level   }`);
 
@@ -36,7 +54,7 @@ if (process.argv.includes('-opendevtools'))
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  log.debug('app ready')
+  log.info('app ready')
   options = _options.parse();
   initMainWindow();
   init.start(mainWindow);

@@ -108,7 +108,7 @@ class Manager {
    * @return {Promise}
    */
   init(options) {
-    this._logger.info('Initializing Manager...');
+    this._logger.debug('Initializing Manager...');
 
     this._resolvePlatform();
 
@@ -196,7 +196,7 @@ class Manager {
 
       const downloadFile = path.join(downloadFolder, `archive.${downloadCfg.type}`);
 
-      this._logger.info(`Downloading package from ${downloadCfg.url} to ${downloadFile} ...`);
+      this._logger.debug(`Downloading package from ${downloadCfg.url} to ${downloadFile} ...`);
 
       const writeStream = fs.createWriteStream(downloadFile);
 
@@ -357,14 +357,13 @@ class Manager {
       })
       .then(() => {
         info.client = client;
-
         return info;
       });
     });
   }
 
   _resolvePlatform () {
-    this._logger.info('Resolving platform...');
+    this._logger.debug('Resolving platform...');
 
     // platform
     switch (process.platform) {
@@ -403,13 +402,13 @@ class Manager {
 
       const count = Object.keys(this._clients).length;
 
-      this._logger.info(`${count} possible clients.`);
+      this._logger.debug(`${count} possible clients.`);
 
       if (_.isEmpty(this._clients)) {
         return;
       }
 
-      this._logger.info(`Verifying status of all ${count} possible clients...`);
+      this._logger.debug(`Verifying status of all ${count} possible clients...`);
 
       return Promise.all(_.values(this._clients).map(
         (client) => this._verifyClientStatus(client, options)
@@ -425,7 +424,7 @@ class Manager {
     return Promise.resolve()
     .then(() => {
       // get possible clients
-      this._logger.info('Calculating possible clients...');
+      this._logger.debug('Calculating possible clients...');
 
       const possibleClients = {};
 
@@ -458,7 +457,7 @@ class Manager {
       folders: []
     }, options);
 
-    this._logger.info(`Verify ${client.id} status ...`);
+    this._logger.debug(`Verify ${client.id} status ...`);
 
     return Promise.resolve().then(() => {
       const binName = client.activeCli.bin;
@@ -569,7 +568,7 @@ class Manager {
   _runSanityCheck (client, binPath) {
     this._logger.debug(`${client.id} binary path: ${binPath}`);
 
-    this._logger.info(`Checking for ${client.id} sanity check ...`);
+    this._logger.debug(`Checking for ${client.id} sanity check ...`);
 
     const sanityCheck = _.get(client, 'activeCli.commands.sanity');
 
@@ -580,7 +579,7 @@ class Manager {
       }
     })
     .then(() => {
-      this._logger.info(`Checking sanity for ${client.id} ...`)
+      this._logger.debug(`Checking sanity for ${client.id} ...`)
 
       return this._spawn(binPath, sanityCheck.args);
     })
@@ -597,7 +596,7 @@ class Manager {
         }
       }
 
-      this._logger.debug(`Sanity check passed for ${binPath}`);
+      this._logger.info(`Sanity check passed for ${binPath}`);
 
       // set it!
       client.activeCli.fullPath = binPath;

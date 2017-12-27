@@ -298,7 +298,7 @@ class DaemonManager extends EventEmitter {
 
 
   _resolveBinPath() {
-    log.info('Resolving path to client binary ...');
+    log.debug('Resolving path to client binary ...');
 
     let platform = process.platform;
 
@@ -317,7 +317,7 @@ class DaemonManager extends EventEmitter {
       binPath += '.exe';
     }
 
-    log.info(`Client binary path: ${binPath}`);
+    log.debug(`Client binary path: ${binPath}`);
 
     this._availableClients.particld = {
       binPath
