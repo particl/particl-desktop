@@ -1,16 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import { SharedModule } from '../../..//shared/shared.module';
-
-import { PassphraseService } from './passphrase.service';
+import { SharedModule } from '../../../wallet/shared/shared.module';
+import { CoreModule} from '../../../core/core.module';
+import { ModalsModule, PassphraseService } from '../../modals.module';
 
 describe('PassphraseService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule.forRoot()
+        CoreModule.forRoot(),
+        ModalsModule.forRoot()
       ],
       providers: [PassphraseService]
     });

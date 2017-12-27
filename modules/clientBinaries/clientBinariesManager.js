@@ -1,14 +1,16 @@
 "use strict";
 
-const got = require('got'),
-  _ = require('lodash'),
-  fs = require('fs'),
-  crypto = require('crypto'),
-  path = require('path'),
-  tmp = require('tmp'),
-  mkdirp = require('mkdirp'),
-  unzip = require('node-unzip-2'),
-  spawn = require('buffered-spawn');
+const got  = require('got'),
+         _ = require('lodash'),
+        fs = require('fs'),
+    crypto = require('crypto'),
+      path = require('path'),
+       tmp = require('tmp'),
+    mkdirp = require('mkdirp'),
+     unzip = require('node-unzip-2'),
+     spawn = require('buffered-spawn'),
+       log = require('electron-log'),
+  progress = require('cli-progress')
 
 
 function copyFile(src, dst) {
@@ -47,13 +49,6 @@ function checksum(filePath, algorithm) {
   });
 }
 
-const DUMMY_LOGGER = {
-  debug: function() {},
-  info: function() {},
-  warn: function() {},
-  error: function() {}
-};
-
 class Manager {
   /**
    * Construct a new instance.
@@ -64,7 +59,7 @@ class Manager {
   constructor (config) {
     this._config = config;
 
-    this._logger = DUMMY_LOGGER;
+    this._logger = log;
   }
 
   /**
@@ -73,21 +68,6 @@ class Manager {
    */
   get config () {
     return this._config;
-  }
-
-  /**
-   * Set the logger.
-   * @param {Object} val Should have same methods as global `console` object.
-   */
-  set logger (val) {
-    this._logger = {};
-
-    for (let key in DUMMY_LOGGER) {
-      this._logger[key] = (val && typeof val[key] === 'function')
-        ? val[key].bind(val)
-        : DUMMY_LOGGER[key]
-      ;
-    }
   }
 
   /**
@@ -221,28 +201,34 @@ class Manager {
       const writeStream = fs.createWriteStream(downloadFile);
 
       const stream = got.stream(downloadCfg.url);
-
-      // stream.pipe(progress({
-      //   time: 100
-      // }));
+      let progressBar = undefined;
 
       stream.pipe(writeStream);
 
-      // stream.on('progress', (info) => );
+      stream.on('downloadProgress', (info) => {
+        if (progressBar) {
+          progressBar.update(info.transferred);
+        } else {
+          progressBar = new progress.Bar({}, progress.Presets.shades_classic);
+          progressBar.start(info.total, info.transferred);
+        }
+      });
 
       stream.on('error', (err) => {
+        if (progressBar) {
+          progressBar.stop();
+        }
         this._logger.error(err);
-
         reject(new Error(`Error downloading package for ${clientId}: ${err.message}`));
-      })
+      });
 
       stream.on('end', () => {
+        if (progressBar) {
+          progressBar.stop();
+        }
         this._logger.debug(`Downloaded ${downloadCfg.url} to ${downloadFile}`);
-
-        // quick sanity check
         try {
           fs.accessSync(downloadFile, fs.F_OK | fs.R_OK);
-
           resolve({
             downloadFolder: downloadFolder,
             downloadFile: downloadFile

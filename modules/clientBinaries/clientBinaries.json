@@ -1,15 +1,15 @@
 {
   "clients": {
     "particld": {
-      "version": "0.15.0.4",
+      "version": "0.15.1.1",
       "platforms": {
         "linux": {
           "arm": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.15.0.4/particl-0.15.0.4-arm-linux-gnueabihf.tar.gz",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.15.1.1/particl-0.15.1.1-arm-linux-gnueabihf.tar.gz",
               "type": "tar",
-              "sha256": "03a2690e5d3bc0d725ab318ba95cf20d47d8fcef301974ed7c9bf2730e931b84",
-              "bin": "particl-0.15.0.4/bin/particld"
+              "sha256": "cc8a3d314319464be259689836c18dce88b4f9d2168bb01c899dda97797b3e17",
+              "bin": "particl-0.15.1.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -19,17 +19,17 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.15.0.4"
+                  "0.15.1.1"
                 ]
               }
             }
           },
           "ia32": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.15.0.4/particl-0.15.0.4-i686-pc-linux-gnu.tar.gz",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.15.1.1/particl-0.15.1.1-i686-pc-linux-gnu.tar.gz",
               "type": "tar",
-              "sha256": "75f2154e2c78baf7bde2ad93020325fd16912b09b37c06e3b09fa9038c670621",
-              "bin": "particl-0.15.0.4/bin/particld"
+              "sha256": "ed739c465e0e039597819d2126e8dd1a893cf9ac382b115816f8aa8786ea6214",
+              "bin": "particl-0.15.1.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -39,17 +39,17 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.15.0.4"
+                  "0.15.1.1"
                 ]
               }
             }
           },
           "x64": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.15.0.4/particl-0.15.0.4-x86_64-linux-gnu.tar.gz",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.15.1.1/particl-0.15.1.1-x86_64-linux-gnu.tar.gz",
               "type": "tar",
-              "sha256": "acdfc6140bb212a648176b495b6725376173f4e4893f7fe681dac4fe0140cf41",
-              "bin": "particl-0.15.0.4/bin/particld"
+              "sha256": "53eda42d0e36212bb578017d49e359c4095e42886d1cca61934505ff3be33218",
+              "bin": "particl-0.15.1.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -59,7 +59,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.15.0.4"
+                  "0.15.1.1"
                 ]
               }
             }
@@ -68,10 +68,10 @@
         "mac": {
           "ia32": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.15.0.4/particl-0.15.0.4-osx-unsigned.dmg",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.15.1.1/particl-0.15.1.1-osx-unsigned.dmg",
               "type": "dmg",
-              "sha256": "039fb42ce4a778ae3c3ec0979208a2c84935276bbea319435e2f35f6f133a774",
-              "bin": "particl-0.15.0.4/bin/particld"
+              "sha256": "8d23aa5e5777b068f07a569a2b42c64a9f2eb04ea5422f1da6fffec444d07a3b",
+              "bin": "particl-0.15.1.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -81,17 +81,17 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.15.0.4"
+                  "0.15.1.1"
                 ]
               }
             }
           },
           "x64": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.15.0.4/particl-0.15.0.4-osx64.tar.gz",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.15.1.1/particl-0.15.1.1-osx64.tar.gz",
               "type": "tar",
-              "sha256": "7bc22cc6fb8cc31610af441c11c6060703cadfd8bf155fa5b5628e7f525cf6ef",
-              "bin": "particl-0.15.0.4/bin/particld"
+              "sha256": "bfc9eb7f1b14b4a74db88713de02d37524977269f4a5fd0e9f15f639e20e740e",
+              "bin": "particl-0.15.1.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -101,7 +101,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.15.0.4"
+                  "0.15.1.1"
                 ]
               }
             }
@@ -110,10 +110,10 @@
         "win": {
           "ia32": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.15.0.4/particl-0.15.0.4-win32.zip",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.15.1.1/particl-0.15.1.1-win32.zip",
               "type": "zip",
-              "sha256": "5c7c1055752e4a1a70c53178c4ad09e4c20e415f511dc636c1f1f67d3eba13bb",
-              "bin": "particl-0.15.0.4/bin/particld.exe"
+              "sha256": "4cb4c5c408dfe385c88d53ee31cabcaf1ae45e696139feee4e1631f988065371",
+              "bin": "particl-0.15.1.1/bin/particld.exe"
             },
             "bin": "particld.exe",
             "commands": {
@@ -123,17 +123,17 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.15.0.4"
+                  "0.15.1.1"
                 ]
               }
             }
           },
           "x64": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.15.0.4/particl-0.15.0.4-win64.zip",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.15.1.1/particl-0.15.1.1-win64.zip",
               "type": "zip",
-              "sha256": "1486e6ff9c43a4cf10da1d85f3cb3fa6462971c01e299e125f8ab5d683862752",
-              "bin": "particl-0.15.0.4/bin/particld.exe"
+              "sha256": "9cdd3ad0d4b3fb456ecff7b88873f16bfa0f14eca7f8dfd7880ea06cb622502a",
+              "bin": "particl-0.15.1.1/bin/particld.exe"
             },
             "bin": "particld.exe",
             "commands": {
@@ -143,7 +143,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.15.0.4"
+                  "0.15.1.1"
                 ]
               }
             }

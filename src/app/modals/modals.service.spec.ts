@@ -1,18 +1,22 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { ModalsModule } from './modals.module';
-import { RpcModule } from '../core/rpc/rpc.module';
-import { SharedModule } from '../shared/shared.module';
+import { CoreModule } from '../core/core.module';
 
 import { ModalsService } from './modals.service';
+import { MatDialogModule, MatDialogRef } from '@angular/material';
 
-describe('ModalsService', () => {
+
+  describe('ModalsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
+        MatDialogModule,
         ModalsModule,
-        RpcModule.forRoot()
+        CoreModule.forRoot()
+      ],
+      providers: [
+        { provide: MatDialogRef},
       ]
     });
   });

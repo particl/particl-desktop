@@ -1,10 +1,12 @@
 import {Component, forwardRef, Inject, ViewChild} from '@angular/core';
 import { Log } from 'ng2-logger';
+import { MatDialogRef } from '@angular/material';
 
-import { RPCService } from '../../core/rpc/rpc.module';
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
-import { FlashNotificationService } from '../../services/flash-notification.service';
+
+import { RpcService } from '../../core/core.module';
+import { SnackbarService } from '../../core/snackbar/snackbar.service'; // TODO; import from module
 import { ModalsService } from '../modals.service';
 
 @Component({
@@ -20,11 +22,13 @@ export class EncryptwalletComponent {
   @ViewChild('passwordElement')
   passwordElement: PasswordComponent;
 
-  constructor(private _rpc: RPCService,
-              private flashNotification: FlashNotificationService,
-              @Inject(forwardRef(() => ModalsService))
-              private _modalsService: ModalsService) {
-  }
+  constructor(
+    @Inject(forwardRef(() => ModalsService))
+    private _modalsService: ModalsService,
+    private _rpc: RpcService,
+    private flashNotification: SnackbarService,
+    public _dialogRef: MatDialogRef<EncryptwalletComponent>
+  ) { }
 
   encryptwallet(password: IPassword) {
     if (this.password) {
@@ -46,10 +50,12 @@ export class EncryptwalletComponent {
                   .subscribe(() => {
                     if (!this._modalsService.initializedWallet) {
                       this._modalsService.open('createWallet', {forceOpen: true});
-                      this._rpc.toggleState(true);
                     } else {
                       this._modalsService.close();
+                      // force-close encrypt modal
+                      this._dialogRef.close();
                     }
+                    this._rpc.toggleState(true);
                   });
               }
             },
