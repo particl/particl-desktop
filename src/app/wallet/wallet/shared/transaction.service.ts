@@ -17,9 +17,17 @@ export class TransactionService {
   txs: Transaction[] = [];
 
   /* Pagination stuff */
-  txCount: number = 0;
-  currentPage: number = 0;
+  txCount:        number = 0;
+  currentPage:    number = 0;
   totalPageCount: number = 0;
+
+  filters: any = {
+    watchonly: undefined,
+    category:  undefined,
+    search:    undefined,
+    type:      undefined,
+    sort:      undefined
+  };
 
   /* Blocks */
   block: number = 0;
@@ -44,6 +52,7 @@ export class TransactionService {
       .subscribe(
         txcount => {
           this.loading = true;
+          this.txCount = txcount;
           if (txcount > this.txCount) {
             this.newTransaction();
           }
@@ -62,9 +71,14 @@ export class TransactionService {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.log.d(`postconstructor called txs array: ${this.txs.length}`);
     // TODO: why is this being called twice after executing a tx?
-
   }
 
+  filter(filters: any) {
+    this.loading = true;
+    this.filters = filters;
+    this.rpc_update(true); /* count transactions before getting this page */
+    this.rpc_update();
+  }
 
   changePage(page: number) {
     if (page < 0) {
@@ -80,31 +94,47 @@ export class TransactionService {
   }
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
-  rpc_update() {
+  rpc_update(justCount?: boolean) {
 
     const options = {
       'count': +this.MAX_TXS_PER_PAGE,
-      'skip': this.currentPage * this.MAX_TXS_PER_PAGE
+      'skip':  +this.MAX_TXS_PER_PAGE * this.currentPage,
     };
+    Object.keys(this.filters).map(filter => options[filter] = this.filters[filter]);
+
+    if (justCount) {
+      // TODO: change for next release of daemon
+      // options.count = 0;
+      options.count = 999999;
+      delete options.skip;
+    }
+
+    this.log.d(`call filtertransactions: ${JSON.stringify(options)}`);
     this.rpc.call('filtertransactions', [options])
-    .subscribe(
-      (txResponse: Array<Object>) => {
-        // The callback will send over an array of JSON transaction objects.
-        this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
-        this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
+    .subscribe((txResponse: Array<Object>) => {
 
-        if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
-          this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
-        }
+      if (justCount) {
+        this.log.d(`number of transactions after filter: ${txResponse.length}`);
+        this.txCount = txResponse.length;
+        return ;
+      }
 
-          this.deleteTransactions();
-          txResponse.forEach((tx) => {
-            this.addTransaction(tx);
-          });
+      // The callback will send over an array of JSON transaction objects.
+      this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
+      this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
 
-        this.loading = false;
-        this.log.d(`rpc_update, txs array: ${this.txs.length}`);
+      if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
+        this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
+      }
+
+      this.deleteTransactions();
+      txResponse.map(tx => {
+        this.addTransaction(tx);
       });
+
+      this.loading = false;
+      this.log.d(`rpc_update, txs array: ${this.txs.length}`);
+    });
 
   }
 
@@ -113,15 +143,16 @@ export class TransactionService {
     this.txs.push(new Transaction(json));
   }
 
-
   newTransaction() {
     this.rpc.call('filtertransactions')
       .subscribe(
         (tx: Array<Object>) => {
           if (tx[0]['category'] === 'receive') {
-              this.notification.sendNotification('Incoming transaction', tx[0]['amount'] + ' PART received');
+              this.notification.sendNotification(
+                'Incoming transaction', tx[0]['amount'] + ' PART received');
           } else if (tx[0]['category'] === 'stake') {
-              this.notification.sendNotification('New stake reward', tx[0]['amount'] + ' PART received');
+              this.notification.sendNotification(
+                'New stake reward', tx[0]['amount'] + ' PART received');
           }
         });
   }
