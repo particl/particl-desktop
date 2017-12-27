@@ -1,5 +1,5 @@
-import {Component, OnInit, Input, ViewChild} from '@angular/core';
-import {MatPaginator, PageEvent} from '@angular/material';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material';
 import { Log } from 'ng2-logger'
 
 import { slideDown } from 'app/core-ui/core.animations';
