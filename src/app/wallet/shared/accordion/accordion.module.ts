@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AccordionGroupComponent } from './accordion-group/accordion-group.component';
 import { AccordionHeadingComponent } from './accordion-heading/accordion-heading.component';
 
 @NgModule({
@@ -8,11 +7,9 @@ import { AccordionHeadingComponent } from './accordion-heading/accordion-heading
     CommonModule
   ],
   declarations: [
-    AccordionGroupComponent,
     AccordionHeadingComponent
   ],
   exports: [
-    AccordionGroupComponent,
     AccordionHeadingComponent
   ]
 })
