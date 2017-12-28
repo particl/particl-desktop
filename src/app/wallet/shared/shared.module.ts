@@ -8,7 +8,6 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { MaterialModule } from '../../core-ui/material/material.module';
 import { HeaderComponent } from './header/header.component';
 import { TableComponent } from './table/table.component';
-import { GridComponent } from './grid/grid.component';
 import {
   DeleteConfirmationModalComponent
 } from './delete-confirmation-modal/delete-confirmation-modal.component';
@@ -22,7 +21,6 @@ import {
   declarations: [
     HeaderComponent,
     TableComponent,
-    GridComponent,
     DeleteConfirmationModalComponent
   ],
   exports: [
@@ -30,8 +28,7 @@ import {
     FormsModule,
     ClipboardModule,
     HeaderComponent,
-    TableComponent,
-    GridComponent
+    TableComponent
   ],
   entryComponents: [
     DeleteConfirmationModalComponent
