@@ -50,7 +50,7 @@ export class TransactionsTableComponent implements OnInit {
   constructor(public txService: TransactionService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);
@@ -67,7 +67,7 @@ export class TransactionsTableComponent implements OnInit {
     this.txService.changePage(event.pageIndex++);
   }
 
-  public showExpandedTransactionDetail(tx: Transaction) {
+  public showExpandedTransactionDetail(tx: Transaction): void {
     const txid: string = tx.getExpandedTransactionID();
     if (this.expandedTransactionID === txid) {
       this.expandedTransactionID = undefined;
@@ -76,11 +76,11 @@ export class TransactionsTableComponent implements OnInit {
     }
   }
 
-  public checkExpandDetails(tx: Transaction) {
+  public checkExpandDetails(tx: Transaction): boolean {
     return (this.expandedTransactionID === tx.getExpandedTransactionID());
   }
 
-  public styleConfimations(confirm: number) {
+  public styleConfimations(confirm: number): string {
     if (confirm <= 0) {
       return 'confirm-none';
     } else if (confirm >= 1 && confirm <= 4) {
@@ -94,7 +94,7 @@ export class TransactionsTableComponent implements OnInit {
     }
   }
 
-  public resetPagination() {
+  public resetPagination(): void {
     if (this.paginator && this.paginator.pageIndex) {
       this.paginator.pageIndex = 0;
       this.txService.changePage(0);

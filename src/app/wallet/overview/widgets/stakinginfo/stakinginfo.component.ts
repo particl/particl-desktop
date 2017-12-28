@@ -78,7 +78,7 @@ export class StakinginfoComponent {
 
   }
 
-  private calculateDynamicStakingReward() {
+  private calculateDynamicStakingReward(): void {
     this.ownPercentageOfActiveStakingSupply = new Amount((this.weight / this.netstakeweight) * 1000, 5);
     this.dynamicStakingReward = new Amount(this.curStakeReward.getAmount() * (this.moneysupply / (this.netstakeweight / 10000000)), 2);
 
