@@ -7,7 +7,6 @@ import { ClipboardModule } from 'ngx-clipboard';
 
 import { MaterialModule } from '../../core-ui/material/material.module';
 import { HeaderComponent } from './header/header.component';
-import { TableComponent } from './table/table.component';
 import {
   DeleteConfirmationModalComponent
 } from './delete-confirmation-modal/delete-confirmation-modal.component';
@@ -20,15 +19,13 @@ import {
   ],
   declarations: [
     HeaderComponent,
-    TableComponent,
     DeleteConfirmationModalComponent
   ],
   exports: [
     CommonModule,
     FormsModule,
     ClipboardModule,
-    HeaderComponent,
-    TableComponent
+    HeaderComponent
   ],
   entryComponents: [
     DeleteConfirmationModalComponent
