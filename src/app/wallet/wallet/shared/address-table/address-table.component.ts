@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatPaginator } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { AddressService } from '../address.service';
@@ -41,7 +41,7 @@ export class AddressTableComponent implements OnInit {
 
   // Search query
   @Input() query: string;
-
+  @ViewChild('paginator') paginator: MatPaginator;
   // Data storage
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
@@ -77,6 +77,7 @@ export class AddressTableComponent implements OnInit {
   /** Returns the addresses to display in the UI with regards to both pagination and search/query. */
   public getSinglePage(): Array<Address> {
     if (this.inSearchMode()) { // in search mode
+      this.resetPagination();
       return this.paginateArray(this.getSearchSubset());
     } else { // not in seach mode
       return this.paginateArray(this.addresses);
@@ -183,6 +184,13 @@ export class AddressTableComponent implements OnInit {
     const dialogRef = this.dialog.open(SignatureAddressModalComponent);
     dialogRef.componentInstance.formData.address = address;
     dialogRef.componentInstance.type = 'verify';
+  }
+
+  public resetPagination(): void {
+    if (this.paginator && this.paginator.pageIndex) {
+      this.paginator.pageIndex = 0;
+      this.currentPage = 1;
+    }
   }
 }
 

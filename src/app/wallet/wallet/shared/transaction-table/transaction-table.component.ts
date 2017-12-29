@@ -57,6 +57,9 @@ export class TransactionsTableComponent implements OnInit {
   }
 
   public filter(filters: any) {
+    if (this.inSearchMode(filters.search)) {
+      this.resetPagination();
+    }
     this.txService.filter(filters);
   }
 
@@ -65,6 +68,10 @@ export class TransactionsTableComponent implements OnInit {
     this.txService.MAX_TXS_PER_PAGE = event.pageSize;
     // increase page index because its start from 0
     this.txService.changePage(event.pageIndex++);
+  }
+
+  private inSearchMode(query: any): boolean {
+    return (query !== undefined && query !== '');
   }
 
   public showExpandedTransactionDetail(tx: Transaction): void {

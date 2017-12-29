@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { MatDialog, MatPaginator } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../core/core.module';
@@ -36,7 +36,7 @@ export class ReceiveComponent implements OnInit {
 
   /* initialized boolean: when true => checkUnusedAddress is already looping! */
   initialized: boolean = false;
-
+  @ViewChild('paginator') paginator: MatPaginator;
   /* General */
   log: any = Log.create('receive.component');
 
@@ -59,7 +59,7 @@ export class ReceiveComponent implements OnInit {
 
     if (this.inSearchMode()) { // in search mode
       type = 'query';
-
+      this.resetPagination();
       this.addresses.query = this.addresses[this.type].filter(el => {
         if (el) {
           return (
@@ -341,6 +341,13 @@ export class ReceiveComponent implements OnInit {
         this.rpc_update();
       },
       error => this.log.er('error'));
+    }
+  }
+
+  public resetPagination(): void {
+    if (this.paginator && this.paginator.pageIndex) {
+      this.paginator.pageIndex = 0;
+      this.page = 1;
     }
   }
 }
