@@ -51,7 +51,7 @@ export class CreateWalletComponent {
     this.reset();
   }
 
-  reset() {
+  reset(): void {
     this._modalsService.enableClose = true;
     this.state.set('modal:fullWidth:enableClose', true);
     this.words = Array(24).fill('');
@@ -64,7 +64,7 @@ export class CreateWalletComponent {
       .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 
-  initialize(type: number) {
+  initialize(type: number): void {
     this.reset();
 
     switch (type) {
@@ -80,7 +80,7 @@ export class CreateWalletComponent {
     this.nextStep();
   }
 
-  nextStep() {
+  nextStep(): void {
     this.validating = true;
 
     /* Recovery password entered */
@@ -97,13 +97,13 @@ export class CreateWalletComponent {
     this.log.d(`moving to step: ${this.step}`);
   }
 
-  prevStep() {
+  prevStep(): void {
     this.step--;
     this.errorString = '';
     this.doStep();
   }
 
-  doStep() {
+  doStep(): void {
     switch (this.step) {
       case 1:
         setTimeout(() => this.nameField.nativeElement.focus(this), 1);
@@ -141,7 +141,7 @@ export class CreateWalletComponent {
   }
 
 
-  private mnemonicCallback(response: Object) {
+  private mnemonicCallback(response: Object): void {
     const words = response['mnemonic'].split(' ');
 
     if (words.length > 1) {
@@ -152,7 +152,7 @@ export class CreateWalletComponent {
     this.log.d(`word string: ${this.words.join(' ')}`);
   }
 
-  public importMnemonicSeed() {
+  public importMnemonicSeed(): void {
     this.state.set('ui:spinner', true);
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
@@ -202,14 +202,14 @@ export class CreateWalletComponent {
   *  Trigger password emit from restore password component
   *  Which in turn will trigger the next step (see html)
   */
-  restoreWallet() {
+  restoreWallet(): void {
     this.passwordRestoreElement.sendPassword();
   }
 
   /**
   * Triggered when the password is emitted from PasswordComponent
   */
-  passwordFromEmitter(pass: IPassword) {
+  passwordFromEmitter(pass: IPassword): void {
     this.password = pass.password;
     this.log.d(`passwordFromEmitter: ${this.password}`);
   }
@@ -217,17 +217,17 @@ export class CreateWalletComponent {
   /**
   * Triggered when the password is emitted from PassphraseComponent
   */
-  wordsFromEmitter(words: string) {
+  wordsFromEmitter(words: string): void {
     this.words = words.split(',');
   }
 
-  close() {
+  close(): void {
     this.reset();
     document.body.dispatchEvent(
       new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   }
 
-  public countWords (count: number) {
+  public countWords (count: number): boolean {
     if ([12, 15, 18, 24].indexOf(count) !== -1) {
       return false;
     }

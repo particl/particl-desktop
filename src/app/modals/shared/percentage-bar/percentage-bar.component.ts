@@ -23,7 +23,7 @@ export class PercentageBarComponent implements OnInit {
 
   constructor( private _blockStatusService: BlockStatusService) { this.log.d('initiated percentage-bar'); }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.log.d('initiated percentage-bar');
     /* Hook BlockStatus -> open syncing modal */
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {

@@ -67,20 +67,20 @@ export class TransactionService {
     .subscribe(chain => this.testnet = chain === 'test');
   }
 
-  postConstructor(MAX_TXS_PER_PAGE: number) {
+  postConstructor(MAX_TXS_PER_PAGE: number): void {
     this.MAX_TXS_PER_PAGE = MAX_TXS_PER_PAGE;
     this.log.d(`postconstructor called txs array: ${this.txs.length}`);
     // TODO: why is this being called twice after executing a tx?
   }
 
-  filter(filters: any) {
+  filter(filters: any): void {
     this.loading = true;
     this.filters = filters;
     this.rpc_update(true); /* count transactions before getting this page */
     this.rpc_update();
   }
 
-  changePage(page: number) {
+  changePage(page: number): void {
     if (page < 0) {
       return;
     }
@@ -89,12 +89,12 @@ export class TransactionService {
     this.rpc_update();
   }
 
-  deleteTransactions() {
+  deleteTransactions(): void {
     this.txs = [];
   }
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
-  rpc_update(justCount?: boolean) {
+  rpc_update(justCount?: boolean): void {
 
     const options = {
       'count': +this.MAX_TXS_PER_PAGE,
@@ -143,7 +143,7 @@ export class TransactionService {
     this.txs.push(new Transaction(json));
   }
 
-  newTransaction() {
+  newTransaction(): void {
     this.rpc.call('filtertransactions')
       .subscribe(
         (tx: Array<Object>) => {
