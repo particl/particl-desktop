@@ -19,7 +19,7 @@
   .mat-icon {
     top: 4px;
     right: 18px;
-    font-size:14px;
+    font-size: 14px;
   }
 }
 
@@ -92,7 +92,7 @@
 .address-info { // address "card"
   margin-bottom: 12px;
   .address-id {
-    color: #7b8891;
+    color: $text-muted;
   }
   .address-label {
     text-transform: uppercase;
