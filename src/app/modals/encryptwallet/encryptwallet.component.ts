@@ -51,9 +51,7 @@ export class EncryptwalletComponent {
                     if (!this._modalsService.initializedWallet) {
                       this._modalsService.open('createWallet', {forceOpen: true});
                     }
-                    // force-close encrypt modal
                     this._dialogRef.close();
-                    this._modalsService.close();
                     this._rpc.toggleState(true);
                   });
               }
