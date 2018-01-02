@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger'
 import { Observable } from 'rxjs/Observable';
-
+import * as _ from 'lodash'
 import { Transaction } from './transaction.model';
 
 import { RpcService } from '../../../core/core.module';
@@ -34,7 +34,7 @@ export class TransactionService {
   /* states */
   loading: boolean = false;
   testnet: boolean = false;
-
+  checkBlock: boolean = false;
 
   /* How many transactions do we display per page and keep in memory at all times.
      When loading more transactions they are fetched JIT and added to txs. */
@@ -51,16 +51,25 @@ export class TransactionService {
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
-          this.loading = true;
-          this.txCount = txcount;
-          if (txcount > this.txCount) {
-            this.newTransaction();
+          if (this.txCount || txcount === 1) {
+            if (txcount > this.txCount) {
+              this.txCount = txcount;
+              this.newTransaction();
+            } else {
+              this.loading = true;
+              this.log.d(`observing txcount, txs array: ${this.txs.length}`);
+              this.rpc_update();
+            }
           }
-          this.log.d(`observing txcount, txs array: ${this.txs.length}`);
-          this.rpc_update();
+          // this.txCount = txcount;
         });
 
-    this.rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/)).subscribe(block =>  this.rpc_update());
+    this.rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/)).subscribe(block =>  {
+      if (block > this.block) {
+        this.checkBlock = true;
+        this.rpc_update()
+      }
+    });
 
     /* check if testnet -> block explorer url */
     this.rpc.state.observe('chain').take(1)
@@ -127,10 +136,15 @@ export class TransactionService {
         this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
       }
 
-      this.deleteTransactions();
-      txResponse.map(tx => {
-        this.addTransaction(tx);
-      });
+      if (this.checkBlock) {
+        this.checkBlock = false;
+        this.compareTransactionResponse(this.txs, txResponse);
+      } else {
+        this.deleteTransactions();
+        txResponse.map(tx => {
+          this.addTransaction(tx);
+        });
+      }
 
       this.loading = false;
       this.log.d(`rpc_update, txs array: ${this.txs.length}`);
@@ -154,7 +168,33 @@ export class TransactionService {
               this.notification.sendNotification(
                 'New stake reward', tx[0]['amount'] + ' PART received');
           }
+          this.checkForNewTransaction(this.txs, tx);
         });
+  }
+
+   // Compare old and new transactions to find out updated confirmations
+  compareTransactionResponse(oldTxs: any, newTxs: any) {
+    newTxs.forEach((newtx) => {
+      oldTxs.forEach((oldtx) => {
+        if (oldtx.txid === newtx.txid && oldtx.confirmations !== newtx.confirmations) {
+          oldtx.confirmations = newtx.confirmations;
+        }
+      });
+    });
+  }
+
+  checkForNewTransaction(oldTxs: any, newTxs: any) {
+    const newTransaction = _(newTxs).differenceBy(oldTxs, 'txid').value();
+    newTransaction.map(tx => {
+      this.unShiftTransactions(tx);
+    });
+  }
+
+  unShiftTransactions(json: Object) {
+    if (this.txs.length === 10) {
+      this.txs.pop();
+    }
+    this.txs.unshift(new Transaction(json));
   }
 
 }
