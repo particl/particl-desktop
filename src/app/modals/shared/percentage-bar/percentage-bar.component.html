@@ -1,18 +1,6 @@
-<!-- dialog -->
-<div class="dialog-percentage-bar" *ngIf="initialized && !sidebar">
-  <span class="percentage-bar-text">{{syncString }}</span>
-  <mat-progress-bar
-    class="dialog-percentage-bar"
-    [color]="'primary'"
-    [bufferValue]="syncPercentage"
-    [mode]="'determinate'"
-    [value]="syncPercentage">
-  </mat-progress-bar>
-</div>
 
-
-<!-- side bar -->
-<div class="sync-progress-wrapper" *ngIf="initialized && sidebar && !(syncPercentage === 100)" matTooltip="{{ syncString }}" matTooltipPosition="above">
+<!-- Sidebar sync progress -->
+<div class="sync-progress-wrapper" *ngIf="initialized && !(syncPercentage === 100)" matTooltip="{{ syncString }}" matTooltipPosition="above">
 
   <p class="sync-info">
     <mat-spinner class="sync-spinner" color="accent"></mat-spinner>Syncing with the network

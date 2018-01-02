@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatGridListModule, MatIconModule, MatListModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatGridListModule, MatIconModule,
+  MatListModule,
   MatMenuModule,
   MatProgressBarModule,
   MatSidenavModule,
   MatSnackBarModule, MatTabsModule, MatToolbarModule, MatRadioModule, MatInputModule,
   MatTooltipModule,
-  MatSelectModule, MatPaginatorModule
+  MatSelectModule, MatPaginatorModule, MatProgressSpinnerModule, MatDialogModule
 } from '@angular/material';
 
 import {A11yModule} from '@angular/cdk/a11y';
@@ -67,7 +68,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatRadioModule,
     MatSelectModule,
     MatInputModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatDialogModule
   ],
   declarations: []
 })

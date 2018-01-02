@@ -1,5 +1,6 @@
-import {Component, forwardRef, Inject, ViewChild} from '@angular/core';
+import { Component, forwardRef, Inject, ViewChild } from '@angular/core';
 import { Log } from 'ng2-logger';
+import { MatDialogRef } from '@angular/material';
 
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
@@ -18,16 +19,17 @@ export class EncryptwalletComponent {
   log: any = Log.create('encryptwallet.component');
   public password: string;
 
-  @ViewChild('passwordElement')
-  passwordElement: PasswordComponent;
+  @ViewChild('passwordElement') passwordElement: PasswordComponent;
 
-  constructor(private _rpc: RpcService,
-              private flashNotification: SnackbarService,
-              @Inject(forwardRef(() => ModalsService))
-              private _modalsService: ModalsService) {
-  }
+  constructor(
+    @Inject(forwardRef(() => ModalsService))
+    private _modalsService: ModalsService,
+    private _rpc: RpcService,
+    private flashNotification: SnackbarService,
+    public _dialogRef: MatDialogRef<EncryptwalletComponent>
+  ) { }
 
-  encryptwallet(password: IPassword) {
+  encryptwallet(password: IPassword): void {
     if (this.password) {
 
       this.log.d(`check password equality: ${password.password === this.password}`);
@@ -47,10 +49,12 @@ export class EncryptwalletComponent {
                   .subscribe(() => {
                     if (!this._modalsService.initializedWallet) {
                       this._modalsService.open('createWallet', {forceOpen: true});
-                      this._rpc.toggleState(true);
                     } else {
                       this._modalsService.close();
+                      // force-close encrypt modal
+                      this._dialogRef.close();
                     }
+                    this._rpc.toggleState(true);
                   });
               }
             },
@@ -72,7 +76,7 @@ export class EncryptwalletComponent {
     }
   }
 
-  clearPassword() {
+  clearPassword(): void {
     this.password = undefined;
   }
 }

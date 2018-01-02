@@ -17,14 +17,19 @@
 }
 
 
-// ------ BUTTONS ------ //
+// ------ ADDRESSES ------ //
 
-.actions {
-  button {
-    margin: 0 10px;
-  }
+.address, .address-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: transparent;
+  transition: background .3s;
+  white-space: nowrap;
 }
 
+// ------ BUTTONS ------ //
+
+.mat-button,
 button {
   .mat-icon {
     width: auto;
@@ -32,6 +37,18 @@ button {
     margin-right: 5px;
     position: relative;
     top: -1px;
+  }
+  &.small { // smaller buttons
+    min-width: auto;
+    line-height: 29px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
+
+.actions {
+  button {
+    margin: 0 10px;
   }
 }
 
@@ -46,6 +63,19 @@ button {
   border-bottom: .2px solid rgba(0, 0, 0, 0.507);
   line-height: 1.6em;
 }
+
+
+// ------ PROGRESS BARS ------ //
+
+.mat-progress-bar {
+  // sidebar/sync: dark buffer background for progress bar
+  &.dark-buffer {
+    .mat-progress-bar-buffer {
+      background: lighten($bg-black, 15%);
+    }
+  }
+}
+
 
 // ------ CARDS ------ //
 
@@ -75,13 +105,32 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 }
 
 
-
 // ------ EXPANSION PANELS ------ //
 
 .mat-expansion-panel {
   .mat-expansion-panel-header {
     &:hover {
       background: inherit !important; // disable darker bg on hover by default
+    }
+  }
+  // sidebar/menu: no padding for panel's content (used in the sidebar)
+  &.no-padding {
+    .mat-expansion-panel-body {
+      margin: 0;
+    }
+  }
+  // sidebar/menu: color panel's arrow
+  &.arrow-colored {
+    .mat-expansion-indicator::after {
+      @extend %tfx;
+      color: $text-muted;
+    }
+    // when expanded..
+    &.mat-expanded {
+      //background: darken($bg-black, 2%); // darken "submenu" background to more visually separate from the rest
+      .mat-expansion-indicator::after {
+        color: $color;
+      }
     }
   }
 }
@@ -101,23 +150,11 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 }
 
 
-// ------ INPUT VISUAL VALIDATION ------ //
-
-input {
-  &.verify-sucess {
-    color: darken($color, 7%) !important; // #57a800
-    //background-color: rgba($color, 0.07) !important; // #edfad7
-  }
-  &.verify-error {
-    color: darken($color-alert, 5%);
-    //background: rgba($color-alert, 0.1) !important;
-  }
-}
-
-
 /* ------------------------------- *\
-    Page subtitles (H2)
+    Typography
 \* ------------------------------- */
+
+// ------ Page subtitles ------ //
 
 .mat-list.list-data .mat-subheader { // "H2" subtitles in pages (e.g. "(un)used addresses" in Receive
   @extend %subtitle;
@@ -132,6 +169,16 @@ input {
 /* ------------------------------- *\
     Lists
 \* ------------------------------- */
+
+.mat-list {
+  // sidebar/menu: smaller vertical padding of child lists
+  &.sidebar-item-group {
+    .mat-list-item .mat-list-item-content {
+      height: 42px;
+      padding: 0 10px;
+    }
+  }
+}
 
 .icon-input { // input with icon (eg. Search in Address Book)
   input.mat-input-element {
@@ -171,18 +218,34 @@ input {
     Forms
 \* ------------------------------- */
 
+// ------ INPUTS ------ //
+
 .mat-form-field {
   font-family: $font;
-  &:not(:first-child) {
+  &.larger { // larger inputs
+    font-size: 14px;
+  }
+  &.no-top-padding { // remove top space reserved for floating placeholders (if disabled)
     .mat-input-infix {
-      border-top: none; // remove the big gap vertical between 2+ inputs
+      border-top: none;
     }
   }
 }
 
-input[type="text"] {
-  border: none;
+input {
+  &[type="text"] {
+    border: none;
+  }
+  // visual verification
+  &.verify-sucess {
+    color: darken($color, 7%) !important;
+  }
+  &.verify-error {
+    color: darken($color-alert, 5%);
+  }
 }
+
+// ------ RADIOS ------ //
 
 .mat-list-radio {
   .mat-radio-button {
@@ -193,21 +256,13 @@ input[type="text"] {
   }
 }
 
-.mat-reduce-button {
-  margin-bottom: 0 !important;
-  padding-left: 8px !important;
-}
-
-.address, .address-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background: transparent;
-  transition: background .3s;
-  white-space: nowrap;
-}
-
-.mat-left-border {
-  border-left: 1px solid #ddd;
+.mat-radio-group {
+  // send: full-width clickable radios
+  &.block-radio {
+    .mat-radio-button .mat-radio-label {
+      width: 100%;
+    }
+  }
 }
 
 
@@ -259,6 +314,43 @@ input[type="text"] {
     max-width: 800px;
     height: calc(100% - 24px);
     margin: 24px auto auto auto;
+
+    // Dialogs (small)
+    .dialog-content {
+      margin: 20px 0 25px;
+    }
+    [mat-dialog-title] { // dialog title
+      font-family: $font;
+      font-weight: 600;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .small-close_button {
+      position: absolute;
+      right: 10px; // align with modal's content padding
+      top: 22px;
+      z-index: 10;
+      background: transparent;
+      color: $text-muted;
+      min-width: 50px;
+      padding: 0;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      .mat-icon {
+        color: rgba($color-alert, 0.5);
+        border-radius: 50%;
+        font-size: 22px;
+        line-height: 1.4;
+        margin: 0;
+      }
+      &:hover {
+        .mat-icon {
+          color: $color-alert;
+        }
+      }
+    }
     .close_button {
       position: absolute;
       right: 0;
@@ -267,6 +359,8 @@ input[type="text"] {
       background: transparent;
       color: $text-muted;
       min-width: 50px;
+      outline: none;
+      cursor: pointer;
       .mat-icon {
         color: rgba($color-alert, 0.5);
         border-radius: 50%;
@@ -290,10 +384,15 @@ input[type="text"] {
 
 /* ------------------------------- *\
     Pagination
-\* ------------------------------- */ 
+\* ------------------------------- */
 
 .mat-paginator {
   margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 56px;
+  padding: 0 8px;
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
@@ -347,205 +446,3 @@ input[type="text"] {
 .capitalize {
   text-transform: capitalize;
 }
-
-
-// ------ MODIFIERS (Tweaks/hacks to material stuff) ------ //
-
-.mat-expansion-panel {
-  // sidebar/menu: no padding for panel's content (used in the sidebar)
-  &.no-padding {
-    .mat-expansion-panel-body {
-      margin: 0;
-    }
-  }
-  // sidebar/menu: color panel's arrow
-  &.arrow-colored {
-    .mat-expansion-indicator::after {
-      @extend %tfx;
-      color: $text-muted;
-    }
-    // when expanded..
-    &.mat-expanded {
-      //background: darken($bg-black, 2%); // darken "submenu" background to more visually separate from the rest
-      .mat-expansion-indicator::after {
-        color: $color;
-      }
-    }
-  }
-}
-
-.mat-list {
-  // sidebar/menu: smaller vertical padding of child lists
-  &.sidebar-item-group {
-    .mat-list-item .mat-list-item-content {
-      height: 42px;
-      padding: 0 10px;
-    }
-  }
-}
-
-.mat-progress-bar {
-  // sidebar/sync: dark buffer background for progress bar
-  &.dark-buffer {
-    .mat-progress-bar-buffer {
-      background: lighten($bg-black, 15%);
-    }
-  }
-}
-
-.mat-radio-group {
-  // send: full-width clickable radios
-  &.block-radio {
-    .mat-radio-button .mat-radio-label {
-      width: 100%;
-    }
-  }
-}
-
-.mat-form-field {
-  &.larger { // larger inputs
-    font-size: 14px;
-  }
-}
-
-.mat-button {
-  &.small { // smaller buttons
-    min-width: auto;
-    line-height: 29px;
-    padding: 0 12px;
-    font-size: 12px;
-  }
-}
-
-
-
-
-
-
-
-/* ------------------------------- *\
-    Probably not needed styles:
-\* ------------------------------- */
-/*
-.mat-right { // still needed for TX details
-  text-align: right; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  height: 18px; 
-} 
-
-
-.details-address {
-  flex-wrap: wrap;
-}
-
-
-.form_block {
-  width: 60%;
-  .mat-form-field {
-    width: 100%;
-    display: block;
-  }
-  .row_input_gap {
-    width: 80% !important;
-  }
-  .button-row {
-    text-align: center;
-    margin-top: 30px;
-  }
-  .wallet-name-label {
-    padding-top: 14px;
-    display: inline-block;
-    font-weight: 700;
-  }
-  button {
-    margin: 0 10px;
-    text-transform: uppercase;
-  }
-}
-
-.error {
-  color: $color-alert;
-}
-
-.hr-light {
-  border: none;
-  border-bottom: 1px solid $bg-shadow;
-  margin: 20px 0;
-}
-
-input[type="text"].mat-bg-transparent {
-  background-color: transparent !important;
-}
-
-panel-header-title {
-  display: block;
-}
-
-.percentage-bar-bottom {
-  .progress-bar-bottom {
-    height: 20px !important;
-  }
-  .percentage-bar-text {
-    position: absolute;
-    z-index: 99999;
-  }
-}
-
-.syncing_header_text{
-  width: 65%;
-  text-align: center;
-}
-
-@media (max-width: 1280px) {
-  .mat-left-border {
-    border-left: none;
-    justify-content: flex-start !important;
-  }
-}
-
-@media (max-width: 960px) {
-  .mat-form-field {
-    width: 100%;
-  }
-  .history-list {
-    .history_container {
-      > div {
-        min-height: 50px;
-        div {
-          min-height: 25px;
-          align-items: center;
-          .highlight, .mat-right {
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-          }
-        }
-      }
-    }
-  }
-  .mat-send-list {
-    .mat-form-field {
-      width: 100%;
-    }
-    .mat-list {
-      .mat-divider {
-        margin: 4px 0;
-      }
-    }
-  }
-}
-
-
-
-@media (max-width: 768px) {
-  .form_block {
-    flex-direction: column !important;
-    width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-}
-*/

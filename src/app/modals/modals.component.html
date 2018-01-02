@@ -1,4 +1,4 @@
-<button mat-raised-button class="close_button pull-right" (click)="close()" *ngIf="enableClose">
+<button class="close_button pull-right" (click)="close()" *ngIf="enableClose">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
@@ -6,8 +6,4 @@
   <mat-spinner mode="indeterminate" *ngIf="loadSpinner"></mat-spinner>
 
   <ng-template #modalContainer></ng-template>
-</div>
-
-<div class="modal-footer-info">
-  <app-percentage-bar></app-percentage-bar>
 </div>

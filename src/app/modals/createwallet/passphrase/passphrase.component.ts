@@ -1,6 +1,4 @@
 import { Component, Input,  OnChanges, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
-import { ClipboardModule } from 'ngx-clipboard';
-
 import { PassphraseService } from './passphrase.service';
 
 import { Log } from 'ng2-logger';
@@ -42,7 +40,7 @@ export class PassphraseComponent implements  OnChanges {
     this.editable = [];
   }
 
-  checkFocus(event: KeyboardEvent, index: number) {
+  checkFocus(event: KeyboardEvent, index: number): void {
     if (event.key === ' ') {
       this.focused = index + 1;
       while (this.partialDisable && this.validateWord(this.words[this.focused], this.focused)) {
@@ -51,7 +49,7 @@ export class PassphraseComponent implements  OnChanges {
     }
   }
 
-  onBlur(index: number) {
+  onBlur(index: number): void {
     this.words[index] = this.words[index].trim();
   }
 
@@ -79,7 +77,7 @@ export class PassphraseComponent implements  OnChanges {
     return this._passphraseService.validateWord(word);
   }
 
-  canEdit(index: number) {
+  canEdit(index: number): boolean {
     return (this.editable.indexOf(index) === -1);
   }
 
@@ -89,7 +87,7 @@ export class PassphraseComponent implements  OnChanges {
       .join(' '));
   }
 
-  clear() {
+  clear(): void {
     this.words = Array(MAX_WORDS).fill('');
   }
 

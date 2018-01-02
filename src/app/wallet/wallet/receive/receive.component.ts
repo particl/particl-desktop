@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -7,7 +7,6 @@ import { RpcService } from '../../../core/core.module';
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
 
-import { ModalsService } from '../../../modals/modals.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 @Component({
@@ -16,9 +15,6 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
   styleUrls: ['./receive.component.scss']
 })
 export class ReceiveComponent implements OnInit {
-
-  @ViewChild('qrCode') qrElementView: ElementRef;
-
   /* UI State */
   public type: string = 'public';
   public query: string = '';
@@ -46,11 +42,10 @@ export class ReceiveComponent implements OnInit {
 
   constructor(private rpc: RpcService,
               public dialog: MatDialog,
-              public _modalService: ModalsService,
               private flashNotificationService: SnackbarService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // start rpc
     this.rpc_update();
   }
@@ -104,7 +99,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   /** Called to change the page. */
-  pageChanged(event: any) {
+  pageChanged(event: any): void {
     if (event.pageIndex !== undefined) {
       this.MAX_ADDRESSES_PER_PAGE = event.pageSize;
       this.page = event.pageIndex + 1;
@@ -136,7 +131,7 @@ export class ReceiveComponent implements OnInit {
     * Sets the address type, also checks if valid. Also changes the selected address.
     * @param type Address type to set
     */
-  setAddressType(type: string) {
+  setAddressType(type: string): void {
     if (['public', 'private'].includes(type)) {
       this.type = type;
     }
@@ -148,7 +143,7 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  changeTab(tab: number) {
+  changeTab(tab: number): void {
     this.page = 1;
     if (tab) {
       this.setAddressType('private');
@@ -157,7 +152,7 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  getAddressType() {
+  getAddressType(): string {
     return this.type;
   }
 
@@ -165,7 +160,7 @@ export class ReceiveComponent implements OnInit {
     * Selected address stuff
     * @param address The address to select
     */
-  selectAddress(address: string) {
+  selectAddress(address: string): void {
     this.selected = address;
   }
 
@@ -181,11 +176,11 @@ export class ReceiveComponent implements OnInit {
     dialogRef.componentInstance.onAddressAdd.subscribe(result => this.rpc_update());
   }
 
-  selectInput() {
+  selectInput(): void {
     (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
   }
 
-  copyToClipBoard() {
+  copyToClipBoard(): void {
     this.flashNotificationService.open('Address copied to clipboard.');
   }
 
@@ -197,7 +192,7 @@ export class ReceiveComponent implements OnInit {
   /* ---- RPC LOGIC -------------------------------------------------------- */
 
   /** Used to get the addresses. */
-  rpc_update() {
+  rpc_update(): void {
     this.rpc.call('filteraddresses', [-1])
       .subscribe(
         response => this.rpc_loadAddressCount_success(response),
@@ -208,7 +203,7 @@ export class ReceiveComponent implements OnInit {
     * Used to get the addresses.
     * TODO: Create interface
     */
-  rpc_loadAddressCount_success(response: any) {
+  rpc_loadAddressCount_success(response: any): void {
     const count = response.num_receive;
 /*    if (count ===) {
       console.log('openNewAddress()')
@@ -223,9 +218,9 @@ export class ReceiveComponent implements OnInit {
 
   /**
     * Used to get the addresses.
-    * TODO: Create interface Array<AddressInterface?>
+    * @TODO: Create interface Array<AddressInterface?>
     */
-  rpc_loadAddresses_success(response: Array<any>) {
+  rpc_loadAddresses_success(response: Array<any>): void {
     const pub = [],
           priv = [];
 
@@ -265,7 +260,7 @@ export class ReceiveComponent implements OnInit {
     * Transforms the json to the right format and adds it to the right array (public / private)
     * TODO: Create interface for response
     */
-  addAddress(response: any, type: string) {
+  addAddress(response: any, type: string): void {
     const tempAddress = {
       id: 0,
       label: 'Empty label',
@@ -305,7 +300,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   /** Sorts the private/public address by id (= HD wallet path m/0/0 < m/0/1) */
-  sortArrays() {
+  sortArrays(): void {
     const compare = (a, b) => b.id - a.id;
 
     this.addresses.public.sort(compare);
@@ -317,7 +312,7 @@ export class ReceiveComponent implements OnInit {
     * If it has received funds, generate a new address and update the table.
     * TODO: Remove timeout if not currently on ngOnDestroy
     */
-  checkIfUnusedAddress() {
+  checkIfUnusedAddress(): void {
     if (this.addresses && this.addresses.public[0] && this.addresses.public[0].address) {
       this.rpc.call('getreceivedbyaddress', [this.addresses.public[0].address, 0])
         .subscribe(
@@ -327,7 +322,7 @@ export class ReceiveComponent implements OnInit {
     setTimeout(this.checkIfUnusedAddress, 30000);
   }
 
-  rpc_callbackUnusedAddress_success(json: Object) {
+  rpc_callbackUnusedAddress_success(json: Object): void {
     if (json > 0) {
       this.log.er('rpc_callbackUnusedAddress_success: Funds received, need unused public address');
 

@@ -1,28 +1,88 @@
-import { Component } from '@angular/core';
-
-import { TransactionCategory } from '../shared/transaction.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss']
 })
-export class HistoryComponent {
 
-  category: TransactionCategory = 'all';
-  tabsTtitles: Array<any> = ['all', 'send', 'receive', 'stake', 'orphaned Stake'];
+export class HistoryComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('transactions') transactions: any;
 
-  filterByCategory(category: TransactionCategory) {
-    this.category = category;
+  categories: Array<any> = [
+    { title: 'All transactions', value: 'all'               },
+    { title: 'Send',             value: 'send'              },
+    { title: 'Receive',          value: 'receive'           },
+    { title: 'Stake',            value: 'stake'             },
+    { title: 'Balance transfer', value: 'internal_transfer' },
+    // { title: 'Immature',         value: 'immature'          },
+    // { title: 'Coinbase',         value: 'coinbase'          },
+    // { title: 'Orphan',           value: 'orphan'            },
+    // { title: 'Orphaned stake',   value: 'orphaned_stake'    },
+  ];
+
+  sortings: Array<any> = [
+    { title: 'By time',                  value: 'time'          },
+    { title: 'By amount',                value: 'amount'        },
+    { title: 'By address',               value: 'address'       },
+    { title: 'By category',              value: 'category'      },
+    { title: 'By confirmations',         value: 'confirmations' },
+    { title: 'By transaction ID (txid)', value: 'txid'          }
+  ];
+
+  types: Array<any> = [
+    { title: 'All types', value: 'all'      },
+    { title: 'Standard',  value: 'standard' },
+    { title: 'Anonymous', value: 'anon'     },
+    { title: 'Blind',     value: 'blind'    },
+  ];
+
+  filters: any = {
+    category: undefined,
+    search:   undefined,
+    sort:     undefined,
+    type:     undefined
+  };
+
+  public selectedTab: number = 0;
+
+  constructor() {
+    this.default();
   }
 
-  changeTab(tabIndex: number): void {
-    if (tabIndex === 4) {
-      this.filterByCategory(this.tabsTtitles['orphaned_stake']);
-    } else {
-      this.filterByCategory(this.tabsTtitles[tabIndex]);
-    }
+  ngOnInit(): void {
+    /* may be used if we concatenate some filters http://bit.ly/2Buav9B */
+  }
+
+  default(): void {
+    this.selectedTab = 0;
+    this.filters = {
+      category: 'all',
+      type:     'all',
+      sort:     'time',
+      search:   ''
+    };
+  }
+
+  changeCategory(index: number): void {
+    this.selectedTab = index;
+    this.transactions.resetPagination();
+    this.filters.category = this.categories[index].value;
+    this.filter();
+  }
+
+  sortList(event: any): void {
+    this.filters.sort = event.value;
+    this.filter();
+  }
+
+  filter(): void {
+    this.transactions.filter(this.filters);
+  }
+
+  clear(): void {
+    this.default();
+    this.filter();
   }
 }

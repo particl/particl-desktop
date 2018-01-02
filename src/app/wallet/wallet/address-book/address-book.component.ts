@@ -3,10 +3,7 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { NewAddressModalComponent } from './modal/new-address-modal/new-address-modal.component';
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { AddressHelper } from '../../shared/util/utils';
-
-import { SendComponent } from '../send/send.component';
 
 @Component({
   selector: 'app-address-book',
@@ -19,8 +16,7 @@ export class AddressBookComponent {
   public query: string;
   private addressHelper: AddressHelper;
   constructor(
-    private dialog: MatDialog,
-    private flashNotificationService: SnackbarService) {
+    private dialog: MatDialog) {
     this.addressHelper = new AddressHelper();
   }
 
