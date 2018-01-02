@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable, Observer } from 'rxjs'; // use this for testing atm
 
-import { Address, deserialize, TEST_ADDRESSES_JSON } from './address.model';
+import { Address, deserialize } from './address.model';
 import { RpcService } from '../../../core/core.module';
 
 
@@ -83,7 +83,7 @@ export class AddressService {
     }
   }
 
-  private rpc_loadAddresses(response: Array<Object>): void {
+  private rpc_loadAddresses(response: Array<Object>) {
     let addresses: Address[] = [];
     response.forEach((resp) => addresses = this.addAddress(addresses, resp));
     this._observerAddresses.next(addresses);

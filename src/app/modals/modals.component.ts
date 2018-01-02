@@ -52,7 +52,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     private state: StateService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.state.observe('modal:fullWidth:enableClose')
       .subscribe(status => this.enableClose = status);
 
@@ -60,7 +60,7 @@ export class ModalsComponent implements DoCheck, OnInit {
       .subscribe(status => this.loadSpinner = status);
   }
 
-  ngDoCheck() {
+  ngDoCheck(): void {
     // TODO: undocumented hack?
     if (this._element) {
       const element = this._element.nativeElement;
@@ -71,7 +71,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   }
 
   // open modal
-  open(message: any, data?: any) {
+  open(message: any, data?: any): void {
     this.log.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
     this.modalContainer.clear();
     const factory = this._resolver.resolveComponentFactory(message);
@@ -82,7 +82,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     }
   }
 
-  close() {
+  close(): void {
     this._dialogRef.close();
     // remove and destroy message
     this.modalContainer.remove();

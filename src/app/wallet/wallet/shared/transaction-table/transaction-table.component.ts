@@ -1,13 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { PageEvent } from '@angular/material';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material';
 import { Log } from 'ng2-logger'
 
-import { slideDown } from '../../../../core-ui/core.animations';
-
+import { slideDown } from 'app/core-ui/core.animations';
 import { Transaction } from '../transaction.model';
 import { TransactionService } from '../transaction.service';
-
-
 
 @Component({
   selector: 'transaction-table',
@@ -18,9 +15,12 @@ import { TransactionService } from '../transaction.service';
 })
 
 export class TransactionsTableComponent implements OnInit {
-  /* Determines what fields are displayed in the Transaction Table. */
-    /* header and utils */
 
+  @Input() display: any;
+  @ViewChild('paginator') paginator: MatPaginator;
+
+  /* Determines what fields are displayed in the Transaction Table. */
+  /* header and utils */
   private _defaults: any = {
     header: true,
     internalHeader: false,
@@ -39,27 +39,25 @@ export class TransactionsTableComponent implements OnInit {
     expand: false
   };
 
-  @Input() display: any;
-
-  // MatPaginator Output
-  pageEvent: PageEvent;
-
   /*
     This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmountObject().getAmount() + tx.category).
     If the unique identifier is present, then the details will be expanded.
   */
   private expandedTransactionID: string = undefined;
-
-
+  pageEvent: PageEvent; /* MatPaginator output */
   log: any = Log.create('transaction-table.component');
 
   constructor(public txService: TransactionService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);
+  }
+
+  public filter(filters: any) {
+    this.txService.filter(filters);
   }
 
   public pageChanged(event: any): void {
@@ -69,7 +67,7 @@ export class TransactionsTableComponent implements OnInit {
     this.txService.changePage(event.pageIndex++);
   }
 
-  public showExpandedTransactionDetail(tx: Transaction) {
+  public showExpandedTransactionDetail(tx: Transaction): void {
     const txid: string = tx.getExpandedTransactionID();
     if (this.expandedTransactionID === txid) {
       this.expandedTransactionID = undefined;
@@ -78,11 +76,11 @@ export class TransactionsTableComponent implements OnInit {
     }
   }
 
-  public checkExpandDetails(tx: Transaction) {
+  public checkExpandDetails(tx: Transaction): boolean {
     return (this.expandedTransactionID === tx.getExpandedTransactionID());
   }
 
-  public styleConfimations(confirm: number) {
+  public styleConfimations(confirm: number): string {
     if (confirm <= 0) {
       return 'confirm-none';
     } else if (confirm >= 1 && confirm <= 4) {
@@ -93,6 +91,13 @@ export class TransactionsTableComponent implements OnInit {
       return 'confirm-3'
     } else {
       return 'confirm-ok';
+    }
+  }
+
+  public resetPagination(): void {
+    if (this.paginator && this.paginator.pageIndex) {
+      this.paginator.pageIndex = 0;
+      this.txService.changePage(0);
     }
   }
 

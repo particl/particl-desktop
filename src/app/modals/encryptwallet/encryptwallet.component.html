@@ -15,7 +15,7 @@
 
     <!-- @TODO: Do we really need a confirmation for the password with "show password" option? -->
     <div *ngIf="password" class="section enter-password">
-      <div class="title">Choose a password</div>
+      <div class="title">Confirm your password</div>
       <p>
         Please enter your chosen password again to confirm it.
       </p>
@@ -36,7 +36,10 @@
     </app-password>
 
     <div *ngIf="password" class="section go-back">
-      <button mat-button (click)="clearPassword()">Back</button>
+      <button mat-button (click)="clearPassword()">
+        <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+        Back
+      </button>
     </div>
 
   </div><!-- .content -->
