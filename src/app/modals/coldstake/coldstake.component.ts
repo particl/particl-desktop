@@ -1,9 +1,7 @@
 import { Component, Inject, forwardRef } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { PasswordComponent } from '../shared/password/password.component';
-import { flyInOut, slideDown } from '../../core-ui/core.animations';
+import { flyInOut } from '../../core-ui/core.animations';
 
 import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../modals.service';
@@ -28,7 +26,6 @@ export class ColdstakeComponent {
   // Cold wallet (step 2)
   prevColdStakeAddress: any = '';
   coldStakeAddress: any = '';
-  private validAddress: boolean = undefined;
 
   // Cold wallet (step 3)
   finalMessage: string = '';
@@ -42,12 +39,10 @@ export class ColdstakeComponent {
     this.nextStep();
   }
 
-  nextStep () {
-    this.log.d(`Going to step: ${this.step + 1}`)
+  nextStep (): void {
+    this.log.d(`Going to step: ${this.step + 1}`);
     this.step++;
     this.animationState = 'next';
-    // TODO why used setTimeout and empty the state?
-    // setTimeout(() => this.animationState = '', 300);
     if ([0, 2].includes(this.step)) {
       const encryptionstatus = this._rpc.state.get('encryptionstatus').trim();
       if (['Unlocked', 'Unencrypted'].includes(encryptionstatus)) {
@@ -56,7 +51,7 @@ export class ColdstakeComponent {
     }
   }
 
-  prevStep() {
+  prevStep(): void {
     this.step--;
     this.animationState = 'prev';
     if ([0, 2].includes(this.step)) {
@@ -70,7 +65,7 @@ export class ColdstakeComponent {
     * called when unlocked (by password component)
     * @param {string} encryptionStatus  The wallet encryption status
     */
-  unlockWallet(encryptionStatus: string) {
+  unlockWallet(encryptionStatus: string): void {
 
     if (['Unlocked', 'Unencrypted'].includes(encryptionStatus)) {
 
@@ -116,7 +111,6 @@ export class ColdstakeComponent {
         success => {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
           this._flashNotificationService.open('Successfully activated cold staking!', 'info');
-          // this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
           this._rpc.state.set('ui:coldstaking', success.changeaddress.coldstakingaddress);
           this.close();
         },
@@ -132,7 +126,6 @@ export class ColdstakeComponent {
         success => {
           this.log.d(`resetColdStakeAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
           this._flashNotificationService.open('Successfully deactivated cold staking!', 'info');
-          // this.finalMessage = 'Successfully deactivated cold staking! ' + success.changeaddress.coldstakingaddress;
           this.close();
         },
         error => {
@@ -141,7 +134,7 @@ export class ColdstakeComponent {
         });
   }
 
-  close() {
+  close(): void {
     this._modalsService.close();
   }
 
