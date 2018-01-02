@@ -32,7 +32,7 @@
               <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-v" *ngIf="list.type === 2"></mat-icon>
             </div>
             <div  fxFlex="80">
-              <p [ngClass]="{'warn-text': list.getCode === -1, 'space-text': list.type === 2 }">
+              <p [ngClass]="{'warn-text': list.code === -1, 'space-text': list.type === 2 }">
                 {{list.text}}
               </p>
             </div>
