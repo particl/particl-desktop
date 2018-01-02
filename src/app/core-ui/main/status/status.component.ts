@@ -1,5 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
