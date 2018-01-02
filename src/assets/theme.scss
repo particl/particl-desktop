@@ -29,8 +29,9 @@
 
 // ------ BUTTONS ------ //
 
+button,
 .mat-button,
-button {
+.mat-raised-button {
   .mat-icon {
     width: auto;
     height: auto;
@@ -317,13 +318,17 @@ input {
 
     // Dialogs (small)
     .dialog-content {
-      margin: 20px 0 25px;
+      margin: 15px -24px;
     }
     [mat-dialog-title] { // dialog title
       font-family: $font;
       font-weight: 600;
       font-size: 20px;
       margin-bottom: 15px;
+      padding-right: 50px;
+      &.text-center {
+        padding: 0;
+      }
     }
 
     .small-close_button {
