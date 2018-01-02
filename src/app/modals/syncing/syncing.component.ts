@@ -1,7 +1,4 @@
-// remove on
-import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { ModalsService } from '../modals.service';
+import { Component } from '@angular/core';
 
 import { StateService, BlockStatusService } from '../../core/core.module';
 
