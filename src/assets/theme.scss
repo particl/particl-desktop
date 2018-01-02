@@ -116,7 +116,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   // sidebar/menu: no padding for panel's content (used in the sidebar)
   &.no-padding {
     .mat-expansion-panel-body {
-      margin: 0;
+      padding: 0;
     }
   }
   // sidebar/menu: color panel's arrow
@@ -173,9 +173,11 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 .mat-list {
   // sidebar/menu: smaller vertical padding of child lists
   &.sidebar-item-group {
-    .mat-list-item .mat-list-item-content {
+    .mat-list-item {
       height: 42px;
-      padding: 0 10px;
+      .mat-list-item-content {
+        padding: 0 10px;
+      }
     }
   }
 }
