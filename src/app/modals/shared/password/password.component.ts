@@ -20,7 +20,7 @@ export class PasswordComponent {
   stakeOnly: boolean = false;
   showPass: boolean = false;
 
-  @Input() label: string = 'YOUR WALLET PASSWORD';
+  @Input() label: string = 'Your wallet password';
   @Input() buttonText: string;
   @Input() unlockTimeout: number = 60;
   @Input() showStakeOnly: boolean = true;
@@ -55,11 +55,11 @@ export class PasswordComponent {
 
   // -- RPC logic starts here --
 
-  unlock () {
+  unlock (): void {
     this.forceEmit();
   }
 
-  public forceEmit() {
+  public forceEmit(): void {
     if (this.emitPassword) {
       // emit password
       this.sendPassword();
@@ -71,25 +71,25 @@ export class PasswordComponent {
     }
   }
 
-  clear() {
+  clear(): void {
     this.password = undefined;
   }
 
   /**
   * Emit password only!
   */
-  sendPassword() {
+  sendPassword(): void {
     const pass: IPassword = {
       password: this.password,
       stakeOnly: this.stakeOnly
-    }
+    };
     this.passwordEmitter.emit(pass);
   }
 
   /** Unlock the wallet
     * TODO: This should be moved to a service...
     */
-  private rpc_unlock() {
+  private rpc_unlock(): void {
     this.log.i('rpc_unlock: calling unlock! timeout=' + this.unlockTimeout);
     this.checkAndFallbackToStaking();
     this._rpc.call('walletpassphrase', [
@@ -126,7 +126,7 @@ export class PasswordComponent {
     * if(staking === true) then fallback to staking instead of locked after timeout!
     * else lock wallet
     */
-  private checkAndFallbackToStaking() {
+  private checkAndFallbackToStaking(): void {
     if (this._rpc.state.get('encryptionstatus') === 'Unlocked, staking only') {
 
       const password = this.password;
@@ -145,7 +145,7 @@ export class PasswordComponent {
     }
   }
 
-  private reset() {
+  private reset(): void {
     this.password = '';
   }
 

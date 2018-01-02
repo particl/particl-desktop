@@ -3,7 +3,7 @@
   No transactions yet
 </div>
 
-<app-grid>
+<div>
   <div class="grid-row grid-header" *ngIf="display.header">
     <div class="cell-date" *ngIf="display.date">date</div>
     <div class="cell-category" *ngIf="display.category">category</div>
@@ -45,15 +45,15 @@
           <span *ngSwitchCase="'send'" class="tx-type sent">
             <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>Sent
             <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
-                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
+                      matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'receive'" class="tx-type received">
             <mat-icon fontSet="partIcon" fontIcon="part-receive" color="primary"></mat-icon>Received
             <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
-                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
+                      matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
           </span>
           <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
-            <mat-icon fontSet="partIcon" fontIcon="part-swap" color="primary"></mat-icon>Balance transfer
+            <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>Balance transfer
           </span>
         </mat-panel-title>
 
@@ -131,11 +131,11 @@
   </ng-container>
 
   <app-paginator
+    #paginator
     *ngIf="display.pagination && txService.txs.length > 0"
     [length]="txService.txCount"
     [pageSize]="txService.MAX_TXS_PER_PAGE"
     [pageSizeOptions]="txService.PAGE_SIZE_OPTIONS"
     (page)="pageChanged($event)">
   </app-paginator>
-
-</app-grid>
+</div>

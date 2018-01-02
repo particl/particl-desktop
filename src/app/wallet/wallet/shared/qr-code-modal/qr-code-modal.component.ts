@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { SnackbarService } from '../../../../core/core.module';
 
@@ -17,10 +18,11 @@ export class QrCodeModalComponent {
 
   @ViewChild('qrCode') qrElementView: ElementRef;
 
-  constructor(private snackbar: SnackbarService) {
+  constructor(private snackbar: SnackbarService,
+              public diloagRef: MatDialogRef<QrCodeModalComponent>) {
   }
 
-  getQrSize() {
+  getQrSize(): number {
     return this.qrElementView.nativeElement.offsetWidth;
   }
 
@@ -28,8 +30,12 @@ export class QrCodeModalComponent {
     return address.match(/.{1,4}/g);
   }
 
-  copyToClipBoard() {
+  copyToClipBoard(): void {
     this.snackbar.open('Address copied to clipboard.', '');
+  }
+
+  dialogClose(): void {
+    this.diloagRef.close();
   }
 
 }

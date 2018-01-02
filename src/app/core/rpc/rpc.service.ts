@@ -1,20 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { Headers, Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import { map, catchError } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
 import { StateService } from '../state/state.service';
 import { RpcStateClass } from './rpc-state/rpc-state.class';
 
-
 const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
-
 const HOSTNAME = 'localhost';
-
 
 declare global {
   interface Window {
@@ -58,7 +55,7 @@ export class RpcService {
   private _rpcState: RpcStateClass;
 
   constructor(
-    private _http: Http,
+    private _http: HttpClient,
     private _ipc: IpcService,
     public state: StateService
   ) {
@@ -85,10 +82,12 @@ export class RpcService {
    */
   call(method: string, params?: Array<any> | null): Observable<any> {
     if (this.isElectron) {
-      return this._ipc.runCommand('rpc-channel', null, method, params)
-        .map(response => response && (response.result !== undefined)
-                       ? response.result
-                       : response);
+      return this._ipc.runCommand('rpc-channel', null, method, params).pipe(
+        map(response => response && (response.result !== undefined)
+                      ? response.result
+                      : response
+        )
+      );
     } else {
       // Running in browser, delete?
       const postData = JSON.stringify({
@@ -97,16 +96,20 @@ export class RpcService {
         id: 1
       });
 
-      const headers = new Headers();
+      const headers = new HttpHeaders();
       headers.append('Content-Type', 'application/json');
       headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
       headers.append('Accept', 'application/json');
 
       return this._http
-      .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
-        .map(response => response.json().result)
-        .catch(error => Observable.throw(
-          typeof error._body === 'object' ? error._body : JSON.parse(error._body)));
+        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+        .pipe(
+          map((response: any) => response.result),
+          catchError(error => Observable.throw(typeof error._body === 'object'
+            ? error._body
+            : JSON.parse(error._body))
+          )
+        );
     }
   }
 

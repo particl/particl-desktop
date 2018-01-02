@@ -2,7 +2,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
-import { MatDialog} from '@angular/material';
 
 import { ModalsService } from '../../../modals/modals.service';
 import { RpcService, StateService } from '../../../core/core.module';
@@ -27,7 +26,6 @@ export class StatusComponent implements OnInit {
   constructor(
     private _rpc: RpcService,
     private _modalsService: ModalsService,
-    private _stateService: StateService,
     private dialog: MatDialog) { }
 
   ngOnInit() {

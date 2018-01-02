@@ -46,12 +46,8 @@ exports.restart = function (cb) {
 exports.start = function (wallets, callback) {
   return (new Promise((resolve, reject) => {
 
-    let   options    = _options.get();
-    const daemonPath = options.customdaemon
-                     ? options.customdaemon
-                     : daemonManager.getPath();
+    chosenWallets    = wallets;
 
-    chosenWallets = wallets;
     rpc.init();
     exports.check().then(() => {
       log.info('daemon already started');
@@ -59,9 +55,10 @@ exports.start = function (wallets, callback) {
 
     }).catch(() => {
 
-      // TODO: only for some debug levels
-      // if (!restarting)
-        // process.argv.push('-printtoconsole');
+      let options      = _options.get();
+      const daemonPath = options.customdaemon
+                       ? options.customdaemon
+                       : daemonManager.getPath();
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
@@ -136,8 +133,7 @@ exports.check = function() {
   return new Promise((resolve, reject) => {
 
     const _timeout = rpc.getTimeoutDelay();
-    let auth = cookie.getAuth(_options.get());
-    rpc.setTimeoutDelay(150);
+    rpc.init();
     rpc.call('getnetworkinfo', null, (error, response) => {
       rxIpc.removeListeners();
       if (error) {
