@@ -32,9 +32,12 @@
               <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-v" *ngIf="list.type === 2"></mat-icon>
             </div>
             <div  fxFlex="80">
-              <p [ngClass]="{'warn-text': list.code === -1, 'space-text': list.type === 2 }">
+              <pre class="text-format" *ngIf="isJson(list.text)">
+                {{list.text | json}}
+              </pre>
+              <pre class="text-format" [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">
                 {{list.text}}
-              </p>
+              </pre>
             </div>
           </div>
         </div>

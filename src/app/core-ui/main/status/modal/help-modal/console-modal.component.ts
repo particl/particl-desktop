@@ -42,14 +42,8 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   formatSuccessResponse(response: any) {
-    let respText = '';
-    if (typeof response === 'object') {
-      respText = JSON.stringify(response, null, 1);
-    } else {
-      respText = response;
-    }
     this.commandList.push(new Command(1, this.command, this.getDateFormat()),
-      new Command(2, respText, this.getDateFormat(), 200));
+      new Command(2, response, this.getDateFormat(), 200));
     this.command = '';
     this.scrollToBottom();
   }
@@ -61,6 +55,10 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       this.command = '';
       this.scrollToBottom();
     }
+  }
+
+  isJson(text: any) {
+    return (typeof text === 'object');
   }
 
   clearCommands() {
