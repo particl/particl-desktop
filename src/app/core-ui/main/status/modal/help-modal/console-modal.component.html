@@ -1,59 +1,50 @@
-<div class="containerX">
+<div class="console-modal">
   <div mat-dialog-container>
     <mat-tab-group>
       <mat-tab label="Console">
         <div #debug class="console-modal-form" (scroll)="onScroll()">
-          <div  fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
-            <div  fxFlex="10">
-              {{currentTime}}
-            </div>
-            <div  fxFlex="10">
-              <!-- @Todo Need to change icon -->
-              <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-v"></mat-icon>
-            </div>
-            <div  fxFlex="80">
-              <p>
-                <span>Welcome to the Particl Core RPC console.Use up and down arrows to navigate history, and Ctrl-L to clear screen.Type <b>help</b> for an overview of available commands.</span>
-              </p>
-              <p>
-                <span class="warn-text">WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</span>
-              </p>
-            </div>
+
+          <div class="intro-text">
+            <p>
+              Welcome to the Particl Core RPC console.<br>
+              <!--Use up and down arrows to navigate history, and Ctrl-L to clear screen.-->
+              Type <code>help</code> for an overview of available commands.
+            </p>
+            <p class="warn-text">
+              <strong>WARNING:</strong> Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.
+            </p>
           </div>
-      
-          <div class="content-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center" *ngFor="let list of commandList">
-            <div  fxFlex="10">
-              {{list.time}}
+
+          <div class="content-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start" *ngFor="let list of commandList">
+            <div fxFlex="0 0 55px">
+              {{ list.time }}
             </div>
-            <div  fxFlex="10" fxLayoutAlign="top top">
-              <!-- @Todo Need to change icon -->
-              <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-h" *ngIf="list.type === 1"></mat-icon>
-              <!-- @Todo Need to change icon -->
-              <mat-icon fontSet="faIcon" fontIcon="fa-mars-stroke-v" *ngIf="list.type === 2"></mat-icon>
+            <div fxFlex="0 0 25px">
+              <mat-icon fontSet="partIcon" fontIcon="part-send" *ngIf="list.type === 1"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-receive" *ngIf="list.type === 2"></mat-icon>
             </div>
-            <div  fxFlex="80">
+            <div fxFlex="1 1 100%">
               <pre class='text-format' *ngIf="isJson(list.text)">
-                {{list.text | json}}
+                {{ list.text | json }}
               </pre>
               <pre class='text-format' [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">
-                {{list.text}}
+                {{ list.text }}
               </pre>
             </div>
           </div>
         </div>
-        <div  fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
-          <mat-form-field fxFlex="1 1 100%">
-            <input matInput [(ngModel)]="command" placeholder="Enter help to get more commands">
+
+        <div class="command-actions" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+          <mat-form-field fxFlex="1 1 100%" floatPlaceholder="never">
+            <input matInput [(ngModel)]="command" placeholder="Enter 'help' for an overview of available commands">
           </mat-form-field>
-          <span matTooltip="Enter">
-            <!-- @Todo Need to change icon -->
-            <mat-icon fontSet="faIcon" fontIcon="fa-sign-in"></mat-icon>
-          </span>
-          <span matTooltip="Clear">
-            <!-- @Todo Need to change icon -->
-            <mat-icon fontSet="faIcon" fontIcon="fa-times-circle-o" color="warn" (click)="clearCommands()"></mat-icon>
-          </span>
+          <button mat-raised-button color="primary" fxFlex>
+            <!-- TODO: make this button work -->
+            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            Enter
+          </button>
         </div>
+
       </mat-tab>
     </mat-tab-group>
   </div>
