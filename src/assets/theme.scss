@@ -363,6 +363,7 @@ input {
       position: absolute;
       right: 0;
       top: 0;
+      z-index: 10;
       padding: 25px 38px;
       background: transparent;
       color: $text-muted;
@@ -384,6 +385,28 @@ input {
     }
     .mat-wallet-content {
       max-height: 100% !important;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      .mat-progress-spinner { // loading spinners
+        width: 100px;
+        height: 100px;
+        padding: 0 !important;
+        position: absolute;
+        left: calc((100% - 100px) / 2);
+        top: calc((100% - 100px) / 2);
+        z-index: 10;
+        background: rgba(white, 0.9);
+        box-shadow: 0 0 70px silver;
+        border-radius: 50%;
+        svg {
+          width: 70px !important;
+          height: 70px !important;
+          transform-origin: 50px 35px;
+        }
+      }
     }
   }
 }

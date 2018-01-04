@@ -24,11 +24,11 @@
         </p>
         <div class="actions">
           <button mat-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
-            <mat-icon fontSet="partIcon" fontIcon="part-simple-add"></mat-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
             Create new wallet
           </button>
           <button mat-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
-            <mat-icon fontSet="partIcon" fontIcon="part-refresh-01"></mat-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
             Restore wallet
           </button>
         </div>
@@ -67,9 +67,11 @@
 
         <div class="actions">
           <button mat-button (click)="prevStep()">
+            <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
             Back
           </button>
           <button mat-raised-button color="primary" type="submit" [disabled]="!nameForm.form.valid">
+            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Next
           </button>
         </div><!-- .actions -->
@@ -150,9 +152,11 @@
           {{ errorString }}
         </p>
         <button mat-button (click)="prevStep()">
+          <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back
         </button>
         <button mat-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
+          <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Next
         </button>
       </div><!-- .actions -->
@@ -207,8 +211,14 @@
       </div><!-- .recovery-password -->
 
       <div class="actions">
-        <button mat-button (click)="prevStep();initialize(2)">Back</button>
-        <button mat-raised-button color="primary" (click)="restoreWallet()" [disabled]="countWords(getCountOfWordsEntered())">Next</button>
+        <button mat-button (click)="prevStep();initialize(2)">
+          <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+          Back
+        </button>
+        <button mat-raised-button color="primary" (click)="restoreWallet()" [disabled]="countWords(getCountOfWordsEntered())">
+          <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+          Next
+        </button>
       </div><!-- .actions -->
 
     </div><!-- .content -->
@@ -226,7 +236,10 @@
         Your new wallet was created successfully and set as the default wallet!
       </p>
       <div class="actions">
-        <button mat-raised-button color="warn" (click)="close()">Close</button>
+        <button mat-raised-button color="primary" (click)="close()">
+          <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+          Close
+        </button>
       </div>
 
     </div><!-- .content -->
