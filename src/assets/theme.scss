@@ -225,6 +225,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 .mat-form-field {
   font-family: $font;
+  line-height: normal;
   &.larger { // larger inputs
     font-size: 14px;
   }
