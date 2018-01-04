@@ -67,7 +67,7 @@ export class SignatureAddressModalComponent implements OnInit {
     this.buildForm();
   }
 
-  openLookup() {
+  openLookup(): void {
     const dialogRef = this.dialog.open(AddressLookupComponent);
     // @TODO confirm lookup type
     dialogRef.componentInstance.type = 'receive';
@@ -77,7 +77,7 @@ export class SignatureAddressModalComponent implements OnInit {
     });
   }
 
-  selectAddress(copyObject: AddressLookUpCopy) {
+  selectAddress(copyObject: AddressLookUpCopy): void {
     this.formData.address = copyObject.address;
     this.verifyAddress();
   }

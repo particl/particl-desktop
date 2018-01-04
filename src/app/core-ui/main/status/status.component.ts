@@ -2,7 +2,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
-import { MatDialog} from '@angular/material';
 
 import { ModalsService } from '../../../modals/modals.service';
 
@@ -25,8 +24,7 @@ export class StatusComponent implements OnInit {
 
   constructor(
     private _rpc: RpcService,
-    private _modalsService: ModalsService,
-    private _stateService: StateService) { }
+    private _modalsService: ModalsService) { }
 
   ngOnInit() {
     this._rpc.state.observe('connections')

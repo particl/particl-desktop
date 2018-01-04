@@ -67,7 +67,7 @@ export class AddressTableComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._subAddresses = this._addressService.getAddresses()
       .subscribe(
         addresses => this.addresses = addresses,
@@ -120,7 +120,7 @@ export class AddressTableComponent implements OnInit {
 
   /** Delete address */
 
-  public deleteAddress(label: string, address: string) {
+  public deleteAddress(label: string, address: string): void {
     const dialogRef = this.dialog.open(DeleteConfirmationModalComponent);
     dialogRef.componentInstance.dialogContent = `${label}: ${address}`;
     dialogRef.componentInstance.onDelete.subscribe(() => {
@@ -136,7 +136,7 @@ export class AddressTableComponent implements OnInit {
     });
   }
 
-  private deleteAddressCallBack(address: string) {
+  private deleteAddressCallBack(address: string): void {
     this._rpc.call('manageaddressbook', ['del', address])
       .subscribe(response => {
           this.rpc_deleteAddress_success(response);
@@ -144,20 +144,20 @@ export class AddressTableComponent implements OnInit {
         error => console.log(`${error.error.message}`));
   }
 
-  private rpc_deleteAddress_success(json: Object) {
+  private rpc_deleteAddress_success(json: Object): void {
     this.flashNotification.open(`Succesfully deleted ${json['address']}`);
     // this._rpc.specialPoll();
     this._addressService.updateAddressList();
   }
 
   /** Edit label address */
-  editLabel(address: string) {
+  editLabel(address: string): void {
     this.log.d(`editLabel, address: ${address}`);
     this.editLabelEmitter.emit(address);
   }
 
   /** Open QR Code Modal */
-  openQrCodeModal(address: Object) {
+  openQrCodeModal(address: Object): void {
     const dialogRef = this.dialog.open(QrCodeModalComponent);
     dialogRef.componentInstance.singleAddress = address;
     this.log.d(`qrcode, address: ${JSON.stringify(address)}`);
@@ -167,7 +167,7 @@ export class AddressTableComponent implements OnInit {
     return  address.match(/.{1,4}/g);
   }
 
-  pageChanged(event: any) {
+  pageChanged(event: any): void {
     if (event.pageIndex !== undefined) {
       this.addressDisplayAmount = event.pageSize;
       this.currentPage = event.pageIndex + 1;
@@ -175,7 +175,7 @@ export class AddressTableComponent implements OnInit {
     }
   }
 
-  copyToClipBoard() {
+  copyToClipBoard(): void {
     this.flashNotification.open('Address copied to clipboard.', '');
   }
 

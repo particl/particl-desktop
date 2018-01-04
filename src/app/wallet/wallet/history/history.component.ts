@@ -8,7 +8,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 export class HistoryComponent implements OnInit {
 
-  // @ViewChild('filterList') filterList: any;
   @ViewChild('transactions') transactions: any;
 
   categories: Array<any> = [
@@ -46,18 +45,17 @@ export class HistoryComponent implements OnInit {
     type:     undefined
   };
 
-  // default tab is zero
   public selectedTab: number = 0;
 
   constructor() {
     this.default();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     /* may be used if we concatenate some filters http://bit.ly/2Buav9B */
   }
 
-  default() {
+  default(): void {
     this.selectedTab = 0;
     this.filters = {
       category: 'all',
@@ -67,7 +65,7 @@ export class HistoryComponent implements OnInit {
     };
   }
 
-  changeCategory(index: number) {
+  changeCategory(index: number): void {
     this.selectedTab = index;
     this.transactions.resetPagination();
     this.filters.category = this.categories[index].value;
@@ -79,11 +77,11 @@ export class HistoryComponent implements OnInit {
     this.filter();
   }
 
-  filter() {
+  filter(): void {
     this.transactions.filter(this.filters);
   }
 
-  clear() {
+  clear(): void {
     this.default();
     this.filter();
   }

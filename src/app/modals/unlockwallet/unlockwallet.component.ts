@@ -28,7 +28,7 @@ export class UnlockwalletComponent {
               public dialogRef: MatDialogRef<ModalsComponent>) {
   }
 
-  unlock(encryptionStatus: string) {
+  unlock(encryptionStatus: string): void {
     // unlock actually happened in password.component.ts
     this.log.d('Unlock signal emitted! = ' + encryptionStatus );
 
@@ -49,7 +49,7 @@ export class UnlockwalletComponent {
   /**
   * setData sets the callback information for when the wallet unlocks.
   */
-  setData(data: any) {
+  setData(data: any): void {
     this.log.d('setting callback, timeout & showStakeOnly data');
     this.callback = data.callback;
     if (Number.isInteger(data.timeout)) {
@@ -59,7 +59,7 @@ export class UnlockwalletComponent {
     this.autoClose = (data.autoClose !== false)
   }
 
-  closeModal() {
+  closeModal(): void {
     // clear callback data
     this.timeout = this.DEFAULT_TIMEOUT;
     this.showStakeOnly = true;

@@ -1,4 +1,4 @@
-import {Component, forwardRef, Inject, ViewChild} from '@angular/core';
+import { Component, forwardRef, Inject, ViewChild } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { MatDialogRef } from '@angular/material';
 
@@ -19,8 +19,7 @@ export class EncryptwalletComponent {
   log: any = Log.create('encryptwallet.component');
   public password: string;
 
-  @ViewChild('passwordElement')
-  passwordElement: PasswordComponent;
+  @ViewChild('passwordElement') passwordElement: PasswordComponent;
 
   constructor(
     @Inject(forwardRef(() => ModalsService))
@@ -30,7 +29,7 @@ export class EncryptwalletComponent {
     public _dialogRef: MatDialogRef<EncryptwalletComponent>
   ) { }
 
-  encryptwallet(password: IPassword) {
+  encryptwallet(password: IPassword): void {
     if (this.password) {
 
       this.log.d(`check password equality: ${password.password === this.password}`);
@@ -77,7 +76,7 @@ export class EncryptwalletComponent {
     }
   }
 
-  clearPassword() {
+  clearPassword(): void {
     this.password = undefined;
   }
 }
