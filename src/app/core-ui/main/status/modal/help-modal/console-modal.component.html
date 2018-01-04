@@ -24,10 +24,10 @@
               <mat-icon fontSet="partIcon" fontIcon="part-receive" *ngIf="list.type === 2"></mat-icon>
             </div>
             <div fxFlex="1 1 100%">
-              <pre class='text-format' *ngIf="isJson(list.text)">
+              <pre class="text-format" *ngIf="isJson(list.text)">
                 {{ list.text | json }}
               </pre>
-              <pre class='text-format' [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">
+              <pre class="text-format" [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">
                 {{ list.text }}
               </pre>
             </div>
