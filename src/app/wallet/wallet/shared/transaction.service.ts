@@ -168,7 +168,9 @@ export class TransactionService {
               this.notification.sendNotification(
                 'New stake reward', tx[0]['amount'] + ' PART received');
           }
-          this.checkForNewTransaction(this.txs, tx);
+          if (this.currentPage === 0) {
+            this.checkForNewTransaction(this.txs, tx);
+          }
         });
   }
 
@@ -191,7 +193,7 @@ export class TransactionService {
   }
 
   unShiftTransactions(json: Object) {
-    if (this.txs.length === 10) {
+    if (this.txs.length === this.MAX_TXS_PER_PAGE) {
       this.txs.pop();
     }
     this.txs.unshift(new Transaction(json));
