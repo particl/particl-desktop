@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../../../core/core.module';
@@ -37,7 +37,6 @@ export class NewAddressModalComponent implements OnInit {
     private _rpc: RpcService,
     private flashNotificationService: SnackbarService,
     private _modals: ModalsService,
-    private dialog: MatDialog,
     private _addressService: AddressService) {
   }
 
@@ -102,7 +101,7 @@ export class NewAddressModalComponent implements OnInit {
     }
   }
 
-  private addressCallBack() {
+  private addressCallBack(): void {
     this._rpc.call('manageaddressbook', ['newsend', this.address, this.label])
       .subscribe(
         response => this.rpc_addAddressToBook_success(response),

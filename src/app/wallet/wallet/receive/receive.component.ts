@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -7,7 +7,6 @@ import { RpcService } from '../../../core/core.module';
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
 
-import { ModalsService } from '../../../modals/modals.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 @Component({
@@ -17,40 +16,34 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 })
 export class ReceiveComponent implements OnInit {
 
-  @ViewChild('qrCode') qrElementView: ElementRef;
+  @ViewChild('paginator') paginator: any;
+
+  log: any = Log.create('receive.component');
+
+  MAX_ADDRESSES_PER_PAGE: number = 5;
+  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
 
   /* UI State */
   public type: string = 'public';
   public query: string = '';
-  // public tabsTitle
 
+  initialized: boolean = false; /* true => checkUnusedAddress is already looping */
   selected: any;
+  page: number = 1;
 
   /* UI Pagination */
   addresses: any = {
     private: [],
     public: [],
     query: []
-
   };
-
-  MAX_ADDRESSES_PER_PAGE: number = 5;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
-  page: number = 1;
-
-  /* initialized boolean: when true => checkUnusedAddress is already looping! */
-  initialized: boolean = false;
-
-  /* General */
-  log: any = Log.create('receive.component');
 
   constructor(private rpc: RpcService,
               public dialog: MatDialog,
-              public _modalService: ModalsService,
               private flashNotificationService: SnackbarService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // start rpc
     this.rpc_update();
   }
@@ -62,9 +55,12 @@ export class ReceiveComponent implements OnInit {
   getSinglePage(): Array<Object> {
     let type = this.type;
 
-    if (this.inSearchMode()) { // in search mode
+    if (this.inSearchMode()) {
       type = 'query';
-
+      if (this.paginator) {
+        this.page = 1;
+        this.paginator.resetPagination(0);
+      }
       this.addresses.query = this.addresses[this.type].filter(el => {
         if (el) {
           return (
@@ -83,7 +79,9 @@ export class ReceiveComponent implements OnInit {
     const offset: number = +(type !== 'query');
 
     return this.addresses[type].slice(
-      offset + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
+      offset + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE),
+      this.page * this.MAX_ADDRESSES_PER_PAGE
+    );
   }
 
   /** Returns the unused addresses to display in the UI. */
@@ -99,12 +97,11 @@ export class ReceiveComponent implements OnInit {
     if (this.inSearchMode()) {
       return this.addresses.query.length;
     }
-
     return this.addresses[this.type].length - 1;
   }
 
   /** Called to change the page. */
-  pageChanged(event: any) {
+  pageChanged(event: any): void {
     if (event.pageIndex !== undefined) {
       this.MAX_ADDRESSES_PER_PAGE = event.pageSize;
       this.page = event.pageIndex + 1;
@@ -136,7 +133,7 @@ export class ReceiveComponent implements OnInit {
     * Sets the address type, also checks if valid. Also changes the selected address.
     * @param type Address type to set
     */
-  setAddressType(type: string) {
+  setAddressType(type: string): void {
     if (['public', 'private'].includes(type)) {
       this.type = type;
     }
@@ -148,7 +145,7 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  changeTab(tab: number) {
+  changeTab(tab: number): void {
     this.page = 1;
     if (tab) {
       this.setAddressType('private');
@@ -157,7 +154,7 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  getAddressType() {
+  getAddressType(): string {
     return this.type;
   }
 
@@ -165,7 +162,7 @@ export class ReceiveComponent implements OnInit {
     * Selected address stuff
     * @param address The address to select
     */
-  selectAddress(address: string) {
+  selectAddress(address: string): void {
     this.selected = address;
   }
 
@@ -181,11 +178,11 @@ export class ReceiveComponent implements OnInit {
     dialogRef.componentInstance.onAddressAdd.subscribe(result => this.rpc_update());
   }
 
-  selectInput() {
+  selectInput(): void {
     (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
   }
 
-  copyToClipBoard() {
+  copyToClipBoard(): void {
     this.flashNotificationService.open('Address copied to clipboard.');
   }
 
@@ -197,7 +194,7 @@ export class ReceiveComponent implements OnInit {
   /* ---- RPC LOGIC -------------------------------------------------------- */
 
   /** Used to get the addresses. */
-  rpc_update() {
+  rpc_update(): void {
     this.rpc.call('filteraddresses', [-1])
       .subscribe(
         response => this.rpc_loadAddressCount_success(response),
@@ -208,13 +205,15 @@ export class ReceiveComponent implements OnInit {
     * Used to get the addresses.
     * TODO: Create interface
     */
-  rpc_loadAddressCount_success(response: any) {
+  rpc_loadAddressCount_success(response: any): void {
     const count = response.num_receive;
-/*    if (count ===) {
+    /*
+    if (count ===) {
       console.log('openNewAddress()')
       this.openNewAddress();
       return;
-    }*/
+    }
+    */
     this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
       .subscribe(
         (resp: Array<any>) => this.rpc_loadAddresses_success(resp),
@@ -223,9 +222,9 @@ export class ReceiveComponent implements OnInit {
 
   /**
     * Used to get the addresses.
-    * TODO: Create interface Array<AddressInterface?>
+    * @TODO: Create interface Array<AddressInterface?>
     */
-  rpc_loadAddresses_success(response: Array<any>) {
+  rpc_loadAddresses_success(response: Array<any>): void {
     const pub = [],
           priv = [];
 
@@ -265,7 +264,7 @@ export class ReceiveComponent implements OnInit {
     * Transforms the json to the right format and adds it to the right array (public / private)
     * TODO: Create interface for response
     */
-  addAddress(response: any, type: string) {
+  addAddress(response: any, type: string): void {
     const tempAddress = {
       id: 0,
       label: 'Empty label',
@@ -305,7 +304,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   /** Sorts the private/public address by id (= HD wallet path m/0/0 < m/0/1) */
-  sortArrays() {
+  sortArrays(): void {
     const compare = (a, b) => b.id - a.id;
 
     this.addresses.public.sort(compare);
@@ -317,7 +316,7 @@ export class ReceiveComponent implements OnInit {
     * If it has received funds, generate a new address and update the table.
     * TODO: Remove timeout if not currently on ngOnDestroy
     */
-  checkIfUnusedAddress() {
+  checkIfUnusedAddress(): void {
     if (this.addresses && this.addresses.public[0] && this.addresses.public[0].address) {
       this.rpc.call('getreceivedbyaddress', [this.addresses.public[0].address, 0])
         .subscribe(
@@ -327,7 +326,7 @@ export class ReceiveComponent implements OnInit {
     setTimeout(this.checkIfUnusedAddress, 30000);
   }
 
-  rpc_callbackUnusedAddress_success(json: Object) {
+  rpc_callbackUnusedAddress_success(json: Object): void {
     if (json > 0) {
       this.log.er('rpc_callbackUnusedAddress_success: Funds received, need unused public address');
 
@@ -348,4 +347,5 @@ export class ReceiveComponent implements OnInit {
       error => this.log.er('error'));
     }
   }
+
 }

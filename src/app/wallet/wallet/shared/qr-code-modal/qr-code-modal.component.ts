@@ -22,7 +22,7 @@ export class QrCodeModalComponent {
               public diloagRef: MatDialogRef<QrCodeModalComponent>) {
   }
 
-  getQrSize() {
+  getQrSize(): number {
     return this.qrElementView.nativeElement.offsetWidth;
   }
 
@@ -30,7 +30,7 @@ export class QrCodeModalComponent {
     return address.match(/.{1,4}/g);
   }
 
-  copyToClipBoard() {
+  copyToClipBoard(): void {
     this.snackbar.open('Address copied to clipboard.', '');
   }
 

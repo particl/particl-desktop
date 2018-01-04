@@ -67,7 +67,7 @@ export class SettingsService {
     return (JSON.parse(localStorage.getItem('settings')));
   }
 
-  applySettings(settings: Object) {
+  applySettings(settings: Object): void {
 
     const oldSettings: string = localStorage.getItem('settings');
     const newSettings: string = JSON.stringify(settings);

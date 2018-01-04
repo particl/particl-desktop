@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { MatIconRegistry } from '@angular/material'; // TODO: move to material module?
 import { Log } from 'ng2-logger';
 

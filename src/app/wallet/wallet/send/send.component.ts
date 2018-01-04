@@ -5,11 +5,11 @@ import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../../modals/modals.service';
 import { RpcService } from '../../../core/core.module';
+
 import { SendService } from './send.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
-
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 import { AddressHelper } from '../../shared/util/utils';
@@ -45,6 +45,7 @@ export class SendComponent {
     currency: 'part',
     privacy: 8
   };
+  public isSendAll: boolean = false;
 
   // RPC logic
   lookup: string;
@@ -63,23 +64,24 @@ export class SendComponent {
   }
 
   /** Select tab */
-  selectTab(tabIndex: number) {
+  selectTab(tabIndex: number): void {
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
     this.send.input = 'balance';
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
       this.verifyAddress();
     }
+    this.updateAmount();
   }
 
   /** Toggle advanced controls and settings */
-  toggleAdvanced() {
+  toggleAdvanced(): void {
     this.advancedText = ' Advanced options';
     this.advanced = !this.advanced;
   }
 
   /** Get current account balance (Public / Blind / Anon) */
-  getBalance(account: string) {
+  getBalance(account: string): number {
     return this._rpc.state.get(account) || 0;
   }
 
@@ -100,7 +102,7 @@ export class SendComponent {
     return this.send.validAmount;
   }
 
-  verifyAmount() {
+  verifyAmount(): void {
 
     if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '' || this.send.amount === null) {
       this.send.validAmount = undefined;
@@ -153,7 +155,7 @@ export class SendComponent {
   }
 
   /** Clear the send object. */
-  clear() {
+  clear(): void {
     this.send = {
       input: this.send.input,
       output: this.send.output,
@@ -162,9 +164,10 @@ export class SendComponent {
       currency: 'part',
       privacy: 50
     };
+    this.isSendAll = false;
   }
 
-  clearReceiver() {
+  clearReceiver(): void {
     this.send.toLabel = '';
     this.send.toAddress = '';
     this.send.validAddress = undefined;
@@ -182,7 +185,7 @@ export class SendComponent {
   }
 
   /** Payment function */
-  pay() {
+  pay(): void {
     if (this.send.input === '' ) {
       this.flashNotification.open('You need to select an input type (public, blind or anon)!');
       return;
@@ -247,7 +250,7 @@ export class SendComponent {
     AddressLookup Modal + set details
   */
 
-  openLookup() {
+  openLookup(): void {
     const dialogRef = this.dialog.open(AddressLookupComponent);
     dialogRef.componentInstance.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
     dialogRef.componentInstance.filter = (
@@ -262,7 +265,7 @@ export class SendComponent {
     * @param address The address to send to
     * @param label The label for the address.
     */
-  selectAddress(copyObject: AddressLookUpCopy) {
+  selectAddress(copyObject: AddressLookUpCopy): void {
     this.send.toAddress = copyObject.address;
     this.send.toLabel = copyObject.label;
     // this.addressLookup.hide();
@@ -270,7 +273,7 @@ export class SendComponent {
   }
 
   /** Add/edits label of an address. */
-  addLabelToAddress() {
+  addLabelToAddress(): void {
     const isMine = this.send.isMine;
 
     /*
@@ -289,12 +292,12 @@ export class SendComponent {
         error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
   }
 
-  setPrivacy(level: number, prog: number) {
+  setPrivacy(level: number, prog: number): void {
     this.send.privacy = level;
     this.progress = prog;
   }
 
-  pasteAddress() {
+  pasteAddress(): void {
     // document.getElementById('address').focus();
     this.address.nativeElement.focus();
     document.execCommand('Paste');
@@ -305,5 +308,14 @@ export class SendComponent {
     if (this.addressHelper.addressFromPaste(event)) {
       this.address.nativeElement.focus();
     }
+  }
+
+  sendAllBalance(): void {
+    this.sendService.isSubstractfeefromamount = (!this.isSendAll);
+    this.send.amount = (!this.isSendAll) ? this.getBalance(this.send.input) : null;
+  }
+
+  updateAmount(): void {
+    this.send.amount = (this.isSendAll) ? this.getBalance(this.send.input) : null;
   }
 }

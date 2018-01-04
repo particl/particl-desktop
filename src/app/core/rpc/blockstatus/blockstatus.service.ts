@@ -1,5 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
