@@ -123,4 +123,8 @@ export class PaginatorComponent implements OnInit {
       length: this.length
     });
   }
+
+  resetPagination(pageIndex: number): void {
+    this.pageIndex = pageIndex
+  }
 }

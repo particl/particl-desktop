@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -15,30 +15,28 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
   styleUrls: ['./receive.component.scss']
 })
 export class ReceiveComponent implements OnInit {
+
+  @ViewChild('paginator') paginator: any;
+
+  log: any = Log.create('receive.component');
+
+  MAX_ADDRESSES_PER_PAGE: number = 5;
+  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+
   /* UI State */
   public type: string = 'public';
   public query: string = '';
-  // public tabsTitle
 
+  initialized: boolean = false; /* true => checkUnusedAddress is already looping */
   selected: any;
+  page: number = 1;
 
   /* UI Pagination */
   addresses: any = {
     private: [],
     public: [],
     query: []
-
   };
-
-  MAX_ADDRESSES_PER_PAGE: number = 5;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
-  page: number = 1;
-
-  /* initialized boolean: when true => checkUnusedAddress is already looping! */
-  initialized: boolean = false;
-
-  /* General */
-  log: any = Log.create('receive.component');
 
   constructor(private rpc: RpcService,
               public dialog: MatDialog,
@@ -57,9 +55,12 @@ export class ReceiveComponent implements OnInit {
   getSinglePage(): Array<Object> {
     let type = this.type;
 
-    if (this.inSearchMode()) { // in search mode
+    if (this.inSearchMode()) {
       type = 'query';
-
+      if (this.paginator) {
+        this.page = 1;
+        this.paginator.resetPagination(0);
+      }
       this.addresses.query = this.addresses[this.type].filter(el => {
         if (el) {
           return (
@@ -78,7 +79,9 @@ export class ReceiveComponent implements OnInit {
     const offset: number = +(type !== 'query');
 
     return this.addresses[type].slice(
-      offset + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.page * this.MAX_ADDRESSES_PER_PAGE);
+      offset + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE),
+      this.page * this.MAX_ADDRESSES_PER_PAGE
+    );
   }
 
   /** Returns the unused addresses to display in the UI. */
@@ -94,7 +97,6 @@ export class ReceiveComponent implements OnInit {
     if (this.inSearchMode()) {
       return this.addresses.query.length;
     }
-
     return this.addresses[this.type].length - 1;
   }
 
@@ -205,11 +207,13 @@ export class ReceiveComponent implements OnInit {
     */
   rpc_loadAddressCount_success(response: any): void {
     const count = response.num_receive;
-/*    if (count ===) {
+    /*
+    if (count ===) {
       console.log('openNewAddress()')
       this.openNewAddress();
       return;
-    }*/
+    }
+    */
     this.rpc.call('filteraddresses', [0, count, '0', '', '1'])
       .subscribe(
         (resp: Array<any>) => this.rpc_loadAddresses_success(resp),
@@ -343,4 +347,5 @@ export class ReceiveComponent implements OnInit {
       error => this.log.er('error'));
     }
   }
+
 }
