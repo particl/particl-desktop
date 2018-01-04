@@ -15,7 +15,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
   styleUrls: ['./receive.component.scss']
 })
 export class ReceiveComponent implements OnInit {
-  
+
   @ViewChild('paginator') paginator: any;
 
   log: any = Log.create('receive.component');
