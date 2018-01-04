@@ -11,11 +11,11 @@ export class HistoryComponent implements OnInit {
   @ViewChild('transactions') transactions: any;
 
   categories: Array<any> = [
-    { title: 'All transactions', value: 'all'               },
-    { title: 'Send',             value: 'send'              },
-    { title: 'Receive',          value: 'receive'           },
-    { title: 'Stake',            value: 'stake'             },
-    { title: 'Balance transfer', value: 'internal_transfer' },
+    { title: 'All transactions',   value: 'all'               },
+    { title: 'Sent',               value: 'send'              },
+    { title: 'Received',           value: 'receive'           },
+    { title: 'Staked',             value: 'stake'             },
+    { title: 'Balance Transfers',  value: 'internal_transfer' },
     // { title: 'Immature',         value: 'immature'          },
     // { title: 'Coinbase',         value: 'coinbase'          },
     // { title: 'Orphan',           value: 'orphan'            },

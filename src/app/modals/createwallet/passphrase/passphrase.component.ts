@@ -1,8 +1,15 @@
-import { Component, Input,  OnChanges, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+import { Log } from 'ng2-logger';
 
 import { PassphraseService } from './passphrase.service';
-
-import { Log } from 'ng2-logger';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 const MAX_WORDS = 24;
@@ -19,6 +26,7 @@ export class PassphraseComponent implements  OnChanges {
   focused: number = 0;
   public editable: number[] = [];
 
+  @ViewChild('phrase') phrase: ElementRef;
   @Input() words: string[] = Array(MAX_WORDS).fill('');
 
   @Input() readOnly: boolean = false;
@@ -93,5 +101,10 @@ export class PassphraseComponent implements  OnChanges {
 
   copyToClipBoard(): void {
     this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.');
+  }
+
+  pasteContent() {
+    this.phrase.nativeElement.focus();
+    document.execCommand('Paste');
   }
 }

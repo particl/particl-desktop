@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material';
+import { PageEvent } from '@angular/material';
 import { Log } from 'ng2-logger'
 
 import { slideDown } from 'app/core-ui/core.animations';
@@ -17,7 +17,7 @@ import { TransactionService } from '../transaction.service';
 export class TransactionsTableComponent implements OnInit {
 
   @Input() display: any;
-  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginator') paginator: any;
 
   /* Determines what fields are displayed in the Transaction Table. */
   /* header and utils */
@@ -57,6 +57,9 @@ export class TransactionsTableComponent implements OnInit {
   }
 
   public filter(filters: any) {
+    if (this.inSearchMode(filters.search)) {
+      this.resetPagination();
+    }
     this.txService.filter(filters);
   }
 
@@ -65,6 +68,10 @@ export class TransactionsTableComponent implements OnInit {
     this.txService.MAX_TXS_PER_PAGE = event.pageSize;
     // increase page index because its start from 0
     this.txService.changePage(event.pageIndex++);
+  }
+
+  private inSearchMode(query: any): boolean {
+    return (query !== undefined && query !== '');
   }
 
   public showExpandedTransactionDetail(tx: Transaction): void {
@@ -95,8 +102,8 @@ export class TransactionsTableComponent implements OnInit {
   }
 
   public resetPagination(): void {
-    if (this.paginator && this.paginator.pageIndex) {
-      this.paginator.pageIndex = 0;
+    if (this.paginator) {
+      this.paginator.resetPagination(0)
       this.txService.changePage(0);
     }
   }

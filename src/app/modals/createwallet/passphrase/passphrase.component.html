@@ -5,6 +5,7 @@
     <div fxFlex="15%" *ngFor="let k of Arr(24).fill(); let i = index">
       <mat-form-field>
         <input
+          #phrase
           matInput
           class="enable-select"
           [appFocusElement]="i === focused"
@@ -24,10 +25,9 @@
       <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon> Copy to Clipboard
     </button>
 
-    <!-- @TODO: Uncomment Paste button when it's working! -->
-    <!--button mat-button *ngIf="!generate" class="paste">
+    <button mat-button *ngIf="!generate" class="paste" (click)="pasteContent()">
       <mat-icon fontSet="partIcon" fontIcon="part-past"></mat-icon> Paste
-    </button-->
+    </button>
 
   </div><!-- .actions -->
 </div><!-- .passphrase -->
