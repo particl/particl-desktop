@@ -33,7 +33,7 @@ export class MainViewComponent implements OnInit {
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
-
+  public encryptionStatus: string = 'Locked';
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -73,6 +73,9 @@ export class MainViewComponent implements OnInit {
     this._rpc.state.observe('ui:walletInitialized')
     .subscribe(status => this.walletInitialized = status);
 
+
+    this._rpc.state.observe('encryptionstatus')
+      .subscribe(status => this.encryptionStatus = status);
 
     /* versions */
     // Obtains the current daemon version
