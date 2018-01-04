@@ -1,4 +1,9 @@
 <div class="console-modal">
+  <!-- FIXME: make the close button work -->
+  <button class="small-close_button">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  </button>
+
   <div mat-dialog-container>
     <mat-tab-group>
       <mat-tab label="Console">
@@ -15,21 +20,17 @@
             </p>
           </div>
 
-          <div class="content-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start" *ngFor="let list of commandList">
-            <div fxFlex="0 0 55px">
-              {{ list.time }}
-            </div>
-            <div fxFlex="0 0 25px">
+          <div class="content-modal" [ngClass]="{'input': list.type === 1}" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start" *ngFor="let list of commandList">
+            <!--div fxFlex="0 0 25px" *ngIf="list.type === 1">
               <mat-icon fontSet="partIcon" fontIcon="part-send" *ngIf="list.type === 1"></mat-icon>
               <mat-icon fontSet="partIcon" fontIcon="part-receive" *ngIf="list.type === 2"></mat-icon>
+            </div-->
+            <div fxFlex="1 1 100%" class="command">
+              <pre class="text-format" *ngIf="isJson(list.text)">{{ list.text | json }}</pre>
+              <pre class="text-format" [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">{{ list.text }}</pre>
             </div>
-            <div fxFlex="1 1 100%">
-              <pre class="text-format" *ngIf="isJson(list.text)">
-                {{ list.text | json }}
-              </pre>
-              <pre class="text-format" [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">
-                {{ list.text }}
-              </pre>
+            <div fxFlex="0 0 55px" class="time" *ngIf="list.type === 1">
+              {{ list.time }}
             </div>
           </div>
         </div>

@@ -35,7 +35,7 @@ export class QrCodeModalComponent {
   }
 
   dialogClose(): void {
-    this.diloagRef.close();
+    this.diloagRef.close(); // FIXME: typo?
   }
 
 }
