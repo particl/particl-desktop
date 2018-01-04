@@ -1,7 +1,15 @@
-import { Component, Input,  OnChanges, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
-import { PassphraseService } from './passphrase.service';
-
+import {
+  Component,
+  Input,
+  OnChanges,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { Log } from 'ng2-logger';
+
+import { PassphraseService } from './passphrase.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 const MAX_WORDS = 24;
@@ -96,7 +104,6 @@ export class PassphraseComponent implements  OnChanges {
   }
 
   pasteContent() {
-    // Directive doesn't get reflect if we make focused = 0
     this.phrase.nativeElement.focus();
     document.execCommand('Paste');
   }
