@@ -39,9 +39,12 @@ export class ColdstakeComponent implements OnInit {
 
   private rpc_progressLoop(): void {
 
-    this._rpc.call('getcoldstakinginfo').subscribe((coldstakinginfo: any) => {
-      this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
-    }, error => this.log.er('couldn\'t get cold staking info', error));
+    if (this.coldStakingEnabled) {
+      this._rpc.call('getcoldstakinginfo').subscribe((coldstakinginfo: any) => {
+        this.log.d(coldstakinginfo['percent_in_coldstakeable_script']);
+        this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
+      }, error => this.log.er('couldn\'t get cold staking info', error));
+    }
 
       /*
     if (this.coldStakingEnabled) {
@@ -66,16 +69,73 @@ export class ColdstakeComponent implements OnInit {
     }
       */
 
-    if (this.coldStakingEnabled) {
-      setTimeout(this.rpc_progressLoop.bind(this), 1000);
-    }
+    setTimeout(this.rpc_progressLoop.bind(this), 1000);
+  }
+
+  zap() {
+
+    /* TODO: use async / await, make return value useful */
+    this.log.d('zap called !');
+
+    this._rpc.call('walletsettings', ['changeaddress']).subscribe(info => {
+
+      this.log.d('zap walletsettings', info);
+      const pkey = info.changeaddress.coldstakingaddress;
+      if (pkey === 'default') {
+        return false;
+      }
+
+      this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(info => {
+
+        this.log.d('zap deriverangekeys', info);
+        if (!info || info.length != 1) {
+          return false;
+        }
+        const stake = info[0]
+
+        this._rpc.call('getnewaddress', ['', false, false, true]).subscribe(info => {
+
+          this.log.d('zap getnewaddress', info);
+          const spend = info;
+          if (!spend || spend === '') {
+            return false;
+          }
+
+          this._rpc.call('buildscript', [JSON.stringify({
+            recipe: 'ifcoinstake',
+            addrstake: stake,
+            addrspend: spend
+          })]).subscribe(info => {
+
+            this.log.d('zap buildscript', info);
+            if (!info || !info.hex) {
+              return false;
+            }
+            const script = info.hex;
+            let sum_inputs = 0; /* TODO */
+
+            this._rpc.call('sendtypeto', ['part', 'part', [{
+              subfee: true,
+              address: 'script',
+              amount: sum_inputs,
+              script: script
+            }], '', '', 4, 64, false]).subscribe(info => {
+
+              this.log.d('zap sendtypeto', info);
+              return true;
+
+            });
+          });
+        });
+      })
+    });
   }
 
   openUnlockWalletModal(): void {
-    this._modals.open('unlock', {forceOpen: true, showStakeOnly: false});
+    this._modals.open('unlock', { forceOpen: true });
   }
 
   openColdStakeModal(): void {
-    this._modals.open('coldStake', {forceOpen: true, type: 'cold'});
+    this._modals.open('coldStake', { forceOpen: true, type: 'cold' });
   }
 }
