@@ -97,7 +97,7 @@
     <footer class="pin-to-bottom">
 
       <mat-content *ngIf="!daemonRunning || !walletInitialized">
-        <mat-list class="error sidebar-item-group">
+        <mat-list class="notification error sidebar-item-group">
           <mat-list-item class="sidebar-item" *ngIf="!daemonRunning">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Connection Refused, Daemon is not connected</span>
@@ -119,10 +119,12 @@
       </mat-content>
 
       <mat-content *ngIf="unlocked_until > 0">
-        <mat-list-item class="sidebar-item">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-          <span class="text">Wallet auto locked in {{time}} minutes</span>
-        </mat-list-item>
+        <mat-list class="notification info sidebar-item-group">
+          <mat-list-item class="sidebar-item">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+            <span class="text" matTooltip="As a security measure, wallet auto-locks after 5 mins" matTooltipPosition="above">Wallet unlocked for {{ time }}</span>
+          </mat-list-item>
+        </mat-list>
       </mat-content>
 
       <!-- Versions | TODO: move to separate component? -->
