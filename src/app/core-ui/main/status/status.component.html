@@ -4,9 +4,8 @@
   </span>
 
   <span
-    class="encryption icon pointer"
+    class="encryption icon"
     matTooltip="{{ encryptionStatus }}"
-    placement="left"
     container="body"
     (click)="toggle()">
       <img src="assets/icons/lock/lock{{ getIconEncryption() }}.png"/>
@@ -15,16 +14,14 @@
   <span
     class="staking icon"
     matTooltip="Cold staking {{ getColdStakingStatus() }}"
-    placement="left"
     [ngClass]="getColdStakingStatus()"
     container="body">
       <mat-icon fontSet="partIcon" fontIcon="part-snowflake"></mat-icon>
   </span>
 
   <span
-    class="encryption icon"
-    matTooltip="Console Debug Window"
-    placement="left"
+    class="console icon"
+    matTooltip="Debug Console"
     container="body"
     (click)="openConsoleWindow()">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console"></mat-icon>
