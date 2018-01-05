@@ -18,7 +18,8 @@ export class ReleaseNotificationComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.getCurrentClientVersion();
+    // check new update in every 30 minute
+    setTimeout(this.getCurrentClientVersion(), 1800000);
   }
 
   getCurrentClientVersion() {
