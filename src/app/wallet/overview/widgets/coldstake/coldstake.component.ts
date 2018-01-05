@@ -37,9 +37,13 @@ export class ColdstakeComponent implements OnInit {
   ngOnInit() {
   }
 
-  /** calls listunspent, then calculate progress. */
   private rpc_progressLoop(): void {
 
+    this._rpc.call('getcoldstakinginfo').subscribe((coldstakinginfo: any) => {
+      this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
+    }, error => this.log.er('couldn\'t get cold staking info', error));
+
+      /*
     if (this.coldStakingEnabled) {
       this._rpc.call('listunspent')
         .subscribe(
@@ -60,8 +64,9 @@ export class ColdstakeComponent implements OnInit {
       // TODO: Handle error appropriately
       error => this.log.er('rpc_progressLoop: listunspent failed', error));
     }
+      */
 
-    if (this.coldstakeProgress < 100) {
+    if (this.coldStakingEnabled) {
       setTimeout(this.rpc_progressLoop.bind(this), 1000);
     }
   }
