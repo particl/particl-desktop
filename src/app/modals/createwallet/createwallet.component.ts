@@ -12,6 +12,7 @@ import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
 
 import { StateService } from '../../core/core.module';
+import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 @Component({
   selector: 'modal-createwallet',
@@ -31,10 +32,12 @@ export class CreateWalletComponent {
   @ViewChild('nameField') nameField: ElementRef;
 
   password: string;
+  passwordVerify: string;
   words: string[];
 
   @ViewChild('passphraseComponent') passphraseComponent: ComponentRef<PassphraseComponent>;
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
+  @ViewChild('passwordElementVerify') passwordElementVerify: PasswordComponent;
   @ViewChild('passwordRestoreElement') passwordRestoreElement: PasswordComponent;
 
   // Used for verification
@@ -48,6 +51,7 @@ export class CreateWalletComponent {
     private _modalsService: ModalsService,
     private _passphraseService: PassphraseService,
     private state: StateService,
+    private flashNotification: SnackbarService,
     private dialogRef: MatDialogRef<CreateWalletComponent>
   ) {
     this.reset();
@@ -60,6 +64,7 @@ export class CreateWalletComponent {
     this.isRestore = false;
     this.name = '';
     this.password = '';
+    this.passwordVerify = '';
     this.errorString = '';
     this.step = 0;
     this.state.observe('encryptionstatus').take(2)
@@ -89,6 +94,8 @@ export class CreateWalletComponent {
     /* Recovery password entered */
     if (this.step === 2) {
       this.passwordElement.sendPassword();
+      this.passwordElementVerify.sendPassword();
+      return;
     }
 
     if (this.validate()) {
@@ -115,16 +122,23 @@ export class CreateWalletComponent {
         if (this.isRestore) {
           this.step = 4;
         }
+        this.password = undefined;
+        this.passwordVerify = undefined;
         break;
       case 3:
         this._passphraseService.generateMnemonic(this.mnemonicCallback.bind(this), this.password);
+        this.flashNotification.open(
+          'Please remember to write down your recovery passphrase',
+          'warning');
         break;
       case 4:
         while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
           const k = Math.floor(Math.random() * 23);
-
           this.words[k] = '';
         }
+        this.flashNotification.open(
+          'Did you write your password at the previous step ?',
+          'warning');
         break;
       case 5:
         this.step = 4;
@@ -209,17 +223,34 @@ export class CreateWalletComponent {
     this.passwordRestoreElement.sendPassword();
   }
 
-  /**
-  * Triggered when the password is emitted from PasswordComponent
-  */
-  passwordFromEmitter(pass: IPassword): void {
-    this.password = pass.password;
-    this.log.d(`passwordFromEmitter: ${this.password}`);
+  /** Triggered when the password is emitted from PasswordComponent */
+  passwordFromEmitter(pass: IPassword, verify?: boolean) {
+    this[verify ? 'passwordVerify' : 'password'] = pass.password;
+    this.log.d(`passwordFromEmitter: ${this.password} ${verify}`);
+    if (!!this[verify ? 'password' : 'passwordVerify'] ||
+      this.password === undefined && this.passwordVerify === undefined) {
+      this.verifyPasswords();
+    }
   }
 
-  /**
-  * Triggered when the password is emitted from PassphraseComponent
-  */
+  /** verify if passwords match */
+  verifyPasswords() {
+    if (!this.validating) {
+      return;
+    }
+
+    if (this.password !== this.passwordVerify) {
+      this.flashNotification.open('Passwords Do Not Match!', 'warning');
+    } else {
+      // We should probably make this a function because it isn't reusing code??
+      this.validating = false;
+      this.step++;
+      this.doStep();
+    }
+    this.passwordVerify = undefined;
+  }
+
+  /** Triggered when the password is emitted from PassphraseComponent */
   wordsFromEmitter(words: string): void {
     this.words = words.split(',');
   }
