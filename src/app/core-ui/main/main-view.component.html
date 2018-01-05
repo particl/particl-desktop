@@ -118,7 +118,7 @@
         </mat-list><!-- .error.sidebar-item-group -->
       </mat-content>
 
-      <mat-content *ngIf="encryptionStatus === 'Unlocked'">
+      <mat-content *ngIf="unlocked_until > 0">
         <mat-list-item class="sidebar-item">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
           <span class="text">Wallet auto locked in {{time}} minutes</span>
