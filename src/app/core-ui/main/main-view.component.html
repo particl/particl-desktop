@@ -20,7 +20,7 @@
       </mat-list><!-- .sidebar-item-group -->
     </mat-content><!-- .sidebar-section -->
 
-    <mat-content class="sidebar-section" *ngIf="true">
+    <mat-content class="sidebar-section" *ngIf="walletInitialized">
       <mat-accordion [multi]="'multi'">
         <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
           <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
@@ -68,7 +68,7 @@
           <mat-content>
             <mat-list class="sidebar-item-group">
 
-              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account" ></mat-icon>
                   <span class="text">Add Account</span>
