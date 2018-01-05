@@ -33,6 +33,7 @@ export class MainViewComponent implements OnInit {
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
+  time: string = '5:00';
   public encryptionStatus: string = 'Locked';
   constructor(
     private _router: Router,
@@ -75,7 +76,12 @@ export class MainViewComponent implements OnInit {
 
 
     this._rpc.state.observe('encryptionstatus')
-      .subscribe(status => this.encryptionStatus = status);
+      .subscribe(status => {
+        this.encryptionStatus = status;
+        if (this.encryptionStatus === 'Unlocked') {
+          this.startTimer(5, 0);
+        }
+      });
 
     /* versions */
     // Obtains the current daemon version
@@ -92,6 +98,23 @@ export class MainViewComponent implements OnInit {
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
   syncScreen() {
     this._modals.open('syncing', {forceOpen: true});
+  }
+
+  startTimer(min: number, sec: number): void {
+    sec = this.checkSecond(sec);
+    if (sec === 59) {
+      min = min - 1;
+    }
+    this.time = min + ':' + ('0' + sec).slice(-2);
+    if (min >= 0 && sec >= 0) {
+      Observable.timer(1000).
+        subscribe(x => this.startTimer(min, sec));
+    }
+  }
+
+  checkSecond(sec: number): number {
+    sec = sec > 0 ? (sec - 1) : 59;
+    return sec;
   }
 
 }
