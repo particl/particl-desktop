@@ -100,7 +100,7 @@
         <mat-list class="error sidebar-item-group">
           <mat-list-item class="sidebar-item" *ngIf="!daemonRunning">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-            <span class="text">Connection Refused, Daemon is not connected</span>
+            <span class="text">Daemon not connected, retrying connection</span>
           </mat-list-item>
           <mat-list-item class="sidebar-item" *ngIf="daemonError && !daemonError.electron">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
@@ -108,8 +108,8 @@
           </mat-list-item>
           <mat-list-item class="sidebar-item" *ngIf="daemonError && daemonError.error">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-            <span *ngIf="daemonError.error.status === 0" class="text">Couldn't connect to Particl Daemon: connection refused</span>
-            <span *ngIf="daemonError.error.status !== 0" class="text">Error {{ daemonError.error.status }}: {{ daemonError.error.message }}</span>
+            <span *ngIf="daemonError.error.status === 0" class="text">Daemon not connected, retrying connection.</span>
+            <!--<span *ngIf="daemonError.error.status !== 0" class="text">Error {{ daemonError.error.status }}: {{ daemonError.error.message }}</span>-->
           </mat-list-item>
           <mat-list-item class="sidebar-item" *ngIf="!walletInitialized">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
