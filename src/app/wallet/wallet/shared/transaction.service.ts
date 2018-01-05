@@ -51,8 +51,7 @@ export class TransactionService {
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
-          if (this.txCount || txcount === 1) {
-            if (txcount > this.txCount) {
+          if (txcount > this.txCount || txcount === 1) {
               this.txCount = txcount;
               this.newTransaction();
             } else {
@@ -60,7 +59,6 @@ export class TransactionService {
               this.log.d(`observing txcount, txs array: ${this.txs.length}`);
               this.rpc_update();
             }
-          }
           // this.txCount = txcount;
         });
 
