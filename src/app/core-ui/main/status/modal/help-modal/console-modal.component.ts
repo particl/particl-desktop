@@ -1,9 +1,15 @@
-import {Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  ViewChild,
+  ElementRef,
+  AfterViewChecked
+} from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../wallet/shared/util/utils';
-
 import { RpcService } from '../../../../../core/core.module';
 import { Command } from './command.model';
 
@@ -65,7 +71,8 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     this.commandList = [];
   }
 
-    /* Time stuff */
+  /* Time stuff */
+
   getCurrentTime() {
     this.currentTime = this.getDateFormat();
   }
