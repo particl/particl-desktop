@@ -68,7 +68,7 @@
           <mat-content>
             <mat-list class="sidebar-item-group">
 
-              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
                   <span class="text">Add Account</span>
@@ -92,7 +92,6 @@
         </a>
       </mat-list>
     </mat-content> --><!-- .sidebar-section -->
-
 
     <footer class="pin-to-bottom">
 
@@ -118,7 +117,7 @@
         </mat-list><!-- .error.sidebar-item-group -->
       </mat-content>
 
-      <!-- Versions | TODO: move to separate component? -->
+      <!-- Versions -->
       <mat-content class="client-version">
         <div class="client item">
           Client <span class="version">{{ clientVersion }}</span>
@@ -136,34 +135,11 @@
 
     </footer><!-- .pin-to-bottom -->
 
-
   </mat-sidenav><!-- .sidebar -->
 
-
-
   <!-- Page header -->
-  <!-- TODO: info notification -->
-  <mat-card class="notification info">
-    <mat-card-title class="title">
-      New update available <span class="tag">1.1.0</span> &ndash; please upgrade:
-      <!-- TODO: link to https://github.com/particl/partgui/releases (releases include a changelog as well, so no need for separate button for that) -->
-      <button class="button" mat-button color="primary">
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-flash-21"></mat-icon>
-        Upgrade now
-      </button>
-    </mat-card-title>
-  </mat-card><!-- .notification -->
-  <!-- TODO: alert/warning notification -->
-  <mat-card class="notification alert">
-    <mat-card-title class="title">
-      New security update available <span class="tag">1.1.2</span> &ndash; please upgrade:
-      <!-- TODO: link to https://github.com/particl/partgui/releases (releases include a changelog as well, so no need for separate button for that) -->
-      <button class="button" mat-button color="warn">
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-flash-21"></mat-icon>
-        Upgrade now
-      </button>
-    </mat-card-title>
-  </mat-card><!-- .notification -->
+  <!-- info/warning notification -->
+  <app-release-notification></app-release-notification>
 
   <mat-toolbar class="header-main">
     <button fxLayout="row" fxLayoutAlign="center end" mat-button (click)="sidenav.toggle()" fxHide.gt-sm>
@@ -180,7 +156,5 @@
   <div class="margin-left-right-50">
     <router-outlet></router-outlet>
   </div>
-
-
 
 </mat-sidenav-container>
