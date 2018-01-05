@@ -1,5 +1,8 @@
 <div class="console-modal">
   <div mat-dialog-container>
+  <button class="close_button" (click)="close()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  </button>
     <mat-tab-group>
       <mat-tab label="Console">
         <div #debug class="console-modal-form" (scroll)="onScroll()">

@@ -22,7 +22,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public disableScrollDown: boolean = false;
 
   constructor(private _rpc: RpcService,
-              private dialog: MatDialog) {
+              private dialog: MatDialogRef<ConsoleModalComponent>) {
   }
 
   ngOnInit() {
@@ -102,6 +102,10 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     if (event.ctrlKey && event.keyCode === 76) {
       this.clearCommands();
     }
+  }
+
+  close(): void {
+    this.dialog.close();
   }
 
 }
