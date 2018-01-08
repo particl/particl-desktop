@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnChanges } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
@@ -19,7 +19,7 @@ import { SignatureAddressModalComponent } from '../signature-address-modal/signa
   templateUrl: './address-table.component.html',
   styleUrls: ['./address-table.component.scss']
 })
-export class AddressTableComponent implements OnInit {
+export class AddressTableComponent implements OnInit, OnChanges {
 
   // Determines what fields are displayed in the Transaction Table.
   // header and utils
@@ -74,16 +74,24 @@ export class AddressTableComponent implements OnInit {
         error => console.log('addresstable-component subscription error:' + error));
   }
 
+  ngOnChanges(): void {
+    this.resetPagination();
+  }
+
   /** Returns the addresses to display in the UI with regards to both pagination and search/query. */
   public getSinglePage(): Array<Address> {
     if (this.inSearchMode()) { // in search mode
-      if (this.paginator) {
-        this.currentPage = 1;
-        this.paginator.resetPagination(0);
-      }
       return this.paginateArray(this.getSearchSubset());
     } else { // not in seach mode
       return this.paginateArray(this.addresses);
+    }
+  }
+
+  // Reset pagination
+  resetPagination(): void {
+    if (this.paginator) {
+      this.currentPage = 1;
+      this.paginator.resetPagination(0);
     }
   }
 

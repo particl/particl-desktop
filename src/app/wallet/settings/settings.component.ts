@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService } from './settings.service';
 import { Location } from '@angular/common';
+
+import { SettingsService } from './settings.service';
 
 @Component({
   selector: 'app-settings',
@@ -32,6 +33,9 @@ export class SettingsComponent implements OnInit {
 
   settingsTab(tab: string) {
     this.tab = tab;
+    if (tab === 'help') {
+      // const dialogRef = this.dialog.open(ConsoleModalComponent);
+    }
   }
 
   apply() {

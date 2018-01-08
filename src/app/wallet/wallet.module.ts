@@ -33,7 +33,7 @@ import { routing } from './wallet.routing';
   exports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-  ],
+  ]
 })
 export class WalletViewsModule {
   constructor() {
