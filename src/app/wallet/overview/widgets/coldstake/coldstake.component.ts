@@ -74,7 +74,7 @@ export class ColdstakeComponent implements OnInit {
 
   zap() {
 
-    /* TODO: use async / await, make return value useful */
+    /* TODO: use async / await, make return value useful, subscribe errors */
     this.log.d('zap called !');
 
     this._rpc.call('walletsettings', ['changeaddress']).subscribe(info => {
@@ -93,7 +93,8 @@ export class ColdstakeComponent implements OnInit {
         }
         const stake = info[0]
 
-        this._rpc.call('getnewaddress', ['', false, false, true]).subscribe(info => {
+        this._rpc.call('getnewaddress', ['""', 'false', 'false', 'true'])
+        .subscribe(info => {
 
           this.log.d('zap getnewaddress', info);
           const spend = info;
@@ -101,34 +102,66 @@ export class ColdstakeComponent implements OnInit {
             return false;
           }
 
-          this._rpc.call('buildscript', [JSON.stringify({
+          this._rpc.call('buildscript', [{
             recipe: 'ifcoinstake',
             addrstake: stake,
             addrspend: spend
-          })]).subscribe(info => {
+          }]).subscribe(info => {
 
             this.log.d('zap buildscript', info);
             if (!info || !info.hex) {
               return false;
             }
             const script = info.hex;
-            let sum_inputs = 0; /* TODO */
 
-            this._rpc.call('sendtypeto', ['part', 'part', [{
-              subfee: true,
-              address: 'script',
-              amount: sum_inputs,
-              script: script
-            }], '', '', 4, 64, false]).subscribe(info => {
+            this._rpc.call('listunspent').subscribe(info => {
 
-              this.log.d('zap sendtypeto', info);
-              return true;
+              let sum_inputs = 0; /* TODO */
+              let inputs = [];
 
-            });
+              info.map(utxo => {
+                this.log.d('listunspent utxo', utxo);
+                sum_inputs += utxo.amount;
+                inputs.push({ tx: utxo.txid, n: utxo.vout });
+              });
+
+              this.log.d('zap params', sum_inputs, inputs);
+
+              this._rpc.call('sendtypeto', ['part', 'part', [{
+                subfee: true,
+                address: 'script',
+                amount: sum_inputs,
+                script: script
+              }], '', '', 4, 64, true, JSON.stringify({
+                inputs: inputs
+              })]).subscribe(info => {
+
+                this.log.d('zap sendtypeto simulate', info);
+
+                // TODO: ask user to confirm
+                // this.confirmZap(sum_inputs, script);
+
+              });
+            })
+
           });
         });
       })
     });
+  }
+
+  confirmZap(amount, script) {
+    this._rpc.call('sendtypeto', ['part', 'part', [{
+      subfee: true,
+      address: 'script',
+      amount: amount,
+      script: script
+    }], '', '', 4, 64, false]).subscribe(info => {
+
+      this.log.d('zap sendtypeto', info);
+
+    });
+
   }
 
   openUnlockWalletModal(): void {
