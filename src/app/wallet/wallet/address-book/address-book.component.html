@@ -6,6 +6,14 @@
           <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
           <span>Save Address</span>
         </button>
+
+        <!-- Choose type filter -->
+        <mat-select fxFlex="0 0 90px" name="type" (change)="filterType($event)" value="">
+          <mat-option value="">All Types</mat-option>
+          <mat-option value="public">PUBLIC</mat-option>
+          <mat-option value="private">PRIVATE</mat-option>
+        </mat-select>
+
       </div>
       <mat-form-field class="icon-input search-address" fxFlex="25" fxFlex.lt-md="40" fxFlex.lt-sm="100">
         <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}"
@@ -18,6 +26,7 @@
   <div class="container-fluid">
     <address-table
       [query]="query"
+      [filter]="filter"
       [displayHeader]="false"
       [displayInternalHeader]="true"
       [displayPagination]="true"

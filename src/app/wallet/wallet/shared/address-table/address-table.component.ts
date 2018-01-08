@@ -41,6 +41,7 @@ export class AddressTableComponent implements OnInit {
 
   // Search query
   @Input() query: string;
+  @Input() filter: RegExp;
   @ViewChild('paginator') paginator: any;
   // Data storage
   private addresses: Address[] = [];
@@ -83,7 +84,7 @@ export class AddressTableComponent implements OnInit {
       }
       return this.paginateArray(this.getSearchSubset());
     } else { // not in seach mode
-      return this.paginateArray(this.addresses);
+      return this.paginateArray(this.getFilterSubset());
     }
   }
 
@@ -93,12 +94,20 @@ export class AddressTableComponent implements OnInit {
 
   /** Returns the addresses that match a search/query. */
   private getSearchSubset(): Address[] {
-    return this.addresses.filter(el => {
+    console.log(this.getFilterSubset());
+    return this.getFilterSubset().filter(address => {
         return (
-          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-          || el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+          address.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
+          address.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
         );
       });
+  }
+
+  /** Returns the addresses that match a search/query. */
+  private getFilterSubset(): Address[] {
+    return (this.filter ?
+      this.addresses.filter(address => this.filter.test(address.address)) :
+      this.addresses);
   }
 
   /** Returns the addresses to display in the UI with regards to the pagination parameters */
