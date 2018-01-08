@@ -1,11 +1,13 @@
 
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../../modals/modals.service';
-
 import { RpcService, StateService } from '../../../core/core.module';
+
+import { ConsoleModalComponent } from './modal/help-modal/console-modal.component';
 
 @Component({
   selector: 'app-status',
@@ -24,7 +26,8 @@ export class StatusComponent implements OnInit {
 
   constructor(
     private _rpc: RpcService,
-    private _modalsService: ModalsService) { }
+    private _modalsService: ModalsService,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     this._rpc.state.observe('connections')
@@ -88,5 +91,10 @@ export class StatusComponent implements OnInit {
       default:
         break;
     }
+  }
+
+  /* Open Debug Console Window */
+  openConsoleWindow() {
+    this.dialog.open(ConsoleModalComponent);
   }
 }

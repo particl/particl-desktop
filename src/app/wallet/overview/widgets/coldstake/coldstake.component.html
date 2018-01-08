@@ -5,22 +5,20 @@
     </ul>
   </app-header>
 
-  <mat-card *ngIf="coldStakingEnabled === undefined" class="staking-node">
-    <div class="title">
-      Cold Staking Node <span class="status inactive">Unlock to check</span>
-    </div>
-    <button class="mat-raised-button mat-primary pull-left" (click)="openUnlockWalletModal()" matTooltip="Unlock wallet to enable cold staking">
+  <mat-card *ngIf="coldStakingEnabled === undefined" class="staking-node inactive">
+    <button mat-raised-button color="primary" class="pull-left" (click)="openUnlockWalletModal()" matTooltip="Unlock wallet to enable cold staking">
       <mat-icon fontSet="partIcon" fontIcon="part-lock"></mat-icon>
     </button>
+    <div class="title">Cold Staking Node</div>
+    <div class="subtitle">Unlock to check</div>
   </mat-card>
 
-  <mat-card *ngIf="coldStakingEnabled === false" class="staking-node">
-    <div class="title">
-      Cold Staking Node <span class="status inactive">inactive</span>
-    </div>
-    <button class="mat-raised-button mat-primary pull-left" (click)="openColdStakeModal()" matTooltip="Add Cold Staking node key">
+  <mat-card *ngIf="coldStakingEnabled === false" class="staking-node inactive">
+    <button mat-raised-button color="primary" class="pull-left" (click)="openColdStakeModal()" matTooltip="Add Cold Staking node key">
       <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
     </button>
+    <div class="title">Cold Staking Node</div>
+    <div class="subtitle">Inactive</div>
   </mat-card>
 
   <p class="widget-help" *ngIf="!coldStakingEnabled">
@@ -39,20 +37,43 @@
 
 
   <!-- if cold staking is under 100% progress -->
-  <mat-card *ngIf="coldStakingEnabled" class="staking-node">
-    <div class="title">
-      Cold Staking Progress <span class="status active">{{coldstakeProgress}}%</span>
+  <mat-card *ngIf="coldStakingEnabled && stakingTowardsCold" class="staking-node active">
+    <div class="title">Cold Staking Node</div>
+    <div class="subtitle in-progress">
+      Activation in progress
+      <span class="progress">{{coldstakeProgress}}%</span>
     </div>
     <mat-progress-bar
-      class="progress-bar-bottom"
+      class="progress-bar"
       [color]="'primary'"
       [bufferValue]="coldstakeProgress"
       [mode]="'determinate'"
       [value]="coldstakeProgress">
     </mat-progress-bar>
-
     <p class="widget-help" *ngIf="coldStakingEnabled">
+      {{coldstakeProgress}}% of your balance is now safely staking on your staking node.
       Please keep this wallet online until the cold staking activation process is complete.
+    </p>
+  </mat-card>
+
+  <!-- if cold staking is under 100% progress -->
+  <mat-card *ngIf="coldStakingEnabled && !stakingTowardsCold" class="staking-node warning">
+    <div class="title">Cold Staking Node</div>
+    <div class="subtitle in-progress">
+      <strong>Paused</strong> &ndash; Wallet locked
+      <span class="progress">{{coldstakeProgress}}%</span>
+    </div>
+    <mat-progress-bar
+      class="progress-bar"
+      [color]="'warn'"
+      [bufferValue]="coldstakeProgress"
+      [mode]="'determinate'"
+      [value]="coldstakeProgress">
+    </mat-progress-bar>
+    <p class="widget-help">
+      The cold staking activation is paused. Unlock wallet for staking to continue the process.
+      Whilst paused, {{coldstakeProgress}}% of your balance that has already converted
+      will continue to stake on your staking node.
     </p>
   </mat-card>
 

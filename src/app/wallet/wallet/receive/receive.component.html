@@ -48,7 +48,7 @@
         </div>
 
         <div class="actions">
-          <button mat-button class="copy" ngxClipboard [cbContent]="selected.address">
+          <button mat-button class="copy" ngxClipboard [cbContent]="selected.address" (click)="copyToClipBoard()">
             <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
             Copy address
           </button>
@@ -159,6 +159,7 @@
     <!-- use two paginator for reset pagination after tab change. -->
     <div class="receive-pagination">
       <app-paginator
+        #paginator
         *ngIf="type == 'private' && getSinglePage().length > 0"
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
@@ -168,6 +169,7 @@
 
       <app-paginator
         *ngIf="type == 'public' && getSinglePage().length > 0"
+        #paginator
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
         [pageSizeOptions]="PAGE_SIZE_OPTIONS"

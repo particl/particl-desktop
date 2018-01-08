@@ -24,11 +24,11 @@
         </p>
         <div class="actions">
           <button mat-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
-            <mat-icon fontSet="partIcon" fontIcon="part-simple-add"></mat-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
             Create new wallet
           </button>
           <button mat-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
-            <mat-icon fontSet="partIcon" fontIcon="part-refresh-01"></mat-icon>
+            <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
             Restore wallet
           </button>
         </div>
@@ -67,9 +67,11 @@
 
         <div class="actions">
           <button mat-button (click)="prevStep()">
+            <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
             Back
           </button>
           <button mat-raised-button color="primary" type="submit" [disabled]="!nameForm.form.valid">
+            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Next
           </button>
         </div><!-- .actions -->
@@ -133,6 +135,16 @@
           [showStakeOnly]="false">
         </app-password>
       </div>
+      <!--Confirmation of password-->
+      <div *ngIf="step === 2">
+          <app-password
+            #passwordElementVerify
+            label="Verify Password"
+            [emitPassword]="true"
+            (passwordEmitter)="passwordFromEmitter($event, true)"
+            [showStakeOnly]="false">
+          </app-password>
+        </div>
 
       <ng-template [ngIf]="[3,4].indexOf(step) != -1">
         <app-passphrase
@@ -150,9 +162,11 @@
           {{ errorString }}
         </p>
         <button mat-button (click)="prevStep()">
+          <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back
         </button>
         <button mat-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
+          <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Next
         </button>
       </div><!-- .actions -->
@@ -207,8 +221,14 @@
       </div><!-- .recovery-password -->
 
       <div class="actions">
-        <button mat-button (click)="prevStep();initialize(2)">Back</button>
-        <button mat-raised-button color="primary" (click)="restoreWallet()" [disabled]="countWords(getCountOfWordsEntered())">Next</button>
+        <button mat-button (click)="prevStep();initialize(2)">
+          <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+          Back
+        </button>
+        <button mat-raised-button color="primary" (click)="restoreWallet()" [disabled]="countWords(getCountOfWordsEntered())">
+          <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+          Next
+        </button>
       </div><!-- .actions -->
 
     </div><!-- .content -->
@@ -223,10 +243,14 @@
 
       <div class="title">Congratulations!</div>
       <p>
-        Your new wallet was created successfully and set as the default wallet!
+        Your new wallet was created successfully and set as the default wallet!<br>
+        <b>Please ensure that your Passphrase is written down and stored in a secure location!</b>
       </p>
       <div class="actions">
-        <button mat-raised-button color="warn" (click)="close()">Close</button>
+        <button mat-raised-button color="primary" (click)="close()">
+          <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+          Close
+        </button>
       </div>
 
     </div><!-- .content -->
