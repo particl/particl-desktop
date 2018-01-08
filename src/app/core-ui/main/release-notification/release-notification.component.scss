@@ -1,0 +1,41 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// ------ ALERTS/NOTIFICATIONS ------ //
+
+mat-card.notification {
+  @extend %disable-select;
+  padding: 12px 28px;
+  background: $bg;
+  box-shadow: 0 1px $bg-shadow !important;
+  border-left: 6px solid transparent;
+  border-radius: 0;
+  &.info {
+    border-left: 6px solid $color;
+    .title .tag {
+      background: $color;
+    }
+  }
+  &.alert {
+    border-left: 6px solid $color-alert;
+    .title .tag {
+      background: $color-alert;
+    }
+  }
+  .title {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+    .tag {
+      background: $text;
+      color: white;
+      border-radius: 99px;
+      padding: 0px 6px;
+      margin: 0 1px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .button {
+      margin-left: 8px;
+    }
+  }
+}
