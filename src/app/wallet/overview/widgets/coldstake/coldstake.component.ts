@@ -88,7 +88,7 @@ export class ColdstakeComponent implements OnInit {
       this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(info => {
 
         this.log.d('zap deriverangekeys', info);
-        if (!info || info.length != 1) {
+        if (!info || info.length !== 1) {
           return false;
         }
         const stake = info[0]
