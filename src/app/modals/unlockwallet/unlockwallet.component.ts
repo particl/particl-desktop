@@ -14,7 +14,8 @@ import { ModalsComponent } from '../modals.component';
 export class UnlockwalletComponent {
 
   // constants
-  DEFAULT_TIMEOUT: number = 60;
+  // DEFAULT_TIMEOUT: number = 60;
+  DEFAULT_TIMEOUT: number = 300;
   log: any = Log.create('unlockwallet.component');
 
   @Output() unlockEmitter: EventEmitter<string> = new EventEmitter<string>();
