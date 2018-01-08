@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { RpcService } from '../../../core/core.module';
 
 import { Contact } from './contact.model';
@@ -14,6 +14,8 @@ import { MatDialogRef } from '@angular/material';
 export class AddressLookupComponent implements OnInit {
 
   @Output() selectAddressCallback: EventEmitter<AddressLookUpCopy> = new EventEmitter<AddressLookUpCopy>();
+
+  @ViewChild('paginator') paginator: any;
 
   log: any = Log.create('addresslookup.component');
 
@@ -121,6 +123,12 @@ export class AddressLookupComponent implements OnInit {
 
   dialogClose(): void {
     this.dialogRef.close();
+  }
+
+  // Reset pagination
+  resetPagination(): void {
+    this.current_page = 1;
+    this.paginator.resetPagination(0);
   }
 
 }

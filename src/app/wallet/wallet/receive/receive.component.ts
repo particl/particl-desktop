@@ -57,10 +57,7 @@ export class ReceiveComponent implements OnInit {
 
     if (this.inSearchMode()) {
       type = 'query';
-      if (this.paginator) {
-        this.page = 1;
-        this.paginator.resetPagination(0);
-      }
+
       this.addresses.query = this.addresses[this.type].filter(el => {
         if (el) {
           return (
@@ -82,6 +79,14 @@ export class ReceiveComponent implements OnInit {
       offset + ((this.page - 1) * this.MAX_ADDRESSES_PER_PAGE),
       this.page * this.MAX_ADDRESSES_PER_PAGE
     );
+  }
+
+  // Reset pagination
+  resetPagination(): void {
+    if (this.paginator) {
+      this.page = 1;
+      this.paginator.resetPagination(0);
+    }
   }
 
   /** Returns the unused addresses to display in the UI. */
