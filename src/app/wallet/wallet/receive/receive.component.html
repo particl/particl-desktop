@@ -17,7 +17,11 @@
     <mat-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
       <input matInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
              placeholder="Search receive addresses" (ngModelChange)="resetPagination()">
-      <mat-icon fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address"
+
+      <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
+                fontIcon="part-circle-remove"></mat-icon>
+
+      <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address"
                 matTooltipPosition="after"></mat-icon>
     </mat-form-field>
   </div>
@@ -87,14 +91,14 @@
             <!-- Copy address -->
             <span fxFlex="20%" fxFlex.lt-md="25px">
               <mat-icon class="cursor-pointer" matTooltip="Copy address" ngxClipboard
-                       [cbContent]="getUnusedAddress().address" (click)="copyToClipBoard()" fontSet="partIcon"
-                       fontIcon="part-copy"></mat-icon>
+                        [cbContent]="getUnusedAddress().address" (click)="copyToClipBoard()" fontSet="partIcon"
+                        fontIcon="part-copy"></mat-icon>
             </span>
             <!-- Sign message -->
-            <div fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'" >
+            <div fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
               <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-person-check"
-                       (click)="openSignatureModal(getUnusedAddress().address)"
-                       matTooltip="Sign / Verify message"></mat-icon>
+                        (click)="openSignatureModal(getUnusedAddress().address)"
+                        matTooltip="Sign / Verify message"></mat-icon>
             </div>
             <!-- Select address -->
             <span fxFlex="20%" fxFlex.lt-md="25px">
@@ -136,13 +140,13 @@
               <!-- Copy address -->
               <span fxFlex="20%" fxFlex.lt-md="25px">
                 <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer"
-                         matTooltip="Copy address" (click)="copyToClipBoard()"
-                         ngxClipboard [cbContent]="address.address"></mat-icon>
+                          matTooltip="Copy address" (click)="copyToClipBoard()"
+                          ngxClipboard [cbContent]="address.address"></mat-icon>
               </span>
               <!-- Sign/Verify public address only  -->
               <span fxFlex="20%" fxFlex.lt-md="25px" *ngIf="type == 'public'">
                 <mat-icon fontSet="partIcon" fontIcon="part-person-check" matTooltip="Sign / Verify message"
-                         (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></mat-icon>
+                          (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></mat-icon>
               </span>
               <!-- Select address -->
               <span fxFlex="20%" fxFlex.lt-md="25px">

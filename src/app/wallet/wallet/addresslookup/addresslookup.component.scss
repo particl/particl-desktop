@@ -2,6 +2,11 @@
 
 .search-address { // address/label search
   margin-top: 15px;
+  .mat-icon {
+    top: 4px;
+    right: 18px;
+    font-size: 14px;
+  }
 }
 
 .address-type { // address type filter (select)
