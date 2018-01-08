@@ -68,7 +68,7 @@
           <mat-content>
             <mat-list class="sidebar-item-group">
 
-              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
                   <span class="text">Add Account</span>
@@ -92,7 +92,6 @@
         </a>
       </mat-list>
     </mat-content> --><!-- .sidebar-section -->
-
 
     <footer class="pin-to-bottom">
 
@@ -118,7 +117,7 @@
         </mat-list><!-- .error.sidebar-item-group -->
       </mat-content>
 
-      <!-- Versions | TODO: move to separate component? -->
+      <!-- Versions -->
       <mat-content class="client-version">
         <div class="client item">
           Client <span class="version">{{ clientVersion }}</span>
@@ -136,12 +135,12 @@
 
     </footer><!-- .pin-to-bottom -->
 
-
   </mat-sidenav><!-- .sidebar -->
 
-
-
   <!-- Page header -->
+  <!-- info/warning notification -->
+  <app-release-notification></app-release-notification>
+
   <mat-toolbar class="header-main">
     <button fxLayout="row" fxLayoutAlign="center end" mat-button (click)="sidenav.toggle()" fxHide.gt-sm>
       <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
@@ -157,7 +156,5 @@
   <div class="margin-left-right-50">
     <router-outlet></router-outlet>
   </div>
-
-
 
 </mat-sidenav-container>
