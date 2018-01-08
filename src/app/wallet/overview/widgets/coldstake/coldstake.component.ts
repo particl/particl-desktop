@@ -138,8 +138,9 @@ export class ColdstakeComponent implements OnInit {
 
                 this.log.d('zap sendtypeto simulate', info);
 
-                // TODO: ask user to confirm
-                // this.confirmZap(sum_inputs, script);
+                // TODO: ask user to confirm info.fee in a modal
+
+                this.confirmZap(sum_inputs, script);
 
               });
             })
