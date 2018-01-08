@@ -21,6 +21,11 @@
           Display
         </a>
       </li>
+      <li [class.active]="tab == 'help'">
+        <a href="javascript:void(0)" (click)="settingsTab('help')">
+          Help
+        </a>
+      </li>
       <!--<li [class.active]="tab == 'i2p'">
         <a href="javascript:void(0)" (click)="settingsTab('i2p')">
           I2P
@@ -297,7 +302,8 @@
     </div>
   </div>
 
-  <div class="pull-right">
+
+  <div class="pull-right" *ngIf="tab !== 'help'">
     <button (click)="cancel()">Cancel</button>
     <button (click)="apply()">Apply</button>
     <button class="validate" (click)="validate()">OK</button>

@@ -1,0 +1,19 @@
+<mat-card class="notification info" *ngIf="latestClientVersion && isNewUpdateAvailable()">
+  <mat-card-title class="title">
+    New update available <span class="tag">v{{ latestClientVersion }}</span> &ndash; please upgrade:
+    <a href="{{releaseUrl}}" target="_blank" class="button" mat-button color="primary">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lightning"></mat-icon>
+      Upgrade now
+    </a>
+  </mat-card-title>
+</mat-card><!-- .notification -->
+
+<mat-card class="notification alert" *ngIf="false">
+  <mat-card-title class="title">
+    New security update available <span class="tag">1.1.2</span> &ndash; please upgrade:
+    <button class="button" mat-button color="warn">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lightning"></mat-icon>
+      Upgrade now
+    </button>
+  </mat-card-title>
+</mat-card><!-- .notification -->

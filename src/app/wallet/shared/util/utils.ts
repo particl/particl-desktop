@@ -166,3 +166,26 @@ export class AddressHelper {
       '' : this.getAddress(event.clipboardData.getData('text'));
   }
 }
+
+export class DateFormatter {
+
+  constructor(private date: Date) {
+  }
+
+  public dateFormatter() {
+    return (
+      (this.date.getDate() < 10 ? '0' + this.date.getDate() : this.date.getDate()) + '-' +
+      ((this.date.getMonth() + 1) < 10 ? '0' + (this.date.getMonth() + 1) : (this.date.getMonth() + 1)) + '-' +
+      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear()) + ' ' +
+      this.hourSecFormatter()
+    )
+  }
+
+  public hourSecFormatter() {
+      return (
+        (this.date.getHours() < 10 ? '0' + this.date.getHours() : this.date.getHours()) + ':' +
+        (this.date.getMinutes() < 10 ? '0' + this.date.getMinutes() : this.date.getMinutes()) + ':' +
+        (this.date.getSeconds() < 10 ? '0' + this.date.getSeconds() : this.date.getSeconds())
+      )
+  }
+}
