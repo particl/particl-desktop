@@ -40,7 +40,7 @@
   <mat-card *ngIf="coldStakingEnabled && stakingTowardsCold" class="staking-node active">
     <div class="title">Cold Staking Node</div>
     <!-- TODO: GFX -->
-    <button (click)="zap()">zap</button>
+    <button (click)="openZapWalletsettingsModal()">zap</button>
     <div class="subtitle in-progress">
       Activation in progress
       <span class="progress">{{coldstakeProgress}}%</span>
@@ -62,7 +62,7 @@
   <mat-card *ngIf="coldStakingEnabled && !stakingTowardsCold" class="staking-node warning">
     <div class="title">Cold Staking Node</div>
     <!-- TODO: GFX -->
-    <button (click)="zap()">zap</button>
+    <button (click)="openZapWalletsettingsModal()">zap</button>
     <div class="subtitle in-progress">
       <strong>Paused</strong> &ndash; Wallet locked
       <span class="progress">{{coldstakeProgress}}%</span>
