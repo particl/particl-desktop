@@ -1,4 +1,5 @@
 <div class="status-icon disable-select">
+
   <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
     <img src="assets/icons/network/connect_{{ getIconNumber() }}.png"/>
   </span>
@@ -18,12 +19,13 @@
     container="body">
       <mat-icon fontSet="partIcon" fontIcon="part-snowflake"></mat-icon>
   </span>
-
-  <span
+  
+    <span
     class="console icon"
     matTooltip="Debug Console"
     container="body"
     (click)="openConsoleWindow()">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console"></mat-icon>
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console-window"></mat-icon>
   </span>
-</div><!-- .status-icons -->
+
+  </div><!-- .status-icons -->
