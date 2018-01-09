@@ -2,13 +2,8 @@
 
 .mat-expansion-panel {
   margin-bottom: 9px;
-  box-shadow: none;
+  box-shadow: none !important;
   border-bottom: 1px solid $bg-shadow;
-  &.history-list {
-    &.mat-expanded { // when TX detail is opened
-      //margin: 20px 0;
-    }
-  }
 }
 
 .mat-expansion-panel-header {
