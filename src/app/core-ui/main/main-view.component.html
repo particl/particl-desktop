@@ -106,12 +106,7 @@
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Warning: You are using Particl through a browser.</span>
           </mat-list-item>
-          <mat-list-item class="sidebar-item" *ngIf="daemonError && daemonError.error">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-            <span *ngIf="daemonError.error.status === 0" class="text">Daemon not connected, retrying connection.</span>
-            <!--<span *ngIf="daemonError.error.status !== 0" class="text">Error {{ daemonError.error.status }}: {{ daemonError.error.message }}</span>-->
-          </mat-list-item>
-          <mat-list-item class="sidebar-item" *ngIf="!walletInitialized">
+          <mat-list-item class="sidebar-item" *ngIf="walletInitialized === false && daemonRunning">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Please create wallet first to access other tabs</span>
           </mat-list-item>
