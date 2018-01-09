@@ -4,19 +4,63 @@
     <!-- ===== MAIN ===== -->
 
     <mat-tab label="Main">
-      <div *ngIf="tabLabels[selectedTab] == 'main'" fxLayout="row" fxLayoutGap="10px" class="container-block">
+      <div class="container-block">
 
+        <!-- xxxxxxxxxxxxxxxxxxxxxxx -->
+
+
+        <div fxLayout="row" fxLayoutGap="30px">
+          <div fxFlex="50">
+
+            <mat-card>
+              <div class="title">Title</div>
+              <mat-list class="list section">
+  
+                <mat-list-item class="item">
+                  <mat-checkbox class="checkbox align-top" [(ngModel)]="settings.main.autostart">
+                    <h4 class="option" mat-line>Start Particl on system login</h4>
+                    <p class="desc" mat-line>Start Particl wallet automatically?</p>
+                  </mat-checkbox>
+                </mat-list-item>
+                
+                <mat-list-item class="item">
+                  <mat-checkbox class="checkbox align-top" [(ngModel)]="settings.main.detachDatabases">
+                    <h4 class="option" mat-line>Detach databases at shutdown</h4>
+                    <p class="desc" mat-line>???</p>
+                  </mat-checkbox>
+                </mat-list-item>
+  
+                <mat-divider class="divider"></mat-divider>
+              </mat-list>
+            </mat-card>
+
+          </div>
+          <div fxFlex="50">
+            
+            <mat-card>
+              2
+            </mat-card>
+
+          </div>
+        </div>
+
+        
+        
+        <!-- xxxxxxxxxxxxxxxxxxxxxxx -->
+        
         <mat-list>
-          <mat-list-item>
-            <div class="input-label col-xs-4">Start Particl on system login</div>
-            <mat-checkbox [(ngModel)]="settings.main.autostart"></mat-checkbox>
-          </mat-list-item>
-          <mat-list-item>
-            <div class="input-label col-xs-4">Detach databases at shutdown</div>
-            <mat-checkbox [(ngModel)]="settings.main.detachDatabases"></mat-checkbox>
-          </mat-list-item>
 
-          <mat-list-item>
+          <!--mat-list-item>
+            <div class="">Start Particl on system login</div>
+            <mat-checkbox [(ngModel)]="settings.main.autostart"></mat-checkbox>
+          </mat-list-item-->
+
+          <!--mat-list-item>
+            <div class="">Detach databases at shutdown</div>
+            <mat-checkbox [(ngModel)]="settings.main.detachDatabases"></mat-checkbox>
+          </mat-list-item-->
+
+          <!--mat-list-item>
             <div>Pay transaction fee</div>
 
             <div>
@@ -38,7 +82,7 @@
                 </div>
               </div>
             </div>
-          </mat-list-item>
+          </mat-list-item-->
 
           <mat-list-item>
             <div>Pay transaction fee</div>
@@ -65,12 +109,12 @@
             </div>
           </mat-list-item>
           <mat-list-item>
-            <div class="input-label col-xs-4">Enable staking</div>
+            <div class="">Enable staking</div>
             <mat-checkbox [(ngModel)]="settings.main.stake"></mat-checkbox>
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Reserve</div>
+            <div class="">Reserve</div>
             <div class="col-xs-8">
               <div class="input-comment row">
                 <p>Reserved amount does not participate in staking and is therefore spendable at any time.</p>
@@ -95,14 +139,14 @@
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Minimum stake interval</div>
+            <div class="">Minimum stake interval</div>
             <mat-form-field class="example-full-width">
               <input matInput type="text" [(ngModel)]="settings.main.stakeInterval">
             </mat-form-field>
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Minimum ring size</div>
+            <div class="">Minimum ring size</div>
             <mat-form-field class="example-full-width">
               <input matInput type="text" [(ngModel)]="settings.main.minRing">
             </mat-form-field>
@@ -110,7 +154,7 @@
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Maximum ring size</div>
+            <div class="">Maximum ring size</div>
             <mat-form-field class="example-full-width">
               <input matInput type="text" [(ngModel)]="settings.main.maxRing">
             </mat-form-field>
@@ -118,27 +162,27 @@
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Automatically select ring size</div>
+            <div class="">Automatically select ring size</div>
             <mat-checkbox [(ngModel)]="settings.main.autoRing"></mat-checkbox>
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Enable secure messaging</div>
+            <div class="">Enable secure messaging</div>
             <mat-checkbox [(ngModel)]="settings.main.secureMessaging"></mat-checkbox>
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Thin mode (requires restart)</div>
+            <div class="">Thin mode (requires restart)</div>
             <mat-checkbox [(ngModel)]="settings.main.thin"></mat-checkbox>
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Thin full index</div>
+            <div class="">Thin full index</div>
             <mat-checkbox [(ngModel)]="settings.main.thinFullIndex"></mat-checkbox>
           </mat-list-item>
 
           <mat-list-item>
-            <div class="input-label col-xs-4">Thin index window</div>
+            <div class="">Thin index window</div>
             <mat-form-field class="example-full-width">
               <input matInput type="text" [(ngModel)]="settings.main.thinIndexWindow">
             </mat-form-field>
@@ -152,19 +196,19 @@
     <!-- ===== NETWORK ===== -->
 
     <mat-tab label="Network">
-      <div *ngIf="tabLabels[selectedTab] == 'network'" class="container-block">
+      <div class="container-block">
         <div class="card row">
-          <div class="input-label col-xs-4">Map port using UPNP</div>
+          <div class="">Map port using UPNP</div>
           <mat-checkbox [(ngModel)]="settings.network.upnp"></mat-checkbox>
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Connect through Socks proxy</div>
+          <div class="">Connect through Socks proxy</div>
           <mat-checkbox [(ngModel)]="settings.network.proxy"></mat-checkbox>
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Proxy IP</div>
+          <div class="">Proxy IP</div>
 
           <mat-form-field class="example-full-width">
             <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
@@ -172,7 +216,7 @@
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Port</div>
+          <div class="">Port</div>
 
           <mat-form-field class="example-full-width">
             <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort">
@@ -181,7 +225,7 @@
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Socket version</div>
+          <div class="">Socket version</div>
           <div class="col-xs-4">
             <mat-form-field>
               <mat-select [(ngModel)]="settings.network.socketVersion">
@@ -200,12 +244,12 @@
     <mat-tab label="Window">
       <div *ngIf="tabLabels[selectedTab] == 'window'" class="container-block">
         <div class="card row">
-          <div class="input-label col-xs-4">Minimize to the tray instead of the taskbar</div>
+          <div class="">Minimize to the tray instead of the taskbar</div>
           <mat-checkbox [(ngModel)]="settings.window.tray"></mat-checkbox>
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Minimize on close</div>
+          <div class="">Minimize on close</div>
           <mat-checkbox [(ngModel)]="settings.window.minimize"></mat-checkbox>
         </div>
       </div>
@@ -217,7 +261,7 @@
     <mat-tab label="Display">
       <div *ngIf="tabLabels[selectedTab] == 'display'" class="container-block">
         <div class="card row">
-          <div class="input-label col-xs-4">User interface language</div>
+          <div class="">User interface language</div>
           <div class="col-xs-4">
             <mat-form-field>
               <mat-select [(ngModel)]="settings.display.language">
@@ -228,7 +272,7 @@
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Unit to show amounts in</div>
+          <div class="">Unit to show amounts in</div>
           <div class="col-xs-4">
             <mat-form-field>
               <mat-select [(ngModel)]="settings.display.units">
@@ -240,7 +284,7 @@
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Rows per page</div>
+          <div class="">Rows per page</div>
           <div class="col-xs-4">
             <mat-form-field>
               <mat-select [(ngModel)]="settings.display.rows">
@@ -254,12 +298,12 @@
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Display addresses in transaction list</div>
+          <div class="">Display addresses in transaction list</div>
           <mat-checkbox [(ngModel)]="settings.display.addresses"></mat-checkbox>
         </div>
 
         <div class="card row">
-          <div class="input-label col-xs-4">Events</div>
+          <div class="">Events</div>
 
           <div class="col-xs-8">
             <table class="table">

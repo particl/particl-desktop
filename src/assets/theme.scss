@@ -269,6 +269,17 @@ input {
   }
 }
 
+// ------ CHECKBOXES ------ //
+
+.mat-checkbox {
+  &.align-top { // settings: don't center checkbox vertically
+    .mat-checkbox-inner-container {
+      margin: 0 12px 0 0;
+      top: 4px;
+    }
+  }
+}
+
 
 /* ------------------------------- *\
     Scrollbars
