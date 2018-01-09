@@ -1,5 +1,8 @@
 <app-header>
-  <mat-tab-group class="demo-tab-group" (selectChange)="changeTab($event.index)">
+  <mat-tab-group (selectChange)="changeTab($event.index)">
+
+    <!-- ===== MAIN ===== -->
+
     <mat-tab label="Main">
       <div *ngIf="tabLabels[selectedTab] == 'main'" fxLayout="row" fxLayoutGap="10px" class="container-block">
 
@@ -7,7 +10,6 @@
           <mat-list-item>
             <div class="input-label col-xs-4">Start Particl on system login</div>
             <mat-checkbox [(ngModel)]="settings.main.autostart"></mat-checkbox>
-
           </mat-list-item>
           <mat-list-item>
             <div class="input-label col-xs-4">Detach databases at shutdown</div>
@@ -146,6 +148,9 @@
       </div>
     </mat-tab>
 
+
+    <!-- ===== NETWORK ===== -->
+
     <mat-tab label="Network">
       <div *ngIf="tabLabels[selectedTab] == 'network'" class="container-block">
         <div class="card row">
@@ -189,6 +194,9 @@
       </div>
     </mat-tab>
 
+
+    <!-- ===== WINDOW ===== -->
+
     <mat-tab label="Window">
       <div *ngIf="tabLabels[selectedTab] == 'window'" class="container-block">
         <div class="card row">
@@ -202,6 +210,9 @@
         </div>
       </div>
     </mat-tab>
+
+
+    <!-- ===== DISPLAY ===== -->
 
     <mat-tab label="Display">
       <div *ngIf="tabLabels[selectedTab] == 'display'" class="container-block">
@@ -333,29 +344,38 @@
       </div>
     </mat-tab>
 
+
+    <!-- ===== HELP ===== -->
+
     <mat-tab label="Help">
-      No content
-    </mat-tab>
-
-    <mat-tab label="I2P">
-      <div>
-        <div class="card">
-          I2P (coming soon)
-        </div>
-      </div>
-    </mat-tab>
-
-    <mat-tab label="TOR">
       <div class="container-block">
-        <div class="card">
-          TOR (coming soon)
-        </div>
+        No content
       </div>
     </mat-tab>
+
+
+    <!-- ===== I2P ===== -->
+
+    <!--mat-tab label="I2P">
+      <div>
+        I2P (coming soon)
+      </div>
+    </mat-tab-->
+
+
+    <!-- ===== TOR ===== -->
+
+    <!--mat-tab label="TOR">
+      <div class="container-block">
+        TOR (coming soon)
+      </div>
+    </mat-tab-->
+
   </mat-tab-group>
 </app-header>
 
 <div class="pull-right" *ngIf="tabLabels[selectedTab] !== 'help'">
+  <!-- TODO: activate only when changes has been made (until then make the buttons disabled) -->
   <button (click)="cancel()" mat-raised-button color="warn">Cancel</button>
   <button (click)="apply()" mat-raised-button>Apply</button>
   <button class="validate" (click)="validate()" mat-raised-button color="primary">OK</button>
