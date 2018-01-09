@@ -132,7 +132,7 @@ export class ColdstakeComponent implements OnInit {
                 address: 'script',
                 amount: sum_inputs,
                 script: script
-              }], '', '', 4, 64, true, JSON.stringify({
+              }], 'coldstaking zap', '', 4, 64, true, JSON.stringify({
                 inputs: inputs
               })]).subscribe(info => {
 
