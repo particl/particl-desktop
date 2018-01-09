@@ -17,6 +17,7 @@ export class ColdstakeComponent implements OnInit {
   private log: any = Log.create('coldstake.component');
   coldStakingEnabled: boolean = undefined;
   stakingTowardsCold: boolean = undefined;
+  activation: string = 'Activation in progress';
 
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
@@ -29,7 +30,7 @@ export class ColdstakeComponent implements OnInit {
     .subscribe(status => this.coldStakingEnabled = status);
 
     this._rpc.state.observe('ui:coldstaking:stake')
-    .subscribe(status => this.stakingTowardsCold = this.coldStakingEnabled && status);
+    .subscribe(status => this.stakingTowardsCold = status);
 
     this.rpc_progressLoop();
   }
@@ -63,6 +64,9 @@ export class ColdstakeComponent implements OnInit {
 
     if (this.coldstakeProgress < 100) {
       setTimeout(this.rpc_progressLoop.bind(this), 1000);
+    }
+    if (this.coldstakeProgress === 100) {
+      this.activation = 'Activated';
     }
   }
 
