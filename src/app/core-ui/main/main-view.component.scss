@@ -76,28 +76,35 @@ a.sidebar-item-link {
 
 
 
-// ------ ERROR MESSAGES ------ //
+// ------ ERROR & INFO MESSAGES ------ //
 
-.error {
+.notification {
   .sidebar-item {
     .icon {
-      color: $color-alert;
       margin: 0 14px 0 0;
     }
     .text {
       color: white;
       font-size: 11px;
-      padding: 24px 16px;
+      padding: 0;
     }
     &:hover {
       background: none;
-      .icon {
-        color: $color-alert;
-      }
+    }
+  }
+  &.error {
+    .icon,
+    &:hover .icon {
+      color: $color-alert;
+    }
+  }
+  &.info {
+    .icon,
+    &:hover .icon {
+      color: $color-info;
     }
   }
 }
-
 
 /* ------------------------------- *\
     LAYOUT

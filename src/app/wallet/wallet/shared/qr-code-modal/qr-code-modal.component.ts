@@ -10,17 +10,18 @@ import { SnackbarService } from '../../../../core/core.module';
 })
 export class QrCodeModalComponent {
 
+  @ViewChild('qrCode') qrElementView: ElementRef;
+
   public singleAddress: any = {
     label: 'Empty label',
     address: 'Empty address',
     owned: false
   };
 
-  @ViewChild('qrCode') qrElementView: ElementRef;
-
-  constructor(private snackbar: SnackbarService,
-              public diloagRef: MatDialogRef<QrCodeModalComponent>) {
-  }
+  constructor(
+    private snackbar: SnackbarService,
+    public dialogRef: MatDialogRef<QrCodeModalComponent>
+  ) { }
 
   getQrSize(): number {
     return this.qrElementView.nativeElement.offsetWidth;
@@ -35,7 +36,7 @@ export class QrCodeModalComponent {
   }
 
   dialogClose(): void {
-    this.diloagRef.close();
+    this.dialogRef.close();
   }
 
 }

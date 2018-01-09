@@ -16,7 +16,7 @@
     </div>
     <mat-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
       <input matInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
-             placeholder="Search receive addresses">
+             placeholder="Search receive addresses" (ngModelChange)="resetPagination()">
       <mat-icon fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address"
                 matTooltipPosition="after"></mat-icon>
     </mat-form-field>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="actions">
-          <button mat-button class="copy" ngxClipboard [cbContent]="selected.address">
+          <button mat-button class="copy" ngxClipboard [cbContent]="selected.address" (click)="copyToClipBoard()">
             <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
             Copy address
           </button>

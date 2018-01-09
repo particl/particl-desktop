@@ -68,9 +68,9 @@
           <mat-content>
             <mat-list class="sidebar-item-group">
 
-              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()">
                 <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account" ></mat-icon>
+                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
                   <span class="text">Add Account</span>
                 </mat-list-item>
               </a>
@@ -82,22 +82,21 @@
     </mat-content><!-- .sidebar-section -->
 
 
-    <!--mat-content class="sidebar-section">
+    <!-- <mat-content class="sidebar-section">
       <mat-list class="sidebar-item-group">
-        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/settings">
+        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/settings">
           <mat-list-item class="sidebar-item">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
             <span class="text">Settings</span>
           </mat-list-item>
         </a>
       </mat-list>
-    </mat-content--><!-- .sidebar-section -->
-
+    </mat-content> --><!-- .sidebar-section -->
 
     <footer class="pin-to-bottom">
 
       <mat-content *ngIf="!daemonRunning || !walletInitialized">
-        <mat-list class="error sidebar-item-group">
+        <mat-list class="notification error sidebar-item-group">
           <mat-list-item class="sidebar-item" *ngIf="!daemonRunning">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Daemon not connected, retrying connection</span>
@@ -111,6 +110,15 @@
             <span class="text">Please create wallet first to access other tabs</span>
           </mat-list-item>
         </mat-list><!-- .error.sidebar-item-group -->
+      </mat-content>
+
+      <mat-content *ngIf="unlocked_until > 0">
+        <mat-list class="notification info sidebar-item-group">
+          <mat-list-item class="sidebar-item">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+            <span class="text" matTooltip="As a security measure, wallet auto-locks after 5 mins" matTooltipPosition="above">Wallet unlocked for {{ time }}</span>
+          </mat-list-item>
+        </mat-list>
       </mat-content>
 
       <!-- Versions | TODO: move to separate component? -->
@@ -131,12 +139,12 @@
 
     </footer><!-- .pin-to-bottom -->
 
-
   </mat-sidenav><!-- .sidebar -->
 
-
-
   <!-- Page header -->
+  <!-- info/warning notification -->
+  <app-release-notification></app-release-notification>
+
   <mat-toolbar class="header-main">
     <button fxLayout="row" fxLayoutAlign="center end" mat-button (click)="sidenav.toggle()" fxHide.gt-sm>
       <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
@@ -152,7 +160,5 @@
   <div class="margin-left-right-50">
     <router-outlet></router-outlet>
   </div>
-
-
 
 </mat-sidenav-container>
