@@ -7,7 +7,7 @@ import { ModalsService } from '../../../../modals/modals.service';
 
 import { Amount } from '../../../shared/util/utils';
 import { ZapColdstakingComponent } from './zap-coldstaking/zap-coldstaking.component';
-import {RevertColdstakingComponent} from "./revert-coldstaking/revert-coldstaking.component";
+import {RevertColdstakingComponent} from './revert-coldstaking/revert-coldstaking.component';
 
 @Component({
   selector: 'app-coldstake',
