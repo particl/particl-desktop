@@ -61,17 +61,14 @@ export class ColdstakeComponent implements OnInit {
       // TODO: Handle error appropriately
       error => this.log.er('rpc_progressLoop: listunspent failed', error));
     }
-
-    if (this.coldstakeProgress < 100) {
-      setTimeout(this.rpc_progressLoop.bind(this), 1000);
-    }
+    setTimeout(this.rpc_progressLoop.bind(this), 1000);
     if (this.coldstakeProgress === 100) {
       this.activation = 'Activated';
     }
   }
 
   openUnlockWalletModal(): void {
-    this._modals.open('unlock', {forceOpen: true, showStakeOnly: false});
+    this._modals.open('unlock', {forceOpen: true, showStakeOnly: false, stakeOnly: true});
   }
 
   openColdStakeModal(): void {
