@@ -13,7 +13,7 @@ export class RevertColdstakingComponent implements OnInit {
 
   private log: any = Log.create('revert-coldstaking');
 
-  public fee: number = 42;
+  public fee: number;
   public utxos: any;
 
   address: string;

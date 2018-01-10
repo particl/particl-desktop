@@ -16,6 +16,8 @@ export class ZapColdstakingComponent {
   public fee: number;
   public utxos: any;
 
+  script: string;
+
   constructor(private _rpc: RpcService) {
 
     // TODO: move to coldstaking service
@@ -55,6 +57,7 @@ export class ZapColdstakingComponent {
               if (!script || !script.hex) {
                 return false;
               }
+              this.script = script.hex;
 
                 this._rpc.call('sendtypeto', ['part', 'part', [{
                   subfee: true,
@@ -81,12 +84,14 @@ export class ZapColdstakingComponent {
     this._rpc.call('sendtypeto', ['part', 'part', [{
       subfee: true,
       address: 'script',
-      amount: amount,
-      script: script /* TODO : remove optional args */
-    }], 'coldstaking zap', '', 4, 64, false]).subscribe(info => {
+      amount: this.utxos.amount,
+      script: this.script
+    }], 'coldstaking zap', '', 4, 64, false, JSON.stringify({
+      inputs: this.utxos.txs
+    })]).subscribe(info => {
 
       this.log.d('zap sendtypeto', info);
-      // TODO: flash notification
+      // TODO: flash notification, close modal
 
     });
 

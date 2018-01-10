@@ -55,12 +55,21 @@
       The activation process will continue only when your wallet is online and unlocked for staking.
       You can close your wallet if you need to, but it is adviced to keep it online until it reaches 100%.
     </p>
+    <!-- TODO: component ? -->
     <p class="buttons">
-      <button mat-button class="small" color="primary" (click)="openZapColdstakingModal()" matTooltip="Fast-forward to 100%">
-        Zap <span class="tag zap">{{ hotstaking.txs.length }}</span>
+      <button mat-button class="small" color="primary"
+        matTooltip="Fast-forward to 100%"
+        (click)="openZapColdstakingModal()"
+        *ngIf="hotstaking.txs.length > 0">
+        Zap
+        <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
       </button>
-      <button mat-button class="small" color="warn" (click)="openReverColdstakingModal()" matTooltip="Cancel Cold Staking activation">
-        Cancel <span class="tag cancel">{{ coldstaking.txs.length }}</span>
+      <button mat-button class="small" color="warn"
+        matTooltip="Cancel Cold Staking activation"
+        (click)="openReverColdstakingModal()"
+        *ngIf="coldstaking.txs.length > 0">
+        Cancel
+        <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
       </button>
     </p>
   </mat-card>
@@ -84,12 +93,21 @@
       Whilst paused, {{coldstakeProgress}}% of your balance that has already converted
       will continue to stake on your staking node.
     </p>
+    <!-- TODO: component ? -->
     <p class="buttons">
-      <button mat-button class="small" color="primary" (click)="openZapColdstakingModal()" matTooltip="Fast-forward to 100%">
-        Zap <span class="tag zap">{{ hotstaking.txs.length }}</span>
+      <button mat-button class="small" color="primary"
+        matTooltip="Fast-forward to 100%"
+        (click)="openZapColdstakingModal()"
+        *ngIf="hotstaking.txs.length > 0">
+        Zap
+        <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
       </button>
-      <button mat-button class="small" color="warn" (click)="openReverColdstakingModal()" matTooltip="Cancel Cold Staking activation">
-        Cancel <span class="tag cancel">{{ coldstaking.txs.length }}</span>
+      <button mat-button class="small" color="warn"
+        matTooltip="Cancel Cold Staking activation"
+        (click)="openReverColdstakingModal()"
+        *ngIf="coldstaking.txs.length > 0">
+        Cancel
+        <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
       </button>
     </p>
   </mat-card>
