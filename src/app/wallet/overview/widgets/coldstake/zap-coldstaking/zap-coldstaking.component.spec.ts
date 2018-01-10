@@ -5,11 +5,11 @@ import { SharedModule } from '../../../../shared/shared.module';
 import { CoreModule } from '../../../../../core/core.module';
 import { CoreUiModule } from '../../../../../core-ui/core-ui.module';
 
-import { ZapWalletsettingsComponent } from './zap-walletsettings.component';
+import { ZapColdstakingComponent } from './zap-coldstaking.component';
 
-describe('ZapWalletsettingsComponent', () => {
-  let component: ZapWalletsettingsComponent;
-  let fixture: ComponentFixture<ZapWalletsettingsComponent>;
+describe('ZapColdstakingComponent', () => {
+  let component: ZapColdstakingComponent;
+  let fixture: ComponentFixture<ZapColdstakingComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -18,14 +18,14 @@ describe('ZapWalletsettingsComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
       ],
-      declarations: [ ZapWalletsettingsComponent ],
+      declarations: [ ZapColdstakingComponent ],
       providers: [{ provide: MatDialogRef}]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZapWalletsettingsComponent);
+    fixture = TestBed.createComponent(ZapColdstakingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

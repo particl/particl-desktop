@@ -5,13 +5,13 @@ import { Log } from 'ng2-logger';
 import { RpcService } from '../../../../../core/rpc/rpc.service';
 
 @Component({
-  selector: 'app-zap-walletsettings',
-  templateUrl: './zap-walletsettings.component.html',
-  styleUrls: ['./zap-walletsettings.component.scss']
+  selector: 'app-zap-coldstaking',
+  templateUrl: './zap-coldstaking.component.html',
+  styleUrls: ['./zap-coldstaking.component.scss']
 })
-export class ZapWalletsettingsComponent {
+export class ZapColdstakingComponent {
 
-  private log: any = Log.create('zap-walletsettings');
+  private log: any = Log.create('zap-coldstaking');
 
   public fee: number;
   public utxos: any;
