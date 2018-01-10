@@ -39,13 +39,6 @@
   <!-- if cold staking is under 100% progress -->
   <mat-card *ngIf="coldStakingEnabled && stakingTowardsCold" class="staking-node active">
     <div class="title">Cold Staking Node</div>
-    <!-- TODO: GFX -->
-    <button (click)="openZapColdstakingModal()">
-      zap {{ hotstaking.txs.length }}
-    </button>
-    <button (click)="openReverColdstakingModal()">
-      undo {{ coldstaking.txs.length }}
-    </button>
     <div class="subtitle in-progress">
       Activation in progress
       <span class="progress">{{coldstakeProgress}}%</span>
@@ -62,18 +55,19 @@
       The activation process will continue only when your wallet is online and unlocked for staking.
       You can close your wallet if you need to, but it is adviced to keep it online until it reaches 100%.
     </p>
+    <p class="buttons">
+      <button mat-button class="small" color="primary" (click)="openZapColdstakingModal()" matTooltip="Fast-forward to 100%">
+        Zap <span class="tag zap">{{ hotstaking.txs.length }}</span>
+      </button>
+      <button mat-button class="small" color="warn" (click)="openReverColdstakingModal()" matTooltip="Cancel Cold Staking activation">
+        Cancel <span class="tag cancel">{{ coldstaking.txs.length }}</span>
+      </button>
+    </p>
   </mat-card>
 
   <!-- if cold staking is under 100% progress -->
   <mat-card *ngIf="coldStakingEnabled && !stakingTowardsCold" class="staking-node warning">
     <div class="title">Cold Staking Node</div>
-    <!-- TODO: GFX -->
-    <button (click)="openZapColdstakingModal()">
-      zap {{ hotstaking.txs.length }}
-    </button>
-    <button (click)="openReverColdstakingModal()">
-      undo {{ coldstaking.txs.length }}
-    </button>
     <div class="subtitle in-progress">
       <strong>Paused</strong> &ndash; Wallet locked
       <span class="progress">{{coldstakeProgress}}%</span>
@@ -89,6 +83,14 @@
       The cold staking activation is paused. Unlock wallet for staking to continue the process.
       Whilst paused, {{coldstakeProgress}}% of your balance that has already converted
       will continue to stake on your staking node.
+    </p>
+    <p class="buttons">
+      <button mat-button class="small" color="primary" (click)="openZapColdstakingModal()" matTooltip="Fast-forward to 100%">
+        Zap <span class="tag zap">{{ hotstaking.txs.length }}</span>
+      </button>
+      <button mat-button class="small" color="warn" (click)="openReverColdstakingModal()" matTooltip="Cancel Cold Staking activation">
+        Cancel <span class="tag cancel">{{ coldstaking.txs.length }}</span>
+      </button>
     </p>
   </mat-card>
 
