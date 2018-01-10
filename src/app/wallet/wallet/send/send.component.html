@@ -31,6 +31,7 @@
         <mat-radio-button class="balance" value="blind_balance" fxFlex (click)="send.output = 'balance'">
           <div class="name">Blind</div>
           <div class="amount"><span class="desc">Available balance:</span> {{ getBalance('blind_balance') }}</div>
+          <div><span class="desc" *ngIf="isBlind" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform.">?</span></div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="anon_balance" fxFlex [disabled]="type === 'balanceTransfer'">
           <div class="name">Anon</div>
@@ -98,6 +99,7 @@
           <mat-radio-button class="balance" value="blind_balance" (click)="send.input = 'balance'" fxFlex>
             <div class="name">Blind</div>
             <div class="desc">Balance:<span class="amount">{{ getBalance('blind_balance') }}</span></div>
+            <div><span class="desc" *ngIf="isBlind" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform.">?</span></div>
           </mat-radio-button>
           <mat-radio-button class="balance" value="anon_balance" disabled fxFlex>
             <div class="name">Anon</div>
