@@ -82,11 +82,9 @@ export class ColdstakeComponent {
 
       unspent.map(utxo => {
         if (utxo.coldstaking_address) {
-          this.log.d('listunspent coldstaking utxo', utxo);
           this.coldstaking.amount += utxo.amount;
           this.coldstaking.txs.push({tx: utxo.txid, n: utxo.vout});
         } else {
-          this.log.d('listunspent hotstaking utxo', utxo);
           this.hotstaking.amount += utxo.amount;
           this.hotstaking.txs.push({tx: utxo.txid, n: utxo.vout});
         }

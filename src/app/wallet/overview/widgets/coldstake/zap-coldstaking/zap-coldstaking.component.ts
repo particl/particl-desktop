@@ -66,7 +66,7 @@ export class ZapColdstakingComponent {
                 })]).subscribe(tx => {
 
                   this.log.d('zap fees', tx);
-                  this.fee = tx.fees;
+                  this.fee = tx.fee;
 
                 });
 

@@ -2,10 +2,12 @@
 
 <mat-dialog-content>
 
-  {{ fee }}
+  <button mat-raised-button color="primary" (click)="disableColdstaking()">
+    disable
+  </button>
 
   <button mat-raised-button color="primary" (click)="revertColdstaking()">
-    undo
+    {{ fee }} PART - revert
   </button>
 
 </mat-dialog-content>
