@@ -50,7 +50,7 @@ export class RevertColdstakingComponent implements OnInit {
     });
   }
 
-  revertColdstaking() {
+  revert() {
 
     this.disableColdstaking();
 
@@ -62,7 +62,10 @@ export class RevertColdstakingComponent implements OnInit {
       inputs: this.utxos.txs
     })]).subscribe(tx => {
       this.log.d('revert response', tx);
-      // TODO: flash notification, close modal
+
+      this.dialogRef.close();
+      this.flashNotification.open(
+        `Succesfully brought ${this.utxos.amount} PART into hot wallet`, 'warn');
     })
 
   }
@@ -80,9 +83,6 @@ export class RevertColdstakingComponent implements OnInit {
       }
 
       // TODO: update status of cold staking widget
-      this.dialogRef.close();
-      this.flashNotification.open(
-        `Succesfully brought ${this.utxos.amount} PART in hot wallet`, 'warn');
     });
   }
 
