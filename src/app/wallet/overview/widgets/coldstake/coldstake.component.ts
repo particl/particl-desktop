@@ -41,88 +41,66 @@ export class ColdstakeComponent {
 
     if (this.coldStakingEnabled) {
       this._rpc.call('getcoldstakinginfo').subscribe((coldstakinginfo: any) => {
-        this.log.d(coldstakinginfo['percent_in_coldstakeable_script']);
         this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
       }, error => this.log.er('couldn\'t get cold staking info', error));
     }
-
-      /*
-    if (this.coldStakingEnabled) {
-      this._rpc.call('listunspent')
-        .subscribe(
-          (response: Array<any>) => {
-            let activeCount = 0;
-            let totalCount = 0;
-
-            response.forEach((output) => {
-              totalCount += output.amount;
-
-              if (output.coldstaking_address !== undefined) {
-                activeCount += output.amount;
-              }
-              this.log.d(`activeCount=${activeCount} totalCount=${totalCount}`);
-              this.progress = new Amount((activeCount / totalCount) * 100, 2);
-           });
-         },
-      // TODO: Handle error appropriately
-      error => this.log.er('rpc_progressLoop: listunspent failed', error));
-    }
-      */
-
     setTimeout(this.rpc_progressLoop.bind(this), 1000);
+  }
+
+  private listHotstaking() {
+
   }
 
   openZapWalletsettingsModal(): void {
 
     /* TODO: use async / await, make return value useful, subscribe errors */
-    this.log.d('zap called !');
 
-    this._rpc.call('walletsettings', ['changeaddress']).subscribe(info => {
+    this._rpc.call('walletsettings', ['changeaddress']).subscribe(res => {
 
-      this.log.d('zap walletsettings', info);
-      const pkey = info.changeaddress.coldstakingaddress;
-      if (pkey === 'default') {
+      this.log.d('zap pkey', res);
+      const pkey = res.changeaddress.coldstakingaddress;
+      if (!pkey || pkey === '' || pkey === 'default') {
         return false;
       }
 
-      this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(deriverangekeys_info => {
+      this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(derived => {
 
-        this.log.d('zap deriverangekeys', deriverangekeys_info);
-        if (!deriverangekeys_info || deriverangekeys_info.length !== 1) {
+        this.log.d('zap coldstaking address', derived);
+        if (!derived || derived.length !== 1) {
           return false;
         }
-        const stake = deriverangekeys_info[0];
+        const coldstakingAddress = derived[0];
 
         this._rpc.call('getnewaddress', ['""', 'false', 'false', 'true'])
-          .subscribe(getnewaddress_info => {
+          .subscribe(spendingAddress => {
 
-            this.log.d('zap getnewaddress', getnewaddress_info);
-            const spend = getnewaddress_info;
-            if (!spend || spend === '') {
+            this.log.d('zap spending address', spendingAddress);
+            if (!spendingAddress || spendingAddress === '') {
               return false;
             }
 
             this._rpc.call('buildscript', [{
               recipe: 'ifcoinstake',
-              addrstake: stake,
-              addrspend: spend
-            }]).subscribe(buildscript_info => {
+              addrstake: coldstakingAddress,
+              addrspend: spendingAddress
+            }]).subscribe(script => {
 
-              this.log.d('zap buildscript', buildscript_info);
-              if (!buildscript_info || !buildscript_info.hex) {
+              this.log.d('zap buildscript', script);
+              if (!script || !script.hex) {
                 return false;
               }
-              const script = buildscript_info.hex;
 
-              this._rpc.call('listunspent').subscribe(__info => {
+              this._rpc.call('listunspent').subscribe(unspent => {
 
                 let sum_inputs = 0;
                 const inputs = [];
 
-                __info.map(utxo => {
-                  this.log.d('listunspent utxo', utxo);
-                  sum_inputs += utxo.amount;
-                  inputs.push({tx: utxo.txid, n: utxo.vout});
+                unspent.map(utxo => {
+                  if (utxo.coldstaking_address === undefined) {
+                    this.log.d('listunspent utxo', utxo);
+                    sum_inputs += utxo.amount;
+                    inputs.push({tx: utxo.txid, n: utxo.vout});
+                  }
                 });
 
                 this.log.d('zap params', sum_inputs, inputs);
@@ -131,15 +109,15 @@ export class ColdstakeComponent {
                   subfee: true,
                   address: 'script',
                   amount: sum_inputs,
-                  script: script
+                  script: script.hex
                 }], '', '', 4, 64, true, JSON.stringify({
                   inputs: inputs
-                })]).subscribe(_info => {
+                })]).subscribe(tx => {
 
-                  this.log.d('zap sendtypeto simulate', _info);
-
+                  this.log.d('zap fees', tx);
                   const dialogRef = this.dialog.open(ZapWalletsettingsComponent);
-                  dialogRef.componentInstance.fee = _info.fee;
+                  dialogRef.componentInstance.fee = tx.fee;
+
                 });
               })
 
