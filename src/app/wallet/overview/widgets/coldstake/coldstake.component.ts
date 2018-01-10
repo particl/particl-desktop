@@ -85,19 +85,19 @@ export class ColdstakeComponent {
         return false;
       }
 
-      this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(info => {
+      this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(deriverangekeys_info => {
 
-        this.log.d('zap deriverangekeys', info);
-        if (!info || info.length !== 1) {
+        this.log.d('zap deriverangekeys', deriverangekeys_info);
+        if (!deriverangekeys_info || deriverangekeys_info.length !== 1) {
           return false;
         }
-        const stake = info[0];
+        const stake = deriverangekeys_info[0];
 
         this._rpc.call('getnewaddress', ['""', 'false', 'false', 'true'])
-          .subscribe(info => {
+          .subscribe(getnewaddress_info => {
 
-            this.log.d('zap getnewaddress', info);
-            const spend = info;
+            this.log.d('zap getnewaddress', getnewaddress_info);
+            const spend = getnewaddress_info;
             if (!spend || spend === '') {
               return false;
             }
@@ -106,20 +106,20 @@ export class ColdstakeComponent {
               recipe: 'ifcoinstake',
               addrstake: stake,
               addrspend: spend
-            }]).subscribe(info => {
+            }]).subscribe(buildscript_info => {
 
-              this.log.d('zap buildscript', info);
-              if (!info || !info.hex) {
+              this.log.d('zap buildscript', buildscript_info);
+              if (!buildscript_info || !buildscript_info.hex) {
                 return false;
               }
-              const script = info.hex;
+              const script = buildscript_info.hex;
 
-              this._rpc.call('listunspent').subscribe(info => {
+              this._rpc.call('listunspent').subscribe(__info => {
 
                 let sum_inputs = 0;
                 const inputs = [];
 
-                info.map(utxo => {
+                __info.map(utxo => {
                   this.log.d('listunspent utxo', utxo);
                   sum_inputs += utxo.amount;
                   inputs.push({tx: utxo.txid, n: utxo.vout});
