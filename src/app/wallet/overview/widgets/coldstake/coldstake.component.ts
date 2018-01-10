@@ -15,13 +15,23 @@ import { ZapWalletsettingsComponent } from './zap-walletsettings/zap-walletsetti
 })
 export class ColdstakeComponent {
 
-  /*  General   */
   private log: any = Log.create('coldstake.component');
+
   coldStakingEnabled: boolean = undefined;
   stakingTowardsCold: boolean = undefined;
 
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
+
+  hotstaking: any = {
+    txs: [],
+    amount: 0
+  };
+
+  coldstaking: any = {
+    txs: [],
+    amount: 0
+  }
 
   constructor(
     private _modals: ModalsService,
@@ -43,88 +53,55 @@ export class ColdstakeComponent {
       this._rpc.call('getcoldstakinginfo').subscribe((coldstakinginfo: any) => {
         this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
       }, error => this.log.er('couldn\'t get cold staking info', error));
+      this.stakingStatus();
     }
     setTimeout(this.rpc_progressLoop.bind(this), 1000);
   }
 
-  private listHotstaking() {
+  private stakingStatus() {
+
+    this._rpc.call('listunspent').subscribe(unspent => {
+
+      this.hotstaking = {
+        txs: [],
+        amount: 0
+      };
+
+      this.coldstaking = {
+        txs: [],
+        amount: 0
+      };
+
+      unspent.map(utxo => {
+        if (utxo.coldstaking_address) {
+          this.log.d('listunspent coldstaking utxo', utxo);
+          this.coldstaking.amount += utxo.amount;
+          this.coldstaking.txs.push({tx: utxo.txid, n: utxo.vout});
+        } else {
+          this.log.d('listunspent hotstaking utxo', utxo);
+          this.hotstaking.amount += utxo.amount;
+          this.hotstaking.txs.push({tx: utxo.txid, n: utxo.vout});
+        }
+      });
+
+      this.log.d('hotstaking', this.hotstaking);
+      this.log.d('coldstaking', this.coldstaking);
+
+    });
 
   }
 
-  openZapWalletsettingsModal(): void {
+  revertColdstaking() {
+    this.log.d('undo coldstaking');
 
-    /* TODO: use async / await, make return value useful, subscribe errors */
-
-    this._rpc.call('walletsettings', ['changeaddress']).subscribe(res => {
-
-      this.log.d('zap pkey', res);
-      const pkey = res.changeaddress.coldstakingaddress;
-      if (!pkey || pkey === '' || pkey === 'default') {
-        return false;
-      }
-
-      this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(derived => {
-
-        this.log.d('zap coldstaking address', derived);
-        if (!derived || derived.length !== 1) {
-          return false;
-        }
-        const coldstakingAddress = derived[0];
-
-        this._rpc.call('getnewaddress', ['""', 'false', 'false', 'true'])
-          .subscribe(spendingAddress => {
-
-            this.log.d('zap spending address', spendingAddress);
-            if (!spendingAddress || spendingAddress === '') {
-              return false;
-            }
-
-            this._rpc.call('buildscript', [{
-              recipe: 'ifcoinstake',
-              addrstake: coldstakingAddress,
-              addrspend: spendingAddress
-            }]).subscribe(script => {
-
-              this.log.d('zap buildscript', script);
-              if (!script || !script.hex) {
-                return false;
-              }
-
-              this._rpc.call('listunspent').subscribe(unspent => {
-
-                let sum_inputs = 0;
-                const inputs = [];
-
-                unspent.map(utxo => {
-                  if (utxo.coldstaking_address === undefined) {
-                    this.log.d('listunspent utxo', utxo);
-                    sum_inputs += utxo.amount;
-                    inputs.push({tx: utxo.txid, n: utxo.vout});
-                  }
-                });
-
-                this.log.d('zap params', sum_inputs, inputs);
-
-                this._rpc.call('sendtypeto', ['part', 'part', [{
-                  subfee: true,
-                  address: 'script',
-                  amount: sum_inputs,
-                  script: script.hex
-                }], '', '', 4, 64, true, JSON.stringify({
-                  inputs: inputs
-                })]).subscribe(tx => {
-
-                  this.log.d('zap fees', tx);
-                  const dialogRef = this.dialog.open(ZapWalletsettingsComponent);
-                  dialogRef.componentInstance.fee = tx.fee;
-
-                });
-              })
-
-            });
-          });
-      })
+    this._rpc.call('walletsettings', ['changeaddress', '"{}"']).subscribe(res => {
+      this.log.d('coldstaking undo changeaddress', res);
     });
+  }
+
+  openZapWalletsettingsModal(): void {
+    const dialogRef = this.dialog.open(ZapWalletsettingsComponent);
+    dialogRef.componentInstance.utxos = this.hotstaking;
   }
 
   openUnlockWalletModal(): void {
