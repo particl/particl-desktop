@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -13,7 +13,7 @@ import { ZapWalletsettingsComponent } from './zap-walletsettings/zap-walletsetti
   templateUrl: './coldstake.component.html',
   styleUrls: ['./coldstake.component.scss']
 })
-export class ColdstakeComponent implements OnInit {
+export class ColdstakeComponent {
 
   /*  General   */
   private log: any = Log.create('coldstake.component');
@@ -35,9 +35,6 @@ export class ColdstakeComponent implements OnInit {
     .subscribe(status => this.stakingTowardsCold = this.coldStakingEnabled && status);
 
     this.rpc_progressLoop();
-  }
-
-  ngOnInit() {
   }
 
   private rpc_progressLoop(): void {
@@ -75,7 +72,7 @@ export class ColdstakeComponent implements OnInit {
     setTimeout(this.rpc_progressLoop.bind(this), 1000);
   }
 
-  openZapWalletsettingsModal() {
+  openZapWalletsettingsModal(): void {
 
     /* TODO: use async / await, make return value useful, subscribe errors */
     this.log.d('zap called !');
@@ -137,13 +134,12 @@ export class ColdstakeComponent implements OnInit {
                   script: script
                 }], '', '', 4, 64, true, JSON.stringify({
                   inputs: inputs
-                })]).subscribe(info => {
+                })]).subscribe(_info => {
 
-                  this.log.d('zap sendtypeto simulate', info);
+                  this.log.d('zap sendtypeto simulate', _info);
 
-                  // TODO: ask user to confirm info.fee in a modal
-                  this.dialog.open(ZapWalletsettingsComponent);
-
+                  const dialogRef = this.dialog.open(ZapWalletsettingsComponent);
+                  dialogRef.componentInstance.fee = _info.fee;
                 });
               })
 

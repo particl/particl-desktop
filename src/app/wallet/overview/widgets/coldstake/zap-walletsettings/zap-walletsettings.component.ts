@@ -13,12 +13,12 @@ export class ZapWalletsettingsComponent {
 
   private log: any = Log.create('zap-walletsettings');
 
-  fee: number = 42;
+  public fee: number;
 
   constructor(private _rpc: RpcService) {
   }
 
-  zap(amount: number, script: any) {
+  zap(amount: number, script: any): void {
 
     this._rpc.call('sendtypeto', ['part', 'part', [{
       subfee: true,
