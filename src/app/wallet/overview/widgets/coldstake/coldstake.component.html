@@ -59,14 +59,14 @@
     <p class="buttons">
       <button mat-button class="small" color="primary"
         matTooltip="Fast-forward to 100%"
-        (click)="openZapColdstakingModal()"
+        (click)="zap()"
         *ngIf="hotstaking.txs.length > 0">
         Zap
         <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
       </button>
       <button mat-button class="small" color="warn"
         matTooltip="Cancel Cold Staking activation"
-        (click)="openReverColdstakingModal()"
+        (click)="revert()"
         *ngIf="coldstaking.txs.length > 0">
         Cancel
         <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
@@ -97,14 +97,14 @@
     <p class="buttons">
       <button mat-button class="small" color="primary"
         matTooltip="Fast-forward to 100%"
-        (click)="openZapColdstakingModal()"
+        (click)="zap()"
         *ngIf="hotstaking.txs.length > 0">
         Zap
         <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
       </button>
       <button mat-button class="small" color="warn"
         matTooltip="Cancel Cold Staking activation"
-        (click)="openReverColdstakingModal()"
+        (click)="revert()"
         *ngIf="coldstaking.txs.length > 0">
         Cancel
         <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->

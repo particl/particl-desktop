@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { Log } from 'ng2-logger';
 
-import { RpcService } from '../../../../../core/rpc/rpc.service';
+import { ModalsService } from 'app/modals/modals.service';
+import { RpcService } from 'app/core/rpc/rpc.service';
+import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-zap-coldstaking',
@@ -13,19 +16,23 @@ export class ZapColdstakingComponent {
 
   private log: any = Log.create('zap-coldstaking');
 
-  public fee: number;
   public utxos: any;
-
+  fee: number;
   script: string;
 
-  constructor(private _rpc: RpcService) {
+  constructor(
+    private flashNotification: SnackbarService,
+    private dialogRef: MatDialogRef<ZapColdstakingComponent>,
+    private _modals: ModalsService,
+    private _rpc: RpcService
+  ) {
 
     // TODO: move to coldstaking service
     /* TODO: use async / await, make return value useful, subscribe errors */
 
     this._rpc.call('walletsettings', ['changeaddress']).subscribe(res => {
 
-      this.log.d('zap pkey', res);
+      this.log.d('pkey', res);
       const pkey = res.changeaddress.coldstakingaddress;
       if (!pkey || pkey === '' || pkey === 'default') {
         return false;
@@ -33,7 +40,7 @@ export class ZapColdstakingComponent {
 
       this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(derived => {
 
-        this.log.d('zap coldstaking address', derived);
+        this.log.d('coldstaking address', derived);
         if (!derived || derived.length !== 1) {
           return false;
         }
@@ -42,7 +49,7 @@ export class ZapColdstakingComponent {
         this._rpc.call('getnewaddress', ['""', 'false', 'false', 'true'])
           .subscribe(spendingAddress => {
 
-            this.log.d('zap spending address', spendingAddress);
+            this.log.d('spending address', spendingAddress);
             if (!spendingAddress || spendingAddress === '') {
               return false;
             }
@@ -53,7 +60,7 @@ export class ZapColdstakingComponent {
               addrspend: spendingAddress
             }]).subscribe(script => {
 
-              this.log.d('zap buildscript', script);
+              this.log.d('script', script);
               if (!script || !script.hex) {
                 return false;
               }
@@ -68,7 +75,7 @@ export class ZapColdstakingComponent {
                   inputs: this.utxos.txs
                 })]).subscribe(tx => {
 
-                  this.log.d('zap fees', tx);
+                  this.log.d('fees', tx);
                   this.fee = tx.fee;
 
                 });
@@ -79,7 +86,7 @@ export class ZapColdstakingComponent {
     });
   }
 
-  zap(amount: number, script: any): void {
+  zap() {
 
     this._rpc.call('sendtypeto', ['part', 'part', [{
       subfee: true,
@@ -90,9 +97,11 @@ export class ZapColdstakingComponent {
       inputs: this.utxos.txs
     })]).subscribe(info => {
 
-      this.log.d('zap sendtypeto', info);
-      // TODO: flash notification, close modal
+      this.log.d('zap', info);
 
+      this.dialogRef.close();
+      this.flashNotification.open(
+        `Succesfully zapped ${this.utxos.amount} PART to cold staking`, 'warn');
     });
 
   }

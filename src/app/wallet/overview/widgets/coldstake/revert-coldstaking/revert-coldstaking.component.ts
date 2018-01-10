@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { Log } from 'ng2-logger';
 
-import { RpcService } from '../../../../../core/rpc/rpc.service';
+import { ModalsService } from 'app/modals/modals.service';
+import { RpcService } from 'app/core/rpc/rpc.service';
+import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-revert-coldstaking',
@@ -19,6 +22,9 @@ export class RevertColdstakingComponent implements OnInit {
   address: string;
 
   constructor(
+    private flashNotification: SnackbarService,
+    private dialogRef: MatDialogRef<RevertColdstakingComponent>,
+    private _modals: ModalsService,
     private _rpc: RpcService
   ) { }
 
@@ -28,6 +34,8 @@ export class RevertColdstakingComponent implements OnInit {
       this.log.d('stealth addresses', stealthAddresses)
       this.address = stealthAddresses[0]['Stealth Addresses'][0]['Address'];
       this.log.d('selected address', this.address)
+
+      this.log.d('amount', this.utxos.amount);
 
       this._rpc.call('sendtypeto', ['part', 'part', [{
         subfee: true,
@@ -59,7 +67,7 @@ export class RevertColdstakingComponent implements OnInit {
 
   }
 
-  disableColdstaking() {
+  private disableColdstaking() {
 
     // TODO: move to coldstaking service
     this.log.d('undo coldstaking');
@@ -72,8 +80,9 @@ export class RevertColdstakingComponent implements OnInit {
       }
 
       // TODO: update status of cold staking widget
-      // flash notification
-
+      this.dialogRef.close();
+      this.flashNotification.open(
+        `Succesfully brought ${this.utxos.amount} PART in hot wallet`, 'warn');
     });
   }
 

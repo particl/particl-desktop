@@ -12,7 +12,7 @@ export class SendConfirmationModalComponent {
 
   public dialogContent: string;
 
-  constructor(private diloagRef: MatDialogRef<SendConfirmationModalComponent>) {
+  constructor(private dialogRef: MatDialogRef<SendConfirmationModalComponent>) {
   }
 
   confirm(): void {
@@ -21,7 +21,7 @@ export class SendConfirmationModalComponent {
   }
 
   dialogClose(): void {
-    this.diloagRef.close();
+    this.dialogRef.close();
   }
 
 }
