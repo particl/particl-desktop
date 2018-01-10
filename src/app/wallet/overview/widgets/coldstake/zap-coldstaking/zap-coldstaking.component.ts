@@ -86,6 +86,7 @@ export class ZapColdstakingComponent {
     }], 'coldstaking zap', '', 4, 64, false]).subscribe(info => {
 
       this.log.d('zap sendtypeto', info);
+      // TODO: flash notification
 
     });
 

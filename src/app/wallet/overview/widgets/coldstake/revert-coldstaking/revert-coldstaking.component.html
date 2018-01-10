@@ -2,12 +2,12 @@
 
 <mat-dialog-content>
 
-
-
-  <button mat-raised-button color="primary">test</button>
+  <button mat-raised-button color="primary" (click)="revertColdstaking()">
+    undo
+  </button>
 
 </mat-dialog-content>
 
 <mat-dialog-actions fxLayoutAlign="end center">
-  <button  mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
 </mat-dialog-actions>

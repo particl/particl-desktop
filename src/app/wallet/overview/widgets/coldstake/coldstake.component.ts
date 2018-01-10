@@ -24,11 +24,13 @@ export class ColdstakeComponent {
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
 
+  // TODO: move to coldstaking service
   hotstaking: any = {
     txs: [],
     amount: 0
   };
 
+  // TODO: move to coldstaking service
   coldstaking: any = {
     txs: [],
     amount: 0
@@ -45,10 +47,13 @@ export class ColdstakeComponent {
     this._rpc.state.observe('ui:coldstaking:stake')
     .subscribe(status => this.stakingTowardsCold = this.coldStakingEnabled && status);
 
+    // TODO: move to coldstaking service
     this.rpc_progressLoop();
   }
 
   private rpc_progressLoop(): void {
+
+    // TODO: move to coldstaking service
 
     if (this.coldStakingEnabled) {
       this._rpc.call('getcoldstakinginfo').subscribe((coldstakinginfo: any) => {
@@ -60,6 +65,8 @@ export class ColdstakeComponent {
   }
 
   private stakingStatus() {
+
+    // TODO: move to coldstaking service
 
     this._rpc.call('listunspent').subscribe(unspent => {
 
@@ -92,13 +99,9 @@ export class ColdstakeComponent {
 
   }
 
-  revertColdstaking() {
-    this.log.d('undo coldstaking');
-
+  openReverColdstakingModal() {
     const dialogRef = this.dialog.open(RevertColdstakingComponent);
-    this._rpc.call('walletsettings', ['changeaddress', '"{}"']).subscribe(res => {
-      this.log.d('coldstaking undo changeaddress', res);
-    });
+    dialogRef.componentInstance.utxos = this.coldstaking;
   }
 
   openZapColdstakingModal(): void {
