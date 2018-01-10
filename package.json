@@ -115,7 +115,7 @@
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
     "lodash.values": "^4.3.0",
-    "ng2-logger": "^1.0.3",
+    "ng2-logger": "^2.0.20",
     "ngx-clipboard": "8.1.1",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.2",
