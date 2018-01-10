@@ -40,7 +40,7 @@
   <mat-card *ngIf="coldStakingEnabled && stakingTowardsCold" class="staking-node active">
     <div class="title">Cold Staking Node</div>
     <!-- TODO: GFX -->
-    <button (click)="openZapWalletsettingsModal()">
+    <button (click)="openZapColdstakingModal()">
       zap {{ hotstaking.txs.length }}
     </button>
     <button (click)="revertColdstaking()">
@@ -67,7 +67,7 @@
   <mat-card *ngIf="coldStakingEnabled && !stakingTowardsCold" class="staking-node warning">
     <div class="title">Cold Staking Node</div>
     <!-- TODO: GFX -->
-    <button (click)="openZapWalletsettingsModal()">
+    <button (click)="openZapColdstakingModal()">
       zap {{ hotstaking.txs.length }}
     </button>
     <button (click)="revertColdstaking()">

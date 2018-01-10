@@ -9,12 +9,13 @@ import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
 import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
-import { ZapWalletsettingsComponent } from './overview/widgets/coldstake/zap-walletsettings/zap-walletsettings.component';
+import { ZapColdstakingComponent } from './overview/widgets/coldstake/zap-coldstaking/zap-coldstaking.component';
 
 import 'hammerjs';
 
 
 import { routing } from './wallet.routing';
+import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-coldstaking/revert-coldstaking.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { routing } from './wallet.routing';
     SettingsComponent,
     StakinginfoComponent,
     ColdstakeComponent,
-    ZapWalletsettingsComponent
+    ZapColdstakingComponent,
+    RevertColdstakingComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +35,8 @@ import { routing } from './wallet.routing';
     CoreUiModule
   ],
   entryComponents: [
-    ZapWalletsettingsComponent
+    ZapColdstakingComponent,
+    RevertColdstakingComponent
   ],
   exports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

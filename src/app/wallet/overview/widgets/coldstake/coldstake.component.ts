@@ -6,7 +6,8 @@ import { RpcService } from '../../../../core/rpc/rpc.module';
 import { ModalsService } from '../../../../modals/modals.service';
 
 import { Amount } from '../../../shared/util/utils';
-import { ZapWalletsettingsComponent } from './zap-walletsettings/zap-walletsettings.component';
+import { ZapColdstakingComponent } from './zap-coldstaking/zap-coldstaking.component';
+import {RevertColdstakingComponent} from "./revert-coldstaking/revert-coldstaking.component";
 
 @Component({
   selector: 'app-coldstake',
@@ -31,7 +32,7 @@ export class ColdstakeComponent {
   coldstaking: any = {
     txs: [],
     amount: 0
-  }
+  };
 
   constructor(
     private _modals: ModalsService,
@@ -94,13 +95,14 @@ export class ColdstakeComponent {
   revertColdstaking() {
     this.log.d('undo coldstaking');
 
+    const dialogRef = this.dialog.open(RevertColdstakingComponent);
     this._rpc.call('walletsettings', ['changeaddress', '"{}"']).subscribe(res => {
       this.log.d('coldstaking undo changeaddress', res);
     });
   }
 
-  openZapWalletsettingsModal(): void {
-    const dialogRef = this.dialog.open(ZapWalletsettingsComponent);
+  openZapColdstakingModal(): void {
+    const dialogRef = this.dialog.open(ZapColdstakingComponent);
     dialogRef.componentInstance.utxos = this.hotstaking;
   }
 
