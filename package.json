@@ -98,7 +98,7 @@
     "@angular/core": "^4.4.6",
     "@angular/flex-layout": "^2.0.0-beta.9",
     "@angular/forms": "^4.4.6",
-    "@angular/http": "^4.4.6",
+    "@angular/http": "^5.2.0",
     "@angular/material": "2.0.0-beta.9",
     "@angular/platform-browser": "^4.4.6",
     "@angular/platform-browser-dynamic": "^4.4.6",
