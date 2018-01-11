@@ -1,4 +1,5 @@
 import { Component, Inject, forwardRef } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { flyInOut } from '../../core-ui/core.animations';
@@ -34,7 +35,8 @@ export class ColdstakeComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _rpc: RpcService,
-    private _flashNotificationService: SnackbarService
+    private _flashNotificationService: SnackbarService,
+    public _dialogRef: MatDialogRef<ColdstakeComponent>
   ) {
     this.nextStep();
   }
@@ -135,7 +137,7 @@ export class ColdstakeComponent {
   }
 
   close(): void {
-    this._modalsService.close();
+    this._dialogRef.close();
   }
 
   /**
