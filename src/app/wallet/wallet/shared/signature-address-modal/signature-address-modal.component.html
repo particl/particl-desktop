@@ -1,4 +1,4 @@
-<div class="containerX signature-address-container">
+<div class="containerX signature-address-container disable-select">
   <button class="small-close_button pull-right" (click)="dialogClose()">
     <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
   </button>
@@ -23,7 +23,7 @@
 
       <div class="signature-address-modal-form">
 
-        <div class="address-field" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+        <div class="address-field" fxLayout="row" fxLayoutAlign="center center">
           <mat-form-field fxFlex="1 1 100%">
             <input matInput formControlName="address" [(ngModel)]="formData.address" #addressInput
                     [ngClass]="{'verify-sucess': validAddress === true, 'verify-error': validAddress === false }"
@@ -31,12 +31,14 @@
                     (input)="verifyAddress()">
           </mat-form-field>
 
-          <span fxFlex="0 0 20px" matTooltip="Address Lookup" (click)="openLookup()">
-            <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-people"></mat-icon>
-          </span>
-          <span fxFlex="0 0 20px" matTooltip="Paste" (click)="pasteAddress()">
-            <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
-          </span>
+          <div class="icons" fxFlex="0 0 65px">
+            <span class="icon" matTooltip="Address Lookup" (click)="openLookup()">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-people"></mat-icon>
+            </span>
+            <span class="icon" matTooltip="Paste" (click)="pasteAddress()">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
+            </span>
+          </div>
 
         </div><!-- .address-field -->
 
@@ -47,7 +49,7 @@
         <mat-form-field>
           <input matInput formControlName="signature" [(ngModel)]="formData.signature"
                  [disabled]="isDisabled"
-                 placeholder="{{(type == 'sign')? 'Click `Sign Message` to generate signature': 'Signature'}}">
+                 placeholder="{{(type == 'sign')? 'Click [Sign Message] to generate signature': 'Signature'}}">
         </mat-form-field>
         <!-- todo: <mat-icon *ngIf="type == 'sign' && formData.signature" class="cursor-pointer" (click)="onCopyAddress()"
                  matTooltip="Copy address" ngxClipboard
