@@ -30,10 +30,8 @@
         </mat-radio-button>
         <mat-radio-button class="balance" value="blind_balance" fxFlex (click)="send.output = 'balance'">
           <div class="name">Blind</div>
-          <div class="desc">
-            Available balance:<span class="amount">{{ getBalance('blind_balance') }}</span>
-            <mat-icon *ngIf="isBlind" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
-          </div>
+          <div class="desc">Available balance:<span *ngIf="!checkBalance('blind_balance')" class="amount">{{ getBalance('blind_balance') }}</span> 
+          <mat-icon *ngIf="checkBalance('blind_balance')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon></div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="anon_balance" fxFlex [disabled]="type === 'balanceTransfer'">
           <div class="name">Anon</div>
@@ -100,9 +98,8 @@
           </mat-radio-button>
           <mat-radio-button class="balance" value="blind_balance" (click)="send.input = 'balance'" fxFlex>
             <div class="name">Blind</div>
-            <div class="desc">
-              Balance:<span class="amount">{{ getBalance('blind_balance') }}</span>
-              <mat-icon *ngIf="isBlind" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
+            <div class="desc">Balance:<span *ngIf="!checkBalance('blind_balance')" class="amount">{{ getBalance('blind_balance') }}</span>
+              <mat-icon *ngIf="checkBalance('blind_balance')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
             </div>
           </mat-radio-button>
           <mat-radio-button class="balance" value="anon_balance" disabled fxFlex>
