@@ -25,7 +25,7 @@
                  (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
 
           <mat-icon *ngIf="filters.search" (click)="filters.search=''; filter()" matTooltip="Clear" fontSet="partIcon"
-                    fontIcon="part-circle-remove"></mat-icon>
+                    fontIcon="part-clear-all"></mat-icon>
 
           <mat-icon *ngIf="!filters.search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"
                     matTooltip="Search">
