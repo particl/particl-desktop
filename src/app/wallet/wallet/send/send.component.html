@@ -125,7 +125,7 @@
             <mat-form-field fxFlex="1 1 100%" class="full-width larger">
               <input #address name="toAddress" matInput
                      [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
-                     type="text" placeholder="Recipient's address" [(ngModel)]="send.toAddress"
+                     type="text" placeholder="Receiver's address" [(ngModel)]="send.toAddress"
                      (ngModelChange)="verifyAddress()"/>
             </mat-form-field>
             <span fxFlex="0 0 20px">
