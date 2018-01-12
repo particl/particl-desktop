@@ -18,7 +18,7 @@ export class ColdstakeComponent implements OnInit {
   coldStakingEnabled: boolean = undefined;
   stakingTowardsCold: boolean = undefined;
   activation: string = 'Activation in progress';
-
+  public encryptionStatus: string = 'Locked';
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
 
@@ -26,6 +26,10 @@ export class ColdstakeComponent implements OnInit {
     private _modals: ModalsService,
     private _rpc: RpcService
   ) {
+
+    this._rpc.state.observe('encryptionstatus')
+      .subscribe(status => this.encryptionStatus = status);
+
     this._rpc.state.observe('ui:coldstaking')
     .subscribe(status => this.coldStakingEnabled = status);
 
@@ -38,29 +42,14 @@ export class ColdstakeComponent implements OnInit {
   ngOnInit() {
   }
 
-  /** calls listunspent, then calculate progress. */
+  /** calls getcoldstakinginfo, then calculate progress. */
   private rpc_progressLoop(): void {
 
-    if (this.coldStakingEnabled) {
-      this._rpc.call('listunspent')
-        .subscribe(
-          (response: Array<any>) => {
-            let activeCount = 0;
-            let totalCount = 0;
+    this._rpc.call('getcoldstakinginfo').subscribe((coldstakinginfo: any) => {
+        this.log.d(coldstakinginfo['percent_in_coldstakeable_script']);
+        this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
+      }, error => this.log.er('couldn\'t get cold staking info', error));
 
-            response.forEach((output) => {
-              totalCount += output.amount;
-
-              if (output.coldstaking_address !== undefined) {
-                activeCount += output.amount;
-              }
-              this.log.d(`activeCount=${activeCount} totalCount=${totalCount}`);
-              this.progress = new Amount((activeCount / totalCount) * 100, 2);
-           });
-         },
-      // TODO: Handle error appropriately
-      error => this.log.er('rpc_progressLoop: listunspent failed', error));
-    }
     setTimeout(this.rpc_progressLoop.bind(this), 1000);
     if (this.coldstakeProgress === 100) {
       this.activation = 'Activated';
@@ -73,5 +62,9 @@ export class ColdstakeComponent implements OnInit {
 
   openColdStakeModal(): void {
     this._modals.open('coldStake', {forceOpen: true, type: 'cold'});
+  }
+
+  checkStatus(): boolean {
+    return ['Unlocked', 'Unlocked, staking only'].includes(this.encryptionStatus);
   }
 }
