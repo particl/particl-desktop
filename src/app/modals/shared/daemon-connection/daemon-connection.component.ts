@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DaemonConnectionComponent implements OnInit {
 
+  public text: string;
   constructor() { }
 
   ngOnInit() {
