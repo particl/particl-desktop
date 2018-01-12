@@ -29,3 +29,11 @@
 .mat-checkbox-layout {
   white-space: normal;
 }
+
+.actions { // buttons (cancel/apply/save)
+  text-align: right;
+  margin-top: 16px;
+  button {
+    margin: 0 0 0 10px;
+  }
+}

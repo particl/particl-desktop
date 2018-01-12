@@ -189,44 +189,73 @@
 
   <!-- ===== NETWORK ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'network'">
-    <div class="card row">
-      <div class="">Map port using UPNP</div>
-      <mat-checkbox [(ngModel)]="settings.network.upnp"></mat-checkbox>
+  <div *ngIf="tabLabels[selectedTab] == 'network'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
+
+      <div class="header-nav">Network settings</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.network.upnp">
+              <h4 class="option">Map port using UPNP</h4>
+              <p class="desc">???</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+      
     </div>
+    <div fxFlex="50">
 
-    <div class="card row">
-      <div class="">Connect through Socks proxy</div>
-      <mat-checkbox [(ngModel)]="settings.network.proxy"></mat-checkbox>
-    </div>
+      <div class="header-nav">Proxy</div>
+      <mat-card class="card">
+        <div class="list section">
 
-    <div class="card row">
-      <div class="">Proxy IP</div>
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.network.proxy">
+              <h4 class="option">Connect through Socks proxy</h4>
+              <p class="desc">???</p>
+            </mat-checkbox>
+          </div>
 
-      <mat-form-field class="example-full-width">
-        <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
-      </mat-form-field>
-    </div>
+          <hr class="divider">
 
-    <div class="card row">
-      <div class="">Port</div>
+          <div class="item">
+            <h4 class="option">Proxy IP</h4>
+            <p class="desc">??? (default: 127.0.0.1)</p>
+            <mat-form-field>
+              <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
+            </mat-form-field>
+          </div>
 
-      <mat-form-field class="example-full-width">
-        <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort">
-      </mat-form-field>
+          <hr class="divider">
 
-    </div>
+          <div class="item">
+            <h4 class="option">Port</h4>
+            <p class="desc">??? (default: 9050)</p>
+            <mat-form-field>
+              <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+            </mat-form-field>
+          </div>
 
-    <div class="card row">
-      <div class="">Socket version</div>
-      <div class="col-xs-4">
-        <mat-form-field>
-          <mat-select [(ngModel)]="settings.network.socketVersion">
-            <mat-option value="4">4</mat-option>
-            <mat-option value="5">5</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Socket version</h4>
+            <p class="desc">??? (default: ???)</p>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.network.socketVersion">
+                <mat-option value="4">4</mat-option>
+                <mat-option value="5">5</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </div>
+      </mat-card>
+      
     </div>
   </div>
 
@@ -402,13 +431,13 @@
   </mat-tab-->
 
 
-  <div class="pull-right" *ngIf="tabLabels[selectedTab] !== 'help'">
+  <div class="actions" *ngIf="tabLabels[selectedTab] !== 'help'">
     <!-- TODO: activate only when changes has been made (until then make the buttons disabled) -->
     <button mat-button (click)="cancel()" color="warn">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       Cancel
     </button>
-    <button mat-raised-button (click)="apply()">
+    <button mat-button (click)="apply()">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Apply
     </button>
