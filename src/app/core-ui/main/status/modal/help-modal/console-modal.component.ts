@@ -6,11 +6,12 @@ import {
   ElementRef,
   AfterViewChecked
 } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../wallet/shared/util/utils';
 import { RpcService } from '../../../../../core/core.module';
+import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 
 @Component({
@@ -28,7 +29,8 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public disableScrollDown: boolean = false;
 
   constructor(private _rpc: RpcService,
-              private dialog: MatDialogRef<ConsoleModalComponent>) {
+              private dialog: MatDialogRef<ConsoleModalComponent>,
+              private snackbar: SnackbarService) {
   }
 
   ngOnInit() {
@@ -60,6 +62,9 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
         new Command(2, error.message, this.getDateFormat(), -1));
       this.command = '';
       this.scrollToBottom();
+    } else {
+      const erroMessage = (error.message) ? error.message : 'Method not found';
+      this.snackbar.open(erroMessage);
     }
   }
 
