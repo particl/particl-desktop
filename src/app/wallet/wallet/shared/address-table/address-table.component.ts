@@ -123,7 +123,7 @@ export class AddressTableComponent implements OnInit {
     if (this.inSearchMode()) {
       return this.getSearchSubset().length;
     } else {
-      return this.addresses.length;
+      return this.getFilterSubset().length;
     }
   }
 
