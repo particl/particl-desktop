@@ -20,7 +20,8 @@ export class ColdstakeComponent {
 
   coldStakingEnabled: boolean = undefined;
   stakingTowardsCold: boolean = undefined;
-
+  activation: string = 'Activation in progress';
+  public encryptionStatus: string = 'Locked';
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
 
@@ -39,11 +40,15 @@ export class ColdstakeComponent {
     private _modals: ModalsService,
     private _rpc: RpcService
   ) {
+
+    this._rpc.state.observe('encryptionstatus')
+      .subscribe(status => this.encryptionStatus = status);
+
     this._rpc.state.observe('ui:coldstaking')
     .subscribe(status => this.coldStakingEnabled = status);
 
     this._rpc.state.observe('ui:coldstaking:stake')
-    .subscribe(status => this.stakingTowardsCold = this.coldStakingEnabled && status);
+    .subscribe(status => this.stakingTowardsCold = status);
 
     // TODO: move to coldstaking service
     this.rpc_progressLoop();
@@ -51,14 +56,17 @@ export class ColdstakeComponent {
 
   private rpc_progressLoop(): void {
 
-    if (this.coldStakingEnabled) {
-      this._rpc.call('getcoldstakinginfo').subscribe(coldstakinginfo => {
-        this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
-      }, error => this.log.er('couldn\'t get cold staking info', error));
-      this.stakingStatus();
-    }
-    // TODO: not necessary when disabled
+    // TODO: not necessary when cold staking disabled
+
+    this._rpc.call('getcoldstakinginfo').subscribe(coldstakinginfo => {
+      this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
+    }, error => this.log.er('couldn\'t get cold staking info', error));
+    this.stakingStatus();
+
     setTimeout(this.rpc_progressLoop.bind(this), 1000);
+    if (this.coldstakeProgress === 100) {
+      this.activation = 'Activated';
+    }
   }
 
   private stakingStatus() {
@@ -144,10 +152,14 @@ export class ColdstakeComponent {
   }
 
   openUnlockWalletModal(): void {
-    this._modals.open('unlock', { forceOpen: true });
+    this._modals.open('unlock', {forceOpen: true, showStakeOnly: false, stakeOnly: true});
   }
 
   openColdStakeModal(): void {
     this._modals.open('coldStake', { forceOpen: true, type: 'cold' });
+  }
+
+  checkStatus(): boolean {
+    return ['Unlocked', 'Unlocked, staking only'].includes(this.encryptionStatus);
   }
 }

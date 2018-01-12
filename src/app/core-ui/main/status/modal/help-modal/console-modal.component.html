@@ -39,8 +39,7 @@
           <mat-form-field fxFlex="1 1 100%" floatPlaceholder="never">
             <input matInput [(ngModel)]="command" placeholder="Enter 'help' for an overview of available commands">
           </mat-form-field>
-          <button mat-raised-button color="primary" fxFlex>
-            <!-- TODO: make this button work -->
+          <button mat-raised-button color="primary" [disabled]="!command" (click)="rpcCall()" fxFlex>
             <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Enter
           </button>
