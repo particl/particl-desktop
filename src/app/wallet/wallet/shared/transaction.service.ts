@@ -51,7 +51,7 @@ export class TransactionService {
     this.rpc.state.observe('txcount')
       .subscribe(
         txcount => {
-          if (txcount > this.txCount || txcount === 1) {
+          if (txcount > this.txCount || (txcount === 1 && this.txCount === 0)) {
               this.txCount = txcount;
               this.newTransaction();
             } else {

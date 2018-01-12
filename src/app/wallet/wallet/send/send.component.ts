@@ -33,6 +33,7 @@ export class SendComponent {
   advanced: boolean = false;
   progress: number = 10;
   advancedText: string = 'Advanced options'
+  isBlind: boolean = false;
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
@@ -83,6 +84,12 @@ export class SendComponent {
   /** Get current account balance (Public / Blind / Anon) */
   getBalance(account: string): number {
     return this._rpc.state.get(account) || 0;
+  }
+
+  checkBalance(account: string): boolean {
+    if (account === 'blind_balance') {
+      return parseFloat(this._rpc.state.get(account)) < 0.0001 && parseFloat(this._rpc.state.get(account)) > 0;
+    }
   }
 
   /** Get the send address */
