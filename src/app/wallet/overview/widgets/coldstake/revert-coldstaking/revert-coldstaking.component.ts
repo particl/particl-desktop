@@ -63,6 +63,7 @@ export class RevertColdstakingComponent implements OnInit {
     })]).subscribe(tx => {
       this.log.d('revert response', tx);
 
+      this._rpc.state.set('ui:coldstaking', false);
       this.dialogRef.close();
       this.flashNotification.open(
         `Succesfully brought ${this.utxos.amount} PART into hot wallet`, 'warn');
