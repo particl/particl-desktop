@@ -198,8 +198,8 @@
 
           <div class="item">
             <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.network.upnp">
-              <h4 class="option">Map port using UPNP</h4>
-              <p class="desc">???</p>
+              <h4 class="option">Map port using UPnP</h4>
+              <p class="desc">UPnP is a set of networking protocols that permits networked devices to seamlessly discover each other's presence on the network without the need for port forwarding. (???)</p>
             </mat-checkbox>
           </div>
 
@@ -262,154 +262,223 @@
 
   <!-- ===== WINDOW ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'window'">
-    <div class="card row">
-      <div class="">Minimize to the tray instead of the taskbar</div>
-      <mat-checkbox [(ngModel)]="settings.window.tray"></mat-checkbox>
-    </div>
+  <div *ngIf="tabLabels[selectedTab] == 'window'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
 
-    <div class="card row">
-      <div class="">Minimize on close</div>
-      <mat-checkbox [(ngModel)]="settings.window.minimize"></mat-checkbox>
+      <div class="header-nav">Window behaviour</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.tray">
+              <h4 class="option">Minimize to the tray</h4>
+              <p class="desc">Minimizes the client window to tray instead of the taskbar</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.minimize">
+              <h4 class="option">Minimize on close</h4>
+              <p class="desc">Don't close the client, keep it running minimized</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+      
+    </div>
+    <div fxFlex="50">
+
+      <!-- .. -->
+
     </div>
   </div>
 
 
   <!-- ===== DISPLAY ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'display'">
-    <div class="card row">
-      <div class="">User interface language</div>
-      <div class="col-xs-4">
-        <mat-form-field>
-          <mat-select [(ngModel)]="settings.display.language">
-            <mat-option value="default">(default)</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+  <div *ngIf="tabLabels[selectedTab] == 'display'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
+
+      <div class="header-nav">User interface</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <h4 class="option">Language</h4>
+            <p class="desc">Select your preferred language</p>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.language">
+                <mat-option value="default">English (default)</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Amount units</h4>
+            <p class="desc">Unit to show amounts in</p>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.units">
+                <mat-option value="part">PART</mat-option>
+                <!-- TODO: add mPART as well? -->
+                <!-- FIXME: USD needs implementation -->
+                <mat-option value="usd">USD</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Rows per page</h4>
+            <p class="desc">Select number of rows per page</p>
+            <!-- FIXME: needs implementation -->
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.rows">
+                <mat-option [value]="20">20</mat-option>
+                <mat-option [value]="50">50</mat-option>
+                <mat-option [value]="100">100</mat-option>
+                <mat-option [value]="500">500</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </div>
+      </mat-card>
+
     </div>
+    <div fxFlex="50">
 
-    <div class="card row">
-      <div class="">Unit to show amounts in</div>
-      <div class="col-xs-4">
-        <mat-form-field>
-          <mat-select [(ngModel)]="settings.display.units">
-            <mat-option value="part">PART</mat-option>
-            <mat-option value="usd">USD</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
+      <div class="header-nav">???</div>
+      <mat-card class="card">
+        <div class="list section">
 
-    <div class="card row">
-      <div class="">Rows per page</div>
-      <div class="col-xs-4">
-        <mat-form-field>
-          <mat-select [(ngModel)]="settings.display.rows">
-            <mat-option [value]="20">20</mat-option>
-            <mat-option [value]="50">50</mat-option>
-            <mat-option [value]="100">100</mat-option>
-            <mat-option [value]="500">500</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
+          <!-- do we really need this when addresses are in TX details? -->
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.addresses">
+              <h4 class="option">Display addresses in transaction list</h4>
+              <p class="desc">...</p>
+            </mat-checkbox>
+          </div>
 
-    <div class="card row">
-      <div class="">Display addresses in transaction list</div>
-      <mat-checkbox [(ngModel)]="settings.display.addresses"></mat-checkbox>
-    </div>
+        </div>
+      </mat-card>
 
-    <div class="card row">
-      <div class="">Events</div>
+      <div class="header-nav">Event notifications</div>
+      <mat-card class="card">
+        <div class="list section">
 
-      <div class="col-xs-8">
-        <table class="table">
-          <tr>
-            <th></th>
-            <th>Visible</th>
-            <th>Notifications</th>
-          </tr>
-          <tr>
-            <td>Incoming message</td>
-            <td></td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.notify.message"></mat-checkbox>
-            </td>
-          </tr>
-          <tr>
-            <td>Sent to</td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.show.sentTo"></mat-checkbox>
-            </td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.notify.sentTo"></mat-checkbox>
-            </td>
-          </tr>
-          <tr>
-            <td>Received with</td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.show.receivedWith"></mat-checkbox>
-            </td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.notify.receivedWith"></mat-checkbox>
-            </td>
-          </tr>
-          <tr>
-            <td>Received from</td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.show.receivedFrom"></mat-checkbox>
-            </td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.notify.receivedFrom"></mat-checkbox>
-            </td>
-          </tr>
-          <tr>
-            <td>Payment to yourself</td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.show.selfPayment"></mat-checkbox>
-            </td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.notify.selfPayment"></mat-checkbox>
-            </td>
-          </tr>
-          <tr>
-            <td>Received PART</td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.show.partReceived"></mat-checkbox>
-            </td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.notify.partReceived"></mat-checkbox>
-            </td>
-          </tr>
-          <tr>
-            <td>Sent PART</td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.show.partSent"></mat-checkbox>
-            </td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.notify.partSent"></mat-checkbox>
-            </td>
-          </tr>
-          <tr>
-            <td>Other</td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.show.other"></mat-checkbox>
-            </td>
-            <td>
-              <mat-checkbox [(ngModel)]="settings.display.notify.other"></mat-checkbox>
-            </td>
-          </tr>
-        </table>
-      </div>
+          <div class="item">
+            <table class="table">
+              <tr>
+                <th></th>
+                <th>Visible</th>
+                <th>Notifications</th>
+              </tr>
+              <tr>
+                <td>Incoming message</td>
+                <td></td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.notify.message"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Sent to</td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.show.sentTo"></mat-checkbox>
+                </td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.notify.sentTo"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Received with</td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.show.receivedWith"></mat-checkbox>
+                </td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.notify.receivedWith"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Received from</td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.show.receivedFrom"></mat-checkbox>
+                </td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.notify.receivedFrom"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Payment to yourself</td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.show.selfPayment"></mat-checkbox>
+                </td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.notify.selfPayment"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Received PART</td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.show.partReceived"></mat-checkbox>
+                </td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.notify.partReceived"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Sent PART</td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.show.partSent"></mat-checkbox>
+                </td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.notify.partSent"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Other</td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.show.other"></mat-checkbox>
+                </td>
+                <td>
+                  <mat-checkbox [(ngModel)]="settings.display.notify.other"></mat-checkbox>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+      </mat-card>
+
     </div>
   </div>
 
 
   <!-- ===== HELP ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'help'">
-    No content
+  <div *ngIf="tabLabels[selectedTab] == 'help'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
+
+      <div class="header-nav">Need help?</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          We don't have any :(
+
+        </div>
+      </mat-card>
+      
+    </div>
+    <div fxFlex="50">
+
+      <!-- ... -->
+
+    </div>
   </div>
 
 

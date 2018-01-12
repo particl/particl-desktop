@@ -1,22 +1,17 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
-.container-block {
-  padding-top: 0; // offset title's margin
-}
+// ------ UI ------ //
 
-.header-nav { // section titles
-  @extend %subtitle;
-  list-style-type: none;
+table.table {
+  width: 100%;
 }
 
 .card {
   margin-bottom: 16px;
 }
 
-.item { // setting item
-  margin-bottom: 16px;
-}
 
+// ------ FORMS ------ //
 
 .checkbox {
   .option { // main description of setting option
@@ -26,8 +21,21 @@
     margin: 0;
   }
 }
-.mat-checkbox-layout {
-  white-space: normal;
+
+
+// ------ LAYOUT ------ //
+
+.container-block {
+  padding-top: 0; // offset title's margin
+}
+
+.header-nav { // section titles
+  @extend %subtitle;
+  list-style-type: none;
+}
+
+.item { // setting item
+  margin-bottom: 16px;
 }
 
 .actions { // buttons (cancel/apply/save)
