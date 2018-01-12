@@ -17,8 +17,8 @@ export class PasswordComponent {
 
   // UI State
   password: string;
-  showPass: boolean = false;
 
+  @Input() showPass: boolean = false;
   @Input() label: string = 'Your Wallet password';
   @Input() buttonText: string;
   @Input() stakeOnly: boolean = false;
@@ -26,6 +26,7 @@ export class PasswordComponent {
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;
   @Input() isButtonDisable: boolean = false;
+  @Input() showPassword: boolean = false;
 
   /**
     * The password emitter will send over an object with the password and stakingOnly info.
@@ -33,7 +34,7 @@ export class PasswordComponent {
     */
   @Input() emitPassword: boolean = false;
   @Output() passwordEmitter: EventEmitter<IPassword> = new EventEmitter<IPassword>();
-
+  @Output() showPasswordToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
   /**
     * The unlock emitter will automatically unlock the wallet for a given time and emit the JSON result
     * of 'getwalletinfo'. This can be used to automatically request an unlock and instantly do a certain things:
@@ -147,6 +148,11 @@ export class PasswordComponent {
 
   private reset(): void {
     this.password = '';
+  }
+
+  // emit showpassword change
+  toggle(): void {
+    this.showPasswordToggle.emit(this.showPass);
   }
 
   // capture the enter button

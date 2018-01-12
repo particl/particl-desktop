@@ -131,7 +131,9 @@
           #passwordElement
           label="Recovery Password (optional)"
           [emitPassword]="true"
+          [showPass]="toggleShowPass"
           (passwordEmitter)="passwordFromEmitter($event)"
+          (showPasswordToggle)="showPasswordToggle($event)"
           [showStakeOnly]="false">
         </app-password>
       </div>
@@ -141,6 +143,8 @@
             #passwordElementVerify
             label="Verify Password"
             [emitPassword]="true"
+            [showPass]="toggleShowPass"
+            [showPassword]="true"
             (passwordEmitter)="passwordFromEmitter($event, true)"
             [showStakeOnly]="false">
           </app-password>

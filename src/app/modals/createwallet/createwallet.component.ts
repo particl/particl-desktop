@@ -34,6 +34,7 @@ export class CreateWalletComponent {
   password: string;
   passwordVerify: string;
   words: string[];
+  toggleShowPass: boolean = false;
 
   @ViewChild('passphraseComponent') passphraseComponent: ComponentRef<PassphraseComponent>;
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
@@ -231,6 +232,11 @@ export class CreateWalletComponent {
       this.password === undefined && this.passwordVerify === undefined) {
       this.verifyPasswords();
     }
+  }
+
+  /** Triggered when showPassword is emitted from PasswordComponent */
+  showPasswordToggle(show: boolean) {
+    this.toggleShowPass = show;
   }
 
   /** verify if passwords match */
