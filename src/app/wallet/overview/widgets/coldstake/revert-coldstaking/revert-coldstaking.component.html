@@ -1,16 +1,16 @@
-<h2 mat-dialog-title>Revert Cold Staking</h2>
+<h2 mat-dialog-title>Disable Cold Staking</h2>
 
 <mat-dialog-content>
   <p>
-    Reverting will cancel Cold Staking and move your funds back to your wallet from your staking device.
-    Note that you don't need to cancel Cold Staking to spend your coins.
+    Disable Cold Staking and move your funds back to your wallet from your staking device.
+    Note that you don't need to disable Cold Staking to spend your coins.
   </p>
   <!--p>
     Alternatively, you can just disable Cold Staking activation. That will stop sending staked coins to your staking device. Coins already there will stay there.
   </p-->
   <p class="warning">
     <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-    Reverting transaction(s) will consume <strong>{{ fee }} PART</strong> fee in the process.
+    Disabling Cold Staking will create {{ utxos.txs.length }} transaction(s) and will consume <strong>{{ fee }} PART</strong> in fees.
   </p>
 </mat-dialog-content>
 
@@ -25,6 +25,6 @@
   </button-->
   <button mat-raised-button color="warn" (click)="revert()" [disabled]="!fee">
     <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-    Revert Cold Staking
+    Disable Cold Staking
   </button>
 </mat-dialog-actions>
