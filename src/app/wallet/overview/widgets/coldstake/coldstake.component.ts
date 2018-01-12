@@ -76,9 +76,32 @@ export class ColdstakeComponent {
       };
 
       unspent.map(utxo => {
-        const stakingType = utxo.coldstaking_address ? 'coldstaking' : 'hotstaking';
-        this[stakingType].amount += utxo.amount;
-        this[stakingType].txs.push({tx: utxo.txid, n: utxo.vout});
+
+        if (utxo.coldstaking_address) { /* found a cold staking utxo */
+
+          let txAlreadyRecorded = false;
+
+          this.coldstaking.txs.map(tx => {
+            if (tx.address === utxo.address) {
+              txAlreadyRecorded = true;
+              tx.amount += utxo.amount;
+              tx.inputs.push({ tx: utxo.txid, n: utxo.vout });
+            }
+          });
+
+          if (!txAlreadyRecorded) {
+            this.coldstaking.txs.push({
+              address: utxo.address,
+              amount: utxo.amount,
+              inputs: [{ tx: utxo.txid, n: utxo.vout }]
+            });
+          }
+
+        } else { /* found a hot staking utxo */
+          this.hotstaking.amount += utxo.amount;
+          this.hotstaking.txs.push({ tx: utxo.txid, n: utxo.vout });
+        }
+
       });
 
       this.log.d('hotstaking', this.hotstaking);

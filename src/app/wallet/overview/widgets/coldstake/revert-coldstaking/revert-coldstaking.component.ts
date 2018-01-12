@@ -31,22 +31,35 @@ export class RevertColdstakingComponent implements OnInit {
   ngOnInit() {
     this._rpc.call('liststealthaddresses').subscribe(stealthAddresses => {
 
-      this.log.d('stealth addresses', stealthAddresses)
+      // TODO: make sure a stealth address was created with wallet
       this.address = stealthAddresses[0]['Stealth Addresses'][0]['Address'];
-      this.log.d('selected address', this.address)
+      this.log.d('return address', this.address);
 
-      this.log.d('amount', this.utxos.amount);
+      let sentTXs = 0;
+      let totalFee = 0;
 
-      this._rpc.call('sendtypeto', ['part', 'part', [{
-        subfee: true,
-        address: this.address,
-        amount: this.utxos.amount
-      }], '', '', 4, 64, true, JSON.stringify({
-        inputs: this.utxos.txs
-      })]).subscribe(tx => {
-        this.log.d('revert fees', tx);
-        this.fee = tx.fee;
-      })
+      this.utxos.txs.map(tx => {
+
+        this.log.d('revert fee for address', tx);
+
+        this._rpc.call('sendtypeto', ['part', 'part', [{
+          subfee: true,
+          address: this.address,
+          amount: tx.amount
+        }], '', '', 4, 64, true, JSON.stringify({
+          inputs: tx.inputs
+        })]).subscribe(res => {
+
+          sentTXs++;
+          totalFee += res.fee;
+          this.log.d(`revert ${sentTXs} fees`, tx);
+
+          if (sentTXs === this.utxos.txs.length) {
+            this.fee = totalFee;
+          }
+        });
+      });
+
     });
   }
 
@@ -54,20 +67,31 @@ export class RevertColdstakingComponent implements OnInit {
 
     this.disableColdstaking();
 
-    this._rpc.call('sendtypeto', ['part', 'part', [{
-      subfee: true,
-      address: this.address,
-      amount: this.utxos.amount
-    }], 'revert coldstaking', '', 4, 64, false, JSON.stringify({
-      inputs: this.utxos.txs
-    })]).subscribe(tx => {
-      this.log.d('revert response', tx);
+    let sentTXs = 0;
+    let amount = 0;
 
-      this._rpc.state.set('ui:coldstaking', false);
-      this.dialogRef.close();
-      this.flashNotification.open(
-        `Succesfully brought ${this.utxos.amount} PART into hot wallet`, 'warn');
-    })
+    this.utxos.txs.map(tx => {
+
+      this.log.d('revert for address', tx);
+
+      this._rpc.call('sendtypeto', ['part', 'part', [{
+        subfee: true,
+        address: this.address,
+        amount: tx.amount
+      }], 'revert coldstaking', '', 4, 64, false, JSON.stringify({
+        inputs: tx.inputs
+      })]).subscribe(res => {
+        this.log.d('revert response', res);
+        amount += tx.amount;
+
+        if (++sentTXs === this.utxos.txs.length) {
+          this._rpc.state.set('ui:coldstaking', false);
+          this.dialogRef.close();
+          this.flashNotification.open(
+            `Succesfully brought ${amount} PART into hot wallet`, 'warn');
+        }
+      });
+    });
 
   }
 
