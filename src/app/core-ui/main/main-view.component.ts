@@ -118,8 +118,8 @@ export class MainViewComponent implements OnInit {
     if (sec === 59) {
       min = min - 1;
     }
-    this.time = min + ':' + ('0' + sec).slice(-2);
     if (min >= 0 && sec >= 0) {
+      this.time = min + ':' + ('0' + sec).slice(-2);
       this.unSubscribeTimer = Observable.timer(1000).
         subscribe(() => this.startTimer(min, sec));
     } else {

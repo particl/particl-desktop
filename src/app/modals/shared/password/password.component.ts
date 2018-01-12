@@ -22,6 +22,7 @@ export class PasswordComponent {
   @Input() showPass: boolean = false;
   @Input() label: string = 'Your Wallet password';
   @Input() buttonText: string;
+  @Input() stakeOnly: boolean = false;
   @Input() unlockTimeout: number = 60;
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;

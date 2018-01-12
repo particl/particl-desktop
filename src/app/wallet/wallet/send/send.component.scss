@@ -55,6 +55,14 @@
       font-weight: 600;
       margin-left: 5px;
     }
+    .help-icon { // explanation of "1e-8" at blind balances (after sending all blind)
+      margin-left: 3px;
+      font-size: 14px;
+      color: $color-info;
+      line-height: 0;
+      position: relative;
+      top: 2px;
+    }
   }
 }
 
