@@ -17,7 +17,6 @@ export class PasswordComponent {
 
   // UI State
   password: string;
-  stakeOnly: boolean = false;
 
   @Input() showPass: boolean = false;
   @Input() label: string = 'Your Wallet password';
