@@ -278,6 +278,11 @@ input {
       top: 4px;
     }
   }
+  &.wrap { // Settings: wrap long checkbox labels
+    .mat-checkbox-layout {
+      white-space: normal;
+    }
+  }
 }
 
 
