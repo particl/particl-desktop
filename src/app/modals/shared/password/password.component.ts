@@ -17,11 +17,11 @@ export class PasswordComponent {
 
   // UI State
   password: string;
-  stakeOnly: boolean = false;
   showPass: boolean = false;
 
   @Input() label: string = 'Your Wallet password';
   @Input() buttonText: string;
+  @Input() stakeOnly: boolean = false;
   @Input() unlockTimeout: number = 60;
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;

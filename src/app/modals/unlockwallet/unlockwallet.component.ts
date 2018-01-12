@@ -24,7 +24,7 @@ export class UnlockwalletComponent {
   private callback: Function;
   timeout: number = this.DEFAULT_TIMEOUT;
   showStakeOnly: boolean = false;
-
+  stakeOnly: boolean = false;
   constructor(private _rpc: RpcService,
               public dialogRef: MatDialogRef<ModalsComponent>) {
   }
@@ -57,6 +57,7 @@ export class UnlockwalletComponent {
       this.timeout = data.timeout;
     }
     this.showStakeOnly = Boolean(data.showStakeOnly);
+    this.stakeOnly = Boolean(data.stakeOnly)
     this.autoClose = (data.autoClose !== false)
   }
 
