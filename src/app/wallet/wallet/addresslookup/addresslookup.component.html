@@ -19,7 +19,7 @@
       </mat-form-field>
 
       <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type uc-first"
-                  *ngIf="allowFilter">
+                  *ngIf="allowFilter" (ngModelChange)="resetPagination()">
         <mat-option *ngFor="let addressType of addressTypes" [value]="addressType">
           {{ addressType }}
         </mat-option>

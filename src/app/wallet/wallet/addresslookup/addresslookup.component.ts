@@ -92,7 +92,7 @@ export class AddressLookupComponent implements OnInit {
             typeInt = '2';
             this._addressCount = response.num_send;
           } else {
-            this.filter = 'private';
+            this.filter = 'Private';
             typeInt = '1';
             this._addressCount = response.num_receive;
           }
