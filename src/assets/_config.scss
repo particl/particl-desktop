@@ -48,6 +48,16 @@ $radius: 4px; // default border-radius
   margin: 30px 0 25px;
 }
 
+%box-item-title { // titles for various items in cards
+  font-weight: bold;
+  font-size: 14px;
+}
+
+%help-text { // small help texts & small descriptions (for form elements)
+  color: $text-muted;
+  font-size: 11px;
+  line-height: 1.5;
+}
 
 // enable/disable text selection
 %disable-select,

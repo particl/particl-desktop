@@ -2,6 +2,12 @@
 
 // ------ UI ------ //
 
+hr.divider {
+  border: none;
+  border-top: 1px solid mix($bg, $bg-shadow);
+  margin: 24px -24px;
+}
+
 table.table {
   width: 100%;
 }
@@ -13,20 +19,21 @@ table.table {
 
 // ------ FORMS ------ //
 
-.checkbox {
-  .option { // main description of setting option
-    margin: 0;
-  }
-  .desc { // help text for ^
-    margin: 0;
-  }
+.option { // main description of setting option
+  @extend %box-item-title;
+  margin: 0 0 3px;
+  line-height: 1.5;
+}
+.desc { // help text for ^
+  @extend %help-text;
+  margin: 0;
 }
 
 
 // ------ LAYOUT ------ //
 
 .container-block {
-  padding-top: 0; // offset title's margin
+  padding-top: 0; // offset title's margin -- FIXME: why does this affect Send page layout? O_o
 }
 
 .header-nav { // section titles
@@ -35,7 +42,7 @@ table.table {
 }
 
 .item { // setting item
-  margin-bottom: 16px;
+  //margin-bottom: 16px;
 }
 
 .actions { // buttons (cancel/apply/save)

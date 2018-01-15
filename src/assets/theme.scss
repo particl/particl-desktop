@@ -10,8 +10,7 @@
 
 .widget-help {
   @extend %disable-select;
-  color: $text-muted;
-  font-size: 11px;
+  @extend %help-text;
   margin-bottom: 25px;
   cursor: help;
 }
@@ -272,10 +271,11 @@ input {
 // ------ CHECKBOXES ------ //
 
 .mat-checkbox {
+  font-family: $font;
   &.align-top { // settings: don't center checkbox vertically
     .mat-checkbox-inner-container {
       margin: 0 12px 0 0;
-      top: 4px;
+      top: 5px;
     }
   }
   &.wrap { // Settings: wrap long checkbox labels
