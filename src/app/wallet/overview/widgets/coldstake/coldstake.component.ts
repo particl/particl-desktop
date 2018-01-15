@@ -79,8 +79,7 @@ export class ColdstakeComponent {
       };
 
       this.coldstaking = {
-        txs: [],
-        amount: 0
+        txs: []
       };
 
       unspent.map(utxo => {
