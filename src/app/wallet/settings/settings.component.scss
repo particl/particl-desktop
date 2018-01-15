@@ -10,6 +10,26 @@ hr.divider {
 
 table.table {
   width: 100%;
+  th {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: normal;
+    color: $text-muted;
+    padding: 5px 0;
+  }
+  td {
+    @extend %tfx;
+    border-top: 1px solid $bg-shadow;
+    padding: 5px 0;
+    &.center {
+      text-align: center;
+    }
+  }
+  tr:hover {
+    td {
+      background: $bg;
+    }
+  }
 }
 
 .card {

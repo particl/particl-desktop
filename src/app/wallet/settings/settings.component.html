@@ -373,7 +373,7 @@
         <div class="list section">
 
           <div class="item">
-            <table class="table">
+            <table class="table" cellspacing="0">
               <tr>
                 <th></th>
                 <th>Visible</th>
@@ -382,70 +382,70 @@
               <tr>
                 <td>Incoming message</td>
                 <td></td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.notify.message"></mat-checkbox>
                 </td>
               </tr>
               <tr>
                 <td>Sent to</td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.show.sentTo"></mat-checkbox>
                 </td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.notify.sentTo"></mat-checkbox>
                 </td>
               </tr>
               <tr>
                 <td>Received with</td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.show.receivedWith"></mat-checkbox>
                 </td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.notify.receivedWith"></mat-checkbox>
                 </td>
               </tr>
               <tr>
                 <td>Received from</td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.show.receivedFrom"></mat-checkbox>
                 </td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.notify.receivedFrom"></mat-checkbox>
                 </td>
               </tr>
               <tr>
                 <td>Payment to yourself</td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.show.selfPayment"></mat-checkbox>
                 </td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.notify.selfPayment"></mat-checkbox>
                 </td>
               </tr>
               <tr>
                 <td>Received PART</td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.show.partReceived"></mat-checkbox>
                 </td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.notify.partReceived"></mat-checkbox>
                 </td>
               </tr>
               <tr>
                 <td>Sent PART</td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.show.partSent"></mat-checkbox>
                 </td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.notify.partSent"></mat-checkbox>
                 </td>
               </tr>
               <tr>
                 <td>Other</td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.show.other"></mat-checkbox>
                 </td>
-                <td>
+                <td class="center">
                   <mat-checkbox [(ngModel)]="settings.display.notify.other"></mat-checkbox>
                 </td>
               </tr>
