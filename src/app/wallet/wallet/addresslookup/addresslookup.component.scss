@@ -1,5 +1,9 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+.modal-content {
+  overflow: visible; // gets rid of vertical scrollbars (not needed here)
+}
+
 .search-address { // address/label search
   margin-top: 15px;
   .mat-icon {
