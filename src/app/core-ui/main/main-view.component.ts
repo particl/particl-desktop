@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
+import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../../environments/environment';
@@ -8,6 +9,7 @@ import { environment } from '../../../environments/environment';
 import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../../modals/modals.module';
 import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
+import { DaemonConnectionComponent } from '../../modals/shared/daemon-connection/daemon-connection.component';
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -41,7 +43,8 @@ export class MainViewComponent implements OnInit {
     private _route: ActivatedRoute,
     private _rpc: RpcService,
     private _modals: ModalsService,
-    public txService: TransactionService
+    public txService: TransactionService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -132,4 +135,10 @@ export class MainViewComponent implements OnInit {
     return sec;
   }
 
+  /**
+  // Sample code for open modal box
+  openDemonConnectionModal() {
+    const dialogRef = this.dialog.open(DaemonConnectionComponent);
+    dialogRef.componentInstance.text = "Test";
+  }*/
 }
