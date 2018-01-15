@@ -111,6 +111,12 @@ export class ColdstakeComponent {
 
       });
 
+      this.hotstaking.amount = this.hotstaking.amount.toFixed(8);
+      this.coldstaking.txs = this.coldstaking.txs.map(tx => {
+        tx.amount = tx.amount.toFixed(8);
+        return tx;
+      });
+
       this.log.d('hotstaking', this.hotstaking);
       this.log.d('coldstaking', this.coldstaking);
 
