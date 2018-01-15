@@ -48,7 +48,13 @@ $radius: 4px; // default border-radius
   margin: 30px 0 25px;
 }
 
-%box-item-title { // titles for various items in cards
+%box-title { // box's main title (bold, all-caps)
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+%box-item-title { // titles for various items in cards (bold)
   font-weight: bold;
   font-size: 14px;
 }

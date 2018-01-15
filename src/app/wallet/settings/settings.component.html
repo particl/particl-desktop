@@ -464,11 +464,34 @@
   <div *ngIf="tabLabels[selectedTab] == 'help'" fxLayout="row" fxLayoutGap="30px">
     <div fxFlex="50">
 
-      <div class="header-nav">Need help?</div>
+      <div class="header-nav">Documentation</div>
       <mat-card class="card">
         <div class="list section">
 
-          We don't have any :(
+          <h4 class="title">Particl Wiki</h4>
+          <p>
+            Particl wiki provides all the knowledge you need to get started, support if something breaks and a lot more. This knowledge base is community-driven and still expanding – your are encouraged to register and contribute!
+          </p>
+          <p>
+            <a href="https://particl.wiki/">Particl.wiki</a>
+          </p>
+
+        </div>
+      </mat-card>
+
+      <div class="header-nav">Social</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <ul>
+            <li><a href="https://twitter.com/particlProject">Twitter (General)</a></li>
+            <li><a href="https://twitter.com/particldev">Twitter (Developer account)</a></li>
+            <li><a href="https://www.facebook.com/ParticlProject/">Facebook</a></li>
+            <li><a href="https://www.youtube.com/c/Particl">YouTube</a></li>
+            <li><a href="https://www.reddit.com/r/Particl/">Reddit</a></li>
+            <li><a href="https://bitcointalk.org/index.php?topic=1835782.0">BitcoinTalk</a></li>
+            <li><a href="https://discord.gg/2tVJaZ9">Discord (Community channel)</a></li>
+          </ul>
 
         </div>
       </mat-card>
@@ -476,7 +499,44 @@
     </div>
     <div fxFlex="50">
 
-      <!-- ... -->
+      <div class="header-nav">Support channels</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <h4 class="title"><a href="https://about.riot.im/" matTooltip="Learn more about Riot" matTooltipPosition="above">Riot.im</a></h4>
+          <p>
+            For team & community support, we recommend Riot as the best way to get in touch:
+          </p>
+          <ul>
+            <li><a href="https://riot.im/app/#/room/#particl:matrix.org">General room</a></li>
+            <li><a href="https://riot.im/app/#/room/#announcements:matrix.org">Announcements</a></li>
+            <li><a href="https://riot.im/app/#/room/#particlhelp:matrix.org">Help</a></li>
+            <li><a href="https://riot.im/app/#/room/#particlmedia:matrix.org">Media</a></li>
+            <li><a href="https://riot.im/app/#/room/#particl-trading:matrix.org">Trading</a></li>
+            <li><a href="https://riot.im/app/#/room/#particl-community-ideas:matrix.org">Suggestions</a></li>
+          </ul>
+
+          <hr class="divider">
+
+          <h4 class="title"><a href="https://slack.com/" matTooltip="Learn more about Slack" matTooltipPosition="above">Slack</a></h4>
+          <p>
+            As an alternative to Riot, we're also on Slack. To use it, request an invitation first:
+          </p>
+          <ul>
+            <li><a href="http://slack.particl.io/">Get Slack invitation</a></li>
+            <li><a href="https://particl.slack.com/">Particl Slack</a></li>
+          </ul>
+
+          <hr class="divider">
+
+          <h4 class="title">Telegram</h4>
+          <ul>
+            <li><a href="https://t.me/particlnews">News channel</a></li>
+            <li><a href="https://t.me/particlproject">Community channel</a></li>
+          </ul>
+
+        </div>
+      </mat-card>
 
     </div>
   </div>

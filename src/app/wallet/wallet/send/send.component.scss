@@ -17,9 +17,7 @@
 }
 
 .title { // box titles
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 13px;
+  @extend %box-title;
   margin: -4px 0 16px !important;
   .advanced-options {
     float: right;

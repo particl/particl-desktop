@@ -34,6 +34,20 @@ table.table {
 
 .card {
   margin-bottom: 16px;
+  .section {
+    & > .title {
+      @extend %box-title;
+      margin-top: 0;
+    }
+    a {
+      color: darken($color, 5%);
+      text-decoration: none;
+      &:hover {
+        color: $color;
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
 
@@ -44,6 +58,7 @@ table.table {
   margin: 0 0 3px;
   line-height: 1.5;
 }
+
 .desc { // help text for ^
   @extend %help-text;
   margin: 0;
@@ -59,10 +74,6 @@ table.table {
 .header-nav { // section titles
   @extend %subtitle;
   list-style-type: none;
-}
-
-.item { // setting item
-  //margin-bottom: 16px;
 }
 
 .actions { // buttons (cancel/apply/save)
