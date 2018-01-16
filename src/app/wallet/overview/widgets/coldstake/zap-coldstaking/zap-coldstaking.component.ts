@@ -83,6 +83,8 @@ export class ZapColdstakingComponent {
             });
           });
       })
+    }, error => {
+      this.log.er('errr');
     });
   }
 
