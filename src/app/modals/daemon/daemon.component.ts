@@ -13,8 +13,8 @@ export class DaemonComponent {
   constructor() { }
 
   setData(data: any) {
-    console.log(data);
     this.message = data;
     this.daemonRunning = data && data.daemonRunning;
+  }
 
 }
