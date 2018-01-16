@@ -6,7 +6,8 @@ First of all, thanks for your interest in helping us build Particl! As more code
     1. [Issues](#1-issues)
     2. [Push Requests (PRs)](#2-push-requests-prs)
         1. [Create new branch](#21-create-new-branch)
-        2. [Submit PR](#22-submit-pr)
+        2. [Commit your code](#22-commit-your-code)
+        3. [Submit PR](#23-submit-pr)
 2. [Dev resources](#dev-resources) (Angular, components, layouts, icons)
 
 ---
@@ -59,7 +60,13 @@ After your repo is ready, create new branch.
 
 When your branch is ready, do your changes and push them to the branch. Be sure to push only the changes related to the connected Issue! Solving multiple Issues is also possible, but it's better to focus on one thing at a time.
 
-#### 2.2. Submit PR
+#### 2.2. Commit your code
+
+- Write meaninful commit messages – don't forget that when your PR is merged, its context is lost. Meaning that once your commits get to `dev` branch, it's harder to say what each commit does just by its name:
+  - ❎ Bad commit message: _"fixed button"_
+  - ✅ Good: _"Receive: fixed 'copy address' button"_
+
+#### 2.3. Submit PR
 
 When your code is complete and ready, [submit new Push Request](https://github.com/particl/partgui/compare).
 
