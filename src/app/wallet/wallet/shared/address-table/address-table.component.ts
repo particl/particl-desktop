@@ -41,6 +41,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
 
   // Search query
   @Input() query: string;
+  @Input() filter: RegExp;
   @ViewChild('paginator') paginator: any;
   // Data storage
   private addresses: Address[] = [];
@@ -71,7 +72,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
     this._subAddresses = this._addressService.getAddresses()
       .subscribe(
         addresses => this.addresses = addresses,
-        error => console.log('addresstable-component subscription error:' + error));
+        error => this.log.e('addresstable-component subscription error', error));
   }
 
   ngOnChanges(): void {
@@ -83,7 +84,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
     if (this.inSearchMode()) { // in search mode
       return this.paginateArray(this.getSearchSubset());
     } else { // not in seach mode
-      return this.paginateArray(this.addresses);
+      return this.paginateArray(this.getFilterSubset());
     }
   }
 
@@ -101,12 +102,17 @@ export class AddressTableComponent implements OnInit, OnChanges {
 
   /** Returns the addresses that match a search/query. */
   private getSearchSubset(): Address[] {
-    return this.addresses.filter(el => {
-        return (
-          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-          || el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-        );
+    return this.getFilterSubset().filter(address => {
+        return (address.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+           || address.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1);
       });
+  }
+
+  /** Returns the addresses that match a search/query. */
+  private getFilterSubset(): Address[] {
+    return (this.filter ?
+      this.addresses.filter(address => this.filter.test(address.address)) :
+      this.addresses);
   }
 
   /** Returns the addresses to display in the UI with regards to the pagination parameters */
@@ -122,7 +128,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
     if (this.inSearchMode()) {
       return this.getSearchSubset().length;
     } else {
-      return this.addresses.length;
+      return this.getFilterSubset().length;
     }
   }
 
@@ -153,7 +159,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
       .subscribe(response => {
           this.rpc_deleteAddress_success(response);
         },
-        error => console.log(`${error.error.message}`));
+        error => this.log.e(error.error.message, error));
   }
 
   private rpc_deleteAddress_success(json: Object): void {
@@ -198,4 +204,3 @@ export class AddressTableComponent implements OnInit, OnChanges {
   }
 
 }
-
