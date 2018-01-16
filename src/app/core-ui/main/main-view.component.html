@@ -116,8 +116,7 @@
             <span class="text">Connecting to daemon...</span>
           </mat-list-item>
 
-          <div *ngIf="daemonError && daemonError.error">
-            {{daemonError.error.status}}
+          <div *ngIf="daemonError !== undefined && daemonError.error">
             <mat-list-item class="sidebar-item" *ngIf="daemonError.error.status === 502">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
               <span class="text">Waiting for daemon initialisation...</span>
