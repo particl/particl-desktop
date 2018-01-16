@@ -72,7 +72,7 @@ export class AddressTableComponent implements OnInit {
     this._subAddresses = this._addressService.getAddresses()
       .subscribe(
         addresses => this.addresses = addresses,
-        error => console.log('addresstable-component subscription error:' + error));
+        error => this.log.e('addresstable-component subscription error', error));
   }
 
   /** Returns the addresses to display in the UI with regards to both pagination and search/query. */
@@ -94,12 +94,9 @@ export class AddressTableComponent implements OnInit {
 
   /** Returns the addresses that match a search/query. */
   private getSearchSubset(): Address[] {
-    console.log(this.getFilterSubset());
     return this.getFilterSubset().filter(address => {
-        return (
-          address.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1 ||
-          address.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-        );
+        return (address.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+           || address.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1);
       });
   }
 
@@ -154,7 +151,7 @@ export class AddressTableComponent implements OnInit {
       .subscribe(response => {
           this.rpc_deleteAddress_success(response);
         },
-        error => console.log(`${error.error.message}`));
+        error => this.log.e(error.error.message, error));
   }
 
   private rpc_deleteAddress_success(json: Object): void {
@@ -199,4 +196,3 @@ export class AddressTableComponent implements OnInit {
   }
 
 }
-
