@@ -20,6 +20,8 @@ This repository is the user interface that works in combination with our [`parti
 [![Code Climate](https://codeclimate.com/github/particl/partgui/badges/gpa.svg)](https://codeclimate.com/github/particl/partgui)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/partgui.svg)](https://greenkeeper.io/)
 
+> Be sure to read our [Contributing Guidelines](CONTRIBUTE.md) first
+
 ## Development
 
 ### Boostrapping for development:
@@ -33,12 +35,8 @@ npm install
 ```
 
 ### Development with Electron
-* Run `ng serve` to start the dev server.
-* Run `npm run start:electron:dev -- -testnet -debug` to start the electron application. Daemon will be updated and launched automatically.
-
-### Development with a Browser (deprecating)
-* Run `ng serve`. Daemon will not launch automatically.
-* Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. Run `ng serve` to start the dev server.
+2. Run `npm run start:electron:dev -- -testnet -opendevtools` to start the electron application. Daemon will be updated and launched automatically.
 
 #### Interact with particl-core daemon
 You can directly interact with the daemon ran by the Electron version.
@@ -49,7 +47,7 @@ You can directly interact with the daemon ran by the Electron version.
 ## Running
 
 ### Start Electron
-* `npm run start:electron:fast` - disables debug messages for faster startup
+* `npm run start:electron:fast` - disables debug messages for faster startup (keep in mind using `:fast` disables auto-reload of app on code change)
 
 ### Package Electron
 * `npm run package:win` - Windows
@@ -57,4 +55,4 @@ You can directly interact with the daemon ran by the Electron version.
 * `npm run package:linux` - Linux
 
 ## Contributors
-Join us in [#particl-dev:matrix.org](https://riot.im/app/#/room/#particl-dev:matrix.org) on [riot](https://riot.im)
+Join us in [#particl-dev:matrix.org](https://riot.im/app/#/room/#particl-dev:matrix.org) on [Riot](https://riot.im)
