@@ -60,10 +60,13 @@ exports.start = function (wallets, callback) {
                        ? options.customdaemon
                        : daemonManager.getPath();
 
-      wallets = wallets.map(wallet => `-wallet=${wallet}`);
-      log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
+      let args = [];
+      process.argv.map(arg => args.push(arg));
+      wallets.map(wallet   => args.push(`-wallet=${wallet}`));
 
-      const child = spawn(daemonPath, [...process.argv, ...wallets])
+      log.info(`starting daemon ${daemonPath} ${args}`);
+
+      const child = spawn(daemonPath, args)
       .on('close', code => {
         daemon = undefined;
         if (code !== 0) {
