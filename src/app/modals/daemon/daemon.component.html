@@ -10,4 +10,7 @@
       Error {{ message.error.status }}: {{ message.error.message }}
     </div>
   </div>
+  <div *ngIf="daemonRunning === false">
+    Daemon loading please wait...
+  </div>
 </div>
