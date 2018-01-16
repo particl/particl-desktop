@@ -110,26 +110,36 @@
 
       <mat-content *ngIf="!daemonRunning || !walletInitialized">
         <mat-list class="notification error sidebar-item-group">
+
           <mat-list-item class="sidebar-item" *ngIf="!daemonRunning">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Connecting to daemon...</span>
           </mat-list-item>
-          <mat-list-item class="sidebar-item" *ngIf="daemonError && daemonError.error">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-            <span *ngIf="daemonError.error.status === 502" class="text">
-              Waiting for daemon initialisation...
-            </span>
-          </mat-list-item>
+
+          <div *ngIf="daemonError && daemonError.error">
+            {{daemonError.error.status}}
+            <mat-list-item class="sidebar-item" *ngIf="daemonError.error.status === 502">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+              <span class="text">Waiting for daemon initialisation...</span>
+            </mat-list-item>
+            <mat-list-item class="sidebar-item" *ngIf="daemonError.error.status === 401">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+              <span class="text">RPC connection failed: check credentials</span>
+            </mat-list-item>
+          </div>
+
           <mat-list-item class="sidebar-item"
             *ngIf="daemonError && !daemonError.electron">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Warning: You are using Particl through a browser.</span>
           </mat-list-item>
+
           <mat-list-item class="sidebar-item"
             *ngIf="walletInitialized === false && daemonRunning">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Please create wallet first to access other tabs</span>
           </mat-list-item>
+
         </mat-list><!-- .error.sidebar-item-group -->
       </mat-content>
 
