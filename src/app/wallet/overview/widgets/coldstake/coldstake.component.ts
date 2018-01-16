@@ -79,8 +79,7 @@ export class ColdstakeComponent {
       };
 
       this.coldstaking = {
-        txs: [],
-        amount: 0
+        txs: []
       };
 
       unspent.map(utxo => {
@@ -110,6 +109,12 @@ export class ColdstakeComponent {
           this.hotstaking.txs.push({ tx: utxo.txid, n: utxo.vout });
         }
 
+      });
+
+      this.hotstaking.amount = this.hotstaking.amount.toFixed(8);
+      this.coldstaking.txs = this.coldstaking.txs.map(tx => {
+        tx.amount = tx.amount.toFixed(8);
+        return tx;
       });
 
       this.log.d('hotstaking', this.hotstaking);

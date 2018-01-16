@@ -66,19 +66,21 @@ export class ZapColdstakingComponent {
               }
               this.script = script.hex;
 
-                this._rpc.call('sendtypeto', ['part', 'part', [{
-                  subfee: true,
-                  address: 'script',
-                  amount: this.utxos.amount,
-                  script: script.hex
-                }], '', '', 4, 64, true, JSON.stringify({
-                  inputs: this.utxos.txs
-                })]).subscribe(tx => {
+              this.log.d('amount', this.utxos.amount);
 
-                  this.log.d('fees', tx);
-                  this.fee = tx.fee;
+              this._rpc.call('sendtypeto', ['part', 'part', [{
+                subfee: true,
+                address: 'script',
+                amount: this.utxos.amount,
+                script: script.hex
+              }], '', '', 4, 64, true, JSON.stringify({
+                inputs: this.utxos.txs
+              })]).subscribe(tx => {
 
-                });
+                this.log.d('fees', tx);
+                this.fee = tx.fee;
+
+              });
 
             });
           });
