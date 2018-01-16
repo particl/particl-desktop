@@ -33,7 +33,7 @@ export class Transaction {
   constructor(json: any) {
     /* transactions */
     this.txid = json.txid;
-    if (json.outputs !== undefined) {
+    if (json.outputs && json.outputs[0]) {
       this.address = json.outputs[0].address;
       this.stealth_address = json.outputs[0].stealth_address;
       this.label = json.outputs[0].label;
