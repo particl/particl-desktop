@@ -64,9 +64,10 @@ exports.start = function (wallets, callback) {
       process.argv.map(arg => args.push(arg));
       wallets.map(wallet   => args.push(`-wallet=${wallet}`));
 
-      log.info(`starting daemon ${daemonPath} ${args}`);
+      // log.info(`starting daemon ${daemonPath} ${args}`);
 
-      const child = spawn(daemonPath, args)
+      // TODO: find a way to do it clean and working on packaged mac
+      const child = spawn(daemonPath, ['-testnet', `-printtoconsole`])
       .on('close', code => {
         daemon = undefined;
         if (code !== 0) {
