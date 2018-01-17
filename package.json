@@ -113,7 +113,7 @@
     "core-js": "^2.4.1",
     "electron-log": "^2.2.14",
     "font-awesome": "^4.7.0",
-    "got": "^8.0.0",
+    "got": "^8.0.2",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.4",
     "lodash.get": "^4.4.2",
@@ -137,7 +137,7 @@
     "codelyzer": "^4.0.0",
     "coveralls": "^3.0.0",
     "electron": "1.7.10",
-    "electron-builder": "^19.53.4",
+    "electron-builder": "^19.54.0",
     "htmlhint": "^0.9.13",
     "jasmine-core": "^2.8.0",
     "jasmine-spec-reporter": "^4.2.0",
@@ -152,7 +152,7 @@
     "sass-lint": "^1.10.2",
     "ts-node": "^4.1.0",
     "tslint": "^5.9.0",
-    "tslint-microsoft-contrib": "^5.0.1",
+    "tslint-microsoft-contrib": "^5.0.2",
     "typescript": ">=2.4.2 <2.6.0"
   }
 }
