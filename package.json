@@ -93,7 +93,7 @@
     "asar": true
   },
   "dependencies": {
-    "@angular/animations": "^5.2.0",
+    "@angular/animations": "^5.2.1",
     "@angular/cdk": "^5.0.4",
     "@angular/common": "^5.2.0",
     "@angular/compiler": "^5.2.0",
