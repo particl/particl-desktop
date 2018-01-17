@@ -37,10 +37,10 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
   },
-  "productName": "Particl",
+  "productName": "particl",
   "build": {
     "electronVersion": "1.7.10",
-    "appId": "io.particl.partgui",
+    "appId": "io.particl.wallet",
     "directories": {
       "buildResources": "resources",
       "output": "packages"
