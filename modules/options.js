@@ -19,17 +19,12 @@ let _options = {};
 exports.parse = function() {
 
   let options = {};
-
-  if (path.basename(process.argv[0]).includes('electron')) {
+  if (process.argv[0].match(/[Ee]lectron/)) {
     // striping 'electron .' from argv
     process.argv = process.argv.splice(2);
   } else {
     // striping /path/to/particl from argv
     process.argv = process.argv.splice(1);
-    // fixed for development mode only
-    if (process.platform === 'darwin') {
-      process.argv = process.argv.splice(1);
-    }
   }
 
   process.argv.forEach((arg, index) => {
