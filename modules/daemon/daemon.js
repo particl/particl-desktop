@@ -91,7 +91,7 @@ exports.start = function (wallets, callback) {
 exports.wait = function(wallets, callback) {
   return new Promise((resolve, reject) => {
 
-    const maxRetries  = 10; // Some slow computers...
+    const maxRetries  = 100; // Some slow computers...
     let   retries     = 0;
     let   errorString = '';
 
@@ -117,7 +117,6 @@ exports.wait = function(wallets, callback) {
         }
         log.error('Could not connect to daemon.')
         reject();
-        electron.app.exit();
       }
     } /* daemonStartup */
 
