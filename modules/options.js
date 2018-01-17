@@ -26,10 +26,10 @@ exports.parse = function() {
   } else {
     // striping /path/to/particl from argv
     process.argv = process.argv.splice(1);
-    // fixed for development mode only
-    if (process.platform === 'darwin') {
-      process.argv = process.argv.splice(1);
-    }
+    // @TODO make sure it will only work for dev
+    // if (process.platform === 'darwin') {
+    //   process.argv = process.argv.splice(1);
+    // }
   }
 
   process.argv.forEach((arg, index) => {
