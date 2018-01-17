@@ -102,7 +102,7 @@
     "@angular/forms": "^5.2.0",
     "@angular/http": "^5.2.0",
     "@angular/material": "^5.0.4",
-    "@angular/platform-browser": "^5.2.0",
+    "@angular/platform-browser": "^5.2.1",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/platform-server": "^5.2.0",
     "@angular/router": "^5.2.0",
