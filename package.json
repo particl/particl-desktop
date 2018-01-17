@@ -99,7 +99,7 @@
     "@angular/compiler": "^5.2.0",
     "@angular/core": "^5.2.0",
     "@angular/flex-layout": "^2.0.0-beta.12",
-    "@angular/forms": "^5.2.0",
+    "@angular/forms": "^5.2.1",
     "@angular/http": "^5.2.0",
     "@angular/material": "^5.0.4",
     "@angular/platform-browser": "^5.2.0",
