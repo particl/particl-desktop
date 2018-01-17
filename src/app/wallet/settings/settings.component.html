@@ -70,23 +70,23 @@
 
           <hr class="divider">
 
-          <div class="item">
-            <h4 class="option">Minimum ring size</h4>
-            <p class="desc">Anon transactions: ??? (default: 3)</p>
-            <mat-form-field>
-              <input matInput type="text" [(ngModel)]="settings.main.minRing">
-            </mat-form-field>
+          <div class="row" fxLayout="row">
+            <div class="item" fxFlex="50">
+              <h4 class="option">Minimum ring size</h4>
+              <p class="desc">Anon transactions: ??? (default: 3)</p>
+              <mat-form-field>
+                <input matInput type="text" [(ngModel)]="settings.main.minRing">
+              </mat-form-field>
+            </div>  
+            <div class="item" fxFlex="50">
+              <h4 class="option">Maximum ring size</h4>
+              <p class="desc">Anon transactions: ??? (default: 100)</p>
+              <mat-form-field>
+                <input matInput type="text" [(ngModel)]="settings.main.maxRing">
+              </mat-form-field>
+            </div>
           </div>
 
-          <hr class="divider">
-
-          <div class="item">
-            <h4 class="option">Maximum ring size</h4>
-            <p class="desc">Anon transactions: ??? (default: 100)</p>
-            <mat-form-field>
-              <input matInput type="text" [(ngModel)]="settings.main.maxRing">
-            </mat-form-field>
-          </div>
 
         </div>
       </mat-card>
@@ -222,22 +222,21 @@
 
           <hr class="divider">
 
-          <div class="item">
-            <h4 class="option">Proxy IP</h4>
-            <p class="desc">??? (default: 127.0.0.1)</p>
-            <mat-form-field>
-              <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
-            </mat-form-field>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <h4 class="option">Port</h4>
-            <p class="desc">??? (default: 9050)</p>
-            <mat-form-field>
-              <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort">
-            </mat-form-field>
+          <div class="row" fxLayout="row">
+            <div class="item" fxFlex="50">
+              <h4 class="option">Proxy IP</h4>
+              <p class="desc">??? (default: 127.0.0.1)</p>
+              <mat-form-field>
+                <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
+              </mat-form-field>
+            </div>
+            <div class="item" fxFlex="50">
+              <h4 class="option">Port</h4>
+              <p class="desc">??? (default: 9050)</p>
+              <mat-form-field>
+                <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+              </mat-form-field>
+            </div>
           </div>
 
           <hr class="divider">
