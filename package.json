@@ -37,7 +37,7 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
   },
-  "productName": "Particl Wallet",
+  "productName": "Particl",
   "build": {
     "electronVersion": "1.7.10",
     "appId": "io.particl.partgui",
@@ -53,6 +53,7 @@
       "resources/**"
     ],
     "mac": {
+      "artifactName": "${name}-${version}-${os}-${arch}",
       "category": "public.app-category.wallet",
       "target": [
         "dmg",
@@ -64,16 +65,41 @@
       "oneClick": false
     },
     "win": {
+      "artifactName": "${name}-${version}-${os}-${arch}",
       "target": [
-        "nsis",
-        "zip"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ]
     },
     "linux": {
       "maintainer": "particl contributors <hello@particl.io>",
+      "artifactName": "${name}-${version}-${os}-${arch}",
       "target": [
-        "deb",
-        "tar.gz"
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64",
+            "armv7l"
+          ]
+        }
       ],
       "desktop": {
         "Comment": "Particl, P2P Privacy project",
@@ -84,7 +110,7 @@
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
-        "Categories": "P2P;Development;Finance"
+        "Categories": "P2P;Finance;Security"
       },
       "category": "ecommerce",
       "packageCategory": "wallet",
