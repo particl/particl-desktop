@@ -1,4 +1,4 @@
-<div mat-dialog-title>{{singleAddress.label}}</div>
+<div mat-dialog-title class="text-center">{{singleAddress.label}}</div>
 
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
@@ -21,7 +21,7 @@
   </div>
 
   <div class="actions">
-    <button mat-button class="copy" ngxClipboard [cbContent]="singleAddress.address">
+    <button mat-button class="copy" ngxClipboard [cbContent]="singleAddress.address" (click)="copyToClipBoard()">
       <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>Copy to clipboard
     </button>
   </div>

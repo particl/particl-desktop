@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
+import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../../environments/environment';
@@ -8,6 +9,7 @@ import { environment } from '../../../environments/environment';
 import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../../modals/modals.module';
 import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
+import { DaemonConnectionComponent } from '../../modals/shared/daemon-connection/daemon-connection.component';
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -33,13 +35,16 @@ export class MainViewComponent implements OnInit {
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
-
+  unSubscribeTimer: any;
+  time: string = '5:00';
+  public unlocked_until: number = 0;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
     private _modals: ModalsService,
-    public txService: TransactionService
+    public txService: TransactionService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -74,6 +79,18 @@ export class MainViewComponent implements OnInit {
     .subscribe(status => this.walletInitialized = status);
 
 
+    this._rpc.state.observe('unlocked_until')
+      .subscribe(status => {
+        this.unlocked_until = status;
+        if (this.unlocked_until > 0) {
+          this.checkTimeDiff(status);
+        } else {
+            if (this.unSubscribeTimer) {
+              this.unSubscribeTimer.unsubscribe();
+            }
+          }
+      });
+
     /* versions */
     // Obtains the current daemon version
     this._rpc.state.observe('subversion')
@@ -91,4 +108,37 @@ export class MainViewComponent implements OnInit {
     this._modals.open('syncing', {forceOpen: true});
   }
 
+  checkTimeDiff(time: number) {
+    const currentUtcTimeStamp = Math.floor((new Date()).getTime() / 1000);
+    const diff = Math.floor(time - currentUtcTimeStamp);
+    const minutes = Math.floor((diff % (60 * 60)) / 60);
+    const sec = Math.ceil((diff % (60 * 60) % 60));
+    this.startTimer(minutes, sec);
+  }
+
+  startTimer(min: number, sec: number): void {
+    sec = this.checkSecond(sec);
+    if (sec === 59) {
+      min = min - 1;
+    }
+    if (min >= 0 && sec >= 0) {
+      this.time = min + ':' + ('0' + sec).slice(-2);
+      this.unSubscribeTimer = Observable.timer(1000).
+        subscribe(() => this.startTimer(min, sec));
+    } else {
+      this.unSubscribeTimer.unsubscribe();
+    }
+  }
+
+  checkSecond(sec: number): number {
+    sec = sec > 0 ? (sec - 1) : 59;
+    return sec;
+  }
+
+  /**
+  // Sample code for open modal box
+  openDemonConnectionModal() {
+    const dialogRef = this.dialog.open(DaemonConnectionComponent);
+    dialogRef.componentInstance.text = "Test";
+  }*/
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnChanges } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
@@ -19,7 +19,7 @@ import { SignatureAddressModalComponent } from '../signature-address-modal/signa
   templateUrl: './address-table.component.html',
   styleUrls: ['./address-table.component.scss']
 })
-export class AddressTableComponent implements OnInit {
+export class AddressTableComponent implements OnInit, OnChanges {
 
   // Determines what fields are displayed in the Transaction Table.
   // header and utils
@@ -41,7 +41,8 @@ export class AddressTableComponent implements OnInit {
 
   // Search query
   @Input() query: string;
-
+  @Input() filter: RegExp;
+  @ViewChild('paginator') paginator: any;
   // Data storage
   private addresses: Address[] = [];
   private _subAddresses: Subscription;
@@ -67,11 +68,15 @@ export class AddressTableComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._subAddresses = this._addressService.getAddresses()
       .subscribe(
         addresses => this.addresses = addresses,
-        error => console.log('addresstable-component subscription error:' + error));
+        error => this.log.e('addresstable-component subscription error', error));
+  }
+
+  ngOnChanges(): void {
+    this.resetPagination();
   }
 
   /** Returns the addresses to display in the UI with regards to both pagination and search/query. */
@@ -79,7 +84,15 @@ export class AddressTableComponent implements OnInit {
     if (this.inSearchMode()) { // in search mode
       return this.paginateArray(this.getSearchSubset());
     } else { // not in seach mode
-      return this.paginateArray(this.addresses);
+      return this.paginateArray(this.getFilterSubset());
+    }
+  }
+
+  // Reset pagination
+  resetPagination(): void {
+    if (this.paginator) {
+      this.currentPage = 1;
+      this.paginator.resetPagination(0);
     }
   }
 
@@ -89,12 +102,17 @@ export class AddressTableComponent implements OnInit {
 
   /** Returns the addresses that match a search/query. */
   private getSearchSubset(): Address[] {
-    return this.addresses.filter(el => {
-        return (
-          el.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-          || el.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
-        );
+    return this.getFilterSubset().filter(address => {
+        return (address.label.toLowerCase().indexOf(this.query.toLowerCase()) !== -1
+           || address.address.toLowerCase().indexOf(this.query.toLowerCase()) !== -1);
       });
+  }
+
+  /** Returns the addresses that match a search/query. */
+  private getFilterSubset(): Address[] {
+    return (this.filter ?
+      this.addresses.filter(address => this.filter.test(address.address)) :
+      this.addresses);
   }
 
   /** Returns the addresses to display in the UI with regards to the pagination parameters */
@@ -110,7 +128,7 @@ export class AddressTableComponent implements OnInit {
     if (this.inSearchMode()) {
       return this.getSearchSubset().length;
     } else {
-      return this.addresses.length;
+      return this.getFilterSubset().length;
     }
   }
 
@@ -120,7 +138,7 @@ export class AddressTableComponent implements OnInit {
 
   /** Delete address */
 
-  public deleteAddress(label: string, address: string) {
+  public deleteAddress(label: string, address: string): void {
     const dialogRef = this.dialog.open(DeleteConfirmationModalComponent);
     dialogRef.componentInstance.dialogContent = `${label}: ${address}`;
     dialogRef.componentInstance.onDelete.subscribe(() => {
@@ -136,28 +154,28 @@ export class AddressTableComponent implements OnInit {
     });
   }
 
-  private deleteAddressCallBack(address: string) {
+  private deleteAddressCallBack(address: string): void {
     this._rpc.call('manageaddressbook', ['del', address])
       .subscribe(response => {
           this.rpc_deleteAddress_success(response);
         },
-        error => console.log(`${error.error.message}`));
+        error => this.log.e(error.error.message, error));
   }
 
-  private rpc_deleteAddress_success(json: Object) {
+  private rpc_deleteAddress_success(json: Object): void {
     this.flashNotification.open(`Succesfully deleted ${json['address']}`);
     // this._rpc.specialPoll();
     this._addressService.updateAddressList();
   }
 
   /** Edit label address */
-  editLabel(address: string) {
+  editLabel(address: string): void {
     this.log.d(`editLabel, address: ${address}`);
     this.editLabelEmitter.emit(address);
   }
 
   /** Open QR Code Modal */
-  openQrCodeModal(address: Object) {
+  openQrCodeModal(address: Object): void {
     const dialogRef = this.dialog.open(QrCodeModalComponent);
     dialogRef.componentInstance.singleAddress = address;
     this.log.d(`qrcode, address: ${JSON.stringify(address)}`);
@@ -167,7 +185,7 @@ export class AddressTableComponent implements OnInit {
     return  address.match(/.{1,4}/g);
   }
 
-  pageChanged(event: any) {
+  pageChanged(event: any): void {
     if (event.pageIndex !== undefined) {
       this.addressDisplayAmount = event.pageSize;
       this.currentPage = event.pageIndex + 1;
@@ -175,7 +193,7 @@ export class AddressTableComponent implements OnInit {
     }
   }
 
-  copyToClipBoard() {
+  copyToClipBoard(): void {
     this.flashNotification.open('Address copied to clipboard.', '');
   }
 
@@ -184,5 +202,5 @@ export class AddressTableComponent implements OnInit {
     dialogRef.componentInstance.formData.address = address;
     dialogRef.componentInstance.type = 'verify';
   }
-}
 
+}

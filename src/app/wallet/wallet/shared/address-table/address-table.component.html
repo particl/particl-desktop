@@ -66,11 +66,13 @@
             <!-- ICO: delete -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
               <mat-icon color="warn" fontSet="partIcon" fontIcon="part-circle-remove"
+                        class="cursor-pointer"
                        (click)="deleteAddress(address.label, address.address)" matTooltip="Delete address"></mat-icon>
             </span>
             <!-- display QR code -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center" *ngIf="!displayQrMenu" class="qrcode-menu">
-              <mat-icon fontSet="partIcon" fontIcon="part-qr" matTooltip="Show QR code"
+              <mat-icon fontSet="partIcon" fontIcon="part-qr"
+                        class="cursor-pointer" matTooltip="Show QR code"
                        (click)="openQrCodeModal(address)"></mat-icon>
             </span>
           </div>
@@ -84,6 +86,7 @@
 
 <app-paginator
   *ngIf="displayPagination && getSinglePage().length>0"
+  #paginator
   [length]="getTotalAddressCount()"
   [pageSize]="getMaxAddressesPerPage()"
   [pageSizeOptions]="PAGE_SIZE_OPTIONS"

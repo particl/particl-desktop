@@ -98,7 +98,7 @@ export class ModalsService {
   }
 
   /** Close the modal */
-  close() {
+  close(): void {
     const isOpen = this.isOpen;
 
     if (!!this.modal && !this.wasManuallyClosed(this.modal.name)) {
@@ -116,12 +116,12 @@ export class ModalsService {
     * Check if a modal was manually closed
     * @param {any} modal  The modal to check
     */
-  wasManuallyClosed(modal: any) {
+  wasManuallyClosed(modal: any): boolean {
     return this.manuallyClosed.includes(modal);
   }
 
   /** Check if the modal is already open */
-  wasAlreadyOpen(modalName: string) {
+  wasAlreadyOpen(modalName: string): boolean {
     return (this.modal === this.messages[modalName]);
   }
 
@@ -135,7 +135,7 @@ export class ModalsService {
     * Open the Sync modal if it needs to be opened
     * @param {any} status  Blockchain status
     */
-  openSyncModal(status: any) {
+  openSyncModal(status: any): void {
     // Open syncing Modal
     if (!this.isOpen && !this.wasManuallyClosed(this.messages['syncing'].name)
       && (status.networkBH <= 0
@@ -148,7 +148,7 @@ export class ModalsService {
   /**
     * Open the Createwallet modal if wallet is not initialized
     */
-  openInitialCreateWallet() {
+  openInitialCreateWallet(): void {
     this._rpc.state.observe('ui:walletInitialized')
       .subscribe(
         state => {

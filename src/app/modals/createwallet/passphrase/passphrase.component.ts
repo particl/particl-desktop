@@ -1,9 +1,15 @@
-import { Component, Input,  OnChanges, Output, EventEmitter } from '@angular/core';
-import { ClipboardModule } from 'ngx-clipboard';
+import {
+  Component,
+  Input,
+  OnChanges,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+import { Log } from 'ng2-logger';
 
 import { PassphraseService } from './passphrase.service';
-
-import { Log } from 'ng2-logger';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 const MAX_WORDS = 24;
@@ -20,6 +26,7 @@ export class PassphraseComponent implements  OnChanges {
   focused: number = 0;
   public editable: number[] = [];
 
+  @ViewChild('phrase') phrase: ElementRef;
   @Input() words: string[] = Array(MAX_WORDS).fill('');
 
   @Input() readOnly: boolean = false;
@@ -41,7 +48,7 @@ export class PassphraseComponent implements  OnChanges {
     this.editable = [];
   }
 
-  checkFocus(event: KeyboardEvent, index: number) {
+  checkFocus(event: KeyboardEvent, index: number): void {
     if (event.key === ' ') {
       this.focused = index + 1;
       while (this.partialDisable && this.validateWord(this.words[this.focused], this.focused)) {
@@ -50,7 +57,7 @@ export class PassphraseComponent implements  OnChanges {
     }
   }
 
-  onBlur(index: number) {
+  onBlur(index: number): void {
     this.words[index] = this.words[index].trim();
   }
 
@@ -78,7 +85,7 @@ export class PassphraseComponent implements  OnChanges {
     return this._passphraseService.validateWord(word);
   }
 
-  canEdit(index: number) {
+  canEdit(index: number): boolean {
     return (this.editable.indexOf(index) === -1);
   }
 
@@ -88,11 +95,16 @@ export class PassphraseComponent implements  OnChanges {
       .join(' '));
   }
 
-  clear() {
+  clear(): void {
     this.words = Array(MAX_WORDS).fill('');
   }
 
   copyToClipBoard(): void {
     this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.');
+  }
+
+  pasteContent() {
+    this.phrase.nativeElement.focus();
+    document.execCommand('Paste');
   }
 }

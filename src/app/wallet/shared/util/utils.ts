@@ -147,9 +147,9 @@ export class Duration {
   }
 
 export class AddressHelper {
-  addressPublicRegex: RegExp = /^[pPrR][a-km-zA-HJ-NP-Z1-9]{25,35}$/;
+  addressPublicRegex: RegExp = /^[pPrR25][a-km-zA-HJ-NP-Z1-9]{25,52}$/;
   addressPrivateRegex: RegExp = /^[Tt][a-km-zA-HJ-NP-Z1-9]{60,}$/
-  addressBothRegex: RegExp = /^[pPrRtT][a-km-zA-HJ-NP-Z1-9]{25,}$/;
+  addressBothRegex: RegExp = /^[pPrR25tT][a-km-zA-HJ-NP-Z1-9]{25,}$/;
 
   testAddress(address: string, type?: string): boolean {
     return this[(type ? type === 'public'
@@ -164,5 +164,28 @@ export class AddressHelper {
   addressFromPaste(event: any): string {
     return ['input', 'textarea'].includes(event.target.tagName.toLowerCase()) ?
       '' : this.getAddress(event.clipboardData.getData('text'));
+  }
+}
+
+export class DateFormatter {
+
+  constructor(private date: Date) {
+  }
+
+  public dateFormatter() {
+    return (
+      (this.date.getDate() < 10 ? '0' + this.date.getDate() : this.date.getDate()) + '-' +
+      ((this.date.getMonth() + 1) < 10 ? '0' + (this.date.getMonth() + 1) : (this.date.getMonth() + 1)) + '-' +
+      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear()) + ' ' +
+      this.hourSecFormatter()
+    )
+  }
+
+  public hourSecFormatter() {
+      return (
+        (this.date.getHours() < 10 ? '0' + this.date.getHours() : this.date.getHours()) + ':' +
+        (this.date.getMinutes() < 10 ? '0' + this.date.getMinutes() : this.date.getMinutes()) + ':' +
+        (this.date.getSeconds() < 10 ? '0' + this.date.getSeconds() : this.date.getSeconds())
+      )
   }
 }

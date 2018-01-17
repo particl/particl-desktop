@@ -3,7 +3,8 @@
 
     <div class="logo-area">
       <div class="logo">
-        <img src="./assets/particl-logo{{txService.testnet ? '-testnet' : ''}}.svg" alt="Particl">
+        <img src="./assets/particl-logo{{txService.testnet ? '-testnet' : ''}}.svg"
+          alt="Particl">
       </div>
     </div>
 
@@ -11,7 +12,8 @@
 
     <mat-content class="sidebar-section">
       <mat-list class="sidebar-item-group">
-        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/overview">
+        <a class="sidebar-item-link"
+          routerLinkActive="active" routerLink="/wallet/overview">
           <mat-list-item class="sidebar-item">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
             <span class="text">Overview</span>
@@ -20,37 +22,45 @@
       </mat-list><!-- .sidebar-item-group -->
     </mat-content><!-- .sidebar-section -->
 
-    <mat-content class="sidebar-section" *ngIf="true">
+    <mat-content class="sidebar-section" *ngIf="walletInitialized">
       <mat-accordion [multi]="'multi'">
         <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
           <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
           <mat-content>
             <mat-list class="sidebar-item-group">
 
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/receive'">
+              <a class="sidebar-item-link"
+                routerLinkActive="active" [routerLink]="'/wallet/receive'">
                 <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-receive"></mat-icon>
+                  <mat-icon class="icon" fontSet="partIcon"
+                    fontIcon="part-receive"></mat-icon>
                   <span class="text">Receive</span>
                 </mat-list-item>
               </a>
 
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/send'">
+              <a class="sidebar-item-link"
+                routerLinkActive="active" [routerLink]="'/wallet/send'">
                 <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-send"></mat-icon>
+                  <mat-icon class="icon" fontSet="partIcon"
+                    fontIcon="part-send"></mat-icon>
                   <span class="text">Send</span>
                 </mat-list-item>
               </a>
 
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/history'">
+              <a class="sidebar-item-link"
+                routerLinkActive="active" [routerLink]="'/wallet/history'">
                 <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-date"></mat-icon>
+                  <mat-icon class="icon"
+                    fontSet="partIcon" fontIcon="part-date"></mat-icon>
                   <span class="text">History</span>
                 </mat-list-item>
               </a>
 
-              <a class="sidebar-item-link" routerLinkActive="active" [routerLink]="'/wallet/address-book'">
+              <a class="sidebar-item-link"
+                routerLinkActive="active" [routerLink]="'/wallet/address-book'">
                 <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-people"></mat-icon>
+                  <mat-icon class="icon" fontSet="partIcon"
+                    fontIcon="part-people"></mat-icon>
                   <span class="text">Address Book</span>
                 </mat-list-item>
               </a>
@@ -68,9 +78,12 @@
           <mat-content>
             <mat-list class="sidebar-item-group">
 
-              <a class="sidebar-item-link" routerLinkActive="active" href="javascript:void(0)" (click)="createWallet()" >
+              <a class="sidebar-item-link"
+                routerLinkActive="active" href="javascript:void(0)"
+                (click)="createWallet()">
                 <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account" ></mat-icon>
+                  <mat-icon class="icon" fontSet="partIcon"
+                    fontIcon="part-add-account"></mat-icon>
                   <span class="text">Add Account</span>
                 </mat-list-item>
               </a>
@@ -82,40 +95,63 @@
     </mat-content><!-- .sidebar-section -->
 
 
-    <!--mat-content class="sidebar-section">
+    <!-- <mat-content class="sidebar-section">
       <mat-list class="sidebar-item-group">
-        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/settings">
+        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/settings">
           <mat-list-item class="sidebar-item">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
             <span class="text">Settings</span>
           </mat-list-item>
         </a>
       </mat-list>
-    </mat-content--><!-- .sidebar-section -->
-
+    </mat-content> --><!-- .sidebar-section -->
 
     <footer class="pin-to-bottom">
 
       <mat-content *ngIf="!daemonRunning || !walletInitialized">
-        <mat-list class="error sidebar-item-group">
+        <mat-list class="notification error sidebar-item-group">
+
           <mat-list-item class="sidebar-item" *ngIf="!daemonRunning">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-            <span class="text">Connection Refused, Daemon is not connected</span>
+            <span class="text">Connecting to daemon...</span>
           </mat-list-item>
-          <mat-list-item class="sidebar-item" *ngIf="daemonError && !daemonError.electron">
+
+          <div *ngIf="daemonError !== undefined && daemonError.error">
+            <mat-list-item class="sidebar-item" *ngIf="daemonError.error.status === 502">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+              <span class="text">Waiting for daemon initialisation...</span>
+            </mat-list-item>
+            <mat-list-item class="sidebar-item" *ngIf="daemonError.error.status === 401">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+              <span class="text">RPC connection failed: check credentials</span>
+            </mat-list-item>
+          </div>
+
+          <mat-list-item class="sidebar-item"
+            *ngIf="daemonError && !daemonError.electron">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Warning: You are using Particl through a browser.</span>
           </mat-list-item>
-          <mat-list-item class="sidebar-item" *ngIf="daemonError && daemonError.error">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-            <span *ngIf="daemonError.error.status === 0" class="text">Couldn't connect to Particl Daemon: connection refused</span>
-            <span *ngIf="daemonError.error.status !== 0" class="text">Error {{ daemonError.error.status }}: {{ daemonError.error.message }}</span>
-          </mat-list-item>
-          <mat-list-item class="sidebar-item" *ngIf="!walletInitialized">
+
+          <mat-list-item class="sidebar-item"
+            *ngIf="walletInitialized === false && daemonRunning">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Please create wallet first to access other tabs</span>
           </mat-list-item>
+
         </mat-list><!-- .error.sidebar-item-group -->
+      </mat-content>
+
+      <mat-content *ngIf="unlocked_until > 0">
+        <mat-list class="notification info sidebar-item-group">
+          <mat-list-item class="sidebar-item">
+            <mat-icon class="icon" fontSet="partIcon"
+              fontIcon="part-lock-open"></mat-icon>
+            <span class="text"
+              matTooltip="As a security measure, wallet auto-locks after 5 mins"
+              matTooltipPosition="above">Wallet unlocked for {{ time }}</span>
+          </mat-list-item>
+        </mat-list>
       </mat-content>
 
       <!-- Versions | TODO: move to separate component? -->
@@ -136,19 +172,21 @@
 
     </footer><!-- .pin-to-bottom -->
 
-
   </mat-sidenav><!-- .sidebar -->
 
-
-
   <!-- Page header -->
+  <!-- info/warning notification -->
+  <app-release-notification></app-release-notification>
+
   <mat-toolbar class="header-main">
-    <button fxLayout="row" fxLayoutAlign="center end" mat-button (click)="sidenav.toggle()" fxHide.gt-sm>
+    <button fxLayout="row" fxLayoutAlign="center end" mat-button
+      (click)="sidenav.toggle()" fxHide.gt-sm>
       <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
     </button>
     {{ title }}
     <div class="containerX">
-      <div fxLayout="row" fxFlex fxLayoutAlign="end center" fxcolor="accent" class="header-icons">
+      <div fxLayout="row" fxFlex fxLayoutAlign="end center" fxcolor="accent"
+        class="header-icons">
         <app-status></app-status>
       </div>
     </div>
@@ -157,7 +195,5 @@
   <div class="margin-left-right-50">
     <router-outlet></router-outlet>
   </div>
-
-
 
 </mat-sidenav-container>

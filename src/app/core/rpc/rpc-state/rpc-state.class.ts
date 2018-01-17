@@ -44,8 +44,12 @@ export class RpcStateClass {
 
   private walletLockedState() {
     this._rpc.state.observe('encryptionstatus')
-      .subscribe(status => this._rpc.state
-        .set('locked', ['Locked', 'Unlocked, staking only'].includes(status)));
+    .subscribe(status => {
+      this._rpc.state
+        .set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
+      this._rpc.state
+        .set('ui:coldstaking:stake', 'Unlocked, staking only' === status);
+    });
   }
 
   /*

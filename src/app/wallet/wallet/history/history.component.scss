@@ -1,118 +1,63 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
-.center-vertical {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
 
-$header-height: 60px;
+// ------ FILTER ------ //
 
-.header {
-  & {
-    border-bottom: 1px solid #EAEAEA;
-    height: $header-height;
-    color: #7A8693;
-    margin-bottom: 15px;
-    overflow-y: hidden;
-  }
-  ul {
-    & {
-      display: inline-block;
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      height: inherit;
-      text-transform: uppercase;
-      font-size: 12px;
-      font-weight: bold;
-      height: $header-height;
-      line-height: $header-height - 8px;
-    }
-    & > li {
-      @extend .center-vertical;
-      display: inline-block;
-      height: inherit;
-      padding: 0 10px;
-      border-top: 4px solid transparent;
-      border-bottom: 4px solid transparent;
-      cursor: pointer;
-    }
-    & > li:hover {
-      color: #000;
-    }
-    & > li.active {
-      color: #000;
-      border-bottom: 4px solid #41ECC2;
-    }
-  }
-  form {
-    & {
-      display: inline-block;
-      height: $header-height;
-    }
-    & > * {
-      @extend .center-vertical;
-      display: inline-block;
-    }
-    & > input {
-      & {
-        height: 60%;
-        background-color: transparent;
-        border: 0;
-        outline: none;
-        padding: 0 10px;
-        border-left: 1px solid #EAEAEA;
-      }
-      &::placeholder {
-        color: #7A8693;
-      }
-      &:focus {
-        outline: none;
-        border-left: 1px solid #41ECC2;
-      }
-    }
-    & > button {
-      & {
-        text-indent: 0;
-        height: 60%;
-        background-color: transparent;
-        border: 0;
-        outline: none;
-        font-size: 20px;
-        box-shadow: none;
-      }
-      &:hover, &:focus {
-        color: #000;
-      }
+.section {
+  .subtitle { // title
+    @extend %subtitle;
+    margin: 24px 0 14px;
+    &.first {
+      margin-top: 0;
     }
   }
 }
 
-table.transaction-table {
-  & {
-    margin: -20px 0;
-    border-collapse: separate;
-    border-spacing: 0 20px;
-    width: 100%;
-  }
-  td {
-    height: 80px;
-    padding: 20px;
-    background-color: #FFF;
-    border-bottom: 1px solid #EBEBEB;
-  }
-}
+.filter-card {
+  @extend %disable-select;
+  padding: 0;
+  margin-bottom: 16px;
 
-.transaction-list {
-  .transaction-item + .transaction-item {
-    margin-top: 20px;
-  }
-  .transaction-item {
-    & {
-      height: 80px;
-      background-color: #FFF;
-      border-bottom: 1px solid #EBEBEB;
+  // search & sorting
+  .search-sorting & {
+    padding: 10px 20px;
+    .filter-input {
+      width: 100%;
+    }
+    .icon-input {
+      .mat-icon {
+        top: 5px;
+        right: 2px;
+        font-size: 14px;
+      }
     }
   }
+
+  // selection list
+  .filter-list {
+    padding-top: 0;
+  }
+
+  // filter options
+  .filter-option {
+    /* Checkboxes:
+    .mat-list-item-content {
+      .mat-list-text {
+        padding: 0 16px 0 0 !important;
+      }
+    }*/
+  }
+
+  // radio buttons
+  .radio-group {
+    width: calc(100% - 32px);
+    padding: 8px 16px;
+    display: block;
+    .filter-option {
+      width: 100%;
+      margin: 5px 0;
+      font-family: $font;
+    }
+  }
+
 }

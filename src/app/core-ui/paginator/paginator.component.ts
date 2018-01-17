@@ -89,7 +89,8 @@ export class PaginatorComponent implements OnInit {
     }
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
-    // If the start index exceeds the list length, do not try and fix the end index to the end.
+    // If the start index exceeds the list length,
+    // do not try and fix the end index to the end.
     const endIndex = startIndex < length
       ? Math.min(startIndex + pageSize, length)
       : startIndex + pageSize;
@@ -100,15 +101,15 @@ export class PaginatorComponent implements OnInit {
    * Changes the page size so that the first item displayed on the page will still be
    * displayed using the new page size.
    *
-   * For example, if the page size is 10 and on the second page (items indexed 10-19) then
-   * switching so that the page size is 5 will set the third page as the current page so
-   * that the 10th item will still be displayed.
+   * For example, if the page size is 10 and on the second page (items indexed 10-19)
+   * then switching so that the page size is 5 will set the third page
+   * as the current page so that the 10th item will still be displayed.
    * @param {?} pageSize
    * @return {?}
    */
   _changePageSize(pageSize: number): void {
-    // Current page needs to be updated to reflect the new page size. Navigate to the page
-    // containing the previous page's first item.
+    // Current page needs to be updated to reflect the new page size.
+    // Navigate to the page containing the previous page's first item.
     const startIndex = this.pageIndex * this.pageSize;
     this.pageIndex = Math.floor(startIndex / pageSize) || 0;
     this.pageSize = pageSize;
@@ -121,5 +122,9 @@ export class PaginatorComponent implements OnInit {
       pageSize: this.pageSize,
       length: this.length
     });
+  }
+
+  resetPagination(pageIndex: number): void {
+    this.pageIndex = pageIndex
   }
 }

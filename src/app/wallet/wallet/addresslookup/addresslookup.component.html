@@ -7,11 +7,19 @@
   <form name="addressLookupfilter">
     <div fxLayout="row" fxLayoutGap="35px">
 
-      <mat-form-field fxFlex="1 1 100%" class="search-address">
-        <input matInput type="text" name="query" placeholder="Filter by label or address..." [(ngModel)]="query">
+      <mat-form-field fxFlex="1 1 100%" class="search-address icon-input">
+        <input matInput type="text" name="query" (ngModelChange)="resetPagination()"
+               placeholder="Filter by label or address..." [(ngModel)]="query">
+
+        <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
+                  fontIcon="part-clear-all"></mat-icon>
+
+        <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" matTooltip="Search">
+        </mat-icon>
       </mat-form-field>
 
-      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type uc-first" *ngIf="allowFilter">
+      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type uc-first"
+                  *ngIf="allowFilter" (ngModelChange)="resetPagination()">
         <mat-option *ngFor="let addressType of addressTypes" [value]="addressType">
           {{ addressType }}
         </mat-option>
@@ -45,6 +53,7 @@
   </mat-list>
 
   <app-paginator
+    #paginator
     [length]="getTotalCountForPagination()"
     [pageSize]="MAX_ADDRESSES_PER_PAGE"
     (page)="pageChanged($event)">

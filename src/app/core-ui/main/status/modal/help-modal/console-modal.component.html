@@ -1,0 +1,51 @@
+<div class="console-modal">
+  <!-- FIXME: make the close button work -->
+  <button class="small-close_button" (click)="close()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  </button>
+
+  <div mat-dialog-container>
+    <mat-tab-group>
+      <mat-tab label="Console">
+        <div #debug class="console-modal-form" (scroll)="onScroll()">
+
+          <div class="intro-text">
+            <p>
+              Welcome to the Particl Core RPC console.<br>
+              <!--Use up and down arrows to navigate history, and Ctrl-L to clear screen.-->
+              Type <code>help</code> for an overview of available commands.
+            </p>
+            <p class="warn-text">
+              <strong>WARNING:</strong> Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.
+            </p>
+          </div>
+
+          <div class="content-modal" [ngClass]="{'input': list.type === 1}" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start" *ngFor="let list of commandList">
+            <!--div fxFlex="0 0 25px" *ngIf="list.type === 1">
+              <mat-icon fontSet="partIcon" fontIcon="part-send" *ngIf="list.type === 1"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-receive" *ngIf="list.type === 2"></mat-icon>
+            </div-->
+            <div fxFlex="1 1 100%" class="command">
+              <pre class="text-format" *ngIf="isJson(list.text)">{{ list.text | json }}</pre>
+              <pre class="text-format" [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">{{ list.text }}</pre>
+            </div>
+            <div fxFlex="0 0 55px" class="time" *ngIf="list.type === 1">
+              {{ list.time }}
+            </div>
+          </div>
+        </div>
+
+        <div class="command-actions" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+          <mat-form-field fxFlex="1 1 100%" floatPlaceholder="never">
+            <input matInput [(ngModel)]="command" placeholder="Enter 'help' for an overview of available commands">
+          </mat-form-field>
+          <button mat-raised-button color="primary" [disabled]="!command" (click)="rpcCall()" fxFlex>
+            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            Enter
+          </button>
+        </div>
+
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

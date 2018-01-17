@@ -1,13 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
 
-import { CoreModule } from '../core/core.module';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-
 import { SharedModule } from './shared/shared.module';
-
-import { WalletModule, ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
+import { WalletModule } from './wallet/wallet.module';
 
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -37,7 +33,7 @@ import { routing } from './wallet.routing';
   exports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-  ],
+  ]
 })
 export class WalletViewsModule {
   constructor() {

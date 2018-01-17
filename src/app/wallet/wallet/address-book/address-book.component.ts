@@ -1,12 +1,9 @@
 import { Component, HostListener } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSelectChange } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { NewAddressModalComponent } from './modal/new-address-modal/new-address-modal.component';
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { AddressHelper } from '../../shared/util/utils';
-
-import { SendComponent } from '../send/send.component';
 
 @Component({
   selector: 'app-address-book',
@@ -16,11 +13,12 @@ import { SendComponent } from '../send/send.component';
 export class AddressBookComponent {
 
   log: any = Log.create('address-book.component');
+
   public query: string;
+  public filter: RegExp;
   private addressHelper: AddressHelper;
   constructor(
-    private dialog: MatDialog,
-    private flashNotificationService: SnackbarService) {
+    private dialog: MatDialog) {
     this.addressHelper = new AddressHelper();
   }
 
@@ -44,6 +42,18 @@ export class AddressBookComponent {
       }
       this.editLabel(address);
       this.dialog.openDialogs[0].componentInstance.isEdit = false;
+    }
+  }
+
+  filterType(event: MatSelectChange): void {
+    switch (event && event.value) {
+      case 'public':
+        this.filter = /^[pPrR25][a-km-zA-HJ-NP-Z1-9]{25,52}$/;
+        break;
+      case 'private':
+        this.filter = /^[Tt][a-km-zA-HJ-NP-Z1-9]{60,}$/;
+        break;
+      default: this.filter = undefined;
     }
   }
 }

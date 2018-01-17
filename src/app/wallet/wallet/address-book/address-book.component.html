@@ -1,23 +1,38 @@
 <div class="container-block address-book disable-select">
   <app-header>
-    <div fxLayout="row">
-      <div fxFlex="75" fxFlex.lt-md="60" fxFlex.lt-sm="100">
+    <div fxLayout="row" fxLayoutGap="30px">
+
+      <div fxFlex="1 1 100%" fxFlex.lt-md="60" fxFlex.lt-sm="100">
         <button mat-button color="primary" (click)="openNewAddress()" class="add-address">
           <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
           <span>Save Address</span>
         </button>
       </div>
-      <mat-form-field class="icon-input search-address" fxFlex="25" fxFlex.lt-md="40" fxFlex.lt-sm="100">
+
+      <!-- FIXME: needs connecting to pagination (so that number of results/pages gets updated on selecting some type filter) -->
+      <mat-select fxFlex="0 0 90px" class="type-filter" name="type" (change)="filterType($event)" value="">
+        <mat-option value="">All Types</mat-option>
+        <mat-option value="public">Public</mat-option>
+        <mat-option value="private">Private</mat-option>
+      </mat-select>
+
+      <mat-form-field class="icon-input search-address" fxFlex="0 0 250px">
         <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}"
-               placeholder="Search Addresses">
-        <mat-icon fontSet="partIcon" fontIcon="part-search" fxHide.lt-md matTooltip="Search For Address"
+               placeholder="Search Addresses" (keyup.escape)="query = ''">
+
+        <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
+                  fontIcon="part-clear-all"></mat-icon>
+
+        <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" fxHide.lt-md matTooltip="Search For Address"
                   matTooltipPosition="before"></mat-icon>
       </mat-form-field>
+
     </div>
   </app-header>
   <div class="container-fluid">
     <address-table
       [query]="query"
+      [filter]="filter"
       [displayHeader]="false"
       [displayInternalHeader]="true"
       [displayPagination]="true"
