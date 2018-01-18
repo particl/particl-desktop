@@ -31,7 +31,7 @@ export class MainViewComponent implements OnInit {
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
-  daemonError: string;
+  daemonError: any;
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
@@ -72,6 +72,7 @@ export class MainViewComponent implements OnInit {
                 error => {
                   this.daemonRunning = ![0, 502].includes(error.status);
                   this.daemonError = error;
+                  this.log.d(error);
                 });
 
     // Updates the error box in the sidenav if wallet is not initialized.
