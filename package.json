@@ -53,7 +53,7 @@
       "resources/**"
     ],
     "mac": {
-      "artifactName": "${name}-${version}-${os}-${arch}",
+      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
       "category": "public.app-category.wallet",
       "target": [
         "dmg",
@@ -65,7 +65,7 @@
       "oneClick": false
     },
     "win": {
-      "artifactName": "${name}-${version}-${os}-${arch}",
+      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
       "target": [
         {
           "target": "nsis",
@@ -85,7 +85,7 @@
     },
     "linux": {
       "maintainer": "particl contributors <hello@particl.io>",
-      "artifactName": "${name}-${version}-${os}-${arch}",
+      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
       "target": [
         {
           "target": "deb",
