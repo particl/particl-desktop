@@ -51,7 +51,25 @@
     </mat-progress-bar>
     <p class="widget-help" *ngIf="coldStakingEnabled || stakingTowardsCold">
       {{coldstakeProgress}}% of your balance is now safely staking on your staking node.
-      Please keep this wallet online until the cold staking activation process is complete.
+      The activation process will continue only when your wallet is online and unlocked for staking.
+      You can close your wallet if you need to, but it is adviced to keep it online until it reaches 100%.
+    </p>
+    <!-- TODO: component ? -->
+    <p class="buttons">
+      <button mat-button class="small" color="primary"
+        matTooltip="Fast-forward to 100%"
+        (click)="zap()"
+        *ngIf="hotstaking.txs.length > 0">
+        Zap
+        <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
+      </button>
+      <button mat-button class="small" color="warn"
+        matTooltip="Disable Cold Staking"
+        (click)="revert()"
+        *ngIf="coldstaking.txs.length > 0">
+        Disable
+        <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
+      </button>
     </p>
   </mat-card>
 
@@ -73,6 +91,23 @@
       The cold staking activation is paused. Unlock wallet for staking to continue the process.
       Whilst paused, {{coldstakeProgress}}% of your balance that has already converted
       will continue to stake on your staking node.
+    </p>
+    <!-- TODO: component ? -->
+    <p class="buttons">
+      <button mat-button class="small" color="primary"
+        matTooltip="Fast-forward to 100%"
+        (click)="zap()"
+        *ngIf="hotstaking.txs.length > 0">
+        Zap
+        <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
+      </button>
+      <button mat-button class="small" color="warn"
+        matTooltip="Disable Cold Staking"
+        (click)="revert()"
+        *ngIf="coldstaking.txs.length > 0">
+        Disable
+        <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
+      </button>
     </p>
   </mat-card>
 
