@@ -85,12 +85,12 @@ export class RpcStateClass {
         return;
       }
 
-      this._rpc.call('extkey', ['list']).subscribe(response => {
+      this._rpc.call('getwalletinfo').subscribe(response => {
         // check if account is active
-        if (response.result === 'No keys to list.') {
-          this._rpc.state.set('ui:walletInitialized', false);
-        } else {
+        if (!!response.hdmasterkey) {
           this._rpc.state.set('ui:walletInitialized', true);
+        } else {
+          this._rpc.state.set('ui:walletInitialized', false);
         }
       }, error => this.log.er('RPC Call returned an error', error));
     });

@@ -59,13 +59,13 @@ export class StatusComponent implements OnInit {
     switch (this.encryptionStatus) {
       case 'Unencrypted':  // TODO: icon?
       case 'Unlocked':
-        return '_off';
+        return '-off';
       case 'Unlocked, staking only':
-        return '_stake';
+        return '-stake';
       case 'Locked':
         return '';
       default:
-        return '_off'; // TODO: icon?
+        return '-off'; // TODO: icon?
     }
   }
 

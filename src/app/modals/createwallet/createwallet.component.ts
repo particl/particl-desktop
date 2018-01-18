@@ -31,8 +31,8 @@ export class CreateWalletComponent {
 
   @ViewChild('nameField') nameField: ElementRef;
 
-  password: string;
-  passwordVerify: string;
+  password: string = '';
+  passwordVerify: string = '';
   words: string[];
   toggleShowPass: boolean = false;
 

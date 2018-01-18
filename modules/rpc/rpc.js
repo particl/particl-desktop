@@ -100,7 +100,7 @@ exports.call = function(method, params, callback) {
       case 'ECONNREFUSED':
         callback({
           status: 502,
-          message: 'Connection Refused',
+          message: 'Daemon not connected, retrying connection',
           _error: error
         });
         break;
