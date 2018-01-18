@@ -14,7 +14,7 @@ This repository is the user interface that works in combination with our [`parti
 [![Download the packaged wallet for Mac, Windows and Linux](download-button.png)](https://github.com/particl/partgui/releases)
 
 # Contribute
-
+[![Snyk](https://snyk.io/test/github/particl/partgui/badge.svg)](https://snyk.io/test/github/particl/partgui)
 [![Build Status](https://travis-ci.org/particl/partgui.svg?branch=master)](https://travis-ci.org/particl/partgui)
 [![Coverage Status](https://coveralls.io/repos/github/particl/partgui/badge.svg?branch=master)](https://coveralls.io/github/particl/partgui?branch=master)
 [![Code Climate](https://codeclimate.com/github/particl/partgui/badges/gpa.svg)](https://codeclimate.com/github/particl/partgui)
