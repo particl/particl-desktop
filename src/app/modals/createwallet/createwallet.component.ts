@@ -36,7 +36,8 @@ export class CreateWalletComponent {
   words: string[];
   toggleShowPass: boolean = false;
 
-  @ViewChild('passphraseComponent') passphraseComponent: ComponentRef<PassphraseComponent>;
+  @ViewChild('passphraseComponent')
+    passphraseComponent: ComponentRef<PassphraseComponent>;
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
   @ViewChild('passwordElementVerify') passwordElementVerify: PasswordComponent;
   @ViewChild('passwordRestoreElement') passwordRestoreElement: PasswordComponent;
@@ -127,7 +128,9 @@ export class CreateWalletComponent {
         this.passwordVerify = undefined;
         break;
       case 3:
-        this._passphraseService.generateMnemonic(this.mnemonicCallback.bind(this), this.password);
+        this._passphraseService.generateMnemonic(
+          this.mnemonicCallback.bind(this), this.password
+        );
         this.flashNotification.open(
           'Please remember to write down your recovery passphrase',
           'warning');
@@ -228,8 +231,9 @@ export class CreateWalletComponent {
   passwordFromEmitter(pass: IPassword, verify?: boolean) {
     this[verify ? 'passwordVerify' : 'password'] = pass.password;
     this.log.d(`passwordFromEmitter: ${this.password} ${verify}`);
-    if (!!this[verify ? 'password' : 'passwordVerify'] ||
-      this.password === '' && this.passwordVerify === '') {
+    if (!!this[verify ? 'password' : 'passwordVerify']
+      || this.password === '' && this.passwordVerify === ''
+      || this.password === undefined && this.passwordVerify === undefined) {
       this.verifyPasswords();
     }
   }
