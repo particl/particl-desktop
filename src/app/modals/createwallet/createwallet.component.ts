@@ -229,7 +229,7 @@ export class CreateWalletComponent {
     this[verify ? 'passwordVerify' : 'password'] = pass.password;
     this.log.d(`passwordFromEmitter: ${this.password} ${verify}`);
     if (!!this[verify ? 'password' : 'passwordVerify'] ||
-      this.password === '' && this.passwordVerify === '') {
+      this.password === '' && this.passwordVerify === '' || this.password === undefined && this.passwordVerify === undefined) {
       this.verifyPasswords();
     }
   }
