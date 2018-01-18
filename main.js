@@ -32,6 +32,9 @@ let openDevTools = false;
 if (process.argv.includes('-opendevtools'))
   openDevTools = true;
 
+if (app.getVersion().includes('RC'))
+  process.argv.push(...['-testnet', '-printtoconsole']);
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
