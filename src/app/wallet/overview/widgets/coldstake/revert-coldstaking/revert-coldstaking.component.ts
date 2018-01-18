@@ -55,7 +55,7 @@ export class RevertColdstakingComponent implements OnInit {
 
                 sentTXs++;
                 totalFee += res.fee;
-                this.log.d(`revert ${sentTXs} fees`, tx);
+                this.log.d(`revert ${sentTXs} fees`, res);
 
                 if (sentTXs === this.utxos.txs.length) {
                   this.fee = totalFee;
@@ -88,6 +88,7 @@ export class RevertColdstakingComponent implements OnInit {
       }], 'revert coldstaking', '', 4, 64, false, JSON.stringify({
         inputs: tx.inputs
       })]).subscribe(res => {
+
         this.log.d('revert response', res);
         amount += tx.amount;
 

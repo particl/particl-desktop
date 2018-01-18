@@ -73,6 +73,8 @@ export class ColdstakeComponent {
 
     this._rpc.call('listunspent').subscribe(unspent => {
 
+      this.log.d('listunspent', unspent);
+
       this.hotstaking = {
         txs: [],
         amount: 0

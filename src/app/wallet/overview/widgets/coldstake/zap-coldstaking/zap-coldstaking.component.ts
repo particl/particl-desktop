@@ -92,6 +92,8 @@ export class ZapColdstakingComponent {
 
   zap() {
 
+    this.log.d('zap tx', this.utxos.amount, this.script, this.utxos.txs);
+
     this._rpc.call('sendtypeto', ['part', 'part', [{
       subfee: true,
       address: 'script',
