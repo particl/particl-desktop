@@ -66,7 +66,7 @@ export class RpcStateClass {
           // set state for coldstaking
           response => this._rpc.state.set('ui:coldstaking',
             response.changeaddress === 'default'
-              ? false
+              ? undefined
               : !!response.changeaddress.coldstakingaddress
           ),
           error => this.log.er('walletsettings changeaddress', error)
