@@ -333,8 +333,8 @@
           <hr class="divider">
 
           <div class="item">
-            <h4 class="option">Rows per page</h4>
-            <p class="desc">Select number of rows per page</p>
+            <h4 class="option">Items per page</h4>
+            <p class="desc">Select number of items per page</p>
             <!-- FIXME: needs implementation -->
             <mat-form-field>
               <mat-select [(ngModel)]="settings.display.rows">
@@ -344,6 +344,15 @@
                 <mat-option [value]="500">500</mat-option>
               </mat-select>
             </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.XXXXXXXXXXX">
+              <h4 class="option">Advanced options by default</h4>
+              <p class="desc">Always display advanced options (like Coin control and narrations)</p>
+            </mat-checkbox>
           </div>
 
         </div>
