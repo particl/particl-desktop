@@ -65,6 +65,10 @@ export class ColdstakeComponent implements OnInit {
   }
 
   checkStatus(): boolean {
-    return ['Unlocked', 'Unlocked, staking only'].includes(this.encryptionStatus);
+    return [
+      'Unlocked',
+      'Unlocked, staking only',
+      'Unencrypted'
+    ].includes(this.encryptionStatus);
   }
 }
