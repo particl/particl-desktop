@@ -80,11 +80,6 @@ export class RpcStateClass {
     this._rpc.state.observe('encryptionstatus').take(1).subscribe(status => {
       const locked = this._rpc.state.get('locked');
 
-      if (locked) {
-        this._rpc.state.set('ui:walletInitialized', true);
-        return;
-      }
-
       this._rpc.call('getwalletinfo').subscribe(response => {
         // check if account is active
         if (!!response.hdmasterkeyid) {
