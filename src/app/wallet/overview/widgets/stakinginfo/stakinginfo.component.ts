@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { StateService } from '../../../../core/core.module';
@@ -9,11 +9,12 @@ import { Amount, Duration } from '../../../shared/util/utils';
   templateUrl: './stakinginfo.component.html',
   styleUrls: ['./stakinginfo.component.scss']
 })
-export class StakinginfoComponent {
+export class StakinginfoComponent implements OnDestroy {
 
 
   /*  General   */
-  private log: any = Log.create('send.component');
+  private log: any = Log.create('stakinginfo.component' + Math.floor((Math.random() * 1000) + 1));
+  private destroyed: boolean = false;
 
 
   /*  UI   */
@@ -34,6 +35,7 @@ export class StakinginfoComponent {
 
     this.log.d(`constructor, started`);
     this.state.observe('percentyearreward')
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting curStakeReward ${success}`);
@@ -43,15 +45,18 @@ export class StakinginfoComponent {
       error => this.log.er('Constructor, percentyearreward error:' + error));
 
     this.state.observe('weight')
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting weight ${success}`);
         this.weight = success;
         this.calculateDynamicStakingReward();
       },
-      error => this.log.er('Constructor, weight error:' + error));
+      error => this.log.er('Constructor, weight error:' + error),
+      () => this.log.d("state observe weight completed!"));
 
     this.state.observe('netstakeweight')
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting netstakeweight ${success}`);
@@ -60,6 +65,7 @@ export class StakinginfoComponent {
       error => this.log.er('Constructor, netstakeweight error:' + error));
 
     this.state.observe('moneysupply')
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting moneysupply ${success}`);
@@ -69,6 +75,7 @@ export class StakinginfoComponent {
       error => this.log.er('Constructor, moneysupply error:' + error));
 
     this.state.observe('expectedtime')
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting expectedtime ${success}`);
@@ -83,6 +90,10 @@ export class StakinginfoComponent {
     this.dynamicStakingReward = new Amount(this.curStakeReward.getAmount() * (this.moneysupply / (this.netstakeweight / 10000000)), 2);
 
     this.log.d(`calculateDynamicStakingReward, dynamicStakingReward = ${this.dynamicStakingReward}`);
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
 }
