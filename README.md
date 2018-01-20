@@ -1,4 +1,4 @@
-# Particl Wallet - UI
+# particl-desktop - UI
 
 ![UI Preview](preview.gif)
 
