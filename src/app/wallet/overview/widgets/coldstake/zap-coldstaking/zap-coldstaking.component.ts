@@ -57,8 +57,7 @@ export class ZapColdstakingComponent {
             if (utxo.coldstaking_address // found a cold staking utxo
               || !utxo.address) {
               // skip
-            } else
-            {
+            } else {
               this.utxos.amount += utxo.amount;
               this.utxos.txs.push({
                 address: utxo.address,
@@ -87,7 +86,7 @@ export class ZapColdstakingComponent {
               }
               this.script = script.hex;
 
-              var amount = new Amount(this.utxos.amount, 8);
+              const amount = new Amount(this.utxos.amount, 8);
               this.log.d('amount', amount.getAmount());
 
               this._rpc.call('sendtypeto', ['part', 'part', [{
@@ -117,7 +116,7 @@ export class ZapColdstakingComponent {
 
     this.log.d('zap tx', this.utxos.amount, this.script, this.utxos.txs);
 
-    var amount = new Amount(this.utxos.amount, 8);
+    const amount = new Amount(this.utxos.amount, 8);
     this._rpc.call('sendtypeto', ['part', 'part', [{
       subfee: true,
       address: 'script',

@@ -40,9 +40,8 @@ export class RevertColdstakingComponent implements OnInit {
 
     this._rpc.call('liststealthaddresses', null)
       .subscribe(stealthAddresses => {
-            var sxAddrs = stealthAddresses[0]['Stealth Addresses'];
-            if (sxAddrs.length < 1)
-            {
+            const sxAddrs = stealthAddresses[0]['Stealth Addresses'];
+            if (sxAddrs.length < 1) {
                 this.dialogRef.close();
                 this.flashNotification.open(
                   'No stealth address found, please add a stealthaddress.', 'error');
@@ -60,8 +59,7 @@ export class RevertColdstakingComponent implements OnInit {
                 if (!utxo.coldstaking_address
                   || !utxo.address) {
                   // skip
-                } else
-                {
+                } else {
                   this.utxos.amount += utxo.amount;
                   this.utxos.txs.push({
                     address: utxo.address,

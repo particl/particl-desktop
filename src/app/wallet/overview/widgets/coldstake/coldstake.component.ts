@@ -25,8 +25,8 @@ export class ColdstakeComponent {
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
 
-  hotstakingamount = 0.0;
-  coldstakingamount = 0.0;
+  hotstakingamount: number = 0.0;
+  coldstakingamount: number = 0.0;
 
   constructor(
     private dialog: MatDialog,
