@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService } from 'app/core/rpc/rpc.module';
@@ -14,7 +16,7 @@ import { RevertColdstakingComponent } from './revert-coldstaking/revert-coldstak
   templateUrl: './coldstake.component.html',
   styleUrls: ['./coldstake.component.scss']
 })
-export class ColdstakeComponent {
+export class ColdstakeComponent implements OnDestroy {
 
   private log: any = Log.create('coldstake.component');
 
@@ -24,6 +26,7 @@ export class ColdstakeComponent {
   public encryptionStatus: string = 'Locked';
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
+  private obsprogress: Subscription = undefined;
 
   hotstakingamount: number = 0.0;
   coldstakingamount: number = 0.0;
@@ -33,33 +36,34 @@ export class ColdstakeComponent {
     private _modals: ModalsService,
     private _rpc: RpcService
   ) {
-
     this._rpc.state.observe('encryptionstatus')
       .subscribe(status => this.encryptionStatus = status);
 
     this._rpc.state.observe('ui:coldstaking')
-     .subscribe(status => this.coldStakingEnabled = status);
+      .subscribe(status => this.coldStakingEnabled = status);
 
     this._rpc.state.observe('ui:coldstaking:stake')
-    .subscribe(status => this.stakingTowardsCold = status);
+      .subscribe(status => this.stakingTowardsCold = status);
+
+    this.obsprogress = this._rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/))
+      .subscribe(block => this.rpc_progress());
 
     // TODO: move to coldstaking service
-    this.rpc_progressLoop();
+    this.rpc_progress();
   }
 
-  private rpc_progressLoop(): void {
-
+  private rpc_progress(): void {
     // TODO: not necessary when cold staking disabled
-
-    this._rpc.call('getcoldstakinginfo').subscribe(coldstakinginfo => {
-      this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
-    }, error => this.log.er('couldn\'t get cold staking info', error));
-
     this.stakingStatus();
 
-    setTimeout(this.rpc_progressLoop.bind(this), 5000);
     if (this.coldstakeProgress === 100) {
       this.activation = 'Activated';
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.obsprogress) {
+      this.obsprogress.unsubscribe();
     }
   }
 
