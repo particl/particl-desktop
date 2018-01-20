@@ -93,7 +93,7 @@ export class StakinginfoComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroyed = true;
+    // this.destroyed = true;
   }
 
 }

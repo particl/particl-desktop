@@ -2,6 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+
 
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService } from 'app/core/rpc/rpc.module';
