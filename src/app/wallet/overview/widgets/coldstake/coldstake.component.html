@@ -4,7 +4,7 @@
       <li class="section-title">Cold Staking</li>
     </ul>
   </app-header>
-  <mat-card *ngIf="coldStakingEnabled === undefined && (stakingTowardsCold === false || stakingTowardsCold === undefined)" class="staking-node inactive">
+  <mat-card *ngIf="checkLockStatus() === false && coldStakingEnabled === undefined && (stakingTowardsCold === false || stakingTowardsCold === undefined)" class="staking-node inactive">
     <button mat-raised-button color="primary" class="pull-left" (click)="openUnlockWalletModal()" matTooltip="Unlock wallet to enable cold staking">
       <mat-icon fontSet="partIcon" fontIcon="part-lock"></mat-icon>
     </button>
@@ -12,7 +12,7 @@
     <div class="subtitle">Unlock to check</div>
   </mat-card>
 
-  <mat-card *ngIf="coldStakingEnabled === false && !stakingTowardsCold && checkStatus()" class="staking-node inactive">
+  <mat-card *ngIf="coldStakingEnabled != true && !stakingTowardsCold && checkLockStatus()" class="staking-node inactive">
     <button mat-raised-button color="primary" class="pull-left" (click)="openColdStakeModal()" matTooltip="Add Cold Staking node key">
       <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
     </button>
@@ -36,7 +36,7 @@
 
 
   <!-- if cold staking is under 100% progress -->
-  <mat-card *ngIf="(coldStakingEnabled || stakingTowardsCold) && (checkStatus() || coldstakeProgress === 100)" class="staking-node active">
+  <mat-card *ngIf="(coldStakingEnabled || stakingTowardsCold) && (checkLockStatus() || coldstakeProgress === 100)" class="staking-node active">
     <div class="title">Cold Staking Node</div>
     <div class="subtitle in-progress">
       {{activation}}
@@ -52,21 +52,21 @@
     <p class="widget-help" *ngIf="coldStakingEnabled || stakingTowardsCold">
       {{coldstakeProgress}}% of your balance is now safely staking on your staking node.
       The activation process will continue only when your wallet is online and unlocked for staking.
-      You can close your wallet if you need to, but it is adviced to keep it online until it reaches 100%.
+      You can close your wallet if you need to, but it is advised to keep it online until it reaches 100%.
     </p>
     <!-- TODO: component ? -->
     <p class="buttons">
       <button mat-button class="small" color="primary"
         matTooltip="Fast-forward to 100%"
         (click)="zap()"
-        *ngIf="hotstaking.txs.length > 0">
+        *ngIf="hotstakingamount > 0">
         Zap
         <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
       </button>
       <button mat-button class="small" color="warn"
         matTooltip="Disable Cold Staking"
         (click)="revert()"
-        *ngIf="coldstaking.txs.length > 0">
+        *ngIf="coldstakingamount > 0">
         Disable
         <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
       </button>
@@ -74,7 +74,7 @@
   </mat-card>
 
   <!-- if cold staking is under 100% progress -->
-  <mat-card *ngIf="coldstakeProgress < 100 && !checkStatus() && (coldStakingEnabled || stakingTowardsCold)" class="staking-node warning">
+  <mat-card *ngIf="coldstakeProgress < 100 && !checkLockStatus() && (coldStakingEnabled || stakingTowardsCold)" class="staking-node warning">
     <div class="title">Cold Staking Node</div>
     <div class="subtitle in-progress">
       <strong>Paused</strong> &ndash; Wallet locked
@@ -97,14 +97,14 @@
       <button mat-button class="small" color="primary"
         matTooltip="Fast-forward to 100%"
         (click)="zap()"
-        *ngIf="hotstaking.txs.length > 0">
+        *ngIf="hotstakingamount > 0">
         Zap
         <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
       </button>
       <button mat-button class="small" color="warn"
         matTooltip="Disable Cold Staking"
         (click)="revert()"
-        *ngIf="coldstaking.txs.length > 0">
+        *ngIf="coldstakingamount > 0">
         Disable
         <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
       </button>

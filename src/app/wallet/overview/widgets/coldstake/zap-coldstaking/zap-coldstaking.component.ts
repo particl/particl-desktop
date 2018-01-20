@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
 import { Log } from 'ng2-logger';
+import { Amount } from '../../../../shared/util/utils';
 
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
@@ -30,6 +31,11 @@ export class ZapColdstakingComponent {
     // TODO: move to coldstaking service
     /* TODO: use async / await, make return value useful, subscribe errors */
 
+    this.utxos = {
+      txs: [],
+      amount: 0
+    };
+
     this._rpc.call('walletsettings', ['changeaddress']).subscribe(res => {
 
       this.log.d('pkey', res);
@@ -39,16 +45,31 @@ export class ZapColdstakingComponent {
       }
 
       this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(derived => {
-
         this.log.d('coldstaking address', derived);
         if (!derived || derived.length !== 1) {
           return false;
         }
         const coldstakingAddress = derived[0];
 
-        this._rpc.call('getnewaddress', ['""', 'false', 'false', 'true'])
-          .subscribe(spendingAddress => {
+        this._rpc.call('listunspent').subscribe(unspent => {
+          // TODO: Must process amounts as integers
+          unspent.map(utxo => {
+            if (utxo.coldstaking_address // found a cold staking utxo
+              || !utxo.address) {
+              // skip
+            } else
+            {
+              this.utxos.amount += utxo.amount;
+              this.utxos.txs.push({
+                address: utxo.address,
+                amount: utxo.amount,
+                inputs: [{ tx: utxo.txid, n: utxo.vout }]
+              });
+            };
+          });
 
+          this._rpc.call('getnewaddress', ['""', 'false', 'false', 'true'])
+          .subscribe(spendingAddress => {
             this.log.d('spending address', spendingAddress);
             if (!spendingAddress || spendingAddress === '') {
               return false;
@@ -66,12 +87,13 @@ export class ZapColdstakingComponent {
               }
               this.script = script.hex;
 
-              this.log.d('amount', this.utxos.amount);
+              var amount = new Amount(this.utxos.amount, 8);
+              this.log.d('amount', amount.getAmount());
 
               this._rpc.call('sendtypeto', ['part', 'part', [{
                 subfee: true,
                 address: 'script',
-                amount: this.utxos.amount,
+                amount: amount.getAmount(),
                 script: script.hex
               }], '', '', 4, 64, true, JSON.stringify({
                 inputs: this.utxos.txs
@@ -84,7 +106,8 @@ export class ZapColdstakingComponent {
 
             });
           });
-      })
+        });
+      });
     }, error => {
       this.log.er('errr');
     });
@@ -94,15 +117,16 @@ export class ZapColdstakingComponent {
 
     this.log.d('zap tx', this.utxos.amount, this.script, this.utxos.txs);
 
+    var amount = new Amount(this.utxos.amount, 8);
     this._rpc.call('sendtypeto', ['part', 'part', [{
       subfee: true,
       address: 'script',
-      amount: this.utxos.amount,
+      amount: amount.getAmount(),
       script: this.script
     }], 'coldstaking zap', '', 4, 64, false, JSON.stringify({
       inputs: this.utxos.txs
     })]).subscribe(info => {
-
+      this._rpc.state.set('ui:coldstaking', true);
       this.log.d('zap', info);
 
       this.dialogRef.close();

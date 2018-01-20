@@ -48,7 +48,7 @@ export class RpcStateClass {
       this._rpc.state
         .set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
       this._rpc.state
-        .set('ui:coldstaking:stake', 'Unlocked, staking only' === status);
+        .set('ui:coldstaking:stake', ['Unencrypted', 'Unlocked', 'Unlocked, staking only'].includes(status));
     });
   }
 
@@ -59,6 +59,7 @@ export class RpcStateClass {
   */
   private coldStakeHook() {
     this._rpc.state.observe('locked').subscribe(locked => {
+      // TODO: replace with getcoldstakinginfo.enabled
       if (locked === false) {
         // only available if unlocked
         this._rpc.call('walletsettings', ['changeaddress'])

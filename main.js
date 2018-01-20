@@ -97,6 +97,7 @@ function initMainWindow() {
     maxWidth:  1920,
     height:    675,
     resizable: false,
+    icon:      path.join(__dirname, 'resources/icon.png'),
     webPreferences: {
       nodeIntegration:  false,
       sandbox:          true,
