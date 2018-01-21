@@ -2,7 +2,6 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService } from 'app/core/rpc/rpc.module';
@@ -26,7 +25,7 @@ export class ColdstakeComponent implements OnDestroy {
   public encryptionStatus: string = 'Locked';
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
-  private obsprogress: Subscription = undefined;
+  private destroyed: boolean = false;
 
   hotstakingamount: number = 0.0;
   coldstakingamount: number = 0.0;
@@ -45,11 +44,9 @@ export class ColdstakeComponent implements OnDestroy {
     this._rpc.state.observe('ui:coldstaking:stake')
       .subscribe(status => this.stakingTowardsCold = status);
 
-    this.obsprogress = this._rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/))
+    this._rpc.state.observe('blocks').takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
       .subscribe(block => this.rpc_progress());
-
     // TODO: move to coldstaking service
-    this.rpc_progress();
   }
 
   private rpc_progress(): void {
@@ -62,9 +59,7 @@ export class ColdstakeComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.obsprogress) {
-      this.obsprogress.unsubscribe();
-    }
+    this.destroyed = true;
   }
 
   private stakingStatus() {
