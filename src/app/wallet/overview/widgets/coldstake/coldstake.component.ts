@@ -4,7 +4,6 @@ import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService } from 'app/core/rpc/rpc.module';
 
@@ -63,8 +62,9 @@ export class ColdstakeComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.obsprogress)
+    if (this.obsprogress) {
       this.obsprogress.unsubscribe();
+    }
   }
 
   private stakingStatus() {
