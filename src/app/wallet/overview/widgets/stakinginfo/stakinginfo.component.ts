@@ -53,7 +53,7 @@ export class StakinginfoComponent implements OnDestroy {
         this.calculateDynamicStakingReward();
       },
       error => this.log.er('Constructor, weight error:' + error),
-      () => this.log.d("state observe weight completed!"));
+      () => this.log.d('state observe weight completed!'));
 
     this.state.observe('netstakeweight')
     .takeWhile(() => !this.destroyed)
@@ -93,7 +93,7 @@ export class StakinginfoComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.destroyed = true;
+    this.destroyed = true;
   }
 
 }
