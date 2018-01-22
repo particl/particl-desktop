@@ -4,8 +4,11 @@
 </button>
 
 <div mat-dialog-content class="dialog-content">
+  
+  <!-- FIXME: original dialog content just for reference, can be removed afterwards -->
+  {{dialogContent}}
+  
   <!-- FIXME: this is just a static template. All needs to be connected to backend! -->
-
   <div class="tx-info">
     <!-- TODO: if public -->
     <div class="public">
@@ -43,8 +46,8 @@
 
   <div class="receiver-info">
     <!-- FIXME: if address saved in Address Book, display its label. if not, hide it -->
-    <div class="label">Crz (priv)</div>
-    <code class="address">TetdMHVqfefdFW8r8B8Cy93yYbo7qRbVPJNfnEg6kBQdegcAjX1a3B9Z1EZw2E9vznsooyMNV5TmB7k7e79MUS8WYqKXo9q3BnydDj</code>
+    <div class="label">Allien (Copay)</div>
+    <code class="address">piHvjzDdiykKN5r5E3eVLtX4cYVhgFwNG4</code>
   </div>
 
   <p class="fee-info">
@@ -52,8 +55,6 @@
     Total amount:<span class="amount">12.723552 PART</span><span class="fiat">&asymp; 3.47 USD</span>
   </p>
 
-  <!-- FIXME: original dialog content just for reference, can be removed afterwards -->
-  <p style="opacity: 0.2">{{dialogContent}}</p>
 </div>
 
 <mat-dialog-actions fxLayoutAlign="end center">
