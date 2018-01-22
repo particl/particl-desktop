@@ -56,27 +56,29 @@ export class TransactionService implements OnDestroy {
             this.txCount = txcount;
           }
           if (txcount > this.txCount) {
-              this.txCount = txcount;
-              this.newTransaction();
-            } else {
-              this.loading = true;
-              this.log.d(`observing txcount, txs array: ${this.txs.length}`);
-              this.rpc_update();
-            }
+            this.txCount = txcount;
+            this.newTransaction();
+          } else {
+            this.loading = true;
+            this.log.d(`observing txcount, txs array: ${this.txs.length}`);
+            this.rpc_update();
+          }
           // this.txCount = txcount;
         });
 
     // It doesn't get called sometimes ?
     // this.rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/)).subscribe(block =>  {
-    this.rpc.state.observe('blocks').takeWhile(() => !this.destroyed).subscribe(block =>  {
-      if (this.block === undefined) {
-        this.block = block;
-      }
-      if (block > this.block) {
-        this.checkBlock = true;
-        this.rpc_update()
-      }
-    });
+    this.rpc.state.observe('blocks')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(block => {
+        if (this.block === undefined) {
+          this.block = block;
+        }
+        if (block > this.block) {
+          this.checkBlock = true;
+          this.rpc_update()
+        }
+      });
 
     /* check if testnet -> block explorer url */
     this.rpc.state.observe('chain').take(1)

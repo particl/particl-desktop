@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, Output } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { IPassword } from './password.interface';
@@ -6,17 +6,17 @@ import { IPassword } from './password.interface';
 import { RpcService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
-
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent {
+export class PasswordComponent implements OnDestroy {
 
 
   // UI State
   password: string;
+  private destroyed: boolean = false;
 
   @Input() showPass: boolean = false;
   @Input() label: string = 'Your Wallet password';
@@ -47,6 +47,10 @@ export class PasswordComponent {
 
   constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService) {
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   /** Get the input type - password or text */

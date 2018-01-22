@@ -1,4 +1,7 @@
-import { Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener } from '@angular/core';
+import {
+  Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener,
+  OnDestroy
+} from '@angular/core';
 import { Log } from 'ng2-logger';
 import { MatDialogRef } from '@angular/material';
 
@@ -20,7 +23,7 @@ import { SnackbarService } from '../../core/snackbar/snackbar.service';
   styleUrls: ['./createwallet.component.scss'],
   animations: [slideDown()]
 })
-export class CreateWalletComponent {
+export class CreateWalletComponent implements OnDestroy {
 
   log: any = Log.create('createwallet.component');
 
@@ -47,6 +50,7 @@ export class CreateWalletComponent {
   private validating: boolean = false;
 
   errorString: string = '';
+  private destroyed: boolean = false;
 
   constructor (
     @Inject(forwardRef(() => ModalsService))
@@ -59,6 +63,10 @@ export class CreateWalletComponent {
     this.reset();
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
   reset(): void {
     this._modalsService.enableClose = true;
     this.state.set('modal:fullWidth:enableClose', true);
@@ -69,7 +77,8 @@ export class CreateWalletComponent {
     this.passwordVerify = '';
     this.errorString = '';
     this.step = 0;
-    this.state.observe('encryptionstatus').take(2)
+    this.state.observe('encryptionstatus')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 
