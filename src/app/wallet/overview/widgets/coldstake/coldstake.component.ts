@@ -36,15 +36,19 @@ export class ColdstakeComponent implements OnDestroy {
     private _rpc: RpcService
   ) {
     this._rpc.state.observe('encryptionstatus')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.encryptionStatus = status);
 
     this._rpc.state.observe('ui:coldstaking')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingEnabled = status);
 
     this._rpc.state.observe('ui:coldstaking:stake')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.stakingTowardsCold = status);
 
-    this._rpc.state.observe('blocks').takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
+    this._rpc.state.observe('blocks')
+      .takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
       .subscribe(block => this.rpc_progress());
     // TODO: move to coldstaking service
   }
