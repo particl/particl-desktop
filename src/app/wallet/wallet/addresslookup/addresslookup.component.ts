@@ -104,6 +104,9 @@ export class AddressLookupComponent implements OnInit {
                   success.forEach((contact) => {
                     if (this.type === 'send' || contact.address.length > 35) {
                       this.addressLookups.push(new Contact(contact.label, contact.address));
+                    } else if (this.type === 'sign' && contact.address.length < 35 && contact.owned) {
+                      this.filter = 'Public';
+                      this.addressLookups.push(new Contact(contact.label, contact.address));
                     }
                   })
                 },

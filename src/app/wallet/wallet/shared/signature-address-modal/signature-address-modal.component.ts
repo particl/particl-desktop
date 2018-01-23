@@ -71,7 +71,7 @@ export class SignatureAddressModalComponent implements OnInit {
   openLookup(): void {
     const dialogRef = this.dialog.open(AddressLookupComponent);
     // @TODO confirm lookup type
-    dialogRef.componentInstance.type = (this.type === 'sign') ? 'receive' : 'send';
+    dialogRef.componentInstance.type = (this.type === 'sign') ? 'sign' : 'send';
     dialogRef.componentInstance.filter = 'Public';
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
