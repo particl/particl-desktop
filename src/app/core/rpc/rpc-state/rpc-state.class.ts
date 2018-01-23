@@ -1,10 +1,11 @@
 import { Log } from 'ng2-logger';
 import { RpcService } from '../rpc.service';
+import { OnDestroy } from '@angular/core';
 
-
-export class RpcStateClass {
+export class RpcStateClass implements OnDestroy {
   private log: any = Log.create('rpc-state.class');
 
+  private destroyed: boolean = false;
   constructor(private _rpc: RpcService) {
 
     // Start polling...
@@ -20,19 +21,25 @@ export class RpcStateClass {
     this.initWalletState();
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
   private lastBlockTimeState() {
     let _checkLastBlock = false;
-    this._rpc.state.observe('mediantime').subscribe(mediantime => {
-      const now = new Date().getTime() - (4 * 60 * 1000);
-      const lastblocktime = new Date(mediantime * 1000);
-      if (!_checkLastBlock && now > lastblocktime.getTime()) {
-        _checkLastBlock = true;
-        setTimeout(() => {
-          _checkLastBlock = false;
-          this._rpc.stateCall('getblockchaininfo');
-        }, 100);
-      }
-    });
+    this._rpc.state.observe('mediantime')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(mediantime => {
+        const now = new Date().getTime() - (4 * 60 * 1000);
+        const lastblocktime = new Date(mediantime * 1000);
+        if (!_checkLastBlock && now > lastblocktime.getTime()) {
+          _checkLastBlock = true;
+          setTimeout(() => {
+            _checkLastBlock = false;
+            this._rpc.stateCall('getblockchaininfo');
+          }, 100);
+        }
+      });
   }
 
   private blockLoop() {
@@ -44,12 +51,13 @@ export class RpcStateClass {
 
   private walletLockedState() {
     this._rpc.state.observe('encryptionstatus')
-    .subscribe(status => {
-      this._rpc.state
-        .set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
-      this._rpc.state
-        .set('ui:coldstaking:stake', 'Unlocked, staking only' === status);
-    });
+      .takeWhile(() => !this.destroyed)
+      .subscribe(status => {
+        this._rpc.state
+          .set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
+        this._rpc.state
+          .set('ui:coldstaking:stake', ['Unencrypted', 'Unlocked', 'Unlocked, staking only'].includes(status));
+      });
   }
 
   /*
@@ -58,36 +66,38 @@ export class RpcStateClass {
   *   update the coldstaking state.
   */
   private coldStakeHook() {
-    this._rpc.state.observe('locked').subscribe(locked => {
-      if (locked === false) {
-        // only available if unlocked
-        this._rpc.call('walletsettings', ['changeaddress'])
-        .subscribe(
-          // set state for coldstaking
-          response => this._rpc.state.set('ui:coldstaking',
-            response.changeaddress === 'default'
-              ? undefined
-              : !!response.changeaddress.coldstakingaddress
-          ),
-          error => this.log.er('walletsettings changeaddress', error)
-        );
-      }
-    });
+    this._rpc.state.observe('locked')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(locked => {
+        // TODO: replace with getcoldstakinginfo.enabled
+        if (locked === false) {
+          // only available if unlocked
+          this._rpc.call('walletsettings', ['changeaddress'])
+            .subscribe(
+              // set state for coldstaking
+              response => this._rpc.state.set('ui:coldstaking',
+                response.changeaddress === 'default'
+                  ? undefined
+                  : !!response.changeaddress.coldstakingaddress
+              ),
+              error => this.log.er('walletsettings changeaddress', error)
+            );
+        }
+      });
   }
 
   private initWalletState() {
-
-    this._rpc.state.observe('encryptionstatus').take(1).subscribe(status => {
-      const locked = this._rpc.state.get('locked');
-
-      this._rpc.call('getwalletinfo').subscribe(response => {
-        // check if account is active
-        if (!!response.hdmasterkeyid) {
-          this._rpc.state.set('ui:walletInitialized', true);
-        } else {
-          this._rpc.state.set('ui:walletInitialized', false);
-        }
-      }, error => this.log.er('RPC Call returned an error', error));
-    });
+    this._rpc.state.observe('encryptionstatus')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(status => {
+        this._rpc.call('getwalletinfo').subscribe(response => {
+          // check if account is active
+          if (!!response.hdmasterkeyid) {
+            this._rpc.state.set('ui:walletInitialized', true);
+          } else {
+            this._rpc.state.set('ui:walletInitialized', false);
+          }
+        }, error => this.log.er('RPC Call returned an error', error));
+      });
   }
 }
