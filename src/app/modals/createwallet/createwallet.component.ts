@@ -284,7 +284,7 @@ export class CreateWalletComponent {
     if (event.keyCode === 13) {
       this.nextStep();
     }
-    if (event.ctrlKey && event.keyCode === 86) {
+    if (event.ctrlKey && event.keyCode === 86 && navigator.platform.indexOf('Mac') > -1) {
       document.execCommand('Paste');
     }
   }
