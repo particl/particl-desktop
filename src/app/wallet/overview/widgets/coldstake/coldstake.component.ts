@@ -20,7 +20,6 @@ export class ColdstakeComponent implements OnDestroy {
   private log: any = Log.create('coldstake.component');
 
   coldStakingEnabled: boolean = undefined;
-  stakingTowardsCold: boolean = undefined;
   activation: string = 'Activation in progress';
   public encryptionStatus: string = 'Locked';
   private progress: Amount = new Amount(0, 2);
@@ -29,16 +28,6 @@ export class ColdstakeComponent implements OnDestroy {
 
   hotstakingamount: number = 0.0;
   coldstakingamount: number = 0.0;
-
-  hotstaking: any = {
-    txs: [],
-    amount: 0
-  };
-
-  coldstaking: any = {
-    txs: [],
-    amount: 0
-  };
 
   constructor(
     private dialog: MatDialog,
@@ -52,10 +41,6 @@ export class ColdstakeComponent implements OnDestroy {
     this._rpc.state.observe('ui:coldstaking')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingEnabled = status);
-
-    this._rpc.state.observe('ui:coldstaking:stake')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.stakingTowardsCold = status);
 
     this._rpc.state.observe('blocks')
       .takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))

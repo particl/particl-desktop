@@ -78,7 +78,7 @@ export class CreateWalletComponent implements OnDestroy {
     this.errorString = '';
     this.step = 0;
     this.state.observe('encryptionstatus')
-      .takeWhile(() => !this.destroyed)
+      .take(2)
       .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 

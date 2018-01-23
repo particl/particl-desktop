@@ -55,8 +55,6 @@ export class RpcStateClass implements OnDestroy {
       .subscribe(status => {
         this._rpc.state
           .set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
-        this._rpc.state
-          .set('ui:coldstaking:stake', ['Unencrypted', 'Unlocked', 'Unlocked, staking only'].includes(status));
       });
   }
 
