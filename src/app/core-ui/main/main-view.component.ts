@@ -10,6 +10,7 @@ import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../../modals/modals.module';
 import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
 import { DaemonConnectionComponent } from '../../modals/shared/daemon-connection/daemon-connection.component';
+import { DaemonComponent } from '../../modals/daemon/daemon.component';
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -27,7 +28,7 @@ export class MainViewComponent implements OnInit {
   /* UI States */
 
   title: string = '';
-
+  private daemonComponent: DaemonComponent
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
@@ -70,6 +71,9 @@ export class MainViewComponent implements OnInit {
     .throttle(val => Observable.interval(30000/*ms*/))
     .subscribe(status => this.daemonRunning = true,
                 error => {
+                  if (this.daemonRunning === undefined) {
+                    this._modals.open('daemon', {daemonRunning: false});
+                  }
                   this.daemonRunning = ![0, 502].includes(error.status);
                   this.daemonError = error;
                   this.log.d(error);

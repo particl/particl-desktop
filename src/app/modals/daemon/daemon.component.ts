@@ -8,11 +8,13 @@ import { Component } from '@angular/core';
 export class DaemonComponent {
 
   public message: any;
+  public daemonRunning: boolean;
 
   constructor() { }
 
   setData(data: any) {
     this.message = data;
+    this.daemonRunning = data && data.daemonRunning;
   }
 
 }
