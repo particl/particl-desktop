@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../../../environments/environment';
 import { ReleaseNotification } from './release-notification.model';
+
+import { ClientVersionService } from '../../../core/http/client-version.service';
 
 @Component({
   selector: 'app-release-notification',
@@ -15,7 +16,7 @@ export class ReleaseNotificationComponent implements OnInit {
   public latestClientVersion: string;
   public releaseUrl: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private clientVersionService: ClientVersionService) { }
 
   ngOnInit() {
     // check new update in every 30 minute
@@ -23,7 +24,7 @@ export class ReleaseNotificationComponent implements OnInit {
   }
 
   getCurrentClientVersion() {
-    this.http.get('https://api.github.com/repos/particl/particl-desktop/releases/latest').subscribe((response: ReleaseNotification) => {
+    this.clientVersionService.getCurrentVersion().subscribe((response: ReleaseNotification) => {
       if (response.tag_name) {
         this.latestClientVersion = response.tag_name.substring(1);
       }
