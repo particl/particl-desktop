@@ -122,7 +122,7 @@ export class ColdstakeComponent implements OnDestroy {
     this._modals.open('coldStake', { forceOpen: true, type: 'cold' });
   }
 
-  checkStatus(): boolean {
+  checkLockStatus(): boolean {
     return [
       'Unlocked',
       'Unlocked, staking only',
