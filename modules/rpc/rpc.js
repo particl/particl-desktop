@@ -36,6 +36,8 @@ exports.call = function(method, params, callback) {
     params: params
   });
 
+  log.debug('rpc.call:', postData);
+
   if (!rpcOptions) {
     rpcOptions = {
       hostname: HOSTNAME,
