@@ -30,6 +30,16 @@ export class ColdstakeComponent implements OnDestroy {
   hotstakingamount: number = 0.0;
   coldstakingamount: number = 0.0;
 
+  hotstaking: any = {
+    txs: [],
+    amount: 0
+  };
+
+  coldstaking: any = {
+    txs: [],
+    amount: 0
+  };
+
   constructor(
     private dialog: MatDialog,
     private _modals: ModalsService,

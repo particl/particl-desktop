@@ -48,6 +48,7 @@ export class RevertColdstakingComponent implements OnInit {
                 return;
             };
             this.address = sxAddrs[0]['Address'];
+
             this.log.d('return address', this.address);
 
             let sentTXs = 0;

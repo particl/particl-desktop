@@ -1,8 +1,9 @@
 {
-  "name": "particl",
-  "version": "1.1.0-RC3",
+
+  "name": "particl-desktop",
+  "version": "1.1.0",
   "license": "GPL-2.0",
-  "description": "Particl Electron GUI - The source for the Particl GUI.",
+  "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
   "keywords": [
     "particl",
     "angular2",
@@ -37,10 +38,10 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
   },
-  "productName": "particl",
+  "productName": "Particl Desktop",
   "build": {
     "electronVersion": "1.7.10",
-    "appId": "io.particl.wallet",
+    "appId": "io.particl.desktop",
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -53,8 +54,8 @@
       "resources/**"
     ],
     "mac": {
-      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
-      "category": "public.app-category.wallet",
+      "artifactName": "${name}-${version}-${os}.${ext}",
+      "appCategoryType": "public.app-category.wallet",
       "target": [
         "dmg",
         "zip"
@@ -102,7 +103,7 @@
         }
       ],
       "desktop": {
-        "Comment": "Particl, P2P Privacy project",
+        "Comment": "Particl, P2P Privacy ecosystem",
         "Exec": "/opt/particl/particl %U",
         "Icon": "particl",
         "Name": "Particl",
@@ -119,19 +120,19 @@
     "asar": true
   },
   "dependencies": {
-    "@angular/animations": "^5.2.0",
-    "@angular/cdk": "^5.0.4",
-    "@angular/common": "^5.2.0",
-    "@angular/compiler": "^5.2.0",
-    "@angular/core": "^5.2.0",
+    "@angular/animations": "^5.2.1",
+    "@angular/cdk": "^5.1.0",
+    "@angular/common": "^5.2.1",
+    "@angular/compiler": "^5.2.1",
+    "@angular/core": "^5.2.1",
     "@angular/flex-layout": "^2.0.0-beta.12",
-    "@angular/forms": "^5.2.0",
-    "@angular/http": "^5.2.0",
-    "@angular/material": "^5.0.4",
-    "@angular/platform-browser": "^5.2.0",
-    "@angular/platform-browser-dynamic": "^5.2.0",
-    "@angular/platform-server": "^5.2.0",
-    "@angular/router": "^5.2.0",
+    "@angular/forms": "^5.2.1",
+    "@angular/http": "^5.2.1",
+    "@angular/material": "^5.1.0",
+    "@angular/platform-browser": "^5.2.1",
+    "@angular/platform-browser-dynamic": "^5.2.1",
+    "@angular/platform-server": "^5.2.1",
+    "@angular/router": "^5.2.1",
     "angular2-qrcode": "^2.0.1",
     "bluebird": "^3.4.7",
     "buffered-spawn": "^3.3.2",
@@ -139,14 +140,14 @@
     "core-js": "^2.4.1",
     "electron-log": "^2.2.14",
     "font-awesome": "^4.7.0",
-    "got": "^8.0.2",
+    "got": "^8.0.3",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.4",
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
     "lodash.values": "^4.3.0",
     "ng2-logger": "^1.0.11",
-    "ngx-clipboard": "^9.1.0",
+    "ngx-clipboard": "^9.1.3",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.3",
     "rx-ipc-electron": "^0.1.2",
@@ -155,17 +156,17 @@
     "zone.js": "^0.8.20"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.4",
-    "@angular/compiler-cli": "^5.2.0",
+    "@angular/cli": "^1.6.5",
+    "@angular/compiler-cli": "^5.2.1",
     "@compodoc/compodoc": "^1.0.4",
-    "@types/jasmine": "^2.8.4",
+    "@types/jasmine": "^2.8.5",
     "@types/node": "^9.3.0",
-    "codelyzer": "^4.0.0",
+    "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "1.7.10",
-    "electron-builder": "^19.54.0",
+    "electron": "1.7.11",
+    "electron-builder": "^19.55.2",
     "htmlhint": "^0.9.13",
-    "jasmine-core": "^2.8.0",
+    "jasmine-core": "^2.9.1",
     "jasmine-spec-reporter": "^4.2.0",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
