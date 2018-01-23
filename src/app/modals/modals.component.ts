@@ -7,7 +7,7 @@ import {
   ElementRef,
   HostListener,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef, OnDestroy
 } from '@angular/core';
 import { Log } from 'ng2-logger'
 
@@ -33,7 +33,7 @@ import { StateService } from '../core/core.module';
     EncryptwalletComponent
   ]
 })
-export class ModalsComponent implements DoCheck, OnInit {
+export class ModalsComponent implements DoCheck, OnInit, OnDestroy {
 
   @ViewChild('modalContainer', { read: ViewContainerRef })
   private modalContainer: ViewContainerRef;
@@ -44,6 +44,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   enableClose: boolean;
   loadSpinner: boolean;
   private log: any = Log.create('modals.component');
+  private destroyed: boolean = false;
 
   constructor(
     private _element: ElementRef,
@@ -54,9 +55,11 @@ export class ModalsComponent implements DoCheck, OnInit {
 
   ngOnInit(): void {
     this.state.observe('modal:fullWidth:enableClose')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.enableClose = status);
 
     this.state.observe('ui:spinner')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.loadSpinner = status);
   }
 
@@ -68,6 +71,10 @@ export class ModalsComponent implements DoCheck, OnInit {
       this.hasScrollY = style.overflowY === 'scroll'
         || (style.overflowY === 'auto' && element.clientHeight < element.scrollHeight);
     }
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   // open modal
