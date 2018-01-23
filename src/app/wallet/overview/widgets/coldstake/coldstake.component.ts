@@ -66,6 +66,11 @@ export class ColdstakeComponent implements OnDestroy {
         this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
         this.coldstakingamount = coldstakinginfo['percent_in_coldstakeable_script'];
         this.hotstakingamount = coldstakinginfo['coin_in_stakeable_script'];
+
+        if ('enabled' in coldstakinginfo) {
+            this._rpc.state.set('ui:coldstaking', coldstakinginfo['enabled']);
+        }
+
     }, error => this.log.er('couldn\'t get coldstakinginfo', error));
   }
 

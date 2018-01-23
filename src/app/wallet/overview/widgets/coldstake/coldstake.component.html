@@ -4,7 +4,8 @@
       <li class="section-title">Cold Staking</li>
     </ul>
   </app-header>
-  <mat-card *ngIf="checkLockStatus() === false && coldStakingEnabled === undefined" class="staking-node inactive">
+
+  <mat-card *ngIf="coldStakingEnabled === undefined" class="staking-node inactive">
     <button mat-raised-button color="primary" class="pull-left" (click)="openUnlockWalletModal()" matTooltip="Unlock wallet to enable cold staking">
       <mat-icon fontSet="partIcon" fontIcon="part-lock"></mat-icon>
     </button>
@@ -12,7 +13,7 @@
     <div class="subtitle">Unlock to check</div>
   </mat-card>
 
-  <mat-card *ngIf="coldStakingEnabled != true && checkLockStatus()" class="staking-node inactive">
+  <mat-card *ngIf="coldStakingEnabled === false" class="staking-node inactive">
     <button mat-raised-button color="primary" class="pull-left" (click)="openColdStakeModal()" matTooltip="Add Cold Staking node key">
       <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
     </button>

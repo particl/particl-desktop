@@ -75,7 +75,7 @@ export class RpcStateClass implements OnDestroy {
               // set state for coldstaking
               response => this._rpc.state.set('ui:coldstaking',
                 response.changeaddress === 'default'
-                  ? undefined
+                  ? false
                   : !!response.changeaddress.coldstakingaddress
               ),
               error => this.log.er('walletsettings changeaddress', error)
