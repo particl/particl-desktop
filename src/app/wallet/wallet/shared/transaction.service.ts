@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger'
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash'
@@ -7,10 +7,10 @@ import { Transaction } from './transaction.model';
 import { RpcService } from '../../../core/core.module';
 import { NotificationService } from '../../../core/core.module';
 
-
 @Injectable()
-export class TransactionService {
+export class TransactionService implements OnDestroy {
 
+  private destroyed: boolean = false;
   log: any = Log.create('transaction.service');
 
   /* Stores transactions objects. */
@@ -49,37 +49,44 @@ export class TransactionService {
     this.block = this.rpc.state.get('blocks');
 
     this.rpc.state.observe('txcount')
+      .takeWhile(() => !this.destroyed)
       .subscribe(
         txcount => {
           if (this.txCount === undefined) {
             this.txCount = txcount;
           }
           if (txcount > this.txCount) {
-              this.txCount = txcount;
-              this.newTransaction();
-            } else {
-              this.loading = true;
-              this.log.d(`observing txcount, txs array: ${this.txs.length}`);
-              this.rpc_update();
-            }
+            this.txCount = txcount;
+            this.newTransaction();
+          } else {
+            this.loading = true;
+            this.log.d(`observing txcount, txs array: ${this.txs.length}`);
+            this.rpc_update();
+          }
           // this.txCount = txcount;
         });
 
     // It doesn't get called sometimes ?
     // this.rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/)).subscribe(block =>  {
-    this.rpc.state.observe('blocks').subscribe(block =>  {
-      if (this.block === undefined) {
-        this.block = block;
-      }
-      if (block > this.block) {
-        this.checkBlock = true;
-        this.rpc_update()
-      }
-    });
+    this.rpc.state.observe('blocks')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(block => {
+        if (this.block === undefined) {
+          this.block = block;
+        }
+        if (block > this.block) {
+          this.checkBlock = true;
+          this.rpc_update()
+        }
+      });
 
     /* check if testnet -> block explorer url */
     this.rpc.state.observe('chain').take(1)
     .subscribe(chain => this.testnet = chain === 'test');
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   postConstructor(MAX_TXS_PER_PAGE: number): void {

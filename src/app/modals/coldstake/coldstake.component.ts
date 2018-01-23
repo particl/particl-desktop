@@ -113,7 +113,7 @@ export class ColdstakeComponent {
         success => {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
           this._flashNotificationService.open('Successfully activated cold staking!', 'info');
-          this._rpc.state.set('ui:coldstaking', success.changeaddress.coldstakingaddress);
+          this._rpc.state.set('ui:coldstaking', true);
           this.close();
         },
         error => {

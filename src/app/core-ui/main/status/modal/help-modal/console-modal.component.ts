@@ -43,7 +43,21 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
   rpcCall() {
     const params = this.command.split(' ');
-    this._rpc.call(params.shift(), params)
+
+    // TODO: Remove next release
+    const daemonVersion = this._rpc.state.get('subversion');
+    if (daemonVersion === '/Satoshi:0.15.1.1/') {
+        this._rpc.call(params.shift(), params)
+          .subscribe(
+            response => this.formatSuccessResponse(response),
+            error => this.formatErrorResponse(error));
+        return;
+    }
+
+    if (params.length > 0) {
+        params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
+    }
+    this._rpc.call('runstrings', params)
       .subscribe(
         response => this.formatSuccessResponse(response),
         error => this.formatErrorResponse(error));

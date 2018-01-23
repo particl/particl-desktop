@@ -58,6 +58,7 @@ export class IpcService {
           switch (type) {
             case 'n':
               observer.next(data);
+              observer.complete(); // only do this with ipc.once
               break;
             case 'e':
               observer.error((<any>data).error ? (<any>data).error : data);
