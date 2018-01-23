@@ -33,6 +33,7 @@ export class SignatureAddressModalComponent implements OnInit {
   log: any = Log.create('SignatureAddressModalComponent.component');
 
   @ViewChild('addressInput') addressInput: ElementRef;
+  @ViewChild('signatureInput') signatureInput: ElementRef;
 
   constructor(private dialog: MatDialog,
               private _rpc: RpcService,
@@ -152,12 +153,17 @@ export class SignatureAddressModalComponent implements OnInit {
     this.addressForm.reset();
   }
 
-  onCopyAddress(): void {
-    this.flashNotification.open('Copied address to clipboard!');
-  }
-
   pasteAddress(): void {
     this.addressInput.nativeElement.focus();
+    document.execCommand('paste');
+  }
+
+  copyToClipBoard(): void {
+    this.flashNotification.open('Signature copied to clipboard.');
+  }
+
+  pasteSignature(): void {
+    this.signatureInput.nativeElement.focus();
     document.execCommand('paste');
   }
 

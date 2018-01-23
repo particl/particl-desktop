@@ -10,13 +10,16 @@
         <mat-tab label="Sign Message">
           <p>
             You can sign messages/agreements with your address to prove you can receive Particl sent to them. Be
-            careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.
+            careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your
+            identity over to them. Only sign fully-detailed statements you agree to.
           </p>
         </mat-tab>
         <mat-tab label="Verify Message">
           <p>
             Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs etc. exactly) and
-            signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!
+            signature below to verify the message. Be careful not to read more into the signature than what is in the
+            signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the
+            signing party receives with the address, it cannot prove sendership of any transaction!
           </p>
         </mat-tab>
       </mat-tab-group>
@@ -26,9 +29,9 @@
         <div class="address-field" fxLayout="row" fxLayoutAlign="center center">
           <mat-form-field fxFlex="1 1 100%">
             <input matInput formControlName="address" [(ngModel)]="formData.address" #addressInput
-                    [ngClass]="{'verify-sucess': validAddress === true, 'verify-error': validAddress === false }"
-                    placeholder="Enter a Particl address (e.g. PuMnFoGouqFkFZ1rs2PmVDUqp9psfQssre)"
-                    (input)="verifyAddress()">
+                   [ngClass]="{'verify-sucess': validAddress === true, 'verify-error': validAddress === false }"
+                   placeholder="Enter a Particl address (e.g. PuMnFoGouqFkFZ1rs2PmVDUqp9psfQssre)"
+                   (input)="verifyAddress()">
           </mat-form-field>
 
           <div class="icons" fxFlex="0 0 65px">
@@ -43,17 +46,28 @@
         </div><!-- .address-field -->
 
         <mat-form-field>
-          <textarea matInput formControlName="message" [(ngModel)]="formData.message" rows="10" cols="100" placeholder="Enter message to sign/verify"></textarea>
+          <textarea matInput formControlName="message" [(ngModel)]="formData.message" rows="10" cols="100"
+                    placeholder="Enter message to sign/verify"></textarea>
         </mat-form-field>
 
-        <mat-form-field>
-          <input matInput formControlName="signature" [(ngModel)]="formData.signature"
-                 [disabled]="isDisabled"
-                 placeholder="{{(type == 'sign')? 'Click [Sign Message] to generate signature': 'Signature'}}">
-        </mat-form-field>
-        <!-- todo: <mat-icon *ngIf="type == 'sign' && formData.signature" class="cursor-pointer" (click)="onCopyAddress()"
-                 matTooltip="Copy address" ngxClipboard
-                 [cbContent]="formData.signature" fontSet="partIcon" fontIcon="part-copy"></mat-icon>-->
+        <div class="address-field" fxLayout="row" fxLayoutAlign="center center">
+          <mat-form-field fxFlex="1 1 100%">
+            <input matInput formControlName="signature" [(ngModel)]="formData.signature"
+                   [disabled]="isDisabled"
+                   #signatureInput
+                   placeholder="{{(type == 'sign')? 'Click [Sign Message] to generate signature': 'Signature'}}">
+          </mat-form-field>
+
+          <div class="icons" fxFlex="0 0 45px">
+            <span class="icon" matTooltip="Copy" (click)="copyToClipBoard()" *ngIf="type == 'sign'" ngxClipboard
+                  [cbContent]="formData.signature">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+            </span>
+            <span class="icon" matTooltip="Paste" (click)="pasteSignature()" *ngIf="type == 'verify'">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
+            </span>
+          </div>
+        </div>
       </div><!-- .signature-address-modal-form -->
     </div>
     <mat-dialog-actions fxLayoutAlign="end center">
