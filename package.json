@@ -1,8 +1,8 @@
 {
-  "name": "particl",
+  "name": "particl-desktop",
   "version": "1.1.0",
   "license": "GPL-2.0",
-  "description": "Particl Electron GUI - The source for the Particl GUI.",
+  "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
   "keywords": [
     "particl",
     "angular2",
@@ -37,10 +37,10 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
   },
-  "productName": "particl",
+  "productName": "Particl Desktop",
   "build": {
     "electronVersion": "1.7.10",
-    "appId": "io.particl.wallet",
+    "appId": "io.particl.desktop",
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -53,8 +53,8 @@
       "resources/**"
     ],
     "mac": {
-      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
-      "category": "public.app-category.wallet",
+      "artifactName": "${name}-${version}-${os}.${ext}",
+      "appCategoryType": "public.app-category.wallet",
       "target": [
         "dmg",
         "zip"
@@ -102,7 +102,7 @@
         }
       ],
       "desktop": {
-        "Comment": "Particl, P2P Privacy project",
+        "Comment": "Particl, P2P Privacy ecosystem",
         "Exec": "/opt/particl/particl %U",
         "Icon": "particl",
         "Name": "Particl",
