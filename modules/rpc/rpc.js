@@ -4,6 +4,8 @@ const http        = require('http');
 const cookie      = require('./cookie');
 const _options    = require('../options');
 
+const spyOnRpc = false;
+
 let TIMEOUT = 15000;
 let HOSTNAME;
 let PORT;
@@ -35,8 +37,10 @@ exports.call = function(method, params, callback) {
     method: method,
     params: params
   });
-
-  log.debug('rpc.call:', postData);
+  
+  if(spyOnRpc) {
+    log.debug('rpc.call:', postData);
+  }
 
   if (!rpcOptions) {
     rpcOptions = {
