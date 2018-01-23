@@ -167,6 +167,10 @@ export class ColdstakeComponent {
   }
 
   checkStatus(): boolean {
-    return ['Unlocked', 'Unlocked, staking only'].includes(this.encryptionStatus);
+    return [
+      'Unlocked',
+      'Unlocked, staking only',
+      'Unencrypted'
+    ].includes(this.encryptionStatus);
   }
 }
