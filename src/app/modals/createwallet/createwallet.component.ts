@@ -184,6 +184,7 @@ export class CreateWalletComponent implements OnDestroy {
 
   public importMnemonicSeed(): void {
     this.state.set('ui:spinner', true);
+
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {

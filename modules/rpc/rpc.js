@@ -31,6 +31,7 @@ exports.call = function(method, params, callback) {
     callback = function (){};
   }
 
+  const timeout = [ 'extkeyimportmaster', 'extkeygenesisimport'].includes(method) ? 240 * 1000 : TIMEOUT; // TODO: replace
   const postData = JSON.stringify({
     method: method,
     params: params
@@ -109,7 +110,7 @@ exports.call = function(method, params, callback) {
     }
   });
 
-  request.setTimeout(TIMEOUT, error => {
+  request.setTimeout(timeout, error => {
     return request.abort();
   });
 
