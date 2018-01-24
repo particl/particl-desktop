@@ -79,7 +79,7 @@ export class ModalsService implements OnDestroy {
     * @param {any} data       Optional - data to pass through to the modal.
     */
   open(modal: string, data?: any): void {
-    const dialogRef = this._dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
+    const dialogRef = this._dialog.open(ModalsComponent, {disableClose: true});
     if (modal in this.messages) {
       if (
         (data && data.forceOpen)

@@ -315,10 +315,11 @@ input {
 .cdk-overlay-container {
   .mat-dialog-container {
     position: relative;
+    /*
     max-width: 800px;
     height: calc(100% - 24px);
     margin: 24px auto auto auto;
-
+    */
     // Dialogs (small)
     .dialog-content {
       margin: 15px -24px;
@@ -384,14 +385,6 @@ input {
       }
     }
     .mat-wallet-content {
-      /*
-      max-height: 100% !important;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      */
       .mat-progress-spinner { // loading spinners
         width: 100px;
         height: 100px;
