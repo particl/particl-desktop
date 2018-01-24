@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 
 import { CoreModule } from './core/core.module';
@@ -18,7 +18,7 @@ import { routing } from './app.routing';
   ],
   imports: [
     BrowserModule,
-    NoopAnimationsModule,
+    BrowserAnimationsModule,
     routing,
     /* own */
     CoreModule.forRoot(),

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
@@ -20,7 +20,7 @@ describe('AddressLookupComponent', () => {
         SharedModule,
         RpcModule.forRoot(),
         WalletModule,
-        NoopAnimationsModule
+        BrowserAnimationsModule
       ],
       providers: [
         IpcService,

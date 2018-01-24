@@ -1,6 +1,6 @@
 /* modules (deps) */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef, MatIconModule } from '@angular/material';
 
 import { ModalsModule, PassphraseService } from '../../modals.module';
@@ -29,7 +29,7 @@ describe('PassphraseComponent', () => {
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
         /* deps */
-        NoopAnimationsModule,
+        BrowserAnimationsModule,
         MatIconModule,
        ],
       providers: [

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
@@ -22,7 +22,7 @@ describe('AddressBookComponent', () => {
         WalletModule.forRoot(),
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        NoopAnimationsModule
+        BrowserAnimationsModule
       ],
       declarations: [ ],
       providers: [ ModalsService ]
