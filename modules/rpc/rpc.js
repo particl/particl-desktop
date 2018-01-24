@@ -4,7 +4,7 @@ const http        = require('http');
 const cookie      = require('./cookie');
 const _options    = require('../options');
 
-let TIMEOUT = 15000;
+let TIMEOUT = 30000;
 let HOSTNAME;
 let PORT;
 let rpcOptions;
