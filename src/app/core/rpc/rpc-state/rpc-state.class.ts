@@ -64,11 +64,13 @@ export class RpcStateClass implements OnDestroy {
   *   update the coldstaking state.
   */
   private coldStakeHook() {
+    // TODO: Remove
     this._rpc.state.observe('locked')
       .takeWhile(() => !this.destroyed)
       .subscribe(locked => {
         // TODO: replace with getcoldstakinginfo.enabled
-        if (locked === false) {
+        if (this._rpc.state.get('ui:walletInitialized') === true
+          && locked === false) {
           // only available if unlocked
           this._rpc.call('walletsettings', ['changeaddress'])
             .subscribe(
