@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
@@ -14,12 +14,13 @@ import { ConsoleModalComponent } from './modal/help-modal/console-modal.componen
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss']
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit, OnDestroy {
 
   peerListCount: number = 0;
   public coldStakingStatus: boolean;
   public encryptionStatus: string = 'Locked';
   private _sub: Subscription;
+  private destroyed: boolean = false;
 
   private log: any = Log.create('status.component');
 
@@ -31,16 +32,23 @@ export class StatusComponent implements OnInit {
 
   ngOnInit() {
     this._rpc.state.observe('connections')
+      .takeWhile(() => !this.destroyed)
       .subscribe(connections => this.peerListCount = connections);
 
     this._rpc.state.observe('encryptionstatus')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.encryptionStatus = status);
 
     this._rpc.state.observe('ui:coldstaking')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingStatus = status);
 
     /* Bug: If you remove this line, then the state of 'txcount' doesn't update in the Transaction.service */
-    this._rpc.state.observe('txcount').subscribe(txcount => { });
+    this._rpc.state.observe('txcount').takeWhile(() => !this.destroyed).subscribe(txcount => { });
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   getIconNumber(): number {
@@ -59,13 +67,13 @@ export class StatusComponent implements OnInit {
     switch (this.encryptionStatus) {
       case 'Unencrypted':  // TODO: icon?
       case 'Unlocked':
-        return '_off';
+        return '-off';
       case 'Unlocked, staking only':
-        return '_stake';
+        return '-stake';
       case 'Locked':
         return '';
       default:
-        return '_off'; // TODO: icon?
+        return '-off'; // TODO: icon?
     }
   }
 

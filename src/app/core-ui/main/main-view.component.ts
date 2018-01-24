@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
@@ -9,7 +9,6 @@ import { environment } from '../../../environments/environment';
 import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../../modals/modals.module';
 import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
-import { DaemonConnectionComponent } from '../../modals/shared/daemon-connection/daemon-connection.component';
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -21,7 +20,7 @@ import { DaemonConnectionComponent } from '../../modals/shared/daemon-connection
   templateUrl: './main-view.component.html',
   styleUrls: ['./main-view.component.scss']
 })
-export class MainViewComponent implements OnInit {
+export class MainViewComponent implements OnInit, OnDestroy {
   log: any = Log.create('main-view.component');
 
   /* UI States */
@@ -31,13 +30,14 @@ export class MainViewComponent implements OnInit {
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
-  daemonError: string;
+  daemonError: any;
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
+  private destroyed: boolean = false;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -72,14 +72,17 @@ export class MainViewComponent implements OnInit {
                 error => {
                   this.daemonRunning = ![0, 502].includes(error.status);
                   this.daemonError = error;
+                  this.log.d(error);
                 });
 
     // Updates the error box in the sidenav if wallet is not initialized.
     this._rpc.state.observe('ui:walletInitialized')
-    .subscribe(status => this.walletInitialized = status);
+      .takeWhile(() => !this.destroyed)
+      .subscribe(status => this.walletInitialized = status);
 
 
     this._rpc.state.observe('unlocked_until')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => {
         this.unlocked_until = status;
         if (this.unlocked_until > 0) {
@@ -94,10 +97,13 @@ export class MainViewComponent implements OnInit {
     /* versions */
     // Obtains the current daemon version
     this._rpc.state.observe('subversion')
-    .subscribe(
-      subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
+      .takeWhile(() => !this.destroyed)
+      .subscribe(subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
   /** Open createwallet modal when clicking on error in sidenav */
   createWallet() {
     this._modals.open('createWallet', {forceOpen: true});

@@ -14,7 +14,7 @@ import { WindowService } from './window/window.service';
 import { SnackbarService } from './snackbar/snackbar.service';
 
   /*
-	Loading the core library will intialize IPC & RPC
+    Loading the core library will intialize IPC & RPC
   */
 @NgModule({
   imports: [

@@ -23,7 +23,7 @@ export class ReleaseNotificationComponent implements OnInit {
   }
 
   getCurrentClientVersion() {
-    this.http.get('https://api.github.com/repos/particl/partgui/releases/latest').subscribe((response: ReleaseNotification) => {
+    this.http.get('https://api.github.com/repos/particl/particl-desktop/releases/latest').subscribe((response: ReleaseNotification) => {
       if (response.tag_name) {
         this.latestClientVersion = response.tag_name.substring(1);
       }

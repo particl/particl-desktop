@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
 import { StateService, BlockStatusService } from '../../core/core.module';
 
@@ -9,7 +9,7 @@ import { Log } from 'ng2-logger';
   templateUrl: './syncing.component.html',
   styleUrls: ['./syncing.component.scss']
 })
-export class SyncingComponent {
+export class SyncingComponent implements OnDestroy {
 
   log: any = Log.create('syncing.component');
 
@@ -20,12 +20,14 @@ export class SyncingComponent {
   manuallyOpened: boolean;
   syncPercentage: number;
   nPeers: number;
+  private destroyed: boolean = false;
 
   constructor(
     private _blockStatusService: BlockStatusService,
     private _state: StateService
   ) {
     _state.observe('connections')
+      .takeWhile(() => !this.destroyed)
       .subscribe(connections => this.nPeers = connections);
 
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
@@ -51,5 +53,9 @@ export class SyncingComponent {
           new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }
