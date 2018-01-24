@@ -175,7 +175,6 @@
     "node-sass": "^4.7.2",
     "protractor": "^5.2.1",
     "sass-lint": "^1.10.2",
-    "shasum-cli": "^0.0.1",
     "ts-node": "^4.1.0",
     "tslint": "^5.9.0",
     "tslint-microsoft-contrib": "^5.0.2",
