@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
@@ -25,7 +25,7 @@ describe('SendComponent', () => {
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
         WalletModule.forRoot(), // a bit circular here..
-        BrowserAnimationsModule
+        NoopAnimationsModule
       ],
       providers: [
         { provide: MatDialogRef }

@@ -313,6 +313,9 @@ input {
 \* ------------------------------- */
 
 .cdk-overlay-container {
+  .cdk-overlay-pane {
+    max-width: 900px !important;
+  }
   .mat-dialog-container {
     position: relative;
     /*

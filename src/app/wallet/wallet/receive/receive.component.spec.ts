@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { QRCodeModule } from 'angular2-qrcode';
 
 import { CoreModule } from '../../../core/core.module';
@@ -20,7 +20,7 @@ describe('ReceiveComponent', () => {
       imports: [
         /* deps */
         QRCodeModule,
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         /* own */
         SharedModule,  // is this even needed?
         CoreModule.forRoot(),

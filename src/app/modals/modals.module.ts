@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from '../core-ui/material/material.module';
 
@@ -33,7 +33,7 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
   imports: [
     CommonModule,
     FormsModule,
-    BrowserAnimationsModule,
+    NoopAnimationsModule,
     ClipboardModule,
     /* own */
     MaterialModule
