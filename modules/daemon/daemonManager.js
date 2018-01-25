@@ -311,8 +311,13 @@ class DaemonManager extends EventEmitter {
 
     log.debug(`Platform: ${platform}`);
 
-    let binPath = path.join(app.getPath('userData'), 'particld', 'unpacked', 'particld');
+    let binPath;
 
+    try {
+      binPath =  fs.readFileSync(path.join(app.getPath('userData'), 'particld', 'unpacked', 'particld'));
+    } catch (err) {
+      log.info('No such a directory Particl Desktop.');
+    }
     if (platform === 'win') {
       binPath += '.exe';
     }
