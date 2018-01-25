@@ -242,19 +242,12 @@ export class CreateWalletComponent implements OnDestroy {
   /** Triggered when the password is emitted from PasswordComponent */
   passwordFromEmitter(pass: IPassword, verify?: boolean) {
     this.passcount++;
-    this[verify ? 'passwordVerify' : 'password'] = pass.password;
+    this[verify ? 'passwordVerify' : 'password'] = (pass.password || '');
     this.log.d(`passwordFromEmitter: ${this.password} ${verify}`);
 
     // Make sure we got both passwords back...
     if (this.passcount % 2 === 0) {
       this.verifyPasswords();
-      if (this.password === undefined) {
-          this.password = '';
-          if (this.passwordVerify === undefined) {
-            this.passwordVerify = '';
-          }
-          this.verifyPasswords();
-      }
     }
   }
 

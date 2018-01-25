@@ -15,7 +15,7 @@ export class PasswordComponent implements OnDestroy {
 
 
   // UI State
-  password: string = '';
+  password: string;
   private destroyed: boolean = false;
 
   @Input() showPass: boolean = false;
@@ -77,7 +77,7 @@ export class PasswordComponent implements OnDestroy {
   }
 
   clear(): void {
-    this.password = '';
+    this.password = undefined;
   }
 
   /**
