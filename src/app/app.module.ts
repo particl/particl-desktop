@@ -11,10 +11,12 @@ import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.modu
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
+import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,

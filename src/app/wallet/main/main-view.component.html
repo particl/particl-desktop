@@ -13,7 +13,7 @@
     <mat-content class="sidebar-section">
       <mat-list class="sidebar-item-group">
         <a class="sidebar-item-link"
-          routerLinkActive="active" routerLink="/wallet/overview">
+          routerLinkActive="active" routerLink="[{ outlets: { main: ['overview'] } }]">
           <mat-list-item class="sidebar-item">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
             <span class="text">Overview</span>
@@ -30,7 +30,7 @@
             <mat-list class="sidebar-item-group">
 
               <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/receive'">
+                routerLinkActive="active" [routerLink]="[{ outlets: { main: ['receive'] } }]">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon"
                     fontIcon="part-receive"></mat-icon>
@@ -39,7 +39,7 @@
               </a>
 
               <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/send'">
+                routerLinkActive="active" [routerLink]="[{ outlets: { main: ['send'] } }]">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon"
                     fontIcon="part-send"></mat-icon>
@@ -48,7 +48,7 @@
               </a>
 
               <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/history'">
+                routerLinkActive="active" [routerLink]="[{ outlets: { main: ['history'] } }]">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon"
                     fontSet="partIcon" fontIcon="part-date"></mat-icon>
@@ -57,7 +57,7 @@
               </a>
 
               <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/address-book'">
+                routerLinkActive="active" [routerLink]="[{ outlets: { main: ['address-book'] } }]">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon"
                     fontIcon="part-people"></mat-icon>
@@ -203,7 +203,7 @@
   </mat-toolbar><!-- .header-main -->
 
   <div class="margin-left-right-50">
-    <router-outlet></router-outlet>
+    <router-outlet name="main"></router-outlet>
   </div>
 
 </mat-sidenav-container>

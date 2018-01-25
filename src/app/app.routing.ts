@@ -5,9 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { PreloadingStrategy, PreloadAllModules, Route } from '@angular/router';
 /* end preload strategy */
 
+import { LoadingComponent } from './loading/loading.component';
+
 /* actual routing */
 const routes: Routes = [
   { path: '', redirectTo: 'wallet', pathMatch: 'full' },
+  { path: 'loading', component: LoadingComponent },
   { path: 'wallet', loadChildren: './wallet/wallet.module#WalletViewsModule'}
 ];
 

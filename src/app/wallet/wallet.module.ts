@@ -5,6 +5,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { SharedModule } from './shared/shared.module';
 import { WalletModule } from './wallet/wallet.module';
 
+import { MainViewModule } from './main/main-view.module';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
@@ -29,6 +30,7 @@ import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-
   ],
   imports: [
     CommonModule,
+    MainViewModule,
     routing,
     SharedModule,
     WalletModule.forRoot(),
