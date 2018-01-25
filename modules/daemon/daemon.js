@@ -147,8 +147,6 @@ exports.check = function() {
 
 exports.stop = function() {
   return new Promise((resolve, reject) => {
-
-    if (daemon) {
       rpc.call('stop', null, (error, response) => {
         if (error) {
           log.error('Calling SIGINT!');
@@ -156,14 +154,11 @@ exports.stop = function() {
         } else {
           log.debug('Daemon stopping gracefully...');
           resolve();
+          if (!daemon) {
+            electron.app.quit();
+          }
         }
       });
-    } else
-    {
-        log.debug('Daemon not managed by gui.');
-        resolve();
-        electron.app.quit();
-    }
 
   }).catch(() => {
     if (daemon)
