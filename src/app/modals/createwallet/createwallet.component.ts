@@ -48,7 +48,7 @@ export class CreateWalletComponent implements OnDestroy {
   // Used for verification
   private wordsVerification: string[];
   private validating: boolean = false;
-  private passcount = 0;
+  private passcount: number = 0;
 
   errorString: string = '';
   private destroyed: boolean = false;
@@ -248,6 +248,13 @@ export class CreateWalletComponent implements OnDestroy {
     // Make sure we got both passwords back...
     if (this.passcount % 2 === 0) {
       this.verifyPasswords();
+      if (this.password === undefined) {
+          this.password = '';
+          if (this.passwordVerify === undefined) {
+            this.passwordVerify = '';
+          }
+          this.verifyPasswords();
+      }
     }
   }
 
