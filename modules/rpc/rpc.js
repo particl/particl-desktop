@@ -4,9 +4,12 @@ const http        = require('http');
 const cookie      = require('./cookie');
 const _options    = require('../options');
 
-let TIMEOUT = 30000;
+/* spyOnRpc will output all RPC calls being made */
+const spyOnRpc = false;
+
 let HOSTNAME;
 let PORT;
+let TIMEOUT = 30000;
 let rpcOptions;
 let auth;
 
@@ -36,6 +39,10 @@ exports.call = function(method, params, callback) {
     method: method,
     params: params
   });
+  
+  if(spyOnRpc) {
+    log.debug('rpc.call:', postData);
+  }
 
   if (!rpcOptions) {
     rpcOptions = {
