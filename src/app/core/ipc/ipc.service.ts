@@ -42,21 +42,6 @@ export class IpcService {
         event.sender.send(replyChannel, false);
       }
     });
-
-    this.log.d('Registering ipc listener');
-    this.registerListener("coolaid", this.coolaidObserv);
-  }
-
-  coolaidObserv(...args: any[]): Observable<any> {
-    let self = this;
-    return Observable.create(observer => {
-      self.zone.run(() => {
-        this.log.d('boy we got pushed some darn coolaid');
-        this.log.d(...args);
-        observer.next("Reply from Angular to daemon on push :D");
-        observer.complete();
-      });
-    });
   }
 
   checkRemoteListener(channel: string, receiver: Receiver) {
@@ -81,10 +66,10 @@ export class IpcService {
   }
 
   registerListener(channel: string, observableFactory: ObservableFactoryFunction) {
-    let self = this;
+    //let self = this;
     this.listeners[channel] = true;
     window.ipc.on(channel, function openChannel(event, subChannel, ...args) {
-      self.zone.run(() => {
+      //self.zone.run(() => {
         // Save the listener function so it can be removed
         const replyTo = event.sender;
         const observable = observableFactory(...args);
@@ -99,7 +84,7 @@ export class IpcService {
             replyTo.send(subChannel, 'c');
           }
         );
-      });
+      //});
     });
   }
 

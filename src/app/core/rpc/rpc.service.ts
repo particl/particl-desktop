@@ -8,6 +8,7 @@ import { map, catchError } from 'rxjs/operators';
 import { IpcService } from '../ipc/ipc.service';
 import { StateService } from '../state/state.service';
 import { RpcStateClass } from './rpc-state/rpc-state.class';
+import { ZmqService } from 'app/core/zmq/zmq.service';
 
 const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
@@ -58,6 +59,7 @@ export class RpcService implements OnDestroy {
   constructor(
     private _http: HttpClient,
     private _ipc: IpcService,
+    private _zmq: ZmqService,
     public state: StateService
   ) {
     this.isElectron = window.electron;

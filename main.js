@@ -1,26 +1,27 @@
 
-const electron      = require('electron');
-const app           = electron.app;
+const electron = require('electron');
+const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-const Notification  = electron.Notification;
-const path          = require('path');
-const url           = require('url');
-const platform      = require('os').platform();
-const rxIpc         = require('rx-ipc-electron/lib/main').default;
-const Observable    = require('rxjs/Observable').Observable;
-const log           = require('electron-log');
+const Notification = electron.Notification;
+const path = require('path');
+const url = require('url');
+const platform = require('os').platform();
+const rxIpc = require('rx-ipc-electron/lib/main').default;
+const Observable = require('rxjs/Observable').Observable;
+const log = require('electron-log');
 
 log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
 log.transports.file.file = log.transports.file
-   .findLogPath(log.transports.file.appName)
-   .replace('log.log', 'particl.log');
+  .findLogPath(log.transports.file.appName)
+  .replace('log.log', 'particl.log');
 log.debug(`console log level: ${log.transports.console.level}`);
-log.debug(   `file log level: ${log.transports.file.level   }`);
+log.debug(`file log level: ${log.transports.file.level}`);
 
 const _options = require('./modules/options');
-const init     = require('./modules/init');
-const rpc      = require('./modules/rpc/rpc');
-const daemon   = require('./modules/daemon/daemon');
+const init = require('./modules/init');
+const rpc = require('./modules/rpc/rpc');
+const zmq = require('./modules/zmq/zmq');
+const daemon = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -43,7 +44,11 @@ app.on('ready', () => {
   options = _options.parse();
   initMainWindow();
   init.start(mainWindow);
-  setTimeout(drinkTheCoolaid, 60 * 1000);
+
+  /* Initialize ZMQ */
+  zmq.init(mainWindow);
+  zmq.test(); // loop, will send tests
+  
 });
 
 // Quit when all windows are closed.
@@ -65,8 +70,8 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-app.on('browser-window-created',function(e, window) {
-  rxIpc.registerListener('rx-ipc-notification', function(title, desc, params) {
+app.on('browser-window-created', function (e, window) {
+  rxIpc.registerListener('rx-ipc-notification', function (title, desc, params) {
     let notification = new Notification({
       'title': title,
       'body': desc,
@@ -93,17 +98,17 @@ function initMainWindow() {
     // on Win, the width of app is few px smaller than it should be.
     // this triggers smaller breakpoints
     // this size should cause the same layout results on all OSes
-    width:     1270,
-    minWidth:  961,
-    maxWidth:  1920,
-    height:    675,
+    width: 1270,
+    minWidth: 961,
+    maxWidth: 1920,
+    height: 675,
     resizable: false,
-    icon:      path.join(__dirname, 'resources/icon.png'),
+    icon: path.join(__dirname, 'resources/icon.png'),
     webPreferences: {
-      nodeIntegration:  false,
-      sandbox:          true,
+      nodeIntegration: false,
+      sandbox: true,
       contextIsolation: true,
-      preload:          path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js')
     },
   });
 
@@ -114,7 +119,7 @@ function initMainWindow() {
     mainWindow.loadURL(url.format({
       protocol: 'file:',
       pathname: path.join(__dirname, 'dist/index.html'),
-      slashes:  true
+      slashes: true
     }));
   }
 
@@ -161,11 +166,11 @@ function makeTray() {
       submenu: [
         {
           label: 'Reload',
-          click () { mainWindow.webContents.reloadIgnoringCache(); }
+          click() { mainWindow.webContents.reloadIgnoringCache(); }
         },
         {
           label: 'Open Dev Tools',
-          click () { mainWindow.openDevTools(); }
+          click() { mainWindow.openDevTools(); }
         }
       ]
     },
@@ -174,19 +179,19 @@ function makeTray() {
       submenu: [
         {
           label: 'Close',
-          click () { app.quit() }
+          click() { app.quit() }
         },
         {
           label: 'Hide',
-          click () { mainWindow.hide(); }
+          click() { mainWindow.hide(); }
         },
         {
           label: 'Show',
-          click () { mainWindow.show(); }
+          click() { mainWindow.show(); }
         },
         {
           label: 'Maximize',
-          click () { mainWindow.maximize(); }
+          click() { mainWindow.maximize(); }
         } /* TODO: stop full screen somehow,
         {
           label: 'Toggle Full Screen',
@@ -201,15 +206,15 @@ function makeTray() {
       submenu: [
         {
           label: 'About ' + app.getName(),
-          click () { electron.shell.openExternal('https://particl.io/#about'); }
+          click() { electron.shell.openExternal('https://particl.io/#about'); }
         },
         {
           label: 'Visit Particl.io',
-          click () { electron.shell.openExternal('https://particl.io'); }
+          click() { electron.shell.openExternal('https://particl.io'); }
         },
         {
           label: 'Visit Electron',
-          click () { electron.shell.openExternal('https://electron.atom.io'); }
+          click() { electron.shell.openExternal('https://electron.atom.io'); }
         }
       ]
     }
@@ -228,29 +233,10 @@ function makeTray() {
   tray.setContextMenu(contextMenu)
 
   // Always show window when tray icon clicked
-  tray.on('click',function() {
+  tray.on('click', function () {
     mainWindow.show();
   });
 
   return trayImage;
 }
 
-
-/* test function */
-function drinkTheCoolaid() {
-  console.log(" [rm] sending coolaid node -> angular");
-  setTimeout(drinkTheCoolaid, 20000);
-  rxIpc.runCommand('coolaid', mainWindow.webContents, 1, 2, 3)
-  .subscribe(
-    (data) => {
-      console.log("data: " + data);
-    },
-    (err) => {
-      console.error(err);
-    },
-    () => {
-      console.log("completed!");
-      // Logs [2, 4, 6]
-    }
-  );
-}
