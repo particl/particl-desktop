@@ -12,7 +12,7 @@ export class ZmqService {
   constructor(private _ipc: IpcService) {
     this.log.d('Registering ipc listener');
     // Register a listener on the channel "zmq" (ipc)
-    this._ipc.registerListener("zmq", this.zmqListener.bind(this));
+    this._ipc.registerListener('zmq', this.zmqListener.bind(this));
    }
 
   /*
@@ -22,7 +22,7 @@ export class ZmqService {
    zmqListener(...args: any[]): Observable<any> {
     return Observable.create(observer => {
         this.log.d('ZMQ pushed a new message, yay! data: ' + args);
-        observer.next("Thanks ZMQ, here is some data back you good ol' friend");
+        observer.next('Thanks ZMQ, here is some data back you good ol\' friend');
         observer.complete();
       });
   }

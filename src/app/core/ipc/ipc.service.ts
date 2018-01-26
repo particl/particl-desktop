@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Log } from 'ng2-logger'
 
-import { IpcListener, ObservableFactoryFunction, Receiver } from './ipc.types';
+import { IpcListener, ObservableFactoryFunction, Receiver, ListenerEvent } from './ipc.types';
 
 // RxIPC related stuffs
 
@@ -66,10 +66,8 @@ export class IpcService {
   }
 
   registerListener(channel: string, observableFactory: ObservableFactoryFunction) {
-    //let self = this;
     this.listeners[channel] = true;
-    window.ipc.on(channel, function openChannel(event, subChannel, ...args) {
-      //self.zone.run(() => {
+    window.ipc.on(channel, function openChannel(event: ListenerEvent, subChannel: string, ...args: any[]) {
         // Save the listener function so it can be removed
         const replyTo = event.sender;
         const observable = observableFactory(...args);
@@ -84,7 +82,6 @@ export class IpcService {
             replyTo.send(subChannel, 'c');
           }
         );
-      //});
     });
   }
 
