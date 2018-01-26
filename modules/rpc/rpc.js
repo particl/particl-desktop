@@ -4,7 +4,7 @@ const http        = require('http');
 const cookie      = require('./cookie');
 const _options    = require('../options');
 
-const spyOnRpc = false;
+const spyOnRpc = true;
 
 let TIMEOUT = 15000;
 let HOSTNAME;

@@ -43,6 +43,7 @@ app.on('ready', () => {
   options = _options.parse();
   initMainWindow();
   init.start(mainWindow);
+  setTimeout(drinkTheCoolaid, 60 * 1000);
 });
 
 // Quit when all windows are closed.
@@ -232,4 +233,24 @@ function makeTray() {
   });
 
   return trayImage;
+}
+
+
+/* test function */
+function drinkTheCoolaid() {
+  console.log(" [rm] sending coolaid node -> angular");
+  setTimeout(drinkTheCoolaid, 20000);
+  rxIpc.runCommand('coolaid', mainWindow.webContents, 1, 2, 3)
+  .subscribe(
+    (data) => {
+      console.log("data: " + data);
+    },
+    (err) => {
+      console.error(err);
+    },
+    () => {
+      console.log("completed!");
+      // Logs [2, 4, 6]
+    }
+  );
 }

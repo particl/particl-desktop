@@ -58,14 +58,19 @@ exports.init = function() {
   rxIpc.removeListeners('rpc-channel');
 
   // Register new listener
-  rxIpc.registerListener('rpc-channel', (event, method, params) => {
+  rxIpc.registerListener('rpc-channel', (method, params) => {
     return Observable.create(observer => {
       if (['restart-daemon'].includes(method)) {
         daemon.restart(() => observer.next(true));
       } else {
         rpc.call(method, params, (error, response) => {
           try {
-            error ? observer.error(error) : observer.next(response || undefined);
+            if(error) {
+              observer.error(error);
+            } else {
+              observer.next(response || undefined);
+              observer.complete();
+            }
           } catch (err) {
             if (err.message == 'Object has been destroyed') {
               // suppress error
