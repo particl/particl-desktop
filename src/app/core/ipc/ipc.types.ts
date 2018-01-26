@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 
+// All of this is rx-ipc related stuff
 export type IpcListener = (event: Event, ...args: any[]) => void;
 
 export type ObservableFactoryFunction = (...args: any[]) => Observable<any>;

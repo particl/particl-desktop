@@ -5,7 +5,7 @@ import { Log } from 'ng2-logger'
 import { IpcListener, ObservableFactoryFunction, Receiver, ListenerEvent } from './ipc.types';
 
 // RxIPC related stuffs
-
+// TODO: maybe move into ipc.types ?
 declare global {
   interface Window {
     electron: boolean;
@@ -91,7 +91,6 @@ export class IpcService {
   }
 
   runCommand(channel: string, receiver: Receiver = null, ...args: any[]): Observable<any> {
-    this.log.d(args);
     const self = this;
     const subChannel = channel + ':' + this.listenerCount;
     this.listenerCount++;
@@ -113,7 +112,6 @@ export class IpcService {
               observer.error((<any>data).error ? (<any>data).error : data);
               break;
             case 'c':
-              self.log.d('Completing observable :)');
               observer.complete();
           }
           // Cleanup
@@ -128,15 +126,6 @@ export class IpcService {
 
   private _getListenerCount(channel: string) {
     return window.ipc.listenerCount(channel);
-  }
-
-  runNotification(...args: any[]): Observable<any> {
-    window.ipc.send('rx-ipc-notification', 'message', ...args);
-    return new Observable((observer) => {
-      window.ipc.once('message', function listener() {
-        observer.complete();
-      });
-    })
   }
 
 }
