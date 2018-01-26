@@ -2,6 +2,12 @@ const Observable  = require('rxjs/Observable').Observable;
 const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const log         = require('electron-log');
 
+/* Constants */
+const ZMQ_CHANNEL = "zmq";
+
+const SPY_ON_ZMQ = true;
+
+/* references */
 let mainReference = null;
 
 exports.init = function (mainWindow) {
@@ -13,25 +19,29 @@ exports.init = function (mainWindow) {
 }
 
 /*
-** 
+    Sends a message to the Angular frontend, on the channel "zmq".
+    Subchannels can be anything "wtxhash", "smsg", .. (particl-core)
+    TODO (maybe): promise structure?
 */
-exports.send = function(channel, ...data) {
-    console.log(" [rm] sending coolaid to zmq node -> angular");
+exports.send = function(subchannel, ...data) {
+    log.debug(" [rm] sending zmq coolaid from node -> angular");
     try {
-      rxIpc.runCommand('zmq', mainReference.webContents, channel, ...data)
+      rxIpc.runCommand(ZMQ_CHANNEL, mainReference.webContents, subchannel, ...data)
         .subscribe(
-        (data) => {
-          console.log("data: " + data);
+        (returnData) => {
+            if(SPY_ON_ZMQ) {
+                log.debug('zmq.send: ', returnData);
+            }
         },
-        (err) => {
-          console.error(err);
+        (error) => {
+          log.error("zmq.send: subchan: " + subchannel + " data: " + data + " error: " + err);
         },
         () => {
-          console.log("completed!");
+          log.debug("completed!");
         }
         );
     } catch (error) {
-      log.debug("zmq - failed to runCommand (maybe window closed): " + error);
+      log.debug("zmq.send: failed to runCommand (maybe window closed): " + error);
     }
 
   }
