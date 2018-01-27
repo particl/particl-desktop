@@ -10,7 +10,7 @@ export class NotificationService {
     private _ipc: IpcService
   ) {
   }
-  
+
   /** Send Notification to the backend */
   public sendNotification(title: string, desc: string) {
     this.runNotification(title, desc);
