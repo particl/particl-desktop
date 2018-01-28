@@ -17,6 +17,12 @@ export class IpcService {
   listeners: { [id: string]: boolean } = {};
 
   constructor(public zone: NgZone) {
+
+    // if not electron, quit
+    if(!window.electron) {
+      return;
+    }
+
     // Respond to checks if a listener is registered
     window.ipc.on('rx-ipc-check-listener', (event, channel) => {
       const replyChannel = 'rx-ipc-check-reply:' + channel;
