@@ -67,17 +67,18 @@ export class SignatureAddressModalComponent implements OnInit {
     this.buildForm();
   }
 
-  openLookup() {
+  openLookup(): void {
     const dialogRef = this.dialog.open(AddressLookupComponent);
     // @TODO confirm lookup type
-    dialogRef.componentInstance.type = 'receive';
+    dialogRef.componentInstance.type = (this.type === 'sign') ? 'receive' : 'send';
+    dialogRef.componentInstance.filter = 'Public';
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
       dialogRef.close();
     });
   }
 
-  selectAddress(copyObject: AddressLookUpCopy) {
+  selectAddress(copyObject: AddressLookUpCopy): void {
     this.formData.address = copyObject.address;
     this.verifyAddress();
   }

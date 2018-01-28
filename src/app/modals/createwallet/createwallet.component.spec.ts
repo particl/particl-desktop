@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogRef } from '@angular/material';
 
 import { ModalsModule } from '../modals.module';
 import { CoreModule } from '../../core/core.module';
@@ -22,6 +23,9 @@ describe('CreateWalletComponent', () => {
         CoreModule.forRoot(),
         ModalsModule,
         CoreUiModule.forRoot()
+      ],
+      providers: [
+        { provide: MatDialogRef}
       ]
     })
     .compileComponents();

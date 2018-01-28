@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { RpcService } from '../../../core/core.module';
 
 import { Contact } from './contact.model';
@@ -14,6 +14,8 @@ import { MatDialogRef } from '@angular/material';
 export class AddressLookupComponent implements OnInit {
 
   @Output() selectAddressCallback: EventEmitter<AddressLookUpCopy> = new EventEmitter<AddressLookUpCopy>();
+
+  @ViewChild('paginator') paginator: any;
 
   log: any = Log.create('addresslookup.component');
 
@@ -37,7 +39,7 @@ export class AddressLookupComponent implements OnInit {
               private dialogRef: MatDialogRef<AddressLookupComponent>) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.show();
     this.allowFilter = (this.filter === 'All types');
   }
@@ -56,7 +58,7 @@ export class AddressLookupComponent implements OnInit {
       0 + ((this.current_page - 1) * this.MAX_ADDRESSES_PER_PAGE), this.current_page * this.MAX_ADDRESSES_PER_PAGE);
   }
 
-  pageChanged(event: any) {
+  pageChanged(event: any): void {
     if (event.pageIndex !== undefined) {
       this.MAX_ADDRESSES_PER_PAGE = event.pageSize;
       this.current_page = event.pageIndex + 1;
@@ -64,7 +66,7 @@ export class AddressLookupComponent implements OnInit {
     }
   }
 
-  getTotalCountForPagination() {
+  getTotalCountForPagination(): number {
     return this.searchResult.length;
   }
 
@@ -77,11 +79,11 @@ export class AddressLookupComponent implements OnInit {
     return address.length > 35 ? 'Private' : 'Public';
   }
 
-  show() {
+  show(): void {
     this.rpc_update();
   }
 
-  rpc_update() {
+  rpc_update(): void {
     this._rpc.call('filteraddresses', [-1])
       .subscribe(
         (response: any) => {
@@ -90,7 +92,7 @@ export class AddressLookupComponent implements OnInit {
             typeInt = '2';
             this._addressCount = response.num_send;
           } else {
-            this.filter = 'private';
+            this.filter = 'Private';
             typeInt = '1';
             this._addressCount = response.num_receive;
           }
@@ -114,13 +116,19 @@ export class AddressLookupComponent implements OnInit {
         (error: any) => this.log.er('rpc_update: filteraddresses Failed!'));
   }
 
-  onSelectAddress(address: string, label: string) {
+  onSelectAddress(address: string, label: string): void {
     const emitData: AddressLookUpCopy = {address: address, label: label};
     this.selectAddressCallback.emit(emitData);
   }
 
   dialogClose(): void {
     this.dialogRef.close();
+  }
+
+  // Reset pagination
+  resetPagination(): void {
+    this.current_page = 1;
+    this.paginator.resetPagination(0);
   }
 
 }

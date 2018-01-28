@@ -1,4 +1,4 @@
-import {Component, forwardRef, Inject, ViewChild} from '@angular/core';
+import { Component, forwardRef, Inject, ViewChild } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { MatDialogRef } from '@angular/material';
 
@@ -19,8 +19,7 @@ export class EncryptwalletComponent {
   log: any = Log.create('encryptwallet.component');
   public password: string;
 
-  @ViewChild('passwordElement')
-  passwordElement: PasswordComponent;
+  @ViewChild('passwordElement') passwordElement: PasswordComponent;
 
   constructor(
     @Inject(forwardRef(() => ModalsService))
@@ -30,7 +29,7 @@ export class EncryptwalletComponent {
     public _dialogRef: MatDialogRef<EncryptwalletComponent>
   ) { }
 
-  encryptwallet(password: IPassword) {
+  encryptwallet(password: IPassword): void {
     if (this.password) {
 
       this.log.d(`check password equality: ${password.password === this.password}`);
@@ -41,20 +40,17 @@ export class EncryptwalletComponent {
         this._rpc.call('encryptwallet', [password.password])
           .subscribe(
             response => {
-              this._rpc.state.set('ui:spinner', false);
               this._rpc.toggleState(false);
               this.flashNotification.open(response);
 
               if (this._rpc.isElectron) {
                 this._rpc.call('restart-daemon')
                   .subscribe(() => {
+                    this._rpc.state.set('ui:spinner', false);
                     if (!this._modalsService.initializedWallet) {
                       this._modalsService.open('createWallet', {forceOpen: true});
-                    } else {
-                      this._modalsService.close();
-                      // force-close encrypt modal
-                      this._dialogRef.close();
                     }
+                    this._dialogRef.close();
                     this._rpc.toggleState(true);
                   });
               }
@@ -77,7 +73,7 @@ export class EncryptwalletComponent {
     }
   }
 
-  clearPassword() {
+  clearPassword(): void {
     this.password = undefined;
   }
 }

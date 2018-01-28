@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material';
 import { ModalsComponent } from './modals.component';
 
 @Injectable()
-export class ModalsService {
+export class ModalsService implements OnDestroy {
 
   public modal: any = null;
   private message: Subject<any> = new Subject<any>();
@@ -30,6 +30,7 @@ export class ModalsService {
   /* True if user already has a wallet (imported seed or created wallet) */
   public initializedWallet: boolean = false;
   private data: string;
+  private destroyed: boolean = false;
 
   private log: any = Log.create('modals.service');
 
@@ -68,6 +69,10 @@ export class ModalsService {
       });
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
   /**
     * Open a modal
     * @param {string} modal   The name of the modal to open
@@ -98,7 +103,7 @@ export class ModalsService {
   }
 
   /** Close the modal */
-  close() {
+  close(): void {
     const isOpen = this.isOpen;
 
     if (!!this.modal && !this.wasManuallyClosed(this.modal.name)) {
@@ -116,12 +121,12 @@ export class ModalsService {
     * Check if a modal was manually closed
     * @param {any} modal  The modal to check
     */
-  wasManuallyClosed(modal: any) {
+  wasManuallyClosed(modal: any): boolean {
     return this.manuallyClosed.includes(modal);
   }
 
   /** Check if the modal is already open */
-  wasAlreadyOpen(modalName: string) {
+  wasAlreadyOpen(modalName: string): boolean {
     return (this.modal === this.messages[modalName]);
   }
 
@@ -135,7 +140,7 @@ export class ModalsService {
     * Open the Sync modal if it needs to be opened
     * @param {any} status  Blockchain status
     */
-  openSyncModal(status: any) {
+  openSyncModal(status: any): void {
     // Open syncing Modal
     if (!this.isOpen && !this.wasManuallyClosed(this.messages['syncing'].name)
       && (status.networkBH <= 0
@@ -148,8 +153,9 @@ export class ModalsService {
   /**
     * Open the Createwallet modal if wallet is not initialized
     */
-  openInitialCreateWallet() {
+  openInitialCreateWallet(): void {
     this._rpc.state.observe('ui:walletInitialized')
+      .takeWhile(() => !this.destroyed)
       .subscribe(
         state => {
           this.initializedWallet = state;

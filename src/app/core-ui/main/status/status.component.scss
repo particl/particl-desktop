@@ -23,4 +23,13 @@
       color: darken($bg-shadow, 15%);
     }
   }
+
+  // Console
+  &.console {
+    margin-left: 6px;
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+  }
+
 }

@@ -29,7 +29,9 @@
 
 // ------ BUTTONS ------ //
 
-.mat-button {
+button,
+.mat-button,
+.mat-raised-button {
   .mat-icon {
     width: auto;
     height: auto;
@@ -115,7 +117,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   // sidebar/menu: no padding for panel's content (used in the sidebar)
   &.no-padding {
     .mat-expansion-panel-body {
-      margin: 0;
+      padding: 0;
     }
   }
   // sidebar/menu: color panel's arrow
@@ -172,9 +174,11 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 .mat-list {
   // sidebar/menu: smaller vertical padding of child lists
   &.sidebar-item-group {
-    .mat-list-item .mat-list-item-content {
+    .mat-list-item {
       height: 42px;
-      padding: 0 10px;
+      .mat-list-item-content {
+        padding: 0 10px;
+      }
     }
   }
 }
@@ -221,6 +225,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 .mat-form-field {
   font-family: $font;
+  line-height: normal;
   &.larger { // larger inputs
     font-size: 14px;
   }
@@ -316,13 +321,17 @@ input {
 
     // Dialogs (small)
     .dialog-content {
-      margin: 20px 0 25px;
+      margin: 15px -24px;
     }
     [mat-dialog-title] { // dialog title
       font-family: $font;
       font-weight: 600;
       font-size: 20px;
       margin-bottom: 15px;
+      padding-right: 50px;
+      &.text-center {
+        padding: 0;
+      }
     }
 
     .small-close_button {
@@ -354,10 +363,13 @@ input {
       position: absolute;
       right: 0;
       top: 0;
+      z-index: 10;
       padding: 25px 38px;
       background: transparent;
       color: $text-muted;
       min-width: 50px;
+      outline: none;
+      cursor: pointer;
       .mat-icon {
         color: rgba($color-alert, 0.5);
         border-radius: 50%;
@@ -372,7 +384,31 @@ input {
       }
     }
     .mat-wallet-content {
+      /*
       max-height: 100% !important;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      */
+      .mat-progress-spinner { // loading spinners
+        width: 100px;
+        height: 100px;
+        padding: 0 !important;
+        position: absolute;
+        left: calc((100% - 100px) / 2);
+        top: calc((100% - 100px) / 2);
+        z-index: 10;
+        background: rgba(white, 0.9);
+        box-shadow: 0 0 70px silver;
+        border-radius: 50%;
+        svg {
+          width: 70px !important;
+          height: 70px !important;
+          transform-origin: 50px 35px;
+        }
+      }
     }
   }
 }

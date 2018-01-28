@@ -7,7 +7,7 @@ import {
   ElementRef,
   HostListener,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef, OnDestroy
 } from '@angular/core';
 import { Log } from 'ng2-logger'
 
@@ -33,7 +33,7 @@ import { StateService } from '../core/core.module';
     EncryptwalletComponent
   ]
 })
-export class ModalsComponent implements DoCheck, OnInit {
+export class ModalsComponent implements DoCheck, OnInit, OnDestroy {
 
   @ViewChild('modalContainer', { read: ViewContainerRef })
   private modalContainer: ViewContainerRef;
@@ -44,6 +44,7 @@ export class ModalsComponent implements DoCheck, OnInit {
   enableClose: boolean;
   loadSpinner: boolean;
   private log: any = Log.create('modals.component');
+  private destroyed: boolean = false;
 
   constructor(
     private _element: ElementRef,
@@ -52,15 +53,17 @@ export class ModalsComponent implements DoCheck, OnInit {
     private state: StateService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.state.observe('modal:fullWidth:enableClose')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.enableClose = status);
 
     this.state.observe('ui:spinner')
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.loadSpinner = status);
   }
 
-  ngDoCheck() {
+  ngDoCheck(): void {
     // TODO: undocumented hack?
     if (this._element) {
       const element = this._element.nativeElement;
@@ -70,8 +73,12 @@ export class ModalsComponent implements DoCheck, OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
   // open modal
-  open(message: any, data?: any) {
+  open(message: any, data?: any): void {
     this.log.d(`open modal ${message.name}` + (data ? ` with data ${data}` : ''));
     this.modalContainer.clear();
     const factory = this._resolver.resolveComponentFactory(message);
@@ -82,7 +89,7 @@ export class ModalsComponent implements DoCheck, OnInit {
     }
   }
 
-  close() {
+  close(): void {
     this._dialogRef.close();
     // remove and destroy message
     this.modalContainer.remove();

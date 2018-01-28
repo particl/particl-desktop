@@ -50,11 +50,13 @@ $radius: 4px; // default border-radius
 
 
 // enable/disable text selection
-%disable-select {
+%disable-select,
+.disable-select {
   user-select: none;
   cursor: default;
 }
-%enable-select {
+%enable-select,
+.enable-select {
   user-select: auto;
   cursor: text;
 }

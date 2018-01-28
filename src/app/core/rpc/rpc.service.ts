@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
 import { Subject } from 'rxjs/Subject';
@@ -26,7 +26,7 @@ declare global {
  */
 
 @Injectable()
-export class RpcService {
+export class RpcService implements OnDestroy {
   /**
    * IP/URL for daemon (default = localhost)
    */
@@ -53,6 +53,7 @@ export class RpcService {
   public errorsStateCall: Subject<any> = new Subject<any>();
 
   private _rpcState: RpcStateClass;
+  private destroyed: boolean = false;
 
   constructor(
     private _http: HttpClient,
@@ -62,6 +63,10 @@ export class RpcService {
     this.isElectron = window.electron;
 
     this.toggleState(true);
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   /**
@@ -170,8 +175,12 @@ export class RpcService {
       // initiate loop
       _call();
     } else {
-      this.state.observe('blocks') .subscribe(success => this.stateCall(method, true));
-      this.state.observe('txcount').subscribe(success => this.stateCall(method, true));
+      this.state.observe('blocks')
+        .takeWhile(() => !this.destroyed)
+        .subscribe(success => this.stateCall(method, true));
+      this.state.observe('txcount')
+        .takeWhile(() => !this.destroyed)
+        .subscribe(success => this.stateCall(method, true));
     }
   }
 

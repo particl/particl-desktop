@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
+import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../../environments/environment';
@@ -19,7 +20,7 @@ import { TransactionService } from '../../wallet/wallet/shared/transaction.servi
   templateUrl: './main-view.component.html',
   styleUrls: ['./main-view.component.scss']
 })
-export class MainViewComponent implements OnInit {
+export class MainViewComponent implements OnInit, OnDestroy {
   log: any = Log.create('main-view.component');
 
   /* UI States */
@@ -29,17 +30,21 @@ export class MainViewComponent implements OnInit {
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
-  daemonError: string;
+  daemonError: any;
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
-
+  unSubscribeTimer: any;
+  time: string = '5:00';
+  public unlocked_until: number = 0;
+  private destroyed: boolean = false;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
     private _modals: ModalsService,
-    public txService: TransactionService
+    public txService: TransactionService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -67,20 +72,38 @@ export class MainViewComponent implements OnInit {
                 error => {
                   this.daemonRunning = ![0, 502].includes(error.status);
                   this.daemonError = error;
+                  this.log.d(error);
                 });
 
     // Updates the error box in the sidenav if wallet is not initialized.
     this._rpc.state.observe('ui:walletInitialized')
-    .subscribe(status => this.walletInitialized = status);
+      .takeWhile(() => !this.destroyed)
+      .subscribe(status => this.walletInitialized = status);
 
+
+    this._rpc.state.observe('unlocked_until')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(status => {
+        this.unlocked_until = status;
+        if (this.unlocked_until > 0) {
+          this.checkTimeDiff(status);
+        } else {
+            if (this.unSubscribeTimer) {
+              this.unSubscribeTimer.unsubscribe();
+            }
+          }
+      });
 
     /* versions */
     // Obtains the current daemon version
     this._rpc.state.observe('subversion')
-    .subscribe(
-      subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
+      .takeWhile(() => !this.destroyed)
+      .subscribe(subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
   /** Open createwallet modal when clicking on error in sidenav */
   createWallet() {
     this._modals.open('createWallet', {forceOpen: true});
@@ -91,4 +114,37 @@ export class MainViewComponent implements OnInit {
     this._modals.open('syncing', {forceOpen: true});
   }
 
+  checkTimeDiff(time: number) {
+    const currentUtcTimeStamp = Math.floor((new Date()).getTime() / 1000);
+    const diff = Math.floor(time - currentUtcTimeStamp);
+    const minutes = Math.floor((diff % (60 * 60)) / 60);
+    const sec = Math.ceil((diff % (60 * 60) % 60));
+    this.startTimer(minutes, sec);
+  }
+
+  startTimer(min: number, sec: number): void {
+    sec = this.checkSecond(sec);
+    if (sec === 59) {
+      min = min - 1;
+    }
+    if (min >= 0 && sec >= 0) {
+      this.time = min + ':' + ('0' + sec).slice(-2);
+      this.unSubscribeTimer = Observable.timer(1000).
+        subscribe(() => this.startTimer(min, sec));
+    } else {
+      this.unSubscribeTimer.unsubscribe();
+    }
+  }
+
+  checkSecond(sec: number): number {
+    sec = sec > 0 ? (sec - 1) : 59;
+    return sec;
+  }
+
+  /**
+  // Sample code for open modal box
+  openDemonConnectionModal() {
+    const dialogRef = this.dialog.open(DaemonConnectionComponent);
+    dialogRef.componentInstance.text = "Test";
+  }*/
 }

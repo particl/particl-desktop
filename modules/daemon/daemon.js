@@ -9,7 +9,7 @@ const cookie        = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
 const multiwallet   = require('../multiwallet');
 
-let daemon;
+let daemon = undefined;
 let exitCode = 0;
 let restarting = false;
 let chosenWallets = [];
@@ -54,12 +54,8 @@ exports.restart = function (cb) {
 exports.start = function (wallets, callback) {
   return (new Promise((resolve, reject) => {
 
-    let   options    = _options.get();
-    const daemonPath = options.customdaemon
-                     ? options.customdaemon
-                     : daemonManager.getPath();
+    chosenWallets    = wallets;
 
-    chosenWallets = wallets;
     rpc.init();
     exports.check().then(() => {
       log.info('daemon already started');
@@ -69,6 +65,11 @@ exports.start = function (wallets, callback) {
 
       if (!restarting && ['debug', 'silly'].includes(log.transports.console.level))
         process.argv.push('-printtoconsole');
+
+      let options      = _options.get();
+      const daemonPath = options.customdaemon
+                       ? options.customdaemon
+                       : daemonManager.getPath();
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
@@ -101,7 +102,7 @@ exports.start = function (wallets, callback) {
 exports.wait = function(wallets, callback) {
   return new Promise((resolve, reject) => {
 
-    const maxRetries  = 10; // Some slow computers...
+    const maxRetries  = 100; // Some slow computers...
     let   retries     = 0;
     let   errorString = '';
 
@@ -127,7 +128,6 @@ exports.wait = function(wallets, callback) {
         }
         log.error('Could not connect to daemon.')
         reject();
-        electron.app.exit();
       }
     } /* daemonStartup */
 
@@ -170,7 +170,12 @@ exports.stop = function() {
           resolve();
         }
       });
-    } else resolve();
+    } else
+    {
+        log.debug('Daemon not managed by gui.');
+        resolve();
+        electron.app.quit();
+    }
 
   }).catch(() => {
     if (daemon)
