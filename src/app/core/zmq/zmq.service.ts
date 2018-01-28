@@ -11,8 +11,10 @@ export class ZmqService {
 
   constructor(private _ipc: IpcService) {
     this.log.d('Registering ipc listener');
-    // Register a listener on the channel "zmq" (ipc)
-    this._ipc.registerListener('zmq', this.zmqListener.bind(this));
+    if(window.electron) {
+      // Register a listener on the channel "zmq" (ipc)
+      this._ipc.registerListener('zmq', this.zmqListener.bind(this));
+    }
    }
 
   /*
