@@ -48,6 +48,7 @@ export class CreateWalletComponent implements OnDestroy {
   // Used for verification
   private wordsVerification: string[];
   private validating: boolean = false;
+  private passcount: number = 0;
 
   errorString: string = '';
   private destroyed: boolean = false;
@@ -104,6 +105,8 @@ export class CreateWalletComponent implements OnDestroy {
 
     /* Recovery password entered */
     if (this.step === 2) {
+      this.password = '';
+      this.passwordVerify = '';
       this.passwordElement.sendPassword();
       this.passwordElementVerify.sendPassword();
       return;
@@ -133,8 +136,8 @@ export class CreateWalletComponent implements OnDestroy {
         if (this.isRestore) {
           this.step = 4;
         }
-        this.password = undefined;
-        this.passwordVerify = undefined;
+        this.password = '';
+        this.passwordVerify = '';
         break;
       case 3:
         this._passphraseService.generateMnemonic(
@@ -239,11 +242,12 @@ export class CreateWalletComponent implements OnDestroy {
 
   /** Triggered when the password is emitted from PasswordComponent */
   passwordFromEmitter(pass: IPassword, verify?: boolean) {
-    this[verify ? 'passwordVerify' : 'password'] = pass.password;
+    this.passcount++;
+    this[verify ? 'passwordVerify' : 'password'] = (pass.password || '');
     this.log.d(`passwordFromEmitter: ${this.password} ${verify}`);
-    if (!!this[verify ? 'password' : 'passwordVerify']
-      || this.password === '' && this.passwordVerify === ''
-      || this.password === undefined && this.passwordVerify === undefined) {
+
+    // Make sure we got both passwords back...
+    if (this.passcount % 2 === 0) {
       this.verifyPasswords();
     }
   }
@@ -267,7 +271,8 @@ export class CreateWalletComponent implements OnDestroy {
       this.step++;
       this.doStep();
     }
-    this.passwordVerify = undefined;
+    this.passwordVerify = ''
+    this.password = '';
   }
 
   /** Triggered when the password is emitted from PassphraseComponent */
