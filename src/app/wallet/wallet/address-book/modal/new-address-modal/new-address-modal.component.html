@@ -5,8 +5,8 @@
 
 <form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
 
-  <mat-dialog-content class="modal-content">
-    <mat-form-field>
+  <mat-dialog-content class="modal-content" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+    <mat-form-field fxFlex="1 1 50%">
       <input matInput type="text" formControlName="address"
              [(ngModel)]="address" (ngModelChange)="verifyAddress()"
              placeholder="Enter Address"
@@ -14,11 +14,11 @@
              #addressInput
              required>
     </mat-form-field>
-    <span matTooltip="Paste" (click)="pasteAddress()">
+    <span fxFlex="0 0 16px" matTooltip="Paste address" (click)="pasteAddress()">
       <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
     </span>
-    <mat-form-field>
-      <input matInput type="text" placeholder="Enter Label" name="label" formControlName="label" [(ngModel)]="label" required />
+    <mat-form-field fxFlex="1 1 50%">
+      <input matInput type="text" placeholder="Enter address label" name="label" formControlName="label" [(ngModel)]="label" required />
     </mat-form-field>
   </mat-dialog-content>
 
