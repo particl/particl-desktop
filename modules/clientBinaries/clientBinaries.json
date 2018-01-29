@@ -8,7 +8,7 @@
             "download": {
               "url": "https://github.com/particl/particl-core/releases/download/v0.15.1.2/particl-0.15.1.2-arm-linux-gnueabihf.tar.gz",
               "type": "tar",
-              "sha256": "3b2709342c42e43c9889897e175a2771ca1f9d3fac97aa4a77c16cfbd9e4feea",
+               "sha256": "3b2709342c42e43c9889897e175a2771ca1f9d3fac97aa4a77c16cfbd9e4feea",
               "bin": "particl-0.15.1.2/bin/particld"
             },
             "bin": "particld",
