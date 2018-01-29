@@ -3,8 +3,10 @@
 @import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
 
 
-.actions {
-  margin-bottom: 80px;
+.title {
+  &.center {
+    text-align: center;
+  }
 }
 
 /* ------------------------------- *\

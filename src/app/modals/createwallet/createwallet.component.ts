@@ -141,7 +141,7 @@ export class CreateWalletComponent implements OnDestroy {
           this.mnemonicCallback.bind(this), this.password
         );
         this.flashNotification.open(
-          'Please remember to write down your recovery passphrase',
+          'Please remember to write down your Recovery Passphrase',
           'warning');
         break;
       case 4:
@@ -150,7 +150,7 @@ export class CreateWalletComponent implements OnDestroy {
           this.words[k] = '';
         }
         this.flashNotification.open(
-          'Did you write your password at the previous step ?',
+          'Did you write your password at the previous step?',
           'warning');
         break;
       case 5:
@@ -191,7 +191,7 @@ export class CreateWalletComponent implements OnDestroy {
           this.step = 5;
           this.state.set('ui:walletInitialized', true);
           this.state.set('ui:spinner', false);
-          this.log.i('Mnemonic imported successfully');
+          this.log.i('Recovery Phrase imported successfully');
 
         },
         error => {
@@ -201,7 +201,7 @@ export class CreateWalletComponent implements OnDestroy {
           this._modalsService.enableClose = true;
           this.state.set('ui:spinner', false);
           this.state.set('modal:fullWidth:enableClose', true);
-          this.log.er('Mnemonic import failed');
+          this.log.er('Recovery Phrase import failed');
         });
   }
 
@@ -212,7 +212,7 @@ export class CreateWalletComponent implements OnDestroy {
     if (this.validating && this.step === 4 && !this.isRestore) {
       const valid = !this.words.filter(
         (value, index) => this.wordsVerification[index] !== value).length;
-      this.errorString = valid ? '' : 'You have entered an invalid recovery phrase';
+      this.errorString = valid ? '' : 'You have entered an invalid Recovery Phrase';
       return valid;
     }
 
@@ -259,7 +259,7 @@ export class CreateWalletComponent implements OnDestroy {
     }
 
     if (this.password !== this.passwordVerify) {
-      this.flashNotification.open('Passwords Do Not Match!', 'warning');
+      this.flashNotification.open('Passwords do not match!', 'warning');
     } else {
       // We should probably make this a function because it isn't reusing code??
       this.validating = false;
