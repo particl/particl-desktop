@@ -19,7 +19,7 @@ export class ClientVersionService {
 
   getCurrentVersion(): Observable<ReleaseNotification> {
     return this.http.get(this.releasesUrl).pipe(
-      map(response => response),
+      map(response => response as ReleaseNotification),
       catchError(this.handleError<ReleaseNotification>('error while update'))
     );
   }
