@@ -131,15 +131,15 @@
                      type="text" placeholder="Receiver's address" [(ngModel)]="send.toAddress"
                      (ngModelChange)="verifyAddress()"/>
             </mat-form-field>
-            <span fxFlex="0 0 20px">
+            <span fxFlex="0 0 16px">
               <mat-icon class="cursor-pointer" matTooltip="Pick from Address Book" (click)="openLookup()"
                         fontSet="partIcon" fontIcon="part-people"></mat-icon>
             </span>
-            <span fxFlex="0 0 20px">
+            <span fxFlex="0 0 16px">
               <mat-icon class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-past"
                         (click)="pasteAddress()"></mat-icon>
             </span>
-            <span fxFlex="0 0 20px">
+            <span fxFlex="0 0 16px">
               <mat-icon class="cursor-pointer" matTooltip="Clear all" (click)="clearReceiver()"
                         color="warn" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
             </span>
