@@ -1,5 +1,4 @@
 {
-
   "name": "particl-desktop",
   "version": "1.1.0",
   "license": "GPL-2.0",
@@ -30,10 +29,10 @@
     "start:electron:dev": "electron . --dev",
     "start:electron:fast": "npm run build:electron:fast && electron .",
     "start:electron": "npm run build:electron && electron .",
-    "package:mac": "npm run build:electron:prod && electron-builder -m",
-    "package:linux": "npm run build:electron:prod && electron-builder -l",
-    "package:win": "npm run build:electron:prod && electron-builder --win --x64",
-    "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win",
+    "package:mac": "npm run build:electron:prod && electron-builder -m && sha256sum packages/*.*",
+    "package:linux": "npm run build:electron:prod && electron-builder -l && sha256sum packages/*.*",
+    "package:win": "npm run build:electron:prod && electron-builder --win --x64 && sha256sum packages/*.*",
+    "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win && sha256sum packages/*.*",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
@@ -59,6 +58,21 @@
       "target": [
         "dmg",
         "zip"
+      ]
+    },
+    "dmg": {
+      "background": "background-mac.png",
+      "contents": [
+        {
+          "x": 129,
+          "y": 250
+        },
+        {
+          "x": 410,
+          "y": 247,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
     },
     "nsis": {
