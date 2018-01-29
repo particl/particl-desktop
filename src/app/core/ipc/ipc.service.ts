@@ -19,7 +19,7 @@ export class IpcService {
   constructor(public zone: NgZone) {
 
     // if not electron, quit
-    if(!window.electron) {
+    if (!window.electron) {
       return;
     }
 
