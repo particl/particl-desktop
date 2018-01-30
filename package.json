@@ -61,6 +61,21 @@
         "zip"
       ]
     },
+    "dmg": {
+      "background": "background-mac.png",
+      "contents": [
+        {
+          "x": 129,
+          "y": 250
+        },
+        {
+          "x": 410,
+          "y": 247,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
     "nsis": {
       "perMachine": true,
       "oneClick": false

@@ -5,6 +5,7 @@ import { Contact } from './contact.model';
 import { Log } from 'ng2-logger';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { MatDialogRef } from '@angular/material';
+import { AddressHelper } from '../../shared/util/utils';
 
 @Component({
   selector: 'app-addresslookup',
@@ -19,10 +20,11 @@ export class AddressLookupComponent implements OnInit {
 
   log: any = Log.create('addresslookup.component');
 
-  filter: string = 'All types';
-  allowFilter: boolean = true;
-  query: string = '';
-  searchResult: Contact[];
+  public filter: string = 'All types';
+  public allowFilter: boolean = true;
+  public query: string = '';
+  public searchResult: Contact[];
+  private addressHelper: AddressHelper;
 
   public type: string = 'send';
   public addressTypes: Array<string> = ['All types', 'Public', 'Private'];
@@ -37,6 +39,7 @@ export class AddressLookupComponent implements OnInit {
 
   constructor(private _rpc: RpcService,
               private dialogRef: MatDialogRef<AddressLookupComponent>) {
+    this.addressHelper = new AddressHelper();
   }
 
   ngOnInit(): void {
@@ -102,7 +105,10 @@ export class AddressLookupComponent implements OnInit {
                 (success: any) => {
                   this.addressLookups = [];
                   success.forEach((contact) => {
-                    if (this.type === 'send' || contact.address.length > 35) {
+                    if (this.type === 'send' || this.addressHelper.testAddress(contact.address, 'private')) {
+                      this.addressLookups.push(new Contact(contact.label, contact.address));
+                    } else if (this.type === 'sign' && this.addressHelper.testAddress(contact.address, 'public') && contact.owned) {
+                      this.filter = 'Public';
                       this.addressLookups.push(new Contact(contact.label, contact.address));
                     }
                   })
