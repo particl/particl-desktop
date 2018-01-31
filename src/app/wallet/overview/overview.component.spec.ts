@@ -27,13 +27,12 @@ describe('OverviewComponent', () => {
       ],
       providers: [
         TransactionService
-      ]
-      /*
+      ],
       declarations: [
         OverviewComponent,
         StakinginfoComponent,
         ColdstakeComponent
-      ]*/
+      ]
     })
       .compileComponents();
   }));
