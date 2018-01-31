@@ -4,7 +4,7 @@ First of all, thanks for your interest in helping us build Particl! As more code
 
 1. [Dev workflow](#dev-workflow)
     1. [Issues](#1-issues)
-    2. [Push Requests (PRs)](#2-push-requests-prs)
+    2. [Pull Requests (PRs)](#2-pull-requests-prs)
         1. [Create new branch](#21-create-new-branch)
         2. [Commit your code](#22-commit-your-code)
         3. [Submit PR](#23-submit-pr)
@@ -16,10 +16,10 @@ First of all, thanks for your interest in helping us build Particl! As more code
 
 Quick overview of the workflow:
 
-1. bug is found / feature is suggested → new Issue
-2. new branch is created with code solving the Issue → Push Request initiated
-3. after PR is finished, tested and approved (by at least 1 Team member) → merge to `dev` branch
-4. when multiple PRs are merged, new Release is prepared → merged to `master` branch
+1. Bug is found _or_ feature is suggested → new **Issue** (always check if the issue exists first)
+2. New branch is created with code solving the Issue → **Pull Request** initiated
+3. After PR is finished, tested and approved (by at least 1 Team member) → merge to `dev` branch
+4. When multiple PRs are merged, new Release is prepared → merged to `master` branch
 
 ---
 
@@ -35,7 +35,8 @@ When bug is found or new feature/suggestion proposed, [new Issue gets created](h
   - For bugs: what's happening, how to reproduce it, what OS/version are you using, ...
 - **Tag the Issue with Labels** to categorize it (is it a `bug` or just an `enhancement` like a new feature?). If you're not sure which label to use, leave them empty, someone else will do that (better no labels at all than wrong ones)
   - `bug` - for broken functionality/UI, bad behaviour
-  - `enhancement/feature` - adding new functionality, tweaks for existing features
+  - `feature` - adding new functionality
+  - `enhancement` - tweaks for existing features
 
 It's usually up to Project Manager or someone from the Team to:
 
@@ -44,7 +45,7 @@ It's usually up to Project Manager or someone from the Team to:
 
 ---
 
-### 2. Push Requests (PRs)
+### 2. Pull Requests (PRs)
 
 PRs are working "packages" of code, solving one bug / new feature and are usually connected to existing Issues. For creating new PRs, you must first fork this repository to your own account.
 
@@ -58,21 +59,21 @@ After your repo is ready, create new branch.
   - `feature/..` - for new features, e.g. `feature/coldstaking`
   - `gfx/..` - for graphic/UI/UX tweaks, e.g. `gfx/typography`
 
-When your branch is ready, do your changes and push them to the branch. Be sure to push only the changes related to the connected Issue! Solving multiple Issues is also possible, but it's better to focus on one thing at a time.
+When your branch is ready, do your changes and push them to the branch. Be sure to push only the changes related to the connected Issue! Don't solve multiple Issues in one PR.
 
 #### 2.2. Commit your code
 
-- Write meaninful commit messages – don't forget that when your PR is merged, its context is lost. Meaning that once your commits get to `dev` branch, it's harder to say what each commit does just by its name:
+- Write meaninful commit messages (PRs will be refused if they are not described correctly) – commit messages should make sense on their own. Don't forget that when your PR is merged, its context is lost. Meaning that once your commits get to `dev` branch, it's harder to say what each commit does just by its name:
   - ❎ Bad commit message: _"fixed button"_
   - ✅ Good: _"Receive: fixed 'copy address' button"_
 
 #### 2.3. Submit PR
 
-When your code is complete and ready, [submit new Push Request](https://github.com/particl/partgui/compare).
+When your code is complete and ready, [submit new Pull Request](https://github.com/particl/partgui/compare).
 
 - **Always set your base branch to `dev`** (never to `master` or others!) – `dev` is our main development branch
 - **As always, write short and descriptive title** (you can keep it the same name as your branch)
-- **Describe what has been done in description** – what does this PR solves? We usually list all the changes and even include a screenshot/GIF overview of the final result. This greatly helps the Reviewers and Testers as they know what to focus on.
+- **Describe what has been done in description** – what does this PR solves? We usually list all the changes and even include a screenshot/GIF overview of the original issue _and_ the final result. This greatly helps the Reviewers and Testers as they know what to focus on.
 - **Include references to Issues that this PR solves** – Writing `Fixes #[number]` automatically connects this PR to Issue _[number]_ and when this PR gets merged later, the corresponding Issue gets automatically closed.
   - Read more about [Closing Issues using keywords](https://help.github.com/articles/closing-issues-using-keywords/)
 - **Tag your PR with Labels** – Labels help other to see at first sight what's needed next. The most common are:
