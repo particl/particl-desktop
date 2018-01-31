@@ -10,8 +10,8 @@ import { NotificationService } from '../../../core/core.module';
 @Injectable()
 export class TransactionService implements OnDestroy {
 
-  private destroyed: boolean = false;
   log: any = Log.create('transaction.service');
+  private destroyed: boolean = false;
 
   /* Stores transactions objects. */
   txs: Transaction[] = [];
@@ -45,40 +45,22 @@ export class TransactionService implements OnDestroy {
     this.log.d(`Constructor(): called`);
     this.postConstructor(this.MAX_TXS_PER_PAGE);
 
-    this.txCount = this.rpc.state.get('txcount');
-    this.block = this.rpc.state.get('blocks');
-
-    this.rpc.state.observe('txcount')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(
-        txcount => {
-          if (this.txCount === undefined) {
-            this.txCount = txcount;
-          }
-          if (txcount > this.txCount) {
-            this.txCount = txcount;
-            this.newTransaction();
-          } else {
-            this.loading = true;
-            this.log.d(`observing txcount, txs array: ${this.txs.length}`);
-            this.rpc_update();
-          }
-          // this.txCount = txcount;
-        });
-
     // It doesn't get called sometimes ?
     // this.rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/)).subscribe(block =>  {
     this.rpc.state.observe('blocks')
       .takeWhile(() => !this.destroyed)
       .subscribe(block => {
-        if (this.block === undefined) {
-          this.block = block;
-        }
-        if (block > this.block) {
-          this.checkBlock = true;
-          this.rpc_update()
-        }
+          this.countTransactions();
+          this.loadTransactions();
       });
+
+      this.rpc.state.observe('txcount')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(txcount => {
+          this.countTransactions();
+          this.loadTransactions();
+      });
+
 
     /* check if testnet -> block explorer url */
     this.rpc.state.observe('chain').take(1)
@@ -98,8 +80,8 @@ export class TransactionService implements OnDestroy {
   filter(filters: any): void {
     this.loading = true;
     this.filters = filters;
-    this.rpc_update(true); /* count transactions before getting this page */
-    this.rpc_update();
+    this.countTransactions();
+    this.loadTransactions();
   }
 
   changePage(page: number): void {
@@ -108,15 +90,12 @@ export class TransactionService implements OnDestroy {
     }
     this.loading = true;
     this.currentPage = page;
-    this.rpc_update();
-  }
-
-  deleteTransactions(): void {
-    this.txs = [];
+    this.loadTransactions();
   }
 
   /** Load transactions over RPC, then parse JSON and call addTransaction to add them to txs array. */
-  rpc_update(justCount?: boolean): void {
+  loadTransactions(): void {
+    this.log.d('loadTransactions() start');
 
     const options = {
       'count': +this.MAX_TXS_PER_PAGE,
@@ -124,94 +103,44 @@ export class TransactionService implements OnDestroy {
     };
     Object.keys(this.filters).map(filter => options[filter] = this.filters[filter]);
 
-    if (justCount) {
-      // TODO: change for next release of daemon
-      // options.count = 0;
-      options.count = 999999;
-      delete options.skip;
-    }
-
-    this.log.d(`call filtertransactions: ${JSON.stringify(options)}`);
+    this.log.d(`loadTransactions, call filtertransactions: ${JSON.stringify(options)}`);
     this.rpc.call('filtertransactions', [options])
     .subscribe((txResponse: Array<Object>) => {
 
-      if (justCount) {
-        this.log.d(`number of transactions after filter: ${txResponse.length}`);
-        this.txCount = txResponse.length;
-        return ;
-      }
-
       // The callback will send over an array of JSON transaction objects.
-      this.log.d(`rpc_loadTransactions_success, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
-      this.log.d(`rpc_loadTransactions_success, real tx per page: ${txResponse.length}`);
+      this.log.d(`loadTransactions, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
+      this.log.d(`loadTransactions, real tx per page: ${txResponse.length}`);
 
       if (txResponse.length !== this.MAX_TXS_PER_PAGE) {
-        this.log.er(`rpc_loadTransactions_success, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
+        this.log.er(`loadTransactions, TRANSACTION COUNTS DO NOT MATCH (maybe last page?)`);
       }
 
-      if (this.checkBlock) {
-        this.checkBlock = false;
-        this.compareTransactionResponse(this.txs, txResponse);
-      } else {
-        this.deleteTransactions();
-        txResponse.map(tx => {
-          this.addTransaction(tx);
+        const newTxs: Array<any> = txResponse.map(tx => {
+          return new Transaction(tx);
         });
-      }
+
+        this.txs = newTxs;
 
       this.loading = false;
-      this.log.d(`rpc_update, txs array: ${this.txs.length}`);
+      this.log.d(`loadTransactions, txs array: ${this.txs.length}`);
     });
 
   }
 
-  // Deserializes JSON objects to Transaction classes.
-  addTransaction(json: Object): void {
-    this.txs.push(new Transaction(json));
-  }
+  /** Count the transactions (for a specific filter) */
+  countTransactions(): void {
+    const options = {
+      'count': 999999,
+    };
+    Object.keys(this.filters).map(filter => options[filter] = this.filters[filter]);
 
-  newTransaction(): void {
-    this.rpc.call('filtertransactions')
-      .subscribe(
-        (tx: Array<Object>) => {
-          if (tx[0]['category'] === 'receive') {
-              this.notification.sendNotification(
-                'Incoming transaction', tx[0]['amount'] + ' PART received');
-          } else if (tx[0]['category'] === 'stake') {
-              this.notification.sendNotification(
-                'New stake reward', tx[0]['amount'] + ' PART received');
-          }
-          if (this.currentPage === 0) {
-            // Not sure why max txs per page has 5
-            this.MAX_TXS_PER_PAGE = 10;
-            this.checkForNewTransaction(this.txs, tx);
-          }
-        });
-  }
-
-   // Compare old and new transactions to find out updated confirmations
-  compareTransactionResponse(oldTxs: any, newTxs: any) {
-    newTxs.forEach((newtx) => {
-      oldTxs.forEach((oldtx) => {
-        if (oldtx.txid === newtx.txid && oldtx.confirmations !== newtx.confirmations) {
-          oldtx.confirmations = newtx.confirmations;
-        }
-      });
+    this.rpc.call('filtertransactions', [options])
+    .subscribe((txResponse: Array<Object>) => {
+        this.log.d(`countTransactions, number of transactions after filter: ${txResponse.length}`);
+        this.txCount = txResponse.length;
+        return;
     });
-  }
 
-  checkForNewTransaction(oldTxs: any, newTxs: any) {
-    const newTransaction = _(newTxs).differenceBy(oldTxs, 'txid').value();
-    newTransaction.map(tx => {
-      this.unShiftTransactions(tx);
-    });
-  }
-
-  unShiftTransactions(json: Object) {
-    if (this.txs.length === this.MAX_TXS_PER_PAGE) {
-      this.txs.pop();
-    }
-    this.txs.unshift(new Transaction(json));
   }
 
 }
