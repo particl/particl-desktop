@@ -7,6 +7,7 @@ import { RpcModule } from '../../../core/rpc/rpc.module';
 import { CoreModule } from '../../../core/core.module';
 
 import { HistoryComponent } from './history.component';
+import { TransactionService } from 'app/wallet/wallet/shared/transaction.service';
 
 
 describe('HistoryComponent', () => {
@@ -21,6 +22,9 @@ describe('HistoryComponent', () => {
         WalletModule.forRoot(),
         RpcModule.forRoot(),
         CoreModule.forRoot()
+      ],
+      providers: [
+        TransactionService
       ]
     })
     .compileComponents();

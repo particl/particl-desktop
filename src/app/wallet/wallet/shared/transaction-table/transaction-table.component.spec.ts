@@ -6,6 +6,7 @@ import { WalletModule } from '../../../wallet/wallet.module';
 import { CoreModule } from '../../../../core/core.module';
 
 import { TransactionsTableComponent } from './transaction-table.component';
+import { TransactionService } from 'app/wallet/wallet/shared/transaction.service';
 
 
 
@@ -20,6 +21,9 @@ describe('TransactionTableComponent', () => {
         WalletModule.forRoot(),
         RpcModule.forRoot(),
         CoreModule.forRoot()
+      ],
+      providers: [
+        TransactionService
       ]
     })
     .compileComponents();
