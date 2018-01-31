@@ -185,6 +185,8 @@ export class SendComponent {
     dialogRef.componentInstance.dialogContent = `Do you really want to send
       ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.getAddress()}?`;
 
+    dialogRef.componentInstance.setDetails(this.send);
+
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       dialogRef.close();
       this.pay();

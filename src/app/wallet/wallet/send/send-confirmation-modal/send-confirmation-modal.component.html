@@ -3,31 +3,27 @@
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-<div mat-dialog-content class="dialog-content">
-  
-  <!-- FIXME: original dialog content just for reference, can be removed afterwards -->
-  {{dialogContent}}
-  
-  <!-- FIXME: this is just a static template. All needs to be connected to backend! -->
+<div mat-dialog-content class="dialog-content">  
   <div class="tx-info">
-    <!-- TODO: if public -->
-    <div class="public">
+    <!-- if public -->
+    <div class="public" *ngIf="transactionType === 'public'">
       <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-public"></mat-icon>
       <div class="title">Public transaction</div>
       <p class="help-text">
         Sender, Receiver & transaction amount will be publicly visible on the blockchain
       </p>
     </div>
-    <!-- TODO: if blind -->
-    <!--div class="blind">
+    <!-- if blind / anon-->
+    <div class="blind" *ngIf="transactionType === 'private'">
       <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-blind"></mat-icon>
-      <div class="title">Blind transaction</div>
+      <div class="title">Blind / Anon transaction</div>
       <p class="help-text">
         Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
       </p>
-    </div-->
+    </div>
+    <!-- Cant deferinciate between blind, anon as the adress regex is the same-->
     <!-- TODO: if anon -->
-    <!--div class="anon">
+    <!--div class="anon" *nfif="transactionType === 'blind'">
       <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
       <div class="title">Anon transaction</div>
       <p class="help-text">
@@ -37,7 +33,7 @@
   </div>
 
   <div class="tx-amount">
-    <span class="big">12</span><span class="point">.</span><span class="small">7234</span>&ensp;<span class="currency">PART</span>
+    <span class="big">{{ sendAmount.getIntegerPart() }}</span><span class="point">.</span><span class="small">{{ sendAmount.getFractionalPart() }}</span>&ensp;<span class="currency">PART</span>
     <!-- TODO: until fiat estimations are implemented, hide them -->
     <div class="fiat">&asymp; 3.42 USD</div>
   </div>
@@ -45,9 +41,9 @@
   <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
 
   <div class="receiver-info">
-    <!-- FIXME: if address saved in Address Book, display its label. if not, hide it -->
-    <div class="label">Allien (Copay)</div>
-    <code class="address">piHvjzDdiykKN5r5E3eVLtX4cYVhgFwNG4</code>
+    <!--if address saved in Address Book, display its label. if not, hide it -->
+    <div class="label" *ngIf="receiverName !== ''">{{ receiverName }}</div>
+    <code class="address"> {{ sendAddress }} </code>
   </div>
 
   <p class="fee-info">
