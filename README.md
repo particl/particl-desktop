@@ -22,7 +22,7 @@ This repository is the user interface that works in combination with our [`parti
 [![Code Climate](https://codeclimate.com/github/particl/particl-desktop/badges/gpa.svg)](https://codeclimate.com/github/particl/particl-desktop)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/particl-desktop.svg)](https://greenkeeper.io/)
 
-> Be sure to read our [Contributing Guidelines](CONTRIBUTE.md) first
+> Be sure to read our [Contributing Guidelines](CONTRIBUTING.md) first
 
 ## Development
 
