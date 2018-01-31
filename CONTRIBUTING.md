@@ -33,7 +33,7 @@ When bug is found or new feature/suggestion proposed, [new Issue gets created](h
     - ❎ _"When you click next page in address book nothing happens and 2 pages are hidden please help!!!1!"_
 - **Include as much related information** in Issue's description as you can (the predefined template will help you with that)
   - For bugs: what's happening, how to reproduce it, what OS/version are you using, ...
-- **Tag the Issue with Labels** to categorize it (is it a `bug` or just an `enhancement` like a new feature?). If you're not sure which label to use, leave them empty, someone else will do that (better no labels at all than wrong ones)
+- **Tag the Issue with Labels** to categorize it (is it a `bug` or just an `enhancement` of existing feature?). If you're not sure which label to use, leave them empty, someone else will do that (better no labels at all than wrong ones)
   - `bug` - for broken functionality/UI, bad behaviour
   - `feature` - adding new functionality
   - `enhancement` - tweaks for existing features
