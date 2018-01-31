@@ -97,7 +97,8 @@ function getAuth(options) {
   }
 
   let auth;
-  const COOKIE_FILE = findCookiePath()
+  var dataDir = options.datadir ? options.datadir : findCookiePath();
+  const COOKIE_FILE = dataDir
                     + (options.testnet ? '/testnet' : '')
                     + '/.cookie';
 

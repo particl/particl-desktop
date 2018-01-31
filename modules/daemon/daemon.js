@@ -9,7 +9,7 @@ const cookie        = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
 const multiwallet   = require('../multiwallet');
 
-let daemon;
+let daemon = undefined;
 let exitCode = 0;
 let restarting = false;
 let chosenWallets = [];
@@ -54,7 +54,6 @@ exports.start = function (wallets, callback) {
       resolve(undefined);
 
     }).catch(() => {
-
       let options      = _options.get();
       const daemonPath = options.customdaemon
                        ? options.customdaemon
@@ -159,7 +158,12 @@ exports.stop = function() {
           resolve();
         }
       });
-    } else resolve();
+    } else
+    {
+        log.debug('Daemon not managed by gui.');
+        resolve();
+        electron.app.quit();
+    }
 
   }).catch(() => {
     if (daemon)
