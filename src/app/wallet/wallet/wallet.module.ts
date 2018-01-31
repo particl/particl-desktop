@@ -79,7 +79,6 @@ export class WalletModule {
     return {
       ngModule: WalletModule,
       providers: [
-        TransactionService,
         AddressService,
         SendService
       ]
