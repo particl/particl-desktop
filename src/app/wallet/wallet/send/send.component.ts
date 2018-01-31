@@ -179,11 +179,7 @@ export class SendComponent implements OnInit {
     const d = this.dialog.open(SendConfirmationModalComponent);
     const dc = d.componentInstance;
 
-    let txt = `Do you really want to send ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.send.toAddress}?`
-    if (this.type === 'balanceTransfer') {
-      txt = `Do you really want to transfer the following balance ${this.send.amount} ${this.send.currency.toUpperCase()}?`
-    }
-    dc.dialogContent = txt;
+    dc.setDetails(this.send);
 
     dc.onConfirm.subscribe(() => {
       d.close();
