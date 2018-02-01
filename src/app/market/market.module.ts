@@ -16,7 +16,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
     CoreUiModule
   ],
   declarations: [
-    OverviewListingsComponent, 
+    OverviewListingsComponent,
     PreviewListingComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
