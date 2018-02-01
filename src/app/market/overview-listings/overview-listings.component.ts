@@ -16,6 +16,14 @@ export class OverviewListingsComponent implements OnInit {
   categories: FormControl = new FormControl();
   categoryList: Array<string> = ['Electronics', 'Hobby', 'Health & Beauty', 'Toys', 'Gardening', 'Food', 'Digital', 'Whatever else'];
 
+  // sorting
+  sortings = [
+    {value: 'newest', viewValue: 'Newest'},
+    {value: 'popular', viewValue: 'Popular'},
+    {value: 'price-asc', viewValue: 'Cheapest'},
+    {value: 'price-des', viewValue: 'Most expensive'}
+  ];
+
   listings: Array<any> = [
     '1',
     '2'
