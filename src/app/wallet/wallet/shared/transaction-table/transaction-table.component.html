@@ -14,9 +14,9 @@
 </div>
 
 <ng-container *ngFor="let tx of txService.txs">
-  <mat-expansion-panel class="history-list" [expanded]="checkExpandDetails(tx)" (click)="showExpandedTransactionDetail(tx)">
+  <mat-expansion-panel class="history-list" [expanded]="checkExpandDetails(tx)">
 
-    <mat-expansion-panel-header fxLayout="row" fxLayoutGap="10px" layout-padding>
+    <mat-expansion-panel-header fxLayout="row" fxLayoutGap="10px" (click)="showExpandedTransactionDetail(tx)" layout-padding>
 
       <!-- Date -->
       <mat-panel-title fxFlex="0 0 137px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
