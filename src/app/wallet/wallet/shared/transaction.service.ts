@@ -5,7 +5,6 @@ import * as _ from 'lodash'
 import { Transaction } from './transaction.model';
 
 import { RpcService } from '../../../core/core.module';
-import { NotificationService } from '../../../core/core.module';
 
 @Injectable()
 export class TransactionService implements OnDestroy {
@@ -40,7 +39,7 @@ export class TransactionService implements OnDestroy {
   MAX_TXS_PER_PAGE: number = 10;
   PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50, 100, 250];
 
-  constructor(private rpc: RpcService, private notification: NotificationService) {
+  constructor(private rpc: RpcService) {
   }
 
   ngOnDestroy() {
@@ -59,6 +58,7 @@ export class TransactionService implements OnDestroy {
     this.registerUpdates();
     this.listeningForUpdates = true;
   }
+
   registerUpdates(): void {
 
     // prevent multiple listeners
@@ -135,7 +135,9 @@ export class TransactionService implements OnDestroy {
         }
 
         const newTxs: Array<any> = txResponse.map(tx => {
-          return new Transaction(tx);
+          if (tx !== undefined) {
+            return new Transaction(tx);
+          }
         });
 
         this.txs = newTxs;

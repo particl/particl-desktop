@@ -9,6 +9,9 @@ import { CoreModule } from '../../../core/core.module';
 import { HistoryComponent } from './history.component';
 import { TransactionService } from 'app/wallet/wallet/shared/transaction.service';
 
+import { TransactionsTableComponent } from 'app/wallet/wallet/shared/transaction-table/transaction-table.component';
+import { MockTransactionService } from 'app/wallet/wallet/shared/transaction.mockservice';
+
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
@@ -22,12 +25,19 @@ describe('HistoryComponent', () => {
         WalletModule.forRoot(),
         RpcModule.forRoot(),
         CoreModule.forRoot()
-      ],
-      providers: [
-        TransactionService
       ]
     })
-    .compileComponents();
+
+  // Override TransactionsTableComponent's TransactionService
+  .overrideComponent(TransactionsTableComponent, {
+    set: {
+      providers: [
+        { provide: TransactionService, useClass: MockTransactionService }
+      ]
+    }
+  })
+
+  .compileComponents();
   }));
 
   beforeEach(() => {
