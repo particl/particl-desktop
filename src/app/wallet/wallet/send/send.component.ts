@@ -197,10 +197,6 @@ export class SendComponent {
     })
   }
 
-  fixWallet() : void {
-    this.sendService.fixWallet();
-  }
-
   /** Payment function */
   pay(): void {
     if (this.send.input === '' ) {

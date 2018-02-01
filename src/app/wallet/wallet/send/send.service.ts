@@ -75,27 +75,22 @@ export class SendService {
     amount: number, comment: string, narration: string,
     ringsize: number, numsignatures: number) {
 
-    this.resetTransactionDetails();
-
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
     const params: Array<any> = this.getSendParams(
       anon, address, amount, comment,
       narration, ringsize, numsignatures);
 
-    this.setTransactionDetails(address, amount);
-
-    // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
     this._rpc.call('send' + rpcCall, params)
       .subscribe(
-        success => this.rpc_send_success(success),
-        error => this.rpc_send_failed(error));
+        success => this.rpc_send_success(success, address, amount),
+        error => this.rpc_send_failed(error, address, amount));
   }
 
   transferBalance(
     input: string, output: string, address: string,
     amount: number, ringsize: number, numsignatures: number) {
-    this.resetTransactionDetails();
+
     // comment is internal, narration is stored on blockchain
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
@@ -109,16 +104,14 @@ export class SendService {
       anon, this.defaultStealthAddressForBalanceTransfer,
       amount, '', '', ringsize, numsignatures);
 
-    this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
-
     // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
     this._rpc.call('send' + rpcCall, params).subscribe(
-      success => this.rpc_send_success(success),
-      error => this.rpc_send_failed(error));
+      success => this.rpc_send_success(success, address, amount),
+      error => this.rpc_send_failed(error, address, amount));
   }
 
 
-  rpc_send_success(json: any) {
+  rpc_send_success(json: any, address: string, amount: number) {
     this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
 
     // Truncate the address to 16 characters only
@@ -127,20 +120,31 @@ export class SendService {
     this.flashNotification.open(`Succesfully sent ${this.amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
   }
 
-  rpc_send_failed(json: any) {
+  rpc_send_failed(json: any, address: string, amount: number) {
     this.flashNotification.open(`Transaction Failed ${json.message}`, 'err');
-    this.log.er('rpc_send_failed, failed to execute transactions!');
+    this.log.er('rpc_send_failed, failed to execute transaction!');
     this.log.er(json);
+
+    /* Detect bug in older wallets with Blind inputs */
+    if (json.message.contains('AddBlindedInputs: GetBlind failed for')) {
+      this.fixWallet();
+    }
   }
 
   /*
     AddBlindedInput issue, open modal to fix it.
-    
   */
-  fixWallet() : void {
+  fixWallet(): void {
     const dialogRef = this.dialog.open(FixWalletModalComponent);
-    
+
+    dialogRef.afterClosed().subscribe(
+      (result) => {
+        this.log.d('FixWalletModal closing');
+      }
+    );
   }
+
+
   /*
     Helper functions for RPC
   */
@@ -219,31 +223,5 @@ export class SendService {
     } else if (ringsize === 10) {
       return 4;
     }
-  }
-
-
-  /*
-
-    UI LOGIC
-
-  */
-
-
-    /*
-      We need to display a success modal when a transaction went through,
-      if succesful it needs to have the address and amount.
-
-      gettransaction is broke, it returns an error for blind transactions given the txid.
-      We're just storing it here and resetting it on every tx. (or second option is grabbing it from the component UI).
-    */
-
-  setTransactionDetails(address: string, amount: number) {
-    this.address = address;
-    this.amount = amount;
-  }
-
-  resetTransactionDetails() {
-    this.address = '';
-    this.amount = 0;
   }
 }

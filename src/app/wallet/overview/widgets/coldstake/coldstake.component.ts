@@ -23,7 +23,6 @@ export class ColdstakeComponent implements OnDestroy {
   coldStakingEnabled: boolean = undefined;
   walletInitialized: boolean = undefined;
   public encryptionStatus: string = 'Locked';
-  activation: string = 'Activation in progress';
 
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
@@ -60,10 +59,6 @@ export class ColdstakeComponent implements OnDestroy {
   private rpc_progress(): void {
     // TODO: not necessary when cold staking disabled
     this.stakingStatus();
-
-    if (this.coldstakeProgress === 100) {
-      this.activation = 'Activated';
-    }
   }
 
   ngOnDestroy() {
