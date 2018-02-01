@@ -4,6 +4,11 @@ import { Log } from 'ng2-logger'
 import { RpcService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
+/* fix wallet */
+import { MatDialog } from '@angular/material';
+import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
+
+
 
 @Injectable()
 export class SendService {
@@ -26,8 +31,8 @@ export class SendService {
   */
 
   constructor(public _rpc: RpcService,
-              private flashNotification: SnackbarService) {
-    // this._rpc.oldCall(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
+              private flashNotification: SnackbarService,
+              private dialog: MatDialog) {
     this._rpc.call('liststealthaddresses', null)
       .subscribe(response => {
         this.rpc_listDefaultAddress_success(response)
@@ -128,7 +133,14 @@ export class SendService {
     this.log.er(json);
   }
 
-
+  /*
+    AddBlindedInput issue, open modal to fix it.
+    
+  */
+  fixWallet() : void {
+    const dialogRef = this.dialog.open(FixWalletModalComponent);
+    
+  }
   /*
     Helper functions for RPC
   */
