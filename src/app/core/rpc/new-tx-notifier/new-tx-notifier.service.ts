@@ -42,6 +42,11 @@ export class NewTxNotifierService implements OnDestroy {
       .subscribe(
       (txs: Array<any>) => {
 
+        // if no transactions: stop
+        if (txs.length === 0) {
+          return;
+        }
+
         // not initialized yet
         if (this.lastTxId === undefined) {
           this.lastTxId = txs[0].txid;

@@ -73,6 +73,7 @@ export class TransactionService implements OnDestroy {
       .takeWhile(() => !this.destroyed)
       .distinctUntilChanged() // only update when blocks changes
       .skip(1) // skip the first one (shareReplay)
+      .throttle(val => Observable.interval(30000/*ms*/))
       .subscribe(block => {
         this.log.d(`--- update by blockcount: ${block} ---`);
         this.loadTransactions();
