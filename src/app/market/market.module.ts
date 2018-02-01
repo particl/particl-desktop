@@ -1,9 +1,12 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OverviewListingsComponent } from './overview-listings/overview-listings.component';
-import { PreviewListingComponent } from './overview-listings/preview-listing/preview-listing.component';
+
+import { OverviewListingsComponent } from 'app/market/overview-listings/overview-listings.component';
+import { PreviewListingComponent } from 'app/market/overview-listings/preview-listing/preview-listing.component';
 
 import { routing } from './market.routing';
+
+
 
 @NgModule({
   imports: [
@@ -18,5 +21,5 @@ import { routing } from './market.routing';
 })
 export class MarketModule { }
 
-export { OverviewListingsComponent } from './overview-listings/overview-listings.component';
-export { PreviewListingComponent } from './overview-listings/preview-listing/preview-listing.component';
+export { OverviewListingsComponent } from 'app/market/overview-listings/overview-listings.component';
+export { PreviewListingComponent } from 'app/market/overview-listings/preview-listing/preview-listing.component';
