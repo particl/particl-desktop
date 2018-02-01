@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-preview-listing',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./preview-listing.component.scss']
 })
 export class PreviewListingComponent implements OnInit {
+
+  @Input() listing: any;
 
   constructor() { }
 
