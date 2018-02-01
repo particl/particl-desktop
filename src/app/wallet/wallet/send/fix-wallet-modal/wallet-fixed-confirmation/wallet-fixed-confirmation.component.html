@@ -1,0 +1,17 @@
+<div mat-dialog-title>Fix wallet</div>
+<button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+<div mat-dialog-content class="dialog-content">
+  <p class="success">
+      <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+      Successfully rescanned the chain. Please attempt the transaction again.
+  </p>
+</div>
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-raised-button color="primary" mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    OK
+  </button>
+</mat-dialog-actions>
