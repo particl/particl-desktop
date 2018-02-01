@@ -5,13 +5,15 @@ import { OverviewListingsComponent } from 'app/market/overview-listings/overview
 import { PreviewListingComponent } from 'app/market/overview-listings/preview-listing/preview-listing.component';
 
 import { routing } from './market.routing';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 
 
 @NgModule({
   imports: [
     CommonModule,
-    routing
+    routing,
+    CoreUiModule
   ],
   declarations: [
     OverviewListingsComponent, 
