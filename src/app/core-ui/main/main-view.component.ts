@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
@@ -146,6 +146,14 @@ export class MainViewComponent implements OnInit, OnDestroy {
   checkSecond(sec: number): number {
     sec = sec > 0 ? (sec - 1) : 59;
     return sec;
+  }
+
+  // Paste Event Handle
+  @HostListener('window:keydown', ['$event'])
+  keyDownEvent(event: any) {
+    if (event.metaKey && event.keyCode === 86 && navigator.platform.indexOf('Mac') > -1) {
+      document.execCommand('Paste');
+    }
   }
 
   /**
