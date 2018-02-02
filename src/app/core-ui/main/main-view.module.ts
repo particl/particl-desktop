@@ -10,7 +10,6 @@ import { StatusComponent } from './status/status.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
 import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
 
-import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 
 
@@ -35,9 +34,6 @@ import { ReleaseNotificationComponent } from './release-notification/release-not
   entryComponents: [
     ConsoleModalComponent,
     ReleaseNotificationComponent
-  ],
-  providers: [
-    TransactionService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
