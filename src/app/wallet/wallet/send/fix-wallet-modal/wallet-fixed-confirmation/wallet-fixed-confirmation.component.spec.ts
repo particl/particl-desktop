@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material';
+
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { WalletFixedConfirmationComponent } from './wallet-fixed-confirmation.component';
 
@@ -8,7 +11,11 @@ describe('WalletFixedConfirmationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WalletFixedConfirmationComponent ]
+      declarations: [ WalletFixedConfirmationComponent ],
+      imports: [
+        CoreUiModule.forRoot()
+      ],
+      providers: [ { provide: MatDialogRef } ]
     })
     .compileComponents();
   }));
