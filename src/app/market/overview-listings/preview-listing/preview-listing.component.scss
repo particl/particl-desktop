@@ -1,1 +1,35 @@
 @import "./src/assets/_config"; // import shared colors etc.
+
+.item {
+  &:hover {
+    .image .icons {
+      opacity: 1;
+    }
+  }
+}
+
+.image {
+  margin: -24px -24px 16px;
+  position: relative;
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .icons {
+    @extend %tfx;
+    opacity: 0;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    .icon {
+      background: $color-white;
+      border-radius: 50%;
+      width: auto;
+      height: auto;
+      padding: 5px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  }
+}
