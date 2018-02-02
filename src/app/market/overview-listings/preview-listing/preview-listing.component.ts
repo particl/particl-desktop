@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+
+import { ListingComponent } from 'app/market/listing/listing.component';
 
 @Component({
   selector: 'app-preview-listing',
@@ -9,9 +12,15 @@ export class PreviewListingComponent implements OnInit {
 
   @Input() listing: any;
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  openListing() {
+    let dialog = this.dialog.open(ListingComponent, {
+      data: { listing: this.listing },
+    });
   }
 
 }

@@ -6,6 +6,7 @@ import { PreviewListingComponent } from 'app/market/overview-listings/preview-li
 
 import { routing } from './market.routing';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { ListingComponent } from './listing/listing.component';
 
 
 
@@ -17,7 +18,11 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
   ],
   declarations: [
     OverviewListingsComponent,
-    PreviewListingComponent
+    PreviewListingComponent,
+    ListingComponent
+  ],
+  entryComponents: [
+    ListingComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
