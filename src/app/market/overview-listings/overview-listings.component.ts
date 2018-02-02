@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
+interface ISorting {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-overview-listings',
   templateUrl: './overview-listings.component.html',
@@ -17,14 +22,14 @@ export class OverviewListingsComponent implements OnInit {
   categoryList: Array<string> = ['Electronics', 'Hobby', 'Health & Beauty', 'Toys', 'Gardening', 'Food', 'Digital', 'Whatever else'];
 
   // sorting
-  sortings = [
+  sortings: Array<ISorting> = [
     {value: 'newest', viewValue: 'Newest'},
     {value: 'popular', viewValue: 'Popular'},
     {value: 'price-asc', viewValue: 'Cheapest'},
     {value: 'price-des', viewValue: 'Most expensive'}
   ];
 
-  listings: Array<any> = [
+  listings: Array<string> = [
     'Product name',
     'This one is a little bit longer than others',
     'Sweet gizmo',

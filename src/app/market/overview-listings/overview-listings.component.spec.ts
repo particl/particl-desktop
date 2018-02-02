@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
+
 import { OverviewListingsComponent } from './overview-listings.component';
 
 describe('OverviewListingsComponent', () => {
@@ -8,7 +10,12 @@ describe('OverviewListingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OverviewListingsComponent ]
+      declarations: [
+        OverviewListingsComponent
+      ],
+      imports: [
+        CoreUiModule.forRoot()
+      ]
     })
     .compileComponents();
   }));

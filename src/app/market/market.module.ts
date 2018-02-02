@@ -13,7 +13,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
   imports: [
     CommonModule,
     routing,
-    CoreUiModule
+    CoreUiModule.forRoot()
   ],
   declarations: [
     OverviewListingsComponent,
