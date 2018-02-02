@@ -52,14 +52,19 @@
 <div class="container-block" fxLayout="row">
 
   <div class="sidebar" fxFlex="25%">
+    <div class="subtitle first">Categories</div>
     <mat-card>
-      sidebar
+      categories
+    </mat-card>
+    <div class="subtitle">Filter by price range</div>
+    <mat-card>
+      price filter
     </mat-card>
   </div><!-- .sidebar -->
 
   <div class="content" fxFlex="75%" fxLayout="row wrap" fxLayoutAlign="start start">
     <ng-container *ngFor="let l of listings">
-      <mat-card class="listing" fxFlex="1 1 calc(33% - 30px)">
+      <mat-card class="listing" fxFlex="0 0 calc(33% - 30px)">
         <app-preview-listing [listing]="l"></app-preview-listing>
       </mat-card>
     </ng-container>

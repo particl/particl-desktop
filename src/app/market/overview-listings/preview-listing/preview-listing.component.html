@@ -1,22 +1,22 @@
 <div class="item">
 
   <div class="image">
-    <img src="https://placehold.it/500x300">
+    <img src="https://placehold.it/260x195">
     <div class="icons">
-      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-search" matTooltip="Preview"></mat-icon>
-      <mat-icon class="icon flag" fontSet="partIcon" fontIcon="part-error" matTooltip="Report"></mat-icon>
-      <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart" matTooltip="Favourite"></mat-icon>
+      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-search" matTooltip="Preview" matTooltipPosition="above"></mat-icon>
+      <mat-icon class="icon flag" fontSet="partIcon" fontIcon="part-error" matTooltip="Report" matTooltipPosition="above"></mat-icon>
+      <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart" matTooltip="Favourite" matTooltipPosition="above"></mat-icon>
     </div>
   </div>
   
   <div class="info">
-    <div class="title">Product name</div>
+    <div class="title">{{ listing }}</div>
     <div class="category">Category</div>
   </div>
   
-  <div class="actions" fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="price-cart" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="price" fxFlex>3350.00</div>
-    <button mat-button color="primary" class="small" fxFlex>Add to cart</button>
+    <button class="to-cart small" mat-button color="primary" fxFlex>Add to cart</button>
   </div>
 
 </div>

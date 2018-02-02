@@ -25,14 +25,14 @@ export class OverviewListingsComponent implements OnInit {
   ];
 
   listings: Array<any> = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8'
+    'Product name',
+    'This one is a little bit longer than others',
+    'Sweet gizmo',
+    'Pack of lovely stuff',
+    'Box of things',
+    'Pair of pears',
+    'Cups (couple)',
+    'Digital 1011'
   ];
 
   constructor() {

@@ -3,6 +3,14 @@
 
 // ------ UI ELEMENTS ------ //
 
+.subtitle { // title
+  @extend %subtitle;
+  margin: 24px 0 14px;
+  &.first {
+    margin-top: 0;
+  }
+}
+
 .mat-icon {
   width: auto;
   height: auto;
@@ -48,4 +56,5 @@
 
 .listing { // item
   margin: 0 0 30px 30px;
+  padding: 24px 16px 12px;
 }
