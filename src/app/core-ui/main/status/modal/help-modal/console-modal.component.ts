@@ -29,7 +29,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public command: string;
   public currentTime: string;
   public disableScrollDown: boolean = false;
-  public isRpc: boolean = true;
+  public waitingForRPC: boolean = true;
   public historyCount: number = 0;
 
   constructor(private _rpc: RpcService,
@@ -46,7 +46,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   rpcCall() {
-    this.isRpc = false;
+    this.waitingForRPC = false;
     this.commandHistory.push(this.command);
     this.historyCount = this.commandHistory.length;
     const params = this.command.trim().split(' ')
@@ -62,7 +62,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   formatSuccessResponse(response: any) {
-    this.isRpc = true;
+    this.waitingForRPC = true;
     this.commandList.push(new Command(1, this.command, this.getDateFormat()),
       new Command(2, response, this.getDateFormat(), 200));
     this.command = '';
@@ -70,7 +70,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   formatErrorResponse(error: any) {
-    this.isRpc = true;
+    this.waitingForRPC = true;
     if (error.code === -1) {
       this.commandList.push(new Command(1, this.command, this.getDateFormat()),
         new Command(2, error.message, this.getDateFormat(), -1));
@@ -134,13 +134,14 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   // capture the enter button
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
-    if (event.keyCode === 13 && this.command && this.isRpc) {
+    if (event.keyCode === 13 && this.command && this.waitingForRPC) {
       this.disableScrollDown = false;
       this.rpcCall();
     }
     if (event.ctrlKey && event.keyCode === 76) {
       this.clearCommands();
     }
+    // Up and Down arrow KeyPress to manage command history
     if ([38, 40].includes(event.keyCode) && this.commandHistory.length > 0) {
       this.manageCommandHistory(event.keyCode);
     }

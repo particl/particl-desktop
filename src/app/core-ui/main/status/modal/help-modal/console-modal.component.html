@@ -37,9 +37,9 @@
 
         <div class="command-actions" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
           <mat-form-field fxFlex="1 1 100%" floatPlaceholder="never">
-            <input matInput [(ngModel)]="command" [disabled]="!isRpc" placeholder="Enter 'help' for an overview of available commands">
+            <input matInput [(ngModel)]="command" [disabled]="!waitingForRPC" placeholder="Enter 'help' for an overview of available commands">
           </mat-form-field>
-          <button mat-raised-button color="primary" [disabled]="!command || !isRpc" (click)="rpcCall()" fxFlex>
+          <button mat-raised-button color="primary" [disabled]="!command || !waitingForRPC" (click)="rpcCall()" fxFlex>
             <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Enter
           </button>
