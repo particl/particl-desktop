@@ -24,7 +24,7 @@
       </mat-panel-title>
 
       <!-- Confirmations -->
-      <mat-panel-title fxFlex="1 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation"
+      <mat-panel-title fxFlex="0 0 45px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation"
                         [ngClass]="styleConfimations(tx.getConfirmationCount())">
         <span mat-line matTooltip="Confirmations" matTooltipPosition="before">
           <mat-icon fontSet="partIcon" fontIcon="part-circle-check" class="confirmations"></mat-icon>
@@ -33,7 +33,7 @@
       </mat-panel-title>
 
       <!-- Category icon -->
-      <mat-panel-title fxFlex="1 0 165px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon"
+      <mat-panel-title fxFlex="1 0 175px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon"
                         [ngSwitch]="tx.category">
         <span *ngSwitchCase="'stake'" class="tx-type staked">
           <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>Staked
@@ -73,7 +73,7 @@
       </mat-panel-title>
 
       <!-- Amount -->
-      <mat-panel-title fxFlex="1 0 160px" fxFlex.lt-md="100" *ngIf="display.amount" class="history_amount">
+      <mat-panel-title fxFlex="1 0 155px" fxFlex.lt-md="100" *ngIf="display.amount" class="history_amount">
         <span mat-line>
           <span class="amount"
                 [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }">
