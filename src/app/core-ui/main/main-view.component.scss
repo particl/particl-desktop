@@ -79,14 +79,18 @@ a.sidebar-item-link {
 // ------ ERROR & INFO MESSAGES ------ //
 
 .notification {
+  margin-bottom: 6px;
   .sidebar-item {
+    margin: 4px 0;
     .icon {
       margin: 0 14px 0 0;
     }
     .text {
       color: white;
       font-size: 11px;
+      line-height: 1.5;
       padding: 0;
+      display: inline-block;
     }
     &:hover {
       background: none;
