@@ -18,7 +18,7 @@ export class PreviewListingComponent implements OnInit {
   }
 
   openListing() {
-    let dialog = this.dialog.open(ListingComponent, {
+    const dialog = this.dialog.open(ListingComponent, {
       data: { listing: this.listing },
     });
   }

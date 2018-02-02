@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
@@ -13,6 +14,10 @@ describe('ListingComponent', () => {
       declarations: [ ListingComponent ],
       imports: [
         CoreUiModule.forRoot()
+      ],
+      providers: [
+        { provide: MatDialogRef}, 
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
     .compileComponents();

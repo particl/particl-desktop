@@ -12,7 +12,7 @@ export class ListingComponent implements OnInit {
     private dialogRef: MatDialogRef<ListingComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
-  //listing is in data.listing
+  // listing is in data.listing
 
   ngOnInit() {
   }
