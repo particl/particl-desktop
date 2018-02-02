@@ -16,7 +16,7 @@ describe('FixWalletModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ 
+      declarations: [
         FixWalletModalComponent
       ],
       imports: [
