@@ -7,6 +7,9 @@ import { PreviewListingComponent } from 'app/market/overview-listings/preview-li
 import { routing } from './market.routing';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ListingComponent } from './listing/listing.component';
+import { BuyComponent } from './buy/buy.component';
+import { SellComponent } from './sell/sell.component';
+import { AddItemComponent } from './sell/add-item/add-item.component';
 
 
 
@@ -19,7 +22,10 @@ import { ListingComponent } from './listing/listing.component';
   declarations: [
     OverviewListingsComponent,
     PreviewListingComponent,
-    ListingComponent
+    ListingComponent,
+    BuyComponent,
+    SellComponent,
+    AddItemComponent
   ],
   entryComponents: [
     ListingComponent

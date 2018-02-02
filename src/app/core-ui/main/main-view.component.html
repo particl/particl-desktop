@@ -33,8 +33,26 @@
                 routerLinkActive="active" [routerLink]="'/market/overview'">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-receive"></mat-icon>
+                    fontIcon="part-overview"></mat-icon>
                   <span class="text">Listings</span>
+                </mat-list-item>
+              </a>
+
+              <a class="sidebar-item-link"
+                routerLinkActive="active" [routerLink]="'/market/buy'">
+                <mat-list-item class="sidebar-item">
+                  <mat-icon class="icon" fontSet="partIcon"
+                    fontIcon="part-receive"></mat-icon>
+                  <span class="text">Buy</span>
+                </mat-list-item>
+              </a>
+
+              <a class="sidebar-item-link"
+                routerLinkActive="active" [routerLink]="'/market/sell'">
+                <mat-list-item class="sidebar-item">
+                  <mat-icon class="icon" fontSet="partIcon"
+                    fontIcon="part-send"></mat-icon>
+                  <span class="text">Sell</span>
                 </mat-list-item>
               </a>
 
