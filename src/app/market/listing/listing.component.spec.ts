@@ -16,7 +16,7 @@ describe('ListingComponent', () => {
         CoreUiModule.forRoot()
       ],
       providers: [
-        { provide: MatDialogRef}, 
+        { provide: MatDialogRef},
         { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
