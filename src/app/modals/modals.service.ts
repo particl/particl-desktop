@@ -95,6 +95,8 @@ export class ModalsService implements OnDestroy {
           dialogRef.afterClosed().subscribe(() => {
             this.close();
           });
+        } else {
+            dialogRef.close();
         }
       }
     } else {
