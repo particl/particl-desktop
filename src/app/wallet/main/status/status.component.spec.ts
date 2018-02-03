@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CoreModule } from '../../../core/core.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 import { ModalsModule } from '../../../modals/modals.module';
-import { CoreUiModule } from '../../core-ui.module';
+import { CoreUiModule } from '../../../core-ui.module';
 
 import { StatusComponent } from './status.component';
 

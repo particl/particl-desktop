@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material';
 import { CoreModule } from '../../../../../core/core.module';
 import { SharedModule } from '../../../../../wallet/shared/shared.module';
 import { ModalsModule } from '../../../../../modals/modals.module';
-import { CoreUiModule } from '../../../../core-ui.module';
+import { CoreUiModule } from '../../../../../core-ui.module';
 
 import { ConsoleModalComponent } from './console-modal.component';
 
