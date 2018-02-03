@@ -106,6 +106,7 @@ function getAuth(options) {
     auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();
   } else {
     auth = undefined;
+    log.debug('could not find cookie file! path:', COOKIE_FILE);
   }
 
   return (auth)

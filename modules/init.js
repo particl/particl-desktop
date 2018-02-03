@@ -31,12 +31,12 @@ daemonManager.on('status', (status, msg) => {
 
   // Done -> means we have a binary!
   if(status === 'done') {
-    log.debug('daemonManager returned done, starting daemon!');
+    log.info('daemonManager returned successfully, starting daemon!');
     multiwallet.get()
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
     .then(chosenWallets => daemon.start(chosenWallets, daemonStarted))
-    // .catch(err          => log.error(err));
+    .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
     // .then(()            => ipc.daemonReady(mainWindow.webContents))
 
