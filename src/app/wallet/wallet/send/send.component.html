@@ -33,7 +33,7 @@
           <div class="desc">Available balance:<span *ngIf="!checkBalance('blind_balance')" class="amount">{{ getBalance('blind_balance') }}</span> 
           <mat-icon *ngIf="checkBalance('blind_balance')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon></div>
         </mat-radio-button>
-        <mat-radio-button class="balance" value="anon_balance" fxFlex [disabled]="type === 'balanceTransfer'">
+        <mat-radio-button class="balance" value="anon_balance" fxFlex disabled>
           <div class="name">Anon</div>
           <div class="desc">Available balance:<span class="amount">{{ getBalance('anon_balance') }}</span></div>
         </mat-radio-button>
@@ -131,17 +131,17 @@
                      type="text" placeholder="Receiver's address" [(ngModel)]="send.toAddress"
                      (ngModelChange)="verifyAddress()"/>
             </mat-form-field>
-            <span fxFlex="0 0 20px">
-              <mat-icon class="cursor-pointer zindex" matTooltip="Address Lookup" (click)="openLookup()"
+            <span fxFlex="0 0 16px">
+              <mat-icon class="cursor-pointer" matTooltip="Pick from Address Book" (click)="openLookup()"
                         fontSet="partIcon" fontIcon="part-people"></mat-icon>
             </span>
-            <span fxFlex="0 0 20px">
-              <mat-icon class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-copy"
+            <span fxFlex="0 0 16px">
+              <mat-icon class="cursor-pointer" matTooltip="Paste" fontSet="partIcon" fontIcon="part-past"
                         (click)="pasteAddress()"></mat-icon>
             </span>
-            <span fxFlex="0 0 20px">
-              <mat-icon class="cursor-pointer" matTooltip="Clear" (click)="clearReceiver()"
-                        color="warn" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+            <span fxFlex="0 0 16px">
+              <mat-icon class="cursor-pointer" matTooltip="Clear all" (click)="clearReceiver()"
+                        color="warn" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
             </span>
           </div>
           <mat-form-field class="full-width larger no-top-padding" floatPlaceholder="never">

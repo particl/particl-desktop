@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 
 import { RpcService } from '../../core/core.module';
 import { ModalsService } from '../../modals/modals.module';
-import { TransactionService } from '../../wallet/wallet/shared/transaction.service';
+
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -21,11 +21,14 @@ import { TransactionService } from '../../wallet/wallet/shared/transaction.servi
   styleUrls: ['./main-view.component.scss']
 })
 export class MainViewComponent implements OnInit, OnDestroy {
+
   log: any = Log.create('main-view.component');
+  private destroyed: boolean = false;
 
   /* UI States */
 
   title: string = '';
+  testnet: boolean = false;
 
   /* errors */
   walletInitialized: boolean = undefined;
@@ -37,13 +40,13 @@ export class MainViewComponent implements OnInit, OnDestroy {
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
-  private destroyed: boolean = false;
+
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
     private _modals: ModalsService,
-    public txService: TransactionService,
     private dialog: MatDialog
   ) { }
 
@@ -99,6 +102,10 @@ export class MainViewComponent implements OnInit, OnDestroy {
     this._rpc.state.observe('subversion')
       .takeWhile(() => !this.destroyed)
       .subscribe(subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
+
+     /* check if testnet -> block explorer url */
+     this._rpc.state.observe('chain').take(1)
+     .subscribe(chain => this.testnet = chain === 'test');
   }
 
   ngOnDestroy() {
@@ -139,6 +146,14 @@ export class MainViewComponent implements OnInit, OnDestroy {
   checkSecond(sec: number): number {
     sec = sec > 0 ? (sec - 1) : 59;
     return sec;
+  }
+
+  // Paste Event Handle
+  @HostListener('window:keydown', ['$event'])
+  keyDownEvent(event: any) {
+    if (event.metaKey && event.keyCode === 86 && navigator.platform.indexOf('Mac') > -1) {
+      document.execCommand('Paste');
+    }
   }
 
   /**

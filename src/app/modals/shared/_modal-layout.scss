@@ -50,6 +50,19 @@ p {
       margin-right: 10px;
     }
   }
+  &.success {
+    background: rgba($color-success, 0.1);
+    padding: 15px 25px;
+    margin: 20px 0;
+    border-left: 3px solid $color-success;
+    font-weight: 600;
+    .mat-icon {
+      color: $color-success;
+      width: auto;
+      height: auto;
+      margin-right: 10px;
+    }
+  }
 }
 
 small {
