@@ -53,7 +53,7 @@ daemonManager.on('status', (status, msg) => {
         message: 'Unable to check for updates, please check your connection. Do you want to retry?'
       }, (response) => {
         if(response === 1) {
-          exports.start();
+          exports.startDaemonManager();
         }
       });
     }
