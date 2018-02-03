@@ -79,6 +79,7 @@ class DaemonManager extends EventEmitter {
     })
     .catch((err) => {
       log.warn('Error fetching client binaries config from repo', err);
+      this._emit('error', err.message);
     })
     .then((latestConfig) => {
 
