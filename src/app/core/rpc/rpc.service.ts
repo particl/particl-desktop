@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
 import { Subject } from 'rxjs/Subject';
@@ -8,6 +8,7 @@ import { map, catchError } from 'rxjs/operators';
 import { IpcService } from '../ipc/ipc.service';
 import { StateService } from '../state/state.service';
 import { RpcStateClass } from './rpc-state/rpc-state.class';
+import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 
 const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
@@ -26,7 +27,7 @@ declare global {
  */
 
 @Injectable()
-export class RpcService {
+export class RpcService implements OnDestroy {
   /**
    * IP/URL for daemon (default = localhost)
    */
@@ -53,6 +54,7 @@ export class RpcService {
   public errorsStateCall: Subject<any> = new Subject<any>();
 
   private _rpcState: RpcStateClass;
+  private destroyed: boolean = false;
 
   constructor(
     private _http: HttpClient,
@@ -62,6 +64,10 @@ export class RpcService {
     this.isElectron = window.electron;
 
     this.toggleState(true);
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   /**
@@ -170,8 +176,12 @@ export class RpcService {
       // initiate loop
       _call();
     } else {
-      this.state.observe('blocks') .subscribe(success => this.stateCall(method, true));
-      this.state.observe('txcount').subscribe(success => this.stateCall(method, true));
+      this.state.observe('blocks')
+        .takeWhile(() => !this.destroyed)
+        .subscribe(success => this.stateCall(method, true));
+      this.state.observe('txcount')
+        .takeWhile(() => !this.destroyed)
+        .subscribe(success => this.stateCall(method, true));
     }
   }
 

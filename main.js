@@ -97,6 +97,7 @@ function initMainWindow() {
     minWidth:  1270,
     height:    675,
     minHeight: 675,
+    icon:      path.join(__dirname, 'resources/icon.png'),
     webPreferences: {
       nodeIntegration:  false,
       sandbox:          true,

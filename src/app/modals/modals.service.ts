@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material';
 import { ModalsComponent } from './modals.component';
 
 @Injectable()
-export class ModalsService {
+export class ModalsService implements OnDestroy {
 
   public modal: any = null;
   private message: Subject<any> = new Subject<any>();
@@ -30,6 +30,7 @@ export class ModalsService {
   /* True if user already has a wallet (imported seed or created wallet) */
   public initializedWallet: boolean = false;
   private data: string;
+  private destroyed: boolean = false;
 
   private log: any = Log.create('modals.service');
 
@@ -68,6 +69,10 @@ export class ModalsService {
       });
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
   /**
     * Open a modal
     * @param {string} modal   The name of the modal to open
@@ -90,6 +95,8 @@ export class ModalsService {
           dialogRef.afterClosed().subscribe(() => {
             this.close();
           });
+        } else {
+            dialogRef.close();
         }
       }
     } else {
@@ -150,6 +157,7 @@ export class ModalsService {
     */
   openInitialCreateWallet(): void {
     this._rpc.state.observe('ui:walletInitialized')
+      .takeWhile(() => !this.destroyed)
       .subscribe(
         state => {
           this.initializedWallet = state;
