@@ -48,6 +48,7 @@ export class TransactionsTableComponent implements OnInit {
   log: any = Log.create('transaction-table.component');
 
   constructor(public txService: TransactionService) {
+
   }
 
   ngOnInit(): void {

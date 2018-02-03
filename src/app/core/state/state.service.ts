@@ -70,7 +70,7 @@ export class StateService {
 
       this._observerPairs[prop].observable = Observable.create(
           _observer => this._observerPairs[prop].observer = _observer
-      ).shareReplay();
+      ).shareReplay(1);
     }
 
     return this._observerPairs[prop];

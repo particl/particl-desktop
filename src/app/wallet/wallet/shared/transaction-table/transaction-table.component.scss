@@ -26,7 +26,6 @@
 
   // confirmations
   .history_confirmation {
-    @extend %tfx;
     color: $text-muted;
     .confirmations { // icon
       height: auto;
