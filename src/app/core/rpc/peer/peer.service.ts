@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Observer, Subscription } from 'rxjs'; // use this for testing atm
 import { Log } from 'ng2-logger';
 
 import { RpcService } from '../rpc.service';
 
 @Injectable()
-export class PeerService {
+export class PeerService implements OnDestroy {
 
   private log: any = Log.create('peer.service');
+  private destroyed: boolean = false;
 
   // TODO: Peer interface
   private _peerList: Observable<Array<Object>>;
@@ -59,7 +60,9 @@ export class PeerService {
       error => this.log.er(`updatePeerListLoop(): getblockcount error ${error}`)
     );
 
-    setTimeout(this.updatePeerListLoop.bind(this), 10000);
+    if (!this.destroyed) {
+      setTimeout(this.updatePeerListLoop.bind(this), 10000);
+    }
   }
 
   private setPeerList(peerList: Array<Object>) {
@@ -96,4 +99,8 @@ export class PeerService {
     return this._peerList;
   }
 
+  // TODO: destroy other observables
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
 }
