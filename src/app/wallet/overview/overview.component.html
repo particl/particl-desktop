@@ -8,8 +8,7 @@
   <div class="balance-item" fxFlex="17">
     <app-balance type="blind_balance"></app-balance>
   </div>
-  <!-- FIXME: if testnet => show anon balance -->
-  <div class="balance-item" fxFlex="17">
+  <div *ngIf="testnet" class="balance-item" fxFlex="17">
     <app-balance type="anon_balance"></app-balance>
   </div>
   <div class="balance-item" fxFlex="17">
