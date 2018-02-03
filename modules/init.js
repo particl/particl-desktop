@@ -3,7 +3,7 @@ const log           = require('electron-log');
 
 const ipc           = require('./ipc/ipc');
 const daemon        = require('./daemon/daemon');
-var daemonManager = require('./daemon/daemonManager');
+const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
 
 // TODO move to a proper place
