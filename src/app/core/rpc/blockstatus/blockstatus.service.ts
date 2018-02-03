@@ -8,7 +8,7 @@ import { PeerService } from '../peer/peer.service';
 @Injectable()
 export class BlockStatusService {
 
-  private log: any = Log.create('blockstatus.service');
+  private log: any = Log.create('blockstatus.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   /* Block variables */
   private highestBlockHeightNetwork: number = -1;

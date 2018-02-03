@@ -17,9 +17,9 @@ let options;
 // const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/master/modules/clientBinaries/clientBinaries.json';
 
 // dev
-// const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/dev/modules/clientBinaries/clientBinaries.json';
+// const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/develop/modules/clientBinaries/clientBinaries.json';
 
-const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/dev/modules/clientBinaries/clientBinaries.json';
+const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/develop/modules/clientBinaries/clientBinaries.json';
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
@@ -79,6 +79,7 @@ class DaemonManager extends EventEmitter {
     })
     .catch((err) => {
       log.warn('Error fetching client binaries config from repo', err);
+      this._emit('error', err.message);
     })
     .then((latestConfig) => {
 

@@ -18,14 +18,15 @@ import { RevertColdstakingComponent } from './revert-coldstaking/revert-coldstak
 export class ColdstakeComponent implements OnDestroy {
 
   private log: any = Log.create('coldstake.component');
+  private destroyed: boolean = false;
 
   coldStakingEnabled: boolean = undefined;
   walletInitialized: boolean = undefined;
-  activation: string = 'Activation in progress';
   public encryptionStatus: string = 'Locked';
+
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
-  private destroyed: boolean = false;
+
 
   hotstakingamount: number = 0.0;
   coldstakingamount: number = 0.0;
@@ -42,6 +43,7 @@ export class ColdstakeComponent implements OnDestroy {
     this._rpc.state.observe('ui:coldstaking')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingEnabled = status);
+
     this._rpc.state.observe('ui:walletInitialized')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.walletInitialized = status);
@@ -50,15 +52,13 @@ export class ColdstakeComponent implements OnDestroy {
       .takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
       .subscribe(block => this.rpc_progress());
     // TODO: move to coldstaking service
+
+    this.rpc_progress();
   }
 
   private rpc_progress(): void {
     // TODO: not necessary when cold staking disabled
     this.stakingStatus();
-
-    if (this.coldstakeProgress === 100) {
-      this.activation = 'Activated';
-    }
   }
 
   ngOnDestroy() {
@@ -67,13 +67,19 @@ export class ColdstakeComponent implements OnDestroy {
 
   private stakingStatus() {
     this._rpc.call('getcoldstakinginfo').subscribe(coldstakinginfo => {
-        this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
-        this.coldstakingamount = coldstakinginfo['percent_in_coldstakeable_script'];
-        this.hotstakingamount = coldstakinginfo['coin_in_stakeable_script'];
+      this.log.d('stakingStatus called ' + coldstakinginfo['enabled']);
+      this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
+      this.coldstakingamount = coldstakinginfo['percent_in_coldstakeable_script'];
+      this.hotstakingamount = coldstakinginfo['coin_in_stakeable_script'];
 
-        if ('enabled' in coldstakinginfo) {
-            this._rpc.state.set('ui:coldstaking', coldstakinginfo['enabled']);
-        }
+      this.log.d(`coldstakingamount (actually a percentage) ${this.coldstakingamount}`);
+      this.log.d(`hotstakingamount ${this.hotstakingamount}`);
+
+      if ('enabled' in coldstakinginfo) {
+        this._rpc.state.set('ui:coldstaking', coldstakinginfo['enabled']);
+      } else { // ( < 0.15.1.2) enabled = undefined ( => false)
+        this._rpc.state.set('ui:coldstaking', false);
+      }
 
     }, error => this.log.er('couldn\'t get coldstakinginfo', error));
   }
@@ -91,6 +97,8 @@ export class ColdstakeComponent implements OnDestroy {
 
   openRevertColdstakingModal() {
     const dialogRef = this.dialog.open(RevertColdstakingComponent);
+    // update progress after closing the dialog
+    dialogRef.afterClosed().subscribe(result => this.rpc_progress());
   }
 
   revert() {
@@ -106,10 +114,13 @@ export class ColdstakeComponent implements OnDestroy {
 
   openZapColdstakingModal(): void {
     const dialogRef = this.dialog.open(ZapColdstakingComponent);
+
+    // update progress after closing the dialog
+    dialogRef.afterClosed().subscribe(result => this.rpc_progress());
   }
 
   openUnlockWalletModal(): void {
-    this._modals.open('unlock', {forceOpen: true, showStakeOnly: false, stakeOnly: true});
+    this._modals.open('unlock', { forceOpen: true, showStakeOnly: false, stakeOnly: true });
   }
 
   openColdStakeModal(): void {

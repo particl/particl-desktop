@@ -70,6 +70,7 @@ export class SendComponent {
     this.send.input = 'balance';
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
+      this.send.output = 'blind_balance'
       this.verifyAddress();
     }
     this.updateAmount();
@@ -117,6 +118,11 @@ export class SendComponent {
     }
 
     if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
+      this.send.validAmount = false;
+      return;
+    }
+
+    if (this.send.amount === 1e-8) {
       this.send.validAmount = false;
       return;
     }
