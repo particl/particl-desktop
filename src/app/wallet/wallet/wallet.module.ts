@@ -26,6 +26,8 @@ import { NewAddressModalComponent } from './address-book/modal/new-address-modal
 import { QrCodeModalComponent } from './shared/qr-code-modal/qr-code-modal.component';
 import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
 import { SignatureAddressModalComponent } from './shared/signature-address-modal/signature-address-modal.component';
+import { FixWalletModalComponent } from './send/fix-wallet-modal/fix-wallet-modal.component';
+import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet-fixed-confirmation/wallet-fixed-confirmation.component';
 
 
 
@@ -50,7 +52,9 @@ import { SignatureAddressModalComponent } from './shared/signature-address-modal
     NewAddressModalComponent,
     QrCodeModalComponent,
     SendConfirmationModalComponent,
-    SignatureAddressModalComponent
+    SignatureAddressModalComponent,
+    FixWalletModalComponent,
+    WalletFixedConfirmationComponent
   ],
   exports: [
     TransactionsTableComponent,
@@ -69,7 +73,10 @@ import { SignatureAddressModalComponent } from './shared/signature-address-modal
     QrCodeModalComponent,
     AddressLookupComponent,
     SendConfirmationModalComponent,
-    SignatureAddressModalComponent
+    SignatureAddressModalComponent,
+    /* modals for wallet fix */
+    FixWalletModalComponent,
+    WalletFixedConfirmationComponent
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -79,7 +86,6 @@ export class WalletModule {
     return {
       ngModule: WalletModule,
       providers: [
-        TransactionService,
         AddressService,
         SendService
       ]

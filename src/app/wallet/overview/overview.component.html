@@ -1,5 +1,4 @@
 <mat-card class="balance-overview" fxLayoutWrap fxLayoutGap="3%">
-  <!-- https://github.com/angular/flex-layout/wiki/API-Documentation#html-api-declarative -->
   <div class="balance-item" fxFlex="20">
     <app-balance type="total_balance"></app-balance>
   </div>
@@ -9,9 +8,9 @@
   <div class="balance-item" fxFlex="17">
     <app-balance type="blind_balance"></app-balance>
   </div>
-  <div class="balance-item" fxFlex="17">
+  <!--div class="balance-item" fxFlex="17">
     <app-balance type="anon_balance"></app-balance>
-  </div>
+  </div-->
   <div class="balance-item" fxFlex="17">
     <app-balance type="staked_balance"></app-balance>
   </div>
@@ -25,9 +24,6 @@
       <ul class="header-nav">
         <li>Recent Transactions</li>
       </ul>
-      <!--ul class="header-nav pull-right">
-        <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li>
-      </ul-->
     </app-header>
     <transaction-table
       [display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': true, 'confirmations': true}">
