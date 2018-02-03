@@ -79,7 +79,7 @@ export class CreateWalletComponent implements OnDestroy {
     this.errorString = '';
     this.step = 0;
     this.state.observe('encryptionstatus')
-      .takeWhile(() => !this.destroyed)
+      .take(2)
       .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 
@@ -187,6 +187,7 @@ export class CreateWalletComponent implements OnDestroy {
 
   public importMnemonicSeed(): void {
     this.state.set('ui:spinner', true);
+
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {

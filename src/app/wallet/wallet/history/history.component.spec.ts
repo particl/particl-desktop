@@ -7,6 +7,10 @@ import { RpcModule } from '../../../core/rpc/rpc.module';
 import { CoreModule } from '../../../core/core.module';
 
 import { HistoryComponent } from './history.component';
+import { TransactionService } from 'app/wallet/wallet/shared/transaction.service';
+
+import { TransactionsTableComponent } from 'app/wallet/wallet/shared/transaction-table/transaction-table.component';
+import { MockTransactionService } from 'app/wallet/wallet/shared/transaction.mockservice';
 
 
 describe('HistoryComponent', () => {
@@ -23,7 +27,17 @@ describe('HistoryComponent', () => {
         CoreModule.forRoot()
       ]
     })
-    .compileComponents();
+
+  // Override TransactionsTableComponent's TransactionService
+  .overrideComponent(TransactionsTableComponent, {
+    set: {
+      providers: [
+        { provide: TransactionService, useClass: MockTransactionService }
+      ]
+    }
+  })
+
+  .compileComponents();
   }));
 
   beforeEach(() => {

@@ -9,6 +9,7 @@ import { IpcService } from '../ipc/ipc.service';
 import { StateService } from '../state/state.service';
 import { RpcStateClass } from './rpc-state/rpc-state.class';
 import { ZmqService } from 'app/core/zmq/zmq.service';
+import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 
 const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;

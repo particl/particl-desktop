@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
+  "homepage": "https://particl.io",
   "keywords": [
     "particl",
     "angular2",
@@ -23,16 +24,17 @@
     "e2e": "ng e2e",
     "generate:versions": "node modules/clientBinaries/generateVersions.js",
     "generate:documentation": "",
+    "checksum": "cd packages && checksum -a sha256 *.*",
     "build:electron:prod": "ng build --base-href=./ --env=prod",
     "build:electron:fast": "ng build --base-href=./ --sourcemap=false",
     "build:electron": "ng build --base-href=./",
     "start:electron:dev": "electron . --dev",
-    "start:electron:fast": "npm run build:electron:fast && electron .",
-    "start:electron": "npm run build:electron && electron .",
-    "package:mac": "npm run build:electron:prod && electron-builder -m && sha256sum packages/*.*",
-    "package:linux": "npm run build:electron:prod && electron-builder -l && sha256sum packages/*.*",
-    "package:win": "npm run build:electron:prod && electron-builder --win --x64 && sha256sum packages/*.*",
-    "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win && sha256sum packages/*.*",
+    "start:electron:fast": "yarn run build:electron:fast && electron .",
+    "start:electron": "yarn run build:electron && electron .",
+    "package:mac": "yarn run build:electron:prod && electron-builder -m && yarn run checksum",
+    "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
+    "package:win": "yarn run build:electron:prod && electron-builder --win --x64 && yarn run checksum",
+    "package": "yarn run build:electron:prod && electron-builder -ml && yarn run package:win && yarn run checksum",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
@@ -64,7 +66,7 @@
       "background": "background-mac.png",
       "contents": [
         {
-          "x": 128,
+          "x": 129,
           "y": 250
         },
         {
@@ -174,9 +176,10 @@
     "@compodoc/compodoc": "^1.0.4",
     "@types/jasmine": "^2.8.5",
     "@types/node": "^9.3.0",
+    "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "1.7.11",
+    "electron": "1.7.12",
     "electron-builder": "^19.55.2",
     "htmlhint": "^0.9.13",
     "jasmine-core": "^2.9.1",
