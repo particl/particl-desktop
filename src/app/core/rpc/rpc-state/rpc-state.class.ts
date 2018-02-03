@@ -55,8 +55,6 @@ export class RpcStateClass implements OnDestroy {
       .subscribe(status => {
         this._rpc.state
           .set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
-        this._rpc.state
-          .set('ui:coldstaking:stake', ['Unencrypted', 'Unlocked', 'Unlocked, staking only'].includes(status));
       });
   }
 
@@ -66,6 +64,7 @@ export class RpcStateClass implements OnDestroy {
   *   update the coldstaking state.
   */
   private coldStakeHook() {
+    // TODO: Remove
     this._rpc.state.observe('locked')
       .takeWhile(() => !this.destroyed)
       .subscribe(locked => {
@@ -77,7 +76,7 @@ export class RpcStateClass implements OnDestroy {
               // set state for coldstaking
               response => this._rpc.state.set('ui:coldstaking',
                 response.changeaddress === 'default'
-                  ? undefined
+                  ? false
                   : !!response.changeaddress.coldstakingaddress
               ),
               error => this.log.er('walletsettings changeaddress', error)
