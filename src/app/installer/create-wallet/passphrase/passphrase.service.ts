@@ -28,9 +28,7 @@ export class PassphraseService {
       });
   }
 
-  /*
-   * Create a new recovery phrase.
-  */
+  /** Create a new recovery phrase. */
   generateMnemonic(password?: string): Observable<any> {
     this.log.d(`password: ${password}`);
     const params = ['new', password];
