@@ -16,7 +16,6 @@ import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
-import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { MatDialogRef } from '@angular/material';
 import { StateService } from '../core/core.module';
 
@@ -29,8 +28,7 @@ import { StateService } from '../core/core.module';
     ColdstakeComponent,
     DaemonComponent,
     SyncingComponent,
-    UnlockwalletComponent,
-    EncryptwalletComponent
+    UnlockwalletComponent
   ]
 })
 export class ModalsComponent implements DoCheck, OnInit, OnDestroy {

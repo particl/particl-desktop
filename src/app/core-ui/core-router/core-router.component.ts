@@ -14,15 +14,9 @@ export class CoreRouterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.load();
-    setTimeout(this.wallet.bind(this), 30000);
-  }
-
-  load() {
+    // loading screen
     this._router.navigate(['loading']);
   }
 
-  wallet() {
-    this._router.navigate(['wallet/main']);
-  }
+
 }

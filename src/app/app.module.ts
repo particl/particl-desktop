@@ -5,6 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CoreModule } from './core/core.module';
 import { CoreUiModule } from './core-ui/core-ui.module';
 import { ModalsModule } from './modals/modals.module';
+import { InstallerModule } from 'app/installer/installer.module';
 
 import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.module';
 // import { WalletViewsModule } from './wallet/wallet.module';
@@ -12,6 +13,7 @@ import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.modu
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 import { LoadingComponent } from './loading/loading.component';
+
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { LoadingComponent } from './loading/loading.component';
     CoreModule.forRoot(),
     CoreUiModule.forRoot(),
     ModalsModule.forRoot(),
+    InstallerModule,
     // WalletViewsModule, // shouldn't be needed?
     MultiwalletModule,
   ],

@@ -1,0 +1,13 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.encrypt-wrapper {
+  background-color: #232323;
+  color: $bg;
+  text-align: center;
+  font-family: $font;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

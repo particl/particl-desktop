@@ -17,11 +17,9 @@ import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
-import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
 /* shared in modals */
-import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
-import { PassphraseService } from './createwallet/passphrase/passphrase.service';
+
 import { PasswordComponent } from './shared/password/password.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
@@ -42,13 +40,11 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     FocusDirective,
     FocusTimeoutDirective,
     ModalsComponent,
-    PassphraseComponent,
     PasswordComponent,
     CreateWalletComponent,
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
-    EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
     MultiwalletComponent,
@@ -56,11 +52,14 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
   ],
   exports: [
     ModalsComponent,
-    ClipboardModule
+    ClipboardModule,
+    FocusDirective, // used in new create-wallet
+    FocusTimeoutDirective, // used in new create-wallet
+    PasswordComponent, // used in new create-wallet
+    UnlockwalletComponent // used in new create-wallet
   ],
   providers: [
     ModalsService,
-    PassphraseService,
     SnackbarService
   ],
   entryComponents: [
@@ -68,7 +67,6 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
-    EncryptwalletComponent,
     AlertComponent,
     DaemonConnectionComponent
   ],
@@ -85,4 +83,3 @@ export class ModalsModule {
 }
 
 export { ModalsService } from './modals.service';
-export { PassphraseService } from './createwallet/passphrase/passphrase.service';

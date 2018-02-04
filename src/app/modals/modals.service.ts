@@ -5,12 +5,10 @@ import { Log } from 'ng2-logger';
 import { RpcService, BlockStatusService } from '../core/core.module';
 
 /* modals */
-import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
-import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { MatDialog } from '@angular/material';
@@ -35,12 +33,10 @@ export class ModalsService implements OnDestroy {
   private log: any = Log.create('modals.service');
 
   messages: Object = {
-    createWallet: CreateWalletComponent,
     coldStake: ColdstakeComponent,
     daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent,
-    encrypt: EncryptwalletComponent,
     multiwallet: MultiwalletComponent
   };
 

@@ -2,45 +2,50 @@ import {
   Component, Inject, forwardRef, ViewChild, ElementRef, ComponentRef, HostListener,
   OnDestroy
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { MatDialogRef } from '@angular/material';
 
-import { PasswordComponent } from '../shared/password/password.component';
-import { IPassword } from '../shared/password/password.interface';
+import { PassphraseComponent } from 'app/installer/create-wallet/passphrase/passphrase.component';
+import { PasswordComponent } from '../../modals/shared/password/password.component';
+import { IPassword } from '../../modals/shared/password/password.interface';
 
 import { slideDown } from '../../core-ui/core.animations';
 
-import { ModalsService } from '../modals.service';
-import { PassphraseComponent } from './passphrase/passphrase.component';
-import { PassphraseService } from './passphrase/passphrase.service';
-
 import { StateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
+import { PassphraseService } from 'app/installer/create-wallet/passphrase/passphrase.service';
+
 
 @Component({
-  selector: 'modal-createwallet',
-  templateUrl: './createwallet.component.html',
-  styleUrls: ['./createwallet.component.scss'],
-  animations: [slideDown()]
+  selector: 'app-create-wallet',
+  templateUrl: './create-wallet.component.html',
+  styleUrls: ['./create-wallet.component.scss'],
+  providers: [PassphraseService]
 })
 export class CreateWalletComponent implements OnDestroy {
 
   log: any = Log.create('createwallet.component');
+  private destroyed: boolean = false;
 
   step: number = 0;
   isRestore: boolean = false;
   name: string;
-  isCrypted: boolean = false;
 
   @ViewChild('nameField') nameField: ElementRef;
 
+  // passphrase password
   password: string = '';
   passwordVerify: string = '';
-  words: string[];
   toggleShowPass: boolean = false;
 
+  // 24 words
+  words: string[];
+
+  // unlocking before importing
+  walletPassword: string;
+
   @ViewChild('passphraseComponent')
-    passphraseComponent: ComponentRef<PassphraseComponent>;
+  passphraseComponent: ComponentRef<PassphraseComponent>;
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
   @ViewChild('passwordElementVerify') passwordElementVerify: PasswordComponent;
   @ViewChild('passwordRestoreElement') passwordRestoreElement: PasswordComponent;
@@ -51,15 +56,13 @@ export class CreateWalletComponent implements OnDestroy {
   private passcount: number = 0;
 
   errorString: string = '';
-  private destroyed: boolean = false;
 
-  constructor (
-    @Inject(forwardRef(() => ModalsService))
-    private _modalsService: ModalsService,
+
+  constructor(
     private _passphraseService: PassphraseService,
+    private router: Router,
     private state: StateService,
-    private flashNotification: SnackbarService,
-    private dialogRef: MatDialogRef<CreateWalletComponent>
+    private snackbar: SnackbarService
   ) {
     this.reset();
   }
@@ -69,8 +72,6 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   reset(): void {
-    this._modalsService.enableClose = true;
-    this.state.set('modal:fullWidth:enableClose', true);
     this.words = Array(24).fill('');
     this.isRestore = false;
     this.name = '';
@@ -78,23 +79,16 @@ export class CreateWalletComponent implements OnDestroy {
     this.passwordVerify = '';
     this.errorString = '';
     this.step = 0;
-    this.state.observe('encryptionstatus')
-      .take(2)
-      .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 
   initialize(type: number): void {
     this.reset();
 
     switch (type) {
-      case 0: // Encrypt wallet
-        this.dialogRef.close();
-        this._modalsService.open('encrypt', {forceOpen: true});
-        return;
       case 1: // Create
         break;
       case 2: // Restore
-          this.isRestore = true;
+        this.isRestore = true;
         break;
     }
     this.nextStep();
@@ -143,7 +137,7 @@ export class CreateWalletComponent implements OnDestroy {
         this._passphraseService.generateMnemonic(
           this.mnemonicCallback.bind(this), this.password
         );
-        this.flashNotification.open(
+        this.snackbar.open(
           'Please remember to write down your recovery passphrase',
           'warning');
         break;
@@ -152,7 +146,7 @@ export class CreateWalletComponent implements OnDestroy {
           const k = Math.floor(Math.random() * 23);
           this.words[k] = '';
         }
-        this.flashNotification.open(
+        this.snackbar.open(
           'Did you write your password at the previous step ?',
           'warning');
         break;
@@ -169,8 +163,6 @@ export class CreateWalletComponent implements OnDestroy {
 
         break;
     }
-    this._modalsService.enableClose = (this.step === 0);
-    this.state.set('modal:fullWidth:enableClose', (this.step === 0));
   }
 
 
@@ -186,27 +178,24 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   public importMnemonicSeed(): void {
-    this.state.set('ui:spinner', true);
+    // this.state.set('ui:spinner', true);
 
-    this._passphraseService.importMnemonic(this.words, this.password)
+    this._passphraseService.importMnemonic(this.words, this.password, this.walletPassword)
       .subscribe(
-        success => {
-          this._passphraseService.generateDefaultAddresses();
+      success => {
+        if (success === 'imported') {
           this.step = 5;
-          this.state.set('ui:walletInitialized', true);
-          this.state.set('ui:spinner', false);
+          // this.state.set('ui:spinner', false);
           this.log.i('Mnemonic imported successfully');
-
-        },
-        error => {
-          this.step = 4;
-          this.log.er(error);
-          this.errorString = error.message;
-          this._modalsService.enableClose = true;
-          this.state.set('ui:spinner', false);
-          this.state.set('modal:fullWidth:enableClose', true);
-          this.log.er('Mnemonic import failed');
-        });
+        }
+      },
+      error => {
+        // this.step = 4;
+        this.log.er(error);
+        this.errorString = error.message;
+        // this.state.set('ui:spinner', false);
+        this.log.er('Mnemonic import failed');
+      });
   }
 
   validate(): boolean {
@@ -264,7 +253,7 @@ export class CreateWalletComponent implements OnDestroy {
     }
 
     if (this.password !== this.passwordVerify) {
-      this.flashNotification.open('Passwords Do Not Match!', 'warning');
+      this.snackbar.open('Passwords do not match!', 'warning');
     } else {
       // We should probably make this a function because it isn't reusing code??
       this.validating = false;
@@ -282,11 +271,10 @@ export class CreateWalletComponent implements OnDestroy {
 
   close(): void {
     this.reset();
-    document.body.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    this.router.navigate(['loading']);
   }
 
-  public countWords (count: number): boolean {
+  public countWords(count: number): boolean {
     if ([12, 15, 18, 24].indexOf(count) !== -1) {
       return false;
     }
@@ -301,3 +289,4 @@ export class CreateWalletComponent implements OnDestroy {
     }
   }
 }
+
