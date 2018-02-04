@@ -10,7 +10,7 @@
           class="enable-select"
           [appFocusElement]="i === focused"
           [(ngModel)]="words[i]" type="text" name="recovery"
-          [readonly]="readOnly"
+          [attr.readonly]="readOnly"
           [disabled]="isDisabled || (partialDisable && validateWord(words[i], i) && canEdit(i))"
           [class.verify-error]="words[i].length > 1 && !validateWord(words[i], i)"
           (keyup)="checkFocus($event, i)" (paste)="splitAndFill(i)"

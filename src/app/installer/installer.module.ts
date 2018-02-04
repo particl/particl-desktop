@@ -30,6 +30,14 @@ import { PassphraseComponent } from './create-wallet/passphrase/passphrase.compo
     CreateWalletComponent,
     PassphraseComponent
   ],
+  exports: [
+    InstallerComponent,
+    // encrypt-wallet
+    EncryptWalletComponent,
+    // create-wallet
+    CreateWalletComponent,
+    PassphraseComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InstallerModule { }

@@ -6,10 +6,11 @@ import { MatIconModule } from '@angular/material';
 import { MaterialModule } from '../../core-ui/material/material.module';
 
 import { MainViewComponent } from './main-view.component';
+// vertical sidebar
+import { PercentageBarComponent } from './percentage-bar/percentage-bar.component';
+// horizontal sidebar
 import { StatusComponent } from './status/status.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
-import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
-
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 
 

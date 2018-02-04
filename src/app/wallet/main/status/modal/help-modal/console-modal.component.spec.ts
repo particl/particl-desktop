@@ -2,9 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material';
 
 import { CoreModule } from '../../../../../core/core.module';
-import { SharedModule } from '../../../../../wallet/shared/shared.module';
-import { ModalsModule } from '../../../../../modals/modals.module';
 import { CoreUiModule } from '../../../../../core-ui/core-ui.module';
+import { MainViewModule } from 'app/wallet/main/main-view.module';
+import { ModalsModule } from '../../../../../modals/modals.module';
+import { SharedModule } from '../../../../../wallet/shared/shared.module';
 
 import { ConsoleModalComponent } from './console-modal.component';
 
@@ -15,10 +16,11 @@ describe('ConsoleModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
         CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
+        MainViewModule,
         ModalsModule,
-        CoreUiModule.forRoot()
+        SharedModule,
       ],
       providers: [
         /* deps */

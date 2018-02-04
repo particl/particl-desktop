@@ -1,6 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { CoreModule } from 'app/core/core.module';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { InstallerModule } from 'app/installer/installer.module';
 
 import { CreateWalletComponent } from './create-wallet.component';
+
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -8,7 +14,13 @@ describe('CreateWalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateWalletComponent ]
+      // declarations: [ CreateWalletComponent ],
+      imports: [
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
+        InstallerModule,
+        RouterTestingModule
+      ]
     })
     .compileComponents();
   }));

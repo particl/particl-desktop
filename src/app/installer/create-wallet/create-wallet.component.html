@@ -74,10 +74,10 @@
   
         <!-- STEP 2: Recovery Password -->
         <div *ngIf="step === s.RecoveryPass">
-          <div >
+          <div>
             <div class="title">Choose a Recovery Password <small>(optional)</small></div>
             <p>
-             You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
+              You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
             </p>
             <p class="warning">
               <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
@@ -126,7 +126,7 @@
         <ng-template [ngIf]="[s.RecoveryPhrase, s.RecoveryPhraseVerify].indexOf(step) != -1">
           <app-passphrase
             #passphraseComponent
-            [readOnly]="step === s.RecoveryPhrase"
+            [attr.readOnly]="step === s.RecoveryPhrase"
             [words]="words"
             [partialDisable]="step === s.RecoveryPhraseVerify"
             (wordsEmitter)="wordsFromEmitter($event)"

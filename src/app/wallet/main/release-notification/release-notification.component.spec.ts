@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
+
+import { MainViewModule } from '../main-view.module';
 
 import { ReleaseNotificationComponent } from './release-notification.component';
-import { MainViewModule } from '../main-view.module';
-import { HttpClientModule } from '@angular/common/http';
 
 describe('ReleaseNotificationComponent', () => {
   let component: ReleaseNotificationComponent;

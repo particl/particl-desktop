@@ -6,6 +6,7 @@ import { ModalsModule } from '../../../modals/modals.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 import { StatusComponent } from './status.component';
+import { MainViewModule } from 'app/wallet/main/main-view.module';
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
@@ -14,10 +15,12 @@ describe('StatusComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
         CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
+        MainViewModule,
         ModalsModule,
-        CoreUiModule.forRoot()
+        SharedModule,
+
       ]
     })
     .compileComponents();
