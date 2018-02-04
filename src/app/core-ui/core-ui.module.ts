@@ -1,14 +1,16 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MaterialModule } from './material/material.module';
 
 /* The core router is the whole application. */
 import { CoreRouterModule } from './core-router/core-router.module';
+import { DirectivesModule } from './directives/directives.module';
+import { MaterialModule } from './material/material.module';
 
 // TODO: move to material
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
+
 import { PaginatorComponent } from './paginator/paginator.component';
 
 
@@ -19,11 +21,13 @@ import { PaginatorComponent } from './paginator/paginator.component';
   imports: [
     CommonModule,
     CoreRouterModule,
+    DirectivesModule,
     MaterialModule,
-    MatDialogModule // todo move
+    MatDialogModule, // todo move
   ],
   exports: [
     CoreRouterModule,
+    DirectivesModule,
     MaterialModule,
     PaginatorComponent
   ]

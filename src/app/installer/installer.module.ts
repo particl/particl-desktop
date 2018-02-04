@@ -1,5 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { routing } from 'app/installer/installer.routing';
@@ -13,16 +14,19 @@ import { PassphraseComponent } from './create-wallet/passphrase/passphrase.compo
 
 
 
+
 @NgModule({
   imports: [
     CommonModule,
+    ClipboardModule,
     CoreUiModule.forRoot(),
-    ModalsModule.forRoot(),
     routing,
   ],
   declarations: [
     InstallerComponent,
+    // encrypt-wallet
     EncryptWalletComponent,
+    // create-wallet
     CreateWalletComponent,
     PassphraseComponent
   ],

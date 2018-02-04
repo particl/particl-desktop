@@ -84,7 +84,8 @@ export class StatusComponent implements OnInit, OnDestroy {
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
-        this._modalsService.open('encrypt', {'forceOpen': true});
+        // TODO: maybe move back to the installer?
+        // this._modalsService.open('encrypt', {'forceOpen': true});
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':

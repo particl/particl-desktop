@@ -78,12 +78,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
                   this.log.d(error);
                 });
 
-    // Updates the error box in the sidenav if wallet is not initialized.
-    this._rpc.state.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.walletInitialized = status);
-
-
     this._rpc.state.observe('unlocked_until')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => {
@@ -110,10 +104,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
-  }
-  /** Open createwallet modal when clicking on error in sidenav */
-  createWallet() {
-    this._modals.open('createWallet', {forceOpen: true});
   }
 
   /** Open syncingdialog modal when clicking on progresbar in sidenav */

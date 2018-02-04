@@ -12,12 +12,12 @@ const routes: Routes = [
     path: 'main',
     component: MainViewComponent,
     children: [
-      { path: '', redirectTo: 'overview', outlet: 'main', pathMatch: 'full' },
-      { path: 'overview', component: OverviewComponent, outlet: 'main', data: { title: 'Overview' } },
-      { path: 'receive', component: ReceiveComponent, outlet: 'main', data: { title: 'Receive' } },
-      { path: 'send', component: SendComponent, outlet: 'main', data: { title: 'Send' } },
-      { path: 'history', component: HistoryComponent, outlet: 'main', data: { title: 'History' } },
-      { path: 'address-book', component: AddressBookComponent, outlet: 'main', data: { title: 'Address Book' } }
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
+      { path: 'receive', component: ReceiveComponent, data: { title: 'Receive' } },
+      { path: 'send', component: SendComponent, data: { title: 'Send' } },
+      { path: 'history', component: HistoryComponent, data: { title: 'History' } },
+      { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } }
     ]
   }
 ];

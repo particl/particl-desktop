@@ -36,26 +36,36 @@ export class EncryptWalletComponent implements OnInit {
   }
 
   encrypt(): void {
-    if (this.passwordsAreMatching) {
-      // encrypt wallet
-      this.encryptService.encrypt(this.password).subscribe(
-        (success) => {
-          this.log.d('encrypt, encrypted fine');
-          this.daemonIsAlreadyRestarting = true;
-
-          // wallet encrypted fine, restart daemon and go to loading
-          this.encryptService.restartDaemon().subscribe(
-            () => {
-              this.log.d('encrypt, restarted fine');
-              this.router.navigate(['loading']);
-            },
-            error => this.error = error);
-
-
-        },
-        (error) => { this.error = error }
-      );
+    // safety check, button shouldn't be cliclable anyways
+    if (!this.passwordsAreMatching) {
+      this.error = 'Passwords do not match.';
+      return;
     }
+    // encrypt wallet
+    this.encryptService.encrypt(this.password).subscribe(
+      (success) => {
+        this.log.d('encrypt, encrypted fine');
+        this.daemonIsAlreadyRestarting = true;
+
+        // wallet encrypted fine, restart daemon and go to loading
+        this.encryptService.restartDaemon().subscribe(
+          () => {
+            this.log.d('encrypt, restarted fine');
+            // we have to wait a bit, daemon doesn't stop immediately.
+            // so rpc calls are still working, can't switch immediately
+            this.router.navigate(['loading']);
+          },
+          error => this.error = error);
+
+
+      },
+      (error) => { this.error = error }
+    );
+
+  }
+
+  skip(): void {
+    this.router.navigate(['installer/create']);
   }
 
 }

@@ -31,17 +31,14 @@ export class PassphraseService {
   /*
    * Create a new recovery phrase.
   */
-  generateMnemonic(success: Function, password?: string) {
+  generateMnemonic(password?: string): Observable<any> {
     this.log.d(`password: ${password}`);
     const params = ['new', password];
 
     if (password === undefined || password === '') {
       params.pop();
     }
-    this._rpc.call('mnemonic', params)
-      .subscribe(
-      response => success(response),
-      error => Array(24).fill('error'));
+    return this._rpc.call('mnemonic', params);
   }
 
   validateWord(word: string): boolean {
@@ -59,6 +56,8 @@ export class PassphraseService {
       if (!password) {
         params.pop();
       }
+
+      this.log.d(` [rm] extkeygenesisimport ${words.join(' ')} ${password}`);
 
       // encrypted wallet
       if (walletPassword !== undefined) {

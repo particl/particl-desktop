@@ -15,6 +15,15 @@ import { StateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 import { PassphraseService } from 'app/installer/create-wallet/passphrase/passphrase.service';
 
+enum Step {
+  CreateOrRestore = 0,
+  Name = 1,
+  RecoveryPass = 2,
+  RecoveryPhrase = 3,
+  RecoveryPhraseVerify = 4,
+  UnlockBeforeImport = 5,
+  Congratulations = 6
+}
 
 @Component({
   selector: 'app-create-wallet',
@@ -24,39 +33,39 @@ import { PassphraseService } from 'app/installer/create-wallet/passphrase/passph
 })
 export class CreateWalletComponent implements OnDestroy {
 
-  log: any = Log.create('createwallet.component');
+  log: any = Log.create('create-wallet.component');
   private destroyed: boolean = false;
 
-  step: number = 0;
-  isRestore: boolean = false;
-  name: string;
+  step: Step = Step.CreateOrRestore;
+  errorString: string = '';
 
+  // step 0: create or restore
+  isRestore: boolean = false;
+
+  // step 1: name for wallet
+  name: string;
   @ViewChild('nameField') nameField: ElementRef;
 
-  // passphrase password
+  // step 2: recovery pass
   password: string = '';
   passwordVerify: string = '';
-  toggleShowPass: boolean = false;
 
-  // 24 words
+  // step 3: recovery phrase
   words: string[];
 
-  // unlocking before importing
+  // step 4: recovery phrase verification
+  private wordsVerification: string[];
+
+  // step 5: unlocking before importing
   walletPassword: string;
+  alreadyBusyImportingWallet: boolean = false; // disable buttons when importing
+
 
   @ViewChild('passphraseComponent')
   passphraseComponent: ComponentRef<PassphraseComponent>;
-  @ViewChild('passwordElement') passwordElement: PasswordComponent;
-  @ViewChild('passwordElementVerify') passwordElementVerify: PasswordComponent;
   @ViewChild('passwordRestoreElement') passwordRestoreElement: PasswordComponent;
-
-  // Used for verification
-  private wordsVerification: string[];
-  private validating: boolean = false;
-  private passcount: number = 0;
-
-  errorString: string = '';
-
+  // unimportant enum ref, for usage in ngIf in template
+  s: any = Step;
 
   constructor(
     private _passphraseService: PassphraseService,
@@ -67,10 +76,6 @@ export class CreateWalletComponent implements OnDestroy {
     this.reset();
   }
 
-  ngOnDestroy() {
-    this.destroyed = true;
-  }
-
   reset(): void {
     this.words = Array(24).fill('');
     this.isRestore = false;
@@ -78,7 +83,7 @@ export class CreateWalletComponent implements OnDestroy {
     this.password = '';
     this.passwordVerify = '';
     this.errorString = '';
-    this.step = 0;
+    this.step = Step.CreateOrRestore;
   }
 
   initialize(type: number): void {
@@ -95,23 +100,12 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   nextStep(): void {
-    this.validating = true;
-
-    /* Recovery password entered */
-    if (this.step === 2) {
-      this.password = '';
-      this.passwordVerify = '';
-      this.passwordElement.sendPassword();
-      this.passwordElementVerify.sendPassword();
-      return;
-    }
-
+    // only allow next step if current step is valid
     if (this.validate()) {
-      this.validating = false;
       this.step++;
+      this.errorString = '';
       this.doStep();
     }
-
     this.log.d(`moving to step: ${this.step}`);
   }
 
@@ -123,39 +117,32 @@ export class CreateWalletComponent implements OnDestroy {
 
   doStep(): void {
     switch (this.step) {
-      case 1:
+      case Step.Name:
         setTimeout(() => this.nameField.nativeElement.focus(this), 1);
         break;
-      case 2:
+      case Step.RecoveryPass: // only for create
         if (this.isRestore) {
-          this.step = 4;
+          this.step = Step.RecoveryPhraseVerify;
         }
         this.password = '';
         this.passwordVerify = '';
         break;
-      case 3:
-        this._passphraseService.generateMnemonic(
-          this.mnemonicCallback.bind(this), this.password
-        );
-        this.snackbar.open(
-          'Please remember to write down your recovery passphrase',
-          'warning');
+      case Step.RecoveryPhrase: // only on create
+        this._passphraseService.generateMnemonic(this.password).subscribe(
+          mnemonic => this.setMnemonicSeed(mnemonic),
+          error => this.errorString = error);
         break;
-      case 4:
+      case Step.RecoveryPhraseVerify: // create & restore
         while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
           const k = Math.floor(Math.random() * 23);
           this.words[k] = '';
         }
-        this.snackbar.open(
-          'Did you write your password at the previous step ?',
-          'warning');
         break;
-      case 5:
-        this.step = 4;
-        this.errorString = '';
+      case Step.UnlockBeforeImport:
+        this.step = Step.RecoveryPhraseVerify;
         if (this.state.get('locked')) {
           // unlock wallet
-          this.step = 6
+          this.step = Step.UnlockBeforeImport;
         } else {
           // wallet already unlocked
           this.importMnemonicSeed();
@@ -165,27 +152,26 @@ export class CreateWalletComponent implements OnDestroy {
     }
   }
 
-
-  private mnemonicCallback(response: Object): void {
+  // Store a copy of the mnemonic seed for verification
+  private setMnemonicSeed(response: Object): void {
     const words = response['mnemonic'].split(' ');
 
     if (words.length > 1) {
       this.words = words;
     }
-
+    // TODO: why?
     this.wordsVerification = Object.assign({}, this.words);
     this.log.d(`word string: ${this.words.join(' ')}`);
   }
 
   public importMnemonicSeed(): void {
-    // this.state.set('ui:spinner', true);
+    this.alreadyBusyImportingWallet = true;
 
     this._passphraseService.importMnemonic(this.words, this.password, this.walletPassword)
       .subscribe(
       success => {
         if (success === 'imported') {
-          this.step = 5;
-          // this.state.set('ui:spinner', false);
+          this.step = Step.Congratulations;
           this.log.i('Mnemonic imported successfully');
         }
       },
@@ -193,75 +179,28 @@ export class CreateWalletComponent implements OnDestroy {
         // this.step = 4;
         this.log.er(error);
         this.errorString = error.message;
-        // this.state.set('ui:spinner', false);
+        this.alreadyBusyImportingWallet = false;
         this.log.er('Mnemonic import failed');
       });
   }
 
   validate(): boolean {
-    if (this.validating && this.step === 1) {
+    if (this.step === Step.Name) {
       return !!this.name;
-    }
-    if (this.validating && this.step === 4 && !this.isRestore) {
-      const valid = !this.words.filter(
+
+    } else if (this.step === Step.RecoveryPass) {
+      const isValid: boolean = (this.password === this.passwordVerify);
+      this.errorString = isValid ? '' : 'Passwords do not match!';
+      return isValid;
+
+    } else if (this.step === Step.RecoveryPhraseVerify && !this.isRestore) {
+      const isValid = !this.words.filter(
         (value, index) => this.wordsVerification[index] !== value).length;
-      this.errorString = valid ? '' : 'You have entered an invalid recovery phrase';
-      return valid;
+      this.errorString = isValid ? '' : 'You have entered an invalid recovery phrase';
+      return isValid;
     }
 
     return true;
-  }
-
-  /**
-  *  Returns how many words were entered in passphrase component.
-  */
-  getCountOfWordsEntered(): number {
-    const count = this.words.filter((value: string) => value).length;
-    this.log.d(`allWordsEntered() ${count} were entered!`);
-    return count;
-  }
-
-  /**
-  *  Trigger password emit from restore password component
-  *  Which in turn will trigger the next step (see html)
-  */
-  restoreWallet(): void {
-    this.passwordRestoreElement.sendPassword();
-  }
-
-  /** Triggered when the password is emitted from PasswordComponent */
-  passwordFromEmitter(pass: IPassword, verify?: boolean) {
-    this.passcount++;
-    this[verify ? 'passwordVerify' : 'password'] = (pass.password || '');
-    this.log.d(`passwordFromEmitter: ${this.password} ${verify}`);
-
-    // Make sure we got both passwords back...
-    if (this.passcount % 2 === 0) {
-      this.verifyPasswords();
-    }
-  }
-
-  /** Triggered when showPassword is emitted from PasswordComponent */
-  showPasswordToggle(show: boolean) {
-    this.toggleShowPass = show;
-  }
-
-  /** verify if passwords match */
-  verifyPasswords() {
-    if (!this.validating) {
-      return;
-    }
-
-    if (this.password !== this.passwordVerify) {
-      this.snackbar.open('Passwords do not match!', 'warning');
-    } else {
-      // We should probably make this a function because it isn't reusing code??
-      this.validating = false;
-      this.step++;
-      this.doStep();
-    }
-    this.passwordVerify = ''
-    this.password = '';
   }
 
   /** Triggered when the password is emitted from PassphraseComponent */
@@ -269,16 +208,11 @@ export class CreateWalletComponent implements OnDestroy {
     this.words = words.split(',');
   }
 
-  close(): void {
-    this.reset();
-    this.router.navigate(['loading']);
-  }
+  public isValidMnemonicWordCount(): boolean {
+    // get count of all the entered words
+    const count = this.words.filter((value: string) => value).length;
+    return ([12, 15, 18, 24].indexOf(count) !== -1);
 
-  public countWords(count: number): boolean {
-    if ([12, 15, 18, 24].indexOf(count) !== -1) {
-      return false;
-    }
-    return true;
   }
 
   // capture the enter button
@@ -287,6 +221,15 @@ export class CreateWalletComponent implements OnDestroy {
     if (event.keyCode === 13) {
       this.nextStep();
     }
+  }
+
+  close(): void {
+    this.reset();
+    this.router.navigate(['loading']);
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }
 
