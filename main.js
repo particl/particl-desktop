@@ -81,15 +81,16 @@ function initMainWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    // on Win, the width of app is few px smaller than it should be.
-    // this triggers smaller breakpoints
-    // this size should cause the same layout results on all OSes
-    width: 1270,
-    minWidth: 961,
-    maxWidth: 1920,
-    height: 675,
-    resizable: false,
-    icon: path.join(__dirname, 'resources/icon.png'),
+    // width: on Win, the width of app is few px smaller than it should be
+    // (this triggers smaller breakpoints) - this size should cause
+    // the same layout results on all OSes
+    // minWidth/minHeight: both need to be specified or none will work
+    width:     1270,
+    minWidth:  1270,
+    height:    675,
+    minHeight: 675,
+    icon:      path.join(__dirname, 'resources/icon.png'),
+
     webPreferences: {
       nodeIntegration: false,
       sandbox: true,
