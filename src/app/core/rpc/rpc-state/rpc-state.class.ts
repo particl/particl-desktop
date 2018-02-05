@@ -9,16 +9,14 @@ export class RpcStateClass implements OnDestroy {
   constructor(private _rpc: RpcService) {
 
     // Start polling...
-    this._rpc.registerStateCall('getwalletinfo', 1000);
-    this._rpc.registerStateCall('getblockchaininfo', 5000);
-    this._rpc.registerStateCall('getnetworkinfo', 10000);
-    this._rpc.registerStateCall('getstakinginfo', 10000);
 
+/*
     this.lastBlockTimeState();
     this.blockLoop();
     this.walletLockedState();
     this.coldStakeHook();
     this.initWalletState();
+    */
   }
 
   ngOnDestroy() {
@@ -58,37 +56,7 @@ export class RpcStateClass implements OnDestroy {
       });
   }
 
-  /*
-  * coldStakeHook
-  *   Subscribes to general unlock events and makes use of the time to
-  *   update the coldstaking state.
-  */
-  private coldStakeHook() {
-    // TODO: Remove
-    this._rpc.state.observe('locked')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(locked => {
-        // TODO: replace with getcoldstakinginfo.enabled
-        if (locked === false) {
-          // only available if unlocked
-          this._rpc.call('walletsettings', ['changeaddress'])
-            .subscribe(
-              // set state for coldstaking
-              response => this._rpc.state.set('ui:coldstaking',
-                response.changeaddress === 'default'
-                  ? false
-                  : !!response.changeaddress.coldstakingaddress
-              ),
-              error => this.log.er('walletsettings changeaddress', error)
-            );
-        }
-      });
-  }
-
   private initWalletState() {
-    this._rpc.state.observe('encryptionstatus')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => {
         this._rpc.call('getwalletinfo').subscribe(response => {
           // check if account is active
           if (!!response.hdmasterkeyid) {
@@ -97,6 +65,5 @@ export class RpcStateClass implements OnDestroy {
             this._rpc.state.set('ui:walletInitialized', false);
           }
         }, error => this.log.er('RPC Call returned an error', error));
-      });
   }
 }

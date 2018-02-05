@@ -52,9 +52,15 @@ export class StateService {
     return state;
   }
 
-  observe(prop: string) {
+  observe(prop: string, subkey?: string) {
+    if(subkey) {
+      // TODO: maybe check if subkey exists?
+      // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
+      return this._getObservablePair(prop).observable.map(prop => prop[subkey]);
+    }
     return this._getObservablePair(prop).observable;
   }
+
 
   private _clone(object: InternalStateType) {
     // simple object clone
