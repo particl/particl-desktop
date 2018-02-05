@@ -1,3 +1,4 @@
+<div mat-dialog-title>Product name</div>
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
@@ -31,7 +32,6 @@
   </div>
 
   <div class="product-info" fxFlex="1 1 100%">
-    <div mat-dialog-title>Product name</div>
 
     <table class="meta">
       <tr>
@@ -45,6 +45,9 @@
     </table>
 
     <div class="description">
+      <p>
+        Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
+      </p>
       <p>
         Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
       </p>
@@ -63,6 +66,7 @@
         <td class="item price">
           <span class="big">2123.</span><span class="small">0000</span>
           <span class="currency">PART</span>
+          <span class="fiat">&asymp; 45.15 USD</span>
         </td>
       </tr>
       <tr>
@@ -75,19 +79,19 @@
       </tr>
     </table>
 
-    <div class="action-buttons" fxLayoutAlign="end center">
-      <button mat-button class="small" matTooltip="Report" matTooltipPosition="above">
-        <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
-      </button>
-      <button mat-button class="small" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above">
-        <mat-icon fontSet="partIcon" fontIcon="part-heart"></mat-icon>
-      </button>
-      <button mat-raised-button color="primary">
-        <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        Add to cart
-      </button>
-    </div>
-
+    
   </div><!-- .product-info -->
 </div><!-- .dialog-content -->
 
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button class="small" matTooltip="Report" matTooltipPosition="above">
+    <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
+  </button>
+  <button mat-button class="small" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above">
+    <mat-icon fontSet="partIcon" fontIcon="part-heart"></mat-icon>
+  </button>
+  <button mat-raised-button color="primary">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Add to cart
+  </button>
+</mat-dialog-actions>
