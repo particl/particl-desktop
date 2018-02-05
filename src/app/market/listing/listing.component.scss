@@ -1,0 +1,21 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// ------ UI ELEMENTS ------ //
+
+.image {
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+// ------ LAYOUT ------ //
+
+.featured.image {
+  margin-bottom: 24px;
+}
+
+.gallery {
+  overflow-x: auto;
+}

@@ -94,7 +94,7 @@
         <a mat-list-item class="category-item" href="#">Alcohol</a>
         <a mat-list-item class="category-item" href="#">Cosmetics</a>
         <a mat-list-item class="category-item" href="#">BIO whatever</a>
-        <a mat-list-item class="category-item" href="#">Lipstics</a>
+        <a mat-list-item class="category-item" href="#">Lipsticks</a>
         <a mat-list-item class="category-item" href="#">Vitamins</a>
         <a mat-list-item class="category-item" href="#">More cool pills</a>
       </mat-nav-list>
@@ -145,7 +145,7 @@
   </div><!-- .sidebar -->
 
 
-  <div class="content" fxFlex="75%" fxLayout="row wrap" fxLayoutAlign="start start">
+  <div class="content disable-select" fxFlex="75%" fxLayout="row wrap" fxLayoutAlign="start start">
     <ng-container *ngFor="let l of listings">
       <mat-card class="listing" fxFlex="0 0 calc(100% / 3 - 30px)">
         <app-preview-listing [listing]="l"></app-preview-listing>

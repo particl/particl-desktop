@@ -59,6 +59,11 @@
 
 .category-filter { // category expansion panel
   margin-bottom: 4px !important;
+  &.mat-expanded {
+    .category-filter-header .title {
+      color: $color;
+    }
+  }
   .category-filter-header {
     .title {
       font-weight: 500;

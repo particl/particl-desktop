@@ -1,18 +1,93 @@
-<div mat-dialog-title>Confirm transaction</div>
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
-<div mat-dialog-content class="dialog-content">
-  This is a listing
-</div>
 
-<mat-dialog-actions fxLayoutAlign="end center">
-  <button mat-button mat-dialog-close (click)="dialogClose()">
-    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-    Cancel
-  </button>
-  <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
-    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-    Confirm &amp; Send
-  </button>
-</mat-dialog-actions>
+<div mat-dialog-content class="dialog-content" fxLayout="row" fxLayoutGap="40px">
+  
+  <div class="product-gallery" fxFlex="0 1 350px">
+    <div class="featured image">
+      <img src="./assets/images/placeholder_4-3.jpg">
+    </div>
+    <div class="gallery" fxLayout="row" fxLayoutGap="24px">
+      <div class="small image" fxFlex="1 1 100px">
+        <img src="./assets/images/placeholder_1-1.jpg">
+      </div>
+      <div class="small image" fxFlex="1 1 100px">
+        <img src="./assets/images/placeholder_1-1.jpg">
+      </div>
+      <div class="small image" fxFlex="1 1 100px">
+        <img src="./assets/images/placeholder_1-1.jpg">
+      </div>
+      <div class="small image" fxFlex="1 1 100px">
+        <img src="./assets/images/placeholder_1-1.jpg">
+      </div>
+      <div class="small image" fxFlex="1 1 100px">
+        <img src="./assets/images/placeholder_1-1.jpg">
+      </div>
+      <div class="small image" fxFlex="1 1 100px">
+        <img src="./assets/images/placeholder_1-1.jpg">
+      </div>
+    </div>
+  </div>
+
+  <div class="product-info" fxFlex="1 1 100%">
+    <div mat-dialog-title>Product name</div>
+
+    <table class="meta">
+      <tr>
+        <th>Category</th>
+        <td>Electronics, TVs</td>
+      </tr>
+      <tr>
+        <th>Date added</th>
+        <td>10 Jan, 2018</td>
+      </tr>
+    </table>
+
+    <div class="description">
+      <p>
+        Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
+      </p>
+      <ul>
+        <li>try a more powerful colour</li>
+        <li>jazz it up a little</li>
+        <li>it seems really high, why did you charge so much</li>
+        <li>you will get a lot of free exposure doing this</li>
+        <li>I really think this could go viral can you lower the price</li>
+      </ul>
+    </div>
+
+    <table class="pricing">
+      <tr>
+        <th class="item price">Price</th>
+        <td class="item price">
+          <span class="big">2123.</span><span class="small">0000</span>
+          <span class="currency">PART</span>
+        </td>
+      </tr>
+      <tr>
+        <th class="shipping price">Shipping</th>
+        <td class="shipping price">5.0000 PART</td>
+      </tr>
+      <tr>
+        <th class="escrow price">Escrow</th>
+        <td class="escrow price">0.0000 PART</td>
+      </tr>
+    </table>
+
+    <div class="action-buttons" fxLayoutAlign="end center">
+      <button mat-button class="small" matTooltip="Report" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
+      </button>
+      <button mat-button class="small" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-heart"></mat-icon>
+      </button>
+      <button mat-raised-button color="primary">
+        <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+        Add to cart
+      </button>
+    </div>
+
+  </div><!-- .product-info -->
+</div><!-- .dialog-content -->
+

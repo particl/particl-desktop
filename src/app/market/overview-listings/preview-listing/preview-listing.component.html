@@ -1,9 +1,10 @@
-<div class="item" (click)="openListing()">
+<div class="item">
 
   <div class="image">
-    <img src="https://placehold.it/260x195">
+    <!-- TODO: this is a default placeholder image (show if no other image is available) -->
+    <img src="./assets/images/placeholder_4-3.jpg" (click)="openListing()">
     <div class="icons">
-      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-search" matTooltip="Preview" matTooltipPosition="above"></mat-icon>
+      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-search" matTooltip="Preview" matTooltipPosition="above" (click)="openListing()"></mat-icon>
       <mat-icon class="icon flag" fontSet="partIcon" fontIcon="part-error" matTooltip="Report" matTooltipPosition="above"></mat-icon>
       <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart" matTooltip="Favourite" matTooltipPosition="above"></mat-icon>
     </div>
