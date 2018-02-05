@@ -23,7 +23,6 @@ log.debug(`file log level: ${log.transports.file.level}`);
 const _options = require('./modules/options');
 const init = require('./modules/init');
 const rpc = require('./modules/rpc/rpc');
-const zmq = require('./modules/zmq/zmq');
 const daemon = require('./modules/daemon/daemon');
 const notification = require('./modules/notification/notification');
 
@@ -48,11 +47,6 @@ app.on('ready', () => {
   options = _options.parse();
   initMainWindow();
   init.start(mainWindow);
-
-  /* Initialize ZMQ */
-  zmq.init(mainWindow);
-  zmq.test(); // loop, will send tests
-
 });
 
 // Quit when all windows are closed.

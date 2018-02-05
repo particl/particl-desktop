@@ -5,12 +5,19 @@ const ipc           = require('./ipc/ipc');
 const daemon        = require('./daemon/daemon');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
+const zmq           = require('./zmq/zmq');
 
 // TODO move to a proper place
 function daemonStarted() { log.info('daemon started'); }
 
 exports.start = function (mainWindow) {
+  /* Initialize IPC */
   ipc.init();
+
+  /* Initialize ZMQ */
+  zmq.init(mainWindow);
+  // zmq.test(); // loop, will send tests
+
   exports.startDaemonManager();
 }
 
