@@ -156,6 +156,12 @@ export class AddressHelper {
     ? 'addressPublicRegex' : 'addressPrivateRegex' : 'addressBothRegex')].test(address);
   }
 
+  getAddressType(address: string): string {
+    return (this.testAddress(address) ?
+      (this.testAddress(address, 'public') ? 'public' : 'private') :
+      '');
+  }
+
   getAddress(address: string): string {
     const match = address.match(this.addressBothRegex);
     return match ? match[0] : null;
