@@ -4,8 +4,8 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 
 import { CoreModule } from './core/core.module';
 import { CoreUiModule } from './core-ui/core-ui.module';
-import { ModalsModule } from './modals/modals.module';
 import { InstallerModule } from 'app/installer/installer.module';
+import { ModalsModule } from './modals/modals.module';
 
 import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.module';
 // import { WalletViewsModule } from './wallet/wallet.module';
