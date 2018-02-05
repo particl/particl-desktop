@@ -10,7 +10,6 @@ import { NotificationService } from './notification/notification.service';
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 import { PeerService } from './rpc/peer/peer.service';
 import { StateService } from './state/state.service';
-import { WindowService } from './window/window.service';
 import { SnackbarService } from './snackbar/snackbar.service';
 
   /*
@@ -32,15 +31,12 @@ export class CoreModule {
       ngModule: CoreModule,
       providers: [
         IpcService,
-        WindowService,
         SnackbarService,
         NotificationService
       ]
     };
   }
 }
-
-export { WindowService } from './window/window.service';
 
 export { IpcService } from './ipc/ipc.service';
 export { RpcService } from './rpc/rpc.service';
