@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../../modals/modals.service';
-import { RpcService } from '../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../core/core.module';
 
 import { SendService } from './send.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
@@ -56,6 +56,7 @@ export class SendComponent {
   constructor(
     private sendService: SendService,
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private _modals: ModalsService,
     private dialog: MatDialog,
     private flashNotification: SnackbarService
@@ -84,12 +85,16 @@ export class SendComponent {
 
   /** Get current account balance (Public / Blind / Anon) */
   getBalance(account: string): number {
-    return this._rpc.state.get(account) || 0;
+    return this._rpcState.get('getwalletinfo')[account] || 0;
+  }
+  
+  getBalanceString(account: string): string {
+    return this._rpcState.get('getwalletinfo')[account];
   }
 
   checkBalance(account: string): boolean {
     if (account === 'blind_balance') {
-      return parseFloat(this._rpc.state.get(account)) < 0.0001 && parseFloat(this._rpc.state.get(account)) > 0;
+      return parseFloat(this.getBalanceString(account)) < 0.0001 && parseFloat(this.getBalanceString(account)) > 0;
     }
   }
 
@@ -233,7 +238,7 @@ export class SendComponent {
 
     }
 
-    if (this._rpc.state.get('locked')) {
+    if (this._rpcState.get('locked')) {
       // unlock wallet and send transaction
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
     } else {

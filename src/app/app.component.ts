@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material'; // TODO: move to material module?
 import { Log } from 'ng2-logger';
 
-import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
+// import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private _iconRegistry: MatIconRegistry,
-    private _newtxnotifier: NewTxNotifierService
+    // private _newtxnotifier: NewTxNotifierService
   ) {
     _iconRegistry
       .registerFontClassAlias('partIcon', 'part-icon')

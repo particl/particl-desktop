@@ -5,7 +5,7 @@ import { Log } from 'ng2-logger';
 
 import { SignVerifyMessage } from './sign-verify-message.model';
 
-import { RpcService } from '../../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../../core/core.module';
 import { ModalsService } from '../../../../modals/modals.service';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
@@ -37,6 +37,7 @@ export class SignatureAddressModalComponent implements OnInit {
 
   constructor(private dialog: MatDialog,
               private _rpc: RpcService,
+              private _rpcState: RpcStateService,
               private flashNotification: SnackbarService,
               private formBuilder: FormBuilder,
               private _modals: ModalsService,
@@ -105,7 +106,7 @@ export class SignatureAddressModalComponent implements OnInit {
   // copy code end
 
   onFormSubmit(): void {
-    if (this._rpc.state.get('locked')) {
+    if (this._rpcState.get('locked')) {
       // unlock wallet
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.signVerifyMessage.bind(this)});
     } else {

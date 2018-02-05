@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 
 import { flyInOut } from '../../core-ui/core.animations';
 
-import { RpcService } from '../../core/core.module';
+import { RpcService, RpcStateService } from '../../core/core.module';
 import { ModalsService } from '../modals.service';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
@@ -35,6 +35,7 @@ export class ColdstakeComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private _flashNotificationService: SnackbarService,
     public _dialogRef: MatDialogRef<ColdstakeComponent>
   ) {
@@ -46,7 +47,7 @@ export class ColdstakeComponent {
     this.step++;
     this.animationState = 'next';
     if ([0, 2].includes(this.step)) {
-      const encryptionstatus = this._rpc.state.get('encryptionstatus').trim();
+      const encryptionstatus = this._rpcState.get('getwalletinfo').encryptionstatus.trim();
       if (['Unlocked', 'Unencrypted'].includes(encryptionstatus)) {
         this.unlockWallet(encryptionstatus);
       }
@@ -113,7 +114,7 @@ export class ColdstakeComponent {
         success => {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
           this._flashNotificationService.open('Successfully activated cold staking!', 'info');
-          this._rpc.state.set('ui:coldstaking', true);
+          this._rpcState.set('ui:coldstaking', true);
           this.close();
         },
         error => {

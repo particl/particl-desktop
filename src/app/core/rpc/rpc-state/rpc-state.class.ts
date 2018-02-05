@@ -1,12 +1,16 @@
 import { Log } from 'ng2-logger';
 import { RpcService } from '../rpc.service';
 import { OnDestroy } from '@angular/core';
+import { RpcStateService } from 'app/core/core.module';
 
 export class RpcStateClass implements OnDestroy {
   private log: any = Log.create('rpc-state.class');
 
   private destroyed: boolean = false;
-  constructor(private _rpc: RpcService) {
+  constructor(
+    private _rpc: RpcService,
+    private _rpcState: RpcStateService
+  ) {
 
     // Start polling...
 
@@ -25,7 +29,7 @@ export class RpcStateClass implements OnDestroy {
 
   private lastBlockTimeState() {
     let _checkLastBlock = false;
-    this._rpc.state.observe('mediantime')
+    this._rpcState.observe('getblockchaininfo', 'mediantime')
       .takeWhile(() => !this.destroyed)
       .subscribe(mediantime => {
         const now = new Date().getTime() - (4 * 60 * 1000);
@@ -34,24 +38,24 @@ export class RpcStateClass implements OnDestroy {
           _checkLastBlock = true;
           setTimeout(() => {
             _checkLastBlock = false;
-            this._rpc.stateCall('getblockchaininfo');
+            this._rpcState.stateCall('getblockchaininfo');
           }, 100);
         }
       });
   }
 
   private blockLoop() {
-    if (this._rpc.state.get('blocks') === 0) {
+    if (this._rpcState.get('getblockchaininfo').blocks === 0) {
       setTimeout(this.blockLoop.bind(this), 1000);
     }
-    this._rpc.stateCall('getblockchaininfo');
+    this._rpcState.stateCall('getblockchaininfo');
   }
 
   private walletLockedState() {
-    this._rpc.state.observe('encryptionstatus')
+    this._rpcState.observe('getwalletinfo', 'encryptionstatus')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => {
-        this._rpc.state
+        this._rpcState
           .set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
       });
   }
@@ -60,9 +64,9 @@ export class RpcStateClass implements OnDestroy {
         this._rpc.call('getwalletinfo').subscribe(response => {
           // check if account is active
           if (!!response.hdmasterkeyid) {
-            this._rpc.state.set('ui:walletInitialized', true);
+            this._rpcState.set('ui:walletInitialized', true);
           } else {
-            this._rpc.state.set('ui:walletInitialized', false);
+            this._rpcState.set('ui:walletInitialized', false);
           }
         }, error => this.log.er('RPC Call returned an error', error));
   }

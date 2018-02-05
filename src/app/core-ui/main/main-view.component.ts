@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../../environments/environment';
 
-import { RpcService } from '../../core/core.module';
+import { RpcService, RpcStateService } from '../../core/core.module';
 import { ModalsService } from '../../modals/modals.module';
 
 /*
@@ -46,6 +46,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private _modals: ModalsService,
     private dialog: MatDialog
   ) { }
@@ -69,7 +70,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
     /* errors */
     // Updates the error box in the sidenav whenever a stateCall returns an error.
-    this._rpc.errorsStateCall.asObservable()
+    this._rpcState.errorsStateCall.asObservable()
     .throttle(val => Observable.interval(30000/*ms*/))
     .subscribe(status => this.daemonRunning = true,
                 error => {
@@ -79,12 +80,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
                 });
 
     // Updates the error box in the sidenav if wallet is not initialized.
-    this._rpc.state.observe('ui:walletInitialized')
+    this._rpcState.observe('ui:walletInitialized')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.walletInitialized = status);
 
 
-    this._rpc.state.observe('unlocked_until')
+    this._rpcState.observe('unlocked_until')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => {
         this.unlocked_until = status;
@@ -99,12 +100,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
     /* versions */
     // Obtains the current daemon version
-    this._rpc.state.observe('subversion')
+    this._rpcState.observe('getnetworkinfo', 'subversion')
       .takeWhile(() => !this.destroyed)
       .subscribe(subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
 
      /* check if testnet -> block explorer url */
-     this._rpc.state.observe('chain').take(1)
+     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
      .subscribe(chain => this.testnet = chain === 'test');
   }
 

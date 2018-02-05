@@ -24,6 +24,11 @@ export class RpcStateService extends StateService implements OnDestroy {
     this.registerStateCall('getblockchaininfo', 5000);
     this.registerStateCall('getnetworkinfo', 10000);
     this.registerStateCall('getstakinginfo', 10000);
+
+    // TODO: get rid of these
+    this.walletLockedState();
+    this.initWalletState();
+
   }
 
   /**
@@ -35,7 +40,7 @@ export class RpcStateService extends StateService implements OnDestroy {
    *
    * @example
    * ```JavaScript
-   * this._rpc.stateCall('getwalletinfo');
+   * this._rpcState.stateCall('getwalletinfo');
    * ```
    */
   stateCall(method: string): void {
@@ -109,4 +114,27 @@ export class RpcStateService extends StateService implements OnDestroy {
     this.destroyed = true;
   }
 
+
+
+  // TODO: get rid of these some day..
+
+  private walletLockedState() {
+    this.observe('getwalletinfo', 'encryptionstatus')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(status => {
+        this.set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
+      });
+  }
+
+  // TODO: get rid of this after improve-router
+  private initWalletState() {
+    this._rpc.call('getwalletinfo').subscribe(response => {
+      // check if account is active
+      if (!!response.hdmasterkeyid) {
+        this.set('ui:walletInitialized', true);
+      } else {
+        this.set('ui:walletInitialized', false);
+      }
+    }, error => this.log.er('RPC Call returned an error', error));
+}
 }

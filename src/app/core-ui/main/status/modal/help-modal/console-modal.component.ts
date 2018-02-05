@@ -10,7 +10,7 @@ import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../wallet/shared/util/utils';
-import { RpcService } from '../../../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 
@@ -29,6 +29,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public disableScrollDown: boolean = false;
 
   constructor(private _rpc: RpcService,
+              private _rpcState: RpcStateService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
   }
@@ -45,7 +46,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     const params = this.command.split(' ');
 
     // TODO: Remove next release
-    const daemonVersion = this._rpc.state.get('subversion');
+    const daemonVersion = this._rpcState.get('getnetworkinfo').subversion;
     if (daemonVersion === '/Satoshi:0.15.1.1/') {
         this._rpc.call(params.shift(), params)
           .subscribe(

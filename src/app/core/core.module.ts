@@ -40,6 +40,7 @@ export class CoreModule {
 
 export { IpcService } from './ipc/ipc.service';
 export { RpcService } from './rpc/rpc.service';
+export { RpcStateService } from './rpc/rpc-state/rpc-state.service';
 export { NotificationService } from './notification/notification.service';
 export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 export { PeerService } from './rpc/peer/peer.service';
