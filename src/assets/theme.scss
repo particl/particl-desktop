@@ -109,9 +109,18 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 // ------ EXPANSION PANELS ------ //
 
 .mat-expansion-panel {
+  @extend %disable-select;
+  margin-bottom: 9px !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid $bg-shadow;
   .mat-expansion-panel-header {
+    font-size: 13px;
     &:hover {
       background: inherit !important; // disable darker bg on hover by default
+    }
+    .mat-expansion-panel-header-title {
+      text-transform: uppercase;
+      font-family: $font;
     }
   }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
@@ -178,6 +187,20 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
       height: 42px;
       .mat-list-item-content {
         padding: 0 10px;
+      }
+    }
+  }
+}
+
+.mat-nav-list {
+  // MP Listings: category filter
+  &.category-items {
+    .mat-list-item {
+      
+      .mat-list-item-content {
+        padding: 6px 26px 6px 36px !important;
+        font-size: 13px;
+        color: $text-muted;
       }
     }
   }

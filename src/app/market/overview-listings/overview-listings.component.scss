@@ -18,7 +18,7 @@
 }
 
 
-// ------ LAYOUT ------ //
+// ------ CONTROL BAR (top) ------ //
 
 .control-bar {
   padding: 0 28px 0 35px;
@@ -53,6 +53,29 @@
     }
   }
 }
+
+
+// ------ SIDEBAR (left) ------ //
+
+.category-filter { // category expansion panel
+  margin-bottom: 4px !important;
+  .category-filter-header {
+    .title {
+      font-weight: 500;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+  }
+  .category-items {
+    padding: 0 0 12px !important;
+    .category-item {
+      height: auto;
+    }
+  }
+}
+
+
+// ------ CONTENT (right) ------ //
 
 .listing { // item
   margin: 0 0 30px 30px;
