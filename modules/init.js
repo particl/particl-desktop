@@ -2,17 +2,23 @@ const electron      = require('electron');
 const log           = require('electron-log');
 
 const ipc           = require('./ipc/ipc');
+const rpc           = require('./rpc/rpc');
+const zmq           = require('./zmq/zmq');
+
 const daemon        = require('./daemon/daemon');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
-const zmq           = require('./zmq/zmq');
+const notification   = require('./notification/notification');
+
 
 // TODO move to a proper place
 function daemonStarted() { log.info('daemon started'); }
 
 exports.start = function (mainWindow) {
-  /* Initialize IPC */
-  ipc.init();
+
+  // Initialize IPC listeners
+  rpc.init();
+  notification.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);
@@ -71,10 +77,15 @@ daemonManager.on('status', (status, msg) => {
 });
 
 electron.app.on('before-quit', function beforeQuit(event) {
-  event.preventDefault();
   log.debug('received quit signal');
-  electron.ipcMain.removeAllListeners(['rpc-channel']);
+
+  event.preventDefault();
   electron.app.removeListener('before-quit', beforeQuit);
+
+  // destroy IPC listeners
+  rpc.destroy(); 
+  notification.destroy();
+
   daemon.stop();
 });
 

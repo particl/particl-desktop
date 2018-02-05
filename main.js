@@ -24,7 +24,6 @@ const _options = require('./modules/options');
 const init = require('./modules/init');
 const rpc = require('./modules/rpc/rpc');
 const daemon = require('./modules/daemon/daemon');
-const notification = require('./modules/notification/notification');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -69,7 +68,6 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 app.on('browser-window-created', function (e, window) {
-  notification.init();
   window.setMenu(null);
 });
 
