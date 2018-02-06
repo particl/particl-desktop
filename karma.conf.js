@@ -36,7 +36,7 @@ module.exports = function (config) {
               : ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
     autoWatch: true,
     // browsers: ['Chrome'],
     // potential fix
@@ -44,7 +44,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeNoSandbox: {
         base: 'Chrome',
-        flags: ['--no-sandbox']
+        flags: ['--no-sandbox', '--enable-logging']
       }
     },
     // potential fix
