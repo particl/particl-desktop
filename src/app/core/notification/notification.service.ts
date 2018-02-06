@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Log } from 'ng2-logger'
+
 import { IpcService } from '../ipc/ipc.service';
-// Notification related stuffs
 
 @Injectable()
 export class NotificationService {
@@ -8,9 +10,16 @@ export class NotificationService {
     private _ipc: IpcService
   ) {
   }
+
   /** Send Notification to the backend */
-  sendNotification(title: string, desc: string) {
-    this._ipc.runNotification(title, desc);
+  public sendNotification(title: string, desc: string) {
+    if (window.electron) {
+      this.runNotification(title, desc);
+    }
+  }
+
+  private runNotification(...args: any[]): Observable<any> {
+    return this._ipc.runCommand('notification', null, ...args);
   }
 
 }

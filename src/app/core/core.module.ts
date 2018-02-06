@@ -6,6 +6,8 @@ import { RpcModule } from './rpc/rpc.module';
 
 import { IpcService } from './ipc/ipc.service';
 import { RpcService } from './rpc/rpc.service';
+import { ZmqService } from './zmq/zmq.service';
+
 import { NotificationService } from './notification/notification.service';
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 import { PeerService } from './rpc/peer/peer.service';
@@ -30,6 +32,7 @@ export class CoreModule {
       ngModule: CoreModule,
       providers: [
         IpcService,
+        ZmqService,
         SnackbarService,
         NotificationService
       ]
