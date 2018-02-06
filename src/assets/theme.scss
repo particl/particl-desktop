@@ -309,18 +309,23 @@ input {
 */
 
 ::-webkit-scrollbar-track {
-  border-radius: 15px;
-  background-color: $bg-shadow;
+  border-radius: $radius;
+  background: lighten($bg-shadow, 3%);
 }
 
-::-webkit-scrollbar {
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb {
   width: 6px;
+  height: 6px;
 }
 
-::-webkit-scrollbar-thumb:vertical {
-  width: 6px;
-  //border-radius: 15px;
-  background-color: darken($bg-shadow, 20%);
+::-webkit-scrollbar-thumb {
+  @extend %tfx;
+  background: darken($bg-shadow, 15%);
+  border-radius: $radius;
+  &:hover {
+    background: darken($bg-shadow, 20%);
+  }
 }
 .mat-drawer-container {
   background: $bg;
