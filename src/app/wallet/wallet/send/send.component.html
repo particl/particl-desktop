@@ -174,9 +174,9 @@
           <input matInput type="text" name="sendAmount" placeholder="Amount to send" [(ngModel)]="send.amount"
                  (input)="verifyAmount()"
                  [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
-                 oninput="validity.valid||(value='');" step="any" [disabled]="isSendAll">
+                 oninput="validity.valid||(value='');" step="any" [disabled]="send.subtractFeeFromAmount">
         </mat-form-field>
-        <mat-checkbox name="send_all" [(ngModel)]="isSendAll" (click)="sendAllBalance()" class="send-all">
+        <mat-checkbox name="send_all" [(ngModel)]="send.subtractFeeFromAmount" (click)="sendAllBalance()" class="send-all">
           Send All
         </mat-checkbox>
         <!-- Choose currency -->

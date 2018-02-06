@@ -83,13 +83,14 @@ export class SendService {
     this.flashNotification.open(`Succesfully sent ${amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
   }
 
-  rpc_send_failed(message: any, address?: string, amount?: number) {
+  rpc_send_failed(message: string, address?: string, amount?: number) {
     this.flashNotification.open(`Transaction Failed ${message}`, 'err');
     this.log.er('rpc_send_failed, failed to execute transaction!');
     this.log.er(message);
 
     /* Detect bug in older wallets with Blind inputs */
-    if (message.contains('AddBlindedInputs: GetBlind failed for')) {
+    // AddBlindedInputs: GetBlind failed for
+    if (message.search('GetBlind failed for') !== -1) {
       this.fixWallet();
     }
   }
