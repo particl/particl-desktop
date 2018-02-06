@@ -139,15 +139,12 @@ export class CreateWalletComponent implements OnDestroy {
         }
         break;
       case Step.UnlockBeforeImport:
-        this.step = Step.RecoveryPhraseVerify;
-        if (this.state.get('locked')) {
-          // unlock wallet
-          this.step = Step.UnlockBeforeImport;
-        } else {
+        if (!this.state.get('locked')) {
           // wallet already unlocked
           this.importMnemonicSeed();
         }
-
+        break;
+      case Step.Congratulations:
         break;
     }
   }
@@ -219,7 +216,11 @@ export class CreateWalletComponent implements OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
     if (event.keyCode === 13) {
-      this.nextStep();
+      if (this.step === Step.UnlockBeforeImport) {
+        this.importMnemonicSeed();
+      } else {
+        this.nextStep();
+      }
     }
   }
 

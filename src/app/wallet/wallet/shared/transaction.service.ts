@@ -73,7 +73,7 @@ export class TransactionService implements OnDestroy {
       .takeWhile(() => !this.destroyed)
       .distinctUntilChanged() // only update when blocks changes
       .skip(1) // skip the first one (shareReplay)
-      .throttle(val => Observable.interval(30000/*ms*/))
+      .throttle(val => Observable.interval(2 * 1000/*ms*/))
       .subscribe(block => {
         this.log.d(`--- update by blockcount: ${block} ---`);
         this.loadTransactions();
@@ -172,7 +172,7 @@ export class TransactionService implements OnDestroy {
   }
 
   // TODO: remove shitty hack
-  // When the transaction
+  // When the filtertransactions failed, this is called
   retryLoadTransaction() {
     if (this.alreadyRetryingLoadTx || this.destroyed) {
       return; // abort

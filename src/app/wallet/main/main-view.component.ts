@@ -31,7 +31,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   testnet: boolean = false;
 
   /* errors */
-  walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
   daemonError: any;
   /* version */
@@ -97,7 +96,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
 
-     /* check if testnet -> block explorer url */
+     /* check if testnet -> set logo */
      this._rpc.state.observe('chain').take(1)
      .subscribe(chain => this.testnet = chain === 'test');
   }

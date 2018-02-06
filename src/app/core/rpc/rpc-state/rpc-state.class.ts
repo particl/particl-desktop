@@ -18,7 +18,6 @@ export class RpcStateClass implements OnDestroy {
     this.blockLoop();
     this.walletLockedState();
     this.coldStakeHook();
-    this.initWalletState();
   }
 
   ngOnDestroy() {
@@ -82,21 +81,6 @@ export class RpcStateClass implements OnDestroy {
               error => this.log.er('walletsettings changeaddress', error)
             );
         }
-      });
-  }
-
-  private initWalletState() {
-    this._rpc.state.observe('encryptionstatus')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => {
-        this._rpc.call('getwalletinfo').subscribe(response => {
-          // check if account is active
-          if (!!response.hdmasterkeyid) {
-            this._rpc.state.set('ui:walletInitialized', true);
-          } else {
-            this._rpc.state.set('ui:walletInitialized', false);
-          }
-        }, error => this.log.er('RPC Call returned an error', error));
       });
   }
 }
