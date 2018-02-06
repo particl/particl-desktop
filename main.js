@@ -115,6 +115,7 @@ function initMainWindow() {
     mainWindow.webContents.openDevTools()
   }
 
+  // TODO: do we really want  this?
   // handle external URIs
   mainWindow.webContents.on('new-window', (event, url) => {
     event.preventDefault();
