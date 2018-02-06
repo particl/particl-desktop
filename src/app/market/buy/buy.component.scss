@@ -10,7 +10,11 @@ table {
   thead {
     th {
       text-align: left;
+      text-transform: uppercase;
       font-weight: normal;
+      color: $text-muted;
+      font-size: 11px;
+      padding-bottom: 12px;
     }
   }
   tbody {
@@ -35,12 +39,40 @@ table {
 // ------ CART ------ //
 
 table.cart-items {
+  margin-top: 24px;
+  .cell {
+    padding-right: 25px;
+    min-width: 90px;
+    color: $text-muted;
+  }
   .image {
-    max-width: 90px;
+    padding: 14px;
     img {
       width: 100%;
       height: auto;
     }
+  }
+  .info {
+    padding-right: 30px;
+    .title {
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .category {
+      margin-top: 5px;
+      font-size: 11px;
+      color: $text-muted;
+    }
+  }
+  .quantity {
+    min-width: 60px;
+  }
+  .total {
+    min-width: 90px;
+    padding-right: 0;
+  }
+  .remove {
+    padding: 14px;
   }
 }
 

@@ -262,6 +262,11 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   &.larger { // larger inputs
     font-size: 14px;
   }
+  &.auto-width {
+    .mat-form-field-infix {
+      width: auto;
+    }
+  }
   &.no-top-padding { // remove top space reserved for floating placeholders (if disabled)
     .mat-input-infix {
       border-top: none;
