@@ -14,38 +14,138 @@
 
 
 <div class="container-block disable-select">
-  
-  <mat-horizontal-stepper linear>
-    <mat-step [stepControl]="firstFormGroup">
+  <mat-horizontal-stepper class="no-bg">
+
+
+    <!-- Your cart -->
+    <mat-step [stepControl]="firstFormGroup" class="cart">
       <form [formGroup]="firstFormGroup">
-        <ng-template matStepLabel>Fill out your name</ng-template>
-        <mat-form-field>
+        <ng-template matStepLabel>Your cart</ng-template>
+        <!--mat-form-field>
           <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-        </mat-form-field>
-        <div>
-          <button mat-button matStepperNext>Next</button>
+        </mat-form-field-->
+        <table class="cart-items">
+          <thead>
+            <tr>
+              <th>Items</th>
+              <th>Price</th>
+              <th>Shipping price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="item">
+                <div class="image">
+                  <img src="./assets/images/placeholder_1-1.jpg">
+                </div>
+                <div class="title">Product name</div>
+                <div class="category">Category, Name, Electronics</div>
+              </td>
+              <td class="price">200.0000 PART</td>
+              <td class="shipping">2.4203 PART</td>
+              <td class="quantity">- 1 +</td>
+              <td class="total">202.4203 PART</td>
+              <td class="remove">
+                <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above">
+                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="item">
+                <div class="image">
+                  <img src="./assets/images/placeholder_1-1.jpg">
+                </div>
+                <div class="title">Product name</div>
+                <div class="category">Category, Name, Electronics</div>
+              </td>
+              <td class="price">200.0000 PART</td>
+              <td class="shipping">2.4203 PART</td>
+              <td class="quantity">- 1 +</td>
+              <td class="total">202.4203 PART</td>
+              <td class="remove">
+                <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above">
+                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3"></td>
+              <td>
+                Subtotal<br>
+                Shipping total<br>
+                Escrow<br>
+                <strong>Total</strong>
+              </td>
+              <td colspan="2">
+                170 PART<br>
+                2.153 PART<br>
+                170 PART<br>
+                <strong>342.153 PART</strong>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="action-buttons">
+          <button mat-button>
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Clear cart
+          </button>
+          <button mat-raised-button color="primary" matStepperNext>
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            Continue to shipping
+          </button>
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="secondFormGroup">
+
+
+    <!-- Shipping details -->
+    <mat-step [stepControl]="secondFormGroup" class="shipping">
       <form [formGroup]="secondFormGroup">
-        <ng-template matStepLabel>Fill out your address</ng-template>
-        <mat-form-field>
+        <ng-template matStepLabel>Shipping details</ng-template>
+        <!--mat-form-field>
           <input matInput placeholder="Address" formControlName="secondCtrl" required>
-        </mat-form-field>
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+        </mat-form-field-->
+
+        <div class="action-buttons">
+          <button mat-button matStepperPrevious>
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Back to cart
+          </button>
+          <button mat-raised-button color="primary" matStepperNext>
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            Continue to checkout
+          </button>
         </div>
       </form>
     </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
+
+
+    <!-- Confirmation/Payment -->
+    <mat-step class="confirmation">
+      <ng-template matStepLabel>Confirm & Payment</ng-template>
       You are now done.
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
+
+      <div class="action-buttons">
+        <button mat-button matStepperPrevious>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+          Back to shipping
+        </button>
+        <!-- TODO: after clicking the "confirm" button, payment confirmation modal should pop out with all the details -->
+        <button mat-raised-button color="primary">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+          Confirm & Pay
+        </button>
       </div>
     </mat-step>
+
+
   </mat-horizontal-stepper>
-      
 </div>

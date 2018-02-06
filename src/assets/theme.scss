@@ -146,6 +146,16 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 }
 
 
+// ------ STEPPER ------ //
+
+.mat-stepper-horizontal {
+  // buy/cart-shipping: remove white background
+  &.no-bg {
+    background: none;
+  }
+}
+
+
 // ------ NO RESULTS (no TXs, no addresses, ..) ------ //
 
 .no-results {
