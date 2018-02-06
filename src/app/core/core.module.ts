@@ -9,7 +9,6 @@ import { RpcService } from './rpc/rpc.service';
 import { NotificationService } from './notification/notification.service';
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 import { PeerService } from './rpc/peer/peer.service';
-import { StateService } from './state/state.service';
 import { SnackbarService } from './snackbar/snackbar.service';
 
   /*
@@ -45,4 +44,3 @@ export { NotificationService } from './notification/notification.service';
 export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 export { PeerService } from './rpc/peer/peer.service';
 export { SnackbarService } from './snackbar/snackbar.service';
-export { StateService } from './state/state.service';

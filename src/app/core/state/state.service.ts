@@ -53,10 +53,10 @@ export class StateService {
   }
 
   observe(prop: string, subkey?: string) {
-    if(subkey) {
+    if (subkey) {
       // TODO: maybe check if subkey exists?
       // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
-      return this._getObservablePair(prop).observable.map(prop => prop[subkey]);
+      return this._getObservablePair(prop).observable.map(key => key[subkey]);
     }
     return this._getObservablePair(prop).observable;
   }

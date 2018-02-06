@@ -4,7 +4,8 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../../modals/modals.service';
-import { RpcService, RpcStateService } from '../../../core/core.module';
+import { RpcService } from '../../../core/rpc/rpc.service';
+import { RpcStateService } from '../../../core/rpc/rpc-state/rpc-state.service';
 
 import { SendService } from './send.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
@@ -32,8 +33,6 @@ export class SendComponent {
   type: string = 'sendPayment';
   advanced: boolean = false;
   progress: number = 10;
-  advancedText: string = 'Advanced options'
-  isBlind: boolean = false;
   // TODO: Create proper Interface / type
   send: any = {
     input: 'balance',
@@ -44,14 +43,9 @@ export class SendComponent {
     validAmount: undefined,
     isMine: undefined,
     currency: 'part',
-    privacy: 8
+    privacy: 8,
+    subtractFeeFromAmount: false
   };
-  public isSendAll: boolean = false;
-
-  // RPC logic
-  lookup: string;
-  private _sub: Subscription;
-  private _balance: any;
 
   constructor(
     private sendService: SendService,
@@ -77,17 +71,11 @@ export class SendComponent {
     this.updateAmount();
   }
 
-  /** Toggle advanced controls and settings */
-  toggleAdvanced(): void {
-    this.advancedText = ' Advanced options';
-    this.advanced = !this.advanced;
-  }
-
   /** Get current account balance (Public / Blind / Anon) */
   getBalance(account: string): number {
     return this._rpcState.get('getwalletinfo')[account] || 0;
   }
-  
+
   getBalanceString(account: string): string {
     return this._rpcState.get('getwalletinfo')[account];
   }
@@ -95,15 +83,6 @@ export class SendComponent {
   checkBalance(account: string): boolean {
     if (account === 'blind_balance') {
       return parseFloat(this.getBalanceString(account)) < 0.0001 && parseFloat(this.getBalanceString(account)) > 0;
-    }
-  }
-
-  /** Get the send address */
-  getAddress(): string {
-    if (this.type === 'sendPayment') {
-      return this.send.toAddress;
-    } else {
-      return this.sendService.getBalanceTransferAddress();
     }
   }
 
@@ -182,7 +161,7 @@ export class SendComponent {
       currency: 'part',
       privacy: 50
     };
-    this.isSendAll = false;
+    this.send.subtractFeeFromAmount = false;
   }
 
   clearReceiver(): void {
@@ -192,12 +171,17 @@ export class SendComponent {
   }
 
   onSubmit(): void {
-    const dialogRef = this.dialog.open(SendConfirmationModalComponent);
-    dialogRef.componentInstance.dialogContent = `Do you really want to send
-      ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.getAddress()}?`;
+    const d = this.dialog.open(SendConfirmationModalComponent);
+    const dc = d.componentInstance;
 
-    dialogRef.componentInstance.onConfirm.subscribe(() => {
-      dialogRef.close();
+    let txt = `Do you really want to send ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.send.toAddress}?`
+    if (this.type === 'balanceTransfer') {
+      txt = `Do you really want to transfer the following balance ${this.send.amount} ${this.send.currency.toUpperCase()}?`
+    }
+    dc.dialogContent = txt;
+
+    dc.onConfirm.subscribe(() => {
+      d.close();
       this.pay();
     })
   }
@@ -216,7 +200,7 @@ export class SendComponent {
       this.send.output = this.send.input;
 
       // Check if stealth address if output is private
-      if (this.send.output === 'private' && this.send.toAddress.length < 35) {
+      if (this.send.output === 'private' && !this.addressHelper.testAddress(this.send.toAddress, 'private')) {
         this.flashNotification.open('Stealth address required for private transactions!');
         return;
       }
@@ -253,14 +237,15 @@ export class SendComponent {
       this.addLabelToAddress();
 
       this.sendService.sendTransaction(
-        this.send.input, this.send.output, this.send.toAddress,
-        this.send.amount, this.send.note, this.send.note,
-        this.send.privacy, 1);
+        this.send.input, this.send.output,
+        this.send.toAddress, this.send.amount,
+        this.send.note, this.send.note,
+        this.send.privacy, 1, this.send.subtractFeeFromAmount);
     } else {
 
       this.sendService.transferBalance(
-        this.send.input, this.send.output, this.send.toAddress,
-        this.send.amount, this.send.privacy, 1);
+        this.send.input, this.send.output,
+        this.send.amount, this.send.privacy, 1, this.send.subtractFeeFromAmount);
     }
     this.clear();
   }
@@ -269,13 +254,14 @@ export class SendComponent {
   */
 
   openLookup(): void {
-    const dialogRef = this.dialog.open(AddressLookupComponent);
-    dialogRef.componentInstance.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
-    dialogRef.componentInstance.filter = (
+    const d = this.dialog.open(AddressLookupComponent);
+    const dc = d.componentInstance;
+    dc.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
+    dc.filter = (
       ['anon_balance', 'blind_balance'].includes(this.send.input) ? 'Private' : 'All types');
-    dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
+    dc.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
-      dialogRef.close();
+      d.close();
     });
   }
 
@@ -329,11 +315,10 @@ export class SendComponent {
   }
 
   sendAllBalance(): void {
-    this.sendService.isSubstractfeefromamount = (!this.isSendAll);
-    this.send.amount = (!this.isSendAll) ? this.getBalance(this.send.input) : null;
+    this.send.amount = (!this.send.subtractFeeFromAmount) ? this.getBalance(this.send.input) : null;
   }
 
   updateAmount(): void {
-    this.send.amount = (this.isSendAll) ? this.getBalance(this.send.input) : null;
+    this.send.amount = (this.send.subtractFeeFromAmount) ? this.getBalance(this.send.input) : null;
   }
 }

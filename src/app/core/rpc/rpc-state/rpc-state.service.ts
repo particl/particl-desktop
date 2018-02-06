@@ -17,7 +17,7 @@ export class RpcStateService extends StateService implements OnDestroy {
   /** errors gets updated everytime the stateCall RPC requests return an error */
   public errorsStateCall: Subject<any> = new Subject<any>();
 
-  constructor(private _rpc: RpcService) { 
+  constructor(private _rpc: RpcService) {
     super();
 
     this.registerStateCall('getwalletinfo', 1000);
@@ -61,7 +61,7 @@ export class RpcStateService extends StateService implements OnDestroy {
 
       // loop procedure
       const _call = () => {
-        if(this.destroyed) {
+        if (this.destroyed) {
           // RpcState service has been destroyed, stop.
           return;
         }
@@ -88,7 +88,7 @@ export class RpcStateService extends StateService implements OnDestroy {
 
       // initiate loop
       _call();
-    } 
+    }
   }
 
   /** Updates the state whenever a state call succeeds */
@@ -122,13 +122,14 @@ export class RpcStateService extends StateService implements OnDestroy {
     this.observe('getwalletinfo', 'encryptionstatus')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => {
+        this.log.d(' [rm] updating locked state maybe');
         this.set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
       });
   }
 
   // TODO: get rid of this after improve-router
   private initWalletState() {
-    this._rpc.call('getwalletinfo').subscribe(response => {
+    this.observe('getwalletinfo').subscribe(response => {
       // check if account is active
       if (!!response.hdmasterkeyid) {
         this.set('ui:walletInitialized', true);
