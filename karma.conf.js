@@ -38,16 +38,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_DEBUG,
     autoWatch: true,
-    // browsers: ['Chrome'],
-    // potential fix
-    browsers: ['ChromeNoSandbox'],
-    customLaunchers: {
-      ChromeNoSandbox: {
-        base: 'Chrome',
-        flags: ['--no-sandbox', '--enable-logging']
-      }
-    },
-    // potential fix
+    browsers: ['Chrome'],
     singleRun: false
   });
 };
