@@ -1,19 +1,18 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-import { RpcModule } from './rpc.module';
+import { CoreModule } from '../core.module';
 import { RpcService } from './rpc.service';
-import { IpcService } from '../ipc/ipc.service';
 
 describe('RpcService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        RpcModule.forRoot(),
+        CoreModule.forRoot(),
         HttpClientModule
       ],
       providers: [
-      IpcService
+      // IpcService
     ]
     });
   });

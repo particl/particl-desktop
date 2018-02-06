@@ -1,19 +1,18 @@
 import { TestBed, inject } from '@angular/core/testing';
 
+import { CoreModule } from '../../../core/core.module';
 import { SharedModule } from '../../shared/shared.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
 
 import { AddressService } from './address.service';
-import { IpcService } from '../../../core/ipc/ipc.service';
 
 describe('AddressService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
-        RpcModule.forRoot()
+        CoreModule.forRoot(),
+        SharedModule
       ],
-      providers: [AddressService, IpcService]
+      providers: [AddressService]
     });
   });
 
