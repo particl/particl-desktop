@@ -35,6 +35,12 @@ button.small .mat-icon {
 
 [mat-dialog-title] {
   color: $text;
+  .category {
+    font-size: 12px;
+    font-weight: normal;
+    color: $text-muted;
+    margin-left: 10px;
+  }
 }
 
 .product-gallery {
@@ -53,7 +59,7 @@ button.small .mat-icon {
     margin: 18px 0;
   }
   .pricing {
-    margin: 24px 0;
+    margin: 8px 0 24px;
     .price {
       &.item { // main price
         font-size: 18px;
@@ -69,6 +75,17 @@ button.small .mat-icon {
         font-size: 12px;
         color: $text-muted;
       }
+    }
+  }
+}
+
+mat-dialog-actions {
+  .date {
+    color: $text-muted;
+    display: inline-block;
+    margin-left: 8px;
+    strong {
+      font-weight: 600;
     }
   }
 }

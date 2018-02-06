@@ -1,4 +1,4 @@
-<div mat-dialog-title>Product name</div>
+<div mat-dialog-title>Product name <span class="category">in Category, Electronics, TV</span></div>
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
@@ -33,33 +33,6 @@
 
   <div class="product-info" fxFlex="1 1 100%">
 
-    <table class="meta">
-      <tr>
-        <th>Category</th>
-        <td>Electronics, TVs</td>
-      </tr>
-      <tr>
-        <th>Date added</th>
-        <td>10 Jan, 2018</td>
-      </tr>
-    </table>
-
-    <div class="description">
-      <p>
-        Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
-      </p>
-      <p>
-        Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
-      </p>
-      <ul>
-        <li>try a more powerful colour</li>
-        <li>jazz it up a little</li>
-        <li>it seems really high, why did you charge so much</li>
-        <li>you will get a lot of free exposure doing this</li>
-        <li>I really think this could go viral can you lower the price</li>
-      </ul>
-    </div>
-
     <table class="pricing">
       <tr>
         <th class="item price">Price</th>
@@ -79,19 +52,41 @@
       </tr>
     </table>
 
+    <div class="description">
+      <p>
+        Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
+      </p>
+      <p>
+        Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
+      </p>
+      <ul>
+        <li>try a more powerful colour</li>
+        <li>jazz it up a little</li>
+        <li>it seems really high, why did you charge so much</li>
+        <li>you will get a lot of free exposure doing this</li>
+        <li>I really think this could go viral can you lower the price</li>
+      </ul>
+    </div>
     
   </div><!-- .product-info -->
 </div><!-- .dialog-content -->
 
-<mat-dialog-actions fxLayoutAlign="end center">
-  <button mat-button class="small" matTooltip="Report" matTooltipPosition="above">
-    <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
-  </button>
-  <button mat-button class="small" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above">
-    <mat-icon fontSet="partIcon" fontIcon="part-heart"></mat-icon>
-  </button>
-  <button mat-raised-button color="primary">
-    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-    Add to cart
-  </button>
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <div class="left">
+    <button mat-button class="small" matTooltip="Report" matTooltipPosition="above">
+      <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
+    </button>
+    <div class="date">
+      <strong>Date added</strong> 10 Jan, 2018
+    </div>
+  </div>
+  <div class="right">
+    <button mat-button class="small" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above">
+      <mat-icon fontSet="partIcon" fontIcon="part-heart"></mat-icon>
+    </button>
+    <button mat-raised-button color="primary">
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Add to cart
+    </button>
+  </div>
 </mat-dialog-actions>
