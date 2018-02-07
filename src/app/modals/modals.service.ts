@@ -5,12 +5,9 @@ import { Log } from 'ng2-logger';
 import { RpcService, BlockStatusService } from '../core/core.module';
 
 /* modals */
-import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
-import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
-import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { MatDialog } from '@angular/material';
@@ -35,12 +32,9 @@ export class ModalsService implements OnDestroy {
   private log: any = Log.create('modals.service');
 
   messages: Object = {
-    createWallet: CreateWalletComponent,
     coldStake: ColdstakeComponent,
-    daemon: DaemonComponent,
     syncing: SyncingComponent,
     unlock: UnlockwalletComponent,
-    encrypt: EncryptwalletComponent,
     multiwallet: MultiwalletComponent
   };
 
@@ -56,17 +50,6 @@ export class ModalsService implements OnDestroy {
       this.openSyncModal(status);
     });
 
-    /* Hook wallet initialized -> open createwallet modal */
-    this.openInitialCreateWallet();
-
-    /* Hook daemon errors -> open daemon modal */
-    this._rpc.errorsStateCall.asObservable()
-    .subscribe(
-      status => this.wasAlreadyOpen('daemon') && this.close(),
-      error => {
-          this.enableClose = true;
-          // this.open('daemon', error);
-      });
   }
 
   ngOnDestroy() {
@@ -150,23 +133,6 @@ export class ModalsService implements OnDestroy {
       || status.networkBH - status.internalBH > 50)) {
         this.open('syncing');
     }
-  }
-
-  /**
-    * Open the Createwallet modal if wallet is not initialized
-    */
-  openInitialCreateWallet(): void {
-    this._rpc.state.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(
-        state => {
-          this.initializedWallet = state;
-          if (state) {
-            this.log.i('Wallet already initialized.');
-            return;
-          }
-          this.open('createWallet', {forceOpen: true});
-        });
   }
 
 }

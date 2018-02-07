@@ -46,23 +46,6 @@
   right: 0;
 }
 
-.percentage-bar {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  transition: width .2s;
-  background-color: $color;
-  color: #212121;
-  height: 100%;
-  overflow: hidden;
-}
-
-.inverted-bar {
-  background-color: #212121 !important;
-  color: $color !important;
-  right: 0 !important;
-}
-
 img.logo {
   max-height: 295px;
   width: 19%;

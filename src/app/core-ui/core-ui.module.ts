@@ -1,29 +1,37 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MaterialModule } from './material/material.module';
-import { MainViewModule } from './main/main-view.module';
 
+/* The core router is the whole application. */
+import { CoreRouterModule } from './core-router/core-router.module';
+import { DirectivesModule } from './directives/directives.module';
+import { MaterialModule } from './material/material.module';
+
+// TODO: move to material
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
+
 import { PaginatorComponent } from './paginator/paginator.component';
-// TODO: move to material
+
 
 @NgModule({
   declarations: [
-    PaginatorComponent
+    PaginatorComponent,
   ],
   imports: [
     CommonModule,
+    CoreRouterModule,
+    DirectivesModule,
     MaterialModule,
-    MainViewModule,
-    MatDialogModule // todo move
+    MatDialogModule, // todo move
   ],
   exports: [
+    CoreRouterModule,
+    DirectivesModule,
     MaterialModule,
-    MainViewModule,
     PaginatorComponent
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CoreUiModule {
   static forRoot(): ModuleWithProviders {
@@ -37,4 +45,4 @@ export class CoreUiModule {
 }
 
 export { MaterialModule } from './material/material.module';
-export { MainViewModule } from './main/main-view.module';
+export { CoreRouterModule } from './core-router/core-router.module';

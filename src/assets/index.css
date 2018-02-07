@@ -22,7 +22,7 @@ $radius: 4px; // default border-radius
 */
 
 .intro {
-  background: #222828;
+  background: #232323;
   color: white;
   text-align: center;
   font-family: "Open Sans", sans-serif;
@@ -33,21 +33,22 @@ $radius: 4px; // default border-radius
   left: 0;
   right: 0;
 }
-
+/*
 .intro > .content {
   margin: auto;
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
 }
 
 .logo {
-  width: 240px;
+  width: 300px;
   height: auto;
-  margin: 20px 0 40px;
+  margin: 210px 0 20px;
 }
 
 .quote {
   font-size: 17px;
+  margin-top: 90px;
 }
 
 .author {
@@ -59,3 +60,4 @@ $radius: 4px; // default border-radius
   width: 100%;
   max-width: 100px;
 }
+*/

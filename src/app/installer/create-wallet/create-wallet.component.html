@@ -1,0 +1,258 @@
+<!-- STEP 0: Choose action -->
+<ng-template [ngIf]="step === s.CreateOrRestore">
+    <div class="container disable-select">
+      <div class="content">
+        <div class="section create-restore">
+          <div class="title">Create or Restore wallet</div>
+          <p>
+            Create a new wallet or restore your old wallet using your Recovery Passphrase.
+          </p>
+          <div class="actions">
+            <button mat-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(1);">
+              <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+              Create new wallet
+            </button>
+            <button mat-raised-button color="primary" class="create-wallet-action-button" (click)="initialize(2);">
+              <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+              Restore wallet
+            </button>
+          </div>
+        </div><!-- .wallet-actions -->
+  
+      </div><!-- .content -->
+    </div><!-- .container -->
+</ng-template>
+  
+  
+  <!-- STEP 1: Create/restore wallet -->
+  <ng-template [ngIf]="step === s.Name">
+    <div class="container disable-select">
+      <div class="content">
+  
+        <div class="title">Name your wallet</div>
+        <p>
+          Choose a name for your wallet (e.g. Personal wallet, Shop income, Savings, &hellip;)
+        </p>
+  
+        <form #nameForm="ngForm" (ngSubmit)="nextStep()">
+          <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)">
+            <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+            <span [hidden]="!validation.errors.required">
+              Wallet Name is required
+            </span>
+            <span [hidden]="!validation.errors.maxlength">
+              Wallet Name cannot be more than 32 characters long.
+            </span>
+          </p><!-- validation errors -->
+  
+          <mat-form-field>
+            <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
+          </mat-form-field>
+  
+          <div class="actions">
+            <button mat-button (click)="prevStep()">
+              <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!nameForm.form.valid">
+              <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+              Next
+            </button>
+          </div><!-- .actions -->
+  
+        </form>
+      </div><!-- .content -->
+    </div><!-- .container -->
+  </ng-template>
+  
+  
+  <!-- STEP 2-4 (Create): Recovery Phrase -->
+  <ng-template [ngIf]="[s.RecoveryPass, s.RecoveryPhrase, s.RecoveryPhraseVerify].indexOf(step) != -1 && !isRestore">
+    <div class="container disable-select">
+      <div class="content">
+  
+  
+        <!-- STEP 2: Recovery Password -->
+        <div *ngIf="step === s.RecoveryPass">
+          <div>
+            <div class="title">Choose a Recovery Password <small>(optional)</small></div>
+            <p>
+              You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
+            </p>
+            <p class="warning">
+              <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+              Warning: if you lose Recovery Phrase OR Recovery Password, you won't be able to access your coins!
+            </p>
+          </div>
+
+          <div>
+            <mat-form-field>
+              <input matInput [(ngModel)]="password" placeholder="Recoveryphrase password (optional)" [type]="hide ? 'password' : 'text'">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+            </mat-form-field>
+            <br />
+
+            <mat-form-field>
+              <input matInput [(ngModel)]="passwordVerify" placeholder="Verify recoveryphrase password" [type]="hide ? 'password' : 'text'">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+            </mat-form-field>
+            <br />
+          </div>
+        </div><!-- step == s.RecoveryPass -->
+
+
+        <!-- STEP 3: Recovery Passphrase -->
+        <div *ngIf="step === s.RecoveryPhrase">
+          <div class="title">Recovery Phrase</div>
+          <p>
+            Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
+          </p>
+          <p class="warning">
+            <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+            You must write this Recovery Phrase down and keep it safe or you'll lose access to your coins!
+          </p>
+        </div><!-- step == 3 -->
+  
+  
+        <!-- STEP 4: Recovery Passphrase  -->
+        <div *ngIf="step === s.RecoveryPhraseVerify">
+          <div class="title">Enter your wallet Recovery Phrase</div>
+          <p>
+            Confirm that you backed up your Recovery Phrase by filling in the missing words:
+          </p>
+        </div><!-- step == 4 -->
+
+
+        <ng-template [ngIf]="[s.RecoveryPhrase, s.RecoveryPhraseVerify].indexOf(step) != -1">
+          <app-passphrase
+            #passphraseComponent
+            [attr.readOnly]="step === s.RecoveryPhrase"
+            [words]="words"
+            [partialDisable]="step === s.RecoveryPhraseVerify"
+            (wordsEmitter)="wordsFromEmitter($event)"
+            [generate]="true">
+          </app-passphrase>
+        </ng-template>
+  
+
+        <div class="actions">
+          <p *ngIf="!!errorString"  class="warning">
+            {{ errorString }}
+          </p>
+          <button mat-button (click)="prevStep()">
+            <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+            Back
+          </button>
+          <button mat-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
+            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            Next
+          </button>
+        </div><!-- .actions -->
+  
+      </div><!-- .content -->
+    </div><!-- .container -->
+  </ng-template><!-- Step 2,3 & 4 -->
+  
+  
+  <!-- STEP 4: RecoveryPhraseVerify (Restore) -->
+  <ng-template [ngIf]="step === s.RecoveryPhraseVerify && isRestore">
+    <div class="container disable-select">
+      <div class="content">
+  
+        <div class="title">Wallet Recovery</div>
+        <!--mat-form-field>
+          <input matInput [(ngModel)]="name" placeholder="Wallet name" readonly />
+        </mat-form-field-->
+  
+        <div class="section recovery-phrase">
+          <p>
+            Enter your 24 word Recovery Phrase:
+          </p>
+          <app-passphrase
+            #passphraseComponent
+            [words]="words"
+            (wordsEmitter)="wordsFromEmitter($event)"
+            [generate]="false">
+          </app-passphrase>
+  
+          <p *ngIf="!!errorString"  class="warning">
+            {{ errorString }}
+          </p>
+        </div><!-- .recovery-phrase -->
+  
+        <div class="section recovery-password">
+          <div class="subtitle">Recovery Password</div>
+          <p>
+            If you set up a Recovery Password during wallet creation as well, enter it below:
+          </p>
+
+          <mat-form-field>
+            <input matInput [(ngModel)]="password" placeholder="Recovery Password (optional)" [type]="hide ? 'password' : 'text'">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+          </mat-form-field>
+
+        </div><!-- .recovery-password -->
+  
+        <div class="actions">
+          <button mat-button (click)="prevStep();initialize(2)">
+            <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+            Back
+          </button>
+          <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="!isValidMnemonicWordCount()">
+            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            Next
+          </button>
+        </div><!-- .actions -->
+  
+      </div><!-- .content -->
+    </div><!-- .container -->
+  </ng-template><!-- Step 4 -->
+  
+  <!-- STEP 5: UnlockBeforeImport -->
+  <ng-template [ngIf]="step === s.UnlockBeforeImport">
+      <div class="container disable-select">
+        <div class="content">
+            Please unlock your wallet.
+  
+            <p *ngIf="!!errorString"  class="warning">
+                {{ errorString }}
+            </p>
+  
+            <mat-form-field>
+                <input matInput [(ngModel)]="walletPassword" placeholder="Wallet password" [type]="hide ? 'password' : 'text'">
+                <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              </mat-form-field>
+            
+              <div class="actions">
+                <button color="primary" mat-raised-button (click)="importMnemonicSeed()" [disabled]="alreadyBusyImportingWallet">
+                  <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+                  Unlock wallet & import
+                </button>
+              </div><!-- .actions -->
+  
+        </div><!-- .content -->
+      </div><!-- .container -->
+    </ng-template>
+  
+    
+  <!-- STEP 6: Gratz -->
+  <ng-template [ngIf]="step === s.Congratulations">
+    <div class="container disable-select">
+      <div class="content">
+  
+        <div class="title">Congratulations!</div>
+        <p>
+          Your new wallet was created successfully and set as the default wallet!<br>
+          <b>Please ensure that your Passphrase is written down and stored in a secure location!</b>
+        </p>
+        <div class="actions">
+          <button mat-raised-button color="primary" (click)="close()">
+            <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+            Close
+          </button>
+        </div>
+  
+      </div><!-- .content -->
+    </div><!-- .container -->
+  </ng-template>
+  

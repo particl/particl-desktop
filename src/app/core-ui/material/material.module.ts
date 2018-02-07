@@ -45,7 +45,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatSelectModule,
     MatInputModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    // MatDialogModule // TODO: why not imported?
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */

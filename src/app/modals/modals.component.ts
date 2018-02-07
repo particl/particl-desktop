@@ -11,12 +11,10 @@ import {
 } from '@angular/core';
 import { Log } from 'ng2-logger'
 
-import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
-import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
-import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
+
 import { MatDialogRef } from '@angular/material';
 import { StateService } from '../core/core.module';
 
@@ -25,12 +23,9 @@ import { StateService } from '../core/core.module';
   templateUrl: './modals.component.html',
   styleUrls: ['./modals.component.scss'],
   entryComponents: [
-    CreateWalletComponent,
     ColdstakeComponent,
-    DaemonComponent,
     SyncingComponent,
-    UnlockwalletComponent,
-    EncryptwalletComponent
+    UnlockwalletComponent
   ]
 })
 export class ModalsComponent implements DoCheck, OnInit, OnDestroy {

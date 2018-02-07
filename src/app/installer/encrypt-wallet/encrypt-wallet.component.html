@@ -1,0 +1,35 @@
+<div class="encrypt-wrapper" *ngIf="daemonIsAlreadyRestarting">
+  Daemon is restarting, please wait.
+</div>
+
+<div class="encrypt-wrapper" *ngIf="!daemonIsAlreadyRestarting">
+  <mat-form-field>
+    <input matInput [(ngModel)]="password" placeholder="Enter password here" [type]="hide ? 'password' : 'text'">
+    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+  </mat-form-field>
+
+  <br />
+
+  <mat-form-field>
+    <input matInput [(ngModel)]="passwordVerify" placeholder="Verify password here" [type]="hide ? 'password' : 'text'">
+    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+  </mat-form-field>
+
+  <div class="actions">
+    <button color="primary" mat-raised-button (click)="encrypt()" [disabled]="!passwordsAreMatching">
+      <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+      Encrypt
+    </button>
+  </div><!-- .actions -->
+
+  <br />
+  
+  <!-- maybe a seperate greyed out section to skip it -->
+  <div class="actions">
+      <button color="primary" mat-raised-button (click)="skip()">
+        <mat-icon fontSet="partIcon" fontIcon="part-send"></mat-icon>
+        Skip
+      </button>
+  </div><!-- .actions -->
+
+</div><!-- .encrypt -->

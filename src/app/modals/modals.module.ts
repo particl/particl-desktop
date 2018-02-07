@@ -5,28 +5,24 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from '../core-ui/material/material.module';
+import { DirectivesModule } from 'app/core-ui/directives/directives.module';
 
 import { ModalsService } from './modals.service';
+import { SnackbarService } from '../core/snackbar/snackbar.service';
 
 import { ModalsComponent } from './modals.component';
-import { FocusDirective, FocusTimeoutDirective } from './modals.directives';
 
 /* modals */
-import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
-import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
-import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
-import { AlertComponent } from './shared/alert/alert.component';
 /* shared in modals */
-import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
-import { PassphraseService } from './createwallet/passphrase/passphrase.service';
 import { PasswordComponent } from './shared/password/password.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
-import { SnackbarService } from '../core/snackbar/snackbar.service';
-import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
+
+
+
 
 
 @NgModule({
@@ -36,41 +32,29 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     BrowserAnimationsModule,
     ClipboardModule,
     /* own */
-    MaterialModule
+    MaterialModule,
+    DirectivesModule
   ],
   declarations: [
-    FocusDirective,
-    FocusTimeoutDirective,
     ModalsComponent,
-    PassphraseComponent,
     PasswordComponent,
-    CreateWalletComponent,
-    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
-    EncryptwalletComponent,
-    AlertComponent,
     ColdstakeComponent,
-    MultiwalletComponent,
-    DaemonConnectionComponent
+    MultiwalletComponent
   ],
   exports: [
     ModalsComponent,
-    ClipboardModule
+    ClipboardModule,
   ],
   providers: [
     ModalsService,
-    PassphraseService,
     SnackbarService
   ],
   entryComponents: [
     ModalsComponent,
-    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
-    EncryptwalletComponent,
-    AlertComponent,
-    DaemonConnectionComponent
   ],
 })
 export class ModalsModule {
@@ -85,4 +69,3 @@ export class ModalsModule {
 }
 
 export { ModalsService } from './modals.service';
-export { PassphraseService } from './createwallet/passphrase/passphrase.service';

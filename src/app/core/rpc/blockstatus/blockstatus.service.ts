@@ -44,6 +44,7 @@ export class BlockStatusService {
     this.log.d('constructor blockstatus');
     // this._state.observe('blocks')
     this._peerService.getBlockCount()
+      .distinctUntilChanged() // only update when blocks changes
       .subscribe(
         height => {
           this.log.d('getBlockCount(): triggered');
@@ -66,6 +67,7 @@ export class BlockStatusService {
 
     // Get heighest block count of peers and calculate remainerders.
     this._peerService.getBlockCountNetwork()
+      .distinctUntilChanged() // only update when blocks changes
       .subscribe(
         height => {
           this.log.d(`getBlockCountNetwork(): new height ${height}`);
