@@ -71,13 +71,17 @@ export class MainViewComponent implements OnInit, OnDestroy {
     /* errors */
     // Updates the error box in the sidenav whenever a stateCall returns an error.
     this._rpcState.errorsStateCall.asObservable()
-    .throttle(val => Observable.interval(30000/*ms*/))
-    .subscribe(status => this.daemonRunning = true,
-                error => {
-                  this.daemonRunning = ![0, 502].includes(error.status);
-                  this.daemonError = error;
-                  this.log.d(error);
-                });
+      .distinctUntilChanged()
+      .subscribe(update => {
+        // if error exists & != false
+        if (update.error) {
+          this.daemonRunning = ![0, 502].includes(update.error.status);
+          this.daemonError = update.error;
+          this.log.d(update.error);
+        } else {
+          this.daemonRunning = true;
+        }
+      });
 
     // Updates the error box in the sidenav if wallet is not initialized.
     this._rpcState.observe('ui:walletInitialized')
@@ -92,10 +96,10 @@ export class MainViewComponent implements OnInit, OnDestroy {
         if (this.unlocked_until > 0) {
           this.checkTimeDiff(status);
         } else {
-            if (this.unSubscribeTimer) {
-              this.unSubscribeTimer.unsubscribe();
-            }
+          if (this.unSubscribeTimer) {
+            this.unSubscribeTimer.unsubscribe();
           }
+        }
       });
 
     /* versions */
@@ -104,9 +108,9 @@ export class MainViewComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
 
-     /* check if testnet -> block explorer url */
-     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
-     .subscribe(chain => this.testnet = chain === 'test');
+    /* check if testnet -> block explorer url */
+    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+      .subscribe(chain => this.testnet = chain === 'test');
   }
 
   ngOnDestroy() {
@@ -114,12 +118,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
   }
   /** Open createwallet modal when clicking on error in sidenav */
   createWallet() {
-    this._modals.open('createWallet', {forceOpen: true});
+    this._modals.open('createWallet', { forceOpen: true });
   }
 
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
   syncScreen() {
-    this._modals.open('syncing', {forceOpen: true});
+    this._modals.open('syncing', { forceOpen: true });
   }
 
   checkTimeDiff(time: number) {

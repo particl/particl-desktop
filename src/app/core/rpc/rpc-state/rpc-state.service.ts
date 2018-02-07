@@ -93,7 +93,12 @@ export class RpcStateService extends StateService implements OnDestroy {
 
   /** Updates the state whenever a state call succeeds */
   private stateCallSuccess(method: string, response: any) {
-    this.errorsStateCall.next(true); // Let's keep it simple
+    // no error
+    this.errorsStateCall.next({
+      error: false,
+      electron: this._rpc.isElectron
+    });
+
     this.set(method, response);
   }
 
@@ -103,7 +108,7 @@ export class RpcStateService extends StateService implements OnDestroy {
 
     // if not first error, show modal
     if (!firstError) {
-      this.errorsStateCall.error({
+      this.errorsStateCall.next({
         error: error.target ? error.target : error,
         electron: this._rpc.isElectron
       });
