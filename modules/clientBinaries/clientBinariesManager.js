@@ -10,7 +10,8 @@ const got  = require('got'),
      unzip = require('node-unzip-2'),
      spawn = require('buffered-spawn'),
        log = require('electron-log'),
-  progress = require('cli-progress')
+  progress = require('cli-progress'),
+  EventEmitter = require('events').EventEmitter;
 
 
 function copyFile(src, dst) {
