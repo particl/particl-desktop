@@ -99,10 +99,7 @@ function initMainWindow() {
     resizable: false,
     icon:      path.join(__dirname, 'resources/icon.png'),
     webPreferences: {
-      nodeIntegration:  false,
-      sandbox:          true,
-      contextIsolation: true,
-      preload:          path.join(__dirname, 'preload.js')
+      contextIsolation: true
     },
   });
 
@@ -110,11 +107,7 @@ function initMainWindow() {
   if (options.dev) {
     mainWindow.loadURL('http://localhost:4200');
   } else {
-    mainWindow.loadURL(url.format({
-      protocol: 'file:',
-      pathname: path.join(__dirname, 'dist/index.html'),
-      slashes:  true
-    }));
+    mainWindow.loadURL('chrome://brave/' + __dirname + '/dist/index.html');
   }
 
   // Open the DevTools.
