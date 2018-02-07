@@ -272,7 +272,15 @@
           </tbody>
         </table>
 
-        <div class="order-detail" fxLayout fxLayoutAlign="space-between center">
+        <div class="order-detail" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="20px">
+
+          <div class="order-narration" fxFlex="0 0 250px">
+            <div class="title">Note to seller</div>
+            <mat-form-field class="full-width" floatPlaceholder="never">
+              <input type="text" matInput placeholder="Narration (optional)" maxlength="24">
+              <mat-hint align="end">0 / 24</mat-hint>
+            </mat-form-field>
+          </div>
 
           <div class="shipping-overview" fxFlex="0 0 250px">
             <div class="title">Shipping address</div>

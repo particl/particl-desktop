@@ -96,7 +96,18 @@ table.cart-items {
   border-bottom: 1px solid $bg-shadow;
   color: $text-muted;
   line-height: 1.8;
-  padding: 20px 45px;
+  padding: 24px 30px;
+  .title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 13px;
+    color: $text;
+  }
+  .shipping-overview {
+    p {
+      margin: 6px 0 0;
+    }
+  }
   table.subtotals {
     .value {
       text-align: right;
@@ -127,17 +138,5 @@ table.summary {
   thead th,
   .total {
     padding-right: 25px;
-  }
-}
-
-.shipping-overview {
-  .title {
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 13px;
-    color: $text;
-  }
-  p {
-    margin: 6px 0 0;
   }
 }
