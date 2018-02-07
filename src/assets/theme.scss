@@ -101,6 +101,8 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
       position: relative;
       top: 0.02em;
       opacity: 0.5;
+      width: auto;
+      height: auto;
     }
   }
 }

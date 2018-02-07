@@ -1,13 +1,22 @@
 <app-header class="disable-select">
   <mat-tab-group>
     <mat-tab>
-      <ng-template mat-tab-label>Your cart</ng-template>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-attach"></mat-icon>
+        Your cart
+      </ng-template>
     </mat-tab>
     <mat-tab>
-      <ng-template mat-tab-label>Orders</ng-template>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+        Orders
+      </ng-template>
     </mat-tab>
     <mat-tab>
-      <ng-template mat-tab-label>Favourites</ng-template>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart"></mat-icon>
+        Favourites
+      </ng-template>
     </mat-tab>
   </mat-tab-group>
 </app-header>
@@ -31,7 +40,7 @@
               <th>Price</th>
               <th>Shipping</th>
               <th>Quantity</th>
-              <th>Total</th>
+              <th class="text-right">Total</th>
               <th></th>
             </tr>
           </thead>
@@ -99,7 +108,7 @@
               <td>
                 Subtotal<br>
                 Shipping total<br>
-                Escrow<br>
+                Escrow (?)<br>
                 <strong>Total</strong>
               </td>
               <td class="text-right">
@@ -113,7 +122,7 @@
           </tfoot>
         </table>
 
-        <div class="action-buttons">
+        <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
           <button mat-button>
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
             Clear cart
