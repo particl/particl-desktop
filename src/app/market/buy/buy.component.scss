@@ -6,7 +6,6 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  border-bottom: 1px solid $bg-shadow;
   thead {
     th {
       text-align: left;
@@ -15,23 +14,6 @@ table {
       color: $text-muted;
       font-size: 11px;
       padding-bottom: 12px;
-    }
-  }
-  tbody {
-    background: $color-white;
-    td {
-      border-bottom: 1px solid lighten($bg-shadow, 7%);
-    }
-  }
-  tfoot {
-    background: mix($color-white, $bg);
-    td {
-      color: $text-muted;
-      line-height: 1.8;
-      padding: 20px 0;
-      strong {
-        color: $text;
-      }
     }
   }
 }
@@ -52,21 +34,26 @@ table {
 }
 
 .sub-section { // lower-priority content in cards
-  background: mix(white, $bg);
+  background: mix($color-white, $bg);
   border-top: 1px dashed darken($bg, 7%);
   margin: 24px -24px -24px !important;
   padding: 12px 24px;
 }
 
-.action-buttons {
-  margin: 36px 5px 20px;
-}
-
-
-// ------ CART ------ //
-
 table.cart-items {
   margin-top: 16px;
+  border-bottom: 1px solid lighten($bg-shadow, 7%);
+  thead th {
+    &.text-right {
+      text-align: right;
+    }
+  }
+  tbody {
+    background: $color-white;
+    td {
+      border-top: 1px solid lighten($bg-shadow, 7%);
+    }
+  }
   .cell {
     padding-right: 25px;
     min-width: 90px;
@@ -104,9 +91,53 @@ table.cart-items {
   }
 }
 
+.order-detail {
+  background: mix($color-white, $bg);
+  border-bottom: 1px solid $bg-shadow;
+  color: $text-muted;
+  line-height: 1.8;
+  padding: 20px 45px;
+  table.subtotals {
+    .value {
+      text-align: right;
+    }
+    .total {
+      color: $text;
+      font-weight: 500;
+    }
+  }
+}
+
+.action-buttons {
+  margin: 36px 5px 20px;
+}
+
 
 // ------ SHIPPING ------ //
 
 .shipping {
   margin-top: 16px;
+}
+
+
+// ------ SUMMARY (Confirmation & Payment) ------ //
+
+table.summary {
+  border-collapse: collapse;
+  thead th,
+  .total {
+    padding-right: 25px;
+  }
+}
+
+.shipping-overview {
+  .title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 13px;
+    color: $text;
+  }
+  p {
+    margin: 6px 0 0;
+  }
 }
