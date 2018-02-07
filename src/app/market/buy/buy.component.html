@@ -27,8 +27,8 @@
 
 
     <!-- Your cart -->
-    <mat-step [stepControl]="firstFormGroup" class="cart">
-      <form [formGroup]="firstFormGroup">
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup" class="cart">
         <ng-template matStepLabel>Your cart</ng-template>
         <!--mat-form-field>
           <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
@@ -137,14 +137,77 @@
 
 
     <!-- Shipping details -->
-    <mat-step [stepControl]="secondFormGroup" class="shipping">
-      <form [formGroup]="secondFormGroup">
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup" class="shipping">
         <ng-template matStepLabel>Shipping details</ng-template>
         <!--mat-form-field>
           <input matInput placeholder="Address" formControlName="secondCtrl" required>
         </mat-form-field-->
+        <div fxLayout="row" fxLayoutGap="30px">
 
-        <div class="action-buttons">
+          <div class="shipping-profile" fxFlex>
+            <mat-card>
+              <div class="title">Choose shipping profile</div>
+              <mat-form-field class="full-width">
+                <mat-select placeholder="Select saved shipping address profile">
+                  <mat-option value="home">Home</mat-option>
+                  <mat-option value="office">Office</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p class="widget-help">
+                To save time, you can save your frequently used shipping addresses as your personal shipping profiles. You can create as much profiles as you need (e.g. home address, office address etc.).
+              </p>
+              <p class="widget-help">
+                To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
+              </p>
+            </mat-card>
+          </div><!-- .shipping-profile -->
+
+          <div class="shipping-info" fxFlex>
+            <mat-card>
+              <div class="title">Or enter new shipping address</div>
+              <div class="row" fxLayout fxLayoutGap="30px">
+                <mat-form-field class="full-width" fxFlex>
+                  <input matInput placeholder="First name">
+                </mat-form-field>
+                <mat-form-field class="full-width" fxFlex>
+                  <input matInput placeholder="Last name">
+                </mat-form-field>
+              </div>
+              <mat-form-field class="full-width">
+                <input matInput placeholder="Address">
+              </mat-form-field>
+              <mat-form-field class="full-width">
+                <input matInput placeholder="City">
+              </mat-form-field>
+              <div class="row" fxLayout fxLayoutGap="30px">
+                <mat-form-field class="full-width" fxFlex>
+                  <input matInput placeholder="ZIP / Postal code">
+                </mat-form-field>
+                <mat-form-field class="full-width" fxFlex>
+                  <input matInput placeholder="State">
+                </mat-form-field>
+              </div>
+              <mat-form-field class="full-width">
+                <mat-select placeholder="Country">
+                  <mat-option value="af">Afghanistan</mat-option>
+                  <mat-option value="al">Albania</mat-option>
+                  <mat-option value="ag">Algeria</mat-option>
+                  <mat-option value="as">American Samoa</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
+                <mat-checkbox fxFlex>Save as shipping profile</mat-checkbox>
+                <mat-form-field class="full-width" fxFlex>
+                  <input matInput placeholder="Shipping profile name">
+                </mat-form-field>
+              </div>
+            </mat-card>
+          </div><!-- .shipping-info -->
+
+        </div>
+
+        <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
           <button mat-button matStepperPrevious>
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
             Back to cart
@@ -159,21 +222,23 @@
 
 
     <!-- Confirmation/Payment -->
-    <mat-step class="confirmation">
-      <ng-template matStepLabel>Confirm & Payment</ng-template>
-      You are now done.
-
-      <div class="action-buttons">
-        <button mat-button matStepperPrevious>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-          Back to shipping
-        </button>
-        <!-- TODO: after clicking the "confirm" button, payment confirmation modal should pop out with all the details -->
-        <button mat-raised-button color="primary">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-          Confirm & Pay
-        </button>
-      </div>
+    <mat-step>
+      <form class="confirmation">
+        <ng-template matStepLabel>Confirm & Payment</ng-template>
+        You are now done.
+  
+        <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+          <button mat-button matStepperPrevious>
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Back to shipping
+          </button>
+          <!-- TODO: after clicking the "confirm" button, payment confirmation modal should pop out with all the details -->
+          <button mat-raised-button color="primary">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            Confirm & Pay
+          </button>
+        </div>
+      </form>
     </mat-step>
 
 

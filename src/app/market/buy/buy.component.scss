@@ -36,11 +36,26 @@ table {
   }
 }
 
+.mat-card {
+  & > .title { // TODO: replace with %placeholders when Settings is merged
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 13px;
+    margin: -4px 0 16px !important;
+  }
+}
 
 // ------ LAYOUT ------ //
 
 .container-block {
    padding: 15px 15px 0;
+}
+
+.sub-section { // lower-priority content in cards
+  background: mix(white, $bg);
+  border-top: 1px dashed darken($bg, 7%);
+  margin: 24px -24px -24px !important;
+  padding: 12px 24px;
 }
 
 .action-buttons {
@@ -51,7 +66,7 @@ table {
 // ------ CART ------ //
 
 table.cart-items {
-  margin-top: 24px;
+  margin-top: 16px;
   .cell {
     padding-right: 25px;
     min-width: 90px;
@@ -89,3 +104,9 @@ table.cart-items {
   }
 }
 
+
+// ------ SHIPPING ------ //
+
+.shipping {
+  margin-top: 16px;
+}
