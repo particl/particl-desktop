@@ -51,7 +51,7 @@ class DaemonManager extends EventEmitter {
     log.info('Write new client binaries local config to disk ...');
 
     fs.writeFileSync(
-      path.join(app.getPath('userData'), 'clientBinaries.json'),
+      path.join(this._getCustomUserDataPath(), 'clientBinaries.json'),
       JSON.stringify(json, null, 2)
     );
   }
@@ -96,7 +96,7 @@ class DaemonManager extends EventEmitter {
       // load the local json
       try {
         localConfig = JSON.parse(
-          fs.readFileSync(path.join(app.getPath('userData'), 'clientBinaries.json')).toString()
+          fs.readFileSync(path.join(this._getCustomUserDataPath(), 'clientBinaries.json')).toString()
         );
       } catch (err) {
         log.warn(`Error loading local config - assuming this is a first run: ${err}`);
@@ -111,7 +111,7 @@ class DaemonManager extends EventEmitter {
       }
 
       try {
-        skipedVersion = fs.readFileSync(path.join(app.getPath('userData'), 'skippedNodeVersion.json')).toString();
+        skipedVersion = fs.readFileSync(path.join(this._getCustomUserDataPath(), 'skippedNodeVersion.json')).toString();
       } catch (err) {
         log.info('No "skippedNodeVersion.json" found.');
       }
@@ -177,7 +177,7 @@ class DaemonManager extends EventEmitter {
           //     // skip
           //   } else if (update === 'skip') {
           //     fs.writeFileSync(
-          //       path.join(app.getPath('userData'), 'skippedNodeVersion.json'),
+          //       path.join(this._getCustomUserDataPath(), 'skippedNodeVersion.json'),
           //       nodeVersion
           //     );
           //
@@ -201,7 +201,7 @@ class DaemonManager extends EventEmitter {
       if (!localConfig) {
         log.info('No config for the ClientBinariesManager could be loaded, using local clientBinaries.json.');
 
-        const localConfigPath = path.join(app.getPath('userData'), 'clientBinaries.json');
+        const localConfigPath = path.join(this._getCustomUserDataPath(), 'clientBinaries.json');
         localConfig = (fs.existsSync(localConfigPath))
           ? require(localConfigPath)
           : require('./clientBinaries.json');
@@ -214,7 +214,7 @@ class DaemonManager extends EventEmitter {
       this._emit('scanning', 'Scanning for binaries');
 
       return mgr.init({
-        folders: [ path.join(app.getPath('userData'), 'particld', 'unpacked') ]
+        folders: [ path.join(this._getCustomUserDataPath(), 'particld', 'unpacked') ]
       })
       .then(() => {
         const clients = mgr.clients;
@@ -234,7 +234,7 @@ class DaemonManager extends EventEmitter {
             binariesDownloaded = true;
 
             return mgr.download(c.id, {
-              downloadFolder: path.join(app.getPath('userData'))
+              downloadFolder: path.join(this._getCustomUserDataPath())
               //urlRegex: ALLOWED_DOWNLOAD_URLS_REGEX,
             });
           });
@@ -312,7 +312,7 @@ class DaemonManager extends EventEmitter {
 
     log.debug(`Platform: ${platform}`);
 
-    let binPath = path.join(app.getPath('userData'), 'particld', 'unpacked', 'particld');
+    let binPath = path.join(this._getCustomUserDataPath(), 'particld', 'unpacked', 'particld');
 
     if (platform === 'win') {
       binPath += '.exe';
@@ -323,6 +323,12 @@ class DaemonManager extends EventEmitter {
     this._availableClients.particld = {
       binPath
     };
+  }
+
+  _getCustomUserDataPath() {
+    // small hack, userData points to  ~/.config/brave/
+    // instead of ~/.config/Particl\ Desktop
+    return path.join(path.dirname(app.getPath('userData')), 'Particl Desktop');
   }
 }
 

@@ -8,8 +8,11 @@ interface NodeModule {
 
 interface Window {
   electron: boolean;
-  require: any;
-  ipc: {
+}
+
+declare var chrome: Chrome;
+interface Chrome {
+  ipcRenderer: {
     on: (channel: string, listener: Function) => void;
     once: (channel: string, listener: Function) => void;
     send: (channel: string, arguments?: {}) => void;
@@ -20,3 +23,4 @@ interface Window {
     listenerCount: (channel?: string) => number;
   }
 }
+

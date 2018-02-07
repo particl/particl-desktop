@@ -13,7 +13,7 @@ export class NotificationService {
 
   /** Send Notification to the backend */
   public sendNotification(title: string, desc: string) {
-    if (window.electron) {
+    if (this._ipc.isIpcAvailable()) {
       this.runNotification(title, desc);
     }
   }

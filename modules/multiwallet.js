@@ -15,7 +15,8 @@ exports.getPath = function () {
   if (platform == 'linux') {
     return path.join(app.getPath('home'), '.particl');
   } else {
-    return app.getPath('userData');
+    // return app.getPath('userData');
+    return path.join(path.dirname(app.getPath('userData')), 'particl-desktop');
   }
 }
 

@@ -63,7 +63,7 @@ export class RpcService implements OnDestroy {
     private _zmq: ZmqService,
     public state: StateService
   ) {
-    this.isElectron = window.electron;
+    this.isElectron = this._ipc.isIpcAvailable();
 
     this.toggleState(true);
   }
