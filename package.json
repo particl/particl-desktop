@@ -179,7 +179,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "1.8.2",
+    "electron": "1.7.12",
     "electron-builder": "^19.55.2",
     "htmlhint": "^0.9.13",
     "jasmine-core": "^2.9.1",
