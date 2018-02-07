@@ -22,6 +22,9 @@ export class AppComponent implements OnInit {
     _iconRegistry
       .registerFontClassAlias('partIcon', 'part-icon')
       .registerFontClassAlias('faIcon', 'fa');
+
+    // Muon extras:
+    delete chrome.remote;
   }
 
   ngOnInit() {
