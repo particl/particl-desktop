@@ -60,3 +60,50 @@
   }
  
 }
+
+
+// ------ LISTINGS LIST ------ //
+
+.listing {
+  .header {
+    min-height: 120px !important;
+    font-size: 12px;
+  }
+  .photo {
+    img {
+      width: 100%;
+      display: block;
+    }
+  }
+  .meta {}
+  table.prices {}
+  .action-buttons {
+    .status {
+      background: $bg-shadow;
+      text-align: center;
+      color: white;
+      margin-bottom: 16px;
+      padding: 6px 15px;
+      border-radius: 4px;
+      font-weight: 600;
+      &.pending {
+        background: $color-warning;
+      }
+      &.listed {
+        background: $color;
+      }
+      &.escrow {
+        background: mix($color-warning, $color-alert);
+      }
+      &.shipped {
+        background: darken($color, 12%);
+      }
+      &.sold {
+        background: rgba($color, 0.5);
+      }
+      &.expired {
+        background: $color-alert;
+      }
+    }
+  }
+}

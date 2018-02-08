@@ -6,6 +6,12 @@
         Overview
       </ng-template>
     </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Sell item
+      </ng-template>
+    </mat-tab>
   </mat-tab-group>
 </app-header>
 
@@ -65,8 +71,244 @@
 
   </div><!-- .filter -->
 
-  <div class="tx-list section" fxFlex="1 1 100%">
-    content
-  </div><!-- .tx-list -->
 
-</div>
+
+  <div class="listings-list section" fxFlex="1 1 100%">
+    
+    <mat-expansion-panel class="listing">
+      <mat-expansion-panel-header class="header">
+        <mat-panel-title fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center">
+          <div class="photo" fxFlex="0 0 75px">
+            <img src="./assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="meta" fxFlex="1 1 100%">
+            <div class="name">Item waiting to be listed</div>
+            <div class="category">Misc.</div>
+            <div class="date"><span>Date:</span>2018-02-08</div>
+          </div>
+          <table class="prices" fxFlex="0 0 250px">
+            <tr>
+              <th>Quantity</th>
+              <td>17</td>
+            </tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>0.<small>489</small> PART</td>
+            </tr>
+          </table>
+          <div class="action-buttons" fxFlex="0 0 120px">
+            <div class="status pending">Pending</div>
+            <div class="icons" fxLayout fxLayoutAlign="space-between center">
+              <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-cross" color="warn"></mat-icon>
+            </div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      sss
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="listing">
+      <mat-expansion-panel-header class="header">
+        <mat-panel-title fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center">
+          <div class="photo" fxFlex="0 0 75px">
+            <img src="./assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="meta" fxFlex="1 1 100%">
+            <div class="name">Fresh of the market item</div>
+            <div class="category">Food, Gardening</div>
+            <div class="date"><span>Date:</span>2018-02-08</div>
+          </div>
+          <table class="prices" fxFlex="0 0 250px">
+            <tr>
+              <th>Quantity</th>
+              <td>3</td>
+            </tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>0.<small>489</small> PART</td>
+            </tr>
+          </table>
+          <div class="action-buttons" fxFlex="0 0 120px">
+            <div class="status listed">Listed</div>
+            <div class="icons" fxLayout fxLayoutAlign="space-between center">
+              <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-cross" color="warn"></mat-icon>
+            </div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      sss
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="listing">
+      <mat-expansion-panel-header class="header">
+        <mat-panel-title fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center">
+          <div class="photo" fxFlex="0 0 75px">
+            <img src="./assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="meta" fxFlex="1 1 100%">
+            <div class="name">Big bag of bits</div>
+            <div class="category">Cosmetics</div>
+            <div class="date"><span>Date:</span>2018-02-08</div>
+          </div>
+          <table class="prices" fxFlex="0 0 250px">
+            <tr>
+              <th>Quantity</th>
+              <td>549</td>
+            </tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>0.<small>489</small> PART</td>
+            </tr>
+          </table>
+          <div class="action-buttons" fxFlex="0 0 120px">
+            <div class="status escrow">In escrow</div>
+            <div class="icons" fxLayout fxLayoutAlign="space-between center">
+              <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-cross" color="warn"></mat-icon>
+            </div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      sss
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="listing">
+      <mat-expansion-panel-header class="header">
+        <mat-panel-title fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center">
+          <div class="photo" fxFlex="0 0 75px">
+            <img src="./assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="meta" fxFlex="1 1 100%">
+            <div class="name">Neat package</div>
+            <div class="category">Hobby, Toys</div>
+            <div class="date"><span>Date:</span>2018-02-08</div>
+          </div>
+          <table class="prices" fxFlex="0 0 250px">
+            <tr>
+              <th>Quantity</th>
+              <td>1</td>
+            </tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>0.<small>489</small> PART</td>
+            </tr>
+          </table>
+          <div class="action-buttons" fxFlex="0 0 120px">
+            <div class="status shipped">Shipped</div>
+            <div class="icons" fxLayout fxLayoutAlign="space-between center">
+              <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-cross" color="warn"></mat-icon>
+            </div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      sss
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="listing">
+      <mat-expansion-panel-header class="header">
+        <mat-panel-title fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center">
+          <div class="photo" fxFlex="0 0 75px">
+            <img src="./assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="meta" fxFlex="1 1 100%">
+            <div class="name">Some other stuff</div>
+            <div class="category">Electronics, DIY</div>
+            <div class="date"><span>Date:</span>2018-02-08</div>
+          </div>
+          <table class="prices" fxFlex="0 0 250px">
+            <tr>
+              <th>Quantity</th>
+              <td>3</td>
+            </tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>0.<small>489</small> PART</td>
+            </tr>
+          </table>
+          <div class="action-buttons" fxFlex="0 0 120px">
+            <div class="status sold">Sold</div>
+            <div class="icons" fxLayout fxLayoutAlign="space-between center">
+              <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-cross" color="warn"></mat-icon>
+            </div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      sss
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="listing">
+      <mat-expansion-panel-header class="header">
+        <mat-panel-title fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center">
+          <div class="photo" fxFlex="0 0 75px">
+            <img src="./assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="meta" fxFlex="1 1 100%">
+            <div class="name">Product name</div>
+            <div class="category">Category name, Electronics</div>
+            <div class="date"><span>Date:</span>2018-02-08</div>
+          </div>
+          <table class="prices" fxFlex="0 0 250px">
+            <tr>
+              <th>Quantity</th>
+              <td>1</td>
+            </tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>0.<small>489</small> PART</td>
+            </tr>
+          </table>
+          <div class="action-buttons" fxFlex="0 0 120px">
+            <div class="status expired">Expired</div>
+            <div class="icons" fxLayout fxLayoutAlign="space-between center">
+              <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-cross" color="warn"></mat-icon>
+            </div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      sss
+    </mat-expansion-panel>
+        
+  </div><!-- .listings-list -->
+
+</div><!-- .container-block -->

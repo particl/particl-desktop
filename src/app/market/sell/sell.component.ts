@@ -43,7 +43,6 @@ export class SellComponent implements OnInit {
   }
 
   clear(): void {
-    this.default();
-    this.filter();
+    this.filters();
   }
 }
