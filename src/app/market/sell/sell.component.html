@@ -1,5 +1,72 @@
-<p>
-  sell works!
-</p>
+<app-header class="disable-select">
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+        Overview
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</app-header>
 
-<button (click)="addItem()">Go to add item</button>
+
+<div fxLayout="row" fxLayoutGap="30px" class="container-block">
+
+  <div class="filter" fxFlex="0 0 230px">
+
+    <div class="sell-item">
+      <button mat-raised-button color="primary" (click)="addItem()" class="full-width">
+        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Sell item
+      </button>
+    </div>
+
+    <div class="section search-sorting">
+      <div class="subtitle">Search &amp; sort</div>
+      <mat-card class="filter-card">
+
+        <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+          <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search" (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; filter()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"></mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+          <mat-select placeholder="Sort results">
+            <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
+              {{ sorting.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+    </div>
+
+    <!--p class="widget-help">
+      TODO: any helpful text, anyone?
+    </p-->
+
+    <div class="section filter-by-type">
+      <div class="subtitle">Filter by status</div>
+      <mat-card class="filter-card">
+        <mat-radio-group class="radio-group">
+          <mat-radio-button class="filter-option" *ngFor="let status of statuses" value="{{ status.value }}">
+            {{ status.title }}
+            <!-- FIXME: show amount (below) only if higher than 1 -->
+            <span class="amount">{{ status.amount }}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div>
+
+    <button mat-button color="warn" class="clear-filters" (click)="clear()">
+      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter -->
+
+  <div class="tx-list section" fxFlex="1 1 100%">
+    content
+  </div><!-- .tx-list -->
+
+</div>

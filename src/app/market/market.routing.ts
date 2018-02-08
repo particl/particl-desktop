@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'overview', component: OverviewListingsComponent, data: { title: 'Listings' } },
   { path: 'buy', component: BuyComponent, data: { title: 'Buy' } },
   { path: 'sell', component: SellComponent, data: { title: 'Sell' } },
-  { path: 'add-item', component: AddItemComponent, data: { title: 'Sell - add item' } }
+  { path: 'add-item', component: AddItemComponent, data: { title: 'Sell › Add item' } }
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);
