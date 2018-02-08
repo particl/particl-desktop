@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { QRCodeModule } from 'angular2-qrcode';
+import { QRCodeModule } from 'angularx-qrcode';
 import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../shared/shared.module';
@@ -37,7 +37,6 @@ import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet
     SharedModule,
     CoreUiModule.forRoot(),
     QRCodeModule
-
   ],
   declarations: [
     TransactionsTableComponent,
