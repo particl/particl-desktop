@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService } from 'app/core/rpc/rpc.module';
 
-import { Amount } from '../../../shared/util/utils';
+import { Amount } from '../../../../core/util/utils';
 import { ZapColdstakingComponent } from './zap-coldstaking/zap-coldstaking.component';
 import { RevertColdstakingComponent } from './revert-coldstaking/revert-coldstaking.component';
 

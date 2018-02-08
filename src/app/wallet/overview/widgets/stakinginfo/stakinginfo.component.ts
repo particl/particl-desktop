@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { StateService } from '../../../../core/core.module';
-import { Amount, Duration } from '../../../shared/util/utils';
+import { Amount, Duration } from '../../../../core/util/utils';
 
 @Component({
   selector: 'app-stakinginfo',

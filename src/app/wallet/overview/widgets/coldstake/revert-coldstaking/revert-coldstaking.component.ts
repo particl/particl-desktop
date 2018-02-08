@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
 import { Log } from 'ng2-logger';
-import { Amount } from '../../../../shared/util/utils';
+import { Amount } from '../../../../../core/util/utils';
 
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService } from 'app/core/rpc/rpc.service';

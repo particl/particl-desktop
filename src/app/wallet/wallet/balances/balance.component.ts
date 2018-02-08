@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { StateService } from '../../../core/core.module';
 
-import { Amount } from '../../shared/util/utils';
+import { Amount } from '../../../core/util/utils';
 
 @Component({
   selector: 'app-balance',
