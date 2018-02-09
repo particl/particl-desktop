@@ -21,18 +21,18 @@ export class NewTxNotifierService implements OnDestroy {
 
     this.log.d('tx notifier service running!');
     // TODO: when state moves into its own service, fix it here
-    // TODO: throttle (block sync)..
-    this._rpc.state.observe('blocks').
-      throttle(val => Observable.interval(30000/*ms*/)).
-      takeWhile(() => !this.destroyed).subscribe(
-      (blocks: number) => {
-        this.newTransaction();
-      }
-      );
+    this._rpc.state.observe('txcount')
+      .takeWhile(() => !this.destroyed)
+      .distinctUntilChanged() // only update when txcount changes
+      .skip(1) // skip the first one (shareReplay)
+      .subscribe(txcount => {
+        this.log.d(`--- update by txcount${txcount} ---`);
+        this.checkForNewTransaction();
+      });
   }
 
   // TODO: trigger by ZMQ in the future
-  newTransaction(): void {
+  checkForNewTransaction(): void {
     this.log.d('newTransaction()');
 
     const options = {
