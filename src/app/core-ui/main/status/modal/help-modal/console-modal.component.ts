@@ -139,12 +139,10 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     if (event.keyCode === 13 && this.command && this.waitingForRPC) {
       this.disableScrollDown = false;
       this.rpcCall();
-    }
-    else if (event.ctrlKey && event.keyCode === 76) {
+    } else if (event.ctrlKey && event.keyCode === 76) {
       this.clearCommands();
-    }
-    // Up and Down arrow KeyPress to manage command history
-    else if ([38, 40].includes(event.keyCode) && this.commandHistory.length > 0) {
+      // Up and Down arrow KeyPress to manage command history
+    } else if ([38, 40].includes(event.keyCode) && this.commandHistory.length > 0) {
       this.manageCommandHistory(event.keyCode);
     }
   }
