@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
-import { AddressHelper } from '../../../../wallet/shared/util/utils'
-
 import { Amount } from '../../../shared/util/utils';
 
 @Component({
@@ -16,9 +14,6 @@ export class SendConfirmationModalComponent {
 
   public dialogContent: string;
 
-  // components
-  private addressHelper: AddressHelper;
-
   // send-confirmation-modal variables
   transactionType: string = '';
   sendAmount: Amount;
@@ -27,8 +22,7 @@ export class SendConfirmationModalComponent {
   transactionFee: number = 0;
   totalAmount: number = 0;
 
-  constructor(private diloagRef: MatDialogRef<SendConfirmationModalComponent>) {
-    this.addressHelper = new AddressHelper();
+  constructor(private dialogRef: MatDialogRef<SendConfirmationModalComponent>) { 
   }
 
   confirm(): void {
@@ -37,7 +31,7 @@ export class SendConfirmationModalComponent {
   }
 
   dialogClose(): void {
-    this.diloagRef.close();
+    this.dialogRef.close();
   }
 
   /**
