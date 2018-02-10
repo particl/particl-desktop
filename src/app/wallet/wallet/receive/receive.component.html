@@ -33,8 +33,8 @@
     <mat-card class="qr-card" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap.lt-md="20px">
 
       <div #qrCode class="qrcode" fxFlex fxFlex.lt-md="0 0 200px">
-        <qr-code size="180" [level]="'H'" value="particl:{{ selected.address }}">
-        </qr-code>
+        <qrcode size="180" [level]="'H'" qrdata="particl:{{ selected.address }}">
+        </qrcode>
       </div><!-- qrcode -->
 
       <div class="address-details" fxFlex fxFlex.lt-md="1 1 calc(100% - 220px)">
