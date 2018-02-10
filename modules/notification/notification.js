@@ -1,31 +1,50 @@
 /* electron */
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const log = require('electron-log');
-const Notification = require('electron').Notification;
+const Notification = require('node-notifier');
 
 /* node */
 const path = require('path');
 
 const Observable = require('rxjs/Observable').Observable;
 
+const util = require('../util/util');
+
 /*
-    Register and IPC listener and execute notification.
+  Register and IPC listener and execute notification.
 */
 exports.init = function () {
-    rxIpc.registerListener('notification', function (title, desc, params) {
-        let notification = new Notification({
-            'title': title,
-            'body': desc,
-            'icon': path.join(__dirname, 'src/assets/icons/notification.png')
+  rxIpc.registerListener('notification', function (title, desc) {
+
+    notified = false;
+    // whitelist character for regex (node-notifier executes these as arguments to command line, better sanitize ourselves).
+    whitelist = new RegExp(/[^A-Za-z0-9!.?]/);
+    
+    if ( title.match(whitelist) || desc.match(whitelist) ) {
+        log.error( `notification regex sanity check failed for title=${title} desc=${desc}`);
+     } else {
+        const iconPath = path.join(util.getRootOrResourcePath(), 'resources/notification.png');
+        log.debug(`sending notification ${title} : ${desc} `);
+        log.debug(`iconPath ${iconPath}`);
+    
+        Notification.notify({
+          'title': title,
+          'message': desc,
+          'icon': iconPath,
+          'sound': true,
+          'wait': false,
         })
-        notification.show()
-        return Observable.create(observer => {
-            observer.complete(true);
-        });
+
+        notified = true;
+     }
+
+    return Observable.create(observer => {
+      observer.complete(notified);
     });
+  });
 }
 
 // todo: test
 exports.destroy = function() {
-    rxIpc.removeListeners('notification');
+  rxIpc.removeListeners('notification');
 }

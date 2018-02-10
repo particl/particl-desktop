@@ -5,25 +5,34 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 
+
 /* node */
 const path = require('path');
-const url = require('url');
 const platform = require('os').platform();
+const url = require('url');
+const fs = require('fs');
 
 const Observable = require('rxjs/Observable').Observable;
-const log = require('electron-log');
 
-log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
-log.transports.file.file = log.transports.file
-  .findLogPath(log.transports.file.appName)
-  .replace('log.log', 'particl.log');
-log.debug(`console log level: ${log.transports.console.level}`);
-log.debug(`file log level: ${log.transports.file.level}`);
-
+/* own*/
+const util = require('./modules/util/util');
 const _options = require('./modules/options');
+const daemon = require('./modules/daemon/daemon');
 const init = require('./modules/init');
 const rpc = require('./modules/rpc/rpc');
-const daemon = require('./modules/daemon/daemon');
+
+/* Brave fix */
+app.setPath("userData", util.getCustomUserPath());
+// TODO: remove getCustomUserPath calls everywhere else
+
+/* initialize logging */
+const log = require('electron-log');
+log.transports.file.level = 'debug';
+log.transports.file.file = path.join(util.getCustomUserPath(), 'particl-debug.log');
+
+
+log.debug(`console log level: ${log.transports.console.level}`);
+log.debug(`file log level: ${log.transports.file.level}`);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -43,9 +52,18 @@ if (app.getVersion().includes('RC'))
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   log.debug('app ready')
-  options = _options.parse();
-  initMainWindow();
-  init.start(mainWindow);
+
+  util.checkIfNoSandbox().subscribe(
+    ok => {
+      options = _options.parse();
+      initMainWindow();
+      init.start(mainWindow);
+    },
+    stop => {
+      app.quit();
+    }
+  )
+
 });
 
 // Quit when all windows are closed.
@@ -100,7 +118,11 @@ function initMainWindow() {
   if (options.dev) {
     mainWindow.loadURL('http://localhost:4200');
   } else {
-    mainWindow.loadURL('chrome://brave' + __dirname + '/dist/index.html');
+    mainWindow.loadURL(url.format({
+      protocol: 'chrome:',
+      pathname: path.join('brave', __dirname, 'dist/index.html'),
+      slashes: true
+    }));
   }
 
   // Open the DevTools.

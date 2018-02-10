@@ -8,6 +8,7 @@ interface NodeModule {
 
 interface Window {
   electron: boolean;
+  sendNot: (title: string, desc: string) => void;
 }
 
 declare var chrome: Chrome;
