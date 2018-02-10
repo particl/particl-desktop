@@ -36,7 +36,7 @@ exports.init = function () {
     };
 
     // on osx, discard icon (custom node-notifier)
-    if (process.platform !== 'darwin') {
+    if (process.platform === 'darwin') {
       delete data['icon'];
     }
 
