@@ -46,7 +46,7 @@ export class SendConfirmationModalComponent {
     */
   setDetails(send: any): void {
     this.sendAddress = send.toAddress;
-    this.transactionType = this.addressHelper.getAddressType(this.sendAddress);
+    this.transactionType = send.input;
     this.sendAmount = new Amount(send.amount);
     this.receiverName = send.toLabel;
     this.transactionFee = 0;
