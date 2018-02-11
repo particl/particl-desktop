@@ -21,7 +21,7 @@
         Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
       </p>
     </div>
-    <div class="anon" *nfif="transactionType === 'anon'">
+    <div class="anon" *ngIf="transactionType === 'anon'">
       <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
       <div class="title">Anon transaction</div>
       <p class="help-text">
