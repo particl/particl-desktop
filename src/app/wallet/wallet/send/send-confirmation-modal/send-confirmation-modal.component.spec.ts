@@ -2,8 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MatFormFieldModule } from '@angular/material';
 
-import { CoreModule } from '../../../../core/core.module';
-import { CoreUiModule } from '../../../../core-ui/core-ui.module';
+import { MaterialModule } from '../../../../core-ui/material/material.module';
 
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
 
@@ -15,8 +14,7 @@ describe('SendConfirmationModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CommonModule,
-        CoreModule.forRoot(),
-        CoreUiModule.forRoot(),
+        MaterialModule,
         MatFormFieldModule // check if this is required. If so, move into CoreUi.
       ],
       declarations: [ SendConfirmationModalComponent ],
