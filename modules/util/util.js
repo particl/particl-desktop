@@ -1,6 +1,7 @@
 const { app } = require('electron');
 const electron = require('electron');
 const path = require('path');
+const fs = require('fs');
 const log = require('electron-log');
 
 const Observable = require('rxjs/Observable').Observable;
@@ -11,7 +12,17 @@ const Observable = require('rxjs/Observable').Observable;
 function getCustomUserPath() {
   // small hack, userData points to  ~/.config/brave/
   // instead of ~/.config/Particl\ Desktop
-  return path.join(path.dirname(app.getPath('userData')), 'particl-desktop');
+  const dir = path.join(path.dirname(app.getPath('userData')), 'particl-desktop');
+
+  /*
+   make the directory (also created by electron/muon)
+   but we need it earlier for logging
+   */
+  if (!fs.existsSync(dir)) {
+    fs.mkdir(dir);
+  }
+
+  return dir;
 }
 
 /*
