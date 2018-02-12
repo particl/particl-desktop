@@ -2,8 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material';
 
+
+import { CoreModule } from '../../../core/core.module';
 import { SharedModule } from '../../shared/shared.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
 import { WalletModule } from '../wallet.module';
 
 import { IpcService } from '../../../core/ipc/ipc.service';
@@ -18,12 +19,11 @@ describe('AddressLookupComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule.forRoot(),
+        CoreModule.forRoot(),
         WalletModule,
         BrowserAnimationsModule
       ],
       providers: [
-        IpcService,
         { provide: MatDialogRef }
       ]
     })

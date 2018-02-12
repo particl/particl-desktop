@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
-import { StateService } from '../../state/state.service';
+import { RpcStateService } from '../rpc-state/rpc-state.service';
 import { PeerService } from '../peer/peer.service';
 
 @Injectable()
@@ -38,7 +38,7 @@ export class BlockStatusService {
 
   constructor(
     private _peerService: PeerService,
-    private _state: StateService
+    private _rpcState: RpcStateService
   ) {
     // Get internal block height and calculate syncing details (ETA)
     this.log.d('constructor blockstatus');
@@ -47,7 +47,7 @@ export class BlockStatusService {
       .subscribe(
         height => {
           this.log.d('getBlockCount(): triggered');
-          this.status.lastBlockTime = new Date(+this._state.get('mediantime') * 1000);
+          this.status.lastBlockTime = new Date(+this._rpcState.get('getblockchaininfo').mediantime * 1000);
           this.calculateSyncingDetails(height);
 
           // must be after calculateSyncingDetails
@@ -75,7 +75,7 @@ export class BlockStatusService {
             this.totalRemainder = height - this.startingBlockCount;
           }
         },
-        error => console.log('constructor blockstatus: getBlockCountNetwork() subscription error:' + error));
+        error => this.log.error('constructor blockstatus: getBlockCountNetwork() subscription error:' + error));
   }
 
 
@@ -158,31 +158,6 @@ export class BlockStatusService {
     }
 
     this.status.estimatedTimeLeft = returnString;
-  }
-
-  /** Inserts estimatedTimeLeft into private array and returns an averaged result to create more consistent result. */
-  private averageTimeLeft(estimatedTimeLeft: number): number {
-
-    /* add element to averaging array */
-    const length = this.arrayLastEstimatedTimeLefts.push(estimatedTimeLeft);
-
-    /* if length > allowed length, pop first element */
-    if (length > this.amountToAverage) {
-      this.arrayLastEstimatedTimeLefts.shift();
-    }
-
-    /* sum all elements in array */
-    function add(a: number, b: number) {
-      return a + b;
-    }
-
-    const sum = this.arrayLastEstimatedTimeLefts.reduce(add, 0);
-
-    /* Average = summation / amount of elements */
-    const averageEstimatedTimeLeft = Math.floor(sum / length);
-
-    this.log.d(`averageTimeLeft(): length=${length} averageInSec=${Math.floor(averageEstimatedTimeLeft)}`);
-    return averageEstimatedTimeLeft;
   }
 
   /** Inserts estimatedTimeLeft into private array and returns an exponential moving average result to create more consistent result. */

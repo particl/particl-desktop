@@ -41,11 +41,12 @@
   </mat-card> -->
 
 
-  <!-- if cold staking is 100% progress -->
+  <!-- if cold staking is in progress & wa -->
   <mat-card *ngIf="coldStakingEnabled && (checkLockStatus() || coldstakeProgress === 100)" class="staking-node active">
     <div class="title">Cold Staking Node</div>
     <div class="subtitle in-progress">
-      {{activation}}
+      <span *ngIf="coldstakeProgress < 100">Activation in progress</span>
+      <span *ngIf="coldstakeProgress === 100">Activated</span>
       <span class="progress">{{coldstakeProgress}}%</span>
     </div>
     <mat-progress-bar
@@ -79,7 +80,7 @@
     </p>
   </mat-card>
 
-  <!-- if cold staking is under 100% progress -->
+  <!-- if wallet is locked, & under < 100% progress -->
   <mat-card *ngIf="coldStakingEnabled && coldstakeProgress < 100 && !checkLockStatus()" class="staking-node warning">
     <div class="title">Cold Staking Node</div>
     <div class="subtitle in-progress">

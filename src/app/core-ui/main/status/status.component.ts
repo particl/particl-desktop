@@ -5,9 +5,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
 import { ModalsService } from '../../../modals/modals.service';
-import { RpcService, StateService } from '../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../core/core.module';
 
 import { ConsoleModalComponent } from './modal/help-modal/console-modal.component';
+
 
 @Component({
   selector: 'app-status',
@@ -27,24 +28,25 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   constructor(
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private _modalsService: ModalsService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this._rpc.state.observe('connections')
+    this._rpcState.observe('getnetworkinfo', 'connections')
       .takeWhile(() => !this.destroyed)
       .subscribe(connections => this.peerListCount = connections);
 
-    this._rpc.state.observe('encryptionstatus')
+    this._rpcState.observe('getwalletinfo', 'encryptionstatus')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.encryptionStatus = status);
 
-    this._rpc.state.observe('ui:coldstaking')
+    this._rpcState.observe('ui:coldstaking')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingStatus = status);
 
     /* Bug: If you remove this line, then the state of 'txcount' doesn't update in the Transaction.service */
-    this._rpc.state.observe('txcount').takeWhile(() => !this.destroyed).subscribe(txcount => { });
+    this._rpcState.observe('getwalletinfo', 'txcount').takeWhile(() => !this.destroyed).subscribe(txcount => { });
   }
 
   ngOnDestroy() {
@@ -90,7 +92,7 @@ export class StatusComponent implements OnInit, OnDestroy {
       case 'Unlocked, staking only':
         this._rpc.call('walletlock')
           .subscribe(
-            success => this._rpc.stateCall('getwalletinfo'),
+            success => this._rpcState.stateCall('getwalletinfo'),
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':

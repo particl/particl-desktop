@@ -16,10 +16,10 @@
   <div class="filter" fxFlex="0 0 230px">
 
     <div class="section search-sorting">
-      <div class="subtitle first">Search &amp; sort</div>
+      <div class="subtitle first"><!--Search &amp; -->Sort</div>
       <mat-card class="filter-card">
 
-        <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+        <!--mat-form-field class="icon-input filter-input" floatPlaceholder="never">
           <input matInput type="text" class="header-input"
                  placeholder="Search transactions" [(ngModel)]="filters.search"
                  (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
@@ -30,8 +30,7 @@
           <mat-icon *ngIf="!filters.search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"
                     matTooltip="Search">
           </mat-icon>
-
-        </mat-form-field>
+        </mat-form-field-->
 
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort results"

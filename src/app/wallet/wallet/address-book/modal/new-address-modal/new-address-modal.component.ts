@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { RpcService } from '../../../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 
 import { ModalsService } from '../../../../../modals/modals.service';
@@ -35,6 +35,7 @@ export class NewAddressModalComponent implements OnInit {
     public dialogRef: MatDialogRef<NewAddressModalComponent>,
     private formBuilder: FormBuilder,
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private flashNotificationService: SnackbarService,
     private _modals: ModalsService,
     private _addressService: AddressService) {
@@ -88,7 +89,7 @@ export class NewAddressModalComponent implements OnInit {
     }
 
     if (this.label !== undefined && this.label.trim() && !this.isMine) {
-      if (this._rpc.state.get('locked')) {
+      if (this._rpcState.get('locked')) {
         // unlock wallet and send transaction
         this._modals.open('unlock', {
           forceOpen: true, timeout: 3, callback: this.addressCallBack.bind(this)
