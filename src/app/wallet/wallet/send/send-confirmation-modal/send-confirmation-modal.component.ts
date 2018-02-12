@@ -22,7 +22,7 @@ export class SendConfirmationModalComponent {
   transactionFee: number = 0;
   totalAmount: number = 0;
 
-  constructor(private dialogRef: MatDialogRef<SendConfirmationModalComponent>) { 
+  constructor(private dialogRef: MatDialogRef<SendConfirmationModalComponent>) {
   }
 
   confirm(): void {
