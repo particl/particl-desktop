@@ -7,7 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
+import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.module';
+
 
 /*
  * The MainView is basically:
@@ -47,6 +49,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
+    private _newtxnotifier: NewTxNotifierService,
     private _modals: ModalsService,
     private dialog: MatDialog
   ) { }
