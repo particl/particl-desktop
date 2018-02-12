@@ -10,7 +10,7 @@ import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../wallet/shared/util/utils';
-import { RpcService } from '../../../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 
@@ -33,6 +33,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public historyCount: number = 0;
 
   constructor(private _rpc: RpcService,
+              private _rpcState: RpcStateService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
   }
@@ -46,6 +47,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   rpcCall() {
+
     this.waitingForRPC = false;
     this.commandHistory.push(this.command);
     this.historyCount = this.commandHistory.length;

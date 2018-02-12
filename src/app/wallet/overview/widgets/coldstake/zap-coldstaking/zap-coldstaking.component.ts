@@ -5,7 +5,7 @@ import { Log } from 'ng2-logger';
 import { Amount } from '../../../../shared/util/utils';
 
 import { ModalsService } from 'app/modals/modals.service';
-import { RpcService } from 'app/core/rpc/rpc.service';
+import { RpcService, RpcStateService } from 'app/core/core.module';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 @Component({
@@ -25,7 +25,8 @@ export class ZapColdstakingComponent {
     private flashNotification: SnackbarService,
     private dialogRef: MatDialogRef<ZapColdstakingComponent>,
     private _modals: ModalsService,
-    private _rpc: RpcService
+    private _rpc: RpcService,
+    private _rpcState: RpcStateService
   ) {
 
     // TODO: move to coldstaking service
@@ -125,7 +126,7 @@ export class ZapColdstakingComponent {
     }], 'coldstaking zap', '', 4, 64, false, JSON.stringify({
       inputs: this.utxos.txs
     })]).subscribe(info => {
-      this._rpc.state.set('ui:coldstaking', true);
+      this._rpcState.set('ui:coldstaking', true);
       this.log.d('zap', info);
 
       this.dialogRef.close();

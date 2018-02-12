@@ -3,7 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { IPassword } from './password.interface';
 
-import { RpcService } from '../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 @Component({
@@ -46,6 +46,7 @@ export class PasswordComponent implements OnDestroy {
   log: any = Log.create('password.component');
 
   constructor(private _rpc: RpcService,
+              private _rpcState: RpcStateService,
               private flashNotification: SnackbarService) {
   }
 
@@ -105,9 +106,9 @@ export class PasswordComponent implements OnDestroy {
       .subscribe(
         success => {
           // update state
-          this._rpc.stateCall('getwalletinfo');
+          this._rpcState.stateCall('getwalletinfo');
 
-          let _subs = this._rpc.state.observe('encryptionstatus').skip(1)
+          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus').skip(1)
             .subscribe(
               encryptionstatus => {
                 this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
@@ -132,7 +133,7 @@ export class PasswordComponent implements OnDestroy {
     * else lock wallet
     */
   private checkAndFallbackToStaking(): void {
-    if (this._rpc.state.get('encryptionstatus') === 'Unlocked, staking only') {
+    if (this._rpcState.get('getwalletinfo').encryptionstatus === 'Unlocked, staking only') {
 
       const password = this.password;
       const timeout = this.unlockTimeout;
