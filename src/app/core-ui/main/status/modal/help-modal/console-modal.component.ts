@@ -111,9 +111,9 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     const element = this.commandContainer.nativeElement
     const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight
     if (this.disableScrollDown && atBottom) {
-        this.disableScrollDown = false
+      this.disableScrollDown = false
     } else {
-        this.disableScrollDown = true
+      this.disableScrollDown = true
     }
   }
 
@@ -130,19 +130,19 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     this.command = this.commandHistory[this.historyCount];
   }
 
-
   // capture the enter button
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
+    if ([13, 38, 40].includes(event.keyCode)) {
+      event.preventDefault();
+    }
     if (event.keyCode === 13 && this.command && this.waitingForRPC) {
       this.disableScrollDown = false;
       this.rpcCall();
-    }
-    if (event.ctrlKey && event.keyCode === 76) {
+    } else if (event.ctrlKey && event.keyCode === 76) {
       this.clearCommands();
-    }
-    // Up and Down arrow KeyPress to manage command history
-    if ([38, 40].includes(event.keyCode) && this.commandHistory.length > 0) {
+      // Up and Down arrow KeyPress to manage command history
+    } else if ([38, 40].includes(event.keyCode) && this.commandHistory.length > 0) {
       this.manageCommandHistory(event.keyCode);
     }
   }

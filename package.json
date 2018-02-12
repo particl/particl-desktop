@@ -38,7 +38,7 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js"
   },
-  "productName": "particl-desktop",
+  "productName": "Particl Desktop",
   "build": {
     "muonVersion": "5.0.2",
     "appId": "io.particl.desktop",
@@ -57,7 +57,8 @@
       "artifactName": "${name}-${version}-${os}.${ext}",
       "category": "public.app-category.wallet",
       "target": [
-        "zip"
+        "zip",
+        "dmg"
       ]
     },
     "dmg": {
