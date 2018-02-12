@@ -16,7 +16,7 @@ export class SendConfirmationModalComponent {
 
   // send-confirmation-modal variables
   transactionType: string = '';
-  sendAmount: Amount;
+  sendAmount: Amount = new Amount(0);
   sendAddress: string = '';
   receiverName: string = '';
   transactionFee: number = 0;
