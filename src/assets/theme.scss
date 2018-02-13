@@ -128,6 +128,23 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
       font-family: $font;
     }
   }
+  .mat-expansion-indicator {
+    position: relative;
+    top: -4px;
+    transform: none !important;
+    &::after {
+      transition: none !important;
+    }
+  }
+  &.mat-expanded { // while expanded..
+    .mat-expansion-indicator {
+      top: 0;
+      &::after {
+        position: relative;
+        transform: rotate(-135deg);
+      }
+    }
+  }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
   &.no-padding {
     .mat-expansion-panel-body {
