@@ -76,7 +76,7 @@
 .list {
   .item {
     font-size: 12px;
-    padding: 0 24px 0 0;
+    padding: 0;
     .photo {
       margin-right: 24px;
       img {
@@ -96,7 +96,7 @@
         margin-bottom: 5px;
       }
     }
-    table.prices {
+    .prices {
       color: $text-muted;
       th {
         text-align: right;
@@ -111,6 +111,7 @@
 
 .listing {
   .action-buttons {
+    margin-right: 14px;
     .mat-icon {
       cursor: pointer;
     }
@@ -121,6 +122,65 @@
 // ------ ORDERS ------ //
 
 .order {
+  margin-bottom: 12px;
+
+  .header {
+    height: auto !important;
+    min-height: 70px !important;
+    max-height: 70px !important;
+    padding: 0 24px 0 0;
+    .meta {
+      .hash { // order "ID"
+        font-family: monospace;
+        font-weight: 600;
+        color: white;
+        line-height: 1.3;
+        background: blue;
+        border-radius: 4px;
+        display: inline-block;
+        padding: 0 6px;
+        margin-right: 8px;
+      }
+    }
+    .action-buttons {
+      margin-right: 24px;
+    }
+  }
+  .detail {
+    font-size: 13px;
+    font-family: $font;
+    color: $text-muted;
+    padding: 24px 30px;
+    border-top: 1px solid $bg-shadow;
+    .title {
+      font-size: 13px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: $text;
+      margin-bottom: 10px;
+    }
+    .order-history {
+      table {
+        width: 100%;
+      }
+      .status {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 11px;
+        padding: 1px 10px;
+      }
+    }
+  }
+  mat-action-row {
+    padding: 16px 18px;
+    .left {
+      margin-top: 3px;
+      button {
+        margin: 0 4px 0 0;
+      }
+    }
+  }
+
   .status {
     background: $bg-shadow;
     text-align: center;

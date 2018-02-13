@@ -119,6 +119,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   box-shadow: none !important;
   border-bottom: 1px solid $bg-shadow;
   .mat-expansion-panel-header {
+    font-family: $font;
     font-size: 13px;
     &:hover {
       background: inherit !important; // disable darker bg on hover by default

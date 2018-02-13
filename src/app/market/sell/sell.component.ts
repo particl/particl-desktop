@@ -11,13 +11,23 @@ export class SellComponent implements OnInit {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['listings', 'orders', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
 
-  sortings: Array<any> = [
+  listing_sortings: Array<any> = [
     { title: 'By creation date',   value: 'date-created'    },
     { title: 'By expiration date', value: 'date-expiration' },
-    { title: 'By name',            value: 'name'            },
+    { title: 'By item name',       value: 'item-name'       },
     { title: 'By category',        value: 'category'        },
     { title: 'By quantity',        value: 'quantity'        },
     { title: 'By price',           value: 'price'           }
+  ];
+
+  order_sortings: Array<any> = [
+    { title: 'By creation date', value: 'date-created'  },
+    { title: 'By update date',   value: 'date-update'   },
+    { title: 'By status',        value: 'status'        },
+    { title: 'By item name',     value: 'item-name'     },
+    { title: 'By category',      value: 'category'      },
+    { title: 'By quantity',      value: 'quantity'      },
+    { title: 'By price',         value: 'price'         }
   ];
 
   // TODO: disable radios for 0 amount-statuses
