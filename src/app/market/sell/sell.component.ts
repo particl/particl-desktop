@@ -8,23 +8,28 @@ import { Router } from '@angular/router';
 })
 export class SellComponent implements OnInit {
 
+  public selectedTab: number = 0;
+  public tabLabels: Array<string> = ['listings', 'orders', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
+
   sortings: Array<any> = [
-    { title: 'By time',                  value: 'time'          },
-    { title: 'By amount',                value: 'amount'        },
-    { title: 'By address',               value: 'address'       },
-    { title: 'By category',              value: 'category'      },
-    { title: 'By confirmations',         value: 'confirmations' },
-    { title: 'By transaction ID (txid)', value: 'txid'          }
+    { title: 'By creation date',   value: 'date-created'    },
+    { title: 'By expiration date', value: 'date-expiration' },
+    { title: 'By name',            value: 'name'            },
+    { title: 'By category',        value: 'category'        },
+    { title: 'By quantity',        value: 'quantity'        },
+    { title: 'By price',           value: 'price'           }
   ];
 
+  // TODO: disable radios for 0 amount-statuses
   statuses: Array<any> = [
-    { title: 'All listings', value: 'all',     amount: '5' },
-    { title: 'Pending',      value: 'pending', amount: '1' },
-    { title: 'Listed',       value: 'listed',  amount: '2' },
-    { title: 'In escrow',    value: 'escrow',  amount: '0' },
-    { title: 'Shipped',      value: 'shipped', amount: '1' },
-    { title: 'Sold',         value: 'sold',    amount: '1' },
-    { title: 'Expired',      value: 'expired', amount: '0' },
+    { title: 'All orders', value: 'all',     amount: '5' },
+    { title: 'Pending',    value: 'pending', amount: '1' },
+    { title: 'Listed',     value: 'listed',  amount: '2' },
+    { title: 'Bidding',    value: 'bidding', amount: '0' },
+    { title: 'In escrow',  value: 'escrow',  amount: '0' },
+    { title: 'Shipped',    value: 'shipped', amount: '1' },
+    { title: 'Sold',       value: 'sold',    amount: '1' },
+    { title: 'Expired',    value: 'expired', amount: '0' },
   ];
 
   filters: any = {
@@ -45,4 +50,9 @@ export class SellComponent implements OnInit {
   clear(): void {
     this.filters();
   }
+
+  changeTab(index: number): void {
+    this.selectedTab = index;
+  }
+
 }

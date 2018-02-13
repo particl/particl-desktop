@@ -312,7 +312,8 @@ input {
 .mat-radio-group {
   // send: full-width clickable radios
   &.block-radio {
-    .mat-radio-button .mat-radio-label {
+    .mat-radio-button .mat-radio-label,
+    .mat-radio-button .mat-radio-label-content {
       width: 100%;
     }
   }

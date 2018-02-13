@@ -1,5 +1,13 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+// ------ GENERAL ------ //
+
+.mat-icon {
+  width: auto;
+  height: auto;
+  font-size: 14px;
+}
+
 // ------ LAYOUT ------ //
 
 
@@ -51,59 +59,93 @@
     }
     .amount {
       font-weight: 600;
+      text-align: center;
       background: $bg-shadow;
-      display: inline-block;
-      padding: 0 5px;
       border-radius: $radius;
-      margin-left: 5px;
+      float: right;
+      display: inline-block;
+      width: 20px;
+      padding: 0 5px;
     }
   }
  
 }
 
+// ------ LISTS (listings & orders) ------ //
 
-// ------ LISTINGS LIST ------ //
-
-.listing {
-  .header {
-    min-height: 120px !important;
+.list {
+  .item {
     font-size: 12px;
-  }
-  .photo {
-    img {
-      width: 100%;
-      display: block;
+    padding: 0 24px 0 0;
+    .photo {
+      margin-right: 24px;
+      img {
+        width: 100%;
+        display: block;
+      }
+    }
+    .meta {
+      color: $text-muted;
+      font-size: 11px;
+      line-height: 1.8;
+      .name {
+        color: $text;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 5px;
+      }
+    }
+    table.prices {
+      color: $text-muted;
+      th {
+        text-align: right;
+        font-weight: 600;
+        padding-right: 7px;
+      }
     }
   }
-  .meta {}
-  table.prices {}
+}
+
+// ------ LISTINGS ------ //
+
+.listing {
   .action-buttons {
-    .status {
+    .mat-icon {
+      cursor: pointer;
+    }
+  }
+}
+
+
+// ------ ORDERS ------ //
+
+.order {
+  .status {
+    background: $bg-shadow;
+    text-align: center;
+    color: white;
+    margin-bottom: 12px;
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-weight: 700;
+    &.pending {
       background: $bg-shadow;
-      text-align: center;
-      color: white;
-      margin-bottom: 16px;
-      padding: 6px 15px;
-      border-radius: 4px;
-      font-weight: 600;
-      &.pending {
-        background: $color-warning;
-      }
-      &.listed {
-        background: $color;
-      }
-      &.escrow {
-        background: mix($color-warning, $color-alert);
-      }
-      &.shipped {
-        background: darken($color, 12%);
-      }
-      &.sold {
-        background: rgba($color, 0.5);
-      }
-      &.expired {
-        background: $color-alert;
-      }
+    }
+    &.listed {
+      background: $color;
+    }
+    &.escrow {
+      background: $color-warning;
+    }
+    &.shipped {
+      background: darken($color, 15%);
+    }
+    &.sold {
+      background: $bg-shadow;
+    }
+    &.expired {
+      background: $color-alert;
     }
   }
 }
