@@ -53,13 +53,13 @@ export class StateService {
   }
 
   observe(prop: string, subkey?: string) {
-    let observable = this._getObservablePair(prop).observable.distinctUntilChanged();
+    let observable = this._getObservablePair(prop).observable;
     if (subkey) {
       // TODO: maybe check if subkey exists?
       // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
-      return observable.map(key => key[subkey]);
+      observable = observable.map(key => key[subkey]);
     }
-    return observable;
+    return observable.distinctUntilChanged();
   }
 
 
