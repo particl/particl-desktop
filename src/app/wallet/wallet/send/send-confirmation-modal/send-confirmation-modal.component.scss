@@ -57,6 +57,7 @@
     font-size: 17px;
   }
   & > .fiat {
+    display: none;
     color: $text-muted;
   }
 }
@@ -90,6 +91,7 @@
 }
 
 .fee-info {
+  display: none;
   // FIXME: switch to: @extend %help-text;
   @extend %disable-select;
   color: $text-muted;
