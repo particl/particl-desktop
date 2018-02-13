@@ -18,7 +18,7 @@ exports.init = function () {
 
   notified = false;
   // whitelist character for regex (node-notifier executes these as arguments to command line, better sanitize ourselves).
-  whitelist = new RegExp(/[^A-Za-z0-9!.?]/);
+  whitelist = new RegExp(/[^A-Za-z0-9!\.\?]/);
 
   if ( title.match(whitelist) || desc.match(whitelist) ) {
     log.error( `notification regex sanity check failed for title=${title} desc=${desc}`);
