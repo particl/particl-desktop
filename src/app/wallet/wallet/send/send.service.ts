@@ -1,140 +1,117 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger'
 
 import { RpcService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
+/* fix wallet */
+import { MatDialog } from '@angular/material';
+import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
+
+/*
+  Note: due to upcoming multiwallet, we should never ever store addresses in the GUI for transaction purposes.
+  e.g the stealth address for balance transfer has to be fetched _every_ time a transaction is executed.
+*/
 
 @Injectable()
 export class SendService {
 
-  // success alert box
-  private address: string = '';
-  private amount: number = 0;
-
-  // stealth address used for all balance transfers
-  private defaultStealthAddressForBalanceTransfer: string;
-  public isSubstractfeefromamount: boolean = false;
-
   log: any = Log.create('send.service');
 
-
-  /*
-
-    RPC LOGIC
-
-  */
-
   constructor(public _rpc: RpcService,
-              private flashNotification: SnackbarService) {
-    // this._rpc.oldCall(this, 'liststealthaddresses', null, this.rpc_listDefaultAddress_success);
-    this._rpc.call('liststealthaddresses', null)
-      .subscribe(response => {
-        this.rpc_listDefaultAddress_success(response)
-      },
-      error => {
-        this.log.er('errr');
-      });
+              private flashNotification: SnackbarService,
+              private dialog: MatDialog) {
+
   }
 
-  rpc_listDefaultAddress_success(json: Object) {
-    if (json[0] !== undefined && json[0]['Stealth Addresses'] !== undefined && json[0]['Stealth Addresses'][0] !== undefined) {
-      this.rpc_setDefaultAddress_success(json[0]['Stealth Addresses'][0]['Address']);
-    } else {
-      // this._rpc.oldCall(this, 'getnewstealthaddress', ['balance transfer'], this.rpc_setDefaultAddress_success);
-      this._rpc.call('getnewstealthaddress', ['balance transfer'])
-        .subscribe(
-          (response: any) => {
-            this.rpc_setDefaultAddress_success(response)
-        },
-        error => {
-          this.log.er('rpc_listDefaultAddress_success: liststealthaddresses failed');
-        });
-    }
-  }
-
-  rpc_setDefaultAddress_success (json: any) {
-    this.defaultStealthAddressForBalanceTransfer = json;
-    this.log.d(`rpc_setDefaultAddress_success, stealth address: ${json}`);
-  }
-
-  public getBalanceTransferAddress(): string {
-    return this.defaultStealthAddressForBalanceTransfer;
-  }
-
-  /*
-  * Sends a transactions
-  */
-  sendTransaction(
+  /* Sends a transaction */
+  public sendTransaction(
     input: string, output: string, address: string,
     amount: number, comment: string, narration: string,
-    ringsize: number, numsignatures: number) {
-
-    this.resetTransactionDetails();
+    ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
 
     const rpcCall: string = this.getSendRPCCall(input, output);
     const anon: boolean = this.isAnon(rpcCall);
     const params: Array<any> = this.getSendParams(
       anon, address, amount, comment,
-      narration, ringsize, numsignatures);
+      narration, ringsize, numsignatures, substractfeefromamount);
 
-    this.setTransactionDetails(address, amount);
-
-    // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
     this._rpc.call('send' + rpcCall, params)
       .subscribe(
-        success => this.rpc_send_success(success),
-        error => this.rpc_send_failed(error));
+      success => this.rpc_send_success(success, address, amount),
+      error => this.rpc_send_failed(error.message, address, amount));
   }
 
-  transferBalance(
-    input: string, output: string, address: string,
-    amount: number, ringsize: number, numsignatures: number) {
-    this.resetTransactionDetails();
-    // comment is internal, narration is stored on blockchain
-    const rpcCall: string = this.getSendRPCCall(input, output);
-    const anon: boolean = this.isAnon(rpcCall);
+  public transferBalance(
+    input: string, output: string,
+    amount: number, ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
 
-    this.log.d('transferBalance, sx' + this.defaultStealthAddressForBalanceTransfer);
-    if (!!address) {
-      address = this.defaultStealthAddressForBalanceTransfer;
-    }
+    // get default stealth address
+    this.getDefaultStealthAddress().take(1).subscribe(
+      (stealthAddress: string) => {
+        this.log.d('got transferBalance, sx' + stealthAddress);
 
-    const params: Array<any> = this.getSendParams(
-      anon, this.defaultStealthAddressForBalanceTransfer,
-      amount, '', '', ringsize, numsignatures);
+        // comment is internal, narration is stored on blockchain
+        const rpcCall: string = this.getSendRPCCall(input, output);
+        const anon: boolean = this.isAnon(rpcCall);
+        const params: Array<any> = this.getSendParams(
+          anon, stealthAddress,
+          amount, '', '', ringsize, numsignatures, substractfeefromamount);
 
-    this.setTransactionDetails(this.defaultStealthAddressForBalanceTransfer, amount);
+        this._rpc.call('send' + rpcCall, params).subscribe(
+          success => this.rpc_send_success(success, stealthAddress, amount),
+          error => this.rpc_send_failed(error.message, stealthAddress, amount));
+      },
+      error => this.rpc_send_failed('Failed to get stealth address')
+    );
 
-    // this._rpc.oldCall(this, 'send' + rpcCall, params, this.rpc_send_success, this.rpc_send_failed);
-    this._rpc.call('send' + rpcCall, params).subscribe(
-      success => this.rpc_send_success(success),
-      error => this.rpc_send_failed(error));
   }
 
+  /* Retrieve the first stealth address */
+  private getDefaultStealthAddress(): Observable<string> {
+    return this._rpc.call('liststealthaddresses', null).map(
+      list => list[0]['Stealth Addresses'][0]['Address']);
+  }
 
-  rpc_send_success(json: any) {
+  rpc_send_success(json: any, address: string, amount: number) {
     this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
 
     // Truncate the address to 16 characters only
-    const trimAddress = this.address.substring(0, 16) + '...';
+    const trimAddress = address.substring(0, 16) + '...';
     const txsId = json.substring(0, 45) + '...';
-    this.flashNotification.open(`Succesfully sent ${this.amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
+    this.flashNotification.open(`Succesfully sent ${amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
   }
 
-  rpc_send_failed(json: any) {
-    this.flashNotification.open(`Transaction Failed ${json.message}`, 'err');
-    this.log.er('rpc_send_failed, failed to execute transactions!');
-    this.log.er(json);
+  rpc_send_failed(message: string, address?: string, amount?: number) {
+    this.flashNotification.open(`Transaction Failed ${message}`, 'err');
+    this.log.er('rpc_send_failed, failed to execute transaction!');
+    this.log.er(message);
+
+    /* Detect bug in older wallets with Blind inputs */
+    // AddBlindedInputs: GetBlind failed for
+    if (message.search('GetBlind failed for') !== -1) {
+      this.fixWallet();
+    }
+  }
+
+  /*
+    AddBlindedInput issue, open modal to fix it.
+  */
+  fixWallet(): void {
+    const dialogRef = this.dialog.open(FixWalletModalComponent);
+
+    dialogRef.afterClosed().subscribe(
+      (result) => {
+        this.log.d('FixWalletModal closing');
+      }
+    );
   }
 
 
   /*
     Helper functions for RPC
   */
-
-
-  // TODO: blind?
 
   /**
     * Returns a part of the method of the RPC call required to execute the transaction
@@ -152,7 +129,7 @@ export class SendService {
     } else if (input === 'blind_balance' && output === 'blind_balance') {
       return 'blindtoblind';
 
-    // balance transfers (internal)
+      // balance transfers (internal)
     } else if (input === 'anon_balance' && output === 'balance') {
       return 'anontopart';
     } else if (input === 'balance' && output === 'anon_balance') {
@@ -174,8 +151,8 @@ export class SendService {
   /** A helper function that transforms the transaction details to an array with the right params (for passing to the RPC service). */
   getSendParams(
     anon: boolean, address: string, amount: number, comment: string,
-    narration: string, ringsize: number, numsignatures: number) {
-    const substractfeefromamount: boolean = this.isSubstractfeefromamount;
+    narration: string, ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
+
     const params: Array<any> = [address, amount, '', '', substractfeefromamount];
 
     params.push(!!narration ? narration : '');
@@ -192,8 +169,8 @@ export class SendService {
   /**
   * Returns true if the RPC method is anonto...
   */
-  isAnon(input: string) {
-    return (input === 'anontopart' || input === 'anontoanon' || input === 'anontoblind' )
+  isAnon(input: string): boolean {
+    return ['anontopart', 'anontoanon', 'anontoblind'].includes(input)
   }
 
   /**
@@ -207,31 +184,5 @@ export class SendService {
     } else if (ringsize === 10) {
       return 4;
     }
-  }
-
-
-  /*
-
-    UI LOGIC
-
-  */
-
-
-    /*
-      We need to display a success modal when a transaction went through,
-      if succesful it needs to have the address and amount.
-
-      gettransaction is broke, it returns an error for blind transactions given the txid.
-      We're just storing it here and resetting it on every tx. (or second option is grabbing it from the component UI).
-    */
-
-  setTransactionDetails(address: string, amount: number) {
-    this.address = address;
-    this.amount = amount;
-  }
-
-  resetTransactionDetails() {
-    this.address = '';
-    this.amount = 0;
   }
 }

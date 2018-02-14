@@ -1,5 +1,244 @@
-<p>
-  sell works!
-</p>
+<app-header class="disable-select">
+  <mat-tab-group (selectChange)="changeTab($event.index)">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
+        Listings
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+        Orders
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Sell item
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</app-header>
 
-<button (click)="addItem()">Go to add item</button>
+
+<div fxLayout="row" fxLayoutGap="30px" class="container-block">
+
+  <!-- Listings > Filter -->
+  <div class="filter" fxFlex="0 0 230px" *ngIf="tabLabels[selectedTab] == 'listings'">
+
+    <div class="sell-item">
+      <button mat-raised-button color="primary" (click)="addItem()" class="full-width" matTooltip="Enter a new item for sale" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Add new listing
+      </button>
+    </div>
+
+    <div class="section search-sorting">
+      <div class="subtitle">Search &amp; sort</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+          <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search" (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; filter()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"></mat-icon>
+        </mat-form-field>
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+          <mat-select placeholder="Sort listings">
+            <mat-option *ngFor="let sorting of listing_sortings" [value]="sorting.value">
+              {{ sorting.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+    </div>
+
+    <button mat-button color="warn" class="clear-filters" (click)="clear()">
+      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter -->
+
+  <!-- Orders > Filter -->
+  <div class="filter" fxFlex="0 0 230px" *ngIf="tabLabels[selectedTab] == 'orders'">
+  
+    <div class="section search-sorting">
+      <div class="subtitle first">Search &amp; sort</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search" (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; filter()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"></mat-icon>
+        </mat-form-field>
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+          <mat-select placeholder="Sort orders">
+            <mat-option *ngFor="let sorting of order_sortings" [value]="sorting.value">
+              {{ sorting.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+    </div>
+
+    <div class="section filter-by-type">
+      <div class="subtitle">Filter by status</div>
+      <mat-card class="filter-card">
+        <mat-radio-group class="radio-group block-radio">
+          <mat-radio-button class="filter-option" *ngFor="let status of statuses" value="{{ status.value }}">
+            {{ status.title }}
+            <!-- FIXME: show amount (below) only if higher than 1 -->
+            <span class="amount">{{ status.amount }}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div>
+
+    <button mat-button color="warn" class="clear-filters" (click)="clear()">
+      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter -->
+
+
+  <!-- Listings > list -->
+  <div class="listings list section" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'listings'">
+    
+    <!-- FIXME: if no listings found -->
+    <!--div class="no-results">
+      You don't have any market listings yet
+    </div-->
+    
+    <mat-card class="listing item" fxLayout="row" fxLayoutAlign="center center">
+      <div class="photo" fxFlex="0 0 125px">
+        <img src="./assets/images/placeholder_1-1.jpg">
+      </div>
+      <div class="meta" fxFlex="1 1 100%">
+        <div class="name">Here comes product name which is a bit longer than usual</div>
+        <div class="category">Category, Electronics</div>
+        <div class="date"><span>Added</span> 2018-02-08 &bull; <span>Expires</span> 2018-03-15</div>
+      </div>
+      <table class="prices" fxFlex="0 0 220px">
+        <tr>
+          <th>Quantity</th>
+          <td>17</td>
+        </tr>
+        <tr>
+          <th>Price</th>
+          <td>23.<small>1285</small> PART</td>
+        </tr>
+        <tr>
+          <th>Shipping</th>
+          <td>0.<small>489</small> PART</td>
+        </tr>
+      </table>
+      <div class="action-buttons" fxFlex="0 0 30px">
+        <div class="icons" fxLayout="column" fxLayoutGap="13px" fxLayoutAlign="space-around center">
+          <mat-icon fontSet="partIcon" fontIcon="part-search" matTooltip="Show orders" matTooltipPosition="before"></mat-icon>
+          <mat-icon fontSet="partIcon" fontIcon="part-pen-1" matTooltip="Edit listing" matTooltipPosition="before"></mat-icon>
+          <mat-icon fontSet="partIcon" fontIcon="part-cross" color="warn" matTooltip="Delete listing" matTooltipPosition="before"></mat-icon>
+        </div>
+      </div>
+    </mat-card>
+        
+  </div><!-- .listings-list -->
+
+
+  <!-- Orders > list -->
+  <div class="orders list section" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'orders'">
+    
+    <!-- FIXME: if no orders found (needs better wording?) -->
+    <!--div class="no-results">
+      You don't have any market orders yet
+    </div-->
+
+    <mat-expansion-panel class="order item no-padding">
+      <mat-expansion-panel-header class="header" fxLayout="row" fxLayoutAlign="center center">
+        <div class="photo" fxFlex="0 0 70px">
+          <img src="./assets/images/placeholder_1-1.jpg">
+        </div>
+        <div class="meta" fxFlex="1 1 100%">
+          <div class="name">Here comes product name which is a bit longer than usual</div>
+          <div class="date">
+            <span class="hash" matTooltip="Order hash">AGR</span>
+            Added 2018-02-19 &bull; Updated 2018-02-13
+          </div>
+        </div>
+        <div class="action-buttons" fxFlex="0 0 100px">
+          <div class="status pending">Pending</div>
+        </div>
+      </mat-expansion-panel-header>
+
+      <div class="detail" fxLayout="row" fxLayoutGap="30px">
+        <div class="buyer-info" fxFlex="27%">
+          <div class="shipping">
+            <div class="title">Shipping address</div>
+            <p>
+              Mr. Longname Buyer<br>
+              Particl Avenue X/144<br>
+              5RFG4 United Cryptocity<br>
+              Universe
+            </p>
+          </div>
+        </div><!-- .buyer-info -->
+        <div class="prices" fxFlex="35%">
+          <div class="title">Price & Qty</div>
+          <table>
+            <tr>
+              <th>Quantity</th>
+              <td>2</td>
+            </tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Total price</th>
+              <td>46.<small>257</small> PART</td>
+            </tr>
+          </table>
+        </div>
+        <div class="order-history" fxFlex="32%">
+          <div class="title">Order history</div>
+          <table>
+            <tr><td class="status shipped">Shipped</td><td class="date">2018-02-13</td></tr>
+            <tr><td class="status escrow">In escrow</td><td class="date">2018-02-11</td></tr>
+            <tr><td class="status bidding">Bidding</td><td class="date">2018-02-10</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+        <div class="left">
+          <button mat-button color="warn" matTooltip="Reject & cancel order" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+          </button>
+          <button mat-button matTooltip="Edit order" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+            Edit
+          </button>
+          <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
+          <button mat-button matTooltip="View payment ID" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+          </button>
+          <!-- TODO: shortcut to e2e message to buyer -->
+          <button mat-button class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
+            Contact buyer
+          </button>
+        </div>
+        <div class="right">
+          <!-- TODO: after clicking, show confirmation modal with more info: -->
+          <button mat-raised-button color="primary">
+            <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+            Mark as shipped
+          </button>
+        </div>
+      </mat-action-row>
+    </mat-expansion-panel><!-- .order -->
+      
+      
+        
+  </div><!-- .listings-list -->
+
+</div><!-- .container-block -->

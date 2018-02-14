@@ -28,13 +28,20 @@
   border-bottom: 1px solid darken($bg-black, 5%);
   box-shadow: 0 1px 0 lighten($bg-black, 5%) !important;
   background: $bg-black;
+  margin: 8px 0 0 !important;
   // submenu toggle
   .mat-expansion-panel-header {
+    @extend %tfx;
     font-family: $font;
     font-size: 11.5px;
     color: lighten($text-muted, 5%);
     text-transform: uppercase;
+    min-height: 32px !important;
+    max-height: 32px !important;
     padding: 0 32px;
+    &:hover {
+      color: lighten($text-muted, 20%);
+    }
   }
 }
 
@@ -79,14 +86,18 @@ a.sidebar-item-link {
 // ------ ERROR & INFO MESSAGES ------ //
 
 .notification {
+  margin-bottom: 6px;
   .sidebar-item {
+    margin: 4px 0;
     .icon {
       margin: 0 14px 0 0;
     }
     .text {
       color: white;
       font-size: 11px;
+      line-height: 1.5;
       padding: 0;
+      display: inline-block;
     }
     &:hover {
       background: none;

@@ -10,7 +10,7 @@ import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../wallet/shared/util/utils';
-import { RpcService } from '../../../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 
@@ -23,12 +23,17 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
   @ViewChild('debug') private commandContainer: ElementRef;
   log: any = Log.create('app-console-modal');
+
   public commandList: Command[] = [];
+  public commandHistory: Array<string> = [];
   public command: string;
   public currentTime: string;
   public disableScrollDown: boolean = false;
+  public waitingForRPC: boolean = true;
+  public historyCount: number = 0;
 
   constructor(private _rpc: RpcService,
+              private _rpcState: RpcStateService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
   }
@@ -42,17 +47,12 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   rpcCall() {
-    const params = this.command.split(' ');
 
-    // TODO: Remove next release
-    const daemonVersion = this._rpc.state.get('subversion');
-    if (daemonVersion === '/Satoshi:0.15.1.1/') {
-        this._rpc.call(params.shift(), params)
-          .subscribe(
-            response => this.formatSuccessResponse(response),
-            error => this.formatErrorResponse(error));
-        return;
-    }
+    this.waitingForRPC = false;
+    this.commandHistory.push(this.command);
+    this.historyCount = this.commandHistory.length;
+    const params = this.command.trim().split(' ')
+                    .filter(cmd => cmd.trim() !== '');
 
     if (params.length > 0) {
         params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
@@ -64,6 +64,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   formatSuccessResponse(response: any) {
+    this.waitingForRPC = true;
     this.commandList.push(new Command(1, this.command, this.getDateFormat()),
       new Command(2, response, this.getDateFormat(), 200));
     this.command = '';
@@ -71,6 +72,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   formatErrorResponse(error: any) {
+    this.waitingForRPC = true;
     if (error.code === -1) {
       this.commandList.push(new Command(1, this.command, this.getDateFormat()),
         new Command(2, error.message, this.getDateFormat(), -1));
@@ -111,22 +113,39 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     const element = this.commandContainer.nativeElement
     const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight
     if (this.disableScrollDown && atBottom) {
-        this.disableScrollDown = false
+      this.disableScrollDown = false
     } else {
-        this.disableScrollDown = true
+      this.disableScrollDown = true
     }
   }
 
+  manageCommandHistory(code: number) {
+    if (code === 38) {
+      if (this.historyCount > 0) {
+        this.historyCount--;
+      }
+    } else {
+      if (this.historyCount <= this.commandHistory.length) {
+        this.historyCount++;
+      }
+    }
+    this.command = this.commandHistory[this.historyCount];
+  }
 
   // capture the enter button
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
-    if (event.keyCode === 13) {
+    if ([13, 38, 40].includes(event.keyCode)) {
+      event.preventDefault();
+    }
+    if (event.keyCode === 13 && this.command && this.waitingForRPC) {
       this.disableScrollDown = false;
       this.rpcCall();
-    }
-    if (event.ctrlKey && event.keyCode === 76) {
+    } else if (event.ctrlKey && event.keyCode === 76) {
       this.clearCommands();
+      // Up and Down arrow KeyPress to manage command history
+    } else if ([38, 40].includes(event.keyCode) && this.commandHistory.length > 0) {
+      this.manageCommandHistory(event.keyCode);
     }
   }
 

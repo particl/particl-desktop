@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash'
 import { Transaction } from './transaction.model';
 
-import { RpcService } from '../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../core/core.module';
 
 @Injectable()
 export class TransactionService implements OnDestroy {
@@ -39,7 +39,10 @@ export class TransactionService implements OnDestroy {
   MAX_TXS_PER_PAGE: number = 10;
   PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50, 100, 250];
 
-  constructor(private rpc: RpcService) {
+  constructor(
+    private rpc: RpcService,
+    private rpcState: RpcStateService
+  ) {
   }
 
   ngOnDestroy() {
@@ -69,7 +72,7 @@ export class TransactionService implements OnDestroy {
 
     // It doesn't get called sometimes ?
     // this.rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/)).subscribe(block =>  {
-    this.rpc.state.observe('blocks')
+    this.rpcState.observe('getblockchaininfo', 'blocks')
       .takeWhile(() => !this.destroyed)
       .distinctUntilChanged() // only update when blocks changes
       .skip(1) // skip the first one (shareReplay)
@@ -79,7 +82,7 @@ export class TransactionService implements OnDestroy {
         this.loadTransactions();
       });
 
-    this.rpc.state.observe('txcount')
+    this.rpcState.observe('getwalletinfo', 'txcount')
       .takeWhile(() => !this.destroyed)
       .distinctUntilChanged() // only update when txcount changes
       .skip(1) // skip the first one (shareReplay)
@@ -90,7 +93,7 @@ export class TransactionService implements OnDestroy {
 
 
     /* check if testnet -> block explorer url */
-    this.rpc.state.observe('chain').take(1)
+    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
   }
 

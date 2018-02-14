@@ -45,6 +45,9 @@ button,
     padding: 0 12px;
     font-size: 12px;
   }
+  &.full-width {
+    width: 100%;
+  }
 }
 
 .actions {
@@ -116,6 +119,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   box-shadow: none !important;
   border-bottom: 1px solid $bg-shadow;
   .mat-expansion-panel-header {
+    font-family: $font;
     font-size: 13px;
     &:hover {
       background: inherit !important; // disable darker bg on hover by default
@@ -123,6 +127,23 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
     .mat-expansion-panel-header-title {
       text-transform: uppercase;
       font-family: $font;
+    }
+  }
+  .mat-expansion-indicator {
+    position: relative;
+    top: -4px;
+    transform: none !important;
+    &::after {
+      transition: none !important;
+    }
+  }
+  &.mat-expanded { // while expanded..
+    .mat-expansion-indicator {
+      top: 0;
+      &::after {
+        position: relative;
+        transform: rotate(-135deg);
+      }
     }
   }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
@@ -309,7 +330,8 @@ input {
 .mat-radio-group {
   // send: full-width clickable radios
   &.block-radio {
-    .mat-radio-button .mat-radio-label {
+    .mat-radio-button .mat-radio-label,
+    .mat-radio-button .mat-radio-label-content {
       width: 100%;
     }
   }
