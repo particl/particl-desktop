@@ -13,7 +13,10 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
+
 import { AddressHelper } from '../../../core/util/utils';
+import { TransactionBuilder } from './transaction-builder.model';
+
 
 @Component({
   selector: 'app-send',
@@ -34,18 +37,7 @@ export class SendComponent implements OnInit {
   advanced: boolean = false;
   progress: number = 10;
   // TODO: Create proper Interface / type
-  send: any = {
-    input: 'balance',
-    output: 'blind_balance',
-    toAddress: '',
-    toLabel: '',
-    validAddress: undefined,
-    validAmount: undefined,
-    isMine: undefined,
-    currency: 'part',
-    privacy: 8,
-    subtractFeeFromAmount: false
-  };
+  public send: TransactionBuilder;
 
   constructor(
     private sendService: SendService,
@@ -57,6 +49,19 @@ export class SendComponent implements OnInit {
   ) {
     this.progress = 50;
     this.addressHelper = new AddressHelper();
+
+    this.setFormDefaultValue();
+  }
+
+  setFormDefaultValue() {
+    this.send = new TransactionBuilder();
+
+    this.send.input = 'balance';
+    this.send.output = 'blind_balance';
+    this.send.currency = 'part';
+    this.send.privacy = 8;
+    this.send.subtractFeeFromAmount = false;
+    this.send.numsignatures = 1;
   }
 
   ngOnInit() {
@@ -70,7 +75,7 @@ export class SendComponent implements OnInit {
     this.send.input = 'balance';
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
-      this.send.output = 'blind_balance'
+      this.send.output = 'blind_balance';
       this.verifyAddress();
     }
     this.updateAmount();
@@ -237,18 +242,12 @@ export class SendComponent implements OnInit {
       // edit label of address
       this.addLabelToAddress();
 
-      this.sendService.sendTransaction(
-        this.send.input, this.send.output,
-        this.send.toAddress, this.send.amount,
-        this.send.note, this.send.note,
-        this.send.privacy, 1, this.send.subtractFeeFromAmount);
+      this.sendService.sendTransaction(this.send);
     } else {
 
-      this.sendService.transferBalance(
-        this.send.input, this.send.output,
-        this.send.amount, this.send.privacy, 1, this.send.subtractFeeFromAmount);
+      this.sendService.transferBalance(this.send);
     }
-    this.clear();
+    this.setFormDefaultValue();
   }
   /*
     AddressLookup Modal + set details
