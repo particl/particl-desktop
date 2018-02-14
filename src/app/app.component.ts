@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
       .registerFontClassAlias('faIcon', 'fa');
 
     // Muon extras:
+    chrome.readClipboard = chrome.remote.clipboard.readText;
     delete chrome.remote;
   }
 

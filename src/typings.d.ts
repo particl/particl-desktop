@@ -23,6 +23,7 @@ interface Chrome {
     removeAllListeners: (channel?: string) => void;
     listenerCount: (channel?: string) => number;
   },
-  remote: any
+  remote: any,
+  readClipboard: () => any
 }
 
