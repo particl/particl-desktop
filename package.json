@@ -41,7 +41,7 @@
   },
   "productName": "Particl Desktop",
   "build": {
-    "electronVersion": "1.7.10",
+    "electronVersion": "1.7.12",
     "appId": "io.particl.desktop",
     "directories": {
       "buildResources": "resources",
