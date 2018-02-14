@@ -52,6 +52,19 @@
       </mat-card>
     </div>
 
+    <div class="section filter-by-type">
+      <div class="subtitle">Filter by status</div>
+      <mat-card class="filter-card">
+        <mat-radio-group class="radio-group block-radio">
+          <mat-radio-button class="filter-option" *ngFor="let status of listing_statuses" value="{{ status.value }}">
+            {{ status.title }}
+            <!-- FIXME: show amount (below) only if higher than 1 -->
+            <span class="amount">{{ status.amount }}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div><!-- .filter-by-type -->
+
     <button mat-button color="warn" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
       Clear all filters
@@ -84,14 +97,14 @@
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group block-radio">
-          <mat-radio-button class="filter-option" *ngFor="let status of statuses" value="{{ status.value }}">
+          <mat-radio-button class="filter-option" *ngFor="let status of order_statuses" value="{{ status.value }}">
             {{ status.title }}
             <!-- FIXME: show amount (below) only if higher than 1 -->
             <span class="amount">{{ status.amount }}</span>
           </mat-radio-button>
         </mat-radio-group>
       </mat-card>
-    </div>
+    </div><!-- .filter-by-type -->
 
     <button mat-button color="warn" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
@@ -108,38 +121,76 @@
     <!--div class="no-results">
       You don't have any market listings yet
     </div-->
-    
-    <mat-card class="listing item" fxLayout="row" fxLayoutAlign="center center">
-      <div class="photo" fxFlex="0 0 125px">
-        <img src="./assets/images/placeholder_1-1.jpg">
+    <!--div class="subtitle first">Published listings</div-->
+
+    <mat-expansion-panel class="listing item no-padding">
+      <mat-expansion-panel-header class="header">
+        <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="photo" fxFlex="0 0 110px">
+            <img src="./assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="meta" fxFlex="1 1 100%">
+            <div class="name">A bit longer product name</div>
+            <div class="categories">Electronics, DIY</div>
+            <div class="date">
+              <!--span class="hash" matTooltip="Order hash">AGR</span-->
+              Added 2018-02-19 &bull; Expires 2018-02-13
+            </div>
+          </div>
+          <div class="status pending" fxFlex="0 0 120px"><span>&bull;</span>Pending</div>
+        </div>
+      </mat-expansion-panel-header>
+
+      <div class="status-info">
+        <!-- Unpublished: -->
+        <!--p>Inactive, unpublished listing template &ndash; used to tweak your listing before publishing (or after you take down your active listings later)</p-->
+        <!-- Pending: -->
+        <!--p class="TO_DO">Listing successfully created and paid, waiting to be published on the market (usually needs XX confirmations before going live)</p-->
+        <!-- Listed: -->
+        <p>Active, published listing visible on the market &ndash; available for purchase</p>
+        <!-- Expired: -->
+        <!--p class="TO_DO">Expired, inactive listing &ndash; can be relisted on the market again after payment of listing fee</p-->
       </div>
-      <div class="meta" fxFlex="1 1 100%">
-        <div class="name">Here comes product name which is a bit longer than usual</div>
-        <div class="category">Category, Electronics</div>
-        <div class="date"><span>Added</span> 2018-02-08 &bull; <span>Expires</span> 2018-03-15</div>
-      </div>
-      <table class="prices" fxFlex="0 0 220px">
-        <tr>
-          <th>Quantity</th>
-          <td>17</td>
-        </tr>
-        <tr>
-          <th>Price</th>
-          <td>23.<small>1285</small> PART</td>
-        </tr>
-        <tr>
-          <th>Shipping</th>
-          <td>0.<small>489</small> PART</td>
-        </tr>
-      </table>
-      <div class="action-buttons" fxFlex="0 0 30px">
-        <div class="icons" fxLayout="column" fxLayoutGap="13px" fxLayoutAlign="space-around center">
-          <mat-icon fontSet="partIcon" fontIcon="part-search" matTooltip="Show orders" matTooltipPosition="before"></mat-icon>
-          <mat-icon fontSet="partIcon" fontIcon="part-pen-1" matTooltip="Edit listing" matTooltipPosition="before"></mat-icon>
-          <mat-icon fontSet="partIcon" fontIcon="part-cross" color="warn" matTooltip="Delete listing" matTooltipPosition="before"></mat-icon>
+      <div class="detail" fxLayout="row" fxLayoutGap="30px">
+        <div class="description" fxFlex="65%">
+          <div class="title">Listing description</div>
+          <p>
+            Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
+          </p>
+        </div><!-- .description -->
+        <div class="info" fxFlex="35%">
+          <div class="title">Price & Qty</div>
+          <table class="prices">
+            <tr><th>Quantity</th><td>2</td></tr>
+            <tr><th>Price per item</th><td>23.<small>1285</small> PART</td></tr>
+            <tr><th>Total price</th><td>46.<small>257</small> PART</td></tr>
+          </table>
         </div>
       </div>
-    </mat-card>
+
+      <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+        <div class="left">
+          <button mat-button color="warn" matTooltip="Delete listing" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+          </button>
+          <button mat-button matTooltip="Clone listing" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+          </button>
+          <button mat-button matTooltip="Edit listing details" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+            Edit listing
+          </button>
+        </div>
+        <div class="right">
+          <button mat-raised-button color="primary">
+            <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+            Main action
+          </button>
+        </div>
+      </mat-action-row>
+    </mat-expansion-panel><!-- .listing -->
+
+    <!--div class="subtitle">Unpublished listings (templates)</div-->
         
   </div><!-- .listings-list -->
 
@@ -153,57 +204,58 @@
     </div-->
 
     <mat-expansion-panel class="order item no-padding">
-      <mat-expansion-panel-header class="header" fxLayout="row" fxLayoutAlign="center center">
-        <div class="photo" fxFlex="0 0 70px">
-          <img src="./assets/images/placeholder_1-1.jpg">
-        </div>
-        <div class="meta" fxFlex="1 1 100%">
-          <div class="name">Here comes product name which is a bit longer than usual</div>
-          <div class="date">
-            <span class="hash" matTooltip="Order hash">AGR</span>
-            Added 2018-02-19 &bull; Updated 2018-02-13
+      <mat-expansion-panel-header class="header">
+        <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="photo" fxFlex="0 0 80px">
+            <img src="./assets/images/placeholder_1-1.jpg">
           </div>
-        </div>
-        <div class="action-buttons" fxFlex="0 0 100px">
-          <div class="status pending">Pending</div>
+          <div class="meta" fxFlex="1 1 100%">
+            <div class="name">A bit longer product name</div>
+            <div class="date">
+              <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
+              <span class="hash" matTooltip="Order hash" style="background: navy;">AGR</span>
+              Added 2018-02-19 &bull; Updated 2018-02-13
+            </div>
+          </div>
+          <div class="status pending" fxFlex="0 0 120px"><span>&bull;</span>In escrow</div>
         </div>
       </mat-expansion-panel-header>
 
+      <div class="status-info">
+        <!-- Bidding: -->
+        <!--p>Buyer wants to purchase this item &ndash; Approve or reject this order to continue</p-->
+        <!-- Escrow: -->
+        <p>Buyer's funds are locked in escrow, order is ready to ship &ndash; when sent, mark order as shipped and await its delivery</p>
+        <!-- Shipped: -->
+        <!--p>Order sent to buyer, waiting for buyer to confirm the delivery</p-->
+        <!-- Sold: -->
+        <!--p>Order delivery confirmed by buyer &ndash; awaiting Buyer's feedback</p-->
+      </div>
       <div class="detail" fxLayout="row" fxLayoutGap="30px">
         <div class="buyer-info" fxFlex="27%">
-          <div class="shipping">
-            <div class="title">Shipping address</div>
-            <p>
-              Mr. Longname Buyer<br>
-              Particl Avenue X/144<br>
-              5RFG4 United Cryptocity<br>
-              Universe
-            </p>
-          </div>
+          <div class="title">Shipping address</div>
+          <p>
+            Mr. Longname Buyer<br>
+            Particl Avenue X/144<br>
+            5RFG4 United Cryptocity<br>
+            Universe
+          </p>
         </div><!-- .buyer-info -->
-        <div class="prices" fxFlex="35%">
+        <div class="info" fxFlex="35%">
           <div class="title">Price & Qty</div>
-          <table>
-            <tr>
-              <th>Quantity</th>
-              <td>2</td>
-            </tr>
-            <tr>
-              <th>Price per item</th>
-              <td>23.<small>1285</small> PART</td>
-            </tr>
-            <tr>
-              <th>Total price</th>
-              <td>46.<small>257</small> PART</td>
-            </tr>
+          <table class="prices">
+            <tr><th>Quantity</th><td>2</td></tr>
+            <tr><th>Price per item</th><td>23.<small>1285</small> PART</td></tr>
+            <tr><th>Total price</th><td>46.<small>257</small> PART</td></tr>
           </table>
         </div>
         <div class="order-history" fxFlex="32%">
           <div class="title">Order history</div>
           <table>
-            <tr><td class="status shipped">Shipped</td><td class="date">2018-02-13</td></tr>
-            <tr><td class="status escrow">In escrow</td><td class="date">2018-02-11</td></tr>
-            <tr><td class="status bidding">Bidding</td><td class="date">2018-02-10</td></tr>
+            <!--tr><td class="date">2018-02-24</td><td class="status shipped">Sold</td></tr-->
+            <!--tr><td class="date">2018-02-14</td><td class="status shipped">Shipped</td></tr-->
+            <tr><td class="date">2018-02-11</td><td class="status escrow">In escrow</td></tr>
+            <tr><td class="date">2018-02-10</td><td class="status bidding">Bidding</td></tr>
           </table>
         </div>
       </div>
