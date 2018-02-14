@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { NotificationService } from 'app/core/notification/notification.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
 @Injectable()
 export class NewTxNotifierService implements OnDestroy {
@@ -16,6 +17,7 @@ export class NewTxNotifierService implements OnDestroy {
 
   constructor(
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private _notification: NotificationService
   ) {
 

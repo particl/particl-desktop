@@ -13,7 +13,7 @@ const Observable = require('rxjs/Observable').Observable;
 exports.init = function () {
     var eNotify = require('electron-notify');
     eNotify.setConfig({
-        appIcon: path.join(__dirname, '../../src/assets/icons/notification.png'),
+        appIcon: '../../src/assets/icons/notification.png',
         displayTime: 3000
     });
     rxIpc.registerListener('notification', function (title, desc, params) {

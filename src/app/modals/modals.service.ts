@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
-import { RpcService, BlockStatusService } from '../core/core.module';
+import { RpcService, RpcStateService, BlockStatusService } from '../core/core.module';
 
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
@@ -46,6 +46,7 @@ export class ModalsService implements OnDestroy {
 
   constructor (
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private _blockStatusService: BlockStatusService,
     private _dialog: MatDialog
   ) {
@@ -60,7 +61,7 @@ export class ModalsService implements OnDestroy {
     this.openInitialCreateWallet();
 
     /* Hook daemon errors -> open daemon modal */
-    this._rpc.errorsStateCall.asObservable()
+    this._rpcState.errorsStateCall.asObservable()
     .subscribe(
       status => this.wasAlreadyOpen('daemon') && this.close(),
       error => {
@@ -156,7 +157,7 @@ export class ModalsService implements OnDestroy {
     * Open the Createwallet modal if wallet is not initialized
     */
   openInitialCreateWallet(): void {
-    this._rpc.state.observe('ui:walletInitialized')
+    this._rpcState.observe('ui:walletInitialized')
       .takeWhile(() => !this.destroyed)
       .subscribe(
         state => {
