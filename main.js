@@ -4,6 +4,7 @@ const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const Notification  = electron.Notification;
 const path          = require('path');
+const fs            = require('fs');
 const url           = require('url');
 const platform      = require('os').platform();
 const rxIpc         = require('rx-ipc-electron/lib/main').default;
