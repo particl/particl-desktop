@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material';
 
 import { MaterialModule } from '../material/material.module';
+import { FocusElementDirective } from './focus.directive';
 
 import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
@@ -25,6 +26,7 @@ import { ReleaseNotificationComponent } from './release-notification/release-not
     PercentageBarComponent
   ],
   declarations: [
+    FocusElementDirective,
     MainViewComponent,
     StatusComponent,
     PercentageBarComponent,
