@@ -171,6 +171,6 @@ export class NewAddressModalComponent implements OnInit {
   }
 
   pasteAddress(): void {
-    this.addressInput.nativeElement.value = chrome.readClipboard();
+    this.addressInput.nativeElement.value = window.readClipboard();
   }
 }

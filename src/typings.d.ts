@@ -8,6 +8,7 @@ interface NodeModule {
 
 interface Window {
   electron: boolean;
+  readClipboard: () => string;
   sendNot: (title: string, desc: string) => void;
 }
 
@@ -23,7 +24,8 @@ interface Chrome {
     removeAllListeners: (channel?: string) => void;
     listenerCount: (channel?: string) => number;
   },
-  remote: any,
-  readClipboard: () => any
+  remote: {
+    clipboard: any
+  }
 }
 
