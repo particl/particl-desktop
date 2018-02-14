@@ -8,6 +8,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 /* fix wallet */
 import { MatDialog } from '@angular/material';
 import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
+import {TransactionBuilder} from "./transaction-builder.model";
 
 /*
   Note: due to upcoming multiwallet, we should never ever store addresses in the GUI for transaction purposes.
@@ -26,26 +27,22 @@ export class SendService {
   }
 
   /* Sends a transaction */
-  public sendTransaction(
-    input: string, output: string, address: string,
-    amount: number, comment: string, narration: string,
-    ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
+  // @TODO: estimate fee should be change
+  public sendTransaction(tx: TransactionBuilder, estimateFee: boolean = true) {
+    tx.comment = tx.narration = tx.note;
 
-    const rpcCall: string = this.getSendRPCCall(input, output);
+    const rpcCall: string = this.getSendRPCCall(tx.input, tx.output);
     const anon: boolean = this.isAnon(rpcCall);
     const params: Array<any> = this.getSendParams(
-      anon, address, amount, comment,
-      narration, ringsize, numsignatures, substractfeefromamount);
-
+      anon, tx.toAddress, tx.amount, tx.comment,
+      tx.narration, tx.privacy, tx.numsignatures, tx.subtractFeeFromAmount);
     this._rpc.call('send' + rpcCall, params)
       .subscribe(
-      success => this.rpc_send_success(success, address, amount),
-      error => this.rpc_send_failed(error.message, address, amount));
+      success => this.rpc_send_success(success, tx.toAddress, tx.amount),
+      error => this.rpc_send_failed(error.message, tx.toAddress, tx.amount));
   }
 
-  public transferBalance(
-    input: string, output: string,
-    amount: number, ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
+  public transferBalance(tx: TransactionBuilder) {
 
     // get default stealth address
     this.getDefaultStealthAddress().take(1).subscribe(
@@ -53,15 +50,15 @@ export class SendService {
         this.log.d('got transferBalance, sx' + stealthAddress);
 
         // comment is internal, narration is stored on blockchain
-        const rpcCall: string = this.getSendRPCCall(input, output);
+        const rpcCall: string = this.getSendRPCCall(tx.input, tx.output);
         const anon: boolean = this.isAnon(rpcCall);
         const params: Array<any> = this.getSendParams(
           anon, stealthAddress,
-          amount, '', '', ringsize, numsignatures, substractfeefromamount);
+          tx.amount, '', '', tx.privacy, tx.numsignatures, tx.subtractFeeFromAmount);
 
         this._rpc.call('send' + rpcCall, params).subscribe(
-          success => this.rpc_send_success(success, stealthAddress, amount),
-          error => this.rpc_send_failed(error.message, stealthAddress, amount));
+          success => this.rpc_send_success(success, stealthAddress, tx.amount),
+          error => this.rpc_send_failed(error.message, stealthAddress, tx.amount));
       },
       error => this.rpc_send_failed('Failed to get stealth address')
     );
@@ -121,29 +118,13 @@ export class SendService {
     *
     */
   getSendRPCCall(input: string, output: string) {
-    // real send (external)
-    if (input === 'balance' && output === 'balance') {
-      return 'toaddress';
-    } else if (input === 'anon_balance' && output === 'anon_balance') {
-      return 'anontoanon';
-    } else if (input === 'blind_balance' && output === 'blind_balance') {
-      return 'blindtoblind';
 
-      // balance transfers (internal)
-    } else if (input === 'anon_balance' && output === 'balance') {
-      return 'anontopart';
-    } else if (input === 'balance' && output === 'anon_balance') {
-      return 'parttoanon';
-    } else if (input === 'balance' && output === 'blind_balance') {
-      return 'parttoblind';
-    } else if (input === 'anon_balance' && output === 'blind_balance') {
-      return 'anontoblind';
-    } else if (input === 'blind_balance' && output === 'balance') {
-      return 'blindtopart';
-    } else if (input === 'blind_balance' && output === 'anon_balance') {
-      return 'blindtoanon';
+    input = input.replace('_balance', '').replace('balance', 'part');
+    output = output.replace('_balance', '').replace('balance', 'part');
+    if (input === 'part' && output === 'part') {
+      return 'toaddress';
     } else {
-      return 'error'; // todo: real error
+      return input + 'to' + output;
     }
   }
 
