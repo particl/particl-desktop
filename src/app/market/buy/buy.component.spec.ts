@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
@@ -13,7 +14,8 @@ describe('BuyComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ BuyComponent ],
       imports: [
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        BrowserAnimationsModule
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
