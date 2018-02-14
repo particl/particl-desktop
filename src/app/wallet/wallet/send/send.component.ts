@@ -303,7 +303,7 @@ export class SendComponent {
 
   pasteAddress(): void {
     // document.getElementById('address').focus();
-    this.address.nativeElement.value = chrome.readClipboard();
+    this.address.nativeElement.value = window.readClipboard();
   }
 
   @HostListener('document:paste', ['$event'])
