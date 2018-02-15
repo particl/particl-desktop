@@ -563,3 +563,21 @@ a.highlight {
   color: $color;
   text-decoration: none;
 }
+
+.cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .cdk-overlay-pane {
+    max-width:800px !important;
+    width: 0px;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .mat-dialog-container {
+    position: fixed !important;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing +
+.cdk-global-overlay-wrapper .cdk-overlay-pane:not(.cdk-modal-full) .mat-dialog-container {
+    height: auto;
+    width: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+}
