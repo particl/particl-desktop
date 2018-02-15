@@ -1,0 +1,102 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// ------ GENERAL ------ //
+
+
+// ------ LAYOUT ------ //
+
+.mat-card {
+  & > .title {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+}
+
+
+
+// ------ GALLERY ------ //
+
+.drag-n-drop {
+  border: 1px dashed $bg-shadow;
+  border-radius: 4px;
+  background: $bg;
+  margin-bottom: 16px;
+  padding: 50px 24px 45px;
+  text-align: center;
+  .mat-icon {
+    width: auto;
+    height: auto;
+    display: block;
+    margin-bottom: 16px;
+    font-size: 42px;
+    color: $bg-shadow;
+  }
+  p {
+    margin: 6px 0 0 0;
+    color: $text-muted;
+  }
+}
+
+.gallery {
+  margin: 0 -8px;
+}
+
+.photo {
+  position: relative;
+  padding: 6px 8px;
+  &:hover .icons {
+    opacity: 1;
+  }
+  &.featured img {
+    box-shadow: 0 0 0 2px $color;
+  }
+  img {
+    width: 100%;
+    display: block;
+  }
+  .icons {
+    @extend %tfx;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    .mat-icon {
+      @extend %tfx;
+      width: auto;
+      height: auto;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 6px $bg-shadow;
+      padding: 6px;
+      cursor: pointer;
+      &:hover {
+        &.delete {
+          color: $color-alert;
+        }
+        &.featured {
+          color: $color;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
