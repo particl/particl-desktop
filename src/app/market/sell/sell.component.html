@@ -56,7 +56,7 @@
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group block-radio">
-          <mat-radio-button class="filter-option" *ngFor="let status of listing_statuses" value="{{ status.value }}">
+          <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering" value="{{ status.value }}">
             {{ status.title }}
             <!-- FIXME: show amount (below) only if higher than 1 -->
             <span class="amount">{{ status.amount }}</span>
@@ -97,7 +97,7 @@
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group block-radio">
-          <mat-radio-button class="filter-option" *ngFor="let status of order_statuses" value="{{ status.value }}">
+          <mat-radio-button class="filter-option" *ngFor="let status of order_filtering" value="{{ status.value }}">
             {{ status.title }}
             <!-- FIXME: show amount (below) only if higher than 1 -->
             <span class="amount">{{ status.amount }}</span>
@@ -123,34 +123,28 @@
     </div-->
     <!--div class="subtitle first">Published listings</div-->
 
-    <mat-expansion-panel class="listing item no-padding">
+    <mat-expansion-panel class="listing item no-padding" *ngFor="let listing of listings">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
           <div class="photo" fxFlex="0 0 110px">
             <img src="./assets/images/placeholder_1-1.jpg">
           </div>
           <div class="meta" fxFlex="1 1 100%">
-            <div class="name">A bit longer product name</div>
-            <div class="categories">Electronics, DIY</div>
+            <div class="name">{{ listing.name }}</div>
+            <div class="categories">{{ listing.category }}</div>
             <div class="date">
               <!--span class="hash" matTooltip="Order hash">AGR</span-->
               Added 2018-02-19 &bull; Expires 2018-02-13
             </div>
           </div>
-          <div class="status pending" fxFlex="0 0 120px"><span>&bull;</span>Pending</div>
+          <div class="status {{ listing.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ listing.status }}</div>
         </div>
       </mat-expansion-panel-header>
 
       <div class="status-info">
-        <!-- Unpublished: -->
-        <!--p>Inactive, unpublished listing template &ndash; used to tweak your listing before publishing (or after you take down your active listings later)</p-->
-        <!-- Pending: -->
-        <!--p class="TO_DO">Listing successfully created and paid, waiting to be published on the market (usually needs XX confirmations before going live)</p-->
-        <!-- Listed: -->
-        <p>Active, published listing visible on the market &ndash; available for purchase</p>
-        <!-- Expired: -->
-        <!--p class="TO_DO">Expired, inactive listing &ndash; can be relisted on the market again after payment of listing fee</p-->
+        <p>{{ listing.status_info }}</p>
       </div>
+
       <div class="detail" fxLayout="row" fxLayoutGap="30px">
         <div class="description" fxFlex="65%">
           <div class="title">Listing description</div>
@@ -182,9 +176,9 @@
           </button>
         </div>
         <div class="right">
-          <button mat-raised-button color="primary">
-            <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-            Main action
+          <button mat-raised-button color="{{ listing.action_color }}" matTooltip="{{ listing.action_tooltip }}">
+            <mat-icon fontSet="partIcon" fontIcon="{{ listing.action_icon }}"></mat-icon>
+            {{ listing.action_button }}
           </button>
         </div>
       </mat-action-row>
