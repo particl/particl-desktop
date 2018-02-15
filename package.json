@@ -180,7 +180,7 @@
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
     "electron": "1.7.12",
-    "electron-builder": "^19.55.2",
+    "electron-builder": "^20.0.4",
     "htmlhint": "^0.9.13",
     "jasmine-core": "^2.9.1",
     "jasmine-spec-reporter": "^4.2.0",
