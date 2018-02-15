@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
       .registerFontClassAlias('partIcon', 'part-icon')
       .registerFontClassAlias('faIcon', 'fa');
 
-    if(this._ipc.isIpcAvailable()) {
+    if (this._ipc.isIpcAvailable()) {
       // Muon extras:
       window.readClipboard = chrome.remote.clipboard.readText;
       delete chrome.remote;

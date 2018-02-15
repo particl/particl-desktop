@@ -57,8 +57,7 @@
       "artifactName": "${name}-${version}-${os}.${ext}",
       "category": "public.app-category.wallet",
       "target": [
-        "zip",
-        "dmg"
+        "zip"
       ]
     },
     "dmg": {
