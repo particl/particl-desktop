@@ -154,19 +154,6 @@ export class SendComponent {
         error => this.log.er('verifyAddress: validateAddressCB failed'));
   }
 
-  /** Clear the send object. */
-  clear(): void {
-    this.send = {
-      input: this.send.input,
-      output: this.send.output,
-      validAddress: undefined,
-      validAmount: undefined,
-      currency: 'part',
-      privacy: 50
-    };
-    this.send.subtractFeeFromAmount = false;
-  }
-
   clearReceiver(): void {
     this.send.toLabel = '';
     this.send.toAddress = '';
