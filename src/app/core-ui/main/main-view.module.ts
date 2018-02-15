@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material';
 
 import { MaterialModule } from '../material/material.module';
+import { DirectiveModule } from '../directive/directive.module';
 
 import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
@@ -19,7 +20,8 @@ import { ClientVersionService } from '../../core/http/client-version.service';
     CommonModule,
     RouterModule,
     MaterialModule,
-    MatIconModule
+    MatIconModule,
+    DirectiveModule
   ],
   exports: [
     MainViewComponent,
