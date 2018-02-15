@@ -18,7 +18,7 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { MatDialogRef } from '@angular/material';
-import { StateService } from '../core/core.module';
+import { RpcStateService } from '../core/core.module';
 
 @Component({
   selector: 'app-modals',
@@ -50,15 +50,15 @@ export class ModalsComponent implements DoCheck, OnInit, OnDestroy {
     private _element: ElementRef,
     private _resolver: ComponentFactoryResolver,
     public _dialogRef: MatDialogRef<ModalsComponent>,
-    private state: StateService) {
+    private rpcState: RpcStateService) {
   }
 
   ngOnInit(): void {
-    this.state.observe('modal:fullWidth:enableClose')
+    this.rpcState.observe('modal:fullWidth:enableClose')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.enableClose = status);
 
-    this.state.observe('ui:spinner')
+    this.rpcState.observe('ui:spinner')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.loadSpinner = status);
   }

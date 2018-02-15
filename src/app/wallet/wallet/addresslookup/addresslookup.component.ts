@@ -1,11 +1,13 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
+import { Log } from 'ng2-logger';
+
 import { RpcService } from '../../../core/core.module';
 
-import { Contact } from './contact.model';
-import { Log } from 'ng2-logger';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
-import { MatDialogRef } from '@angular/material';
 import { AddressHelper } from '../../../core/util/utils';
+
+import { Contact } from './contact.model';
 
 @Component({
   selector: 'app-addresslookup',
