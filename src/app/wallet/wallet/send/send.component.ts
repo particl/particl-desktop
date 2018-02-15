@@ -286,7 +286,9 @@ export class SendComponent {
         return;
       }
     }*/
-
+    if (this.send.toLabel === '') {
+      this.send.toLabel = 'Empty Label'
+    }
     const label = this.send.toLabel;
     const addr = this.send.toAddress;
 
