@@ -563,3 +563,17 @@ a.highlight {
   color: $color;
   text-decoration: none;
 }
+
+.cdk-overlay-dark-backdrop + .cdk-global-overlay-wrapper .cdk-overlay-pane {
+    max-width:800px !important;
+    width: 100%;
+}
+
+.cdk-overlay-container .cdk-overlay-dark-backdrop .mat-dialog-container {
+    position: fixed !important;
+}
+
+.cdk-overlay-container .cdk-overlay-pane:not(.cdk-modal-full) .mat-dialog-container {
+    height: auto;
+    margin-top: -10%;
+}
