@@ -8,7 +8,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 /* fix wallet */
 import { MatDialog } from '@angular/material';
 import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
-import {TransactionBuilder} from "./transaction-builder.model";
+import {TransactionBuilder} from './transaction-builder.model';
 
 /*
   Note: due to upcoming multiwallet, we should never ever store addresses in the GUI for transaction purposes.
