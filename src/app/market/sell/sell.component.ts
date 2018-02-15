@@ -92,6 +92,49 @@ export class SellComponent implements OnInit {
     },
   ];
 
+  orders: Array<any> = [
+    {
+      name: 'NFC-enabled contactless payment perfume',
+      hash: 'AGR', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
+      hash_bg: 'bg6', // TODO: assign random hash_bg (bg1-bg16)
+      status: 'bidding',
+      status_info: 'Buyer wants to purchase this item &ndash; Approve or reject this order to continue',
+      action_icon: 'part-check',
+      action_button: 'Accept bid',
+      action_tooltip: 'Approve this order and sell to this buyer'
+    },
+    {
+      name: 'My basic listing template',
+      hash: '5EH', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
+      hash_bg: 'bg2', // TODO: assign random hash_bg (bg1-bg16)
+      status: 'escrow',
+      status_info: 'Buyer\'s funds are locked in escrow, order is ready to ship &ndash; when sent, mark order as shipped and await its delivery',
+      action_icon: 'part-check',
+      action_button: 'Mark as shipped',
+      action_tooltip: 'Confirm that the order has been shipped to buyer'
+    },
+    {
+      name: 'Fresh product (2 kg)',
+      hash: 'SPP', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
+      hash_bg: 'bg11', // TODO: assign random hash_bg (bg1-bg16)
+      status: 'shipping',
+      status_info: 'Order sent to buyer, waiting for buyer to confirm the delivery',
+      action_icon: 'part-date',
+      action_button: 'Waiting for delivery', // TODO: disabled this button
+      action_tooltip: 'Awaiting confirmation of successfull delivery by Buyer'
+    },
+    {
+      name: 'Fresh product (2 kg)',
+      hash: '1ER', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
+      hash_bg: 'bg8', // TODO: assign random hash_bg (bg1-bg16)
+      status: 'sold',
+      status_info: 'Order delivery confirmed by buyer &ndash; awaiting Buyer\'s feedback',
+      action_icon: 'part-date',
+      action_button: 'Waiting for feedback', // TODO: disable this button
+      action_tooltip: 'Awaiting buyer\'s feedback on the order'
+    },
+  ];
+
   filters: any = {
     search:   undefined,
     sort:     undefined,

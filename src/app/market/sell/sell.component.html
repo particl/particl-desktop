@@ -137,7 +137,7 @@
               Added 2018-02-19 &bull; Expires 2018-02-13
             </div>
           </div>
-          <div class="status {{ listing.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ listing.status }}</div>
+          <div class="status {{ listing.status }}" fxFlex="0 0 140px"><span>&bull;</span>{{ listing.status }}</div>
         </div>
       </mat-expansion-panel-header>
 
@@ -149,7 +149,7 @@
         <div class="description" fxFlex="65%">
           <div class="title">Listing description</div>
           <p>
-            Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral, but can you change everything?
+            Todo: Shorten the listing description to ~this amount of text. Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral.
           </p>
         </div><!-- .description -->
         <div class="info" fxFlex="35%">
@@ -197,34 +197,28 @@
       You don't have any market orders yet
     </div-->
 
-    <mat-expansion-panel class="order item no-padding">
+    <mat-expansion-panel class="order item no-padding" *ngFor="let order of orders">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
           <div class="photo" fxFlex="0 0 80px">
             <img src="./assets/images/placeholder_1-1.jpg">
           </div>
           <div class="meta" fxFlex="1 1 100%">
-            <div class="name">A bit longer product name</div>
+            <div class="name">{{ order.name }}</div>
             <div class="date">
               <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
-              <span class="hash" matTooltip="Order hash" style="background: navy;">AGR</span>
+              <span class="hash {{ order.hash_bg }}" matTooltip="Order hash">{{ order.hash }}</span>
               Added 2018-02-19 &bull; Updated 2018-02-13
             </div>
           </div>
-          <div class="status pending" fxFlex="0 0 120px"><span>&bull;</span>In escrow</div>
+          <div class="status {{ order.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order.status }}</div>
         </div>
       </mat-expansion-panel-header>
 
       <div class="status-info">
-        <!-- Bidding: -->
-        <!--p>Buyer wants to purchase this item &ndash; Approve or reject this order to continue</p-->
-        <!-- Escrow: -->
-        <p>Buyer's funds are locked in escrow, order is ready to ship &ndash; when sent, mark order as shipped and await its delivery</p>
-        <!-- Shipped: -->
-        <!--p>Order sent to buyer, waiting for buyer to confirm the delivery</p-->
-        <!-- Sold: -->
-        <!--p>Order delivery confirmed by buyer &ndash; awaiting Buyer's feedback</p-->
+        <p>{{ order.status_info }}</p>
       </div>
+
       <div class="detail" fxLayout="row" fxLayoutGap="30px">
         <div class="buyer-info" fxFlex="27%">
           <div class="title">Shipping address</div>
@@ -275,9 +269,9 @@
         </div>
         <div class="right">
           <!-- TODO: after clicking, show confirmation modal with more info: -->
-          <button mat-raised-button color="primary">
-            <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-            Mark as shipped
+          <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}">
+            <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
+            {{ order.action_button }}
           </button>
         </div>
       </mat-action-row>

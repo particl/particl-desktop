@@ -151,29 +151,31 @@
       text-transform: uppercase;
       font-weight: 600;
       padding: 6px 15px;
+      // listings
       &.unpublished span {
         color: $bg-shadow;
       }
       &.pending span {
-        color: $bg-shadow;
-      }
-      &.listed span {
-        color: $color;
-      }
-      &.bidding span {
-        color: $color;
-      }
-      &.escrow span {
         color: $color-warning;
       }
-      &.shipped span {
-        color: darken($color, 15%);
-      }
-      &.sold span {
-        color: $bg-shadow;
+      &.listed span {
+        color: mix($color, $color-success);
       }
       &.expired span {
         color: $color-alert;
+      }
+      // orders
+      &.bidding span {
+        color: $color-warning;
+      }
+      &.escrow span {
+        color: $color-alert;
+      }
+      &.shipping span {
+        color: mix($color, $color-success);
+      }
+      &.sold span {
+        color: $color-info;
       }
       span { // status indicator
         font-size: 24px;
@@ -214,6 +216,58 @@
       display: inline-block;
       padding: 0 6px;
       margin-right: 8px;
+      // blues
+      &.bg1 {
+        background: darken($color-info, 25%);
+      }
+      &.bg2 {
+        background: darken($color-info, 15%);
+      }
+      &.bg3 {
+        background: $color-info;
+      }
+      &.bg4 {
+        background: lighten($color-info, 15%);
+      }
+      // greens
+      &.bg5 {
+        background: darken($color-success, 10%);
+      }
+      &.bg6 {
+        background: $color-success;
+      }
+      &.bg7 {
+        background: lighten($color-success, 15%);
+      }
+      &.bg8 {
+        background: lighten($color-success, 30%);
+      }
+      // reds
+      &.bg9 {
+        background: darken($color-alert, 30%);
+      }
+      &.bg10 {
+        background: darken($color-alert, 17%);
+      }
+      &.bg11 {
+        background: lighten($color-alert, 2%);
+      }
+      &.bg12 {
+        background: lighten($color-alert, 15%);
+      }
+      // yellows
+      &.bg13 {
+        background: darken(mix($color-warning, $color-alert), 25%);
+      }
+      &.bg14 {
+        background: darken(mix($color-warning, $color-alert), 15%);
+      }
+      &.bg15 {
+        background: darken(mix($color-warning, $color-alert), 5%);
+      }
+      &.bg16 {
+        background: lighten(mix($color-warning, $color-alert), 10%);
+      }
     }
   }
   .detail {
