@@ -116,7 +116,7 @@
             <span class="text">Connecting to daemon...</span>
           </mat-list-item>
 
-          <mat-list-item class="sidebar-item" *ngIf="daemonError && daemonError.error">
+          <mat-list-item class="sidebar-item" *ngIf="daemonError != undefined && daemonError.error">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
 
             <!-- TODO: better handling of errors / mix with modules/rpc/rpc.js -->
@@ -138,7 +138,7 @@
           </mat-list-item>
 
           <mat-list-item class="sidebar-item"
-            *ngIf="daemonError && !daemonError.electron">
+            *ngIf="daemonError && daemonError.electron === false">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
             <span class="text">Warning: You are using Particl through a browser.</span>
           </mat-list-item>

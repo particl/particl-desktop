@@ -3,9 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
 
-import { StateService } from '../../../core/state/state.service';
-
 import { BalanceComponent } from './balance.component';
+import { CoreModule } from 'app/core/core.module';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -15,9 +14,9 @@ describe('BalanceComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        WalletModule.forRoot()
-      ],
-      providers: [StateService]
+        WalletModule.forRoot(),
+        CoreModule.forRoot()
+      ]
     })
     .compileComponents();
   }));

@@ -5,7 +5,7 @@ import { Log } from 'ng2-logger';
 import { Amount } from '../../../../shared/util/utils';
 
 import { ModalsService } from 'app/modals/modals.service';
-import { RpcService } from 'app/core/rpc/rpc.service';
+import { RpcService, RpcStateService } from 'app/core/core.module';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 @Component({
@@ -29,7 +29,8 @@ export class RevertColdstakingComponent implements OnInit {
     private flashNotification: SnackbarService,
     private dialogRef: MatDialogRef<RevertColdstakingComponent>,
     private _modals: ModalsService,
-    private _rpc: RpcService
+    private _rpc: RpcService,
+    private _rpcState: RpcStateService,
   ) { }
 
   ngOnInit() {
@@ -124,7 +125,7 @@ export class RevertColdstakingComponent implements OnInit {
         amount += tx.amount;
 
         if (++sentTXs === this.utxos.txs.length) {
-          this._rpc.state.set('ui:coldstaking', false);
+          this._rpcState.set('ui:coldstaking', false);
           this.dialogRef.close();
           this.flashNotification.open(
             `Succesfully brought ${amount} PART into hot wallet`, 'warn');

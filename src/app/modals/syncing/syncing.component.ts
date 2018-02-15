@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 
-import { StateService, BlockStatusService } from '../../core/core.module';
+import { RpcStateService, BlockStatusService } from '../../core/core.module';
 
 import { Log } from 'ng2-logger';
 
@@ -28,9 +28,9 @@ export class SyncingComponent implements OnDestroy {
 
   constructor(
     private _blockStatusService: BlockStatusService,
-    private _state: StateService
+    private _rpcState: RpcStateService
   ) {
-    _state.observe('connections')
+    _rpcState.observe('getnetworkinfo', 'connections')
       .takeWhile(() => !this.destroyed)
       .subscribe(connections => this.nPeers = connections);
 

@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
 
 import { ModalsService } from 'app/modals/modals.service';
-import { RpcService } from 'app/core/rpc/rpc.module';
+import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
 
 import { Amount } from '../../../shared/util/utils';
 import { ZapColdstakingComponent } from './zap-coldstaking/zap-coldstaking.component';
@@ -34,21 +34,22 @@ export class ColdstakeComponent implements OnDestroy {
   constructor(
     private dialog: MatDialog,
     private _modals: ModalsService,
-    private _rpc: RpcService
+    private _rpc: RpcService,
+    private _rpcState: RpcStateService
   ) {
-    this._rpc.state.observe('encryptionstatus')
+    this._rpcState.observe('getwalletinfo', 'encryptionstatus')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.encryptionStatus = status);
 
-    this._rpc.state.observe('ui:coldstaking')
+    this._rpcState.observe('ui:coldstaking')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingEnabled = status);
 
-    this._rpc.state.observe('ui:walletInitialized')
+    this._rpcState.observe('ui:walletInitialized')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.walletInitialized = status);
 
-    this._rpc.state.observe('blocks')
+    this._rpcState.observe('getblockchaininfo', 'blocks')
       .takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
       .subscribe(block => this.rpc_progress());
     // TODO: move to coldstaking service
@@ -76,16 +77,16 @@ export class ColdstakeComponent implements OnDestroy {
       this.log.d(`hotstakingamount ${this.hotstakingamount}`);
 
       if ('enabled' in coldstakinginfo) {
-        this._rpc.state.set('ui:coldstaking', coldstakinginfo['enabled']);
+        this._rpcState.set('ui:coldstaking', coldstakinginfo['enabled']);
       } else { // ( < 0.15.1.2) enabled = undefined ( => false)
-        this._rpc.state.set('ui:coldstaking', false);
+        this._rpcState.set('ui:coldstaking', false);
       }
 
     }, error => this.log.er('couldn\'t get coldstakinginfo', error));
   }
 
   zap() {
-    if (this._rpc.state.get('locked')) {
+    if (this._rpcState.get('locked')) {
       this._modals.open('unlock', {
         forceOpen: true,
         callback: this.openZapColdstakingModal.bind(this)
@@ -102,7 +103,7 @@ export class ColdstakeComponent implements OnDestroy {
   }
 
   revert() {
-    if (this._rpc.state.get('locked')) {
+    if (this._rpcState.get('locked')) {
       this._modals.open('unlock', {
         forceOpen: true,
         callback: this.openRevertColdstakingModal.bind(this)
