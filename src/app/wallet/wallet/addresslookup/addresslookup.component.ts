@@ -4,9 +4,8 @@ import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../../core/core.module';
 
-import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { AddressHelper } from '../../../core/util/utils';
-
+import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { Contact } from './contact.model';
 
 @Component({

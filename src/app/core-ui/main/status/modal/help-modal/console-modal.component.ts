@@ -11,6 +11,7 @@ import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../core/util/utils';
 import { RpcService, RpcStateService } from '../../../../../core/core.module';
+
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 

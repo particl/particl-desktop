@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { Amount, Duration } from '../../../../core/util/utils';
 import { RpcStateService } from '../../../../core/core.module';
+import { Amount, Duration } from '../../../../core/util/utils';
 
 @Component({
   selector: 'app-stakinginfo',
