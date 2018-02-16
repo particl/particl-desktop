@@ -45,7 +45,7 @@
 
 .photo {
   position: relative;
-  padding: 6px 8px;
+  padding: 8px;
   &:hover .icons {
     opacity: 1;
   }
@@ -85,12 +85,28 @@
 }
 
 
+// ------ DETAILS ------ //
+
+.row {
+  margin-bottom: 24px;
+}
 
 
 
+// ------ BUTTONS ------ //
 
-
-
+.action-buttons {
+  .left {
+    button {
+      margin-right: 8px;
+    }
+  }
+  .right {
+    button {
+      margin-left: 8px;
+    }
+  }
+}
 
 
 

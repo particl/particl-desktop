@@ -58,7 +58,8 @@ export class SellComponent implements OnInit {
       action_icon: 'part-check',
       action_button: 'Publish',
       action_tooltip: 'Activate listing and put it on sale',
-      action_color: 'primary'
+      action_color: 'primary',
+      action_disabled: false
     },
     {
       name: 'Fresh product (2 kg)',
@@ -68,7 +69,8 @@ export class SellComponent implements OnInit {
       action_icon: 'part-date',
       action_button: 'Waiting for publication', // TODO: disable this button
       action_tooltip: 'Awaiting confirmations before making the listing live',
-      action_color: 'primary'
+      action_color: 'primary',
+      action_disabled: true
     },
     {
       name: 'The most delicious Particl-branded cupcakes',
@@ -78,7 +80,8 @@ export class SellComponent implements OnInit {
       action_icon: 'part-error',
       action_button: 'Unpublish',
       action_tooltip: 'Take the listing off market',
-      action_color: 'warn'
+      action_color: 'warn',
+      action_disabled: false
     },
     {
       name: 'NFC-enabled contactless payment perfume',
@@ -88,7 +91,8 @@ export class SellComponent implements OnInit {
       action_icon: 'part-check',
       action_button: 'Publish again',
       action_tooltip: 'Re-list expired listing on the market',
-      action_color: 'primary'
+      action_color: 'primary',
+      action_disabled: false
     },
   ];
 
@@ -98,20 +102,22 @@ export class SellComponent implements OnInit {
       hash: 'AGR', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg6', // TODO: assign random hash_bg (bg1-bg16)
       status: 'bidding',
-      status_info: 'Buyer wants to purchase this item &ndash; Approve or reject this order to continue',
+      status_info: 'Buyer wants to purchase this item – Approve or reject this order to continue',
       action_icon: 'part-check',
       action_button: 'Accept bid',
-      action_tooltip: 'Approve this order and sell to this buyer'
+      action_tooltip: 'Approve this order and sell to this buyer',
+      action_disabled: false
     },
     {
       name: 'My basic listing template',
       hash: '5EH', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg2', // TODO: assign random hash_bg (bg1-bg16)
       status: 'escrow',
-      status_info: 'Buyer\'s funds are locked in escrow, order is ready to ship &ndash; when sent, mark order as shipped and await its delivery',
+      status_info: 'Buyer\'s funds are locked in escrow, order is ready to ship – when sent, mark order as shipped and await its delivery',
       action_icon: 'part-check',
       action_button: 'Mark as shipped',
-      action_tooltip: 'Confirm that the order has been shipped to buyer'
+      action_tooltip: 'Confirm that the order has been shipped to buyer',
+      action_disabled: false
     },
     {
       name: 'Fresh product (2 kg)',
@@ -120,18 +126,20 @@ export class SellComponent implements OnInit {
       status: 'shipping',
       status_info: 'Order sent to buyer, waiting for buyer to confirm the delivery',
       action_icon: 'part-date',
-      action_button: 'Waiting for delivery', // TODO: disabled this button
-      action_tooltip: 'Awaiting confirmation of successfull delivery by Buyer'
+      action_button: 'Waiting for delivery',
+      action_tooltip: 'Awaiting confirmation of successfull delivery by Buyer',
+      action_disabled: true
     },
     {
       name: 'Fresh product (2 kg)',
       hash: '1ER', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg8', // TODO: assign random hash_bg (bg1-bg16)
       status: 'sold',
-      status_info: 'Order delivery confirmed by buyer &ndash; awaiting Buyer\'s feedback',
+      status_info: 'Order delivery confirmed by buyer – awaiting Buyer\'s feedback',
       action_icon: 'part-date',
-      action_button: 'Waiting for feedback', // TODO: disable this button
-      action_tooltip: 'Awaiting buyer\'s feedback on the order'
+      action_button: 'Waiting for feedback',
+      action_tooltip: 'Awaiting buyer\'s feedback on the order',
+      action_disabled: true
     },
   ];
 

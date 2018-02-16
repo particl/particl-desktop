@@ -10,6 +10,41 @@ export class AddItemComponent implements OnInit {
 
   constructor(private router: Router) { }
 
+  categories = [
+    {
+      name: 'Electronics',
+      subcategory: [
+        { value: '01', viewValue: 'Computers' },
+        { value: '02', viewValue: 'Laptops' },
+        { value: '03', viewValue: 'Components' }
+      ]
+    },
+    {
+      name: 'Hobby',
+      subcategory: [
+        { value: '04', viewValue: 'Hardware' },
+        { value: '05', viewValue: 'DIY stuff' },
+        { value: '06', viewValue: 'Chains' }
+      ]
+    },
+    {
+      name: 'Health & Beauty',
+      subcategory: [
+        { value: '01', viewValue: 'Alcohol' },
+        { value: '02', viewValue: 'Cosmetics' },
+        { value: '03', viewValue: 'BIO whatever' }
+      ]
+    },
+    {
+      name: 'Toys',
+      subcategory: [
+        { value: '01', viewValue: 'For boys' },
+        { value: '02', viewValue: 'For girls' },
+        { value: '03', viewValue: 'For adults ;)' }
+      ]
+    }
+  ];
+
   ngOnInit() {
   }
 

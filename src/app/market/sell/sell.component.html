@@ -176,7 +176,7 @@
           </button>
         </div>
         <div class="right">
-          <button mat-raised-button color="{{ listing.action_color }}" matTooltip="{{ listing.action_tooltip }}">
+          <button mat-raised-button color="{{ listing.action_color }}" matTooltip="{{ listing.action_tooltip }}" [disabled]="listing.action_disabled">
             <mat-icon fontSet="partIcon" fontIcon="{{ listing.action_icon }}"></mat-icon>
             {{ listing.action_button }}
           </button>
@@ -269,7 +269,7 @@
         </div>
         <div class="right">
           <!-- TODO: after clicking, show confirmation modal with more info: -->
-          <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}">
+          <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}" [disabled]="order.action_disabled">
             <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
             {{ order.action_button }}
           </button>
