@@ -8,7 +8,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 /* fix wallet */
 import { MatDialog } from '@angular/material';
 import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
-import {TransactionBuilder} from './transaction-builder.model';
+import { TransactionBuilder } from './transaction-builder.model';
 
 /*
   Note: due to upcoming multiwallet, we should never ever store addresses in the GUI for transaction purposes.
@@ -28,7 +28,7 @@ export class SendService {
 
   /* Sends a transaction */
   // @TODO: estimate fee should be change
-  public sendTransaction(tx: TransactionBuilder, estimateFee: boolean = true) {
+  public sendTransaction(tx: TransactionBuilder) {
     tx.comment = tx.narration = tx.note;
 
     const rpcCall: string = this.getSendRPCCall(tx.input, tx.output);
@@ -36,10 +36,25 @@ export class SendService {
     const params: Array<any> = this.getSendParams(
       anon, tx.toAddress, tx.amount, tx.comment,
       tx.narration, tx.privacy, tx.numsignatures, tx.subtractFeeFromAmount);
+
     this._rpc.call('send' + rpcCall, params)
       .subscribe(
-      success => this.rpc_send_success(success, tx.toAddress, tx.amount),
-      error => this.rpc_send_failed(error.message, tx.toAddress, tx.amount));
+        success => this.rpc_send_success(success, tx.toAddress, tx.amount),
+        error => this.rpc_send_failed(error.message, tx.toAddress, tx.amount));
+  }
+
+  // @TODO refactor this method for balance transfer without address
+  public getTransactionFee(tx: TransactionBuilder): Observable<any> {
+    // this.getDefaultStealthAddress().take(1).subscribe(
+    //   (stealthAddress: string) => {
+    //
+    //   });
+    return this._rpc.call('sendtypeto', ['part', 'part', [{
+      subfee: true,
+      address: tx.toAddress,
+      amount: tx.amount,
+    }], '', '', 8, 64, true]).map(
+      fee => fee);
   }
 
   public transferBalance(tx: TransactionBuilder) {
