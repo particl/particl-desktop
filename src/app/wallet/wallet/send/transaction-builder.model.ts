@@ -15,4 +15,5 @@ export class TransactionBuilder {
   privacy: number;
   subtractFeeFromAmount: boolean;
   note: string;
+  transactionFee: number;
 }

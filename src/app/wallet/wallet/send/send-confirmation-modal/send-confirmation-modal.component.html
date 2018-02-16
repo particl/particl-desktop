@@ -3,7 +3,7 @@
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-<div mat-dialog-content class="dialog-content">  
+<div mat-dialog-content class="dialog-content">
   <div class="tx-info">
     <!-- if public -->
     <div class="public" *ngIf="transactionType === 'balance'">
@@ -31,7 +31,9 @@
   </div>
 
   <div class="tx-amount">
-    <span class="big">{{ sendAmount.getIntegerPart() }}</span><span class="point">.</span><span class="small">{{ sendAmount.getFractionalPart() }}</span>&ensp;<span class="currency">PART</span>
+    <span class="big">{{ sendAmount.getIntegerPart() }}</span>
+    <span class="point">.</span><span class="small">{{ sendAmount.getFractionalPart() }}</span>&ensp;
+    <span class="currency">PART</span>
     <!-- TODO: until fiat estimations are implemented, hide them -->
     <div class="fiat">&asymp; 3.42 USD</div>
   </div>
@@ -44,9 +46,9 @@
     <code class="address"> {{ sendAddress }} </code>
   </div>
 
-  <p class="fee-info TO_DO">
-    Transaction fee:<span class="amount">0.000152 PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-    Total amount:<span class="amount">12.723552 PART</span><span class="fiat">&asymp; 3.47 USD</span>
+  <p class="fee-info">
+    Transaction fee:<span class="amount">{{transactionFee}} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+    Total amount:<span class="amount">{{totalAmount}} PART</span><span class="fiat">&asymp; 3.47 USD</span>
   </p>
 
 </div>

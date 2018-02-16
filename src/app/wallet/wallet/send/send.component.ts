@@ -168,16 +168,49 @@ export class SendComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const d = this.dialog.open(SendConfirmationModalComponent);
-    const dc = d.componentInstance;
-
-    dc.setDetails(this.send);
-
-    dc.onConfirm.subscribe(() => {
-      d.close();
-      this.pay();
-    })
+    // @TODO refactor unlock wallet checking
+    // this.checkWalletIslocked(this.openSendConfirmationModal, 30);
+    if (this._rpcState.get('locked')) {
+      // unlock wallet and send transaction
+      this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.openSendConfirmationModal.bind(this)});
+    } else {
+      // wallet already unlocked
+      this.openSendConfirmationModal();
+    }
   }
+
+  /**
+    * Check wallet is locked
+    * @param callback
+    */
+
+  checkWalletIslocked(callback: any, timeout: number = 10) {
+    if (this._rpcState.get('locked')) {
+      // unlock wallet and send transaction
+      this._modals.open('unlock', {forceOpen: true, timeout: 10, callback: callback.bind(this)});
+    } else {
+      // wallet already unlocked
+      callback();
+    }
+  }
+
+  /** Open Send Confirmation Modal */
+  openSendConfirmationModal() {
+    const dialogRef = this.dialog.open(SendConfirmationModalComponent);
+
+    let txt = `Do you really want to send ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.send.toAddress}?`;
+    if (this.type === 'balanceTransfer') {
+      txt = `Do you really want to transfer the following balance ${this.send.amount} ${this.send.currency.toUpperCase()}?`
+    }
+
+    dialogRef.componentInstance.dialogContent = txt;
+    dialogRef.componentInstance.send = this.send;
+
+    dialogRef.componentInstance.onConfirm.subscribe(() => {
+      dialogRef.close();
+      this.pay();
+    });
+}
 
   /** Payment function */
   pay(): void {
@@ -215,13 +248,7 @@ export class SendComponent implements OnInit {
 
     }
 
-    if (this._rpcState.get('locked')) {
-      // unlock wallet and send transaction
-      this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
-    } else {
-      // wallet already unlocked
-      this.sendTransaction();
-    }
+    this.checkWalletIslocked(this.sendTransaction);
   }
 
   private sendTransaction(): void {
