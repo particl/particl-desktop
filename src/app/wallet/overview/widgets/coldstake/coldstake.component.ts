@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
+import { ColdstakeService } from './coldstake.service'
 
 import { Amount } from '../../../shared/util/utils';
 import { ZapColdstakingComponent } from './zap-coldstaking/zap-coldstaking.component';
@@ -15,75 +16,17 @@ import { RevertColdstakingComponent } from './revert-coldstaking/revert-coldstak
   templateUrl: './coldstake.component.html',
   styleUrls: ['./coldstake.component.scss']
 })
-export class ColdstakeComponent implements OnDestroy {
+export class ColdstakeComponent {
 
   private log: any = Log.create('coldstake.component');
-  private destroyed: boolean = false;
-
-  coldStakingEnabled: boolean = undefined;
-  walletInitialized: boolean = undefined;
-  public encryptionStatus: string = 'Locked';
-
-  private progress: Amount = new Amount(0, 2);
-  get coldstakeProgress(): number { return this.progress.getAmount() }
-
-
-  hotstakingamount: number = 0.0;
-  coldstakingamount: number = 0.0;
 
   constructor(
     private dialog: MatDialog,
     private _modals: ModalsService,
     private _rpc: RpcService,
-    private _rpcState: RpcStateService
-  ) {
-    this._rpcState.observe('getwalletinfo', 'encryptionstatus')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.encryptionStatus = status);
-
-    this._rpcState.observe('ui:coldstaking')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.coldStakingEnabled = status);
-
-    this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.walletInitialized = status);
-
-    this._rpcState.observe('getblockchaininfo', 'blocks')
-      .takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
-      .subscribe(block => this.rpc_progress());
-    // TODO: move to coldstaking service
-
-    this.rpc_progress();
-  }
-
-  private rpc_progress(): void {
-    // TODO: not necessary when cold staking disabled
-    this.stakingStatus();
-  }
-
-  ngOnDestroy() {
-    this.destroyed = true;
-  }
-
-  private stakingStatus() {
-    this._rpc.call('getcoldstakinginfo').subscribe(coldstakinginfo => {
-      this.log.d('stakingStatus called ' + coldstakinginfo['enabled']);
-      this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
-      this.coldstakingamount = coldstakinginfo['percent_in_coldstakeable_script'];
-      this.hotstakingamount = coldstakinginfo['coin_in_stakeable_script'];
-
-      this.log.d(`coldstakingamount (actually a percentage) ${this.coldstakingamount}`);
-      this.log.d(`hotstakingamount ${this.hotstakingamount}`);
-
-      if ('enabled' in coldstakinginfo) {
-        this._rpcState.set('ui:coldstaking', coldstakinginfo['enabled']);
-      } else { // ( < 0.15.1.2) enabled = undefined ( => false)
-        this._rpcState.set('ui:coldstaking', false);
-      }
-
-    }, error => this.log.er('couldn\'t get coldstakinginfo', error));
-  }
+    private _rpcState: RpcStateService,
+    private _coldstake: ColdstakeService
+  ) { }
 
   zap() {
     if (this._rpcState.get('locked')) {
@@ -98,15 +41,15 @@ export class ColdstakeComponent implements OnDestroy {
 
   openRevertColdstakingModal() {
     const dialogRef = this.dialog.open(RevertColdstakingComponent);
-    // update progress after closing the dialog
-    dialogRef.afterClosed().subscribe(result => this.rpc_progress());
+    update progress after closing the dialog
+    dialogRef.afterClosed().subscribe(result => this._coldstake.rpc_progress());
   }
 
   revert() {
     if (this._rpcState.get('locked')) {
       this._modals.open('unlock', {
-        forceOpen: true,
-        callback: this.openRevertColdstakingModal.bind(this)
+	forceOpen: true,
+	callback: this.openRevertColdstakingModal.bind(this)
       });
     } else {
       this.openRevertColdstakingModal();
@@ -115,9 +58,8 @@ export class ColdstakeComponent implements OnDestroy {
 
   openZapColdstakingModal(): void {
     const dialogRef = this.dialog.open(ZapColdstakingComponent);
-
-    // update progress after closing the dialog
-    dialogRef.afterClosed().subscribe(result => this.rpc_progress());
+    update progress after closing the dialog
+    dialogRef.afterClosed().subscribe(result => this._coldstake.rpc_progress());
   }
 
   openUnlockWalletModal(): void {
@@ -125,6 +67,7 @@ export class ColdstakeComponent implements OnDestroy {
   }
 
   openColdStakeModal(): void {
+    console.log(this._modals);
     this._modals.open('coldStake', { forceOpen: true, type: 'cold' });
   }
 
@@ -133,6 +76,6 @@ export class ColdstakeComponent implements OnDestroy {
       'Unlocked',
       'Unlocked, staking only',
       'Unencrypted'
-    ].includes(this.encryptionStatus);
+    ].includes(this._coldstake.encryptionStatus);
   }
 }
