@@ -5,11 +5,11 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from '../core-ui/material/material.module';
+import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsService } from './modals.service';
 
 import { ModalsComponent } from './modals.component';
-import { FocusDirective, FocusTimeoutDirective } from './modals.directives';
 
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
@@ -36,11 +36,10 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     BrowserAnimationsModule,
     ClipboardModule,
     /* own */
-    MaterialModule
+    MaterialModule,
+    DirectiveModule
   ],
   declarations: [
-    FocusDirective,
-    FocusTimeoutDirective,
     ModalsComponent,
     PassphraseComponent,
     PasswordComponent,
