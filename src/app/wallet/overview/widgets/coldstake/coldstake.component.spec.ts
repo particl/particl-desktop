@@ -18,9 +18,9 @@ describe('ColdstakeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        /* own */
-        SharedModule,
-        ModalsModule.forRoot(),
+	/* own */
+	SharedModule,
+	ModalsModule.forRoot(),
 	CoreModule.forRoot(),
 	CoreUiModule.forRoot(),
 	WalletModule.forRoot()

@@ -8,7 +8,7 @@ describe('ColdstakeService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-	CoreModule.forRoot(),
+        CoreModule.forRoot(),
       ],
       providers: [ColdstakeService]
     });
