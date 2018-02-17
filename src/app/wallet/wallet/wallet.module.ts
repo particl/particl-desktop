@@ -9,6 +9,7 @@ import { CoreUiModule } from '../../core-ui/core-ui.module';
 import { TransactionService } from './shared/transaction.service';
 import { AddressService } from './shared/address.service';
 import { SendService } from './send/send.service';
+import { ColdstakeService } from '../overview/widgets/coldstake/coldstake.service';
 
 import { TransactionsTableComponent } from './shared/transaction-table/transaction-table.component';
 import { AddressTableComponent } from './shared/address-table/address-table.component';
@@ -86,7 +87,8 @@ export class WalletModule {
       ngModule: WalletModule,
       providers: [
         AddressService,
-        SendService
+        SendService,
+	ColdstakeService
       ]
     };
   }
