@@ -103,10 +103,16 @@ export class RevertColdstakingComponent implements OnInit {
   revert() {
 
     this.disableColdstaking();
+    if (this.utxos.txs.length === 0) {
+      this._rpcState.set('ui:coldstaking', false);
+      this.dialogRef.close();
+      this.flashNotification.open(
+	`Succesfully disabled coldstaking, no transactions needed.`, 'warn');
+      return ;
+    }
 
     let sentTXs = 0;
     let amount = 0;
-
     this.utxos.txs.map(tx => {
 
       this.log.d('revert for address', tx);
@@ -143,7 +149,6 @@ export class RevertColdstakingComponent implements OnInit {
       if (res.changeaddress !== 'cleared') {
 	return false;
       }
-      // TODO: update status of cold staking widget
     });
   }
 
