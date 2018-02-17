@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { Log } from 'ng2-logger';
 import { Amount } from '../../../shared/util/utils';
 
-import { StateService } from 'app/core/core.module';
 import { RpcService, RpcStateService } from 'app/core/core.module';
 
 @Injectable()
@@ -109,7 +108,7 @@ export class ColdstakeService implements OnDestroy {
       });
       this.coldstake = coldstake;
       this.hotstake = hotstake;
-    }
+    });
   }
 
   ngOnDestroy() {

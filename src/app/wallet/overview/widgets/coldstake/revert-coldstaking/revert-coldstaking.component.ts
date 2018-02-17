@@ -31,7 +31,9 @@ export class RevertColdstakingComponent implements OnInit {
     private _modals: ModalsService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-  ) {
+  ) { }
+
+  ngOnInit() {
     this.utxos = {
       txs: [],
       amount: 0
