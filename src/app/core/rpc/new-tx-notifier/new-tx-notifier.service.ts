@@ -23,7 +23,7 @@ export class NewTxNotifierService implements OnDestroy {
 
     this.log.d('tx notifier service running!');
     // TODO: when state moves into its own service, fix it here
-    this._rpc.state.observe('txcount')
+    this._rpcState.observe('txcount')
       .takeWhile(() => !this.destroyed)
       .distinctUntilChanged() // only update when txcount changes
       .skip(1) // skip the first one (shareReplay)
