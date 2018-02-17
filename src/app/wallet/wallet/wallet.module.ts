@@ -88,7 +88,7 @@ export class WalletModule {
       providers: [
         AddressService,
         SendService,
-	ColdstakeService
+        ColdstakeService
       ]
     };
   }
