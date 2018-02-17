@@ -21,27 +21,19 @@ export class ColdstakeService implements OnDestroy {
 
   private progress: Amount = new Amount(0, 2);
   get coldstakeProgress(): number { return this.progress.getAmount() }
-
   constructor(
     private _rpc: RpcService,
     private _rpcState: RpcStateService
   ) {
     this.coldstake =  {
-      utxos: {
-        txs: [],
-        amount: 0
-      },
-      fee: 0,
-      script: ""
-  }
-    this.hotstake =  {
-      utxos: {
-        txs: [],
-        amount: 0
-      },
-      fee: 0,
-      script: ""
-    }
+	txs: [],
+	amount: 0
+      }
+
+    this.hotstake = {
+	txs: [],
+	amount: 0
+      }
 
     this._rpcState.observe('getwalletinfo', 'encryptionstatus')
       .takeWhile(() => !this.destroyed)
@@ -62,170 +54,63 @@ export class ColdstakeService implements OnDestroy {
   }
 
   rpc_progress(): void {
-    // TODO: not necessary when cold staking disabled
-    this.stakingStatus();
+    if (['Unlocked',
+      'Unlocked, staking only',
+      'Unencrypted'
+    ].includes(this.encryptionStatus)) {
+      this.updateData();
+    }
   }
 
-  private stakingStatus() {
+  private updateData() {
     this._rpc.call('getcoldstakinginfo').subscribe(coldstakinginfo => {
       this.log.d('stakingStatus called ' + coldstakinginfo['enabled']);
       this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);
-      this.coldstake.amount = coldstakinginfo['percent_in_coldstakeable_script'];
-      this.hotstake.amount = coldstakinginfo['coin_in_stakeable_script'];
 
-      this.log.d(`coldstakingamount (actually a percentage) ${this.coldstake.amount}`);
+      this.log.d(`coldstakingamount (actually a percentage) ${this.progress.getAmount()}`);
       this.log.d(`hotstakingamount ${this.hotstake.amount}`);
 
       if ('enabled' in coldstakinginfo) {
-        this._rpcState.set('ui:coldstaking', coldstakinginfo['enabled']);
+	this._rpcState.set('ui:coldstaking', coldstakinginfo['enabled']);
       } else { // ( < 0.15.1.2) enabled = undefined ( => false)
-        this._rpcState.set('ui:coldstaking', false);
+	this._rpcState.set('ui:coldstaking', false);
       }
-      this.update();
+      this.updateStakingInfo();
     }, error => this.log.er('couldn\'t get coldstakinginfo', error));
   }
 
-  update() {
-    updateHotStake();
-    this._rpc.call('walletsettings', ['changeaddress']).subscribe(res => {
-
-      this.log.d('pkey', res);
-      const pkey = res.changeaddress.coldstakingaddress;
-      if (!pkey || pkey === '' || pkey === 'default') {
-        return false;
+  private updateStakingInfo() {
+    let coldstake =  {
+	txs: [],
+	amount: 0
+    }
+    let hotstake =  {
+	txs: [],
+	amount: 0
       }
 
-      this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(derived => {
-        this.log.d('coldstaking address', derived);
-        if (!derived || derived.length !== 1) {
-          return false;
-        }
-        const coldstakingAddress = derived[0];
-
-        this._rpc.call('listunspent').subscribe(unspent => {
-          // TODO: Must process amounts as integers
-          unspent.map(utxo => {
-            if (utxo.coldstaking_address // found a cold staking utxo
-              || !utxo.address) {
-              // skip
-            } else {
-              this.coldstake.utxos.amount += utxo.amount;
-              this.coldstake.utxos.txs.push({
-                address: utxo.address,
-                amount: utxo.amount,
-                inputs: [{ tx: utxo.txid, n: utxo.vout }]
-              });
-            };
-          });
-
-          this._rpc.call('getnewaddress', ['""', 'false', 'false', 'true'])
-          .subscribe(spendingAddress => {
-            this.log.d('spending address', spendingAddress);
-            if (!spendingAddress || spendingAddress === '') {
-              return false;
-            }
-
-            this._rpc.call('buildscript', [{
-              recipe: 'ifcoinstake',
-              addrstake: coldstakingAddress,
-              addrspend: spendingAddress
-            }]).subscribe(script => {
-
-              this.log.d('script', script);
-              if (!script || !script.hex) {
-                return false;
-              }
-              this.coldstake.script = script.hex;
-
-              const amount = new Amount(this.coldstake.utxos.amount, 8);
-              this.log.d('amount', amount.getAmount());
-
-              this._rpc.call('sendtypeto', ['part', 'part', [{
-                subfee: true,
-                address: 'script',
-                amount: amount.getAmount(),
-                script: script.hex
-              }], '', '', 4, 64, true, JSON.stringify({
-                inputs: this.coldstake.utxos.txs
-              })]).subscribe(tx => {
-
-                this.log.d('fees', tx);
-                this.coldstake.fee = tx.fee;
-
-              });
-
-            });
-          });
-        });
+    this._rpc.call('listunspent').subscribe(unspent => {
+      // TODO: Must process amounts as integers
+      unspent.map(utxo => {
+	if (utxo.coldstaking_address && utxo.address) {
+	  coldstake.amount += utxo.amount;
+	  coldstake.txs.push({
+	    address: utxo.address,
+	    amount: utxo.amount,
+	    inputs: [{ tx: utxo.txid, n: utxo.vout }]
+	  });
+	} else if (utxo.address) {
+	  hotstake.amount += utxo.amount;
+	  hotstake.txs.push({
+	    address: utxo.address,
+	    amount: utxo.amount,
+	    inputs: [{ tx: utxo.txid, n: utxo.vout }]
+	  });
+	}
       });
-    }, error => {
-      this.log.er('errr');
-    });
-
-  }
-
-  updateHotStake() {
-    this._rpc.call('liststealthaddresses', null)
-      .subscribe(stealthAddresses => {
-        try {
-          this.address = stealthAddresses[0]['Stealth Addresses'][0]['Address'];
-        } catch (err) {
-          this.address = '';
-          this.dialogRef.close();
-          this.flashNotification.open(
-            'No stealth address found, please add a stealthaddress.', 'error');
-          return;
-        };
-
-        this.log.d('return address', this.address);
-
-        let sentTXs = 0;
-        let totalFee = 0;
-
-        this._rpc.call('listunspent').subscribe(unspent => {
-          // TODO: Must process amounts as integers
-          unspent.map(utxo => {
-            if (!utxo.coldstaking_address
-              || !utxo.address) {
-              // skip
-            } else {
-              this.hotstake.utxos.amount += utxo.amount;
-              this.hotstake.utxos.txs.push({
-                address: utxo.address,
-                amount: utxo.amount,
-                inputs: [{ tx: utxo.txid, n: utxo.vout }]
-              });
-            };
-          });
-
-          this.hotstake.utxos.txs.map(tx => {
-
-            this.log.d('revert fee for address', tx);
-
-            this._rpc.call('sendtypeto', ['part', 'part', [{
-              subfee: true,
-              address: this.address,
-              amount: tx.amount
-            }], '', '', 4, 64, true, JSON.stringify({
-              inputs: tx.inputs
-            })]).subscribe(res => {
-
-              sentTXs++;
-              totalFee += res.fee;
-              this.log.d(`revert ${sentTXs} fees`, res);
-
-              if (sentTXs === this.hotstake.utxos.txs.length) {
-                this.hotstake.fee = totalFee;
-              }
-            }, error => {
-              this.log.er('errr');
-            });
-          });
-        });
-      },
-        error => {
-          this.log.er('errr');
-        });
+      this.coldstake = coldstake;
+      this.hotstake = hotstake;
+    }
   }
 
   ngOnDestroy() {

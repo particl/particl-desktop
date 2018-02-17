@@ -41,8 +41,6 @@ export class ColdstakeComponent {
 
   openRevertColdstakingModal() {
     const dialogRef = this.dialog.open(RevertColdstakingComponent);
-    update progress after closing the dialog
-    dialogRef.afterClosed().subscribe(result => this._coldstake.rpc_progress());
   }
 
   revert() {
@@ -58,8 +56,6 @@ export class ColdstakeComponent {
 
   openZapColdstakingModal(): void {
     const dialogRef = this.dialog.open(ZapColdstakingComponent);
-    update progress after closing the dialog
-    dialogRef.afterClosed().subscribe(result => this._coldstake.rpc_progress());
   }
 
   openUnlockWalletModal(): void {
