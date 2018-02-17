@@ -1,20 +1,18 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { RpcModule } from '../rpc.module';
+import { CoreModule } from '../../core.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 
 import { BlockStatusService } from './blockstatus.service';
-import { IpcService } from '../../ipc/ipc.service';
 
 describe('BlockStatusService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule.forRoot()
+        CoreModule.forRoot()
       ],
       providers: [
-        IpcService
       ]
     });
   });

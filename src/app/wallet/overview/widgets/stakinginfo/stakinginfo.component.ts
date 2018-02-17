@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { StateService } from '../../../../core/core.module';
+import { RpcStateService } from '../../../../core/core.module';
 import { Amount, Duration } from '../../../shared/util/utils';
 
 @Component({
@@ -30,11 +30,11 @@ export class StakinginfoComponent implements OnDestroy {
 
 
   constructor(
-    private state: StateService
+    private rpcState: RpcStateService
     ) {
 
     this.log.d(`constructor, started`);
-    this.state.observe('percentyearreward')
+    this.rpcState.observe('getstakinginfo', 'percentyearreward')
     .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
@@ -44,7 +44,7 @@ export class StakinginfoComponent implements OnDestroy {
       },
       error => this.log.er('Constructor, percentyearreward error:' + error));
 
-    this.state.observe('weight')
+    this.rpcState.observe('getstakinginfo', 'weight')
     .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
@@ -55,7 +55,7 @@ export class StakinginfoComponent implements OnDestroy {
       error => this.log.er('Constructor, weight error:' + error),
       () => this.log.d('state observe weight completed!'));
 
-    this.state.observe('netstakeweight')
+    this.rpcState.observe('getstakinginfo', 'netstakeweight')
     .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
@@ -64,7 +64,7 @@ export class StakinginfoComponent implements OnDestroy {
       },
       error => this.log.er('Constructor, netstakeweight error:' + error));
 
-    this.state.observe('moneysupply')
+    this.rpcState.observe('getstakinginfo', 'moneysupply')
     .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
@@ -74,7 +74,7 @@ export class StakinginfoComponent implements OnDestroy {
       },
       error => this.log.er('Constructor, moneysupply error:' + error));
 
-    this.state.observe('expectedtime')
+    this.rpcState.observe('getstakinginfo', 'expectedtime')
     .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {

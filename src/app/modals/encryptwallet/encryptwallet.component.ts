@@ -5,7 +5,7 @@ import { MatDialogRef } from '@angular/material';
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
 
-import { RpcService } from '../../core/core.module';
+import { RpcService, RpcStateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service'; // TODO; import from module
 import { ModalsService } from '../modals.service';
 
@@ -25,6 +25,7 @@ export class EncryptwalletComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private flashNotification: SnackbarService,
     public _dialogRef: MatDialogRef<EncryptwalletComponent>
   ) { }
@@ -35,34 +36,32 @@ export class EncryptwalletComponent {
       this.log.d(`check password equality: ${password.password === this.password}`);
 
       if (this.password === password.password) {
-        this._rpc.state.set('ui:spinner', true);
+        this._rpcState.set('ui:spinner', true);
         this.log.d(`Encrypting wallet! password: ${this.password}`);
         this._rpc.call('encryptwallet', [password.password])
           .subscribe(
             response => {
-              this._rpc.toggleState(false);
               this.flashNotification.open(response);
 
               if (this._rpc.isElectron) {
                 this._rpc.call('restart-daemon')
                   .subscribe(() => {
-                    this._rpc.state.set('ui:spinner', false);
+                    this._rpcState.set('ui:spinner', false);
                     if (!this._modalsService.initializedWallet) {
                       this._modalsService.open('createWallet', {forceOpen: true});
                     }
                     this._dialogRef.close();
-                    this._rpc.toggleState(true);
                   });
               }
             },
             // Handle error appropriately
             error => {
-              this._rpc.state.set('ui:spinner', false);
+              this._rpcState.set('ui:spinner', false);
               this.flashNotification.open('Wallet failed to encrypt properly!', 'err');
               this.log.er('error encrypting wallet', error)
             });
       } else {
-        this._rpc.state.set('ui:spinner', false);
+        this._rpcState.set('ui:spinner', false);
         this.flashNotification.open('The passwords do not match!', 'err');
       }
 
