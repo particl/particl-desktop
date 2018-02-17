@@ -46,8 +46,8 @@ export class ColdstakeComponent {
   revert() {
     if (this._rpcState.get('locked')) {
       this._modals.open('unlock', {
-	forceOpen: true,
-	callback: this.openRevertColdstakingModal.bind(this)
+        forceOpen: true,
+        callback: this.openRevertColdstakingModal.bind(this)
       });
     } else {
       this.openRevertColdstakingModal();

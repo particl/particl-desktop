@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ColdstakeService } from "./widgets/coldstake/coldstake.service";
+import { ColdstakeService } from './widgets/coldstake/coldstake.service';
 
 @Component({
   selector: 'app-overview',

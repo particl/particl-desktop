@@ -12,8 +12,16 @@ export class ColdstakeService implements OnDestroy {
 
   private destroyed: boolean = false;
   private log: any = Log.create('coldstake-service');
-  public: coldstake: any;
-  public: hotstake: any;
+
+  public coldstake: any =  {
+    txs: [],
+    amount: 0
+  };
+
+  public hotstake: any = {
+    txs: [],
+    amount: 0
+  };
 
   coldStakingEnabled: boolean = undefined;
   walletInitialized: boolean = undefined;
@@ -25,15 +33,6 @@ export class ColdstakeService implements OnDestroy {
     private _rpc: RpcService,
     private _rpcState: RpcStateService
   ) {
-    this.coldstake =  {
-	txs: [],
-	amount: 0
-      }
-
-    this.hotstake = {
-	txs: [],
-	amount: 0
-      }
 
     this._rpcState.observe('getwalletinfo', 'encryptionstatus')
       .takeWhile(() => !this.destroyed)
@@ -71,42 +70,42 @@ export class ColdstakeService implements OnDestroy {
       this.log.d(`hotstakingamount ${this.hotstake.amount}`);
 
       if ('enabled' in coldstakinginfo) {
-	this._rpcState.set('ui:coldstaking', coldstakinginfo['enabled']);
+        this._rpcState.set('ui:coldstaking', coldstakinginfo['enabled']);
       } else { // ( < 0.15.1.2) enabled = undefined ( => false)
-	this._rpcState.set('ui:coldstaking', false);
+        this._rpcState.set('ui:coldstaking', false);
       }
       this.updateStakingInfo();
     }, error => this.log.er('couldn\'t get coldstakinginfo', error));
   }
 
   private updateStakingInfo() {
-    let coldstake =  {
-	txs: [],
-	amount: 0
+    const coldstake =  {
+      txs: [],
+      amount: 0
     }
-    let hotstake =  {
-	txs: [],
-	amount: 0
-      }
+    const hotstake =  {
+      txs: [],
+      amount: 0
+    }
 
     this._rpc.call('listunspent').subscribe(unspent => {
       // TODO: Must process amounts as integers
       unspent.map(utxo => {
-	if (utxo.coldstaking_address && utxo.address) {
-	  coldstake.amount += utxo.amount;
-	  coldstake.txs.push({
-	    address: utxo.address,
-	    amount: utxo.amount,
-	    inputs: [{ tx: utxo.txid, n: utxo.vout }]
-	  });
-	} else if (utxo.address) {
-	  hotstake.amount += utxo.amount;
-	  hotstake.txs.push({
-	    address: utxo.address,
-	    amount: utxo.amount,
-	    inputs: [{ tx: utxo.txid, n: utxo.vout }]
-	  });
-	}
+        if (utxo.coldstaking_address && utxo.address) {
+          coldstake.amount += utxo.amount;
+          coldstake.txs.push({
+            address: utxo.address,
+            amount: utxo.amount,
+            inputs: [{ tx: utxo.txid, n: utxo.vout }]
+          });
+        } else if (utxo.address) {
+          hotstake.amount += utxo.amount;
+          hotstake.txs.push({
+            address: utxo.address,
+            amount: utxo.amount,
+            inputs: [{ tx: utxo.txid, n: utxo.vout }]
+          });
+        }
       });
       this.coldstake = coldstake;
       this.hotstake = hotstake;
