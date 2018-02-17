@@ -32,7 +32,9 @@
 
   <div class="tx-amount">
     <span class="big">{{ sendAmount.getIntegerPart() }}</span>
-    <span class="point">.</span><span class="small">{{ sendAmount.getFractionalPart() }}</span>&ensp;
+    <span *ngIf="sendAmount.ifDotExist()">
+      <span class="point">.</span>
+      <span class="small">{{ sendAmount.getFractionalPart() }}</span>&ensp;</span>
     <span class="currency">PART</span>
     <!-- TODO: until fiat estimations are implemented, hide them -->
     <div class="fiat">&asymp; 3.42 USD</div>
