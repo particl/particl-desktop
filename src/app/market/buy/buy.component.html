@@ -423,6 +423,10 @@
 
 <!-- =========== FAVOURITES =========== -->
 
-<div class="container-block disable-select" *ngIf="tabLabels[selectedTab] == 'favourites'">
-  favs, bitch
+<div class="favourites container-block disable-select" *ngIf="tabLabels[selectedTab] == 'favourites'" fxLayout="row wrap" fxLayoutAlign="start start">
+  <ng-container *ngFor="let l of listings">
+    <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
+      <app-preview-listing [listing]="l"></app-preview-listing>
+    </mat-card>
+  </ng-container>
 </div><!-- "Favourites" tab -->

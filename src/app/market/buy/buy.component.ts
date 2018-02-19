@@ -34,6 +34,7 @@ export class BuyComponent implements OnInit {
     { title: 'Sold',       value: 'sold',    amount: '1' }
   ];
 
+  // Orders
   orders: Array<any> = [
     {
       name: 'NFC-enabled contactless payment perfume',
@@ -81,10 +82,20 @@ export class BuyComponent implements OnInit {
     },
   ];
 
+  // Favourites
+  listings: Array<string> = [
+    'Product name',
+    'This one is a little bit longer than others',
+    'Sweet gizmo',
+    'Pack of lovely stuff',
+    'Box of things',
+    'Pair of pears'
+  ];
+
   filters: any = {
-    search:   undefined,
-    sort:     undefined,
-    status:   undefined
+    search: undefined,
+    sort:   undefined,
+    status: undefined
   };
 
   constructor(private _formBuilder: FormBuilder) { }
