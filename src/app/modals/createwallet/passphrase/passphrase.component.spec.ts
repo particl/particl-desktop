@@ -11,7 +11,6 @@ import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 /* components & directives (own) */
-import { FocusDirective } from '../../modals.directives';
 import { PassphraseComponent } from './passphrase.component';
 
 /* delete any unused imports! */

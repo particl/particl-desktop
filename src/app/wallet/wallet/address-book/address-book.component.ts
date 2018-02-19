@@ -3,7 +3,7 @@ import { MatDialog, MatSelectChange } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { NewAddressModalComponent } from './modal/new-address-modal/new-address-modal.component';
-import { AddressHelper } from '../../shared/util/utils';
+import { AddressHelper } from '../../../core/util/utils';
 
 @Component({
   selector: 'app-address-book',
