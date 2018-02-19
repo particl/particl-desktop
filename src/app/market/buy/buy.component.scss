@@ -27,9 +27,68 @@ table {
   }
 }
 
+
+// ------ FILTER ------ //
+// TODO: share these styles with History & Buy (same code)
+
+.section {
+  .subtitle { // title
+    @extend %subtitle;
+    margin: 24px 0 14px;
+    &.first {
+      margin-top: 0;
+    }
+  }
+}
+ 
+.filter-card {
+  @extend %disable-select;
+  padding: 0;
+  margin-bottom: 16px;
+
+  // search & sorting
+  .search-sorting & {
+    padding: 10px 20px;
+    .filter-input {
+      width: 100%;
+    }
+    .icon-input {
+      .mat-icon {
+        top: 5px;
+        right: 2px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // radio buttons
+  .radio-group {
+    width: calc(100% - 32px);
+    padding: 8px 16px;
+    display: block;
+    .filter-option {
+      width: 100%;
+      margin: 5px 0;
+      font-family: $font;
+    }
+    .amount {
+      font-weight: 600;
+      text-align: center;
+      background: $bg-shadow;
+      border-radius: $radius;
+      float: right;
+      display: inline-block;
+      width: 20px;
+      padding: 0 5px;
+    }
+  }
+
+}
+
+
 // ------ LAYOUT ------ //
 
-.container-block {
+.your-cart.container-block {
    padding: 15px 15px 0;
 }
 
@@ -138,5 +197,211 @@ table.summary {
   thead th,
   .total {
     padding-right: 25px;
+  }
+}
+
+
+// ------ LISTS (listings & orders) ------ //
+
+.list {
+  .item { // Listing/Order
+    font-size: 12px;
+    padding: 0;
+    margin-bottom: 16px !important;
+    .header-wrapper {
+      width: 100%;
+      padding-right: 24px;
+      .photo {
+        margin-right: 24px;
+        img {
+          width: 100%;
+          display: block;
+        }
+      }
+      .meta {
+        color: $text-muted;
+        font-size: 11px;
+        line-height: 1.8;
+        .name {
+          color: $text;
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 1.4;
+          margin-bottom: 5px;
+        }
+      }
+    }
+    .status-info {
+      border-top: 1px solid $bg-shadow;
+      padding: 20px 30px;
+      font-size: 13px;
+      font-family: $font;
+      color: $text-muted;
+      p {
+        margin: 0;
+      }
+    }
+    .detail {
+      font-size: 13px;
+      font-family: $font;
+      color: $text-muted;
+      padding: 24px 30px;
+      border-top: 1px dashed $bg-shadow;
+      .title {
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: $text;
+        margin-bottom: 10px;
+      }
+      table.prices {
+        color: $text-muted;
+        border-collapse: collapse;
+        th {
+          text-align: right;
+          font-weight: 600;
+          padding-right: 7px;
+        }
+      }
+    }
+    mat-action-row {
+      padding: 16px 18px;
+      .left {
+        margin-top: 3px;
+        button {
+          margin: 0 4px 0 0;
+        }
+      }
+    }
+    .status {
+      background: mix($bg, $bg-shadow, 85%);
+      border-radius: 4px;
+      text-align: center;
+      color: $text;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 6px 15px;
+      // listings
+      &.unpublished span {
+        color: $bg-shadow;
+      }
+      &.pending span {
+        color: $color-warning;
+      }
+      &.listed span {
+        color: mix($color, $color-success);
+      }
+      &.expired span {
+        color: $color-alert;
+      }
+      // orders
+      &.bidding span {
+        color: $color-warning;
+      }
+      &.escrow span {
+        color: $color-alert;
+      }
+      &.shipping span {
+        color: mix($color, $color-success);
+      }
+      &.sold span {
+        color: $color-info;
+      }
+      span { // status indicator
+        font-size: 24px;
+        line-height: 0;
+        font-weight: 700;
+        position: relative;
+        top: 4px;
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+
+// ------ ORDERS ------ //
+
+.order {
+  .header {
+    min-height: 80px !important;
+    max-height: 80px !important;
+    padding: 0 24px 0 0;
+    .hash { // order "ID"
+      font-family: monospace;
+      font-weight: 600;
+      color: white;
+      line-height: 1.3;
+      border-radius: 4px;
+      display: inline-block;
+      padding: 0 6px;
+      margin-right: 8px;
+      // blues
+      &.bg1 {
+        background: darken($color-info, 25%);
+      }
+      &.bg2 {
+        background: darken($color-info, 15%);
+      }
+      &.bg3 {
+        background: $color-info;
+      }
+      &.bg4 {
+        background: lighten($color-info, 15%);
+      }
+      // greens
+      &.bg5 {
+        background: darken($color-success, 10%);
+      }
+      &.bg6 {
+        background: $color-success;
+      }
+      &.bg7 {
+        background: lighten($color-success, 15%);
+      }
+      &.bg8 {
+        background: lighten($color-success, 30%);
+      }
+      // reds
+      &.bg9 {
+        background: darken($color-alert, 30%);
+      }
+      &.bg10 {
+        background: darken($color-alert, 17%);
+      }
+      &.bg11 {
+        background: lighten($color-alert, 2%);
+      }
+      &.bg12 {
+        background: lighten($color-alert, 15%);
+      }
+      // yellows
+      &.bg13 {
+        background: darken(mix($color-warning, $color-alert), 25%);
+      }
+      &.bg14 {
+        background: darken(mix($color-warning, $color-alert), 15%);
+      }
+      &.bg15 {
+        background: darken(mix($color-warning, $color-alert), 5%);
+      }
+      &.bg16 {
+        background: lighten(mix($color-warning, $color-alert), 10%);
+      }
+    }
+  }
+  .detail {
+    .order-history {
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .status {
+        font-size: 11px;
+        padding: 0;
+        background: none;
+        text-align: left;
+      }
+    }
   }
 }
