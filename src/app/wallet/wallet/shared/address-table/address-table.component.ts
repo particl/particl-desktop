@@ -66,14 +66,13 @@ export class AddressTableComponent implements OnInit, OnChanges {
     public flashNotification: SnackbarService,
     private _modals: ModalsService
   ) {
-
+    this._addressService._addresses.subscribe((addresses) => {
+      this.addresses = addresses
+    })
   }
 
   ngOnInit(): void {
-    this._subAddresses = this._addressService.getAddresses()
-      .subscribe(
-        addresses => this.addresses = addresses,
-        error => this.log.e('addresstable-component subscription error', error));
+    this._addressService.getAddresses();
   }
 
   ngOnChanges(): void {

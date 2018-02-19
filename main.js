@@ -3,20 +3,27 @@
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-const rxIpc = require('rx-ipc-electron/lib/main').default;
+const path          = require('path');
+const fs            = require('fs');
+const url           = require('url');
+const platform      = require('os').platform();
+const rxIpc         = require('rx-ipc-electron/lib/main').default;
+const Observable    = require('rxjs/Observable').Observable;
+const log           = require('electron-log');
 
-/* node */
-const path = require('path');
-const url = require('url');
-const platform = require('os').platform();
+/* make userDataPath if it doesn't exist yet */
+const userDataPath = app.getPath('userData');
+if (!fs.existsSync(userDataPath)) {
+  fs.mkdir(userDataPath);
+}
 
-const Observable = require('rxjs/Observable').Observable;
-const log = require('electron-log');
-
+/* initialize logging */
+log.transports.file.level = 'debug';
 log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
 log.transports.file.file = log.transports.file
   .findLogPath(log.transports.file.appName)
   .replace('log.log', 'particl.log');
+
 log.debug(`console log level: ${log.transports.console.level}`);
 log.debug(`file log level: ${log.transports.file.level}`);
 
