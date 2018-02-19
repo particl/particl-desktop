@@ -4,6 +4,8 @@ import { MatDialogRef, MatFormFieldModule } from '@angular/material';
 
 import { MaterialModule } from '../../../../core-ui/material/material.module';
 
+import { SendService } from '../send.service';
+
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
 
 describe('SendConfirmationModalComponent', () => {
@@ -19,7 +21,8 @@ describe('SendConfirmationModalComponent', () => {
       ],
       declarations: [ SendConfirmationModalComponent ],
       providers: [
-        { provide: MatDialogRef}
+        { provide: MatDialogRef},
+        SendService
       ]
     })
     .compileComponents();
