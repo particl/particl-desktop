@@ -7,7 +7,7 @@ import { ModalsService } from 'app/modals/modals.service';
 import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
 import { ColdstakeService } from './coldstake.service'
 
-import { Amount } from '../../../shared/util/utils';
+import { Amount } from '../../../../core/util/utils';
 import { ZapColdstakingComponent } from './zap-coldstaking/zap-coldstaking.component';
 import { RevertColdstakingComponent } from './revert-coldstaking/revert-coldstaking.component';
 
