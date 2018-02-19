@@ -63,7 +63,6 @@ export class ColdstakeComponent {
   }
 
   openColdStakeModal(): void {
-    console.log(this._modals);
     this._modals.open('coldStake', { forceOpen: true, type: 'cold' });
   }
 
