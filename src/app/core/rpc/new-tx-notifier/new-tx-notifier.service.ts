@@ -24,7 +24,6 @@ export class NewTxNotifierService implements OnDestroy {
     this.log.d('tx notifier service running!');
     this._rpcState.observe('getwalletinfo', 'txcount')
       .takeWhile(() => !this.destroyed)
-      .distinctUntilChanged() // only update when txcount changes
       .subscribe(txcount => {
         this.log.d(`--- update by txcount${txcount} ---`);
         this.checkForNewTransaction();
