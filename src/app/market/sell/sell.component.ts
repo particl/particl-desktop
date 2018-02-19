@@ -54,7 +54,8 @@ export class SellComponent implements OnInit {
       name: 'My basic listing template',
       category: 'Electronics, DIY',
       status: 'unpublished',
-      status_info: 'Inactive, unpublished listing template – used to tweak your listing before publishing (or after you take down your active listings later)',
+      status_info: 'Inactive, unpublished listing template – used to tweak your listing before publishing'
+                  + '(or after you take down your active listings later)',
       action_icon: 'part-check',
       action_button: 'Publish',
       action_tooltip: 'Activate listing and put it on sale',
@@ -64,7 +65,8 @@ export class SellComponent implements OnInit {
       name: 'Fresh product (2 kg)',
       category: 'Food, Cosmetics',
       status: 'pending',
-      status_info: 'Listing successfully created and paid, waiting to be published on the market (usually needs XX confirmations before going live)',
+      status_info: 'Listing successfully created and paid, waiting to be published on the market '
+                  + '(usually needs XX confirmations before going live)',
       action_icon: 'part-date',
       action_button: 'Waiting for publication', // TODO: disable this button
       action_tooltip: 'Awaiting confirmations before making the listing live',
@@ -108,7 +110,8 @@ export class SellComponent implements OnInit {
       hash: '5EH', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg2', // TODO: assign random hash_bg (bg1-bg16)
       status: 'escrow',
-      status_info: 'Buyer\'s funds are locked in escrow, order is ready to ship &ndash; when sent, mark order as shipped and await its delivery',
+      status_info: 'Buyer\'s funds are locked in escrow, order is ready to ship &ndash; when sent,'
+                  + ' mark order as shipped and await its delivery',
       action_icon: 'part-check',
       action_button: 'Mark as shipped',
       action_tooltip: 'Confirm that the order has been shipped to buyer'
