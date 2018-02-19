@@ -1,4 +1,4 @@
-import { Amount, DateFormatter } from '../../shared/util/utils';
+import { Amount, DateFormatter } from '../../../core/util/utils';
 
 export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake' | 'internal_transfer';
 
