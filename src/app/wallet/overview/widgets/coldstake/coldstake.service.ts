@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { Log } from 'ng2-logger';
-import { Amount } from '../../../shared/util/utils';
+import { Amount } from '../../../../core/util/utils';
 
 import { RpcService, RpcStateService } from 'app/core/core.module';
 
