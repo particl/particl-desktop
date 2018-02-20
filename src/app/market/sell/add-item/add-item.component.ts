@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,8 +8,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./add-item.component.scss']
 })
 export class AddItemComponent implements OnInit {
-
-  categories: Array<any> = [
+  
+  categories: FormControl = new FormControl();
+  categoryList: Array<any> = [
     {
       name: 'Electronics',
       subcategory: [
