@@ -13,7 +13,7 @@ export class AddressService {
   private typeOfAddresses: string = 'send'; // "receive","send", "total"
 
   // Stores address objects.
-  private _addresses: Observable<Array<Address>>;
+  public _addresses: Observable<Array<Address>>;
   private _observerAddresses: Observer<Array<Address>>;
 
   // Type
@@ -47,8 +47,8 @@ export class AddressService {
       error => this.log.er(`updateAddressList, failed with error ${error}`));
   }
 
-  getAddresses(): Observable<Array<Address>> {
-    return this._addresses;
+  getAddresses(): void {
+    this.updateAddressList()
   }
 
   private rpc_loadAddressCount_success(response: any): void {

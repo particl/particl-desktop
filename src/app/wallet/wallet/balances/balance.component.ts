@@ -3,7 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { RpcStateService } from '../../../core/core.module';
 
-import { Amount } from '../../shared/util/utils';
+import { Amount } from '../../../core/util/utils';
 
 
 @Component({

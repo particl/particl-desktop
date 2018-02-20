@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material';
 
 import { SendService } from '../send.service';
 
-import { Amount } from '../../../shared/util/utils';
+import { Amount } from '../../../../core/util/utils';
 import { TransactionBuilder } from '../transaction-builder.model';
 
 @Component({

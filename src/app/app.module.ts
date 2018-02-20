@@ -5,6 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CoreModule } from './core/core.module';
 import { CoreUiModule } from './core-ui/core-ui.module';
 import { ModalsModule } from './modals/modals.module';
+import { DirectiveModule } from './core-ui/directive/directive.module';
 
 import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.module';
 // import { WalletViewsModule } from './wallet/wallet.module';
@@ -14,13 +15,14 @@ import { routing } from './app.routing';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     routing,
     /* own */
+    DirectiveModule,
     CoreModule.forRoot(),
     CoreUiModule.forRoot(),
     ModalsModule.forRoot(),

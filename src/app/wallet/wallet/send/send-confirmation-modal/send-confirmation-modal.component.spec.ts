@@ -11,7 +11,7 @@ import { RpcMockService } from '../../../../_test/core-test/rpc-test/rpc-mock.se
 import { RpcService } from '../../../../core/rpc/rpc.service';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
-fdescribe('SendConfirmationModalComponent', () => {
+describe('SendConfirmationModalComponent', () => {
   let component: SendConfirmationModalComponent;
   let fixture: ComponentFixture<SendConfirmationModalComponent>;
 
