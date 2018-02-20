@@ -164,7 +164,7 @@
 
       <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" matTooltip="Delete listing" class="small">
+          <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing()" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
           </button>
           <button mat-button matTooltip="Clone listing" class="small">

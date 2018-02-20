@@ -8,7 +8,6 @@ import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsService } from './modals.service';
-
 import { ModalsComponent } from './modals.component';
 
 /* modals */
@@ -19,6 +18,8 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
+import { DeleteListingComponent } from './delete-listing/delete-listing.component';
+
 /* shared in modals */
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PassphraseService } from './createwallet/passphrase/passphrase.service';
@@ -51,7 +52,8 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     AlertComponent,
     ColdstakeComponent,
     MultiwalletComponent,
-    DaemonConnectionComponent
+    DaemonConnectionComponent,
+    DeleteListingComponent
   ],
   exports: [
     ModalsComponent,
@@ -69,7 +71,8 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
-    DaemonConnectionComponent
+    DaemonConnectionComponent,
+    DeleteListingComponent
   ],
 })
 export class ModalsModule {

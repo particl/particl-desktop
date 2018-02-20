@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material';
+
+import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
 
 @Component({
   selector: 'app-sell',
@@ -152,7 +155,9 @@ export class SellComponent implements OnInit {
     status:   undefined
   };
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    public dialog: MatDialog) {}
 
   ngOnInit() {
   }
@@ -167,6 +172,10 @@ export class SellComponent implements OnInit {
 
   changeTab(index: number): void {
     this.selectedTab = index;
+  }
+
+  confirmDeleteListing(): void {
+    const dialogRef = this.dialog.open(DeleteListingComponent);
   }
 
 }
