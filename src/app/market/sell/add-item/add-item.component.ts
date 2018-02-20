@@ -8,9 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AddItemComponent implements OnInit {
 
-  constructor(private router: Router) { }
-
-  categories = [
+  categories: Array<any> = [
     {
       name: 'Electronics',
       subcategory: [
@@ -44,6 +42,8 @@ export class AddItemComponent implements OnInit {
       ]
     }
   ];
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
