@@ -35,7 +35,10 @@ export class ColdstakeService implements OnDestroy {
 
     this._rpcState.observe('getwalletinfo', 'encryptionstatus')
       .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.encryptionStatus = status);
+      .subscribe(status => {
+        this.encryptionStatus = status;
+        this.update();
+      });
 
     this._rpcState.observe('ui:coldstaking')
       .takeWhile(() => !this.destroyed)
@@ -44,23 +47,11 @@ export class ColdstakeService implements OnDestroy {
     this._rpcState.observe('ui:walletInitialized')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.walletInitialized = status);
-
-    this._rpcState.observe('getblockchaininfo', 'blocks')
-      .takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
-      .subscribe(block => this.rpc_progress());
-    this.rpc_progress();
+    this.update();
   }
 
-  rpc_progress(): void {
-    if (['Unlocked',
-      'Unlocked, staking only',
-      'Unencrypted'
-    ].includes(this.encryptionStatus)) {
-      this.updateData();
-    }
-  }
 
-  private updateData() {
+  update() {
     this._rpc.call('getcoldstakinginfo').subscribe(coldstakinginfo => {
       this.log.d('stakingStatus called ' + coldstakinginfo['enabled']);
       this.progress = new Amount(coldstakinginfo['percent_in_coldstakeable_script'], 2);

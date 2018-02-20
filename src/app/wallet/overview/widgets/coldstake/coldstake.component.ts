@@ -39,10 +39,6 @@ export class ColdstakeComponent {
     }
   }
 
-  openRevertColdstakingModal() {
-    const dialogRef = this.dialog.open(RevertColdstakingComponent);
-  }
-
   revert() {
     if (this._rpcState.get('locked')) {
       this._modals.open('unlock', {
@@ -52,6 +48,10 @@ export class ColdstakeComponent {
     } else {
       this.openRevertColdstakingModal();
     }
+  }
+
+  openRevertColdstakingModal() {
+    const dialogRef = this.dialog.open(RevertColdstakingComponent);
   }
 
   openZapColdstakingModal(): void {
