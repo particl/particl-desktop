@@ -7,8 +7,11 @@ import { MaterialModule } from '../../../../core-ui/material/material.module';
 import { SendService } from '../send.service';
 
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
+import { RpcMockService } from '../../../../_test/core-test/rpc-test/rpc-mock.service';
+import { RpcService } from '../../../../core/rpc/rpc.service';
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
-describe('SendConfirmationModalComponent', () => {
+fdescribe('SendConfirmationModalComponent', () => {
   let component: SendConfirmationModalComponent;
   let fixture: ComponentFixture<SendConfirmationModalComponent>;
 
@@ -21,9 +24,11 @@ describe('SendConfirmationModalComponent', () => {
       ],
       declarations: [ SendConfirmationModalComponent ],
       providers: [
+        SnackbarService,
+        {provide: RpcService, useClass: RpcMockService},
+        SendService,
         { provide: MatDialogRef},
-        SendService
-      ]
+      ],
     })
     .compileComponents();
   }));

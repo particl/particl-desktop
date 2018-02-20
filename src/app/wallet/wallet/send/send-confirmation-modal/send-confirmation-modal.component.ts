@@ -58,7 +58,6 @@ export class SendConfirmationModalComponent implements OnInit {
 
   getTransactionFee() {
     this.sendService.getTransactionFee(this.send).subscribe(fee => {
-      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@feeeeee', fee);
       this.transactionFee = fee.fee
     });
   }
