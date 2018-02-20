@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./add-item.component.scss']
 })
 export class AddItemComponent implements OnInit {
-  
+
   categories: FormControl = new FormControl();
   categoryList: Array<any> = [
     {
