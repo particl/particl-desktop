@@ -43,18 +43,29 @@ export class SendService {
         error => this.rpc_send_failed(error.message, tx.toAddress, tx.amount));
   }
 
-  // @TODO refactor this method for balance transfer without address
   public getTransactionFee(tx: TransactionBuilder): Observable<any> {
-    // this.getDefaultStealthAddress().take(1).subscribe(
-    //   (stealthAddress: string) => {
-    //
-    //   });
-    return this._rpc.call('sendtypeto', ['part', 'part', [{
-      subfee: true,
-      address: tx.toAddress,
-      amount: tx.amount,
-    }], '', '', 8, 64, true]).map(
-      fee => fee);
+    if (!tx.toAddress) {
+      return new Observable((observer) => {
+        this.getDefaultStealthAddress().take(1).subscribe(
+          (stealthAddress: string) => {
+            this._rpc.call('sendtypeto', ['part', 'part', [{
+              subfee: true,
+              address: stealthAddress,
+              amount: tx.amount,
+            }], '', '', 8, 64, true]).subscribe(fee => {
+              observer.next(fee);
+              observer.complete(fee);
+            });
+          });
+      });
+    } else {
+      return this._rpc.call('sendtypeto', ['part', 'part', [{
+        subfee: true,
+        address: tx.toAddress,
+        amount: tx.amount,
+      }], '', '', 8, 64, true]).map(
+        fee => fee);
+    }
   }
 
   public transferBalance(tx: TransactionBuilder) {
