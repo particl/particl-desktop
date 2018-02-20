@@ -54,7 +54,7 @@ export class SendService {
               amount: tx.amount,
             }], '', '', 8, 64, true]).subscribe(fee => {
               observer.next(fee);
-              observer.complete(fee);
+              observer.complete();
             });
           });
       });
