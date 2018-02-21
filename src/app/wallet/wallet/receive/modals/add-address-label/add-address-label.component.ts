@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { RpcService } from '../../../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../../../core/core.module';
 
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { ModalsService } from '../../../../../modals/modals.service';
@@ -27,6 +27,7 @@ export class AddAddressLabelComponent implements OnInit {
     public dialogRef: MatDialogRef<AddAddressLabelComponent>,
     private formBuilder: FormBuilder,
     private rpc: RpcService,
+    private rpcState: RpcStateService,
     private flashNotificationService: SnackbarService,
     private dialog: MatDialog,
     private _modals: ModalsService) {
@@ -43,7 +44,7 @@ export class AddAddressLabelComponent implements OnInit {
   }
 
   onSubmitForm(): void {
-    if (this.rpc.state.get('locked')) {
+    if (this.rpcState.get('locked')) {
       // unlock wallet
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addNewLabel.bind(this)});
     } else {
