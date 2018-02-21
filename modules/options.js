@@ -28,14 +28,15 @@ exports.parse = function() {
   }
 
   process.argv.forEach((arg, index) => {
-    if (arg.includes('=')) {
+    if (arg.includes('=')) {     /* assignation argument                */
       arg = arg.split('=');
       options[arg[0].substr(1)] = arg[1];
-    } else if (arg[1] === '-'){
-      // double dash command
+
+    } else if (arg[1] === '-') { /* double-dashed argument: for Desktop */
       options[arg.substr(2)] = true;
-    } else if (arg[0] === '-') {
-      // simple dash command
+      process.argv.splice(process.argv.indexOf(arg), 1);
+
+    } else if (arg[0] === '-') { /* single-dashed argument: for Core    */
       options[arg.substr(1)] = true;
     }
   });

@@ -29,10 +29,6 @@ const daemon  = require('./modules/daemon/daemon');
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-let openDevTools = false;
-
-if (process.argv.includes('-opendevtools'))
-  openDevTools = true;
 
 if (app.getVersion().includes('RC'))
   process.argv.push(...['-testnet', '-printtoconsole']);
@@ -111,7 +107,7 @@ function initMainWindow() {
   }
 
   // Open the DevTools.
-  if (openDevTools || options.devtools) {
+  if (options.devtools) {
     mainWindow.webContents.openDevTools()
   }
 
