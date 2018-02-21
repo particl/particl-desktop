@@ -14,16 +14,8 @@ let exitCode = 0;
 let restarting = false;
 let chosenWallets = [];
 
-// TODO: for proper logging, parse data to single line entries without date.
 function daemonData(data, logger) {
   data = data.toString().trim();
-  // data = data.split(' ').splice(2);
-  // data.map(chunk => {
-  //   while (newline = chunk.indexOf('\n')) {
-  //     let out = splice(0, newline);
-  //     log.info(out);
-  //   }
-  // })
   logger(data);
 }
 
