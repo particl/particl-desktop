@@ -40,20 +40,19 @@ exports.parse = function() {
 
     if (argIndex === 2) { /* double-dash: desktop-only argument */
       process.argv.splice(process.argv.indexOf(arg), 1);
-      let level = isVerboseLevel(arg);
-      if (level) {
-        options['verbose'] = level;
-      } else {
-        options[arg] = true;
+      let verboseLevel = isVerboseLevel(arg);
+      if (verboseLevel) {
+        options['verbose'] = verboseLevel;
+        return ;
       }
-
     } else if (argIndex === 1) { /* single-dash: core argument */
-      options[arg.substr(1)] = true;
       if (arg.includes('=')) {
         arg = arg.split('=');
         options[arg[0]] = arg[1];
+        return ;
       }
     }
+    options[arg] = true;
   });
 
   options.port = options.rpcport
