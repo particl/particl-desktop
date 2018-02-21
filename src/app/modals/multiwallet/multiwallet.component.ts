@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MultiwalletComponent implements OnInit {
 
-  wallet_selection = ['wallet.dat', 'wallet-work.dat', 'wallet-old.dat', 'shop.dat'];
+  wallet_selections: Array<any> = ['wallet.dat', 'wallet-work.dat', 'wallet-old.dat', 'shop.dat'];
 
   constructor() { }
 
