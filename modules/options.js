@@ -35,17 +35,17 @@ exports.parse = function() {
 
   process.argv.map((arg, index) => {
 
-    let argIndex = arg.lastIndexOf('-') + 1;
-    arg = arg.substr(argIndex);
+    let nDashes = arg.lastIndexOf('-') + 1;
+    arg = arg.substr(nDashes);
 
-    if (argIndex === 2) { /* double-dash: desktop-only argument */
+    if (nDashes === 2) { /* double-dash: desktop-only argument */
       process.argv.splice(process.argv.indexOf(arg), 1);
       let verboseLevel = isVerboseLevel(arg);
       if (verboseLevel) {
         options['verbose'] = verboseLevel;
         return ;
       }
-    } else if (argIndex === 1) { /* single-dash: core argument */
+    } else if (nDashes === 1) { /* single-dash: core argument */
       if (arg.includes('=')) {
         arg = arg.split('=');
         options[arg[0]] = arg[1];
