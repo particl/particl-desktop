@@ -90,7 +90,7 @@ export class SendService {
 
     /* Detect bug in older wallets with Blind inputs */
     // AddBlindedInputs: GetBlind failed for
-    if (message.search('GetBlind failed for') !== -1) {
+    if (message.search('AddBlindedInput') !== -1) {
       this.fixWallet();
     }
   }
