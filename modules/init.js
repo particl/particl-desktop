@@ -44,7 +44,7 @@ daemonManager.on('status', (status, msg) => {
 
   // Done -> means we have a binary!
   if (status === 'done') {
-    log.info('daemonManager returned successfully, starting daemon!');
+    log.debug('daemonManager returned successfully, starting daemon!');
     multiwallet.get()
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))

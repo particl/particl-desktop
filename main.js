@@ -8,23 +8,27 @@ const platform      = require('os').platform();
 const rxIpc         = require('rx-ipc-electron/lib/main').default;
 const Observable    = require('rxjs/Observable').Observable;
 
-/* make userDataPath if it doesn't exist yet */
-const userDataPath = app.getPath('userData');
-if (!fs.existsSync(userDataPath)) {
-  fs.mkdir(userDataPath);
+/* correct appName and userData to respect Linux standards */
+if (process.platform === 'linux') {
+  app.setName('particl-desktop');
+  app.setPath('userData', `${app.getPath('appData')}/${app.getName()}`);
 }
 
-const log      = require('./modules/logger.js').init();
-const _options = require('./modules/options');
-const init     = require('./modules/init');
-const rpc      = require('./modules/rpc/rpc');
-const daemon   = require('./modules/daemon/daemon');
+/* check for paths existence and create */
+[ app.getPath('userData'),
+  app.getPath('userData') + '/testnet'
+].map(path => !fs.existsSync(path) && fs.mkdir(path));
+
+const options = require('./modules/options').parse();
+const log     = require('./modules/logger').init();
+const init    = require('./modules/init');
+const rpc     = require('./modules/rpc/rpc');
+const daemon  = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-let options;
 let openDevTools = false;
 
 if (process.argv.includes('-opendevtools'))
@@ -38,7 +42,6 @@ if (app.getVersion().includes('RC'))
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   log.info('app ready')
-  options = _options.parse();
   log.debug('argv', process.argv);
   log.debug('options', options);
   initMainWindow();

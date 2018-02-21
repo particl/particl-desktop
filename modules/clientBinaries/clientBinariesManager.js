@@ -259,9 +259,9 @@ class Manager {
       if (algorithm) {
         return checksum(dInfo.downloadFile, algorithm)
           .then((hash) => {
-              this._logger.error(algorithm);
-              this._logger.error(hash);
-              this._logger.error(expectedHash);
+              this._logger.silly('algorithm: ', algorithm);
+              this._logger.silly('file hash: ', hash);
+              this._logger.silly('expected: ', expectedHash);
             if (expectedHash !== hash) {
               throw new Error(`Hash mismatch: ${expectedHash}`);
             }

@@ -1,16 +1,20 @@
 const log = require('electron-log');
+const testnet = require('./options.js').get()['testnet'];
 
 exports.init = function () {
 
   log.transports.console.level = 'info';
   log.transports.file.level    = 'debug';
 
-  log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
+  log.transports.file.appName = process.platform == 'linux'
+    ? 'particl-desktop'
+    : 'Particl Desktop';
+  let logPath = testnet ? 'testnet/particl-desktop.log' : 'particl-desktop.log';
   log.transports.file.file = log.transports.file
     .findLogPath(log.transports.file.appName)
-    .replace('log.log', 'particl.log');
+    .replace('log.log', logPath);
 
-  let i;
+  console.log(log.transports.file.file);
 
   if (process.argv.includes('-v')) {
     log.transports.console.level = 'debug';
