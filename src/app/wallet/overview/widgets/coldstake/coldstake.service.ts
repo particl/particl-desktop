@@ -37,7 +37,13 @@ export class ColdstakeService implements OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(status => {
         this.encryptionStatus = status;
-        this.update();
+        this.rpc_progress();
+      });
+
+    this._rpcState.observe('getwalletinfo', 'txcount')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(txcount => {
+        this.rpc_progress();
       });
 
     this._rpcState.observe('ui:coldstaking')
@@ -47,9 +53,17 @@ export class ColdstakeService implements OnDestroy {
     this._rpcState.observe('ui:walletInitialized')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.walletInitialized = status);
-    this.update();
+    this.rpc_progress();
   }
 
+  rpc_progress(): void {
+    if (['Unlocked',
+      'Unlocked, staking only',
+      'Unencrypted'
+      ].includes(this.encryptionStatus)) {
+      this.update();
+    }
+  }
 
   update() {
     this._rpc.call('getcoldstakinginfo').subscribe(coldstakinginfo => {
