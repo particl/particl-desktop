@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   style="isolation:isolate"
+   viewBox="547 419 26 16"
+   width="26"
+   height="16"
+   version="1.1"
+   id="svg249"
+   sodipodi:docname="lock-stake.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <metadata
+     id="metadata255">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs253" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1174"
+     id="namedview251"
+     showgrid="false"
+     inkscape:zoom="2.0669275"
+     inkscape:cx="76.221003"
+     inkscape:cy="-109.25113"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg249" />
+  <path
+     d=" M 560 419 C 557.8 419 556 420.8 556 423 L 556 424 L 554 424 C 553.4 424 553 424.4 553 425 L 553 434 C 553 434.6 553.4 435 554 435 L 566 435 C 566.6 435 567 434.6 567 434 L 567 425 C 567 424.4 566.6 424 566 424 L 564 424 L 564 423 C 564 420.8 562.2 419 560 419 Z  M 561 430.7 L 561 432 L 559 432 L 559 430.7 C 558.4 430.4 558 429.7 558 429 C 558 427.9 558.9 427 560 427 C 561.1 427 562 427.9 562 429 C 562 429.7 561.6 430.4 561 430.7 Z  M 562 424 L 558 424 L 558 423 C 558 421.9 558.9 421 560 421 C 561.1 421 562 421.9 562 423 L 562 424 Z "
+     fill="rgb(243,147,71)"
+     id="path167" />
+</svg>

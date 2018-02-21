@@ -231,251 +231,355 @@ input.verify-sucess {
   font icons
 -------------------------*/
 
-.part-barcode-qr::before {
-    content: "\ea02";
-}
-
-.part-lock::before {
-    content: "\ea03";
-}
-
-.part-snow-2::before {
-    content: "\ea05";
-}
-
-.part-chart-bar-52::before {
-    content: "\ea06";
-}
-
-.part-time-3::before {
-    content: "\ea07";
-}
-
-.part-multiple-19::before {
-    content: "\ea08";
-}
-
-.part-card-add::before {
-    content: "\ea0b";
-}
-
-.part-grid-48::before {
-    content: "\ea0c";
-}
-
-.part-layout-11::before {
-    content: "\ea0d";
-}
-
-.part-shape-oval::before {
-    content: "\ea12";
-}
-
-.part-coins::before {
-    content: "\ea13";
-}
-
-.part-stre-left::before {
-    content: "\ea14";
-}
-
-.part-stre-right::before {
-    content: "\ea15";
-}
-
-.part-stre-down::before {
-    content: "\ea16";
-}
-
-.part-stre-up::before {
-    content: "\ea17";
-}
-
-.part-simple-add::before {
-    content: "\ea19";
-}
-
-.part-circle-remove::before {
-    content: "\ea1b";
-}
-
-.part-tail-right::before {
-    content: "\ea1c";
-}
-
-.part-tail-left::before {
-    content: "\ea1d";
-}
-
-.part-tail-down::before {
-    content: "\ea1e";
-}
-
-.part-tail-up::before {
-    content: "\ea1f";
-}
-
-.part-alert-circle-exc::before {
-    content: "\ea20";
-}
-
-.part-alert-circle-que::before {
-    content: "\ea21";
-}
-
-.part-check-circle-08::before {
-    content: "\ea22";
-}
-
-.part-circle-delete-2::before {
-    content: "\ea23";
-}
-
-.part-circle-add-2::before {
-    content: "\ea24";
-}
-
-.part-copy-2::before {
-    content: "\ea25";
-}
-
-.part-simple-delete::before {
-    content: "\ea27";
-}
-
-.part-small-triangle-up::before {
-    content: "\ea28";
-}
-
-.part-small-triangle-right::before {
-    content: "\ea29";
-}
-
-.part-small-triangle-down::before {
-    content: "\ea2a";
-}
-
-.part-small-triangle-left::before {
-    content: "\ea2b";
-}
-
-.part-a-check::before {
-    content: "\ea2c";
-}
-
-.part-plate::before {
-    content: "\ea31";
-}
-
-.part-select::before {
-    content: "\ea32";
-}
-
-.part-single-copy-04::before {
-    content: "\ea33";
-}
-
-.part-menu-bold::before {
-    content: "\ea34";
-}
-
-.part-favourite-28::before {
-    content: "\ea35";
-}
-
-.part-lock-open::before {
-    content: "\ea37";
-}
-
-.part-ban::before {
-    content: "\ea38";
-}
-
-.part-refresh-01::before {
-    content: "\ea39";
+.part-add-account::before {
+    content: "\ea01";
 }
 
 .part-alert::before {
-    content: "\ea3a";
+    content: "\ea02";
 }
 
-.part-simple-remove::before {
-    content: "\ea3b";
+.part-anon::before {
+    content: "\ea03";
 }
 
-.part-small-remove::before {
-    content: "\ea3c";
+.part-arrow-down::before {
+    content: "\ea04";
 }
 
-.part-small-add::before {
-    content: "\ea3d";
+.part-arrow-left::before {
+    content: "\ea05";
 }
 
-.part-small-delete::before {
-    content: "\ea3e";
+.part-arrow-right::before {
+    content: "\ea06";
 }
 
-.part-zoom-bold-in::before {
-    content: "\ea3f";
+.part-arrow-up::before {
+    content: "\ea07";
 }
 
-.part-zoom-bold-out::before {
-    content: "\ea40";
+.part-attach::before {
+    content: "\ea08";
 }
 
-.part-zoom-bold::before {
-    content: "\ea41";
-}
-
-.part-eye-17::before {
-    content: "\ea42";
-}
-
-.part-eye-ban-18::before {
-    content: "\ea43";
+.part-blind::before {
+    content: "\ea09";
 }
 
 .part-bug::before {
+    content: "\ea0a";
+}
+
+.part-check::before {
+    content: "\ea0b";
+}
+
+.part-circle-alert::before {
+    content: "\ea0c";
+}
+
+.part-circle-check::before {
+    content: "\ea0d";
+}
+
+.part-circle-info::before {
+    content: "\ea0e";
+}
+
+.part-circle-minus::before {
+    content: "\ea0f";
+}
+
+.part-circle-plus::before {
+    content: "\ea10";
+}
+
+.part-circle-question::before {
+    content: "\ea11";
+}
+
+.part-circle-remove::before {
+    content: "\ea12";
+}
+
+.part-circle-user::before {
+    content: "\ea13";
+}
+
+.part-clear-all::before {
+    content: "\ea14";
+}
+
+.part-cog::before {
+    content: "\ea15";
+}
+
+.part-console-window::before {
+    content: "\ea16";
+}
+
+.part-console::before {
+    content: "\ea17";
+}
+
+.part-copy::before {
+    content: "\ea18";
+}
+
+.part-cross::before {
+    content: "\ea19";
+}
+
+.part-cryptocurrency-bitcoin::before {
+    content: "\ea1a";
+}
+
+.part-cryptocurrency-particl::before {
+    content: "\ea1b";
+}
+
+.part-currency-dollar::before {
+    content: "\ea1c";
+}
+
+.part-currency-euro::before {
+    content: "\ea1d";
+}
+
+.part-currency-pound::before {
+    content: "\ea1e";
+}
+
+.part-currency-yen::before {
+    content: "\ea1f";
+}
+
+.part-date::before {
+    content: "\ea20";
+}
+
+.part-error::before {
+    content: "\ea21";
+}
+
+.part-flash::before {
+    content: "\ea22";
+}
+
+.part-globe::before {
+    content: "\ea23";
+}
+
+.part-hamburger::before {
+    content: "\ea24";
+}
+
+.part-heart::before {
+    content: "\ea25";
+}
+
+.part-info::before {
+    content: "\ea26";
+}
+
+.part-label::before {
+    content: "\ea27";
+}
+
+.part-lightning::before {
+    content: "\ea28";
+}
+
+.part-lock-open::before {
+    content: "\ea29";
+}
+
+.part-lock::before {
+    content: "\ea2a";
+}
+
+.part-minus::before {
+    content: "\ea2b";
+}
+
+.part-next-double::before {
+    content: "\ea2c";
+}
+
+.part-next-single::before {
+    content: "\ea2d";
+}
+
+.part-notification-bell::before {
+    content: "\ea2e";
+}
+
+.part-notification-speaker::before {
+    content: "\ea2f";
+}
+
+.part-overview::before {
+    content: "\ea30";
+}
+
+.part-past::before {
+    content: "\ea31";
+}
+
+.part-pen-1::before {
+    content: "\ea32";
+}
+
+.part-pen-2::before {
+    content: "\ea33";
+}
+
+.part-people::before {
+    content: "\ea34";
+}
+
+.part-person-add::before {
+    content: "\ea35";
+}
+
+.part-person-check::before {
+    content: "\ea36";
+}
+
+.part-person-edit::before {
+    content: "\ea37";
+}
+
+.part-person-heart::before {
+    content: "\ea38";
+}
+
+.part-person-remove::before {
+    content: "\ea39";
+}
+
+.part-person::before {
+    content: "\ea3a";
+}
+
+.part-plus::before {
+    content: "\ea3b";
+}
+
+.part-preferences::before {
+    content: "\ea3c";
+}
+
+.part-previous-double::before {
+    content: "\ea3d";
+}
+
+.part-previous-single::before {
+    content: "\ea3e";
+}
+
+.part-public::before {
+    content: "\ea3f";
+}
+
+.part-qr::before {
+    content: "\ea40";
+}
+
+.part-receive::before {
+    content: "\ea41";
+}
+
+.part-refresh::before {
+    content: "\ea42";
+}
+
+.part-rocket::before {
+    content: "\ea43";
+}
+
+.part-search::before {
     content: "\ea44";
 }
 
-.part-small-up::before {
+.part-select::before {
     content: "\ea45";
 }
 
-.part-small-left::before {
+.part-send::before {
     content: "\ea46";
 }
 
-.part-small-right::before {
+.part-small-cross::before {
     content: "\ea47";
 }
 
-.part-small-down::before {
+.part-small-minus::before {
     content: "\ea48";
 }
 
-.part-pen-01::before {
+.part-small-plus::before {
     content: "\ea49";
 }
 
-.part-settings-gear-64::before {
+.part-snowflake::before {
     content: "\ea4a";
 }
 
-.part-flash-21::before {
+.part-stake::before {
     content: "\ea4b";
 }
 
-.part-filter-remove::before {
+.part-swap::before {
+    content: "\ea4c";
+}
+
+.part-tool::before {
     content: "\ea4d";
 }
 
-.part-pen-23::before {
+.part-transfer::before {
     content: "\ea4e";
+}
+
+.part-triangle-down::before {
+    content: "\ea4f";
+}
+
+.part-triangle-left::before {
+    content: "\ea50";
+}
+
+.part-triangle-right::before {
+    content: "\ea51";
+}
+
+.part-triangle-up::before {
+    content: "\ea52";
 }
 
 a.highlight {
   color: $color;
   text-decoration: none;
+}
+
+.cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .cdk-overlay-pane {
+    position: absolute !important;
+    max-width: 100% !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: auto;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .mat-dialog-container {
+    position: fixed !important;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing +
+.cdk-global-overlay-wrapper .cdk-overlay-pane:not(.cdk-modal-full) .mat-dialog-container {
+    height: auto;
+    width: auto;
 }

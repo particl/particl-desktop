@@ -5,11 +5,11 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from '../core-ui/material/material.module';
+import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsService } from './modals.service';
 
 import { ModalsComponent } from './modals.component';
-import { FocusDirective, FocusTimeoutDirective } from './modals.directives';
 
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
@@ -23,10 +23,10 @@ import { AlertComponent } from './shared/alert/alert.component';
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PassphraseService } from './createwallet/passphrase/passphrase.service';
 import { PasswordComponent } from './shared/password/password.component';
-import { PercentageBarComponent } from './shared/percentage-bar/percentage-bar.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
+import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 
 
 @NgModule({
@@ -36,11 +36,10 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
     BrowserAnimationsModule,
     ClipboardModule,
     /* own */
-    MaterialModule
+    MaterialModule,
+    DirectiveModule
   ],
   declarations: [
-    FocusDirective,
-    FocusTimeoutDirective,
     ModalsComponent,
     PassphraseComponent,
     PasswordComponent,
@@ -51,12 +50,11 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
     EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
-    PercentageBarComponent,
-    MultiwalletComponent
+    MultiwalletComponent,
+    DaemonConnectionComponent
   ],
   exports: [
     ModalsComponent,
-    PercentageBarComponent,
     ClipboardModule
   ],
   providers: [
@@ -71,7 +69,8 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
-    MultiwalletComponent
+    MultiwalletComponent,
+    DaemonConnectionComponent
   ],
 })
 export class ModalsModule {

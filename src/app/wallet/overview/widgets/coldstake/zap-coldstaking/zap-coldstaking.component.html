@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Cold Stake Zap</h2>
+
+<mat-dialog-content>
+  <p>
+    Zapping will fast-forward the cold staking progress instantly to 100%.
+  </p>
+  <p>
+    Be warned, that this decreases your financial privacy, as it bundles all your remaining coins into one big transaction. It is advised to zap only the small remaining part of your coins (last ~10 %) &ndash; those that take ages to get processed.
+  </p>
+  <p>
+    Staked coins won't be affected. If the outputs you want to move are in your staked balance, you must wait for them to mature.
+  </p>
+  <p class="warning">
+    <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+    Zapping transaction(s) will consume <strong>{{ fee }} PART</strong> fee in the process.
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="warn" (click)="zap()" [disabled]="!fee">
+    <mat-icon fontSet="partIcon" fontIcon="part-lightning"></mat-icon>
+    Zap to 100%
+  </button>
+</mat-dialog-actions>

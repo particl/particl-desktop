@@ -2,10 +2,9 @@ import { Component, Inject, forwardRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { PasswordComponent } from '../shared/password/password.component';
-import { flyInOut, slideDown } from '../../core-ui/core.animations';
+import { flyInOut } from '../../core-ui/core.animations';
 
-import { RpcService } from '../../core/core.module';
+import { RpcService, RpcStateService } from '../../core/core.module';
 import { ModalsService } from '../modals.service';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
@@ -28,7 +27,6 @@ export class ColdstakeComponent {
   // Cold wallet (step 2)
   prevColdStakeAddress: any = '';
   coldStakeAddress: any = '';
-  private validAddress: boolean = undefined;
 
   // Cold wallet (step 3)
   finalMessage: string = '';
@@ -37,25 +35,26 @@ export class ColdstakeComponent {
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _rpc: RpcService,
-    private _flashNotificationService: SnackbarService
+    private _rpcState: RpcStateService,
+    private _flashNotificationService: SnackbarService,
+    public _dialogRef: MatDialogRef<ColdstakeComponent>
   ) {
     this.nextStep();
   }
 
-  nextStep () {
-    this.log.d(`Going to step: ${this.step + 1}`)
+  nextStep (): void {
+    this.log.d(`Going to step: ${this.step + 1}`);
     this.step++;
     this.animationState = 'next';
-    setTimeout(() => this.animationState = '', 300);
     if ([0, 2].includes(this.step)) {
-      const encryptionstatus = this._rpc.state.get('encryptionstatus').trim();
+      const encryptionstatus = this._rpcState.get('getwalletinfo').encryptionstatus.trim();
       if (['Unlocked', 'Unencrypted'].includes(encryptionstatus)) {
         this.unlockWallet(encryptionstatus);
       }
     }
   }
 
-  prevStep() {
+  prevStep(): void {
     this.step--;
     this.animationState = 'prev';
     if ([0, 2].includes(this.step)) {
@@ -69,7 +68,7 @@ export class ColdstakeComponent {
     * called when unlocked (by password component)
     * @param {string} encryptionStatus  The wallet encryption status
     */
-  unlockWallet(encryptionStatus: string) {
+  unlockWallet(encryptionStatus: string): void {
 
     if (['Unlocked', 'Unencrypted'].includes(encryptionStatus)) {
 
@@ -115,8 +114,7 @@ export class ColdstakeComponent {
         success => {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
           this._flashNotificationService.open('Successfully activated cold staking!', 'info');
-          // this.finalMessage = 'Successfully activated cold staking! ' + success.changeaddress.coldstakingaddress;
-          this._rpc.state.set('ui:coldstaking', success.changeaddress.coldstakingaddress);
+          this._rpcState.set('ui:coldstaking', true);
           this.close();
         },
         error => {
@@ -131,7 +129,6 @@ export class ColdstakeComponent {
         success => {
           this.log.d(`resetColdStakeAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
           this._flashNotificationService.open('Successfully deactivated cold staking!', 'info');
-          // this.finalMessage = 'Successfully deactivated cold staking! ' + success.changeaddress.coldstakingaddress;
           this.close();
         },
         error => {
@@ -140,8 +137,8 @@ export class ColdstakeComponent {
         });
   }
 
-  close() {
-    this._modalsService.close();
+  close(): void {
+    this._dialogRef.close();
   }
 
   /**

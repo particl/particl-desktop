@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
-import { RpcService, BlockStatusService } from '../core/core.module';
+import { RpcService, RpcStateService, BlockStatusService } from '../core/core.module';
 
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material';
 import { ModalsComponent } from './modals.component';
 
 @Injectable()
-export class ModalsService {
+export class ModalsService implements OnDestroy {
 
   public modal: any = null;
   private message: Subject<any> = new Subject<any>();
@@ -30,6 +30,7 @@ export class ModalsService {
   /* True if user already has a wallet (imported seed or created wallet) */
   public initializedWallet: boolean = false;
   private data: string;
+  private destroyed: boolean = false;
 
   private log: any = Log.create('modals.service');
 
@@ -45,6 +46,7 @@ export class ModalsService {
 
   constructor (
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private _blockStatusService: BlockStatusService,
     private _dialog: MatDialog
   ) {
@@ -59,13 +61,17 @@ export class ModalsService {
     this.openInitialCreateWallet();
 
     /* Hook daemon errors -> open daemon modal */
-    this._rpc.errorsStateCall.asObservable()
+    this._rpcState.errorsStateCall.asObservable()
     .subscribe(
       status => this.wasAlreadyOpen('daemon') && this.close(),
       error => {
           this.enableClose = true;
-          this.open('daemon', error);
+          // this.open('daemon', error);
       });
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   /**
@@ -74,7 +80,12 @@ export class ModalsService {
     * @param {any} data       Optional - data to pass through to the modal.
     */
   open(modal: string, data?: any): void {
-    const dialogRef = this._dialog.open(ModalsComponent, {disableClose: true, width: '100%', height: '100%'});
+    const dialogRef = this._dialog.open(ModalsComponent, {
+      disableClose: true,
+      width: '100%',
+      height: '100%',
+      panelClass: 'cdk-modal-full'
+    });
     if (modal in this.messages) {
       if (
         (data && data.forceOpen)
@@ -90,6 +101,8 @@ export class ModalsService {
           dialogRef.afterClosed().subscribe(() => {
             this.close();
           });
+        } else {
+            dialogRef.close();
         }
       }
     } else {
@@ -98,7 +111,7 @@ export class ModalsService {
   }
 
   /** Close the modal */
-  close() {
+  close(): void {
     const isOpen = this.isOpen;
 
     if (!!this.modal && !this.wasManuallyClosed(this.modal.name)) {
@@ -116,12 +129,12 @@ export class ModalsService {
     * Check if a modal was manually closed
     * @param {any} modal  The modal to check
     */
-  wasManuallyClosed(modal: any) {
+  wasManuallyClosed(modal: any): boolean {
     return this.manuallyClosed.includes(modal);
   }
 
   /** Check if the modal is already open */
-  wasAlreadyOpen(modalName: string) {
+  wasAlreadyOpen(modalName: string): boolean {
     return (this.modal === this.messages[modalName]);
   }
 
@@ -135,7 +148,7 @@ export class ModalsService {
     * Open the Sync modal if it needs to be opened
     * @param {any} status  Blockchain status
     */
-  openSyncModal(status: any) {
+  openSyncModal(status: any): void {
     // Open syncing Modal
     if (!this.isOpen && !this.wasManuallyClosed(this.messages['syncing'].name)
       && (status.networkBH <= 0
@@ -148,8 +161,9 @@ export class ModalsService {
   /**
     * Open the Createwallet modal if wallet is not initialized
     */
-  openInitialCreateWallet() {
-    this._rpc.state.observe('ui:walletInitialized')
+  openInitialCreateWallet(): void {
+    this._rpcState.observe('ui:walletInitialized')
+      .takeWhile(() => !this.destroyed)
       .subscribe(
         state => {
           this.initializedWallet = state;

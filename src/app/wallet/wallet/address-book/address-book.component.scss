@@ -23,10 +23,14 @@ app-header {
   padding-top: 20px; // offset button and search form
 }
 
+.type-filter {
+  margin-top: 16px;
+}
+
 .search-address {
   .mat-icon {
     top: 4px;
     right: 18px;
-    font-size:14px;
+    font-size: 14px;
   }
 }

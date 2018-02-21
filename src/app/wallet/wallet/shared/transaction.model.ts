@@ -1,4 +1,4 @@
-import { Amount } from '../../shared/util/utils';
+import { Amount, DateFormatter } from '../../../core/util/utils';
 
 export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake' | 'internal_transfer';
 
@@ -33,7 +33,7 @@ export class Transaction {
   constructor(json: any) {
     /* transactions */
     this.txid = json.txid;
-    if (json.outputs !== undefined) {
+    if (json.outputs && json.outputs.length) {
       this.address = json.outputs[0].address;
       this.stealth_address = json.outputs[0].stealth_address;
       this.label = json.outputs[0].label;
@@ -82,9 +82,7 @@ export class Transaction {
 
   /* Amount stuff */
   public getAmount(): number {
-    if (this.category === 'stake') {
-      return +this.reward;
-    } else if (this.category === 'internal_transfer') {
+   if (this.category === 'internal_transfer') {
       // add all elements in output array ( but exclude vout === 65535)
       // todo: check assumption that we own all outputs?
       /*
@@ -139,34 +137,18 @@ export class Transaction {
 
   /* Date stuff */
   public getDate(): string {
-    return this.dateFormatter(new Date(this.time * 1000));
+    return new DateFormatter(new Date(this.time * 1000)).dateFormatter();
   }
-
-  private dateFormatter(d: Date) {
-    return (
-      d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + '-' +
-      ((d.getMonth() + 1) < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + '-' +
-      (d.getFullYear() < 10 ? '0' + d.getFullYear() : d.getFullYear()) + ' ' +
-      (d.getHours() < 10 ? '0' + d.getHours() : d.getHours()) + ':' +
-      (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()) + ':' +
-      (d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
-    );
-  }
-
-
 
   /* Narration */
   public getNarration() {
-    if (this.n0) {
-      return this.n0;
-    } else if (this.n1) {
-      return this.n1;
-    } else {
-      return false
+    for (const key in this.outputs) {
+      if (this.outputs[key] && this.outputs[key].narration) {
+        return this.outputs[key].narration;
+      }
     }
+    return false
   }
 
 
 }
-
-

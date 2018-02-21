@@ -1,9 +1,6 @@
-// remove on
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
-import { ModalsService } from '../modals.service';
-
-import { StateService, BlockStatusService } from '../../core/core.module';
+import { RpcStateService, BlockStatusService } from '../../core/core.module';
 
 import { Log } from 'ng2-logger';
 
@@ -12,9 +9,10 @@ import { Log } from 'ng2-logger';
   templateUrl: './syncing.component.html',
   styleUrls: ['./syncing.component.scss']
 })
-export class SyncingComponent {
+export class SyncingComponent implements OnDestroy {
 
   log: any = Log.create('syncing.component');
+  private destroyed: boolean = false;
 
   remainder: any;
   lastBlockTime: Date;
@@ -24,35 +22,56 @@ export class SyncingComponent {
   syncPercentage: number;
   nPeers: number;
 
+  /* modal stuff */
+  alreadyClosedOnce: boolean = false;
+
+
   constructor(
     private _blockStatusService: BlockStatusService,
-    private _state: StateService
+    private _rpcState: RpcStateService
   ) {
-    _state.observe('connections')
+    _rpcState.observe('getnetworkinfo', 'connections')
+      .takeWhile(() => !this.destroyed)
       .subscribe(connections => this.nPeers = connections);
 
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
+
       this.remainder = status.remainingBlocks < 0
         ? 'waiting for peers...'
         : status.remainingBlocks;
+
       this.lastBlockTime = status.lastBlockTime;
+
       this.increasePerMinute = status.syncPercentage === 100
         ? 'DONE'
         : status.syncPercentage.toFixed(2).toString() + ' %';
+
       this.estimatedTimeLeft = status.syncPercentage === 100
         ? 'DONE'
         : status.estimatedTimeLeft;
+
       this.manuallyOpened = status.manuallyOpened;
       this.syncPercentage = status.syncPercentage;
-      if (status.syncPercentage === 100 && !this.manuallyOpened) {
 
+      if (status.syncPercentage === 100 && !this.manuallyOpened) {
+        this.closeOnceHackishly();
+      }
+    });
+  }
+
+  closeOnceHackishly() {
+    if (!this.alreadyClosedOnce) {
         // BUG: this constructor is on a loop when we're syncing?
         // run particld with -reindex flag to trigger the bug
         this.log.d(`syncPercentage is 100%, closing automatically!`);
 
         document.body.dispatchEvent(
           new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        this.alreadyClosedOnce = true;
       }
-    });
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }

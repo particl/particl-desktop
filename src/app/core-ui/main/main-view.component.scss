@@ -76,28 +76,39 @@ a.sidebar-item-link {
 
 
 
-// ------ ERROR MESSAGES ------ //
+// ------ ERROR & INFO MESSAGES ------ //
 
-.error {
+.notification {
+  margin-bottom: 6px;
   .sidebar-item {
+    margin: 4px 0;
     .icon {
-      color: $color-alert;
       margin: 0 14px 0 0;
     }
     .text {
       color: white;
       font-size: 11px;
-      padding: 24px 16px;
+      line-height: 1.5;
+      padding: 0;
+      display: inline-block;
     }
     &:hover {
       background: none;
-      .icon {
-        color: $color-alert;
-      }
+    }
+  }
+  &.error {
+    .icon,
+    &:hover .icon {
+      color: $color-alert;
+    }
+  }
+  &.info {
+    .icon,
+    &:hover .icon {
+      color: $color-info;
     }
   }
 }
-
 
 /* ------------------------------- *\
     LAYOUT
@@ -113,8 +124,6 @@ a.sidebar-item-link {
 
   .logo {
     display: block;
-    background: url("../../../assets/particl-logo.svg") no-repeat 0 0;
-    background-size: 144px 60px;
     height: 60px;
     width: 144px;
     margin: 30px auto;

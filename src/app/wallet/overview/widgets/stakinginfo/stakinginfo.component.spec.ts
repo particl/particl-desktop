@@ -6,7 +6,7 @@ import { SharedModule } from '../../../shared/shared.module';
 
 import { StakinginfoComponent } from './stakinginfo.component';
 
-import { Amount, Duration } from '../../../shared/util/utils';
+import { Amount, Duration } from '../../../../core/util/utils';
 
 describe('StakinginfoComponent', () => {
   let component: StakinginfoComponent;

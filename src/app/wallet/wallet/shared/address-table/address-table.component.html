@@ -32,7 +32,8 @@
           </div>
 
           <!-- Address -->
-          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)">
+          <div fxFlex="1 1 70%" class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)"
+                matTooltip="Show Address" matTooltipPosition="above">
             <span class="title">Address&emsp;</span>
             <span class="address-string enable-select">{{ address.address }}</span>
           </div>
@@ -54,22 +55,24 @@
                fxLayoutAlign.lt-md="start center" fxLayoutGap="10px" *ngIf="displayToolsMenu" class="address-actions">
             <!-- ICO: copy address -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <mat-icon fontSet="partIcon" fontIcon="part-single-copy-04" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
             </span>
             <!-- ICO: verify message -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
-              <mat-icon fontSet="partIcon" fontIcon="part-a-check" (click)="openSignatureModal(address.address)"
+              <mat-icon fontSet="partIcon" fontIcon="part-person-check" (click)="openSignatureModal(address.address)"
                        class="cursor-pointer" matTooltip="Sign / Verify message"
                        ngxClipboard></mat-icon>
             </span>
             <!-- ICO: delete -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center">
               <mat-icon color="warn" fontSet="partIcon" fontIcon="part-circle-remove"
+                        class="cursor-pointer"
                        (click)="deleteAddress(address.label, address.address)" matTooltip="Delete address"></mat-icon>
             </span>
             <!-- display QR code -->
             <span fxFlex="0 0 20px" fxLayoutAlign="center center" *ngIf="!displayQrMenu" class="qrcode-menu">
-              <mat-icon fontSet="partIcon" fontIcon="part-barcode-qr" matTooltip="Show QR code"
+              <mat-icon fontSet="partIcon" fontIcon="part-qr"
+                        class="cursor-pointer" matTooltip="Show QR code"
                        (click)="openQrCodeModal(address)"></mat-icon>
             </span>
           </div>
@@ -81,10 +84,11 @@
   </div>
 </div>
 
-<mat-paginator
+<app-paginator
   *ngIf="displayPagination && getSinglePage().length>0"
+  #paginator
   [length]="getTotalAddressCount()"
   [pageSize]="getMaxAddressesPerPage()"
   [pageSizeOptions]="PAGE_SIZE_OPTIONS"
   (page)="pageChanged($event)">
-</mat-paginator>
+</app-paginator>

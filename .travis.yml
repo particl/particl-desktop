@@ -14,6 +14,11 @@ apt:
     - icnsutils
     - graphicsmagick
 
+cache:
+  directories:
+  - node_modules
+  - $HOME/.npm/_prebuilds
+
 before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0

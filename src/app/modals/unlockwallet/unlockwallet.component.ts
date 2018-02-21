@@ -14,7 +14,8 @@ import { ModalsComponent } from '../modals.component';
 export class UnlockwalletComponent {
 
   // constants
-  DEFAULT_TIMEOUT: number = 60;
+  // DEFAULT_TIMEOUT: number = 60;
+  DEFAULT_TIMEOUT: number = 300;
   log: any = Log.create('unlockwallet.component');
 
   @Output() unlockEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -23,12 +24,12 @@ export class UnlockwalletComponent {
   private callback: Function;
   timeout: number = this.DEFAULT_TIMEOUT;
   showStakeOnly: boolean = false;
-
+  stakeOnly: boolean = false;
   constructor(private _rpc: RpcService,
               public dialogRef: MatDialogRef<ModalsComponent>) {
   }
 
-  unlock(encryptionStatus: string) {
+  unlock(encryptionStatus: string): void {
     // unlock actually happened in password.component.ts
     this.log.d('Unlock signal emitted! = ' + encryptionStatus );
 
@@ -49,17 +50,18 @@ export class UnlockwalletComponent {
   /**
   * setData sets the callback information for when the wallet unlocks.
   */
-  setData(data: any) {
+  setData(data: any): void {
     this.log.d('setting callback, timeout & showStakeOnly data');
     this.callback = data.callback;
     if (Number.isInteger(data.timeout)) {
       this.timeout = data.timeout;
     }
     this.showStakeOnly = Boolean(data.showStakeOnly);
+    this.stakeOnly = Boolean(data.stakeOnly)
     this.autoClose = (data.autoClose !== false)
   }
 
-  closeModal() {
+  closeModal(): void {
     // clear callback data
     this.timeout = this.DEFAULT_TIMEOUT;
     this.showStakeOnly = true;

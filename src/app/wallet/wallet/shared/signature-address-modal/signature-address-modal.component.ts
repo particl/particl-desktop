@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { SignVerifyMessage } from './sign-verify-message.model';
 
-import { RpcService } from '../../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../../core/core.module';
 import { ModalsService } from '../../../../modals/modals.service';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
@@ -33,14 +33,15 @@ export class SignatureAddressModalComponent implements OnInit {
   log: any = Log.create('SignatureAddressModalComponent.component');
 
   @ViewChild('addressInput') addressInput: ElementRef;
+  @ViewChild('signatureInput') signatureInput: ElementRef;
 
-  constructor(
-    private dialog: MatDialog,
-    private _rpc: RpcService,
-    private flashNotification: SnackbarService,
-    private formBuilder: FormBuilder,
-    private _modals: ModalsService
-  ) {
+  constructor(private dialog: MatDialog,
+              private _rpc: RpcService,
+              private _rpcState: RpcStateService,
+              private flashNotification: SnackbarService,
+              private formBuilder: FormBuilder,
+              private _modals: ModalsService,
+              private dialogRef: MatDialogRef<SignatureAddressModalComponent>) {
   }
 
   ngOnInit() {
@@ -68,17 +69,18 @@ export class SignatureAddressModalComponent implements OnInit {
     this.buildForm();
   }
 
-  openLookup() {
+  openLookup(): void {
     const dialogRef = this.dialog.open(AddressLookupComponent);
     // @TODO confirm lookup type
-    dialogRef.componentInstance.type = 'receive';
+    dialogRef.componentInstance.type = (this.type === 'sign') ? 'sign' : 'send';
+    dialogRef.componentInstance.filter = 'Public';
     dialogRef.componentInstance.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
       dialogRef.close();
     });
   }
 
-  selectAddress(copyObject: AddressLookUpCopy) {
+  selectAddress(copyObject: AddressLookUpCopy): void {
     this.formData.address = copyObject.address;
     this.verifyAddress();
   }
@@ -104,7 +106,7 @@ export class SignatureAddressModalComponent implements OnInit {
   // copy code end
 
   onFormSubmit(): void {
-    if (this._rpc.state.get('locked')) {
+    if (this._rpcState.get('locked')) {
       // unlock wallet
       this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.signVerifyMessage.bind(this)});
     } else {
@@ -152,12 +154,21 @@ export class SignatureAddressModalComponent implements OnInit {
     this.addressForm.reset();
   }
 
-  onCopyAddress(): void {
-    this.flashNotification.open('Copied address to clipboard!');
-  }
-
   pasteAddress(): void {
     this.addressInput.nativeElement.focus();
     document.execCommand('paste');
+  }
+
+  copyToClipBoard(): void {
+    this.flashNotification.open('Signature copied to clipboard.');
+  }
+
+  pasteSignature(): void {
+    this.signatureInput.nativeElement.focus();
+    document.execCommand('paste');
+  }
+
+  dialogClose(): void {
+    this.dialogRef.close();
   }
 }
