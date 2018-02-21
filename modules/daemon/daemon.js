@@ -63,9 +63,6 @@ exports.start = function (wallets, callback) {
 
     }).catch(() => {
 
-      if (!restarting && ['debug', 'silly'].includes(log.transports.console.level))
-        process.argv.push('-printtoconsole');
-
       let options      = _options.get();
       const daemonPath = options.customdaemon
                        ? options.customdaemon

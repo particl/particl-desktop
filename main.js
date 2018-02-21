@@ -7,7 +7,6 @@ const url           = require('url');
 const platform      = require('os').platform();
 const rxIpc         = require('rx-ipc-electron/lib/main').default;
 const Observable    = require('rxjs/Observable').Observable;
-const log           = require('electron-log');
 
 /* make userDataPath if it doesn't exist yet */
 const userDataPath = app.getPath('userData');
@@ -15,30 +14,11 @@ if (!fs.existsSync(userDataPath)) {
   fs.mkdir(userDataPath);
 }
 
-/* initialize logging */
-log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
-log.transports.file.file = log.transports.file
-  .findLogPath(log.transports.file.appName)
-  .replace('log.log', 'particl.log');
-log.transports.console.level = 'info';
-log.transports.file.level = 'debug';
-if (process.argv.includes('-v')) {
-  log.transports.console.level = 'debug'; /* most messages */
-  process.argv.push('-printtoconsole');   /* daemon output */
-}
-if (process.argv.includes('-vv')) {
-  log.transports.console.level = 'silly'; /* all messages      */
-  process.argv.push('-debug');            /* daemon debug mode */
-}
-log.daemon = log.info;
-
-log.debug(`console log level: ${log.transports.console.level}`);
-log.debug(`file log level: ${log.transports.file.level}`);
-
+const log      = require('./modules/logger.js').init();
 const _options = require('./modules/options');
-const init = require('./modules/init');
-const rpc = require('./modules/rpc/rpc');
-const daemon = require('./modules/daemon/daemon');
+const init     = require('./modules/init');
+const rpc      = require('./modules/rpc/rpc');
+const daemon   = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -59,6 +39,8 @@ if (app.getVersion().includes('RC'))
 app.on('ready', () => {
   log.info('app ready')
   options = _options.parse();
+  log.debug('argv', process.argv);
+  log.debug('options', options);
   initMainWindow();
   init.start(mainWindow);
 });

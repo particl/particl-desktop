@@ -34,7 +34,7 @@ exports.startDaemonManager = function() {
     .catch((error)      => log.error(error));
 }
 
-/* 
+/*
   Start daemon when we get the GO sign from daemonManager.
   Listen for daemonManager errors too..
 
@@ -43,7 +43,7 @@ exports.startDaemonManager = function() {
 daemonManager.on('status', (status, msg) => {
 
   // Done -> means we have a binary!
-  if(status === 'done') {
+  if (status === 'done') {
     log.info('daemonManager returned successfully, starting daemon!');
     multiwallet.get()
     // TODO: activate for prompting wallet
@@ -77,13 +77,13 @@ daemonManager.on('status', (status, msg) => {
 });
 
 electron.app.on('before-quit', function beforeQuit(event) {
-  log.debug('received quit signal');
+  log.info('received quit signal, cleaning up...');
 
   event.preventDefault();
   electron.app.removeListener('before-quit', beforeQuit);
 
   // destroy IPC listeners
-  rpc.destroy(); 
+  rpc.destroy();
   notification.destroy();
 
   daemon.stop();
