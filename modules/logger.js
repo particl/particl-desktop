@@ -1,5 +1,5 @@
-const log = require('electron-log');
-const testnet = require('./options.js').get()['testnet'];
+const log     = require('electron-log');
+const options = require('./options.js').get();
 
 exports.init = function () {
 
@@ -9,27 +9,26 @@ exports.init = function () {
   log.transports.file.appName = process.platform == 'linux'
     ? 'particl-desktop'
     : 'Particl Desktop';
-  let logPath = testnet ? 'testnet/particl-desktop.log' : 'particl-desktop.log';
+  let logPath = options.testnet
+    ? 'testnet/particl-desktop.log'
+    : 'particl-desktop.log';
   log.transports.file.file = log.transports.file
     .findLogPath(log.transports.file.appName)
     .replace('log.log', logPath);
 
-  console.log(log.transports.file.file);
-
-  if (process.argv.includes('-v')) {
-    log.transports.console.level = 'debug';
-    process.argv.splice(process.argv.indexOf('-v'), 1);
-
-  } else if (process.argv.includes('-vv')) {
-    log.transports.console.level = 'debug';
-    process.argv.push('-printtoconsole');
-    process.argv.splice(process.argv.indexOf('-vv'), 1);
-
-  } else if (process.argv.includes('-vvv')) {
-    log.transports.console.level = 'silly';
-    process.argv.push('-debug');
-    process.argv.push('-printtoconsole');
-    process.argv.splice(process.argv.indexOf('-vvv'), 1);
+  switch (options.verbose) {
+    case 1:
+      log.transports.console.level = 'debug';
+      break ;
+    case 2:
+      log.transports.console.level = 'debug';
+      process.argv.push('-printtoconsole');
+      break ;
+    case 3:
+      log.transports.console.level = 'silly';
+      process.argv.push('-debug');
+      process.argv.push('-printtoconsole');
+      break ;
   }
 
   log.daemon = log.info;
