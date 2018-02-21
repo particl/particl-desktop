@@ -46,6 +46,12 @@ export class ColdstakeService implements OnDestroy {
         this.rpc_progress();
       });
 
+    this._rpcState.observe('getblockchaininfo', 'blocks')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(status => {
+        this.rpc_progress();
+      });
+
     this._rpcState.observe('ui:coldstaking')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingEnabled = status);
