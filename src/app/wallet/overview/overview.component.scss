@@ -1,4 +1,5 @@
-@import 'widgets/shared/shared.scss';
+@import "./src/assets/_config"; // import shared colors etc.
+@import "widgets/shared/shared.scss";
 
 .balance-overview { // list of balances
   @extend %disable-select;
@@ -12,7 +13,11 @@
   }
 }
 
-.overview-content { // area with widgets
+.overview { // area with widgets
   padding: 0 35px;
 }
 
+.action-buttons {
+  text-align: right;
+  margin: 24px 0 48px;
+}
