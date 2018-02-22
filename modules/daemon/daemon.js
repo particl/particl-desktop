@@ -71,8 +71,8 @@ exports.start = function (wallets, callback) {
         } else {
           log.info('daemon exited successfully');
         }
-        if (!restarting)
-          electron.app.quit();
+        // if (!restarting)
+         // electron.app.quit();
       })
 
       // TODO change for logging

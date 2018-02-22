@@ -39,6 +39,7 @@ export class RpcService implements OnDestroy {
    */
   private port: number = TESTNET_PORT; // TODO: Mainnet / testnet flag...
 
+  // note: basic64 equiv= dGVzdDp0ZXN0
   private username: string = 'test';
   private password: string = 'test';
 
@@ -48,7 +49,7 @@ export class RpcService implements OnDestroy {
     private _http: HttpClient,
     private _ipc: IpcService
   ) {
-    this.isElectron = window.electron;
+    this.isElectron = false; // window.electron
   }
 
   ngOnDestroy() {
@@ -86,10 +87,13 @@ export class RpcService implements OnDestroy {
         id: 1
       });
 
-      const headers = new HttpHeaders();
-      headers.append('Content-Type', 'application/json');
-      headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
-      headers.append('Accept', 'application/json');
+
+      let headerJson = {
+       'Content-Type': 'application/json',
+       'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`),
+       'Accept': 'application/json',
+      };
+      let headers = new HttpHeaders(headerJson);
 
       return this._http
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
