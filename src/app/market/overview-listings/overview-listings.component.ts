@@ -30,6 +30,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   categories: FormControl = new FormControl();
   categoryList: Array<string> = [];
 
+  _t: Array<any>;
   _rootCategoryList: Category = new Category({});
 
   // sorting
@@ -69,6 +70,9 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   updateCategories(list) {
     this.log.d('Updating category list');
+    this.log.d(list);
+    this.log.d(this._t);
+    this._t = list;
     this._rootCategoryList = new Category(list);
     this.categoryList = this._rootCategoryList.getSubCategoryNames();
   }

@@ -13,6 +13,7 @@ const filter = {
 let whitelist = new Map();
 
 exports.init = function () {
+    loadDev();
     loadMarketAuthentication();
     loadWalletAuthentication();
     loadGithub();
@@ -84,6 +85,17 @@ function loadWalletAuthentication() {
     let value = {
         name: "wallet",
         auth: cookie.getAuth(options)
+    }
+
+    whitelist.set(key, value);
+}
+
+function loadDev() {
+    let options = _options.get();
+    let key = 'localhost:4200';
+    let value = {
+        name: "dev",
+        auth: false
     }
 
     whitelist.set(key, value);
