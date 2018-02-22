@@ -27,7 +27,7 @@ export class ColdstakeComponent {
     private _rpcState: RpcStateService,
     private _coldstake: ColdstakeService
   ) { }
-
+  
   zap() {
     if (this._rpcState.get('locked')) {
       this._modals.open('unlock', {
