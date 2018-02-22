@@ -71,8 +71,9 @@ export class ColdstakeService implements OnDestroy {
       this.log.d(`hotstakingamount ${this.hotstake.amount}`);
 
       if ('enabled' in coldstakinginfo) {
-        this._rpcState.set('ui:coldstaking', coldstakinginfo['enabled']);
-        this.coldStakingEnabled = true;
+        const enabled = coldstakinginfo['enabled'];
+        this._rpcState.set('ui:coldstaking', enabled);
+        this.coldStakingEnabled = enabled;
       } else { // ( < 0.15.1.2) enabled = undefined ( => false)
         this._rpcState.set('ui:coldstaking', false);
         this.coldStakingEnabled = false;
