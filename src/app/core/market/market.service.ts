@@ -11,14 +11,8 @@ export class MarketService {
   url = `http://${this.hostname}/api/rpc`;
 
   constructor(private _http: HttpClient) {
-    window.m = this.test.bind(this);
    }
-  test() {
-    this.call('help', []).subscribe(
-      list => console.log('got list' + list),
-      error => console.log('error' + error)
-    )
-  }
+
   call(method: string, params?: Array<any> | null): Observable<any> {
 
       // Running in browser, delete?
