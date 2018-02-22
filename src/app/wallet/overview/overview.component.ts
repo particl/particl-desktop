@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RpcService } from '../../core/core.module';
+import { RpcStateService } from '../../core/core.module';
 
 @Component({
   selector: 'app-overview',
