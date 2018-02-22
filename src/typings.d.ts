@@ -8,7 +8,6 @@ interface NodeModule {
 
 interface Window {
   electron: boolean;
-  m: (method: string, params?: Array<any> | null) => any;
   require: any;
   ipc: {
     on: (channel: string, listener: Function) => void;
