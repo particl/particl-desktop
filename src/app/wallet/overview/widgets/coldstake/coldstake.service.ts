@@ -42,12 +42,14 @@ export class ColdstakeService implements OnDestroy {
 
     this._rpcState.observe('getwalletinfo', 'txcount')
       .takeWhile(() => !this.destroyed)
+      .debounceTime(1000/*ms*/)
       .subscribe(txcount => {
         this.update();
       });
 
     this._rpcState.observe('getblockchaininfo', 'blocks')
       .takeWhile(() => !this.destroyed)
+      .debounceTime(10 * 1000/*ms*/)
       .subscribe(status => {
         this.update();
       });
