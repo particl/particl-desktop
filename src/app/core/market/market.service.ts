@@ -11,7 +11,8 @@ export class MarketService {
   url = `http://${this.hostname}/api/rpc`;
 
   constructor(private _http: HttpClient) {
-   }
+  }
+
 
   call(method: string, params?: Array<any> | null): Observable<any> {
 
