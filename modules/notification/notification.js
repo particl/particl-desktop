@@ -5,17 +5,19 @@ const Observable   = require('rxjs/Observable').Observable;
 const notification = require('electron-notify');
 
 exports.init = function () {
-    notification.setConfig({
-        appIcon: 'assets/icons/notification.png',
-        displayTime: 3000
-    });
-    rxIpc.registerListener('notification', (title, desc, params) => {
-        notification.notify({ title: title, text: desc });
-        return Observable.create(observer => observer.complete(true));
-    });
+  console.log("notification init");
+  notification.setConfig({
+    appIcon: 'assets/icons/notification.png',
+    displayTime: 3000
+  });
+  rxIpc.registerListener('notification', (title, desc, params) => {
+    console.log('got notification', title, desc, params);
+    notification.notify({ title: title, text: desc });
+    return Observable.create(observer => observer.complete(true));
+  });
 }
 
 // todo: test
 exports.destroy = function() {
-    rxIpc.removeListeners('notification');
+  rxIpc.removeListeners('notification');
 }

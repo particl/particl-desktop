@@ -8,7 +8,7 @@ const zmq           = require('./zmq/zmq');
 const daemon        = require('./daemon/daemon');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
-const notification   = require('./notification/notification');
+const notification  = require('./notification/notification');
 
 
 // TODO move to a proper place
@@ -34,7 +34,7 @@ exports.startDaemonManager = function() {
     .catch((error)      => log.error(error));
 }
 
-/* 
+/*
   Start daemon when we get the GO sign from daemonManager.
   Listen for daemonManager errors too..
 
@@ -83,7 +83,7 @@ electron.app.on('before-quit', function beforeQuit(event) {
   electron.app.removeListener('before-quit', beforeQuit);
 
   // destroy IPC listeners
-  rpc.destroy(); 
+  rpc.destroy();
   notification.destroy();
 
   daemon.stop();
