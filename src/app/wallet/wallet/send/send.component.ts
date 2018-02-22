@@ -61,7 +61,7 @@ export class SendComponent implements OnInit {
 
   ngOnInit() {
     /* check if testnet -> Show/Hide Anon Balance */
-     this._rpc.state.observe('chain').take(1)
+     this.rpcState.observe('getblockchaininfo', 'chain').take(1)
      .subscribe(chain => this.testnet = chain === 'test');
   }
   /** Select tab */
