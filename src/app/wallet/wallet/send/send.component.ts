@@ -13,7 +13,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
-import { AddressHelper } from '../../shared/util/utils';
+import { AddressHelper } from '../../../core/util/utils';
 
 @Component({
   selector: 'app-send',
@@ -286,7 +286,9 @@ export class SendComponent {
         return;
       }
     }*/
-
+    if (this.send.toLabel === '') {
+      this.send.toLabel = 'Empty Label'
+    }
     const label = this.send.toLabel;
     const addr = this.send.toAddress;
 

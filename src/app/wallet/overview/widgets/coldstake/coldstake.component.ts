@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { ModalsService } from 'app/modals/modals.service';
 import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
 
-import { Amount } from '../../../shared/util/utils';
+import { Amount } from '../../../../core/util/utils';
 import { ZapColdstakingComponent } from './zap-coldstaking/zap-coldstaking.component';
 import { RevertColdstakingComponent } from './revert-coldstaking/revert-coldstaking.component';
 
@@ -50,7 +50,7 @@ export class ColdstakeComponent implements OnDestroy {
       .subscribe(status => this.walletInitialized = status);
 
     this._rpcState.observe('getblockchaininfo', 'blocks')
-      .takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
+      .takeWhile(() => !this.destroyed).debounceTime(10000/*ms*/)
       .subscribe(block => this.rpc_progress());
     // TODO: move to coldstaking service
 
