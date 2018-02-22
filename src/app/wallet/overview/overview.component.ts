@@ -8,11 +8,11 @@ import { RpcService } from '../../core/core.module';
 })
 export class OverviewComponent implements OnInit {
   testnet: boolean = false;
-  constructor(private _rpc: RpcService) { }
+  constructor(private rpcState: RpcStateService) { }
 
   ngOnInit() {
     // check if testnet -> Show/Hide Anon Balance
-    this._rpc.state.observe('chain').take(1)
+    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
      .subscribe(chain => this.testnet = chain === 'test');
   }
 
