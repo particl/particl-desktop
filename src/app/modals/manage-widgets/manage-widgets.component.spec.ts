@@ -17,7 +17,7 @@ describe('ManageWidgetsComponent', () => {
         SharedModule, 
         CoreModule.forRoot(), 
         CoreUiModule.forRoot() 
-      ], 
+      ],
       providers: [ 
         /* deps */ 
         { provide: MatDialogRef } 
