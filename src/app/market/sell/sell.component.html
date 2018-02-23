@@ -170,7 +170,7 @@
           <button mat-button matTooltip="Clone listing" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
           </button>
-          <button mat-button matTooltip="Edit listing details" class="small">
+          <button mat-button matTooltip="Edit listing details" (click)="addItem()" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
             Edit listing
           </button>
@@ -245,7 +245,7 @@
 
       <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" matTooltip="Reject & cancel order" class="small">
+          <button mat-button color="warn" matTooltip="Reject & cancel order" (click)="confirmDeleteListing()" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
           </button>
           <button mat-button matTooltip="Edit order" class="small">

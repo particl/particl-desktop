@@ -50,7 +50,7 @@ export class ColdstakeComponent implements OnDestroy {
       .subscribe(status => this.walletInitialized = status);
 
     this._rpcState.observe('getblockchaininfo', 'blocks')
-      .takeWhile(() => !this.destroyed).throttle(val => Observable.interval(10000/*ms*/))
+      .takeWhile(() => !this.destroyed).debounceTime(10000/*ms*/)
       .subscribe(block => this.rpc_progress());
     // TODO: move to coldstaking service
 

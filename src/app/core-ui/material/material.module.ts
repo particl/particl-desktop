@@ -10,7 +10,7 @@ import {
   MatSnackBarModule, MatTabsModule, MatToolbarModule, MatRadioModule, MatInputModule,
   MatTooltipModule,
   MatSelectModule, MatPaginatorModule, MatProgressSpinnerModule, MatDialogModule,
-  MatStepperModule
+  MatStepperModule, MatSlideToggleModule
 } from '@angular/material';
 
 import {A11yModule} from '@angular/cdk/a11y';
@@ -47,7 +47,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatInputModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
-    MatStepperModule
+    MatStepperModule,
+    MatSlideToggleModule
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -74,7 +75,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatDialogModule,
-    MatStepperModule
+    MatStepperModule,
+    MatSlideToggleModule
   ],
   declarations: []
 })

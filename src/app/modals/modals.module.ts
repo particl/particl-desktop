@@ -28,6 +28,7 @@ import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
+import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     ColdstakeComponent,
     MultiwalletComponent,
     DaemonConnectionComponent,
-    DeleteListingComponent
+    DeleteListingComponent,
+    ManageWidgetsComponent
   ],
   exports: [
     ModalsComponent,
@@ -72,7 +74,8 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     EncryptwalletComponent,
     AlertComponent,
     DaemonConnectionComponent,
-    DeleteListingComponent
+    DeleteListingComponent,
+    ManageWidgetsComponent
   ],
 })
 export class ModalsModule {
