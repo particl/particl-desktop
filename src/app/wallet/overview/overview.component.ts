@@ -9,7 +9,7 @@ import { ManageWidgetsComponent } from '../../modals/manage-widgets/manage-widge
 })
 export class OverviewComponent {
 
-  constructor( public dialog: MatDialog, ){}
+  constructor( public dialog: MatDialog, ) {}
 
   openWidgetManager(): void {
     const dialogRef = this.dialog.open(ManageWidgetsComponent);
