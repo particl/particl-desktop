@@ -49,7 +49,7 @@ export class RpcService implements OnDestroy {
     private _http: HttpClient,
     private _ipc: IpcService
   ) {
-    this.isElectron = false; // window.electron
+    this.isElectron = false;  // window.electron
   }
 
   ngOnDestroy() {
