@@ -4,6 +4,7 @@
       <!-- [(selectedIndex)]="categories.indexOf(filters.category)"> -->
       <mat-tab *ngFor="let category of categories">
         <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-{{ category.icon }}"></mat-icon>
           {{ category.title }}
         </ng-template>
       </mat-tab>
