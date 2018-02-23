@@ -4,11 +4,13 @@
       <mat-tab-group (selectChange)="changeTab($event.index)">
         <mat-tab>
           <ng-template mat-tab-label>
+            <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
             Public
           </ng-template>
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
+            <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
             Private
           </ng-template>
         </mat-tab>
