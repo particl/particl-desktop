@@ -1,0 +1,10 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+@import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
+
+
+.wallet-list { // wallet selection list
+  max-width: 300px;
+  margin: 30px auto;
+  padding: 0;
+}

@@ -118,7 +118,7 @@ a.sidebar-item-link {
 
 .sidebar { // AKA .mat-sidenav
   @extend %disable-select;
-  width: 250px;
+  width: 280px;
   background-color: $bg-black;
   color: white;
 
@@ -133,7 +133,7 @@ a.sidebar-item-link {
   .pin-to-bottom {
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 60px; // = width of multiwallet sidebar
     right: 0;
 
     // Versions
@@ -151,7 +151,42 @@ a.sidebar-item-link {
     }
 
   }
+}
 
+
+// ------ MULTIWALLET ------ //
+
+.multiwallet {
+  background: darken($bg-black, 5%);
+  button {
+    @extend %tfx;
+    min-width: auto;
+    margin: 0 auto;
+    width: 32px;
+    padding: 0;
+    height: 32px;
+    line-height: 32px;
+    font-family: $font;
+    font-weight: bold;
+    &.mat-primary:not(.active) {
+      background: lighten($bg-black, 7%);
+      &:hover {
+        background: lighten($bg-black, 15%);
+      }
+    }
+  }
+
+  // send feedback
+  .feedback {
+    .mat-icon {
+      margin: 0;
+    }
+    .report-bug {
+      .mat-icon {
+        color: $text-muted;
+      }
+    }
+  }
 }
 
 

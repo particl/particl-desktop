@@ -6,6 +6,13 @@
     UI Elements
 \* ------------------------------- */
 
+code {
+  color: darken($color, 12%);
+  background: rgba($color, 0.1);
+  border-radius: $radius;
+  padding: 1px 5px;
+}
+
 // ------ HELP DESCRIPTION ------ //
 
 .widget-help {
@@ -137,6 +144,18 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 }
 
 
+// ------ SELECTION LISTS ------ //
+
+.mat-selection-list {
+  // multiwallet/modal: no padding for option's text
+  &.wallet-list {
+    .mat-list-option .mat-list-text {
+      padding: 0;
+    }
+  }
+}
+
+
 // ------ NO RESULTS (no TXs, no addresses, ..) ------ //
 
 .no-results {
@@ -171,7 +190,8 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
     Lists
 \* ------------------------------- */
 
-.mat-list {
+.mat-list,
+.mat-nav-list {
   // sidebar/menu: smaller vertical padding of child lists
   &.sidebar-item-group {
     .mat-list-item {
@@ -179,6 +199,12 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
       .mat-list-item-content {
         padding: 0 10px;
       }
+    }
+  }
+  // multiwallet/sidebar switcher: no padding for item's content
+  &.no-padding {
+    .mat-list-item .mat-list-item-content {
+      padding: 0 !important;
     }
   }
 }

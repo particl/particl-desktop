@@ -1,3 +1,39 @@
-<p>
-  multiwallet works!
-</p>
+<div class="container">
+  <div class="content">
+    
+    <h2 mat-dialog-title class="title">Multiwallet setup</h2>
+
+    <mat-dialog-content>
+      <p>
+        We've detected multiple <code>wallet.dat</code> files in your Particl folder. Particl Wallet can interact with multiple wallet files at once. Here you can select all the wallets you would like to use in this session:
+      </p>
+
+      <mat-selection-list #wallets class="wallet-list">
+        <mat-list-option class="wallet-selection" *ngFor="let wallet of wallet_selection">
+          <!-- TODO: can we select all options by default? or maybe just pre-select the "main" wallet.dat? -->
+          {{ wallet }}
+        </mat-list-option>
+      </mat-selection-list><!-- .wallet-list -->
+      
+      <ul class="widget-help">
+        <li>
+          This dialog will open every time when multiple wallets are present (your wallet selection isn't permanent).
+        </li>
+        <li>
+          If you're unsure which wallet to select, choose all of them.
+        </li>
+        <li>
+          You can later switch between wallets on the left side.
+        </li>
+      </ul>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-raised-button color="primary">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
+        Load selected wallets
+      </button>
+    </mat-dialog-actions>
+
+  </div><!-- .content -->
+</div><!-- .container -->

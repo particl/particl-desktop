@@ -69,6 +69,7 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
+    MultiwalletComponent,
     DaemonConnectionComponent
   ],
 })

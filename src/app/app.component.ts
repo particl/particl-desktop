@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material'; // TODO: move to material module?
 import { Log } from 'ng2-logger';
+import { ModalsService } from './modals/modals.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private _iconRegistry: MatIconRegistry,
+    private _modalsService: ModalsService
   ) {
     _iconRegistry
       .registerFontClassAlias('partIcon', 'part-icon')
@@ -22,6 +24,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+     this.openMultiwallet();
+  }
 
+  /** Open multiwallet  */
+  openMultiwallet(): void {
+    this._modalsService.open('multiwallet')
   }
 }
