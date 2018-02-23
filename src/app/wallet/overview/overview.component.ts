@@ -5,7 +5,7 @@ import { ManageWidgetsComponent } from '../../modals/manage-widgets/manage-widge
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss']
+  styleUrls: ['./overview.component.scss'],
 })
 export class OverviewComponent {
 
