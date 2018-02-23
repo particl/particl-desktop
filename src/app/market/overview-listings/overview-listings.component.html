@@ -2,42 +2,31 @@
   <div class="control-bar" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
 
     <!-- Search-->
-    <mat-form-field class="icon-input search-listings" fxFlex="0 0 250px" (click)="selectInput()">
-      <input matInput type="text" class="header-input" id="searchbar" 
-             placeholder="Search items for sale..">
-      <!-- FIXME: *ngIf="query" isn't working -->
-      <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
-                fontIcon="part-clear-all"></mat-icon>
-      <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search"></mat-icon>
-    </mat-form-field>
+    <div class="icon-input search-listings" fxFlex="0 0 250px">
+      <input type="text" class="header-input" id="searchbar" placeholder="Search items for sale..">
+      <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+    </div>
 
     <!-- Filtering -->
     <div class="filtering" fxFlex="1 1 100%">
+      <mat-select placeholder="Country" [formControl]="countries" multiple class="filter country">
+        <mat-option>All countries</mat-option>
+        <mat-option *ngFor="let country of countryList" [value]="country">{{ country }}</mat-option>
+      </mat-select>
 
-      <mat-form-field class="filter contry no-underline">
-        <mat-select placeholder="Country" [formControl]="countries" multiple>
-          <mat-option>All countries</mat-option>
-          <mat-option *ngFor="let country of countryList" [value]="country">{{ country }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-  
-      <mat-form-field class="filter category no-underline">
-        <mat-select placeholder="Categories" [formControl]="categories" multiple>
-          <mat-option>All categories</mat-option>
-          <mat-option *ngFor="let category of categoryList" [value]="category">{{ category }}</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <mat-select placeholder="Categories" [formControl]="categories" multiple class="filter category">
+        <mat-option>All categories</mat-option>
+        <mat-option *ngFor="let category of categoryList" [value]="category">{{ category }}</mat-option>
+      </mat-select>
     </div>
 
     <!-- Sorting -->
-    <mat-form-field class="filter sorting" fxFlex="0 1 300px">
-      <mat-select placeholder="Sort by">
-        <mat-option>Default</mat-option>
-        <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
-          {{ sorting.viewValue }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <mat-select placeholder="Sort by" class="filter sorting" fxFlex="0 1 300px">
+      <mat-option>Default</mat-option>
+      <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
+        {{ sorting.viewValue }}
+      </mat-option>
+    </mat-select>
 
     <div class="display" fxFlex="0 1 80px" fxLayout="row" fxLayoutGap="15px">
       <!-- FIXME: add ".active" class to currently selected view + needs to implement functionality -->
