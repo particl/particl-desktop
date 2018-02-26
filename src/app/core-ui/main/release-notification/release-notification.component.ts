@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../../../environments/environment';
 import { ReleaseNotification } from './release-notification.model';
 
 import { ClientVersionService } from '../../../core/http/client-version.service';
-import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-release-notification',
