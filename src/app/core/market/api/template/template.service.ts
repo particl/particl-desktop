@@ -23,13 +23,13 @@ export class TemplateService {
     internationalShippingPrice: number,
     paymentAddress?: string // TODO: class
     ) {
-      let params  = [
+      const params  = [
                         'add',
                         1, // profile
                         title,
                         shortDescr,
                         longDescr,
-                        categoryIdOrName, 
+                        categoryIdOrName,
                         paymentType,
                         currency,
                         basePrice,
@@ -39,12 +39,12 @@ export class TemplateService {
                       ];
        if (paymentAddress === undefined) {
          params.pop();
-       }             
+       }
     return this.market.call('template', params);
   }
 
   search(page: number, pageLimit: number, profileId: number) {
-    return this.market.call('template', ['search', page, pageLimit, "ASC", profileId]);
+    return this.market.call('template', ['search', page, pageLimit, 'ASC', profileId]);
   }
 
   post(listingTemplateId: number, marketId: number) {

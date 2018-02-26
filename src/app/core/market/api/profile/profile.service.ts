@@ -22,9 +22,9 @@ export class ProfileService {
     return this.market.call('profile', ['get', profileIdOrName]);
   }
 
-  // TODO: profileAddresses, 
+  // TODO: profileAddresses,
   add(profileName: string, profileAddress?: string): Observable<any> {
-    let params = ['add', profileName, profileAddress];
+    const params = ['add', profileName, profileAddress];
     if (profileAddress === null) {
       params.pop(); // if null pop parent
     }
@@ -40,6 +40,6 @@ export class ProfileService {
   }
 
   search(searchString: string): Observable<any> {
-    return this.market.call('profile', ['search', searchString]); 
+    return this.market.call('profile', ['search', searchString]);
   }
 }
