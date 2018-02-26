@@ -88,12 +88,12 @@ export class RpcService implements OnDestroy {
       });
 
 
-      let headerJson = {
+      const headerJson = {
        'Content-Type': 'application/json',
        'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`),
        'Accept': 'application/json',
       };
-      let headers = new HttpHeaders(headerJson);
+      const headers = new HttpHeaders(headerJson);
 
       return this._http
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })

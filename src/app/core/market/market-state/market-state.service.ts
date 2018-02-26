@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { StateService } from 'app/core/state/state.service';
 import { MarketService } from 'app/core/market/market.service';
 
 @Injectable()
-export class MarketStateService extends StateService {
+export class MarketStateService extends StateService implements OnDestroy {
 
-  private log: any = Log.create('market-state.service'); 
+  private log: any = Log.create('market-state.service');
   private destroyed: boolean = false;
 
-  constructor(private market: MarketService) { 
+  constructor(private market: MarketService) {
     super();
     this.log.d('MarketState: initialized');
     // fetch categories
@@ -54,14 +54,14 @@ export class MarketStateService extends StateService {
       // no error
       this.set(method, response);
     }
-  
+
     /** Updates the state when the state call errors */
     private stateCallError(method: string, error: any, firstError: boolean) {
       this.log.er(`stateCallError(): Market RPC Call ${method} returned an error:`, error);
     }
-  
+
     ngOnDestroy() {
       this.destroyed = true;
     }
-    
+
 }

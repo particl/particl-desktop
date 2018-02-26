@@ -17,13 +17,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
 
-  title = new FormControl();
-  shortDesc = new FormControl();
-  longDesc = new FormControl();
+  title: FormControl = new FormControl();
+  shortDesc: FormControl = new FormControl();
+  longDesc: FormControl = new FormControl();
   categories: FormControl = new FormControl();
-  price = new FormControl();
-  domesticShippingPrice = new FormControl();
-  internationalShippingPrice = new FormControl();
+  price: FormControl = new FormControl();
+  domesticShippingPrice: FormControl = new FormControl();
+  internationalShippingPrice: FormControl = new FormControl();
 
   _rootCategoryList: Category = new Category({});
 
@@ -60,15 +60,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
   save() {
     this.template.add(
       this.title.value,
-      "test", //this.shortDesc.value,
+      'test', // this.shortDesc.value,
       this.longDesc.value,
       75, // TODO: replace
-      "SALE",
-      "PARTICL",
+      'SALE',
+      'PARTICL',
       +this.price.value,
       +this.domesticShippingPrice.value,
       1, // this.internationalShippingPrice.value
-      "Paaaa"
+      'Paaaa'
     ).subscribe(
       (template) => { this.log.d('template=' + template); }
     );

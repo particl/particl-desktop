@@ -22,8 +22,12 @@ export class ProfileService {
     return this.market.call('profile', ['get', profileIdOrName]);
   }
 
+<<<<<<< HEAD
+=======
+  // TODO: profileAddresses,
+>>>>>>> 0855dad7165fe739fea576df955767b6dace9406
   add(profileName: string, profileAddress?: string): Observable<any> {
-    let params = ['add', profileName, profileAddress];
+    const params = ['add', profileName, profileAddress];
     if (profileAddress === null) {
       params.pop(); // if null pop parent
     }
