@@ -25,6 +25,7 @@ export class TemplateService {
     ) {
       let params  = [
                         'add',
+                        1, // profile
                         title,
                         shortDescr,
                         longDescr,
@@ -36,7 +37,7 @@ export class TemplateService {
                         internationalShippingPrice,
                         paymentAddress
                       ];
-       if (paymentAddress === null) {
+       if (paymentAddress === undefined) {
          params.pop();
        }             
     return this.market.call('template', params);

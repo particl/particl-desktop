@@ -62,7 +62,7 @@ exports.start = function (wallets, callback) {
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
-      const child = spawn(daemonPath, [...process.argv, ...wallets])
+      const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
       .on('close', code => {
         daemon = undefined;
         if (code !== 0) {

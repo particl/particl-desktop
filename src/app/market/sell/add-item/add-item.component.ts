@@ -56,19 +56,19 @@ export class AddItemComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed = true;
   }
-
+// template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   save() {
-    this.log.d('save');
     this.template.add(
       this.title.value,
-      this.shortDesc.value,
+      "test", //this.shortDesc.value,
       this.longDesc.value,
       75, // TODO: replace
       "SALE",
       "PARTICL",
       +this.price.value,
       +this.domesticShippingPrice.value,
-      this.internationalShippingPrice.value
+      1, // this.internationalShippingPrice.value
+      "Paaaa"
     ).subscribe(
       (template) => { this.log.d('template=' + template); }
     );
