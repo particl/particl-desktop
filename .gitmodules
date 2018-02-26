@@ -1,0 +1,3 @@
+[submodule "dapp-shell"]
+	path = dapp-shell
+	url = https://github.com/particl/dapp-shell
