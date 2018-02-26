@@ -20,13 +20,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
   title = new FormControl();
   shortDesc = new FormControl();
   longDesc = new FormControl();
-  
   categories: FormControl = new FormControl();
-  categoryList: Array<any> = [];
-
   price = new FormControl();
-  
-  
+  domesticShippingPrice = new FormControl();
+  internationalShippingPrice = new FormControl();
+
   _rootCategoryList: Category = new Category({});
 
   constructor(
@@ -49,7 +47,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   updateCategories(list: Category) {
     this.log.d('Updating category list');
     this._rootCategoryList = list;
-    this.categoryList = this._rootCategoryList.getSubCategoryNames();
   }
 
   backToSell() {
@@ -65,13 +62,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.template.add(
       this.title.value,
       this.shortDesc.value,
-      20, // TODO: replace
+      this.longDesc.value,
+      75, // TODO: replace
       "SALE",
       "PARTICL",
       +this.price.value,
-      this.domesticShippingPrice.value,
+      +this.domesticShippingPrice.value,
       this.internationalShippingPrice.value
-    )
+    ).subscribe(
+      (template) => { this.log.d('template=' + template); }
+    );
   }
 
   saveAndPublish() {

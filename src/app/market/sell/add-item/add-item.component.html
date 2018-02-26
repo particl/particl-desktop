@@ -63,7 +63,7 @@
     <mat-card class="details" fxFlex="50">
       <div class="title">Listing details</div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="Listing title (product name)">
+        <input matInput placeholder="Listing title (product name)" [formControl]="title">
       </mat-form-field>
     
       <mat-form-field class="full-width">
@@ -93,11 +93,11 @@
         </mat-form-field>
         <!-- TODO: add another input for fiat value and inter-connect the two: -->
         <mat-form-field fxFlex="50%" class="auto-width" hintLabel="(in PART)">
-          <input matInput placeholder="Price per item">
+          <input matInput placeholder="Price per item" [formControl]="price">
         </mat-form-field>
         <!-- TODO: ability to add more shipping options via select & some admin/modal? -->
         <mat-form-field fxFlex="50%" class="auto-width" hintLabel="(in PART)">
-          <input matInput placeholder="Shipping price">
+          <input matInput placeholder="Shipping price" [formControl]="domesticShippingPrice">
         </mat-form-field>
       </div>
       <p class="widget-help">
