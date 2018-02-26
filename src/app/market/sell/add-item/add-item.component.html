@@ -12,7 +12,7 @@
         <p>or drag'n'drop it here</p>
       </div>
       <p class="widget-help">
-        Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality & focused images in good lighting where possible.
+        Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible.
       </p>
       <div class="gallery" fxLayoutWrap>
         <div class="photo" fxFlex="25">
@@ -67,12 +67,17 @@
       </mat-form-field>
     
       <mat-form-field class="full-width">
+        <textarea matInput #summary rows="3" placeholder="Summary (short description)" [formControl]="shortDesc"></textarea>
+        <mat-hint align="end">{{ description.value?.length || 0 }}/???</mat-hint>
+      </mat-form-field>
+      
+      <mat-form-field class="full-width">
         <textarea matInput #description rows="12" placeholder="Description" [formControl]="longDesc"></textarea>
-        <mat-hint align="end">{{description.value?.length || 0}}/300</mat-hint>
+        <mat-hint align="end">{{ description.value?.length || 0 }}/300</mat-hint>
       </mat-form-field>
     
       <mat-form-field class="full-width">
-        <mat-select placeholder="Select categories" [formControl]="categories" multiple>
+        <mat-select placeholder="Select categories" [formControl]="categories">
           <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
             <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.name">
               {{ subcategory.name }}
@@ -87,17 +92,24 @@
         </mat-select>
       </mat-form-field>
 
+      <!-- TODO: add another input for fiat value and inter-connect the two: -->
+      <mat-form-field class="full-width">
+        <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
+        <input matInput placeholder="Price per item" [formControl]="price">
+        <span matSuffix>PART</span>
+      </mat-form-field>
+
       <div class="row" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="25px">
-        <mat-form-field fxFlex="0 0 70px" class="auto-width">
+        <!--mat-form-field fxFlex="0 0 70px" class="auto-width">
           <input matInput placeholder="Quantity">
+        </mat-form-field-->
+        <mat-form-field fxFlex="50%" class="auto-width">
+          <input matInput placeholder="Domestic shipping price" [formControl]="domesticShippingPrice">
+          <span matSuffix>PART</span>
         </mat-form-field>
-        <!-- TODO: add another input for fiat value and inter-connect the two: -->
-        <mat-form-field fxFlex="50%" class="auto-width" hintLabel="(in PART)">
-          <input matInput placeholder="Price per item" [formControl]="price">
-        </mat-form-field>
-        <!-- TODO: ability to add more shipping options via select & some admin/modal? -->
-        <mat-form-field fxFlex="50%" class="auto-width" hintLabel="(in PART)">
-          <input matInput placeholder="Shipping price" [formControl]="domesticShippingPrice">
+        <mat-form-field fxFlex="50%" class="auto-width">
+          <input matInput placeholder="International shipping price" [formControl]="internationalShippingPrice">
+          <span matSuffix>PART</span>
         </mat-form-field>
       </div>
       <p class="widget-help">

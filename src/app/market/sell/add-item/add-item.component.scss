@@ -87,8 +87,13 @@
 
 // ------ DETAILS ------ //
 
-.row {
-  margin-bottom: 24px;
+.mat-form-field {
+  .icon {
+    font-size: 14px;
+    position: relative;
+    top: 2px;
+    margin-right: 10px;
+  }
 }
 
 
@@ -96,6 +101,7 @@
 // ------ BUTTONS ------ //
 
 .action-buttons {
+  margin-top: 24px;
   .left {
     button {
       margin-right: 8px;
