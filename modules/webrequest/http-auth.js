@@ -26,11 +26,18 @@ exports.init = function () {
             let headers = Object.assign({}, details.requestHeaders);
 
             // get authentication
-            const auth = getAuthentication(u);
+            let auth = getAuthentication(u);
+
+            if(auth === undefined && u === "localhost:4200") {
+                console.log('Setting auth to false');
+                auth = false;
+            }
+
             if(auth !== undefined) {
                 if (auth === false) {
                     // no authentication required
-                    callback({});
+
+                    callback({ cancel: false, requestHeaders: headers });
                 } else {
                     // inject authentication into headers
                     headers['Authorization'] = 'Basic ' + new Buffer(auth).toString('base64')
@@ -82,6 +89,7 @@ function loadMarketAuthentication() {
 function loadWalletAuthentication() {
     let options = _options.get();
     let key = (options.rpcbind || 'localhost') + ":" + options.port;
+    console.log('adding key=' + key);
     let value = {
         name: "wallet",
         auth: cookie.getAuth(options)
