@@ -5,6 +5,7 @@ import { Log } from 'ng2-logger';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
+import { TemplateService } from 'app/core/market/api/template/template.service';
 
 @Component({
   selector: 'app-add-item',
@@ -30,7 +31,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private category: CategoryService
+    private category: CategoryService,
+    private template: TemplateService
   ) { }
 
   ngOnInit() {
@@ -59,7 +61,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.log.d('save ' + this.longDesc.value);
+    this.log.d('save');
+    this.template.add(
+      this.title.value,
+      this.shortDesc.value,
+      20, // TODO: replace
+      "SALE",
+      "PARTICL",
+      +this.price.value,
+      this.domesticShippingPrice.value,
+      this.internationalShippingPrice.value
+    )
   }
 
   saveAndPublish() {

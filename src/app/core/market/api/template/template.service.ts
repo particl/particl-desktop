@@ -21,9 +21,9 @@ export class TemplateService {
     basePrice: number,
     domesticShippingPrice: number,
     internationalShippingPrice: number,
-    paymentAddress: string // TODO: class
+    paymentAddress?: string // TODO: class
     ) {
-      const params  = [
+      let params  = [
                         'add',
                         title,
                         shortDescr,
@@ -36,6 +36,9 @@ export class TemplateService {
                         internationalShippingPrice,
                         paymentAddress
                       ];
+       if (paymentAddress === null) {
+         params.pop();
+       }             
     return this.market.call('template', params);
   }
 
