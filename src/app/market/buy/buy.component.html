@@ -132,7 +132,9 @@
                 <mat-select placeholder="Select saved shipping address profile"
                 disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
                   <mat-option *ngFor="let address of profile.ShippingAddresses"
-                  value="test"></mat-option>
+                  [value]="address.title" (click)="fillAddress(address)">
+                    {{address.title}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
               <p class="widget-help">
@@ -166,7 +168,7 @@
               </mat-form-field>
               <div class="row" fxLayout fxLayoutGap="30px">
                 <mat-form-field class="full-width" fxFlex>
-                  <input matInput formControlName="zip" placeholder="ZIP / Postal code">
+                  <input matInput formControlName="zipCode" placeholder="ZIP / Postal code">
                 </mat-form-field>
                 <mat-form-field class="full-width" fxFlex>
                   <input matInput formControlName="state" placeholder="State">
@@ -174,10 +176,8 @@
               </div>
               <mat-form-field class="full-width">
                 <mat-select formControlName="countryCode" placeholder="Country">
-                  <mat-option value="af">Afghanistan</mat-option>
-                  <mat-option value="al">Albania</mat-option>
-                  <mat-option value="ag">Algeria</mat-option>
-                  <mat-option value="as">American Samoa</mat-option>
+                  <mat-option value="US">United States of America</mat-option>
+                  <mat-option value="FR">France</mat-option>
                 </mat-select>
               </mat-form-field>
               <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">

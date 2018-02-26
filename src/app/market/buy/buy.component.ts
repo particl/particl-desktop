@@ -131,17 +131,32 @@ export class BuyComponent implements OnInit {
       city:         ['', Validators.required],
       state:        [''],
       countryCode:  ['', Validators.required],
-      zip:          ['', Validators.required],
+      zipCode:      ['', Validators.required],
       save:         ['']
     });
   }
 
   updateShippingProfile() {
-    console.log(this.shippingFormGroup.value);
     if (this.shippingFormGroup.value.save) {
       delete this.shippingFormGroup.value.save;
-      this._profileService.addShippingAddress(this.shippingFormGroup.value);
+      this._profileService.addShippingAddress(this.shippingFormGroup.value).take(1)
+        .subscribe(address => {
+          this._profileService.get(1).take(1)
+            .subscribe(updatedProfile => this.profile = updatedProfile);
+        });
     }
+  }
+
+  fillAddress(address) {
+    console.log(address);
+    address.countryCode = address.country;
+    delete address.country;
+    address.save = false;
+    delete address.id;
+    delete address.profileId;
+    delete address.updatedAt;
+    delete address.createdAt;
+    this.shippingFormGroup.setValue(address);
   }
 
   clear(): void {

@@ -38,9 +38,8 @@ export class ProfileService {
       shippingAddress.addressLine2,
       shippingAddress.city,
       shippingAddress.state,
-      '',
       shippingAddress.countryCode,
-      shippingAddress.zip
+      shippingAddress.zipCode
     ]);
   }
 
