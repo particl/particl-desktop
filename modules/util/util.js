@@ -10,7 +10,7 @@ function getRootOrResourcePath() {
   // running from packaged
   if(__dirname.search('app.asar') > -1) {
     dir = __dirname.substring(0, __dirname.indexOf('app.asar')) + 'app.asar';
-    dir = path.join(dir, 'src/assets/icons/notification.png');
+    dir = path.join(dir, 'dist/assets/icons/notification.png');
   } else {
     dir = '../../src/assets/icons/notification.png';
   }
