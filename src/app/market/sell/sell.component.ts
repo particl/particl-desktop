@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
+import { TemplateService } from 'app/core/market/api/template/template.service';
 
 @Component({
   selector: 'app-sell',
@@ -155,15 +156,19 @@ export class SellComponent implements OnInit {
     status:   undefined
   };
 
+  public templates: Array<any>;
+
   constructor(
     private router: Router,
-    public dialog: MatDialog) {}
+    public dialog: MatDialog,
+    private template: TemplateService) {}
 
   ngOnInit() {
+    this.update();
   }
 
-  addItem() {
-    this.router.navigate(['/market/add-item']);
+  addItem(id?: number, clone?: boolean) {
+    this.router.navigate(['/market/template'], { queryParams: {'id': id, 'clone': clone } });
   }
 
   clear(): void {
@@ -174,8 +179,16 @@ export class SellComponent implements OnInit {
     this.selectedTab = index;
   }
 
-  confirmDeleteListing(): void {
+  confirmDeleteListing(id: number): void {
     const dialogRef = this.dialog.open(DeleteListingComponent);
+  }
+
+  update() {
+    this.template.search(1, 10, 1).subscribe(
+      (templates: Array<any>) => {
+        this.templates = templates;
+      }
+    )
   }
 
 }

@@ -11,6 +11,10 @@ export class TemplateService {
     private marketState: MarketStateService
   ) { }
 
+  get(templateId: number) {
+    return this.market.call('template', ['get', templateId]);
+  }
+
   // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   add(title: string,
     shortDescr: string,

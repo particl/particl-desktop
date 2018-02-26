@@ -123,33 +123,33 @@
     </div-->
     <!--div class="subtitle first">Published listings</div-->
 
-    <mat-expansion-panel class="listing item no-padding" *ngFor="let listing of listings">
+    <mat-expansion-panel class="listing item no-padding" *ngFor="let template of templates">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
           <div class="photo" fxFlex="0 0 110px">
             <img src="./assets/images/placeholder_1-1.jpg">
           </div>
           <div class="meta" fxFlex="1 1 100%">
-            <div class="name">{{ listing.name }}</div>
-            <div class="categories">{{ listing.category }}</div>
+            <div class="name">{{ template.ItemInformation.title }}</div>
+            <div class="categories">{{ template.ItemInformation.ItemCategory.name }}</div>
             <div class="date">
               <!--span class="hash" matTooltip="Order hash">AGR</span-->
               Added 2018-02-19 &bull; Expires 2018-02-13
             </div>
           </div>
-          <div class="status {{ listing.status }}" fxFlex="0 0 140px"><span>&bull;</span>{{ listing.status }}</div>
+          <div class="status unpublished" fxFlex="0 0 140px"><span>&bull;</span>Unpublished</div>
         </div>
       </mat-expansion-panel-header>
 
       <div class="status-info">
-        <p>{{ listing.status_info }}</p>
+        <!--p>{{ listing.status_info }}</p-->
       </div>
 
       <div class="detail" fxLayout="row" fxLayoutGap="30px">
         <div class="description" fxFlex="65%">
           <div class="title">Listing description</div>
           <p>
-            Todo: Shorten the listing description to ~this amount of text. Concept is bang on, but can we look at a better execution can you make it look like this clipart i found. We are a big name to have in your portfolio I really think this could go viral.
+            {{ template.ItemInformation.longDescription }}
           </p>
         </div><!-- .description -->
         <div class="info" fxFlex="35%">
@@ -164,21 +164,21 @@
 
       <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing()" class="small">
+          <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(template.id)" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
           </button>
-          <button mat-button matTooltip="Clone listing" class="small">
+          <button mat-button matTooltip="Clone listing" (click)="addItem(template.id, true)" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
           </button>
-          <button mat-button matTooltip="Edit listing details" (click)="addItem()" class="small">
+          <button mat-button matTooltip="Edit listing details" (click)="addItem(template.id)" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
             Edit listing
           </button>
         </div>
-        <div class="right">
-          <button mat-raised-button color="{{ listing.action_color }}" matTooltip="{{ listing.action_tooltip }}" [disabled]="listing.action_disabled">
-            <mat-icon fontSet="partIcon" fontIcon="{{ listing.action_icon }}"></mat-icon>
-            {{ listing.action_button }}
+        <div class="right"> <!-- listing.action_color  -->
+          <button mat-raised-button color="primary" matTooltip="listing.action_tooltip" [disabled]="false"> <!-- listing.action_disabled -->
+            <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon> <!-- listing.action_icon -->
+             listing.action_button 
           </button>
         </div>
       </mat-action-row>
