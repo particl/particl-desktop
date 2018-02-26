@@ -42,7 +42,7 @@
     "install:desktop": "git submodule update && yarn",
     "start:marketplace": "cd dapp-shell && yarn run serve",
     "start": "yarn run start:electron:fast && yarn run start:marketplace",
-    "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test && yarn run start:marketplace"
+    "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test"
   },
   "productName": "Particl Desktop",
   "build": {
