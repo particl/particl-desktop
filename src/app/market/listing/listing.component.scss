@@ -8,6 +8,7 @@ table {
     text-align: left;
     font-weight: 600;
     padding-right: 24px;
+    vertical-align: top;
   }
 }
 
@@ -58,6 +59,10 @@ button.small .mat-icon {
   line-height: 1.7;
   .description {
     margin: 18px 0;
+    &.summary {
+      font-weight: 600;
+      color: $text;
+    }
   }
   .pricing {
     margin: 8px 0 24px;
