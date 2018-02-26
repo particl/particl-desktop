@@ -147,23 +147,20 @@ exports.check = function() {
 
 exports.stop = function() {
   return new Promise((resolve, reject) => {
-
-    if (daemon) {
-      rpc.call('stop', null, (error, response) => {
-        if (error) {
-          log.error('Calling SIGINT!');
-          reject();
-        } else {
-          log.debug('Daemon stopping gracefully...');
-          resolve();
-        }
-      });
-    } else
-    {
-        log.debug('Daemon not managed by gui.');
+    // Stop deamon either ways
+    rpc.call('stop', null, (error, response) => {
+      if (error) {
+        log.error('Calling SIGINT!');
+        reject();
+      } else {
+        log.debug('Daemon stopping gracefully...');
         resolve();
-        electron.app.quit();
-    }
+        // quit app forcefully if daemon not started from gui
+        if (!daemon) {
+          electron.app.quit();
+        }
+      }
+    });
 
   }).catch(() => {
     if (daemon)
