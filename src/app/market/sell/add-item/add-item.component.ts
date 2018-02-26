@@ -1,57 +1,68 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Log } from 'ng2-logger';
+
+import { CategoryService } from 'app/core/market/api/category/category.service';
+import { Category } from 'app/core/market/api/category/category.model';
 
 @Component({
   selector: 'app-add-item',
   templateUrl: './add-item.component.html',
   styleUrls: ['./add-item.component.scss']
 })
-export class AddItemComponent implements OnInit {
+export class AddItemComponent implements OnInit, OnDestroy {
 
+  log: any = Log.create('add-item.component');
+  private destroyed: boolean = false;
+
+  title = new FormControl();
+  shortDesc = new FormControl();
+  longDesc = new FormControl();
+  
   categories: FormControl = new FormControl();
-  categoryList: Array<any> = [
-    {
-      name: 'Electronics',
-      subcategory: [
-        { value: '01', viewValue: 'Computers' },
-        { value: '02', viewValue: 'Laptops' },
-        { value: '03', viewValue: 'Components' }
-      ]
-    },
-    {
-      name: 'Hobby',
-      subcategory: [
-        { value: '04', viewValue: 'Hardware' },
-        { value: '05', viewValue: 'DIY stuff' },
-        { value: '06', viewValue: 'Chains' }
-      ]
-    },
-    {
-      name: 'Health & Beauty',
-      subcategory: [
-        { value: '01', viewValue: 'Alcohol' },
-        { value: '02', viewValue: 'Cosmetics' },
-        { value: '03', viewValue: 'BIO whatever' }
-      ]
-    },
-    {
-      name: 'Toys',
-      subcategory: [
-        { value: '01', viewValue: 'For boys' },
-        { value: '02', viewValue: 'For girls' },
-        { value: '03', viewValue: 'For adults ;)' }
-      ]
-    }
-  ];
+  categoryList: Array<any> = [];
 
-  constructor(private router: Router) { }
+  price = new FormControl();
+  
+  
+  _rootCategoryList: Category = new Category({});
+
+  constructor(
+    private router: Router,
+    private category: CategoryService
+  ) { }
 
   ngOnInit() {
+    this.subToCategories();
+  }
+
+  subToCategories() {
+    this.category.list()
+    .takeWhile(() => !this.destroyed)
+    .subscribe(
+      list => this.updateCategories(list));
+  }
+
+  updateCategories(list: Category) {
+    this.log.d('Updating category list');
+    this._rootCategoryList = list;
+    this.categoryList = this._rootCategoryList.getSubCategoryNames();
   }
 
   backToSell() {
     this.router.navigate(['/market/sell']);
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
+  save() {
+    this.log.d('save ' + this.longDesc.value);
+  }
+
+  saveAndPublish() {
+    this.log.d('saveAndPublish');
+  }
 }

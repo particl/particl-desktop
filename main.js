@@ -30,6 +30,7 @@ log.debug(`file log level: ${log.transports.file.level}`);
 const _options = require('./modules/options');
 const init = require('./modules/init');
 const rpc = require('./modules/rpc/rpc');
+const _auth = require('./modules/webrequest/http-auth');
 const daemon = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -51,6 +52,7 @@ if (app.getVersion().includes('RC'))
 app.on('ready', () => {
   log.debug('app ready')
   options = _options.parse();
+  _auth.init();
   initMainWindow();
   init.start(mainWindow);
 });

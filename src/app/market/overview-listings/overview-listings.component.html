@@ -45,87 +45,15 @@
 
     <div class="subtitle first">Categories</div>
 
-    <mat-expansion-panel class="category-filter no-padding">
+    <mat-expansion-panel *ngFor="let category of _rootCategoryList.subCategoryList" class="category-filter no-padding">
       <mat-expansion-panel-header class="category-filter-header">
-        <span class="title">Electronics</span>
+        <span class="title">{{category.name}}</span>
       </mat-expansion-panel-header>
       <mat-nav-list class="category-items">
-        <a mat-list-item class="category-item" href="#">All Electronics</a>
-        <a mat-list-item class="category-item" href="#">Computers</a>
-        <a mat-list-item class="category-item" href="#">Laptops</a>
-        <a mat-list-item class="category-item" href="#">Components</a>
-        <a mat-list-item class="category-item" href="#">TVs</a>
-        <a mat-list-item class="category-item" href="#">Accessories</a>
+        <a mat-list-item *ngFor="let subcategory of category.subCategoryList" class="category-item" >{{subcategory.name}}</a>
       </mat-nav-list>
     </mat-expansion-panel>
   
-    <mat-expansion-panel class="category-filter no-padding">
-      <mat-expansion-panel-header class="category-filter-header">
-        <span class="title">Hobby</span>
-      </mat-expansion-panel-header>
-      <mat-nav-list class="category-items">
-        <a mat-list-item class="category-item" href="#">All Hobby</a>
-        <a mat-list-item class="category-item" href="#">Hobby hardware</a>
-        <a mat-list-item class="category-item" href="#">DIY stuff</a>
-        <a mat-list-item class="category-item" href="#">Chains</a>
-        <a mat-list-item class="category-item" href="#">Gardening</a>
-        <a mat-list-item class="category-item" href="#">Seeds</a>
-        <a mat-list-item class="category-item" href="#">Soil & Pots</a>
-      </mat-nav-list>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel class="category-filter no-padding">
-      <mat-expansion-panel-header class="category-filter-header">
-        <span class="title">Health & Beauty</span>
-      </mat-expansion-panel-header>
-      <mat-nav-list class="category-items">
-        <a mat-list-item class="category-item" href="#">All Health & Beauty</a>
-        <a mat-list-item class="category-item" href="#">Alcohol</a>
-        <a mat-list-item class="category-item" href="#">Cosmetics</a>
-        <a mat-list-item class="category-item" href="#">BIO whatever</a>
-        <a mat-list-item class="category-item" href="#">Lipsticks</a>
-        <a mat-list-item class="category-item" href="#">Vitamins</a>
-        <a mat-list-item class="category-item" href="#">More cool pills</a>
-      </mat-nav-list>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel class="category-filter no-padding">
-      <mat-expansion-panel-header class="category-filter-header">
-        <span class="title">Toys</span>
-      </mat-expansion-panel-header>
-      <mat-nav-list class="category-items">
-        <a mat-list-item class="category-item" href="#">All Toys</a>
-        <a mat-list-item class="category-item" href="#">For boys</a>
-        <a mat-list-item class="category-item" href="#">For girls</a>
-        <a mat-list-item class="category-item" href="#">For adults ;)</a>
-      </mat-nav-list>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel class="category-filter no-padding">
-      <mat-expansion-panel-header class="category-filter-header">
-        <span class="title">Food</span>
-      </mat-expansion-panel-header>
-      <mat-nav-list class="category-items">
-        <a mat-list-item class="category-item" href="#">All Food</a>
-        <a mat-list-item class="category-item" href="#">Fresh food</a>
-        <a mat-list-item class="category-item" href="#">Expired food in sale</a>
-      </mat-nav-list>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel class="category-filter no-padding">
-      <mat-expansion-panel-header class="category-filter-header">
-        <span class="title">Digital</span>
-      </mat-expansion-panel-header>
-      <mat-nav-list class="category-items">
-        <a mat-list-item class="category-item" href="#">All Digital</a>
-        <a mat-list-item class="category-item" href="#">Music</a>
-        <a mat-list-item class="category-item" href="#">Movies</a>
-        <a mat-list-item class="category-item" href="#">Games</a>
-        <a mat-list-item class="category-item" href="#">Software</a>
-        <a mat-list-item class="category-item" href="#">E-books</a>
-      </mat-nav-list>
-    </mat-expansion-panel>
-
     <!--div class="subtitle">Filter by price range</div>
     <mat-card>
       price filter

@@ -1,5 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Log } from 'ng2-logger';
+
+import { MarketService } from 'app/core/market/market.service';
+import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+
+import { Category } from 'app/core/market/api/category/category.model';
+import { CategoryService } from 'app/core/market/api/category/category.service';
 
 interface ISorting {
   value: string;
@@ -11,15 +18,22 @@ interface ISorting {
   templateUrl: './overview-listings.component.html',
   styleUrls: ['./overview-listings.component.scss']
 })
-export class OverviewListingsComponent implements OnInit {
+export class OverviewListingsComponent implements OnInit, OnDestroy {
+
+  log: any = Log.create('overview-listings.component');
+  private destroyed: boolean = false;
 
   // filters
   countries: FormControl = new FormControl();
   countryList: Array<string> = ['Europe', 'North America', 'South America', 'Asia', 'Africa', 'Moon'];
 
+  search: string;
+
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
   categories: FormControl = new FormControl();
-  categoryList: Array<string> = ['Electronics', 'Hobby', 'Health & Beauty', 'Toys', 'Gardening', 'Food', 'Digital', 'Whatever else'];
+  categoryList: Array<string> = [];
+
+  _rootCategoryList: Category = new Category({});
 
   // sorting
   sortings: Array<ISorting> = [
@@ -40,12 +54,32 @@ export class OverviewListingsComponent implements OnInit {
     'Digital 1011'
   ];
 
-  constructor() {
+  constructor(
+    private category: CategoryService
+  ) {
     console.warn('overview created');
    }
 
   ngOnInit() {
     console.log('overview created');
+    
+    this.category.list()
+    .takeWhile(() => !this.destroyed)
+    .subscribe(
+      list => this.updateCategories(list));
   }
 
+  updateCategories(list: Category) {
+    this.log.d('Updating category list');
+    this._rootCategoryList = list;
+    this.categoryList = this._rootCategoryList.getSubCategoryNames();
+  }
+
+  getPage() {
+
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
 }
