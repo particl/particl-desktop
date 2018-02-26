@@ -5,7 +5,8 @@ import { Log } from 'ng2-logger';
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
-import { Category } from 'app/core/market/api/category.model';
+import { Category } from 'app/core/market/api/category/category.model';
+import { CategoryService } from 'app/core/market/api/category/category.service';
 
 interface ISorting {
   value: string;
@@ -26,11 +27,12 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   countries: FormControl = new FormControl();
   countryList: Array<string> = ['Europe', 'North America', 'South America', 'Asia', 'Africa', 'Moon'];
 
+  search: string;
+
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
   categories: FormControl = new FormControl();
   categoryList: Array<string> = [];
 
-  _t: Array<any>;
   _rootCategoryList: Category = new Category({});
 
   // sorting
@@ -53,8 +55,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private market: MarketService,
-    private marketState: MarketStateService
+    private category: CategoryService
   ) {
     console.warn('overview created');
    }
@@ -62,19 +63,20 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log('overview created');
     
-    this.marketState.observe('category')
+    this.category.list()
     .takeWhile(() => !this.destroyed)
     .subscribe(
       list => this.updateCategories(list));
   }
 
-  updateCategories(list) {
+  updateCategories(list: Category) {
     this.log.d('Updating category list');
-    this.log.d(list);
-    this.log.d(this._t);
-    this._t = list;
-    this._rootCategoryList = new Category(list);
+    this._rootCategoryList = list;
     this.categoryList = this._rootCategoryList.getSubCategoryNames();
+  }
+
+  getPage() {
+
   }
 
   ngOnDestroy() {

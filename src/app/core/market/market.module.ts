@@ -4,6 +4,10 @@ import { CommonModule } from '@angular/common';
 import { MarketService } from './market.service';
 import { MarketStateService } from './market-state/market-state.service';
 
+import { CategoryService } from './api/category/category.service';
+import { ProfileService } from './api/profile/profile.service';
+import { TemplateService } from './api/template/template.service';
+
 @NgModule({
   imports: [
     CommonModule
@@ -16,7 +20,11 @@ export class MarketModule {
       ngModule: MarketModule,
       providers: [
         MarketService,
-        MarketStateService
+        MarketStateService,
+        // API
+        CategoryService,
+        ProfileService,
+        TemplateService
       ]
     };
   }
