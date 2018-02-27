@@ -49,7 +49,7 @@ export class TemplateService {
 
   addPicture(id, data) {
     const params = [
-      'image', 'add'
+      'image', 'add',
       id,
       'LOCAL',
       'BASE64',
