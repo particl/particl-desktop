@@ -21,6 +21,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   templateId: number = 2;
 
   // template info
+  // TODO: FormGroup
   title = new FormControl();
   shortDesc = new FormControl();
   longDesc = new FormControl();
@@ -31,6 +32,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   _rootCategoryList: Category = new Category({});
 
+  dropArea: any;
+  fileInput: any;
+  pictures: string[];
+  featuredPicture: number = 0;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -39,6 +45,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+
+    // TODO: drag and drop
+    this.dropArea = document.getElementById('drag-n-drop');
+
+    this.fileInput = document.getElementById('fileInput');
+    this.fileInput.onchange = this.processPictures.bind(this);
+    this.pictures = new Array();
+
     this.subToCategories();
 
     this.route.queryParams.take(1).subscribe(params => {
@@ -48,19 +62,42 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = +id;
         this.preload();
       }
-
       if (clone === true) {
         this.templateId = undefined;
       }
    });
-   
+  }
+
+  uploadPicture() {
+    this.fileInput.click();
+  }
+
+  processPictures(event) {
+    Array.from(event.target.files).map(file => {
+      let reader = new FileReader();
+      reader.onload = event => {
+        this.pictures.push(reader.result.split('base64,')[1]);
+        this.log.d('added picture', file.name);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  removePicture(index) {
+    this.pictures.splice(index, 1);
+    if (this.featuredPicture > index) {
+      this.featuredPicture -= 1;
+    }
+  }
+
+  featurePicture(index) {
+    this.featuredPicture = index;
   }
 
   subToCategories() {
     this.category.list()
     .takeWhile(() => !this.destroyed)
-    .subscribe(
-      list => this.updateCategories(list));
+    .subscribe(list => this.updateCategories(list));
   }
 
   updateCategories(list: Category) {
@@ -103,9 +140,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
       +this.price.value,
       +this.domesticShippingPrice.value,
       +this.internationalShippingPrice.value
-    ).subscribe(
-      (template) => { this.log.d('Saved template!'); }
-    );
+    ).subscribe(template => {
+      // add images
+      console.log(template);
+      this.pictures.map(picture => this.template.addPicture(template.id, picture));
+      this.log.d('Saved template!');
+    });
   }
 
   saveAndPublish() {

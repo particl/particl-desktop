@@ -47,6 +47,17 @@ export class TemplateService {
     return this.market.call('template', params);
   }
 
+  addPicture(id, data) {
+    const params = [
+      'image', 'add'
+      id,
+      'LOCAL',
+      'BASE64',
+      data
+    ];
+    console.log(params);
+  }
+
   search(page: number, pageLimit: number, profileId: number) {
     return this.market.call('template', ['search', page, pageLimit, 'ASC', profileId]);
   }

@@ -1,81 +1,55 @@
 <div class="container-block disable-select">
-  
+
   <div class="row" fxLayout="row" fxLayoutGap="30px">
 
     <mat-card class="photos" fxFlex="50">
       <div class="title">Upload photos</div>
-      <div class="drag-n-drop">
+      <div id="drag-n-drop">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
-        <button mat-button color="primary">
+        <input style="display: none;" type="file"
+        accept="image/*" multiple="true" id="fileInput">
+        <button mat-button color="primary" (click)="uploadPicture()">
           Upload a photo
         </button>
-        <p>or drag'n'drop it here</p>
+        <!-- TODO: drag n drop -->
+        <!-- <p>or drag'n'drop it here</p> -->
       </div>
       <p class="widget-help">
         Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible.
       </p>
       <div class="gallery" fxLayoutWrap>
-        <div class="photo" fxFlex="25">
-          <img src="./assets/images/placeholder_1-1.jpg">
+        <div *ngFor="let picture of pictures ; index as i"
+             class="photo {{i === featuredPicture ? 'featured' : ''}}" fxFlex="25">
+          <!-- TODO: maybe not gif, but removing is 'unsafe' -->
+          <img src="data:image/gif;base64,{{picture}}">
           <div class="icons">
-            <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross" matTooltip="Remove image"></mat-icon>
-            <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check" matTooltip="Set as featured"></mat-icon>
-          </div>
-        </div>
-        <div class="photo featured" fxFlex="25">
-          <img src="./assets/images/placeholder_1-1.jpg">
-          <div class="icons">
-            <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross" matTooltip="Remove image"></mat-icon>
-            <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check" matTooltip="Set as featured"></mat-icon>
-          </div>
-        </div>
-        <div class="photo" fxFlex="25">
-          <img src="./assets/images/placeholder_1-1.jpg">
-          <div class="icons">
-            <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross" matTooltip="Remove image"></mat-icon>
-            <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check" matTooltip="Set as featured"></mat-icon>
-          </div>
-        </div>
-        <div class="photo" fxFlex="25">
-          <img src="./assets/images/placeholder_1-1.jpg">
-          <div class="icons">
-            <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross" matTooltip="Remove image"></mat-icon>
-            <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check" matTooltip="Set as featured"></mat-icon>
-          </div>
-        </div>
-        <div class="photo" fxFlex="25">
-          <img src="./assets/images/placeholder_1-1.jpg">
-          <div class="icons">
-            <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross" matTooltip="Remove image"></mat-icon>
-            <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check" matTooltip="Set as featured"></mat-icon>
-          </div>
-        </div>
-        <div class="photo" fxFlex="25">
-          <img src="./assets/images/placeholder_1-1.jpg">
-          <div class="icons">
-            <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross" matTooltip="Remove image"></mat-icon>
-            <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check" matTooltip="Set as featured"></mat-icon>
+            <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
+                      matTooltip="Remove image" (click)="removePicture(i)">
+            </mat-icon>
+            <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                      matTooltip="Set as featured" (click)="featurePicture(i)">
+            </mat-icon>
           </div>
         </div>
       </div><!-- .gallery -->
     </mat-card><!-- .photos -->
-  
+
     <mat-card class="details" fxFlex="50">
       <div class="title">Listing details</div>
       <mat-form-field class="full-width">
         <input matInput placeholder="Listing title (product name)" [formControl]="title">
       </mat-form-field>
-    
+
       <mat-form-field class="full-width">
         <textarea matInput #summary rows="3" placeholder="Summary (short description)" [formControl]="shortDesc"></textarea>
         <mat-hint align="end">{{ description.value?.length || 0 }}/200</mat-hint>
       </mat-form-field>
-      
+
       <mat-form-field class="full-width">
         <textarea matInput #description rows="12" placeholder="Description" [formControl]="longDesc"></textarea>
         <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
       </mat-form-field>
-    
+
       <mat-form-field class="full-width">
         <mat-select placeholder="Select categories" [formControl]="categories">
           <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
@@ -119,7 +93,7 @@
     </mat-card>
 
   </div>
-    
+
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
       <button mat-button (click)="backToSell()" color="warn">
