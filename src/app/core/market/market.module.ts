@@ -7,6 +7,7 @@ import { MarketStateService } from './market-state/market-state.service';
 import { CategoryService } from './api/category/category.service';
 import { ProfileService } from './api/profile/profile.service';
 import { TemplateService } from './api/template/template.service';
+import { ListingService } from './api/listing/listing.service';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ export class MarketModule {
         // API
         CategoryService,
         ProfileService,
-        TemplateService
+        TemplateService,
+        ListingService
       ]
     };
   }

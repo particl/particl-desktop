@@ -58,4 +58,5 @@ export class TemplateService {
   remove(listingTemplateId: number) {
     return this.market.call('template', ['remove', listingTemplateId]);
   }
+
 }
