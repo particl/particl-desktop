@@ -53,7 +53,7 @@
           <table class="cart-items">
 
             <thead>
-              <tr><th>Items</th><th>Price</th><th>Shipping</th><th>Quantity</th><th class="text-right">Total</th><th></th></tr>
+              <tr><th>Items</th><th>Price</th><th>Quantity</th><th class="text-right">Total</th><th></th></tr>
             </thead>
 
             <tbody>
@@ -74,9 +74,6 @@
                 <td class="price cell">
                   {{getPrice(listing).int}}.<small>{{getPrice(listing).cents}}</small> PART
                 </td>
-                <!-- cannot determine if user is domestic or international -->
-                <!-- TODO: swap shipping address selection and cart -->
-                <td class="shipping cell TO_DO">2.<small>4203</small> PART</td>
                 <td class="quantity cell TO_DO">
                   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
                     <!--button mat-button class="small">-</button-->
@@ -98,14 +95,17 @@
           </table>
 
           <div class="order-detail"
-               fxLayout fxLayoutAlign="end center">
+               fxLayout fxLayoutAlign="space-between start">
+            <div class="subtotal-notice" fxFlex="0 1 500px">
+              Subtotal doesn't include shipping and escrow costs. You can review these in the summary before placing your order.
+            </div>
             <table class="subtotals" fxFlex="0 0 250px">
-              <tr><td class="desc">Subtotal</td><td class="value">
+              <tr><td class="desc total">Subtotal</td><td class="value total">
                 {{getSubTotal().toFixed(8)}} PART
               </td></tr>
-              <tr><td class="desc TO_DO">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
+              <!--tr><td class="desc TO_DO">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
               <tr><td class="desc TO_DO">Escrow (?)</td><td class="value">170 PART</td></tr>
-              <tr><td class="desc total TO_DO">Total</td><td class="value total">342.<small>153</small> PART</td></tr>
+              <tr><td class="desc total TO_DO">Total</td><td class="value total">342.<small>153</small> PART</td></tr-->
             </table>
           </div><!-- .order-detail -->
 
