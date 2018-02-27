@@ -189,7 +189,7 @@ export class SellComponent implements OnInit {
   }
 
   update() {
-    this.listing.searchOwn(1, 10).subscribe(
+    this.template.search(1, 10, 1).subscribe(
       (listings: Array<any>) => {
         console.log('got templates');
         console.log(listings);

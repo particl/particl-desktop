@@ -68,12 +68,11 @@
         Sorry, no matching listings found
       </p>
     </div>
-    <ng-container *ngFor="let l of listings">
+    <ng-container *ngFor="let item of listings">
       <mat-card class="listing" fxFlex="0 0 calc(100% / 3 - 30px)">
-        <app-preview-listing [listing]="l"></app-preview-listing>
+        <app-preview-listing [listing]="item"></app-preview-listing>
       </mat-card>
     </ng-container>
   </div><!-- .content -->
 
 </div>
-

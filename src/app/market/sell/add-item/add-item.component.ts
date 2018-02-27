@@ -54,7 +54,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       title:                      ['', [Validators.required]],
       shortDescription:           ['', [Validators.required]],
       longDescription:            ['', [Validators.required]],
-      categories:                 ['', [Validators.required]],
+      category:                 ['', [Validators.required]],
       basePrice:                  ['', [Validators.required]],
       domesticShippingPrice:      ['', [Validators.required]],
       internationalShippingPrice: ['', [Validators.required]]
@@ -70,7 +70,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
       if (clone === true) {
         this.templateId = undefined;
       }
-   });
+    });
+
+    // this.listing.generateListing().take(1).subscribe(listing => {
+    //   console.log(listing);
+    //   this.listing.get(1).take(1).subscribe(res => {
+    //     console.log(res);
+    //   })
+    // });
   }
 
   uploadPicture() {
@@ -134,34 +141,46 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
-  save() {
+  save(): Promise<any> {
+
     let item = this.itemFormGroup.value;
-    this.template.add(
-      item.title,
-      item.shortDescription,
-      item.longDescription,
-      75, // TODO: replace
-      'SALE',
-      'PARTICL',
-      +item.basePrice,
-      +item.domesticShippingPrice,
-      +item.internationalShippingPrice
-    ).subscribe(template => {
-      // add images
-      this.log.d('Saved template', template);
-      this.pictures.map(picture => {
-        this.template.addPicture(template.id, picture).take(1).subscribe(res => {
-          console.log(res);
-        });
-      });
-    });
+    let nPicturesAdded = 0;
+    console.log('-- category -- ');
+    console.log(item.category);
+    return new Promise((resolve, reject) => {
+      this.template.add(
+        item.title,
+        item.shortDescription,
+        item.longDescription,
+        75, // TODO: replace
+        'SALE',
+        'PARTICL',
+        +item.basePrice,
+        +item.domesticShippingPrice,
+        +item.internationalShippingPrice
+      ).take(1).subscribe(template => {
+
+        this.log.d('Saved template', template);
+        this.pictures.map(picture => {
+
+          this.template.addPicture(template.id, picture).take(1).subscribe(res => {
+            console.log(res);
+            if (++nPicturesAdded === this.pictures.length) {
+              resolve(template.id);
+            }
+          });
+
+        }); /* map pictures */
+      }); /* template add */
+    }); /* promise */
   }
 
   saveAndPublish() {
-    this.save();
     this.log.d('saveAndPublish');
-    this.listing.generateListing().subscribe(listing => {
-      console.log(listing);
+    this.save().then(id => {
+      this.template.post(id, 1).take(1).subscribe(listing => {
+        console.log(listing);
+      });
     });
   }
 

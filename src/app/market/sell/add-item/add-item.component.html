@@ -53,9 +53,9 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <mat-select placeholder="Select categories" formControlName="categories">
+        <mat-select placeholder="Select category" formControlName="category">
           <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
-            <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.name">
+            <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.id">
               {{ subcategory.name }}
             </mat-option>
           </mat-optgroup>

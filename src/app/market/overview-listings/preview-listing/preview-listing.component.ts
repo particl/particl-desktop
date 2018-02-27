@@ -15,12 +15,20 @@ export class PreviewListingComponent implements OnInit {
   constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
+    console.log(this.listing);
   }
 
   openListing() {
     const dialog = this.dialog.open(ListingComponent, {
       data: { listing: this.listing },
     });
+  }
+
+  getThumbnail() {
+    // TODO: logic for main image, taking 0 here
+    return this.listing.ItemInformation.ItemImages[0].ItemImageDatas.find(data => {
+      return data.imageVersion === 'THUMBNAIL';
+    }).data;
   }
 
 }

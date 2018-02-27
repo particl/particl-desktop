@@ -12,9 +12,16 @@ export class ListingComponent implements OnInit {
     private dialogRef: MatDialogRef<ListingComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
-  // listing is in data.listing
+
+  pictures: any;
 
   ngOnInit() {
+    this.pictures = new Array();
+    data.listing.ItemInformation.ItemImages.map(image => {
+      this.pictures.push(image.ItemImageDatas.find(size => {
+        return size.imageVersion === 'MEDIUM';
+      }).data);
+    });
   }
 
   dialogClose(): void {

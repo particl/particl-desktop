@@ -117,7 +117,7 @@
   <!-- Listings > list -->
   <div class="listings list section" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'listings'">
 
-    <div class="no-results">
+    <div class="no-results" *ngIf="listings.length === 0">
       You don't have any market listings yet
     </div>
     <!--div class="subtitle first">Published listings</div-->
