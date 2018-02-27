@@ -437,7 +437,7 @@
 
   <div *ngIf="favorites.length != 0">
     <ng-container *ngFor="let favorite of favorites">
-      <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
+      <mat-card class="listing">
         <app-preview-listing [listing]="favorite"></app-preview-listing>
       </mat-card>
     </ng-container>
