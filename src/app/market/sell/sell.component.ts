@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
 import { TemplateService } from 'app/core/market/api/template/template.service';
+import { ListingService } from 'app/core/market/api/listing/listing.service';
 
 @Component({
   selector: 'app-sell',
@@ -161,7 +162,9 @@ export class SellComponent implements OnInit {
   constructor(
     private router: Router,
     public dialog: MatDialog,
-    private template: TemplateService) {}
+    private template: TemplateService,
+    private listing: ListingService
+  ) {}
 
   ngOnInit() {
     this.update();
@@ -186,7 +189,7 @@ export class SellComponent implements OnInit {
   }
 
   update() {
-    this.template.search(1, 10, 1).subscribe(
+    this.listing.searchOwn(1, 10).subscribe(
       (templates: Array<any>) => {
         this.templates = templates;
       }

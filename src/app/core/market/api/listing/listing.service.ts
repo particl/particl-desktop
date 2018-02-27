@@ -18,10 +18,15 @@ export class ListingService {
     )
   }
 
-  search(page: number, pageLimit: number) {
-    return this.market.call('item', ['search', page, pageLimit, 'ASC', 1, 'ALL', '*']);
+  search(page: number, pageLimit: number, type?: string) {
+    type = type || "ALL";
+    return this.market.call('item', ['search', page, pageLimit, 'ASC', 75, type, '*']);
   }
 
+  searchOwn(page: number, pageLimit: number) {
+    return this.search(page, pageLimit, "OWN");
+  }
+  
   generateListing() {
     console.log('generating listing');
     return this.market.call('data', ['generate', 'listingitem', 1, true]);
