@@ -57,6 +57,7 @@
             </thead>
 
             <tbody>
+              <!-- TODO: make component -->
               <tr *ngFor="let listing of cart">
                 <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                   <div class="image" fxFlex="0 0 115px">
@@ -85,7 +86,7 @@
                 </td>
                 <td class="total cell TO_DO">202.<small>4203</small> PART</td>
                 <td class="remove">
-                  <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(listing.id)">
+                  <button mat-button color="warn" class="small TO_DO" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(listing.id)">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
                   </button>
                 </td>
@@ -212,7 +213,7 @@
     <mat-step>
       <form class="confirmation">
         <ng-template matStepLabel>Confirm & Payment</ng-template>
-        <table class="cart-items summary">
+        <table class="cart-items summary TO_DO">
           <thead>
             <tr><th>Items</th><th>Price</th><th>Shipping</th><th>Quantity</th><th class="text-right">Total</th></tr>
           </thead>
@@ -250,7 +251,7 @@
           </tbody>
         </table>
 
-        <div class="order-detail" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="20px">
+        <div class="order-detail TO_DO" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="20px">
 
           <div class="shipping-overview" fxFlex="0 0 250px">
             <div class="title">Shipping address</div>
@@ -292,7 +293,7 @@
   <!-- Orders > Filter -->
   <div class="filter" fxFlex="0 0 230px">
 
-    <div class="section search-sorting">
+    <div class="section search-sorting TO_DO">
       <div class="subtitle first">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
@@ -310,7 +311,7 @@
       </mat-card>
     </div>
 
-    <div class="section filter-by-type">
+    <div class="section filter-by-type TO_DO">
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group block-radio">
@@ -323,7 +324,7 @@
       </mat-card>
     </div><!-- .filter-by-type -->
 
-    <button mat-button color="warn" class="clear-filters" (click)="clear()">
+    <button mat-button color="warn" class="clear-filters TO_DO" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
       Clear all filters
     </button>
@@ -333,27 +334,32 @@
   <!-- Orders > list -->
   <div class="orders list section" fxFlex="1 1 100%">
 
-    <div class="no-results">
+    <div class="no-results" *ngIf="orders.length == 0">
       You don't have any market orders yet
     </div>
 
-    <mat-expansion-panel class="order item no-padding" *ngFor="let order of orders">
-      <mat-expansion-panel-header class="header">
-        <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-          <div class="photo" fxFlex="0 0 80px">
-            <img src="./assets/images/placeholder_1-1.jpg">
-          </div>
-          <div class="meta" fxFlex="1 1 100%">
-            <div class="name">{{ order.name }}</div>
-            <div class="date">
-              <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
-              <span class="hash {{ order.hash_bg }}" matTooltip="Order hash">{{ order.hash }}</span>
-              Added 2018-02-19 &bull; Updated 2018-02-13
+    <mat-expansion-panel class="order item no-padding"
+      *ngFor="let order of orders">
+      <div *ngIf="order.length > 0">
+        <mat-expansion-panel-header class="header TO_DO">
+          <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="photo" fxFlex="0 0 80px">
+              <img src="./assets/images/placeholder_1-1.jpg">
+            </div>
+            <div class="meta" fxFlex="1 1 100%">
+              <div class="name">{{ order.name }}</div>
+              <div class="date">
+                <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
+                <span class="hash {{ order.hash_bg }}" matTooltip="Order hash">{{ order.hash }}</span>
+                Added 2018-02-19 &bull; Updated 2018-02-13
+              </div>
+            </div>
+            <div class="status {{ order.status }}" fxFlex="0 0 120px">
+              <span>&bull;</span>{{ order.status }}
             </div>
           </div>
-          <div class="status {{ order.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order.status }}</div>
-        </div>
-      </mat-expansion-panel-header>
+        </mat-expansion-panel-header>
+      </div>
 
       <div class="status-info">
         <p>{{ order.status_info }}</p>
