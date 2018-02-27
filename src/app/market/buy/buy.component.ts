@@ -139,14 +139,7 @@ export class BuyComponent implements OnInit {
       save:         ['']
     });
 
-    this.cartService.getCart().take(1).subscribe(cart => {
-      cart.ShoppingCartItems.map(item => {
-        this.listingService.get(item.id).take(1).subscribe(listing => {
-          console.log(listing);
-          this.cart.push(listing);
-        });
-      });
-    });
+    this.getCart();
 
     this.favoritesService.getFavorites().take(1).subscribe(favorites => {
       favorites.map(favorite => {
@@ -182,14 +175,14 @@ export class BuyComponent implements OnInit {
     return {
       int:     price.toFixed(0),
       cents:  +(price % 1).toFixed(8) * 100000000,
-      escrow: +(price * listing.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
+      escrow:  (price * listing.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
     };
   }
 
   getShipping(listing) {
     let price: number = listing.PaymentInformation.ItemPrice.ShippingPrice;
     return {
-      int:    +price.toFixed(0),
+      int:     price.toFixed(0),
       cents: +(price % 1).toFixed(8) * 100000000
     };
   }
@@ -201,7 +194,22 @@ export class BuyComponent implements OnInit {
   }
 
   removeFromCart(id) {
+    this.cartService.removeItem(id).take(1).subscribe(res => {
+      console.log(res);
+      this.getCart();
+    });
+  }
 
+  getCart() {
+    this.cart = [];
+    this.cartService.getCart().take(1).subscribe(cart => {
+      cart.ShoppingCartItems.map(item => {
+        this.listingService.get(item.id).take(1).subscribe(listing => {
+          console.log(listing);
+          this.cart.push(listing);
+        });
+      });
+    });
   }
 
   /* shipping */

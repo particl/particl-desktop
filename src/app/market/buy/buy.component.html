@@ -338,9 +338,10 @@
       You don't have any market orders yet
     </div>
 
-    <mat-expansion-panel class="order item no-padding"
-      *ngFor="let order of orders">
-      <div *ngIf="order.length > 0">
+    <div *ngIf="orders.length > 0">
+
+      <mat-expansion-panel class="order item no-padding"
+        *ngFor="let order of orders">
         <mat-expansion-panel-header class="header TO_DO">
           <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
             <div class="photo" fxFlex="0 0 80px">
@@ -359,64 +360,64 @@
             </div>
           </div>
         </mat-expansion-panel-header>
-      </div>
 
-      <div class="status-info">
-        <p>{{ order.status_info }}</p>
-      </div>
+        <div class="status-info">
+          <p>{{ order.status_info }}</p>
+        </div>
 
-      <div class="detail" fxLayout="row" fxLayoutGap="30px">
-        <div class="buyer-info" fxFlex="27%">
-          <div class="title">Shipping address</div>
-          <p>Mr. Longname Buyer<br>Particl Avenue X/144<br>5RFG4 United Cryptocity<br>Universe</p>
-        </div><!-- .buyer-info -->
-        <div class="info" fxFlex="35%">
-          <div class="title">Price & Qty</div>
-          <table class="prices">
-            <tr><th>Quantity</th><td>2</td></tr>
-            <tr><th>Price per item</th><td>23.<small>1285</small> PART</td></tr>
-            <tr><th>Total price</th><td>46.<small>257</small> PART</td></tr>
-          </table>
+        <div class="detail" fxLayout="row" fxLayoutGap="30px">
+          <div class="buyer-info" fxFlex="27%">
+            <div class="title">Shipping address</div>
+            <p>Mr. Longname Buyer<br>Particl Avenue X/144<br>5RFG4 United Cryptocity<br>Universe</p>
+          </div><!-- .buyer-info -->
+          <div class="info" fxFlex="35%">
+            <div class="title">Price & Qty</div>
+            <table class="prices">
+              <tr><th>Quantity</th><td>2</td></tr>
+              <tr><th>Price per item</th><td>23.<small>1285</small> PART</td></tr>
+              <tr><th>Total price</th><td>46.<small>257</small> PART</td></tr>
+            </table>
+          </div>
+          <div class="order-history" fxFlex="32%">
+            <div class="title">Order history</div>
+            <table>
+              <!--tr><td class="date">2018-02-24</td><td class="status shipped">Sold</td></tr-->
+              <!--tr><td class="date">2018-02-14</td><td class="status shipped">Shipped</td></tr-->
+              <tr><td class="date">2018-02-11</td><td class="status escrow">In escrow</td></tr>
+              <tr><td class="date">2018-02-10</td><td class="status bidding">Bidding</td></tr>
+            </table>
+          </div>
         </div>
-        <div class="order-history" fxFlex="32%">
-          <div class="title">Order history</div>
-          <table>
-            <!--tr><td class="date">2018-02-24</td><td class="status shipped">Sold</td></tr-->
-            <!--tr><td class="date">2018-02-14</td><td class="status shipped">Shipped</td></tr-->
-            <tr><td class="date">2018-02-11</td><td class="status escrow">In escrow</td></tr>
-            <tr><td class="date">2018-02-10</td><td class="status bidding">Bidding</td></tr>
-          </table>
-        </div>
-      </div>
 
-      <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
-        <div class="left">
-          <button mat-button color="warn" matTooltip="Reject & cancel order" class="small">
-            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-          </button>
-          <button mat-button matTooltip="Edit order" class="small">
-            <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
-            Edit
-          </button>
-          <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-          <button mat-button matTooltip="View payment ID" class="small">
-            <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
-          </button>
-          <!-- TODO: shortcut to e2e message to buyer -->
-          <button mat-button class="small">
-            <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
-            Contact buyer
-          </button>
-        </div>
-        <div class="right">
-          <!-- TODO: after clicking, show confirmation modal with more info: -->
-          <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}" [disabled]="order.action_disabled">
-            <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
-            {{ order.action_button }}
-          </button>
-        </div>
-      </mat-action-row>
-    </mat-expansion-panel><!-- .order -->
+        <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+          <div class="left">
+            <button mat-button color="warn" matTooltip="Reject & cancel order" class="small">
+              <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            </button>
+            <button mat-button matTooltip="Edit order" class="small">
+              <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+              Edit
+            </button>
+            <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
+            <button mat-button matTooltip="View payment ID" class="small">
+              <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+            </button>
+            <!-- TODO: shortcut to e2e message to buyer -->
+            <button mat-button class="small">
+              <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
+              Contact buyer
+            </button>
+          </div>
+          <div class="right">
+            <!-- TODO: after clicking, show confirmation modal with more info: -->
+            <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}" [disabled]="order.action_disabled">
+              <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
+              {{ order.action_button }}
+            </button>
+          </div>
+        </mat-action-row>
+      </mat-expansion-panel><!-- .order -->
+    </div>
 
   </div><!-- .orders.list -->
 </div><!-- "Orders" tab -->

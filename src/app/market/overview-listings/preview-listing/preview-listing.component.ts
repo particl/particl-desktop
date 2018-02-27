@@ -42,6 +42,6 @@ export class PreviewListingComponent implements OnInit {
   }
 
   addToFavorites(id) {
-    this.favoritesService.addItem(id);
+    this.favoritesService.addItem(id).take(1).subscribe(res => console.log(res));
   }
 }
