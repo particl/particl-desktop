@@ -6,6 +6,7 @@ import { Log } from 'ng2-logger';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
 import { TemplateService } from 'app/core/market/api/template/template.service';
+import { ListingService } from 'app/core/market/api/listing/listing.service';
 
 @Component({
   selector: 'app-add-item',
@@ -41,7 +42,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private category: CategoryService,
-    private template: TemplateService
+    private template: TemplateService,
+    private listing: ListingService
   ) { }
 
   ngOnInit() {
@@ -151,6 +153,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
   saveAndPublish() {
     this.save();
     this.log.d('saveAndPublish');
+    this.listing.generateListing().subscribe(
+      (listing) => { console.log(listing); }
+    );
   }
 
   update() {

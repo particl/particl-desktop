@@ -2,7 +2,7 @@ export class Category {
   subCategoryList: Array<Category>;
   get name() { return this.category.name };
 
-  constructor(private category:any) {
+  constructor(private category: any) {
     if (category.ChildItemCategories) {
       this.setSubCategoryList();
     }

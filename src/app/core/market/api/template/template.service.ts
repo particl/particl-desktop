@@ -27,7 +27,7 @@ export class TemplateService {
     internationalShippingPrice: number,
     paymentAddress?: string // TODO: class
     ) {
-      const params  = [
+      let params  = [
                         'add',
                         1, // profile
                         title,
@@ -69,4 +69,5 @@ export class TemplateService {
   remove(listingTemplateId: number) {
     return this.market.call('template', ['remove', listingTemplateId]);
   }
+
 }

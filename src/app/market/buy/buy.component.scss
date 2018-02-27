@@ -28,6 +28,14 @@ table {
   }
 }
 
+custom-icon {
+  .mat-icon {
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+  }
+}
+
 
 // ------ LAYOUT ------ //
 
@@ -81,7 +89,8 @@ table.cart-items {
     }
   }
   .quantity {
-    min-width: 60px;
+    min-width: 50px;
+    max-width: 50px;
   }
   .total {
     min-width: 90px;
