@@ -104,9 +104,9 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
     .mat-icon {
       @extend %tfx;
       font-size: 14px;
-      margin-right: 8px;
+      margin-right: 6px;
       position: relative;
-      top: 0.02em;
+      top: 2px;
       opacity: 0.5;
       width: auto;
       height: auto;
