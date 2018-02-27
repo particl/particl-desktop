@@ -51,12 +51,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.subToCategories();
 
     this.itemFormGroup = this.formBuilder.group({
-      title: [''],
-      shortDesc: [''],
-      longDesc: [''],
-      categories: [''],
-      price: [''],
-      domesticShippingPrice: [''],
+      title:                      [''],
+      shortDescription:                  [''],
+      // shortDesc:                  [''],
+      longDescription:                   [''],
+      // longDesc:                   [''],
+      categories:                 [''],
+      basePrice:                      [''],
+      // price:                      [''],
+      domesticShippingPrice:      [''],
       internationalShippingPrice: ['']
     });
 
@@ -78,7 +81,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   processPictures(event) {
-    Array.from(event.target.files).map(file: File => {
+    Array.from(event.target.files).map((file: File) => {
       let reader = new FileReader();
       reader.onload = event => {
         this.pictures.push(reader.result.split('base64,')[1]);
@@ -120,31 +123,39 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   preload() {
     this.log.d(`preloading for id=${this.templateId}`);
-    this.template.get(this.templateId).subscribe(
-      (template: any) => {
-        this.log.d(`preloaded id=${this.templateId}!`)
-        this.title.setValue(template.ItemInformation.title);
-        this.shortDesc.setValue(template.ItemInformation.shortDescription);
-        this.longDesc.setValue(template.ItemInformation.longDescription);
-        this.price.setValue(template.PaymentInformation.ItemPrice.basePrice);
-        this.domesticShippingPrice.setValue(template.PaymentInformation.ItemPrice.ShippingPrice.domestic);
-        this.internationalShippingPrice.setValue(template.PaymentInformation.ItemPrice.ShippingPrice.international);
-      }
-    );
+    this.template.get(this.templateId).subscribe((template: any) => {
+      this.log.d(`preloaded id=${this.templateId}!`)
+      console.log(template)
+
+      let itemPrice = template.ItemInformation.ItemPrice;
+
+      template.ItemInformation.basePrice = itemPrice.basePrice;
+      template.ItemInformation.domesticShippingPrice = itemPrice.ShippingPrice.domestic;
+      template.ItemInformation.internationalShippingPrice = itemPrice.ShippingPrice.international;
+
+      this.itemFormGroup.setValue(template.ItemInformation);
+
+      // this.shortDesc.setValue(template.ItemInformation.shortDescription);
+      // this.longDesc.setValue(template.ItemInformation.longDescription);
+      // this.price.setValue(template.PaymentInformation.ItemPrice.basePrice);
+      // this.domesticShippingPrice.setValue(template.PaymentInformation.ItemPrice.ShippingPrice.domestic);
+      // this.internationalShippingPrice.setValue(template.PaymentInformation.ItemPrice.ShippingPrice.international);
+    });
   }
 
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   save() {
+    let item = this.itemFormGroup;
     this.template.add(
-      this.title.value,
-      this.shortDesc.value,
-      this.longDesc.value,
+      item.get('title').value,
+      item.get('shortDescription').value,
+      item.get('longDesc').value,
       75, // TODO: replace
       'SALE',
       'PARTICL',
-      +this.price.value,
-      +this.domesticShippingPrice.value,
-      +this.internationalShippingPrice.value
+      +item.get('basePrice').value,
+      +item.get('domesticShippingPrice').value,
+      +item.get('internationalShippingPrice').value
     ).subscribe(template => {
       // add images
       console.log(template);
