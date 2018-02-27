@@ -23,13 +23,13 @@ export class BuyComponent implements OnInit {
   shippingFormGroup: FormGroup;
 
   order_sortings: Array<any> = [
-    { title: 'By creation date', value: 'date-created'  },
-    { title: 'By update date',   value: 'date-update'   },
-    { title: 'By status',        value: 'status'        },
-    { title: 'By item name',     value: 'item-name'     },
-    { title: 'By category',      value: 'category'      },
-    { title: 'By quantity',      value: 'quantity'      },
-    { title: 'By price',         value: 'price'         }
+    { title: 'By creation date', value: 'date-created' },
+    { title: 'By update date',   value: 'date-update'  },
+    { title: 'By status',        value: 'status'       },
+    { title: 'By item name',     value: 'item-name'    },
+    { title: 'By category',      value: 'category'     },
+    { title: 'By quantity',      value: 'quantity'     },
+    { title: 'By price',         value: 'price'        }
   ];
 
   // TODO: disable radios for 0 amount-statuses
