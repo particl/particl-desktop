@@ -7,7 +7,7 @@ import { map, catchError } from 'rxjs/operators';
 export class MarketService {
 
   // hostname: string = 'dev1.particl.xyz';
-  hostname: string = '192.168.1.179';
+  hostname: string = 'localhost';
   port: number = 3000;
   url: string = `http://${this.hostname}:${this.port}/api/rpc`;
 

@@ -79,7 +79,7 @@ function getAuthentication(url) {
 function loadMarketAuthentication() {
     let options = _options.get();
     // let key = "dev1.particl.xyz:";
-    let key = "192.168.1.179:3000";
+    let key = "localhost:3000";
     let value = {
         name: "market",
         auth: "test:test"

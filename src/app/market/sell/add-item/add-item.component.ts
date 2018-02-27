@@ -95,23 +95,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
   save() {
     this.template.add(
       this.title.value,
-<<<<<<< HEAD
       this.shortDesc.value,
-=======
-      'test', // this.shortDesc.value,
->>>>>>> 0fbcb0faf41c2a54b4b18c92ddd07825d533d57b
       this.longDesc.value,
       75, // TODO: replace
       'SALE',
       'PARTICL',
       +this.price.value,
       +this.domesticShippingPrice.value,
-<<<<<<< HEAD
       +this.internationalShippingPrice.value
-=======
-      1, // this.internationalShippingPrice.value
-      'Paaaa'
->>>>>>> 0fbcb0faf41c2a54b4b18c92ddd07825d533d57b
     ).subscribe(
       (template) => { this.log.d('Saved template!'); }
     );
