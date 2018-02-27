@@ -4,6 +4,9 @@ export class Template {
 
      }
 
-     get status() { return 'unpublished' }
+     get status() {
+       if (this.template)
+       return 'unpublished'
+    }
   
   }

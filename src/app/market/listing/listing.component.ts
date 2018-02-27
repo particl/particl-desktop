@@ -17,7 +17,7 @@ export class ListingComponent implements OnInit {
 
   ngOnInit() {
     this.pictures = new Array();
-    data.listing.ItemInformation.ItemImages.map(image => {
+    this.data.listing.ItemInformation.ItemImages.map(image => {
       this.pictures.push(image.ItemImageDatas.find(size => {
         return size.imageVersion === 'MEDIUM';
       }).data);
