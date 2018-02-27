@@ -27,7 +27,7 @@ export class TemplateService {
     internationalShippingPrice: number,
     paymentAddress?: string // TODO: class
     ) {
-      const params  = [
+      let params  = [
                         'add',
                         1, // profile
                         title,
