@@ -54,7 +54,7 @@ export class SellComponent implements OnInit {
     { title: 'Sold',       value: 'sold',    amount: '1' }
   ];
 
-  listings: Array<any> = [
+  listingssample: Array<any> = [
     {
       name: 'My basic listing template',
       category: 'Electronics, DIY',
@@ -157,7 +157,7 @@ export class SellComponent implements OnInit {
     status:   undefined
   };
 
-  public templates: Array<any>;
+  public listings: Array<any>;
 
   constructor(
     private router: Router,
@@ -190,8 +190,10 @@ export class SellComponent implements OnInit {
 
   update() {
     this.listing.searchOwn(1, 10).subscribe(
-      (templates: Array<any>) => {
-        this.templates = templates;
+      (listings: Array<any>) => {
+        console.log('got templates');
+        console.log(listings);
+        this.listings = listings;
       }
     )
   }

@@ -123,15 +123,15 @@
     </div-->
     <!--div class="subtitle first">Published listings</div-->
 
-    <mat-expansion-panel class="listing item no-padding" *ngFor="let template of templates">
+    <mat-expansion-panel class="listing item no-padding" *ngFor="let listing of listings">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
           <div class="photo" fxFlex="0 0 110px">
             <img src="./assets/images/placeholder_1-1.jpg">
           </div>
           <div class="meta" fxFlex="1 1 100%">
-            <div class="name">{{ template.ItemInformation.title }}</div>
-            <div class="categories">{{ template.ItemInformation.ItemCategory.name }}</div>
+            <div class="name">{{ listing.ItemInformation.title }}</div>
+            <div class="categories">{{ listing.ItemInformation.ItemCategory.name }}</div>
             <div class="date">
               <!--span class="hash" matTooltip="Order hash">AGR</span-->
               Added 2018-02-19 &bull; Expires 2018-02-13
@@ -149,7 +149,7 @@
         <div class="description" fxFlex="65%">
           <div class="title">Listing description</div>
           <p>
-            {{ template.ItemInformation.longDescription }}
+            {{ listing.ItemInformation.longDescription }}
           </p>
         </div><!-- .description -->
         <div class="info" fxFlex="35%">
@@ -164,13 +164,13 @@
 
       <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(template.id)" class="small">
+          <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(listing.id)" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
           </button>
-          <button mat-button matTooltip="Clone listing" (click)="addItem(template.id, true)" class="small">
+          <button mat-button matTooltip="Clone listing" (click)="addItem(listing.id, true)" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
           </button>
-          <button mat-button matTooltip="Edit listing details" (click)="addItem(template.id)" class="small">
+          <button mat-button matTooltip="Edit listing details" (click)="addItem(listing.id)" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
             Edit listing
           </button>

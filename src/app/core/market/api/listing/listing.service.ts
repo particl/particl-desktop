@@ -19,12 +19,13 @@ export class ListingService {
   }
 
   search(page: number, pageLimit: number, type?: string) {
-    type = type || "ALL";
-    return this.market.call('item', ['search', page, pageLimit, 'ASC', 75, type, '*']);
+    console.log(type);
+    type = (type) ? type :"ALL";
+    return this.market.call('item', ['search', page, pageLimit, 'ASC', 75, 'ALL', type]);
   }
 
   searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, "OWN");
+    return this.search(page, pageLimit, "*"); // OWN
   }
   
   generateListing() {
