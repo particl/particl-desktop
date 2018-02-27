@@ -38,6 +38,15 @@
     <mat-step [stepControl]="cartFormGroup">
       <form [formGroup]="cartFormGroup" class="cart">
         <ng-template matStepLabel>Your cart</ng-template>
+        <div class="no-results">
+          <p>
+            Oh no, your cart is empty! Let's fix this:<br>
+            <button mat-button color="primary">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-search"></mat-icon>
+              Browse listings for sale
+            </button>
+          </p>
+        </div>
         <table class="cart-items">
           <thead>
             <tr><th>Items</th><th>Price</th><th>Shipping</th><th>Quantity</th><th class="text-right">Total</th><th></th></tr>
@@ -342,10 +351,9 @@
   <!-- Orders > list -->
   <div class="orders list section" fxFlex="1 1 100%">
 
-    <!-- FIXME: if no orders found (needs better wording?) -->
-    <!--div class="no-results">
+    <div class="no-results">
       You don't have any market orders yet
-    </div-->
+    </div>
 
     <mat-expansion-panel class="order item no-padding" *ngFor="let order of orders">
       <mat-expansion-panel-header class="header">
@@ -429,6 +437,11 @@
 <!-- =========== FAVOURITES =========== -->
 
 <div class="favourites container-block disable-select" *ngIf="tabLabels[selectedTab] == 'favourites'" fxLayout="row wrap" fxLayoutAlign="start start">
+  <div class="no-results">
+    <p>
+      You don't have any favourite listings yet
+    </p>
+  </div>
   <ng-container *ngFor="let l of listings">
     <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
       <app-preview-listing [listing]="l"></app-preview-listing>

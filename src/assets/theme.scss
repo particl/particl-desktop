@@ -190,6 +190,9 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   padding: 170px 0;
   border: 2px dashed $bg-shadow;
   background: rgba(white, 0.5);
+  button {
+    margin-top: 12px;
+  }
 }
 
 

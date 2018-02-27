@@ -28,11 +28,11 @@
       </mat-option>
     </mat-select>
 
-    <div class="display" fxFlex="0 1 80px" fxLayout="row" fxLayoutGap="15px">
-      <!-- FIXME: add ".active" class to currently selected view + needs to implement functionality -->
+    <!--div class="display" fxFlex="0 1 80px" fxLayout="row" fxLayoutGap="15px">
+      FIXME: add ".active" class to currently selected view + needs to implement functionality
       <mat-icon class="icon active" fontSet="partIcon" fontIcon="part-overview" matTooltip="Grid view"></mat-icon>
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="List view"></mat-icon>
-    </div>
+    </div-->
 
   </div><!-- .control-bar -->
 </app-header>
@@ -63,6 +63,11 @@
 
 
   <div class="content disable-select" fxFlex="75%" fxLayout="row wrap" fxLayoutAlign="start start">
+    <div class="no-results">
+      <p>
+        Sorry, no matching listings found
+      </p>
+    </div>
     <ng-container *ngFor="let l of listings">
       <mat-card class="listing" fxFlex="0 0 calc(100% / 3 - 30px)">
         <app-preview-listing [listing]="l"></app-preview-listing>

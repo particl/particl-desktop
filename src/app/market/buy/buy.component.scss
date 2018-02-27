@@ -39,8 +39,13 @@ custom-icon {
 
 // ------ LAYOUT ------ //
 
-.your-cart.container-block {
+.your-cart {
+  &.container-block {
    padding: 15px 15px 0;
+  }
+  .no-results {
+    margin-top: 16px;
+  }
 }
 
 .sub-section { // lower-priority content in cards
@@ -157,6 +162,10 @@ table.summary {
 
 .favourites {
   padding: 35px 20px;
+  .no-results {
+    width: 100%;
+    margin: 0 14px;
+  }
   .listing { // item
     margin: 0 15px 30px 15px;
     padding: 24px 16px 12px;
