@@ -93,16 +93,6 @@ export class BuyComponent implements OnInit {
     },
   ];
 
-  // Favourites
-  listings: Array<string> = [
-    'Product name',
-    'This one is a little bit longer than others',
-    'Sweet gizmo',
-    'Pack of lovely stuff',
-    'Box of things',
-    'Pair of pears'
-  ];
-
   filters: any = {
     search: undefined,
     sort:   undefined,
@@ -135,7 +125,7 @@ export class BuyComponent implements OnInit {
     });
 
     this.cartFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
+      firstCtrl: ['']
     });
 
     this.shippingFormGroup = this._formBuilder.group({

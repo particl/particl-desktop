@@ -81,7 +81,7 @@
                   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
                     <!--button mat-button class="small">-</button-->
                     <mat-form-field class="auto-width">
-                      <input matInput type="number" value="1" min="1" formControlName="firstCtrl" required>
+                      <input matInput type="number" value="1" min="1" formControlName="firstCtrl">
                     </mat-form-field>
                     <!--button mat-button class="small">+</button-->
                   </div>
@@ -424,17 +424,24 @@
 </div><!-- "Orders" tab -->
 
 
-<!-- =========== FAVOURITES =========== -->
+<!-- =========== FAVORITES =========== -->
 
-<div class="favourites container-block disable-select" *ngIf="tabLabels[selectedTab] == 'favourites'" fxLayout="row wrap" fxLayoutAlign="start start">
-  <div class="no-results">
+<div class="favourites container-block disable-select"
+     *ngIf="tabLabels[selectedTab] == 'favourites'"
+     fxLayout="row wrap" fxLayoutAlign="start start">
+
+  <div class="no-results" *ngIf="favorites.length == 0">
     <p>
       You don't have any favourite listings yet
     </p>
   </div>
-  <ng-container *ngFor="let l of listings">
-    <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
-      <app-preview-listing [listing]="l"></app-preview-listing>
-    </mat-card>
-  </ng-container>
+
+  <div *ngIf="favorites.length != 0">
+    <ng-container *ngFor="let favorite of favorites">
+      <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
+        <app-preview-listing [listing]="favorite"></app-preview-listing>
+      </mat-card>
+    </ng-container>
+  </div>
+
 </div><!-- "Favourites" tab -->
