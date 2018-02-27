@@ -62,7 +62,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('overview created');
-    
+
     this.category.list()
     .takeWhile(() => !this.destroyed)
     .subscribe(

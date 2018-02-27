@@ -8,7 +8,7 @@ export class MarketService {
 
   hostname: string = 'dev1.particl.xyz';
   port: number = 3200;
-  url = `http://${this.hostname}/api/rpc`;
+  url: string = `http://${this.hostname}/api/rpc`;
 
   constructor(private _http: HttpClient) {
    }
@@ -25,12 +25,12 @@ export class MarketService {
 
 
 
-      let headerJson = {
+      const headerJson = {
        'Content-Type': 'application/json',
        // 'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`), // we hijack the http request in electron
        'Accept': 'application/json',
       };
-      let headers = new HttpHeaders(headerJson);
+      const headers = new HttpHeaders(headerJson);
 
       return this._http
         .post(this.url, postData, { headers: headers })

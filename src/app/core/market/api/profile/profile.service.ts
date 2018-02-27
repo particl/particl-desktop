@@ -22,13 +22,25 @@ export class ProfileService {
     return this.market.call('profile', ['get', profileIdOrName]);
   }
 
-  // TODO: profileAddresses, 
   add(profileName: string, profileAddress?: string): Observable<any> {
-    let params = ['add', profileName, profileAddress];
+    const params = ['add', profileName, profileAddress];
     if (profileAddress === null) {
       params.pop(); // if null pop parent
     }
     return this.market.call('profile', params);
+  }
+
+  addShippingAddress(shippingAddress: any): Observable<any> {
+    return this.market.call('profile', [
+      'address', 'add', 1,
+      shippingAddress.title,
+      shippingAddress.addressLine1,
+      shippingAddress.addressLine2,
+      shippingAddress.city,
+      shippingAddress.state,
+      shippingAddress.countryCode,
+      shippingAddress.zipCode
+    ]);
   }
 
   update(profileId: number, profileName: string): Observable<any> {
@@ -40,6 +52,6 @@ export class ProfileService {
   }
 
   search(searchString: string): Observable<any> {
-    return this.market.call('profile', ['search', searchString]); 
+    return this.market.call('profile', ['search', searchString]);
   }
 }

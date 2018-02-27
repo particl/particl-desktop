@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators
+} from '@angular/forms';
+
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
 
 @Component({
   selector: 'app-buy',
@@ -12,8 +19,8 @@ export class BuyComponent implements OnInit {
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
 
   /* https://material.angular.io/components/stepper/overview */
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+  cartFormGroup: FormGroup;
+  shippingFormGroup: FormGroup;
 
   order_sortings: Array<any> = [
     { title: 'By creation date', value: 'date-created'  },
@@ -98,15 +105,58 @@ export class BuyComponent implements OnInit {
     status: undefined
   };
 
-  constructor(private _formBuilder: FormBuilder) { }
+  profile: any = { };
+
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _profileService: ProfileService
+  ) { }
 
   ngOnInit() {
-    this.firstFormGroup = this._formBuilder.group({
+
+    this._profileService.get(1).take(1).subscribe(profile => {
+      console.log("GOT PROFILE");
+      console.log(profile);
+      this.profile = profile;
+    });
+
+    this.cartFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required]
     });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
+
+    this.shippingFormGroup = this._formBuilder.group({
+      title:        [''],
+      addressLine1: ['', Validators.required],
+      addressLine2: [''],
+      city:         ['', Validators.required],
+      state:        [''],
+      countryCode:  ['', Validators.required],
+      zipCode:      ['', Validators.required],
+      save:         ['']
     });
+  }
+
+  updateShippingProfile() {
+    if (this.shippingFormGroup.value.save) {
+      delete this.shippingFormGroup.value.save;
+      this._profileService.addShippingAddress(this.shippingFormGroup.value).take(1)
+        .subscribe(address => {
+          this._profileService.get(1).take(1)
+            .subscribe(updatedProfile => this.profile = updatedProfile);
+        });
+    }
+  }
+
+  fillAddress(address) {
+    console.log(address);
+    address.countryCode = address.country;
+    delete address.country;
+    address.save = false;
+    delete address.id;
+    delete address.profileId;
+    delete address.updatedAt;
+    delete address.createdAt;
+    this.shippingFormGroup.setValue(address);
   }
 
   clear(): void {

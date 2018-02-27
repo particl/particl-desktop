@@ -26,7 +26,7 @@ export class CategoryService {
   }
 
   update(categoryId: number, categoryName: string, description: string, parent?: number): Observable<any> {
-    let params = ['update', categoryId, categoryName, description, parent];
+    const params = ['update', categoryId, categoryName, description, parent];
     if (parent === null) {
       params.pop(); // if null pop parent
     }
@@ -38,6 +38,6 @@ export class CategoryService {
   }
 
   search(searchString: string): Observable<any> {
-    return this.market.call('category', ['search', searchString]); 
+    return this.market.call('category', ['search', searchString]);
   }
 }
