@@ -94,8 +94,8 @@ table.cart-items {
     }
   }
   .quantity {
-    min-width: 50px;
-    max-width: 50px;
+    min-width: 30px;
+    max-width: 30px;
   }
   .total {
     min-width: 90px;
@@ -104,6 +104,8 @@ table.cart-items {
   }
   .remove {
     padding: 14px;
+    min-width: 20px;
+    max-width: 20px;
   }
 }
 
