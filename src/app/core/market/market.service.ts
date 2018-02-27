@@ -30,9 +30,15 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.url, postData, { headers: headers })
-      .pipe(
-        map((response: any) => response.result),
-        catchError(error => Observable.throw(error))
-      );
+        .map((response: any) => response.result)
+        .catch((error: any) => {
+          let err = "";
+          if(error.status === 404) {
+            err = error.error.error;
+          } else {
+            err = error;
+          }
+          return Observable.throw(err);
+        })
   }
 }

@@ -15,7 +15,7 @@ export class CartService {
   addItem(id) {
     this.market.call('cartitem', ['add', 1, id]).take(1).subscribe(
       data => this.snackbar.open(data.message),
-      err  => this.snackbar.open(err.message)
+      err  => this.snackbar.open(err)
     );
   }
 
