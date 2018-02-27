@@ -52,13 +52,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.itemFormGroup = this.formBuilder.group({
       title:                      [''],
-      shortDescription:                  [''],
-      // shortDesc:                  [''],
-      longDescription:                   [''],
-      // longDesc:                   [''],
+      shortDescription:           [''],
+      longDescription:            [''],
       categories:                 [''],
-      basePrice:                      [''],
-      // price:                      [''],
+      basePrice:                  [''],
       domesticShippingPrice:      [''],
       internationalShippingPrice: ['']
     });
@@ -104,8 +101,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   subToCategories() {
     this.category.list()
-    .takeWhile(() => !this.destroyed)
-    .subscribe(list => this.updateCategories(list));
+      .takeWhile(() => !this.destroyed)
+      .subscribe(list => this.updateCategories(list));
   }
 
   updateCategories(list: Category) {
@@ -125,7 +122,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.log.d(`preloading for id=${this.templateId}`);
     this.template.get(this.templateId).subscribe((template: any) => {
       this.log.d(`preloaded id=${this.templateId}!`)
-      console.log(template)
 
       let itemPrice = template.ItemInformation.ItemPrice;
 
@@ -134,42 +130,35 @@ export class AddItemComponent implements OnInit, OnDestroy {
       template.ItemInformation.internationalShippingPrice = itemPrice.ShippingPrice.international;
 
       this.itemFormGroup.setValue(template.ItemInformation);
-
-      // this.shortDesc.setValue(template.ItemInformation.shortDescription);
-      // this.longDesc.setValue(template.ItemInformation.longDescription);
-      // this.price.setValue(template.PaymentInformation.ItemPrice.basePrice);
-      // this.domesticShippingPrice.setValue(template.PaymentInformation.ItemPrice.ShippingPrice.domestic);
-      // this.internationalShippingPrice.setValue(template.PaymentInformation.ItemPrice.ShippingPrice.international);
     });
   }
 
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   save() {
-    let item = this.itemFormGroup;
+    let item = this.itemFormGroup.value;
     this.template.add(
-      item.get('title').value,
-      item.get('shortDescription').value,
-      item.get('longDesc').value,
+      item.title,
+      item.shortDescription,
+      item.longDescription,
       75, // TODO: replace
       'SALE',
       'PARTICL',
-      +item.get('basePrice').value,
-      +item.get('domesticShippingPrice').value,
-      +item.get('internationalShippingPrice').value
+      +item.basePrice,
+      +item.domesticShippingPrice,
+      +item.internationalShippingPrice
     ).subscribe(template => {
       // add images
-      console.log(template);
+      this.log.d('Saved template', template);
       this.pictures.map(picture => this.template.addPicture(template.id, picture));
-      this.log.d('Saved template!');
     });
   }
 
   saveAndPublish() {
     this.save();
     this.log.d('saveAndPublish');
-    this.listing.generateListing().subscribe(
-      (listing) => { console.log(listing); }
-    );
+    this.listing.generateListing().subscribe(listing => {
+      console.log(listing);
+    });
   }
 
   update() {
