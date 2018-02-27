@@ -112,7 +112,6 @@ export class BuyComponent implements OnInit {
   profile: any = { };
 
   /* cart */
-
   cart: any[] = [];
 
   /* favs */
@@ -153,6 +152,7 @@ export class BuyComponent implements OnInit {
     this.cartService.getCart().take(1).subscribe(cart => {
       cart.ShoppingCartItems.map(item => {
         this.listingService.get(item.id).take(1).subscribe(listing => {
+          console.log(listing);
           this.cart.push(listing);
         });
       });
@@ -181,6 +181,38 @@ export class BuyComponent implements OnInit {
     this._router.navigate(['/market/overview']);
   }
 
+  getImage(listing) {
+    return listing.ItemInformation.ItemImages[0].ItemImageDatas.find(size => {
+      return size.imageVersion === 'THUMBNAIL';
+    }).data;
+  }
+
+  getPrice(listing) {
+    let price = listing.PaymentInformation.ItemPrice.basePrice;
+    return {
+      int:     price.toFixed(0),
+      cents:  (price % 1).toFixed(8) * 100000000,
+      escrow: (price * listing.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
+    };
+  }
+
+  getShipping(listing) {
+    let price = listing.PaymentInformation.ItemPrice.ShippingPrice;
+    return {
+      int:    price.toFixed(0),
+      cents: (price % 1).toFixed(8) * 100000000
+    };
+  }
+
+  getSubTotal() {
+    let total = 0.0;
+    this.cart.map(item => total += item.PaymentInformation.ItemPrice.basePrice);
+    return total;
+  }
+
+  removeFromCart(id) {
+
+  }
 
   /* shipping */
 
