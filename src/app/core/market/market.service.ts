@@ -6,9 +6,10 @@ import { map, catchError } from 'rxjs/operators';
 @Injectable()
 export class MarketService {
 
-  hostname: string = 'dev1.particl.xyz';
-  port: number = 3200;
-  url: string = `http://${this.hostname}/api/rpc`;
+  // hostname: string = 'dev1.particl.xyz';
+  hostname: string = '192.168.1.179';
+  port: number = 3000;
+  url: string = `http://${this.hostname}:${this.port}/api/rpc`;
 
   constructor(private _http: HttpClient) {
    }

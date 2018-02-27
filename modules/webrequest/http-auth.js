@@ -22,6 +22,7 @@ exports.init = function () {
         // clone it
         const url = new URL(details.url);
         const u = url.hostname + ":" + url.port;
+        console.log(u);
         if (isWhitelisted(u)) {
             let headers = Object.assign({}, details.requestHeaders);
 
@@ -51,7 +52,7 @@ exports.init = function () {
         } else {
             log.error('Not whitelisted: ' + u);
             callback({ cancel: true });
-        } 
+        }
     })
 
 }
@@ -77,7 +78,8 @@ function getAuthentication(url) {
 
 function loadMarketAuthentication() {
     let options = _options.get();
-    let key = "dev1.particl.xyz:";
+    // let key = "dev1.particl.xyz:";
+    let key = "192.168.1.179:3000";
     let value = {
         name: "market",
         auth: "test:test"
