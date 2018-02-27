@@ -2,26 +2,26 @@
   <div class="control-bar" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
 
     <!-- Search-->
-    <div class="icon-input search-listings" fxFlex="0 0 250px">
+    <div class="icon-input search-listings TO_DO" fxFlex="0 0 250px">
       <input type="text" class="header-input" id="searchbar" placeholder="Search items for sale..">
       <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
     </div>
 
     <!-- Filtering -->
     <div class="filtering" fxFlex="1 1 100%">
-      <mat-select placeholder="Country" [formControl]="countries" multiple class="filter country">
+      <mat-select placeholder="Country" [formControl]="countries" multiple class="filter country TO_DO">
         <mat-option>All countries</mat-option>
         <mat-option *ngFor="let country of countryList" [value]="country">{{ country }}</mat-option>
       </mat-select>
 
-      <mat-select placeholder="Categories" [formControl]="categories" multiple class="filter category">
+      <mat-select placeholder="Categories" [formControl]="categories" class="filter category">
         <mat-option>All categories</mat-option>
         <mat-option *ngFor="let category of categoryList" [value]="category">{{ category }}</mat-option>
       </mat-select>
     </div>
 
     <!-- Sorting -->
-    <mat-select placeholder="Sort by" class="filter sorting" fxFlex="0 1 300px">
+    <mat-select placeholder="Sort by" class="filter sorting TO_DO" fxFlex="0 1 300px">
       <mat-option>Default</mat-option>
       <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
         {{ sorting.viewValue }}
