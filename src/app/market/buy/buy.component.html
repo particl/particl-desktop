@@ -38,20 +38,26 @@
     <mat-step [stepControl]="cartFormGroup">
       <form [formGroup]="cartFormGroup" class="cart">
         <ng-template matStepLabel>Your cart</ng-template>
-        <div class="no-results">
+
+        <div class="no-results" [hidden]="cart.length !== 0">
           <p>
             Oh no, your cart is empty! Let's fix this:<br>
-            <button mat-button color="primary">
+            <button mat-button color="primary" (click)="goToListings()">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-search"></mat-icon>
               Browse listings for sale
             </button>
           </p>
         </div>
-        <table class="cart-items">
+
+        <table class="cart-items" [hidden]="cart.length === 0">
           <thead>
             <tr><th>Items</th><th>Price</th><th>Shipping</th><th>Quantity</th><th class="text-right">Total</th><th></th></tr>
           </thead>
           <tbody>
+
+
+
+
             <tr>
               <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                 <div class="image" fxFlex="0 0 115px">
@@ -80,6 +86,10 @@
                 </button>
               </td>
             </tr>
+
+
+
+
             <tr>
               <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                 <div class="image" fxFlex="0 0 115px">
@@ -108,10 +118,15 @@
                 </button>
               </td>
             </tr>
+
+
+
+
           </tbody>
         </table>
 
-        <div class="order-detail" fxLayout fxLayoutAlign="end center">
+        <div [hidden]="cart.length === 0" class="order-detail"
+             fxLayout fxLayoutAlign="end center">
           <table class="subtotals" fxFlex="0 0 250px">
             <tr><td class="desc">Subtotal</td><td class="value">170 PART</td></tr>
             <tr><td class="desc">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
@@ -120,7 +135,7 @@
           </table>
         </div><!-- .order-detail -->
 
-        <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+        <div [hidden]="cart.length === 0" class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
           <button mat-button class="TO_DO">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
             Clear cart

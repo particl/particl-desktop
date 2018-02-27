@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -7,6 +8,9 @@ import {
 } from '@angular/forms';
 
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { CartService } from 'app/core/market/api/cart/cart.service';
+import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 
 @Component({
   selector: 'app-buy',
@@ -107,9 +111,20 @@ export class BuyComponent implements OnInit {
 
   profile: any = { };
 
+  /* cart */
+
+  cart: any[] = [];
+
+  /* favs */
+  favorites: any[] = [];
+
   constructor(
     private _formBuilder: FormBuilder,
-    private _profileService: ProfileService
+    private _router: Router,
+    private _profileService: ProfileService,
+    private listingService: ListingService,
+    private cartService: CartService,
+    private favoritesService: FavoritesService
   ) { }
 
   ngOnInit() {
@@ -134,7 +149,40 @@ export class BuyComponent implements OnInit {
       zipCode:      ['', Validators.required],
       save:         ['']
     });
+
+    this.cartService.getCart().take(1).subscribe(cart => {
+      cart.ShoppingCartItems.map(item => {
+        this.listingService.get(item.id).take(1).subscribe(listing => {
+          this.cart.push(listing);
+        });
+      });
+    });
+
+    this.favoritesService.getFavorites().take(1).subscribe(favorites => {
+      favorites.map(favorite => {
+        this.listingService.get(favorite.id).take(1).subscribe(listing => {
+          this.favorites.push(listing);
+        });
+      });
+    })
   }
+
+  clear(): void {
+    this.filters();
+  }
+
+  changeTab(index: number): void {
+    this.selectedTab = index;
+  }
+
+  /* cart */
+
+  goToListings() {
+    this._router.navigate(['/market/overview']);
+  }
+
+
+  /* shipping */
 
   updateShippingProfile() {
     if (this.shippingFormGroup.value.save) {
@@ -157,14 +205,6 @@ export class BuyComponent implements OnInit {
     delete address.updatedAt;
     delete address.createdAt;
     this.shippingFormGroup.setValue(address);
-  }
-
-  clear(): void {
-    this.filters();
-  }
-
-  changeTab(index: number): void {
-    this.selectedTab = index;
   }
 
 }

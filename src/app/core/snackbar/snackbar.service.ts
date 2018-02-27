@@ -4,8 +4,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 @Injectable()
 export class SnackbarService {
 
-  constructor(private snackBar: MatSnackBar) {
-  }
+  constructor(private snackBar: MatSnackBar) { }
 
   open(message: string, type?: string, action?: string): void {
     const config = new MatSnackBarConfig();

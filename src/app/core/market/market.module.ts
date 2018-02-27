@@ -8,6 +8,8 @@ import { CategoryService } from './api/category/category.service';
 import { ProfileService } from './api/profile/profile.service';
 import { TemplateService } from './api/template/template.service';
 import { ListingService } from './api/listing/listing.service';
+import { CartService } from './api/cart/cart.service';
+import { FavoritesService } from './api/favorites/favorites.service';
 
 @NgModule({
   imports: [
@@ -26,7 +28,9 @@ export class MarketModule {
         CategoryService,
         ProfileService,
         TemplateService,
-        ListingService
+        ListingService,
+        CartService,
+        FavoritesService
       ]
     };
   }
