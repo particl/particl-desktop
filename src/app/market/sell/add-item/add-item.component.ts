@@ -52,8 +52,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.itemFormGroup = this.formBuilder.group({
       title:                      ['', [Validators.required]],
-      shortDescription:           ['', [Validators.required]],
-      longDescription:            ['', [Validators.required]],
+      shortDescription:           ['', [Validators.required,
+                                        Validators.maxLength(200)]],
+      longDescription:            ['', [Validators.required,
+                                        Validators.maxLength(1000)]],
       categories:                 ['', [Validators.required]],
       basePrice:                  ['', [Validators.required]],
       domesticShippingPrice:      ['', [Validators.required]],

@@ -29,35 +29,33 @@
       <tr>
         <th class="item price">Price</th>
         <td class="item price">
-          <span class="big">2123.</span><span class="small">0000</span>
+          <span class="big">{{price.int}}.</span>
+          <span class="small">{{price.cents * 100000000}}</span>
           <span class="currency">PART</span>
-          <span class="fiat">&asymp; 45.15 USD</span>
+          <span class="fiat TO_DO">&asymp; 45.15 USD</span>
         </td>
       </tr>
       <tr>
         <th class="shipping price">Shipping</th>
         <td class="shipping price">
-          International 5.000 PART<br>
-          Switzerland 2.100 PART
+          International {{data.listing.PaymentInformation.ItemPrice.ShippingPrice.international}} PART<br>
+          {{data.listing.ItemInformation.ItemLocation.region}} {{data.listing.PaymentInformation.ItemPrice.ShippingPrice.domestic}} PART
         </td>
       </tr>
       <tr>
         <th class="escrow price">Escrow</th>
-        <td class="escrow price">0.0000 PART</td>
+        <td class="escrow price">{{price.escrow}} PART</td>
       </tr>
     </table>
 
     <div class="summary description">
       <p>
-        Summary (200 chars limit). Product management breakout fastworks meeting assassin, and going forward I just wanted to give you a heads-up. Baseline the procedure and samepage your department pixel pushing horsehead.
+        {{data.listing.ItemInformation.shortDescription}}
       </p>
     </div>
     <div class="description">
       <p>
-        Description (1.000 chars limit). I am dead inside we need to dialog around your choice of work attire, or win-win-win put in in a deck for our standup today we need a paradigm shift after I ran into Helen at a restaurant, I realized she was just office pretty. Upsell going forward, and race without a finish line, for turd polishing. Data-point hard stop. The last person we talked to said this would be ready accountable talk we need distributors to evangelize the new line to local markets, nor productize or win-win thought shower. Closer to the metal. Forcing function we need to have a Come to Jesus meeting with Phil about his attitude best practices.
-      </p>
-      <p>
-        Cross sabers nail jelly to the hothouse wall, nor price point, so design thinking when does this sunset? or bells and whistles. Those options are already baked in with this model pro-sumer software, future-proof. Proceduralize shelfware, or show pony push back. Strategic fit dogpile that. Work flows programmatically, yet touch base.
+        {{data.listing.ItemInformation.longDescription}}
       </p>
     </div>
 
@@ -66,15 +64,15 @@
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <div class="left">
-    <button mat-button class="small" matTooltip="Report" matTooltipPosition="above">
+    <button mat-button class="small TO_DO" matTooltip="Report" matTooltipPosition="above">
       <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
     </button>
     <div class="date">
-      <strong>Date added</strong> 10 Jan, 2018
+      <strong>Date added</strong> {{date}}
     </div>
   </div>
   <div class="right">
-    <button mat-button class="small" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above">
+    <button mat-button class="small TO_DO" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above">
       <mat-icon fontSet="partIcon" fontIcon="part-heart"></mat-icon>
     </button>
     <button mat-raised-button color="primary">

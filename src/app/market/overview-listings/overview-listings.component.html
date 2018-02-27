@@ -63,7 +63,7 @@
 
 
   <div class="content disable-select" fxFlex="75%" fxLayout="row wrap" fxLayoutAlign="start start">
-    <div class="no-results">
+    <div class="no-results" [hidden]="listings.length !== 0">
       <p>
         Sorry, no matching listings found
       </p>
