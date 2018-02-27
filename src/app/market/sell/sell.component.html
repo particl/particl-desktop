@@ -34,7 +34,7 @@
       </button>
     </div>
 
-    <div class="section search-sorting">
+    <div class="section search-sorting TO_DO">
       <div class="subtitle">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
@@ -52,7 +52,7 @@
       </mat-card>
     </div>
 
-    <div class="section filter-by-type">
+    <div class="section filter-by-type TO_DO">
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group block-radio">
@@ -65,7 +65,7 @@
       </mat-card>
     </div><!-- .filter-by-type -->
 
-    <button mat-button color="warn" class="clear-filters" (click)="clear()">
+    <button mat-button color="warn" class="clear-filters TO_DO" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
       Clear all filters
     </button>
@@ -74,7 +74,7 @@
 
   <!-- Orders > Filter -->
   <div class="filter" fxFlex="0 0 230px" *ngIf="tabLabels[selectedTab] == 'orders'">
-  
+
     <div class="section search-sorting">
       <div class="subtitle first">Search &amp; sort</div>
       <mat-card class="filter-card">
@@ -177,14 +177,14 @@
         <div class="right"> <!-- listing.action_color  -->
           <button mat-raised-button color="primary" matTooltip="listing.action_tooltip" [disabled]="false"> <!-- listing.action_disabled -->
             <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon> <!-- listing.action_icon -->
-             listing.action_button 
+             listing.action_button
           </button>
         </div>
       </mat-action-row>
     </mat-expansion-panel><!-- .listing -->
 
     <!--div class="subtitle">Unpublished listings (templates)</div-->
-        
+
   </div><!-- .listings-list -->
 
 

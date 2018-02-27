@@ -23,4 +23,8 @@ export class CartService {
     return this.market.call('cart', ['get', 1]);
   }
 
+  removeItem(id) {
+    return this.market.call('cartitem', ['remove', 1, id]);
+  }
+
 }

@@ -10,6 +10,7 @@ export class FavoritesService {
   ) { }
 
   addItem(id) {
+    console.log(id);
     return this.market.call('favorite', ['add', 1, id]);
   }
 

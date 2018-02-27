@@ -63,7 +63,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
       list => this.updateCategories(list));
 
     // TODO: search
-    this.listingService.get(1).take(1).subscribe(listing => {
+    this.listingService.get(2).take(1).subscribe(listing => {
       this.listings.push(listing);
     })
   }

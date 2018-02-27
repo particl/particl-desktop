@@ -32,6 +32,8 @@
 button,
 .mat-button,
 .mat-raised-button {
+  font-family: $font;
+  font-weight: 600;
   .mat-icon {
     width: auto;
     height: auto;
@@ -93,6 +95,8 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 .mat-tab-group {
   .mat-tab-label {
+    font-family: $font;
+    font-weight: 600;
     &.mat-tab-label-active { // keep active tabs black (not grey)
       opacity: 1;
       .mat-icon { opacity: 0.9; }
@@ -100,9 +104,9 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
     .mat-icon {
       @extend %tfx;
       font-size: 14px;
-      margin-right: 8px;
+      margin-right: 6px;
       position: relative;
-      top: 0.02em;
+      top: 2px;
       opacity: 0.5;
       width: auto;
       height: auto;
@@ -172,6 +176,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 // ------ STEPPER ------ //
 
 .mat-stepper-horizontal {
+  font-family: $font;
   // buy/cart-shipping: remove white background
   &.no-bg {
     background: none;
@@ -232,7 +237,6 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   // MP Listings: category filter
   &.category-items {
     .mat-list-item {
-      
       .mat-list-item-content {
         padding: 6px 26px 6px 36px !important;
         font-size: 13px;
@@ -331,6 +335,7 @@ input {
 }
 
 .mat-radio-group {
+  font-family: $font;
   // send: full-width clickable radios
   &.block-radio {
     .mat-radio-button .mat-radio-label,
