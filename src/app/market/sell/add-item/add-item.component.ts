@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
@@ -21,15 +21,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   // template id
   templateId: number = 2;
 
-  // template info
-  // TODO: FormGroup
-  title = new FormControl();
-  shortDesc = new FormControl();
-  longDesc = new FormControl();
-  categories: FormControl = new FormControl();
-  price: FormControl = new FormControl();
-  domesticShippingPrice: FormControl = new FormControl();
-  internationalShippingPrice: FormControl = new FormControl();
+  itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
 
@@ -41,6 +33,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
     private category: CategoryService,
     private template: TemplateService,
     private listing: ListingService
@@ -56,6 +49,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.pictures = new Array();
 
     this.subToCategories();
+
+    this.itemFormGroup = this.formBuilder.group({
+      title: [''],
+      shortDesc: [''],
+      longDesc: [''],
+      categories: [''],
+      price: [''],
+      domesticShippingPrice: [''],
+      internationalShippingPrice: ['']
+    });
 
     this.route.queryParams.take(1).subscribe(params => {
       const id = params['id'];
@@ -75,7 +78,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   processPictures(event) {
-    Array.from(event.target.files).map(file => {
+    Array.from(event.target.files).map(file: File => {
       let reader = new FileReader();
       reader.onload = event => {
         this.pictures.push(reader.result.split('base64,')[1]);
