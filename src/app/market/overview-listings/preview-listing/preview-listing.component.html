@@ -5,8 +5,8 @@
     <img src="data:image/gif;base64,{{getThumbnail()}}" (click)="openListing()">
     <div class="icons">
       <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-search" matTooltip="Preview" matTooltipPosition="above" (click)="openListing()"></mat-icon>
-      <mat-icon class="icon flag" fontSet="partIcon" fontIcon="part-error" matTooltip="Report" matTooltipPosition="above"></mat-icon>
-      <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart" matTooltip="Favourite" matTooltipPosition="above"></mat-icon>
+      <mat-icon class="icon flag TO_DO" fontSet="partIcon" fontIcon="part-error" matTooltip="Report" matTooltipPosition="above"></mat-icon>
+      <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart" matTooltip="Favourite" matTooltipPosition="above" (click)="addToFavorites(listing.id)"></mat-icon>
     </div>
   </div>
 
@@ -17,7 +17,9 @@
 
   <div class="price-cart" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="price" fxFlex>{{listing.PaymentInformation.ItemPrice.basePrice.toFixed(8)}}</div>
-    <button class="to-cart small" mat-button color="primary" fxFlex>Add to cart</button>
+    <button class="to-cart small" mat-button color="primary" fxFlex (click)="addToCart(listing.id)">
+      Add to cart
+    </button>
   </div>
 
 </div>

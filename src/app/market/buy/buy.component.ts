@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -7,6 +8,9 @@ import {
 } from '@angular/forms';
 
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { CartService } from 'app/core/market/api/cart/cart.service';
+import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 
 @Component({
   selector: 'app-buy',
@@ -89,16 +93,6 @@ export class BuyComponent implements OnInit {
     },
   ];
 
-  // Favourites
-  listings: Array<string> = [
-    'Product name',
-    'This one is a little bit longer than others',
-    'Sweet gizmo',
-    'Pack of lovely stuff',
-    'Box of things',
-    'Pair of pears'
-  ];
-
   filters: any = {
     search: undefined,
     sort:   undefined,
@@ -107,9 +101,19 @@ export class BuyComponent implements OnInit {
 
   profile: any = { };
 
+  /* cart */
+  cart: any[] = [];
+
+  /* favs */
+  favorites: any[] = [];
+
   constructor(
     private _formBuilder: FormBuilder,
-    private _profileService: ProfileService
+    private _router: Router,
+    private _profileService: ProfileService,
+    private listingService: ListingService,
+    private cartService: CartService,
+    private favoritesService: FavoritesService
   ) { }
 
   ngOnInit() {
@@ -121,7 +125,7 @@ export class BuyComponent implements OnInit {
     });
 
     this.cartFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
+      firstCtrl: ['']
     });
 
     this.shippingFormGroup = this._formBuilder.group({
@@ -134,7 +138,73 @@ export class BuyComponent implements OnInit {
       zipCode:      ['', Validators.required],
       save:         ['']
     });
+
+    this.cartService.getCart().take(1).subscribe(cart => {
+      cart.ShoppingCartItems.map(item => {
+        this.listingService.get(item.id).take(1).subscribe(listing => {
+          console.log(listing);
+          this.cart.push(listing);
+        });
+      });
+    });
+
+    this.favoritesService.getFavorites().take(1).subscribe(favorites => {
+      favorites.map(favorite => {
+        this.listingService.get(favorite.id).take(1).subscribe(listing => {
+          this.favorites.push(listing);
+        });
+      });
+    })
   }
+
+  clear(): void {
+    this.filters();
+  }
+
+  changeTab(index: number): void {
+    this.selectedTab = index;
+  }
+
+  /* cart */
+
+  goToListings() {
+    this._router.navigate(['/market/overview']);
+  }
+
+  getImage(listing) {
+    return listing.ItemInformation.ItemImages[0].ItemImageDatas.find(size => {
+      return size.imageVersion === 'THUMBNAIL';
+    }).data;
+  }
+
+  getPrice(listing) {
+    let price: number = listing.PaymentInformation.ItemPrice.basePrice;
+    return {
+      int:     price.toFixed(0),
+      cents:  +(price % 1).toFixed(8) * 100000000,
+      escrow: +(price * listing.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
+    };
+  }
+
+  getShipping(listing) {
+    let price: number = listing.PaymentInformation.ItemPrice.ShippingPrice;
+    return {
+      int:    +price.toFixed(0),
+      cents: +(price % 1).toFixed(8) * 100000000
+    };
+  }
+
+  getSubTotal() {
+    let total = 0.0;
+    this.cart.map(item => total += item.PaymentInformation.ItemPrice.basePrice);
+    return total;
+  }
+
+  removeFromCart(id) {
+
+  }
+
+  /* shipping */
 
   updateShippingProfile() {
     if (this.shippingFormGroup.value.save) {
@@ -157,14 +227,6 @@ export class BuyComponent implements OnInit {
     delete address.updatedAt;
     delete address.createdAt;
     this.shippingFormGroup.setValue(address);
-  }
-
-  clear(): void {
-    this.filters();
-  }
-
-  changeTab(index: number): void {
-    this.selectedTab = index;
   }
 
 }

@@ -1,6 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { CartService } from 'app/core/market/api/cart/cart.service';
+import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
+
 @Component({
   selector: 'app-listing',
   templateUrl: './listing.component.html',
@@ -10,6 +13,8 @@ export class ListingComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ListingComponent>,
+    private cartService: CartService,
+    private favoritesService: FavoritesService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -34,6 +39,14 @@ export class ListingComponent implements OnInit {
     };
 
     this.date = new Date(this.data.listing.createdAt).toLocaleDateString();
+  }
+
+  addToCart(id) {
+    this.cartService.addItem(id);
+  }
+
+  addToFavorites(id) {
+    this.favoritesService.addItem(id);
   }
 
   dialogClose(): void {

@@ -72,10 +72,10 @@
     </div>
   </div>
   <div class="right">
-    <button mat-button class="small TO_DO" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above">
+    <button mat-button class="small" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above" (click)="addToFavorites(data.listing.id)">
       <mat-icon fontSet="partIcon" fontIcon="part-heart"></mat-icon>
     </button>
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" (click)="addToCart(data.listing.id)">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Add to cart
     </button>

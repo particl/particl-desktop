@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { ListingComponent } from 'app/market/listing/listing.component';
+import { CartService } from 'app/core/market/api/cart/cart.service';
+import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 
 @Component({
   selector: 'app-preview-listing',
@@ -12,7 +14,11 @@ export class PreviewListingComponent implements OnInit {
 
   @Input() listing: any;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(
+    private dialog: MatDialog,
+    private cartService: CartService,
+    private favoritesService: FavoritesService
+  ) { }
 
   ngOnInit() {
     console.log(this.listing);
@@ -31,4 +37,11 @@ export class PreviewListingComponent implements OnInit {
     }).data;
   }
 
+  addToCart(id) {
+    this.cartService.addItem(id);
+  }
+
+  addToFavorites(id) {
+    this.favoritesService.addItem(id);
+  }
 }
