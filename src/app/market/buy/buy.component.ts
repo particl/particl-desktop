@@ -178,19 +178,19 @@ export class BuyComponent implements OnInit {
   }
 
   getPrice(listing) {
-    let price = listing.PaymentInformation.ItemPrice.basePrice;
+    let price: number = listing.PaymentInformation.ItemPrice.basePrice;
     return {
       int:     price.toFixed(0),
-      cents:  (price % 1).toFixed(8) * 100000000,
-      escrow: (price * listing.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
+      cents:  +(price % 1).toFixed(8) * 100000000,
+      escrow: +(price * listing.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
     };
   }
 
   getShipping(listing) {
-    let price = listing.PaymentInformation.ItemPrice.ShippingPrice;
+    let price: number = listing.PaymentInformation.ItemPrice.ShippingPrice;
     return {
-      int:    price.toFixed(0),
-      cents: (price % 1).toFixed(8) * 100000000
+      int:    +price.toFixed(0),
+      cents: +(price % 1).toFixed(8) * 100000000
     };
   }
 
