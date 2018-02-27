@@ -51,13 +51,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.subToCategories();
 
     this.itemFormGroup = this.formBuilder.group({
-      title:                      [''],
-      shortDescription:           [''],
-      longDescription:            [''],
-      categories:                 [''],
-      basePrice:                  [''],
-      domesticShippingPrice:      [''],
-      internationalShippingPrice: ['']
+      title:                      ['', [Validators.required]],
+      shortDescription:           ['', [Validators.required]],
+      longDescription:            ['', [Validators.required]],
+      categories:                 ['', [Validators.required]],
+      basePrice:                  ['', [Validators.required]],
+      domesticShippingPrice:      ['', [Validators.required]],
+      internationalShippingPrice: ['', [Validators.required]]
     });
 
     this.route.queryParams.take(1).subscribe(params => {
@@ -149,7 +149,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
     ).subscribe(template => {
       // add images
       this.log.d('Saved template', template);
-      this.pictures.map(picture => this.template.addPicture(template.id, picture));
+      this.pictures.map(picture => {
+        this.template.addPicture(template.id, picture).take(1).subscribe(res => {
+          console.log(res);
+        });
+      });
     });
   }
 

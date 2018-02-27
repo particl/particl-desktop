@@ -69,7 +69,7 @@
       <!-- TODO: add another input for fiat value and inter-connect the two: -->
       <mat-form-field class="full-width">
         <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput placeholder="Price per item" formControlName="basePrice">
+        <input matInput placeholder="Price per item" formControlName="basePrice" type="number">
         <span matSuffix>PART</span>
       </mat-form-field>
 
@@ -78,11 +78,11 @@
           <input matInput placeholder="Quantity">
         </mat-form-field-->
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput placeholder="Domestic shipping price" formControlName="domesticShippingPrice">
+          <input matInput placeholder="Domestic shipping price" formControlName="domesticShippingPrice" type="number">
           <span matSuffix>PART</span>
         </mat-form-field>
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput placeholder="International shipping price" formControlName="internationalShippingPrice">
+          <input matInput placeholder="International shipping price" formControlName="internationalShippingPrice" type="number">
           <span matSuffix>PART</span>
         </mat-form-field>
       </div>

@@ -28,23 +28,23 @@ export class TemplateService {
     paymentAddress?: string // TODO: class
     ) {
       let params  = [
-                        'add',
-                        1, // profile
-                        title,
-                        shortDescr,
-                        longDescr,
-                        categoryIdOrName,
-                        paymentType,
-                        currency,
-                        basePrice,
-                        domesticShippingPrice,
-                        internationalShippingPrice,
-                        paymentAddress
-                      ];
-       if (paymentAddress === undefined) {
-         params.pop();
-       }
-    return this.market.call('template', params);
+        'add',
+        1, // profile
+        title,
+        shortDescr,
+        longDescr,
+        categoryIdOrName,
+        paymentType,
+        currency,
+        basePrice,
+        domesticShippingPrice,
+        internationalShippingPrice,
+        paymentAddress
+      ];
+      if (paymentAddress === undefined) {
+        params.pop();
+      }
+      return this.market.call('template', params);
   }
 
   addPicture(id, data) {
@@ -55,7 +55,7 @@ export class TemplateService {
       'BASE64',
       data
     ];
-    console.log(params);
+    return this.market.call('template', params);
   }
 
   search(page: number, pageLimit: number, profileId: number) {
