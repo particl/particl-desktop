@@ -8,6 +8,8 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 import { Category } from 'app/core/market/api/category/category.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 
+import { ListingService } from 'app/core/market/api/listing/listing.service';
+
 interface ISorting {
   value: string;
   viewValue: string;
@@ -43,22 +45,14 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     {value: 'price-des', viewValue: 'Most expensive'}
   ];
 
-  listings: Array<string> = [
-    'Product name',
-    'This one is a little bit longer than others',
-    'Sweet gizmo',
-    'Pack of lovely stuff',
-    'Box of things',
-    'Pair of pears',
-    'Cups (couple)',
-    'Digital 1011'
-  ];
+  listings: Array<any> = [];
 
   constructor(
-    private category: CategoryService
+    private category: CategoryService,
+    private listingService: ListingService
   ) {
     console.warn('overview created');
-   }
+  }
 
   ngOnInit() {
     console.log('overview created');
@@ -67,6 +61,11 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     .takeWhile(() => !this.destroyed)
     .subscribe(
       list => this.updateCategories(list));
+
+    // TODO: search
+    this.listingService.get(1).take(1).subscribe(listing => {
+      this.listings.push(listing);
+    })
   }
 
   updateCategories(list: Category) {

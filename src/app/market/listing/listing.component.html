@@ -1,32 +1,24 @@
-<div mat-dialog-title>Product name <span class="category">in Category, Electronics, TV</span></div>
+<div mat-dialog-title>
+  {{data.listing.ItemInformation.title}}
+  <span class="category">
+    in {{data.listing.ItemInformation.ItemCategory.name}}
+  </span>
+</div>
+
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content" fxLayout="row" fxLayoutGap="40px">
-  
+
   <div class="product-gallery" fxFlex="0 1 350px">
     <div class="featured image">
-      <img src="./assets/images/placeholder_4-3.jpg">
+      <img src="{{pictures[0] ? 'data:image/gif;base64,'+pictures[0] : './assets/images/placeholder_4-3.jpg'}}">
     </div>
     <div class="gallery" fxLayout="row" fxLayoutGap="24px">
-      <div class="small image" fxFlex="1 1 100px">
-        <img src="./assets/images/placeholder_1-1.jpg">
-      </div>
-      <div class="small image" fxFlex="1 1 100px">
-        <img src="./assets/images/placeholder_1-1.jpg">
-      </div>
-      <div class="small image" fxFlex="1 1 100px">
-        <img src="./assets/images/placeholder_1-1.jpg">
-      </div>
-      <div class="small image" fxFlex="1 1 100px">
-        <img src="./assets/images/placeholder_1-1.jpg">
-      </div>
-      <div class="small image" fxFlex="1 1 100px">
-        <img src="./assets/images/placeholder_1-1.jpg">
-      </div>
-      <div class="small image" fxFlex="1 1 100px">
-        <img src="./assets/images/placeholder_1-1.jpg">
+      <!-- TODO: s/small/medium -->
+      <div class="small image" fxFlex="1 1 100px" *ngFor="let picture of pictures">
+        <img src="data:image/gif;base64,{{picture}}">
       </div>
     </div>
   </div>
@@ -68,7 +60,7 @@
         Cross sabers nail jelly to the hothouse wall, nor price point, so design thinking when does this sunset? or bells and whistles. Those options are already baked in with this model pro-sumer software, future-proof. Proceduralize shelfware, or show pony push back. Strategic fit dogpile that. Work flows programmatically, yet touch base.
       </p>
     </div>
-    
+
   </div><!-- .product-info -->
 </div><!-- .dialog-content -->
 
