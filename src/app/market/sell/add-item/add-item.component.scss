@@ -40,16 +40,22 @@
 }
 
 .gallery {
-  margin: 0 -8px;
+  margin: 0 -10px;
 }
 
-.photo {
+.photo-wrapper {
   position: relative;
-  padding: 8px;
+  margin: 10px;
+  background: repeating-linear-gradient(
+    45deg, $bg, $bg 5px,
+    mix($bg-shadow, $bg) 5px, mix($bg-shadow, $bg) 7px
+  );
+  height: 123px;
+  overflow: hidden;
   &:hover .icons {
     opacity: 1;
   }
-  &.featured img {
+  &.featured {
     box-shadow: 0 0 0 2px $color;
   }
   img {
@@ -69,7 +75,7 @@
       height: auto;
       background: white;
       border-radius: 50%;
-      box-shadow: 0 0 6px $bg-shadow;
+      box-shadow: 0 0 6px rgba(black, 0.25);
       padding: 6px;
       cursor: pointer;
       &:hover {
