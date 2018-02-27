@@ -116,11 +116,10 @@
 
   <!-- Listings > list -->
   <div class="listings list section" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'listings'">
-    
-    <!-- FIXME: if no listings found -->
-    <!--div class="no-results">
+
+    <div class="no-results">
       You don't have any market listings yet
-    </div-->
+    </div>
     <!--div class="subtitle first">Published listings</div-->
 
     <mat-expansion-panel class="listing item no-padding" *ngFor="let template of templates">
@@ -191,11 +190,10 @@
 
   <!-- Orders > list -->
   <div class="orders list section" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'orders'">
-    
-    <!-- FIXME: if no orders found (needs better wording?) -->
-    <!--div class="no-results">
+
+    <div class="no-results">
       You don't have any market orders yet
-    </div-->
+    </div>
 
     <mat-expansion-panel class="order item no-padding" *ngFor="let order of orders">
       <mat-expansion-panel-header class="header">
