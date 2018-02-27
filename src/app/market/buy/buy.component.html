@@ -25,15 +25,19 @@
 <!-- =========== CART =========== -->
 
 <div class="your-cart container-block disable-select" *ngIf="tabLabels[selectedTab] == 'cart'">
-  <mat-horizontal-stepper class="no-bg">
+  <mat-horizontal-stepper linear class="no-bg">
+    <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
+    <ng-template matStepperIcon="edit">
+      <custom-icon><mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon></custom-icon>
+    </ng-template>
+    <ng-template matStepperIcon="done">
+      <custom-icon><mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon></custom-icon>
+    </ng-template>
 
     <!-- Your cart -->
     <mat-step [stepControl]="cartFormGroup">
       <form [formGroup]="cartFormGroup" class="cart">
         <ng-template matStepLabel>Your cart</ng-template>
-        <!--mat-form-field>
-          <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-        </mat-form-field-->
         <table class="cart-items">
           <thead>
             <tr><th>Items</th><th>Price</th><th>Shipping</th><th>Quantity</th><th class="text-right">Total</th><th></th></tr>
@@ -53,11 +57,11 @@
               <td class="shipping cell">2.<small>4203</small> PART</td>
               <td class="quantity cell">
                 <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                  <button mat-button class="small">-</button>
+                  <!--button mat-button class="small">-</button-->
                   <mat-form-field class="auto-width">
-                    <input matInput type="number" value="1" min="1">
+                    <input matInput type="number" value="1" min="1" formControlName="firstCtrl" required>
                   </mat-form-field>
-                  <button mat-button class="small">+</button>
+                  <!--button mat-button class="small">+</button-->
                 </div>
               </td>
               <td class="total cell">202.<small>4203</small> PART</td>
@@ -81,11 +85,11 @@
               <td class="shipping cell">2.<small>4203</small> PART</td>
               <td class="quantity cell">
                 <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                  <button mat-button class="small">-</button>
+                  <!--button mat-button class="small">-</button-->
                   <mat-form-field class="auto-width">
-                    <input matInput type="number" value="1" min="1">
+                    <input matInput type="number" value="1" min="1" formControlName="firstCtrl" required>
                   </mat-form-field>
-                  <button mat-button class="small">+</button>
+                  <!--button mat-button class="small">+</button-->
                 </div>
               </td>
               <td class="total cell">202.<small>4203</small> PART</td>
@@ -108,7 +112,7 @@
         </div><!-- .order-detail -->
 
         <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
-          <button mat-button>
+          <button mat-button class="TO_DO">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
             Clear cart
           </button>
@@ -150,6 +154,7 @@
             <mat-card>
               <div class="title">Or enter new shipping address</div>
               <div class="row" fxLayout fxLayoutGap="30px">
+                <!-- FIXME: First and Last name should be required as well (waiting for dapp shell integration) -->
                 <mat-form-field class="full-width" fxFlex>
                   <input matInput placeholder="First name">
                 </mat-form-field>
@@ -248,7 +253,7 @@
 
         <div class="order-detail" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="20px">
 
-          <div class="order-narration" fxFlex="0 0 250px">
+          <div class="order-narration TO_DO" fxFlex="0 0 250px">
             <div class="title">Note to seller</div>
             <mat-form-field class="full-width" floatPlaceholder="never">
               <input type="text" matInput placeholder="Narration (optional)" maxlength="24">
@@ -276,7 +281,7 @@
             Back to shipping
           </button>
           <!-- TODO: after clicking the "confirm" button, payment confirmation modal should pop out with all the details -->
-          <button mat-raised-button color="primary">
+          <button mat-raised-button color="primary" class="TO_DO">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Confirm & Pay
           </button>
