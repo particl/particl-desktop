@@ -52,8 +52,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.itemFormGroup = this.formBuilder.group({
       title:                      ['', [Validators.required]],
-      shortDescription:           ['', [Validators.required]],
-      longDescription:            ['', [Validators.required]],
+      shortDescription:           ['', [Validators.required,
+                                        Validators.maxLength(200)]],
+      longDescription:            ['', [Validators.required,
+                                        Validators.maxLength(1000)]],
       category:                 ['', [Validators.required]],
       basePrice:                  ['', [Validators.required]],
       domesticShippingPrice:      ['', [Validators.required]],
@@ -130,13 +132,33 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.template.get(this.templateId).subscribe((template: any) => {
       this.log.d(`preloaded id=${this.templateId}!`)
 
-      let itemPrice = template.ItemInformation.ItemPrice;
+      let t = {
+        title: '',
+        shortDescription: '',
+        longDescription: '',
+        category: 0,
+        basePrice: 0,
+        domesticShippingPrice: 0,
+        internationalShippingPrice: 0
+        
+      };
 
-      template.ItemInformation.basePrice = itemPrice.basePrice;
-      template.ItemInformation.domesticShippingPrice = itemPrice.ShippingPrice.domestic;
-      template.ItemInformation.internationalShippingPrice = itemPrice.ShippingPrice.international;
+      console.log(template);
 
-      this.itemFormGroup.setValue(template.ItemInformation);
+      t.title = template.ItemInformation.title;
+      t.shortDescription = template.ItemInformation.shortDescription;
+      t.longDescription = template.ItemInformation.longDescription;
+      t.category = template.ItemInformation.ItemCategory.id;
+      console.log("getting category to id="+ this.itemFormGroup.get('category').value);
+      console.log("setting category to id="+t.category);
+
+      let itemPrice = template.PaymentInformation.ItemPrice;
+      t.basePrice = itemPrice.basePrice;
+      t.domesticShippingPrice = itemPrice.ShippingPrice.domestic;
+      t.internationalShippingPrice = itemPrice.ShippingPrice.international;
+
+      this.itemFormGroup.setValue(t);
+      // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
     });
   }
 
@@ -152,7 +174,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         item.title,
         item.shortDescription,
         item.longDescription,
-        75, // TODO: replace
+        item.category,
         'SALE',
         'PARTICL',
         +item.basePrice,

@@ -1,12 +1,19 @@
 export class Template {
 
-    constructor(private template) {
-
+    constructor(private object) {
+      console.log('item obj l' + this.object.ListingItemObjects.length);
      }
 
      get status() {
-       if (this.template)
-       return 'unpublished'
+       if (this.object.ListingItemObjects.length > 0) {
+          return 'Published';
+       } else {
+          return 'Unpublished';
+       }
+    }
+
+    get statusClass() {
+      return this.status.toLocaleLowerCase();
     }
   
   }

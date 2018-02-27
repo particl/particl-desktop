@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+
+import { Template } from 'app/core/market/api/template/template.model';
 
 @Injectable()
 export class TemplateService {
@@ -58,8 +61,13 @@ export class TemplateService {
     return this.market.call('template', params);
   }
 
-  search(page: number, pageLimit: number, profileId: number) {
-    return this.market.call('template', ['search', page, pageLimit, 'ASC', profileId]);
+  search(page: number, pageLimit: number, profileId: number): Observable<Array<Template>> {
+    return this.market.call('template', ['search', page, pageLimit, 'ASC', profileId])
+    .map(
+      (templates: any) => {
+        return templates.map(t => new Template(t));
+      }
+    );
   }
 
   post(listingTemplateId: number, marketId: number) {

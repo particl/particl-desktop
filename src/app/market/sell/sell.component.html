@@ -117,7 +117,7 @@
   <!-- Listings > list -->
   <div class="listings list section" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'listings'">
 
-    <div class="no-results" *ngIf="listings.length === 0">
+    <div class="no-results" *ngIf="listings?.length === 0">
       You don't have any market listings yet
     </div>
     <!--div class="subtitle first">Published listings</div-->
@@ -129,14 +129,14 @@
             <img src="./assets/images/placeholder_1-1.jpg">
           </div>
           <div class="meta" fxFlex="1 1 100%">
-            <div class="name">{{ listing.ItemInformation.title }}</div>
-            <div class="categories">{{ listing.ItemInformation.ItemCategory.name }}</div>
+            <div class="name">{{ listing.object.ItemInformation.title }}</div>
+            <div class="categories">{{ listing.object.ItemInformation.ItemCategory.name }}</div>
             <div class="date">
               <!--span class="hash" matTooltip="Order hash">AGR</span-->
               Added 2018-02-19 &bull; Expires 2018-02-13
             </div>
           </div>
-          <div class="status unpublished" fxFlex="0 0 140px"><span>&bull;</span>Unpublished</div>
+          <div class="status {{listing.statusClass}}" fxFlex="0 0 140px"><span>&bull;</span>{{listing.status}}</div>
         </div>
       </mat-expansion-panel-header>
 
@@ -148,15 +148,15 @@
         <div class="description" fxFlex="65%">
           <div class="title">Listing description</div>
           <p>
-            {{ listing.ItemInformation.longDescription }}
+            {{ listing.object.ItemInformation.longDescription }}
           </p>
         </div><!-- .description -->
         <div class="info" fxFlex="35%">
           <div class="title">Price & Qty</div>
           <table class="prices">
-            <tr><th>Quantity</th><td>2</td></tr>
+            <!--tr><th>Quantity</th><td>2</td></tr-->
             <tr><th>Price per item</th><td>23.<small>1285</small> PART</td></tr>
-            <tr><th>Total price</th><td>46.<small>257</small> PART</td></tr>
+            <!--tr><th>Total price</th><td>46.<small>257</small> PART</td></tr-->
           </table>
         </div>
       </div>
