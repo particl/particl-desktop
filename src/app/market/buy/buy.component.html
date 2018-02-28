@@ -426,8 +426,7 @@
 <!-- =========== FAVORITES =========== -->
 
 <div class="favourites container-block disable-select"
-     *ngIf="tabLabels[selectedTab] == 'favourites'"
-     fxLayout="row wrap" fxLayoutAlign="start start">
+     *ngIf="tabLabels[selectedTab] == 'favourites'">
 
   <div class="no-results" *ngIf="favorites.length == 0">
     <p>
@@ -436,8 +435,8 @@
   </div>
 
   <div *ngIf="favorites.length != 0">
-    <ng-container *ngFor="let favorite of favorites">
-      <mat-card class="listing">
+    <ng-container *ngFor="let favorite of favorites" fxLayout="row wrap" fxLayoutAlign="start start">
+      <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
         <app-preview-listing [listing]="favorite"></app-preview-listing>
       </mat-card>
     </ng-container>
