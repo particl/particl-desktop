@@ -34,38 +34,37 @@
       </button>
     </div>
 
-    <div class="section search-sorting TO_DO">
+    <div class="section search-sorting">
       <div class="subtitle">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
-          <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search" (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
-          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; filter()"></mat-icon>
-          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"></mat-icon>
+          <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search" (keyup)="update()" (keyup.enter)="update()" (keyup.escape)="filters.search = ''; update()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; update()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="update()"></mat-icon>
         </mat-form-field>
-        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+        <!--mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort listings">
             <mat-option *ngFor="let sorting of listing_sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field -->
       </mat-card>
     </div>
 
-    <div class="section filter-by-type TO_DO">
+    <!--div class="section filter-by-type TO_DO">
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group block-radio">
           <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering" value="{{ status.value }}">
             {{ status.title }}
-            <!-- FIXME: show amount (below) only if higher than 1 -->
             <span class="amount">{{ status.amount }}</span>
           </mat-radio-button>
         </mat-radio-group>
       </mat-card>
-    </div><!-- .filter-by-type -->
+    </div--><!-- .filter-by-type -->
 
-    <button mat-button color="warn" class="clear-filters TO_DO" (click)="clear()">
+    <button mat-button color="warn" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
       Clear all filters
     </button>
@@ -79,9 +78,9 @@
       <div class="subtitle first">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
-          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search" (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
-          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; filter()"></mat-icon>
-          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"></mat-icon>
+          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search" (keyup.enter)="update()" (keyup.escape)="filters.search = ''; update()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; update()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="update()"></mat-icon>
         </mat-form-field>
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort orders">
@@ -129,8 +128,8 @@
             <img src="./assets/images/placeholder_1-1.jpg">
           </div>
           <div class="meta" fxFlex="1 1 100%">
-            <div class="name">{{ listing.object.ItemInformation.title }}</div>
-            <div class="categories">{{ listing.object.ItemInformation.ItemCategory.name }}</div>
+            <div class="name">{{ listing.title }}</div>
+            <div class="categories">{{ listing.category.name }}</div>
             <div class="date">
               <!--span class="hash" matTooltip="Order hash">AGR</span-->
               Added 2018-02-19 &bull; Expires 2018-02-13
@@ -148,7 +147,7 @@
         <div class="description" fxFlex="65%">
           <div class="title">Listing description</div>
           <p>
-            {{ listing.object.ItemInformation.longDescription }}
+            {{ listing.longDescription }}
           </p>
         </div><!-- .description -->
         <div class="info" fxFlex="35%">

@@ -22,7 +22,7 @@ exports.init = function () {
         // clone it
         const url = new URL(details.url);
         const u = url.hostname + ":" + url.port;
-        console.log(u);
+
         if (isWhitelisted(u)) {
             let headers = Object.assign({}, details.requestHeaders);
 

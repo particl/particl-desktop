@@ -159,6 +159,9 @@ export class SellComponent implements OnInit {
 
   public listings: Array<any>;
 
+  public search: string = "";
+  public category: string = "";
+
   constructor(
     private router: Router,
     public dialog: MatDialog,
@@ -177,7 +180,11 @@ export class SellComponent implements OnInit {
   }
 
   clear(): void {
-    this.filters();
+    this.filters = {
+      search:   undefined,
+      sort:     undefined,
+      status:   undefined
+    };
   }
 
   changeTab(index: number): void {
@@ -189,7 +196,9 @@ export class SellComponent implements OnInit {
   }
 
   update() {
-    this.template.search(1, 10, 1).subscribe(
+    const category = this.filters.category ? this.filters.category : null;
+    const search = this.filters.search ? this.filters.search : null;
+    this.template.search(1, 10, 1, category, search).subscribe(
       (listings: Array<any>) => {
         console.log('got templates');
         console.log(listings);

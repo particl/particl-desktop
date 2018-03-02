@@ -61,8 +61,9 @@ export class TemplateService {
     return this.market.call('template', params);
   }
 
-  search(page: number, pageLimit: number, profileId: number): Observable<Array<Template>> {
-    return this.market.call('template', ['search', page, pageLimit, 'ASC', profileId])
+  search(page: number, pageLimit: number, profileId: number, category: string, searchString: string): Observable<Array<Template>> {
+    let params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
+    return this.market.call('template', params)
     .map(
       (templates: any) => {
         return templates.map(t => new Template(t));
