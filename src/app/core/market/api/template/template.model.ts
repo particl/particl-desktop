@@ -1,8 +1,14 @@
 import { Category } from "app/core/market/api/category/category.model";
+import { DateFormatter } from "app/core/util/utils";
 
 export class Template {
 
+    public category: Category = new Category({});
+    public createdAt: string = '';
+
     constructor(private object) {
+      this.category = new Category(this.object.ItemInformation.ItemCategory);
+      this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
       console.log('item obj l' + this.object.ListingItemObjects.length);
      }
 
@@ -10,7 +16,6 @@ export class Template {
      get title() : string { return this.object.ItemInformation.title }
      get shortDescription() : string { return this.object.ItemInformation.shortDescription }
      get longDescription() : string { return this.object.ItemInformation.longDescription }
-     get category(): Category { return new Category(this.object.ItemInformation.ItemCategory)}
 
      // Status
      get status(): string {

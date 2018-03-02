@@ -2,8 +2,8 @@
   <div class="control-bar" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
 
     <!-- Search-->
-    <div class="icon-input search-listings TO_DO" fxFlex="0 0 250px">
-      <input type="text" class="header-input" id="searchbar" placeholder="Search items for sale..">
+    <div class="icon-input search-listings" fxFlex="0 0 250px">
+      <input type="text" class="header-input" id="searchbar" placeholder="Search items for sale.." [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()">
       <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
     </div>
 

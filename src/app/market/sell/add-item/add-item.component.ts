@@ -73,13 +73,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = undefined;
       }
     });
-
-    // this.listing.generateListing().take(1).subscribe(listing => {
-    //   console.log(listing);
-    //   this.listing.get(1).take(1).subscribe(res => {
-    //     console.log(res);
-    //   })
-    // });
+    /*
+    this.listing.generateListing().take(1).subscribe(listing => {
+      console.log(listing);
+      this.listing.get(1).take(1).subscribe(res => {
+        console.log(res);
+      })
+     });*/
   }
 
   uploadPicture() {
@@ -167,8 +167,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     let item = this.itemFormGroup.value;
     let nPicturesAdded = 0;
-    console.log('-- category -- ');
-    console.log(item.category);
+
     return new Promise((resolve, reject) => {
       this.template.add(
         item.title,
@@ -197,16 +196,21 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }); /* promise */
   }
 
+  saveTemplate() {
+    this.save().then(id => {
+      console.log('returning to sell');
+      this.backToSell();
+    });
+  }
   saveAndPublish() {
     this.log.d('saveAndPublish');
     this.save().then(id => {
       this.template.post(id, 1).take(1).subscribe(listing => {
         console.log(listing);
+        this.backToSell();
       });
     });
-  }
-
-  update() {
 
   }
+
 }

@@ -47,6 +47,16 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   listings: Array<any> = [];
 
+  // pagination
+  pagination: any = {
+    currentPage: 1,
+    maxPerPage: 30
+  }
+
+  filters: any = {
+    search:   undefined
+  };
+
   constructor(
     private category: CategoryService,
     private listingService: ListingService
@@ -56,26 +66,38 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('overview created');
+    this.loadCategories();
+    this.loadPage();
+  }
 
+  loadCategories() {
     this.category.list()
     .takeWhile(() => !this.destroyed)
     .subscribe(
-      list => this.updateCategories(list));
+      list => {
+        this._rootCategoryList = list;
+        this.categoryList = this._rootCategoryList.getSubCategoryNames();
+      });
+  }
 
-    // TODO: search
-    this.listingService.get(2).take(1).subscribe(listing => {
-      this.listings.push(listing);
+  loadPage(replace?: boolean) {
+    const page = this.pagination.currentPage;
+    const max = this.pagination.maxPerPage;
+
+    const search = this.filters.search;
+
+    this.listingService.search(page, max, null, search).take(1).subscribe(listings => {
+      if (replace === true) {
+        this.listings = listings;
+      } else {
+        this.listings = this.listings.concat(listings);
+      }
+
     })
   }
 
-  updateCategories(list: Category) {
-    this.log.d('Updating category list');
-    this._rootCategoryList = list;
-    this.categoryList = this._rootCategoryList.getSubCategoryNames();
-  }
-
-  getPage() {
-
+  clearAndLoadPage() {
+    this.loadPage(true);
   }
 
   ngOnDestroy() {

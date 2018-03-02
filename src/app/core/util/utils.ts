@@ -172,12 +172,12 @@ export class DateFormatter {
   constructor(private date: Date) {
   }
 
-  public dateFormatter() {
+  public dateFormatter(onlyShowDate?: boolean) {
     return (
       (this.date.getDate() < 10 ? '0' + this.date.getDate() : this.date.getDate()) + '-' +
       ((this.date.getMonth() + 1) < 10 ? '0' + (this.date.getMonth() + 1) : (this.date.getMonth() + 1)) + '-' +
-      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear()) + ' ' +
-      this.hourSecFormatter()
+      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear()) 
+      + (onlyShowDate === false ?  ' ' + this.hourSecFormatter() : '')
     )
   }
 

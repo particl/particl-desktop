@@ -10,22 +10,31 @@ export class ListingService {
     private market: MarketService,
     private marketState: MarketStateService
   ) {
-    this.search(1, 10).subscribe(
-      (list) => {
-        console.log('Listing search:');
-        console.log(list);
-      }
-    );
+
   }
 
-  search(page: number, pageLimit: number, type?: string) {
-    console.log(type);
-    type = (type) ? type :"ALL";
-    return this.market.call('item', ['search', page, pageLimit, 'ASC', 75, 'ALL', type]);
+  search(page: number, pageLimit: number, profileId: number | string, search: string) {
+    let params = [
+      'search',
+      page,
+      pageLimit,
+      'ASC',
+      null, // category
+      'ALL', 
+      profileId || "ALL",
+      null, // minPrice
+      null, // maxPrice
+      null, // country
+      null, // shippingDestination
+      search || null, // search
+      true // withRelated
+    ];
+
+    return this.market.call('item', params);
   }
 
   searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, "*"); // OWN
+    return this.search(page, pageLimit, "*", null); // OWN
   }
 
   get(id) {

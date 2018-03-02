@@ -132,7 +132,7 @@
             <div class="categories">{{ listing.category.name }}</div>
             <div class="date">
               <!--span class="hash" matTooltip="Order hash">AGR</span-->
-              Added 2018-02-19 &bull; Expires 2018-02-13
+              Added {{ listing.createdAt }} &bull; Expires 2018-02-13
             </div>
           </div>
           <div class="status {{listing.statusClass}}" fxFlex="0 0 140px"><span>&bull;</span>{{listing.status}}</div>
