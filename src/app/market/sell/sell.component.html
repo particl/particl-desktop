@@ -38,9 +38,9 @@
       <div class="subtitle">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
-          <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search" (keyup)="update()" (keyup.enter)="update()" (keyup.escape)="filters.search = ''; update()">
-          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; update()"></mat-icon>
-          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="update()"></mat-icon>
+          <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search" (keyup)="loadPage()" (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; loadPage()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="loadPage()"></mat-icon>
         </mat-form-field>
         <!--mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort listings">
@@ -78,9 +78,9 @@
       <div class="subtitle first">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
-          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search" (keyup.enter)="update()" (keyup.escape)="filters.search = ''; update()">
-          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; update()"></mat-icon>
-          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="update()"></mat-icon>
+          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search" (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; loadPage()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="loadPage()"></mat-icon>
         </mat-form-field>
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort orders">

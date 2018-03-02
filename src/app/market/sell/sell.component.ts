@@ -170,7 +170,7 @@ export class SellComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.update();
+    this.loadPage();
   }
 
   addItem(id?: number, clone?: boolean) {
@@ -185,6 +185,7 @@ export class SellComponent implements OnInit {
       sort:     undefined,
       status:   undefined
     };
+    this.loadPage();
   }
 
   changeTab(index: number): void {
@@ -195,7 +196,7 @@ export class SellComponent implements OnInit {
     const dialogRef = this.dialog.open(DeleteListingComponent);
   }
 
-  update() {
+  loadPage() {
     const category = this.filters.category ? this.filters.category : null;
     const search = this.filters.search ? this.filters.search : null;
     this.template.search(1, 10, 1, category, search).subscribe(

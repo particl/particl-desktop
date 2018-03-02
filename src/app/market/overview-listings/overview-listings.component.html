@@ -28,6 +28,11 @@
       </mat-option>
     </mat-select-->
 
+    <!-- Sorting -->
+    <button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxFlex="0 1 300px" (click)="this.listingService.generateBogusListings(50)">
+      <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon> Create 50 bogus listings
+    </button>
+
     <!--div class="display" fxFlex="0 1 80px" fxLayout="row" fxLayoutGap="15px">
       FIXME: add ".active" class to currently selected view + needs to implement functionality
       <mat-icon class="icon active" fontSet="partIcon" fontIcon="part-overview" matTooltip="Grid view"></mat-icon>
