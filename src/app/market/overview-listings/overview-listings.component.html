@@ -21,12 +21,12 @@
     </div>
 
     <!-- Sorting -->
-    <mat-select placeholder="Sort by" class="filter sorting TO_DO" fxFlex="0 1 300px">
+    <!--mat-select placeholder="Sort by" class="filter sorting TO_DO" fxFlex="0 1 300px">
       <mat-option>Default</mat-option>
       <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
         {{ sorting.viewValue }}
       </mat-option>
-    </mat-select>
+    </mat-select-->
 
     <!--div class="display" fxFlex="0 1 80px" fxLayout="row" fxLayoutGap="15px">
       FIXME: add ".active" class to currently selected view + needs to implement functionality
@@ -41,7 +41,7 @@
 
 <div class="container-block" fxLayout="row">
 
-  <div class="sidebar" fxFlex="25%">
+  <!-- div class="sidebar" fxFlex="25%">
 
     <div class="subtitle first">Categories</div>
 
@@ -54,22 +54,22 @@
       </mat-nav-list>
     </mat-expansion-panel>
 
-    <!--div class="subtitle">Filter by price range</div>
+    <div class="subtitle">Filter by price range</div>
     <mat-card>
       price filter
-    </mat-card-->
+    </mat-card>
 
-  </div><!-- .sidebar -->
+  </div--><!-- .sidebar -->
 
 
-  <div class="content disable-select" fxFlex="75%" fxLayout="row wrap" fxLayoutAlign="start start">
+  <div class="content disable-select" fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="start start">
     <div class="no-results" [hidden]="listings.length !== 0">
       <p>
         Sorry, no matching listings found
       </p>
     </div>
     <ng-container *ngFor="let item of listings">
-      <mat-card class="listing" fxFlex="0 0 calc(100% / 3 - 30px)">
+      <mat-card class="listing" fxFlex="0 0 calc(100% / 6 - 30px)">
         <app-preview-listing [listing]="item"></app-preview-listing>
       </mat-card>
     </ng-container>
