@@ -67,7 +67,14 @@
   </div--><!-- .sidebar -->
 
 
-  <div class="content disable-select" fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="start start">
+  <div class="content disable-select" fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="start start" 
+    infiniteScroll
+    [infiniteScrollContainer]="pagination.infinityScrollSelector"
+    [fromRoot]="true"
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="loadNextPage()">
+
     <div class="no-results" [hidden]="listings.length !== 0">
       <p>
         Sorry, no matching listings found
@@ -78,6 +85,11 @@
         <app-preview-listing [listing]="item"></app-preview-listing>
       </mat-card>
     </ng-container>
+    <div class="no-results" [hidden]="!noMoreListings">
+      <p>
+        Sorry, that's all folks!
+      </p>
+    </div>
   </div><!-- .content -->
 
 </div>

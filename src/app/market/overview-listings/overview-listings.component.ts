@@ -46,11 +46,14 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   ];
 
   listings: Array<any> = [];
+  noMoreListings: boolean = false;
 
   // pagination
   pagination: any = {
     currentPage: 1,
-    maxPerPage: 30
+    maxPerPage: 30,
+    // hooks into the scroll bar of the main page..
+    infinityScrollSelector: '.mat-drawer-content'
   }
 
   filters: any = {
@@ -80,24 +83,35 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadPage(replace?: boolean) {
+  loadPage(clear?: boolean) {
     const page = this.pagination.currentPage;
     const max = this.pagination.maxPerPage;
 
     const search = this.filters.search;
 
     this.listingService.search(page, max, null, search).take(1).subscribe(listings => {
-      if (replace === true) {
+      if (clear === true) {
         this.listings = listings;
+        this.noMoreListings = false;
       } else {
-        this.listings = this.listings.concat(listings);
+        if (listings.length > 0) {
+          this.listings = this.listings.concat(listings);
+        } else {
+          this.noMoreListings = true;
+        }
       }
 
     })
   }
 
   clearAndLoadPage() {
+    this.pagination.currentPage = 1;
     this.loadPage(true);
+  }
+
+  loadNextPage() {
+    this.pagination.currentPage++;
+    this.loadPage();
   }
 
   ngOnDestroy() {

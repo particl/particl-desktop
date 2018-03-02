@@ -30,7 +30,6 @@ exports.init = function () {
             let auth = getAuthentication(u);
 
             if(auth === undefined && u === "localhost:4200") {
-                console.log('Setting auth to false');
                 auth = false;
             }
 
