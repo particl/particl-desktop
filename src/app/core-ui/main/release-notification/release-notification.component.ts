@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { interval } from 'rxjs/observable/interval';
 
 import { environment } from '../../../../environments/environment';
 import { ReleaseNotification } from './release-notification.model';
@@ -21,18 +21,18 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
   constructor(private clientVersionService: ClientVersionService) { }
 
   ngOnInit() {
-    this.getCurrentClientVersion();
+    // check new update in every 30 minute
+    const versionInterval = interval(1800000);
+    versionInterval.takeWhile(() => !this.destroyed).subscribe(val => this.getCurrentClientVersion());
   }
 
+  // no need to destroy.
   ngOnDestroy() {
     this.destroyed = true;
   }
 
   getCurrentClientVersion() {
-    // check new update in every 30 minute
     this.clientVersionService.getCurrentVersion()
-      .throttle(val => Observable.interval(1800000/*ms*/))
-      .takeWhile(() => !this.destroyed)
       .subscribe((response: ReleaseNotification) => {
         if (response.tag_name) {
           this.latestClientVersion = response.tag_name.substring(1);
