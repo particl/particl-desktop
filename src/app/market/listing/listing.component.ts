@@ -1,9 +1,14 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { Template } from 'app/core/market/api/template/template.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 
+
+interface IDate {
+  listing: Template
+}
 @Component({
   selector: 'app-listing',
   templateUrl: './listing.component.html',
@@ -18,27 +23,29 @@ export class ListingComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  pictures: any;
+  pictures: any = new Array();
   price: any;
   date: any;
 
   ngOnInit() {
-
-    this.pictures = new Array();
-    this.data.listing.ItemInformation.ItemImages.map(image => {
+    this.data.listing.images.map(image => {
       this.pictures.push(image.ItemImageDatas.find(size => {
         return size.imageVersion === 'MEDIUM';
       }).data);
     });
 
-    let price = this.data.listing.PaymentInformation.ItemPrice.basePrice;
-    this.price = {
-      int:     price.toFixed(0),
-      cents:  (price % 1).toFixed(8),
-      escrow: (price * this.data.listing.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
-    };
+    let price = this.data.listing.object.PaymentInformation.ItemPrice;
+    if (price && price.basePrice) {
+      price = price.basePrice;
+      this.price = {
+        int:     price.toFixed(0),
+        cents:  (price % 1).toFixed(8),
+        escrow: (price * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
+      };
+    }
 
-    this.date = new Date(this.data.listing.createdAt).toLocaleDateString();
+
+    this.date = new Date(this.data.listing.object.createdAt).toLocaleDateString();
   }
 
   addToCart(id) {

@@ -11,6 +11,7 @@ import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
+import { Template } from 'app/core/market/api/template/template.model';
 
 @Component({
   selector: 'app-buy',
@@ -105,7 +106,7 @@ export class BuyComponent implements OnInit {
   cart: any[] = [];
 
   /* favs */
-  favorites: any[] = [];
+  favorites: Array<Template> = [];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -144,7 +145,7 @@ export class BuyComponent implements OnInit {
     this.favoritesService.getFavorites().take(1).subscribe(favorites => {
       favorites.map(favorite => {
         this.listingService.get(favorite.id).take(1).subscribe(listing => {
-          this.favorites.push(listing);
+          this.favorites.push(new Template(listing));
         });
       });
     })

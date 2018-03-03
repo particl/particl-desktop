@@ -9,10 +9,16 @@ import { Category } from 'app/core/market/api/category/category.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { Template } from 'app/core/market/api/template/template.model';
 
 interface ISorting {
   value: string;
   viewValue: string;
+}
+
+interface IPage {
+  pageNumber: number,
+  listings: Array<any>;
 }
 
 @Component({
@@ -45,15 +51,15 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     {value: 'price-des', viewValue: 'Most expensive'}
   ];
 
-  listings: Array<any> = [];
+  pages: Array<IPage> = [];
   noMoreListings: boolean = false;
 
   // pagination
   pagination: any = {
-    currentPage: 1,
+    maxPages: 2,
     maxPerPage: 30,
     // hooks into the scroll bar of the main page..
-    infinityScrollSelector: '.mat-drawer-content'
+    infinityScrollSelector: '.mat-drawer-content' // .mat-drawer-content
   }
 
   filters: any = {
@@ -70,7 +76,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log('overview created');
     this.loadCategories();
-    this.loadPage();
+    this.loadPage(1);
   }
 
   loadCategories() {
@@ -83,19 +89,25 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadPage(clear?: boolean) {
-    const page = this.pagination.currentPage;
+  loadPage(pageNumber: number, clear?: boolean) {
     const max = this.pagination.maxPerPage;
 
     const search = this.filters.search;
 
-    this.listingService.search(page, max, null, search).take(1).subscribe(listings => {
+    this.listingService.search(pageNumber, max, null, search).take(1).subscribe((listings: Array<any>) => {
+      // new page
+      const page = {
+        pageNumber: pageNumber,
+        listings: listings.map(listing => new Template(listing))
+      };
+
+      // should we clear all existing pages? e.g search
       if (clear === true) {
-        this.listings = listings;
+        this.pages = [page];
         this.noMoreListings = false;
-      } else {
+      } else { // infinite scroll
         if (listings.length > 0) {
-          this.listings = this.listings.concat(listings);
+          this.pushNewPage(page);
         } else {
           this.noMoreListings = true;
         }
@@ -104,14 +116,58 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     })
   }
 
+  pushNewPage(page: IPage) {
+    const newPageNumber = page.pageNumber;
+    let goingDown = true; // direction
+
+    // previous page
+    if (this.pages[0] && this.pages[0].pageNumber > newPageNumber) {
+      console.log('adding page to top');
+      this.pages.unshift(page);
+      goingDown = false;
+    } else { // next page
+      console.log('adding page to bottom');
+      this.pages.push(page);
+    }
+
+    // if exceeding max length, delete a page of the other direction
+    if (this.pages.length > this.pagination.maxPages) {
+      if (goingDown) {
+        this.pages.shift(); // delete first page
+      } else {
+        this.pages.pop(); // going up, delete last page
+      }
+    }
+  }
+
   clearAndLoadPage() {
-    this.pagination.currentPage = 1;
-    this.loadPage(true);
+    this.loadPage(1, true);
+  }
+
+  // TODO: fix scroll up!
+  loadPreviousPage() {
+    console.log("prev page trigered");
+    let previousPage = this.getFirstPageCurrentlyLoaded(); previousPage--;
+    console.log("loading prev page" + previousPage);
+    if(previousPage > 0) {
+      this.loadPage(previousPage);
+    }
   }
 
   loadNextPage() {
-    this.pagination.currentPage++;
-    this.loadPage();
+    let nextPage = this.getLastPageCurrentlyLoaded(); nextPage++;
+    console.log('loading next page: ' + nextPage);
+    this.loadPage(nextPage);
+  }
+
+  // Returns the pageNumber of the last page that is currently visible
+  getLastPageCurrentlyLoaded() {
+    return this.pages[this.pages.length - 1].pageNumber;
+  }
+
+  // Returns the pageNumber if the first page that is currently visible 
+  getFirstPageCurrentlyLoaded() {
+    return this.pages[0].pageNumber;
   }
 
   ngOnDestroy() {

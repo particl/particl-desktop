@@ -1,7 +1,7 @@
 <div mat-dialog-title>
-  {{data.listing.ItemInformation.title}}
+  {{data.listing.title}}
   <span class="category">
-    in {{data.listing.ItemInformation.ItemCategory.name}}
+    in {{data.listing.category.name}}
   </span>
 </div>
 
@@ -13,7 +13,7 @@
 
   <div class="product-gallery" fxFlex="0 1 350px">
     <div class="featured image">
-      <img src="{{pictures[0] ? 'data:image/gif;base64,'+pictures[0] : './assets/images/placeholder_4-3.jpg'}}">
+      <img src="{{data.listing.featuredImage ? 'data:image/gif;base64,'+ data.listing.featuredImage.data : './assets/images/placeholder_4-3.jpg' }}">
     </div>
     <div class="gallery" fxLayout="row" fxLayoutGap="24px">
       <!-- TODO: s/small/medium -->
@@ -29,8 +29,8 @@
       <tr>
         <th class="item price">Price</th>
         <td class="item price">
-          <span class="big">{{price.int}}.</span>
-          <span class="small">{{price.cents * 100000000}}</span>
+          <span class="big">{{price?.int}}.</span>
+          <span class="small">{{price?.cents * 100000000}}</span>
           <span class="currency">PART</span>
           <span class="fiat TO_DO">&asymp; 45.15 USD</span>
         </td>
@@ -38,24 +38,24 @@
       <tr>
         <th class="shipping price">Shipping</th>
         <td class="shipping price">
-          International {{data.listing.PaymentInformation.ItemPrice.ShippingPrice.international}} PART<br>
-          {{data.listing.ItemInformation.ItemLocation.region}} {{data.listing.PaymentInformation.ItemPrice.ShippingPrice.domestic}} PART
+          International {{data.listing.object.PaymentInformation.ItemPrice?.ShippingPrice.international}} PART<br>
+          {{data.listing.object.ItemInformation.ItemLocation.region}} {{data.listing.object.PaymentInformation.ItemPrice?.ShippingPrice.domestic}} PART
         </td>
       </tr>
       <tr>
         <th class="escrow price">Escrow</th>
-        <td class="escrow price">{{price.escrow}} PART</td>
+        <td class="escrow price">{{price?.escrow}} PART</td>
       </tr>
     </table>
 
     <div class="summary description">
       <p>
-        {{data.listing.ItemInformation.shortDescription}}
+        {{data.listing.shortDescription}}
       </p>
     </div>
     <div class="description">
       <p>
-        {{data.listing.ItemInformation.longDescription}}
+        {{data.listing.longDescription}}
       </p>
     </div>
 

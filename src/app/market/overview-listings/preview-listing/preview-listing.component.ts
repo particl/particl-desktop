@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { ListingComponent } from 'app/market/listing/listing.component';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
+import { Template } from 'app/core/market/api/template/template.model';
 
 @Component({
   selector: 'app-preview-listing',
@@ -12,7 +13,7 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
 })
 export class PreviewListingComponent implements OnInit {
 
-  @Input() listing: any;
+  @Input() listing: Template;
 
   constructor(
     private dialog: MatDialog,
@@ -21,7 +22,7 @@ export class PreviewListingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.listing);
+    // console.log(this.listing);
   }
 
   openListing() {
@@ -31,10 +32,13 @@ export class PreviewListingComponent implements OnInit {
   }
 
   getThumbnail() {
-    // TODO: logic for main image, taking 0 here
-    return this.listing.ItemInformation.ItemImages[0].ItemImageDatas.find(data => {
-      return data.imageVersion === 'THUMBNAIL';
-    }).data;
+    if(this.listing.thumbnail) {
+      // TODO: logic for main image, taking 0 here
+      return 'data:image/gif;base64,' + this.listing.thumbnail.data;
+    } else {
+      return './assets/images/placeholder_4-3.jpg';
+    }
+
   }
 
   addToCart(id) {
