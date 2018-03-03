@@ -20,4 +20,6 @@ export class Cart {
         return new Amount(total);
     }
 
+    get countOfItems() { return this.shoppingCartItems.length; }
+
 }

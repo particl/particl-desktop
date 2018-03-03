@@ -172,6 +172,12 @@ export class BuyComponent implements OnInit {
       this.getCart();
     });
   }
+  
+  clearCart() {
+    this.cartService.clearCart().subscribe(
+      (x) => console.log('cleared');
+    );
+  }
 
   getCart() {
     this.cartService.getCart().take(1).subscribe(cart => {
