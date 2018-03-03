@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { MarketService } from 'app/core/market/market.service';
+import { Cart } from './cart.model';
 
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
-
 @Injectable()
 export class CartService {
 
@@ -20,11 +20,11 @@ export class CartService {
   }
 
   getCart() {
-    return this.market.call('cart', ['get', 1]);
+    return this.market.call('cart', ['get', 1]).map(c => new Cart(c));
   }
 
-  removeItem(id) {
-    return this.market.call('cartitem', ['remove', 1, id]);
+  removeItem(listingId: number) {
+    return this.market.call('cartitem', ['remove', 1, listingId]);
   }
 
 }

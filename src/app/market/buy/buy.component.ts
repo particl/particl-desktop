@@ -11,7 +11,8 @@ import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
-import { Template } from 'app/core/market/api/template/template.model';
+import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Cart } from 'app/core/market/api/cart/cart.model';
 
 @Component({
   selector: 'app-buy',
@@ -103,10 +104,10 @@ export class BuyComponent implements OnInit {
   profile: any = { };
 
   /* cart */
-  cart: any[] = [];
+  cart: Cart;
 
   /* favs */
-  favorites: Array<Template> = [];
+  favorites: Array<Listing> = [];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -145,7 +146,7 @@ export class BuyComponent implements OnInit {
     this.favoritesService.getFavorites().take(1).subscribe(favorites => {
       favorites.map(favorite => {
         this.listingService.get(favorite.id).take(1).subscribe(listing => {
-          this.favorites.push(new Template(listing));
+          this.favorites.push(new Listing(listing));
         });
       });
     })
@@ -165,49 +166,20 @@ export class BuyComponent implements OnInit {
     this._router.navigate(['/market/overview']);
   }
 
-  getImage(listing) {
-    return listing.ItemInformation.ItemImages[0].ItemImageDatas.find(size => {
-      return size.imageVersion === 'THUMBNAIL';
-    }).data;
-  }
-
-  getPrice(listing) {
-    let price: number = listing.PaymentInformation.ItemPrice.basePrice;
-    return {
-      int:     price.toFixed(0),
-      cents:  +(price % 1).toFixed(8) * 100000000,
-      escrow:  (price * listing.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
-    };
-  }
-
-  getShipping(listing) {
-    let price: number = listing.PaymentInformation.ItemPrice.ShippingPrice;
-    return {
-      int:     price.toFixed(0),
-      cents: +(price % 1).toFixed(8) * 100000000
-    };
-  }
-
-  getSubTotal() {
-    let total = 0.0;
-    this.cart.map(item => total += item.PaymentInformation.ItemPrice.basePrice);
-    return total;
-  }
-
-  removeFromCart(id) {
-    this.cartService.removeItem(id).take(1).subscribe(res => {
+  removeFromCart(shoppingCartId: number) {
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
       console.log(res);
       this.getCart();
     });
   }
 
   getCart() {
-    this.cart = [];
     this.cartService.getCart().take(1).subscribe(cart => {
-      cart.ShoppingCartItems.map(item => {
-        this.listingService.get(item.id).take(1).subscribe(listing => {
-          console.log(listing);
-          this.cart.push(listing);
+      this.cart = cart;
+      cart.shoppingCartItems.forEach(shoppingCartItem => {
+        this.listingService.get(shoppingCartItem.listingItemId).take(1).subscribe(listing => {
+          console.log('setting listing for shoppingCartItem id=' + shoppingCartItem.id)
+          shoppingCartItem.listing = new Listing(listing);
         });
       });
     });

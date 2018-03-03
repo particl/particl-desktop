@@ -39,7 +39,7 @@
       <form [formGroup]="cartFormGroup" class="cart">
         <ng-template matStepLabel>Your cart</ng-template>
 
-        <div class="no-results" [hidden]="cart.length != 0">
+        <div class="no-results" [hidden]="cart?.shoppingCartItems.length != 0">
           <p>
             Oh no, your cart is empty! Let's fix this:<br>
             <button mat-button color="primary" (click)="goToListings()">
@@ -49,7 +49,7 @@
           </p>
         </div>
 
-        <div [hidden]="cart.length == 0">
+        <div [hidden]="cart === undefined">
           <table class="cart-items">
 
             <thead>
@@ -58,22 +58,22 @@
 
             <tbody>
               <!-- TODO: make component -->
-              <tr *ngFor="let listing of cart">
+              <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
                 <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                   <div class="image" fxFlex="0 0 115px">
-                    <img src="data:image/gif;base64,{{getImage(listing)}}">
+                    <img src="data:image/gif;base64,{{shoppingCartItem.listing?.thumbnail?.data}}">
                   </div>
                   <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                     <div class="title">
-                      {{listing.ItemInformation.title}}
+                      {{shoppingCartItem.listing?.title}}
                     </div>
                     <div class="category">
-                      {{listing.ItemInformation.ItemCategory.name}}
+                      {{shoppingCartItem.listing?.category.name}}
                     </div>
                   </div>
                 </td>
                 <td class="price cell">
-                  {{getPrice(listing).int}}.<small>{{getPrice(listing).cents}}</small> PART
+                  {{shoppingCartItem.listing?.basePrice.getIntegerPart()}}.<small>{{shoppingCartItem.listing?.basePrice.getFractionalPart()}}</small> PART
                 </td>
                 <td class="quantity cell TO_DO">
                   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
@@ -86,7 +86,7 @@
                 </td>
                 <td class="total cell TO_DO">202.<small>4203</small> PART</td>
                 <td class="remove">
-                  <button mat-button color="warn" class="small TO_DO" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(listing.id)">
+                  <button mat-button color="warn" class="small TO_DO" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(shoppingCartItem.listingItemId)">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
                   </button>
                 </td>
@@ -102,7 +102,7 @@
             </div>
             <table class="subtotals" fxFlex="0 0 250px">
               <tr><td class="desc total">Subtotal</td><td class="value total">
-                {{getSubTotal().toFixed(8)}} PART
+                {{cart.subTotal.amount}} PART
               </td></tr>
               <!--tr><td class="desc TO_DO">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
               <tr><td class="desc TO_DO">Escrow (?)</td><td class="value">170 PART</td></tr>

@@ -1,14 +1,21 @@
 import { Category } from "app/core/market/api/category/category.model";
-import { DateFormatter } from "app/core/util/utils";
+import { DateFormatter, Amount } from "app/core/util/utils";
 
 export class Template {
 
     public category: Category = new Category({});
     public createdAt: string = '';
 
+    public basePrice: Amount = new Amount(0);
+    public shippingPrice: Amount = new Amount(0);
+
     constructor(private object) {
       this.category = new Category(this.object.ItemInformation.ItemCategory);
       this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
+
+      this.setBasePrice();
+      this.setShippingPrice();
+
       console.log('item obj l' + this.object.ListingItemObjects.length);
      }
 
@@ -48,4 +55,22 @@ export class Template {
     }
 
     get images(): any { return this.object.ItemInformation.ItemImages; }
+
+    setBasePrice(): void {
+      const itemPrice = this.object.PaymentInformation.ItemPrice
+      if (itemPrice) {
+        this.basePrice = new Amount(itemPrice.basePrice);
+      } else {
+        this.basePrice = undefined;
+      }
+    }
+
+    setShippingPrice(): void {
+      const itemPrice = this.object.PaymentInformation.ItemPrice
+      if (itemPrice) {
+        this.shippingPrice = new Amount(itemPrice.shippingPrice);
+      } else {
+        this.shippingPrice = undefined;
+      }
+    }
   }
