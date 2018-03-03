@@ -43,7 +43,9 @@ export class ListingService {
 
   generateBogusListings(amount: number) {
     console.log('generating listing');
-    return this.market.call('data', ['generate', 'listingitem', amount, true]);
+    return this.market.call('data', ['generate', 'listingitem', amount, true]).subscribe(
+      (listings) => console.log('generated')
+    );
   }
 
 }
