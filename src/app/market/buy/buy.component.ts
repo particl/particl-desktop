@@ -175,7 +175,7 @@ export class BuyComponent implements OnInit {
   
   clearCart() {
     this.cartService.clearCart().subscribe(
-      (x) => console.log('cleared');
+      (x) => console.log('cleared')
     );
   }
 
