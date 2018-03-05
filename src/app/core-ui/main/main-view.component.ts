@@ -11,7 +11,12 @@ import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.module';
 import { MarketService } from 'app/core/market/market.service';
+import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { ListingService } from 'app/core/market/api/listing/listing.service';
 
+import { Listing } from 'app/core/market/api/listing/listing.model';
+
+import { Cart } from 'app/core/market/api/cart/cart.model';
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -32,7 +37,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   title: string = '';
   testnet: boolean = false;
-
+  cartItemCount: number = 0;
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
@@ -43,7 +48,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
-
+  cart: Cart;
 
   constructor(
     private _router: Router,
@@ -55,7 +60,9 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
-    private _market: MarketService
+    private _market: MarketService,
+    private _marketState: MarketStateService,
+    private listingService: ListingService,
   ) { }
 
   ngOnInit() {
@@ -118,6 +125,21 @@ export class MainViewComponent implements OnInit, OnDestroy {
     /* check if testnet -> block explorer url */
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
+
+    // Obtain total cart items
+    // @TODO move to market state service ?
+    this._marketState.observe('cart')
+      .takeWhile(() => !this.destroyed)
+      .map(c => new Cart(c))
+      .subscribe(cart => {
+        this.cart = cart;
+        this.cartItemCount = cart.shoppingCartItems.length;
+        cart.shoppingCartItems.forEach(shoppingCartItem => {
+          this.listingService.get(shoppingCartItem.listingItemId).take(1).subscribe(listing => {
+            shoppingCartItem.listing = new Listing(listing);
+          });
+        });
+      });
   }
 
   ngOnDestroy() {
