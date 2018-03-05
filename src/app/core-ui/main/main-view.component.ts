@@ -12,9 +12,6 @@ import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.module';
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
-import { ListingService } from 'app/core/market/api/listing/listing.service';
-
-import { Listing } from 'app/core/market/api/listing/listing.model';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 /*
@@ -62,7 +59,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _newtxnotifier: NewTxNotifierService,
     private _market: MarketService,
     private _marketState: MarketStateService,
-    private listingService: ListingService,
   ) { }
 
   ngOnInit() {
@@ -133,12 +129,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
       .map(c => new Cart(c))
       .subscribe(cart => {
         this.cart = cart;
-        this.cartItemCount = cart.shoppingCartItems.length;
-        cart.shoppingCartItems.forEach(shoppingCartItem => {
-          this.listingService.get(shoppingCartItem.listingItemId).take(1).subscribe(listing => {
-            shoppingCartItem.listing = new Listing(listing);
-          });
-        });
       });
   }
 
