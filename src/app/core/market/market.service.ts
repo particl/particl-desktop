@@ -32,7 +32,7 @@ export class MarketService {
     return this._http.post(this.url, postData, { headers: headers })
         .map((response: any) => response.result)
         .catch((error: any) => {
-          let err = "";
+          let err = '';
           if(error.status === 404) {
             err = error.error.error;
           } else {
