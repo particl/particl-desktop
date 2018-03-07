@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
-  FormControl,
   Validators
 } from '@angular/forms';
 
@@ -121,7 +120,7 @@ export class BuyComponent implements OnInit {
   ngOnInit() {
 
     this._profileService.get(1).take(1).subscribe(profile => {
-      console.log("GOT PROFILE");
+      console.log('GOT PROFILE');
       console.log(profile);
       this.profile = profile;
     });
@@ -172,7 +171,7 @@ export class BuyComponent implements OnInit {
       this.getCart();
     });
   }
-  
+
   clearCart() {
     this.cartService.clearCart().subscribe(
       (x) => console.log('cleared')
@@ -204,7 +203,8 @@ export class BuyComponent implements OnInit {
     }
   }
 
-  fillAddress(address) {
+  // @TODO: remove type any
+  fillAddress(address: any) {
     console.log(address);
     address.countryCode = address.country;
     delete address.country;

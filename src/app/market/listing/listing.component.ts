@@ -5,7 +5,6 @@ import { Template } from 'app/core/market/api/template/template.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 
-
 interface IDate {
   listing: Template
 }
@@ -16,16 +15,16 @@ interface IDate {
 })
 export class ListingComponent implements OnInit {
 
+  pictures: any = new Array();
+  price: any;
+  date: any;
+
   constructor(
     private dialogRef: MatDialogRef<ListingComponent>,
     private cartService: CartService,
     private favoritesService: FavoritesService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
-
-  pictures: any = new Array();
-  price: any;
-  date: any;
 
   ngOnInit() {
     this.data.listing.images.map(image => {
@@ -48,11 +47,11 @@ export class ListingComponent implements OnInit {
     this.date = new Date(this.data.listing.object.createdAt).toLocaleDateString();
   }
 
-  addToCart(id) {
+  addToCart(id: number) {
     this.cartService.addItem(id);
   }
 
-  addToFavorites(id) {
+  addToFavorites(id: number) {
     this.favoritesService.addItem(id);
   }
 

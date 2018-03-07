@@ -5,7 +5,7 @@ import { ListingComponent } from 'app/market/listing/listing.component';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 import { Template } from 'app/core/market/api/template/template.model';
-import {SnackbarService} from "../../../core/snackbar/snackbar.service";
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-preview-listing',

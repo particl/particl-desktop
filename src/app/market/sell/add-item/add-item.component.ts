@@ -52,11 +52,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.itemFormGroup = this.formBuilder.group({
       title:                      ['', [Validators.required]],
-      shortDescription:           ['', [Validators.required,
-                                        Validators.maxLength(200)]],
+      shortDescription:           ['', [Validators.required, Validators.maxLength(200)]],
       longDescription:            ['', [Validators.required,
                                         Validators.maxLength(1000)]],
-      category:                 ['', [Validators.required]],
+      category:                   ['', [Validators.required]],
       basePrice:                  ['', [Validators.required]],
       domesticShippingPrice:      ['', [Validators.required]],
       internationalShippingPrice: ['', [Validators.required]]
@@ -86,9 +85,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.fileInput.click();
   }
 
-  processPictures(event) {
+// TODO: remove type any
+  processPictures(event: any) {
     Array.from(event.target.files).map((file: File) => {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = event => {
         this.pictures.push(reader.result.split('base64,')[1]);
         this.log.d('added picture', file.name);
@@ -97,14 +97,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  removePicture(index) {
+  removePicture(index: number) {
     this.pictures.splice(index, 1);
     if (this.featuredPicture > index) {
       this.featuredPicture -= 1;
     }
   }
 
-  featurePicture(index) {
+  featurePicture(index: number) {
     this.featuredPicture = index;
   }
 
@@ -130,9 +130,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
   preload() {
     this.log.d(`preloading for id=${this.templateId}`);
     this.template.get(this.templateId).subscribe((template: any) => {
-      this.log.d(`preloaded id=${this.templateId}!`)
+      this.log.d(`preloaded id=${this.templateId}!`);
 
-      let t = {
+      const t = {
         title: '',
         shortDescription: '',
         longDescription: '',
@@ -140,7 +140,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
         basePrice: 0,
         domesticShippingPrice: 0,
         internationalShippingPrice: 0
-        
       };
 
       console.log(template);
@@ -149,10 +148,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.shortDescription = template.ItemInformation.shortDescription;
       t.longDescription = template.ItemInformation.longDescription;
       t.category = template.ItemInformation.ItemCategory.id;
-      console.log("getting category to id="+ this.itemFormGroup.get('category').value);
-      console.log("setting category to id="+t.category);
+      console.log('getting category to id=' + this.itemFormGroup.get('category').value);
+      console.log('setting category to id=' + t.category);
 
-      let itemPrice = template.PaymentInformation.ItemPrice;
+      const itemPrice = template.PaymentInformation.ItemPrice;
       t.basePrice = itemPrice.basePrice;
       t.domesticShippingPrice = itemPrice.ShippingPrice.domestic;
       t.internationalShippingPrice = itemPrice.ShippingPrice.international;
@@ -165,7 +164,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   save(): Promise<any> {
 
-    let item = this.itemFormGroup.value;
+    const item = this.itemFormGroup.value;
     let nPicturesAdded = 0;
 
     return new Promise((resolve, reject) => {

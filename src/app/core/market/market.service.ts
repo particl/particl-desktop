@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MarketService {
@@ -11,7 +10,8 @@ export class MarketService {
   port: number = 3000;
   url: string = `http://${this.hostname}:${this.port}/api/rpc`;
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient) {
+  }
 
   call(method: string, params?: Array<any> | null): Observable<any> {
     // Running in browser, delete?
@@ -29,16 +29,16 @@ export class MarketService {
     };
     const headers = new HttpHeaders(headerJson);
 
-    return this._http.post(this.url, postData, { headers: headers })
-        .map((response: any) => response.result)
-        .catch((error: any) => {
-          let err = '';
-          if(error.status === 404) {
-            err = error.error.error;
-          } else {
-            err = error;
-          }
-          return Observable.throw(err);
-        })
+    return this._http.post(this.url, postData, {headers: headers})
+      .map((response: any) => response.result)
+      .catch((error: any) => {
+        let err = '';
+        if (error.status === 404) {
+          err = error.error.error;
+        } else {
+          err = error;
+        }
+        return Observable.throw(err);
+      })
   }
 }

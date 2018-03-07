@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 import { Template } from 'app/core/market/api/template/template.model';
 
@@ -10,8 +9,7 @@ import { Template } from 'app/core/market/api/template/template.model';
 export class TemplateService {
 
   constructor(
-    private market: MarketService,
-    private marketState: MarketStateService
+    private market: MarketService
   ) { }
 
   get(templateId: number) {
@@ -30,7 +28,7 @@ export class TemplateService {
     internationalShippingPrice: number,
     paymentAddress?: string // TODO: class
     ) {
-      let params  = [
+      const params  = [
         'add',
         1, // profile
         title,
@@ -50,7 +48,8 @@ export class TemplateService {
       return this.market.call('template', params);
   }
 
-  addPicture(id, data) {
+  // @TODO remove type any
+  addPicture(id: number, data: any) {
     const params = [
       'image', 'add',
       id,
@@ -62,13 +61,13 @@ export class TemplateService {
   }
 
   search(page: number, pageLimit: number, profileId: number, category: string, searchString: string): Observable<Array<Template>> {
-    let params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
+    const params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
     return this.market.call('template', params)
-    .map(
-      (templates: any) => {
-        return templates.map(t => new Template(t));
-      }
-    );
+      .map(
+        (templates: any) => {
+          return templates.map(t => new Template(t));
+        }
+      );
   }
 
   post(listingTemplateId: number, marketId: number) {
