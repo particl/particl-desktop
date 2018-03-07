@@ -34,7 +34,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   title: string = '';
   testnet: boolean = false;
-  cartItemCount: number = 0;
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
