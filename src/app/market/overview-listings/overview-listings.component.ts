@@ -2,13 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Log } from 'ng2-logger';
 
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 
 import { Category } from 'app/core/market/api/category/category.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
+import { Favorite } from '../../core/market/api/favorites/favorite.model';
 
 interface ISorting {
   value: string;
@@ -68,7 +69,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   constructor(
     private category: CategoryService,
     private listingService: ListingService,
-    private marketState: MarketStateService
+    private favoritesService: FavoritesService
   ) {
     console.warn('overview created');
   }
@@ -77,18 +78,20 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     console.log('overview created');
     this.loadCategories();
     this.loadPage(1);
-
-    this.getFavorites();
   }
 
   getFavorites() {
-    this.marketState.observe('favorite').subscribe(res => {
-
+    this.favoritesService.getFavorites().subscribe((favorite: Favorite[]) => {
       if (this.pages[0] && this.pages[0].listings) {
-        console.log('>>>>>>>>>>>>>>>>>>>>>############>>>>>>>>>>>>', this.pages[0].listings);
-        // @TODO compare two array and find fav. item
+        favorite.forEach(obj => {
+          this.pages[0].listings.forEach(item => {
+            if (obj.listingItemId === item.id) {
+              item.favorite = true;
+            }
+          });
+        });
       }
-    })
+    });
   }
 
   loadCategories() {
@@ -126,7 +129,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
             this.noMoreListings = true;
           }
         }
-
+        this.getFavorites();
       })
   }
 

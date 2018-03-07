@@ -5,6 +5,7 @@ import { ListingComponent } from 'app/market/listing/listing.component';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 import { Template } from 'app/core/market/api/template/template.model';
+import {SnackbarService} from "../../../core/snackbar/snackbar.service";
 
 @Component({
   selector: 'app-preview-listing',
@@ -18,7 +19,8 @@ export class PreviewListingComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private cartService: CartService,
-    private favoritesService: FavoritesService
+    private favoritesService: FavoritesService,
+    private snackbar: SnackbarService
   ) { }
 
   ngOnInit() {
@@ -27,25 +29,34 @@ export class PreviewListingComponent implements OnInit {
 
   openListing() {
     const dialog = this.dialog.open(ListingComponent, {
-      data: { listing: this.listing },
+      data: {listing: this.listing},
     });
   }
 
   getThumbnail() {
-    if(this.listing.thumbnail) {
+    if (this.listing.thumbnail) {
       // TODO: logic for main image, taking 0 here
       return 'data:image/gif;base64,' + this.listing.thumbnail.data;
     } else {
       return './assets/images/placeholder_4-3.jpg';
     }
-
   }
 
-  addToCart(id) {
+  addToCart(id: number) {
     this.cartService.addItem(id);
   }
 
-  addToFavorites(id) {
-    this.favoritesService.addItem(id).take(1).subscribe(res => console.log(res));
+  addToFavorites(id: number) {
+    if (this.listing.favorite) {
+      this.favoritesService.removeItem(id).take(1).subscribe(res => {
+        this.snackbar.open(`${this.listing.title} Removed from Favorite list`);
+        this.listing.favorite = false;
+      });
+    }
+    this.favoritesService.addItem(id).take(1).subscribe(res => {
+      this.snackbar.open(`${this.listing.title} Add to Favorite list`);
+      this.listing.favorite = true;
+    });
+
   }
 }

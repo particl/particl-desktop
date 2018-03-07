@@ -4,9 +4,15 @@
     <!-- TODO: this is a default placeholder image (show if no other image is available) -->
     <img src="{{getThumbnail()}}" (click)="openListing()">
     <div class="icons">
-      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-search" matTooltip="Preview" matTooltipPosition="above" (click)="openListing()"></mat-icon>
-      <!--mat-icon class="icon flag TO_DO" fontSet="partIcon" fontIcon="part-error" matTooltip="Report" matTooltipPosition="above"></mat-icon-->
-      <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart" matTooltip="Favourite" matTooltipPosition="above" (click)="addToFavorites(listing.id)"></mat-icon>
+      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-search" matTooltip="Preview"
+                matTooltipPosition="above" (click)="openListing()"></mat-icon>
+      <mat-icon class="icon flag TO_DO" fontSet="partIcon" fontIcon="part-error" matTooltip="Report"
+                matTooltipPosition="above"></mat-icon>
+      <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart"
+                [matTooltip]="(listing.favorite)? 'Click to Un-Favourite' : 'Click to Favourite'"
+                [color]="(listing.favorite)?'warn': ''"
+                matTooltipPosition="above" (click)="addToFavorites(listing.id)"></mat-icon>
+
     </div>
   </div>
 
