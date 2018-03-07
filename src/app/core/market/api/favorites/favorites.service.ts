@@ -9,9 +9,12 @@ export class FavoritesService {
     private market: MarketService
   ) { }
 
-  addItem(id) {
-    console.log(id);
+  addItem(id: number) {
     return this.market.call('favorite', ['add', 1, id]);
+  }
+
+  removeItem(id: number) {
+    return this.market.call('favorite', ['remove', 1, id]);
   }
 
   getFavorites() {
