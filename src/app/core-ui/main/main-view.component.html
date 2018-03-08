@@ -239,14 +239,7 @@
       </div>
     </div><!-- .left -->
     <div class="right" fxFlex="1 1 60%">
-      <!-- FIXME: show only when stuff is in cart -->
-      <div class="cart-info" routerLinkActive="active"
-           [routerLink]="'/market/buy'"
-           matTooltip="View cart" matTooltipPosition="before">
-        <!-- FIXME: replace with cart icon when available -->
-        <mat-icon fontSet="partIcon" fontIcon="part-circle-user"></mat-icon>
-        <strong class="tag">{{cart?.countOfItems}}</strong> items <span class="amount TO_DO">(13.4245 PART)</span>
-      </div>
+      <app-cart></app-cart>
       <app-status></app-status>
     </div><!-- .right -->
 
