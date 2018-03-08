@@ -8,6 +8,7 @@ export class Template {
 
   public basePrice: Amount = new Amount(0);
   public shippingPrice: Amount = new Amount(0);
+  public favorite: boolean;
 
   constructor(private object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);

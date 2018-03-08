@@ -80,11 +80,12 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     this.loadPage(1);
   }
 
-  getFavorites() {
+  getFavorites(pageNumber: number) {
+    const index = pageNumber - 1;
     this.favoritesService.getFavorites().subscribe((favorite: Favorite[]) => {
-      if (this.pages[0] && this.pages[0].listings) {
+      if (this.pages[index] && this.pages[index].listings) {
         favorite.forEach(obj => {
-          this.pages[0].listings.forEach(item => {
+          this.pages[index].listings.forEach(item => {
             if (obj.listingItemId === item.id) {
               item.favorite = true;
             }
@@ -129,7 +130,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
             this.noMoreListings = true;
           }
         }
-        this.getFavorites();
+        this.getFavorites(pageNumber);
       })
   }
 
