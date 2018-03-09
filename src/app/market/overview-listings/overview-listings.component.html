@@ -14,9 +14,9 @@
         <mat-option *ngFor="let country of countryList" [value]="country">{{ country }}</mat-option>
       </mat-select>
 
-      <mat-select placeholder="Categories" [formControl]="categories" class="filter category TO_DO">
+      <mat-select placeholder="All categories" [formControl]="categories" class="filter category TO_DO" (change)="filter()" [(ngModel)]="filters.sort">
         <mat-option>All categories</mat-option>
-        <mat-option *ngFor="let category of categoryList" [value]="category">{{ category }}</mat-option>
+        <mat-option *ngFor="let category of categoryList" [value]="category.id">{{ category.name }}</mat-option>
       </mat-select>
     </div>
 

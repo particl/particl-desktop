@@ -63,7 +63,8 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   filters: any = {
-    search:   undefined
+    search:  undefined,
+    sort: undefined
   };
 
   constructor(
@@ -85,7 +86,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     .subscribe(
       list => {
         this._rootCategoryList = list;
-        this.categoryList = this._rootCategoryList.getSubCategoryNames();
+        this.categoryList = this._rootCategoryList.getSubCategory();
       });
   }
 
@@ -94,7 +95,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
     const search = this.filters.search;
 
-    this.listingService.search(pageNumber, max, null, search).take(1).subscribe((listings: Array<any>) => {
+    this.listingService.search(pageNumber, max, null, search, this.filters.sort).take(1).subscribe((listings: Array<any>) => {
       // new page
       const page = {
         pageNumber: pageNumber,
@@ -168,6 +169,10 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   // Returns the pageNumber if the first page that is currently visible 
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
+  }
+
+  filter(): void {
+    this.loadPage(1)
   }
 
   ngOnDestroy() {

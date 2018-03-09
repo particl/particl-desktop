@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
+import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { Cart } from './cart.model';
 
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
@@ -15,13 +16,17 @@ export class CartService {
 
   constructor(
     private market: MarketService,
+    private marketState: MarketStateService,
     private snackbar: SnackbarService
   ) { }
 
   addItem(listingItemId: number) {
     this.log.d(`Adding listingItemId=${listingItemId} to cart with id=1`);
-    this.market.call('cartitem', ['add', 1, listingItemId]).take(1).do(
-      data => this.snackbar.open(data),
+    this.market.call('cartitem', ['add', 1, listingItemId]).take(1).subscribe(
+      data => {
+        this.snackbar.open(data)
+        this.marketState.registerStateCall('cart', null, ['get', 1])
+      },
       err  => this.snackbar.open(err)
     );
   }
