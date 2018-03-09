@@ -19,12 +19,12 @@
     <mat-expansion-panel-header fxLayout="row" fxLayoutGap="10px" (click)="showExpandedTransactionDetail(tx)" layout-padding>
 
       <!-- Date -->
-      <mat-panel-title fxFlex="0 0 137px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
+      <mat-panel-title fxFlex="0 0 85px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
         {{ tx.getDate() }}
       </mat-panel-title>
 
       <!-- Confirmations -->
-      <mat-panel-title fxFlex="0 0 45px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation"
+      <mat-panel-title fxFlex="0 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation"
                         [ngClass]="styleConfimations(tx.getConfirmationCount())">
         <span mat-line matTooltip="Confirmations" matTooltipPosition="before">
           <mat-icon fontSet="partIcon" fontIcon="part-circle-check" class="confirmations"></mat-icon>
