@@ -13,13 +13,13 @@ export class ListingService {
 
   }
 
-  search(page: number, pageLimit: number, profileId: number | string, search: string) {
+  search(page: number, pageLimit: number, profileId: number | string, search: string, catId?: number) {
     let params = [
       'search',
       page,
       pageLimit,
       'ASC',
-      null, // category
+      catId || null, // category
       'ALL', 
       profileId || "ALL",
       null, // minPrice
