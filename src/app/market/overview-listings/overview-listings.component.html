@@ -87,7 +87,7 @@
     </div>
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let item of page.listings">
-        <mat-card class="listing" fxFlex="0 0 calc(100% / 6 - 30px)">
+        <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
           <app-preview-listing [listing]="item"></app-preview-listing>
         </mat-card>
       </ng-container>

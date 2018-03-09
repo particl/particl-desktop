@@ -39,9 +39,13 @@ yarn install
 
 ### Development with Electron
 
-1. Run `ng serve` to start the dev server.
-2. Run `yarn run start:electron:dev -testnet -opendevtools` to start the electron application. Daemon will be updated and launched automatically.
-   * Note: this command will auto-refresh the client on each saved change
+1. `git submodule init`
+2. `git submodule update`
+3. run `ng serve` to start the dev server and keep it running
+4. in other terminal, install the Marketplace module: `yarn run install:marketplace`
+5. and then start it: `yarn run start:marketplace`
+6. in 3rd terminal, run `yarn run start:electron:dev -testnet -opendevtools` to start the electron application. Daemon will be updated and launched automatically.
+   * note: this command will auto-refresh the client on each saved change
    * `-testnet` – for running on testnet (omit for running the client on mainnet)
    * `-opendevtools` – automatically opens Developer Tools on client launch
 
