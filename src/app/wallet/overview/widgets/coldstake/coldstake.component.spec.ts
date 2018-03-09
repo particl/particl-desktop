@@ -5,6 +5,7 @@ import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../../modals/modals.module';
 
 import { SharedModule } from '../../../shared/shared.module';
+import { WalletModule } from '../../../wallet/wallet.module';
 
 import { ColdstakeComponent } from './coldstake.component';
 
@@ -21,11 +22,12 @@ describe('ColdstakeComponent', () => {
         SharedModule,
         ModalsModule.forRoot(),
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        WalletModule.forRoot()
       ],
       declarations: [ ColdstakeComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
