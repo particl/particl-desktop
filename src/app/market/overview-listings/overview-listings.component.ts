@@ -63,7 +63,8 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   filters: any = {
-    search:   undefined
+    search:   undefined,
+    sort: undefined
   };
 
   constructor(
@@ -85,7 +86,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     .subscribe(
       list => {
         this._rootCategoryList = list;
-        this.categoryList = this._rootCategoryList.getSubCategoryNames();
+        this.categoryList = this._rootCategoryList.getSubCategory();
       });
   }
 
@@ -93,8 +94,9 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     const max = this.pagination.maxPerPage;
 
     const search = this.filters.search;
-
-    this.listingService.search(pageNumber, max, null, search).take(1).subscribe((listings: Array<any>) => {
+    console.log(this.filters.sort)
+    this.listingService.search(pageNumber, max, null, search, this.filters.sort).take(1).subscribe((listings: Array<any>) => {
+      console.log(listings);
       // new page
       const page = {
         pageNumber: pageNumber,
@@ -169,6 +171,10 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
   }
+
+  filter(): void {
+    this.loadPage(1)
+   }
 
   ngOnDestroy() {
     this.destroyed = true;
