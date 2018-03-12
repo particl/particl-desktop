@@ -4,8 +4,10 @@ import { MatDialog } from '@angular/material';
 import { ListingComponent } from 'app/market/listing/listing.component';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
-import { Template } from 'app/core/market/api/template/template.model';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+import { MarketStateService } from '../../../core/market/market-state/market-state.service';
+
+import { Listing } from '../../../core/market/api/listing/listing.model';
 
 @Component({
   selector: 'app-preview-listing',
@@ -14,13 +16,14 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 })
 export class PreviewListingComponent implements OnInit {
 
-  @Input() listing: Template;
+  @Input() listing: Listing;
 
   constructor(
     private dialog: MatDialog,
     private cartService: CartService,
     private favoritesService: FavoritesService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private marketState: MarketStateService
   ) { }
 
   ngOnInit() {
@@ -42,21 +45,26 @@ export class PreviewListingComponent implements OnInit {
     }
   }
 
-  addToCart(id: number) {
-    this.cartService.addItem(id);
+  addToCart() {
+    this.cartService.addItem(this.listing.id);
   }
 
-  addToFavorites(id: number) {
+  addToFavorites() {
     if (this.listing.favorite) {
-      this.favoritesService.removeItem(id).take(1).subscribe(res => {
+      this.favoritesService.removeItem(this.listing.id).take(1).subscribe(res => {
+        this.updateFavorites();
         this.snackbar.open(`${this.listing.title} Removed from Favorite list`);
         this.listing.favorite = false;
       });
     }
-    this.favoritesService.addItem(id).take(1).subscribe(res => {
+    this.favoritesService.addItem(this.listing.id).take(1).subscribe(res => {
+      this.updateFavorites();
       this.snackbar.open(`${this.listing.title} Add to Favorite list`);
       this.listing.favorite = true;
     });
+  }
 
+  updateFavorites() {
+    this.marketState.registerStateCall('favorite', null, ['list', 1]);
   }
 }
