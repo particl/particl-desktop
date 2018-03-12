@@ -162,29 +162,12 @@ export class SendComponent {
   }
 
   onSubmit(): void {
-    // @TODO refactor unlock wallet checking
-    // this.checkWalletIslocked(this.openSendConfirmationModal, 30);
     if (this._rpcState.get('locked')) {
       // unlock wallet and send transaction
       this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.openSendConfirmationModal.bind(this)});
     } else {
       // wallet already unlocked
       this.openSendConfirmationModal();
-    }
-  }
-
-  /**
-    * Check wallet is locked
-    * @param callback
-    */
-
-  checkWalletIslocked(callback: any, timeout: number = 10) {
-    if (this._rpcState.get('locked')) {
-      // unlock wallet and send transaction
-      this._modals.open('unlock', {forceOpen: true, timeout: 10, callback: callback.bind(this)});
-    } else {
-      // wallet already unlocked
-      callback();
     }
   }
 
@@ -243,7 +226,13 @@ export class SendComponent {
 
     }
 
-    this.checkWalletIslocked(this.sendTransaction);
+    if (this._rpcState.get('locked')) {
+      // unlock wallet and send transaction
+      this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.sendTransaction.bind(this)});
+    } else {
+      // wallet already unlocked
+      this.sendTransaction();
+    }
   }
 
   private sendTransaction(): void {
