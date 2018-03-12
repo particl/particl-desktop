@@ -30,6 +30,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('overview-listings.component');
   private destroyed: boolean = false;
+  public isLoading: boolean = false;
 
   // filters
   countries: FormControl = new FormControl();
@@ -90,11 +91,13 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
+    this.isLoading = true;
     const max = this.pagination.maxPerPage;
 
     const search = this.filters.search;
 
     this.listingService.search(pageNumber, max, null, search).take(1).subscribe((listings: Array<any>) => {
+      this.isLoading = false;
       // new page
       const page = {
         pageNumber: pageNumber,
@@ -165,7 +168,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     return this.pages[this.pages.length - 1].pageNumber;
   }
 
-  // Returns the pageNumber if the first page that is currently visible 
+  // Returns the pageNumber if the first page that is currently visible
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
   }
