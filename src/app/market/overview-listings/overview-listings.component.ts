@@ -8,8 +8,8 @@ import { Category } from 'app/core/market/api/category/category.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
-import { Template } from 'app/core/market/api/template/template.model';
 import { Favorite } from '../../core/market/api/favorites/favorite.model';
+import { Listing } from '../../core/market/api/listing/listing.model';
 
 interface ISorting {
   value: string;
@@ -80,21 +80,6 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     this.loadPage(1);
   }
 
-  getFavorites(pageNumber: number) {
-    const index = pageNumber - 1;
-    this.favoritesService.getFavorites().subscribe((favorite: Favorite[]) => {
-      if (this.pages[index] && this.pages[index].listings) {
-        favorite.forEach(obj => {
-          this.pages[index].listings.forEach(item => {
-            if (obj.listingItemId === item.id) {
-              item.favorite = true;
-            }
-          });
-        });
-      }
-    });
-  }
-
   loadCategories() {
     this.category.list()
     .takeWhile(() => !this.destroyed)
@@ -116,7 +101,12 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
         // new page
         const page = {
           pageNumber: pageNumber,
-          listings: listings.map(listing => new Template(listing))
+          listings: listings.map(listing => {
+            listing.favorite = true;
+            const data = new Listing(listing);
+            data.favorite = this.favoritesService.isListingItemFavorited(listing.id);
+            return data;
+          })
         };
 
         // should we clear all existing pages? e.g search
@@ -130,7 +120,6 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
             this.noMoreListings = true;
           }
         }
-        this.getFavorites(pageNumber);
       })
   }
 
