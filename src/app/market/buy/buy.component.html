@@ -53,7 +53,9 @@
           <table class="cart-items">
 
             <thead>
-              <tr><th>Items</th><th>Price</th><th>Quantity</th><th class="text-right">Total</th><th></th></tr>
+              <!-- @TODO if quantity required then add this label before total  -->
+              <!-- <th>Quantity</th> -->
+              <tr><th>Items</th><th>Price</th><th class="text-right">Total</th><th></th></tr>
             </thead>
 
             <tbody>
@@ -72,19 +74,19 @@
                     </div>
                   </div>
                 </td>
-                <!-- @TODO Fix  -->
                 <td class="price cell">
                   {{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART
                 </td>
-                <td class="quantity cell TO_DO">
+                <!-- @TODO if quantity required then we can uncomment the code   -->
+               <!--  <td class="quantity cell TO_DO">
                   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                    <!--button mat-button class="small">-</button-->
+                    <button mat-button class="small">-</button>
                     <mat-form-field class="auto-width">
                       <input matInput type="number" value="1" min="1" formControlName="firstCtrl">
                     </mat-form-field>
-                    <!--button mat-button class="small">+</button-->
+                    <button mat-button class="small">+</button>
                   </div>
-                </td>
+                </td> -->
                 <td class="total cell">{{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART</td>
                 <td class="remove">
                   <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(shoppingCartItem.listingItemId)">
