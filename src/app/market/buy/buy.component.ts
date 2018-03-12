@@ -178,12 +178,6 @@ export class BuyComponent implements OnInit {
   getCart(): void {
     this.cartService.getCart().take(1).subscribe(cart => {
       this.cart = cart;
-      cart.shoppingCartItems.forEach(shoppingCartItem => {
-        this.listingService.get(shoppingCartItem.listingItemId).take(1).subscribe(listing => {
-          console.log('setting listing for shoppingCartItem id=' + shoppingCartItem.id)
-          shoppingCartItem.listing = new Listing(listing);
-        });
-      });
     });
   }
 

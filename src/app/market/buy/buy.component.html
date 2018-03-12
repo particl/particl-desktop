@@ -61,19 +61,20 @@
               <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
                 <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                   <div class="image" fxFlex="0 0 115px">
-                    <img src="data:image/gif;base64,{{shoppingCartItem.listing?.thumbnail?.data}}">
+                    <img src="data:image/gif;base64,{{shoppingCartItem.thumbnail?.data}}">
                   </div>
                   <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                     <div class="title">
-                      {{shoppingCartItem.listing?.title}}
+                      {{shoppingCartItem.title}}
                     </div>
                     <div class="category">
-                      {{shoppingCartItem.listing?.category.name}}
+                      {{shoppingCartItem.name}}
                     </div>
                   </div>
                 </td>
+                <!-- @TODO Fix  -->
                 <td class="price cell">
-                  {{shoppingCartItem.listing?.basePrice.getIntegerPart()}}.<small>{{shoppingCartItem.listing?.basePrice.getFractionalPart()}}</small> PART
+                  {{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART
                 </td>
                 <td class="quantity cell TO_DO">
                   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
@@ -84,7 +85,7 @@
                     <!--button mat-button class="small">+</button-->
                   </div>
                 </td>
-                <td class="total cell TO_DO">202.<small>4203</small> PART</td>
+                <td class="total cell">{{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART</td>
                 <td class="remove">
                   <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(shoppingCartItem.listingItemId)">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>

@@ -25,7 +25,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Obtain total cart items
-    this._marketState.observe('cart')
+    this._marketState.observe('cartitem')
       .takeWhile(() => !this.destroyed)
       .map(c => new Cart(c))
       .subscribe(cart => {

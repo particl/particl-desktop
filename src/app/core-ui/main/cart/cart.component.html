@@ -2,5 +2,5 @@
       matTooltip="View cart" matTooltipPosition="before">
   <!-- FIXME: replace with cart icon when available -->
   <mat-icon fontSet="partIcon" fontIcon="part-circle-user"></mat-icon>
-  <strong class="tag">{{ cart?.countOfItems }}</strong> items <span class="amount TO_DO">(13.4245 PART)</span>
+  <strong class="tag">{{ cart?.countOfItems }}</strong> items <span class="amount">{{cart?.subTotal.amount}} PART</span>
 </div>

@@ -32,7 +32,11 @@ export class CartService {
 
   getCart(): Observable<any> {
     this.log.d(`Getting cart with id=1`);
-    return this.market.call('cart', ['get', 1]).map(c => new Cart(c)).do(
+    // return this.market.call('cart', ['get', 1]).map(c => new Cart(c)).do(
+    //   data => console.log(data),
+    //   error => console.log(error)
+    //   );
+    return this.market.call('cartitem', ['list', 1, true]).map(c => new Cart(c)).do(
       data => console.log(data),
       error => console.log(error)
       );
@@ -61,7 +65,7 @@ export class CartService {
   }
 
   updateCart(): void {
-    this.marketState.registerStateCall('cart', null, ['get', 1])
+    this.marketState.registerStateCall('cartitem', null, ['list', 1, true])
   }
 
 }

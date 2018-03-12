@@ -15,7 +15,7 @@ export class MarketStateService extends StateService implements OnDestroy {
     this.log.d('MarketState: initialized');
     // fetch categories
     this.registerStateCall('category', 5 * 1000, ['list']);
-    this.registerStateCall('cart', null, ['get', 1])
+    this.registerStateCall('cartitem', null, ['list', 1, true])
   }
 
   /** Register a state call, executes every X seconds (timeout) */
