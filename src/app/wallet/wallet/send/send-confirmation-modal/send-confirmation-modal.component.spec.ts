@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MatFormFieldModule } from '@angular/material';
-
 import { MaterialModule } from '../../../../core-ui/material/material.module';
 
 import { SendService } from '../send.service';
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
-import { RpcMockService } from '../../../../_test/core-test/rpc-test/rpc-mock.service';
-import { RpcService } from '../../../../core/rpc/rpc.service';
-import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
+import { TransactionBuilder } from '../transaction-builder.model';
+
+import { SendMockService } from '../../../../_test/wallet-test/send-test/send-mock.service';
 
 describe('SendConfirmationModalComponent', () => {
   let component: SendConfirmationModalComponent;
@@ -25,8 +25,7 @@ describe('SendConfirmationModalComponent', () => {
       declarations: [ SendConfirmationModalComponent ],
       providers: [
         SnackbarService,
-        {provide: RpcService, useClass: RpcMockService},
-        SendService,
+        {provide: SendService, useClass: SendMockService},
         { provide: MatDialogRef},
       ],
     })
@@ -36,6 +35,7 @@ describe('SendConfirmationModalComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SendConfirmationModalComponent);
     component = fixture.componentInstance;
+    component.send = new TransactionBuilder();
     fixture.detectChanges();
   });
 
