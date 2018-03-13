@@ -59,7 +59,7 @@ export class SendComponent implements OnInit {
     this.send.input = 'balance';
     this.send.output = 'blind_balance';
     this.send.currency = 'part';
-    this.send.privacy = 8;
+    this.send.ringsize = 8;
     this.send.subtractFeeFromAmount = false;
     this.send.numsignatures = 1;
   }
@@ -302,7 +302,7 @@ export class SendComponent implements OnInit {
   }
 
   setPrivacy(level: number, prog: number): void {
-    this.send.privacy = level;
+    this.send.ringsize = level;
     this.progress = prog;
   }
 

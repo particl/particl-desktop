@@ -12,7 +12,7 @@ export class TransactionBuilder {
   validAmount: boolean;
   isMine: boolean;
   currency: string;
-  privacy: number;
+  ringsize: number;
   subtractFeeFromAmount: boolean;
   note: string;
   transactionFee: number;

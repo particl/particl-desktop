@@ -35,7 +35,7 @@ export class SendService {
     const anon: boolean = this.isAnon(rpcCall);
     const params: Array<any> = this.getSendParams(
       anon, tx.toAddress, tx.amount, tx.comment,
-      tx.narration, tx.privacy, tx.numsignatures, tx.subtractFeeFromAmount);
+      tx.narration, tx.ringsize, tx.numsignatures, tx.subtractFeeFromAmount);
 
     this._rpc.call('send' + rpcCall, params)
       .subscribe(
@@ -80,7 +80,7 @@ export class SendService {
         const anon: boolean = this.isAnon(rpcCall);
         const params: Array<any> = this.getSendParams(
           anon, stealthAddress,
-          tx.amount, '', '', tx.privacy, tx.numsignatures, tx.subtractFeeFromAmount);
+          tx.amount, '', '', tx.ringsize, tx.numsignatures, tx.subtractFeeFromAmount);
 
         this._rpc.call('send' + rpcCall, params).subscribe(
           success => this.rpc_send_success(success, stealthAddress, tx.amount),
