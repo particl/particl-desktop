@@ -53,7 +53,6 @@ export class SendConfirmationModalComponent implements OnInit {
     this.transactionType = this.send.input;
     this.sendAmount = new Amount(this.send.amount);
     this.receiverName = this.send.toLabel;
-    console.log(this.transactionType);
   }
 
   getTransactionFee() {
