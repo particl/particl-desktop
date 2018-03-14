@@ -8,6 +8,11 @@ export class Amount {
     return this.amount;
   }
 
+  public getAmountWithFee(fee: number) {
+    const total = this.amount + fee;
+    return this.truncateToDecimals(total, 8);
+  }
+
   /**
    * Returns integer part.
    * e.g:
