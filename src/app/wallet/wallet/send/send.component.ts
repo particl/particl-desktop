@@ -175,7 +175,6 @@ export class SendComponent {
 
     dialogRef.componentInstance.dialogContent = txt;
     dialogRef.componentInstance.send = this.send;
-    dialogRef.componentInstance.totalAmount = this.getBalance(this.send.input);
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       dialogRef.close();
