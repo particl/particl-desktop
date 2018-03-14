@@ -55,13 +55,6 @@ export class SendComponent implements OnInit {
 
   setFormDefaultValue() {
     this.send = new TransactionBuilder();
-
-    this.send.input = 'balance';
-    this.send.output = 'blind_balance';
-    this.send.currency = 'part';
-    this.send.ringsize = 8;
-    this.send.subtractFeeFromAmount = false;
-    this.send.numsignatures = 1;
   }
 
   ngOnInit() {
