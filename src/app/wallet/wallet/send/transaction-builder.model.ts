@@ -16,4 +16,14 @@ export class TransactionBuilder {
   subtractFeeFromAmount: boolean;
   note: string;
   transactionFee: number;
+
+  constructor() {
+    // set default value
+    this.input = 'balance';
+    this.output = 'blind_balance';
+    this.currency = 'part';
+    this.ringsize = 8;
+    this.subtractFeeFromAmount = false;
+    this.numsignatures = 1;
+  }
 }
