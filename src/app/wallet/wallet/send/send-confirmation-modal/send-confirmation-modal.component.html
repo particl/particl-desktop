@@ -49,8 +49,8 @@
   </div>
 
   <p class="fee-info">
-    Transaction fee:<span class="amount">{{transactionFee}} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-    Total amount:<span class="amount">{{totalAmount}} PART</span><span class="fiat">&asymp; 3.47 USD</span>
+    Transaction fee:<span class="amount">{{ transactionFee }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+    Total amount:<span class="amount">{{ sendAmount.getAmountWithFee(transactionFee) }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
   </p>
 
 </div>
