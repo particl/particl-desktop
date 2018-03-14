@@ -64,14 +64,15 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   filters: any = {
-    search:   undefined
+    search: undefined,
+    country: undefined
   };
 
   constructor(
     private category: CategoryService,
     private listingService: ListingService
   ) {
-    console.warn('overview created', this.countryList);
+    console.warn('overview created');
   }
 
   ngOnInit() {
@@ -94,14 +95,18 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     const max = this.pagination.maxPerPage;
 
     const search = this.filters.search;
-
-    this.listingService.search(pageNumber, max, null, search).take(1).subscribe((listings: Array<any>) => {
+    console.log(this.filters.country);
+    this.listingService.search(pageNumber, max, null, search, this.filters.country).take(1).subscribe((listings: Array<any>) => {
       // new page
       const page = {
         pageNumber: pageNumber,
         listings: listings.map(listing => new Template(listing))
       };
 
+      if (page.listings.length === 0) {
+        this.pages = [];
+        return ;
+      }
       // should we clear all existing pages? e.g search
       if (clear === true) {
         this.pages = [page];
@@ -169,6 +174,10 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   // Returns the pageNumber if the first page that is currently visible 
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
+  }
+
+  filterCountry(): void {
+    this.loadPage(1);
   }
 
   ngOnDestroy() {

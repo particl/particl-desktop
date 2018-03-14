@@ -9,9 +9,10 @@
 
     <!-- Filtering -->
     <div class="filtering" fxFlex="1 1 100%">
-      <mat-select placeholder="All countries" [formControl]="countries" multiple class="filter country TO_DO">
+      <!-- removed multiple as I guess currently the api returning data on the basis of only one selected country -->
+      <mat-select placeholder="All countries" [formControl]="countries" class="filter country" (change)="filterCountry()" [(ngModel)]="filters.country">
         <mat-option>All countries</mat-option>
-        <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}</mat-option>
+        <mat-option *ngFor="let country of countryList?.countries" [value]="country.name">{{ country.name }}</mat-option>
       </mat-select>
 
       <mat-select placeholder="Categories" [formControl]="categories" class="filter category TO_DO">
@@ -80,7 +81,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon> Load previous page
     </button>
 
-    <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
+    <div class="no-results" [hidden]="pages.length !== 0">
       <p>
         Sorry, no matching listings found
       </p>
