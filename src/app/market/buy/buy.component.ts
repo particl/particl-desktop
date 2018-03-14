@@ -162,38 +162,28 @@ export class BuyComponent implements OnInit {
 
   /* cart */
 
-  goToListings() {
+  goToListings(): void {
     this._router.navigate(['/market/overview']);
   }
 
-  removeFromCart(shoppingCartId: number) {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
-      console.log(res);
-      this.getCart();
-    });
+  removeFromCart(shoppingCartId: number): void {
+    this.cartService.removeItem(shoppingCartId).take(1)
+      .subscribe(res => this.getCart());
   }
   
-  clearCart() {
-    this.cartService.clearCart().subscribe(
-      (x) => console.log('cleared')
-    );
+  clearCart(): void {
+    this.cartService.clearCart().subscribe(res => this.getCart());
   }
 
-  getCart() {
+  getCart(): void {
     this.cartService.getCart().take(1).subscribe(cart => {
       this.cart = cart;
-      cart.shoppingCartItems.forEach(shoppingCartItem => {
-        this.listingService.get(shoppingCartItem.listingItemId).take(1).subscribe(listing => {
-          console.log('setting listing for shoppingCartItem id=' + shoppingCartItem.id)
-          shoppingCartItem.listing = new Listing(listing);
-        });
-      });
     });
   }
 
   /* shipping */
 
-  updateShippingProfile() {
+  updateShippingProfile(): void {
     if (this.shippingFormGroup.value.save) {
       delete this.shippingFormGroup.value.save;
       this._profileService.addShippingAddress(this.shippingFormGroup.value).take(1)
