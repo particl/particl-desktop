@@ -10,6 +10,7 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
+import { CountryList } from 'app/core/market/api/listing/countrylist.model';
 
 interface ISorting {
   value: string;
@@ -33,7 +34,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   // filters
   countries: FormControl = new FormControl();
-  countryList: Array<string> = ['Europe', 'North America', 'South America', 'Asia', 'Africa', 'Moon'];
+  countryList: CountryList = new CountryList();
 
   search: string;
 
@@ -70,7 +71,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     private category: CategoryService,
     private listingService: ListingService
   ) {
-    console.warn('overview created');
+    console.warn('overview created', this.countryList);
   }
 
   ngOnInit() {

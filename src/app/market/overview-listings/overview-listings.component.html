@@ -9,9 +9,9 @@
 
     <!-- Filtering -->
     <div class="filtering" fxFlex="1 1 100%">
-      <mat-select placeholder="Country" [formControl]="countries" multiple class="filter country TO_DO">
+      <mat-select placeholder="All countries" [formControl]="countries" multiple class="filter country TO_DO">
         <mat-option>All countries</mat-option>
-        <mat-option *ngFor="let country of countryList" [value]="country">{{ country }}</mat-option>
+        <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}</mat-option>
       </mat-select>
 
       <mat-select placeholder="Categories" [formControl]="categories" class="filter category TO_DO">
