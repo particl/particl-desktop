@@ -12,6 +12,7 @@ import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.c
 import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
 
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
+import { CartComponent } from './cart/cart.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { ReleaseNotificationComponent } from './release-notification/release-not
     StatusComponent,
     PercentageBarComponent,
     ConsoleModalComponent,
-    ReleaseNotificationComponent
+    ReleaseNotificationComponent,
+    CartComponent
   ],
   entryComponents: [
     ConsoleModalComponent,

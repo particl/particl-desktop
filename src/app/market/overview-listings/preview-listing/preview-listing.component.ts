@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { ListingComponent } from 'app/market/listing/listing.component';
@@ -14,20 +14,15 @@ import { Listing } from '../../../core/market/api/listing/listing.model';
   templateUrl: './preview-listing.component.html',
   styleUrls: ['./preview-listing.component.scss']
 })
-export class PreviewListingComponent implements OnInit {
+export class PreviewListingComponent {
 
   @Input() listing: Listing;
 
-  constructor(
-    private dialog: MatDialog,
-    private cartService: CartService,
-    private favoritesService: FavoritesService,
-    private snackbar: SnackbarService,
-    private marketState: MarketStateService
-  ) { }
-
-  ngOnInit() {
-    // console.log(this.listing);
+  constructor(private dialog: MatDialog,
+              private cartService: CartService,
+              private favoritesService: FavoritesService,
+              private snackbar: SnackbarService,
+              private marketState: MarketStateService) {
   }
 
   openListing() {
@@ -56,12 +51,13 @@ export class PreviewListingComponent implements OnInit {
         this.snackbar.open(`${this.listing.title} Removed from Favorite list`);
         this.listing.favorite = false;
       });
+    } else {
+      this.favoritesService.addItem(this.listing.id).take(1).subscribe(res => {
+        this.updateFavorites();
+        this.snackbar.open(`${this.listing.title} Add to Favorite list`);
+        this.listing.favorite = true;
+      });
     }
-    this.favoritesService.addItem(this.listing.id).take(1).subscribe(res => {
-      this.updateFavorites();
-      this.snackbar.open(`${this.listing.title} Add to Favorite list`);
-      this.listing.favorite = true;
-    });
   }
 
   updateFavorites() {

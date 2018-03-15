@@ -16,14 +16,14 @@ export class MarketStateService extends StateService implements OnDestroy {
     // fetch categories
     this.registerStateCall('category', 5 * 1000, ['list']);
 
-    // No need to register favorite service
-     this.registerStateCall('favorite', null, ['list', 1]);
+    this.registerStateCall('favorite', null, ['list', 1]);
+
+    this.registerStateCall('cartitem', null, ['list', 1, true])
   }
 
   /** Register a state call, executes every X seconds (timeout) */
   registerStateCall(method: string, timeout: number, params?: Array<any> | null): void {
       let firstError = true;
-
       // loop procedure
       const _call = () => {
         if (this.destroyed) {
