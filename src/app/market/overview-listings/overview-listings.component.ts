@@ -94,28 +94,28 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     const max = this.pagination.maxPerPage;
 
     const search = this.filters.search;
-    console.log(this.filters.sort)
-    this.listingService.search(pageNumber, max, null, search, this.filters.sort).take(1).subscribe((listings: Array<any>) => {
-      console.log(listings);
-      // new page
-      const page = {
-        pageNumber: pageNumber,
-        listings: listings.map(listing => new Template(listing))
-      };
+    const sort = this.filters.sort;
 
-      // should we clear all existing pages? e.g search
-      if (clear === true) {
-        this.pages = [page];
-        this.noMoreListings = false;
-      } else { // infinite scroll
-        if (listings.length > 0) {
-          this.pushNewPage(page);
-        } else {
-          this.noMoreListings = true;
+    this.listingService.search(pageNumber, max, null, search, sort)
+      .take(1).subscribe((listings: Array<any>) => {
+        // new page
+        const page = {
+          pageNumber: pageNumber,
+          listings: listings.map(listing => new Template(listing))
+        };
+
+        // should we clear all existing pages? e.g search
+        if (clear === true) {
+          this.pages = [page];
+          this.noMoreListings = false;
+        } else { // infinite scroll
+          if (listings.length > 0) {
+            this.pushNewPage(page);
+          } else {
+            this.noMoreListings = true;
+          }
         }
-      }
-
-    })
+      })
   }
 
   pushNewPage(page: IPage) {
@@ -171,10 +171,6 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
   }
-
-  filter(): void {
-    this.loadPage(1)
-   }
 
   ngOnDestroy() {
     this.destroyed = true;
