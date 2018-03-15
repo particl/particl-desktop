@@ -9,9 +9,9 @@ export class Cart {
   }
 
   get subTotal(): Amount {
-    let total: number = 0.0;
+    let total = 0.0;
     this.shoppingCartItems.map(shoppingCartItem => {
-      let object: any = shoppingCartItem.ListingItem;
+      const object: any = shoppingCartItem.ListingItem;
       // if listing is loaded (async)
       if (object.PaymentInformation) {
         total += object.PaymentInformation.ItemPrice.basePrice

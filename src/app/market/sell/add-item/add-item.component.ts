@@ -89,7 +89,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   processPictures(event: any) {
     Array.from(event.target.files).map((file: File) => {
       const reader = new FileReader();
-      reader.onload = event => {
+      reader.onload = _event => {
         this.pictures.push(reader.result.split('base64,')[1]);
         this.log.d('added picture', file.name);
       };

@@ -15,9 +15,9 @@ interface IDate {
 })
 export class ListingComponent implements OnInit {
 
-  pictures: Array<any> = new Array();
-  price: number;
-  date: string;
+  public pictures: Array<any> = new Array();
+  public price: any;
+  public date: string;
 
   constructor(
     private dialogRef: MatDialogRef<ListingComponent>,
