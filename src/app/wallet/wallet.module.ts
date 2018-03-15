@@ -11,6 +11,7 @@ import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo
 import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
 import { ZapColdstakingComponent } from './overview/widgets/coldstake/zap-coldstaking/zap-coldstaking.component';
 import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-coldstaking/revert-coldstaking.component';
+import { SellerOverviewComponent } from './overview/seller-overview/seller-overview.component';
 
 import 'hammerjs';
 
@@ -24,7 +25,8 @@ import { routing } from './wallet.routing';
     StakinginfoComponent,
     ColdstakeComponent,
     ZapColdstakingComponent,
-    RevertColdstakingComponent
+    RevertColdstakingComponent,
+    SellerOverviewComponent
   ],
   imports: [
     CommonModule,
