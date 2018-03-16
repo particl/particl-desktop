@@ -147,7 +147,6 @@ exports.check = function() {
 
 exports.stop = function() {
   return new Promise((resolve, reject) => {
-
     if (daemon) {
       rpc.call('stop', null, (error, response) => {
         if (error) {
