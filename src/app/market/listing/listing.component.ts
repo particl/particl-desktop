@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+
 import { Template } from 'app/core/market/api/template/template.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
@@ -20,6 +22,7 @@ export class ListingComponent implements OnInit {
     private dialogRef: MatDialogRef<ListingComponent>,
     private cartService: CartService,
     private favoritesService: FavoritesService,
+    private marketState: MarketStateService
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -40,7 +43,8 @@ export class ListingComponent implements OnInit {
       this.price = {
         int:     price.toFixed(0),
         cents:  (price % 1).toFixed(8),
-        escrow: (price * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
+        escrow: (price * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8),
+        usd: +(price * this.marketState.get('currencyprice')[0].price).toFixed(2)
       };
     }
 
