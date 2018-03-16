@@ -42,7 +42,7 @@ export class PreviewListingComponent implements OnInit {
   }
 
   addToCart(id) {
-    this.cartService.addItem(id);
+    this.cartService.addItem(id).subscribe();
   }
 
   addToFavorites(id) {

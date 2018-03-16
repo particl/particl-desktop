@@ -53,7 +53,9 @@
           <table class="cart-items">
 
             <thead>
-              <tr><th>Items</th><th>Price</th><th>Quantity</th><th class="text-right">Total</th><th></th></tr>
+              <!-- @TODO if quantity required then add this label before total  -->
+              <!-- <th>Quantity</th> -->
+              <tr><th>Items</th><th>Price</th><th class="text-right">Total</th><th></th></tr>
             </thead>
 
             <tbody>
@@ -61,30 +63,31 @@
               <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
                 <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                   <div class="image" fxFlex="0 0 115px">
-                    <img src="data:image/gif;base64,{{shoppingCartItem.listing?.thumbnail?.data}}">
+                    <img src="data:image/gif;base64,{{shoppingCartItem.thumbnail?.data}}">
                   </div>
                   <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                     <div class="title">
-                      {{shoppingCartItem.listing?.title}}
+                      {{shoppingCartItem.title}}
                     </div>
                     <div class="category">
-                      {{shoppingCartItem.listing?.category.name}}
+                      {{shoppingCartItem.name}}
                     </div>
                   </div>
                 </td>
                 <td class="price cell">
-                  {{shoppingCartItem.listing?.basePrice.getIntegerPart()}}.<small>{{shoppingCartItem.listing?.basePrice.getFractionalPart()}}</small> PART
+                  {{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART
                 </td>
-                <td class="quantity cell TO_DO">
+                <!-- @TODO if quantity required then we can uncomment the code   -->
+               <!--  <td class="quantity cell TO_DO">
                   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                    <!--button mat-button class="small">-</button-->
+                    <button mat-button class="small">-</button>
                     <mat-form-field class="auto-width">
                       <input matInput type="number" value="1" min="1" formControlName="firstCtrl">
                     </mat-form-field>
-                    <!--button mat-button class="small">+</button-->
+                    <button mat-button class="small">+</button>
                   </div>
-                </td>
-                <td class="total cell TO_DO">202.<small>4203</small> PART</td>
+                </td> -->
+                <td class="total cell">{{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART</td>
                 <td class="remove">
                   <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(shoppingCartItem.listingItemId)">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
