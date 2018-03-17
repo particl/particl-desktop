@@ -107,10 +107,6 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
           listings: listings.map(listing => new Template(listing))
         };
 
-        if (page.listings.length === 0) {
-          this.pages = [];
-          return ;
-        }
         // should we clear all existing pages? e.g search
         if (clear === true) {
           this.pages = [page];
