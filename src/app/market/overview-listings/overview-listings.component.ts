@@ -10,6 +10,8 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Favorite } from '../../core/market/api/favorites/favorite.model';
 import { Listing } from '../../core/market/api/listing/listing.model';
+import { CountryList } from 'app/core/market/api/listing/countrylist.model';
+
 
 interface ISorting {
   value: string;
@@ -30,10 +32,11 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('overview-listings.component');
   private destroyed: boolean = false;
+  public isLoading: boolean = false;
 
   // filters
   countries: FormControl = new FormControl();
-  countryList: Array<string> = ['Europe', 'North America', 'South America', 'Asia', 'Africa', 'Moon'];
+  countryList: CountryList = new CountryList();
 
   search: string;
 
@@ -63,7 +66,8 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   };
 
   filters: any = {
-    search:   undefined
+    search: undefined,
+    country: undefined
   };
 
   constructor(
@@ -91,13 +95,17 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
+    // set loading aninmation
+    this.isLoading = true;
+    
+    // params
     const max = this.pagination.maxPerPage;
-
     const search = this.filters.search;
-
-    this.listingService.search(pageNumber, max, null, search)
-      .take(1)
-      .subscribe((listings: Array<any>) => {
+    const country = this.filters.country;
+    
+    this.listingService.search(pageNumber, max, null, search, country)
+      .take(1).subscribe((listings: Array<any>) => {
+        this.isLoading = false;
         // new page
         const page = {
           pageNumber: pageNumber,
@@ -108,6 +116,11 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
             return data;
           })
         };
+        // TODO: is this needed?
+        if (page.listings.length === 0) {
+          this.pages = [];
+          return ;
+        }
 
         // should we clear all existing pages? e.g search
         if (clear === true) {
