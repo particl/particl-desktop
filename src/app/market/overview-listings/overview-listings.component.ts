@@ -97,12 +97,12 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   loadPage(pageNumber: number, clear?: boolean) {
     // set loading aninmation
     this.isLoading = true;
-    
+
     // params
     const max = this.pagination.maxPerPage;
     const search = this.filters.search;
     const country = this.filters.country;
-    
+
     this.listingService.search(pageNumber, max, null, search, country)
       .take(1).subscribe((listings: Array<any>) => {
         this.isLoading = false;
@@ -116,11 +116,6 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
             return data;
           })
         };
-        // TODO: is this needed?
-        if (page.listings.length === 0) {
-          this.pages = [];
-          return ;
-        }
 
         // should we clear all existing pages? e.g search
         if (clear === true) {

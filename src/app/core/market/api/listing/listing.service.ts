@@ -22,7 +22,7 @@ export class ListingService {
       profileId || 'ALL',
       null, // minPrice
       null, // maxPrice
-      country, // country
+      country ? country.toUpperCase() : null, // country
       null, // shippingDestination
       search || null, // search
       true // withRelated
