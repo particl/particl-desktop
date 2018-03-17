@@ -495,3 +495,11 @@ input {
 .capitalize {
   text-transform: capitalize;
 }
+
+// ------ QR-Code ------ //
+
+.qr-code {
+  img {
+    display: inline !important;
+  }
+}

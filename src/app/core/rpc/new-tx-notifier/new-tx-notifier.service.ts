@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { NotificationService } from 'app/core/notification/notification.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
 @Injectable()
 export class NewTxNotifierService implements OnDestroy {
@@ -16,23 +17,21 @@ export class NewTxNotifierService implements OnDestroy {
 
   constructor(
     private _rpc: RpcService,
+    private _rpcState: RpcStateService,
     private _notification: NotificationService
   ) {
 
     this.log.d('tx notifier service running!');
-    // TODO: when state moves into its own service, fix it here
-    // TODO: throttle (block sync)..
-    this._rpc.state.observe('blocks').
-      throttle(val => Observable.interval(30000/*ms*/)).
-      takeWhile(() => !this.destroyed).subscribe(
-      (blocks: number) => {
-        this.newTransaction();
-      }
-      );
+    this._rpcState.observe('getwalletinfo', 'txcount')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(txcount => {
+        this.log.d(`--- update by txcount${txcount} ---`);
+        this.checkForNewTransaction();
+      });
   }
 
   // TODO: trigger by ZMQ in the future
-  newTransaction(): void {
+  checkForNewTransaction(): void {
     this.log.d('newTransaction()');
 
     const options = {

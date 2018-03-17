@@ -35,7 +35,6 @@ class SafeIpcRenderer {
           throw new Error(`Blocked access to unknown channel
             ${channel} ${validChannel} from the renderer`);
         }
-
         return fn.apply(ipcRenderer, [channel].concat(args));
       };
     };
@@ -47,16 +46,18 @@ class SafeIpcRenderer {
     this.sendToHost         = protect(ipcRenderer.sendToHost);
     this.removeListener     = protect(ipcRenderer.removeListener);
     this.removeAllListeners = protect(ipcRenderer.removeAllListeners);
+    this.listenerCount      = protect(ipcRenderer.listenerCount);
   }
 }
 
 window.ipc = new SafeIpcRenderer([
   'front-choosewallet',
+  'zmq',
   'front-walletready',
   'rpc-channel',
   'rx-ipc-check-reply:rpc-channel',
   'rx-ipc-check-listener',
-  'rx-ipc-notification',
+  'notification',
   'rx-ipc-check-reply:front-choosewallet'
 ]);
 
