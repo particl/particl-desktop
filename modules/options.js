@@ -16,28 +16,43 @@ let _options = {};
 **   rpcpassword: pass
 ** }
 */
+
+function isVerboseLevel(arg) {
+  let level = 0;
+  let notVerbose = false;
+  [...arg].map(char => char === 'v' ? level++ : notVerbose = true);
+  return notVerbose ? false : level;
+}
+
 exports.parse = function() {
 
   let options = {};
   if (process.argv[0].match(/[Ee]lectron/)) {
-    // striping 'electron .' from argv
-    process.argv = process.argv.splice(2);
+    process.argv = process.argv.splice(2); /* striping 'electron .' from argv */
   } else {
-    // striping /path/to/particl from argv
-    process.argv = process.argv.splice(1);
+    process.argv = process.argv.splice(1); /* striping /path/to/particl from argv */
   }
 
-  process.argv.forEach((arg, index) => {
-    if (arg.includes('=')) {
-      arg = arg.split('=');
-      options[arg[0].substr(1)] = arg[1];
-    } else if (arg[1] === '-'){
-      // double dash command
-      options[arg.substr(2)] = true;
-    } else if (arg[0] === '-') {
-      // simple dash command
-      options[arg.substr(1)] = true;
+  process.argv.map((arg, index) => {
+
+    let nDashes = arg.lastIndexOf('-') + 1;
+    arg = arg.substr(nDashes);
+
+    if (nDashes === 2) { /* double-dash: desktop-only argument */
+      process.argv.splice(process.argv.indexOf(arg), 1);
+      let verboseLevel = isVerboseLevel(arg);
+      if (verboseLevel) {
+        options['verbose'] = verboseLevel;
+        return ;
+      }
+    } else if (nDashes === 1) { /* single-dash: core argument */
+      if (arg.includes('=')) {
+        arg = arg.split('=');
+        options[arg[0]] = arg[1];
+        return ;
+      }
     }
+    options[arg] = true;
   });
 
   options.port = options.rpcport
