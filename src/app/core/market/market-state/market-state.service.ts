@@ -15,13 +15,12 @@ export class MarketStateService extends StateService implements OnDestroy {
     this.log.d('MarketState: initialized');
     // fetch categories
     this.registerStateCall('category', 5 * 1000, ['list']);
+    this.registerStateCall('cartitem', null, ['list', 1, true])
   }
 
   /** Register a state call, executes every X seconds (timeout) */
   registerStateCall(method: string, timeout: number, params?: Array<any> | null): void {
-    if (timeout) {
       let firstError = true;
-
       // loop procedure
       const _call = () => {
         if (this.destroyed) {
@@ -34,19 +33,21 @@ export class MarketStateService extends StateService implements OnDestroy {
               this.stateCallSuccess(method, success);
 
               // re-start loop after timeout
-              setTimeout(_call, timeout);
+              if (timeout) {
+                setTimeout(_call, timeout);
+              }
             },
             error => {
               this.stateCallError(method, error, firstError);
-
-              setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
+              if (timeout) {
+                setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
+              }
               firstError = false;
             });
       };
 
       // initiate loop
       _call();
-    }
   }
 
     /** Updates the state whenever a state call succeeds */

@@ -13,7 +13,7 @@ export class ListingService {
 
   }
 
-  search(page: number, pageLimit: number, profileId: number | string, search: string) {
+  search(page: number, pageLimit: number, profileId: number | string, search: string, country?: any) {
     let params = [
       'search',
       page,
@@ -24,7 +24,7 @@ export class ListingService {
       profileId || "ALL",
       null, // minPrice
       null, // maxPrice
-      null, // country
+      country, // country
       null, // shippingDestination
       search || null, // search
       true // withRelated
