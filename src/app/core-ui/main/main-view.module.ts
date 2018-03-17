@@ -12,6 +12,7 @@ import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.c
 import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
 
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
+import { ClientVersionService } from '../../core/http/client-version.service';
 
 
 @NgModule({
@@ -36,6 +37,9 @@ import { ReleaseNotificationComponent } from './release-notification/release-not
   entryComponents: [
     ConsoleModalComponent,
     ReleaseNotificationComponent
+  ],
+  providers: [
+    ClientVersionService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
