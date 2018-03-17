@@ -43,8 +43,7 @@
   </div><!-- .control-bar -->
 </app-header>
 
-
-
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length < 1"></mat-progress-bar>
 <div class="container-block" fxLayout="row">
 
   <!-- div class="sidebar" fxFlex="25%">
@@ -68,7 +67,7 @@
   </div--><!-- .sidebar -->
 
 
-  <div class="content disable-select" fxLayout="row wrap" fxLayoutAlign="start start" 
+  <div class="content disable-select" fxLayout="row wrap" fxLayoutAlign="start start"
     infiniteScroll
     [infiniteScrollContainer]="pagination.infinityScrollSelector"
     [fromRoot]="true"
@@ -102,3 +101,4 @@
   </div><!-- .content -->
 
 </div>
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length > 0"></mat-progress-bar>
