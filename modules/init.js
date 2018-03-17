@@ -86,7 +86,9 @@ electron.app.on('before-quit', function beforeQuit(event) {
   rpc.destroy(); 
   notification.destroy();
 
-  daemon.stop();
+  daemon.stop().then(() => {
+    electron.app.quit();
+  })
 });
 
 electron.app.on('quit', (event, exitCode) => {
