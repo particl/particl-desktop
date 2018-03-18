@@ -15,7 +15,7 @@ import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 
 import { AddressHelper } from '../../../core/util/utils';
-import { TransactionBuilder } from './transaction-builder.model';
+import { TransactionBuilder, TxType } from './transaction-builder.model';
 
 
 @Component({
@@ -65,28 +65,46 @@ export class SendComponent implements OnInit {
   /** Select tab */
   selectTab(tabIndex: number): void {
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
-    this.send.input = 'balance';
+    this.send.input = TxType.PUBLIC;
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
-      this.send.output = 'blind_balance';
+      this.send.output = TxType.BLIND;
       this.verifyAddress();
     }
     this.updateAmount();
   }
 
   /** Get current account balance (Public / Blind / Anon) */
-  getBalance(account: string): number {
-    return this._rpcState.get('getwalletinfo')[account] || 0;
+  getBalance(account: TxType): number {
+    const balance = this.txTypeToBalanceType(account);
+    return this._rpcState.get('getwalletinfo')[balance] || 0;
   }
 
-  getBalanceString(account: string): string {
-    return this._rpcState.get('getwalletinfo')[account];
+  getBalanceString(account: TxType): string {
+    const balance = this.txTypeToBalanceType(account);
+    return this._rpcState.get('getwalletinfo')[balance];
   }
 
-  checkBalance(account: string): boolean {
-    if (account === 'blind_balance') {
+  checkBalance(account: TxType): boolean {
+    if (account === TxType.BLIND) {
       return parseFloat(this.getBalanceString(account)) < 0.0001 && parseFloat(this.getBalanceString(account)) > 0;
     }
+  }
+
+  private txTypeToBalanceType(type: TxType): string {
+    let r: string;
+    switch (type) {
+      case TxType.PUBLIC:
+        r = 'balance';
+        break;
+      case TxType.BLIND:
+        r = 'blind_balance';
+        break;
+      case TxType.ANON:
+        r = 'anon_balance';
+        break;
+    }
+    return r;
   }
 
   /** Amount validation functions. */
@@ -99,7 +117,7 @@ export class SendComponent implements OnInit {
 
   verifyAmount(): void {
 
-    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '' || this.send.amount === null) {
+    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.amount === null) {
       this.send.validAmount = undefined;
       return;
     }
@@ -120,7 +138,7 @@ export class SendComponent implements OnInit {
 
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
-    if (this.send.input !== 'balance' && this.addressHelper.testAddress(this.send.toAddress, 'public')) {
+    if (this.send.input !== TxType.PUBLIC && this.addressHelper.testAddress(this.send.toAddress, 'public')) {
       return false;
     }
 
@@ -190,7 +208,7 @@ export class SendComponent implements OnInit {
 
   /** Payment function */
   pay(): void {
-    if (this.send.input === '' ) {
+    if (!this.send.input) {
       this.flashNotification.open('You need to select an input type (public, blind or anon)!');
       return;
     }
@@ -202,7 +220,7 @@ export class SendComponent implements OnInit {
       this.send.output = this.send.input;
 
       // Check if stealth address if output is private
-      if (this.send.output === 'private' && !this.addressHelper.testAddress(this.send.toAddress, 'private')) {
+      if (this.send.output === TxType.ANON && !this.addressHelper.testAddress(this.send.toAddress, 'private')) {
         this.flashNotification.open('Stealth address required for private transactions!');
         return;
       }
@@ -210,7 +228,7 @@ export class SendComponent implements OnInit {
     // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
 
-      if (this.send.output === '') {
+      if (!this.send.output) {
         this.flashNotification.open('You need to select an output type (public, blind or anon)!');
         return;
       }
@@ -254,7 +272,7 @@ export class SendComponent implements OnInit {
     const dc = d.componentInstance;
     dc.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
     dc.filter = (
-      ['anon_balance', 'blind_balance'].includes(this.send.input) ? 'Private' : 'All types');
+      [TxType.ANON, TxType.BLIND].includes(this.send.input) ? 'Private' : 'All types');
     dc.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
       d.close();

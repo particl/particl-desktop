@@ -35,8 +35,8 @@ export class SendService {
     const anon: boolean = this.isAnon(rpcCall);
     const params: Array<any> = this.getSendParams(
       anon, tx.toAddress, tx.amount, tx.comment,
-      tx.narration, tx.ringsize, tx.numsignatures, tx.subtractFeeFromAmount);
-
+      tx.narration, +tx.ringsize, tx.numsignatures, tx.subtractFeeFromAmount);
+      console.log(params);
     this._rpc.call('send' + rpcCall, params)
       .subscribe(
         success => this.rpc_send_success(success, tx.toAddress, tx.amount),
@@ -48,7 +48,7 @@ export class SendService {
       return new Observable((observer) => {
         this.getDefaultStealthAddress().take(1).subscribe(
           (stealthAddress: string) => {
-            this._rpc.call('sendtypeto', ['part', 'part', [{
+            this._rpc.call('sendtypeto', [tx.input, tx.output, [{
               subfee: true,
               address: stealthAddress,
               amount: tx.amount,
@@ -59,7 +59,7 @@ export class SendService {
           });
       });
     } else {
-      return this._rpc.call('sendtypeto', ['part', 'part', [{
+      return this._rpc.call('sendtypeto', [tx.input, tx.output, [{
         subfee: true,
         address: tx.toAddress,
         amount: tx.amount,
@@ -80,7 +80,7 @@ export class SendService {
         const anon: boolean = this.isAnon(rpcCall);
         const params: Array<any> = this.getSendParams(
           anon, stealthAddress,
-          tx.amount, '', '', tx.ringsize, tx.numsignatures, tx.subtractFeeFromAmount);
+          tx.amount, '', '', +tx.ringsize, tx.numsignatures, tx.subtractFeeFromAmount);
 
         this._rpc.call('send' + rpcCall, params).subscribe(
           success => this.rpc_send_success(success, stealthAddress, tx.amount),
@@ -160,13 +160,13 @@ export class SendService {
     anon: boolean, address: string, amount: number, comment: string,
     narration: string, ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
 
-    const params: Array<any> = [address, amount, '', '', substractfeefromamount];
+    const params: Array<any> = [address, +amount, '', '', substractfeefromamount];
 
     params.push(!!narration ? narration : '');
 
     if (anon) {
       // comment-to empty
-      params.push(this.getRingSize(ringsize));
+      params.push(+ringsize);
       // params.push(numsignatures);
     }
 
@@ -180,16 +180,4 @@ export class SendService {
     return ['anontopart', 'anontoanon', 'anontoblind'].includes(input)
   }
 
-  /**
-  * Converts slider logic (0 -> 100) to actual ring size for RPC parameters.
-  */
-  getRingSize(ringsize: number): number {
-    if (ringsize === 100) {
-      return 16;
-    } else if (ringsize === 50) {
-      return 8;
-    } else if (ringsize === 10) {
-      return 4;
-    }
-  }
 }

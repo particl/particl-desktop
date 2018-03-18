@@ -6,7 +6,7 @@
 <div mat-dialog-content class="dialog-content">
   <div class="tx-info">
     <!-- if public -->
-    <div class="public" *ngIf="transactionType === 'balance'">
+    <div class="public" *ngIf="transactionType === 'part'">
       <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-public"></mat-icon>
       <div class="title">Public transaction</div>
       <p class="help-text">
@@ -14,14 +14,14 @@
       </p>
     </div>
     <!-- if blind / anon-->
-    <div class="blind" *ngIf="transactionType === 'blind_balance'">
+    <div class="blind" *ngIf="transactionType === 'blind'">
       <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-blind"></mat-icon>
       <div class="title">Blind transaction</div>
       <p class="help-text">
         Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
       </p>
     </div>
-    <div class="anon" *ngIf="transactionType === 'anon_balance'">
+    <div class="anon" *ngIf="transactionType === 'anon'">
       <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
       <div class="title">Anon transaction</div>
       <p class="help-text">
@@ -45,6 +45,7 @@
   <div class="receiver-info">
     <!--if address saved in Address Book, display its label. if not, hide it -->
     <div class="label" *ngIf="receiverName !== ''">{{ receiverName }}</div>
+    <div class="label" *ngIf="!sendAddress">Balance Transfer</div>
     <code class="address"> {{ sendAddress }} </code>
   </div>
 

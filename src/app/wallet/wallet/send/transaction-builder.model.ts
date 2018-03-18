@@ -1,6 +1,12 @@
+export enum TxType {
+  PUBLIC = 'part',
+  BLIND = 'blind',
+  ANON = 'anon'
+}
+
 export class TransactionBuilder {
-  input: string;
-  output: string;
+  input: TxType;
+  output: TxType;
   toAddress: string;
   toLabel: string;
   address: string;
@@ -19,8 +25,8 @@ export class TransactionBuilder {
 
   constructor() {
     // set default value
-    this.input = 'balance';
-    this.output = 'blind_balance';
+    this.input = TxType.PUBLIC;
+    this.output = TxType.BLIND;
     this.currency = 'part';
     this.ringsize = 8;
     this.subtractFeeFromAmount = false;
