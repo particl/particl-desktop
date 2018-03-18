@@ -33,13 +33,18 @@ exports.parse = function() {
     process.argv = process.argv.splice(1); /* striping /path/to/particl from argv */
   }
 
-  process.argv.map((arg, index) => {
+  // make a copy of process.argv, because we'll be changing it
+  // which messes with the map operator
+  const args = process.argv.slice(0); 
 
+  args.map((arg, index) => {
     let nDashes = arg.lastIndexOf('-') + 1;
+    const argIndex = process.argv.indexOf(arg);
     arg = arg.substr(nDashes);
 
     if (nDashes === 2) { /* double-dash: desktop-only argument */
-      process.argv.splice(process.argv.indexOf(arg), 1);
+      // delete param, so it doesn't get passed to particl-core
+      process.argv.splice(argIndex, 1);
       let verboseLevel = isVerboseLevel(arg);
       if (verboseLevel) {
         options['verbose'] = verboseLevel;
