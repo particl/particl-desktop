@@ -52,7 +52,7 @@ export class SendService {
               subfee: true,
               address: stealthAddress,
               amount: tx.amount,
-            }], '', '', 8, 64, true]).subscribe(fee => {
+            }], '', '', tx.ringsize, 64, true]).subscribe(fee => {
               observer.next(fee);
               observer.complete();
             });
@@ -63,7 +63,7 @@ export class SendService {
         subfee: true,
         address: tx.toAddress,
         amount: tx.amount,
-      }], '', '', 8, 64, true]).map(
+      }], '', '', tx.ringsize, 64, true]).map(
         fee => fee);
     }
   }
@@ -145,8 +145,6 @@ export class SendService {
     */
   getSendRPCCall(input: string, output: string) {
 
-    input = input.replace('_balance', '').replace('balance', 'part');
-    output = output.replace('_balance', '').replace('balance', 'part');
     if (input === 'part' && output === 'part') {
       return 'toaddress';
     } else {
