@@ -11,7 +11,7 @@ import { TransactionBuilder } from '../transaction-builder.model';
 
 import { SendMockService } from '../../../../_test/wallet-test/send-test/send-mock.service';
 
-fdescribe('SendConfirmationModalComponent', () => {
+describe('SendConfirmationModalComponent', () => {
   let component: SendConfirmationModalComponent;
   let fixture: ComponentFixture<SendConfirmationModalComponent>;
 
