@@ -20,8 +20,6 @@ export class TransactionBuilder {
   currency: string;
   ringsize: number;
   subtractFeeFromAmount: boolean;
-  note: string;
-  transactionFee: number;
 
   constructor() {
     // set default value

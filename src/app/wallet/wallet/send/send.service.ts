@@ -29,7 +29,7 @@ export class SendService {
   /* Sends a transaction */
   // @TODO: estimate fee should be change
   public sendTransaction(tx: TransactionBuilder) {
-    tx.comment = tx.narration = tx.note;
+    tx.comment = null;
 
     const rpcCall: string = this.getSendRPCCall(tx.input, tx.output);
     const anon: boolean = this.isAnon(rpcCall);

@@ -156,7 +156,7 @@
         <div class="section narration advanced" *ngIf="advanced">
           <mat-form-field class="full-width larger" floatPlaceholder="never">
             <input #narration type="text" matInput name="sendNote" placeholder="Narration (optional)" maxlength="24"
-                   [(ngModel)]="send.note">
+                   [(ngModel)]="send.narration">
             <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
           </mat-form-field>
           <p class="widget-help">
