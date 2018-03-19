@@ -26,7 +26,7 @@ export class TransactionBuilder {
   constructor() {
     // set default value
     this.input = TxType.PUBLIC;
-    this.output = TxType.BLIND;
+    this.output = TxType.PUBLIC; // set it public for default send payment tab.
     this.currency = 'part';
     this.ringsize = 8;
     this.subtractFeeFromAmount = false;

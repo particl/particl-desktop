@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material';
 
 import { SendService } from '../send.service';
 
-import { Amount } from '../../../../core/util/utils';
+import { Amount, Fee } from '../../../../core/util/utils';
 import { TransactionBuilder } from '../transaction-builder.model';
 
 @Component({
@@ -23,8 +23,7 @@ export class SendConfirmationModalComponent implements OnInit {
   sendAmount: Amount = new Amount(0);
   sendAddress: string = '';
   receiverName: string = '';
-  transactionFee: number = 0;
-  totalAmount: number = 0;
+  transactionAmount: Fee = new Fee(0);
 
   constructor(private dialogRef: MatDialogRef<SendConfirmationModalComponent>,
               private sendService: SendService) {
@@ -57,7 +56,7 @@ export class SendConfirmationModalComponent implements OnInit {
 
   getTransactionFee() {
     this.sendService.getTransactionFee(this.send).subscribe(fee => {
-      this.transactionFee = fee.fee
+      this.transactionAmount = new Fee(fee.fee);
     });
   }
 

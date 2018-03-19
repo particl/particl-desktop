@@ -66,6 +66,7 @@ export class SendComponent implements OnInit {
   selectTab(tabIndex: number): void {
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
     this.send.input = TxType.PUBLIC;
+    this.send.output = TxType.PUBLIC;
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
       this.send.output = TxType.BLIND;
