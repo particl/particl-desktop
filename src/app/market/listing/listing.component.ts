@@ -22,7 +22,7 @@ export class ListingComponent implements OnInit {
     private dialogRef: MatDialogRef<ListingComponent>,
     private cartService: CartService,
     private favoritesService: FavoritesService,
-    private marketState: MarketStateService
+    private marketState: MarketStateService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
