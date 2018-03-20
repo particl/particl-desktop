@@ -12,9 +12,7 @@ import { ManageWidgetsComponent } from '../../modals/manage-widgets/manage-widge
 })
 export class OverviewComponent implements OnInit {
   testnet: boolean = false;
-  constructor(private rpcState: RpcStateService) { }
-
-  constructor( public dialog: MatDialog, ) {}
+  constructor(public dialog: MatDialog, private rpcState: RpcStateService) { }
 
   openWidgetManager(): void {
     const dialogRef = this.dialog.open(ManageWidgetsComponent);
