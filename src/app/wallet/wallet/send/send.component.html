@@ -25,12 +25,13 @@
       <!-- Select "FROM" balance/account -->
       <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" fxLayout="column"
                        fxLayoutGap="10px" (change)="updateAmount()">
-        <mat-radio-button class="balance" value="part" checked="checked" (click)="send.output = 'blind'" fxFlex>
+        <mat-radio-button class="balance" value="part" checked="checked"
+                          (click)="send.output = (type === 'sendPayment')? 'part': 'blind'" fxFlex>
           <div class="name">Public</div>
           <div class="desc">Available balance: <span class="amount">{{ getBalance('part') }}</span></div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="blind" fxFlex (click)="send.output = 'part'">
-          <div class="name">Blind</div>
+          <div class="name">Blind 1</div>
           <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')" class="amount">{{ getBalance('blind') }}</span>
             <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
                       matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
