@@ -8,9 +8,9 @@
   <div class="balance-item" fxFlex="17">
     <app-balance type="blind_balance"></app-balance>
   </div>
-  <!--div class="balance-item" fxFlex="17">
+  <div *ngIf="testnet" class="balance-item" fxFlex="17">
     <app-balance type="anon_balance"></app-balance>
-  </div-->
+  </div>
   <div class="balance-item" fxFlex="17">
     <app-balance type="staked_balance"></app-balance>
   </div>
@@ -19,15 +19,15 @@
 
 <div class="overview" fxLayout="row" fxLayoutGap="40px">
   <div class="overview-content" fxFlex="67">
-
-    <div class="seller-overview TO_DO">
+    <!-- @TODO comment out the code for widget for total listing, sell orders -->
+    <!-- <div class="seller-overview TO_DO">
       <app-header>
         <ul class="header-nav">
           <li>Seller overview</li>
-          <!--li class="buttons">
+          li class="buttons">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
             <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
-          </li-->
+          </li
         </ul>
       </app-header>
       <mat-card fxLayout>
@@ -41,7 +41,7 @@
             <div class="item"><div class="value">1</div><div class="desc">Expired</div></div>
             <div class="item"><div class="value">0</div><div class="desc">Unpublished</div></div>
           </div>
-        </div><!-- .list.listings -->
+        </div>.list.listings
         <div class="list orders" fxFlex="1 1 50%" fxLayout>
           <div class="total" fxFlex="1 1 40%">
             <div class="value">12</div>
@@ -52,9 +52,9 @@
             <div class="item"><div class="value">1</div><div class="desc">In escrow</div></div>
             <div class="item"><div class="value">3</div><div class="desc">Shipped</div></div>
           </div>
-        </div><!-- .list.orders -->
+        </div>.list.orders
       </mat-card>
-    </div><!-- .seller-overview -->
+    </div>.seller-overview -->
 
     <div class="recent-transactions">
       <app-header>
@@ -75,15 +75,15 @@
 
 
   <div class="overview-sidebar" fxFlex="33">
-
-    <div class="buy-orders TO_DO">
+      <!-- @TODO comment out the code for widget for total buy orders -->
+   <!--  <div class="buy-orders TO_DO">
       <app-header>
         <ul class="header-nav">
           <li>Your buy orders</li>
-          <!--li class="buttons">
+          li class="buttons">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
             <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
-          </li-->
+          </li
         </ul>
       </app-header>
       <mat-card class="list orders" fxLayout>
@@ -96,8 +96,8 @@
           <div class="item"><div class="value">0</div><div class="desc">In escrow</div></div>
           <div class="item"><div class="value">2</div><div class="desc">Shipped</div></div>
         </div>
-      </mat-card><!-- .list.orders -->
-    </div><!-- .buy-orders -->
+      </mat-card>.list.orders
+    </div>.buy-orders -->
 
     <app-coldstake></app-coldstake>
     <app-stakinginfo></app-stakinginfo>

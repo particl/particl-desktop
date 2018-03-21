@@ -13,7 +13,8 @@ export class ListingService {
 
   }
 
-  search(page: number, pageLimit: number, profileId: number | string, search: string, catId?: number) {
+  search(page: number, pageLimit: number, profileId: number | string, search: string, catId: number, country: any) {
+
     let params = [
       'search',
       page,
@@ -24,7 +25,7 @@ export class ListingService {
       profileId || "ALL",
       null, // minPrice
       null, // maxPrice
-      null, // country
+      country ? country.toUpperCase() : null, // country
       null, // shippingDestination
       search || null, // search
       true // withRelated
@@ -34,7 +35,7 @@ export class ListingService {
   }
 
   searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, "*", null); // OWN
+    return this.search(page, pageLimit, "*", null, null, null); // OWN
   }
 
   get(id) {

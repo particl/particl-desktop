@@ -14,9 +14,9 @@ let exitCode = 0;
 let restarting = false;
 let chosenWallets = [];
 
-// TODO: log properly on console and to file [ -- -printtoconsole ]
 function daemonData(data, logger) {
-  logger(data.toString().trim());
+  data = data.toString().trim();
+  logger(data);
 }
 
 exports.restart = function (cb) {
@@ -54,6 +54,7 @@ exports.start = function (wallets, callback) {
       resolve(undefined);
 
     }).catch(() => {
+
       let options      = _options.get();
       const daemonPath = options.customdaemon
                        ? options.customdaemon
