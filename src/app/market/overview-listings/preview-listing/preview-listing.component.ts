@@ -48,13 +48,13 @@ export class PreviewListingComponent {
     if (this.listing.favorite) {
       this.favoritesService.removeItem(this.listing.id).take(1).subscribe(res => {
         this.updateFavorites();
-        this.snackbar.open(`${this.listing.title} Removed from Favorite list`);
+        this.snackbar.open(`${this.listing.title} removed from Favorite`);
         this.listing.favorite = false;
       });
     } else {
       this.favoritesService.addItem(this.listing.id).take(1).subscribe(res => {
         this.updateFavorites();
-        this.snackbar.open(`${this.listing.title} Add to Favorite list`);
+        this.snackbar.open(`${this.listing.title} added to Favorite`);
         this.listing.favorite = true;
       });
     }
