@@ -1,17 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Log } from 'ng2-logger';
+import { FormControl } from '@angular/forms';
 
-import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
+import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
+import { CategoryService } from '../../core/market/api/category/category.service';
+import { ListingService } from '../../core/market/api/listing/listing.service';
 
-import { Category } from 'app/core/market/api/category/category.model';
-import { CategoryService } from 'app/core/market/api/category/category.service';
-
-import { ListingService } from 'app/core/market/api/listing/listing.service';
-import { Favorite } from '../../core/market/api/favorites/favorite.model';
+import { Category } from '../../core/market/api/category/category.model';
+import { CountryList } from '../../core/market/api/listing/countrylist.model';
 import { Listing } from '../../core/market/api/listing/listing.model';
-import { CountryList } from 'app/core/market/api/listing/countrylist.model';
-
 
 interface ISorting {
   value: string;
@@ -24,13 +21,12 @@ interface IPage {
 }
 
 @Component({
-  selector: 'app-overview-listings',
-  templateUrl: './overview-listings.component.html',
-  styleUrls: ['./overview-listings.component.scss']
+  selector: 'app-listing',
+  templateUrl: './listings.component.html',
+  styleUrls: ['./listings.component.scss']
 })
-export class OverviewListingsComponent implements OnInit, OnDestroy {
-
-  log: any = Log.create('overview-listings.component');
+export class ListingsComponent implements OnInit, OnDestroy {
+  log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
   public isLoading: boolean = false;
 
@@ -86,12 +82,12 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   loadCategories() {
     this.category.list()
-    .takeWhile(() => !this.destroyed)
-    .subscribe(
-      list => {
-        this._rootCategoryList = list;
-        this.categoryList = this._rootCategoryList.getSubCategoryNames();
-      });
+      .takeWhile(() => !this.destroyed)
+      .subscribe(
+        list => {
+          this._rootCategoryList = list;
+          this.categoryList = this._rootCategoryList.getSubCategoryNames();
+        });
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
@@ -105,30 +101,30 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
     this.listingService.search(pageNumber, max, null, search, country)
       .take(1).subscribe((listings: Array<any>) => {
-        this.isLoading = false;
-        // new page
-        const page = {
-          pageNumber: pageNumber,
-          listings: listings.map(listing => {
-            listing.favorite = true;
-            const data = new Listing(listing);
-            data.favorite = this.favoritesService.isListingItemFavorited(listing.id);
-            return data;
-          })
-        };
+      this.isLoading = false;
+      // new page
+      const page = {
+        pageNumber: pageNumber,
+        listings: listings.map(listing => {
+          listing.favorite = true;
+          const data = new Listing(listing);
+          data.favorite = this.favoritesService.isListingItemFavorited(listing.id);
+          return data;
+        })
+      };
 
-        // should we clear all existing pages? e.g search
-        if (clear === true) {
-          this.pages = [page];
-          this.noMoreListings = false;
-        } else { // infinite scroll
-          if (listings.length > 0) {
-            this.pushNewPage(page);
-          } else {
-            this.noMoreListings = true;
-          }
+      // should we clear all existing pages? e.g search
+      if (clear === true) {
+        this.pages = [page];
+        this.noMoreListings = false;
+      } else { // infinite scroll
+        if (listings.length > 0) {
+          this.pushNewPage(page);
+        } else {
+          this.noMoreListings = true;
         }
-      })
+      }
+    })
   }
 
   pushNewPage(page: IPage) {

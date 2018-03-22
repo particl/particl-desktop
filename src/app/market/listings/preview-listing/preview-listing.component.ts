@@ -1,26 +1,22 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
-import { Template } from 'app/core/market/api/template/template.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 
-interface IDate {
-  listing: Template
-}
 @Component({
-  selector: 'app-listing',
-  templateUrl: './listing.component.html',
-  styleUrls: ['./listing.component.scss']
+  selector: 'app-preview-listing',
+  templateUrl: './preview-listing.component.html',
+  styleUrls: ['./preview-listing.component.scss']
 })
-export class ListingComponent implements OnInit {
+export class PreviewListingComponent implements OnInit{
 
   public pictures: Array<any> = new Array();
   public price: any;
   public date: string;
 
   constructor(
-    private dialogRef: MatDialogRef<ListingComponent>,
+    private dialogRef: MatDialogRef<PreviewListingComponent>,
     private cartService: CartService,
     private favoritesService: FavoritesService,
     @Inject(MAT_DIALOG_DATA) public data: any) {

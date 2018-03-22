@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { PreviewListingComponent } from './preview-listing.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 describe('PreviewListingComponent', () => {
   let component: PreviewListingComponent;
@@ -13,9 +14,13 @@ describe('PreviewListingComponent', () => {
       declarations: [ PreviewListingComponent ],
       imports: [
         CoreUiModule.forRoot()
+      ],
+      providers: [
+        { provide: MatDialogRef},
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

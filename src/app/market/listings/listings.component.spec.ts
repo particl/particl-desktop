@@ -1,19 +1,19 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/compiler/src/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
-import { OverviewListingsComponent } from './overview-listings.component';
+import { ListingsComponent } from './listings.component';
 
-describe('OverviewListingsComponent', () => {
-  let component: OverviewListingsComponent;
-  let fixture: ComponentFixture<OverviewListingsComponent>;
+describe('ListingsComponent', () => {
+  let component: ListingsComponent;
+  let fixture: ComponentFixture<ListingsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        OverviewListingsComponent
+        ListingsComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -21,11 +21,11 @@ describe('OverviewListingsComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OverviewListingsComponent);
+    fixture = TestBed.createComponent(ListingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

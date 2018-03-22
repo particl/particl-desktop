@@ -1,21 +1,31 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import { ListingComponent } from 'app/market/listing/listing.component';
-import { CartService } from 'app/core/market/api/cart/cart.service';
-import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
-import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+import { FavoritesService } from '../../../core/market/api/favorites/favorites.service';
+import { CartService } from '../../../core/market/api/cart/cart.service';
 import { MarketStateService } from '../../../core/market/market-state/market-state.service';
 
 import { Listing } from '../../../core/market/api/listing/listing.model';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+
+import { PreviewListingComponent } from '../preview-listing/preview-listing.component';
+
+interface ISorting {
+  value: string;
+  viewValue: string;
+}
+
+interface IPage {
+  pageNumber: number,
+  listings: Array<any>;
+}
 
 @Component({
-  selector: 'app-preview-listing',
-  templateUrl: './preview-listing.component.html',
-  styleUrls: ['./preview-listing.component.scss']
+  selector: 'app-listing-item',
+  templateUrl: './listing-item.component.html',
+  styleUrls: ['./listing-item.component.scss']
 })
-export class PreviewListingComponent {
-
+export class ListingItemComponent {
   @Input() listing: Listing;
 
   constructor(private dialog: MatDialog,
@@ -26,7 +36,7 @@ export class PreviewListingComponent {
   }
 
   openListing() {
-    const dialog = this.dialog.open(ListingComponent, {
+    const dialog = this.dialog.open(PreviewListingComponent, {
       data: {listing: this.listing},
     });
   }
