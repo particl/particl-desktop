@@ -9,17 +9,17 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
   templateUrl: './preview-listing.component.html',
   styleUrls: ['./preview-listing.component.scss']
 })
-export class PreviewListingComponent implements OnInit{
+
+export class PreviewListingComponent implements OnInit {
 
   public pictures: Array<any> = new Array();
   public price: any;
   public date: string;
 
-  constructor(
-    private dialogRef: MatDialogRef<PreviewListingComponent>,
-    private cartService: CartService,
-    private favoritesService: FavoritesService,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(private dialogRef: MatDialogRef<PreviewListingComponent>,
+              private cartService: CartService,
+              private favoritesService: FavoritesService,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit() {
@@ -33,8 +33,8 @@ export class PreviewListingComponent implements OnInit{
     if (price && price.basePrice) {
       price = price.basePrice;
       this.price = {
-        int:     price.toFixed(0),
-        cents:  (price % 1).toFixed(8),
+        int: price.toFixed(0),
+        cents: (price % 1).toFixed(8),
         escrow: (price * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
       };
     }
