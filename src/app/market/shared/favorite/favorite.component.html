@@ -1,4 +1,4 @@
 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart"
-          [matTooltip]="(listing.favorite)? 'Remove from Favorite' : 'Add to Favorite'"
-          [color]="(listing.favorite)?'warn': ''"
+          [matTooltip]="(favoritesService.isListingItemFavorited(listing.id))? 'Remove from Favorite' : 'Add to Favorite'"
+          [color]="(favoritesService.isListingItemFavorited(listing.id))?'warn': ''"
           matTooltipPosition="above" (click)="addToFavorites()"></mat-icon>

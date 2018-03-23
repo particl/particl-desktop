@@ -16,7 +16,7 @@ export class FavoriteComponent implements OnInit {
   @Input() listing: Listing;
 
   constructor(
-    private favoritesService: FavoritesService,
+    public favoritesService: FavoritesService,
     private snackbar: SnackbarService,
     private marketState: MarketStateService
   ) {}
