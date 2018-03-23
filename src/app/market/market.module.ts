@@ -10,6 +10,7 @@ import { ListingsComponent } from './listings/listings.component';
 import { BuyComponent } from './buy/buy.component';
 import { SellComponent } from './sell/sell.component';
 import { AddItemComponent } from './sell/add-item/add-item.component';
+import { FavoriteComponent } from './shared/favorite/favorite.component';
 
 
 
@@ -25,7 +26,8 @@ import { AddItemComponent } from './sell/add-item/add-item.component';
     ListingsComponent,
     BuyComponent,
     SellComponent,
-    AddItemComponent
+    AddItemComponent,
+    FavoriteComponent
   ],
   entryComponents: [
     PreviewListingComponent

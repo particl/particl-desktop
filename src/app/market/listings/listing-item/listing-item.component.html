@@ -8,11 +8,7 @@
                 matTooltipPosition="above" (click)="openListing()"></mat-icon>
       <mat-icon class="icon flag TO_DO" fontSet="partIcon" fontIcon="part-error" matTooltip="Report"
                 matTooltipPosition="above"></mat-icon>
-      <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart"
-                [matTooltip]="(listing.favorite)? 'Remove from Favorite' : 'Add to Favorite'"
-                [color]="(listing.favorite)?'warn': ''"
-                matTooltipPosition="above" (click)="addToFavorites(listing.id)"></mat-icon>
-
+      <app-favorite class="icon fav" [listing]="listing"></app-favorite>
     </div>
   </div>
 
