@@ -152,10 +152,10 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   // TODO: fix scroll up!
   loadPreviousPage() {
-    console.log("prev page trigered");
+    console.log('prev page trigered');
     let previousPage = this.getFirstPageCurrentlyLoaded(); previousPage--;
-    console.log("loading prev page" + previousPage);
-    if(previousPage > 0) {
+    console.log('loading prev page' + previousPage);
+    if (previousPage > 0) {
       this.loadPage(previousPage);
     }
   }

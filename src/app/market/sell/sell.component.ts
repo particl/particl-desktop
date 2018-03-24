@@ -159,8 +159,8 @@ export class SellComponent implements OnInit {
 
   public listings: Array<any>;
 
-  public search: string = "";
-  public category: string = "";
+  public search: string = '';
+  public category: string = '';
 
   constructor(
     private router: Router,

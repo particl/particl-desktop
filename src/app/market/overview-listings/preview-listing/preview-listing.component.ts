@@ -32,7 +32,7 @@ export class PreviewListingComponent implements OnInit {
   }
 
   getThumbnail() {
-    if(this.listing.thumbnail) {
+    if (this.listing.thumbnail) {
       // TODO: logic for main image, taking 0 here
       return 'data:image/gif;base64,' + this.listing.thumbnail.data;
     } else {

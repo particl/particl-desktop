@@ -8,6 +8,7 @@ import { Category } from 'app/core/market/api/category/category.model';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
+import { CountryList } from 'app/core/market/api/listing/countrylist.model';
 
 @Component({
   selector: 'app-add-item',
@@ -25,8 +26,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
+  countries: CountryList = new CountryList();
   images: string[];
-
+ 
+  // file upload 
   dropArea: any;
   fileInput: any;
   picturesToUpload: string[];
@@ -90,7 +93,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   processPictures(event) {
     Array.from(event.target.files).map((file: File) => {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = event => {
         this.picturesToUpload.push(reader.result);
         this.log.d('added picture', file.name);
@@ -134,7 +137,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.template.get(this.templateId).subscribe((template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`)
 
-      let t = {
+      const t = {
         title: '',
         shortDescription: '',
         longDescription: '',
@@ -142,7 +145,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         basePrice: 0,
         domesticShippingPrice: 0,
         internationalShippingPrice: 0
-        
+
       };
 
       console.log(template);
@@ -154,9 +157,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       console.log("getting category to id="+ this.itemFormGroup.get('category').value);
       console.log("setting category to id="+t.category);
 
-      t.basePrice = t.basePrice;
-      t.domesticShippingPrice =t.domesticShippingPrice;
-      t.internationalShippingPrice = t.internationalShippingPrice;
+      t.basePrice = template.basePrice.getAmount();
+      t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
+      t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
 
       this.itemFormGroup.setValue(t);
 
@@ -173,7 +176,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   save(): Promise<any> {
 
-    let item = this.itemFormGroup.value;
+    const item = this.itemFormGroup.value;
     let nPicturesAdded = 0;
 
     return new Promise((resolve, reject) => {

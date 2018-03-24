@@ -176,7 +176,7 @@ export class DateFormatter {
     return (
       (this.date.getDate() < 10 ? '0' + this.date.getDate() : this.date.getDate()) + '-' +
       ((this.date.getMonth() + 1) < 10 ? '0' + (this.date.getMonth() + 1) : (this.date.getMonth() + 1)) + '-' +
-      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear()) 
+      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear())
       + (onlyShowDate === false ?  ' ' + this.hourSecFormatter() : '')
     )
   }
