@@ -5,29 +5,24 @@ export enum TxType {
 }
 
 export class TransactionBuilder {
-  input: TxType;
-  output: TxType;
+  input: TxType = TxType.PUBLIC;
+  output: TxType = TxType.PUBLIC;
   toAddress: string;
   toLabel: string;
   address: string;
   amount: number;
   comment: string;
   narration: string;
-  numsignatures: number;
+  numsignatures: number = 1;
   validAddress: boolean;
   validAmount: boolean;
   isMine: boolean;
-  currency: string;
-  ringsize: number;
-  subtractFeeFromAmount: boolean;
+  currency: string = 'part';
+  ringsize: number = 8;
+  subtractFeeFromAmount: boolean = false;
+  estimateFeeOnly: boolean = true;
 
   constructor() {
-    // set default value
-    this.input = TxType.PUBLIC;
-    this.output = TxType.PUBLIC; // set it public for default send payment tab.
-    this.currency = 'part';
-    this.ringsize = 8;
-    this.subtractFeeFromAmount = false;
-    this.numsignatures = 1;
+
   }
 }

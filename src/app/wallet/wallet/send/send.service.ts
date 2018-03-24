@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger'
 
@@ -6,7 +7,6 @@ import { RpcService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 /* fix wallet */
-import { MatDialog } from '@angular/material';
 import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
 import { TransactionBuilder } from './transaction-builder.model';
 
@@ -20,84 +20,84 @@ export class SendService {
 
   log: any = Log.create('send.service');
 
-  constructor(public _rpc: RpcService,
+  constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService,
               private dialog: MatDialog) {
 
   }
 
   /* Sends a transaction */
-  // @TODO: estimate fee should be change
   public sendTransaction(tx: TransactionBuilder) {
     tx.comment = null;
+    tx.estimateFeeOnly = false;
 
-    const rpcCall: string = this.getSendRPCCall(tx.input, tx.output);
-    const anon: boolean = this.isAnon(rpcCall);
-    const params: Array<any> = this.getSendParams(
-      anon, tx.toAddress, tx.amount, tx.comment,
-      tx.narration, +tx.ringsize, tx.numsignatures, tx.subtractFeeFromAmount);
-      console.log(params);
-    this._rpc.call('send' + rpcCall, params)
+    this.send(tx)
       .subscribe(
         success => this.rpc_send_success(success, tx.toAddress, tx.amount),
         error => this.rpc_send_failed(error.message, tx.toAddress, tx.amount));
   }
 
   public getTransactionFee(tx: TransactionBuilder): Observable<any> {
+    tx.estimateFeeOnly = true;
     if (!tx.toAddress) {
       return new Observable((observer) => {
         this.getDefaultStealthAddress().take(1).subscribe(
           (stealthAddress: string) => {
-            this._rpc.call('sendtypeto', [tx.input, tx.output, [{
-              subfee: true,
-              address: stealthAddress,
-              amount: tx.amount,
-            }], '', '', tx.ringsize, 64, true]).subscribe(fee => {
+            // set balance transfer stealth address
+            tx.toAddress = stealthAddress;
+            this.send(tx).subscribe(fee => {
               observer.next(fee);
               observer.complete();
             });
           });
       });
     } else {
-      return this._rpc.call('sendtypeto', [tx.input, tx.output, [{
-        subfee: true,
-        address: tx.toAddress,
-        amount: tx.amount,
-      }], '', '', tx.ringsize, 64, true]).map(
+      return this.send(tx).map(
         fee => fee);
     }
   }
 
   public transferBalance(tx: TransactionBuilder) {
+    tx.estimateFeeOnly = false;
 
     // get default stealth address
     this.getDefaultStealthAddress().take(1).subscribe(
       (stealthAddress: string) => {
         this.log.d('got transferBalance, sx' + stealthAddress);
+        tx.toAddress = stealthAddress;
 
-        // comment is internal, narration is stored on blockchain
-        const rpcCall: string = this.getSendRPCCall(tx.input, tx.output);
-        const anon: boolean = this.isAnon(rpcCall);
-        const params: Array<any> = this.getSendParams(
-          anon, stealthAddress,
-          tx.amount, '', '', +tx.ringsize, tx.numsignatures, tx.subtractFeeFromAmount);
-
-        this._rpc.call('send' + rpcCall, params).subscribe(
+        // execute transaction
+        this.send(tx).subscribe(
           success => this.rpc_send_success(success, stealthAddress, tx.amount),
           error => this.rpc_send_failed(error.message, stealthAddress, tx.amount));
       },
-      error => this.rpc_send_failed('Failed to get stealth address')
+      error => this.rpc_send_failed('transferBalance, Failed to get stealth address')
     );
 
   }
 
-  /* Retrieve the first stealth address */
+  /**
+   * Retrieve the first stealth address.
+   */
   private getDefaultStealthAddress(): Observable<string> {
     return this._rpc.call('liststealthaddresses', null).map(
       list => list[0]['Stealth Addresses'][0]['Address']);
   }
 
-  rpc_send_success(json: any, address: string, amount: number) {
+  /**
+   * Executes or estimates a transaction.
+   * Estimates if estimateFeeOnly === true.
+   */
+  private send(tx: TransactionBuilder): Observable<any> {
+    return this._rpc.call('sendtypeto', [tx.input, tx.output, [{
+      address: tx.toAddress,
+      amount: tx.amount,
+      subfee: tx.subtractFeeFromAmount,
+      narr: tx.narration
+    }], '', '', tx.ringsize, 64, tx.estimateFeeOnly]);
+  }
+
+  private rpc_send_success(json: any, address: string, amount: number) {
     this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
 
     // Truncate the address to 16 characters only
@@ -106,7 +106,7 @@ export class SendService {
     this.flashNotification.open(`Succesfully sent ${amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
   }
 
-  rpc_send_failed(message: string, address?: string, amount?: number) {
+  private rpc_send_failed(message: string, address?: string, amount?: number) {
     this.flashNotification.open(`Transaction Failed ${message}`, 'err');
     this.log.er('rpc_send_failed, failed to execute transaction!');
     this.log.er(message);
@@ -129,53 +129,6 @@ export class SendService {
         this.log.d('FixWalletModal closing');
       }
     );
-  }
-
-
-  /*
-    Helper functions for RPC
-  */
-
-  /**
-    * Returns a part of the method of the RPC call required to execute the transaction
-    *
-    * @param {string} input  From which type/balance we should send the funds (public, blind, anon)
-    * @param {string} output  To which type/balance we should send the funds (public, blind, anon)
-    *
-    */
-  getSendRPCCall(input: string, output: string) {
-
-    if (input === 'part' && output === 'part') {
-      return 'toaddress';
-    } else {
-      return input + 'to' + output;
-    }
-  }
-
-  // TODO: do I need to turn everything into strings manually?
-  /** A helper function that transforms the transaction details to an array with the right params (for passing to the RPC service). */
-  getSendParams(
-    anon: boolean, address: string, amount: number, comment: string,
-    narration: string, ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
-
-    const params: Array<any> = [address, +amount, '', '', substractfeefromamount];
-
-    params.push(!!narration ? narration : '');
-
-    if (anon) {
-      // comment-to empty
-      params.push(+ringsize);
-      // params.push(numsignatures);
-    }
-
-    return params;
-  }
-
-  /**
-  * Returns true if the RPC method is anonto...
-  */
-  isAnon(input: string): boolean {
-    return ['anontopart', 'anontoanon', 'anontoblind'].includes(input)
   }
 
 }

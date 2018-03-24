@@ -31,7 +31,7 @@
           <div class="desc">Available balance: <span class="amount">{{ getBalance('part') }}</span></div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="blind" fxFlex (click)="send.output = 'part'">
-          <div class="name">Blind 1</div>
+          <div class="name">Blind</div>
           <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')" class="amount">{{ getBalance('blind') }}</span>
             <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
                       matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
