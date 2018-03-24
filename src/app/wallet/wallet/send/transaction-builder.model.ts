@@ -12,6 +12,7 @@ export class TransactionBuilder {
   address: string;
   amount: number;
   comment: string;
+  commentTo: string;
   narration: string;
   numsignatures: number = 1;
   validAddress: boolean;

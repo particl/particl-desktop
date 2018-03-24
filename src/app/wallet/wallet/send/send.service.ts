@@ -28,7 +28,6 @@ export class SendService {
 
   /* Sends a transaction */
   public sendTransaction(tx: TransactionBuilder) {
-    tx.comment = null;
     tx.estimateFeeOnly = false;
 
     this.send(tx)
@@ -94,7 +93,7 @@ export class SendService {
       amount: tx.amount,
       subfee: tx.subtractFeeFromAmount,
       narr: tx.narration
-    }], '', '', tx.ringsize, 64, tx.estimateFeeOnly]);
+    }], tx.comment, tx.commentTo, tx.ringsize, 64, tx.estimateFeeOnly]);
   }
 
   private rpc_send_success(json: any, address: string, amount: number) {
