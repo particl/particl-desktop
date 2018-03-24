@@ -7,6 +7,7 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { Template } from 'app/core/market/api/template/template.model';
 
 @Component({
   selector: 'app-add-item',
@@ -24,10 +25,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
+  images: string[];
 
   dropArea: any;
   fileInput: any;
-  pictures: string[];
+  picturesToUpload: string[];
   featuredPicture: number = 0;
 
   constructor(
@@ -46,7 +48,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.fileInput = document.getElementById('fileInput');
     this.fileInput.onchange = this.processPictures.bind(this);
-    this.pictures = new Array();
+    this.picturesToUpload = new Array();
 
     this.subToCategories();
 
@@ -90,7 +92,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     Array.from(event.target.files).map((file: File) => {
       let reader = new FileReader();
       reader.onload = event => {
-        this.pictures.push(reader.result.split('base64,')[1]);
+        this.picturesToUpload.push(reader.result);
         this.log.d('added picture', file.name);
       };
       reader.readAsDataURL(file);
@@ -98,7 +100,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   removePicture(index) {
-    this.pictures.splice(index, 1);
+    this.picturesToUpload.splice(index, 1);
     if (this.featuredPicture > index) {
       this.featuredPicture -= 1;
     }
@@ -129,7 +131,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   preload() {
     this.log.d(`preloading for id=${this.templateId}`);
-    this.template.get(this.templateId).subscribe((template: any) => {
+    this.template.get(this.templateId).subscribe((template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`)
 
       let t = {
@@ -145,19 +147,25 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
       console.log(template);
 
-      t.title = template.ItemInformation.title;
-      t.shortDescription = template.ItemInformation.shortDescription;
-      t.longDescription = template.ItemInformation.longDescription;
-      t.category = template.ItemInformation.ItemCategory.id;
+      t.title = template.title;
+      t.shortDescription = template.shortDescription;
+      t.longDescription = template.longDescription;
+      t.category = template.category.id;
       console.log("getting category to id="+ this.itemFormGroup.get('category').value);
       console.log("setting category to id="+t.category);
 
-      let itemPrice = template.PaymentInformation.ItemPrice;
-      t.basePrice = itemPrice.basePrice;
-      t.domesticShippingPrice = itemPrice.ShippingPrice.domestic;
-      t.internationalShippingPrice = itemPrice.ShippingPrice.international;
+      t.basePrice = t.basePrice;
+      t.domesticShippingPrice =t.domesticShippingPrice;
+      t.internationalShippingPrice = t.internationalShippingPrice;
 
       this.itemFormGroup.setValue(t);
+
+      this.images = template.images.map(i => {
+        return {
+          dataId: i.ItemImageDatas[0].dataId,
+          id: i.id
+        }
+      })
       // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
     });
   }
@@ -180,13 +188,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
         +item.domesticShippingPrice,
         +item.internationalShippingPrice
       ).take(1).subscribe(template => {
-
+        this.templateId = template.id;
         this.log.d('Saved template', template);
-        this.pictures.map(picture => {
-
+        this.picturesToUpload.map(picture => {
+          this.log.d('Uploading pictures!');
           this.template.addPicture(template.id, picture).take(1).subscribe(res => {
             console.log(res);
-            if (++nPicturesAdded === this.pictures.length) {
+            if (++nPicturesAdded === this.picturesToUpload.length) {
               resolve(template.id);
             }
           });
@@ -197,20 +205,29 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   saveTemplate() {
-    this.save().then(id => {
-      console.log('returning to sell');
-      this.backToSell();
-    });
+    if (this.templateId) {
+      // update 
+    } else {
+      this.save().then(id => {
+        console.log('returning to sell');
+        this.backToSell();
+      });
+    }
+
   }
   saveAndPublish() {
     this.log.d('saveAndPublish');
-    this.save().then(id => {
-      this.template.post(id, 1).take(1).subscribe(listing => {
-        console.log(listing);
-        this.backToSell();
+    if (this.templateId) {
+      // update
+    } else {
+      // save new
+      this.save().then(id => {
+        this.template.post(id, 1).take(1).subscribe(listing => {
+          console.log(listing);
+          this.backToSell();
+        });
       });
-    });
-
+    }
   }
 
 }
