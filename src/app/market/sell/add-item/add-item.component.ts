@@ -9,6 +9,9 @@ import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
 import { CountryList } from 'app/core/market/api/listing/countrylist.model';
+import { ImageService } from 'app/core/market/api/template/image/image.service';
+import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { InformationService } from 'app/core/market/api/template/information/information.service';
 
 @Component({
   selector: 'app-add-item',
@@ -41,7 +44,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private category: CategoryService,
     private template: TemplateService,
-    private listing: ListingService
+    private image: ImageService,
+    private information: InformationService,
+    private listing: ListingService,
+    private snackbar: SnackbarService
   ) { }
 
   ngOnInit() {
@@ -69,12 +75,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.take(1).subscribe(params => {
       const id = params['id'];
-      const clone = params['clone'];
+      const clone: boolean = params['clone'];
       if (id) {
         this.templateId = +id;
         this.preload();
       }
-      if (clone === true) {
+      if (clone) {
+        this.log.d('Cloning listing!');
         this.templateId = undefined;
       }
     });
@@ -100,6 +107,29 @@ export class AddItemComponent implements OnInit, OnDestroy {
       };
       reader.readAsDataURL(file);
     });
+  }
+
+  removeExistingImage(imageId: number) {
+    this.image.remove(imageId).subscribe(
+      success => {
+        this.snackbar.open('Removed image successfully!')
+        
+        // find image in array and remove it.
+        let indexToRemove: number;
+        this.images.find((element: any, index: number) => {
+          if (element.id === imageId) {
+            indexToRemove = index;
+            return true;
+          } 
+          return false;
+        });
+        if (indexToRemove >= 0) {
+          this.log.d('Removing image from UI with index', indexToRemove);
+          this.images.splice(indexToRemove, 1);
+        }
+      },
+      error => this.snackbar.open(error)
+    );
   }
 
   removePicture(index) {
@@ -174,10 +204,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
-  save(): Promise<any> {
+  private save(): Promise<any> {
 
     const item = this.itemFormGroup.value;
-    let nPicturesAdded = 0;
 
     return new Promise((resolve, reject) => {
       this.template.add(
@@ -193,23 +222,46 @@ export class AddItemComponent implements OnInit, OnDestroy {
       ).take(1).subscribe(template => {
         this.templateId = template.id;
         this.log.d('Saved template', template);
-        this.picturesToUpload.map(picture => {
-          this.log.d('Uploading pictures!');
-          this.template.addPicture(template.id, picture).take(1).subscribe(res => {
-            console.log(res);
-            if (++nPicturesAdded === this.picturesToUpload.length) {
-              resolve(template.id);
-            }
-          });
 
-        }); /* map pictures */
-      }); /* template add */
-    }); /* promise */
+        /* uploading images */
+        this.image.upload(template.id, this.picturesToUpload)
+              .then(resolve);
+
+      }); 
+    }); 
+  }
+
+  private update(){
+    const item = this.itemFormGroup.value;
+
+    // update information
+    this.information.update(
+        this.templateId,
+        item.title,
+        item.shortDescription,
+        item.longDescription,
+        item.category
+      ).subscribe();
+
+    // update images 
+    this.image.upload(this.templateId, this.picturesToUpload).then(
+      (t) => {
+        this.log.d('Uploaded the new images!');
+      }
+    );
+    // update location
+
+    // update shipping
+
+    // update messaging
+    // update payment 
+    // update escrow
   }
 
   saveTemplate() {
     if (this.templateId) {
       // update 
+      this.update();
     } else {
       this.save().then(id => {
         console.log('returning to sell');
@@ -222,6 +274,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.log.d('saveAndPublish');
     if (this.templateId) {
       // update
+      this.update();
     } else {
       // save new
       this.save().then(id => {

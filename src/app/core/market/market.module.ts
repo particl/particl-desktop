@@ -10,6 +10,8 @@ import { TemplateService } from './api/template/template.service';
 import { ListingService } from './api/listing/listing.service';
 import { CartService } from './api/cart/cart.service';
 import { FavoritesService } from './api/favorites/favorites.service';
+import { ImageService } from './api/template/image/image.service';
+import { InformationService } from './api/template/information/information.service';
 
 @NgModule({
   imports: [
@@ -30,7 +32,9 @@ export class MarketModule {
         TemplateService,
         ListingService,
         CartService,
-        FavoritesService
+        FavoritesService,
+        ImageService,
+        InformationService
       ]
     };
   }

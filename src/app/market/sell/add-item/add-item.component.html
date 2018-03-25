@@ -25,7 +25,7 @@
          <img src="{{image.dataId}}">
          <div class="icons">
            <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
-                     matTooltip="Remove image" (click)="removePicture(i)">
+                     matTooltip="Remove image" (click)="removeExistingImage(image.id)">
            </mat-icon>
            <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
                      matTooltip="Set as featured" (click)="featurePicture(i)">
@@ -123,11 +123,11 @@
     <div class="right">
       <button mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-        Save for later
+        {{ templateId ? 'Update' : 'Save for later'}}
       </button>
       <button mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        Save & Publish
+        {{ templateId ? 'Update & Publish' : 'Save & Publish'}}
       </button>
     </div>
   </div>

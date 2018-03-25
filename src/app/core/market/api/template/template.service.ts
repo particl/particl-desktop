@@ -50,10 +50,6 @@ export class TemplateService {
       return this.market.call('template', params);
   }
 
-  addPicture(id, data) {
-    return this.market.uploadImage(id, data);
-  }
-
   search(page: number, pageLimit: number, profileId: number, category: string, searchString: string): Observable<Array<Template>> {
     const params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
     return this.market.call('template', params)

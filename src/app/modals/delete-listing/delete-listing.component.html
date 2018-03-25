@@ -4,9 +4,9 @@
     Are you sure you want to remove your listing/order? [Can we use this confirmation modal for both listings and orders?]
   </p>
   <table class="info">
-    <tr><th>Listing name</th><td><strong>[Product name]</strong></td></tr>
-    <tr><th>Category</th><td>[Product category]</td></tr>
-    <tr><th>Price</th><td>[Product price]</td></tr>
+    <tr><th>Listing name</th><td><strong>{{templateToRemove.title}}</strong></td></tr>
+    <tr><th>Category</th><td>{{templateToRemove.category.name}}</td></tr>
+    <tr><th>Price</th><td>{{templateToRemove.basePrice.getAmount()}}</td></tr>
   </table>
   <p class="widget-help">
     This will completely remove the listing, including all associated data (like photos, descriptions etc.) and nobody will be able to purchase it.
@@ -18,7 +18,7 @@
     Cancel
   </button>
   <!-- FIXME: implement.. -->
-  <button mat-raised-button color="warn">
+  <button mat-raised-button color="warn" (click)="remove()">
     <mat-icon fontSet="partIcon" fontIcon="part-circle-minus"></mat-icon>
     Yes, remove listing
   </button>
