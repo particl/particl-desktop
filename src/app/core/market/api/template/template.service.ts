@@ -14,8 +14,8 @@ export class TemplateService {
     private marketState: MarketStateService
   ) { }
 
-  get(templateId: number) {
-    return this.market.call('template', ['get', templateId]);
+  get(templateId: number): Observable<Template> {
+    return this.market.call('template', ['get', templateId]).map(t => new Template(t));
   }
 
   // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
@@ -30,7 +30,7 @@ export class TemplateService {
     internationalShippingPrice: number,
     paymentAddress?: string // TODO: class
     ) {
-      let params  = [
+      const params  = [
         'add',
         1, // profile
         title,
@@ -50,19 +50,8 @@ export class TemplateService {
       return this.market.call('template', params);
   }
 
-  addPicture(id, data) {
-    const params = [
-      'image', 'add',
-      id,
-      'LOCAL',
-      'BASE64',
-      data
-    ];
-    return this.market.call('template', params);
-  }
-
   search(page: number, pageLimit: number, profileId: number, category: string, searchString: string): Observable<Array<Template>> {
-    let params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
+    const params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
     return this.market.call('template', params)
     .map(
       (templates: any) => {
