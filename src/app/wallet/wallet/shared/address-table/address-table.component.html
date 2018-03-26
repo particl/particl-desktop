@@ -28,7 +28,9 @@
           <!-- Label -->
           <div fxFlex="1 0 150px" fxFlex.lt-md="100" class="title cursor-pointer" *ngIf="displayLabel"
                (click)="editLabel(address.address)" matTooltip="Edit Address label">
-            {{ address.label }}
+            <span class="title">{{ address.label }} </span>
+
+            <mat-icon class="edit-label" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
           </div>
 
           <!-- Address -->
