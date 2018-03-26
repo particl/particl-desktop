@@ -65,7 +65,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   filters: any = {
-    sort: undefined,
+    category: undefined,
     search: undefined,
     country: undefined
   };
@@ -99,10 +99,10 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
     const search = this.filters.search;
 
-    const sort = this.filters.sort;
+    const category = this.filters.category;
     const country = this.filters.country;
 
-    this.listingService.search(pageNumber, max, null, search, sort, country)
+    this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<any>) => {
         this.isLoading = false;
         // new page

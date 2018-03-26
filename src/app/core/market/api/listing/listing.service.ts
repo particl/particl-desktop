@@ -12,8 +12,6 @@ export class ListingService {
   ) {
 
   }
-
-<<<<<<< HEAD
   search(page: number, pageLimit: number, profileId: number | string, search: string, catId: number, country: any) {
 
     const params = [
