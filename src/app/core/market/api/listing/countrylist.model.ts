@@ -24,4 +24,8 @@ export class CountryList {
     const obj = reduce(getDataSet(), 'en');
     this.countries = Object.keys(obj).map((key) => { return obj[key] });
   }
+
+  getCountryByName(name: string): Country {
+    return this.countries.find((el) => el.name.toUpperCase() === name.toUpperCase());
+  }
 }
