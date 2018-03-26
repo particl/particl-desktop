@@ -46,7 +46,7 @@ export class CartService {
     this.log.d(`Removing listingItemId=${listingItemId} from cart with id=1`);
     return this.market.call('cartitem', ['remove', 1, listingItemId]).do(
       data => {
-        this.snackbar.open('Item successfully removed from cart');
+        this.snackbar.open('Item successfully removed from cart')
         this.updateCart();
       },
       err => this.snackbar.open(err)
@@ -57,15 +57,15 @@ export class CartService {
     this.log.d(`Clearing cart with id=1`);
     return this.market.call('cart', ['clear', 1]).do(
       data => {
-        this.snackbar.open('All Items Cleared From Cart');
+        this.snackbar.open('All Items Cleared From Cart')
         this.updateCart();
       },
       err => this.snackbar.open(err)
-      );
+      ); ;
   }
 
   updateCart(): void {
-    this.marketState.registerStateCall('cartitem', null, ['list', 1, true]);
+    this.marketState.registerStateCall('cartitem', null, ['list', 1, true])
   }
 
 }

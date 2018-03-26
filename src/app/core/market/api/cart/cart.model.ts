@@ -1,3 +1,4 @@
+import { Listing } from '../listing/listing.model';
 import { Amount } from 'app/core/util/utils';
 export class Cart {
 
@@ -11,7 +12,7 @@ export class Cart {
   get subTotal(): Amount {
     let total = 0.0;
     this.shoppingCartItems.map(shoppingCartItem => {
-      const object: any = shoppingCartItem.ListingItem;
+      const object = shoppingCartItem.ListingItem;
       // if listing is loaded (async)
       if (object.PaymentInformation) {
         total += object.PaymentInformation.ItemPrice.basePrice
@@ -22,15 +23,15 @@ export class Cart {
 
   private setCartItems(): void {
     this.shoppingCartItems.map(shoppingCartItem => {
-      const object: any = shoppingCartItem.ListingItem;
+      const object = shoppingCartItem.ListingItem;
       if (object.ItemInformation) {
         shoppingCartItem.title = object.ItemInformation.title;
         shoppingCartItem.name = object.ItemInformation.ItemCategory.name;
         shoppingCartItem.thumbnail = this.getThumbnail(object.ItemInformation.ItemImages[0]);
       }
       if (object.PaymentInformation) {
-        shoppingCartItem.integerPart = new Amount(object.PaymentInformation.ItemPrice.basePrice).getIntegerPart();
-        shoppingCartItem.fractionPart = new Amount(object.PaymentInformation.ItemPrice.basePrice).getFractionalPart();
+        shoppingCartItem.integerPart = new Amount (object.PaymentInformation.ItemPrice.basePrice).getIntegerPart();
+        shoppingCartItem.fractionPart = new Amount (object.PaymentInformation.ItemPrice.basePrice).getFractionalPart();
       }
     });
   }
@@ -40,12 +41,12 @@ export class Cart {
   }
 
   private getThumbnail(images: any) {
-    if (images) {
-      return images.ItemImageDatas.find(data => {
-        return data.imageVersion === 'THUMBNAIL';
-      });
-    }
-    return undefined;
+     if (images) {
+        return images.ItemImageDatas.find(data => {
+          return data.imageVersion === 'THUMBNAIL';
+        });
+      }
+      return undefined;
   }
 
 }

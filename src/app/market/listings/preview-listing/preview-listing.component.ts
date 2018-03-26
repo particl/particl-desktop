@@ -26,7 +26,7 @@ export class PreviewListingComponent implements OnInit {
     this.data.listing.images.map(image => {
       this.pictures.push(image.ItemImageDatas.find(size => {
         return size.imageVersion === 'MEDIUM';
-      }).data);
+      }));
     });
 
     let price = this.data.listing.object.PaymentInformation.ItemPrice;

@@ -6,9 +6,8 @@
       <div class="title">Upload photos</div>
       <div id="drag-n-drop">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
-        <!--@TODO remove inline css -->
         <input style="display: none;" type="file"
-               accept="image/*" multiple="true" id="fileInput">
+        accept="image/*" multiple="true" id="fileInput">
         <button mat-button color="primary" (click)="uploadPicture()">
           Upload a photo
         </button>
@@ -16,16 +15,30 @@
         <!-- <p>or drag'n'drop it here</p> -->
       </div>
       <p class="widget-help">
-        Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on
-        market). Be sure to upload high quality &amp; focused images in good lighting where possible.
+        Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible.
       </p>
       <div class="gallery" fxLayoutWrap>
-        <div *ngFor="let picture of pictures ; index as i"
-             class="photo-wrapper {{i === featuredPicture ? 'featured' : ''}}" fxFlex="0 0 123px"
-             fxLayoutAlign="center center">
+
+          <div *ngFor="let image of images"
+          class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+       <div class="photo" fxFLex>
+         <img src="{{image.dataId}}">
+         <div class="icons">
+           <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
+                     matTooltip="Remove image" (click)="removeExistingImage(image.id)">
+           </mat-icon>
+           <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                     matTooltip="Set as featured" (click)="featurePicture(i)">
+           </mat-icon>
+         </div>
+       </div>
+     </div>
+
+        <div *ngFor="let picture of picturesToUpload ; index as i"
+             class="photo-wrapper {{i === featuredPicture ? 'featured' : ''}}" fxFlex="0 0 123px" fxLayoutAlign="center center">
           <!-- TODO: maybe not gif, but removing is 'unsafe' -->
           <div class="photo" fxFLex>
-            <img src="data:image/gif;base64,{{picture}}">
+            <img src="{{picture}}">
             <div class="icons">
               <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
                         matTooltip="Remove image" (click)="removePicture(i)">
@@ -36,6 +49,7 @@
             </div>
           </div>
         </div>
+
       </div><!-- .gallery -->
     </mat-card><!-- .photos -->
 
@@ -46,14 +60,12 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <textarea matInput #summary rows="3" placeholder="Summary (short description)"
-                  formControlName="shortDescription"></textarea>
+        <textarea matInput #summary rows="3" placeholder="Summary (short description)" formControlName="shortDescription"></textarea>
         <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <textarea matInput #description rows="12" placeholder="Description"
-                  formControlName="longDescription"></textarea>
+        <textarea matInput #description rows="12" placeholder="Description" formControlName="longDescription"></textarea>
         <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
       </mat-form-field>
 
@@ -68,8 +80,8 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <mat-select placeholder="Country">
-          <mat-option value="option">Option</mat-option>
+        <mat-select placeholder="Country" formControlName="country">
+          <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -89,8 +101,7 @@
           <span matSuffix>PART</span>
         </mat-form-field>
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput placeholder="International shipping price" formControlName="internationalShippingPrice"
-                 type="number">
+          <input matInput placeholder="International shipping price" formControlName="internationalShippingPrice" type="number">
           <span matSuffix>PART</span>
         </mat-form-field>
       </div>
@@ -112,11 +123,11 @@
     <div class="right">
       <button mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-        Save for later
+        {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
       <button mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        Save & Publish
+        {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
     </div>
   </div>
