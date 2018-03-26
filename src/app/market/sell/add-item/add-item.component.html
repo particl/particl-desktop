@@ -81,7 +81,7 @@
 
       <mat-form-field class="full-width">
         <mat-select placeholder="Country">
-          <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
+          <mat-option *ngFor="let country of countryList.getList()" value="{{country.name}}">{{country.name}}</mat-option>
         </mat-select>
       </mat-form-field>
 

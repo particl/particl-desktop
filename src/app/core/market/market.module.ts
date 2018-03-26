@@ -9,6 +9,7 @@ import { ProfileService } from './api/profile/profile.service';
 import { TemplateService } from './api/template/template.service';
 import { ListingService } from './api/listing/listing.service';
 import { CartService } from './api/cart/cart.service';
+import { CountryListService } from './api/countrylist/countrylist.service';
 import { FavoritesService } from './api/favorites/favorites.service';
 import { ImageService } from './api/template/image/image.service';
 import { InformationService } from './api/template/information/information.service';
@@ -32,6 +33,7 @@ export class MarketModule {
         TemplateService,
         ListingService,
         CartService,
+        CountryListService,
         FavoritesService,
         ImageService,
         InformationService
