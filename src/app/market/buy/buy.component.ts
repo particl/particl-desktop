@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, DoCheck } from '@angular/core';
+import { MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -19,14 +20,26 @@ import { Cart } from 'app/core/market/api/cart/cart.model';
   templateUrl: './buy.component.html',
   styleUrls: ['./buy.component.scss']
 })
-export class BuyComponent implements OnInit {
+export class BuyComponent implements OnInit, DoCheck {
 
+  @ViewChild('stepper') stepper: MatStepper;
+  private modelFirstName: any;
+  private modelLastName: any;
+  private modelAddressLine1: any;
+  private modelAddressLine2: any;
+  private modelCity: any;
+  private modelZip: any;
+  private modelState: any;
+  private modelCountry: any;
+  
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
 
   /* https://material.angular.io/components/stepper/overview */
   cartFormGroup: FormGroup;
   shippingFormGroup: FormGroup;
+  
+  private static stepperIndex: number = 0;
 
   order_sortings: Array<any> = [
     { title: 'By creation date', value: 'date-created' },
@@ -118,7 +131,7 @@ export class BuyComponent implements OnInit {
     private favoritesService: FavoritesService
   ) { }
 
-  ngOnInit() {
+  ngOnInit() { 
 
     this._profileService.get(1).take(1).subscribe(profile => {
       console.log("GOT PROFILE");
@@ -149,7 +162,27 @@ export class BuyComponent implements OnInit {
           this.favorites.push(new Listing(listing));
         });
       });
-    })
+    });
+  }
+
+  ngDoCheck(): void {
+    try {  
+      this.stepper.selectedIndex = BuyComponent.stepperIndex;   
+      
+      this.modelFirstName = BuyComponent.ShippingDetails.firstName;
+      this.modelLastName = BuyComponent.ShippingDetails.lastName;
+      this.modelAddressLine1 = BuyComponent.ShippingDetails.addressLine1;
+      this.modelAddressLine2 = BuyComponent.ShippingDetails.addressLine2;     
+      this.modelCity = BuyComponent.ShippingDetails.city; 
+      this.modelZip = BuyComponent.ShippingDetails.zip;
+      this.modelState = BuyComponent.ShippingDetails.state;
+      this.modelCountry = BuyComponent.ShippingDetails.country;
+    }
+    catch(e) { }
+  }
+
+  stepClick(ev) {
+    BuyComponent.stepperIndex = ev.selectedIndex;
   }
 
   clear(): void {
@@ -171,7 +204,7 @@ export class BuyComponent implements OnInit {
       .subscribe(res => this.getCart());
   }
   
-  clearCart(): void {
+  clearCart(): void { 
     this.cartService.clearCart().subscribe(res => this.getCart());
   }
 
@@ -194,6 +227,49 @@ export class BuyComponent implements OnInit {
     }
   }
 
+  static ShippingDetails = class {
+    static firstName: string;
+    static lastName: string;
+    static addressLine1: string;
+    static addressLine2: string;
+    static city: string;
+    static zip: string;
+    static state: string;
+    static country: string;
+  }
+
+  onKeyFirstName(value: string) {
+    BuyComponent.ShippingDetails.firstName = value;
+  }
+
+  onKeyLastName(value: string) {
+    BuyComponent.ShippingDetails.lastName = value;
+  }
+
+  onKeyAddressLine1(value: string) {
+    BuyComponent.ShippingDetails.addressLine1 = value;
+  }  
+
+  onKeyAddressLine2(value: string) {
+    BuyComponent.ShippingDetails.addressLine2 = value;
+  }
+
+  onKeyCity(value: string) {
+    BuyComponent.ShippingDetails.city = value;
+  }
+
+  onKeyZip(value: string) {
+    BuyComponent.ShippingDetails.zip = value;
+  }
+
+  onKeyState(value: string) {
+    BuyComponent.ShippingDetails.state = value;
+  }
+
+  onChange(ev) {
+    BuyComponent.ShippingDetails.country = ev.value;
+  }
+
   fillAddress(address) {
     console.log(address);
     address.countryCode = address.country;
@@ -205,5 +281,6 @@ export class BuyComponent implements OnInit {
     delete address.createdAt;
     this.shippingFormGroup.setValue(address);
   }
-
 }
+
+
