@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
+import { MarketModule } from '../../core/market/market.module';
+
 import { BuyComponent } from './buy.component';
 
 describe('BuyComponent', () => {
@@ -17,7 +19,9 @@ describe('BuyComponent', () => {
       imports: [
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        BrowserAnimationsModule,
+        MarketModule.forRoot()
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
