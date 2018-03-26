@@ -102,7 +102,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     const category = this.filters.category;
     const country = this.filters.country;
 
-    this.listingService.search(pageNumber, max, null, search, sort, country)
+    this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<any>) => {
         this.isLoading = false;
         // new page
