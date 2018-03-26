@@ -34,13 +34,13 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
 
   // filters
-  countries: FormControl = new FormControl();
+  // countries: FormControl = new FormControl();
   countryList: CountryList = new CountryList();
 
   search: string;
 
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
-  categories: FormControl = new FormControl();
+  // categories: FormControl = new FormControl();
   categoryList: Array<string> = [];
 
   _rootCategoryList: Category = new Category({});

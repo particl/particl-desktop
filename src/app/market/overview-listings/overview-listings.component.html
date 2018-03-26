@@ -10,12 +10,12 @@
     <!-- Filtering -->
     <div class="filtering" fxFlex="1 1 100%">
       <!-- removed multiple as I guess currently the api returning data on the basis of only one selected country -->
-      <mat-select placeholder="All countries" [formControl]="countries" class="filter country" (change)="clearAndLoadPage()" [(ngModel)]="filters.country">
+      <mat-select placeholder="All countries" class="filter country" (change)="clearAndLoadPage()" [(ngModel)]="filters.country">
         <mat-option>All countries</mat-option>
         <mat-option *ngFor="let country of countryList?.countries" [value]="country.name">{{ country.name }}</mat-option>
       </mat-select>
 
-      <mat-select placeholder="All categories" (change)="clearAndLoadPage()" [(ngModel)]="filters.category" [formControl]="categories" class="filter category">
+      <mat-select placeholder="All categories" (change)="clearAndLoadPage()" [(ngModel)]="filters.category"  class="filter category">
         <mat-option>All categories</mat-option>
         <mat-option *ngFor="let category of categoryList" [value]="category.id">{{ category.name }}</mat-option>
       </mat-select>
