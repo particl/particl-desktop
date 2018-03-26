@@ -8,6 +8,11 @@ export class Amount {
     return this.amount;
   }
 
+  public getAmountWithFee(fee: number) {
+    const total = this.amount + fee;
+    return this.truncateToDecimals(total, 8);
+  }
+
   /**
    * Returns integer part.
    * e.g:
@@ -83,6 +88,26 @@ export class Amount {
 
 }
 
+export class Fee {
+  constructor(private fee: number) {
+    this.fee = this.truncateToDecimals(fee, 8);
+  }
+
+  public getFee(): number {
+    return this.fee;
+  }
+
+  public getAmountWithFee(amount: number): number {
+    const total = this.fee + amount;
+    return this.truncateToDecimals(total, 8);
+  }
+
+  truncateToDecimals(int: number, dec: number): number {
+    const calcDec = Math.pow(10, dec);
+    return Math.trunc(int * calcDec) / calcDec;
+  }
+}
+
 export class Duration {
 
   constructor(private duration: number) {
@@ -156,6 +181,12 @@ export class AddressHelper {
     ? 'addressPublicRegex' : 'addressPrivateRegex' : 'addressBothRegex')].test(address);
   }
 
+  getAddressType(address: string): string {
+    return (this.testAddress(address) ?
+      (this.testAddress(address, 'public') ? 'public' : 'private') :
+      '');
+  }
+
   getAddress(address: string): string {
     const match = address.match(this.addressBothRegex);
     return match ? match[0] : null;
@@ -176,7 +207,7 @@ export class DateFormatter {
     return (
       (this.date.getDate() < 10 ? '0' + this.date.getDate() : this.date.getDate()) + '-' +
       ((this.date.getMonth() + 1) < 10 ? '0' + (this.date.getMonth() + 1) : (this.date.getMonth() + 1)) + '-' +
-      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear()) 
+      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear())
       + (onlyShowDate === false ?  ' ' + this.hourSecFormatter() : '')
     )
   }
@@ -188,4 +219,14 @@ export class DateFormatter {
         (this.date.getSeconds() < 10 ? '0' + this.date.getSeconds() : this.date.getSeconds())
       )
   }
+}
+
+export function dataURItoBlob(dataURI) {
+  let byteString = atob(dataURI.split(',')[1]);
+  let ab = new ArrayBuffer(byteString.length);
+  let ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: 'image/jpeg' });
 }
