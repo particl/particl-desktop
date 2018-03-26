@@ -16,7 +16,7 @@ export class Category {
   }
 
   getSubCategory(): Array<any> {
-    return this.subCategoryList.map(o => { return o });
+    return this.subCategoryList;
   }
 
 }
