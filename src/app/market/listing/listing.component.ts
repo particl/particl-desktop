@@ -18,6 +18,10 @@ interface IDate {
 })
 export class ListingComponent implements OnInit {
 
+  pictures: any = new Array();
+  price: any;
+  date: any;
+
   constructor(
     private dialogRef: MatDialogRef<ListingComponent>,
     private cartService: CartService,
@@ -25,10 +29,6 @@ export class ListingComponent implements OnInit {
     private marketState: MarketStateService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
-
-  pictures: any = new Array();
-  price: any;
-  date: any;
 
   ngOnInit() {
     this.data.listing.images.map(image => {
@@ -52,11 +52,11 @@ export class ListingComponent implements OnInit {
     this.date = new Date(this.data.listing.object.createdAt).toLocaleDateString();
   }
 
-  addToCart(id) {
+  addToCart(id: number) {
     this.cartService.addItem(id);
   }
 
-  addToFavorites(id) {
+  addToFavorites(id: number) {
     this.favoritesService.addItem(id);
   }
 

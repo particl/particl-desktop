@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
@@ -69,7 +69,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(200)]],
       longDescription:            ['', [Validators.required,
                                         Validators.maxLength(1000)]],
-      category:                 ['', [Validators.required]],
+      category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
       basePrice:                  ['', [Validators.required]],
       domesticShippingPrice:      ['', [Validators.required]],
@@ -104,10 +104,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.fileInput.click();
   }
 
-  processPictures(event) {
+  // @TODO: remove type any
+  processPictures(event: any) {
     Array.from(event.target.files).map((file: File) => {
       const reader = new FileReader();
-      reader.onload = event => {
+      reader.onload = _event => {
         this.picturesToUpload.push(reader.result);
         this.log.d('added picture', file.name);
       };
@@ -118,7 +119,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
   removeExistingImage(imageId: number) {
     this.image.remove(imageId).subscribe(
       success => {
+<<<<<<< c21d31496efb8610380372ae1a0de1df65f6231b
         this.snackbar.open('Removed image successfully!')
+=======
+        this.snackbar.open('Removed image successfully!');
+>>>>>>> Resolve all lint issue & remove unusable module/component/service
 
         // find image in array and remove it.
         let indexToRemove: number;
@@ -138,14 +143,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     );
   }
 
-  removePicture(index) {
+  removePicture(index: number) {
     this.picturesToUpload.splice(index, 1);
     if (this.featuredPicture > index) {
       this.featuredPicture -= 1;
     }
   }
 
-  featurePicture(index) {
+  featurePicture(index: number) {
     this.featuredPicture = index;
   }
 
@@ -171,7 +176,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   preload() {
     this.log.d(`preloading for id=${this.templateId}`);
     this.template.get(this.templateId).subscribe((template: Template) => {
-      this.log.d(`preloaded id=${this.templateId}!`)
+      this.log.d(`preloaded id=${this.templateId}!`);
 
       const t = {
         title: '',
@@ -190,8 +195,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.shortDescription = template.shortDescription;
       t.longDescription = template.longDescription;
       t.category = template.category.id;
+<<<<<<< c21d31496efb8610380372ae1a0de1df65f6231b
       console.log('getting category to id=' + this.itemFormGroup.get('category').value);
       console.log('setting category to id=' + t.category);
+=======
+>>>>>>> Resolve all lint issue & remove unusable module/component/service
 
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
@@ -231,7 +239,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
-              .then(resolve);
+          .then(resolve);
 
       });
     });
@@ -243,6 +251,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     // update information
     /*
+<<<<<<< c21d31496efb8610380372ae1a0de1df65f6231b
     this.information.update(
         this.templateId,
         item.title,
@@ -250,6 +259,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
         item.longDescription,
         item.category
       ).subscribe();*/
+=======
+     this.information.update(
+     this.templateId,
+     item.title,
+     item.shortDescription,
+     item.longDescription,
+     item.category
+     ).subscribe();*/
+>>>>>>> Resolve all lint issue & remove unusable module/component/service
 
     // update images
     this.image.upload(this.templateId, this.picturesToUpload).then(
@@ -280,6 +298,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
 
   }
+
   saveAndPublish() {
     this.log.d('Saving and publishing the listing.');
     if (this.templateId) {

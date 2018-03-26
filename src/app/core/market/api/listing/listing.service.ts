@@ -37,7 +37,7 @@ export class ListingService {
     return this.search(page, pageLimit, '*', null); // OWN
   }
 
-  get(id) {
+  get(id: number) {
     return this.market.call('item', ['get', id]);
   }
 
