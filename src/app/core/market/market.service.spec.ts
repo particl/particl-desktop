@@ -9,7 +9,7 @@ describe('MarketService', () => {
       imports: [
         MarketModule.forRoot()
       ],
-      providers: [MarketService]
+      providers: [ MarketService ]
     });
   });
 
