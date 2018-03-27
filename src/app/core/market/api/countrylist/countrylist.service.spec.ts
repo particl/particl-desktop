@@ -17,12 +17,12 @@ describe('CountryListService', () => {
   }));
 
   it('should search country by name', inject([CountryListService], (service: CountryListService) => {
-    let mockString = 'Andorra'
+    const mockString = 'Andorra'
     expect(service.getCountryByName(mockString).name).toBe(mockString);
   }));
 
   it('should return nil country ', inject([CountryListService], (service: CountryListService) => {
-    let mockString = 'and'
+    const mockString = 'and'
     expect(service.getCountryByName(mockString)).toBe(undefined);
   }));
 
