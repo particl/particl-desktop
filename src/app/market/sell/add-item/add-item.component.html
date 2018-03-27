@@ -18,11 +18,27 @@
         Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible.
       </p>
       <div class="gallery" fxLayoutWrap>
-        <div *ngFor="let picture of pictures ; index as i"
+
+          <div *ngFor="let image of images"
+          class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+       <div class="photo" fxFLex>
+         <img src="{{image.dataId}}">
+         <div class="icons">
+           <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
+                     matTooltip="Remove image" (click)="removeExistingImage(image.id)">
+           </mat-icon>
+           <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                     matTooltip="Set as featured" (click)="featurePicture(i)">
+           </mat-icon>
+         </div>
+       </div>
+     </div>
+
+        <div *ngFor="let picture of picturesToUpload ; index as i"
              class="photo-wrapper {{i === featuredPicture ? 'featured' : ''}}" fxFlex="0 0 123px" fxLayoutAlign="center center">
           <!-- TODO: maybe not gif, but removing is 'unsafe' -->
           <div class="photo" fxFLex>
-            <img src="data:image/gif;base64,{{picture}}">
+            <img src="{{picture}}">
             <div class="icons">
               <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
                         matTooltip="Remove image" (click)="removePicture(i)">
@@ -33,6 +49,7 @@
             </div>
           </div>
         </div>
+
       </div><!-- .gallery -->
     </mat-card><!-- .photos -->
 
@@ -63,8 +80,8 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <mat-select placeholder="Country">
-          <mat-option value="option">Option</mat-option>
+        <mat-select placeholder="Country" formControlName="country">
+          <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -106,11 +123,11 @@
     <div class="right">
       <button mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-        Save for later
+        {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
       <button mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        Save & Publish
+        {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
     </div>
   </div>

@@ -63,7 +63,7 @@
               <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
                 <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                   <div class="image" fxFlex="0 0 115px">
-                    <img src="data:image/gif;base64,{{shoppingCartItem.thumbnail?.data}}">
+                    <img src="{{shoppingCartItem.thumbnail?.dataId}}">
                   </div>
                   <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                     <div class="title">
@@ -183,9 +183,8 @@
                 </mat-form-field>
               </div>
               <mat-form-field class="full-width">
-                <mat-select formControlName="countryCode" placeholder="Country" [(ngModel)]="modelCountry" (change) = "onChange($event)" #tagCountry>
-                  <mat-option value="US">United States of America</mat-option>
-                  <mat-option value="FR">France</mat-option>
+                <mat-select formControlName="countryCode" placeholder="Country" (change)="onChange($event)">
+                  <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
@@ -249,7 +248,7 @@
 
           <div class="shipping-overview" fxFlex="0 0 250px">
             <div class="title">Shipping address</div>
-            <p class="address">First Lastname<br>Address, City, State<br>ZIP/Postal code, Country</p>
+            <p class="address">{{modelFirstName}} {{modelLastName}}<br>{{modelAddressLine1}} {{modelAddressLine2}}, {{modelCity}}, {{modelState}}<br>{{modelZip}}, {{modelCountry}}</p>
           </div>
 
           <table class="subtotals" fxFlex="0 0 250px">

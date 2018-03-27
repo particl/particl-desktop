@@ -5,6 +5,8 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Template } from 'app/core/market/api/template/template.model';
 
 @Component({
   selector: 'app-sell',
@@ -159,8 +161,8 @@ export class SellComponent implements OnInit {
 
   public listings: Array<any>;
 
-  public search: string = "";
-  public category: string = "";
+  public search: string = '';
+  public category: string = '';
 
   constructor(
     private router: Router,
@@ -192,15 +194,19 @@ export class SellComponent implements OnInit {
     this.selectedTab = index;
   }
 
-  confirmDeleteListing(id: number): void {
+  confirmDeleteListing(template: Template): void {
     const dialogRef = this.dialog.open(DeleteListingComponent);
+    dialogRef.componentInstance.templateToRemove = template;
+    dialogRef.afterClosed().subscribe(
+      () => this.loadPage()
+    );
   }
 
   loadPage() {
     const category = this.filters.category ? this.filters.category : null;
     const search = this.filters.search ? this.filters.search : null;
     this.template.search(1, 10, 1, category, search).subscribe(
-      (listings: Array<any>) => {
+      (listings: Array<Template>) => {
         console.log('got templates');
         console.log(listings);
         this.listings = listings;
