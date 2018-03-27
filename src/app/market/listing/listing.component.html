@@ -13,12 +13,12 @@
 
   <div class="product-gallery" fxFlex="0 1 350px">
     <div class="featured image">
-      <img src="{{data.listing.featuredImage ? 'data:image/gif;base64,'+ data.listing.featuredImage.data : './assets/images/placeholder_4-3.jpg' }}">
+      <img src="{{data.listing.featuredImage ? data.listing.featuredImage.dataId : './assets/images/placeholder_4-3.jpg' }}">
     </div>
     <div class="gallery" fxLayout="row" fxLayoutGap="24px">
       <!-- TODO: s/small/medium -->
       <div class="small image" fxFlex="1 1 100px" *ngFor="let picture of pictures">
-        <img src="data:image/gif;base64,{{picture}}">
+        <img src="{{picture.dataId}}">
       </div>
     </div>
   </div>

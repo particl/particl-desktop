@@ -123,11 +123,11 @@
     <div class="right">
       <button mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-        {{ templateId ? 'Update' : 'Save for later'}}
+        {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
       <button mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        {{ templateId ? 'Update & Publish' : 'Save & Publish'}}
+        {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
     </div>
   </div>

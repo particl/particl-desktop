@@ -13,6 +13,7 @@ import { CountryListService } from './api/countrylist/countrylist.service';
 import { FavoritesService } from './api/favorites/favorites.service';
 import { ImageService } from './api/template/image/image.service';
 import { InformationService } from './api/template/information/information.service';
+import { LocationService } from './api/template/location/location.service';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ export class MarketModule {
         CountryListService,
         FavoritesService,
         ImageService,
-        InformationService
+        InformationService,
+        LocationService
       ]
     };
   }

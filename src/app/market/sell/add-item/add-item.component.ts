@@ -12,6 +12,7 @@ import { CountryListService } from 'app/core/market/api/countrylist/countrylist.
 import { ImageService } from 'app/core/market/api/template/image/image.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
+import { LocationService } from 'app/core/market/api/template/location/location.service';
 
 @Component({
   selector: 'app-add-item',
@@ -24,7 +25,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   private destroyed: boolean = false;
 
   // template id
-  templateId: number = 2;
+  templateId: number;
 
   itemFormGroup: FormGroup;
 
@@ -45,6 +46,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private template: TemplateService,
     private image: ImageService,
     private information: InformationService,
+    private location: LocationService,
     private listing: ListingService,
     private snackbar: SnackbarService,
     private countryList: CountryListService
@@ -68,6 +70,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       longDescription:            ['', [Validators.required,
                                         Validators.maxLength(1000)]],
       category:                 ['', [Validators.required]],
+      country:                    ['', [Validators.required]],
       basePrice:                  ['', [Validators.required]],
       domesticShippingPrice:      ['', [Validators.required]],
       internationalShippingPrice: ['', [Validators.required]]
@@ -94,6 +97,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
      });*/
   }
 
+  isExistingTemplate() {
+    return (this.templateId !== undefined && this.templateId > 0);
+  }
   uploadPicture() {
     this.fileInput.click();
   }
@@ -191,7 +197,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
       t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
 
-      this.itemFormGroup.setValue(t);
+      this.itemFormGroup.patchValue(t);
 
       this.images = template.images.map(i => {
         return {
@@ -233,15 +239,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private update(){
     const item = this.itemFormGroup.value;
+    console.log('country', item.country);
 
     // update information
+    /*
     this.information.update(
         this.templateId,
         item.title,
         item.shortDescription,
         item.longDescription,
         item.category
-      ).subscribe();
+      ).subscribe();*/
 
     // update images 
     this.image.upload(this.templateId, this.picturesToUpload).then(
@@ -250,7 +258,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     );
     // update location
-
+    const country = this.countryList.getCountryByName(item.country);
+    this.location.update(this.templateId, country, null, null).subscribe();
     // update shipping
 
     // update messaging
@@ -259,6 +268,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   saveTemplate() {
+    this.log.d('Saving as a template.');
     if (this.templateId) {
       // update 
       this.update();
@@ -271,7 +281,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   }
   saveAndPublish() {
-    this.log.d('saveAndPublish');
+    this.log.d('Saving and publishing the listing.');
     if (this.templateId) {
       // update
       this.update();

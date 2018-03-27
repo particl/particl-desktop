@@ -2,19 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 // cant use iso3166-2-db/i18n/dispute/UN/en due to sandbox limitations
 import { getDataSet, reduce } from 'iso3166-2-db';
-
-export interface Country {
-  fips: string;
-  iso: string;
-  iso3: string;
-  name: string;
-  numeric: number;
-  reference: {
-    geonames: number;
-    openstreetmap: number;
-    wikipedia: string;
-  }
-}
+import { Country } from './country.model';
 
 @Injectable()
 export class CountryListService {
@@ -31,5 +19,9 @@ export class CountryListService {
 
   getList(): any {
     return this.countries;
+  }
+
+  getCountryByName(name: string): Country {
+    return this.countries.find((el) => el.name.toUpperCase() === name.toUpperCase());
   }
 }
