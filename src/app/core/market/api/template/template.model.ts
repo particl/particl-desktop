@@ -25,7 +25,7 @@ export class Template {
      get shortDescription(): string { return this.object.ItemInformation.shortDescription }
      get longDescription(): string { return this.object.ItemInformation.longDescription }
 
-     
+
 
      // Status
      get status(): string {
