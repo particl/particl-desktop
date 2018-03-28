@@ -13,6 +13,7 @@ import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Cart } from 'app/core/market/api/cart/cart.model';
+import { CountryList } from 'app/core/market/api/listing/countrylist.model';
 
 @Component({
   selector: 'app-buy',
@@ -109,6 +110,9 @@ export class BuyComponent implements OnInit {
   /* favs */
   favorites: Array<Listing> = [];
 
+  /* countries */
+  countries: CountryList = new CountryList();
+
   constructor(
     private _formBuilder: FormBuilder,
     private _router: Router,
@@ -120,8 +124,10 @@ export class BuyComponent implements OnInit {
 
   ngOnInit() {
 
+    console.log(this.countries);
+
     this._profileService.get(1).take(1).subscribe(profile => {
-      console.log("GOT PROFILE");
+      console.log('GOT PROFILE');
       console.log(profile);
       this.profile = profile;
     });
@@ -162,38 +168,28 @@ export class BuyComponent implements OnInit {
 
   /* cart */
 
-  goToListings() {
+  goToListings(): void {
     this._router.navigate(['/market/overview']);
   }
 
-  removeFromCart(shoppingCartId: number) {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
-      console.log(res);
-      this.getCart();
-    });
-  }
-  
-  clearCart() {
-    this.cartService.clearCart().subscribe(
-      (x) => console.log('cleared')
-    );
+  removeFromCart(shoppingCartId: number): void {
+    this.cartService.removeItem(shoppingCartId).take(1)
+      .subscribe(res => this.getCart());
   }
 
-  getCart() {
+  clearCart(): void {
+    this.cartService.clearCart().subscribe(res => this.getCart());
+  }
+
+  getCart(): void {
     this.cartService.getCart().take(1).subscribe(cart => {
       this.cart = cart;
-      cart.shoppingCartItems.forEach(shoppingCartItem => {
-        this.listingService.get(shoppingCartItem.listingItemId).take(1).subscribe(listing => {
-          console.log('setting listing for shoppingCartItem id=' + shoppingCartItem.id)
-          shoppingCartItem.listing = new Listing(listing);
-        });
-      });
     });
   }
 
   /* shipping */
 
-  updateShippingProfile() {
+  updateShippingProfile(): void {
     if (this.shippingFormGroup.value.save) {
       delete this.shippingFormGroup.value.save;
       this._profileService.addShippingAddress(this.shippingFormGroup.value).take(1)

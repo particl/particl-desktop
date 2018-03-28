@@ -10,6 +10,7 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
+import { CountryList } from 'app/core/market/api/listing/countrylist.model';
 
 interface ISorting {
   value: string;
@@ -30,10 +31,11 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('overview-listings.component');
   private destroyed: boolean = false;
+  public isLoading: boolean = false;
 
   // filters
   countries: FormControl = new FormControl();
-  countryList: Array<string> = ['Europe', 'North America', 'South America', 'Asia', 'Africa', 'Moon'];
+  countryList: CountryList = new CountryList();
 
   search: string;
 
@@ -63,7 +65,8 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   filters: any = {
-    search:   undefined
+    search: undefined,
+    country: undefined
   };
 
   constructor(
@@ -90,30 +93,33 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
+    this.isLoading = true;
     const max = this.pagination.maxPerPage;
 
     const search = this.filters.search;
+    const country = this.filters.country;
+    this.listingService.search(pageNumber, max, null, search, country)
+      .take(1).subscribe((listings: Array<any>) => {
+        this.isLoading = false;
+        // new page
+        const page = {
+          pageNumber: pageNumber,
+          listings: listings.map(listing => new Template(listing))
+        };
 
-    this.listingService.search(pageNumber, max, null, search).take(1).subscribe((listings: Array<any>) => {
-      // new page
-      const page = {
-        pageNumber: pageNumber,
-        listings: listings.map(listing => new Template(listing))
-      };
-
-      // should we clear all existing pages? e.g search
-      if (clear === true) {
-        this.pages = [page];
-        this.noMoreListings = false;
-      } else { // infinite scroll
-        if (listings.length > 0) {
-          this.pushNewPage(page);
-        } else {
-          this.noMoreListings = true;
+        // should we clear all existing pages? e.g search
+        if (clear === true) {
+          this.pages = [page];
+          this.noMoreListings = false;
+        } else { // infinite scroll
+          if (listings.length > 0) {
+            this.pushNewPage(page);
+          } else {
+            this.noMoreListings = true;
+          }
         }
-      }
 
-    })
+      })
   }
 
   pushNewPage(page: IPage) {
@@ -146,10 +152,10 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   // TODO: fix scroll up!
   loadPreviousPage() {
-    console.log("prev page trigered");
+    console.log('prev page trigered');
     let previousPage = this.getFirstPageCurrentlyLoaded(); previousPage--;
-    console.log("loading prev page" + previousPage);
-    if(previousPage > 0) {
+    console.log('loading prev page' + previousPage);
+    if (previousPage > 0) {
       this.loadPage(previousPage);
     }
   }
@@ -165,7 +171,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     return this.pages[this.pages.length - 1].pageNumber;
   }
 
-  // Returns the pageNumber if the first page that is currently visible 
+  // Returns the pageNumber if the first page that is currently visible
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
   }

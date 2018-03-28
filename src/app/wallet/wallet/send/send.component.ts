@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
@@ -13,7 +13,10 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
+
 import { AddressHelper } from '../../../core/util/utils';
+import { TransactionBuilder, TxType } from './transaction-builder.model';
+
 
 @Component({
   selector: 'app-send',
@@ -21,31 +24,20 @@ import { AddressHelper } from '../../../core/util/utils';
   // TODO merge / globalize styles
   styleUrls: ['./send.component.scss', '../../settings/settings.component.scss']
 })
-export class SendComponent {
+export class SendComponent implements OnInit {
 
 
   // General
   log: any = Log.create('send.component');
   private addressHelper: AddressHelper;
-
+  testnet: boolean = false;
   // UI logic
   @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
   advanced: boolean = false;
   progress: number = 10;
   // TODO: Create proper Interface / type
-  send: any = {
-    input: 'balance',
-    output: 'blind_balance',
-    toAddress: '',
-    toLabel: '',
-    validAddress: undefined,
-    validAmount: undefined,
-    isMine: undefined,
-    currency: 'part',
-    privacy: 8,
-    subtractFeeFromAmount: false
-  };
+  public send: TransactionBuilder;
 
   constructor(
     private sendService: SendService,
@@ -57,33 +49,63 @@ export class SendComponent {
   ) {
     this.progress = 50;
     this.addressHelper = new AddressHelper();
+
+    this.setFormDefaultValue();
   }
 
+  setFormDefaultValue() {
+    this.send = new TransactionBuilder();
+  }
+
+  ngOnInit() {
+    /* check if testnet -> Show/Hide Anon Balance */
+     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+     .subscribe(chain => this.testnet = chain === 'test');
+  }
   /** Select tab */
   selectTab(tabIndex: number): void {
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
-    this.send.input = 'balance';
+    this.send.input = TxType.PUBLIC;
+    this.send.output = TxType.PUBLIC;
     if (this.type === 'balanceTransfer') {
       this.send.toAddress = '';
-      this.send.output = 'blind_balance'
+      this.send.output = TxType.BLIND;
       this.verifyAddress();
     }
     this.updateAmount();
   }
 
   /** Get current account balance (Public / Blind / Anon) */
-  getBalance(account: string): number {
-    return this._rpcState.get('getwalletinfo')[account] || 0;
+  getBalance(account: TxType): number {
+    const balance = this.txTypeToBalanceType(account);
+    return this._rpcState.get('getwalletinfo')[balance] || 0;
   }
 
-  getBalanceString(account: string): string {
-    return this._rpcState.get('getwalletinfo')[account];
+  getBalanceString(account: TxType): string {
+    const balance = this.txTypeToBalanceType(account);
+    return this._rpcState.get('getwalletinfo')[balance];
   }
 
-  checkBalance(account: string): boolean {
-    if (account === 'blind_balance') {
+  checkBalance(account: TxType): boolean {
+    if (account === TxType.BLIND) {
       return parseFloat(this.getBalanceString(account)) < 0.0001 && parseFloat(this.getBalanceString(account)) > 0;
     }
+  }
+
+  private txTypeToBalanceType(type: TxType): string {
+    let r: string;
+    switch (type) {
+      case TxType.PUBLIC:
+        r = 'balance';
+        break;
+      case TxType.BLIND:
+        r = 'blind_balance';
+        break;
+      case TxType.ANON:
+        r = 'anon_balance';
+        break;
+    }
+    return r;
   }
 
   /** Amount validation functions. */
@@ -96,7 +118,7 @@ export class SendComponent {
 
   verifyAmount(): void {
 
-    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.input === '' || this.send.amount === null) {
+    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.amount === null) {
       this.send.validAmount = undefined;
       return;
     }
@@ -117,7 +139,7 @@ export class SendComponent {
 
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
-    if (this.send.input !== 'balance' && this.addressHelper.testAddress(this.send.toAddress, 'public')) {
+    if (this.send.input !== TxType.PUBLIC && this.addressHelper.testAddress(this.send.toAddress, 'public')) {
       return false;
     }
 
@@ -151,19 +173,6 @@ export class SendComponent {
         error => this.log.er('verifyAddress: validateAddressCB failed'));
   }
 
-  /** Clear the send object. */
-  clear(): void {
-    this.send = {
-      input: this.send.input,
-      output: this.send.output,
-      validAddress: undefined,
-      validAmount: undefined,
-      currency: 'part',
-      privacy: 50
-    };
-    this.send.subtractFeeFromAmount = false;
-  }
-
   clearReceiver(): void {
     this.send.toLabel = '';
     this.send.toAddress = '';
@@ -171,24 +180,36 @@ export class SendComponent {
   }
 
   onSubmit(): void {
-    const d = this.dialog.open(SendConfirmationModalComponent);
-    const dc = d.componentInstance;
+    if (this._rpcState.get('locked')) {
+      // unlock wallet and send transaction
+      this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.openSendConfirmationModal.bind(this)});
+    } else {
+      // wallet already unlocked
+      this.openSendConfirmationModal();
+    }
+  }
 
-    let txt = `Do you really want to send ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.send.toAddress}?`
+  /** Open Send Confirmation Modal */
+  openSendConfirmationModal() {
+    const dialogRef = this.dialog.open(SendConfirmationModalComponent);
+
+    let txt = `Do you really want to send ${this.send.amount} ${this.send.currency.toUpperCase()} to ${this.send.toAddress}?`;
     if (this.type === 'balanceTransfer') {
       txt = `Do you really want to transfer the following balance ${this.send.amount} ${this.send.currency.toUpperCase()}?`
     }
-    dc.dialogContent = txt;
 
-    dc.onConfirm.subscribe(() => {
-      d.close();
+    dialogRef.componentInstance.dialogContent = txt;
+    dialogRef.componentInstance.send = this.send;
+
+    dialogRef.componentInstance.onConfirm.subscribe(() => {
+      dialogRef.close();
       this.pay();
-    })
-  }
+    });
+}
 
   /** Payment function */
   pay(): void {
-    if (this.send.input === '' ) {
+    if (!this.send.input) {
       this.flashNotification.open('You need to select an input type (public, blind or anon)!');
       return;
     }
@@ -200,7 +221,7 @@ export class SendComponent {
       this.send.output = this.send.input;
 
       // Check if stealth address if output is private
-      if (this.send.output === 'private' && !this.addressHelper.testAddress(this.send.toAddress, 'private')) {
+      if (this.send.output === TxType.ANON && !this.addressHelper.testAddress(this.send.toAddress, 'private')) {
         this.flashNotification.open('Stealth address required for private transactions!');
         return;
       }
@@ -208,7 +229,7 @@ export class SendComponent {
     // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
 
-      if (this.send.output === '') {
+      if (!this.send.output) {
         this.flashNotification.open('You need to select an output type (public, blind or anon)!');
         return;
       }
@@ -224,7 +245,7 @@ export class SendComponent {
 
     if (this._rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.sendTransaction.bind(this)});
+      this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.sendTransaction.bind(this)});
     } else {
       // wallet already unlocked
       this.sendTransaction();
@@ -236,18 +257,12 @@ export class SendComponent {
       // edit label of address
       this.addLabelToAddress();
 
-      this.sendService.sendTransaction(
-        this.send.input, this.send.output,
-        this.send.toAddress, this.send.amount,
-        this.send.note, this.send.note,
-        this.send.privacy, 1, this.send.subtractFeeFromAmount);
+      this.sendService.sendTransaction(this.send);
     } else {
 
-      this.sendService.transferBalance(
-        this.send.input, this.send.output,
-        this.send.amount, this.send.privacy, 1, this.send.subtractFeeFromAmount);
+      this.sendService.transferBalance(this.send);
     }
-    this.clear();
+    this.setFormDefaultValue();
   }
   /*
     AddressLookup Modal + set details
@@ -258,7 +273,7 @@ export class SendComponent {
     const dc = d.componentInstance;
     dc.type = (this.type === 'balanceTransfer') ? 'receive' : 'send';
     dc.filter = (
-      ['anon_balance', 'blind_balance'].includes(this.send.input) ? 'Private' : 'All types');
+      [TxType.ANON, TxType.BLIND].includes(this.send.input) ? 'Private' : 'All types');
     dc.selectAddressCallback.subscribe((response: AddressLookUpCopy) => {
       this.selectAddress(response);
       d.close();
@@ -299,7 +314,7 @@ export class SendComponent {
   }
 
   setPrivacy(level: number, prog: number): void {
-    this.send.privacy = level;
+    this.send.ringsize = level;
     this.progress = prog;
   }
 

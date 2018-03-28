@@ -2,19 +2,19 @@
   <mat-tab-group (selectChange)="changeTab($event.index)">
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-attach"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
         Your cart
       </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
         Orders
       </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart-outline"></mat-icon>
         Favourites
       </ng-template>
     </mat-tab>
@@ -53,7 +53,9 @@
           <table class="cart-items">
 
             <thead>
-              <tr><th>Items</th><th>Price</th><th>Quantity</th><th class="text-right">Total</th><th></th></tr>
+              <!-- @TODO if quantity required then add this label before total  -->
+              <!-- <th>Quantity</th> -->
+              <tr><th>Items</th><th>Price</th><th class="text-right">Total</th><th></th></tr>
             </thead>
 
             <tbody>
@@ -61,30 +63,31 @@
               <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
                 <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                   <div class="image" fxFlex="0 0 115px">
-                    <img src="data:image/gif;base64,{{shoppingCartItem.listing?.thumbnail?.data}}">
+                    <img src="{{shoppingCartItem.thumbnail?.dataId}}">
                   </div>
                   <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                     <div class="title">
-                      {{shoppingCartItem.listing?.title}}
+                      {{shoppingCartItem.title}}
                     </div>
                     <div class="category">
-                      {{shoppingCartItem.listing?.category.name}}
+                      {{shoppingCartItem.name}}
                     </div>
                   </div>
                 </td>
                 <td class="price cell">
-                  {{shoppingCartItem.listing?.basePrice.getIntegerPart()}}.<small>{{shoppingCartItem.listing?.basePrice.getFractionalPart()}}</small> PART
+                  {{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART
                 </td>
-                <td class="quantity cell TO_DO">
+                <!-- @TODO if quantity required then we can uncomment the code   -->
+               <!--  <td class="quantity cell TO_DO">
                   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                    <!--button mat-button class="small">-</button-->
+                    <button mat-button class="small">-</button>
                     <mat-form-field class="auto-width">
                       <input matInput type="number" value="1" min="1" formControlName="firstCtrl">
                     </mat-form-field>
-                    <!--button mat-button class="small">+</button-->
+                    <button mat-button class="small">+</button>
                   </div>
-                </td>
-                <td class="total cell TO_DO">202.<small>4203</small> PART</td>
+                </td> -->
+                <td class="total cell">{{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART</td>
                 <td class="remove">
                   <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(shoppingCartItem.listingItemId)">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
@@ -181,8 +184,7 @@
               </div>
               <mat-form-field class="full-width">
                 <mat-select formControlName="countryCode" placeholder="Country">
-                  <mat-option value="US">United States of America</mat-option>
-                  <mat-option value="FR">France</mat-option>
+                  <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
@@ -400,7 +402,7 @@
             </button>
             <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
             <button mat-button matTooltip="View payment ID" class="small">
-              <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
             </button>
             <!-- TODO: shortcut to e2e message to buyer -->
             <button mat-button class="small">
