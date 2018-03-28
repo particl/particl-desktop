@@ -2,19 +2,19 @@
   <mat-tab-group (selectChange)="changeTab($event.index)">
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-attach"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
         Your cart
       </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
         Orders
       </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart-outline"></mat-icon>
         Favourites
       </ng-template>
     </mat-tab>
@@ -402,7 +402,7 @@
             </button>
             <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
             <button mat-button matTooltip="View payment ID" class="small">
-              <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+              <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
             </button>
             <!-- TODO: shortcut to e2e message to buyer -->
             <button mat-button class="small">
