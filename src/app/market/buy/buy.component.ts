@@ -15,7 +15,6 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryList } from 'app/core/market/api/listing/countrylist.model';
-import { MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-buy',
@@ -141,6 +140,8 @@ export class BuyComponent implements OnInit, DoCheck {
 
     console.log(this.countries);
 
+    console.log(this.countries);
+
     this._profileService.get(1).take(1).subscribe(profile => {
       console.log('GOT PROFILE');
       console.log(profile);
@@ -211,8 +212,8 @@ export class BuyComponent implements OnInit, DoCheck {
     this.cartService.removeItem(shoppingCartId).take(1)
       .subscribe(res => this.getCart());
   }
-  
-  clearCart(): void { 
+
+  clearCart(): void {
     this.cartService.clearCart().subscribe(res => this.getCart());
   }
 
