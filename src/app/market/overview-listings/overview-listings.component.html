@@ -43,7 +43,7 @@
   </div><!-- .control-bar -->
 </app-header>
 
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length < 1"></mat-progress-bar>
+
 <div class="container-block" fxLayout="row">
 
   <!-- div class="sidebar" fxFlex="25%">
@@ -100,5 +100,7 @@
     </div>
   </div><!-- .content -->
 
-</div>
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length > 0"></mat-progress-bar>
+
+</div><!-- .container-block -->
+
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length > 0" class="loading-bar"></mat-progress-bar>
