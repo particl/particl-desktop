@@ -1,7 +1,7 @@
 import { Listing } from '../listing/listing.model';
-import { Amount } from "app/core/util/utils";
+import { Amount } from 'app/core/util/utils';
 export class Cart {
-    
+
   public shoppingCartItems: Array<any>;
 
   constructor(private cartDbObj: any) {
@@ -9,10 +9,10 @@ export class Cart {
       this.setCartItems();
   }
 
-  get subTotal(): Amount{
-    let total: number = 0.0;
+  get subTotal(): Amount {
+    let total = 0.0;
     this.shoppingCartItems.map(shoppingCartItem => {
-      let object = shoppingCartItem.ListingItem;
+      const object = shoppingCartItem.ListingItem;
       // if listing is loaded (async)
       if (object.PaymentInformation) {
         total += object.PaymentInformation.ItemPrice.basePrice
@@ -23,7 +23,7 @@ export class Cart {
 
   private setCartItems(): void {
     this.shoppingCartItems.map(shoppingCartItem => {
-      let object = shoppingCartItem.ListingItem;
+      const object = shoppingCartItem.ListingItem;
       if (object.ItemInformation) {
         shoppingCartItem.title = object.ItemInformation.title;
         shoppingCartItem.name = object.ItemInformation.ItemCategory.name;
@@ -36,16 +36,16 @@ export class Cart {
     });
   }
 
-  get countOfItems() { 
+  get countOfItems() {
     return this.shoppingCartItems.length;
   }
 
   private getThumbnail(images: any) {
-     if(images) {
+     if (images) {
         return images.ItemImageDatas.find(data => {
           return data.imageVersion === 'THUMBNAIL';
         });
-      } 
+      }
       return undefined;
   }
 
