@@ -184,7 +184,7 @@ export class BuyComponent implements OnInit, DoCheck {
       this.modelCity = BuyComponent.ShippingDetails.city; 
       this.modelZip = BuyComponent.ShippingDetails.zip;
       this.modelState = BuyComponent.ShippingDetails.state;
-      this.modelCountry = BuyComponent.ShippingDetails.country; 
+      this.modelCountry = BuyComponent.ShippingDetails.country;   
     }
     catch(e) { }
   }

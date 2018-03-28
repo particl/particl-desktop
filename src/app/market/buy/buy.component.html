@@ -183,7 +183,7 @@
                 </mat-form-field>
               </div>
               <mat-form-field class="full-width">
-                <mat-select formControlName="countryCode" placeholder="Country" (change)="onChange($event)">
+                <mat-select formControlName="countryCode" placeholder="Country" [(ngModel)]="modelCountry" (change)="onChange($event)">
                   <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -248,7 +248,7 @@
 
           <div class="shipping-overview" fxFlex="0 0 250px">
             <div class="title">Shipping address</div>
-            <p class="address">{{modelFirstName}} {{modelLastName}}<br>{{modelAddressLine1}} {{modelAddressLine2}}, {{modelCity}}, {{modelState}}<br>{{modelZip}}, {{modelCountry}}</p>
+            <p class="address">{{modelFirstName}} {{modelLastName}}<br>{{modelAddressLine1}}, {{modelAddressLine2}}, {{modelCity}}, {{modelState}}<br>{{modelZip}}, {{modelCountry}}</p>
           </div>
 
           <table class="subtotals" fxFlex="0 0 250px">
