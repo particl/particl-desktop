@@ -22,7 +22,7 @@ export class PreviewListingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // console.log(this.listing);
+    console.log(this.listing);
   }
 
   openListing() {
@@ -34,7 +34,7 @@ export class PreviewListingComponent implements OnInit {
   getThumbnail() {
     if (this.listing.thumbnail) {
       // TODO: logic for main image, taking 0 here
-      return 'data:image/gif;base64,' + this.listing.thumbnail.data;
+      return this.listing.thumbnail.dataId;
     } else {
       return './assets/images/placeholder_4-3.jpg';
     }

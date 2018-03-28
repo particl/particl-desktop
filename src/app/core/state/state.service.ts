@@ -6,7 +6,7 @@ import { Observer } from 'rxjs/Rx';
 
 export interface InternalStateType {
   [key: string]: any;
-};
+}
 
 interface InternalStateCache {
   [key: string]: {

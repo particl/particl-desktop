@@ -63,7 +63,7 @@
               <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
                 <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                   <div class="image" fxFlex="0 0 115px">
-                    <img src="data:image/gif;base64,{{shoppingCartItem.thumbnail?.data}}">
+                    <img src="{{shoppingCartItem.thumbnail?.dataId}}">
                   </div>
                   <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                     <div class="title">

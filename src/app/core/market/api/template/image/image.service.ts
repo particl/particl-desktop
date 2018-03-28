@@ -28,7 +28,7 @@ export class ImageService {
 
     return new Promise((resolve, reject) => {
       images.map(picture => {
-        this.log.d('Uploading pictures!');
+        this.log.d('Uploading pictures to templateId=', templateId);
         this.add(templateId, picture).take(1).subscribe(res => {
           console.log(res);
           if (++nPicturesAdded === images.length) {
