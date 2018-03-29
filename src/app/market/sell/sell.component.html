@@ -190,7 +190,7 @@
   <!-- Orders > list -->
   <div class="orders list section TO_DO" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'orders'">
 
-    <div class="no-results">
+    <div class="no-results" *ngIf="orders.length === 0">
       You don't have any market orders yet
     </div>
 
@@ -240,9 +240,9 @@
         </div>
       </div>
 
-      <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+      <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" matTooltip="Reject & cancel order" (click)="confirmDeleteListing()" class="small">
+          <button mat-button color="warn" matTooltip="Reject & cancel order" (click)="confirmDeleteListing()" class="small single">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
           </button>
           <button mat-button matTooltip="Edit order" class="small">
@@ -250,7 +250,7 @@
             Edit
           </button>
           <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-          <button mat-button matTooltip="View payment ID" class="small">
+          <button mat-button matTooltip="View payment ID" class="small single">
             <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
           </button>
           <!-- TODO: shortcut to e2e message to buyer -->
