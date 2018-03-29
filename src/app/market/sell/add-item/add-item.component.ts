@@ -32,8 +32,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   _rootCategoryList: Category = new Category({});
   countries: CountryList = new CountryList();
   images: string[];
- 
-  // file upload 
   dropArea: any;
   fileInput: any;
   picturesToUpload: string[];
@@ -119,14 +117,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.image.remove(imageId).subscribe(
       success => {
         this.snackbar.open('Removed image successfully!')
-        
         // find image in array and remove it.
         let indexToRemove: number;
         this.images.find((element: any, index: number) => {
           if (element.id === imageId) {
             indexToRemove = index;
             return true;
-          } 
+          }
+
           return false;
         });
         if (indexToRemove >= 0) {
@@ -190,8 +188,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.shortDescription = template.shortDescription;
       t.longDescription = template.longDescription;
       t.category = template.category.id;
-      console.log("getting category to id="+ this.itemFormGroup.get('category').value);
-      console.log("setting category to id="+t.category);
+
+      console.log('getting category to id=' + this.itemFormGroup.get('category').value);
+      console.log('setting category to id=' + t.category);
 
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
@@ -232,12 +231,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
               .then(resolve);
-
-      }); 
-    }); 
+      });
+    });
   }
 
-  private update(){
+  private update() {
     const item = this.itemFormGroup.value;
     console.log('country', item.country);
 
@@ -251,7 +249,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         item.category
       ).subscribe();*/
 
-    // update images 
+    // update images
     this.image.upload(this.templateId, this.picturesToUpload).then(
       (t) => {
         this.log.d('Uploaded the new images!');
@@ -263,14 +261,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update shipping
 
     // update messaging
-    // update payment 
+    // update payment
     // update escrow
   }
 
   saveTemplate() {
     this.log.d('Saving as a template.');
     if (this.templateId) {
-      // update 
+      // update
       this.update();
     } else {
       this.save().then(id => {
@@ -295,5 +293,4 @@ export class AddItemComponent implements OnInit, OnDestroy {
       });
     }
   }
-
 }

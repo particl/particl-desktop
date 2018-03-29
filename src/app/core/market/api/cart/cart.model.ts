@@ -23,8 +23,9 @@ export class Cart {
 
   get shippingTotal(): Amount{
     let total: number = 0.0;
+
     this.shoppingCartItems.map(shoppingCartItem => {
-      let object = shoppingCartItem.ListingItem;
+      const object = shoppingCartItem.ListingItem;
       // if listing is loaded (async)
       if (object.PaymentInformation) {
         total += object.PaymentInformation.ItemPrice.ShippingPrice.international

@@ -60,10 +60,11 @@
       <app-header>
         <ul class="header-nav">
           <li>Recent Transactions</li>
-          <li class="buttons">
+          <!-- TODO: uncomment when widget management is ready -->
+          <!--li class="buttons">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
             <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
-          </li>
+          </li-->
         </ul>
       </app-header>
       <transaction-table
@@ -75,8 +76,8 @@
 
 
   <div class="overview-sidebar" fxFlex="33">
-      <!-- @TODO comment out the code for widget for total buy orders -->
-   <!--  <div class="buy-orders TO_DO">
+    <!-- @TODO comment out the code for widget for total buy orders -->
+    <!-- <div class="buy-orders TO_DO">
       <app-header>
         <ul class="header-nav">
           <li>Your buy orders</li>
@@ -102,12 +103,13 @@
     <app-coldstake></app-coldstake>
     <app-stakinginfo></app-stakinginfo>
 
-    <div class="action-buttons">
+    <!-- TODO: uncomment when widget management is ready -->
+    <!--div class="action-buttons">
       <button mat-button (click)="openWidgetManager()">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
         Manage widgets
       </button>
-    </div><!-- .action-buttons -->
+    </div--><!-- .action-buttons -->
 
   </div><!-- .overview-sidebar -->
 </div><!-- .overview-content -->

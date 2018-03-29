@@ -9,18 +9,17 @@ import { Country } from 'app/core/market/api/listing/countrylist.model';
 
 @Injectable()
 export class LocationService {
-  
   log: any = Log.create('location.service');
 
   constructor(private market: MarketService) { }
 
   update(itemTemplateId: number, region: Country, address: string, gps: GpsMarker): Observable<any> {
-    return this.market.call('template', 
+    return this.market.call('template',
       [
-        'location', 
-        'add', 
-        itemTemplateId, 
-        region.iso, 
+        'location',
+        'add',
+        itemTemplateId,
+        region.iso,
         address || 'a',
         gps ? gps.title : null,
         gps ? gps.description : null,

@@ -5,7 +5,6 @@ import { MarketService } from 'app/core/market/market.service';
 
 @Injectable()
 export class ImageService {
-  
   log: any = Log.create('image.service');
 
   constructor(private market: MarketService) { }
@@ -18,8 +17,7 @@ export class ImageService {
     return this.market.call('template', ['image', 'remove', imageId]);
   }
 
-  /**
-   * 
+  /*
    * @param templateId the template id to attach the images to.
    * @param images array of base64 dataURI's to upload.
    */
