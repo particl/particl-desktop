@@ -132,7 +132,7 @@
       <form [formGroup]="shippingFormGroup" class="shipping">
         <ng-template matStepLabel>Shipping details</ng-template>
         <div fxLayout="row" fxLayoutGap="30px">
-          <div class="shipping-profile" fxFlex>
+          <!--<div class="shipping-profile" fxFlex>
             <mat-card>
               <div class="title">Choose shipping profile</div>
               <mat-form-field class="full-width">
@@ -151,11 +151,11 @@
                 To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
               </p>
             </mat-card>
-          </div><!-- .shipping-profile -->
+          </div>--><!-- .shipping-profile -->
 
           <div class="shipping-info" fxFlex>
             <mat-card>
-              <div class="title">Or enter new shipping address</div>
+              <div class="title"><!--Or e-->Enter <!--new-->shipping address</div>
               <div class="row" fxLayout fxLayoutGap="30px">
                 <!-- FIXME: First and Last name should be required as well (waiting for dapp shell integration) -->
                 <mat-form-field class="full-width" fxFlex>
@@ -187,12 +187,12 @@
                   <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
+              <!--<div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
                 <mat-checkbox formControlName="save" fxFlex>Save as shipping profile</mat-checkbox>
                 <mat-form-field class="full-width" fxFlex>
                   <input matInput formControlName="title" placeholder="Shipping profile name">
                 </mat-form-field>
-              </div>
+              </div>-->
             </mat-card>
           </div><!-- .shipping-info -->
 
@@ -248,7 +248,7 @@
 
           <div class="shipping-overview" fxFlex="0 0 250px">
             <div class="title">Shipping address</div>
-            <p class="address">{{modelFirstName}} {{modelLastName}}<br>{{modelAddressLine1}}, {{modelAddressLine2}}, {{modelCity}}, {{modelState}}<br>{{modelZip}}, {{modelCountry}}</p>
+            <p class="address">{{modelFirstName}} {{modelLastName}}<br>{{modelAddressLine1}}, {{modelAddressLine2}}<br>{{modelCity}}, {{modelState}}, {{modelZip}}<br>{{modelCountry}}</p>
           </div>
 
           <table class="subtotals" fxFlex="0 0 250px">
