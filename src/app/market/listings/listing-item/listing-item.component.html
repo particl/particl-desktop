@@ -4,10 +4,8 @@
     <!-- TODO: this is a default placeholder image (show if no other image is available) -->
     <img src="{{getThumbnail()}}" (click)="openListing()">
     <div class="icons">
-      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-search" matTooltip="Preview"
+      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-zoom-bold-in" matTooltip="Preview"
                 matTooltipPosition="above" (click)="openListing()"></mat-icon>
-      <mat-icon class="icon flag TO_DO" fontSet="partIcon" fontIcon="part-error" matTooltip="Report"
-                matTooltipPosition="above"></mat-icon>
       <app-favorite class="icon fav" [listing]="listing"></app-favorite>
     </div>
   </div>
