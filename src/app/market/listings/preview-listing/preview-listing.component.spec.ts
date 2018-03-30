@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketModule } from '../../../core/market/market.module';
@@ -15,6 +16,7 @@ describe('PreviewListingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ PreviewListingComponent ],
       imports: [
         CoreUiModule.forRoot(),

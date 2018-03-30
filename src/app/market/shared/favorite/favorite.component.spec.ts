@@ -1,5 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { MarketModule } from '../../../core/market/market.module';
+import { MaterialModule } from '../../../core-ui/material/material.module';
+import { FavoritesService } from '../../../core/market/api/favorites/favorites.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+
 import { FavoriteComponent } from './favorite.component';
 
 describe('FavoriteComponent', () => {
@@ -8,7 +13,15 @@ describe('FavoriteComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FavoriteComponent ]
+      imports: [
+        MaterialModule,
+        MarketModule.forRoot()
+      ],
+      declarations: [ FavoriteComponent ],
+      providers: [
+        FavoritesService,
+        SnackbarService
+      ]
     })
     .compileComponents();
   }));
