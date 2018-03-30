@@ -1,7 +1,5 @@
-
-/* electron */
-const electron = require('electron');
-const app = electron.app;
+const electron      = require('electron');
+const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path          = require('path');
 const fs            = require('fs');
@@ -9,38 +7,28 @@ const url           = require('url');
 const platform      = require('os').platform();
 const rxIpc         = require('rx-ipc-electron/lib/main').default;
 const Observable    = require('rxjs/Observable').Observable;
-const log           = require('electron-log');
 
-/* make userDataPath if it doesn't exist yet */
-const userDataPath = app.getPath('userData');
-if (!fs.existsSync(userDataPath)) {
-  fs.mkdir(userDataPath);
+/* correct appName and userData to respect Linux standards */
+if (process.platform === 'linux') {
+  app.setName('particl-desktop');
+  app.setPath('userData', `${app.getPath('appData')}/${app.getName()}`);
 }
 
-/* initialize logging */
-log.transports.file.level = 'debug';
-log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
-log.transports.file.file = log.transports.file
-  .findLogPath(log.transports.file.appName)
-  .replace('log.log', 'particl.log');
+/* check for paths existence and create */
+[ app.getPath('userData'),
+  app.getPath('userData') + '/testnet'
+].map(path => !fs.existsSync(path) && fs.mkdir(path));
 
-log.debug(`console log level: ${log.transports.console.level}`);
-log.debug(`file log level: ${log.transports.file.level}`);
-
-const _options = require('./modules/options');
-const init = require('./modules/init');
-const rpc = require('./modules/rpc/rpc');
-const daemon = require('./modules/daemon/daemon');
+const options = require('./modules/options').parse();
+const log     = require('./modules/logger').init();
+const init    = require('./modules/init');
+const rpc     = require('./modules/rpc/rpc');
+const daemon  = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-let options;
-let openDevTools = false;
-
-if (process.argv.includes('-opendevtools'))
-  openDevTools = true;
 
 if (app.getVersion().includes('RC'))
   process.argv.push(...['-testnet', '-printtoconsole']);
@@ -49,8 +37,9 @@ if (app.getVersion().includes('RC'))
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  log.debug('app ready')
-  options = _options.parse();
+  log.info('app ready')
+  log.debug('argv', process.argv);
+  log.debug('options', options);
   initMainWindow();
   init.start(mainWindow);
 });
@@ -118,7 +107,7 @@ function initMainWindow() {
   }
 
   // Open the DevTools.
-  if (openDevTools || options.devtools) {
+  if (options.devtools) {
     mainWindow.webContents.openDevTools()
   }
 
@@ -233,4 +222,3 @@ function makeTray() {
 
   return trayImage;
 }
-

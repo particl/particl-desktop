@@ -23,24 +23,28 @@
       <div class="title">Pay from</div>
 
       <!-- Select "FROM" balance/account -->
-      <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
-        <mat-radio-button class="balance" value="balance" checked="checked" (click)="send.output = 'blind_balance'" fxFlex>
+      <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" fxLayout="column"
+                       fxLayoutGap="10px" (change)="updateAmount()">
+        <mat-radio-button class="balance" value="part" checked="checked"
+                          (click)="send.output = (type === 'sendPayment')? 'part': 'blind'" fxFlex>
           <div class="name">Public</div>
-          <div class="desc">Available balance: <span class="amount">{{ getBalance('balance') }}</span></div>
+          <div class="desc">Available balance: <span class="amount">{{ getBalance('part') }}</span></div>
         </mat-radio-button>
-        <mat-radio-button class="balance" value="blind_balance" fxFlex (click)="send.output = 'balance'">
+        <mat-radio-button class="balance" value="blind" fxFlex (click)="send.output = 'part'">
           <div class="name">Blind</div>
-          <div class="desc">Available balance:<span *ngIf="!checkBalance('blind_balance')" class="amount">{{ getBalance('blind_balance') }}</span> 
-          <mat-icon *ngIf="checkBalance('blind_balance')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon></div>
+          <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')" class="amount">{{ getBalance('blind') }}</span>
+            <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
+                      matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
+          </div>
         </mat-radio-button>
-        <mat-radio-button class="balance" value="anon_balance" fxFlex disabled matTooltip="Not available – Anon transactions are currently being tested by researchers from NJIT">
+        <mat-radio-button *ngIf="testnet" class="balance" value="anon" (click)="send.output = 'part'" fxFlex>
           <div class="name">Anon</div>
-          <div class="desc">Available balance:<span class="amount">{{ getBalance('anon_balance') }}</span></div>
+          <div class="desc">Available balance:<span class="amount">{{ getBalance('anon') }}</span></div>
         </mat-radio-button>
       </mat-radio-group><!-- .from-balance-type -->
 
       <!-- Show privacy slider if anonymous TX -->
-      <div *ngIf="send.input === 'anon_balance'">
+      <div *ngIf="send.input === 'anon'">
         <div class="subtitle">Select privacy level</div>
         <div class="privacy-level">
           <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
@@ -51,20 +55,20 @@
             <span fxFlex="0 0 50px" class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="High privacy"
                   matTooltipPosition="below">High</span>
           </div><!-- .privacy-labels -->
-          <mat-progress-bar [color]="'primary'" [bufferValue]="send.privacy" [mode]="'determinate'"
+          <mat-progress-bar [color]="'primary'" [bufferValue]="send.ringsize" [mode]="'determinate'"
                             [value]="progress"></mat-progress-bar>
         </div><!-- .privacy-level -->
       </div><!-- /if Anon -->
 
       <!-- TX info help -->
-      <p class="widget-help" *ngIf="send.input === 'balance'">
+      <p class="widget-help" *ngIf="send.input === 'part'">
         In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver
         addresses.
       </p>
-      <p class="widget-help" *ngIf="send.input === 'blind_balance'">
+      <p class="widget-help" *ngIf="send.input === 'blind'">
         Blinded transactions hide transaction amounts, but the sender and receiver addresses are still visible.
       </p>
-      <p class="widget-help" *ngIf="send.input === 'anon_balance'">
+      <p class="widget-help" *ngIf="send.input === 'anon'">
         Anon transaction offer the highest privacy &ndash; transaction amounts and not even sender and receiver
         addresses are publicly visible. You can further adjust the privacy level to your needs ("Normal" privacy level
         is fine for most users). The higher privacy level is, the larger fee needs to be paid.
@@ -91,20 +95,24 @@
             <span>Advanced options</span>
           </button>
         </div>
-        <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output" fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
-          <mat-radio-button class="balance" value="balance" (click)="send.input = 'blind_balance'" checked="checked" fxFlex>
+        <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output"
+                         fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
+          <mat-radio-button class="balance" value="part" (click)="send.input = 'blind'" checked="checked" fxFlex>
             <div class="name">Public</div>
-            <div class="desc">Balance:<span class="amount">{{ getBalance('balance') }}</span></div>
+            <div class="desc">Balance:<span class="amount">{{ getBalance('part') }}</span></div>
           </mat-radio-button>
-          <mat-radio-button class="balance" value="blind_balance" (click)="send.input = 'balance'" fxFlex>
+          <mat-radio-button class="balance" value="blind" (click)="send.input = 'part'" fxFlex>
             <div class="name">Blind</div>
-            <div class="desc">Balance:<span *ngIf="!checkBalance('blind_balance')" class="amount">{{ getBalance('blind_balance') }}</span>
-              <mat-icon *ngIf="checkBalance('blind_balance')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
+            <div class="desc">Balance:<span *ngIf="!checkBalance('blind')"
+                                            class="amount">{{ getBalance('blind') }}</span>
+              <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question"
+                        class="help-icon"
+                        matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
             </div>
           </mat-radio-button>
-          <mat-radio-button class="balance" value="anon_balance" disabled fxFlex matTooltip="Not available – Anon transactions are currently being tested by researchers from NJIT">
+          <mat-radio-button *ngIf="testnet" class="balance" value="anon" (click)="send.input = 'part'" fxFlex>
             <div class="name">Anon</div>
-            <div class="desc">Balance:<span class="amount">{{ getBalance('anon_balance') }}</span></div>
+            <div class="desc">Balance:<span class="amount">{{ getBalance('anon') }}</span></div>
           </mat-radio-button>
         </mat-radio-group><!-- .from-balance-type -->
         <p class="widget-help">
@@ -115,7 +123,8 @@
       <mat-card class="pay-to" *ngIf="type === 'sendPayment' || advanced">
         <div class="title">
           Pay to
-          <button mat-button (click)="advanced = !advanced" *ngIf="type === 'sendPayment'" class="small advanced-options">
+          <button mat-button (click)="advanced = !advanced" *ngIf="type === 'sendPayment'"
+                  class="small advanced-options">
             <mat-icon fontSet="partIcon"
                       fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
             <span>Advanced options</span>
@@ -145,7 +154,8 @@
             </span>
           </div>
           <mat-form-field class="full-width larger no-top-padding" floatPlaceholder="never">
-            <input name="toLabel" matInput type="text" placeholder="Receiver's name (optional)" [(ngModel)]="send.toLabel">
+            <input name="toLabel" matInput type="text" placeholder="Receiver's name (optional)"
+                   [(ngModel)]="send.toLabel">
           </mat-form-field>
           <p class="widget-help">
             You can save Receiver's address to your Address book by labeling it here.
@@ -156,7 +166,7 @@
         <div class="section narration advanced" *ngIf="advanced">
           <mat-form-field class="full-width larger" floatPlaceholder="never">
             <input #narration type="text" matInput name="sendNote" placeholder="Narration (optional)" maxlength="24"
-                   [(ngModel)]="send.note">
+                   [(ngModel)]="send.narration">
             <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
           </mat-form-field>
           <p class="widget-help">
@@ -176,7 +186,8 @@
                  [ngClass]="{'verify-sucess': checkAmount() === true, 'verify-error': checkAmount() === false }"
                  [disabled]="send.subtractFeeFromAmount">
         </mat-form-field>
-        <mat-checkbox name="send_all" [(ngModel)]="send.subtractFeeFromAmount" (click)="sendAllBalance()" class="send-all">
+        <mat-checkbox name="send_all" [(ngModel)]="send.subtractFeeFromAmount" (click)="sendAllBalance()"
+                      class="send-all">
           Send All
         </mat-checkbox>
         <!-- Choose currency -->

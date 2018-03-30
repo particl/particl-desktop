@@ -43,8 +43,8 @@ exports.startDaemonManager = function() {
 daemonManager.on('status', (status, msg) => {
 
   // Done -> means we have a binary!
-  if(status === 'done') {
-    log.info('daemonManager returned successfully, starting daemon!');
+  if (status === 'done') {
+    log.debug('daemonManager returned successfully, starting daemon!');
     multiwallet.get()
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
@@ -77,7 +77,7 @@ daemonManager.on('status', (status, msg) => {
 });
 
 electron.app.on('before-quit', function beforeQuit(event) {
-  log.debug('received quit signal');
+  log.info('received quit signal, cleaning up...');
 
   event.preventDefault();
   electron.app.removeListener('before-quit', beforeQuit);
