@@ -8,6 +8,11 @@ export class Amount {
     return this.amount;
   }
 
+  public getAmountWithFee(fee: number) {
+    const total = this.amount + fee;
+    return this.truncateToDecimals(total, 8);
+  }
+
   /**
    * Returns integer part.
    * e.g:
@@ -83,6 +88,26 @@ export class Amount {
 
 }
 
+export class Fee {
+  constructor(private fee: number) {
+    this.fee = this.truncateToDecimals(fee, 8);
+  }
+
+  public getFee(): number {
+    return this.fee;
+  }
+
+  public getAmountWithFee(amount: number): number {
+    const total = this.fee + amount;
+    return this.truncateToDecimals(total, 8);
+  }
+
+  truncateToDecimals(int: number, dec: number): number {
+    const calcDec = Math.pow(10, dec);
+    return Math.trunc(int * calcDec) / calcDec;
+  }
+}
+
 export class Duration {
 
   constructor(private duration: number) {
@@ -154,6 +179,12 @@ export class AddressHelper {
   testAddress(address: string, type?: string): boolean {
     return this[(type ? type === 'public'
     ? 'addressPublicRegex' : 'addressPrivateRegex' : 'addressBothRegex')].test(address);
+  }
+
+  getAddressType(address: string): string {
+    return (this.testAddress(address) ?
+      (this.testAddress(address, 'public') ? 'public' : 'private') :
+      '');
   }
 
   getAddress(address: string): string {

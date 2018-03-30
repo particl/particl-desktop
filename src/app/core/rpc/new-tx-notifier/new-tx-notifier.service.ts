@@ -9,19 +9,18 @@ import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 @Injectable()
 export class NewTxNotifierService implements OnDestroy {
 
-  log: any = Log.create('new-tx-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
+  log: any = Log.create(
+    'new-tx-notifier.service id:' + Math.floor((Math.random() * 1000) + 1)
+  );
   private destroyed: boolean = false;
-
   private lastTxId: string = undefined;
-
 
   constructor(
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
     private _notification: NotificationService
   ) {
-
-    this.log.d('tx notifier service running!');
+    this.log.d('tx notifier service running');
     this._rpcState.observe('getwalletinfo', 'txcount')
       .takeWhile(() => !this.destroyed)
       .subscribe(txcount => {
@@ -55,10 +54,8 @@ export class NewTxNotifierService implements OnDestroy {
             if (this.lastTxId === tx.txid) {
               return true;
             }
-
             this.notifyNewTransaction(tx);
           })
-
           // update tip
           this.lastTxId = txs[0].txid;
         }
@@ -68,14 +65,17 @@ export class NewTxNotifierService implements OnDestroy {
   private notifyNewTransaction(tx: any) {
     this.log.d('notify new tx: ' + tx);
     if (tx.category === 'receive') {
-      this._notification.sendNotification('Incoming transaction', tx.amount + ' PART received');
+      this._notification.sendNotification(
+        'Incoming transaction', tx.amount + ' PART received'
+      );
     } else if (tx.category === 'stake') {
-      this._notification.sendNotification('New stake reward', tx.amount + ' PART received');
+      this._notification.sendNotification(
+        'New stake reward', tx.amount + ' PART received'
+      );
     }
   }
 
   ngOnDestroy() {
     this.destroyed = true;
   }
-
 }

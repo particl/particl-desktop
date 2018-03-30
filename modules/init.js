@@ -8,7 +8,7 @@ const zmq           = require('./zmq/zmq');
 const daemon        = require('./daemon/daemon');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
-const notification   = require('./notification/notification');
+const notification  = require('./notification/notification');
 
 
 // TODO move to a proper place
