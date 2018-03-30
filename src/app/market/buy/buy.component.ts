@@ -75,6 +75,17 @@ export class BuyComponent implements OnInit {
       show_escrow_txdetails: false,
     },
     {
+      name: 'Development Buff (2 week subscription)',
+      hash: 'FG2', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
+      hash_bg: 'bg12', // TODO: assign random hash_bg (bg1-bg16)
+      status: 'awaiting',
+      status_info: '????',
+      action_icon: 'part-check',
+      action_button: 'Accept bid',
+      action_tooltip: 'Approve this order and sell to this buyer',
+      action_disabled: false
+    },
+    {
       name: 'My basic listing template',
       hash: '5EH', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg2', // TODO: assign random hash_bg (bg1-bg16)
