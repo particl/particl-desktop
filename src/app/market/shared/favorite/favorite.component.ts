@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import { Log } from 'ng2-logger';
 
 import { FavoritesService } from '../../../core/market/api/favorites/favorites.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
@@ -6,12 +7,15 @@ import { MarketStateService } from '../../../core/market/market-state/market-sta
 
 import { Listing } from '../../../core/market/api/listing/listing.model';
 
+
 @Component({
   selector: 'app-favorite',
   templateUrl: './favorite.component.html',
   styleUrls: ['./favorite.component.scss']
 })
 export class FavoriteComponent implements OnInit {
+
+  private log: any = Log.create('favorite.component id:' + Math.floor((Math.random() * 1000) + 1));
 
   @Input() listing: Listing;
 
@@ -21,26 +25,13 @@ export class FavoriteComponent implements OnInit {
     private marketState: MarketStateService
   ) {}
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  toggle() {
+    this.favoritesService.toggle(this.listing);
   }
 
-  addToFavorites() {
-    if (this.listing.favorite) {
-      this.favoritesService.removeItem(this.listing.id).take(1).subscribe(res => {
-        this.updateFavorites();
-        this.snackbar.open(`${this.listing.title} removed from Favorites`);
-        this.listing.favorite = false;
-      });
-    } else {
-      this.favoritesService.addItem(this.listing.id).take(1).subscribe(res => {
-        this.updateFavorites();
-        this.snackbar.open(`${this.listing.title} added to Favorites`);
-        this.listing.favorite = true;
-      });
-    }
-  }
-
-  updateFavorites() {
-    this.marketState.registerStateCall('favorite', null, ['list', 1]);
+  get isFavorited(): boolean {
+    return this.favoritesService.isListingItemFavorited(this.listing.id);
   }
 }

@@ -34,7 +34,7 @@ export class ListingItemComponent {
   getThumbnail() {
     if (this.listing.thumbnail) {
       // TODO: logic for main image, taking 0 here
-      return 'data:image/gif;base64,' + this.listing.thumbnail.data;
+      return this.listing.thumbnail.dataId;
     } else {
       return './assets/images/placeholder_4-3.jpg';
     }
@@ -42,25 +42,5 @@ export class ListingItemComponent {
 
   addToCart() {
     this.cartService.addItem(this.listing.id).subscribe();
-  }
-
-  addToFavorites() {
-    if (this.listing.favorite) {
-      this.favoritesService.removeItem(this.listing.id).take(1).subscribe(res => {
-        this.updateFavorites();
-        this.snackbar.open(`${this.listing.title} removed from Favorite`);
-        this.listing.favorite = false;
-      });
-    } else {
-      this.favoritesService.addItem(this.listing.id).take(1).subscribe(res => {
-        this.updateFavorites();
-        this.snackbar.open(`${this.listing.title} added to Favorite`);
-        this.listing.favorite = true;
-      });
-    }
-  }
-
-  updateFavorites() {
-    this.marketState.registerStateCall('favorite', null, ['list', 1]);
   }
 }

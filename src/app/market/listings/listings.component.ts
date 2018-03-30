@@ -106,12 +106,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       // new page
       const page = {
         pageNumber: pageNumber,
-        listings: listings.map(listing => {
-          listing.favorite = true;
-          const data = new Listing(listing);
-          data.favorite = this.favoritesService.isListingItemFavorited(listing.id);
-          return data;
-        })
+        listings: listings.map(listing => new Listing(listing))
       };
 
       // should we clear all existing pages? e.g search

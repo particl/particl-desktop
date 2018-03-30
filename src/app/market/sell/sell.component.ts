@@ -228,7 +228,6 @@ export class SellComponent implements OnInit {
     const search = this.filters.search ? this.filters.search : null;
     this.template.search(1, 10, 1, category, search).subscribe(
       (listings: Array<Template>) => {
-        console.log('got templates');
         console.log(listings);
         this.listings = listings;
       }

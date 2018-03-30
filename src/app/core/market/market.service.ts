@@ -54,9 +54,7 @@ export class MarketService {
       },
       value: new Buffer(base64)
     }*/
-    console.log('image length, ', base64DataURI.length);
     const blob: Blob = dataURItoBlob(base64DataURI);
-    console.log('blob length, ', blob.size);
     form.append('image', blob, 'image.jpg');
 
 

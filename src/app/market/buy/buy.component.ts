@@ -13,6 +13,7 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+import { Favorite } from 'app/core/market/api/favorites/favorite.model';
 
 @Component({
   selector: 'app-buy',
@@ -139,8 +140,6 @@ export class BuyComponent implements OnInit {
   ngOnInit() {
 
     this._profileService.get(1).take(1).subscribe(profile => {
-      console.log('GOT PROFILE');
-      console.log(profile);
       this.profile = profile;
     });
 
@@ -161,10 +160,17 @@ export class BuyComponent implements OnInit {
 
     this.getCart();
 
-    this.favoritesService.getFavorites().take(1).subscribe(favorites => {
-      favorites.map(favorite => {
-        this.listingService.get(favorite.id).take(1).subscribe(listing => {
-          this.favorites.push(new Listing(listing));
+    this.favoritesService.updateListOfFavorites();
+
+    this.favoritesService.getFavorites().subscribe(favorites => {
+      let temp: Array<Listing> = new Array<Listing>();
+      favorites.forEach(favorite => {
+        this.listingService.get(favorite.listingItemId).take(1).subscribe(listing => {
+          temp.push(new Listing(listing));
+          // little cheat here, because async behavior
+          // we're setting the pointer to our new temp array every time we receive
+          // a listing.
+          this.favorites = temp; 
         });
       });
     })

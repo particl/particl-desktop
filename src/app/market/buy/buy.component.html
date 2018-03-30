@@ -520,14 +520,14 @@
 <div class="favourites container-block disable-select"
      *ngIf="tabLabels[selectedTab] == 'favourites'">
 
-  <div class="no-results" *ngIf="favorites.length == 0">
+  <div class="no-results" *ngIf="favorites === undefined || favorites?.length == 0">
     <p>
       You don't have any favourite listings yet
     </p>
   </div>
 
-  <div *ngIf="favorites.length != 0">
-    <ng-container *ngFor="let favorite of favorites" fxLayout="row wrap" fxLayoutAlign="start start">
+  <div *ngIf="favorites !== undefined && favorites.length != 0" fxLayout="row wrap" fxLayoutAlign="start start">
+    <ng-container *ngFor="let favorite of favorites">
       <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
         <app-listing-item [listing]="favorite"></app-listing-item>
       </mat-card>
