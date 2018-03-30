@@ -89,22 +89,23 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     });
     /*
-    this.listing.generateListing().take(1).subscribe(listing => {
-      console.log(listing);
-      this.listing.get(1).take(1).subscribe(res => {
-        console.log(res);
-      })
+     this.listing.generateListing().take(1).subscribe(listing => {
+     console.log(listing);
+     this.listing.get(1).take(1).subscribe(res => {
+     console.log(res);
+     })
      });*/
   }
 
   isExistingTemplate() {
     return (this.templateId !== undefined && this.templateId > 0);
   }
+
   uploadPicture() {
     this.fileInput.click();
   }
 
-  // @TODO: remove type any
+  // @TODO : remove type any
   processPictures(event: any) {
     Array.from(event.target.files).map((file: File) => {
       const reader = new FileReader();
@@ -119,11 +120,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   removeExistingImage(imageId: number) {
     this.image.remove(imageId).subscribe(
       success => {
-<<<<<<< c21d31496efb8610380372ae1a0de1df65f6231b
         this.snackbar.open('Removed image successfully!')
-=======
-        this.snackbar.open('Removed image successfully!');
->>>>>>> Resolve all lint issue & remove unusable module/component/service
 
         // find image in array and remove it.
         let indexToRemove: number;
@@ -195,11 +192,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.shortDescription = template.shortDescription;
       t.longDescription = template.longDescription;
       t.category = template.category.id;
-<<<<<<< c21d31496efb8610380372ae1a0de1df65f6231b
       console.log('getting category to id=' + this.itemFormGroup.get('category').value);
       console.log('setting category to id=' + t.category);
-=======
->>>>>>> Resolve all lint issue & remove unusable module/component/service
 
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
@@ -251,15 +245,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     // update information
     /*
-<<<<<<< c21d31496efb8610380372ae1a0de1df65f6231b
-    this.information.update(
-        this.templateId,
-        item.title,
-        item.shortDescription,
-        item.longDescription,
-        item.category
-      ).subscribe();*/
-=======
      this.information.update(
      this.templateId,
      item.title,
@@ -267,7 +252,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
      item.longDescription,
      item.category
      ).subscribe();*/
->>>>>>> Resolve all lint issue & remove unusable module/component/service
 
     // update images
     this.image.upload(this.templateId, this.picturesToUpload).then(
