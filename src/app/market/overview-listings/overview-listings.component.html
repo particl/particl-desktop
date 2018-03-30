@@ -81,9 +81,9 @@
        (scrolledUp)="loadPreviousPage()"
        (scrolled)="loadNextPage()">
 
-  <button mat-button class="menu-toggle" fxFlex="100%" (click)="loadPreviousPage()"
+    <button mat-button class="previous-page" fxFlex="100%" (click)="loadPreviousPage()"
             *ngIf="pages[0] && pages[0].pageNumber !== 1">
-      <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
       Load previous page
     </button>
 
