@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
 import { GpsMarker } from './gps.model';
-import { Country } from 'app/core/market/api/listing/countrylist.model';
+import { Country } from 'app/core/market/api/countrylist/country.model';
 
 
 @Injectable()

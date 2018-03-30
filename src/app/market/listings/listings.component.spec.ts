@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/compiler/src/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { ListingsComponent } from './listings.component';
@@ -17,7 +18,8 @@ describe('ListingsComponent', () => {
       ],
       imports: [
         BrowserAnimationsModule,
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        CoreModule.forRoot()
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })

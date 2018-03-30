@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { FormControl } from '@angular/forms';
 
-import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
-import { CategoryService } from '../../core/market/api/category/category.service';
-import { ListingService } from '../../core/market/api/listing/listing.service';
-
-import { Category } from '../../core/market/api/category/category.model';
-import { CountryList } from '../../core/market/api/listing/countrylist.model';
+import { Category } from 'app/core/market/api/category/category.model';
 import { Listing } from '../../core/market/api/listing/listing.model';
+
+import { CategoryService } from 'app/core/market/api/category/category.service';
+import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 
 interface ISorting {
   value: string;
@@ -25,6 +25,7 @@ interface IPage {
   templateUrl: './listings.component.html',
   styleUrls: ['./listings.component.scss']
 })
+
 export class ListingsComponent implements OnInit, OnDestroy {
   log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
@@ -32,8 +33,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   // filters
   countries: FormControl = new FormControl();
-  countryList: CountryList = new CountryList();
-
   search: string;
 
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
@@ -69,7 +68,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
   constructor(
     private category: CategoryService,
     private listingService: ListingService,
-    private favoritesService: FavoritesService
+    private favoritesService: FavoritesService,
+    private countryList: CountryListService
   ) {
     console.warn('overview created');
   }

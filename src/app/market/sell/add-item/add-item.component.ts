@@ -8,7 +8,7 @@ import { Category } from 'app/core/market/api/category/category.model';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
-import { CountryList, Country } from 'app/core/market/api/listing/countrylist.model';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { ImageService } from 'app/core/market/api/template/image/image.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
@@ -30,7 +30,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
-  countries: CountryList = new CountryList();
   images: string[];
 
   // file upload
@@ -49,7 +48,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private information: InformationService,
     private location: LocationService,
     private listing: ListingService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private countryList: CountryListService
   ) { }
 
   ngOnInit() {
@@ -258,7 +258,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     );
     // update location
-    const country: Country = this.countries.getCountryByName(item.country);
+    const country = this.countryList.getCountryByName(item.country);
     this.location.update(this.templateId, country, null, null).subscribe();
     // update shipping
 

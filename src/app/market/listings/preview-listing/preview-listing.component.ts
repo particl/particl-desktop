@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
+import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 
@@ -16,10 +18,12 @@ export class PreviewListingComponent implements OnInit {
   public price: any;
   public date: string;
 
-  constructor(private dialogRef: MatDialogRef<PreviewListingComponent>,
-              private cartService: CartService,
-              private favoritesService: FavoritesService,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(
+    private dialogRef: MatDialogRef<PreviewListingComponent>,
+    private cartService: CartService,
+    private favoritesService: FavoritesService,
+    private marketState: MarketStateService,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit() {
@@ -33,9 +37,10 @@ export class PreviewListingComponent implements OnInit {
     if (price && price.basePrice) {
       price = price.basePrice;
       this.price = {
-        int: price.toFixed(0),
-        cents: (price % 1).toFixed(8),
-        escrow: (price * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8)
+        int:     price.toFixed(0),
+        cents:  (price % 1).toFixed(8),
+        escrow: (price * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8),
+        usd: +(price * this.marketState.get('currencyprice')[0].price).toFixed(2)
       };
     }
 
