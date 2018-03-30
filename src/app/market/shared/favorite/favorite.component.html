@@ -1,4 +1,5 @@
-<mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart-outline-add"
+<mat-icon class="fav icon" fontSet="partIcon"
+          [fontIcon]="(favoritesService.isListingItemFavorited(listing.id))? 'part-heart-outline-remove' : 'part-heart-outline-add'"
+          [ngClass]="{ 'active': favoritesService.isListingItemFavorited(listing.id) }"
           [matTooltip]="(favoritesService.isListingItemFavorited(listing.id))? 'Remove from Favorite' : 'Add to Favorite'"
-          [color]="(favoritesService.isListingItemFavorited(listing.id))?'warn': ''"
           matTooltipPosition="above" (click)="addToFavorites()"></mat-icon>
