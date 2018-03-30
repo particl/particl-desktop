@@ -28,13 +28,13 @@ export class FavoriteComponent implements OnInit {
     if (this.listing.favorite) {
       this.favoritesService.removeItem(this.listing.id).take(1).subscribe(res => {
         this.updateFavorites();
-        this.snackbar.open(`${this.listing.title} removed from Favorite`);
+        this.snackbar.open(`${this.listing.title} removed from Favorites`);
         this.listing.favorite = false;
       });
     } else {
       this.favoritesService.addItem(this.listing.id).take(1).subscribe(res => {
         this.updateFavorites();
-        this.snackbar.open(`${this.listing.title} added to Favorite`);
+        this.snackbar.open(`${this.listing.title} added to Favorites`);
         this.listing.favorite = true;
       });
     }

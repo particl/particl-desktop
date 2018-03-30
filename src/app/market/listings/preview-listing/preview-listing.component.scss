@@ -86,6 +86,11 @@ button.small .mat-icon {
 }
 
 mat-dialog-actions {
+  app-favorite { // add/remove from favs icon
+    margin-right: 16px;
+    position: relative;
+    top: 3px;
+  }
   .date {
     color: $text-muted;
     display: inline-block;
