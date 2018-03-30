@@ -12,7 +12,7 @@
       <!-- removed multiple as I guess currently the api returning data on the basis of only one selected country -->
       <mat-select placeholder="All countries" [formControl]="countries" class="filter country" (change)="clearAndLoadPage()" [(ngModel)]="filters.country">
         <mat-option>All countries</mat-option>
-        <mat-option *ngFor="let country of countryList?.countries" [value]="country.name">{{ country.name }}</mat-option>
+        <mat-option *ngFor="let country of countryList.getList()" [value]="country.name">{{ country.name }}</mat-option>
       </mat-select>
 
       <mat-select placeholder="Categories" [formControl]="categories" class="filter category TO_DO">

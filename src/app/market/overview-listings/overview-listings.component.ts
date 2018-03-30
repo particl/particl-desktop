@@ -6,8 +6,9 @@ import { Category } from 'app/core/market/api/category/category.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+
 import { Template } from 'app/core/market/api/template/template.model';
-import { CountryList } from 'app/core/market/api/listing/countrylist.model';
 
 interface ISorting {
   value: string;
@@ -32,8 +33,6 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   // filters
   countries: FormControl = new FormControl();
-  countryList: CountryList = new CountryList();
-
   search: string;
 
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
@@ -68,7 +67,8 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private category: CategoryService,
-    private listingService: ListingService
+    private listingService: ListingService,
+    private countryList: CountryListService
   ) {
     console.warn('overview created');
   }
