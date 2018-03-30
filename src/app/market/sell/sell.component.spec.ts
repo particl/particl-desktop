@@ -7,6 +7,10 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { SellComponent } from './sell.component';
 
+import { TemplateService } from '../../core/market/api/template/template.service';
+import { MarketService } from '../../core/market/market.service';
+import { MarketModule } from '../../core/market/market.module';
+
 
 describe('SellComponent', () => {
   let component: SellComponent;
@@ -18,8 +22,10 @@ describe('SellComponent', () => {
       imports: [
         CoreUiModule.forRoot(),
         RouterTestingModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        MarketModule.forRoot()
       ],
+      providers: [ TemplateService, MarketService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();

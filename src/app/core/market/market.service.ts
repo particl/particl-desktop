@@ -46,7 +46,7 @@ export class MarketService {
 
   public uploadImage(templateId: number, base64DataURI: any) {
     // Running in browser, delete?
-    let form: FormData = new FormData();
+    const form: FormData = new FormData();
     /*
     image: {
       options: {

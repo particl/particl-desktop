@@ -1,10 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
+import { MarketModule } from '../../../market.module';
+
 import { InformationService } from './information.service';
 
 describe('InformationService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [
+        MarketModule.forRoot()
+      ],
       providers: [InformationService]
     });
   });

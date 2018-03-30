@@ -197,7 +197,8 @@ export class BuyComponent implements OnInit {
     }
   }
 
-  fillAddress(address) {
+  // TODO: remove type any
+  fillAddress(address: any) {
     console.log(address);
     address.countryCode = address.country;
     delete address.country;

@@ -9,7 +9,7 @@ export class FavoritesService {
     private market: MarketService
   ) { }
 
-  addItem(id) {
+  addItem(id: number) {
     console.log(id);
     return this.market.call('favorite', ['add', 1, id]);
   }
