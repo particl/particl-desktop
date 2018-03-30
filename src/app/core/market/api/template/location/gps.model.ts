@@ -4,3 +4,4 @@ export interface GpsMarker {
     lat: number;
     long: number;
 }
+

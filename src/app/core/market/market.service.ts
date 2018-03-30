@@ -60,7 +60,6 @@ export class MarketService {
     console.log('blob length, ', blob.size);
     form.append('image', blob, 'image.jpg');
 
-
     const headerJson = {
       // 'Content-Type': 'multipart/form-data'
     };

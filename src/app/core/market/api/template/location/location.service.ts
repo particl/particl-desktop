@@ -9,7 +9,6 @@ import { Country } from 'app/core/market/api/listing/countrylist.model';
 
 @Injectable()
 export class LocationService {
-
   log: any = Log.create('location.service');
 
   constructor(private market: MarketService) { }

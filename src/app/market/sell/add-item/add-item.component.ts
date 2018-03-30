@@ -32,8 +32,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   _rootCategoryList: Category = new Category({});
   countries: CountryList = new CountryList();
   images: string[];
-
-  // file upload
   dropArea: any;
   fileInput: any;
   picturesToUpload: string[];
@@ -119,7 +117,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.image.remove(imageId).subscribe(
       success => {
         this.snackbar.open('Removed image successfully!')
-
         // find image in array and remove it.
         let indexToRemove: number;
         this.images.find((element: any, index: number) => {
@@ -127,6 +124,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
             indexToRemove = index;
             return true;
           }
+
           return false;
         });
         if (indexToRemove >= 0) {
@@ -190,6 +188,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.shortDescription = template.shortDescription;
       t.longDescription = template.longDescription;
       t.category = template.category.id;
+
       console.log('getting category to id=' + this.itemFormGroup.get('category').value);
       console.log('setting category to id=' + t.category);
 
@@ -232,7 +231,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
               .then(resolve);
-
       });
     });
   }
@@ -295,5 +293,4 @@ export class AddItemComponent implements OnInit, OnDestroy {
       });
     }
   }
-
 }

@@ -25,7 +25,7 @@
 <!-- =========== CART =========== -->
 
 <div class="your-cart container-block disable-select" *ngIf="tabLabels[selectedTab] == 'cart'">
-  <mat-horizontal-stepper linear [@.disabled]="true" class="no-bg">
+  <mat-horizontal-stepper linear [@.disabled]="true" class="no-bg" (selectionChange)="stepClick($event)" #stepper>
     <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
     <ng-template matStepperIcon="edit">
       <custom-icon><mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon></custom-icon>
@@ -132,7 +132,7 @@
       <form [formGroup]="shippingFormGroup" class="shipping">
         <ng-template matStepLabel>Shipping details</ng-template>
         <div fxLayout="row" fxLayoutGap="30px">
-          <div class="shipping-profile" fxFlex>
+          <!--<div class="shipping-profile" fxFlex>
             <mat-card>
               <div class="title">Choose shipping profile</div>
               <mat-form-field class="full-width">
@@ -151,48 +151,48 @@
                 To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
               </p>
             </mat-card>
-          </div><!-- .shipping-profile -->
+          </div>--><!-- .shipping-profile -->
 
           <div class="shipping-info" fxFlex>
             <mat-card>
-              <div class="title">Or enter new shipping address</div>
+              <div class="title"><!--Or e-->Enter <!--new-->shipping address</div>
               <div class="row" fxLayout fxLayoutGap="30px">
                 <!-- FIXME: First and Last name should be required as well (waiting for dapp shell integration) -->
                 <mat-form-field class="full-width" fxFlex>
-                  <input matInput placeholder="First name">
+                  <input matInput placeholder="First name" [(ngModel)]="modelFirstName" [ngModelOptions]="{standalone: true}" (keyup)="onKeyFirstName(tagFirstName.value)" #tagFirstName>
                 </mat-form-field>
                 <mat-form-field class="full-width" fxFlex>
-                  <input matInput placeholder="Last name">
+                  <input matInput placeholder="Last name" [(ngModel)]="modelLastName" [ngModelOptions]="{standalone: true}" (keyup)="onKeyLastName(tagLastName.value)" #tagLastName>
                 </mat-form-field>
               </div>
               <mat-form-field class="full-width">
-                <input matInput formControlName="addressLine1" placeholder="Address line 1">
+                <input matInput formControlName="addressLine1" placeholder="Address line 1" [(ngModel)]="modelAddressLine1" (keyup)="onKeyAddressLine1(tagAddressLine1.value)"  #tagAddressLine1>
               </mat-form-field>
               <mat-form-field class="full-width">
-                <input matInput formControlName="addressLine2" placeholder="Address line 2">
+                <input matInput formControlName="addressLine2"  placeholder="Address line 2" [(ngModel)]="modelAddressLine2" (keyup)="onKeyAddressLine2(tagAddressLine2.value)"  #tagAddressLine2>
               </mat-form-field>
               <mat-form-field class="full-width">
-                <input matInput formControlName="city" placeholder="City">
+                <input matInput formControlName="city" placeholder="City" [(ngModel)]="modelCity" (keyup)="onKeyCity(tagCity.value)"  #tagCity>
               </mat-form-field>
               <div class="row" fxLayout fxLayoutGap="30px">
                 <mat-form-field class="full-width" fxFlex>
-                  <input matInput formControlName="zipCode" placeholder="ZIP / Postal code">
+                  <input matInput formControlName="zipCode" placeholder="ZIP / Postal code" [(ngModel)]="modelZip" (keyup)="onKeyZip(tagZip.value)"  #tagZip>
                 </mat-form-field>
                 <mat-form-field class="full-width" fxFlex>
-                  <input matInput formControlName="state" placeholder="State">
+                  <input matInput formControlName="state" placeholder="State" [(ngModel)]="modelState" (keyup)="onKeyState(tagState.value)"  #tagState>
                 </mat-form-field>
               </div>
               <mat-form-field class="full-width">
-                <mat-select formControlName="countryCode" placeholder="Country">
+                <mat-select formControlName="countryCode" placeholder="Country" [(ngModel)]="modelCountry" (change)="onChange($event)">
                   <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
+              <!--<div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
                 <mat-checkbox formControlName="save" fxFlex>Save as shipping profile</mat-checkbox>
                 <mat-form-field class="full-width" fxFlex>
                   <input matInput formControlName="title" placeholder="Shipping profile name">
                 </mat-form-field>
-              </div>
+              </div>-->
             </mat-card>
           </div><!-- .shipping-info -->
 
@@ -212,43 +212,34 @@
     </mat-step>
 
     <!-- Confirmation/Payment -->
-    <mat-step>
+    <mat-step [stepControl]="confirmation">
       <form class="confirmation">
         <ng-template matStepLabel>Confirm & Payment</ng-template>
         <table class="cart-items summary TO_DO">
           <thead>
-            <tr><th>Items</th><th>Price</th><th>Shipping</th><th>Quantity</th><th class="text-right">Total</th></tr>
+            <tr><th>Items</th><th>Price</th><th>Shipping</th><!--<th>Quantity</th>--><th class="text-right">Total</th></tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
               <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                 <div class="image" fxFlex="0 0 115px">
-                  <img src="./assets/images/placeholder_1-1.jpg">
+                  <img src="data:image/gif;base64,{{shoppingCartItem.thumbnail?.data}}">
                 </div>
                 <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
-                  <div class="title">Product name</div>
-                  <div class="category">Category, Name, Electronics</div>
+                  <div class="title">
+                    {{shoppingCartItem.title}}
+                  </div>
+                  <div class="category">
+                    {{shoppingCartItem.name}}
+                  </div>
                 </div>
               </td>
-              <td class="price cell">200.<small>4203</small> PART</td>
-              <td class="shipping cell">2.<small>4203</small> PART</td>
-              <td class="quantity cell">1 &times;</td>
-              <td class="total cell">404.<small>8406</small> PART</td>
-            </tr>
-            <tr>
-              <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
-                <div class="image" fxFlex="0 0 115px">
-                  <img src="./assets/images/placeholder_1-1.jpg">
-                </div>
-                <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
-                  <div class="title">This product name is quite longer than usual, but still looks pretty much OK</div>
-                  <div class="category">Category, Name, Electronics</div>
-                </div>
-              </td>
-              <td class="price cell">200.<small>4203</small> PART</td>
-              <td class="shipping cell">2.<small>4203</small> PART</td>
-              <td class="quantity cell">2 &times;</td>
-              <td class="total cell">202.<small>4203</small> PART</td>
+              <td class="price cell">
+                {{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART
+              </td>             
+              <td class="shipping cell">{{shoppingCartItem.shippingPriceIntegerPart}}.<small>{{shoppingCartItem.shippingPriceFractionPart}}</small> PART</td>
+              <!--<td class="quantity cell">1 &times;</td>-->
+              <td class="total cell">{{shoppingCartItem.totalIntegerPart}}.<small>{{shoppingCartItem.totalFractionPart}}</small> PART</td>
             </tr>
           </tbody>
         </table>
@@ -257,14 +248,14 @@
 
           <div class="shipping-overview" fxFlex="0 0 250px">
             <div class="title">Shipping address</div>
-            <p class="address">First Lastname<br>Address, City, State<br>ZIP/Postal code, Country</p>
+            <p class="address">{{modelFirstName}} {{modelLastName}}<br>{{modelAddressLine1}}, {{modelAddressLine2}}<br>{{modelCity}}, {{modelState}}, {{modelZip}}<br>{{modelCountry}}</p>
           </div>
 
           <table class="subtotals" fxFlex="0 0 250px">
-            <tr><td class="desc">Subtotal</td><td class="value">170 PART</td></tr>
-            <tr><td class="desc">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
-            <tr><td class="desc">Escrow (?)</td><td class="value">170 PART</td></tr>
-            <tr><td class="desc total">Total</td><td class="value total">342.<small>153</small> PART</td></tr>
+            <tr><td class="desc">Subtotal</td><td class="value">{{cart?.subTotal.amount}} PART</td></tr>
+            <tr><td class="desc">Shipping total</td><td class="value">{{cart?.shippingTotal.amount}} PART</td></tr>
+            <tr><td class="desc">Escrow (?)</td><td class="value">{{cart?.escrow.amount}} PART</td></tr>
+            <tr><td class="desc total">Total</td><td class="value total">{{cart?.total.amount}} PART</td></tr>
           </table>
 
         </div><!-- .order-detail -->

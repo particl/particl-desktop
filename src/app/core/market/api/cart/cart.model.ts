@@ -21,6 +21,43 @@ export class Cart {
     return new Amount(total);
   }
 
+  get shippingTotal(): Amount{
+    let total: number = 0.0;
+
+    this.shoppingCartItems.map(shoppingCartItem => {
+      const object = shoppingCartItem.ListingItem;
+      // if listing is loaded (async)
+      if (object.PaymentInformation) {
+        total += object.PaymentInformation.ItemPrice.ShippingPrice.international
+      }
+    });
+    return new Amount(total);
+  }
+
+  get escrow(): Amount {
+    let total: number = 0.0;
+    this.shoppingCartItems.map(shoppingCartItem => {
+      let object = shoppingCartItem.ListingItem;
+      // if listing is loaded (async)
+      if (object.PaymentInformation) {
+        total += object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international
+      }
+    });
+    return new Amount(total);    
+  }
+
+  get total(): Amount{
+    let total: number = 0.0;
+    this.shoppingCartItems.map(shoppingCartItem => {
+      let object = shoppingCartItem.ListingItem;
+      // if listing is loaded (async)
+      if (object.PaymentInformation) {
+        total += 2*(object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international)
+      }
+    });
+    return new Amount(total);
+  }
+
   private setCartItems(): void {
     this.shoppingCartItems.map(shoppingCartItem => {
       const object = shoppingCartItem.ListingItem;
@@ -32,6 +69,11 @@ export class Cart {
       if (object.PaymentInformation) {
         shoppingCartItem.integerPart = new Amount (object.PaymentInformation.ItemPrice.basePrice).getIntegerPart();
         shoppingCartItem.fractionPart = new Amount (object.PaymentInformation.ItemPrice.basePrice).getFractionalPart();
+        //Check if international needs USD to PART
+        shoppingCartItem.shippingPriceIntegerPart = new Amount (object.PaymentInformation.ItemPrice.ShippingPrice.international).getIntegerPart();
+        shoppingCartItem.shippingPriceFractionPart = new Amount (object.PaymentInformation.ItemPrice.ShippingPrice.international).getFractionalPart();
+        shoppingCartItem.totalIntegerPart = new Amount (object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international ).getIntegerPart();
+        shoppingCartItem.totalFractionPart = new Amount (object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international ).getFractionalPart();
       }
     });
   }
@@ -48,5 +90,4 @@ export class Cart {
       }
       return undefined;
   }
-
 }
