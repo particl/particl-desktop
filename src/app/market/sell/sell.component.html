@@ -28,7 +28,8 @@
   <div class="filter" fxFlex="0 0 230px" *ngIf="tabLabels[selectedTab] == 'listings'">
 
     <div class="sell-item">
-      <button mat-raised-button color="primary" (click)="addItem()" class="full-width" matTooltip="Enter a new item for sale" matTooltipPosition="above">
+      <button mat-raised-button color="primary" (click)="addItem()" class="full-width"
+              matTooltip="Enter a new item for sale" matTooltipPosition="above">
         <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
         Add new listing
       </button>
@@ -38,9 +39,12 @@
       <div class="subtitle">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
-          <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search" (keyup)="loadPage()" (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
-          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; loadPage()"></mat-icon>
-          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="loadPage()"></mat-icon>
+          <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search"
+                 (keyup)="loadPage()" (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
+                    (click)="filters.search=''; loadPage()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
+                    (click)="loadPage()"></mat-icon>
         </mat-form-field>
         <!--mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort listings">
@@ -78,9 +82,12 @@
       <div class="subtitle first">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
-          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search" (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
-          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; loadPage()"></mat-icon>
-          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="loadPage()"></mat-icon>
+          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search"
+                 (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
+                    (click)="filters.search=''; loadPage()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
+                    (click)="loadPage()"></mat-icon>
         </mat-form-field>
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort orders">
@@ -154,7 +161,13 @@
           <div class="title">Price & Qty</div>
           <table class="prices">
             <!--tr><th>Quantity</th><td>2</td></tr-->
-            <tr><th>Price per item</th><td>23.<small>1285</small> PART</td></tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.
+                <small>1285</small>
+                PART
+              </td>
+            </tr>
             <!--tr><th>Total price</th><td>46.<small>257</small> PART</td></tr-->
           </table>
         </div>
@@ -162,7 +175,8 @@
 
       <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(listing)" class="small">
+          <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(listing)"
+                  class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
           </button>
           <button mat-button matTooltip="Clone listing" (click)="addItem(listing.id, true)" class="small">
@@ -174,9 +188,10 @@
           </button>
         </div>
         <div class="right"> <!-- listing.action_color  -->
-          <button mat-raised-button color="primary" matTooltip="listing.action_tooltip" [disabled]="false"> <!-- listing.action_disabled -->
+          <button mat-raised-button color="primary" matTooltip="listing.action_tooltip" [disabled]="false">
+            <!-- listing.action_disabled -->
             <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon> <!-- listing.action_icon -->
-             listing.action_button
+            listing.action_button
           </button>
         </div>
       </mat-action-row>
@@ -224,9 +239,24 @@
         <div class="info" fxFlex="35%">
           <div class="title">Price & Qty</div>
           <table class="prices">
-            <tr><th>Quantity</th><td>2</td></tr>
-            <tr><th>Price per item</th><td>23.<small>1285</small> PART</td></tr>
-            <tr><th>Total price</th><td>46.<small>257</small> PART</td></tr>
+            <tr>
+              <th>Quantity</th>
+              <td>2</td>
+            </tr>
+            <tr>
+              <th>Price per item</th>
+              <td>23.
+                <small>1285</small>
+                PART
+              </td>
+            </tr>
+            <tr>
+              <th>Total price</th>
+              <td>46.
+                <small>257</small>
+                PART
+              </td>
+            </tr>
           </table>
         </div>
         <div class="order-history" fxFlex="32%">
@@ -234,15 +264,22 @@
           <table>
             <!--tr><td class="date">2018-02-24</td><td class="status shipped">Sold</td></tr-->
             <!--tr><td class="date">2018-02-14</td><td class="status shipped">Shipped</td></tr-->
-            <tr><td class="date">2018-02-11</td><td class="status escrow">In escrow</td></tr>
-            <tr><td class="date">2018-02-10</td><td class="status bidding">Bidding</td></tr>
+            <tr>
+              <td class="date">2018-02-11</td>
+              <td class="status escrow">In escrow</td>
+            </tr>
+            <tr>
+              <td class="date">2018-02-10</td>
+              <td class="status bidding">Bidding</td>
+            </tr>
           </table>
         </div>
       </div>
 
       <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" matTooltip="Reject & cancel order" (click)="confirmDeleteListing()" class="small">
+          <button mat-button color="warn" matTooltip="Reject & cancel order" (click)="confirmDeleteListing()"
+                  class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
           </button>
           <button mat-button matTooltip="Edit order" class="small">
@@ -261,7 +298,8 @@
         </div>
         <div class="right">
           <!-- TODO: after clicking, show confirmation modal with more info: -->
-          <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}" [disabled]="order.action_disabled">
+          <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}"
+                  [disabled]="order.action_disabled">
             <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
             {{ order.action_button }}
           </button>

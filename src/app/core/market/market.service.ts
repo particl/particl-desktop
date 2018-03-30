@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 import { dataURItoBlob } from 'app/core/util/utils';
 
 @Injectable()
@@ -46,7 +45,7 @@ export class MarketService {
 
   public uploadImage(templateId: number, base64DataURI: any) {
     // Running in browser, delete?
-    let form: FormData = new FormData();
+    const form: FormData = new FormData();
     /*
     image: {
       options: {

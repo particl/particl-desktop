@@ -1,5 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 import { MarketService } from './market.service';
 import { MarketStateService } from './market-state/market-state.service';
@@ -17,7 +18,8 @@ import { LocationService } from './api/template/location/location.service';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
   declarations: []
 })

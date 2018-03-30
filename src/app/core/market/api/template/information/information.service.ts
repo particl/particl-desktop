@@ -8,7 +8,8 @@ export class InformationService {
 
   log: any = Log.create('information.service');
 
-  constructor(private market: MarketService) { }
+  constructor(private market: MarketService) {
+  }
 
   public update(templateId: number, title: string, shortDesc: string, longDesc: string, categoryId: number) {
     return this.market.call('template',

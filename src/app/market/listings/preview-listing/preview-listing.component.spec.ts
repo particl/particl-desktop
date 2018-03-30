@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { MarketModule } from '../../../core/market/market.module';
+
+import { CartService } from '../../../core/market/api/cart/cart.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { PreviewListingComponent } from './preview-listing.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
@@ -13,11 +17,14 @@ describe('PreviewListingComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ PreviewListingComponent ],
       imports: [
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        MarketModule.forRoot()
       ],
       providers: [
         { provide: MatDialogRef},
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        CartService,
+        SnackbarService
       ]
     })
       .compileComponents();

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { FormControl } from '@angular/forms';
 
 import { Category } from 'app/core/market/api/category/category.model';
 import { Listing } from '../../core/market/api/listing/listing.model';
@@ -32,11 +31,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
 
   // filters
-  countries: FormControl = new FormControl();
+  // countries: FormControl = new FormControl();
   search: string;
 
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
-  categories: FormControl = new FormControl();
+  // categories: FormControl = new FormControl();
   categoryList: Array<string> = [];
 
   _rootCategoryList: Category = new Category({});
@@ -61,6 +60,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   };
 
   filters: any = {
+    category: undefined,
     search: undefined,
     country: undefined
   };
@@ -82,12 +82,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   loadCategories() {
     this.category.list()
-      .takeWhile(() => !this.destroyed)
-      .subscribe(
-        list => {
-          this._rootCategoryList = list;
-          this.categoryList = this._rootCategoryList.getSubCategoryNames();
-        });
+    .takeWhile(() => !this.destroyed)
+    .subscribe(
+      list => {
+        this._rootCategoryList = list;
+        this.categoryList = this._rootCategoryList.getSubCategory();
+      });
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
@@ -97,9 +97,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
     // params
     const max = this.pagination.maxPerPage;
     const search = this.filters.search;
+    const category = this.filters.category;
     const country = this.filters.country;
 
-    this.listingService.search(pageNumber, max, null, search, country)
+    this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<any>) => {
       this.isLoading = false;
       // new page

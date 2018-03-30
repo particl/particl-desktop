@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
-  FormControl,
   Validators
 } from '@angular/forms';
 
@@ -197,6 +196,7 @@ export class BuyComponent implements OnInit {
     }
   }
 
+  // TODO: remove type any
   fillAddress(address: any) {
     console.log(address);
     address.countryCode = address.country;
