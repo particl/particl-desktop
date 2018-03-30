@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger'
 
@@ -6,8 +7,8 @@ import { RpcService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 /* fix wallet */
-import { MatDialog } from '@angular/material';
 import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
+import { TransactionBuilder } from './transaction-builder.model';
 
 /*
   Note: due to upcoming multiwallet, we should never ever store addresses in the GUI for transaction purposes.
@@ -19,62 +20,83 @@ export class SendService {
 
   log: any = Log.create('send.service');
 
-  constructor(public _rpc: RpcService,
+  constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService,
               private dialog: MatDialog) {
 
   }
 
   /* Sends a transaction */
-  public sendTransaction(
-    input: string, output: string, address: string,
-    amount: number, comment: string, narration: string,
-    ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
+  public sendTransaction(tx: TransactionBuilder) {
+    tx.estimateFeeOnly = false;
 
-    const rpcCall: string = this.getSendRPCCall(input, output);
-    const anon: boolean = this.isAnon(rpcCall);
-    const params: Array<any> = this.getSendParams(
-      anon, address, amount, comment,
-      narration, ringsize, numsignatures, substractfeefromamount);
-
-    this._rpc.call('send' + rpcCall, params)
+    this.send(tx)
       .subscribe(
-      success => this.rpc_send_success(success, address, amount),
-      error => this.rpc_send_failed(error.message, address, amount));
+        success => this.rpc_send_success(success, tx.toAddress, tx.amount),
+        error => this.rpc_send_failed(error.message, tx.toAddress, tx.amount));
   }
 
-  public transferBalance(
-    input: string, output: string,
-    amount: number, ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
+  public getTransactionFee(tx: TransactionBuilder): Observable<any> {
+    tx.estimateFeeOnly = true;
+    if (!tx.toAddress) {
+      return new Observable((observer) => {
+        this.getDefaultStealthAddress().take(1).subscribe(
+          (stealthAddress: string) => {
+            // set balance transfer stealth address
+            tx.toAddress = stealthAddress;
+            this.send(tx).subscribe(fee => {
+              observer.next(fee);
+              observer.complete();
+            });
+          });
+      });
+    } else {
+      return this.send(tx).map(
+        fee => fee);
+    }
+  }
+
+  public transferBalance(tx: TransactionBuilder) {
+    tx.estimateFeeOnly = false;
 
     // get default stealth address
     this.getDefaultStealthAddress().take(1).subscribe(
       (stealthAddress: string) => {
         this.log.d('got transferBalance, sx' + stealthAddress);
+        tx.toAddress = stealthAddress;
 
-        // comment is internal, narration is stored on blockchain
-        const rpcCall: string = this.getSendRPCCall(input, output);
-        const anon: boolean = this.isAnon(rpcCall);
-        const params: Array<any> = this.getSendParams(
-          anon, stealthAddress,
-          amount, '', '', ringsize, numsignatures, substractfeefromamount);
-
-        this._rpc.call('send' + rpcCall, params).subscribe(
-          success => this.rpc_send_success(success, stealthAddress, amount),
-          error => this.rpc_send_failed(error.message, stealthAddress, amount));
+        // execute transaction
+        this.send(tx).subscribe(
+          success => this.rpc_send_success(success, stealthAddress, tx.amount),
+          error => this.rpc_send_failed(error.message, stealthAddress, tx.amount));
       },
-      error => this.rpc_send_failed('Failed to get stealth address')
+      error => this.rpc_send_failed('transferBalance, Failed to get stealth address')
     );
 
   }
 
-  /* Retrieve the first stealth address */
+  /**
+   * Retrieve the first stealth address.
+   */
   private getDefaultStealthAddress(): Observable<string> {
     return this._rpc.call('liststealthaddresses', null).map(
       list => list[0]['Stealth Addresses'][0]['Address']);
   }
 
-  rpc_send_success(json: any, address: string, amount: number) {
+  /**
+   * Executes or estimates a transaction.
+   * Estimates if estimateFeeOnly === true.
+   */
+  private send(tx: TransactionBuilder): Observable<any> {
+    return this._rpc.call('sendtypeto', [tx.input, tx.output, [{
+      address: tx.toAddress,
+      amount: tx.amount,
+      subfee: tx.subtractFeeFromAmount,
+      narr: tx.narration
+    }], tx.comment, tx.commentTo, tx.ringsize, 64, tx.estimateFeeOnly]);
+  }
+
+  private rpc_send_success(json: any, address: string, amount: number) {
     this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
 
     // Truncate the address to 16 characters only
@@ -83,7 +105,7 @@ export class SendService {
     this.flashNotification.open(`Succesfully sent ${amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
   }
 
-  rpc_send_failed(message: string, address?: string, amount?: number) {
+  private rpc_send_failed(message: string, address?: string, amount?: number) {
     this.flashNotification.open(`Transaction Failed ${message}`, 'err');
     this.log.er('rpc_send_failed, failed to execute transaction!');
     this.log.er(message);
@@ -108,81 +130,4 @@ export class SendService {
     );
   }
 
-
-  /*
-    Helper functions for RPC
-  */
-
-  /**
-    * Returns a part of the method of the RPC call required to execute the transaction
-    *
-    * @param {string} input  From which type/balance we should send the funds (public, blind, anon)
-    * @param {string} output  To which type/balance we should send the funds (public, blind, anon)
-    *
-    */
-  getSendRPCCall(input: string, output: string) {
-    // real send (external)
-    if (input === 'balance' && output === 'balance') {
-      return 'toaddress';
-    } else if (input === 'anon_balance' && output === 'anon_balance') {
-      return 'anontoanon';
-    } else if (input === 'blind_balance' && output === 'blind_balance') {
-      return 'blindtoblind';
-
-      // balance transfers (internal)
-    } else if (input === 'anon_balance' && output === 'balance') {
-      return 'anontopart';
-    } else if (input === 'balance' && output === 'anon_balance') {
-      return 'parttoanon';
-    } else if (input === 'balance' && output === 'blind_balance') {
-      return 'parttoblind';
-    } else if (input === 'anon_balance' && output === 'blind_balance') {
-      return 'anontoblind';
-    } else if (input === 'blind_balance' && output === 'balance') {
-      return 'blindtopart';
-    } else if (input === 'blind_balance' && output === 'anon_balance') {
-      return 'blindtoanon';
-    } else {
-      return 'error'; // todo: real error
-    }
-  }
-
-  // TODO: do I need to turn everything into strings manually?
-  /** A helper function that transforms the transaction details to an array with the right params (for passing to the RPC service). */
-  getSendParams(
-    anon: boolean, address: string, amount: number, comment: string,
-    narration: string, ringsize: number, numsignatures: number, substractfeefromamount: boolean) {
-
-    const params: Array<any> = [address, amount, '', '', substractfeefromamount];
-
-    params.push(!!narration ? narration : '');
-
-    if (anon) {
-      // comment-to empty
-      params.push(this.getRingSize(ringsize));
-      // params.push(numsignatures);
-    }
-
-    return params;
-  }
-
-  /**
-  * Returns true if the RPC method is anonto...
-  */
-  isAnon(input: string): boolean {
-    return ['anontopart', 'anontoanon', 'anontoblind'].includes(input)
-  }
-
-  /**
-  * Converts slider logic (0 -> 100) to actual ring size for RPC parameters.
-  */
-  getRingSize(ringsize: number): number {
-    if (ringsize === 100) {
-      return 16;
-    } else if (ringsize === 50) {
-      return 8;
-    } else if (ringsize === 10) {
-      return 4;
-    }
-  }
 }
