@@ -51,7 +51,7 @@ export class ListingItemComponent {
   }
 
   addToCart() {
-    this.cartService.addItem(this.listing.id);
+    this.cartService.addItem(this.listing.id).subscribe();
   }
 
   addToFavorites() {

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
@@ -12,11 +12,15 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
   styleUrls: ['./preview-listing.component.scss']
 })
 
-export class PreviewListingComponent implements OnInit {
+export class PreviewListingComponent implements OnInit, OnDestroy {
+
+  private destroyed: boolean = false;
 
   public pictures: Array<any> = new Array();
   public price: any;
   public date: string;
+
+  private currencyprice: number = 0;
 
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
@@ -40,23 +44,38 @@ export class PreviewListingComponent implements OnInit {
         int:     price.toFixed(0),
         cents:  (price % 1).toFixed(8),
         escrow: (price * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8),
-        usd: +(price * this.marketState.get('currencyprice')[0].price).toFixed(2)
+        usd: +(price * +this.currencyprice.toFixed(2))
       };
     }
 
 
     this.date = new Date(this.data.listing.object.createdAt).toLocaleDateString();
+
+    this.marketState.observe('currencyprice')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(price => {
+        this.currencyprice = price[0].price;
+      });
   }
 
   addToCart(id: number) {
-    this.cartService.addItem(id);
+    this.cartService.addItem(id)
+      .subscribe(item => {
+        console.log('added ' + id + ' to cart!');
+      }
+      );
   }
 
   addToFavorites(id: number) {
-    this.favoritesService.addItem(id);
+    this.favoritesService.addItem(id).subscribe();
+
   }
 
   dialogClose(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }
