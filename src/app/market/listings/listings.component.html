@@ -81,7 +81,7 @@
        (scrolledUp)="loadPreviousPage()"
        (scrolled)="loadNextPage()">
 
-  <button mat-button class="menu-toggle" fxFlex="100%" (click)="loadPreviousPage()"
+    <button mat-button class="menu-toggle" fxFlex="100%" (click)="loadPreviousPage()"
             *ngIf="pages[0] && pages[0].pageNumber !== 1">
       <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
       Load previous page
@@ -95,7 +95,7 @@
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let item of page.listings">
         <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
-          <app-preview-listing [listing]="item"></app-preview-listing>
+          <app-listing-item [listing]="item"></app-listing-item>
         </mat-card>
       </ng-container>
     </ng-container>

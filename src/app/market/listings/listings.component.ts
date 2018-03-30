@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Log } from 'ng2-logger';
 
 import { Category } from 'app/core/market/api/category/category.model';
-import { CategoryService } from 'app/core/market/api/category/category.service';
+import { Listing } from '../../core/market/api/listing/listing.model';
 
+import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-
-import { Template } from 'app/core/market/api/template/template.model';
+import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 
 interface ISorting {
   value: string;
@@ -21,13 +20,13 @@ interface IPage {
 }
 
 @Component({
-  selector: 'app-overview-listings',
-  templateUrl: './overview-listings.component.html',
-  styleUrls: ['./overview-listings.component.scss']
+  selector: 'app-listing',
+  templateUrl: './listings.component.html',
+  styleUrls: ['./listings.component.scss']
 })
-export class OverviewListingsComponent implements OnInit, OnDestroy {
 
-  log: any = Log.create('overview-listings.component');
+export class ListingsComponent implements OnInit, OnDestroy {
+  log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
   public isLoading: boolean = false;
 
@@ -69,6 +68,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   constructor(
     private category: CategoryService,
     private listingService: ListingService,
+    private favoritesService: FavoritesService,
     private countryList: CountryListService
   ) {
     console.warn('overview created');
@@ -91,35 +91,41 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
+    // set loading aninmation
     this.isLoading = true;
+
+    // params
     const max = this.pagination.maxPerPage;
-
     const search = this.filters.search;
-
     const category = this.filters.category;
     const country = this.filters.country;
 
     this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<any>) => {
-        this.isLoading = false;
-        // new page
-        const page = {
-          pageNumber: pageNumber,
-          listings: listings.map(listing => new Template(listing))
-        };
+      this.isLoading = false;
+      // new page
+      const page = {
+        pageNumber: pageNumber,
+        listings: listings.map(listing => {
+          listing.favorite = true;
+          const data = new Listing(listing);
+          data.favorite = this.favoritesService.isListingItemFavorited(listing.id);
+          return data;
+        })
+      };
 
-        // should we clear all existing pages? e.g search
-        if (clear === true) {
-          this.pages = [page];
-          this.noMoreListings = false;
-        } else { // infinite scroll
-          if (listings.length > 0) {
-            this.pushNewPage(page);
-          } else {
-            this.noMoreListings = true;
-          }
+      // should we clear all existing pages? e.g search
+      if (clear === true) {
+        this.pages = [page];
+        this.noMoreListings = false;
+      } else { // infinite scroll
+        if (listings.length > 0) {
+          this.pushNewPage(page);
+        } else {
+          this.noMoreListings = true;
         }
-      })
+      }
+    })
   }
 
   pushNewPage(page: IPage) {
@@ -153,7 +159,8 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   // TODO: fix scroll up!
   loadPreviousPage() {
     console.log('prev page trigered');
-    let previousPage = this.getFirstPageCurrentlyLoaded(); previousPage--;
+    let previousPage = this.getFirstPageCurrentlyLoaded();
+    previousPage--;
     console.log('loading prev page' + previousPage);
     if (previousPage > 0) {
       this.loadPage(previousPage);

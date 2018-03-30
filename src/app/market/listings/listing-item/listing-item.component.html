@@ -6,9 +6,7 @@
     <div class="icons">
       <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-zoom-bold-in" matTooltip="Preview"
                 matTooltipPosition="above" (click)="openListing()"></mat-icon>
-      <!--mat-icon class="icon flag TO_DO" fontSet="partIcon" fontIcon="part-error" matTooltip="Report" matTooltipPosition="above"></mat-icon-->
-      <mat-icon class="icon fav" fontSet="partIcon" fontIcon="part-heart-outline-add" matTooltip="Favourite"
-                matTooltipPosition="above" (click)="addToFavorites(listing.id)"></mat-icon>
+      <app-favorite class="icon fav" [listing]="listing"></app-favorite>
     </div>
   </div>
 
