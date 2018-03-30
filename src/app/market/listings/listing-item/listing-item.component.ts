@@ -10,16 +10,6 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { PreviewListingComponent } from '../preview-listing/preview-listing.component';
 
-interface ISorting {
-  value: string;
-  viewValue: string;
-}
-
-interface IPage {
-  pageNumber: number,
-  listings: Array<any>;
-}
-
 @Component({
   selector: 'app-listing-item',
   templateUrl: './listing-item.component.html',
