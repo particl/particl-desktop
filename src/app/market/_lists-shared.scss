@@ -80,6 +80,7 @@
       text-transform: uppercase;
       font-weight: 600;
       padding: 6px 15px;
+      margin-top: 0;
       // listings
       &.unpublished span {
         color: $bg-shadow;
@@ -97,13 +98,16 @@
       &.bidding span {
         color: $color-warning;
       }
+      &.awaiting span {
+        color: mix($color-warning, $color-alert, 60%);
+      }
       &.escrow span {
         color: $color-alert;
       }
       &.shipping span {
         color: mix($color, $color-success);
       }
-      &.sold span {
+      &.complete span {
         color: $color-info;
       }
       span { // status indicator

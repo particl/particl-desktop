@@ -438,27 +438,29 @@
             <p>Mr. Longname Buyer<br>Particl Avenue X/144<br>5RFG4 United Cryptocity<br>Universe</p>
           </div><!-- .buyer-info -->
           <div class="info" fxFlex="35%">
-            <div class="title">Price & Qty</div>
-            <table class="prices">
-              <tr>
-                <th>Quantity</th>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th>Price per item</th>
-                <td>23.
-                  <small>1285</small>
-                  PART
-                </td>
-              </tr>
-              <tr>
-                <th>Total price</th>
-                <td>46.
-                  <small>257</small>
-                  PART
-                </td>
-              </tr>
-            </table>
+            <div class="title">Price<!-- & Qty--></div>
+          <table class="prices">
+            <!--tr>
+              <th>Quantity</th>
+              <td>2</td>
+            </tr-->
+            <tr>
+              <th>Listing price</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>3.<small>012</small> PART</td>
+            </tr>
+            <tr>
+              <th>Escrow</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Total price</th>
+              <td>49.<small>269</small> PART</td>
+            </tr>
+          </table>
           </div>
           <div class="order-history" fxFlex="32%">
             <div class="title">Order history</div>
@@ -479,22 +481,23 @@
 
         <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
           <div class="left">
-            <button mat-button color="warn" matTooltip="Reject & cancel order" class="small">
+            <!--button mat-button color="warn" matTooltip="Reject & cancel order" class="small single">
               <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-            </button>
-            <button mat-button matTooltip="Edit order" class="small">
+            </button-->
+            <!--button mat-button matTooltip="Edit order" class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
               Edit
-            </button>
+            </button-->
             <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-            <button mat-button matTooltip="View payment ID" class="small">
+            <button mat-button matTooltip="Escrow TX details" *ngIf="order.show_escrow_txdetails" class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
+              View payment
             </button>
             <!-- TODO: shortcut to e2e message to buyer -->
-            <button mat-button class="small">
+            <!--button mat-button class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
               Contact buyer
-            </button>
+            </button-->
           </div>
           <div class="right">
             <!-- TODO: after clicking, show confirmation modal with more info: -->
