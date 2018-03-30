@@ -2,9 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Log } from 'ng2-logger';
 
-import { MarketService } from 'app/core/market/market.service';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
-
 import { Category } from 'app/core/market/api/category/category.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 
