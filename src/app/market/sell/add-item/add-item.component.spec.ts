@@ -5,6 +5,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { MarketModule } from '../../../core/market/market.module';
+
+import { CategoryService } from '../../../core/market/api/category/category.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { AddItemComponent } from './add-item.component';
 
@@ -19,8 +23,10 @@ describe('AddItemComponent', () => {
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
         BrowserAnimationsModule,
-        RouterTestingModule
+        RouterTestingModule,
+        MarketModule.forRoot()
       ],
+      providers: [ CategoryService, SnackbarService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();

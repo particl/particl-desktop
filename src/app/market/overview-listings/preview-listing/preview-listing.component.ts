@@ -41,11 +41,11 @@ export class PreviewListingComponent implements OnInit {
 
   }
 
-  addToCart(id) {
-    this.cartService.addItem(id).subscribe();
+  addToCart() {
+    this.cartService.addItem(this.listing.id).subscribe();
   }
 
-  addToFavorites(id) {
-    this.favoritesService.addItem(id).take(1).subscribe(res => console.log(res));
+  addToFavorites() {
+    this.favoritesService.addItem(this.listing.id).take(1).subscribe(res => console.log(res));
   }
 }

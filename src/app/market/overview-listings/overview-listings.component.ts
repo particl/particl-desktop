@@ -58,7 +58,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     maxPerPage: 30,
     // hooks into the scroll bar of the main page..
     infinityScrollSelector: '.mat-drawer-content' // .mat-drawer-content
-  }
+  };
 
   filters: any = {
     category: undefined,
