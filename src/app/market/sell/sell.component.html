@@ -205,7 +205,7 @@
   <!-- Orders > list -->
   <div class="orders list section TO_DO" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'orders'">
 
-    <div class="no-results">
+    <div class="no-results" *ngIf="orders.length === 0">
       You don't have any market orders yet
     </div>
 
@@ -237,25 +237,27 @@
           <p>Mr. Longname Buyer<br>Particl Avenue X/144<br>5RFG4 United Cryptocity<br>Universe</p>
         </div><!-- .buyer-info -->
         <div class="info" fxFlex="35%">
-          <div class="title">Price & Qty</div>
+          <div class="title">Price<!-- & Qty--></div>
           <table class="prices">
-            <tr>
+            <!--tr>
               <th>Quantity</th>
               <td>2</td>
+            </tr-->
+            <tr>
+              <th>Listing price</th>
+              <td>23.<small>1285</small> PART</td>
             </tr>
             <tr>
-              <th>Price per item</th>
-              <td>23.
-                <small>1285</small>
-                PART
-              </td>
+              <th>Shipping</th>
+              <td>3.<small>012</small> PART</td>
+            </tr>
+            <tr>
+              <th>Escrow</th>
+              <td>23.<small>1285</small> PART</td>
             </tr>
             <tr>
               <th>Total price</th>
-              <td>46.
-                <small>257</small>
-                PART
-              </td>
+              <td>49.<small>269</small> PART</td>
             </tr>
           </table>
         </div>
@@ -276,25 +278,26 @@
         </div>
       </div>
 
-      <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+      <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" matTooltip="Reject & cancel order" (click)="confirmDeleteListing()"
-                  class="small">
+          <button mat-button color="warn" (click)="confirmDeleteListing()" *ngIf="order.allow_reject_order" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Reject bid &amp; cancel order
           </button>
-          <button mat-button matTooltip="Edit order" class="small">
+          <!--button mat-button matTooltip="Edit order" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
             Edit
-          </button>
+          </button-->
           <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-          <button mat-button matTooltip="View payment ID" class="small">
+          <button mat-button matTooltip="Escrow TX details" *ngIf="order.show_escrow_txdetails" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
+            View payment
           </button>
           <!-- TODO: shortcut to e2e message to buyer -->
-          <button mat-button class="small">
+          <!--button mat-button class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
             Contact buyer
-          </button>
+          </button-->
         </div>
         <div class="right">
           <!-- TODO: after clicking, show confirmation modal with more info: -->

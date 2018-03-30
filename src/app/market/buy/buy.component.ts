@@ -54,7 +54,31 @@ export class BuyComponent implements OnInit {
       hash: 'AGR', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg6', // TODO: assign random hash_bg (bg1-bg16)
       status: 'bidding',
-      status_info: 'Buyer wants to purchase this item – Approve or reject this order to continue',
+      status_info: 'Waiting for seller to manually accept your bid',
+      action_icon: 'part-date',
+      action_button: 'Waiting for seller',
+      action_tooltip: '',
+      action_disabled: true,
+      show_escrow_txdetails: false,
+    },
+    {
+      name: 'Development Buff (2 week subscription)',
+      hash: 'FG2', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
+      hash_bg: 'bg12', // TODO: assign random hash_bg (bg1-bg16)
+      status: 'awaiting',
+      status_info: 'Seller accepted your bid – please proceed to making the payment (this will lock the funds to escrow)',
+      action_icon: 'part-check',
+      action_button: 'Make payment',
+      action_tooltip: 'Pay for your order & escrow',
+      action_disabled: false,
+      show_escrow_txdetails: false,
+    },
+    {
+      name: 'Development Buff (2 week subscription)',
+      hash: 'FG2', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
+      hash_bg: 'bg12', // TODO: assign random hash_bg (bg1-bg16)
+      status: 'awaiting',
+      status_info: '????',
       action_icon: 'part-check',
       action_button: 'Accept bid',
       action_tooltip: 'Approve this order and sell to this buyer',
@@ -65,33 +89,36 @@ export class BuyComponent implements OnInit {
       hash: '5EH', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg2', // TODO: assign random hash_bg (bg1-bg16)
       status: 'escrow',
-      status_info: 'Buyer\'s funds are locked in escrow, order is ready to ship – when sent, mark order as shipped and await its delivery',
-      action_icon: 'part-check',
-      action_button: 'Mark as shipped',
-      action_tooltip: 'Confirm that the order has been shipped to buyer',
-      action_disabled: false
+      status_info: 'Funds locked in escrow, waiting for Seller to ship the order',
+      action_icon: 'part-date',
+      action_button: 'Waiting for shipping',
+      action_tooltip: '',
+      action_disabled: true,
+      show_escrow_txdetails: true,
     },
     {
       name: 'Fresh product (2 kg)',
       hash: 'SPP', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg11', // TODO: assign random hash_bg (bg1-bg16)
       status: 'shipping',
-      status_info: 'Order sent to buyer, waiting for buyer to confirm the delivery',
-      action_icon: 'part-date',
-      action_button: 'Waiting for delivery',
-      action_tooltip: 'Awaiting confirmation of successfull delivery by Buyer',
-      action_disabled: true
+      status_info: 'Order has been shipped – when you receive it, mark it as delivered and escrow will be released automatically',
+      action_icon: 'part-check',
+      action_button: 'Mark as delivered',
+      action_tooltip: 'Confirm that you\'ve received the order',
+      action_disabled: false,
+      show_escrow_txdetails: true,
     },
     {
       name: 'Fresh product (2 kg)',
       hash: '1ER', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg8', // TODO: assign random hash_bg (bg1-bg16)
-      status: 'sold',
-      status_info: 'Order delivery confirmed by buyer – awaiting Buyer\'s feedback',
-      action_icon: 'part-date',
-      action_button: 'Waiting for feedback',
-      action_tooltip: 'Awaiting buyer\'s feedback on the order',
-      action_disabled: true
+      status: 'complete',
+      status_info: 'Successfully finalized order',
+      action_icon: 'part-check',
+      action_button: 'Order complete',
+      action_tooltip: '',
+      action_disabled: true,
+      show_escrow_txdetails: true,
     },
   ];
 
