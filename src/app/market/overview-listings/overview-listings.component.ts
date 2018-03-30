@@ -32,11 +32,11 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
 
   // filters
-  countries: FormControl = new FormControl();
+  // countries: FormControl = new FormControl();
   search: string;
 
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
-  categories: FormControl = new FormControl();
+  // categories: FormControl = new FormControl();
   categoryList: Array<string> = [];
 
   _rootCategoryList: Category = new Category({});
@@ -61,6 +61,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   };
 
   filters: any = {
+    category: undefined,
     search: undefined,
     country: undefined
   };
@@ -85,7 +86,7 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     .subscribe(
       list => {
         this._rootCategoryList = list;
-        this.categoryList = this._rootCategoryList.getSubCategoryNames();
+        this.categoryList = this._rootCategoryList.getSubCategory();
       });
   }
 
@@ -94,8 +95,11 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     const max = this.pagination.maxPerPage;
 
     const search = this.filters.search;
+
+    const category = this.filters.category;
     const country = this.filters.country;
-    this.listingService.search(pageNumber, max, null, search, country)
+
+    this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<any>) => {
         this.isLoading = false;
         // new page
@@ -115,7 +119,6 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
             this.noMoreListings = true;
           }
         }
-
       })
   }
 

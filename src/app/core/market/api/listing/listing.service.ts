@@ -12,16 +12,16 @@ export class ListingService {
   ) {
 
   }
+  search(page: number, pageLimit: number, profileId: number | string, search: string, catId: number, country: any) {
 
-  search(page: number, pageLimit: number, profileId: number | string, search: string, country?: any) {
     const params = [
       'search',
       page,
       pageLimit,
       'ASC',
-      null, // category
-      'ALL',
-      profileId || 'ALL',
+      catId || null, // category
+      'ALL', 
+      profileId || "ALL",
       null, // minPrice
       null, // maxPrice
       country ? country.toUpperCase() : null, // country
@@ -34,7 +34,7 @@ export class ListingService {
   }
 
   searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, '*', null); // OWN
+    return this.search(page, pageLimit, "*", null, null, null); // OWN
   }
 
   get(id: number) {
