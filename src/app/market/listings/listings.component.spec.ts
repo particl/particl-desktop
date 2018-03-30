@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/compiler/src/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
@@ -16,6 +16,7 @@ describe('ListingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       declarations: [
         ListingsComponent
       ],
@@ -25,7 +26,6 @@ describe('ListingsComponent', () => {
         CoreModule.forRoot(),
         MarketModule.forRoot()
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         CategoryService
       ]
