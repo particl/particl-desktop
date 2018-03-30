@@ -12,7 +12,7 @@
       <!-- removed multiple as I guess currently the api returning data on the basis of only one selected country -->
       <mat-select placeholder="All countries" class="filter country" (change)="clearAndLoadPage()" [(ngModel)]="filters.country">
         <mat-option>All countries</mat-option>
-        <mat-option *ngFor="let country of countryList?.countries" [value]="country.name">{{ country.name }}</mat-option>
+        <mat-option *ngFor="let country of countryList.getList()" [value]="country.name">{{ country.name }}</mat-option>
       </mat-select>
 
       <mat-select placeholder="All categories" (change)="clearAndLoadPage()" [(ngModel)]="filters.category"  class="filter category">
@@ -30,8 +30,8 @@
     </mat-select-->
 
     <!-- Sorting -->
-    <button mat-button class="menu-toggle" fxFlex="0 1 300px" (click)="this.listingService.generateBogusListings(50)">
-      <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon> Create 50 bogus listings
+    <button mat-button class="menu-toggle" fxFlex="0 1 425px" (click)="this.listingService.generateBogusListings(50)">
+      <mat-icon fontSet="partIcon" fontIcon="part-smiley"></mat-icon> Create 50 bogus listings
     </button>
 
     <!--div class="display" fxFlex="0 1 80px" fxLayout="row" fxLayoutGap="15px">
@@ -43,7 +43,7 @@
   </div><!-- .control-bar -->
 </app-header>
 
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length < 1"></mat-progress-bar>
+
 <div class="container-block" fxLayout="row">
 
   <!-- div class="sidebar" fxFlex="25%">
@@ -100,5 +100,7 @@
     </div>
   </div><!-- .content -->
 
-</div>
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length > 0"></mat-progress-bar>
+
+</div><!-- .container-block -->
+
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>

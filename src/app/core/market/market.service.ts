@@ -58,7 +58,7 @@ export class MarketService {
     console.log('image length, ', base64DataURI.length);
     const blob: Blob = dataURItoBlob(base64DataURI);
     console.log('blob length, ', blob.size);
-    form.append("image", blob, "image.jpg");
+    form.append('image', blob, 'image.jpg');
 
 
     const headerJson = {
@@ -69,8 +69,8 @@ export class MarketService {
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
 //        .map((response: any) => response.result)
         .catch((error: any) => {
-          let err = "";
-          if(error.status === 404) {
+          let err = '';
+          if (error.status === 404) {
             err = error.error.error;
           } else {
             err = error;

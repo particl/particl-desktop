@@ -32,7 +32,7 @@
           <span class="big">{{price?.int}}.</span>
           <span class="small">{{price?.cents * 100000000}}</span>
           <span class="currency">PART</span>
-          <span class="fiat TO_DO">&asymp; 45.15 USD</span>
+          <span class="fiat">&asymp; {{price?.usd}} USD</span>
         </td>
       </tr>
       <tr>
@@ -65,7 +65,7 @@
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <div class="left">
     <!--button mat-button class="small TO_DO" matTooltip="Report" matTooltipPosition="above">
-      <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
     </button-->
     <div class="date">
       <strong>Date added</strong> {{date}}
@@ -73,7 +73,7 @@
   </div>
   <div class="right">
     <button mat-button class="small" color="warn" matTooltip="Add to Favourites" matTooltipPosition="above" (click)="addToFavorites(data.listing.id)">
-      <mat-icon fontSet="partIcon" fontIcon="part-heart"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-heart-outline-add"></mat-icon>
     </button>
     <button mat-raised-button color="primary" (click)="addToCart(data.listing.id)">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>

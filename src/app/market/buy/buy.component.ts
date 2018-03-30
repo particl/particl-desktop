@@ -13,7 +13,7 @@ import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Cart } from 'app/core/market/api/cart/cart.model';
-import { CountryList } from 'app/core/market/api/listing/countrylist.model';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 
 @Component({
   selector: 'app-buy',
@@ -110,8 +110,6 @@ export class BuyComponent implements OnInit {
   /* favs */
   favorites: Array<Listing> = [];
 
-  /* countries */
-  countries: CountryList = new CountryList();
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -119,12 +117,11 @@ export class BuyComponent implements OnInit {
     private _profileService: ProfileService,
     private listingService: ListingService,
     private cartService: CartService,
-    private favoritesService: FavoritesService
+    private favoritesService: FavoritesService,
+    private countryList: CountryListService
   ) { }
 
   ngOnInit() {
-
-    console.log(this.countries);
 
     this._profileService.get(1).take(1).subscribe(profile => {
       console.log('GOT PROFILE');
