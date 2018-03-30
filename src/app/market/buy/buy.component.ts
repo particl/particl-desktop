@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
-  FormControl,
   Validators
 } from '@angular/forms';
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
 import { TemplateService } from 'app/core/market/api/template/template.service';

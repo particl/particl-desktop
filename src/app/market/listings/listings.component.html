@@ -14,7 +14,7 @@
       <!-- removed multiple as I guess currently the api returning data on the basis of only one selected country -->
       <mat-select placeholder="All countries" class="filter country" (change)="clearAndLoadPage()" [(ngModel)]="filters.country">
         <mat-option>All countries</mat-option>
-        <mat-option *ngFor="let country of countryList?.countries" [value]="country.name">{{ country.name }}
+        <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}
         </mat-option>
       </mat-select>
 
@@ -95,7 +95,7 @@
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let item of page.listings">
         <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
-          <app-preview-listing [listing]="item"></app-preview-listing>
+          <app-listing-item [listing]="item"></app-listing-item>
         </mat-card>
       </ng-container>
     </ng-container>

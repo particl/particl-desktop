@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { MarketService } from 'app/core/market/market.service';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 @Injectable()
 export class ListingService {
 
   constructor(
-    private market: MarketService,
-    private marketState: MarketStateService
+    private market: MarketService
   ) {
 
   }
@@ -20,8 +18,8 @@ export class ListingService {
       pageLimit,
       'ASC',
       catId || null, // category
-      'ALL', 
-      profileId || "ALL",
+      'ALL',
+      profileId || 'ALL',
       null, // minPrice
       null, // maxPrice
       country ? country.toUpperCase() : null, // country
@@ -34,7 +32,7 @@ export class ListingService {
   }
 
   searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, "*", null, null, null); // OWN
+    return this.search(page, pageLimit, '*', null, null, null); // OWN
   }
 
   get(id: number) {

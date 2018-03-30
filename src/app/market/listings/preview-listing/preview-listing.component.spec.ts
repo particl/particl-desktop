@@ -7,6 +7,7 @@ import { CartService } from '../../../core/market/api/cart/cart.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { PreviewListingComponent } from './preview-listing.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 describe('PreviewListingComponent', () => {
   let component: PreviewListingComponent;
@@ -19,9 +20,14 @@ describe('PreviewListingComponent', () => {
         CoreUiModule.forRoot(),
         MarketModule.forRoot()
       ],
-      providers: [ CartService, SnackbarService ]
+      providers: [
+        { provide: MatDialogRef},
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        CartService,
+        SnackbarService
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
