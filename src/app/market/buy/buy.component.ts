@@ -150,7 +150,21 @@ export class BuyComponent implements OnInit {
 
   ngOnInit() {
     this.formData = new ShippingDetails();
-    this._profileService.get(1).take(1).subscribe(profile => this.profile = profile);
+    this._profileService.get(1).take(1).subscribe(profile => {
+      this.profile = profile;
+
+      // TODO: Select default address..
+      if (profile.ShippingAddresses && profile.ShippingAddresses.length) {
+        this.formData.firstName = profile.ShippingAddresses[0].firstName;
+        this.formData.lastName = profile.ShippingAddresses[0].lastName;
+        this.formData.addressLine1 = profile.ShippingAddresses[0].addressLine1;
+        this.formData.addressLine2 = profile.ShippingAddresses[0].addressLine2;
+        this.formData.city = profile.ShippingAddresses[0].city;
+        this.formData.state = profile.ShippingAddresses[0].state;
+        this.formData.country = profile.ShippingAddresses[0].country;
+        this.formData.zip = profile.ShippingAddresses[0].zipCode;
+      }
+    });
 
     this.formBuild();
 
@@ -251,12 +265,12 @@ export class BuyComponent implements OnInit {
   }
 
   placeOrder() {
+    // TODO: Only create address if its required...
     this.market.call('address', [
       'add', this.profile.id, this.formData.firstName, this.formData.lastName,
       'not used', this.formData.addressLine1, this.formData.addressLine2,
       this.formData.city, this.formData.state, this.formData.country, this.formData.zip])
       .subscribe(address => {
-
         this.cart.cartDbObj.forEach((cart: any, index) => {
           if (cart.ListingItem && cart.ListingItem.hash) {
             // itemhash.push(cart.ListingItem.hash)
@@ -266,7 +280,8 @@ export class BuyComponent implements OnInit {
               this.snackbarService.open('Order has been successfully placed');
               // change tab
             // this.selectedTab = 1;
-            });
+            },
+            error => this.snackbarService.open(error, 'err'));
           }
         });
       });
