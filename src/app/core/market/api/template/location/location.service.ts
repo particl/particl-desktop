@@ -21,7 +21,7 @@ export class LocationService {
         'location',
         'add',
         itemTemplateId,
-        region.iso,
+        region.iso ? region.iso : null,
         address || 'a',
         gps ? gps.title : null,
         gps ? gps.description : null,

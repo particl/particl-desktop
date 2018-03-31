@@ -74,20 +74,27 @@ export class Template {
     return this.object.ItemInformation.ItemImages;
   }
 
+  get intPrice(): number {
+    return this.basePrice.getIntegerPart();
+  }
+
+  get centsPrice(): number {
+    return this.basePrice.getFractionalPart();
+  }
+
   setBasePrice(): void {
-    const itemPrice = this.object.PaymentInformation.ItemPrice;
-    if (itemPrice) {
-      this.basePrice = new Amount(itemPrice.basePrice);
-    } else {
-      this.basePrice = undefined;
-    }
+    this.basePrice = (this.object.PaymentInformation.ItemPrice
+      ? new Amount(this.object.PaymentInformation.ItemPrice.basePrice)
+      : undefined);
   }
 
   setShippingPrice(): void {
     const itemPrice = this.object.PaymentInformation.ItemPrice;
     if (itemPrice && itemPrice.ShippingPrice) {
-      this.domesticShippingPrice = new Amount(itemPrice.ShippingPrice.domestic);
-      this.internationalShippingPrice = new Amount(itemPrice.ShippingPrice.international);
+      this.domesticShippingPrice = (itemPrice.ShippingPrice.domestic
+        ? new Amount(itemPrice.ShippingPrice.domestic) : undefined);
+      this.internationalShippingPrice = (itemPrice.ShippingPrice.international
+        ? new Amount(itemPrice.ShippingPrice.international) : undefined);
     }
   }
 }
