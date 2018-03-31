@@ -19,6 +19,8 @@ import { MarketService } from '../../core/market/market.service';
 import { ShippingDetails } from '../shared/shipping-details.model';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
+import { }
+
 @Component({
   selector: 'app-buy',
   templateUrl: './buy.component.html',
@@ -166,10 +168,11 @@ export class BuyComponent implements OnInit {
 
     this.shippingFormGroup = this._formBuilder.group({
       title:        [''],
+      firstName:    ['', Validators.required],
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       city:         ['', Validators.required],
-      state:        [''],
+      state:        ['', Validators.required],
       countryCode:  ['', Validators.required],
       zipCode:      ['', Validators.required],
       save:         ['']
@@ -251,7 +254,25 @@ export class BuyComponent implements OnInit {
   }
 
   placeOrder() {
-    this.getItemHash()
+    this.market.call('address', [
+      'add', this.profile.id, this.formData.firstName, this.formData.lastName,
+      'not used', this.formData.addressLine1, this.formData.addressLine2,
+      this.formData.city, this.formData.state, this.formData.country, this.formData.zip])
+      .subscribe(address => {
+
+        this.cart.cartDbObj.forEach((cart: any, index) => {
+          if (cart.ListingItem && cart.ListingItem.hash) {
+            // itemhash.push(cart.ListingItem.hash)
+
+            this.market.call('bid', ['send', cart.ListingItem.hash, address.id]).subscribe((res) => {
+
+              this.snackbarService.open('Order has been successfully placed');
+              // change tab
+            // this.selectedTab = 1;
+            });
+          }
+        });
+      });
     // item hashes
     // const itemhash: string = JSON.stringify(this.getItemHash());
     // this.market.call('bid', ['send', itemhash, this.profile.address]).subscribe((res) => {
@@ -268,18 +289,6 @@ export class BuyComponent implements OnInit {
   // @TODO create asyc function for loop calling API
   getItemHash() {
     // let itemhash: Array<any> = [];
-    this.cart.cartDbObj.forEach((cart: any, index) => {
-      if (cart.ListingItem && cart.ListingItem.hash) {
-        // itemhash.push(cart.ListingItem.hash)
-
-        this.market.call('bid', ['send', cart.ListingItem.hash, this.profile.address]).subscribe((res) => {
-
-          this.snackbarService.open('Order has been successfully placed');
-          // change tab
-         // this.selectedTab = 1;
-        }
-      }
-    });
     // return itemhash;
   }
 }
