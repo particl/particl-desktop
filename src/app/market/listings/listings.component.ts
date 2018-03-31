@@ -36,7 +36,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
   // categories: FormControl = new FormControl();
-  categoryList: Array<string> = [];
+  categoryList: Array<Category> = [];
 
   _rootCategoryList: Category = new Category({});
 
@@ -86,7 +86,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     .subscribe(
       list => {
         this._rootCategoryList = list;
-        this.categoryList = this._rootCategoryList.getSubCategory();
+        this.categoryList = this._rootCategoryList.getFlatSubCategory();
       });
   }
 
