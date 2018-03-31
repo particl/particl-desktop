@@ -14,10 +14,12 @@ export class CountryListService {
 
   private setCountries() {
     const obj = reduce(getDataSet(), 'en');
-    this.countries = Object.keys(obj).map((key) => { return obj[key] });
+    this.countries = Object.keys(obj).map(key => obj[key])
+      .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
   }
 
   getList(): any {
+    console.log(this.countries);
     return this.countries;
   }
 
