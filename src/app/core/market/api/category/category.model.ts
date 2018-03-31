@@ -19,4 +19,19 @@ export class Category {
     return this.subCategoryList;
   }
 
+  getFlatSubCategory() : Array<Category> {
+    let temp: Array<Category> = [];
+
+    // push our own category to the list
+    temp.push(this);
+
+    // recursively add subcategories
+    if (this.subCategoryList) {
+      this.subCategoryList.forEach((category: Category) => {
+          temp = temp.concat(category.getFlatSubCategory());
+        });
+    } 
+    return temp;
+  }
+
 }

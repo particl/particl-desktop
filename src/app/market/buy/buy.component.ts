@@ -256,44 +256,19 @@ export class BuyComponent implements OnInit {
     return '';
   }
 
-  // TODO: remove type any
-  fillAddress() {
-    
-    //this.shippingFormGroup.setValue(address);
-  }
-
   placeOrder() {
-    this.getItemHash()
-    // item hashes
-    // const itemhash: string = JSON.stringify(this.getItemHash());
-    // this.market.call('bid', ['send', itemhash, this.profile.address]).subscribe((res) => {
-    //
-    //   this.snackbarService.open('Order has been successfully placed');
-    //   // change tab
-    //   this.selectedTab = 1;
-    //
-    // }, (error) => {
-    //   console.error('>>>', error);
-    // });
-  }
-
-  // @TODO create asyc function for loop calling API
-  getItemHash() {
-    // let itemhash: Array<any> = [];
     this.cart.cartDbObj.forEach((cart: any, index) => {
       if (cart.ListingItem && cart.ListingItem.hash) {
-        // itemhash.push(cart.ListingItem.hash)
 
         this.market.call('bid', ['send', cart.ListingItem.hash, this.profile.address]).subscribe((res) => {
 
           this.snackbarService.open('Order has been successfully placed');
-          // change tab
-         // this.selectedTab = 1;
-        }
+
+        });
       }
     });
-    // return itemhash;
   }
+
 }
 
 
