@@ -151,7 +151,8 @@
       <form [formGroup]="shippingFormGroup" class="shipping">
         <ng-template matStepLabel>Shipping details</ng-template>
         <div fxLayout="row" fxLayoutGap="30px">
-          <div class="shipping-profile" fxFlex>
+          <!--Hide shipping profile -->
+          <div class="shipping-profile" *ngIf="false" fxFlex>
             <mat-card>
               <div class="title">Choose shipping profile</div>
               <mat-form-field class="full-width">
@@ -171,11 +172,12 @@
                 To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
               </p>
             </mat-card>
-          </div><!-- .shipping-profile -->
+          </div>
+          <!-- .shipping-profile -->
 
           <div class="shipping-info" fxFlex>
             <mat-card>
-              <div class="title">Or enter new shipping address</div>
+              <div class="title">Enter shipping address</div>
               <div class="row" fxLayout fxLayoutGap="30px">
                 <!-- FIXME: First and Last name should be required as well (waiting for dapp shell integration) -->
                 <mat-form-field class="full-width" fxFlex>
@@ -207,7 +209,9 @@
                   <mat-option *ngFor="let country of countryList.getList()" value="{{country.iso}}">{{country.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
+
+              <!--Hide shipping profile -->
+              <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center" *ngIf="false">
                 <mat-checkbox formControlName="save" fxFlex>Save as shipping profile</mat-checkbox>
                 <mat-form-field class="full-width" fxFlex>
                   <input matInput formControlName="title" placeholder="Shipping profile name">
@@ -234,7 +238,7 @@
     <!-- Confirmation/Payment -->
     <mat-step [stepControl]="confirmation">
       <form class="confirmation">
-        <ng-template matStepLabel>Confirm & Payment</ng-template>
+        <ng-template matStepLabel>Confirm & Place order</ng-template>
         <table class="cart-items summary TO_DO">
           <thead>
             <tr><th>Items</th><th>Price</th><th>Shipping</th><!--<th>Quantity</th>--><th class="text-right">Total</th></tr>
@@ -274,7 +278,7 @@
           <table class="subtotals" fxFlex="0 0 250px">
             <tr><td class="desc">Subtotal</td><td class="value">{{cart?.subTotal.amount}} PART</td></tr>
             <tr><td class="desc">Shipping total</td><td class="value">{{cart?.shippingTotal.amount}} PART</td></tr>
-            <tr><td class="desc">Escrow (?)</td><td class="value">{{cart?.escrow.amount}} PART</td></tr>
+            <!--<tr><td class="desc">Escrow (?)</td><td class="value">{{cart?.escrow.amount}} PART</td></tr>-->
             <tr><td class="desc total">Total</td><td class="value total">{{cart?.total.amount}} PART</td></tr>
           </table>
 
@@ -288,7 +292,7 @@
           <!-- TODO: after clicking the "confirm" button, payment confirmation modal should pop out with all the details -->
           <button mat-raised-button color="primary" class="TO_DO">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-            Confirm & Pay
+            Place order
           </button>
         </div>
       </form>
