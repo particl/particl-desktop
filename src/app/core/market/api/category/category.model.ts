@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export class Category {
   subCategoryList: Array<Category>;
   get name() { return this.category.name };
@@ -12,7 +14,9 @@ export class Category {
   // get subcategories (single level)
   setSubCategoryList() {
     const list = this.category.ChildItemCategories;
-    this.subCategoryList = list.map(o => { return new Category(o)});
+    this.subCategoryList = _.concat(list, _.flatMap(list, item =>
+      _.map(item.ChildItemCategories, ChildItemCategories => _.defaults({}, ChildItemCategories))
+    ));
   }
 
   getSubCategory(): Array<any> {
