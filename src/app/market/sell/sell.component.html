@@ -142,7 +142,7 @@
               Added {{ listing.createdAt }} &bull; Expires 2018-02-13
             </div>
           </div>
-          <div class="status {{listing.statusClass}}" fxFlex="0 0 140px"><span>&bull;</span>{{listing.status}}</div>
+          <div class="status {{listing.statusClass}}" fxFlex="0 0 140px"><span>&bull;</span>Published</div>
         </div>
       </mat-expansion-panel-header>
 
@@ -188,7 +188,7 @@
           </button>
         </div>
         <div class="right"> <!-- listing.action_color  -->
-          <button mat-raised-button color="primary" matTooltip="Publish Listing" [disabled]="listing.status === 'Published'" (click)="postTemplate(listing.id)" >
+          <button mat-raised-button color="primary" matTooltip="Publish Listing" [disabled]="true" (click)="postTemplate(listing.id)" >
             <!-- listing.action_disabled -->
             <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon> <!-- listing.action_icon -->
             Publish Listing
