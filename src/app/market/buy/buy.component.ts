@@ -28,7 +28,6 @@ export class BuyComponent implements OnInit {
 
   static stepperIndex: number = 0;
   @ViewChild('stepper') stepper: MatStepper;
-  public formData: ShippingDetails;
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
@@ -147,14 +146,12 @@ export class BuyComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.formData = new ShippingDetails();
-    this._profileService.get(1).take(1).subscribe(profile => {
-      this.profile = profile;
-    });
-
     this.formBuild();
 
+    this.getProfile();
+
     this.getCart();
+
     this.favoritesService.updateListOfFavorites();
     this.getFavorites();
   }
@@ -165,14 +162,14 @@ export class BuyComponent implements OnInit {
     });
 
     this.shippingFormGroup = this._formBuilder.group({
-      title:        [''],
+      firstName:    ['', Validators.required],
+      lastName:     ['', Validators.required],
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       city:         ['', Validators.required],
       state:        [''],
-      countryCode:  ['', Validators.required],
-      zipCode:      ['', Validators.required],
-      save:         ['']
+      country:      ['', Validators.required],
+      zipCode:      ['', Validators.required]
     });
   }
 
@@ -189,10 +186,6 @@ export class BuyComponent implements OnInit {
         });
       });
     });
-  }
-
-  onStepChange(ev: any) {
-    BuyComponent.stepperIndex = ev.selectedIndex;
   }
 
   clear(): void {
@@ -226,28 +219,47 @@ export class BuyComponent implements OnInit {
 
   /* shipping */
 
-  updateShippingProfile(): void {
-    if (this.shippingFormGroup.value.save) {
-      delete this.shippingFormGroup.value.save;
-      this._profileService.addShippingAddress(this.shippingFormGroup.value).take(1)
-        .subscribe(address => {
-          this._profileService.get(1).take(1)
-            .subscribe(updatedProfile => this.profile = updatedProfile);
-        });
+  updateShippingAddress(): void {
+    if (!this.profile) {
+      this.snackbarService.open('Profile was not fetched!');
+      return;
     }
+
+    let upsert: Function = this._profileService.updateShippingAddress.bind(this);
+
+    if (this.profile.ShippingAddresses.length === 0) {
+      upsert = this._profileService.addShippingAddress.bind(this);
+    }
+    console.log(this.shippingFormGroup.value);
+    upsert(this.shippingFormGroup.value).take(1).subscribe(address => {
+      this.getProfile();
+    });
+
+  }
+
+  getProfile(): void{
+    this._profileService.get(1).take(1).subscribe(
+      profile => {
+        this.profile = profile;
+        console.log('--- profile address ----');
+        const addresses = profile.ShippingAddresses;
+        if (addresses.length > 0) {
+          this.shippingFormGroup.patchValue(addresses[0]);
+        }
+      });
+  }
+
+  valueOf(field: string) {
+    if(this.shippingFormGroup) {
+      return this.shippingFormGroup.get(field).value;
+    }
+    return '';
   }
 
   // TODO: remove type any
-  fillAddress(address: any) {
-    console.log(address);
-    address.countryCode = address.country;
-    delete address.country;
-    address.save = false;
-    delete address.id;
-    delete address.profileId;
-    delete address.updatedAt;
-    delete address.createdAt;
-    this.shippingFormGroup.setValue(address);
+  fillAddress() {
+    
+    //this.shippingFormGroup.setValue(address);
   }
 
   placeOrder() {
