@@ -13,6 +13,7 @@ import { ImageService } from 'app/core/market/api/template/image/image.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
+import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 
 @Component({
   selector: 'app-add-item',
@@ -49,7 +50,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private location: LocationService,
     private listing: ListingService,
     private snackbar: SnackbarService,
-    private countryList: CountryListService
+    private countryList: CountryListService,
+    private escrow: EscrowService
   ) { }
 
   ngOnInit() {
@@ -234,6 +236,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.image.upload(template.id, this.picturesToUpload)
           .then(resp => resolve(template.id));
 
+        this.escrow.add(template.id, EscrowType.MAD).subscribe(
+          success => this.snackbar.open('Succesfully added escrow!')
+        );
+
       });
     });
   }
@@ -266,6 +272,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update messaging
     // update payment
     // update escrow
+    this.escrow.update(this.templateId, EscrowType.MAD).subscribe(
+      success => this.snackbar.open('Succesfully added escrow!')
+    );
+
   }
 
   saveTemplate() {
