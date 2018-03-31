@@ -4,7 +4,7 @@ export class Cart {
 
   public shoppingCartItems: Array<any>;
 
-  constructor(private cartDbObj: any) {
+  constructor(public cartDbObj: any) {
       this.shoppingCartItems = this.cartDbObj;
       this.setCartItems();
   }
@@ -42,7 +42,7 @@ export class Cart {
         total += object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international
       }
     });
-    return new Amount(total);    
+    return new Amount(total);
   }
 
   get total(): Amount{

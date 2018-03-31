@@ -17,7 +17,7 @@ import { CountryListService } from 'app/core/market/api/countrylist/countrylist.
 import { MarketService } from '../../core/market/market.service';
 
 import { ShippingDetails } from '../shared/shipping-details.model';
-import {SnackbarService} from "../../core/snackbar/snackbar.service";
+import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-buy',
@@ -251,18 +251,36 @@ export class BuyComponent implements OnInit {
   }
 
   placeOrder() {
+    this.getItemHash()
     // item hashes
-    const itemhash: string = JSON.stringify(this.cart);
-    this.market.call('bid', ['send', itemhash, this.profile.address]).subscribe((res) => {
-      console.log('>>>called', res);
+    // const itemhash: string = JSON.stringify(this.getItemHash());
+    // this.market.call('bid', ['send', itemhash, this.profile.address]).subscribe((res) => {
+    //
+    //   this.snackbarService.open('Order has been successfully placed');
+    //   // change tab
+    //   this.selectedTab = 1;
+    //
+    // }, (error) => {
+    //   console.error('>>>', error);
+    // });
+  }
 
-      this.snackbarService.open('Order has been successfully placed')
-      // change tab
-      this.selectedTab = 1;
+  // @TODO create asyc function for loop calling API
+  getItemHash() {
+    // let itemhash: Array<any> = [];
+    this.cart.cartDbObj.forEach((cart: any, index) => {
+      if (cart.ListingItem && cart.ListingItem.hash) {
+        // itemhash.push(cart.ListingItem.hash)
 
-    }, (error) => {
-      console.error('>>>', error);
+        this.market.call('bid', ['send', cart.ListingItem.hash, this.profile.address]).subscribe((res) => {
+
+          this.snackbarService.open('Order has been successfully placed');
+          // change tab
+         // this.selectedTab = 1;
+        }
+      }
     });
+    // return itemhash;
   }
 }
 
