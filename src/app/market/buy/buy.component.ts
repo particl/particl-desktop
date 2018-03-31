@@ -14,35 +14,28 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-import { Favorite } from 'app/core/market/api/favorites/favorite.model';
+
+import { ShippingDetails } from '../shared/shipping-details.model';
 
 @Component({
   selector: 'app-buy',
   templateUrl: './buy.component.html',
   styleUrls: ['./buy.component.scss']
 })
-export class BuyComponent implements OnInit, DoCheck {
+export class BuyComponent implements OnInit {
 
+  static stepperIndex: number = 0;
   @ViewChild('stepper') stepper: MatStepper;
-  private modelFirstName: any;
-  private modelLastName: any;
-  private modelAddressLine1: any;
-  private modelAddressLine2: any;
-  private modelCity: any;
-  private modelZip: any;
-  private modelState: any;
-  private modelCountry: any;
+  public formData: ShippingDetails;
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
 
   /* https://material.angular.io/components/stepper/overview */
-  cartFormGroup: FormGroup;
-  shippingFormGroup: FormGroup;
+  public cartFormGroup: FormGroup;
+  public shippingFormGroup: FormGroup;
 
-  private static stepperIndex: number = 0;
-
-  order_sortings: Array<any> = [
+  public order_sortings: Array<any> = [
     { title: 'By creation date', value: 'date-created' },
     { title: 'By update date',   value: 'date-update'  },
     { title: 'By status',        value: 'status'       },
@@ -53,7 +46,7 @@ export class BuyComponent implements OnInit, DoCheck {
   ];
 
   // TODO: disable radios for 0 amount-statuses
-  order_filtering: Array<any> = [
+  public order_filtering: Array<any> = [
     { title: 'All orders', value: 'all',     amount: '3' },
     { title: 'Bidding',    value: 'bidding', amount: '1' },
     { title: 'In escrow',  value: 'escrow',  amount: '0' },
@@ -62,7 +55,7 @@ export class BuyComponent implements OnInit, DoCheck {
   ];
 
   // Orders
-  orders: Array<any> = [
+  public orders: Array<any> = [
     {
       name: 'NFC-enabled contactless payment perfume',
       hash: 'AGR', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
@@ -125,20 +118,19 @@ export class BuyComponent implements OnInit, DoCheck {
     },
   ];
 
-  filters: any = {
+  public filters: any = {
     search: undefined,
     sort:   undefined,
     status: undefined
   };
 
-  profile: any = { };
+  public profile: any = { };
 
   /* cart */
-  cart: Cart;
+  public cart: Cart;
 
   /* favs */
-  favorites: Array<Listing> = [];
-
+  public favorites: Array<Listing> = [];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -151,13 +143,19 @@ export class BuyComponent implements OnInit, DoCheck {
   ) { }
 
   ngOnInit() {
-
-    console.log(this.countries);
-
+    this.formData = new ShippingDetails();
     this._profileService.get(1).take(1).subscribe(profile => {
       this.profile = profile;
     });
 
+    this.formBuild();
+
+    this.getCart();
+    this.favoritesService.updateListOfFavorites();
+    this.getFavorites();
+  }
+
+  formBuild() {
     this.cartFormGroup = this._formBuilder.group({
       firstCtrl: ['']
     });
@@ -172,13 +170,11 @@ export class BuyComponent implements OnInit, DoCheck {
       zipCode:      ['', Validators.required],
       save:         ['']
     });
+  }
 
-    this.getCart();
-
-    this.favoritesService.updateListOfFavorites();
-
+  getFavorites() {
     this.favoritesService.getFavorites().subscribe(favorites => {
-      let temp: Array<Listing> = new Array<Listing>();
+      const temp: Array<Listing> = new Array<Listing>();
       favorites.forEach(favorite => {
         this.listingService.get(favorite.listingItemId).take(1).subscribe(listing => {
           temp.push(new Listing(listing));
@@ -191,23 +187,7 @@ export class BuyComponent implements OnInit, DoCheck {
     });
   }
 
-  ngDoCheck(): void {
-    try {
-      this.stepper.selectedIndex = BuyComponent.stepperIndex;
-
-      this.modelFirstName = BuyComponent.ShippingDetails.firstName;
-      this.modelLastName = BuyComponent.ShippingDetails.lastName;
-      this.modelAddressLine1 = BuyComponent.ShippingDetails.addressLine1;
-      this.modelAddressLine2 = BuyComponent.ShippingDetails.addressLine2;
-      this.modelCity = BuyComponent.ShippingDetails.city;
-      this.modelZip = BuyComponent.ShippingDetails.zip;
-      this.modelState = BuyComponent.ShippingDetails.state;
-      this.modelCountry = BuyComponent.ShippingDetails.country;
-    }
-    catch(e) { }
-  }
-
-  stepClick(ev) {
+  onStepChange(ev: any) {
     BuyComponent.stepperIndex = ev.selectedIndex;
   }
 
@@ -251,49 +231,6 @@ export class BuyComponent implements OnInit, DoCheck {
             .subscribe(updatedProfile => this.profile = updatedProfile);
         });
     }
-  }
-
-  static ShippingDetails = class {
-    static firstName: string;
-    static lastName: string;
-    static addressLine1: string;
-    static addressLine2: string;
-    static city: string;
-    static zip: string;
-    static state: string;
-    static country: string;
-  }
-
-  onKeyFirstName(value: string) {
-    BuyComponent.ShippingDetails.firstName = value;
-  }
-
-  onKeyLastName(value: string) {
-    BuyComponent.ShippingDetails.lastName = value;
-  }
-
-  onKeyAddressLine1(value: string) {
-    BuyComponent.ShippingDetails.addressLine1 = value;
-  }
-
-  onKeyAddressLine2(value: string) {
-    BuyComponent.ShippingDetails.addressLine2 = value;
-  }
-
-  onKeyCity(value: string) {
-    BuyComponent.ShippingDetails.city = value;
-  }
-
-  onKeyZip(value: string) {
-    BuyComponent.ShippingDetails.zip = value;
-  }
-
-  onKeyState(value: string) {
-    BuyComponent.ShippingDetails.state = value;
-  }
-
-  onChange(ev) {
-    BuyComponent.ShippingDetails.country = ev.value;
   }
 
   // TODO: remove type any
