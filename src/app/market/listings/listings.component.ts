@@ -101,12 +101,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const country = this.filters.country;
 
     this.listingService.search(pageNumber, max, null, search, category, country)
-      .take(1).subscribe((listings: Array<any>) => {
+      .take(1).subscribe((listings: Array<Listing>) => {
       this.isLoading = false;
       // new page
       const page = {
         pageNumber: pageNumber,
-        listings: listings.map(listing => new Listing(listing))
+        listings: listings
       };
 
       // should we clear all existing pages? e.g search

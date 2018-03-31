@@ -15,6 +15,7 @@ import { FavoritesService } from './api/favorites/favorites.service';
 import { ImageService } from './api/template/image/image.service';
 import { InformationService } from './api/template/information/information.service';
 import { LocationService } from './api/template/location/location.service';
+import { EscrowService } from './api/template/escrow/escrow.service';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ export class MarketModule {
         FavoritesService,
         ImageService,
         InformationService,
-        LocationService
+        LocationService,
+        EscrowService
       ]
     };
   }
