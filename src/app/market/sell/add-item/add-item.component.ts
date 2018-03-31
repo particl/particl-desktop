@@ -13,6 +13,7 @@ import { ImageService } from 'app/core/market/api/template/image/image.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
+import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 
 @Component({
   selector: 'app-add-item',
@@ -49,7 +50,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private location: LocationService,
     private listing: ListingService,
     private snackbar: SnackbarService,
-    private countryList: CountryListService
+    private countryList: CountryListService,
+    private escrow: EscrowService
   ) { }
 
   ngOnInit() {
@@ -215,7 +217,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   private save(): Promise<any> {
 
     const item = this.itemFormGroup.value;
-
     return new Promise((resolve, reject) => {
       this.template.add(
         item.title,
@@ -233,7 +234,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
-          .then(resolve);
+          .then();
+
+        this.escrow.add(template.id, EscrowType.MAD).subscribe(
+          success => {
+            this.snackbar.open('Succesfully added escrow!')
+            resolve(template.id);
+          }
+        );
 
       });
     });
@@ -267,6 +275,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update messaging
     // update payment
     // update escrow
+    this.escrow.update(this.templateId, EscrowType.MAD).subscribe(
+      success => this.snackbar.open('Succesfully added escrow!')
+    );
+
   }
 
   saveTemplate() {
@@ -291,6 +303,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       // save new
       this.save().then(id => {
+        console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
           console.log(listing);
           this.backToSell();

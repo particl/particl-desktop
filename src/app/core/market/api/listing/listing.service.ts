@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { MarketService } from 'app/core/market/market.service';
+import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ListingService {
@@ -10,7 +12,7 @@ export class ListingService {
   ) {
 
   }
-  search(page: number, pageLimit: number, profileId: number | string, search: string, catId: number, country: any) {
+  search(page: number, pageLimit: number, profileId: number | string, search: string, catId: number, country: any): Observable<Array<Listing>> {
 
     const params = [
       'search',
@@ -28,7 +30,12 @@ export class ListingService {
       true // withRelated
     ];
 
-    return this.market.call('item', params);
+    return this.market.call('item', params)
+    .map(
+      (listings: Array<Listing>) => {
+        return listings.map(t => new Listing(t));
+      }
+    );
   }
 
   searchOwn(page: number, pageLimit: number) {

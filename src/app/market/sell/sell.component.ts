@@ -234,4 +234,11 @@ export class SellComponent implements OnInit {
     )
   }
 
+  postTemplate(id: any) {
+    this.template.post(id, 1).take(1).subscribe(listing => {
+        console.log(listing);
+      });
+
+  }
+
 }
