@@ -14,8 +14,10 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+import { MarketService } from '../../core/market/market.service';
 
 import { ShippingDetails } from '../shared/shipping-details.model';
+import {SnackbarService} from "../../core/snackbar/snackbar.service";
 
 @Component({
   selector: 'app-buy',
@@ -139,7 +141,9 @@ export class BuyComponent implements OnInit {
     private listingService: ListingService,
     private cartService: CartService,
     private favoritesService: FavoritesService,
-    public countryList: CountryListService
+    public countryList: CountryListService,
+    private market: MarketService,
+    private snackbarService: SnackbarService
   ) { }
 
   ngOnInit() {
@@ -244,6 +248,21 @@ export class BuyComponent implements OnInit {
     delete address.updatedAt;
     delete address.createdAt;
     this.shippingFormGroup.setValue(address);
+  }
+
+  placeOrder() {
+    // item hashes
+    const itemhash: string = JSON.stringify(this.cart);
+    this.market.call('bid', ['send', itemhash, this.profile.address]).subscribe((res) => {
+      console.log('>>>called', res);
+
+      this.snackbarService.open('Order has been successfully placed')
+      // change tab
+      this.selectedTab = 1;
+
+    }, (error) => {
+      console.error('>>>', error);
+    });
   }
 }
 

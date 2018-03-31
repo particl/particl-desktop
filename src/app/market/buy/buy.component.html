@@ -244,7 +244,7 @@
     <mat-step [stepControl]="confirmation">
       <form class="confirmation">
         <ng-template matStepLabel>Confirm & Place order</ng-template>
-        <table class="cart-items summary TO_DO">
+        <table class="cart-items summary">
           <thead>
           <tr>
             <th>Items</th>
@@ -286,7 +286,7 @@
           </tbody>
         </table>
 
-        <div class="order-detail TO_DO" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="20px">
+        <div class="order-detail" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="20px">
 
           <div class="shipping-overview" fxFlex="0 0 250px">
             <div class="title">Shipping address</div>
@@ -318,7 +318,7 @@
             Back to shipping
           </button>
           <!-- TODO: after clicking the "confirm" button, payment confirmation modal should pop out with all the details -->
-          <button mat-raised-button color="primary" class="TO_DO">
+          <button mat-raised-button color="primary" (click)="placeOrder()">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Place order
           </button>
