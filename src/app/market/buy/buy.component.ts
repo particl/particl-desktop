@@ -163,14 +163,14 @@ export class BuyComponent implements OnInit {
     this.favoritesService.updateListOfFavorites();
 
     this.favoritesService.getFavorites().subscribe(favorites => {
-      let temp: Array<Listing> = new Array<Listing>();
+      const temp: Array<Listing> = new Array<Listing>();
       favorites.forEach(favorite => {
         this.listingService.get(favorite.listingItemId).take(1).subscribe(listing => {
           temp.push(new Listing(listing));
           // little cheat here, because async behavior
           // we're setting the pointer to our new temp array every time we receive
           // a listing.
-          this.favorites = temp; 
+          this.favorites = temp;
         });
       });
     })

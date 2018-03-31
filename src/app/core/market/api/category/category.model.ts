@@ -19,7 +19,7 @@ export class Category {
     return this.subCategoryList;
   }
 
-  getFlatSubCategory() : Array<Category> {
+  getFlatSubCategory(): Array<Category> {
     let temp: Array<Category> = [];
 
     // push our own category to the list
@@ -30,7 +30,7 @@ export class Category {
       this.subCategoryList.forEach((category: Category) => {
           temp = temp.concat(category.getFlatSubCategory());
         });
-    } 
+    }
     return temp;
   }
 
