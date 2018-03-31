@@ -2,24 +2,24 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
-import { PreviewListingComponent } from './preview-listing.component';
+import { ListingItemComponent } from './listing-item.component';
 
-describe('PreviewListingComponent', () => {
-  let component: PreviewListingComponent;
-  let fixture: ComponentFixture<PreviewListingComponent>;
+describe('ListingItemComponent', () => {
+  let component: ListingItemComponent;
+  let fixture: ComponentFixture<ListingItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PreviewListingComponent ],
+      declarations: [ ListingItemComponent ],
       imports: [
         CoreUiModule.forRoot()
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PreviewListingComponent);
+    fixture = TestBed.createComponent(ListingItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

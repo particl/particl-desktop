@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
@@ -8,7 +8,7 @@ import { Category } from 'app/core/market/api/category/category.model';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
-import { CountryList, Country } from 'app/core/market/api/listing/countrylist.model';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { ImageService } from 'app/core/market/api/template/image/image.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
@@ -30,10 +30,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
-  countries: CountryList = new CountryList();
   images: string[];
- 
-  // file upload 
+
+  // file upload
   dropArea: any;
   fileInput: any;
   picturesToUpload: string[];
@@ -49,7 +48,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private information: InformationService,
     private location: LocationService,
     private listing: ListingService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private countryList: CountryListService
   ) { }
 
   ngOnInit() {
@@ -69,7 +69,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(200)]],
       longDescription:            ['', [Validators.required,
                                         Validators.maxLength(1000)]],
-      category:                 ['', [Validators.required]],
+      category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
       basePrice:                  ['', [Validators.required]],
       domesticShippingPrice:      ['', [Validators.required]],
@@ -89,25 +89,27 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     });
     /*
-    this.listing.generateListing().take(1).subscribe(listing => {
-      console.log(listing);
-      this.listing.get(1).take(1).subscribe(res => {
-        console.log(res);
-      })
+     this.listing.generateListing().take(1).subscribe(listing => {
+     console.log(listing);
+     this.listing.get(1).take(1).subscribe(res => {
+     console.log(res);
+     })
      });*/
   }
 
   isExistingTemplate() {
     return (this.templateId !== undefined && this.templateId > 0);
   }
+
   uploadPicture() {
     this.fileInput.click();
   }
 
-  processPictures(event) {
+  // @TODO : remove type any
+  processPictures(event: any) {
     Array.from(event.target.files).map((file: File) => {
       const reader = new FileReader();
-      reader.onload = event => {
+      reader.onload = _event => {
         this.picturesToUpload.push(reader.result);
         this.log.d('added picture', file.name);
       };
@@ -119,14 +121,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.image.remove(imageId).subscribe(
       success => {
         this.snackbar.open('Removed image successfully!')
-        
+
         // find image in array and remove it.
         let indexToRemove: number;
         this.images.find((element: any, index: number) => {
           if (element.id === imageId) {
             indexToRemove = index;
             return true;
-          } 
+          }
           return false;
         });
         if (indexToRemove >= 0) {
@@ -138,14 +140,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     );
   }
 
-  removePicture(index) {
+  removePicture(index: number) {
     this.picturesToUpload.splice(index, 1);
     if (this.featuredPicture > index) {
       this.featuredPicture -= 1;
     }
   }
 
-  featurePicture(index) {
+  featurePicture(index: number) {
     this.featuredPicture = index;
   }
 
@@ -171,7 +173,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   preload() {
     this.log.d(`preloading for id=${this.templateId}`);
     this.template.get(this.templateId).subscribe((template: Template) => {
-      this.log.d(`preloaded id=${this.templateId}!`)
+      this.log.d(`preloaded id=${this.templateId}!`);
 
       const t = {
         title: '',
@@ -190,8 +192,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.shortDescription = template.shortDescription;
       t.longDescription = template.longDescription;
       t.category = template.category.id;
-      console.log("getting category to id="+ this.itemFormGroup.get('category').value);
-      console.log("setting category to id="+t.category);
+      console.log('getting category to id=' + this.itemFormGroup.get('category').value);
+      console.log('setting category to id=' + t.category);
 
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
@@ -231,46 +233,46 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
-              .then(resolve);
+          .then(resolve);
 
-      }); 
-    }); 
+      });
+    });
   }
 
-  private update(){
+  private update() {
     const item = this.itemFormGroup.value;
     console.log('country', item.country);
 
     // update information
     /*
-    this.information.update(
-        this.templateId,
-        item.title,
-        item.shortDescription,
-        item.longDescription,
-        item.category
-      ).subscribe();*/
+     this.information.update(
+     this.templateId,
+     item.title,
+     item.shortDescription,
+     item.longDescription,
+     item.category
+     ).subscribe();*/
 
-    // update images 
+    // update images
     this.image.upload(this.templateId, this.picturesToUpload).then(
       (t) => {
         this.log.d('Uploaded the new images!');
       }
     );
     // update location
-    const country: Country = this.countries.getCountryByName(item.country);
+    const country = this.countryList.getCountryByName(item.country);
     this.location.update(this.templateId, country, null, null).subscribe();
     // update shipping
 
     // update messaging
-    // update payment 
+    // update payment
     // update escrow
   }
 
   saveTemplate() {
     this.log.d('Saving as a template.');
     if (this.templateId) {
-      // update 
+      // update
       this.update();
     } else {
       this.save().then(id => {
@@ -280,6 +282,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
 
   }
+
   saveAndPublish() {
     this.log.d('Saving and publishing the listing.');
     if (this.templateId) {

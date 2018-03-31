@@ -1,16 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Log } from 'ng2-logger';
 
-import { MarketService } from 'app/core/market/market.service';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
-
 import { Category } from 'app/core/market/api/category/category.model';
-import { CategoryService } from 'app/core/market/api/category/category.service';
+import { Listing } from '../../core/market/api/listing/listing.model';
 
+import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
-import { Template } from 'app/core/market/api/template/template.model';
-import { CountryList } from 'app/core/market/api/listing/countrylist.model';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 
 interface ISorting {
   value: string;
@@ -23,24 +20,22 @@ interface IPage {
 }
 
 @Component({
-  selector: 'app-overview-listings',
-  templateUrl: './overview-listings.component.html',
-  styleUrls: ['./overview-listings.component.scss']
+  selector: 'app-listing',
+  templateUrl: './listings.component.html',
+  styleUrls: ['./listings.component.scss']
 })
-export class OverviewListingsComponent implements OnInit, OnDestroy {
 
-  log: any = Log.create('overview-listings.component');
+export class ListingsComponent implements OnInit, OnDestroy {
+  log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
   public isLoading: boolean = false;
 
   // filters
-  countries: FormControl = new FormControl();
-  countryList: CountryList = new CountryList();
-
+  // countries: FormControl = new FormControl();
   search: string;
 
   // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
-  categories: FormControl = new FormControl();
+  // categories: FormControl = new FormControl();
   categoryList: Array<string> = [];
 
   _rootCategoryList: Category = new Category({});
@@ -62,16 +57,19 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     maxPerPage: 30,
     // hooks into the scroll bar of the main page..
     infinityScrollSelector: '.mat-drawer-content' // .mat-drawer-content
-  }
+  };
 
   filters: any = {
+    category: undefined,
     search: undefined,
     country: undefined
   };
 
   constructor(
     private category: CategoryService,
-    private listingService: ListingService
+    private listingService: ListingService,
+    private favoritesService: FavoritesService,
+    private countryList: CountryListService
   ) {
     console.warn('overview created');
   }
@@ -88,38 +86,41 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
     .subscribe(
       list => {
         this._rootCategoryList = list;
-        this.categoryList = this._rootCategoryList.getSubCategoryNames();
+        this.categoryList = this._rootCategoryList.getSubCategory();
       });
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
+    // set loading aninmation
     this.isLoading = true;
+
+    // params
     const max = this.pagination.maxPerPage;
-
     const search = this.filters.search;
+    const category = this.filters.category;
     const country = this.filters.country;
-    this.listingService.search(pageNumber, max, null, search, country)
+
+    this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<any>) => {
-        this.isLoading = false;
-        // new page
-        const page = {
-          pageNumber: pageNumber,
-          listings: listings.map(listing => new Template(listing))
-        };
+      this.isLoading = false;
+      // new page
+      const page = {
+        pageNumber: pageNumber,
+        listings: listings.map(listing => new Listing(listing))
+      };
 
-        // should we clear all existing pages? e.g search
-        if (clear === true) {
-          this.pages = [page];
-          this.noMoreListings = false;
-        } else { // infinite scroll
-          if (listings.length > 0) {
-            this.pushNewPage(page);
-          } else {
-            this.noMoreListings = true;
-          }
+      // should we clear all existing pages? e.g search
+      if (clear === true) {
+        this.pages = [page];
+        this.noMoreListings = false;
+      } else { // infinite scroll
+        if (listings.length > 0) {
+          this.pushNewPage(page);
+        } else {
+          this.noMoreListings = true;
         }
-
-      })
+      }
+    })
   }
 
   pushNewPage(page: IPage) {
@@ -153,7 +154,8 @@ export class OverviewListingsComponent implements OnInit, OnDestroy {
   // TODO: fix scroll up!
   loadPreviousPage() {
     console.log('prev page trigered');
-    let previousPage = this.getFirstPageCurrentlyLoaded(); previousPage--;
+    let previousPage = this.getFirstPageCurrentlyLoaded();
+    previousPage--;
     console.log('loading prev page' + previousPage);
     if (previousPage > 0) {
       this.loadPage(previousPage);

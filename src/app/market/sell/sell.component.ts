@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
 import { TemplateService } from 'app/core/market/api/template/template.service';
@@ -111,11 +111,26 @@ export class SellComponent implements OnInit {
       hash: 'AGR', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg6', // TODO: assign random hash_bg (bg1-bg16)
       status: 'bidding',
-      status_info: 'Buyer wants to purchase this item – Approve or reject this order to continue',
+      status_info: 'Buyer wants to purchase this item – accept or reject this bid to continue',
       action_icon: 'part-check',
       action_button: 'Accept bid',
       action_tooltip: 'Approve this order and sell to this buyer',
-      action_disabled: false
+      action_disabled: false,
+      allow_reject_order: true,
+      show_escrow_txdetails: false,
+    },
+    {
+      name: 'Development Buff (2 week subscription)',
+      hash: 'FG2', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
+      hash_bg: 'bg12', // TODO: assign random hash_bg (bg1-bg16)
+      status: 'awaiting',
+      status_info: 'Waiting for Buyer to lock the payment into escrow',
+      action_icon: 'part-date',
+      action_button: 'Waiting for buyer',
+      action_tooltip: 'Waiting for buyer\'s payment',
+      action_disabled: true,
+      allow_reject_order: false,
+      show_escrow_txdetails: false,
     },
     {
       name: 'My basic listing template',
@@ -123,11 +138,13 @@ export class SellComponent implements OnInit {
       hash_bg: 'bg2', // TODO: assign random hash_bg (bg1-bg16)
       status: 'escrow',
       status_info: 'Buyer\'s funds are locked in escrow, order is ready to ship – when sent,'
-                  + ' mark order as shipped and await its delivery',
+                  + ' mark order as shipped, await its delivery and release of funds from escrow',
       action_icon: 'part-check',
       action_button: 'Mark as shipped',
-      action_tooltip: 'Confirm that the order has been shipped to buyer',
-      action_disabled: false
+      action_tooltip: 'Confirm that the order has been shipped to Buyer',
+      action_disabled: false,
+      allow_reject_order: false,
+      show_escrow_txdetails: true,
     },
     {
       name: 'Fresh product (2 kg)',
@@ -138,18 +155,22 @@ export class SellComponent implements OnInit {
       action_icon: 'part-date',
       action_button: 'Waiting for delivery',
       action_tooltip: 'Awaiting confirmation of successfull delivery by Buyer',
-      action_disabled: true
+      action_disabled: true,
+      allow_reject_order: false,
+      show_escrow_txdetails: true,
     },
     {
       name: 'Fresh product (2 kg)',
       hash: '1ER', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
       hash_bg: 'bg8', // TODO: assign random hash_bg (bg1-bg16)
-      status: 'sold',
-      status_info: 'Order delivery confirmed by buyer – awaiting Buyer\'s feedback',
-      action_icon: 'part-date',
-      action_button: 'Waiting for feedback',
-      action_tooltip: 'Awaiting buyer\'s feedback on the order',
-      action_disabled: true
+      status: 'complete',
+      status_info: 'Order delivery confirmed by Buyer – order successfully finalized',
+      action_icon: 'part-check',
+      action_button: 'Order complete',
+      action_tooltip: '',
+      action_disabled: true,
+      allow_reject_order: false,
+      show_escrow_txdetails: true,
     },
   ];
 
@@ -207,7 +228,6 @@ export class SellComponent implements OnInit {
     const search = this.filters.search ? this.filters.search : null;
     this.template.search(1, 10, 1, category, search).subscribe(
       (listings: Array<Template>) => {
-        console.log('got templates');
         console.log(listings);
         this.listings = listings;
       }

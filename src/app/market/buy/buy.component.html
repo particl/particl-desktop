@@ -28,10 +28,14 @@
   <mat-horizontal-stepper linear [@.disabled]="true" class="no-bg" (selectionChange)="stepClick($event)" #stepper>
     <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
     <ng-template matStepperIcon="edit">
-      <custom-icon><mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon></custom-icon>
+      <custom-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      </custom-icon>
     </ng-template>
     <ng-template matStepperIcon="done">
-      <custom-icon><mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon></custom-icon>
+      <custom-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+      </custom-icon>
     </ng-template>
 
     <!-- Your cart -->
@@ -53,47 +57,58 @@
           <table class="cart-items">
 
             <thead>
-              <!-- @TODO if quantity required then add this label before total  -->
-              <!-- <th>Quantity</th> -->
-              <tr><th>Items</th><th>Price</th><th class="text-right">Total</th><th></th></tr>
+            <!-- @TODO if quantity required then add this label before total  -->
+            <!-- <th>Quantity</th> -->
+            <tr>
+              <th>Items</th>
+              <th>Price</th>
+              <th class="text-right">Total</th>
+              <th></th>
+            </tr>
             </thead>
 
             <tbody>
-              <!-- TODO: make component -->
-              <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
-                <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
-                  <div class="image" fxFlex="0 0 115px">
-                    <img src="{{shoppingCartItem.thumbnail?.dataId}}">
+            <!-- TODO: make component -->
+            <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
+              <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
+                <div class="image" fxFlex="0 0 115px">
+                  <img src="{{shoppingCartItem.thumbnail?.dataId}}">
+                </div>
+                <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
+                  <div class="title">
+                    {{shoppingCartItem.title}}
                   </div>
-                  <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
-                    <div class="title">
-                      {{shoppingCartItem.title}}
-                    </div>
-                    <div class="category">
-                      {{shoppingCartItem.name}}
-                    </div>
+                  <div class="category">
+                    {{shoppingCartItem.name}}
                   </div>
-                </td>
-                <td class="price cell">
-                  {{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART
-                </td>
-                <!-- @TODO if quantity required then we can uncomment the code   -->
-               <!--  <td class="quantity cell TO_DO">
-                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                    <button mat-button class="small">-</button>
-                    <mat-form-field class="auto-width">
-                      <input matInput type="number" value="1" min="1" formControlName="firstCtrl">
-                    </mat-form-field>
-                    <button mat-button class="small">+</button>
-                  </div>
-                </td> -->
-                <td class="total cell">{{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART</td>
-                <td class="remove">
-                  <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above" (click)="removeFromCart(shoppingCartItem.listingItemId)">
-                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
-                  </button>
-                </td>
-              </tr>
+                </div>
+              </td>
+              <td class="price cell">
+                {{shoppingCartItem.integerPart}}.
+                <small>{{shoppingCartItem.fractionPart}}</small>
+                PART
+              </td>
+              <!-- @TODO if quantity required then we can uncomment the code   -->
+              <!--  <td class="quantity cell TO_DO">
+                 <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                   <button mat-button class="small">-</button>
+                   <mat-form-field class="auto-width">
+                     <input matInput type="number" value="1" min="1" formControlName="firstCtrl">
+                   </mat-form-field>
+                   <button mat-button class="small">+</button>
+                 </div>
+               </td> -->
+              <td class="total cell">{{shoppingCartItem.integerPart}}.
+                <small>{{shoppingCartItem.fractionPart}}</small>
+                PART
+              </td>
+              <td class="remove">
+                <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above"
+                        (click)="removeFromCart(shoppingCartItem.listingItemId)">
+                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+                </button>
+              </td>
+            </tr>
             </tbody>
 
           </table>
@@ -101,12 +116,16 @@
           <div class="order-detail"
                fxLayout fxLayoutAlign="space-between start">
             <div class="subtotal-notice" fxFlex="0 1 500px">
-              Subtotal doesn't include shipping and escrow costs. You can review these in the summary before placing your order.
+              Subtotal doesn't include shipping and escrow costs. You can review these in the summary before placing
+              your order.
             </div>
             <table class="subtotals" fxFlex="0 0 250px">
-              <tr><td class="desc total">Subtotal</td><td class="value total">
-                {{cart?.subTotal.amount}} PART
-              </td></tr>
+              <tr>
+                <td class="desc total">Subtotal</td>
+                <td class="value total">
+                  {{cart?.subTotal.amount}} PART
+                </td>
+              </tr>
               <!--tr><td class="desc TO_DO">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
               <tr><td class="desc TO_DO">Escrow (?)</td><td class="value">170 PART</td></tr>
               <tr><td class="desc total TO_DO">Total</td><td class="value total">342.<small>153</small> PART</td></tr-->
@@ -137,15 +156,16 @@
               <div class="title">Choose shipping profile</div>
               <mat-form-field class="full-width">
                 <mat-select placeholder="Select saved shipping address profile"
-                disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
+                            disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
                   <mat-option *ngFor="let address of profile.ShippingAddresses"
-                  [value]="address.title" (click)="fillAddress(address)">
+                              [value]="address.title" (click)="fillAddress(address)">
                     {{address.title}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
               <p class="widget-help">
-                To save time, you can save your frequently used shipping addresses as your personal shipping profiles. You can create as much profiles as you need (e.g. home address, office address etc.).
+                To save time, you can save your frequently used shipping addresses as your personal shipping profiles.
+                You can create as much profiles as you need (e.g. home address, office address etc.).
               </p>
               <p class="widget-help">
                 To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
@@ -184,7 +204,7 @@
               </div>
               <mat-form-field class="full-width">
                 <mat-select formControlName="countryCode" placeholder="Country" [(ngModel)]="modelCountry" (change)="onChange($event)">
-                  <mat-option *ngFor="let country of countries.countries" value="{{country.name}}">{{country.name}}</mat-option>
+                  <mat-option *ngFor="let country of countryList.getList()" value="{{country.iso}}">{{country.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
@@ -236,7 +256,7 @@
               </td>
               <td class="price cell">
                 {{shoppingCartItem.integerPart}}.<small>{{shoppingCartItem.fractionPart}}</small> PART
-              </td>             
+              </td>
               <td class="shipping cell">{{shoppingCartItem.shippingPriceIntegerPart}}.<small>{{shoppingCartItem.shippingPriceFractionPart}}</small> PART</td>
               <!--<td class="quantity cell">1 &times;</td>-->
               <td class="total cell">{{shoppingCartItem.totalIntegerPart}}.<small>{{shoppingCartItem.totalFractionPart}}</small> PART</td>
@@ -290,9 +310,12 @@
       <div class="subtitle first">Search &amp; sort</div>
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
-          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search" (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
-          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all" (click)="filters.search=''; filter()"></mat-icon>
-          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"></mat-icon>
+          <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search"
+                 (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
+                    (click)="filters.search=''; filter()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
+                    (click)="filter()"></mat-icon>
         </mat-form-field>
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort orders">
@@ -334,7 +357,7 @@
     <div *ngIf="orders.length > 0">
 
       <mat-expansion-panel class="order item no-padding"
-        *ngFor="let order of orders">
+                           *ngFor="let order of orders">
         <mat-expansion-panel-header class="header TO_DO">
           <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
             <div class="photo" fxFlex="0 0 80px">
@@ -364,46 +387,71 @@
             <p>Mr. Longname Buyer<br>Particl Avenue X/144<br>5RFG4 United Cryptocity<br>Universe</p>
           </div><!-- .buyer-info -->
           <div class="info" fxFlex="35%">
-            <div class="title">Price & Qty</div>
-            <table class="prices">
-              <tr><th>Quantity</th><td>2</td></tr>
-              <tr><th>Price per item</th><td>23.<small>1285</small> PART</td></tr>
-              <tr><th>Total price</th><td>46.<small>257</small> PART</td></tr>
-            </table>
+            <div class="title">Price<!-- & Qty--></div>
+          <table class="prices">
+            <!--tr>
+              <th>Quantity</th>
+              <td>2</td>
+            </tr-->
+            <tr>
+              <th>Listing price</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>3.<small>012</small> PART</td>
+            </tr>
+            <tr>
+              <th>Escrow</th>
+              <td>23.<small>1285</small> PART</td>
+            </tr>
+            <tr>
+              <th>Total price</th>
+              <td>49.<small>269</small> PART</td>
+            </tr>
+          </table>
           </div>
           <div class="order-history" fxFlex="32%">
             <div class="title">Order history</div>
             <table>
               <!--tr><td class="date">2018-02-24</td><td class="status shipped">Sold</td></tr-->
               <!--tr><td class="date">2018-02-14</td><td class="status shipped">Shipped</td></tr-->
-              <tr><td class="date">2018-02-11</td><td class="status escrow">In escrow</td></tr>
-              <tr><td class="date">2018-02-10</td><td class="status bidding">Bidding</td></tr>
+              <tr>
+                <td class="date">2018-02-11</td>
+                <td class="status escrow">In escrow</td>
+              </tr>
+              <tr>
+                <td class="date">2018-02-10</td>
+                <td class="status bidding">Bidding</td>
+              </tr>
             </table>
           </div>
         </div>
 
         <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
           <div class="left">
-            <button mat-button color="warn" matTooltip="Reject & cancel order" class="small">
+            <!--button mat-button color="warn" matTooltip="Reject & cancel order" class="small single">
               <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-            </button>
-            <button mat-button matTooltip="Edit order" class="small">
+            </button-->
+            <!--button mat-button matTooltip="Edit order" class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
               Edit
-            </button>
+            </button-->
             <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-            <button mat-button matTooltip="View payment ID" class="small">
+            <button mat-button matTooltip="Escrow TX details" *ngIf="order.show_escrow_txdetails" class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
+              View payment
             </button>
             <!-- TODO: shortcut to e2e message to buyer -->
-            <button mat-button class="small">
+            <!--button mat-button class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
               Contact buyer
-            </button>
+            </button-->
           </div>
           <div class="right">
             <!-- TODO: after clicking, show confirmation modal with more info: -->
-            <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}" [disabled]="order.action_disabled">
+            <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}"
+                    [disabled]="order.action_disabled">
               <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
               {{ order.action_button }}
             </button>
@@ -421,16 +469,16 @@
 <div class="favourites container-block disable-select"
      *ngIf="tabLabels[selectedTab] == 'favourites'">
 
-  <div class="no-results" *ngIf="favorites.length == 0">
+  <div class="no-results" *ngIf="favorites === undefined || favorites?.length == 0">
     <p>
       You don't have any favourite listings yet
     </p>
   </div>
 
-  <div *ngIf="favorites.length != 0">
-    <ng-container *ngFor="let favorite of favorites" fxLayout="row wrap" fxLayoutAlign="start start">
+  <div *ngIf="favorites !== undefined && favorites.length != 0" fxLayout="row wrap" fxLayoutAlign="start start">
+    <ng-container *ngFor="let favorite of favorites">
       <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
-        <app-preview-listing [listing]="favorite"></app-preview-listing>
+        <app-listing-item [listing]="favorite"></app-listing-item>
       </mat-card>
     </ng-container>
   </div>

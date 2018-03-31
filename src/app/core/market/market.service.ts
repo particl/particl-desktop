@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 import { dataURItoBlob } from 'app/core/util/utils';
 
 @Injectable()
@@ -46,7 +45,7 @@ export class MarketService {
 
   public uploadImage(templateId: number, base64DataURI: any) {
     // Running in browser, delete?
-    let form: FormData = new FormData();
+    const form: FormData = new FormData();
     /*
     image: {
       options: {
@@ -55,10 +54,8 @@ export class MarketService {
       },
       value: new Buffer(base64)
     }*/
-    console.log('image length, ', base64DataURI.length);
     const blob: Blob = dataURItoBlob(base64DataURI);
-    console.log('blob length, ', blob.size);
-    form.append("image", blob, "image.jpg");
+    form.append('image', blob, 'image.jpg');
 
 
     const headerJson = {
@@ -69,8 +66,8 @@ export class MarketService {
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
 //        .map((response: any) => response.result)
         .catch((error: any) => {
-          let err = "";
-          if(error.status === 404) {
+          let err = '';
+          if (error.status === 404) {
             err = error.error.error;
           } else {
             err = error;

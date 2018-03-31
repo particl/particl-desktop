@@ -5,7 +5,7 @@ import { MarketService } from 'app/core/market/market.service';
 
 @Injectable()
 export class ImageService {
-  
+
   log: any = Log.create('image.service');
 
   constructor(private market: MarketService) { }
@@ -19,7 +19,7 @@ export class ImageService {
   }
 
   /**
-   * 
+   *
    * @param templateId the template id to attach the images to.
    * @param images array of base64 dataURI's to upload.
    */
@@ -30,7 +30,6 @@ export class ImageService {
       images.map(picture => {
         this.log.d('Uploading pictures to templateId=', templateId);
         this.add(templateId, picture).take(1).subscribe(res => {
-          console.log(res);
           if (++nPicturesAdded === images.length) {
             this.log.d('All images uploaded!');
             resolve(templateId);

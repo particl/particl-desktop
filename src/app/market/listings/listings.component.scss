@@ -102,7 +102,19 @@
   margin: 0 0 30px 30px;
 }
 
+button.previous-page {
+  margin: -10px 0 24px 30px;
+}
+
 .listing { // item
   margin: 0 0 30px 30px;
   padding: 24px 16px 12px;
+}
+
+// ------ LOADING (bottom) ------ //
+
+.loading-bar {
+  position: fixed;
+  bottom: 0;
+  height: 8px;
 }

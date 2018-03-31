@@ -1,15 +1,16 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { OverviewListingsComponent } from 'app/market/overview-listings/overview-listings.component';
-import { PreviewListingComponent } from 'app/market/overview-listings/preview-listing/preview-listing.component';
+import { ListingItemComponent } from 'app/market/listings/listing-item/listing-item.component';
+import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
 
 import { routing } from './market.routing';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { ListingComponent } from './listing/listing.component';
+import { ListingsComponent } from './listings/listings.component';
 import { BuyComponent } from './buy/buy.component';
 import { SellComponent } from './sell/sell.component';
 import { AddItemComponent } from './sell/add-item/add-item.component';
+import { FavoriteComponent } from './shared/favorite/favorite.component';
 
 
 
@@ -20,19 +21,20 @@ import { AddItemComponent } from './sell/add-item/add-item.component';
     CoreUiModule.forRoot()
   ],
   declarations: [
-    OverviewListingsComponent,
+    ListingItemComponent,
     PreviewListingComponent,
-    ListingComponent,
+    ListingsComponent,
     BuyComponent,
     SellComponent,
-    AddItemComponent
+    AddItemComponent,
+    FavoriteComponent
   ],
   entryComponents: [
-    ListingComponent
+    PreviewListingComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MarketModule { }
 
-export { OverviewListingsComponent } from 'app/market/overview-listings/overview-listings.component';
-export { PreviewListingComponent } from 'app/market/overview-listings/preview-listing/preview-listing.component';
+export { ListingItemComponent } from 'app/market/listings/listing-item/listing-item.component';
+export { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';

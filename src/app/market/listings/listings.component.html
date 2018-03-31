@@ -3,21 +3,24 @@
 
     <!-- Search-->
     <div class="icon-input search-listings" fxFlex="0 0 250px">
-      <input type="text" class="header-input" id="searchbar" placeholder="Search items for sale.." [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()">
+      <input type="text" class="header-input" id="searchbar" placeholder="Search items for sale.."
+             [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
+             (keyup.escape)="filters.search = ''; clearAndLoadPage()">
       <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
     </div>
 
     <!-- Filtering -->
     <div class="filtering" fxFlex="1 1 100%">
       <!-- removed multiple as I guess currently the api returning data on the basis of only one selected country -->
-      <mat-select placeholder="All countries" [formControl]="countries" class="filter country" (change)="clearAndLoadPage()" [(ngModel)]="filters.country">
+      <mat-select placeholder="All countries" class="filter country" (change)="clearAndLoadPage()" [(ngModel)]="filters.country">
         <mat-option>All countries</mat-option>
-        <mat-option *ngFor="let country of countryList?.countries" [value]="country.name">{{ country.name }}</mat-option>
+        <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}
+        </mat-option>
       </mat-select>
 
-      <mat-select placeholder="Categories" [formControl]="categories" class="filter category TO_DO">
+      <mat-select placeholder="All categories" (change)="clearAndLoadPage()" [(ngModel)]="filters.category"  class="filter category">
         <mat-option>All categories</mat-option>
-        <mat-option *ngFor="let category of categoryList" [value]="category">{{ category }}</mat-option>
+        <mat-option *ngFor="let category of categoryList" [value]="category.id">{{ category.name }}</mat-option>
       </mat-select>
     </div>
 
@@ -30,8 +33,10 @@
     </mat-select-->
 
     <!-- Sorting -->
+
     <button mat-button class="menu-toggle" fxFlex="0 1 425px" (click)="this.listingService.generateBogusListings(50)">
-      <mat-icon fontSet="partIcon" fontIcon="part-smiley"></mat-icon> Create 50 bogus listings
+      <mat-icon fontSet="partIcon" fontIcon="part-smiley"></mat-icon>
+      Create 50 bogus listings
     </button>
 
     <!--div class="display" fxFlex="0 1 80px" fxLayout="row" fxLayoutGap="15px">
@@ -43,7 +48,7 @@
   </div><!-- .control-bar -->
 </app-header>
 
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length < 1"></mat-progress-bar>
+
 <div class="container-block" fxLayout="row">
 
   <!-- div class="sidebar" fxFlex="25%">
@@ -68,16 +73,18 @@
 
 
   <div class="content disable-select" fxLayout="row wrap" fxLayoutAlign="start start"
-    infiniteScroll
-    [infiniteScrollContainer]="pagination.infinityScrollSelector"
-    [fromRoot]="true"
-    [infiniteScrollDistance]="2"
-    [infiniteScrollThrottle]="50"
-    (scrolledUp)="loadPreviousPage()"
-    (scrolled)="loadNextPage()">
+       infiniteScroll
+       [infiniteScrollContainer]="pagination.infinityScrollSelector"
+       [fromRoot]="true"
+       [infiniteScrollDistance]="2"
+       [infiniteScrollThrottle]="50"
+       (scrolledUp)="loadPreviousPage()"
+       (scrolled)="loadNextPage()">
 
-    <button mat-button class="menu-toggle" fxFlex="100%" (click)="loadPreviousPage()" *ngIf="pages[0] && pages[0].pageNumber !== 1">
-      <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon> Load previous page
+    <button mat-button class="previous-page" fxFlex="100%" (click)="loadPreviousPage()"
+            *ngIf="pages[0] && pages[0].pageNumber !== 1">
+      <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+      Load previous page
     </button>
 
     <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
@@ -88,7 +95,7 @@
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let item of page.listings">
         <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
-          <app-preview-listing [listing]="item"></app-preview-listing>
+          <app-listing-item [listing]="item"></app-listing-item>
         </mat-card>
       </ng-container>
     </ng-container>
@@ -100,5 +107,7 @@
     </div>
   </div><!-- .content -->
 
-</div>
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading && pages.length > 0"></mat-progress-bar>
+
+</div><!-- .container-block -->
+
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
