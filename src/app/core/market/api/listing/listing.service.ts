@@ -35,6 +35,8 @@ export class ListingService {
       (listings: Array<Listing>) => {
         return listings.map(t => new Listing(t));
       }
+    ).do(
+      listings => console.log(listings)
     );
   }
 
