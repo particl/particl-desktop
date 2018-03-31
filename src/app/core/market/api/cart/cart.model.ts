@@ -12,13 +12,17 @@ export class Cart {
   get subTotal(): Amount {
     let total = 0.0;
     this.shoppingCartItems.map(shoppingCartItem => {
-      const object = shoppingCartItem.ListingItem;
+      const object: any = shoppingCartItem.ListingItem;
       // if listing is loaded (async)
       if (object.PaymentInformation) {
-        total += object.PaymentInformation.ItemPrice.basePrice
+        total += this.getBasePrice(object.PaymentInformation);
       }
     });
     return new Amount(total);
+  }
+
+  getBasePrice(paymentInformation: any) {
+    return paymentInformation.ItemPrice ? paymentInformation.ItemPrice.basePrice : 0;
   }
 
   private setCartItems(): void {
@@ -30,8 +34,9 @@ export class Cart {
         shoppingCartItem.thumbnail = this.getThumbnail(object.ItemInformation.ItemImages[0]);
       }
       if (object.PaymentInformation) {
-        shoppingCartItem.integerPart = new Amount (object.PaymentInformation.ItemPrice.basePrice).getIntegerPart();
-        shoppingCartItem.fractionPart = new Amount (object.PaymentInformation.ItemPrice.basePrice).getFractionalPart();
+        const basePrice = this.getBasePrice(object.PaymentInformation);
+        shoppingCartItem.integerPart = new Amount (basePrice).getIntegerPart();
+        shoppingCartItem.fractionPart = new Amount (basePrice).getFractionalPart();
       }
     });
   }
