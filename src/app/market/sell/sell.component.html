@@ -158,13 +158,13 @@
           </p>
         </div><!-- .description -->
         <div class="info" fxFlex="35%">
-          <div class="title">Price & Qty</div>
+          <div class="title">Price</div>
           <table class="prices">
             <!--tr><th>Quantity</th><td>2</td></tr-->
             <tr>
               <th>Price per item</th>
-              <td>23.
-                <small>1285</small>
+              <td>{{listing.intPrice}}.
+                <small>{{listing.centsPrice}}</small>
                 PART
               </td>
             </tr>
@@ -188,10 +188,10 @@
           </button>
         </div>
         <div class="right"> <!-- listing.action_color  -->
-          <button mat-raised-button color="primary" matTooltip="listing.action_tooltip" [disabled]="false">
+          <button mat-raised-button color="primary" matTooltip="Publish Listing" [disabled]="listing.status === 'Published'">
             <!-- listing.action_disabled -->
             <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon> <!-- listing.action_icon -->
-            listing.action_button
+            Publish Listing
           </button>
         </div>
       </mat-action-row>

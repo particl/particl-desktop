@@ -74,8 +74,24 @@ export class Template {
     return this.object.ItemInformation.ItemImages;
   }
 
+  get intPrice(): any {
+    const itemPrice = this.getPrice();
+    if (itemPrice) {
+      return new Amount(itemPrice.basePrice).getIntegerPart();
+    }
+    return undefined;
+  }
+
+  get centsPrice(): any {
+    const itemPrice = this.getPrice();
+    if (itemPrice) {
+      return new Amount(itemPrice.basePrice).getFractionalPart();
+    }
+    return undefined;
+  }
+
   setBasePrice(): void {
-    const itemPrice = this.object.PaymentInformation.ItemPrice;
+    const itemPrice = this.getPrice();
     if (itemPrice) {
       this.basePrice = new Amount(itemPrice.basePrice);
     } else {
@@ -84,10 +100,14 @@ export class Template {
   }
 
   setShippingPrice(): void {
-    const itemPrice = this.object.PaymentInformation.ItemPrice;
+    const itemPrice = this.getPrice();
     if (itemPrice && itemPrice.ShippingPrice) {
       this.domesticShippingPrice = new Amount(itemPrice.ShippingPrice.domestic);
       this.internationalShippingPrice = new Amount(itemPrice.ShippingPrice.international);
     }
+  }
+
+  getPrice(): any {
+    return this.object.PaymentInformation.ItemPrice;
   }
 }

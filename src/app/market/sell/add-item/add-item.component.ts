@@ -215,7 +215,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   private save(): Promise<any> {
 
     const item = this.itemFormGroup.value;
-
     return new Promise((resolve, reject) => {
       this.template.add(
         item.title,
@@ -233,7 +232,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
-          .then(resolve);
+          .then(resp => resolve(template.id));
 
       });
     });
