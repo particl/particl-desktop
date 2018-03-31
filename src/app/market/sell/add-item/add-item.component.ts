@@ -234,10 +234,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
-          .then(resp => resolve(template.id));
+          .then();
 
         this.escrow.add(template.id, EscrowType.MAD).subscribe(
-          success => this.snackbar.open('Succesfully added escrow!')
+          success => {
+            this.snackbar.open('Succesfully added escrow!')
+            resolve(template.id);
+          }
         );
 
       });
@@ -300,6 +303,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       // save new
       this.save().then(id => {
+        console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
           console.log(listing);
           this.backToSell();
