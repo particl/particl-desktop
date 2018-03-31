@@ -150,9 +150,7 @@ export class BuyComponent implements OnInit {
 
   ngOnInit() {
     this.formData = new ShippingDetails();
-    this._profileService.get(1).take(1).subscribe(profile => {
-      this.profile = profile;
-    });
+    this._profileService.get(1).take(1).subscribe(profile => this.profile = profile);
 
     this.formBuild();
 
@@ -168,7 +166,6 @@ export class BuyComponent implements OnInit {
 
     this.shippingFormGroup = this._formBuilder.group({
       title:        [''],
-      firstName:    ['', Validators.required],
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       city:         ['', Validators.required],
