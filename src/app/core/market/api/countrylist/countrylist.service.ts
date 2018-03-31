@@ -19,7 +19,6 @@ export class CountryListService {
   }
 
   getList(): any {
-    console.log(this.countries);
     return this.countries;
   }
 
