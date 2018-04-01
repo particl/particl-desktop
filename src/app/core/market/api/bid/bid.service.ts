@@ -17,16 +17,15 @@ export class BidService {
 
   order(cart: Cart, profile: any): Promise<boolean> {
     let nBidsPlaced = 0;
-    const listings = cart.cartDbObj;
 
     return new Promise((resolve, reject) => {
-      listings.forEach((listing: any) => {
-        if (listing.ListingItem && listing.ListingItem.hash) {
+      cart.listings.forEach((listing: any) => {
+        if (listing.hash) {
           // bid for item
-          this.market.call('bid', ['send', listing.ListingItem.hash, profile.address])
+          this.market.call('bid', ['send', listing.hash, profile.address])
             .subscribe(
               (res) => {
-                if (++nBidsPlaced === listings.length) {
+                if (++nBidsPlaced === cart.listings.length) {
                   this.snackbar.open('Order has been successfully placed');
                   resolve(true);
                 }
