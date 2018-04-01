@@ -16,6 +16,7 @@ import { ImageService } from './api/template/image/image.service';
 import { InformationService } from './api/template/information/information.service';
 import { LocationService } from './api/template/location/location.service';
 import { EscrowService } from './api/template/escrow/escrow.service';
+import { BidService } from './api/bid/bid.service';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ export class MarketModule {
         ImageService,
         InformationService,
         LocationService,
-        EscrowService
+        EscrowService,
+        BidService
       ]
     };
   }

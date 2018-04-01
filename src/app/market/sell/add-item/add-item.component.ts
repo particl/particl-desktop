@@ -90,13 +90,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = undefined;
       }
     });
-    /*
-     this.listing.generateListing().take(1).subscribe(listing => {
-     console.log(listing);
-     this.listing.get(1).take(1).subscribe(res => {
-     console.log(res);
-     })
-     });*/
   }
 
   isExistingTemplate() {
