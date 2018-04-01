@@ -6,6 +6,7 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
+import { Listing } from 'app/core/market/api/listing/listing.model';
 
 @Injectable()
 export class BidService {
@@ -19,7 +20,7 @@ export class BidService {
     let nBidsPlaced = 0;
 
     return new Promise((resolve, reject) => {
-      cart.listings.forEach((listing: any) => {
+      cart.listings.forEach((listing: Listing) => {
         if (listing.hash) {
           // bid for item
           this.market.call('bid', ['send', listing.hash, profile.address])
