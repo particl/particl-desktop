@@ -4,91 +4,68 @@ export class Cart {
 
   public shoppingCartItems: Array<any>;
 
+  public subTotal: Amount = new Amount(0);
+  public shippingTotal: Amount = new Amount(0);
+  public escrowTotal: Amount = new Amount(0);
+  public total: Amount = new Amount(0);
+
   constructor(public cartDbObj: any) {
       this.shoppingCartItems = this.cartDbObj;
       this.setCartItems();
   }
 
-  get subTotal(): Amount {
-    let total = 0.0;
-    this.shoppingCartItems.map(shoppingCartItem => {
-      const object: any = shoppingCartItem.ListingItem;
-      // if listing is loaded (async)
-      if (object.PaymentInformation && object.PaymentInformation.ItemPrice) {
-        total += object.PaymentInformation.ItemPrice.basePrice;
-      }
-    });
-    return new Amount(total);
-  }
+    setSubTotal(): void {
+      let total = 0.0;
+      this.shoppingCartItems.forEach(shoppingCartItem => {
+        const listing: Listing = shoppingCartItem.ListingItem;
+        total += listing.basePrice.getAmount();
+      });
+      this.subTotal = new Amount(total);
+    }
 
-  get shippingTotal(): Amount{
-    let total: number = 0.0;
-    this.shoppingCartItems.map(shoppingCartItem => {
-      const object = shoppingCartItem.ListingItem;
-      // if listing is loaded (async)
-      if (object.PaymentInformation) {
-        total += object.PaymentInformation.ItemPrice.ShippingPrice.international
-      }
-    });
-    return new Amount(total);
-  }
+    setShippingTotal(): void {
+      let total = 0.0;
+      this.shoppingCartItems.forEach(shoppingCartItem => {
+        const listing: Listing = shoppingCartItem.ListingItem;
+        total += listing.internationalShippingPrice.getAmount();
+      });
+      this.shippingTotal = new Amount(total);
+    }
 
-  get escrow(): Amount {
-    let total: number = 0.0;
-    this.shoppingCartItems.map(shoppingCartItem => {
-      let object = shoppingCartItem.ListingItem;
-      // if listing is loaded (async)
-      if (object.PaymentInformation) {
-        total += object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international
-      }
-    });
-    return new Amount(total);
-  }
+    setEscrowTotal(): void {
+      let total = 0.0;
+      this.shoppingCartItems.forEach(shoppingCartItem => {
+        const listing: Listing = shoppingCartItem.ListingItem;
+        total += listing.escrowPrice.getAmount();
+      });
+      this.escrowTotal = new Amount(total);
+    }
 
-  get total(): Amount{
-    let total: number = 0.0;
-    this.shoppingCartItems.map(shoppingCartItem => {
-      let object = shoppingCartItem.ListingItem;
-      // if listing is loaded (async)
-      if (object.PaymentInformation) {
-        total += 2*(object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international)
-      }
-    });
-    return new Amount(total);
-  }
+    setTotal(): void {
+      let total: number = 0.0;
+      total += (this.subTotal.getAmount() 
+              + this.shippingTotal.getAmount()
+              + this.escrowTotal.getAmount());
+      this.total = new Amount(total);
+    }
 
   private setCartItems(): void {
     this.shoppingCartItems.map(shoppingCartItem => {
-      const object = shoppingCartItem.ListingItem;
-      if (object.ItemInformation) {
-        shoppingCartItem.title = object.ItemInformation.title;
-        shoppingCartItem.name = object.ItemInformation.ItemCategory.name;
-        shoppingCartItem.thumbnail = this.getThumbnail(object.ItemInformation.ItemImages[0]);
-      }
-      if (object.PaymentInformation) {
-        const basePrice = new Amount(object.PaymentInformation && object.PaymentInformation.ItemPrice
-            ? object.PaymentInformation.ItemPrice.basePrice : 0);
-        shoppingCartItem.integerPart = basePrice.getIntegerPart();
-        shoppingCartItem.fractionPart = basePrice.getFractionalPart();
-        //Check if international needs USD to PART
-        shoppingCartItem.shippingPriceIntegerPart = new Amount (object.PaymentInformation.ItemPrice.ShippingPrice.international).getIntegerPart();
-        shoppingCartItem.shippingPriceFractionPart = new Amount (object.PaymentInformation.ItemPrice.ShippingPrice.international).getFractionalPart();
-        shoppingCartItem.totalIntegerPart = new Amount (object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international ).getIntegerPart();
-        shoppingCartItem.totalFractionPart = new Amount (object.PaymentInformation.ItemPrice.basePrice + object.PaymentInformation.ItemPrice.ShippingPrice.international ).getFractionalPart();
-      }
+      shoppingCartItem.ListingItem = new Listing(shoppingCartItem.ListingItem);
     });
+
+    this.setSubTotal();
+    this.setShippingTotal();
+    this.setEscrowTotal();
+    this.setTotal();
   }
 
   get countOfItems() {
     return this.shoppingCartItems.length;
   }
 
-  private getThumbnail(images: any) {
-     if (images) {
-        return images.ItemImageDatas.find(data => {
-          return data.imageVersion === 'THUMBNAIL';
-        });
-      }
-      return undefined;
+  get listings(): Array<Listing> {
+    return this.shoppingCartItems.map((sci: any) => sci.ListingItem);
   }
+
 }

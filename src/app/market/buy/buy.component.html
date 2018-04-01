@@ -69,25 +69,27 @@
 
             <tbody>
             <!-- TODO: make component -->
-            <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
+            <tr *ngFor="let listing of cart?.listings">
               <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
                 <div class="image" fxFlex="0 0 115px">
-                  <img src="{{shoppingCartItem.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+                  <img src="{{listing.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
                 </div>
                 <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                   <div class="title">
-                    {{shoppingCartItem.title}}
+                    {{listing.title}}
                   </div>
                   <div class="category">
-                    {{shoppingCartItem.name}}
+                    {{listing.name}}
                   </div>
                 </div>
               </td>
               <td class="price cell">
-                {{shoppingCartItem.integerPart}}.
-                <small>{{shoppingCartItem.fractionPart}}</small>
+                {{listing.basePrice?.getIntegerPart()}}.
+                <small>{{listing.basePrice?.getFractionalPart()}}</small>
                 PART
               </td>
+              <!--<td class="quantity cell">1 &times;</td>-->
+
               <!-- @TODO if quantity required then we can uncomment the code   -->
               <!--  <td class="quantity cell TO_DO">
                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
@@ -98,13 +100,13 @@
                    <button mat-button class="small">+</button>
                  </div>
                </td> -->
-              <td class="total cell">{{shoppingCartItem.integerPart}}.
-                <small>{{shoppingCartItem.fractionPart}}</small>
+               <td class="total cell">{{listing.basePrice?.getIntegerPart()}}.
+                <small>{{listing.basePrice?.getFractionalPart()}}</small>
                 PART
               </td>
               <td class="remove">
                 <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above"
-                        (click)="removeFromCart(shoppingCartItem.listingItemId)">
+                        (click)="removeFromCart(listing.id)">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
                 </button>
               </td>
@@ -253,32 +255,32 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let shoppingCartItem of cart?.shoppingCartItems">
+          <tr *ngFor="let listing of cart?.listings">
             <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
               <div class="image" fxFlex="0 0 115px">
-                <img src="{{shoppingCartItem.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+                <img src="{{listing.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
               </div>
               <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                 <div class="title">
-                  {{shoppingCartItem.title}}
+                  {{listing.title}}
                 </div>
                 <div class="category">
-                  {{shoppingCartItem.name}}
+                  {{listing.category.name}}
                 </div>
               </div>
             </td>
             <td class="price cell">
-              {{shoppingCartItem.integerPart}}.
-              <small>{{shoppingCartItem.fractionPart}}</small>
+              {{listing.basePrice?.getIntegerPart()}}.
+              <small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
-            <td class="shipping cell">{{shoppingCartItem.shippingPriceIntegerPart}}.
-              <small>{{shoppingCartItem.shippingPriceFractionPart}}</small>
+            <td class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}.
+              <small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
               PART
             </td>
             <!--<td class="quantity cell">1 &times;</td>-->
-            <td class="total cell">{{shoppingCartItem.totalIntegerPart}}.
-              <small>{{shoppingCartItem.totalFractionPart}}</small>
+            <td class="total cell">{{listing.internationalTotal?.getIntegerPart()}}.
+              <small>{{listing.internationalTotal?.getFractionalPart()}}</small>
               PART
             </td>
           </tr>
@@ -299,13 +301,16 @@
           <table class="subtotals" fxFlex="0 0 250px">
             <tr>
               <td class="desc">Subtotal</td>
-              <td class="value">{{cart?.subTotal.amount}} PART</td>
+              <td class="value">{{cart?.subTotal.getAmount()}} PART</td>
             </tr>
             <tr>
               <td class="desc">Shipping total</td>
-              <td class="value">{{cart?.shippingTotal.amount}} PART</td>
+              <td class="value">{{cart?.shippingTotal.getAmount()}} PART</td>
             </tr>
-            <!--<tr><td class="desc">Escrow (?)</td><td class="value">{{cart?.escrow.amount}} PART</td></tr>-->
+            <tr>
+              <td class="desc">Escrow</td>
+              <td class="value">{{cart?.escrowTotal.getAmount()}} PART</td>
+            </tr>
             <tr>
               <td class="desc total">Total</td>
               <td class="value total">{{cart?.total.amount}} PART</td>
