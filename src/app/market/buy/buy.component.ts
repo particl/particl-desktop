@@ -249,6 +249,7 @@ export class BuyComponent implements OnInit {
       profile => {
         this.profile = profile;
         console.log('--- profile address ----');
+        console.log(profile);
         const addresses = profile.ShippingAddresses;
         if (addresses.length > 0) {
           this.shippingFormGroup.patchValue(addresses[0]);
