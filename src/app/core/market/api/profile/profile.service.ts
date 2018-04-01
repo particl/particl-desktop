@@ -33,12 +33,29 @@ export class ProfileService {
   addShippingAddress(shippingAddress: any): Observable<any> {
     return this.market.call('profile', [
       'address', 'add', 1,
-      shippingAddress.title,
+      shippingAddress.firstName,
+      shippingAddress.lastName,
+      'DEFAULT', // title
       shippingAddress.addressLine1,
       shippingAddress.addressLine2,
       shippingAddress.city,
       shippingAddress.state,
-      shippingAddress.countryCode,
+      shippingAddress.country,
+      shippingAddress.zipCode
+    ]);
+  }
+
+  updateShippingAddress(shippingAddress: any): Observable<any> {
+    return this.market.call('profile', [
+      'address', 'update', 1,
+      shippingAddress.firstName,
+      shippingAddress.lastName,
+      'DEFAULT', // title
+      shippingAddress.addressLine1,
+      shippingAddress.addressLine2,
+      shippingAddress.city,
+      shippingAddress.state,
+      shippingAddress.country,
       shippingAddress.zipCode
     ]);
   }

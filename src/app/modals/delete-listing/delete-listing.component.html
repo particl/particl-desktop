@@ -1,7 +1,7 @@
 <div mat-dialog-title class="title">Remove market listing/order</div>
 <mat-dialog-content class="modal-content">
   <p>
-    Are you sure you want to remove your listing/order? [Can we use this confirmation modal for both listings and orders?]
+    Are you sure you want to remove your listing/order?
   </p>
   <table class="info">
     <tr><th>Listing name</th><td><strong>{{templateToRemove.title}}</strong></td></tr>
@@ -17,7 +17,6 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <!-- FIXME: implement.. -->
   <button mat-raised-button color="warn" (click)="remove()">
     <mat-icon fontSet="partIcon" fontIcon="part-circle-minus"></mat-icon>
     Yes, remove listing

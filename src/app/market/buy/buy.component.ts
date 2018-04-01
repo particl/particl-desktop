@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, DoCheck } from '@angular/core';
+import { MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -13,7 +14,13 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-import { Favorite } from 'app/core/market/api/favorites/favorite.model';
+import { MarketService } from '../../core/market/market.service';
+
+import { ShippingDetails } from '../shared/shipping-details.model';
+import { SnackbarService } from '../../core/snackbar/snackbar.service';
+import { BidService } from 'app/core/market/api/bid/bid.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { ModalsService } from 'app/modals/modals.service';
 
 @Component({
   selector: 'app-buy',
@@ -26,10 +33,10 @@ export class BuyComponent implements OnInit {
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
 
   /* https://material.angular.io/components/stepper/overview */
-  cartFormGroup: FormGroup;
-  shippingFormGroup: FormGroup;
+  public cartFormGroup: FormGroup;
+  public shippingFormGroup: FormGroup;
 
-  order_sortings: Array<any> = [
+  public order_sortings: Array<any> = [
     { title: 'By creation date', value: 'date-created' },
     { title: 'By update date',   value: 'date-update'  },
     { title: 'By status',        value: 'status'       },
@@ -40,7 +47,7 @@ export class BuyComponent implements OnInit {
   ];
 
   // TODO: disable radios for 0 amount-statuses
-  order_filtering: Array<any> = [
+  public order_filtering: Array<any> = [
     { title: 'All orders', value: 'all',     amount: '3' },
     { title: 'Bidding',    value: 'bidding', amount: '1' },
     { title: 'In escrow',  value: 'escrow',  amount: '0' },
@@ -49,7 +56,7 @@ export class BuyComponent implements OnInit {
   ];
 
   // Orders
-  orders: Array<any> = [
+  public orders: Array<any> = [
     {
       name: 'NFC-enabled contactless payment perfume',
       hash: 'AGR', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
@@ -112,68 +119,80 @@ export class BuyComponent implements OnInit {
     },
   ];
 
-  filters: any = {
+  public filters: any = {
     search: undefined,
     sort:   undefined,
     status: undefined
   };
 
-  profile: any = { };
+  public profile: any = { };
 
   /* cart */
-  cart: Cart;
+  public cart: Cart;
 
   /* favs */
-  favorites: Array<Listing> = [];
-
+  public favorites: Array<Listing> = [];
 
   constructor(
-    private _formBuilder: FormBuilder,
-    private _router: Router,
-    private _profileService: ProfileService,
+    // 3rd party
+    private formBuilder: FormBuilder,
+    private router: Router,
+    // core
+    private snackbarService: SnackbarService,
+    private rpcState: RpcStateService,
+    private modals: ModalsService,
+    // market
+    private market: MarketService,
+    private profileService: ProfileService,
     private listingService: ListingService,
     private cartService: CartService,
     private favoritesService: FavoritesService,
-    private countryList: CountryListService
+    public countryList: CountryListService,
+    private bid: BidService,
+
   ) { }
 
   ngOnInit() {
+    this.formBuild();
 
-    this._profileService.get(1).take(1).subscribe(profile => {
-      this.profile = profile;
-    });
-
-    this.cartFormGroup = this._formBuilder.group({
-      firstCtrl: ['']
-    });
-
-    this.shippingFormGroup = this._formBuilder.group({
-      title:        [''],
-      addressLine1: ['', Validators.required],
-      addressLine2: [''],
-      city:         ['', Validators.required],
-      state:        [''],
-      countryCode:  ['', Validators.required],
-      zipCode:      ['', Validators.required],
-      save:         ['']
-    });
+    this.getProfile();
 
     this.getCart();
 
     this.favoritesService.updateListOfFavorites();
+    this.getFavorites();
+  }
 
+  formBuild() {
+    this.cartFormGroup = this.formBuilder.group({
+      firstCtrl: ['']
+    });
+
+    this.shippingFormGroup = this.formBuilder.group({
+      firstName:    ['', Validators.required],
+      lastName:     ['', Validators.required],
+      addressLine1: ['', Validators.required],
+      addressLine2: [''],
+      city:         ['', Validators.required],
+      state:        [''],
+      country:      ['', Validators.required],
+      zipCode:      ['', Validators.required]
+    });
+  }
+
+  getFavorites() {
     this.favoritesService.getFavorites().subscribe(favorites => {
-      let temp: Array<Listing> = new Array<Listing>();
+      const temp: Array<Listing> = new Array<Listing>();
       favorites.forEach(favorite => {
         this.listingService.get(favorite.listingItemId).take(1).subscribe(listing => {
-          temp.push(new Listing(listing));
+          temp.push(listing);
           // little cheat here, because async behavior
           // we're setting the pointer to our new temp array every time we receive
           // a listing.
-          this.favorites = temp; 
+          this.favorites = temp;
         });
       });
-    })
+    });
   }
 
   clear(): void {
@@ -187,7 +206,7 @@ export class BuyComponent implements OnInit {
   /* cart */
 
   goToListings(): void {
-    this._router.navigate(['/market/overview']);
+    this.router.navigate(['/market/overview']);
   }
 
   removeFromCart(shoppingCartId: number): void {
@@ -207,28 +226,53 @@ export class BuyComponent implements OnInit {
 
   /* shipping */
 
-  updateShippingProfile(): void {
-    if (this.shippingFormGroup.value.save) {
-      delete this.shippingFormGroup.value.save;
-      this._profileService.addShippingAddress(this.shippingFormGroup.value).take(1)
-        .subscribe(address => {
-          this._profileService.get(1).take(1)
-            .subscribe(updatedProfile => this.profile = updatedProfile);
-        });
+  updateShippingAddress(): void {
+    if (!this.profile) {
+      this.snackbarService.open('Profile was not fetched!');
+      return;
+    }
+
+    let upsert: Function = this.profileService.updateShippingAddress.bind(this);
+
+    if (this.profile.ShippingAddresses.length === 0) {
+      upsert = this.profileService.addShippingAddress.bind(this);
+    }
+    console.log(this.shippingFormGroup.value);
+    upsert(this.shippingFormGroup.value).take(1).subscribe(address => {
+      this.getProfile();
+    });
+
+  }
+
+  getProfile(): void{
+    this.profileService.get(1).take(1).subscribe(
+      profile => {
+        this.profile = profile;
+        console.log('--- profile address ----');
+        const addresses = profile.ShippingAddresses;
+        if (addresses.length > 0) {
+          this.shippingFormGroup.patchValue(addresses[0]);
+        }
+      });
+  }
+
+  valueOf(field: string) {
+    if(this.shippingFormGroup) {
+      return this.shippingFormGroup.get(field).value;
+    }
+    return '';
+  }
+
+  placeOrder() {
+    if (this.rpcState.get('locked')) {
+      // unlock wallet and send transaction
+      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.bid.order.bind(this, this.cart, this.profile)});
+    } else {
+      // wallet already unlocked
+      this.bid.order(this.cart, this.profile);
     }
   }
 
-  // TODO: remove type any
-  fillAddress(address: any) {
-    console.log(address);
-    address.countryCode = address.country;
-    delete address.country;
-    address.save = false;
-    delete address.id;
-    delete address.profileId;
-    delete address.updatedAt;
-    delete address.createdAt;
-    this.shippingFormGroup.setValue(address);
-  }
-
 }
+
+

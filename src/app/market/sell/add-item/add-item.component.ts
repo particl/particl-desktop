@@ -90,13 +90,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = undefined;
       }
     });
-    /*
-     this.listing.generateListing().take(1).subscribe(listing => {
-     console.log(listing);
-     this.listing.get(1).take(1).subscribe(res => {
-     console.log(res);
-     })
-     });*/
   }
 
   isExistingTemplate() {
@@ -217,7 +210,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   private save(): Promise<any> {
 
     const item = this.itemFormGroup.value;
-
     return new Promise((resolve, reject) => {
       this.template.add(
         item.title,
@@ -235,10 +227,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
-          .then(resolve);
+          .then();
 
         this.escrow.add(template.id, EscrowType.MAD).subscribe(
-          success => this.snackbar.open('Succesfully added escrow!')
+          success => {
+            this.snackbar.open('Succesfully added escrow!')
+            resolve(template.id);
+          }
         );
 
       });
@@ -301,6 +296,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       // save new
       this.save().then(id => {
+        console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
           console.log(listing);
           this.backToSell();

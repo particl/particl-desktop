@@ -9,6 +9,10 @@ export class Template {
   public basePrice: Amount = new Amount(0);
   public domesticShippingPrice: Amount = new Amount(0);
   public internationalShippingPrice: Amount = new Amount(0);
+  public escrowPrice: Amount = new Amount(0);
+
+  public domesticTotal: Amount = new Amount(0);
+  public internationalTotal: Amount = new Amount(0);
 
   // @TODO: remove type any
   constructor(private object: any) {
@@ -17,8 +21,8 @@ export class Template {
 
     this.setBasePrice();
     this.setShippingPrice();
-
-    console.log('item obj l' + this.object.ListingItemObjects.length);
+    this.setEscrowPrice();
+    this.setTotal();
   }
 
   get id(): number {
@@ -37,6 +41,10 @@ export class Template {
     return this.object.ItemInformation.longDescription
   }
 
+  get hash(): string {
+    return this.object.hash;
+  }
+  
   // Status
   get status(): string {
     if (this.object.ListingItemObjects.length > 0) {
@@ -75,19 +83,48 @@ export class Template {
   }
 
   setBasePrice(): void {
-    const itemPrice = this.object.PaymentInformation.ItemPrice;
-    if (itemPrice) {
-      this.basePrice = new Amount(itemPrice.basePrice);
-    } else {
-      this.basePrice = undefined;
-    }
+    this.basePrice = (this.object.PaymentInformation.ItemPrice
+      ? new Amount(this.object.PaymentInformation.ItemPrice.basePrice)
+      : this.basePrice);
   }
 
   setShippingPrice(): void {
     const itemPrice = this.object.PaymentInformation.ItemPrice;
     if (itemPrice && itemPrice.ShippingPrice) {
-      this.domesticShippingPrice = new Amount(itemPrice.ShippingPrice.domestic);
-      this.internationalShippingPrice = new Amount(itemPrice.ShippingPrice.international);
+      this.domesticShippingPrice = (itemPrice.ShippingPrice.domestic
+        ? new Amount(itemPrice.ShippingPrice.domestic) : this.domesticShippingPrice);
+      this.internationalShippingPrice = (itemPrice.ShippingPrice.international
+        ? new Amount(itemPrice.ShippingPrice.international) :  this.internationalShippingPrice);
     }
   }
+
+  setEscrowPrice(): void {
+    const itemPrice = this.object.PaymentInformation.ItemPrice;
+    const escrow = this.object.PaymentInformation.Escrow;
+    if (itemPrice === undefined || escrow === undefined) {
+      return;
+    }
+
+    const basePrice = itemPrice.basePrice;
+    const ratio = escrow.Ratio;
+    if (basePrice === undefined || ratio === undefined) {
+      return;
+    }
+
+    const total = (ratio.buyer / 100) * (basePrice + this.internationalShippingPrice.getAmount());
+
+    this.escrowPrice = new Amount(total);
+  }
+
+  setTotal(): void {
+    let iTotal = this.basePrice.getAmount();
+    let dTotal = this.basePrice.getAmount();
+
+    iTotal += this.internationalShippingPrice.getAmount();
+    dTotal += this.domesticShippingPrice.getAmount();
+
+    this.internationalTotal = new Amount(iTotal);
+    this.domesticTotal = new Amount(dTotal);
+  }
+
 }

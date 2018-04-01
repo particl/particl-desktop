@@ -37,14 +37,14 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       }));
     });
 
-    let price = this.data.listing.object.PaymentInformation.ItemPrice;
-    if (price && price.basePrice) {
-      price = price.basePrice;
+    let itemPrice = this.data.listing.object.PaymentInformation.ItemPrice;
+    if (itemPrice && itemPrice.basePrice) {
+      itemPrice = itemPrice.basePrice;
       this.price = {
-        int:     price.toFixed(0),
-        cents:  (price % 1).toFixed(8),
-        escrow: (price * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8),
-        usd: +(price * +this.currencyprice.toFixed(2))
+        int:     itemPrice.toFixed(0),
+        cents:  (itemPrice % 1).toFixed(8),
+        escrow: (itemPrice * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8),
+        usd: +(itemPrice * +this.currencyprice.toFixed(2))
       };
     }
 
