@@ -43,7 +43,7 @@ export class ListingService {
   }
 
   get(id: number) {
-    return this.market.call('item', ['get', id]);
+    return this.market.call('item', ['get', id]).map(listing => new Listing(listing));
   }
 
   generateBogusListings(amount: number) {

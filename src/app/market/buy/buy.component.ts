@@ -18,6 +18,9 @@ import { MarketService } from '../../core/market/market.service';
 
 import { ShippingDetails } from '../shared/shipping-details.model';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
+import { BidService } from 'app/core/market/api/bid/bid.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { ModalsService } from 'app/modals/modals.service';
 
 @Component({
   selector: 'app-buy',
@@ -25,9 +28,6 @@ import { SnackbarService } from '../../core/snackbar/snackbar.service';
   styleUrls: ['./buy.component.scss']
 })
 export class BuyComponent implements OnInit {
-
-  static stepperIndex: number = 0;
-  @ViewChild('stepper') stepper: MatStepper;
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
@@ -134,15 +134,22 @@ export class BuyComponent implements OnInit {
   public favorites: Array<Listing> = [];
 
   constructor(
-    private _formBuilder: FormBuilder,
-    private _router: Router,
-    private _profileService: ProfileService,
+    // 3rd party
+    private formBuilder: FormBuilder,
+    private router: Router,
+    // core
+    private snackbarService: SnackbarService,
+    private rpcState: RpcStateService,
+    private modals: ModalsService,
+    // market
+    private market: MarketService,
+    private profileService: ProfileService,
     private listingService: ListingService,
     private cartService: CartService,
     private favoritesService: FavoritesService,
     public countryList: CountryListService,
-    private market: MarketService,
-    private snackbarService: SnackbarService
+    private bid: BidService,
+
   ) { }
 
   ngOnInit() {
@@ -157,11 +164,11 @@ export class BuyComponent implements OnInit {
   }
 
   formBuild() {
-    this.cartFormGroup = this._formBuilder.group({
+    this.cartFormGroup = this.formBuilder.group({
       firstCtrl: ['']
     });
 
-    this.shippingFormGroup = this._formBuilder.group({
+    this.shippingFormGroup = this.formBuilder.group({
       firstName:    ['', Validators.required],
       lastName:     ['', Validators.required],
       addressLine1: ['', Validators.required],
@@ -178,7 +185,7 @@ export class BuyComponent implements OnInit {
       const temp: Array<Listing> = new Array<Listing>();
       favorites.forEach(favorite => {
         this.listingService.get(favorite.listingItemId).take(1).subscribe(listing => {
-          temp.push(new Listing(listing));
+          temp.push(listing);
           // little cheat here, because async behavior
           // we're setting the pointer to our new temp array every time we receive
           // a listing.
@@ -199,7 +206,7 @@ export class BuyComponent implements OnInit {
   /* cart */
 
   goToListings(): void {
-    this._router.navigate(['/market/overview']);
+    this.router.navigate(['/market/overview']);
   }
 
   removeFromCart(shoppingCartId: number): void {
@@ -225,10 +232,10 @@ export class BuyComponent implements OnInit {
       return;
     }
 
-    let upsert: Function = this._profileService.updateShippingAddress.bind(this);
+    let upsert: Function = this.profileService.updateShippingAddress.bind(this);
 
     if (this.profile.ShippingAddresses.length === 0) {
-      upsert = this._profileService.addShippingAddress.bind(this);
+      upsert = this.profileService.addShippingAddress.bind(this);
     }
     console.log(this.shippingFormGroup.value);
     upsert(this.shippingFormGroup.value).take(1).subscribe(address => {
@@ -238,7 +245,7 @@ export class BuyComponent implements OnInit {
   }
 
   getProfile(): void{
-    this._profileService.get(1).take(1).subscribe(
+    this.profileService.get(1).take(1).subscribe(
       profile => {
         this.profile = profile;
         console.log('--- profile address ----');
@@ -257,16 +264,13 @@ export class BuyComponent implements OnInit {
   }
 
   placeOrder() {
-    this.cart.cartDbObj.forEach((cart: any, index) => {
-      if (cart.ListingItem && cart.ListingItem.hash) {
-
-        this.market.call('bid', ['send', cart.ListingItem.hash, this.profile.address]).subscribe((res) => {
-
-          this.snackbarService.open('Order has been successfully placed');
-
-        });
-      }
-    });
+    if (this.rpcState.get('locked')) {
+      // unlock wallet and send transaction
+      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.bid.order.bind(this, this.cart, this.profile)});
+    } else {
+      // wallet already unlocked
+      this.bid.order(this.cart, this.profile);
+    }
   }
 
 }
