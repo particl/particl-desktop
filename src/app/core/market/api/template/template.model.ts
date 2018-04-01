@@ -48,14 +48,10 @@ export class Template {
   // Status
   get status(): string {
     if (this.object.ListingItemObjects.length > 0) {
-      return 'Published';
+      return 'published';
     } else {
-      return 'Unpublished';
+      return 'unpublished';
     }
-  }
-
-  get statusClass(): String {
-    return this.status.toLocaleLowerCase()
   }
 
   get thumbnail(): any {

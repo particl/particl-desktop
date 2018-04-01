@@ -142,7 +142,9 @@
               Added {{ listing.createdAt }} &bull; Expires 2018-02-13
             </div>
           </div>
-          <div class="status {{listing.statusClass}}" fxFlex="0 0 140px"><span>&bull;</span>Published</div>
+          <div *ngFor="let status of getStatus(listing.status)">
+              <div class="status {{status.class}}" fxFlex="0 0 140px"><span>&bull;</span>{{status.status}}</div>
+          </div>
         </div>
       </mat-expansion-panel-header>
 
@@ -163,8 +165,8 @@
             <!--tr><th>Quantity</th><td>2</td></tr-->
             <tr>
               <th>Price per item</th>
-              <td>{{listing.intPrice}}.
-                <small>{{listing.centsPrice}}</small>
+              <td>{{listing.basePrice.getIntegerPart()}}.
+                <small>{{listing.basePrice.getFractionalPart()}}</small>
                 PART
               </td>
             </tr>
@@ -187,12 +189,12 @@
             Edit listing
           </button>
         </div>
-        <div class="right"> <!-- listing.action_color  -->
-          <button mat-raised-button color="primary" matTooltip="Publish Listing" (click)="postTemplate(listing.id)" >
-            <!-- listing.action_disabled -->
-            <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon> <!-- listing.action_icon -->
-            Publish Listing
-          </button>
+        <div class="right" *ngFor="let status of getStatus(listing.status)">
+            <button mat-raised-button color="{{status.action_color}}" matTooltip="{{status.action_tooltip}}" (click)="action(listing)" >
+                <!-- listing.action_disabled -->
+                <mat-icon fontSet="partIcon" fontIcon="{{status.action_icon}}"></mat-icon>
+                {{ status.action_button }}
+              </button>
         </div>
       </mat-action-row>
     </mat-expansion-panel><!-- .listing -->
