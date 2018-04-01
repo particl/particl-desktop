@@ -12,7 +12,8 @@ export class ListingService {
   ) {
 
   }
-  search(page: number, pageLimit: number, profileId: number | string, search: string, catId: number, country: any): Observable<Array<Listing>> {
+  search(page: number, pageLimit: number, profileId: number | string,
+         search: string, catId: number, country: any): Observable<Array<Listing>> {
 
     const params = [
       'search',

@@ -12,10 +12,10 @@ export class Cart {
   get subTotal(): Amount {
     let total = 0.0;
     this.shoppingCartItems.map(shoppingCartItem => {
-      const object = shoppingCartItem.ListingItem;
+      const object: any = shoppingCartItem.ListingItem;
       // if listing is loaded (async)
-      if (object.PaymentInformation) {
-        total += object.PaymentInformation.ItemPrice.basePrice
+      if (object.PaymentInformation && object.PaymentInformation.ItemPrice) {
+        total += object.PaymentInformation.ItemPrice.basePrice;
       }
     });
     return new Amount(total);
@@ -66,8 +66,10 @@ export class Cart {
         shoppingCartItem.thumbnail = this.getThumbnail(object.ItemInformation.ItemImages[0]);
       }
       if (object.PaymentInformation) {
-        shoppingCartItem.integerPart = new Amount (object.PaymentInformation.ItemPrice.basePrice).getIntegerPart();
-        shoppingCartItem.fractionPart = new Amount (object.PaymentInformation.ItemPrice.basePrice).getFractionalPart();
+        const basePrice = new Amount(object.PaymentInformation && object.PaymentInformation.ItemPrice
+            ? object.PaymentInformation.ItemPrice.basePrice : 0);
+        shoppingCartItem.integerPart = basePrice.getIntegerPart();
+        shoppingCartItem.fractionPart = basePrice.getFractionalPart();
         //Check if international needs USD to PART
         shoppingCartItem.shippingPriceIntegerPart = new Amount (object.PaymentInformation.ItemPrice.ShippingPrice.international).getIntegerPart();
         shoppingCartItem.shippingPriceFractionPart = new Amount (object.PaymentInformation.ItemPrice.ShippingPrice.international).getFractionalPart();
