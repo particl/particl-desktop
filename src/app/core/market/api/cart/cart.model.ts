@@ -16,8 +16,7 @@ export class Cart {
 
     setSubTotal(): void {
       let total = 0.0;
-      this.shoppingCartItems.forEach(shoppingCartItem => {
-        const listing: Listing = shoppingCartItem.ListingItem;
+      this.listings.forEach(listing => {
         total += listing.basePrice.getAmount();
       });
       this.subTotal = new Amount(total);
@@ -25,8 +24,7 @@ export class Cart {
 
     setShippingTotal(): void {
       let total = 0.0;
-      this.shoppingCartItems.forEach(shoppingCartItem => {
-        const listing: Listing = shoppingCartItem.ListingItem;
+      this.listings.forEach(listing => {
         total += listing.internationalShippingPrice.getAmount();
       });
       this.shippingTotal = new Amount(total);
@@ -34,8 +32,7 @@ export class Cart {
 
     setEscrowTotal(): void {
       let total = 0.0;
-      this.shoppingCartItems.forEach(shoppingCartItem => {
-        const listing: Listing = shoppingCartItem.ListingItem;
+      this.listings.forEach(listing => {
         total += listing.escrowPrice.getAmount();
       });
       this.escrowTotal = new Amount(total);
