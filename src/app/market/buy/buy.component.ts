@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, DoCheck } from '@angular/core';
-import { MatStepper } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
   Validators
 } from '@angular/forms';
+import { Log } from 'ng2-logger';
 
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
@@ -16,7 +16,6 @@ import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { MarketService } from '../../core/market/market.service';
 
-import { ShippingDetails } from '../shared/shipping-details.model';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
@@ -29,6 +28,7 @@ import { ModalsService } from 'app/modals/modals.service';
 })
 export class BuyComponent implements OnInit {
 
+  private log: any = Log.create('buy.component: ' + Math.floor((Math.random() * 1000) + 1));
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
 
@@ -189,11 +189,20 @@ export class BuyComponent implements OnInit {
   placeOrder() {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.bid.order.bind(this, this.cart, this.profile)});
+      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this)});
     } else {
       // wallet already unlocked
-      this.bid.order(this.cart, this.profile);
+      this.bidOrder();
     }
+  }
+
+  bidOrder() {
+    this.bid.order(this.cart, this.profile).subscribe((res) => {
+      this.snackbarService.open('Order has been successfully placed');
+      this.changeTab(1);
+    }, (error) => {
+      this.log.d(`Error while placing an order`);
+    });
   }
 
 }
