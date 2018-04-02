@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
+import { Observable } from 'rxjs/Observable';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
@@ -11,9 +12,12 @@ import { Template } from 'app/core/market/api/template/template.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { ImageService } from 'app/core/market/api/template/image/image.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { ModalsService } from 'app/modals/modals.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
+
 
 @Component({
   selector: 'app-add-item',
@@ -50,6 +54,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private location: LocationService,
     private listing: ListingService,
     private snackbar: SnackbarService,
+    private rpcState: RpcStateService,
+    private modals: ModalsService,
     private countryList: CountryListService,
     private escrow: EscrowService
   ) { }
@@ -207,10 +213,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
-  private save(): Promise<any> {
+  private save(): Observable<any> {
 
     const item = this.itemFormGroup.value;
-    return new Promise((resolve, reject) => {
+    return new Observable((observer) => {
       this.template.add(
         item.title,
         item.shortDescription,
@@ -232,7 +238,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.escrow.add(template.id, EscrowType.MAD).subscribe(
           success => {
             this.snackbar.open('Succesfully added escrow!')
-            resolve(template.id);
+            observer.next(template.id);
+            observer.complete()
+          },
+          error => {
+            observer.error(error);
           }
         );
 
@@ -280,7 +290,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       // update
       this.update();
     } else {
-      this.save().then(id => {
+      this.save().subscribe(id => {
         console.log('returning to sell');
         this.backToSell();
       });
@@ -290,12 +300,20 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   saveAndPublish() {
     this.log.d('Saving and publishing the listing.');
+    if (this.rpcState.get('locked')) {
+      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callPublish.bind(this)});
+    } else {
+      this.callPublish();
+    }
+  }
+
+  callPublish() {
     if (this.templateId) {
       // update
       this.update();
     } else {
       // save new
-      this.save().then(id => {
+      this.save().subscribe(id => {
         console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
           console.log(listing);

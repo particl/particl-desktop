@@ -44,7 +44,6 @@ export class Template {
   get hash(): string {
     return this.object.hash;
   }
-  
   // Status
   get status(): string {
     if (this.object.ListingItemObjects.length > 0) {

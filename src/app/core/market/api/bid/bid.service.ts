@@ -14,7 +14,7 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 export class BidService {
 
   private log: any = Log.create('cart.service id:' + Math.floor((Math.random() * 1000) + 1));
-  
+
   constructor(private market: MarketService,
               private marketState: MarketStateService,
               private snackbar: SnackbarService) {

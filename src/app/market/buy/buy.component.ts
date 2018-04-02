@@ -244,7 +244,7 @@ export class BuyComponent implements OnInit {
 
   }
 
-  getProfile(): void{
+  getProfile(): void {
     this.profileService.get(1).take(1).subscribe(
       profile => {
         this.profile = profile;
@@ -258,7 +258,7 @@ export class BuyComponent implements OnInit {
   }
 
   valueOf(field: string) {
-    if(this.shippingFormGroup) {
+    if (this.shippingFormGroup) {
       return this.shippingFormGroup.get(field).value;
     }
     return '';
