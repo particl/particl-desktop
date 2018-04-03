@@ -11,7 +11,7 @@ import { BuyComponent } from './buy/buy.component';
 import { SellComponent } from './sell/sell.component';
 import { AddItemComponent } from './sell/add-item/add-item.component';
 import { FavoriteComponent } from './shared/favorite/favorite.component';
-
+import { OrdersComponent } from './shared/orders/orders.component';
 
 
 @NgModule({
@@ -27,7 +27,8 @@ import { FavoriteComponent } from './shared/favorite/favorite.component';
     BuyComponent,
     SellComponent,
     AddItemComponent,
-    FavoriteComponent
+    FavoriteComponent,
+    OrdersComponent
   ],
   entryComponents: [
     PreviewListingComponent
