@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { Log } from 'ng2-logger';
 
+import { BidService } from 'app/core/market/api/bid/bid.service';
+import { Bid } from 'app/core/market/api/bid/bid.model';
 
 @Component({
   selector: 'app-orders',
@@ -30,85 +32,17 @@ export class OrdersComponent implements OnInit {
     { title: 'Shipped',    value: 'shipped', amount: '1' },
     { title: 'Sold',       value: 'sold',    amount: '1' }
   ];
-  orders: Array<any> = [
-    {
-      name: 'NFC-enabled contactless payment perfume',
-      hash: 'AGR', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
-      hash_bg: 'bg6', // TODO: assign random hash_bg (bg1-bg16)
-      status: 'bidding',
-      status_info: 'Buyer wants to purchase this item – accept or reject this bid to continue',
-      action_icon: 'part-check',
-      action_button: 'Accept bid',
-      action_tooltip: 'Approve this order and sell to this buyer',
-      action_disabled: false,
-      allow_reject_order: true,
-      show_escrow_txdetails: false,
-    },
-    {
-      name: 'Development Buff (2 week subscription)',
-      hash: 'FG2', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
-      hash_bg: 'bg12', // TODO: assign random hash_bg (bg1-bg16)
-      status: 'awaiting',
-      status_info: 'Waiting for Buyer to lock the payment into escrow',
-      action_icon: 'part-date',
-      action_button: 'Waiting for buyer',
-      action_tooltip: 'Waiting for buyer\'s payment',
-      action_disabled: true,
-      allow_reject_order: false,
-      show_escrow_txdetails: false,
-    },
-    {
-      name: 'My basic listing template',
-      hash: '5EH', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
-      hash_bg: 'bg2', // TODO: assign random hash_bg (bg1-bg16)
-      status: 'escrow',
-      status_info: 'Buyer\'s funds are locked in escrow, order is ready to ship – when sent,'
-                  + ' mark order as shipped, await its delivery and release of funds from escrow',
-      action_icon: 'part-check',
-      action_button: 'Mark as shipped',
-      action_tooltip: 'Confirm that the order has been shipped to Buyer',
-      action_disabled: false,
-      allow_reject_order: false,
-      show_escrow_txdetails: true,
-    },
-    {
-      name: 'Fresh product (2 kg)',
-      hash: 'SPP', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
-      hash_bg: 'bg11', // TODO: assign random hash_bg (bg1-bg16)
-      status: 'shipping',
-      status_info: 'Order sent to buyer, waiting for buyer to confirm the delivery',
-      action_icon: 'part-date',
-      action_button: 'Waiting for delivery',
-      action_tooltip: 'Awaiting confirmation of successfull delivery by Buyer',
-      action_disabled: true,
-      allow_reject_order: false,
-      show_escrow_txdetails: true,
-    },
-    {
-      name: 'Fresh product (2 kg)',
-      hash: '1ER', // TODO: randomized string (maybe first letters of TX ID) for quick order ID
-      hash_bg: 'bg8', // TODO: assign random hash_bg (bg1-bg16)
-      status: 'complete',
-      status_info: 'Order delivery confirmed by Buyer – order successfully finalized',
-      action_icon: 'part-check',
-      action_button: 'Order complete',
-      action_tooltip: '',
-      action_disabled: true,
-      allow_reject_order: false,
-      show_escrow_txdetails: true,
-    },
-  ];
+  orders: Array<Bid> = [];
 
   filters: any = {
     search:   undefined,
     sort:     undefined
   };
 
-  constructor(
-  ) {}
+  constructor(private bid: BidService) {}
 
   ngOnInit() {
-    console.log(this.type);
+    this.bid.search().subscribe(orders => this.orders = orders )
   }
 
 }
