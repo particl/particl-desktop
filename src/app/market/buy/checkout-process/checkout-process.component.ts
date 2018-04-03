@@ -73,7 +73,9 @@ export class CheckoutProcessComponent implements OnInit {
       city: ['', Validators.required],
       state: [''],
       country: ['', Validators.required],
-      zipCode: ['', Validators.required]
+      zipCode: ['', Validators.required],
+      newShipping: [''],
+      newShipingProfileName: ['']
     });
   }
 
@@ -88,8 +90,13 @@ export class CheckoutProcessComponent implements OnInit {
       .subscribe(res => this.getCart());
   }
 
-  clearCart(): void {
-    this.cartService.clearCart().subscribe(res => this.getCart());
+  clearCart(isSnack: boolean = true): void {
+    this.cartService.clearCart().subscribe(res => {
+      if (isSnack) {
+        this.snackbarService.open('All Items Cleared From Cart');
+      }
+      this.getCart()
+    });
   }
 
   getCart(): void {
@@ -150,6 +157,8 @@ export class CheckoutProcessComponent implements OnInit {
 
   bidOrder() {
     this.bid.order(this.cart, this.profile).subscribe((res) => {
+      this.clearCart(false);
+
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {

@@ -128,14 +128,14 @@
       <div fxLayout="row" fxLayoutGap="30px">
 
         <!--Hide shipping profile -->
-        <div class="shipping-profile" *ngIf="false" fxFlex>
+        <div class="shipping-profile" fxFlex>
           <mat-card>
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
               <mat-select placeholder="Select saved shipping address profile"
                           disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
                 <mat-option *ngFor="let address of profile.ShippingAddresses"
-                            [value]="address.title" (click)="fillAddress(address)">
+                            [value]="address.title" (click)="updateShippingAddress(address)">
                   {{address.title}}
                 </mat-option>
               </mat-select>
@@ -189,10 +189,12 @@
             </mat-form-field>
 
             <!--Hide shipping profile -->
-            <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center" *ngIf="false">
-              <mat-checkbox formControlName="save" fxFlex>Save as shipping profile</mat-checkbox>
+            <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
+              <mat-checkbox formControlName="newShipping" ngModel="newShipping" fxFlex>Save as shipping profile
+              </mat-checkbox>
               <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="title" placeholder="Shipping profile name">
+                <input matInput formControlName="newShipingProfileName" placeholder="Shipping profile name"
+                       [(ngModel)]="newShipingProfileName">
               </mat-form-field>
             </div>
 
