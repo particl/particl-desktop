@@ -64,9 +64,6 @@ export class BuyComponent implements OnInit {
   }
 
   changeTab(index: number): void {
-    if (index === 0) {
-      this.getCart();
-    }
     this.selectedTab = index;
   }
 
