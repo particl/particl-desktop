@@ -8,6 +8,7 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Bid } from 'app/core/market/api/bid/bid.model';
 
 
 @Injectable()
@@ -43,5 +44,11 @@ export class BidService {
         }
       });
     });
+  }
+
+  search(): Observable<Array<Bid>> {
+    // Params: flag for buy or sell required
+    const params = ['search'];
+    return this.market.call('bid', params)
   }
 }
