@@ -87,7 +87,7 @@ export class CheckoutProcessComponent implements OnInit {
 
   removeFromCart(shoppingCartId: number): void {
     this.cartService.removeItem(shoppingCartId).take(1)
-      .subscribe(res => this.getCart());
+      .subscribe(this.getCart);
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -100,9 +100,7 @@ export class CheckoutProcessComponent implements OnInit {
   }
 
   getCart(): void {
-    this.cartService.getCart().take(1).subscribe(cart => {
-      this.cart = cart;
-    });
+    this.cartService.getCart().take(1).subscribe(cart => this.cart = cart);
   }
 
   /* shipping */
@@ -139,10 +137,7 @@ export class CheckoutProcessComponent implements OnInit {
   }
 
   valueOf(field: string) {
-    if (this.shippingFormGroup) {
-      return this.shippingFormGroup.get(field).value;
-    }
-    return '';
+    return this.shippingFormGroup ? this.shippingFormGroup.get(field).value : '';
   }
 
   placeOrder() {

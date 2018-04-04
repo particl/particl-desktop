@@ -33,10 +33,7 @@ export class BidService {
                   observer.next(true);
                   observer.complete();
                 }
-              },
-              (failed) => {
-                observer.error(false);
-              });
+              }, observer.error);
         }
       });
     });
