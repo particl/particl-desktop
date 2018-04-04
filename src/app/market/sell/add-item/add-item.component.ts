@@ -240,11 +240,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
             this.snackbar.open('Succesfully added escrow!')
             observer.next(template.id);
             observer.complete()
-          },
-          error => {
-            observer.error(error);
-          }
-        );
+          }, observer.error);
 
       });
     });
