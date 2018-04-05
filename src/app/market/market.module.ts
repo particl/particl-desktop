@@ -12,7 +12,7 @@ import { SellComponent } from './sell/sell.component';
 import { AddItemComponent } from './sell/add-item/add-item.component';
 import { FavoriteComponent } from './shared/favorite/favorite.component';
 import { OrdersComponent } from './shared/orders/orders.component';
-
+import { CheckoutProcessComponent } from './buy/checkout-process/checkout-process.component';
 
 @NgModule({
   imports: [
@@ -28,7 +28,8 @@ import { OrdersComponent } from './shared/orders/orders.component';
     SellComponent,
     AddItemComponent,
     FavoriteComponent,
-    OrdersComponent
+    OrdersComponent,
+    CheckoutProcessComponent
   ],
   entryComponents: [
     PreviewListingComponent
