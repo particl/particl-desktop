@@ -22,10 +22,12 @@
 </app-header>
 
 
-<div fxLayout="row" fxLayoutGap="30px" class="container-block">
+<!-- =========== LISTINGS =========== -->
+
+<div fxLayout="row" fxLayoutGap="30px" class="container-block" *ngIf="tabLabels[selectedTab] == 'listings'">
 
   <!-- Listings > Filter -->
-  <div class="filter" fxFlex="0 0 230px" *ngIf="tabLabels[selectedTab] == 'listings'">
+  <div class="filter" fxFlex="0 0 230px">
 
     <div class="sell-item">
       <button mat-raised-button color="primary" (click)="addItem()" class="full-width"
@@ -76,7 +78,7 @@
   </div><!-- .filter -->
 
    <!-- Listings > list -->
-  <div class="listings list section" fxFlex="1 1 100%" *ngIf="tabLabels[selectedTab] == 'listings'">
+  <div class="listings list section" fxFlex="1 1 100%">
 
     <div class="no-results" *ngIf="listings?.length === 0">
       You don't have any market listings yet
@@ -157,7 +159,13 @@
     <!--div class="subtitle">Unpublished listings (templates)</div-->
 
   </div><!-- .listings-list -->
-
-  <app-orders *ngIf="tabLabels[selectedTab] == 'orders'" [type] = "orderType"></app-orders> 
-
 </div><!-- .container-block -->
+
+
+<!-- =========== ORDERS =========== -->
+
+<div class="container-block disable-select" *ngIf="tabLabels[selectedTab] == 'orders'">
+
+  <app-orders [type]="orderType" fxLayout fxLayoutGap="30px"></app-orders>
+
+</div><!-- "Orders" tab -->

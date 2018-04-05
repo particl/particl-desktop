@@ -340,9 +340,10 @@
 
 <!-- =========== ORDERS =========== -->
 
-<div class="container-block disable-select" fxLayout fxLayoutGap="30px" *ngIf="tabLabels[selectedTab] == 'orders'">
+<div class="container-block disable-select" *ngIf="tabLabels[selectedTab] == 'orders'">
 
-  <app-orders [type]="orderType"></app-orders>
+  <app-orders [type]="orderType" fxLayout fxLayoutGap="30px"></app-orders>
+
 </div><!-- "Orders" tab -->
 
 
