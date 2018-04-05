@@ -19,7 +19,7 @@ table {
   }
 }
 
-.mat-card {
+.mat-card { // @ Shipping step
   & > .title { // TODO: replace with %placeholders when Settings is merged
     text-transform: uppercase;
     font-weight: bold;
@@ -28,7 +28,7 @@ table {
   }
 }
 
-custom-icon {
+custom-icon { // overwrite of Material Stepper's step icons
   .mat-icon {
     font-size: 13px;
     line-height: 1.6;
@@ -39,10 +39,8 @@ custom-icon {
 
 // ------ LAYOUT ------ //
 
-.your-cart {
-  &.container-block {
-    padding: 15px 15px 0;
-  }
+.container-block {
+  padding: 15px 15px 0;
   .no-results {
     margin-top: 16px;
   }
@@ -106,6 +104,34 @@ table.cart-items {
     padding: 14px;
     min-width: 20px;
     max-width: 20px;
+  }
+}
+
+.order-detail { // subtotals & more below the cart table
+  background: mix($color-white, $bg);
+  border-bottom: 1px solid $bg-shadow;
+  color: $text-muted;
+  line-height: 1.8;
+  padding: 24px 30px;
+  .title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 13px;
+    color: $text;
+  }
+  .shipping-overview {
+    p {
+      margin: 6px 0 0;
+    }
+  }
+  table.subtotals {
+    .value {
+      text-align: right;
+    }
+    .total {
+      color: $text;
+      font-weight: 500;
+    }
   }
 }
 
