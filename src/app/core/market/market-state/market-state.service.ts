@@ -42,6 +42,7 @@ export class MarketStateService extends StateService implements OnDestroy {
             error => {
               this.stateCallError(method, error, firstError);
               if (timeout) {
+                console.log(error.status);
                 setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
               }
               firstError = false;

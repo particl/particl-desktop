@@ -38,9 +38,9 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js",
     "install:all": "yarn run install:desktop && yarn run install:marketplace",
-    "install:marketplace": "cd dapp-shell && yarn && ./bin/copy-env.sh && yarn run setup",
+    "install:marketplace": "cd particl-market && yarn && ./bin/copy-env.sh && yarn run setup",
     "install:desktop": "git submodule update && yarn",
-    "start:marketplace": "cd dapp-shell && yarn run serve",
+    "start:marketplace": "cd particl-market && yarn run serve",
     "start": "yarn run start:electron:fast && yarn run start:marketplace",
     "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test"
   },

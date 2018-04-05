@@ -39,9 +39,9 @@ export class BidService {
     });
   }
 
-  search(): Observable<Array<Bid>> {
+  search(mine?: boolean): Observable<Array<Bid>> {
     // Params: flag for buy or sell required
-    const params = ['search'];
+    const params = ['search', "", "", !!mine];
     return this.market.call('bid', params)
   }
 }

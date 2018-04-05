@@ -42,7 +42,7 @@ export class OrdersComponent implements OnInit {
   constructor(private bid: BidService) {}
 
   ngOnInit() {
-    this.bid.search().subscribe(orders => this.orders = orders )
+    this.bid.search(this.type === 'sell').subscribe(orders => this.orders = orders);
   }
 
 }
