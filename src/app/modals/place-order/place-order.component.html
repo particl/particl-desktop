@@ -1,0 +1,20 @@
+<div mat-dialog-title class="title">Place order</div>
+<mat-dialog-content class="modal-content">
+  <p>
+    Are you sure you want to place this bid?
+  </p>
+  <p class="widget-help">
+    Before paying for this order, your bid needs to be accepted by the Seller.<br>
+    After it is accepted, you can pay for the order in Buy > Orders.
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    No, cancel order
+  </button>
+  <button mat-raised-button color="primary" (click)="placeOrder()">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Yes, place order
+  </button>
+</mat-dialog-actions>
