@@ -99,7 +99,8 @@ export class CheckoutProcessComponent implements OnInit {
     });
   }
 
-  getCart(): void {
+  // Should follow es6
+  getCart = () => {
     this.cartService.getCart().take(1).subscribe(cart => this.cart = cart);
   }
 

@@ -39,11 +39,9 @@ export class Cart {
     }
 
     setTotal(): void {
-      let total: number = 0.0;
-      total += (this.subTotal.getAmount() 
-              + this.shippingTotal.getAmount()
-              + this.escrowTotal.getAmount());
-      this.total = new Amount(total);
+      this.total = new Amount(this.subTotal.getAmount()
+               + this.shippingTotal.getAmount()
+               + this.escrowTotal.getAmount())
     }
 
   private setCartItems(): void {
