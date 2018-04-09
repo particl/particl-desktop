@@ -33,7 +33,7 @@ export class OrdersComponent implements OnInit {
     { title: 'Shipped',    value: 'shipped', amount: '1' },
     { title: 'Sold',       value: 'sold',    amount: '1' }
   ];
-  orders: Array<Bid> = [];
+  orders: Bid;
   public profile: any = {};
 
   filters: any = {
@@ -55,9 +55,7 @@ export class OrdersComponent implements OnInit {
       });
   }
   loadOrders(): void {
-    this.bid.search(this.profile.address).subscribe(orders => {
-      this.orders = orders;
-    });
+    this.bid.search(this.profile.address, this.type).take(1).subscribe(orders => this.orders = orders);
   }
 
 }

@@ -7,7 +7,8 @@ import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Template } from 'app/core/market/api/template/template.model';
-
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { ModalsService } from 'app/modals/modals.service';
 import { Status } from './status.class';
 
 @Component({
@@ -36,7 +37,9 @@ export class SellComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private template: TemplateService,
-    private listing: ListingService
+    private listing: ListingService,
+    private rpcState: RpcStateService,
+    private modals: ModalsService,
   ) {}
 
   ngOnInit() {
@@ -93,6 +96,14 @@ export class SellComponent implements OnInit {
   }
 
   postTemplate(id: any) {
+    if (this.rpcState.get('locked')) {
+      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callTemplate.bind(this, id)});
+    } else {
+      this.callTemplate(id);
+    }
+  }
+
+  callTemplate(id: any) {
     this.template.post(id, 1).take(1).subscribe(listing => {
         console.log(listing);
       });

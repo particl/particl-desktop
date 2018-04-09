@@ -22,7 +22,6 @@ export class Status {
             action_color: 'primary',
             action_disabled: false
         }];
-    
     get(status: string): UiStatus {
         return this.states.find((state: UiStatus) => state.status === status);
     }

@@ -16,6 +16,8 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsService } from 'app/modals/modals.service';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
 
 @Component({
   selector: 'app-checkout-process',
@@ -48,7 +50,8 @@ export class CheckoutProcessComponent implements OnInit {
     private profileService: ProfileService,
     private cartService: CartService,
     public countryList: CountryListService,
-    private bid: BidService) {
+    private bid: BidService,
+    public dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -99,7 +102,8 @@ export class CheckoutProcessComponent implements OnInit {
     });
   }
 
-  getCart(): void {
+  // Should follow es6
+  getCart = () => {
     this.cartService.getCart().take(1).subscribe(cart => this.cart = cart);
   }
 
@@ -140,6 +144,16 @@ export class CheckoutProcessComponent implements OnInit {
     return this.shippingFormGroup ? this.shippingFormGroup.get(field).value : '';
   }
 
+  placeOrderModal(): void {
+    let dialogRef = this.dialog.open(PlaceOrderComponent);
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res === undefined) {
+        this.placeOrder();
+      }
+      });
+  }
+
+  
   placeOrder() {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
@@ -160,4 +174,5 @@ export class CheckoutProcessComponent implements OnInit {
       this.log.d(`Error while placing an order`);
     });
   }
+  
 }

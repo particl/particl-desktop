@@ -42,13 +42,13 @@
 
   </div><!-- .filter -->
   <!-- Orders > list -->
-  <div class="orders list section TO_DO" fxFlex="1 1 100%">
+  <div class="orders list section" fxFlex="1 1 100%">
 
-    <div class="no-results" *ngIf="orders.length === 0">
+    <div class="no-results" *ngIf="orders?.ordersCount === 0">
       You don't have any market orders yet
     </div>
 
-    <mat-expansion-panel class="order item no-padding" *ngFor="let order of orders">
+    <mat-expansion-panel class="order item no-padding" *ngFor="let order of orders?.orderItems">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
           <div class="photo" fxFlex="0 0 80px">
@@ -73,7 +73,11 @@
       <div class="detail" fxLayout="row" fxLayoutGap="30px">
         <div class="buyer-info" fxFlex="27%">
           <div class="title">Shipping address</div>
-          <p>Mr. Longname Buyer<br>Particl Avenue X/144<br>5RFG4 United Cryptocity<br>Universe</p>
+          <p>
+            {{order?.ShippingAddress.firstName}} {{order?.ShippingAddress.lastName}} <br>
+            {{order?.ShippingAddress.addressLine1}}, {{order?.ShippingAddress.addressLine2}},{{order?.ShippingAddress.city}}, {{order?.ShippingAddress.state}}<br>
+            {{order?.ShippingAddress.zipCode}}, {{order?.ShippingAddress.country}}
+          </p>
         </div><!-- .buyer-info -->
         <div class="info" fxFlex="35%">
           <div class="title">Price<!-- & Qty--></div>

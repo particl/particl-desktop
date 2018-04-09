@@ -58,7 +58,7 @@ export class CartService {
     return this.market.call('cart', ['clear', 1]).do(this.updateCart, this.snackbar.open)
   }
 
-  updateCart(): void {
+  updateCart = () => {
     this.marketState.registerStateCall('cartitem', null, ['list', 1, true])
   }
 

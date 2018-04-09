@@ -24,7 +24,7 @@
 
 <!-- =========== CART =========== -->
 
-<div class="your-cart container-block disable-select" *ngIf="tabLabels[selectedTab] == 'cart'">
+<div class="your-cart disable-select" *ngIf="tabLabels[selectedTab] == 'cart'">
   <app-checkout-process (onOrderPlaced)="changeTab($event)"></app-checkout-process>
 </div><!-- "Your cart" tab -->
 

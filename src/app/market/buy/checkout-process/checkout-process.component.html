@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear [@.disabled]="true" class="no-bg">
+<mat-horizontal-stepper linear [@.disabled]="true" class="no-bg container-block">
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
   <ng-template matStepperIcon="edit">
     <custom-icon>
@@ -210,7 +210,7 @@
         </button>
         <button mat-raised-button color="primary" matStepperNext (click)="updateShippingAddress()">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-          Continue to checkout
+          Continue to confirmation
         </button>
       </div>
     </form>
@@ -299,8 +299,7 @@
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back to shipping
         </button>
-        <!-- TODO: after clicking the "confirm" button, payment confirmation modal should pop out with all the details -->
-        <button mat-raised-button color="primary" (click)="placeOrder()">
+        <button mat-raised-button color="primary" (click)="placeOrderModal()"><!-- placeOrder() moved to the modal -->
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Place order
         </button>
