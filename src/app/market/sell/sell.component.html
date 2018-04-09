@@ -85,76 +85,78 @@
     </div>
     <!--div class="subtitle first">Published listings</div-->
 
-    <mat-expansion-panel class="listing item no-padding" *ngFor="let listing of listings">
-      <mat-expansion-panel-header class="header">
-        <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-          <div class="photo" fxFlex="0 0 110px">
-            <img src="{{ listing.featuredImage?.dataId || './assets/images/placeholder_1-1.jpg'}}">
-          </div>
-          <div class="meta" fxFlex="1 1 100%">
-            <div class="name">{{ listing.title }}</div>
-            <div class="categories">{{ listing.category.name }}</div>
-            <div class="date">
-              <!--span class="hash" matTooltip="Order hash">AGR</span-->
-              Added {{ listing.createdAt }} &bull; Expires 2018-02-13
+    <mat-accordion>
+      <mat-expansion-panel class="listing item no-padding" *ngFor="let listing of listings">
+        <mat-expansion-panel-header class="header">
+          <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="photo" fxFlex="0 0 110px">
+              <img src="{{ listing.featuredImage?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+            </div>
+            <div class="meta" fxFlex="1 1 100%">
+              <div class="name">{{ listing.title }}</div>
+              <div class="categories">{{ listing.category.name }}</div>
+              <div class="date">
+                <!--span class="hash" matTooltip="Order hash">AGR</span-->
+                Added {{ listing.createdAt }} &bull; Expires 2018-02-13
+              </div>
+            </div>
+            <div *ngFor="let status of getStatus(listing.status)">
+                <div class="status {{ status.class }}" fxFlex="0 0 140px"><span>&bull;</span>{{ status.status }}</div>
             </div>
           </div>
-          <div *ngFor="let status of getStatus(listing.status)">
-              <div class="status {{status.class}}" fxFlex="0 0 140px"><span>&bull;</span>{{status.status}}</div>
+        </mat-expansion-panel-header>
+
+        <!--div class="status-info">
+          <p>{{ listing.status_info }}</p>
+        </div-->
+
+        <div class="detail" fxLayout="row" fxLayoutGap="30px">
+          <div class="description" fxFlex="65%">
+            <div class="title">Listing description</div>
+            <p>
+              {{ listing.longDescription }}
+            </p>
+          </div><!-- .description -->
+          <div class="info" fxFlex="35%">
+            <div class="title">Price</div>
+            <table class="prices">
+              <!--tr><th>Quantity</th><td>2</td></tr-->
+              <tr>
+                <th>Price per item</th>
+                <td>{{ listing.basePrice.getIntegerPart() }}.
+                  <small>{{ listing.basePrice.getFractionalPart() }}</small>
+                  PART
+                </td>
+              </tr>
+              <!--tr><th>Total price</th><td>46.<small>257</small> PART</td></tr-->
+            </table>
           </div>
         </div>
-      </mat-expansion-panel-header>
 
-      <div class="status-info">
-        <!--p>{{ listing.status_info }}</p-->
-      </div>
-
-      <div class="detail" fxLayout="row" fxLayoutGap="30px">
-        <div class="description" fxFlex="65%">
-          <div class="title">Listing description</div>
-          <p>
-            {{ listing.longDescription }}
-          </p>
-        </div><!-- .description -->
-        <div class="info" fxFlex="35%">
-          <div class="title">Price</div>
-          <table class="prices">
-            <!--tr><th>Quantity</th><td>2</td></tr-->
-            <tr>
-              <th>Price per item</th>
-              <td>{{listing.basePrice.getIntegerPart()}}.
-                <small>{{listing.basePrice.getFractionalPart()}}</small>
-                PART
-              </td>
-            </tr>
-            <!--tr><th>Total price</th><td>46.<small>257</small> PART</td></tr-->
-          </table>
-        </div>
-      </div>
-
-      <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
-        <div class="left">
-          <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(listing)"
-                  class="small">
-            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-          </button>
-          <button mat-button matTooltip="Clone listing" (click)="addItem(listing.id, true)" class="small">
-            <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
-          </button>
-          <button mat-button matTooltip="Edit listing details" (click)="addItem(listing.id)" class="small">
-            <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
-            Edit listing
-          </button>
-        </div>
-        <div class="right" *ngFor="let status of getStatus(listing.status)">
-            <button mat-raised-button color="{{status.action_color}}" matTooltip="{{status.action_tooltip}}" (click)="action(listing)" >
-                <!-- listing.action_disabled -->
-                <mat-icon fontSet="partIcon" fontIcon="{{status.action_icon}}"></mat-icon>
-                {{ status.action_button }}
-              </button>
-        </div>
-      </mat-action-row>
-    </mat-expansion-panel><!-- .listing -->
+        <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+          <div class="left">
+            <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(listing)"
+                    class="small">
+              <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            </button>
+            <button mat-button matTooltip="Clone listing" (click)="addItem(listing.id, true)" class="small">
+              <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+            </button>
+            <button mat-button matTooltip="Edit listing details" (click)="addItem(listing.id)" class="small">
+              <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+              Edit listing
+            </button>
+          </div>
+          <div class="right" *ngFor="let status of getStatus(listing.status)">
+              <button mat-raised-button color="{{ status.action_color }}" matTooltip="{{ status.action_tooltip }}" (click)="action(listing)" >
+                  <!-- listing.action_disabled -->
+                  <mat-icon fontSet="partIcon" fontIcon="{{ status.action_icon }}"></mat-icon>
+                  {{ status.action_button }}
+                </button>
+          </div>
+        </mat-action-row>
+      </mat-expansion-panel><!-- .listing -->
+    </mat-accordion>
 
     <!--div class="subtitle">Unpublished listings (templates)</div-->
 
