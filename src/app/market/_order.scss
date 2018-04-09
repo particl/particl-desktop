@@ -3,6 +3,17 @@
 
 // ------ ORDERS ------ //
 
+.list {
+  .item {
+    .header-wrapper {
+      .photo { // crop orders's image to square
+        min-height: 80px;
+        max-height: 80px;
+      }
+    }
+  }
+}
+
 .order {
   .header {
     min-height: 80px !important;
