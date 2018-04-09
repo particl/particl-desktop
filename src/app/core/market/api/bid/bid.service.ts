@@ -19,13 +19,11 @@ export class BidService {
 
   order(cart: Cart, profile: any): Observable<boolean> {
     let nBidsPlaced = 0;
-    const addressIdOfProfile: number = profile.ShippingAddresses[0].id;
-    const profileId: string = profile.ShippingAddresses[0].profileId;
     return new Observable((observer) => {
       cart.listings.forEach((listing: Listing) => {
         if (listing.hash) {
           // bid for item
-          this.market.call('bid', ['send', listing.hash, addressIdOfProfile, profileId])
+          this.market.call('bid', ['send', listing.hash, profile.id, profile.ShippingAddresses[0].id])
             .subscribe(
               (res) => {
                 this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressIdOfProfile}`);
