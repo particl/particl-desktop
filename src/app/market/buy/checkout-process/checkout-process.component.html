@@ -11,7 +11,9 @@
     </custom-icon>
   </ng-template>
 
-  <!-- Your cart -->
+
+  <!-- =========== YOUR CART =========== -->
+
   <mat-step [stepControl]="cartFormGroup">
     <form [formGroup]="cartFormGroup" class="cart">
       <ng-template matStepLabel>Your cart</ng-template>
@@ -121,7 +123,9 @@
     </form>
   </mat-step>
 
-  <!-- Shipping details -->
+
+  <!-- =========== SHIPPING DETAILS =========== -->
+
   <mat-step [stepControl]="shippingFormGroup">
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
@@ -216,7 +220,9 @@
     </form>
   </mat-step>
 
-  <!-- Confirmation/Payment -->
+
+  <!-- =========== CONFIRM & PLACE ORDER =========== -->
+
   <mat-step [stepControl]="confirmation">
     <form class="confirmation">
       <ng-template matStepLabel>Confirm & Place order</ng-template>
