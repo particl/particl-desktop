@@ -3,6 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
 
 @Component({
   selector: 'app-orders',
@@ -33,16 +34,30 @@ export class OrdersComponent implements OnInit {
     { title: 'Sold',       value: 'sold',    amount: '1' }
   ];
   orders: Array<Bid> = [];
+  public profile: any = {};
 
   filters: any = {
     search:   undefined,
     sort:     undefined
   };
 
-  constructor(private bid: BidService) {}
+  constructor(private bid: BidService, private profileService: ProfileService) {}
 
   ngOnInit() {
-    this.bid.search(this.type === 'sell').subscribe(orders => this.orders = orders);
+    this.loadProfile();
+  }
+
+  loadProfile(): void {
+    this.profileService.get(1).take(1).subscribe(
+      profile => {
+        this.profile = profile;
+        this.loadOrders();
+      });
+  }
+  loadOrders(): void {
+    this.bid.search(this.profile.address).subscribe(orders => {
+      this.orders = orders;
+    });
   }
 
 }
