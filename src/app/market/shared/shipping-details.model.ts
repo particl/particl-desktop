@@ -1,10 +1,12 @@
 export class ShippingDetails {
+  id: number;
+  title: string;
   firstName: string;
   lastName: string;
   addressLine1: string;
   addressLine2: string;
   city: string;
-  zip: string;
+  zipCode: string;
   state: string;
   country: string;
 }

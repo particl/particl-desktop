@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { ShippingDetails } from '../../../../market/shared/shipping-details.model';
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 // TODO: addresses & favourites!
 @Injectable()
 export class ProfileService {
+
+  // @TODO: added for checkout process
+  public shippingDetails: ShippingDetails;
+  public stepper: number;
 
   constructor(
     private market: MarketService,
@@ -31,11 +36,12 @@ export class ProfileService {
   }
 
   addShippingAddress(shippingAddress: any): Observable<any> {
+    console.log('addShippingAddress>>>', shippingAddress);
     return this.market.call('profile', [
       'address', 'add', 1,
       shippingAddress.firstName,
       shippingAddress.lastName,
-      'DEFAULT', // title
+      (shippingAddress.title) ? shippingAddress.title : 'DEFAULT', // title
       shippingAddress.addressLine1,
       shippingAddress.addressLine2,
       shippingAddress.city,
@@ -47,10 +53,11 @@ export class ProfileService {
 
   updateShippingAddress(shippingAddress: any): Observable<any> {
     return this.market.call('profile', [
-      'address', 'update', 1,
+      'address', 'update',
+      shippingAddress.id,
       shippingAddress.firstName,
       shippingAddress.lastName,
-      'DEFAULT', // title
+      (shippingAddress.title) ? shippingAddress.title : 'DEFAULT', // title
       shippingAddress.addressLine1,
       shippingAddress.addressLine2,
       shippingAddress.city,
