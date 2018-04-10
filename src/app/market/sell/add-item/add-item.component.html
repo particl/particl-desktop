@@ -8,8 +8,8 @@
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
 
         <!--hide input -->
-        <input style="display: none;" type="file"
-              accept="image/*" multiple="true" id="fileInput">
+        <input *ngIf="false" type="file"
+               accept="image/*" multiple="true" id="fileInput">
 
         <button mat-button color="primary" (click)="uploadPicture()">
           Upload a photo
@@ -88,7 +88,8 @@
 
       <mat-form-field class="full-width">
         <mat-select placeholder="Country" formControlName="country">
-          <mat-option *ngFor="let country of countryList.getList()" value="{{country.name}}">{{country.name}}</mat-option>
+          <mat-option *ngFor="let country of countryList.getList()" value="{{country.name}}">{{country.name}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 

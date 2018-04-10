@@ -10,6 +10,7 @@ import { SellComponent } from './sell.component';
 import { TemplateService } from '../../core/market/api/template/template.service';
 import { MarketService } from '../../core/market/market.service';
 import { MarketModule } from '../../core/market/market.module';
+import {RpcStateService} from "../../core/rpc/rpc-state/rpc-state.service";
 
 
 describe('SellComponent', () => {
@@ -25,7 +26,7 @@ describe('SellComponent', () => {
         BrowserAnimationsModule,
         MarketModule.forRoot()
       ],
-      providers: [ TemplateService, MarketService ],
+      providers: [ TemplateService, MarketService, RpcStateService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();

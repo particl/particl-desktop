@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule, MatStepperModule } from '@angular/material';
+import { MaterialModule } from '../../../core-ui/material/material.module';
 
 import { CheckoutProcessComponent } from './checkout-process.component';
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 
 describe('CheckoutProcessComponent', () => {
   let component: CheckoutProcessComponent;
@@ -8,6 +11,11 @@ describe('CheckoutProcessComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+      imports: [
+        MaterialModule,
+        MatStepperModule
+      ],
       declarations: [ CheckoutProcessComponent ]
     })
     .compileComponents();

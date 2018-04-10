@@ -8,6 +8,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { PreviewListingComponent } from './preview-listing.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 
 describe('PreviewListingComponent', () => {
   let component: PreviewListingComponent;
@@ -15,6 +16,7 @@ describe('PreviewListingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       declarations: [ PreviewListingComponent ],
       imports: [
         CoreUiModule.forRoot(),

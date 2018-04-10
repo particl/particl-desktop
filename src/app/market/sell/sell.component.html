@@ -77,7 +77,7 @@
 
   </div><!-- .filter -->
 
-   <!-- Listings > list -->
+  <!-- Listings > list -->
   <div class="listings list section" fxFlex="1 1 100%">
 
     <div class="no-results" *ngIf="listings?.length === 0">
@@ -100,7 +100,7 @@
             </div>
           </div>
           <div *ngFor="let status of getStatus(listing.status)">
-              <div class="status {{status.class}}" fxFlex="0 0 140px"><span>&bull;</span>{{status.status}}</div>
+            <div class="status {{status.class}}" fxFlex="0 0 140px"><span>&bull;</span>{{status.status}}</div>
           </div>
         </div>
       </mat-expansion-panel-header>
@@ -147,11 +147,12 @@
           </button>
         </div>
         <div class="right" *ngFor="let status of getStatus(listing.status)">
-            <button mat-raised-button color="{{status.action_color}}" matTooltip="{{status.action_tooltip}}" (click)="action(listing)" >
-                <!-- listing.action_disabled -->
-                <mat-icon fontSet="partIcon" fontIcon="{{status.action_icon}}"></mat-icon>
-                {{ status.action_button }}
-              </button>
+          <button mat-raised-button color="{{status.action_color}}" matTooltip="{{status.action_tooltip}}"
+                  (click)="action(listing)">
+            <!-- listing.action_disabled -->
+            <mat-icon fontSet="partIcon" fontIcon="{{status.action_icon}}"></mat-icon>
+            {{ status.action_button }}
+          </button>
         </div>
       </mat-action-row>
     </mat-expansion-panel><!-- .listing -->
