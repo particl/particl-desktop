@@ -21,7 +21,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsService } from 'app/modals/modals.service';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
 
 @Component({
@@ -77,6 +77,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   setShippingCache() {
     this.updateSteperIndex();
     this.profileService.shippingDetails = this.shippingFormGroup.value;
+    this.profileService.shippingDetails.id = this.selectedAddress.id
   }
 
   formBuild() {
@@ -147,7 +148,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   setValue(address: ShippingDetails) {
-    console.log('catched address', address);
     this.shippingFormGroup.patchValue(address);
   }
 
@@ -155,8 +155,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.profileService.get(1).take(1).subscribe(
       profile => {
         this.profile = profile;
-        console.log('--- profile address ----');
-        console.log(profile);
         const addresses = profile.ShippingAddresses;
         if (addresses.length > 0) {
           this.setSteperIndex();
@@ -206,7 +204,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   setSteperIndex() {
-    // @TODO: set steper completed on 3 index.
+    // @TODO: set stepper completed on 3 index.
     this.stepper.selectedIndex = this.profileService.stepper;
   }
 
