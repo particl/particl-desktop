@@ -26,7 +26,7 @@ export class BidService {
           this.market.call('bid', ['send', listing.hash, profile.id, profile.ShippingAddresses[0].id])
             .subscribe(
               (res) => {
-                this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressIdOfProfile}`);
+                // this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressIdOfProfile}`);
                 if (++nBidsPlaced === cart.listings.length) {
                   observer.next(true);
                   observer.complete();
