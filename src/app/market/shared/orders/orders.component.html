@@ -59,15 +59,15 @@
             <div class="date">
               <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
               <span class="hash {{ order.hash_bg }}" matTooltip="Order hash">{{ order.hash }}</span>
-              Added 2018-02-19 &bull; Updated 2018-02-13
+              Added {{order?.added}} &bull; Updated {{order?.updated}}
             </div>
           </div>
-          <div class="status {{ order.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order.status }}</div>
+          <div class="status {{ order.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order?.status }}</div>
         </div>
       </mat-expansion-panel-header>
 
       <div class="status-info">
-        <p>{{ order.status_info }}</p>
+        <p>{{ order?.messages.status_info }}</p>
       </div>
 
       <div class="detail" fxLayout="row" fxLayoutGap="30px">
@@ -123,7 +123,7 @@
 
       <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
         <div class="left">
-          <button mat-button color="warn" (click)="confirmDeleteListing()" *ngIf="order.allow_reject_order" class="small">
+          <button mat-button color="warn" (click)="confirmDeleteListing()" *ngIf="order?.messages.allow_reject_order" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
             Reject bid &amp; cancel order
           </button>
@@ -144,10 +144,10 @@
         </div>
         <div class="right">
           <!-- TODO: after clicking, show confirmation modal with more info: -->
-          <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}"
-                  [disabled]="order.action_disabled">
+          <button mat-raised-button color="primary" matTooltip="{{ order?.messages.action_tooltip }}"
+                  [disabled]="order?.messages.action_disabled">
             <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
-            {{ order.action_button }}
+            {{ order?.messages.action_button }}
           </button>
         </div>
       </mat-action-row>

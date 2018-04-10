@@ -41,7 +41,7 @@ export class BidService {
 
   search(address: string, type: any): Observable<any> {
     // Params: flag for buy or sell required
-    const params = ["search", "", "", address];
-    return this.market.call("bid", params).map(o => new Bid(o, address, type))
+    const params = ['search', '', '', address];
+    return this.market.call('bid', params).map(o => new Bid(o, address, type))
   }
 }

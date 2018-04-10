@@ -230,3 +230,86 @@ export function dataURItoBlob(dataURI: string) {
   }
   return new Blob([ab], {type: 'image/jpeg'});
 }
+
+export const Messages = {
+  'Bidding': {
+    'buy': {
+      'action_button': 'Waiting for seller',
+      'tooltip': '',
+      'action_disabled': true,
+      'allow_reject_order': true,
+      'status_info': 'Waiting for seller to manually accept your bid'
+    }
+    'sell': {
+      'action_button': 'Accept bid',
+      'tooltip': 'Approve this order and sell to this buyer',
+      'action_disabled': false,
+      'allow_reject_order': true,
+      'status_info': 'Buyer wants to purchase this item - Approve or reject this item to continue'
+    }
+  }
+  'Awaiting': {
+    'buy': {
+      'action_button': 'Make Payment',
+      'tooltip': 'Pay for your order and escrow',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Seller accept your bid - Please proceed to making the payment this will lock the funds to escrow'
+    }
+    'sell': {
+      'action_button': 'Waiting For Buyer',
+      'tooltip': 'Waiting for Buyers Payment',
+      'action_disabled': true,
+      'allow_reject_order': false,
+      'status_info': 'Waiting for buyer to lock the payment into escrow'
+    }
+  }
+  'Escrow': {
+    'buy': {
+      'action_button': 'Waiting For Shipping',
+      'tooltip': '',
+      'action_disabled': true,
+      'allow_reject_order': false,
+      'status_info': 'Funds locked in escrow waiting for seller to process order for shipping'
+    }
+    'sell': {
+      'action_button': 'Marked as Shipped',
+      'tooltip': 'Confirmed that the order has been shipped to buyer',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Buyers funds are locked in escrow, order is ready to ship - when sent, mark order as shipped and awaits its delivery'
+    }
+  }
+  'Shipping': {
+    'buy': {
+      'action_button': 'Mark as Delivered',
+      'tooltip': 'Confirmed that you have received the order',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Orders has shipped - when you receive it, mark it as delivered and escrow will be released automatically'
+    }
+    'sell': {
+      'action_button': 'Waiting for Delivery',
+      'tooltip': 'Awaiting confirmation of Successfull delivery by the buyer',
+      'action_disabled': true,
+      'allow_reject_order': false,
+      'status_info': 'Order sent to buyer, waiting for buyer to confirm'
+    }
+  }
+  'Complete': {
+    'buy': {
+      'action_button': 'Order Complete',
+      'tooltip': '',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Successfully finalized order'
+    }
+    'sell': {
+      'action_button': 'Order Complete',
+      'tooltip': '',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Order delivery confirmed by buyer'
+    }
+  }
+}
