@@ -237,7 +237,7 @@ export const Messages = {
       'action_button': 'Waiting for seller',
       'tooltip': '',
       'action_disabled': true,
-      'allow_reject_order': true,
+      'allow_reject_order': false,
       'status_info': 'Waiting for seller to manually accept your bid'
     }
     'sell': {
