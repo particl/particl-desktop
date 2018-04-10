@@ -73,9 +73,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.setShippingCache();
   }
 
-  //@TODO create saparate service for checkout process.
+  // @TODO create separate service for checkout process.
   setShippingCache() {
-    this.setSteperIndex();
+    this.updateSteperIndex();
     this.profileService.shippingDetails = this.shippingFormGroup.value;
   }
 
@@ -200,12 +200,17 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.log.d(`Error while placing an order`);
     });
   }
-  
+
   clearCache() {
     this.profileService.shippingDetails = new ShippingDetails()
   }
 
   setSteperIndex() {
+    // @TODO: set steper completed on 3 index.
+    this.stepper.selectedIndex = this.profileService.stepper;
+  }
+
+  updateSteperIndex() {
     this.profileService.stepper = this.stepper.selectedIndex;
   }
 }

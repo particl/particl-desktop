@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear [@.disabled]="true" class="no-bg container-block" #stepper >
+<mat-horizontal-stepper linear [@.disabled]="true" class="no-bg container-block" #stepper>
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
   <ng-template matStepperIcon="edit">
     <custom-icon>
@@ -218,7 +218,7 @@
   </mat-step>
 
   <!-- Confirmation/Payment -->
-  <mat-step [stepControl]="confirmation">
+  <mat-step [stepControl]="confirmation" >
     <form class="confirmation">
       <ng-template matStepLabel>Confirm & Place order</ng-template>
       <table class="cart-items summary">

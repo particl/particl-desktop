@@ -11,7 +11,7 @@ export class ProfileService {
 
   // @TODO: added for checkout process
   public shippingDetails: ShippingDetails;
-  public stepper: number;
+  public stepper: number = 0;
 
   constructor(
     private market: MarketService,
