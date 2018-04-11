@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { ListingService } from '../../../core/market/api/listing/listing.service';
 
 @Component({
   selector: 'app-orders',
@@ -33,7 +34,7 @@ export class OrdersComponent implements OnInit {
     { title: 'Shipped',    value: 'shipped', amount: '1' },
     { title: 'Sold',       value: 'sold',    amount: '1' }
   ];
-  orders: Bid;
+  public orders: Bid[];
   public profile: any = {};
 
   filters: any = {
@@ -41,7 +42,10 @@ export class OrdersComponent implements OnInit {
     sort:     undefined
   };
 
-  constructor(private bid: BidService, private profileService: ProfileService) {}
+  constructor(
+    private bid: BidService,
+    private profileService: ProfileService,
+    private listingService: ListingService) { }
 
   ngOnInit() {
     this.loadProfile();
@@ -54,8 +58,20 @@ export class OrdersComponent implements OnInit {
         this.loadOrders();
       });
   }
+
   loadOrders(): void {
-    this.bid.search(this.profile.address, this.type).take(1).subscribe(orders => this.orders = orders);
+    this.bid.search(this.profile.address, this.type).take(1).subscribe(orders => {
+      console.log('called >>>>>>>>>>>>>>>>>');
+      this.orders = orders;
+    });
+  }
+
+  getItemDetails(order: Bid) {
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ test inddfdf @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    // this.listingService.get(order.listingItemId).subscribe(response =>{
+    // //  console.log(response);
+    //  // order.listings = response;
+    // });
   }
 
 }

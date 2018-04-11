@@ -13,6 +13,7 @@ import { AddItemComponent } from './sell/add-item/add-item.component';
 import { FavoriteComponent } from './shared/favorite/favorite.component';
 import { OrdersComponent } from './shared/orders/orders.component';
 import { CheckoutProcessComponent } from './buy/checkout-process/checkout-process.component';
+import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { CheckoutProcessComponent } from './buy/checkout-process/checkout-proces
     AddItemComponent,
     FavoriteComponent,
     OrdersComponent,
-    CheckoutProcessComponent
+    CheckoutProcessComponent,
+    OrderItemComponent
   ],
   entryComponents: [
     PreviewListingComponent

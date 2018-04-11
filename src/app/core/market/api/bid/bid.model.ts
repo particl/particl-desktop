@@ -1,8 +1,13 @@
 import * as _ from 'lodash';
 import { Amount, DateFormatter, Messages } from 'app/core/util/utils';
+import { Listing
+} from '../listing/listing.model';
 
 export class Bid {
   public orderItems: Array<any>;
+  //  @TODO replace with product model
+  public listing: Listing;
+  public listingItemId: number;
 
   constructor(public orders: any, public address: any, public type: any) {
     this.setFilter();
