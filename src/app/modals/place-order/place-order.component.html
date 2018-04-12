@@ -1,20 +1,67 @@
-<div mat-dialog-title class="title">Place order</div>
-<mat-dialog-content class="modal-content">
-  <p>
-    Are you sure you want to place this bid?
-  </p>
-  <p class="widget-help">
-    Before paying for this order, your bid needs to be accepted by the Seller.<br>
-    After it is accepted, you can pay for the order in Buy > Orders.
-  </p>
-</mat-dialog-content>
-<mat-dialog-actions fxLayoutAlign="end center">
-  <button type="button" mat-button mat-dialog-close>
-    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-    No, cancel order
-  </button>
-  <button mat-raised-button color="primary" (click)="placeOrder()">
-    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-    Yes, place order
-  </button>
-</mat-dialog-actions>
+<div *ngIf="type === 'place'">
+  <div mat-dialog-title class="title">Place order</div>
+  <mat-dialog-content class="modal-content">
+    <p>
+      Are you sure you want to place this bid?
+    </p>
+    <p class="widget-help">
+      Before paying for this order, your bid needs to be accepted by the Seller.<br>
+      After it is accepted, you can pay for the order in Buy > Orders.
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      No, cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="placeOrder()">
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Yes, place order
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="type === 'accept'">
+  <div mat-dialog-title class="title">Accept Bid</div>
+  <mat-dialog-content class="modal-content">
+    <p>
+      Are you sure you want to accept this bid?
+    </p>
+    <p class="widget-help">
+      Before the payment can be made, you need to accept the bid made by the Buyer.
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      No, cancel 
+    </button>
+    <button mat-raised-button color="primary" (click)="placeOrder()">
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Yes, accept bid
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="type === 'reject'">
+  <div mat-dialog-title class="title">Reject Bid</div>
+  <mat-dialog-content class="modal-content">
+    <p>
+      Are you sure you want to reject this bid?
+    </p>
+    <p class="widget-help">
+      Before the payment can be made, you need to accept the bid made by the Buyer.<br>
+      By rejecting this bid, the Buyer will not be able to purchase your item.
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      No, cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="placeOrder()">
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Yes, reject bid
+    </button>
+  </mat-dialog-actions>
+</div>

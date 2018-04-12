@@ -6,7 +6,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
   styleUrls: ['./place-order.component.scss']
 })
 export class PlaceOrderComponent implements OnInit {
-
+  public type: string = '';
   constructor(public _dialogRef: MatDialogRef<PlaceOrderComponent>) { }
 
   ngOnInit() {
