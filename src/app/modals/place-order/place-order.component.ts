@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 @Component({
   selector: 'app-place-order',
   templateUrl: './place-order.component.html',
@@ -7,12 +7,14 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 })
 export class PlaceOrderComponent implements OnInit {
   public type: string = '';
+  @Output() isConfirmed: EventEmitter<string> = new EventEmitter();
   constructor(public _dialogRef: MatDialogRef<PlaceOrderComponent>) { }
 
   ngOnInit() {
   }
 
-  placeOrder() {
+  placeOrder(): void {
     this._dialogRef.close();
+    this.isConfirmed.emit();
   }
 }
