@@ -146,6 +146,7 @@ export class CheckoutProcessComponent implements OnInit {
 
   placeOrderModal(): void {
     const dialogRef = this.dialog.open(PlaceOrderComponent);
+    dialogRef.componentInstance.type = 'place';
     dialogRef.afterClosed().subscribe((res) => {
       if (res === undefined) {
         this.placeOrder();
