@@ -42,7 +42,9 @@ export class OrderItemComponent implements OnInit {
     switch (this.order.status) {
       case 'Bidding':
         // run accept command for seller
-        this.order.type === 'sell' ? this.openPopup() : '';
+        if (this.order.type === 'sell') {
+          this.openPopup()
+        }
         break;
 
       case 'Awaiting':
@@ -66,11 +68,7 @@ export class OrderItemComponent implements OnInit {
   openPopup() {
     const dialogRef = this.dialog.open(PlaceOrderComponent);
     dialogRef.componentInstance.type = 'accept';
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res === undefined) {
-        this.checkForWallet();
-      }
-      });
+    dialogRef.componentInstance.isConfirmed.subscribe(() => this.checkForWallet());
   }
 
   checkForWallet() {
