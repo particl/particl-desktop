@@ -48,4 +48,9 @@ export class BidService {
     const params = ['accept', hash, id];
     return this.market.call('bid', params);
   }
+
+  rejectBidCommand(hash: string, id: number): Observable<any> {
+    const params = ['reject', hash, id];
+    return this.market.call('bid', params);
+  }
 }
