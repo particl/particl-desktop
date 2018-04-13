@@ -232,7 +232,7 @@ export function dataURItoBlob(dataURI: string) {
 }
 
 export const Messages = {
-  'Bidding': {
+  'BIDDING': {
     'buy': {
       'action_button': 'Waiting for seller',
       'tooltip': '',
@@ -246,9 +246,10 @@ export const Messages = {
       'action_disabled': false,
       'allow_reject_order': true,
       'status_info': 'Buyer wants to purchase this item - Approve or reject this item to continue'
-    }
+    },
+    'status' : 'Bidding'
   },
-  'Awaiting': {
+  'AWAITING_ESCROW': {
     'buy': {
       'action_button': 'Make Payment',
       'tooltip': 'Pay for your order and escrow',
@@ -262,9 +263,10 @@ export const Messages = {
       'action_disabled': true,
       'allow_reject_order': false,
       'status_info': 'Waiting for buyer to lock the payment into escrow'
-    }
+    },
+    'status' : 'Awaiting (Escrow)'
   },
-  'Escrow': {
+  'ESCROW_LOCKED': {
     'buy': {
       'action_button': 'Waiting For Shipping',
       'tooltip': '',
@@ -278,9 +280,10 @@ export const Messages = {
       'action_disabled': false,
       'allow_reject_order': false,
       'status_info': 'Buyers funds are locked in escrow, order is ready to ship - when sent, mark order as shipped and awaits its delivery'
-    }
+    },
+    'status' : 'Escrow'
   },
-  'Shipping': {
+  'SHIPPING': {
     'buy': {
       'action_button': 'Mark as Delivered',
       'tooltip': 'Confirmed that you have received the order',
@@ -294,9 +297,10 @@ export const Messages = {
       'action_disabled': true,
       'allow_reject_order': false,
       'status_info': 'Order sent to buyer, waiting for buyer to confirm'
-    }
+    },
+    'status' : 'Shipping'
   },
-  'Complete': {
+  'COMPLETE': {
     'buy': {
       'action_button': 'Order Complete',
       'tooltip': '',
@@ -310,6 +314,7 @@ export const Messages = {
       'action_disabled': false,
       'allow_reject_order': false,
       'status_info': 'Order delivery confirmed by buyer'
-    }
+    },
+    'status' : 'Complete'
   }
 }

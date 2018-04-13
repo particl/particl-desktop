@@ -93,15 +93,16 @@ export class OrderItemComponent implements OnInit {
   }
 
   acceptBid() {
-    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).subscribe(()=> {
+    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(()=> {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
     });
   }
 
   rejectBid() {
-    this.bid.rejectBidCommand(this.order.listing.hash, this.order.id).subscribe(res => {
+    this.bid.rejectBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
     });
+
   }
 
 }

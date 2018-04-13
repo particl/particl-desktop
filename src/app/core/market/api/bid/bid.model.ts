@@ -36,10 +36,11 @@ export class Bid {
   // Required Testing on different Scenarios
   private setOrderKeys(ord: any) {
     // once the order has been accepted then we get status in orderItem
-    ord.status = ord.OrderItem.status ? ord.OrderItem.status : 'Bidding';
+    const status = ord.OrderItem.status ? ord.OrderItem.status : 'BIDDING';
     ord.type = this.type;
     ord.added = new DateFormatter(new Date(ord.createdAt)).dateFormatter(true);
     ord.updated = new DateFormatter(new Date(ord.updatedAt)).dateFormatter(true);
-    ord.messages = Messages[ord.status][this.type];
+    ord.messages = Messages[status][this.type];
+    ord.status = Messages[status].status;
   }
 }
