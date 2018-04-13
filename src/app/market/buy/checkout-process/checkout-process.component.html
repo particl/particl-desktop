@@ -57,8 +57,7 @@
               </div>
             </td>
             <td class="price cell">
-              {{listing.basePrice?.getIntegerPart()}}.
-              <small>{{listing.basePrice?.getFractionalPart()}}</small>
+              {{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
             <!--<td class="quantity cell">1 &times;</td>-->
@@ -73,8 +72,7 @@
                  <button mat-button class="small">+</button>
                </div>
              </td> -->
-            <td class="total cell">{{listing.basePrice?.getIntegerPart()}}.
-              <small>{{listing.basePrice?.getFractionalPart()}}</small>
+            <td class="total cell">{{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
             <td class="remove">
@@ -245,17 +243,14 @@
             </div>
           </td>
           <td class="price cell">
-            {{listing.basePrice?.getIntegerPart()}}.
-            <small>{{listing.basePrice?.getFractionalPart()}}</small>
+            {{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
-          <td class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}.
-            <small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
+          <td class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}.<small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
             PART
           </td>
           <!--<td class="quantity cell">1 &times;</td>-->
-          <td class="total cell">{{listing.internationalTotal?.getIntegerPart()}}.
-            <small>{{listing.internationalTotal?.getFractionalPart()}}</small>
+          <td class="total cell">{{listing.internationalTotal?.getIntegerPart()}}.<small>{{listing.internationalTotal?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>

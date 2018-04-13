@@ -78,14 +78,14 @@
   </div><!-- .filter -->
 
    <!-- Listings > list -->
-  <div class="listings list section" fxFlex="1 1 100%">
+  <div class="listings section" fxFlex="1 1 100%">
 
     <div class="no-results" *ngIf="listings?.length === 0">
       You don't have any market listings yet
     </div>
     <!--div class="subtitle first">Published listings</div-->
 
-    <mat-expansion-panel class="listing item no-padding" *ngFor="let listing of listings">
+    <mat-expansion-panel class="listing list-item no-padding" *ngFor="let listing of listings">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
           <div class="photo" fxFlex="0 0 110px">
