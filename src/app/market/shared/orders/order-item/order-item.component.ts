@@ -82,7 +82,8 @@ export class OrderItemComponent implements OnInit {
   }
 
   acceptBid() {
-    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).subscribe(res => console.log(res));
+    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).
+      subscribe(res => console.log(res));
   }
 
 }
