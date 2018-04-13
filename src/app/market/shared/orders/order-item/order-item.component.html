@@ -16,7 +16,7 @@
       <div class="status {{ order.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order?.status }}</div>
     </div>
   </mat-expansion-panel-header>
-  
+
   <div class="status-info">
     <p>{{ order?.messages.status_info }}</p>
   </div>
@@ -88,7 +88,7 @@
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
-      <button mat-button color="warn" (click)="reject_bid()" *ngIf="order?.messages.allow_reject_order"
+      <button mat-button color="warn" (click)="callBid('reject')" *ngIf="order?.messages.allow_reject_order"
               class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
         Reject bid &amp; cancel order

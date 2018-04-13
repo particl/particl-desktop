@@ -10,6 +10,7 @@ import { ModalsService } from 'app/modals/modals.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
 import { PlaceOrderComponent } from '../../../../modals/place-order/place-order.component';
+import {SnackbarService} from "../../../../core/snackbar/snackbar.service";
 @Component({
   selector: 'app-order-item',
   templateUrl: './order-item.component.html',
@@ -24,7 +25,8 @@ export class OrderItemComponent implements OnInit {
     private bid: BidService,
     private rpcState: RpcStateService,
     private modals: ModalsService,
-    public dialog: MatDialog
+    private dialog: MatDialog,
+    private snackbarService: SnackbarService
   ) { }
 
   ngOnInit() {
@@ -42,8 +44,8 @@ export class OrderItemComponent implements OnInit {
     switch (this.order.status) {
       case 'Bidding':
         // run accept command for seller
-        if (this.order.type === 'sell') {
-          this.openPopup()
+        if (this.order.type === 'sell' || true) {
+          this.callBid('accept')
         }
         break;
 
@@ -65,25 +67,42 @@ export class OrderItemComponent implements OnInit {
     }
   }
 
-  openPopup() {
+  // @TODO: refactor method for all calls
+  callBid(type: string) {
     const dialogRef = this.dialog.open(PlaceOrderComponent);
-    dialogRef.componentInstance.type = 'accept';
-    dialogRef.componentInstance.isConfirmed.subscribe(() => this.checkForWallet());
+    dialogRef.componentInstance.type = type;
+    dialogRef.componentInstance.isConfirmed.subscribe(() => this.checkForWallet(type));
   }
 
-  checkForWallet() {
+  checkForWallet(type: string) {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.acceptBid.bind(this)});
+      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callAction.bind(this, type)});
     } else {
       // wallet already unlocked
+      this.callAction(type);
+    }
+  }
+
+  callAction(type: string) {
+    if (type === 'accept') {
       this.acceptBid();
+    } else if (type === 'reject'){
+      this.rejectBid();
     }
   }
 
   acceptBid() {
-    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).
-      subscribe(res => console.log(res));
+    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(()=> {
+      this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
+    });
+  }
+
+  rejectBid() {
+    this.bid.rejectBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(res => {
+      this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
+    });
+
   }
 
 }
