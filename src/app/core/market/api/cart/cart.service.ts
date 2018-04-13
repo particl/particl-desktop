@@ -55,10 +55,10 @@ export class CartService {
 
   clearCart(): Observable<any> {
     this.log.d(`Clearing cart with id=1`);
-    return this.market.call('cart', ['clear', 1]).do(this.updateCart, this.snackbar.open)
+    return this.market.call('cart', ['clear', 1]).do(this.updateCart.bind(this), this.snackbar.open)
   }
 
-  updateCart = () => {
+  updateCart(): void {
     this.marketState.registerStateCall('cartitem', null, ['list', 1, true])
   }
 
