@@ -90,7 +90,7 @@ export class CheckoutProcessComponent implements OnInit {
 
   removeFromCart(shoppingCartId: number): void {
     this.cartService.removeItem(shoppingCartId).take(1)
-      .subscribe(this.getCart);
+      .subscribe(this.getCart.bind(this));
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -102,8 +102,7 @@ export class CheckoutProcessComponent implements OnInit {
     });
   }
 
-  // Should follow es6
-  getCart = () => {
+  getCart(): void {
     this.cartService.getCart().take(1).subscribe(cart => this.cart = cart);
   }
 
