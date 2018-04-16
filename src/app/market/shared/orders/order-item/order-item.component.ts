@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { Bid } from '../../../../core/market/api/bid/bid.model';
@@ -10,7 +10,7 @@ import { ModalsService } from 'app/modals/modals.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
 import { PlaceOrderComponent } from '../../../../modals/place-order/place-order.component';
-import {SnackbarService} from "../../../../core/snackbar/snackbar.service";
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 @Component({
   selector: 'app-order-item',
   templateUrl: './order-item.component.html',
@@ -44,25 +44,30 @@ export class OrderItemComponent implements OnInit {
     switch (this.order.status) {
       case 'Bidding':
         // run accept command for seller
-        if (this.order.type === 'sell' || true) {
+        if (this.order.type === 'sell') {
           this.callBid('accept')
         }
         break;
 
-      case 'Awaiting':
-        // Awaiting call
+      case 'Awaiting (Escrow)':
+        // Awaiting call with popup
+        if (this.order.type === 'buy') {
+        }
         break;
 
       case 'Escrow':
-        // Escrow release call
+        // Escrow release call with popup
+        if (this.order.type === 'sell') {
+        }
         break;
 
       case 'Shipping':
-        // shipping call
+        // shipping call with popup
+        if (this.order.type === 'buy') {
+        }
         break;
 
       default:
-        // code...
         break;
     }
   }
@@ -87,20 +92,24 @@ export class OrderItemComponent implements OnInit {
   callAction(type: string) {
     if (type === 'accept') {
       this.acceptBid();
-    } else if (type === 'reject'){
+    } else if (type === 'reject') {
       this.rejectBid();
     }
   }
 
   acceptBid() {
-    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(()=> {
+    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(() => {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
+    }, (error) => {
+      this.snackbarService.open(`${error}`);
     });
   }
 
   rejectBid() {
     this.bid.rejectBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
+    }, (error) => {
+      this.snackbarService.open(`${error}`);
     });
 
   }
