@@ -65,3 +65,25 @@
     </button>
   </mat-dialog-actions>
 </div>
+
+<div *ngIf="type === 'escrow'">
+  <div mat-dialog-title class="title">Escrow</div>
+  <mat-dialog-content class="modal-content">
+    <p>
+      some text related to escrow
+    </p>
+    <p class="widget-help">
+     some text related to escrow
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      No, cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="placeOrder()">
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Yes, escrow release
+    </button>
+  </mat-dialog-actions>
+</div>

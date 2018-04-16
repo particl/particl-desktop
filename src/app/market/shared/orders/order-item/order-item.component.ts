@@ -10,6 +10,7 @@ import { ModalsService } from 'app/modals/modals.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
 import { PlaceOrderComponent } from '../../../../modals/place-order/place-order.component';
+import { ShippingComponent } from '../../../../modals/shipping/shipping.component';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 @Component({
   selector: 'app-order-item',
@@ -58,12 +59,14 @@ export class OrderItemComponent implements OnInit {
       case 'Escrow':
         // Escrow release call with popup
         if (this.order.type === 'sell') {
+          this.callBid('escrow');
         }
         break;
 
       case 'Shipping':
         // shipping call with popup
         if (this.order.type === 'buy') {
+          this.callBid('shipping');
         }
         break;
 
@@ -74,7 +77,7 @@ export class OrderItemComponent implements OnInit {
 
   // @TODO: refactor method for all calls
   callBid(type: string) {
-    const dialogRef = this.dialog.open(PlaceOrderComponent);
+    const dialogRef = this.dialog.open(type === 'shipping' ? ShippingComponent : PlaceOrderComponent);
     dialogRef.componentInstance.type = type;
     dialogRef.componentInstance.isConfirmed.subscribe(() => this.checkForWallet(type));
   }
@@ -94,6 +97,10 @@ export class OrderItemComponent implements OnInit {
       this.acceptBid();
     } else if (type === 'reject') {
       this.rejectBid();
+    } else if (type === 'shipping') {
+      // Shipping Call
+    } else if (type === 'escrow') {
+      // Escrow release command
     }
   }
 
