@@ -51,4 +51,9 @@ export class BidService {
     const params = ['reject', hash, id];
     return this.market.call('bid', params);
   }
+
+  escrowReleaseCommand(id: number, memo: string): Observable<any> {
+    const params = ['release', id, memo];
+    return this.market.call('escrow', params);
+  }
 }

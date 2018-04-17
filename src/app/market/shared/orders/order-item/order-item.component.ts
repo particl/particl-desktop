@@ -51,20 +51,20 @@ export class OrderItemComponent implements OnInit {
         break;
 
       case 'Awaiting (Escrow)':
-        // Awaiting call with popup
+        // Escrow lock call with popup
         if (this.order.type === 'buy') {
+          this.callBid('escrowLock');
         }
         break;
 
       case 'Escrow':
-        // Escrow release call with popup
         if (this.order.type === 'sell') {
           this.callBid('escrow');
         }
         break;
 
       case 'Shipping':
-        // shipping call with popup
+        // escrow release call with popup
         if (this.order.type === 'buy') {
           this.callBid('shipping');
         }
@@ -97,10 +97,11 @@ export class OrderItemComponent implements OnInit {
       this.acceptBid();
     } else if (type === 'reject') {
       this.rejectBid();
-    } else if (type === 'shipping') {
-      // Shipping Call
     } else if (type === 'escrow') {
-      // Escrow release command
+      // Escrow Release Command
+      this.escrowRelease();
+    } else if (type === 'escrowLock') {
+      // Escrow lock command
     }
   }
 
@@ -115,6 +116,16 @@ export class OrderItemComponent implements OnInit {
   rejectBid() {
     this.bid.rejectBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
+    }, (error) => {
+      this.snackbarService.open(`${error}`);
+    });
+
+  }
+
+  // Not sure if memo is required = 'Release the funds, greetings buyer'
+  escrowRelease() {
+    this.bid.escrowReleaseCommand(this.order.id, 'Release the funds, greetings buyer').take(1).subscribe(res => {
+      this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
     }, (error) => {
       this.snackbarService.open(`${error}`);
     });
