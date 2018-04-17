@@ -1,10 +1,32 @@
-<div>
-  <div mat-dialog-title class="title">Shipping</div>
-  <mat-dialog-content class="modal-content">
-    <p class="widget-help">
-      we are shipping
-    </p>
-  </mat-dialog-content>
-  <mat-dialog-actions fxLayoutAlign="end center">
-  </mat-dialog-actions>
-</div>
+<div mat-dialog-title class="title">Confirm order as shipped</div>
+
+
+<mat-dialog-content class="modal-content">
+
+  <p>
+    By clicking the "Order shipped" button, you confirm that you already sent the order to the Buyer.<br>
+    It is recommended to enter the tracking information below (if available).
+  </p>
+
+  <mat-form-field class="full-width" floatPlaceholder="never">
+    <input matInput type="text" placeholder="Additional shipping info (e.g. tracking number)">
+  </mat-form-field>
+
+  <p class="widget-help">
+    Please note that if you haven't shipped the order yet, you shouldn't confirm this and it will result<br>
+    in losing your money locked in escrow.
+  </p>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button color="warn" mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Order shipped
+  </button>
+</mat-dialog-actions>
