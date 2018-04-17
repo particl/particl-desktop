@@ -47,8 +47,8 @@
         </tr>
         <tr>
           <th>Shipping</th>
-          <td>3.
-            <small>012</small>
+          <td>{{order.listing?.domesticShippingPrice?.getIntegerPart()}}.
+            <small>{{order.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
@@ -61,9 +61,9 @@
         </tr>
         <tr>
           <th>Total price</th>
-          <td>{{order.listing?.domesticShippingPrice?.getIntegerPart()}}
-            .
-            <small>{{order.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
+          <td>
+            {{order.listing?.totalAmount?.getIntegerPart()}}.
+            <small>{{order.listing?.totalAmount?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
