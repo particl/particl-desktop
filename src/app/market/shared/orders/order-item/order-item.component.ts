@@ -97,7 +97,7 @@ export class OrderItemComponent implements OnInit {
       this.acceptBid();
     } else if (type === 'reject') {
       this.rejectBid();
-    } else if (type === 'escrow') {
+    } else if (type === 'escrow' || type === 'shipping') {
       // Escrow Release Command
       this.escrowRelease();
     } else if (type === 'escrowLock') {
