@@ -12,6 +12,7 @@ import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { PlaceOrderComponent } from '../../../../modals/place-order/place-order.component';
 import { ShippingComponent } from '../../../../modals/shipping/shipping.component';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
+import { SendConfirmationModalComponent } from '../../../../wallet/wallet/send/send-confirmation-modal/send-confirmation-modal.component';
 @Component({
   selector: 'app-order-item',
   templateUrl: './order-item.component.html',
@@ -130,6 +131,15 @@ export class OrderItemComponent implements OnInit {
       this.snackbarService.open(`${error}`);
     });
 
+  }
+
+  openPaymentConfirmationModal() {
+    // @TODO need to be sets trasaction fee.
+    const dialogRef = this.dialog.open(SendConfirmationModalComponent);
+
+    dialogRef.componentInstance.onConfirm().subscribe(() => {
+      // do other action after confirm
+    });
   }
 
 }
