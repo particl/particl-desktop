@@ -206,6 +206,20 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
     Typography
 \* ------------------------------- */
 
+// ------ <kbd> ------ //
+
+kbd {
+  font-size: 95%;
+  line-height: 1.3;
+  font-family: inherit;
+  border: 1px solid silver;
+  border-radius: 2px;
+  background: #fafafa;
+  display: inline-block;
+  padding: 2px 5px;
+  margin: 0 2px;
+}
+
 // ------ Page subtitles ------ //
 
 .mat-list.list-data .mat-subheader { // "H2" subtitles in pages (e.g. "(un)used addresses" in Receive
