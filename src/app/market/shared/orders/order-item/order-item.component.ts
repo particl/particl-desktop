@@ -148,7 +148,7 @@ export class OrderItemComponent implements OnInit {
 
   escrowLock() {
     // <orderItemId> <nonce> <memo> , @TODO send nonce ?
-    this.bid.escrowLockCommand(this.order.id, null, 'Release the funds').take(1).subscribe(res => {
+    this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').take(1).subscribe(res => {
       this.snackbarService.open(`Payment done for order ${this.order.listing.title}`);
       this.order.OrderItem.status = 'ESCROW_LOCKED';
       this.order = setOrderKeys(this.order, this.order.type)
