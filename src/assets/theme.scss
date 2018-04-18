@@ -6,17 +6,6 @@
     UI Elements
 \* ------------------------------- */
 
-// ------ HELP DESCRIPTION ------ //
-
-.widget-help {
-  @extend %disable-select;
-  color: $text-muted;
-  font-size: 11px;
-  margin-bottom: 25px;
-  cursor: help;
-}
-
-
 // ------ ADDRESSES ------ //
 
 .address, .address-label {
@@ -205,6 +194,22 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 /* ------------------------------- *\
     Typography
 \* ------------------------------- */
+
+// ------ PARAGRAPH STYLES ------ //
+
+// Highlighted "lead" paragraphs
+.lead {
+  font-size: 15px;
+}
+
+// Help descriptions
+.widget-help {
+  @extend %disable-select;
+  color: $text-muted;
+  font-size: 11px;
+  margin-bottom: 25px;
+  cursor: help;
+}
 
 // ------ <kbd> ------ //
 
