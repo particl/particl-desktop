@@ -54,7 +54,7 @@ export class OrderItemComponent implements OnInit {
       case 'Awaiting (Escrow)':
         // Escrow lock call with popup
         if (this.order.type === 'buy') {
-          this.callBid('escrowLock');
+          this.openPaymentConfirmationModal();
         }
         break;
 
@@ -98,17 +98,16 @@ export class OrderItemComponent implements OnInit {
       this.acceptBid();
     } else if (type === 'reject') {
       this.rejectBid();
-    } else if (type === 'escrow' || type === 'shipping') {
+    } else {
       // Escrow Release Command
       this.escrowRelease(type);
-    } else if (type === 'escrowLock') {
-      // Escrow lock command
     }
   }
 
   acceptBid() {
     this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(() => {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
+      // Reload same order without calling api
       this.order.OrderItem.status = 'AWAITING_ESCROW';
       this.order = setOrderKeys(this.order, this.order.type)
     }, (error) => {
@@ -143,6 +142,18 @@ export class OrderItemComponent implements OnInit {
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       // do other action after confirm
+      this.escrowLock();
+    });
+  }
+
+  escrowLock() {
+    // <orderItemId> <nonce> <memo> , @TODO send nonce ?
+    this.bid.escrowLockCommand(this.order.id, null, 'Release the funds').take(1).subscribe(res => {
+      this.snackbarService.open(`Payment done for order ${this.order.listing.title}`);
+      this.order.OrderItem.status = 'ESCROW_LOCKED';
+      this.order = setOrderKeys(this.order, this.order.type)
+    }, (error) => {
+      this.snackbarService.open(`${error}`);
     });
   }
 
