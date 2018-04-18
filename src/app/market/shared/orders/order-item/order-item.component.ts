@@ -21,7 +21,7 @@ import { SendConfirmationModalComponent } from '../../../../wallet/wallet/send/s
 export class OrderItemComponent implements OnInit {
 
   @Input() order: Bid;
-
+  trackNumber: string;
   constructor(
     private listingService: ListingService,
     private bid: BidService,
@@ -80,7 +80,10 @@ export class OrderItemComponent implements OnInit {
   callBid(type: string) {
     const dialogRef = this.dialog.open(type === 'shipping' ? ShippingComponent : PlaceOrderComponent);
     dialogRef.componentInstance.type = type;
-    dialogRef.componentInstance.isConfirmed.subscribe(() => this.checkForWallet(type));
+    dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
+      this.trackNumber = res ? res : ''; 
+      this.checkForWallet(type);
+    });
   }
 
   checkForWallet(type: string) {
@@ -124,9 +127,8 @@ export class OrderItemComponent implements OnInit {
 
   }
 
-  // Not sure if memo is required = 'Release the funds, greetings buyer'
   escrowRelease(ordStatus: string) {
-    this.bid.escrowReleaseCommand(this.order.id, 'Release the funds, greetings buyer').take(1).subscribe(res => {
+    this.bid.escrowReleaseCommand(this.order.id, this.trackNumber).take(1).subscribe(res => {
       this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
       this.order.OrderItem.status = ordStatus === 'escrow' ? 'SHIPPING' : 'COMPLETE';
       this.order = setOrderKeys(this.order, this.order.type)
