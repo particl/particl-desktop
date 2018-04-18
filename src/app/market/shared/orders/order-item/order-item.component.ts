@@ -54,7 +54,8 @@ export class OrderItemComponent implements OnInit {
       case 'Awaiting (Escrow)':
         // Escrow lock call with popup
         if (this.order.type === 'buy') {
-          this.openPaymentConfirmationModal();
+          // this.openPaymentConfirmationModal();
+          this.escrowLock();
         }
         break;
 

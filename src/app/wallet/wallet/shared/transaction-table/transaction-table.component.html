@@ -34,7 +34,7 @@
 
       <!-- Category icon -->
       <mat-panel-title fxFlex="1 0 175px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon"
-                        [ngSwitch]="tx.category">
+                        [ngSwitch]="tx.getCategory()">
         <span *ngSwitchCase="'stake'" class="tx-type staked">
           <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>Staked
         </span>
@@ -43,6 +43,11 @@
         </span>
         <span *ngSwitchCase="'send'" class="tx-type sent">
           <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>Sent
+          <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
+                    matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
+        </span>
+        <span *ngSwitchCase="'multisig'" class="tx-type sent">
+          <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>Multisig / escrow
           <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
         </span>
