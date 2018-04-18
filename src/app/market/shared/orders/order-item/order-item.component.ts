@@ -21,7 +21,7 @@ import { SendConfirmationModalComponent } from '../../../../wallet/wallet/send/s
 export class OrderItemComponent implements OnInit {
 
   @Input() order: Bid;
-
+  trackNumber: string;
   constructor(
     private listingService: ListingService,
     private bid: BidService,
@@ -54,7 +54,8 @@ export class OrderItemComponent implements OnInit {
       case 'Awaiting (Escrow)':
         // Escrow lock call with popup
         if (this.order.type === 'buy') {
-          this.callBid('escrowLock');
+          // this.openPaymentConfirmationModal();
+          this.escrowLock();
         }
         break;
 
@@ -80,7 +81,10 @@ export class OrderItemComponent implements OnInit {
   callBid(type: string) {
     const dialogRef = this.dialog.open(type === 'shipping' ? ShippingComponent : PlaceOrderComponent);
     dialogRef.componentInstance.type = type;
-    dialogRef.componentInstance.isConfirmed.subscribe(() => this.checkForWallet(type));
+    dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
+      this.trackNumber = res ? res : '';
+      this.checkForWallet(type);
+    });
   }
 
   checkForWallet(type: string) {
@@ -98,17 +102,16 @@ export class OrderItemComponent implements OnInit {
       this.acceptBid();
     } else if (type === 'reject') {
       this.rejectBid();
-    } else if (type === 'escrow' || type === 'shipping') {
+    } else {
       // Escrow Release Command
       this.escrowRelease(type);
-    } else if (type === 'escrowLock') {
-      // Escrow lock command
     }
   }
 
   acceptBid() {
     this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(() => {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
+      // Reload same order without calling api
       this.order.OrderItem.status = 'AWAITING_ESCROW';
       this.order = setOrderKeys(this.order, this.order.type)
     }, (error) => {
@@ -125,9 +128,8 @@ export class OrderItemComponent implements OnInit {
 
   }
 
-  // Not sure if memo is required = 'Release the funds, greetings buyer'
   escrowRelease(ordStatus: string) {
-    this.bid.escrowReleaseCommand(this.order.id, 'Release the funds, greetings buyer').take(1).subscribe(res => {
+    this.bid.escrowReleaseCommand(this.order.id, this.trackNumber).take(1).subscribe(res => {
       this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
       this.order.OrderItem.status = ordStatus === 'escrow' ? 'SHIPPING' : 'COMPLETE';
       this.order = setOrderKeys(this.order, this.order.type)
@@ -143,6 +145,18 @@ export class OrderItemComponent implements OnInit {
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       // do other action after confirm
+      this.escrowLock();
+    });
+  }
+
+  escrowLock() {
+    // <orderItemId> <nonce> <memo> , @TODO send nonce ?
+    this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').take(1).subscribe(res => {
+      this.snackbarService.open(`Payment done for order ${this.order.listing.title}`);
+      this.order.OrderItem.status = 'ESCROW_LOCKED';
+      this.order = setOrderKeys(this.order, this.order.type)
+    }, (error) => {
+      this.snackbarService.open(`${error}`);
     });
   }
 

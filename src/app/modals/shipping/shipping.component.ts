@@ -7,6 +7,7 @@ import { MatDialogRef } from '@angular/material';
 })
 export class ShippingComponent implements OnInit {
   public type: string = '';
+  trackingNumber: string = '';
   @Output() isConfirmed: EventEmitter<string> = new EventEmitter();
   constructor(public _dialogRef: MatDialogRef<ShippingComponent>) { }
 
@@ -15,6 +16,6 @@ export class ShippingComponent implements OnInit {
 
   placeOrder(): void {
     this._dialogRef.close();
-    this.isConfirmed.emit();
+    this.isConfirmed.emit(this.trackingNumber);
   }
 }

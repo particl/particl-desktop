@@ -9,7 +9,7 @@
   </p>
 
   <mat-form-field class="full-width" floatPlaceholder="never">
-    <input matInput type="text" placeholder="Additional shipping info (e.g. tracking number)">
+    <input matInput type="text" placeholder="Additional shipping info (e.g. tracking number)" [(ngModel)]="trackingNumber">
   </mat-form-field>
 
   <p class="widget-help">
@@ -25,7 +25,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary">
+  <button mat-raised-button color="primary" (click)="placeOrder()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Order shipped
   </button>

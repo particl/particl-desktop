@@ -57,4 +57,9 @@ export class BidService {
     return this.market.call('escrow', params);
   }
 
+  escrowLockCommand(id: number, nonce: any, memo: string): Observable<any> {
+    const params = ['lock', id, nonce, memo];
+    return this.market.call('escrow', params);
+  }
+
 }
