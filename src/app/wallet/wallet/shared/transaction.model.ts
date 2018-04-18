@@ -72,7 +72,7 @@ export class Transaction {
     if (this.stealth_address === undefined) {
       if (this.address && this.address.startsWith('r')) {
         return AddressType.MULTISIG;
-      } 
+      }
       return AddressType.NORMAL;
     } else {
       return AddressType.STEALTH;
@@ -80,11 +80,11 @@ export class Transaction {
   }
 
   public isMultiSig(): boolean {
-    return this.getAddressType() == AddressType.MULTISIG;
+    return this.getAddressType() === AddressType.MULTISIG;
   }
 
   getCategory(): string {
-    return this.isMultiSig() ? 'multisig' : this.category; 
+    return this.isMultiSig() ? 'multisig' : this.category;
   }
 
   public getExpandedTransactionID(): string {

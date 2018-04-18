@@ -82,7 +82,7 @@ export class OrderItemComponent implements OnInit {
     const dialogRef = this.dialog.open(type === 'shipping' ? ShippingComponent : PlaceOrderComponent);
     dialogRef.componentInstance.type = type;
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
-      this.trackNumber = res ? res : ''; 
+      this.trackNumber = res ? res : '';
       this.checkForWallet(type);
     });
   }
