@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { Amount, DateFormatter, Messages } from 'app/core/util/utils';
+import { Amount, DateFormatter, Messages, setOrderKeys } from 'app/core/util/utils';
 import { Listing
 } from '../listing/listing.model';
 
@@ -10,7 +10,10 @@ export class Bid {
   public listing: Listing;
   public listingItemId: number;
   public status: string;
-
+  // @TODO some refactoring needed
+  public OrderItem: {
+    status: string
+  }
   constructor(public orders: any, public address: any, public type: any) {
     this.setFilter();
   }
@@ -19,11 +22,11 @@ export class Bid {
     this.orderItems = [];
     _.each(this.orders, (order) => {
       if (this.type === 'buy' && order.bidder === this.address) {
-        this.setOrderKeys(order);
+        order = setOrderKeys(order, this.type);
         this.orderItems.push(order)
       }
       if (this.type === 'sell' && order.ListingItem.seller  === this.address) {
-        this.setOrderKeys(order);
+        order = setOrderKeys(order, this.type);
         this.orderItems.push(order);
       }
     })
@@ -33,14 +36,4 @@ export class Bid {
     return this.orderItems.length;
   }
 
-  // Required Testing on different Scenarios
-  private setOrderKeys(ord: any) {
-    // once the order has been accepted then we get status in orderItem
-    const status = ord.OrderItem.status ? ord.OrderItem.status : 'BIDDING';
-    ord.type = this.type;
-    ord.added = new DateFormatter(new Date(ord.createdAt)).dateFormatter(true);
-    ord.updated = new DateFormatter(new Date(ord.updatedAt)).dateFormatter(true);
-    ord.messages = Messages[status][this.type];
-    ord.status = Messages[status].status;
-  }
 }

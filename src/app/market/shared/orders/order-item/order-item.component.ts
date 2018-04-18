@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { Bid } from '../../../../core/market/api/bid/bid.model';
-
+import { setOrderKeys } from 'app/core/util/utils';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { ListingService } from '../../../../core/market/api/listing/listing.service';
 
@@ -100,7 +100,7 @@ export class OrderItemComponent implements OnInit {
       this.rejectBid();
     } else if (type === 'escrow' || type === 'shipping') {
       // Escrow Release Command
-      this.escrowRelease();
+      this.escrowRelease(type);
     } else if (type === 'escrowLock') {
       // Escrow lock command
     }
@@ -109,6 +109,8 @@ export class OrderItemComponent implements OnInit {
   acceptBid() {
     this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(() => {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
+      this.order.OrderItem.status = 'AWAITING_ESCROW';
+      this.order = setOrderKeys(this.order, this.order.type)
     }, (error) => {
       this.snackbarService.open(`${error}`);
     });
@@ -124,9 +126,11 @@ export class OrderItemComponent implements OnInit {
   }
 
   // Not sure if memo is required = 'Release the funds, greetings buyer'
-  escrowRelease() {
+  escrowRelease(ordStatus: string) {
     this.bid.escrowReleaseCommand(this.order.id, 'Release the funds, greetings buyer').take(1).subscribe(res => {
       this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
+      this.order.OrderItem.status = ordStatus === 'escrow' ? 'SHIPPING' : 'COMPLETE';
+      this.order = setOrderKeys(this.order, this.order.type)
     }, (error) => {
       this.snackbarService.open(`${error}`);
     });

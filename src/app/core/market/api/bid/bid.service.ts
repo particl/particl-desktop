@@ -56,4 +56,5 @@ export class BidService {
     const params = ['release', id, memo];
     return this.market.call('escrow', params);
   }
+
 }
