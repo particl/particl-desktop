@@ -137,7 +137,7 @@ export class OrderItemComponent implements OnInit {
     // @TODO need to be sets trasaction fee.
     const dialogRef = this.dialog.open(SendConfirmationModalComponent);
 
-    dialogRef.componentInstance.onConfirm().subscribe(() => {
+    dialogRef.componentInstance.onConfirm.subscribe(() => {
       // do other action after confirm
     });
   }
