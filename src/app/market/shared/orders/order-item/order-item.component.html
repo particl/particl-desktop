@@ -40,30 +40,30 @@
         </tr-->
         <tr>
           <th>Listing price</th>
-          <td>{{order.listing?.basePrice?.getIntegerPart()}}.
-            <small>{{order.listing?.basePrice?.getFractionalPart()}}</small>
+          <td>{{order.listing?.basePrice?.getIntegerPart()}}.<!--
+            --><small>{{order.listing?.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
         <tr>
           <th>Shipping</th>
-          <td>{{order.listing?.domesticShippingPrice?.getIntegerPart()}}.
-            <small>{{order.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
+          <td>{{order.listing?.domesticShippingPrice?.getIntegerPart()}}.<!--
+            --><small>{{order.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td>{{order.listing?.escrowPrice?.getIntegerPart()}}.
-            <small>{{order.listing?.escrowPrice?.getFractionalPart()}}</small>
+          <td>{{order.listing?.escrowPrice?.getIntegerPart()}}.<!--
+            --><small>{{order.listing?.escrowPrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
         <tr>
           <th>Total price</th>
           <td>
-            {{order.listing?.totalAmount?.getIntegerPart()}}.
-            <small>{{order.listing?.totalAmount?.getFractionalPart()}}</small>
+            {{order.listing?.totalAmount?.getIntegerPart()}}.<!--
+            --><small>{{order.listing?.totalAmount?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
@@ -71,7 +71,7 @@
     </div>
     <div class="order-history" fxFlex="32%">
       <div class="title">Order history</div>
-      <table>
+      <table class="TO_DO">
         <!--tr><td class="date">2018-02-24</td><td class="status shipped">Sold</td></tr-->
         <!--tr><td class="date">2018-02-14</td><td class="status shipped">Shipped</td></tr-->
         <tr>
@@ -112,7 +112,7 @@
       <!-- TODO: after clicking, show confirmation modal with more info: -->
       <button mat-raised-button color="primary" matTooltip="{{ order?.messages.action_tooltip }}"
               [disabled]="order?.messages.action_disabled" (click)="order_action()">
-        <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
+        <mat-icon fontSet="partIcon" fontIcon="{{ order?.messages.action_icon }}"></mat-icon>
         {{ order?.messages.action_button }}
       </button>
     </div>
