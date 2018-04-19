@@ -38,7 +38,7 @@ export class BidService {
   }
 
   search(address: string, type: any): Observable<any> {
-    const params = ['search', '', '', address];
+    const params = ['search', '*', '*', 'ASC', address];
     return this.market.call('bid', params).map(o => new Bid(o, address, type))
   }
 
