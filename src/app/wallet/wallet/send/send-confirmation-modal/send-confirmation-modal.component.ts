@@ -1,10 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
 import { SendService } from '../send.service';
 
 import { Amount, Fee } from '../../../../core/util/utils';
 import { TransactionBuilder } from '../transaction-builder.model';
+import {Bid} from "../../../../core/market/api/bid/bid.model";
 
 @Component({
   selector: 'app-send-confirmation-modal',
@@ -14,9 +15,11 @@ import { TransactionBuilder } from '../transaction-builder.model';
 export class SendConfirmationModalComponent implements OnInit {
 
   @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
+  @Input() type: string;
 
   public dialogContent: string;
   public send: TransactionBuilder;
+  public bidItem: Bid;
 
   // send-confirmation-modal variables
   transactionType: string = '';
@@ -30,7 +33,9 @@ export class SendConfirmationModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setDetails();
+    if (this.type === 'tx') {
+      this.setTxDetails();
+    }
   }
 
   confirm(): void {
@@ -43,9 +48,9 @@ export class SendConfirmationModalComponent implements OnInit {
   }
 
   /**
-    * Set the confirmation modal data
+    * Set the confirmation modal data for tx
     */
-  setDetails(): void {
+  setTxDetails(): void {
     this.getTransactionFee();
 
     this.sendAddress = this.send.toAddress;
