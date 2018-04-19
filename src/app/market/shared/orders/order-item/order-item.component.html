@@ -88,7 +88,7 @@
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
-      <button mat-button color="warn" (click)="callBid('reject')" *ngIf="order?.messages.allow_reject_order"
+      <button mat-button color="warn" (click)="callBid('reject')" *ngIf="order?.messages?.allow_reject_order"
               class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
         Reject bid &amp; cancel order
@@ -110,8 +110,8 @@
     </div>
     <div class="right">
       <!-- TODO: after clicking, show confirmation modal with more info: -->
-      <button mat-raised-button color="primary" matTooltip="{{ order?.messages.action_tooltip }}"
-              [disabled]="order?.messages.action_disabled" (click)="order_action()">
+      <button mat-raised-button color="primary" matTooltip="{{ order?.messages?.action_tooltip }}"
+              [disabled]="order?.messages?.action_disabled" (click)="order_action()">
         <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
         {{ order?.messages.action_button }}
       </button>

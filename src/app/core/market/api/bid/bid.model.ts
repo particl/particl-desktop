@@ -21,20 +21,25 @@ export class Bid {
 
   setFilter() {
     this.orderItems = [];
+    let orders = [];
     _.each(this.orders, (order) => {
       if (this.type === 'buy' && order.bidder === this.address) {
         order = setOrderKeys(order, this.type);
-        this.orderItems.push(order)
+        // this.orderItems.push(order)
+        orders.push(order);
       }
       if (this.type === 'sell' && order.ListingItem.seller  === this.address) {
         order = setOrderKeys(order, this.type);
-        this.orderItems.push(order);
+        // this.orderItems.push(order);
+        orders.push(order);
       }
     })
+
+    this.orders = orders;
   }
 
   get ordersCount() {
-    return this.orderItems.length;
+    return this.orders.length;
   }
 
 }

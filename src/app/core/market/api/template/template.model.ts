@@ -47,7 +47,7 @@ export class Template {
   }
   // Status
   get status(): string {
-    if (this.object.ListingItemObjects.length > 0) {
+    if (this.object.ListingItems.length > 0) {
       return 'published';
     } else {
       return 'unpublished';
