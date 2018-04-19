@@ -5,6 +5,7 @@ import { ListingItemComponent } from 'app/market/listings/listing-item/listing-i
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
 
 import { routing } from './market.routing';
+import { WalletModule } from '../wallet/wallet/wallet.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ListingsComponent } from './listings/listings.component';
 import { BuyComponent } from './buy/buy.component';
@@ -19,7 +20,8 @@ import { OrderItemComponent } from './shared/orders/order-item/order-item.compon
   imports: [
     CommonModule,
     routing,
-    CoreUiModule.forRoot()
+    CoreUiModule.forRoot(),
+    WalletModule.forRoot()
   ],
   declarations: [
     ListingItemComponent,
