@@ -10,7 +10,8 @@ import { environment } from '../../../environments/environment';
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.module';
-
+import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { ListingService } from 'app/core/market/api/listing/listing.service';
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -51,7 +52,8 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     // the following imports are just 'hooks' to
     // get the singleton up and running
-    private _newtxnotifier: NewTxNotifierService
+    private _newtxnotifier: NewTxNotifierService,
+    private _marketState: MarketStateService
   ) { }
 
   ngOnInit() {
@@ -114,6 +116,11 @@ export class MainViewComponent implements OnInit, OnDestroy {
     /* check if testnet -> block explorer url */
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
+
+    this._marketState.observe('currencyprice')
+      .take(1).subscribe(price => {
+        ListingService.currencyPrice = price[0].price;
+      });
 
   }
 

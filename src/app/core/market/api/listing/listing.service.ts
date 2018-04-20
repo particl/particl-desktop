@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class ListingService {
-
+  public static currencyPrice: number = 0;
   constructor(
     private market: MarketService
   ) {
