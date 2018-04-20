@@ -196,11 +196,17 @@ a.sidebar-item-link {
   @extend %disable-select;
   border-bottom: 1px solid $bg-shadow;
   background: #fff;
+  width: calc(100% - 250px);
   padding-left: 35px;
   padding-right: 26px;
   font-family: $font;
   font-size: 15px;
   text-transform: uppercase;
+  position: fixed;
+  top: 0;
+  left: 250px;
+  right: 0;
+  z-index: 100;
   .title {
     font-weight: 700;
   }
