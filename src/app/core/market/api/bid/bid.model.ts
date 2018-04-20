@@ -21,7 +21,7 @@ export class Bid {
 
   setFilter() {
     this.orderItems = [];
-    let orders = [];
+    const orders = [];
     _.each(this.orders, (order) => {
       if (this.type === 'buy' && order.bidder === this.address) {
         order = setOrderKeys(order, this.type);
