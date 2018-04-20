@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 import { Bid } from '../../../../core/market/api/bid/bid.model';
 import { setOrderKeys } from 'app/core/util/utils';
@@ -147,7 +147,13 @@ export class OrderItemComponent implements OnInit {
     dialogRef.componentInstance.bidItem = this.order;
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       // do other action after confirm
-      this.escrowLock();
+      if (this.rpcState.get('locked')) {
+        // unlock wallet and send transaction
+        this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.escrowLock.bind(this)});
+      } else {
+        // wallet already unlocked
+        this.escrowLock();
+      }
     });
   }
 
