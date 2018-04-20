@@ -110,7 +110,7 @@
     </div>
     <div class="right">
       <!-- TODO: after clicking, show confirmation modal with more info: -->
-      <button mat-raised-button color="primary" matTooltip="{{ order?.messages?.action_tooltip }}"
+      <button mat-raised-button color="primary" matTooltip="{{ order?.messages?.tooltip }}"
               [disabled]="order?.messages?.action_disabled" (click)="order_action()">
         <mat-icon fontSet="partIcon" fontIcon="{{ order?.messages?.action_icon }}"></mat-icon>
         {{ order?.messages?.action_button }}
