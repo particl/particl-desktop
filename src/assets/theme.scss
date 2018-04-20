@@ -423,7 +423,7 @@ input {
 */
 
 ::-webkit-scrollbar-track {
-  border-radius: $radius;
+  //border-radius: $radius;
   background: lighten($bg-shadow, 3%);
 }
 
