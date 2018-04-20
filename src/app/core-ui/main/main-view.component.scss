@@ -64,10 +64,19 @@
     font-weight: 600;
     color: white;
   }
+  .tag {
+    @extend %tag;
+    background: lighten($bg-black, 15%);;
+    margin-left: auto;
+    font-size: 70%;
+  }
   &:hover {
     background: darken($bg-black, 1.5%);
     .icon {
       color: lighten($bg-black, 30%);
+    }
+    .tag {
+      background-color: lighten($bg-black, 20%);
     }
   }
 }
@@ -76,8 +85,13 @@ a.sidebar-item-link {
   text-decoration: none;
   text-transform: uppercase;
   outline: none;
-  &.active > .sidebar-item .icon { // highlight active menu item
-    color: $color !important;
+  &.active .sidebar-item {
+    .icon { // highlight active menu item
+      color: $color !important;
+    }
+    .tag {
+      //background: $color !important;
+    }
   }
 }
 

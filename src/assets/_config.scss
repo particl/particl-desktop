@@ -49,6 +49,18 @@ $radius: 4px; // default border-radius
   margin: 30px 0 25px;
 }
 
+%tag { // notification tags - e.g. in tabs: Orders [3]
+  @extend %tfx;
+  font-size: 80%;
+  color: white;
+  font-weight: 600;
+  line-height: 1.6;
+  background-color: $color;
+  border-radius: 4px;
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 11px;
+}
 
 // enable/disable text selection
 %disable-select,
