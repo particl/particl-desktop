@@ -5,7 +5,7 @@ import { SendService } from '../send.service';
 
 import { Amount, Fee } from '../../../../core/util/utils';
 import { TransactionBuilder } from '../transaction-builder.model';
-import {Bid} from "../../../../core/market/api/bid/bid.model";
+import {Bid} from '../../../../core/market/api/bid/bid.model';
 
 @Component({
   selector: 'app-send-confirmation-modal',
