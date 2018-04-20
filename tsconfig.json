@@ -1,20 +1,32 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
     "outDir": "./dist/out-tsc",
     "baseUrl": "src",
     "sourceMap": true,
+    "importHelpers": true,
     "declaration": false,
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "particl-market/src/types",
+      "src/types",
+      "types"
     ],
     "lib": [
-      "es2016",
+      "es6",
       "dom"
-    ]
-  }
+    ],
+  },
+  "exclude": [
+    "particl-market/test/*"
+  ],
+  "include": [
+    "particl-market/src"
+  ]
 }
