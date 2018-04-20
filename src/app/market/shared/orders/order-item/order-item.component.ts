@@ -61,14 +61,14 @@ export class OrderItemComponent implements OnInit {
 
       case 'Escrow':
         if (this.order.type === 'sell') {
-          this.callBid('escrow');
+          this.callBid('shipping');
         }
         break;
 
       case 'Shipping':
         // escrow release call with popup
         if (this.order.type === 'buy') {
-          this.callBid('shipping');
+          this.callBid('escrow');
         }
         break;
 
