@@ -8,17 +8,19 @@ const zmq           = require('./zmq/zmq');
 const daemon        = require('./daemon/daemon');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
-const notification   = require('./notification/notification');
+const notification  = require('./notification/notification');
+const market        = require('./market/market');
 
 
 // TODO move to a proper place
 function daemonStarted() { log.info('daemon started'); }
 
 exports.start = function (mainWindow) {
-
   // Initialize IPC listeners
   rpc.init();
   notification.init();
+
+  market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);

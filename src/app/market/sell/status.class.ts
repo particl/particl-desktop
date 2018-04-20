@@ -27,10 +27,10 @@ export class Status {
             class: 'published',
             status_info: 'Active, published listing template',
             action_icon: 'part-check',
-            action_button: 'Published!',
+            action_button: 'Published',
             action_tooltip: 'Listing is active on the network!',
-            action_color: 'secondary',
-            action_disabled: false
+            action_color: 'primary',
+            action_disabled: true
         }];
     get(status: string): UiStatus {
         return this.states.find((state: UiStatus) => state.status === status);
