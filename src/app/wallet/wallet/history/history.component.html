@@ -1,5 +1,5 @@
 <app-header class="disable-select">
-  <div class="container-fluid">
+  <div class="container-fluid tab-bar">
     <mat-tab-group (selectChange)="changeCategory($event.index)" [selectedIndex]="selectedTab">
       <!-- [(selectedIndex)]="categories.indexOf(filters.category)"> -->
       <mat-tab *ngFor="let category of categories">
