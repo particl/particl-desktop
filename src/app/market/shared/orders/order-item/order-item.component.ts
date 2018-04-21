@@ -131,7 +131,7 @@ export class OrderItemComponent implements OnInit {
   escrowRelease(ordStatus: string) {
     this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).take(1).subscribe(res => {
       this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
-      this.order.OrderItem.status = ordStatus === 'escrow' ? 'SHIPPING' : 'COMPLETE';
+      this.order.OrderItem.status = ordStatus === 'shipping' ? 'SHIPPING' : 'COMPLETE';
       this.order = setOrderKeys(this.order, this.order.type)
     }, (error) => {
       this.snackbarService.open(`${error}`);
