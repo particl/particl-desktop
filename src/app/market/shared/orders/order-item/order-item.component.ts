@@ -51,7 +51,7 @@ export class OrderItemComponent implements OnInit {
         }
         break;
 
-      case 'Awaiting (Escrow)':
+      case 'Awaiting':
         // Escrow lock call with popup
         if (this.order.type === 'buy') {
           this.openPaymentConfirmationModal();
@@ -140,6 +140,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   openPaymentConfirmationModal() {
+    console.log('sadfasdfasdfasdf');
     // @TODO need to be sets trasaction fee.
     const dialogRef = this.dialog.open(SendConfirmationModalComponent);
 
