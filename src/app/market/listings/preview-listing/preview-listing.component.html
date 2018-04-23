@@ -74,7 +74,7 @@
   <div class="right">
     <app-favorite [listing]="data.listing"></app-favorite>
 
-    <button mat-raised-button color="primary" (click)="addToCart(data.listing.id)">
+    <button *ngIf="showAddToCart" mat-raised-button color="primary" (click)="addToCart(data.listing.id)">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Add to cart
     </button>

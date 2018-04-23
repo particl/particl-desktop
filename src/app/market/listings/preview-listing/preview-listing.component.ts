@@ -18,6 +18,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   public pictures: Array<any> = new Array();
   public price: any;
   public date: string;
+  private showAddToCart: boolean = false;
 
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
@@ -46,6 +47,8 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       };
     }
 
+    if(!this.data.listing.object.ListingItemTemplate.hash)
+      this.showAddToCart = true;
 
     this.date = new Date(this.data.listing.object.createdAt).toLocaleDateString();
   }
