@@ -4,6 +4,8 @@
 </button>
 
 <div mat-dialog-content class="dialog-content">
+
+
   <!--TX confirmation-->
   <div class="tx-confirmation" *ngIf="type === 'tx'">
     <div class="tx-info">
@@ -56,7 +58,8 @@
       Total amount:<span
       class="amount">{{ transactionAmount.getAmountWithFee(sendAmount.getAmount()) }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
     </p>
-  </div> <!--end TX confirmation -->
+  </div><!-- TX confirmation -->
+
 
   <!-- Bid confirmation-->
   <div class="tx-confirmation" *ngIf="type === 'bid'">
@@ -64,14 +67,14 @@
       <!-- if public -->
       <div class="public">
         <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
-        <div class="title">{{ bidItem.listing?.title }}</div>
+        <div class="title">You're buying</div>
         <p class="help-text">
-          Sender, Receiver & transaction amount will be publicly visible on the blockchain
+          Seller accepted your bid &ndash; pay for your order
         </p>
       </div>
     </div>
 
-    <div class="tx-amount">
+    <div class="tx-amount TO_DO">
       <span class="big">12</span>
       <span>
       <span class="point">.</span>
@@ -84,20 +87,22 @@
     <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
 
     <div class="receiver-info">
-      <!--if address saved in Address Book, display its label. if not, hide it -->
-      <div class="label">Balance Transfer</div>
-      <code class="address"> asdf asdfsadfa sadfsadf </code>
+      <div class="label">{{ bidItem.listing?.title }}</div>
+      <code class="address TO_DO">[seller's address here]</code>
     </div>
 
-    <p class="fee-info">
+    <p class="fee-info TO_DO">
       Transaction fee:<span class="amount">11 PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-      Total amount:<span
-      class="amount">12 PART</span><span class="fiat">&asymp; 3.47 USD</span>
+      Shipping:<span class="amount">2.455 PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Escrow:<span class="amount">13.455 PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Total amount:<span class="amount">26.91 PART</span><span class="fiat">&asymp; 3.47 USD</span>
     </p>
   </div>
-</div>
 
-<mat-dialog-actions fxLayoutAlign="end center">
+
+</div><!-- .dialog-content -->
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
   <button mat-button mat-dialog-close (click)="dialogClose()">
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
