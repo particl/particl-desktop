@@ -30,12 +30,14 @@ export class Amount {
    * -25.9 -> '9'
    * 25 -> '0'
    * 25.9 -> '9'
+   * 
+   * We have to return this as a string, else the leading zero's are gone.
    */
-  public getFractionalPart(): number {
+  public getFractionalPart(): string {
     if (this.ifDotExist()) {
-      return +(this.getAmount().toString()).split('.')[1];
+      return (this.getAmount().toString()).split('.')[1];
     }
-    return 0;
+    return '0';
   }
 
   /**
