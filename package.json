@@ -42,12 +42,14 @@
     "install:desktop": "git submodule update && yarn",
     "start:marketplace": "cd particl-market && yarn run serve",
     "start": "yarn run start:electron:fast && yarn run start:marketplace",
-    "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test"
+    "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test",
+    "postinstall": "install-app-deps"
   },
   "productName": "Particl Desktop",
   "build": {
     "electronVersion": "1.7.12",
     "appId": "io.particl.desktop",
+    "npmRebuild": true,
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -140,7 +142,10 @@
       "packageCategory": "wallet",
       "icon": "resources/linux"
     },
-    "asar": true
+    "asar": true,
+    "asarUnpack": [
+      "particl-market/node_modules/sqlite3/**/*"
+    ]
   },
   "dependencies": {
     "@angular/animations": "^5.2.5",
