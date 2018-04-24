@@ -49,7 +49,7 @@
   "build": {
     "electronVersion": "1.7.12",
     "appId": "io.particl.desktop",
-    "npmRebuild": true,
+    "npmRebuild": false,
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -144,7 +144,7 @@
     },
     "asar": true,
     "asarUnpack": [
-      "particl-market/node_modules/sqlite3/**/*"
+      "node_modules/particl-market/node_modules/sqlite3/**/*"
     ]
   },
   "dependencies": {
@@ -180,6 +180,7 @@
     "ngx-infinite-scroll": "^0.8.3",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.3",
+    "particl-market": "particl/particl-market#npm-module",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.5.6",
     "tmp": "^0.0.33",
