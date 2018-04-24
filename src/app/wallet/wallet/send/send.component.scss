@@ -76,10 +76,14 @@
 // ------ LAYOUT ------ //
 
 app-header {
+  mat-tab-group {
+    margin-top: $header-main-height;
+  }
   .bottom-line { // line under tabs
     border-bottom: 1px solid $bg-shadow;
   }
 }
+
 
 .privacy-level { // slider in Anon TXs
   margin: 0 0 20px;

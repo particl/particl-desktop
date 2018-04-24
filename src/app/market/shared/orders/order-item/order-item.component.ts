@@ -140,7 +140,6 @@ export class OrderItemComponent implements OnInit {
   }
 
   openPaymentConfirmationModal() {
-    console.log('sadfasdfasdfasdf');
     // @TODO need to be sets trasaction fee.
     const dialogRef = this.dialog.open(SendConfirmationModalComponent);
 
