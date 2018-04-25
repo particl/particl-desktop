@@ -1,6 +1,6 @@
-<div *ngIf="cart?.countOfItems > 0" class="cart-info" routerLinkActive="active" [routerLink]="'/market/buy'"
-      matTooltip="View cart" matTooltipPosition="before">
-  <!-- FIXME: replace with cart icon when available -->
+<div class="cart-info" routerLinkActive="active" [routerLink]="'/market/buy'"
+     matTooltip="View cart" matTooltipPosition="before">
   <mat-icon fontSet="partIcon" fontIcon="part-cart"></mat-icon>
-  <strong class="tag">{{ cart?.countOfItems }}</strong> items <span class="amount">{{cart?.subTotal.amount}} PART</span>
+  <strong class="tag">{{ cart?.countOfItems }}</strong> item<span *ngIf="cart?.countOfItems !== 1">s</span>
+  <span *ngIf="cart?.countOfItems > 0" class="amount">({{ cart?.subTotal.amount }} PART)</span>
 </div>

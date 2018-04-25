@@ -37,9 +37,29 @@ export class BidService {
     });
   }
 
-  search(): Observable<Array<Bid>> {
-    // Params: flag for buy or sell required
-    const params = ['search'];
-    return this.market.call('bid', params)
+  search(address: string, type: any): Observable<any> {
+    const params = ['search', '*', '*', 'ASC'];
+    return this.market.call('bid', params).do(x => console.log(x)).map(o => new Bid(o, address, type))
   }
+
+  acceptBidCommand(hash: string, id: number): Observable<any> {
+    const params = ['accept', hash, id];
+    return this.market.call('bid', params);
+  }
+
+  rejectBidCommand(hash: string, id: number): Observable<any> {
+    const params = ['reject', hash, id];
+    return this.market.call('bid', params);
+  }
+
+  escrowReleaseCommand(id: number, memo: string): Observable<any> {
+    const params = ['release', id, memo];
+    return this.market.call('escrow', params);
+  }
+
+  escrowLockCommand(id: number, nonce: any, memo: string): Observable<any> {
+    const params = ['lock', id, nonce, memo];
+    return this.market.call('escrow', params);
+  }
+
 }

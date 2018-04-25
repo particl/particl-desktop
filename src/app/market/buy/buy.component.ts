@@ -16,9 +16,6 @@ export class BuyComponent implements OnInit {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
 
-  // Order type
-  orderType: string = 'buy';
-
   public filters: any = {
     search: undefined,
     sort:   undefined,

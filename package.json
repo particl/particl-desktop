@@ -38,9 +38,9 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js",
     "install:all": "yarn run install:desktop && yarn run install:marketplace",
-    "install:marketplace": "cd dapp-shell && yarn && ./bin/copy-env.sh && yarn run setup",
+    "install:marketplace": "cd particl-market && yarn && ./bin/copy-env.sh && yarn run setup",
     "install:desktop": "git submodule update && yarn",
-    "start:marketplace": "cd dapp-shell && yarn run serve",
+    "start:marketplace": "cd particl-market && yarn run serve",
     "start": "yarn run start:electron:fast && yarn run start:marketplace",
     "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test"
   },
@@ -57,7 +57,10 @@
       "preload.js",
       "modules/**",
       "dist/**",
-      "resources/**"
+      "resources/**",
+      "particl-market/dist/**",
+      "particl-market/.env.example",
+      "particl-market/node_modules/**"
     ],
     "mac": {
       "artifactName": "${name}-${version}-${os}.${ext}",
@@ -145,7 +148,7 @@
     "@angular/common": "^5.2.5",
     "@angular/compiler": "^5.2.5",
     "@angular/core": "^5.2.5",
-    "@angular/flex-layout": "^2.0.0-beta.12",
+    "@angular/flex-layout": "2.0.0-beta.12",
     "@angular/forms": "^5.2.5",
     "@angular/http": "^5.2.5",
     "@angular/material": "^5.2.1",

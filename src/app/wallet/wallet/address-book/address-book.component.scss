@@ -1,5 +1,9 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
+.address-book {
+  margin-top: $header-main-height;
+}
+
 app-header {
   button.add-address {
     padding: 3px 16px;

@@ -13,6 +13,7 @@ export class Template {
 
   public domesticTotal: Amount = new Amount(0);
   public internationalTotal: Amount = new Amount(0);
+  public totalAmount: Amount = new Amount(0);
 
   // @TODO: remove type any
   constructor(private object: any) {
@@ -46,7 +47,7 @@ export class Template {
   }
   // Status
   get status(): string {
-    if (this.object.ListingItemObjects.length > 0) {
+    if (this.object.ListingItems.length > 0) {
       return 'published';
     } else {
       return 'unpublished';
@@ -120,6 +121,10 @@ export class Template {
 
     this.internationalTotal = new Amount(iTotal);
     this.domesticTotal = new Amount(dTotal);
+
+    // TODO add total for international and domestic.
+    const total = this.escrowPrice.getAmount() + iTotal;
+    this.totalAmount = new Amount(total);
   }
 
 }

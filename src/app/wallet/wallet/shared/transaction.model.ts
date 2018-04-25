@@ -1,4 +1,5 @@
 import { Amount, DateFormatter } from '../../../core/util/utils';
+import { AddressType } from './address.model';
 
 export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake' | 'internal_transfer';
 
@@ -66,6 +67,25 @@ export class Transaction {
     return this.stealth_address;
   }
 
+  private getAddressType(): AddressType {
+    console.log(this.address)
+    if (this.stealth_address === undefined) {
+      if (this.address && this.address.startsWith('r')) {
+        return AddressType.MULTISIG;
+      }
+      return AddressType.NORMAL;
+    } else {
+      return AddressType.STEALTH;
+    }
+  }
+
+  public isMultiSig(): boolean {
+    return this.getAddressType() === AddressType.MULTISIG;
+  }
+
+  getCategory(): string {
+    return this.isMultiSig() ? 'multisig' : this.category;
+  }
 
   public getExpandedTransactionID(): string {
     return this.txid + this.getAmountObject().getAmount() + this.category;
@@ -82,7 +102,7 @@ export class Transaction {
 
   /* Amount stuff */
   public getAmount(): number {
-   if (this.category === 'internal_transfer') {
+   if (this.getCategory() === 'internal_transfer') {
       // add all elements in output array ( but exclude vout === 65535)
       // todo: check assumption that we own all outputs?
       /*
@@ -107,6 +127,9 @@ export class Transaction {
       // only use fake output to determine internal transfer
       const fakeOutput = function (a: any, b: any) { return a - (b.vout === 65535 ? b.amount : 0); }
       return this.outputs.reduce(fakeOutput, 0);
+    } else if (this.getCategory() === 'multisig') {
+      const amount: number = this.outputs.find(output => output.address.startsWith('r')).amount;
+      return amount;
     } else {
       return +this.amount;
     }
@@ -121,7 +144,10 @@ export class Transaction {
   /* todo: fee is not defined in normal receive tx, wut? */
   public getNetAmount(): number {
     const amount: number = +this.getAmountObject().getAmount();
+    console.log('amount=' + amount);
 
+    // @ TODO: the fee for multisig transaction includes the change
+    console.log('fee=' + this.fee)
     /* If fee undefined then just return amount */
     if (this.fee === undefined) {
       return amount;

@@ -30,6 +30,7 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 import { PlaceOrderComponent } from './place-order/place-order.component';
+import { ShippingComponent } from './shipping/shipping.component';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { PlaceOrderComponent } from './place-order/place-order.component';
     DaemonConnectionComponent,
     DeleteListingComponent,
     ManageWidgetsComponent,
-    PlaceOrderComponent
+    PlaceOrderComponent,
+    ShippingComponent
   ],
   exports: [
     ModalsComponent,
@@ -78,7 +80,8 @@ import { PlaceOrderComponent } from './place-order/place-order.component';
     DaemonConnectionComponent,
     DeleteListingComponent,
     ManageWidgetsComponent,
-    PlaceOrderComponent
+    PlaceOrderComponent,
+    ShippingComponent
   ],
 })
 export class ModalsModule {

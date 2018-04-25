@@ -3,6 +3,7 @@
 
 .balance-overview { // list of balances
   @extend %disable-select;
+  margin-top: $header-main-height;
   padding: 24px 35px;
   .balance-item {
     border-right: 1px solid $bg-shadow;

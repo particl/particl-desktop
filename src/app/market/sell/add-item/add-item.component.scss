@@ -5,6 +5,10 @@
 
 // ------ LAYOUT ------ //
 
+.container-block {
+  margin-top: $header-main-height;
+}
+
 .mat-card {
   & > .title {
     text-transform: uppercase;

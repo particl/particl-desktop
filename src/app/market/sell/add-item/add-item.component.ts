@@ -231,16 +231,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = template.id;
         this.log.d('Saved template', template);
 
-        /* uploading images */
-        this.image.upload(template.id, this.picturesToUpload)
-          .then();
-
         this.escrow.add(template.id, EscrowType.MAD).subscribe(
           success => {
             this.snackbar.open('Succesfully added escrow!')
+          }, observer.error);
+
+        /* uploading images */
+        this.image.upload(template.id, this.picturesToUpload)
+          .then((templateId) => {
             observer.next(template.id);
             observer.complete()
-          }, observer.error);
+          });
 
       });
     });
