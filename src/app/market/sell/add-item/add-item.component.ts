@@ -234,6 +234,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.escrow.add(template.id, EscrowType.MAD).subscribe(
           success => {
             this.snackbar.open('Succesfully added escrow!')
+            if (this.picturesToUpload.length === 0) {
+              observer.next(template.id);
+              observer.complete()
+            }
           }, observer.error);
 
         /* uploading images */
