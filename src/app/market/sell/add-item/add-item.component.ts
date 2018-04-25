@@ -238,7 +238,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
               observer.next(template.id);
               observer.complete()
             }
-          }, observer.error);
+          }, error => this.snackbar.open(error));
 
         /* uploading images */
         this.image.upload(template.id, this.picturesToUpload)
@@ -247,7 +247,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
             observer.complete()
           });
 
-      });
+      }, error => error.error ? this.snackbar.open(error.error.message) : this.snackbar.open(error));
     });
   }
 
