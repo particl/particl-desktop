@@ -49,7 +49,7 @@
   "build": {
     "electronVersion": "1.7.12",
     "appId": "io.particl.desktop",
-    "npmRebuild": false,
+    "npmRebuild": true,
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -59,16 +59,12 @@
       "preload.js",
       "modules/**",
       "dist/**",
-      "resources/**",
-      "particl-market/dist/**",
-      "particl-market/.env.example",
-      "particl-market/node_modules/**"
+      "resources/**"
     ],
     "mac": {
       "artifactName": "${name}-${version}-${os}.${ext}",
       "category": "public.app-category.wallet",
       "target": [
-        "dmg",
         "zip"
       ]
     },
@@ -144,7 +140,7 @@
     },
     "asar": true,
     "asarUnpack": [
-      "node_modules/particl-market/node_modules/sqlite3/**/*"
+      "node_modules/sqlite3/**/*"
     ]
   },
   "dependencies": {
@@ -180,7 +176,7 @@
     "ngx-infinite-scroll": "^0.8.3",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.3",
-    "particl-market": "particl/particl-market#npm-module",
+    "particl-marketplace": "^0.0.1",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.5.6",
     "tmp": "^0.0.33",

@@ -7843,9 +7843,9 @@ parseurl@~1.3.1, parseurl@~1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
 
-particl-market@particl/particl-market#npm-module:
+particl-marketplace@^0.0.1:
   version "0.0.1"
-  resolved "https://codeload.github.com/particl/particl-market/tar.gz/8dfe6b3ac6b5861d5aaaae666f05e6694079189f"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.1.tgz#8127ac76841d0275b5692b9f482d75f09fdd633a"
   dependencies:
     "@types/bluebird" "^3.5.8"
     "@types/body-parser" "^1.16.4"

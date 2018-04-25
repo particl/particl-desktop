@@ -1,5 +1,5 @@
 const _options    = require('../options');
-const market    = require('particl-market');
+const market    = require('particl-marketplace');
 // require('../../node_modules/particl-market/dist/core/App.js');
 
 exports.init = function() {
@@ -15,9 +15,8 @@ exports.init = function() {
         market.migrate().then(() => {
           console.log('Migration done');
           // TODO: this ugly hack starts the particl-market
-          const t = require('particl-market/dist/app.js');
+          const t = require('particl-marketplace/dist/app.js');
         });
-
 
       });
     });
