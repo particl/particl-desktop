@@ -37,7 +37,7 @@ export class Amount {
     if (this.ifDotExist()) {
       return (this.getAmount().toString()).split('.')[1];
     }
-    return '0';
+    return '';
   }
 
   /**
