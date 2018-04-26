@@ -78,6 +78,14 @@ export class Template {
     return this.object.ItemInformation.ItemImages;
   }
 
+  get country(): any {
+    const itemlocation = this.object.ItemInformation.ItemLocation;
+    if (itemlocation) {
+      return itemlocation.region;
+    }
+    return undefined;
+  }
+
   setBasePrice(): void {
     this.basePrice = (this.object.PaymentInformation.ItemPrice
       ? new Amount(this.object.PaymentInformation.ItemPrice.basePrice)

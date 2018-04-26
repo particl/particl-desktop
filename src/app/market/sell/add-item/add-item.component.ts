@@ -184,15 +184,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
         basePrice: 0,
         domesticShippingPrice: 0,
         internationalShippingPrice: 0
-
+        country: ''
       };
 
       console.log(template);
-
+      const country = this.countryList.getCountryByRegion(template.country);
       t.title = template.title;
       t.shortDescription = template.shortDescription;
       t.longDescription = template.longDescription;
       t.category = template.category.id;
+      t.country = country? country.name : '';
       console.log('getting category to id=' + this.itemFormGroup.get('category').value);
       console.log('setting category to id=' + t.category);
 
@@ -216,6 +217,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   private save(): Observable<any> {
 
     const item = this.itemFormGroup.value;
+    const country = this.countryList.getCountryByName(item.country);
     return new Observable((observer) => {
       this.template.add(
         item.title,
@@ -230,10 +232,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
       ).take(1).subscribe(template => {
         this.templateId = template.id;
         this.log.d('Saved template', template);
+        // Need to add location while saving the template
+        this.location.update(this.templateId, country, null, null).subscribe();
 
+        // Add escrow
         this.escrow.add(template.id, EscrowType.MAD).subscribe(
           success => {
-            this.snackbar.open('Succesfully added escrow!')
             if (this.picturesToUpload.length === 0) {
               observer.next(template.id);
               observer.complete()
@@ -273,15 +277,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
     );
     // update location
     const country = this.countryList.getCountryByName(item.country);
-    this.location.update(this.templateId, country, null, null).subscribe();
+    this.location.update(this.templateId, country, null, null).subscribe(success => {
+      this.escrow.update(this.templateId, EscrowType.MAD).subscribe();
+    }, error => error.error ? this.snackbar.open(error.error.message) : this.snackbar.open(error));
     // update shipping
 
     // update messaging
     // update payment
     // update escrow
-    this.escrow.update(this.templateId, EscrowType.MAD).subscribe(
-      success => this.snackbar.open('Succesfully added escrow!')
-    );
+   
 
   }
 
@@ -293,6 +297,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       this.save().subscribe(id => {
         console.log('returning to sell');
+        this.snackbar.open('Succesfully Saved!')
         this.backToSell();
       });
     }
@@ -317,6 +322,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.save().subscribe(id => {
         console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
+          this.snackbar.open('Succesfully added Listing!')
           console.log(listing);
           this.backToSell();
         });

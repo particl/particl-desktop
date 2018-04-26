@@ -25,4 +25,8 @@ export class CountryListService {
   getCountryByName(name: string): Country {
     return this.countries.find((el) => el.name.toUpperCase() === name.toUpperCase());
   }
+
+  getCountryByRegion(iso: string): Country {
+    return iso ? this.countries.find((el) => el.iso.toUpperCase() === iso.toUpperCase()) : undefined;
+  }
 }
