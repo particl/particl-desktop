@@ -2,6 +2,8 @@
 
 .status-icons {
   display: inline-block;
+  border-left: 1px solid $bg-shadow;
+  padding: 15px 0 15px 22px;
 }
 
 .icon {
