@@ -32,7 +32,7 @@ let mainWindow;
 let tray;
 
 if (app.getVersion().includes('RC'))
-  process.argv.push(...['-testnet', '-printtoconsole']);
+  process.argv.push(...['-testnet']);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

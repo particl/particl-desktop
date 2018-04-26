@@ -1,4 +1,4 @@
-<!-- Orders > Filter -->
+<!-- Orders > Filter (HIDDEN IN CSS) -->
 <div class="filter" fxFlex="0 0 230px">
 
   <div class="section search-sorting TO_DO">
@@ -42,123 +42,12 @@
 
 </div><!-- .filter -->
 <!-- Orders > list -->
-<div class="orders list section TO_DO" fxFlex="1 1 100%">
+<div class="orders section" fxFlex="1 1 100%">
 
-  <div class="no-results" *ngIf="orders.length === 0">
+  <div class="no-results" *ngIf="orders?.ordersCount === 0">
     You don't have any market orders yet
   </div>
 
-  <mat-expansion-panel class="order item no-padding" *ngFor="let order of orders">
-    <mat-expansion-panel-header class="header">
-      <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-        <div class="photo" fxFlex="0 0 80px">
-          <img src="./assets/images/placeholder_1-1.jpg">
-        </div>
-        <div class="meta" fxFlex="1 1 100%">
-          <div class="name">{{ order.name }}</div>
-          <div class="date">
-            <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
-            <span class="hash {{ order.hash_bg }}" matTooltip="Order hash">{{ order.hash }}</span>
-            Added 2018-02-19 &bull; Updated 2018-02-13
-          </div>
-        </div>
-        <div class="status {{ order.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order.status }}</div>
-      </div>
-    </mat-expansion-panel-header>
-
-    <div class="status-info">
-      <p>{{ order.status_info }}</p>
-    </div>
-
-    <div class="detail" fxLayout="row" fxLayoutGap="30px">
-      <div class="buyer-info" fxFlex="27%">
-        <div class="title">Shipping address</div>
-        <p>Mr. Longname Buyer<br>Particl Avenue X/144<br>5RFG4 United Cryptocity<br>Universe</p>
-      </div><!-- .buyer-info -->
-      <div class="info" fxFlex="35%">
-        <div class="title">Price<!-- & Qty--></div>
-        <table class="prices">
-          <!--tr>
-            <th>Quantity</th>
-            <td>2</td>
-          </tr-->
-          <tr>
-            <th>Listing price</th>
-            <td>23.
-              <small>1285</small>
-              PART
-            </td>
-          </tr>
-          <tr>
-            <th>Shipping</th>
-            <td>3.
-              <small>012</small>
-              PART
-            </td>
-          </tr>
-          <tr>
-            <th>Escrow</th>
-            <td>23.
-              <small>1285</small>
-              PART
-            </td>
-          </tr>
-          <tr>
-            <th>Total price</th>
-            <td>49.
-              <small>269</small>
-              PART
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="order-history" fxFlex="32%">
-        <div class="title">Order history</div>
-        <table>
-          <!--tr><td class="date">2018-02-24</td><td class="status shipped">Sold</td></tr-->
-          <!--tr><td class="date">2018-02-14</td><td class="status shipped">Shipped</td></tr-->
-          <tr>
-            <td class="date">2018-02-11</td>
-            <td class="status escrow">In escrow</td>
-          </tr>
-          <tr>
-            <td class="date">2018-02-10</td>
-            <td class="status bidding">Bidding</td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
-      <div class="left">
-        <button mat-button color="warn" (click)="confirmDeleteListing()" *ngIf="order.allow_reject_order" class="small">
-          <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-          Reject bid &amp; cancel order
-        </button>
-        <!--button mat-button matTooltip="Edit order" class="small">
-          <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
-          Edit
-        </button-->
-        <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-        <button mat-button matTooltip="Escrow TX details" *ngIf="order.show_escrow_txdetails" class="small">
-          <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
-          View payment
-        </button>
-        <!-- TODO: shortcut to e2e message to buyer -->
-        <!--button mat-button class="small">
-          <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
-          Contact buyer
-        </button-->
-      </div>
-      <div class="right">
-        <!-- TODO: after clicking, show confirmation modal with more info: -->
-        <button mat-raised-button color="primary" matTooltip="{{ order.action_tooltip }}"
-                [disabled]="order.action_disabled">
-          <mat-icon fontSet="partIcon" fontIcon="{{ order.action_icon }}"></mat-icon>
-          {{ order.action_button }}
-        </button>
-      </div>
-    </mat-action-row>
-  </mat-expansion-panel><!-- .order -->
+  <app-order-item *ngFor="let order of orders?.orders" [order]="order"></app-order-item>
 
 </div><!-- .orders.list -->

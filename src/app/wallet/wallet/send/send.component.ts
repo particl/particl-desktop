@@ -198,6 +198,7 @@ export class SendComponent implements OnInit {
       txt = `Do you really want to transfer the following balance ${this.send.amount} ${this.send.currency.toUpperCase()}?`
     }
 
+    dialogRef.componentInstance.type = 'tx';
     dialogRef.componentInstance.dialogContent = txt;
     dialogRef.componentInstance.send = this.send;
 

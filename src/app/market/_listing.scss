@@ -10,3 +10,12 @@
     padding: 0 24px 0 0;
   }
 }
+
+.list-item {
+  .header-wrapper {
+    .photo { // crop listing's image to square
+      min-height: 110px;
+      max-height: 110px;
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { ListingItemComponent } from 'app/market/listings/listing-item/listing-i
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
 
 import { routing } from './market.routing';
+import { WalletModule } from '../wallet/wallet/wallet.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ListingsComponent } from './listings/listings.component';
 import { BuyComponent } from './buy/buy.component';
@@ -13,12 +14,14 @@ import { AddItemComponent } from './sell/add-item/add-item.component';
 import { FavoriteComponent } from './shared/favorite/favorite.component';
 import { OrdersComponent } from './shared/orders/orders.component';
 import { CheckoutProcessComponent } from './buy/checkout-process/checkout-process.component';
+import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
 
 @NgModule({
   imports: [
     CommonModule,
     routing,
-    CoreUiModule.forRoot()
+    CoreUiModule.forRoot(),
+    WalletModule.forRoot()
   ],
   declarations: [
     ListingItemComponent,
@@ -29,7 +32,8 @@ import { CheckoutProcessComponent } from './buy/checkout-process/checkout-proces
     AddItemComponent,
     FavoriteComponent,
     OrdersComponent,
-    CheckoutProcessComponent
+    CheckoutProcessComponent,
+    OrderItemComponent
   ],
   entryComponents: [
     PreviewListingComponent

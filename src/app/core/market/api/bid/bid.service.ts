@@ -19,16 +19,14 @@ export class BidService {
 
   order(cart: Cart, profile: any): Observable<boolean> {
     let nBidsPlaced = 0;
-    const addressIdOfProfile: number = profile.ShippingAddresses[0].id;
-
     return new Observable((observer) => {
       cart.listings.forEach((listing: Listing) => {
         if (listing.hash) {
           // bid for item
-          this.market.call('bid', ['send', listing.hash, addressIdOfProfile])
+          this.market.call('bid', ['send', listing.hash, profile.id, profile.ShippingAddresses[0].id])
             .subscribe(
               (res) => {
-                this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressIdOfProfile}`);
+                // this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressIdOfProfile}`);
                 if (++nBidsPlaced === cart.listings.length) {
                   observer.next(true);
                   observer.complete();
@@ -39,9 +37,29 @@ export class BidService {
     });
   }
 
-  search(): Observable<Array<Bid>> {
-    // Params: flag for buy or sell required
-    const params = ['search'];
-    return this.market.call('bid', params)
+  search(address: string, type: any): Observable<any> {
+    const params = ['search', '*', '*', 'ASC'];
+    return this.market.call('bid', params).do(x => console.log(x)).map(o => new Bid(o, address, type))
   }
+
+  acceptBidCommand(hash: string, id: number): Observable<any> {
+    const params = ['accept', hash, id];
+    return this.market.call('bid', params);
+  }
+
+  rejectBidCommand(hash: string, id: number): Observable<any> {
+    const params = ['reject', hash, id];
+    return this.market.call('bid', params);
+  }
+
+  escrowReleaseCommand(id: number, memo: string): Observable<any> {
+    const params = ['release', id, memo];
+    return this.market.call('escrow', params);
+  }
+
+  escrowLockCommand(id: number, nonce: any, memo: string): Observable<any> {
+    const params = ['lock', id, nonce, memo];
+    return this.market.call('escrow', params);
+  }
+
 }

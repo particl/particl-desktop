@@ -100,3 +100,4 @@ export { ReceiveComponent } from './receive/receive.component';
 export { SendComponent } from './send/send.component';
 export { BalanceComponent } from './balances/balance.component';
 export { HistoryComponent } from './history/history.component';
+export { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';

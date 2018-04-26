@@ -22,9 +22,6 @@ export class SellComponent implements OnInit {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['listings', 'orders', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
 
-  // order type
-  orderType: string = 'sell';
-
   filters: any = {
     search:   undefined,
     sort:     undefined,

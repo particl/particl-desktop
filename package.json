@@ -1,6 +1,6 @@
 {
   "name": "particl-desktop",
-  "version": "1.1.0",
+  "version": "1.1.0-RC1-alpha",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
   "homepage": "https://particl.io",
@@ -38,16 +38,18 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js",
     "install:all": "yarn run install:desktop && yarn run install:marketplace",
-    "install:marketplace": "cd dapp-shell && yarn && ./bin/copy-env.sh && yarn run setup",
+    "install:marketplace": "cd particl-market && yarn && ./bin/copy-env.sh && yarn run setup",
     "install:desktop": "git submodule update && yarn",
-    "start:marketplace": "cd dapp-shell && yarn run serve",
+    "start:marketplace": "cd particl-market && yarn run serve",
     "start": "yarn run start:electron:fast && yarn run start:marketplace",
-    "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test"
+    "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test",
+    "postinstall": "install-app-deps"
   },
   "productName": "Particl Desktop",
   "build": {
     "electronVersion": "1.7.12",
     "appId": "io.particl.desktop",
+    "npmRebuild": true,
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -63,7 +65,6 @@
       "artifactName": "${name}-${version}-${os}.${ext}",
       "category": "public.app-category.wallet",
       "target": [
-        "dmg",
         "zip"
       ]
     },
@@ -137,7 +138,10 @@
       "packageCategory": "wallet",
       "icon": "resources/linux"
     },
-    "asar": true
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/sqlite3/**/*"
+    ]
   },
   "dependencies": {
     "@angular/animations": "^5.2.5",
@@ -145,7 +149,7 @@
     "@angular/common": "^5.2.5",
     "@angular/compiler": "^5.2.5",
     "@angular/core": "^5.2.5",
-    "@angular/flex-layout": "^2.0.0-beta.12",
+    "@angular/flex-layout": "2.0.0-beta.12",
     "@angular/forms": "^5.2.5",
     "@angular/http": "^5.2.5",
     "@angular/material": "^5.2.1",
@@ -172,6 +176,7 @@
     "ngx-infinite-scroll": "^0.8.3",
     "node-unzip-2": "^0.2.1",
     "open-sans-all": "^0.1.3",
+    "particl-marketplace": "^0.0.1",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.5.6",
     "tmp": "^0.0.33",

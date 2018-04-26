@@ -30,12 +30,14 @@ export class Amount {
    * -25.9 -> '9'
    * 25 -> '0'
    * 25.9 -> '9'
+   * 
+   * We have to return this as a string, else the leading zero's are gone.
    */
-  public getFractionalPart(): number {
+  public getFractionalPart(): string {
     if (this.ifDotExist()) {
-      return +(this.getAmount().toString()).split('.')[1];
+      return (this.getAmount().toString()).split('.')[1];
     }
-    return 0;
+    return '';
   }
 
   /**
@@ -229,4 +231,112 @@ export function dataURItoBlob(dataURI: string) {
     ia[i] = byteString.charCodeAt(i);
   }
   return new Blob([ab], {type: 'image/jpeg'});
+}
+
+export const Messages = {
+  'BIDDING': {
+    'buy': {
+      'action_button': 'Waiting for Seller',
+      'tooltip': '',
+      'action_disabled': true,
+      'action_icon': 'part-date',
+      'allow_reject_order': false,
+      'status_info': 'Waiting for Seller to manually accept (or reject) your bid'
+    },
+    'sell': {
+      'action_button': 'Accept bid',
+      'tooltip': 'Approve this order and sell to this Buyer',
+      'action_icon': 'part-check',
+      'action_disabled': false,
+      'allow_reject_order': true,
+      'status_info': 'Buyer wants to purchase this item - approve or reject this order to continue'
+    },
+    'status' : 'Bidding'
+  },
+  'AWAITING_ESCROW': {
+    'buy': {
+      'action_button': 'Make payment',
+      'tooltip': 'Pay for your order and escrow',
+      'action_icon': 'part-check',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Seller accepted your bid - please proceed to making the payment (this will lock the funds to escrow)'
+    },
+    'sell': {
+      'action_button': 'Waiting for Buyer',
+      'tooltip': 'Waiting for Buyer\'s Payment',
+      'action_icon': 'part-date',
+      'action_disabled': true,
+      'allow_reject_order': false,
+      'status_info': 'Waiting for Buyer to lock the payment into escrow'
+    },
+    'status' : 'Awaiting'
+  },
+  'ESCROW_LOCKED': {
+    'buy': {
+      'action_button': 'Waiting for shipping',
+      'tooltip': '',
+      'action_icon': 'part-date',
+      'action_disabled': true,
+      'allow_reject_order': false,
+      'status_info': 'Funds locked in escrow, waiting for Seller to process order for shipping'
+    },
+    'sell': {
+      'action_button': 'Mark as shipped',
+      'tooltip': 'Confirm that the order has been shipped to Buyer',
+      'action_icon': 'part-check',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Buyer\'s funds are locked in escrow, order is ready to ship - when sent, Mark order as shipped and awaits its delivery'
+    },
+    'status' : 'Escrow'
+  },
+  'SHIPPING': {
+    'buy': {
+      'action_button': 'Mark as delivered',
+      'tooltip': 'Confirm that you have received the order',
+      'action_icon': 'part-check',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Order has been shipped - when you receive it, Mark it as delivered and your escrow funds will be released automatically'
+    },
+    'sell': {
+      'action_button': 'Waiting for delivery',
+      'tooltip': 'Awaiting confirmation of successfull delivery by Buyer',
+      'action_icon': 'part-date',
+      'action_disabled': true,
+      'allow_reject_order': false,
+      'status_info': 'Order sent to Buyer, waiting for Buyer to confirm the delivery'
+    },
+    'status' : 'Shipping'
+  },
+  'COMPLETE': {
+    'buy': {
+      'action_button': 'Order complete',
+      'tooltip': '',
+      'action_icon': 'part-check',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Successfully finalized order'
+    },
+    'sell': {
+      'action_button': 'Order Complete',
+      'tooltip': '',
+      'action_icon': 'part-check',
+      'action_disabled': false,
+      'allow_reject_order': false,
+      'status_info': 'Order delivery confirmed by Buyer - order successfully finalized'
+    },
+    'status' : 'Complete'
+  }
+}
+export const setOrderKeys = (ord: any, type: string) => {
+  // once the order has been accepted then we get status in orderItem
+  const status = ord.OrderItem.status ? ord.OrderItem.status : 'BIDDING';
+  ord.type = type;
+  ord.added = new DateFormatter(new Date(ord.createdAt)).dateFormatter(true);
+  ord.updated = new DateFormatter(new Date(ord.updatedAt)).dateFormatter(true);
+  ord.messages = Messages[status][type];
+  ord.status = Messages[status].status;
+  return ord;
 }

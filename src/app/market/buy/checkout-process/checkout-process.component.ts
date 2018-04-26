@@ -107,7 +107,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   removeFromCart(shoppingCartId: number): void {
     this.cartService.removeItem(shoppingCartId).take(1)
-      .subscribe(this.getCart);
+      .subscribe(this.getCart.bind(this));
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -119,8 +119,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Should follow es6
-  getCart = () => {
+  getCart(): void {
     this.cartService.getCart().take(1).subscribe(cart => this.cart = cart);
   }
 
@@ -170,13 +169,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   placeOrderModal(): void {
     const dialogRef = this.dialog.open(PlaceOrderComponent);
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res === undefined) {
-        this.placeOrder();
-      }
-      });
+    dialogRef.componentInstance.type = 'place';
+    dialogRef.componentInstance.isConfirmed.subscribe(() => this.placeOrder());
   }
-
 
   placeOrder() {
     if (this.rpcState.get('locked')) {

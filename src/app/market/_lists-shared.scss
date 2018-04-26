@@ -2,122 +2,121 @@
 
 // ------ LISTS (shared for listings & orders) ------ //
 
-.list {
-  .item { // Listing/Order
-    font-size: 12px;
-    padding: 0;
-    margin-bottom: 16px !important;
-    .header-wrapper {
-      width: 100%;
-      padding-right: 24px;
-      .photo {
-        margin-right: 24px;
-        img {
-          width: 100%;
-          display: block;
-        }
-      }
-      .meta {
-        color: $text-muted;
-        font-size: 11px;
-        line-height: 1.8;
-        .name {
-          color: $text;
-          font-size: 14px;
-          font-weight: 600;
-          line-height: 1.4;
-          margin-bottom: 5px;
-        }
+
+.list-item { // Listing/Order
+  font-size: 12px;
+  padding: 0;
+  margin-bottom: 16px !important;
+  .header-wrapper {
+    width: 100%;
+    padding-right: 24px;
+    .photo {
+      margin-right: 24px;
+      img {
+        width: 100%;
+        display: block;
       }
     }
-    .status-info {
-      border-top: 1px solid $bg-shadow;
-      padding: 20px 30px;
-      font-size: 13px;
-      font-family: $font;
+    .meta {
       color: $text-muted;
-      p {
-        margin: 0;
-      }
-    }
-    .detail {
-      font-size: 13px;
-      font-family: $font;
-      color: $text-muted;
-      padding: 24px 30px;
-      border-top: 1px dashed $bg-shadow;
-      .title {
-        font-size: 13px;
-        text-transform: uppercase;
-        font-weight: 600;
+      font-size: 11px;
+      line-height: 1.8;
+      .name {
         color: $text;
-        margin-bottom: 10px;
-      }
-      table.prices {
-        color: $text-muted;
-        border-collapse: collapse;
-        th {
-          text-align: right;
-          font-weight: 600;
-          padding-right: 7px;
-        }
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 5px;
       }
     }
-    mat-action-row {
-      padding: 16px 18px;
-      .left {
-        margin-top: 3px;
-        button {
-          margin: 0 4px 0 0;
-        }
-      }
+  }
+  .status-info {
+    border-top: 1px solid $bg-shadow;
+    padding: 20px 30px;
+    font-size: 13px;
+    font-family: $font;
+    color: $text-muted;
+    p {
+      margin: 0;
     }
-    .status {
-      background: mix($bg, $bg-shadow, 85%);
-      border-radius: 4px;
-      text-align: center;
-      color: $text;
+  }
+  .detail {
+    font-size: 13px;
+    font-family: $font;
+    color: $text-muted;
+    padding: 24px 30px;
+    border-top: 1px dashed $bg-shadow;
+    .title {
+      font-size: 13px;
       text-transform: uppercase;
       font-weight: 600;
-      padding: 6px 15px;
-      margin-top: 0;
-      // listings
-      &.unpublished span {
-        color: $bg-shadow;
+      color: $text;
+      margin-bottom: 10px;
+    }
+    table.prices {
+      color: $text-muted;
+      border-collapse: collapse;
+      th {
+        text-align: right;
+        font-weight: 600;
+        padding-right: 7px;
       }
-      &.pending span {
-        color: $color-warning;
+    }
+  }
+  mat-action-row {
+    padding: 16px 18px;
+    .left {
+      margin-top: 3px;
+      button {
+        margin: 0 4px 0 0;
       }
-      &.listed span {
-        color: mix($color, $color-success);
-      }
-      &.expired span {
-        color: $color-alert;
-      }
-      // orders
-      &.bidding span {
-        color: $color-warning;
-      }
-      &.awaiting span {
-        color: mix($color-warning, $color-alert, 60%);
-      }
-      &.escrow span {
-        color: $color-alert;
-      }
-      &.shipping span {
-        color: mix($color, $color-success);
-      }
-      &.complete span {
-        color: $color-info;
-      }
-      span { // status indicator
-        font-size: 24px;
-        line-height: 0;
-        font-weight: 700;
-        position: relative;
-        top: 4px;
-        margin-right: 5px;
-      }
+    }
+  }
+  .status {
+    background: mix($bg, $bg-shadow, 85%);
+    border-radius: 4px;
+    text-align: center;
+    color: $text;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 6px 15px;
+    margin-top: 0;
+    // listings
+    &.unpublished span {
+      color: $bg-shadow;
+    }
+    &.pending span {
+      color: $color-warning;
+    }
+    &.published span {
+      color: mix($color, $color-success);
+    }
+    &.expired span {
+      color: $color-alert;
+    }
+    // orders
+    &.Bidding span {
+      color: $color-warning;
+    }
+    &.Awaiting span {
+      color: mix($color-warning, $color-alert, 60%);
+    }
+    &.Escrow span {
+      color: $color-alert;
+    }
+    &.Shipping span {
+      color: mix($color, $color-success);
+    }
+    &.Complete span {
+      color: $color-info;
+    }
+    span { // status indicator
+      font-size: 24px;
+      line-height: 0;
+      font-weight: 700;
+      position: relative;
+      top: 4px;
+      margin-right: 5px;
     }
   }
 }

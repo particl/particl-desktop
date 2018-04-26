@@ -1,0 +1,40 @@
+<div mat-dialog-title class="title">Confirm order as shipped</div>
+
+
+<mat-dialog-content class="modal-content" fxLayout>
+
+  <div class="image" fxFlex="0 0 120px">
+    <img src="./assets/icons/SVG/market/shipped.svg">
+  </div>
+
+  <div class="text" fxFlex="1 1 350px">
+    <p>
+      By clicking the <kbd>Order shipped</kbd> button, you confirm that you already sent the order to the Buyer.
+    </p>
+    <p>
+      It is recommended to enter the tracking information below<br>(if available):
+    </p>
+
+    <mat-form-field class="full-width" floatPlaceholder="never">
+      <input matInput type="text" placeholder="Additional shipping info (e.g. tracking number)" [(ngModel)]="trackingNumber">
+    </mat-form-field>
+
+    <p class="widget-help">
+      Please note that if you haven't shipped the order yet, you shouldn't confirm this and it will result
+      in losing your money locked in escrow.
+    </p>
+  </div>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button color="warn" mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" (click)="placeOrder()">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Order shipped
+  </button>
+</mat-dialog-actions>
