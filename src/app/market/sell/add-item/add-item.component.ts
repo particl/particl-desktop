@@ -183,7 +183,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         category: 0,
         basePrice: 0,
         domesticShippingPrice: 0,
-        internationalShippingPrice: 0
+        internationalShippingPrice: 0,
         country: ''
       };
 
