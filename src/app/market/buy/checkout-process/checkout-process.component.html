@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear [@.disabled]="true" class="no-bg container-block">
+<mat-horizontal-stepper linear [@.disabled]="true" class="no-bg container-block" #stepper>
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
   <ng-template matStepperIcon="edit">
     <custom-icon>
@@ -121,9 +121,7 @@
     </form>
   </mat-step>
 
-
   <!-- =========== SHIPPING DETAILS =========== -->
-
   <mat-step [stepControl]="shippingFormGroup">
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
@@ -134,10 +132,12 @@
           <mat-card>
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
-              <mat-select placeholder="Select saved shipping address profile"
+              <mat-select [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
+                          (change)="setValue(selectedAddress)"
+                          placeholder="Select saved shipping address profile"
                           disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
                 <mat-option *ngFor="let address of profile.ShippingAddresses"
-                            [value]="address.title" (click)="updateShippingAddress(address)">
+                            [value]="address" >
                   {{address.title}}
                 </mat-option>
               </mat-select>
@@ -192,11 +192,11 @@
 
             <!--Hide shipping profile -->
             <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
-              <mat-checkbox formControlName="newShipping" ngModel="newShipping" fxFlex>Save as shipping profile
+              <mat-checkbox formControlName="newShipping" [(ngModel)]="newShipping" fxFlex>Save as shipping profile
               </mat-checkbox>
               <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="newShipingProfileName" placeholder="Shipping profile name"
-                       [(ngModel)]="newShipingProfileName">
+                <input matInput formControlName="title" placeholder="Shipping profile name"
+                       [(ngModel)]="title">
               </mat-form-field>
             </div>
 

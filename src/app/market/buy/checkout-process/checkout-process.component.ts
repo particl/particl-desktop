@@ -1,4 +1,7 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {
+  Component, EventEmitter, OnDestroy, OnInit, Output,
+  ViewChild
+} from '@angular/core';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -6,17 +9,19 @@ import {
   Validators
 } from '@angular/forms';
 import { Log } from 'ng2-logger';
+import { MatStepper } from '@angular/material';
 
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { Cart } from 'app/core/market/api/cart/cart.model';
+import { ShippingDetails } from '../../shared/shipping-details.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { MarketService } from '../../../core/market/market.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsService } from 'app/modals/modals.service';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
 
 @Component({
@@ -24,14 +29,16 @@ import { PlaceOrderComponent } from '../../../modals/place-order/place-order.com
   templateUrl: './checkout-process.component.html',
   styleUrls: ['./checkout-process.component.scss']
 })
-export class CheckoutProcessComponent implements OnInit {
+export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create('buy.component: ' + Math.floor((Math.random() * 1000) + 1));
 
   @Output() onOrderPlaced: EventEmitter<number> = new EventEmitter<number>();
-  /* https://material.angular.io/components/stepper/overview */
+  @ViewChild('stepper') stepper: MatStepper;
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
+  public newShipping: boolean;
+  public selectedAddress: ShippingDetails;
 
   public profile: any = {};
 
@@ -60,7 +67,17 @@ export class CheckoutProcessComponent implements OnInit {
     this.getProfile();
 
     this.getCart();
+  }
 
+  ngOnDestroy() {
+    this.setShippingCache();
+  }
+
+  // @TODO create separate service for checkout process.
+  setShippingCache() {
+    this.updateSteperIndex();
+    this.profileService.shippingDetails = this.shippingFormGroup.value;
+    this.profileService.shippingDetails.id = this.selectedAddress.id
   }
 
   formBuild() {
@@ -78,7 +95,7 @@ export class CheckoutProcessComponent implements OnInit {
       country: ['', Validators.required],
       zipCode: ['', Validators.required],
       newShipping: [''],
-      newShipingProfileName: ['']
+      title: ['']
     });
   }
 
@@ -114,27 +131,34 @@ export class CheckoutProcessComponent implements OnInit {
       return;
     }
 
-    let upsert: Function = this.profileService.updateShippingAddress.bind(this);
-
-    if (this.profile.ShippingAddresses.length === 0) {
+    let upsert: Function;
+    if (this.profile.ShippingAddresses.length === 0 || this.newShipping) {
       upsert = this.profileService.addShippingAddress.bind(this);
+    } else {
+      this.shippingFormGroup.value.id = this.selectedAddress.id;
+      upsert = this.profileService.updateShippingAddress.bind(this);
     }
-    console.log(this.shippingFormGroup.value);
+
+    this.setShippingCache();
     upsert(this.shippingFormGroup.value).take(1).subscribe(address => {
       this.getProfile();
     });
 
   }
 
+  setValue(address: ShippingDetails) {
+    this.shippingFormGroup.patchValue(address);
+  }
+
   getProfile(): void {
     this.profileService.get(1).take(1).subscribe(
       profile => {
         this.profile = profile;
-        console.log('--- profile address ----');
-        console.log(profile);
         const addresses = profile.ShippingAddresses;
         if (addresses.length > 0) {
-          this.shippingFormGroup.patchValue(addresses[0]);
+          this.setSteperIndex();
+          this.selectedAddress = (this.profileService.shippingDetails) ? this.profileService.shippingDetails : addresses[0];
+          this.setValue(this.selectedAddress);
         }
       });
   }
@@ -162,11 +186,24 @@ export class CheckoutProcessComponent implements OnInit {
   bidOrder() {
     this.bid.order(this.cart, this.profile).subscribe((res) => {
       this.clearCart(false);
-
+      this.clearCache();
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
       this.log.d(`Error while placing an order`);
     });
+  }
+
+  clearCache() {
+    this.profileService.shippingDetails = new ShippingDetails()
+  }
+
+  setSteperIndex() {
+    // @TODO: set stepper completed on 3 index.
+    this.stepper.selectedIndex = this.profileService.stepper;
+  }
+
+  updateSteperIndex() {
+    this.profileService.stepper = this.stepper.selectedIndex;
   }
 }
