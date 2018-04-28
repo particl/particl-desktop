@@ -77,7 +77,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   setShippingCache() {
     this.updateSteperIndex();
     this.profileService.shippingDetails = this.shippingFormGroup.value;
-    this.profileService.shippingDetails.id = this.selectedAddress.id
+    this.profileService.shippingDetails.id = this.selectedAddress && this.selectedAddress.id
   }
 
   formBuild() {
