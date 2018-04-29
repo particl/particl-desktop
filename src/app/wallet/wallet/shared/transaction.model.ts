@@ -68,7 +68,6 @@ export class Transaction {
   }
 
   private getAddressType(): AddressType {
-    console.log(this.address)
     if (this.stealth_address === undefined) {
       if (this.address && this.address.startsWith('r')) {
         return AddressType.MULTISIG;
@@ -144,10 +143,7 @@ export class Transaction {
   /* todo: fee is not defined in normal receive tx, wut? */
   public getNetAmount(): number {
     const amount: number = +this.getAmountObject().getAmount();
-    console.log('amount=' + amount);
-
     // @ TODO: the fee for multisig transaction includes the change
-    console.log('fee=' + this.fee)
     /* If fee undefined then just return amount */
     if (this.fee === undefined) {
       return amount;
