@@ -19,6 +19,9 @@ if (process.platform === 'linux') {
   app.getPath('userData') + '/testnet'
 ].map(path => !fs.existsSync(path) && fs.mkdir(path));
 
+if (app.getVersion().includes('RC'))
+  process.argv.push(...['-testnet']);
+
 const options = require('./modules/options').parse();
 const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
@@ -30,9 +33,6 @@ const daemon  = require('./modules/daemon/daemon');
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-
-if (app.getVersion().includes('RC'))
-  process.argv.push(...['-testnet']);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

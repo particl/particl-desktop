@@ -1,3 +1,6 @@
+process.env.NODE_ENV="alpha"
+process.env.TESTNET=true
+
 const _options    = require('../options');
 const market    = require('particl-marketplace');
 // require('../../node_modules/particl-market/dist/core/App.js');
