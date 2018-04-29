@@ -194,8 +194,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.longDescription = template.longDescription;
       t.category = template.category.id;
       t.country = country? country.name : '';
-      console.log('getting category to id=' + this.itemFormGroup.get('category').value);
-      console.log('setting category to id=' + t.category);
 
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
