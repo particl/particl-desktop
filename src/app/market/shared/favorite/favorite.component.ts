@@ -6,6 +6,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { MarketStateService } from '../../../core/market/market-state/market-state.service';
 
 import { Listing } from '../../../core/market/api/listing/listing.model';
+import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class FavoriteComponent implements OnInit {
   @Input() listing: Listing;
 
   constructor(
-    public favoritesService: FavoritesService,
+    public favorites: FavoritesService,
     private snackbar: SnackbarService,
     private marketState: MarketStateService
   ) {}
@@ -28,10 +29,10 @@ export class FavoriteComponent implements OnInit {
   ngOnInit() { }
 
   toggle() {
-    this.favoritesService.toggle(this.listing);
+    this.favorites.toggle(this.listing);
   }
 
   get isFavorited(): boolean {
-    return this.favoritesService.isListingItemFavorited(this.listing.id);
+    return this.favorites.cache.isFavorited(this.listing);
   }
 }

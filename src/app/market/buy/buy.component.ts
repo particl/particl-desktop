@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
+import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+
+
 
 @Component({
   selector: 'app-buy',
@@ -37,13 +40,13 @@ export class BuyComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.favoritesService.updateListOfFavorites();
-    this.getFavorites();
+    this.favoritesService.cache.update();
+    this.load();
   }
 
-  getFavorites() {
-    this.favoritesService.getFavorites().subscribe(favorites => {
-      const temp: Array<Listing> = new Array<Listing>();
+  load() {
+    this.favoritesService.cache.getFavorites().subscribe(favorites => {
+      const temp: Listing[] = [];
       favorites.forEach(favorite => {
         this.listingService.get(favorite.listingItemId).take(1).subscribe(listing => {
           temp.push(listing);

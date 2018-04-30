@@ -1,10 +1,10 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { MarketCacheModule } from './market-cache/market-cache.module';
 
 import { MarketService } from './market.service';
 import { MarketStateService } from './market-state/market-state.service';
-import { MarketUiCacheService } from './market-cache/market-ui-cache.service';
 
 import { CategoryService } from './api/category/category.service';
 import { ProfileService } from './api/profile/profile.service';
@@ -22,7 +22,8 @@ import { BidService } from './api/bid/bid.service';
 @NgModule({
   imports: [
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    MarketCacheModule.forRoot()
   ],
   declarations: []
 })
@@ -33,7 +34,6 @@ export class MarketModule {
       providers: [
         MarketService,
         MarketStateService,
-        MarketUiCacheService,
         // API
         CategoryService,
         ProfileService,
