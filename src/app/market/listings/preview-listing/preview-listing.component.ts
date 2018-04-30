@@ -5,6 +5,7 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
+import { Listing } from 'app/core/market/api/listing/listing.model';
 
 @Component({
   selector: 'app-preview-listing',
@@ -58,17 +59,12 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       });
   }
 
-  addToCart(id: number) {
-    this.cartService.addItem(id)
+  addToCart(listing: Listing) {
+    this.cartService.add(listing)
       .subscribe(item => {
-        console.log('added ' + id + ' to cart!');
+        console.log('added ' + listing.id + ' to cart!');
       }
       );
-  }
-
-  addToFavorites(id: number) {
-    this.favoritesService.addItem(id).subscribe();
-
   }
 
   dialogClose(): void {

@@ -42,6 +42,6 @@ export class ListingItemComponent {
   }
 
   addToCart() {
-    this.cartService.addItem(this.listing.id).subscribe();
+    this.cartService.add(this.listing).subscribe();
   }
 }

@@ -7,6 +7,7 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 import { Cart } from './cart.model';
 
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { Listing } from 'app/core/market/api/listing/listing.model';
 
 
 @Injectable()
@@ -20,9 +21,9 @@ export class CartService {
     private snackbar: SnackbarService
   ) { }
 
-  addItem(listingItemId: number): Observable<any> {
-    this.log.d(`Adding listingItemId=${listingItemId} to cart with id=1`);
-    return this.market.call('cartitem', ['add', 1, listingItemId]).take(1).do(
+  add(listing: Listing): Observable<any> {
+    this.log.d(`Adding listingItemId=${listing.id} to cart with id=1`);
+    return this.market.call('cartitem', ['add', 1, listing.id]).take(1).do(
       data => {
         this.snackbar.open('Item successfully added in cart')
         this.updateCart();

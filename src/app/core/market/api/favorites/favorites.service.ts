@@ -28,15 +28,15 @@ export class FavoritesService {
 
   }
 
-  addItem(id: number) {
-    return this.market.call('favorite', ['add', 1, id])
+  add(listing: Listing) {
+    return this.market.call('favorite', ['add', 1, listing.id])
     .do((data) => {
       this.cache.update();
     });
   }
 
-  removeItem(id: number) {
-    return this.market.call('favorite', ['remove', 1, id])
+  remove(listing: Listing) {
+    return this.market.call('favorite', ['remove', 1, listing.id])
       .do((data) => {
         this.cache.update();
       });
@@ -44,11 +44,11 @@ export class FavoritesService {
 
   toggle(listing: Listing): void {
     if (this.cache.isFavorited(listing) === true) {
-      this.removeItem(listing.id).take(1).subscribe(res => {
+      this.remove(listing).take(1).subscribe(res => {
         this.snackbar.open(`${listing.title} removed from Favorites`);
       });
     } else {
-      this.addItem(listing.id).take(1).subscribe(res => {
+      this.add(listing).take(1).subscribe(res => {
         this.snackbar.open(`${listing.title} added to Favorites`);
       });
     }
