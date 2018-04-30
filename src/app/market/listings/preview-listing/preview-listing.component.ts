@@ -32,26 +32,6 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.data.listing.images.map(image => {
-      this.pictures.push(image.ItemImageDatas.find(size => {
-        return size.imageVersion === 'MEDIUM';
-      }));
-    });
-
-    let itemPrice = this.data.listing.object.PaymentInformation.ItemPrice;
-    if (itemPrice && itemPrice.basePrice) {
-      itemPrice = itemPrice.basePrice;
-      this.price = {
-        int:     itemPrice.toFixed(0),
-        cents:  (itemPrice % 1).toFixed(8),
-        escrow: (itemPrice * this.data.listing.object.PaymentInformation.Escrow.Ratio.buyer / 100).toFixed(8),
-        usd: +(itemPrice * +this.currencyprice.toFixed(2))
-      };
-    }
-
-
-    this.date = new Date(this.data.listing.object.createdAt).toLocaleDateString();
-
     this.marketState.observe('currencyprice')
       .takeWhile(() => !this.destroyed)
       .subscribe(price => {
@@ -60,11 +40,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   }
 
   addToCart(listing: Listing) {
-    this.cartService.add(listing)
-      .subscribe(item => {
-        console.log('added ' + listing.id + ' to cart!');
-      }
-      );
+    this.cartService.add(listing).subscribe();
   }
 
   dialogClose(): void {
