@@ -63,7 +63,7 @@ export class FavoritesService {
   }
 
   updateListOfFavorites() {
-    this.marketState.registerStateCall('favorite', null, ['list', 1]);
+    this.marketState.register('favorite', null, ['list', 1]);
   }
 
   isListingItemFavorited(listingItemId: number): boolean {

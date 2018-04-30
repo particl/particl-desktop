@@ -59,7 +59,7 @@ export class CartService {
   }
 
   updateCart(): void {
-    this.marketState.registerStateCall('cartitem', null, ['list', 1, true])
+    this.marketState.register('cartitem', null, ['list', 1, true])
   }
 
 }

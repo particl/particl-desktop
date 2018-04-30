@@ -97,13 +97,19 @@ export class RpcService implements OnDestroy {
 
       return this._http
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
-        .pipe(
-          map((response: any) => response.result),
-          catchError(error => Observable.throw(typeof error._body === 'object'
-            ? error._body
-            : JSON.parse(error._body))
-          )
-        );
+          .map((response: any) => response.result)
+          .catch(error => {
+            let err: string;
+            if (typeof error._body === 'object') {
+              err =  error._body
+            } else if (error._body) {
+              err = JSON.parse(error._body);
+            } else {
+              err = error.message;
+            }
+           
+            return Observable.throw(err)
+          })
     }
   }
 
