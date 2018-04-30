@@ -27,7 +27,6 @@ export class MarketStateService extends StateService implements OnDestroy {
 
     // loop procedure
     const _call = () => {
-      console.log('market state call!')
       if (this.destroyed) {
         // RpcState service has been destroyed, stop.
         return;
@@ -36,6 +35,7 @@ export class MarketStateService extends StateService implements OnDestroy {
         .finally(() => {
           // re-start loop
           if (timeout) {
+            console.log('error count', errors);
             const restartAfter = this.determineTimeoutDuration(errors, timeout);
             setTimeout(_call, restartAfter);
           }

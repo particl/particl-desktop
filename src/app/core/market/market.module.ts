@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { MarketService } from './market.service';
 import { MarketStateService } from './market-state/market-state.service';
+import { MarketCacheService } from './market-cache/market-cache.service';
 
 import { CategoryService } from './api/category/category.service';
 import { ProfileService } from './api/profile/profile.service';
@@ -32,6 +33,7 @@ export class MarketModule {
       providers: [
         MarketService,
         MarketStateService,
+        MarketCacheService,
         // API
         CategoryService,
         ProfileService,
