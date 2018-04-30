@@ -5,6 +5,7 @@ export class Template {
 
   public category: Category = new Category({});
   public createdAt: string = '';
+  public status: string = '';
 
   public basePrice: Amount = new Amount(0);
   public domesticShippingPrice: Amount = new Amount(0);
@@ -20,6 +21,7 @@ export class Template {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
     this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
 
+    this.setStatus();
     this.setBasePrice();
     this.setShippingPrice();
     this.setEscrowPrice();
@@ -44,14 +46,6 @@ export class Template {
 
   get hash(): string {
     return this.object.hash;
-  }
-  // Status
-  get status(): string {
-    if (this.object.ListingItems.length > 0) {
-      return 'published';
-    } else {
-      return 'unpublished';
-    }
   }
 
   get thumbnail(): any {
@@ -85,7 +79,13 @@ export class Template {
     }
     return undefined;
   }
-
+  setStatus(): void {
+    if (this.object.ListingItems && this.object.ListingItems.length > 0) {
+      this.status = 'published';
+    } else {
+      this.status = 'unpublished';
+    }
+  }
   setBasePrice(): void {
     this.basePrice = (this.object.PaymentInformation.ItemPrice
       ? new Amount(this.object.PaymentInformation.ItemPrice.basePrice)

@@ -21,6 +21,15 @@ export class Status {
             action_tooltip: 'Activate listing and put it on sale',
             action_color: 'primary',
             action_disabled: false
+        },{
+            status: 'awaiting',
+            class: 'published',
+            status_info: 'Awaiting publishment!',
+            action_icon: 'part-check',
+            action_button: 'Awaiting publishment',
+            action_tooltip: 'Waiting for listing to become active on the network!',
+            action_color: 'primary',
+            action_disabled: true
         },
         {
             status: 'published',

@@ -17,6 +17,7 @@ import { ModalsService } from 'app/modals/modals.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
+import { MarketUiCacheService } from 'app/core/market/market-cache/market-ui-cache.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   // template id
   templateId: number;
+  preloadedTemplate: Template;
 
   itemFormGroup: FormGroup;
 
@@ -57,7 +59,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private rpcState: RpcStateService,
     private modals: ModalsService,
     private countryList: CountryListService,
-    private escrow: EscrowService
+    private escrow: EscrowService,
+    private cache: MarketUiCacheService
   ) { }
 
   ngOnInit() {
@@ -176,6 +179,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.template.get(this.templateId).subscribe((template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
 
+
+      
+      if (template.status === 'unpublished' && this.cache.isAwaiting(template.id)) {
+        template.status = 'awaiting';
+      }
+      
+
       const t = {
         title: '',
         shortDescription: '',
@@ -207,6 +217,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
           id: i.id
         }
       })
+
+      this.preloadedTemplate = template;
       // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
     });
   }
@@ -320,6 +332,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.save().subscribe(id => {
         console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
+          this.cache.posting(id);
+          this.preloadedTemplate.status = 'awaiting';
+          
           this.snackbar.open('Succesfully added Listing!')
           console.log(listing);
           this.backToSell();

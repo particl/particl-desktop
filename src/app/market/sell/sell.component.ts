@@ -10,6 +10,7 @@ import { Template } from 'app/core/market/api/template/template.model';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsService } from 'app/modals/modals.service';
 import { Status } from './status.class';
+import { MarketUiCacheService } from 'app/core/market/market-cache/market-ui-cache.service';
 
 @Component({
   selector: 'app-sell',
@@ -38,6 +39,7 @@ export class SellComponent implements OnInit {
     public dialog: MatDialog,
     private template: TemplateService,
     private listing: ListingService,
+    private cache: MarketUiCacheService,
     private rpcState: RpcStateService,
     private modals: ModalsService,
   ) {}
@@ -76,10 +78,16 @@ export class SellComponent implements OnInit {
   loadPage() {
     const category = this.filters.category ? this.filters.category : null;
     const search = this.filters.search ? this.filters.search : null;
+
     this.template.search(1, 10, 1, category, search).subscribe(
       (listings: Array<Template>) => {
         console.log(listings);
-        this.listings = listings;
+        this.listings = listings.map((t) => {
+          if (t.status === 'unpublished' && this.cache.isAwaiting(t.id)) {
+            t.status = 'awaiting';
+          }
+          return t;
+        });
       }
     )
   }
@@ -90,6 +98,7 @@ export class SellComponent implements OnInit {
       case 'unpublished':
         this.postTemplate(listing.id);
         break;
+      case 'awaiting':
       case 'published':
         break;
     }
@@ -106,6 +115,8 @@ export class SellComponent implements OnInit {
   callTemplate(id: any) {
     this.template.post(id, 1).take(1).subscribe(listing => {
         console.log(listing);
+        this.cache.posting(id);
+        this.loadPage();
       });
   }
 
