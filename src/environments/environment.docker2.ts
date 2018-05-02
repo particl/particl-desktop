@@ -1,12 +1,12 @@
 declare const require: any;
 
 export const environment = {
-  production: true,
-  version: require('../../package.json').version,
+  production: false,
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
-  envName: 'prod',
+  version: require('../../package.json').version,
+  envName: 'docker2',
   particlHost: 'localhost',
-  particlPort: 51935,
+  particlPort: 53935,
   marketHost: 'localhost',
-  marketPort: 3000
+  marketPort: 3200
 };

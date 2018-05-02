@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { dataURItoBlob } from 'app/core/util/utils';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class MarketService {
 
   // hostname: string = 'dev1.particl.xyz';
-  hostname: string = 'localhost';
-  port: number = 3000;
+  // hostname: string = 'localhost';
+  // port: number = 3000;
+  hostname: string = environment.marketHost;
+  port: number = environment.marketPort;
+
   url: string = `http://${this.hostname}:${this.port}/api/rpc`;
   imageUrl: string = `http://${this.hostname}:${this.port}/api/item-images/template/`;
 
