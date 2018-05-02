@@ -29,6 +29,8 @@
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
+        "docker1": "environments/environment.docker1.ts",
+        "docker2": "environments/environment.docker2.ts",
         "prod": "environments/environment.prod.ts"
       }
     }
