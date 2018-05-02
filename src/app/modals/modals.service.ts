@@ -50,7 +50,7 @@ export class ModalsService implements OnDestroy {
     private _blockStatusService: BlockStatusService,
     private _dialog: MatDialog
   ) {
-
+    console.log('modals service recreated');
     /* Hook BlockStatus -> open syncing modal */
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
