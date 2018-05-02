@@ -329,8 +329,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.save().subscribe(id => {
         console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
+          
           this.listing.cache.posting(id);
-          this.preloadedTemplate.status = 'awaiting';
+          if (this.preloadedTemplate) {
+            this.preloadedTemplate.status = 'awaiting';
+          } 
           
           this.snackbar.open('Succesfully added Listing!')
           console.log(listing);

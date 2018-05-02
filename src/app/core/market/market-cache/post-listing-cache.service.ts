@@ -13,7 +13,7 @@ export class PostListingCacheService {
   }
 
   isAwaiting(template: Template): boolean {
-    return template.status === 'unpublished' && this.awaiting.includes(template.id);
+    return template && template.status === 'unpublished' && this.awaiting.includes(template.id);
   }
 
   constructor() {
