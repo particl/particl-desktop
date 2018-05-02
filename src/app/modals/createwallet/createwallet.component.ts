@@ -54,7 +54,7 @@ export class CreateWalletComponent implements OnDestroy {
   private destroyed: boolean = false;
 
   constructor (
-    @Inject(forwardRef(() => ModalsService))
+    //@Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
     private _passphraseService: PassphraseService,
     private rpcState: RpcStateService,

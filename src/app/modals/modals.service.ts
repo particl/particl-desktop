@@ -32,7 +32,7 @@ export class ModalsService implements OnDestroy {
   private data: string;
   private destroyed: boolean = false;
 
-  private log: any = Log.create('modals.service');
+  private log: any = Log.create('modals.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   messages: Object = {
     createWallet: CreateWalletComponent,
@@ -50,7 +50,7 @@ export class ModalsService implements OnDestroy {
     private _blockStatusService: BlockStatusService,
     private _dialog: MatDialog
   ) {
-
+    this.log.i('Modal service recreated!.');
     /* Hook BlockStatus -> open syncing modal */
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
@@ -162,10 +162,12 @@ export class ModalsService implements OnDestroy {
     * Open the Createwallet modal if wallet is not initialized
     */
   openInitialCreateWallet(): void {
+    this.log.i('openInitialCreateWallet.');
     this._rpcState.observe('ui:walletInitialized')
       .takeWhile(() => !this.destroyed)
       .subscribe(
         state => {
+          this.log.i('ui:walletInitialized updated.');
           this.initializedWallet = state;
           if (state) {
             this.log.i('Wallet already initialized.');

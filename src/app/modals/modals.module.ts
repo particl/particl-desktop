@@ -66,7 +66,6 @@ import { ShippingComponent } from './shipping/shipping.component';
     ClipboardModule
   ],
   providers: [
-    ModalsService,
     PassphraseService,
     SnackbarService
   ],
