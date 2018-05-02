@@ -17,8 +17,6 @@ import { ModalsService } from 'app/modals/modals.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
-import { MarketUiCacheService } from 'app/core/market/market-cache/market-ui-cache.service';
-
 
 @Component({
   selector: 'app-add-item',
@@ -59,8 +57,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private rpcState: RpcStateService,
     private modals: ModalsService,
     private countryList: CountryListService,
-    private escrow: EscrowService,
-    private cache: MarketUiCacheService
+    private escrow: EscrowService
   ) { }
 
   ngOnInit() {
@@ -181,7 +178,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
 
       
-      if (template.status === 'unpublished' && this.cache.isAwaiting(template.id)) {
+      if (this.listing.cache.isAwaiting(template)) {
         template.status = 'awaiting';
       }
       
@@ -332,7 +329,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.save().subscribe(id => {
         console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
-          this.cache.posting(id);
+          this.listing.cache.posting(id);
           this.preloadedTemplate.status = 'awaiting';
           
           this.snackbar.open('Succesfully added Listing!')

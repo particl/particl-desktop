@@ -23,7 +23,7 @@ export class Status {
             action_disabled: false
         },{
             status: 'awaiting',
-            class: 'published',
+            class: 'pending',
             status_info: 'Awaiting publishment!',
             action_icon: 'part-check',
             action_button: 'Awaiting publishment',

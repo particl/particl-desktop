@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { StateService } from '../..//state/state.service';
+import { Template } from 'app/core/market/api/template/template.model';
 
 @Injectable()
-export class MarketUiCacheService  implements OnDestroy {
+export class PostListingCacheService {
 
   // Contains templateId's currently being published
   private awaiting: number[] = [];
@@ -11,15 +12,12 @@ export class MarketUiCacheService  implements OnDestroy {
     this.awaiting.push(templateId);
   }
 
-  isAwaiting(templateId: number): boolean {
-    return this.awaiting.includes(templateId);
+  isAwaiting(template: Template): boolean {
+    return template.status === 'unpublished' && this.awaiting.includes(template.id);
   }
 
   constructor() {
 
    }
 
-  ngOnDestroy() {
-    this
-  }
 }

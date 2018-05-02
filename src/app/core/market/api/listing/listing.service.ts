@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
+import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
+
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class ListingService {
 
   constructor(
-    private market: MarketService
+    private market: MarketService,
+    public cache: PostListingCacheService
   ) {
 
   }

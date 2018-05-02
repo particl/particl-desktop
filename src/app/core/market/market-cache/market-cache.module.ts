@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MarketUiCacheService } from './market-ui-cache.service';
+import { PostListingCacheService } from './post-listing-cache.service';
 import { FavoriteCacheService } from './favorite-cache.service';
 
 
@@ -16,7 +16,7 @@ export class MarketCacheModule {
     return {
       ngModule: MarketCacheModule,
       providers: [
-        MarketUiCacheService,
+        PostListingCacheService,
         FavoriteCacheService,
       ]
     };
