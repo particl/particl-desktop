@@ -20,7 +20,7 @@
 
       <mat-select placeholder="All categories" (change)="clearAndLoadPage()" [(ngModel)]="filters.category"  class="filter category">
         <mat-option>All categories</mat-option>
-        <mat-option *ngFor="let category of categoryList" [value]="category.id">{{ category.name }}</mat-option>
+        <mat-option *ngFor="let category of categoryList" [value]="category.id"><span class="lvl-{{ category.level }}">{{ category.name }}</span></mat-option>
       </mat-select>
     </div>
 

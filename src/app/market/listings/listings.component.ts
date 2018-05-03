@@ -34,7 +34,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // countries: FormControl = new FormControl();
   search: string;
 
-  // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
+
   // categories: FormControl = new FormControl();
   categoryList: Array<Category> = [];
 

@@ -24,6 +24,24 @@
   }
 }
 
+
+// ------ CATEGORIES FILTER (top) ------ //
+
+.mat-option {
+  // filter by category top-level group
+  .lvl-1 {
+    margin-left: 0;
+  }
+  // filter by category sub-group/item
+  .lvl-2 {
+    margin-left: 16px !important;
+  }
+  // filter by category item
+  .lvl-3 {
+    margin-left: 32px !important;
+  }
+}
+
 // ------ CONTROL BAR (top) ------ //
 
 .control-bar {
@@ -69,7 +87,6 @@
     }
   }
 }
-
 
 // ------ SIDEBAR (left) ------ //
 

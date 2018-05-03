@@ -3,7 +3,7 @@ export class Category {
   get name() { return this.category.name };
   get id() { return this.category.id };
 
-  constructor(private category: any) {
+  constructor(private category: any, private level: number = 0) {
     if (category.ChildItemCategories) {
       this.setSubCategoryList();
     }
@@ -12,7 +12,7 @@ export class Category {
   // get subcategories (single level)
   setSubCategoryList() {
     const list = this.category.ChildItemCategories;
-    this.subCategoryList = list.map(o => { return new Category(o)});
+    this.subCategoryList = list.map(o => { return new Category(o, this.level + 1) });
   }
 
   getSubCategory(): Array<any> {
