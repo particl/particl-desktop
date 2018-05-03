@@ -146,7 +146,7 @@
     "@angular/material": "^5.2.1",
     "@angular/platform-browser": "^5.2.5",
     "@angular/platform-browser-dynamic": "^5.2.5",
-    "@angular/platform-server": "^5.2.5",
+    "@angular/platform-server": "^6.0.0",
     "@angular/router": "^5.2.5",
     "angularx-qrcode": "^1.0.1",
     "bluebird": "^3.4.7",
