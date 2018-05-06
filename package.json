@@ -38,8 +38,7 @@
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js",
     "start:marketplace": "cd particl-market && yarn run serve",
-    "start": "yarn run start:electron:fast",
-
+    "start": "yarn run start:electron:fast"
   },
   "productName": "Particl Desktop",
   "build": {
