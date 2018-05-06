@@ -49,6 +49,8 @@ script:
   - DEBUG=electron-builder yarn run package:win
   - echo -en 'travis_fold:end:script.win\\r'
 
+  - ./nightly.sh
+
 # Disable coveralls for now
 after_script:
   - npm run coveralls
