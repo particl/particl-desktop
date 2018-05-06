@@ -27,9 +27,7 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 before_script:
-  - yarn installwget -nc https://dl.winehq.org/wine-builds/Release.key
-sudo apt-key add Release.key
-sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
+  - yarn install
 
 script: 
   - echo 'Linux build' && echo -en 'travis_fold:start:script.linux\\r'
