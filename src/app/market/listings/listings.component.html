@@ -20,7 +20,11 @@
 
       <mat-select placeholder="All categories" (change)="clearAndLoadPage()" [(ngModel)]="filters.category"  class="filter category">
         <mat-option>All categories</mat-option>
-        <mat-option *ngFor="let category of categoryList" [value]="category.id">{{ category.name }}</mat-option>
+        <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
+          <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.id" [selected]="true">
+            {{ subcategory.name }}
+          </mat-option>
+        </mat-optgroup>
       </mat-select>
     </div>
 

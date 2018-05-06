@@ -34,9 +34,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // countries: FormControl = new FormControl();
   search: string;
 
-  // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
   // categories: FormControl = new FormControl();
-  categoryList: Array<Category> = [];
+
+  _rootCategoryList: Category = new Category({});
 
   // sorting
   sortings: Array<ISorting> = [
@@ -83,8 +83,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     .takeWhile(() => !this.destroyed)
     .subscribe(
       list => {
-        this.categoryList = list.getFlatSubCategory();
-        this.categoryList.shift();
+        this._rootCategoryList = list;
       });
   }
 
