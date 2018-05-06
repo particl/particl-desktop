@@ -40,11 +40,12 @@ script:
   
   - echo 'Win build' && echo -en 'travis_fold:start:script.win\\r'
   - sudo dpkg --add-architecture i386
-  - wget -nc https://dl.winehq.org/wine-builds/Release.key
-  - sudo apt-key add Release.key
-  - sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
+#  - wget -nc https://dl.winehq.org/wine-builds/Release.key
+#  - sudo apt-key add Release.key
+#  - sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
   - sudo apt-get update
-  - sudo apt-get install -y --install-recommends winehq-stable
+#  - sudo apt-get install -y --install-recommends winehq-stable
+  - sudo apt install wine wine32 wine64 libwine libwine:i386 fonts-wine
   - DEBUG=electron-builder yarn run package:win
   - echo -en 'travis_fold:end:script.win\\r'
 
