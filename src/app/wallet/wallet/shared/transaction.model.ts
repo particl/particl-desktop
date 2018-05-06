@@ -1,7 +1,7 @@
 import { Amount, DateFormatter } from '../../../core/util/utils';
 import { AddressType } from './address.model';
 
-export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake' | 'internal_transfer';
+export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake' | 'internal_transfer' | 'multisig' | 'listing_fee';
 
 export class Transaction {
 
@@ -11,7 +11,7 @@ export class Transaction {
     address: string ;
     stealth_address: string;
     label: string;
-    category: string;
+    category: TransactionCategory;
     amount: number;
     reward: number;
     fee: number;
@@ -82,8 +82,18 @@ export class Transaction {
     return this.getAddressType() === AddressType.MULTISIG;
   }
 
-  getCategory(): string {
-    return this.isMultiSig() ? 'multisig' : this.category;
+  public isListingFee(): boolean {
+    return this.category === 'internal_transfer' && this.outputs.length === 0;
+  }
+
+  getCategory(): TransactionCategory {
+    if (this.isMultiSig()) {
+      return 'multisig';
+    } else if (this.isListingFee()) {
+      return 'listing_fee'
+    } else {
+      return this.category;
+    } 
   }
 
   public getExpandedTransactionID(): string {

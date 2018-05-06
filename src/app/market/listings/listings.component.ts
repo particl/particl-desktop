@@ -38,8 +38,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // categories: FormControl = new FormControl();
   categoryList: Array<Category> = [];
 
-  _rootCategoryList: Category = new Category({});
-
   // sorting
   sortings: Array<ISorting> = [
     {value: 'newest', viewValue: 'Newest'},
@@ -85,8 +83,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     .takeWhile(() => !this.destroyed)
     .subscribe(
       list => {
-        this._rootCategoryList = list;
-        this.categoryList = this._rootCategoryList.getFlatSubCategory();
+        this.categoryList = list.getFlatSubCategory();
+        this.categoryList.shift();
       });
   }
 

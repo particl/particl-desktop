@@ -2,6 +2,9 @@
 
 [mat-dialog-title] {
   text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0 3rem;
 }
 
 .dialog-content {

@@ -77,14 +77,13 @@ button,
 .loading-container {
   text-align: center;
   position: absolute;
+  z-index: 10;
   top: 113px;
   left: 0;
   right: 0;
   bottom: 8px;
   display: flex;
-  margin: 30px;
-  border: 2px dashed darken($bg, 7%);
-  border-radius: 4px;
+  background: rgba($bg, 0.9);
   .loading-info { // text info for loading screens (e.g. Listings)
     margin: auto;
     .loading-image {

@@ -5,8 +5,7 @@ const path          = require('path');
 const fs            = require('fs');
 const url           = require('url');
 const platform      = require('os').platform();
-const rxIpc         = require('rx-ipc-electron/lib/main').default;
-const Observable    = require('rxjs/Observable').Observable;
+
 
 /* correct appName and userData to respect Linux standards */
 if (process.platform === 'linux') {

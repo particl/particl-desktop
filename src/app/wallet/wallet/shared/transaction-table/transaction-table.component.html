@@ -59,6 +59,9 @@
         <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
           <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>Balance transfer
         </span>
+        <span *ngSwitchCase="'listing_fee'" class="tx-type sent">
+          <mat-icon fontSet="partIcon" fontIcon="part-send" color="primary"></mat-icon>Posted Listing
+        </span>
       </mat-panel-title>
 
       <!-- Address -->
