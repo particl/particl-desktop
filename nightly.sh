@@ -34,6 +34,7 @@ then
     echo -en 'travis_fold:end:script.win\\r'
 fi
 
+
 # Upload
 if [[ $TRUE_COMMIT_MESSAGES != *"-upload"* ]]
 then 
