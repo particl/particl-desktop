@@ -33,11 +33,11 @@ then
 
     DEBUG=electron-builder yarn run package:win64
 
-    cd packages
-    zip -r particl-desktop-winx64.zip win-unpacked
-    cd ..
+    # cd packages
+    # zip -r particl-desktop-winx64.zip win-unpacked
+    # cd ..
 
-    #DEBUG=electron-builder yarn run package:win32
+    DEBUG=electron-builder yarn run package:win32
 
     #cd packages
     #zip -r particl-desktop-winx32.zip win-ia32-unpacked

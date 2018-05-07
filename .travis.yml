@@ -2,8 +2,6 @@ sudo: required
 dist: trusty
 services: docker
 language: node_js
-node_js:
-  - '6.11'
 
 addons:
 apt:
