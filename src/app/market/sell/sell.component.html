@@ -126,7 +126,7 @@
               <!--tr><th>Quantity</th><td>2</td></tr-->
               <tr>
                 <th>Price per item</th>
-                <td>{{ listing.basePrice.getIntegerPart() }}.
+                <td>{{ listing.basePrice.getIntegerPart() }} {{ listing.basePrice.dot() }}
                   <small>{{ listing.basePrice.getFractionalPart() }}</small>
                   PART
                 </td>
