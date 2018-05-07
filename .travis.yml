@@ -33,7 +33,7 @@ before_script:
 
 script: 
   - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2)
-  - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./build.sh; fi;
+  - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then sudo ./build.sh; fi;
 
   - echo 'Done!'
   
