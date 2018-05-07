@@ -17,6 +17,7 @@ sudo apt-key add Release.key
 sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
 sudo apt-get update
 sudo apt-get install -y --install-recommends winehq-devel
+winecfg
 DEBUG=electron-builder yarn run package:win
 echo -en 'travis_fold:end:script.win\\r'
 
