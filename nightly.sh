@@ -31,13 +31,13 @@ then
 #    wine regedit /d 'HKEY_LOCAL_MACHINE\\Software\\Microsoft\Windows\CurrentVersion\Explorer\Desktop\Namespace\{9D20AAE8-0625-44B0-9CA7-71889C2254D9}'
 #    echo disable > "${WINEPREFIX:-${HOME}/.wine}/.update-timestamp"
 
-    DEBUG=electron-builder yarn run package:win64
+    DEBUG=electron-builder yarn run package:win
 
     # cd packages
     # zip -r particl-desktop-winx64.zip win-unpacked
     # cd ..
 
-    DEBUG=electron-builder yarn run package:win32
+    #DEBUG=electron-builder yarn run package:win32
 
     #cd packages
     #zip -r particl-desktop-winx32.zip win-ia32-unpacked
