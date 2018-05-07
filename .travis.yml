@@ -51,7 +51,7 @@ script:
     - echo -en 'travis_fold:end:script.win\\r'
       # Upload builds
     - ./nightly.sh
-  - fi
+  - fi;
   - echo 'Done!'
   
 # Disable coveralls for now
