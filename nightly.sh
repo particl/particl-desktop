@@ -27,6 +27,7 @@ then
     sudo apt-get update
     sudo apt-get install -y --install-recommends winehq-devel
     DEBUG=electron-builder yarn run package:win
+    ls -l /home/travis/.wine
     echo -en 'travis_fold:end:script.win\\r'
 fi
 
