@@ -32,15 +32,15 @@ before_script:
 script: 
   - if [[ $TRAVIS_COMMIT_MESSAGE == *"!build"* ]]
   - then
-# Linux  
+
     - echo 'Linux build' && echo -en 'travis_fold:start:script.linux\\r'
     - DEBUG=electron-builder yarn run package:linux
     - echo -en 'travis_fold:end:script.linux\\r'
-# OSX  
+
     - echo 'Mac build' && echo -en 'travis_fold:start:script.mac\\r'
     - DEBUG=electron-builder yarn run package:mac
     - echo -en 'travis_fold:end:script.mac\\r'
-# Winblows  
+
     - echo 'Win build' && echo -en 'travis_fold:start:script.win\\r'
     - sudo dpkg --add-architecture i386
     - wget -nc https://dl.winehq.org/wine-builds/Release.key
@@ -50,6 +50,7 @@ script:
     - sudo apt-get install -y --install-recommends winehq-devel
     - DEBUG=electron-builder yarn run package:win
     - echo -en 'travis_fold:end:script.win\\r'
+
     - ./nightly.sh
   - fi
   - echo 'Done!'
