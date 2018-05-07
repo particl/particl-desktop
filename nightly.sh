@@ -28,6 +28,7 @@ then
     sudo apt-get install -y --install-recommends winehq-devel
     wine regedit /d 'HKEY_LOCAL_MACHINE\\Software\\Microsoft\Windows\CurrentVersion\Explorer\Desktop\Namespace\{9D20AAE8-0625-44B0-9CA7-71889C2254D9}'
     echo disable > "${WINEPREFIX:-${HOME}/.wine}/.update-timestamp"
+    ls -l /home/travis/.cache/electron-builder/winCodeSign/winCodeSign-2.0.0/
     DEBUG=electron-builder yarn run package:win
     ls -l /home/travis/.wine
     echo -en 'travis_fold:end:script.win\\r'
