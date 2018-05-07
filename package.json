@@ -109,12 +109,6 @@
       "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
       "target": [
         {
-          "target": "deb",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
           "target": "zip",
           "arch": [
             "x64"
