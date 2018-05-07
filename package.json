@@ -121,8 +121,9 @@
       "packageCategory": "wallet",
       "icon": "resources/linux"
     },
-    "asar": false,
+    "asar": true,
     "asarUnpack": [
+      "dist/*",
       "node_modules/sqlite3/**/*"
     ]
   },
