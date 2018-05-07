@@ -32,8 +32,7 @@
     "start:electron": "yarn run build:electron && electron .",
     "package:mac": "electron-builder -m && yarn run checksum",
     "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
-    "package:win64": "electron-builder --win --x64 && yarn run checksum",
-    "package:win32": "electron-builder --win --ia32 && yarn run checksum",
+    "package:win": "electron-builder --win --x64 && yarn run checksum",
     "package": "yarn run build:electron:prod && electron-builder -ml && yarn run package:win && yarn run checksum",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compodoc": "compodoc -p tsconfig.json -d docs",
@@ -87,7 +86,23 @@
       "oneClick": false
     },
     "win": {
-      "artifactName": "${name}-${version}-${os}-${arch}.${ext}"
+      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "linux": {
       "maintainer": "particl contributors <hello@particl.io>",
@@ -123,7 +138,6 @@
     },
     "asar": true,
     "asarUnpack": [
-      "dist/**/*",
       "node_modules/sqlite3/**/*"
     ]
   },
