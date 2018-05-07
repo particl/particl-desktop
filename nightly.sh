@@ -31,9 +31,14 @@ then
 #    wine regedit /d 'HKEY_LOCAL_MACHINE\\Software\\Microsoft\Windows\CurrentVersion\Explorer\Desktop\Namespace\{9D20AAE8-0625-44B0-9CA7-71889C2254D9}'
 #    echo disable > "${WINEPREFIX:-${HOME}/.wine}/.update-timestamp"
 
+    DEBUG=electron-builder yarn run package:win64
+
+    cd packages
+    zip -r particl-desktop-winx64.zip win-unpacked
+    cd ..
+
     DEBUG=electron-builder yarn run package:win32
     
-    DEBUG=electron-builder yarn run package:win64
     ls -l ./packages
     echo -en 'travis_fold:end:script.win\\r'
 fi
