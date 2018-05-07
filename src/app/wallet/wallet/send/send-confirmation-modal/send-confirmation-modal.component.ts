@@ -33,7 +33,6 @@ export class SendConfirmationModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.bidItem);
     if (this.type === 'tx') {
       this.setTxDetails();
     }
