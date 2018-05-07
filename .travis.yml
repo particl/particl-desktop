@@ -50,7 +50,7 @@ script:
     - echo -en 'travis_fold:end:script.win\\r'
 
     - ./nightly.sh
-  - fi ;
+  - fi
 
 # Disable coveralls for now
 after_script:
