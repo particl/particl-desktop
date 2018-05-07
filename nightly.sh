@@ -32,6 +32,7 @@ then
 #    echo disable > "${WINEPREFIX:-${HOME}/.wine}/.update-timestamp"
 
     DEBUG=electron-builder yarn run package:win32
+    
     DEBUG=electron-builder yarn run package:win64
     ls -l ./packages
     echo -en 'travis_fold:end:script.win\\r'
