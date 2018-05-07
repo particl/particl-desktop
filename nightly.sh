@@ -38,7 +38,11 @@ then
     cd ..
 
     DEBUG=electron-builder yarn run package:win32
-    
+
+    cd packages
+    zip -r particl-desktop-winx32.zip win-ia32-unpacked
+    cd ..
+
     ls -l ./packages
     echo -en 'travis_fold:end:script.win\\r'
 fi
