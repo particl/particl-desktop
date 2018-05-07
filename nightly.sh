@@ -25,7 +25,7 @@ then
     sudo apt-key add Release.key
     sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
     sudo apt-get update -y
-    sudo apt-get install -y --force-yes wine-stable winehq-stable yarn
+    sudo apt-get install -y --force-yes wine-stable winehq-stable
     WINEARCH=win32 winecfg
 #    wine regedit /d 'HKEY_LOCAL_MACHINE\\Software\\Microsoft\Windows\CurrentVersion\Explorer\Desktop\Namespace\{9D20AAE8-0625-44B0-9CA7-71889C2254D9}'
 #    echo disable > "${WINEPREFIX:-${HOME}/.wine}/.update-timestamp"
