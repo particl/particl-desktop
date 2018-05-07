@@ -1,5 +1,6 @@
 sudo: required
 dist: trusty
+services: docker
 language: node_js
 node_js:
   - '6.11'
@@ -32,13 +33,16 @@ before_script:
 
 script: 
   - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2)
-  - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./nightly.sh; fi;
+  - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./build.sh; fi;
 
   - echo 'Done!'
   
 # Disable coveralls for now
 after_script:
   - npm run coveralls
+
+before_cache:
+- rm -rf $HOME/.cache/electron-builder/wine
 
 #deploy:
 #  - provider: releases
