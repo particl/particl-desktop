@@ -30,7 +30,8 @@ before_script:
   - yarn install
 
 script: 
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"build"* ]]; then ./nightly.sh; fi;
+  - echo $TRAVIS_COMMIT_MESSAGE
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"build"* ]]; then echo 'building ..' && ./nightly.sh; fi;
  
   - echo 'Done!'
   
