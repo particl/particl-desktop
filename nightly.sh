@@ -1,4 +1,6 @@
 
+yarn run build:electron:prod
+
 # Linux
 if [[ $TRUE_COMMIT_MESSAGES != *"-linux"* ]]
 then 
@@ -56,10 +58,14 @@ then
     Uploads=("Builds\n")
     for fn in `ls | grep "particl-desktop"`; do
         echo "Uploading $fn"
-        url="$(curl -s --upload-file $fn https://transfer.sh/$fn)\n\n"
+        url="$(curl  -H "Max-Days: 2" -s --upload-file $fn https://transfer.sh/$fn)\n\n"
         checksum="$(sha256sum $fn)\n"
         Uploads=(${Uploads[@]} $checksum)
         Uploads=(${Uploads[@]} $url)
     done
     echo -e ${Uploads[@]}
+    
+    curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+    -d "{\"body\": \"${Uploads[@]}\"}" \
+    "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
 fi
