@@ -31,7 +31,7 @@ before_script:
 
 script: 
   - if [[ $TRAVIS_COMMIT_MESSAGE == *"!build"* ]]; then ./nightly.sh; fi;
-  
+ 
   - echo 'Done!'
   
 # Disable coveralls for now
