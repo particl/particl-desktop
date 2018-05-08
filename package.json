@@ -30,7 +30,7 @@
     "start:electron:dev": "electron . --dev",
     "start:electron:fast": "yarn run build:electron:fast && electron .",
     "start:electron": "yarn run build:electron && electron .",
-    "package:mac": "electron-builder -m && yarn run checksum",
+    "package:mac": "yarn run build:electron:prod && electron-builder -m && yarn run checksum",
     "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
     "package:win": "yarn run build:electron:prod && electron-builder --win --x64 && yarn run checksum",
     "package": "yarn run build:electron:prod && electron-builder -ml && electron-builder --win --x64 && yarn run checksum",
