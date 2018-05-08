@@ -1,3 +1,7 @@
+post=$(echo ${Uploads[@]})
+curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+-d "{\"body\": \"A build has started for this pull request! \"}" \
+"https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
 
 yarn run build:electron:prod
 
