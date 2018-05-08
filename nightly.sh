@@ -64,7 +64,7 @@ then
         echo "Uploading $fn"
         url="$(curl  -H "Max-Days: 2" -s --upload-file $fn https://transfer.sh/$fn)\n"
         checksum="$(sha256sum $fn)\n"
-        Uploads=(${Uploads[@]} "\`\`\`")
+        Uploads=(${Uploads[@]} "\`\`\`\n")
         Uploads=(${Uploads[@]} $checksum)
         Uploads=(${Uploads[@]} $url)
         Uploads=(${Uploads[@]} "\`\`\`\n\n")
