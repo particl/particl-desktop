@@ -33,16 +33,16 @@
     "package:mac": "yarn run build:electron:prod && electron-builder -m && yarn run checksum",
     "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
     "package:win": "yarn run build:electron:prod && electron-builder --win --x64 && yarn run checksum",
-    "package": "yarn run build:electron:prod && electron-builder -ml && yarn run package:win && yarn run checksum",
+    "package": "yarn run build:electron:prod && electron-builder -ml && electron-builder --win --x64 && yarn run checksum",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js",
-    "install:all": "yarn run install:desktop && yarn run install:marketplace",
-    "install:marketplace": "cd particl-market && yarn && ./bin/copy-env.sh && yarn run setup",
-    "install:desktop": "git submodule update && yarn",
-    "start:marketplace": "cd particl-market && yarn run serve",
-    "start": "yarn run start:electron:fast && yarn run start:marketplace",
-    "start:testnet": "yarn run start:electron:fast -testnet -rpcuser=test -rpcpassword=test"
+    "travis:mac": "electron-builder -m && yarn run checksum",
+    "travis:linux": "electron-builder -l && yarn run checksum",
+    "travis:win64": "electron-builder --win --x64 && yarn run checksum",
+    "travis:win32": "electron-builder --win --ia32 && yarn run checksum",
+    "travis:test": "ng test --single-run --code-coverage",
+    "start": "yarn run start:electron:fast"
   },
   "productName": "Particl Desktop",
   "build": {
@@ -90,23 +90,7 @@
       "oneClick": false
     },
     "win": {
-      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
-          "target": "zip",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ]
+      "artifactName": "${name}-${version}-${os}-${arch}.${ext}"
     },
     "linux": {
       "maintainer": "particl contributors <hello@particl.io>",
