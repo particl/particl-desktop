@@ -9,7 +9,7 @@ yarn run build:electron:prod
 if [[ $TRUE_COMMIT_MESSAGES != *"-linux"* ]]
 then 
     echo 'Linux build' && echo -en 'travis_fold:start:script.linux\\r'
-    DEBUG=electron-builder yarn run package:linux
+    DEBUG=electron-builder yarn run travis:linux
 
     cd packages
     mv `ls | grep "particl-desktop.*linux-x64.zip"` particl-desktop-linux-x64-PR$TRAVIS_PULL_REQUEST.zip
@@ -24,7 +24,7 @@ if [[ $TRUE_COMMIT_MESSAGES != *"-mac"* ]]
 then 
 
     echo 'Mac build' && echo -en 'travis_fold:start:script.mac\\r'
-    DEBUG=electron-builder yarn run package:mac
+    DEBUG=electron-builder yarn run travis:mac
 
     cd packages
     mv `ls | grep "particl-desktop.*mac.zip"` particl-desktop-mac-PR$TRAVIS_PULL_REQUEST.zip
@@ -48,13 +48,13 @@ then
 #    wine regedit /d 'HKEY_LOCAL_MACHINE\\Software\\Microsoft\Windows\CurrentVersion\Explorer\Desktop\Namespace\{9D20AAE8-0625-44B0-9CA7-71889C2254D9}'
 #    echo disable > "${WINEPREFIX:-${HOME}/.wine}/.update-timestamp"
 
-    DEBUG=electron-builder yarn run package:win64
+    DEBUG=electron-builder yarn run travis:win64
 
     cd packages
     zip -r particl-desktop-win-x64-PR$TRAVIS_PULL_REQUEST.zip win-unpacked
     cd ..
 
-    DEBUG=electron-builder yarn run package:win32
+    DEBUG=electron-builder yarn run travis:win32
 
     cd packages
     zip -r particl-desktop-win-ia32-PR$TRAVIS_PULL_REQUEST.zip win-ia32-unpacked

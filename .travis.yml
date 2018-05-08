@@ -13,7 +13,6 @@ apt:
     - google-chrome-beta
     - icnsutils
     - graphicsmagick
-    - libcairo2-dev
 
 cache:
   directories:

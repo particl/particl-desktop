@@ -30,15 +30,17 @@
     "start:electron:dev": "electron . --dev",
     "start:electron:fast": "yarn run build:electron:fast && electron .",
     "start:electron": "yarn run build:electron && electron .",
-    "package:mac": "electron-builder -m && yarn run checksum",
-    "package:linux": "electron-builder -l && yarn run checksum",
-    "package:win64": "electron-builder --win --x64 && yarn run checksum",
-    "package:win32": "electron-builder --win --ia32 && yarn run checksum",
-    "package": "yarn run build:electron:prod && electron-builder -ml && yarn run package:win && yarn run checksum",
+    "package:mac": "yarn run build:electron:prod && electron-builder -m && yarn run checksum",
+    "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
+    "package:win": "yarn run build:electron:prod && electron-builder --win --x64 && yarn run checksum",
+    "package": "yarn run build:electron:prod && electron-builder -ml && electron-builder --win --x64 && yarn run checksum",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "generate-release": "node ./modules/clientBinaries/generateVersions.js",
-    "start:marketplace": "cd particl-market && yarn run serve",
+    "travis:mac": "electron-builder -m && yarn run checksum",
+    "travis:linux": "electron-builder -l && yarn run checksum",
+    "travis:win64": "electron-builder --win --x64 && yarn run checksum",
+    "travis:win32": "electron-builder --win --ia32 && yarn run checksum",
     "start": "yarn run start:electron:fast"
   },
   "productName": "Particl Desktop",
@@ -123,7 +125,6 @@
     },
     "asar": true,
     "asarUnpack": [
-      "dist/**/*",
       "node_modules/sqlite3/**/*"
     ]
   },
