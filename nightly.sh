@@ -62,16 +62,15 @@ then
     Uploads=("Builds\n")
     for fn in `ls | grep "particl-desktop"`; do
         echo "Uploading $fn"
-        url="$(curl  -H "Max-Days: 2" -s --upload-file $fn https://transfer.sh/$fn)\n\n"
+        url="$(curl  -H "Max-Days: 2" -s --upload-file $fn https://transfer.sh/$fn)\n"
         checksum="$(sha256sum $fn)\n"
         Uploads=(${Uploads[@]} "\`\`\`")
         Uploads=(${Uploads[@]} $checksum)
         Uploads=(${Uploads[@]} $url)
-        Uploads=(${Uploads[@]} "\`\`\`\n")
+        Uploads=(${Uploads[@]} "\`\`\`\n\n")
     done
     echo -e ${Uploads[@]}
 
-    echo "Posting comment"
     post=$(echo ${Uploads[@]})
     curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
     -d "{\"body\": \"${post}\"}" \
