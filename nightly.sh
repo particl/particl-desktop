@@ -64,12 +64,9 @@ then
         Uploads=(${Uploads[@]} $url)
     done
     echo -e ${Uploads[@]}
-    post=$(echo -e ${Uploads[@]})
+    
+    post=$(echo ${Uploads[@]})
     echo "Posting comment"
-    curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-    -d "{\"body\": \"Test comment\"}" \
-    "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
-
     curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
     -d "{\"body\": \"${post}\"}" \
     "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
