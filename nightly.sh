@@ -36,13 +36,13 @@ then
     DEBUG=electron-builder yarn run package:win64
 
     cd packages
-    zip -r particl-desktop-winx64.zip win-unpacked
+    zip -r particl-desktop-win-x64-PR$TRAVIS_PULL_REQUEST.zip win-unpacked
     cd ..
 
     DEBUG=electron-builder yarn run package:win32
 
     cd packages
-    zip -r particl-desktop-winx32.zip win-ia32-unpacked
+    zip -r particl-desktop-win-ia32.zip win-ia32-unpacked
     cd ..
 
     ls -l ./packages
@@ -60,8 +60,10 @@ then
         echo "Uploading $fn"
         url="$(curl  -H "Max-Days: 2" -s --upload-file $fn https://transfer.sh/$fn)\n\n"
         checksum="$(sha256sum $fn)\n"
+        Uploads=(${Uploads[@]} "\`\`\`")
         Uploads=(${Uploads[@]} $checksum)
         Uploads=(${Uploads[@]} $url)
+        Uploads=(${Uploads[@]} "\`\`\`\n")
     done
     echo -e ${Uploads[@]}
 
