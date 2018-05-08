@@ -19,6 +19,10 @@
 
   <div class="status-info">
     <p>{{ order?.messages.status_info }}</p>
+    <div *ngIf="order?.type === 'buy' && order?.status === 'Shipping'">
+      <p *ngIf="order?.listing?.memo">Additional Shipping Information: {{ order?.listing?.memo}}</p>
+      <p *ngIf="!order?.listing?.memo">Additional Shipping Information: No Information Provided</p>
+    </div>
   </div>
 
   <div class="detail" fxLayout="row" fxLayoutGap="30px">
