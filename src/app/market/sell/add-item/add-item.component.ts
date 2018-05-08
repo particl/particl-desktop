@@ -222,9 +222,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   private save(): Observable<any> {
-    if (this.itemFormGroup.invalid) {
-      return Observable.throw('Invalid Listing');
-    }
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
     return new Observable((observer) => {
@@ -298,11 +295,18 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   }
 
+  validate() {
+    return this.itemFormGroup.valid || this.snackbar.open('Invalid Listing');
+  }
+
   saveTemplate() {
+    if (!this.validate()) {
+      return;
+    };
     this.log.d('Saving as a template.');
     if (this.templateId) {
       // update
-      this.itemFormGroup.valid ? this.update() : this.snackbar.open('Invalid Listing');
+      this.update();
     } else {
       this.save().subscribe(id => {
         console.log('returning to sell');
@@ -314,6 +318,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   saveAndPublish() {
+    if (!this.validate()) {
+      return;
+    };
     this.log.d('Saving and publishing the listing.');
     if (this.rpcState.get('locked')) {
       this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callPublish.bind(this)});
