@@ -31,6 +31,19 @@ before_script:
   - yarn install
 
 script: 
+
+  - echo 'Build Dist' && echo -en 'travis_fold:start:script.build\\r'
+  - yarn build --base-href="./"
+  - echo -en 'travis_fold:end:script.build\\r'
+  
+  - echo 'Lint Codebase' && echo -en 'travis_fold:start:script.lint\\r'
+  - yarn run lint
+  - echo -en 'travis_fold:end:script.lint\\r'
+  
+  - echo 'Test Codebase' && echo -en 'travis_fold:start:script.test\\r'
+  - yarn run travis:test
+  - echo -en 'travis_fold:end:script.test\\r'
+
   - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2)
   - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./build.sh; fi;
 
