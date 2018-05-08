@@ -39,7 +39,7 @@ script:
   - echo -en 'travis_fold:end:script.lint\\r'
   
   - echo 'Test Codebase' && echo -en 'travis_fold:start:script.test\\r'
-  - ng test --single-run --code-coverage
+  - yarn run travis:test
   - echo -en 'travis_fold:end:script.test\\r'
 
   - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2)
