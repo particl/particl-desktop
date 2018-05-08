@@ -39,11 +39,11 @@ then
     zip -r particl-desktop-winx64.zip win-unpacked
     cd ..
 
-    #DEBUG=electron-builder yarn run package:win32
+    DEBUG=electron-builder yarn run package:win32
 
-    #cd packages
-    #zip -r particl-desktop-winx32.zip win-ia32-unpacked
-    #cd ..
+    cd packages
+    zip -r particl-desktop-winx32.zip win-ia32-unpacked
+    cd ..
 
     ls -l ./packages
     echo -en 'travis_fold:end:script.win\\r'
@@ -65,6 +65,7 @@ then
     done
     echo -e ${Uploads[@]}
 
+    echo "Posting comment"
     curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
     -d "{\"body\": \"$(echo -e ${Uploads[@]})\"}" \
     "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
