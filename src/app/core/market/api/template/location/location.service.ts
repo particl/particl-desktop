@@ -15,11 +15,11 @@ export class LocationService {
   constructor(private market: MarketService) {
   }
 
-  update(itemTemplateId: number, region: Country, address: string, gps: GpsMarker): Observable<any> {
+  update(itemTemplateId: number, region: Country, address: string, gps: GpsMarker, method: string): Observable<any> {
     return this.market.call('template',
       [
         'location',
-        'add',
+        method,
         itemTemplateId,
         region ? region.iso : null,
         address || 'a',
