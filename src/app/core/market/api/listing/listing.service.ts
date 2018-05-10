@@ -22,7 +22,7 @@ export class ListingService {
       'search',
       page,
       pageLimit,
-      'ASC',
+      'DESC',
       catId || null, // category
       'ALL',
       profileId || 'ALL',
