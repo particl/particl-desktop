@@ -8,6 +8,8 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { BidService } from 'app/core/market/api/bid/bid.service';
 
 interface ISorting {
   value: string;
@@ -29,7 +31,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
   public isLoading: boolean = false;
-
+  public hashes: Array<any> = new Array();
   // filters
   // countries: FormControl = new FormControl();
   search: string;
@@ -67,13 +69,16 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private category: CategoryService,
     private listingService: ListingService,
     private favoritesService: FavoritesService,
-    private countryList: CountryListService
+    private countryList: CountryListService,
+    private bid: BidService,
+    private profileService: ProfileService
   ) {
     console.warn('overview created');
   }
 
   ngOnInit() {
     console.log('overview created');
+    this.loadProfile();
     this.loadCategories();
     this.loadPage(1);
   }
@@ -173,6 +178,20 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // Returns the pageNumber if the first page that is currently visible
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
+  }
+
+  loadProfile() {
+    this.profileService.get(1).take(1).subscribe(
+      profile => {
+        this.loadOrders(profile.address);
+      });
+  }
+
+  loadOrders(address: string): void {
+    this.bid.search(address, 'buy').take(1).subscribe(orders => {
+      console.log('called >>>>>>>>>>>>>>>>>', orders.hashes);
+      this.hashes = orders.hashes;
+    });
   }
 
   ngOnDestroy() {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { FavoritesService } from '../../../core/market/api/favorites/favorites.service';
@@ -15,14 +15,20 @@ import { PreviewListingComponent } from '../preview-listing/preview-listing.comp
   templateUrl: './listing-item.component.html',
   styleUrls: ['./listing-item.component.scss']
 })
-export class ListingItemComponent {
+export class ListingItemComponent implements OnInit {
   @Input() listing: Listing;
-
+  // Input hashes
+  @Input() hashes: Array<any> = new Array();
   constructor(private dialog: MatDialog,
               private cartService: CartService,
               private favoritesService: FavoritesService,
               private snackbar: SnackbarService,
               private marketState: MarketStateService) {
+  }
+
+  ngOnInit() {
+    // Passing all hashes as a key
+    this.listing.hashes = this.hashes;
   }
 
   openListing() {

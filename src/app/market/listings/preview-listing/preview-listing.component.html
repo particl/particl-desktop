@@ -75,7 +75,7 @@
   <div class="right">
     <app-favorite [listing]="data.listing"></app-favorite>
 
-    <button mat-raised-button color="primary" *ngIf="!data.listing.object.ListingItemTemplate?.hash" (click)="addToCart(data.listing)">
+    <button mat-raised-button color="primary" *ngIf="!data.listing.object.ListingItemTemplate?.hash && !data.listing.isBidded(data.listing.hashes)" (click)="addToCart(data.listing)">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Add to cart
     </button>
