@@ -19,6 +19,10 @@
 
   <div class="status-info">
     <p>{{ order?.messages.status_info }}</p>
+    <div *ngIf="order?.type === 'buy' && order?.status === 'Shipping'">
+      <p *ngIf="order?.listing?.memo">Additional Shipping Information: {{ order?.listing?.memo}}</p>
+      <p *ngIf="!order?.listing?.memo">Additional Shipping Information: No Information Provided</p>
+    </div>
   </div>
 
   <div class="detail" fxLayout="row" fxLayoutGap="30px">
@@ -40,21 +44,21 @@
         </tr-->
         <tr>
           <th>Listing price</th>
-          <td>{{order.listing?.basePrice?.getIntegerPart()}}.<!--
+          <td>{{order.listing?.basePrice?.getIntegerPart()}} {{order.listing?.basePrice?.dot()}}<!--
             --><small>{{order.listing?.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
         <tr>
           <th>Shipping</th>
-          <td>{{order.listing?.domesticShippingPrice?.getIntegerPart()}}.<!--
+          <td>{{order.listing?.domesticShippingPrice?.getIntegerPart()}} {{order.listing?.domesticShippingPrice?.dot()}}<!--
             --><small>{{order.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td>{{order.listing?.escrowPrice?.getIntegerPart()}}.<!--
+          <td>{{order.listing?.escrowPrice?.getIntegerPart()}} {{order.listing?.escrowPrice?.dot()}}<!--
             --><small>{{order.listing?.escrowPrice?.getFractionalPart()}}</small>
             PART
           </td>
@@ -62,7 +66,7 @@
         <tr>
           <th>Total price</th>
           <td>
-            {{order.listing?.totalAmount?.getIntegerPart()}}.<!--
+            {{order.listing?.totalAmount?.getIntegerPart()}} {{order.listing?.totalAmount?.dot()}}<!--
             --><small>{{order.listing?.totalAmount?.getFractionalPart()}}</small>
             PART
           </td>

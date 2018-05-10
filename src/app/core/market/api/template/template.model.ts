@@ -15,6 +15,7 @@ export class Template {
   public domesticTotal: Amount = new Amount(0);
   public internationalTotal: Amount = new Amount(0);
   public totalAmount: Amount = new Amount(0);
+  public memo: string = '';
 
   // @TODO: remove type any
   constructor(private object: any) {
@@ -26,6 +27,7 @@ export class Template {
     this.setShippingPrice();
     this.setEscrowPrice();
     this.setTotal();
+    this.setMemo();
   }
 
   get id(): number {
@@ -91,7 +93,6 @@ export class Template {
       ? new Amount(this.object.PaymentInformation.ItemPrice.basePrice)
       : this.basePrice);
   }
-
   setShippingPrice(): void {
     const itemPrice = this.object.PaymentInformation.ItemPrice;
     if (itemPrice && itemPrice.ShippingPrice) {
@@ -133,6 +134,13 @@ export class Template {
     // TODO add total for international and domestic.
     const total = this.escrowPrice.getAmount() + iTotal;
     this.totalAmount = new Amount(total);
+  }
+
+  setMemo(): void {
+    const msg = this.object.ActionMessages;
+    if (msg) {
+      this.memo = msg.filter((info) => info.MessageInfo.memo).map(obj => obj.MessageInfo.memo)[0] || '';
+    }
   }
 
 }

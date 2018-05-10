@@ -79,9 +79,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(1000)]],
       category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required]],
-      domesticShippingPrice:      ['', [Validators.required]],
-      internationalShippingPrice: ['', [Validators.required]]
+      basePrice:                  ['', [Validators.required, Validators.min(0)]],
+      domesticShippingPrice:      ['', [Validators.required, Validators.min(0)]],
+      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]
     });
 
     this.route.queryParams.take(1).subscribe(params => {
@@ -222,7 +222,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
 // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   private save(): Observable<any> {
-
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
     return new Observable((observer) => {
@@ -296,7 +295,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   }
 
+  validate() {
+    return this.itemFormGroup.valid || this.snackbar.open('Invalid Listing');
+  }
+
   saveTemplate() {
+    if (!this.validate()) {
+      return;
+    };
     this.log.d('Saving as a template.');
     if (this.templateId) {
       // update
@@ -306,12 +312,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
         console.log('returning to sell');
         this.snackbar.open('Succesfully Saved!')
         this.backToSell();
-      });
+      }, err => this.snackbar.open(err));
     }
 
   }
 
   saveAndPublish() {
+    if (!this.validate()) {
+      return;
+    };
     this.log.d('Saving and publishing the listing.');
     if (this.rpcState.get('locked')) {
       this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callPublish.bind(this)});
@@ -339,7 +348,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
           console.log(listing);
           this.backToSell();
         });
-      });
+      }, err => this.snackbar.open(err));
     }
   }
 
