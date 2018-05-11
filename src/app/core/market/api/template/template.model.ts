@@ -74,10 +74,6 @@ export class Template {
     return this.object.ItemInformation.ItemImages;
   }
 
-  public isBidded(hashes: Array<string>): boolean {
-    return hashes.includes(this.object.hash);
-  }
-
   get country(): any {
     const itemlocation = this.object.ItemInformation.ItemLocation;
     if (itemlocation) {

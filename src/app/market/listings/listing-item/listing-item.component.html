@@ -17,9 +17,7 @@
 
   <div class="price-cart" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="price" fxFlex>{{listing.object.PaymentInformation.ItemPrice?.basePrice?.toFixed(8)}}</div>
-    <button *ngIf="!listing.object.ListingItemTemplate?.hash && !listing.isBidded(hashes)" class="to-cart small" mat-button color="primary" fxFlex (click)="addToCart(listing.id)">
-      Add to cart
-    </button>
+    <app-add-to-cart [listing]="listing"></app-add-to-cart>
   </div>
 
 </div>

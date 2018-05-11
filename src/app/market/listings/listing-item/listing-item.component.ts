@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { FavoritesService } from '../../../core/market/api/favorites/favorites.service';
-import { CartService } from '../../../core/market/api/cart/cart.service';
 import { MarketStateService } from '../../../core/market/market-state/market-state.service';
 
 import { Listing } from '../../../core/market/api/listing/listing.model';
@@ -20,7 +19,6 @@ export class ListingItemComponent implements OnInit {
   // Input hashes
   @Input() hashes: Array<any> = new Array();
   constructor(private dialog: MatDialog,
-              private cartService: CartService,
               private favoritesService: FavoritesService,
               private snackbar: SnackbarService,
               private marketState: MarketStateService) {
@@ -47,7 +45,4 @@ export class ListingItemComponent implements OnInit {
     }
   }
 
-  addToCart() {
-    this.cartService.add(this.listing).subscribe();
-  }
 }

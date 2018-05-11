@@ -59,7 +59,7 @@
               </div>
             </td>
             <td class="price cell">
-              {{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
+              {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
             <!--<td class="quantity cell">1 &times;</td>-->
@@ -74,7 +74,7 @@
                  <button mat-button class="small">+</button>
                </div>
              </td> -->
-            <td class="total cell">{{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
+            <td class="total cell">{{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
             <td class="remove">

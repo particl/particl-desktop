@@ -19,7 +19,6 @@ export class Bid {
   }
   constructor(public orders: any, public address: any, public type: any) {
     this.setFilter();
-    this.setHashes();
   }
 
   setFilter() {
@@ -43,12 +42,6 @@ export class Bid {
 
   get ordersCount() {
     return this.orders.length;
-  }
-  // Get the all hashes from buyer side
-  private setHashes() {
-    if (this.type === 'buy') {
-      this.hashes = this.orders.filter(order => order.OrderItem.itemHash).map(o => o.OrderItem.itemHash)
-    }
   }
 
 }
