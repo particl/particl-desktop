@@ -23,8 +23,9 @@ export class AddToCartCacheService {
    }
 
   isBidded(listing: Listing): boolean {
-    this.hashes = this.orders.filter(order => order.OrderItem.itemHash).map(o => o.OrderItem.itemHash);
-    return this.hashes.includes(listing.hash);
+    return this.orders.filter(order => order.OrderItem.itemHash)
+                      .map(o => o.OrderItem.itemHash)
+                      .includes(listing.hash);
   }
 
   update() {
