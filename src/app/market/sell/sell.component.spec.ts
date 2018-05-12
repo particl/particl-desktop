@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { CoreModule } from 'app/core/core.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 import { TemplateService } from '../../core/market/api/template/template.service';
 import { MarketService } from '../../core/market/market.service';
@@ -22,6 +23,7 @@ describe('SellComponent', () => {
       imports: [
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
+        ModalsModule.forRoot(),
         RouterTestingModule,
         BrowserAnimationsModule
       ],

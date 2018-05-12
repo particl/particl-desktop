@@ -5,10 +5,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 import { CheckoutProcessComponent } from './checkout-process.component';
-
-
 
 describe('CheckoutProcessComponent', () => {
   let component: CheckoutProcessComponent;
@@ -21,6 +20,7 @@ describe('CheckoutProcessComponent', () => {
         RouterTestingModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
+        ModalsModule.forRoot(),
         MatStepperModule
       ],
       declarations: [ CheckoutProcessComponent ]

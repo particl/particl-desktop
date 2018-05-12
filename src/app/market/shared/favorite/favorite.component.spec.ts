@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
+import { CoreModule } from 'app/core/core.module';
+
 import { FavoriteComponent } from './favorite.component';
 
 describe('FavoriteComponent', () => {
@@ -11,7 +13,8 @@ describe('FavoriteComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        CommonModule
+        CommonModule,
+        CoreModule.forRoot()
       ],
       declarations: [ FavoriteComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
