@@ -4,7 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { MarketModule } from '../../core/market/market.module';
+import { CoreModule } from 'app/core/core.module';
 
 import { TemplateService } from '../../core/market/api/template/template.service';
 import { MarketService } from '../../core/market/market.service';
@@ -20,10 +20,10 @@ describe('SellComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ SellComponent ],
       imports: [
+        CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         RouterTestingModule,
-        BrowserAnimationsModule,
-        MarketModule.forRoot()
+        BrowserAnimationsModule
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })

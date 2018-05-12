@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { FavoriteComponent } from './favorite.component';
-import { CommonModule } from '@angular/common';
 
 describe('FavoriteComponent', () => {
   let component: FavoriteComponent;
@@ -12,7 +13,8 @@ describe('FavoriteComponent', () => {
       imports: [
         CommonModule
       ],
-      declarations: [ FavoriteComponent ]
+      declarations: [ FavoriteComponent ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

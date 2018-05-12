@@ -4,9 +4,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { MarketModule } from '../../core/market/market.module';
-
-import { CategoryService } from '../../core/market/api/category/category.service';
 
 import { ListingsComponent } from './listings.component';
 
@@ -22,9 +19,8 @@ describe('ListingsComponent', () => {
       ],
       imports: [
         BrowserAnimationsModule,
-        CoreUiModule.forRoot(),
         CoreModule.forRoot(),
-        MarketModule.forRoot()
+        CoreUiModule.forRoot()
       ]
     })
       .compileComponents();

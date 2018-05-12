@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { OrdersComponent } from './orders.component';
 
@@ -8,7 +9,8 @@ describe('OrdersComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrdersComponent ]
+      declarations: [ OrdersComponent ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));
