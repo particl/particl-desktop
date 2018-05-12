@@ -255,6 +255,7 @@ class DaemonManager extends EventEmitter {
           }
         });
 
+
         // restart if it downloaded while running
         // if (restart && binariesDownloaded) {
         //   log.info('Restarting app ...');
