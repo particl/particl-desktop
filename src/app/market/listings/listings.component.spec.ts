@@ -25,9 +25,6 @@ describe('ListingsComponent', () => {
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
         MarketModule.forRoot()
-      ],
-      providers: [
-        CategoryService
       ]
     })
       .compileComponents();

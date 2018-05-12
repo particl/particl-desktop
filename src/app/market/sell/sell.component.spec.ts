@@ -25,7 +25,6 @@ describe('SellComponent', () => {
         BrowserAnimationsModule,
         MarketModule.forRoot()
       ],
-      providers: [ TemplateService, MarketService, RpcStateService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
