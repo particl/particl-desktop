@@ -1,7 +1,7 @@
 <div mat-dialog-title>
-  {{data.listing.title}}
+  {{data?.listing?.title}}
   <span class="category">
-    in {{data.listing.category.name}}
+    in {{data?.listing?.category.name}}
   </span>
 </div>
 
@@ -13,7 +13,7 @@
 
   <div class="product-gallery" fxFlex="0 1 350px">
     <div class="featured image">
-      <img src="{{data.listing.featuredImage?.dataId || './assets/images/placeholder_4-3.jpg' }}">
+      <img src="{{data?.listing?.featuredImage?.dataId || './assets/images/placeholder_4-3.jpg' }}">
     </div>
     <div class="gallery" fxLayout="row" fxLayoutGap="24px">
       <!-- TODO: s/small/medium -->
@@ -29,9 +29,9 @@
       <tr>
         <th class="item price">Price</th>
         <td class="item price">
-          <span class="big">{{data.listing.basePrice.getIntegerPart()}}</span>
-          <span class="big">{{ data.listing.basePrice.dot() }}</span>
-          <span class="small">{{data.listing.basePrice.getFractionalPart()}}</span>
+          <span class="big">{{data?.listing?.basePrice.getIntegerPart()}}</span>
+          <span class="big">{{ data?.listing?.basePrice.dot() }}</span>
+          <span class="small">{{data?.listing?.basePrice.getFractionalPart()}}</span>
           <span class="currency">PART</span>
           <!--span class="fiat">&asymp; {{price?.usd}} USD</span-->
         </td>
@@ -39,24 +39,24 @@
       <tr>
         <th class="shipping price">Shipping</th>
         <td class="shipping price">
-          International {{data.listing.internationalShippingPrice.getAmount()}} PART<br>
-          {{data.listing.country}} {{data.listing.domesticShippingPrice.getAmount()}} PART
+          International {{data?.listing?.internationalShippingPrice.getAmount()}} PART<br>
+          {{data?.listing?.country}} {{data?.listing?.domesticShippingPrice.getAmount()}} PART
         </td>
       </tr>
       <tr>
         <th class="escrow price">Escrow</th>
-        <td class="escrow price">{{ data.listing.escrowPrice.getAmount() }} PART</td>
+        <td class="escrow price">{{ data?.listing?.escrowPrice.getAmount() }} PART</td>
       </tr>
     </table>
 
     <div class="summary description">
       <p>
-        {{data.listing.shortDescription}}
+        {{data?.listing?.shortDescription}}
       </p>
     </div>
     <div class="description">
       <p>
-        {{data.listing.longDescription}}
+        {{data?.listing?.longDescription}}
       </p>
     </div>
 
@@ -69,13 +69,13 @@
       <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
     </button-->
     <div class="date">
-      <strong>Date added</strong> {{data.listing.createdAt}}
+      <strong>Date added</strong> {{data?.listing?.createdAt}}
     </div>
   </div>
   <div class="right">
-    <app-favorite [listing]="data.listing"></app-favorite>
+    <app-favorite [listing]="data?.listing"></app-favorite>
 
-    <button mat-raised-button color="primary" *ngIf="!data.listing.object.ListingItemTemplate?.hash" (click)="addToCart(data.listing)">
+    <button mat-raised-button color="primary" *ngIf="!data?.listing?.object.ListingItemTemplate?.hash" (click)="addToCart(data?.listing)">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Add to cart
     </button>

@@ -33,6 +33,6 @@ export class FavoriteComponent implements OnInit {
   }
 
   get isFavorited(): boolean {
-    return this.favorites.cache.isFavorited(this.listing);
+    return this.listing && this.favorites.cache.isFavorited(this.listing);
   }
 }

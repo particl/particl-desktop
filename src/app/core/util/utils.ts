@@ -30,7 +30,7 @@ export class Amount {
    * -25.9 -> '9'
    * 25 -> '0'
    * 25.9 -> '9'
-   * 
+   *
    * We have to return this as a string, else the leading zero's are gone.
    */
   public getFractionalPart(): string {
@@ -287,7 +287,7 @@ export const Messages = {
       'action_icon': 'part-check',
       'action_disabled': false,
       'allow_reject_order': false,
-      'status_info': 'Buyer\'s funds are locked in escrow, order is ready to ship - when sent, Mark order as shipped and awaits its delivery'
+      'status_info': `Buyer\'s funds are locked in escrow, order is ready to ship - when sent, Mark order as shipped and await its delivery`
     },
     'status' : 'Escrow'
   },
@@ -298,7 +298,7 @@ export const Messages = {
       'action_icon': 'part-check',
       'action_disabled': false,
       'allow_reject_order': false,
-      'status_info': 'Order has been shipped - when you receive it, Mark it as delivered and your escrow funds will be released automatically'
+      'status_info': 'Order has been shipped - when you receive it, Mark it as delivered and the escrow funds will be released'
     },
     'sell': {
       'action_button': 'Waiting for delivery',

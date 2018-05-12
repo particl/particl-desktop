@@ -11,7 +11,7 @@ import { FavoriteCacheService } from './favorite-cache.service';
   ],
   declarations: []
 })
-export class MarketCacheModule { 
+export class MarketCacheModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MarketCacheModule,

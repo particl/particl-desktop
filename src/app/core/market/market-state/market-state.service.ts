@@ -23,7 +23,7 @@ export class MarketStateService extends StateService implements OnDestroy {
   /** Register a state call, executes every X seconds (timeout) */
   register(method: string, timeout: number, params?: Array<any> | null): void {
     // Keep track of errors, and poll accordingly
-    let errors: number = 0;
+    let errors = 0;
 
     // loop procedure
     const _call = () => {
@@ -55,14 +55,14 @@ export class MarketStateService extends StateService implements OnDestroy {
     _call();
   }
 
-  determineTimeoutDuration(errors: number, timeout): number {
+  determineTimeoutDuration(errors: number, timeout: number): number {
     let restartAfter: number = timeout;
 
     // if error occurred
     if (errors > 0) {
       if (errors < 10) {
         // might be booting up, let's retry after 500ms
-        restartAfter = 500; 
+        restartAfter = 500;
       } else {
         // wait 10 seconds or timeout duration
         // whichever is the longest.
