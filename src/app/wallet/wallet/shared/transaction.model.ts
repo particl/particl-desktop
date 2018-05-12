@@ -1,7 +1,16 @@
 import { Amount, DateFormatter } from '../../../core/util/utils';
 import { AddressType } from './address.model';
 
-export type TransactionCategory = 'all' | 'stake' | 'coinbase' | 'send' | 'receive' | 'orphaned_stake' | 'internal_transfer' | 'multisig' | 'listing_fee';
+export type TransactionCategory =
+    'all'
+    | 'stake'
+    | 'coinbase'
+    | 'send'
+    | 'receive'
+    | 'orphaned_stake'
+    | 'internal_transfer'
+    | 'multisig'
+    | 'listing_fee';
 
 export class Transaction {
 
@@ -93,7 +102,7 @@ export class Transaction {
       return 'listing_fee'
     } else {
       return this.category;
-    } 
+    }
   }
 
   public getExpandedTransactionID(): string {

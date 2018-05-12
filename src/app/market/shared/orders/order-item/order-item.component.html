@@ -3,17 +3,17 @@
   <mat-expansion-panel-header class="header">
     <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
       <div class="photo" fxFlex="0 0 80px">
-        <img src="{{order.listing?.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+        <img src="{{order?.listing?.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
       </div>
       <div class="meta" fxFlex="1 1 100%">
-        <div class="name">{{ order.listing?.title }}</div>
+        <div class="name">{{ order?.listing?.title }}</div>
         <div class="date">
           <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
-          <span class="hash {{ order.hash_bg }}" matTooltip="Order hash">{{ order.hash }}</span>
+          <span class="hash {{ order?.hash_bg }}" matTooltip="Order hash">{{ order?.hash }}</span>
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
       </div>
-      <div class="status {{ order.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order?.status }}</div>
+      <div class="status {{ order?.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order?.status }}</div>
     </div>
   </mat-expansion-panel-header>
 
@@ -44,30 +44,30 @@
         </tr-->
         <tr>
           <th>Listing price</th>
-          <td>{{order.listing?.basePrice?.getIntegerPart()}} {{order.listing?.basePrice?.dot()}}<!--
-            --><small>{{order.listing?.basePrice?.getFractionalPart()}}</small>
+          <td>{{order?.listing?.basePrice?.getIntegerPart()}} {{order?.listing?.basePrice?.dot()}}<!--
+            --><small>{{order?.listing?.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
         <tr>
           <th>Shipping</th>
-          <td>{{order.listing?.domesticShippingPrice?.getIntegerPart()}} {{order.listing?.domesticShippingPrice?.dot()}}<!--
-            --><small>{{order.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
+          <td>{{order?.listing?.domesticShippingPrice?.getIntegerPart()}} {{order?.listing?.domesticShippingPrice?.dot()}}<!--
+            --><small>{{order?.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td>{{order.listing?.escrowPrice?.getIntegerPart()}} {{order.listing?.escrowPrice?.dot()}}<!--
-            --><small>{{order.listing?.escrowPrice?.getFractionalPart()}}</small>
+          <td>{{order?.listing?.escrowPrice?.getIntegerPart()}} {{order?.listing?.escrowPrice?.dot()}}<!--
+            --><small>{{order?.listing?.escrowPrice?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
         <tr>
           <th>Total price</th>
           <td>
-            {{order.listing?.totalAmount?.getIntegerPart()}} {{order.listing?.totalAmount?.dot()}}<!--
-            --><small>{{order.listing?.totalAmount?.getFractionalPart()}}</small>
+            {{order?.listing?.totalAmount?.getIntegerPart()}} {{order?.listing?.totalAmount?.dot()}}<!--
+            --><small>{{order?.listing?.totalAmount?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
@@ -102,7 +102,7 @@
         Edit
       </button-->
       <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-      <button mat-button matTooltip="Escrow TX details" *ngIf="order.show_escrow_txdetails" class="small">
+      <button mat-button matTooltip="Escrow TX details" *ngIf="order?.show_escrow_txdetails" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
         View payment
       </button>

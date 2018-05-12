@@ -35,14 +35,4 @@ export class ListingItemComponent implements OnInit {
     });
   }
 
-  // @TODO: add common method or move to model.
-  getThumbnail() {
-    if (this.listing.thumbnail) {
-      // TODO: logic for main image, taking 0 here
-      return this.listing.thumbnail.dataId;
-    } else {
-      return './assets/images/placeholder_4-3.jpg';
-    }
-  }
-
 }

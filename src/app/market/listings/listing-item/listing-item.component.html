@@ -2,7 +2,7 @@
 
   <div class="image">
     <!-- TODO: this is a default placeholder image (show if no other image is available) -->
-    <img src="{{getThumbnail()}}" (click)="openListing()">
+    <img src="{{listing?.thumbnail || './assets/images/placeholder_4-3.jpg'}}" (click)="openListing()">
     <div class="icons">
       <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-zoom-bold-in" matTooltip="Preview"
                 matTooltipPosition="above" (click)="openListing()"></mat-icon>
@@ -11,12 +11,12 @@
   </div>
 
   <div class="info">
-    <div class="title">{{ listing.title }}</div>
-    <div class="category">{{listing.category?.name}}</div>
+    <div class="title">{{ listing?.title }}</div>
+    <div class="category">{{listing?.category?.name}}</div>
   </div>
 
   <div class="price-cart" fxLayout="row" fxLayoutAlign="space-between center">
-    <div class="price" fxFlex>{{listing.object.PaymentInformation.ItemPrice?.basePrice?.toFixed(8)}}</div>
+    <div class="price" fxFlex>{{listing?.object?.PaymentInformation?.ItemPrice?.basePrice?.toFixed(8)}}</div>
     <app-add-to-cart [listing]="listing"></app-add-to-cart>
   </div>
 

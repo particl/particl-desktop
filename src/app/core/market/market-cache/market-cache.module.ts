@@ -11,7 +11,7 @@ import { AddToCartCacheService } from './add-to-cart-cache.service';
   ],
   declarations: []
 })
-export class MarketCacheModule { 
+export class MarketCacheModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MarketCacheModule,
