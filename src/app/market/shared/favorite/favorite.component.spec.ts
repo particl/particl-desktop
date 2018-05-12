@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { CoreModule } from 'app/core/core.module';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { FavoriteComponent } from './favorite.component';
 
@@ -14,7 +15,8 @@ describe('FavoriteComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CommonModule,
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
       ],
       declarations: [ FavoriteComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]

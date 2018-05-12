@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
+
 import { OrdersComponent } from './orders.component';
 
 describe('OrdersComponent', () => {
@@ -10,6 +12,9 @@ describe('OrdersComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ OrdersComponent ],
+      imports: [
+        CoreUiModule.forRoot()
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
