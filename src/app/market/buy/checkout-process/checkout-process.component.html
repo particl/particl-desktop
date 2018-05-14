@@ -59,7 +59,7 @@
               </div>
             </td>
             <td class="price cell">
-              {{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
+              {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
             <!--<td class="quantity cell">1 &times;</td>-->
@@ -74,7 +74,7 @@
                  <button mat-button class="small">+</button>
                </div>
              </td> -->
-            <td class="total cell">{{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
+            <td class="total cell">{{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
             <td class="remove">
@@ -144,7 +144,7 @@
             </mat-form-field>
             <p class="widget-help">
               To save time, you can save your frequently used shipping addresses as your personal shipping profiles.
-              You can create as much profiles as you need (e.g. home address, office address etc.).
+              You can create as many profiles as you need (e.g. home address, office address, etc.).
             </p>
             <p class="widget-help">
               To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
@@ -249,14 +249,14 @@
             </div>
           </td>
           <td class="price cell">
-            {{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
+            {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
-          <td class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}.<small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
+          <td class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}{{listing.internationalShippingPrice?.dot()}}<small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
             PART
           </td>
           <!--<td class="quantity cell">1 &times;</td>-->
-          <td class="total cell">{{listing.internationalTotal?.getIntegerPart()}}.<small>{{listing.internationalTotal?.getFractionalPart()}}</small>
+          <td class="total cell">{{listing.internationalTotal?.getIntegerPart()}}{{listing.internationalTotal?.dot()}}<small>{{listing.internationalTotal?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>

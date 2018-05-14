@@ -204,7 +204,7 @@ class DaemonManager extends EventEmitter {
         const localConfigPath = path.join(app.getPath('userData'), 'clientBinaries.json');
         localConfig = (fs.existsSync(localConfigPath))
           ? require(localConfigPath)
-          : require('./clientBinaries.json');
+          : require('../clientBinaries/clientBinaries.json');
       }
 
       // scan for node
@@ -254,6 +254,7 @@ class DaemonManager extends EventEmitter {
             };
           }
         });
+
 
         // restart if it downloaded while running
         // if (restart && binariesDownloaded) {

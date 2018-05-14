@@ -43,6 +43,8 @@ script:
   - echo -en 'travis_fold:end:script.test\\r'
 
   - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2)
+  - echo $TRUE_COMMIT_MESSAGES
+  
   - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./nightly.sh; fi;
 
   - echo 'Done!'

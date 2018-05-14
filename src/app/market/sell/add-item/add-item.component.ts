@@ -177,11 +177,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.log.d(`preloaded id=${this.templateId}!`);
 
 
-      
+
       if (this.listing.cache.isAwaiting(template)) {
         template.status = 'awaiting';
       }
-      
+
 
       const t = {
         title: '',
@@ -200,7 +200,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.shortDescription = template.shortDescription;
       t.longDescription = template.longDescription;
       t.category = template.category.id;
-      t.country = country? country.name : '';
+      t.country = country ? country.name : '';
 
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
@@ -291,7 +291,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update messaging
     // update payment
     // update escrow
-   
+
 
   }
 
@@ -338,12 +338,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.save().subscribe(id => {
         console.log(id);
         this.template.post(id, 1).take(1).subscribe(listing => {
-          
+
           this.listing.cache.posting(id);
           if (this.preloadedTemplate) {
             this.preloadedTemplate.status = 'awaiting';
-          } 
-          
+          }
+
           this.snackbar.open('Succesfully added Listing!')
           console.log(listing);
           this.backToSell();

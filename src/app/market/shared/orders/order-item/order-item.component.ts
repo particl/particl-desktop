@@ -36,6 +36,11 @@ export class OrderItemComponent implements OnInit {
   }
 
   getItemDetails() {
+
+    if (!this.order) {
+      return;
+    }
+
     this.listingService.get(this.order.listingItemId).subscribe(response => {
      this.order.listing = response;
     });

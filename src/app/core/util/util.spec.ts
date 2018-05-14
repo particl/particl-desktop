@@ -55,10 +55,10 @@ describe('Amount', () => {
 
 
   it('should validate 0.001', () => {
-    expect(amount.getAmount()).toEqual(mockAmountTwo);
-    expect(amount.getIntegerPart()).toEqual(0);
-    expect(amount.getFractionalPart()).toEqual('006');
-    expect(amount.dot()).toBe('.');
+    expect(amountTwo.getAmount()).toEqual(mockAmountTwo);
+    expect(amountTwo.getIntegerPart()).toEqual(0);
+    expect(amountTwo.getFractionalPart()).toEqual('006');
+    expect(amountTwo.dot()).toBe('.');
   });
 
 });

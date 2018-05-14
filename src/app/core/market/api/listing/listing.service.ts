@@ -22,7 +22,7 @@ export class ListingService {
       'search',
       page,
       pageLimit,
-      'ASC',
+      'DESC',
       catId || null, // category
       'ALL',
       profileId || 'ALL',
@@ -50,13 +50,6 @@ export class ListingService {
 
   get(id: number) {
     return this.market.call('item', ['get', id]).map(listing => new Listing(listing));
-  }
-
-  generateBogusListings(amount: number) {
-    console.log('generating listing');
-    return this.market.call('data', ['generate', 'listingitem', amount, true]).subscribe(
-      (listings) => console.log('generated')
-    );
   }
 
 }
