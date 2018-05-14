@@ -93,6 +93,7 @@ function initMainWindow() {
     icon:      path.join(__dirname, 'resources/icon.png'),
 
     webPreferences: {
+      webviewTag: false,
       nodeIntegration: false,
       sandbox: true,
       contextIsolation: true,
