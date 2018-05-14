@@ -16,7 +16,7 @@ export class Template {
   public internationalTotal: Amount = new Amount(0);
   public totalAmount: Amount = new Amount(0);
   public memo: string = '';
-  public pictures: Array<any> = new Array();
+  public allImages: Array<any> = new Array();
   // @TODO: remove type any
   constructor(private object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
@@ -147,7 +147,7 @@ export class Template {
   setImages(): void {
     const itemimage = this.object.ItemInformation.ItemImages;
     if (itemimage) {
-      this.pictures = itemimage.filter((img, index) => (img.ItemImageDatas && index > 0))
+      this.allImages = itemimage.filter((img, index) => (img.ItemImageDatas && index > 0))
                         .map(data => data.ItemImageDatas.find(o => o.imageVersion === 'THUMBNAIL'));
     }
   }

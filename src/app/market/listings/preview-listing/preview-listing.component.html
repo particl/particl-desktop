@@ -17,8 +17,8 @@
     </div>
     <div class="gallery" fxLayout="row" fxLayoutGap="24px">
       <!-- TODO: s/small/medium -->
-      <div class="small image" fxFlex="1 1 100px" *ngFor="let picture of data?.listing?.pictures">
-        <img src="{{picture.dataId}}">
+      <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.allImages">
+        <img src="{{img.dataId}}">
       </div>
     </div>
   </div>
