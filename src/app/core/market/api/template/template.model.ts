@@ -16,7 +16,6 @@ export class Template {
   public internationalTotal: Amount = new Amount(0);
   public totalAmount: Amount = new Amount(0);
   public memo: string = '';
-  public hashes: Array<any> = new Array();
   // @TODO: remove type any
   constructor(private object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);

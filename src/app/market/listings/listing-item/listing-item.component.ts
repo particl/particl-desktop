@@ -14,19 +14,12 @@ import { PreviewListingComponent } from '../preview-listing/preview-listing.comp
   templateUrl: './listing-item.component.html',
   styleUrls: ['./listing-item.component.scss']
 })
-export class ListingItemComponent implements OnInit {
+export class ListingItemComponent {
   @Input() listing: Listing;
-  // Input hashes
-  @Input() hashes: Array<any> = new Array();
   constructor(private dialog: MatDialog,
               private favoritesService: FavoritesService,
               private snackbar: SnackbarService,
               private marketState: MarketStateService) {
-  }
-
-  ngOnInit() {
-    // Passing all hashes as a key
-    this.listing.hashes = this.hashes;
   }
 
   openListing() {

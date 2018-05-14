@@ -10,7 +10,6 @@ export class Bid {
   public listing: Listing;
   public listingItemId: number;
   public status: string;
-  public hashes: Array<any> = new Array();
 
   // @TODO some refactoring needed
   public OrderItem: {
