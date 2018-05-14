@@ -39,6 +39,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public shippingFormGroup: FormGroup;
   public newShipping: boolean;
   public selectedAddress: ShippingDetails;
+  public selectedIndex: number = 0;
+  public isStepperLinear: boolean = true;
+  public isShippingDetailsStepCompleted: boolean = false;
 
   public profile: any = {};
 
@@ -197,12 +200,18 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   clearCache() {
+    this.profileService.stepper = 0;
     this.profileService.shippingDetails = new ShippingDetails()
   }
 
   setSteperIndex() {
-    // @TODO: set stepper completed on 3 index.
-    this.stepper.selectedIndex = this.profileService.stepper;
+    // set manually shipping details step completed.
+    if (this.profileService.stepper === 2) {
+      this.isStepperLinear = false;
+      this.isShippingDetailsStepCompleted = true;
+    }
+
+    this.selectedIndex = this.profileService.stepper;
   }
 
   updateSteperIndex() {
