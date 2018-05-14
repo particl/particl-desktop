@@ -42,7 +42,8 @@ server
 .DS_Store
 Thumbs.db
 
-
+# user uploaded data
+/data/uploads
 
 # packages
 /packages
