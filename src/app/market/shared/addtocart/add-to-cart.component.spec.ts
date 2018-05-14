@@ -1,7 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+import { CoreModule } from 'app/core/core.module';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { AddToCartComponent } from './add-to-cart.component';
-import { CommonModule } from '@angular/common';
 
 describe('AddToCartComponent', () => {
   let component: AddToCartComponent;
@@ -10,9 +14,12 @@ describe('AddToCartComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        CommonModule
+        CommonModule,
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
       ],
-      declarations: [ AddToCartComponent ]
+      declarations: [ AddToCartComponent ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));
@@ -27,3 +34,4 @@ describe('AddToCartComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

@@ -23,9 +23,12 @@ export class AddToCartCacheService implements OnDestroy {
    }
 
   isBidded(listing: Listing): boolean {
-    return this.orders.filter(order => order.OrderItem.itemHash)
-                      .map(o => o.OrderItem.itemHash)
-                      .includes(listing.hash);
+    if (listing) {
+      return this.orders.filter(order => order.OrderItem.itemHash)
+                        .map(o => o.OrderItem.itemHash)
+                        .includes(listing.hash);
+    }
+    return false;
   }
 
   update() {
