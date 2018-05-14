@@ -75,10 +75,7 @@
     </div>
 
     <div class="tx-amount">
-      <span class="big">{{ bidItem.listing?.totalAmount?.getIntegerPart() }}</span>
-      <span>
-      <span class="point">{{ bidItem.listing?.totalAmount?.dot() }}</span>
-      <span class="small">{{ bidItem.listing?.totalAmount?.getFractionalPart() }}</span>&ensp;</span>
+      <span class="big">{{ bidItem.listing?.totalAmount?.getIntegerPart() }}</span><span class="point">{{ bidItem.listing?.totalAmount?.dot() }}</span><span class="small">{{ bidItem.listing?.totalAmount?.getFractionalPart() }}</span>&ensp;
       <span class="currency">PART</span>
       <!-- TODO: until fiat estimations are implemented, hide them -->
       <div class="fiat">&asymp; 3.42 USD</div>
@@ -93,10 +90,10 @@
 
     <p class="fee-info">
       <!-- Transaction fee:<span class="amount">11 PART</span><span class="fiat">&asymp; 0.05 USD</span><br> -->
-      Listing price:<span class="amount">{{bidItem.listing?.basePrice?.getIntegerPart()}} {{bidItem.listing?.basePrice?.dot()}} {{bidItem.listing?.basePrice?.getFractionalPart()}} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-      Shipping:<span class="amount">{{bidItem.listing?.domesticShippingPrice?.getIntegerPart()}} {{bidItem.listing?.domesticShippingPrice?.dot()}} {{bidItem.listing?.domesticShippingPrice?.getFractionalPart()}} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-      Escrow:<span class="amount">{{bidItem.listing?.escrowPrice?.getIntegerPart()}} {{bidItem.listing?.escrowPrice?.dot()}} {{bidItem.listing?.escrowPrice?.getFractionalPart()}} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-      Total amount:<span class="amount">{{bidItem.listing?.totalAmount?.getIntegerPart()}} {{bidItem.listing?.totalAmount?.dot()}} {{bidItem.listing?.totalAmount?.getFractionalPart()}} PART</span><span class="fiat">&asymp; 3.47 USD</span>
+      Listing price:<span class="amount">{{ bidItem.listing?.basePrice?.getIntegerPart() }}{{ bidItem.listing?.basePrice?.dot() }}{{ bidItem.listing?.basePrice?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Shipping:<span class="amount">{{ bidItem.listing?.domesticShippingPrice?.getIntegerPart() }}{{ bidItem.listing?.domesticShippingPrice?.dot() }}{{ bidItem.listing?.domesticShippingPrice?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Escrow:<span class="amount">{{ bidItem.listing?.escrowPrice?.getIntegerPart() }}{{ bidItem.listing?.escrowPrice?.dot() }}{{ bidItem.listing?.escrowPrice?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Total amount:<span class="amount">{{ bidItem.listing?.totalAmount?.getIntegerPart() }}{{ bidItem.listing?.totalAmount?.dot() }}{{ bidItem.listing?.totalAmount?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
     </p>
 
     <p class="escrow-info">
