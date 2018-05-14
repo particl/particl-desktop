@@ -44,31 +44,23 @@
         </tr-->
         <tr>
           <th>Listing price</th>
-          <td>{{order?.listing?.basePrice?.getIntegerPart()}} {{order?.listing?.basePrice?.dot()}}<!--
-            --><small>{{order?.listing?.basePrice?.getFractionalPart()}}</small>
-            PART
+          <td>{{order?.listing?.basePrice?.getIntegerPart()}} {{order?.listing?.basePrice?.dot()}}<small>{{order?.listing?.basePrice?.getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Shipping</th>
-          <td>{{order?.listing?.domesticShippingPrice?.getIntegerPart()}} {{order?.listing?.domesticShippingPrice?.dot()}}<!--
-            --><small>{{order?.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
-            PART
+          <td>{{order?.listing?.domesticShippingPrice?.getIntegerPart()}} {{order?.listing?.domesticShippingPrice?.dot()}}<small>{{order?.listing?.domesticShippingPrice?.getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td>{{order?.listing?.escrowPrice?.getIntegerPart()}} {{order?.listing?.escrowPrice?.dot()}}<!--
-            --><small>{{order?.listing?.escrowPrice?.getFractionalPart()}}</small>
-            PART
+          <td>{{order?.listing?.escrowPrice?.getIntegerPart()}} {{order?.listing?.escrowPrice?.dot()}}<small>{{order?.listing?.escrowPrice?.getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Total price</th>
           <td>
-            {{order?.listing?.totalAmount?.getIntegerPart()}} {{order?.listing?.totalAmount?.dot()}}<!--
-            --><small>{{order?.listing?.totalAmount?.getFractionalPart()}}</small>
-            PART
+            {{order?.listing?.totalAmount?.getIntegerPart()}} {{order?.listing?.totalAmount?.dot()}}<small>{{order?.listing?.totalAmount?.getFractionalPart()}}</small> PART
           </td>
         </tr>
       </table>

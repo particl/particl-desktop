@@ -103,3 +103,9 @@
     margin: 0 5px;
   }
 }
+
+.escrow-info {
+  @extend .fee-info;
+  margin-top: 20px;
+  padding: 0 70px;
+}
