@@ -19,9 +19,15 @@
 
   <div class="status-info">
     <p>{{ order?.messages.status_info }}</p>
-    <div *ngIf="order?.type === 'buy' && order?.status === 'Shipping'">
-      <p *ngIf="order?.listing?.memo">Additional Shipping Information: {{ order?.listing?.memo}}</p>
-      <p *ngIf="!order?.listing?.memo">Additional Shipping Information: No Information Provided</p>
+    <div *ngIf="order?.type === 'buy' && order?.status === 'Shipping'" class="additional-shipping-info">
+      <p *ngIf="order?.listing?.memo">
+        <span class="title">Shipping info from Seller</span>
+        <code class="more-info">{{ order?.listing?.memo}}</code>
+      </p>
+      <p *ngIf="!order?.listing?.memo">
+        <span class="title">Shipping info from Seller</span>
+        <em>No information provided</em>
+      </p>
     </div>
   </div>
 
@@ -105,7 +111,6 @@
       </button-->
     </div>
     <div class="right">
-      <!-- TODO: after clicking, show confirmation modal with more info: -->
       <button mat-raised-button color="primary" matTooltip="{{ order?.messages?.tooltip }}"
               [disabled]="order?.messages?.action_disabled" (click)="order_action()">
         <mat-icon fontSet="partIcon" fontIcon="{{ order?.messages?.action_icon }}"></mat-icon>
