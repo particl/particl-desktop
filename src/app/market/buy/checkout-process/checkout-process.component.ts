@@ -23,6 +23,7 @@ import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsService } from 'app/modals/modals.service';
 import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
+import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checkout-process-cache.service';
 
 @Component({
   selector: 'app-checkout-process',
@@ -60,6 +61,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private cartService: CartService,
     public countryList: CountryListService,
+    public checkoutProcessCacheService: CheckoutProcessCacheService,
     private bid: BidService,
     public dialog: MatDialog) {
   }
@@ -79,9 +81,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   // @TODO create separate service for checkout process.
   setShippingCache() {
     this.updateSteperIndex();
-    this.profileService.shippingDetails = this.shippingFormGroup.value;
+    this.checkoutProcessCacheService.shippingDetails = this.shippingFormGroup.value;
     if (this.selectedAddress) {
-      this.profileService.shippingDetails.id = this.selectedAddress.id
+      this.checkoutProcessCacheService.shippingDetails.id = this.selectedAddress.id
     }
   }
 
@@ -162,7 +164,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         const addresses = profile.ShippingAddresses;
         if (addresses.length > 0) {
           this.setSteperIndex();
-          this.selectedAddress = (this.profileService.shippingDetails) ? this.profileService.shippingDetails : addresses[0];
+          this.selectedAddress = (
+            this.checkoutProcessCacheService.shippingDetails
+          ) ? (
+            this.checkoutProcessCacheService.shippingDetails
+          ) : addresses[0];
           this.setValue(this.selectedAddress);
         }
       });
@@ -200,21 +206,21 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   clearCache() {
-    this.profileService.stepper = 0;
-    this.profileService.shippingDetails = new ShippingDetails()
+    this.checkoutProcessCacheService.stepper = 0;
+    this.checkoutProcessCacheService.shippingDetails = new ShippingDetails()
   }
 
   setSteperIndex() {
     // set manually shipping details step completed.
-    if (this.profileService.stepper === 2) {
+    if (this.checkoutProcessCacheService.stepper === 2) {
       this.isStepperLinear = false;
       this.isShippingDetailsStepCompleted = true;
     }
 
-    this.selectedIndex = this.profileService.stepper;
+    this.selectedIndex = this.checkoutProcessCacheService.stepper;
   }
 
   updateSteperIndex() {
-    this.profileService.stepper = this.stepper.selectedIndex;
+    this.checkoutProcessCacheService.stepper = this.stepper.selectedIndex;
   }
 }
