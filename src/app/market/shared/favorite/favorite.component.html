@@ -1,5 +1,7 @@
-<mat-icon class="fav icon" fontSet="partIcon"
+<!-- <mat-icon class="fav icon" fontSet="partIcon"
           [fontIcon]="(isFavorited)? 'part-heart-outline-remove' : 'part-heart-outline-add'"
           [ngClass]="{ 'active': isFavorited }"
           [matTooltip]="(isFavorited)? 'Remove from Favorites' : 'Add to Favorites'"
-          matTooltipPosition="above" (click)="toggle()"></mat-icon>
+          matTooltipPosition="above" (click)="toggle()"></mat-icon> -->
+<div *ngIf="fav === true">listing page favourite</div>
+<div *ngIf="fav === false">detail page favourite</div>
