@@ -19,7 +19,7 @@ export class FavoriteComponent implements OnInit {
   private log: any = Log.create('favorite.component id:' + Math.floor((Math.random() * 1000) + 1));
 
   @Input() listing: Listing;
-  @Input() fav: boolean = true;
+  @Input() detail: boolean = true;
   constructor(
     public favorites: FavoritesService,
     private snackbar: SnackbarService,
