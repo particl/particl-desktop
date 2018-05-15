@@ -29,9 +29,7 @@
       <tr>
         <th class="item price">Price</th>
         <td class="item price">
-          <span class="big">{{data?.listing?.basePrice.getIntegerPart()}}</span>
-          <span class="big">{{ data?.listing?.basePrice.dot() }}</span>
-          <span class="small">{{data?.listing?.basePrice.getFractionalPart()}}</span>
+          <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
           <span class="currency">PART</span>
           <!--span class="fiat">&asymp; {{price?.usd}} USD</span-->
         </td>
@@ -39,8 +37,8 @@
       <tr>
         <th class="shipping price">Shipping</th>
         <td class="shipping price">
-          International {{data?.listing?.internationalShippingPrice.getAmount()}} PART<br>
-          {{data?.listing?.country}} {{data?.listing?.domesticShippingPrice.getAmount()}} PART
+          International &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} PART<br>
+          Local in {{ data?.listing?.country }} &ndash; {{ data?.listing?.domesticShippingPrice.getAmount() }} PART
         </td>
       </tr>
       <tr>
@@ -49,14 +47,19 @@
       </tr>
     </table>
 
+    <p class="info message" *ngIf="data?.listing?.object.ListingItemTemplate?.hash">
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      This is your own listing
+    </p>
+
     <div class="summary description">
       <p>
-        {{data?.listing?.shortDescription}}
+        {{ data?.listing?.shortDescription }}
       </p>
     </div>
     <div class="description">
       <p>
-        {{data?.listing?.longDescription}}
+        {{ data?.listing?.longDescription }}
       </p>
     </div>
 
@@ -69,13 +72,13 @@
       <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
     </button-->
     <div class="date">
-      <strong>Date added</strong> {{data?.listing?.createdAt}}
+      <strong>Date added</strong> {{ data?.listing?.createdAt }}
     </div>
   </div>
-  <div class="right">
+  <div class="right" *ngIf="!data?.listing?.object.ListingItemTemplate?.hash">
     <app-favorite [listing]="data?.listing"></app-favorite>
 
-    <button mat-raised-button color="primary" *ngIf="!data?.listing?.object.ListingItemTemplate?.hash" (click)="addToCart(data?.listing)">
+    <button mat-raised-button color="primary" (click)="addToCart(data?.listing)">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Add to cart
     </button>

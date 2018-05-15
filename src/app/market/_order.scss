@@ -80,6 +80,19 @@
       background: lighten(mix($color-warning, $color-alert), 10%);
     }
   }
+  .additional-shipping-info {
+    margin-top: 8px;
+    .title {
+      font-size: 13px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: $text;
+    }
+    .more-info {
+      @extend %enable-select;
+      margin-left: 10px;
+    }
+  }
   .detail {
     .order-history {
       table {
