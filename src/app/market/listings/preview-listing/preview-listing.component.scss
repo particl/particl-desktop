@@ -27,6 +27,25 @@ button.small .mat-icon {
   margin: 0; // remove margin from buttons with icons only
 }
 
+// Info/alert messages
+.message {
+  &.info {
+    padding: 16px 0;
+    background: $bg;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+  }
+  .mat-icon {
+    width: auto;
+    height: auto;
+    font-size: 16px;
+    margin-right: 6px;
+    position: relative;
+    top: 3px;
+    color: $color;
+  }
+}
 
 // ------ LAYOUT ------ //
 
@@ -62,6 +81,7 @@ button.small .mat-icon {
     &.summary {
       font-weight: 600;
       color: $text;
+      font-size: 14px;
     }
   }
   .pricing {

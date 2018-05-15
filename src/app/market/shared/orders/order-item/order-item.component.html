@@ -19,9 +19,15 @@
 
   <div class="status-info">
     <p>{{ order?.messages.status_info }}</p>
-    <div *ngIf="order?.type === 'buy' && order?.status === 'Shipping'">
-      <p *ngIf="order?.listing?.memo">Additional Shipping Information: {{ order?.listing?.memo}}</p>
-      <p *ngIf="!order?.listing?.memo">Additional Shipping Information: No Information Provided</p>
+    <div *ngIf="order?.type === 'buy' && order?.status === 'Shipping'" class="additional-shipping-info">
+      <p *ngIf="order?.listing?.memo">
+        <span class="title">Shipping info from Seller</span>
+        <code class="more-info">{{ order?.listing?.memo}}</code>
+      </p>
+      <p *ngIf="!order?.listing?.memo">
+        <span class="title">Shipping info from Seller</span>
+        <em>No information provided</em>
+      </p>
     </div>
   </div>
 
@@ -29,9 +35,9 @@
     <div class="buyer-info" fxFlex="27%">
       <div class="title">Shipping address</div>
       <p>
-        {{order?.ShippingAddress.firstName}} {{order?.ShippingAddress.lastName}} <br>
+        {{order?.ShippingAddress.firstName}} {{order?.ShippingAddress.lastName}}<br>
         {{order?.ShippingAddress.addressLine1}},
-        {{order?.ShippingAddress.addressLine2}},{{order?.ShippingAddress.city}}, {{order?.ShippingAddress.state}}<br>
+        {{order?.ShippingAddress.addressLine2}}, {{order?.ShippingAddress.city}}, {{order?.ShippingAddress.state}}<br>
         {{order?.ShippingAddress.zipCode}}, {{order?.ShippingAddress.country}}
       </p>
     </div><!-- .buyer-info -->
@@ -44,31 +50,23 @@
         </tr-->
         <tr>
           <th>Listing price</th>
-          <td>{{order?.listing?.basePrice?.getIntegerPart()}} {{order?.listing?.basePrice?.dot()}}<!--
-            --><small>{{order?.listing?.basePrice?.getFractionalPart()}}</small>
-            PART
+          <td>{{order?.listing?.basePrice?.getIntegerPart()}}{{order?.listing?.basePrice?.dot()}}<small>{{order?.listing?.basePrice?.getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Shipping</th>
-          <td>{{order?.listing?.domesticShippingPrice?.getIntegerPart()}} {{order?.listing?.domesticShippingPrice?.dot()}}<!--
-            --><small>{{order?.listing?.domesticShippingPrice?.getFractionalPart()}}</small>
-            PART
+          <td>{{order?.listing?.domesticShippingPrice?.getIntegerPart()}}{{order?.listing?.domesticShippingPrice?.dot()}}<small>{{order?.listing?.domesticShippingPrice?.getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td>{{order?.listing?.escrowPrice?.getIntegerPart()}} {{order?.listing?.escrowPrice?.dot()}}<!--
-            --><small>{{order?.listing?.escrowPrice?.getFractionalPart()}}</small>
-            PART
+          <td>{{order?.listing?.escrowPrice?.getIntegerPart()}}{{order?.listing?.escrowPrice?.dot()}}<small>{{order?.listing?.escrowPrice?.getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Total price</th>
           <td>
-            {{order?.listing?.totalAmount?.getIntegerPart()}} {{order?.listing?.totalAmount?.dot()}}<!--
-            --><small>{{order?.listing?.totalAmount?.getFractionalPart()}}</small>
-            PART
+            {{order?.listing?.totalAmount?.getIntegerPart()}}{{order?.listing?.totalAmount?.dot()}}<small>{{order?.listing?.totalAmount?.getFractionalPart()}}</small> PART
           </td>
         </tr>
       </table>
@@ -113,7 +111,6 @@
       </button-->
     </div>
     <div class="right">
-      <!-- TODO: after clicking, show confirmation modal with more info: -->
       <button mat-raised-button color="primary" matTooltip="{{ order?.messages?.tooltip }}"
               [disabled]="order?.messages?.action_disabled" (click)="order_action()">
         <mat-icon fontSet="partIcon" fontIcon="{{ order?.messages?.action_icon }}"></mat-icon>
