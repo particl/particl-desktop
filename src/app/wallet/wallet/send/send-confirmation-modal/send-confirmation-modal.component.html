@@ -74,8 +74,14 @@
       </div>
     </div>
 
-    <div class="tx-amount">
-      <span class="big">{{ bidItem.listing?.totalAmount?.getIntegerPart() }}</span><span class="point">{{ bidItem.listing?.totalAmount?.dot() }}</span><span class="small">{{ bidItem.listing?.totalAmount?.getFractionalPart() }}</span>&ensp;
+    <div *ngIf="bidItem.listing?.country === bidItem.ShippingAddress?.country" class="tx-amount">
+      <span  class="big">{{ bidItem.listing?.totalAmountDomestic?.getIntegerPart() }}</span><span class="point">{{ bidItem.listing?.totalAmountDomestic?.dot() }}</span><span class="small">{{ bidItem.listing?.totalAmountDomestic?.getFractionalPart() }}</span>&ensp;
+      <span class="currency">PART</span>
+      <!-- TODO: until fiat estimations are implemented, hide them -->
+      <div class="fiat">&asymp; 3.42 USD</div>
+    </div>
+    <div *ngIf="bidItem.listing?.country !== bidItem.ShippingAddress?.country" class="tx-amount">
+      <span class="big">{{ bidItem.listing?.totalAmountInternaltional?.getIntegerPart() }}</span><span class="point">{{ bidItem.listing?.totalAmountInternaltional?.dot() }}</span><span class="small">{{ bidItem.listing?.totalAmountInternaltional?.getFractionalPart() }}</span>&ensp;
       <span class="currency">PART</span>
       <!-- TODO: until fiat estimations are implemented, hide them -->
       <div class="fiat">&asymp; 3.42 USD</div>
