@@ -147,15 +147,17 @@ exports.check = function() {
 }
 
 exports.stop = function() {
+  log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
     if (daemon) {
+      log.info('Call RPC stop!');
       rpc.call('stop', null, (error, response) => {
         if (error) {
           log.error('Calling SIGINT!');
           reject();
         } else {
-          log.debug('Daemon stopping gracefully...');
+          log.info('Daemon stopping gracefully...');
           resolve();
         }
       });
@@ -167,7 +169,9 @@ exports.stop = function() {
     }
 
   }).catch(() => {
-    if (daemon)
+    if (daemon) {
+      log.error('Calling SIGINT!');
       daemon.kill('SIGINT')
+    }
   });
 }
