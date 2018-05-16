@@ -16,6 +16,7 @@ export class Bid {
     status: string,
     id: number
   }
+
   constructor(public orders: any, public address: any, public type: any) {
     this.setFilter();
   }
