@@ -91,9 +91,15 @@
     <p class="fee-info">
       <!-- Transaction fee:<span class="amount">11 PART</span><span class="fiat">&asymp; 0.05 USD</span><br> -->
       Listing price:<span class="amount">{{ bidItem.listing?.basePrice?.getIntegerPart() }}{{ bidItem.listing?.basePrice?.dot() }}{{ bidItem.listing?.basePrice?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-      Shipping:<span class="amount">{{ bidItem.listing?.domesticShippingPrice?.getIntegerPart() }}{{ bidItem.listing?.domesticShippingPrice?.dot() }}{{ bidItem.listing?.domesticShippingPrice?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-      Escrow:<span class="amount">{{ bidItem.listing?.escrowPrice?.getIntegerPart() }}{{ bidItem.listing?.escrowPrice?.dot() }}{{ bidItem.listing?.escrowPrice?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-      Total amount:<span class="amount">{{ bidItem.listing?.totalAmount?.getIntegerPart() }}{{ bidItem.listing?.totalAmount?.dot() }}{{ bidItem.listing?.totalAmount?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
+      Shipping:<span *ngIf="bidItem.listing?.country === bidItem.ShippingAddress?.country" class="amount">{{ bidItem.listing?.domesticShippingPrice?.getIntegerPart() }}{{ bidItem.listing?.domesticShippingPrice?.dot() }}{{ bidItem.listing?.domesticShippingPrice?.getFractionalPart() }} PART</span>
+      <span *ngIf="bidItem.listing?.country !== bidItem.ShippingAddress?.country" class="amount">{{ bidItem.listing?.internationalShippingPrice?.getIntegerPart() }}{{ bidItem.listing?.internationalShippingPrice?.dot() }}{{ bidItem.listing?.internationalShippingPrice?.getFractionalPart() }} PART</span>
+      <span class="fiat">&asymp; 0.05 USD</span><br>
+      Escrow:<span *ngIf="bidItem.listing?.country === bidItem.ShippingAddress?.country" class="amount">{{ bidItem.listing?.escrowPriceDomestic?.getIntegerPart() }}{{ bidItem.listing?.escrowPriceDomestic?.dot() }}{{ bidItem.listing?.escrowPriceDomestic?.getFractionalPart() }} PART</span>
+      <span *ngIf="bidItem.listing?.country !== bidItem.ShippingAddress?.country" class="amount">{{ bidItem.listing?.escrowPriceInternational?.getIntegerPart() }}{{ bidItem.listing?.escrowPriceInternational?.dot() }}{{ bidItem.listing?.escrowPriceInternational?.getFractionalPart() }} PART</span>
+      <span class="fiat">&asymp; 0.05 USD</span><br>
+      Total amount:<span *ngIf="bidItem.listing?.country === bidItem.ShippingAddress?.country" class="amount">{{ bidItem.listing?.totalAmountDomestic?.getIntegerPart() }}{{ bidItem.listing?.totalAmountDomestic?.dot() }}{{ bidItem.listing?.totalAmountDomestic?.getFractionalPart() }} PART</span>
+      <span *ngIf="bidItem.listing?.country !== bidItem.ShippingAddress?.country" class="amount">{{ bidItem.listing?.totalAmountInternaltional?.getIntegerPart() }}{{ bidItem.listing?.totalAmountInternaltional?.dot() }}{{ bidItem.listing?.totalAmountInternaltional?.getFractionalPart() }} PART</span>
+      <span class="fiat">&asymp; 3.47 USD</span>
     </p>
 
     <p class="escrow-info">

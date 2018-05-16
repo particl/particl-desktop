@@ -252,11 +252,17 @@
             {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
-          <td class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}{{listing.internationalShippingPrice?.dot()}}<small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
+          <td *ngIf="listing.country !== valueOf('country')" class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}{{listing.internationalShippingPrice?.dot()}}<small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
+            PART
+          </td>
+          <td *ngIf="listing.country === valueOf('country')" class="shipping cell">{{listing.domesticShippingPrice?.getIntegerPart()}}{{listing.domesticShippingPrice?.dot()}}<small>{{listing.domesticShippingPrice?.getFractionalPart()}}</small>
             PART
           </td>
           <!--<td class="quantity cell">1 &times;</td>-->
-          <td class="total cell">{{listing.internationalTotal?.getIntegerPart()}}{{listing.internationalTotal?.dot()}}<small>{{listing.internationalTotal?.getFractionalPart()}}</small>
+          <td *ngIf="listing.country !== valueOf('country')" class="total cell">{{listing.internationalTotal?.getIntegerPart()}}{{listing.internationalTotal?.dot()}}<small>{{listing.internationalTotal?.getFractionalPart()}}</small>
+            PART
+          </td>
+          <td *ngIf="listing.country === valueOf('country')" class="total cell">{{listing.domesticTotal?.getIntegerPart()}}{{listing.domesticTotal?.dot()}}<small>{{listing.domesticTotal?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
@@ -281,15 +287,15 @@
           </tr>
           <tr>
             <td class="desc">Shipping total</td>
-            <td class="value">{{cart?.shippingTotal.getAmount()}} PART</td>
+            <td class="value">{{cart?.setShippingTotal(valueOf('country')).getAmount()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Escrow</td>
-            <td class="value">{{cart?.escrowTotal.getAmount()}} PART</td>
+            <td class="value">{{cart?.setEscrowTotal(valueOf('country')).getAmount()}} PART</td>
           </tr>
           <tr>
             <td class="desc total">Total</td>
-            <td class="value total">{{cart?.total.amount}} PART</td>
+            <td class="value total">{{cart?.setTotal(valueOf('country')).getAmount()}} PART</td>
           </tr>
         </table>
 
