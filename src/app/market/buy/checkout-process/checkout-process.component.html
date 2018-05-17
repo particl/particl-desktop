@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear [@.disabled]="true" class="no-bg container-block" #stepper>
+<mat-horizontal-stepper [selectedIndex]="selectedIndex" [linear]="isStepperLinear" [@.disabled]="true" class="no-bg container-block" #stepper>
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
   <ng-template matStepperIcon="edit">
     <custom-icon>
@@ -122,7 +122,7 @@
   </mat-step>
 
   <!-- =========== SHIPPING DETAILS =========== -->
-  <mat-step [stepControl]="shippingFormGroup">
+  <mat-step [completed]="isShippingDetailsStepCompleted" [stepControl]="shippingFormGroup">
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
       <div fxLayout="row" fxLayoutGap="30px">
