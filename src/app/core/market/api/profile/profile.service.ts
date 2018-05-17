@@ -9,16 +9,10 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 @Injectable()
 export class ProfileService {
 
-  // @TODO: added for checkout process will be move to ShippingService
-  public shippingDetails: ShippingDetails;
-  public stepper: number = 0;
-
   constructor(
     private market: MarketService,
     private marketState: MarketStateService
-  ) {
-    this.shippingDetails = new ShippingDetails();
-  }
+  ) { }
 
   list() {
     return this.marketState.observe('profile')
