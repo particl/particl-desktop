@@ -51,10 +51,14 @@
   .label {
     font-weight: 700;
     text-transform: uppercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .address {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
     font-family: monospace;
     color: $text-muted;
     background: transparent;
