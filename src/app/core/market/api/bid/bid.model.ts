@@ -10,11 +10,13 @@ export class Bid {
   public listing: Listing;
   public listingItemId: number;
   public status: string;
+
   // @TODO some refactoring needed
   public OrderItem: {
     status: string,
     id: number
   }
+
   constructor(public orders: any, public address: any, public type: any) {
     this.setFilter();
   }
