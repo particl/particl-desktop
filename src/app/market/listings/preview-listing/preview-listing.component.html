@@ -75,7 +75,7 @@
       <strong>Date added</strong> {{ data?.listing?.createdAt }}
     </div>
   </div>
-  <div class="right" fxLayout fxLayoutAlign="end center" *ngIf="!data?.listing?.object.ListingItemTemplate?.hash">
+  <div class="right" fxLayout fxLayoutAlign="end center">
     <app-favorite [listing]="data?.listing" [detail]="true"></app-favorite>
     <app-add-to-cart [listing]="data?.listing"></app-add-to-cart>
   </div>

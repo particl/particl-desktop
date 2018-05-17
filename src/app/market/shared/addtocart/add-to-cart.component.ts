@@ -2,8 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { Listing } from '../../../core/market/api/listing/listing.model';
-import { CartService } from '../../../core/market/api/cart/cart.service';
-import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
+import { CartService } from '../../../core/market/api/cart/cart.service'
 
 @Component({
   selector: 'app-add-to-cart',
@@ -17,8 +16,7 @@ export class AddToCartComponent implements OnInit {
   @Input() listing: Listing;
 
   constructor(
-    private cartService: CartService,
-    private cache: AddToCartCacheService
+    private cartService: CartService
   ) {}
 
   ngOnInit() { }
@@ -28,7 +26,7 @@ export class AddToCartComponent implements OnInit {
   }
 
   get bidded(): boolean {
-    return this.cache.isBidded(this.listing);
+    return this.cartService.cache.isBidded(this.listing);
   }
 
 }

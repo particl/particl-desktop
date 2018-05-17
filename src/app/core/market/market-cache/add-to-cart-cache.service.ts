@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import * as _ from 'lodash';
 import { Log } from 'ng2-logger';
 
 import { Bid } from '../api/bid/bid.model';

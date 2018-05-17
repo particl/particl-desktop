@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { FavoritesService } from '../../../core/market/api/favorites/favorites.service';
@@ -14,7 +14,7 @@ import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cach
   templateUrl: './favorite.component.html',
   styleUrls: ['./favorite.component.scss']
 })
-export class FavoriteComponent implements OnInit {
+export class FavoriteComponent {
 
   private log: any = Log.create('favorite.component id:' + Math.floor((Math.random() * 1000) + 1));
 
@@ -25,8 +25,6 @@ export class FavoriteComponent implements OnInit {
     private snackbar: SnackbarService,
     private marketState: MarketStateService
   ) {}
-
-  ngOnInit() { }
 
   toggle() {
     this.favorites.toggle(this.listing);
