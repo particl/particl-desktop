@@ -22,6 +22,7 @@
     </mat-tab-->
   </mat-tab-group>
 </app-header>
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== LISTINGS =========== -->
@@ -44,11 +45,11 @@
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
           <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search"
-                 (keyup)="loadPage()" (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
+                 (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()">
           <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
-                    (click)="filters.search=''; loadPage()"></mat-icon>
+                    (click)="filters.search=''; clearAndLoadPage()"></mat-icon>
           <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
-                    (click)="loadPage()"></mat-icon>
+                    (click)="clearAndLoadPage()"></mat-icon>
         </mat-form-field>
         <!--mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort listings">
@@ -79,16 +80,46 @@
 
   </div><!-- .filter -->
 
-  <!-- Listings > list -->
-  <div class="listings section" fxFlex="1 1 100%">
-
-    <div class="no-results" *ngIf="listings?.length === 0">
-      You don't have any market listings yet
+  <!-- .loading-container -->
+  <div class="loading-container" *ngIf="isPageLoading">
+    <div class="loading-info">
+      <div class="loading-image">
+        <img src="./assets/particl-logo-symbol.svg">
+      </div>
+      <p class="title">
+        Hang on, we're loading the listings
+      </p>
+      <p class="widget-help">
+        This might take a while
+      </p>
     </div>
-    <!--div class="subtitle first">Published listings</div-->
+  </div><!-- .loading-container -->
 
-    <mat-accordion>
-      <mat-expansion-panel class="listing list-item no-padding" *ngFor="let listing of listings">
+  <!-- Listings > list -->
+  <div class="listings section" fxFlex="1 1 100%"
+    infiniteScroll
+    [infiniteScrollContainer]="pagination.infinityScrollSelector"
+    [fromRoot]="true"
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolledUp)="loadPreviousPage()"
+    (scrolled)="loadNextPage()">
+    <!-- <div class="no-results" *ngIf="listings?.length === 0">
+      You don't have any market listings yet
+    </div> -->
+    <!--div class="subtitle first">Published listings</div-->
+    <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
+      <p>
+        Sorry, no matching listings found
+      </p>
+    </div>
+    <button [disabled]="isLoading" mat-button class="previous-page" (click)="loadPreviousPage()"
+    *ngIf="pages[0] && pages[0].pageNumber !== 1">
+      <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+      Load previous page
+    </button>
+    <mat-accordion *ngFor="let page of pages">
+      <mat-expansion-panel class="listing list-item no-padding" *ngFor="let listing of page.listings">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
             <div class="photo" fxFlex="0 0 110px">
@@ -160,11 +191,16 @@
         </mat-action-row>
       </mat-expansion-panel><!-- .listing -->
     </mat-accordion>
-
+    <div class="no-results" [hidden]="!noMoreListings">
+      <p>
+        Sorry, that's all folks!
+      </p>
+    </div>
     <!--div class="subtitle">Unpublished listings (templates)</div-->
 
   </div><!-- .listings-list -->
 </div><!-- .container-block -->
+<mat-progress-bar mode="indeterminate" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== ORDERS =========== -->
