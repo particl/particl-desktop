@@ -9,6 +9,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 
+
 interface ISorting {
   value: string;
   viewValue: string;
@@ -29,7 +30,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
   public isLoading: boolean = false;
-
   // filters
   // countries: FormControl = new FormControl();
   search: string;

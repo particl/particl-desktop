@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
 import { Cart } from './cart.model';
 
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
@@ -18,7 +19,8 @@ export class CartService {
   constructor(
     private market: MarketService,
     private marketState: MarketStateService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    public cache: AddToCartCacheService
   ) { }
 
   add(listing: Listing): Observable<any> {

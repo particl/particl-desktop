@@ -16,7 +16,6 @@ export class Template {
   public internationalTotal: Amount = new Amount(0);
   public totalAmount: Amount = new Amount(0);
   public memo: string = '';
-
   // @TODO: remove type any
   constructor(private object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
@@ -48,6 +47,10 @@ export class Template {
 
   get hash(): string {
     return this.object.hash;
+  }
+
+  get isMine(): boolean {
+    return this.object.ListingItemTemplate && this.object.ListingItemTemplate.hash;
   }
 
   get thumbnail(): any {

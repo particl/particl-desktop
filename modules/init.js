@@ -85,8 +85,7 @@ electron.app.on('before-quit', function beforeQuit(event) {
   electron.app.removeListener('before-quit', beforeQuit);
 
   daemon.stop().then(() => {
-    log.info('Quitting app!');
-    electron.app.quit();
+    log.info('daemon.stop() resolved!');
   })
 });
 

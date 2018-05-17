@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
-import { CartService } from 'app/core/market/api/cart/cart.service';
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 
@@ -25,7 +24,6 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
-    private cartService: CartService,
     private favoritesService: FavoritesService,
     private marketState: MarketStateService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -37,10 +35,6 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       .subscribe(price => {
         this.currencyprice = price[0].price;
       });
-  }
-
-  addToCart(listing: Listing) {
-    this.cartService.add(listing).subscribe();
   }
 
   dialogClose(): void {
