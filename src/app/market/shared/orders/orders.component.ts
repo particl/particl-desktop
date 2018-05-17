@@ -59,7 +59,7 @@ export class OrdersComponent implements OnInit {
 
   loadOrders(): void {
     this.bid.search(this.profile.address, this.type).take(1).subscribe(orders => {
-      console.log('called >>>>>>>>>>>>>>>>>');
+      console.log('called >>>>>>>>>>>>>>>>>', orders);
       this.orders = orders;
     });
   }
