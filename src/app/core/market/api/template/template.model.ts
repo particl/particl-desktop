@@ -49,7 +49,7 @@ export class Template {
     return this.object.hash;
   }
 
-  get hashTemplate(): boolean {
+  get isMine(): boolean {
     return this.object.ListingItemTemplate && this.object.ListingItemTemplate.hash;
   }
 
