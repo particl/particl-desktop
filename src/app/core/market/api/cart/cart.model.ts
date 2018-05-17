@@ -14,43 +14,35 @@ export class Cart {
       this.setCartItems();
   }
 
-    setSubTotal(): void {
-      let total = 0.0;
-      this.listings.forEach(listing => {
-        total += listing.basePrice.getAmount();
-      });
-      this.subTotal = new Amount(total);
-    }
+  setSubTotal(): void {
+    let total = 0.0;
+    this.listings.forEach(listing => {
+      total += listing.basePrice.getAmount();
+    });
+    this.subTotal = new Amount(total);
+  }
 
-    setShippingTotal(country: string): Amount {
-      let total = 0.0;
-      this.listings.forEach(listing => {
-        total += country === listing.country ? (
-            listing.domesticShippingPrice.getAmount()
-          ) : (
-            listing.internationalShippingPrice.getAmount()
-          )
-      });
-      return new Amount(total);
-    }
+  setShippingTotal(country: string): Amount {
+    let total = 0.0;
+    this.listings.forEach(listing => {
+      total += listing.shippingAmount(country).getAmount();
+    });
+    return new Amount(total);
+  }
 
-    setEscrowTotal(country: string): Amount {
-      let total = 0.0;
-      this.listings.forEach(listing => {
-        total += country === listing.country ? (
-            listing.escrowPriceDomestic.getAmount()
-          ) : (
-            listing.escrowPriceInternational.getAmount()
-          )
-      });
-      return new Amount(total);
-    }
+  setEscrowTotal(country: string): Amount {
+    let total = 0.0;
+    this.listings.forEach(listing => {
+      total += listing.escrowAmount(country).getAmount();
+    });
+    return new Amount(total);
+  }
 
-    setTotal(country: string): Amount {
-      return new Amount(this.subTotal.getAmount()
-               + this.setShippingTotal(country).getAmount()
-               + this.setEscrowTotal(country).getAmount())
-    }
+  setTotal(country: string): Amount {
+    return new Amount(this.subTotal.getAmount()
+             + this.setShippingTotal(country).getAmount()
+             + this.setEscrowTotal(country).getAmount())
+  }
 
   private setCartItems(): void {
     this.shoppingCartItems.map(shoppingCartItem => {

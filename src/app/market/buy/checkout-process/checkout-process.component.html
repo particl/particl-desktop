@@ -252,17 +252,11 @@
             {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
-          <td *ngIf="listing.country !== valueOf('country')" class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}{{listing.internationalShippingPrice?.dot()}}<small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
-            PART
-          </td>
-          <td *ngIf="listing.country === valueOf('country')" class="shipping cell">{{listing.domesticShippingPrice?.getIntegerPart()}}{{listing.domesticShippingPrice?.dot()}}<small>{{listing.domesticShippingPrice?.getFractionalPart()}}</small>
+          <td class="shipping cell">{{listing?.shippingAmount(valueOf('country')).getIntegerPart()}}{{listing?.shippingAmount(valueOf('country')).dot()}}<small>{{listing?.shippingAmount(valueOf('country')).getFractionalPart()}}</small>
             PART
           </td>
           <!--<td class="quantity cell">1 &times;</td>-->
-          <td *ngIf="listing.country !== valueOf('country')" class="total cell">{{listing.internationalTotal?.getIntegerPart()}}{{listing.internationalTotal?.dot()}}<small>{{listing.internationalTotal?.getFractionalPart()}}</small>
-            PART
-          </td>
-          <td *ngIf="listing.country === valueOf('country')" class="total cell">{{listing.domesticTotal?.getIntegerPart()}}{{listing.domesticTotal?.dot()}}<small>{{listing.domesticTotal?.getFractionalPart()}}</small>
+          <td class="total cell">{{listing?.total(valueOf('country')).getIntegerPart()}}{{listing?.total(valueOf('country')).dot()}}<small>{{llisting?.total(valueOf('country')).getFractionalPart()}}</small>
             PART
           </td>
         </tr>

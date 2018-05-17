@@ -22,6 +22,7 @@ export class OrderItemComponent implements OnInit {
 
   @Input() order: Bid;
   trackNumber: string;
+  country: string = '';
   constructor(
     private listingService: ListingService,
     private bid: BidService,
@@ -40,7 +41,7 @@ export class OrderItemComponent implements OnInit {
     if (!this.order) {
       return;
     }
-
+    this.country = this.order.ShippingAddress.country;
     this.listingService.get(this.order.listingItemId).subscribe(response => {
      this.order.listing = response;
     });

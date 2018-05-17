@@ -55,25 +55,18 @@
         </tr>
         <tr>
           <th>Shipping</th>
-          <td *ngIf="order?.listing?.country === order?.ShippingAddress.country">{{order?.listing?.domesticShippingPrice?.getIntegerPart()}}{{order?.listing?.domesticShippingPrice?.dot()}}<small>{{order?.listing?.domesticShippingPrice?.getFractionalPart()}}</small> PART
-          </td>
-          <td *ngIf="order?.listing?.country !== order?.ShippingAddress.country">{{order?.listing?.internationalShippingPrice?.getIntegerPart()}}{{order?.listing?.internationalShippingPrice?.dot()}}<small>{{order?.listing?.internationalShippingPrice?.getFractionalPart()}}</small> PART
+          <td >{{order?.listing?.shippingAmount(country).getIntegerPart()}}{{order?.listing?.shippingAmount(country).dot()}}<small>{{order?.listing?.shippingAmount(country).getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td *ngIf="order?.listing?.country === order?.ShippingAddress.country">{{order?.listing?.escrowPriceDomestic?.getIntegerPart()}}{{order?.listing?.escrowPriceDomestic?.dot()}}<small>{{order?.listing?.escrowPriceDomestic?.getFractionalPart()}}</small> PART
-          </td>
-          <td *ngIf="order?.listing?.country !== order?.ShippingAddress.country">{{order?.listing?.escrowPriceInternational?.getIntegerPart()}}{{order?.listing?.escrowPriceInternational?.dot()}}<small>{{order?.listing?.escrowPriceInternational?.getFractionalPart()}}</small> PART
+          <td>{{order?.listing?.escrowAmount(country).getIntegerPart()}}{{order?.listing?.escrowAmount(country).dot()}}<small>{{order?.listing?.escrowAmount(country).getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Total price</th>
-          <td *ngIf="order?.listing?.country === order?.ShippingAddress.country">
-            {{order?.listing?.totalAmountDomestic?.getIntegerPart()}}{{order?.listing?.totalAmountDomestic?.dot()}}<small>{{order?.listing?.totalAmountDomestic?.getFractionalPart()}}</small> PART
-          </td>
-          <td *ngIf="order?.listing?.country !== order?.ShippingAddress.country">
-            {{order?.listing?.totalAmountInternaltional?.getIntegerPart()}}{{order?.listing?.totalAmountInternaltional?.dot()}}<small>{{order?.listing?.totalAmountInternaltional?.getFractionalPart()}}</small> PART
+          <td>
+            {{order?.listing?.totalAmount(country).getIntegerPart()}}{{order?.listing?.totalAmount(country).dot()}}<small>{{order?.listing?.totalAmount(country).getFractionalPart()}}</small> PART
           </td>
         </tr>
       </table>

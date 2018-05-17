@@ -117,11 +117,11 @@ export class Template {
       return;
     }
 
+    const totalDomestic = (ratio.buyer / 100) * (basePrice + this.domesticShippingPrice.getAmount());
     const totalInternational = (ratio.buyer / 100) * (basePrice + this.internationalShippingPrice.getAmount());
-    const totalDomestic = (ratio.buyer / 100) * (basePrice + this.domesticShippingPrice.getAmount())
 
-    this.escrowPriceInternational = new Amount(totalInternational);
     this.escrowPriceDomestic = new Amount(totalDomestic);
+    this.escrowPriceInternational = new Amount(totalInternational);
   }
 
   setTotal(): void {
@@ -135,10 +135,11 @@ export class Template {
     this.domesticTotal = new Amount(dTotal);
 
     // TODO add total for international and domestic.
-    const totalInternaltional = this.escrowPriceInternational.getAmount() + iTotal;
-    const totalDomestic = this.escrowPriceDomestic.getAmount() + iTotal;
-    this.totalAmountInternaltional = new Amount(totalInternaltional);
+    const totalDomestic = this.escrowPriceDomestic.getAmount() + dTotal;
+    const totalInternational = this.escrowPriceInternational.getAmount() + iTotal;
+
     this.totalAmountDomestic = new Amount(totalDomestic);
+    this.totalAmountInternaltional = new Amount(totalInternational);
   }
 
   setMemo(): void {
@@ -146,6 +147,26 @@ export class Template {
     if (msg) {
       this.memo = msg.filter((info) => info.MessageInfo.memo).map(obj => obj.MessageInfo.memo)[0] || '';
     }
+  }
+
+  shippingAmount(country: string): Amount {
+    return this.object.country === country ? (
+          this.domesticShippingPrice
+        ) : (
+          this.internationalShippingPrice
+        )
+  }
+
+  escrowAmount(country: string): Amount {
+    return this.object.country === country ? this.escrowPriceDomestic : this.escrowPriceInternational;
+  }
+
+  totalAmount(country: string): Amount {
+    return this.object.country === country ? this.totalAmountDomestic : this.totalAmountInternaltional;
+  }
+
+  total(country: string): Amount {
+    return this.object.country === country ? this.domesticTotal : this.internationalTotal
   }
 
 }
