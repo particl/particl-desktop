@@ -49,6 +49,10 @@ export class Template {
     return this.object.hash;
   }
 
+  get isMine(): boolean {
+    return this.object.ListingItemTemplate && this.object.ListingItemTemplate.hash;
+  }
+
   get thumbnail(): any {
     const itemimage = this.object.ItemInformation.ItemImages[0];
     if (itemimage) {
