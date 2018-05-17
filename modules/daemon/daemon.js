@@ -48,7 +48,6 @@ exports.start = function (wallets, callback) {
 
     chosenWallets    = wallets;
 
-    rpc.init();
     exports.check().then(() => {
       log.info('daemon already started');
       resolve(undefined);
@@ -65,6 +64,7 @@ exports.start = function (wallets, callback) {
 
       const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
       .on('close', code => {
+        log.info('daemon exited - setting to undefined.');
         daemon = undefined;
         if (code !== 0) {
           reject();
@@ -74,7 +74,7 @@ exports.start = function (wallets, callback) {
         }
         // if (!restarting)
          // electron.app.quit();
-      })
+      });
 
       // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
@@ -132,9 +132,7 @@ exports.check = function() {
   return new Promise((resolve, reject) => {
 
     const _timeout = rpc.getTimeoutDelay();
-    rpc.init();
     rpc.call('getnetworkinfo', null, (error, response) => {
-      rxIpc.removeListeners();
       if (error) {
         reject(error);
       } else if (response) {
@@ -163,7 +161,9 @@ exports.stop = function() {
       });
     } else
     {
-        log.debug('Daemon not managed by gui.');
+        log.info('Daemon not managed by gui.');
+        log.info('Outputting daemon var: ');
+        console.log(daemon);
         resolve();
         electron.app.quit();
     }
