@@ -11,7 +11,6 @@ const multiwallet   = require('../multiwallet');
 
 let daemon = undefined;
 let exitCode = 0;
-let restarting = false;
 let chosenWallets = [];
 
 function daemonData(data, logger) {
@@ -21,9 +20,9 @@ function daemonData(data, logger) {
 
 exports.restart = function (cb) {
   log.info('restarting daemon...')
-  restarting = true;
 
-  return exports.stop().then(function waitForShutdown() {
+  const restarting = true;
+  return exports.stop(restarting).then(function waitForShutdown() {
     log.debug('waiting for daemon shutdown...')
 
     exports.check().then(waitForShutdown).catch((err) => {
@@ -32,7 +31,6 @@ exports.restart = function (cb) {
         setTimeout(() => {     /* wait for full daemon shutdown */
 
           exports.start(chosenWallets, cb)
-            .then(() => restarting = false)
             .catch(error => log.error(error));
 
         }, 10 * 1000);
@@ -144,15 +142,26 @@ exports.check = function() {
   });
 }
 
-exports.stop = function() {
+exports.stop = function(restarting) {
   log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
     if (daemon) {
+
+      // attach event to stop electron when daemon closes.
+      // do not close electron when restarting (e.g encrypting wallet)
+      if (!restarting) {
+        daemon.on('close', code => {
+          log.info('daemon exited successfully - we can now quit electron safely! :)');
+          electron.app.quit();
+        });
+      }
+
       log.info('Call RPC stop!');
       rpc.call('stop', null, (error, response) => {
         if (error) {
-          log.error('Calling SIGINT!');
+          log.info('daemon errored to rpc stop - killing it brutally :(');
+          daemon.kill('SIGINT');
           reject();
         } else {
           log.info('Daemon stopping gracefully...');
@@ -162,16 +171,8 @@ exports.stop = function() {
     } else
     {
         log.info('Daemon not managed by gui.');
-        log.info('Outputting daemon var: ');
-        console.log(daemon);
         resolve();
-        electron.app.quit();
     }
 
-  }).catch(() => {
-    if (daemon) {
-      log.error('Calling SIGINT!');
-      daemon.kill('SIGINT')
-    }
   });
 }
