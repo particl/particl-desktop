@@ -42,5 +42,5 @@ export class AddressService {
       address.zipCode
     ]);
   }
-  
+
 }

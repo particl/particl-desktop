@@ -17,7 +17,7 @@ export class ProfileService {
     private market: MarketService,
     private marketState: MarketStateService,
     public address: AddressService
-  ) { 
+  ) {
     // find default profile
     this.list().subscribe((profiles: any[]) => {
       this.defaultProfileId = profiles.find((e) => e.name === 'DEFAULT').id;

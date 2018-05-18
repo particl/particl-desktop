@@ -147,13 +147,13 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     const address = this.shippingFormGroup.value as Address;
-    upsert(address).take(1).subscribe(address => {
+    upsert(address).take(1).subscribe(addressWithId => {
       // update the cache
       this.allowGoingBack();
       this.storeCache();
 
       // we need to retrieve the id of  address we added (new)
-      this.select(address);
+      this.select(addressWithId);
 
     });
 
