@@ -36,19 +36,22 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   private destroyed: boolean = false;
 
   @Output() onOrderPlaced: EventEmitter<number> = new EventEmitter<number>();
-  @ViewChild('stepper') stepper: MatStepper;
-  public cartFormGroup: FormGroup;
-  public shippingFormGroup: FormGroup;
+
 
   public selectedAddress: ShippingDetails;
-  public selectedIndex: number = 0;
-  public isStepperLinear: boolean = true;
-  public isShippingDetailsStepCompleted: boolean = false;
 
   public profile: any = {};
 
   /* cart */
   public cart: Cart;
+
+  /* Stepper stuff */
+  @ViewChild('stepper') stepper: MatStepper;
+  // stepper form data
+  public cartFormGroup: FormGroup;
+  public shippingFormGroup: FormGroup;
+
+
 
   constructor(// 3rd party
     private formBuilder: FormBuilder,
@@ -62,7 +65,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private cartService: CartService,
     public countryList: CountryListService,
-    public checkoutProcessCacheService: CheckoutProcessCacheService,
+    public cache: CheckoutProcessCacheService,
     private bid: BidService,
     public dialog: MatDialog) {
   }
@@ -73,24 +76,15 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.getProfile();
 
     this.cartService.list()
-    .takeWhile(() => !this.destroyed)
-    .subscribe(cart => this.cart = cart);
+      .takeWhile(() => !this.destroyed)
+      .subscribe(cart => this.cart = cart);
 
-    // this.cartService.update();
+    this.getCache();
   }
 
   ngOnDestroy() {
     this.destroyed = true;
-    this.setShippingCache();
-  }
-
-  // @TODO create separate service for checkout process.
-  setShippingCache() {
-    this.updateSteperIndex();
-    this.checkoutProcessCacheService.shippingDetails = this.shippingFormGroup.value;
-    if (this.selectedAddress) {
-      this.checkoutProcessCacheService.shippingDetails.id = this.selectedAddress.id
-    }
+    this.storeCache();
   }
 
   formBuild() {
@@ -152,8 +146,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       upsert = this.profileService.updateShippingAddress.bind(this);
     }
 
-    this.setShippingCache();
     upsert(this.shippingFormGroup.value).take(1).subscribe(address => {
+      // update the cache
+      this.allowGoingBack();
+      this.storeCache();
+
+      // get profile updates
       this.getProfile();
     });
 
@@ -170,12 +168,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         this.profile = profile;
         const addresses = profile.ShippingAddresses.filter((address) => address.title && address.type === 'SHIPPING_OWN');
         if (addresses.length > 0) {
-          this.setSteperIndex();
           this.selectedAddress = (
-            this.checkoutProcessCacheService.shippingDetails
+            this.cache.shippingDetails
           ) ? (
-            this.checkoutProcessCacheService.shippingDetails
-          ) : addresses[0];
+              this.cache.shippingDetails
+            ) : addresses[0];
           this.setValue(this.selectedAddress);
         }
       });
@@ -185,6 +182,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     return this.shippingFormGroup ? this.shippingFormGroup.get(field).value : '';
   }
 
+
+
+  /* 
+    On click confirm order.
+  */
+  
   placeOrderModal(): void {
     const dialogRef = this.dialog.open(PlaceOrderComponent);
     dialogRef.componentInstance.type = 'place';
@@ -194,7 +197,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   placeOrder() {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this)});
+      this.modals.open('unlock', { forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this) });
     } else {
       // wallet already unlocked
       this.bidOrder();
@@ -204,8 +207,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   bidOrder() {
     const addressId = this.selectedAddress.id;
     this.bid.order(this.cart, this.profile, addressId).subscribe((res) => {
-      this.clearCart(false);
-      this.clearCache();
+
+      this.cartService.clear().subscribe();
+      this.cache.clear();
+
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
@@ -213,27 +218,29 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  clearCache() {
-    console.log('Clearing the cache of checkout');
-    this.isStepperLinear = true;
-    this.isShippingDetailsStepCompleted = false;
-    this.stepper.selectedIndex = 0;
 
-    this.checkoutProcessCacheService.stepper = 0;
-    this.checkoutProcessCacheService.shippingDetails = new ShippingDetails();
+
+  /* 
+    Cache functions 
+  */
+
+  getCache(): void {
+    // link the stepper with the cache
+    this.stepper.selectedIndex = this.cache.selectedIndex;
+    this.stepper.linear = this.cache.linear;
   }
 
-  setSteperIndex() {
-    // set manually shipping details step completed.
-    if (this.checkoutProcessCacheService.stepper === 2) {
-      this.isStepperLinear = false;
-      this.isShippingDetailsStepCompleted = true;
+  storeCache(): void {
+    this.cache.selectedIndex = this.stepper.selectedIndex;
+    this.cache.linear = this.stepper.linear;
+
+    this.cache.shippingDetails = this.shippingFormGroup.value;
+    if (this.selectedAddress) {
+      this.cache.shippingDetails.id = this.selectedAddress.id
     }
-
-    this.selectedIndex = this.checkoutProcessCacheService.stepper;
   }
 
-  updateSteperIndex() {
-    this.checkoutProcessCacheService.stepper = this.stepper.selectedIndex;
+  allowGoingBack() {
+    this.stepper.linear = false;
   }
 }

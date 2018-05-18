@@ -1,4 +1,4 @@
-<mat-horizontal-stepper [selectedIndex]="selectedIndex" [linear]="isStepperLinear" [@.disabled]="true" class="no-bg container-block" #stepper>
+<mat-horizontal-stepper [@.disabled]="true" class="no-bg container-block" #stepper>
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
   <ng-template matStepperIcon="edit">
     <custom-icon>
@@ -14,7 +14,7 @@
 
   <!-- =========== YOUR CART =========== -->
 
-  <mat-step [stepControl]="cartFormGroup">
+  <mat-step [completed]="stepper.selectedIndex >= 1" [stepControl]="cartFormGroup">
     <form [formGroup]="cartFormGroup" class="cart">
       <ng-template matStepLabel>Your cart</ng-template>
 
@@ -122,7 +122,7 @@
   </mat-step>
 
   <!-- =========== SHIPPING DETAILS =========== -->
-  <mat-step [completed]="isShippingDetailsStepCompleted" [stepControl]="shippingFormGroup">
+  <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
       <div fxLayout="row" fxLayoutGap="30px">

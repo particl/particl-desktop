@@ -37,7 +37,6 @@ export class MarketStateService extends StateService implements OnDestroy {
         .finally(() => {
           // re-start loop
           if (timeout) {
-            console.log('error count', errors);
             const restartAfter = this.determineTimeoutDuration(errors, timeout);
             setTimeout(_call, restartAfter);
           }

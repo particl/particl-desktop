@@ -38,7 +38,6 @@ export class ProfileService {
   }
 
   addShippingAddress(shippingAddress: any): Observable<any> {
-    console.log('addShippingAddress>>>', shippingAddress);
     return this.market.call('profile', [
       'address', 'add', 1,
       shippingAddress.firstName,
