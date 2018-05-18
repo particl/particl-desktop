@@ -35,6 +35,8 @@ export class SellComponent implements OnInit {
     status:   undefined
   };
 
+  templateSearchSubcription: any;
+
   // public listings: Array<any>;
   pages: Array<IPage> = [];
   noMoreListings: boolean = false;
@@ -101,7 +103,13 @@ export class SellComponent implements OnInit {
     const search = this.filters.search ? this.filters.search : null;
     const max = this.pagination.maxPerPage;
 
-    this.template.search(pageNumber, max, 1, category, search)
+    // should unsubcribe previous search subcription to prevent the previous keyword search result overridding with the latest one ?
+
+    if (this.templateSearchSubcription) {
+      this.templateSearchSubcription.unsubscribe();
+    }
+
+    this.templateSearchSubcription = this.template.search(pageNumber, max, 1, category, search)
       .take(1).subscribe((listings: Array<Listing>) => {
         listings = listings.map((t) => {
         if (this.listing.cache.isAwaiting(t)) {
