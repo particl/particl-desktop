@@ -79,7 +79,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(cart => this.cart = cart);
 
-    this.getCache();
+    // set stepper to values of cache
+    this.stepper.selectedIndex = this.cache.selectedIndex;
+    this.stepper.linear = this.cache.linear;
   }
 
   ngOnDestroy() {
@@ -151,7 +153,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.allowGoingBack();
       this.storeCache();
 
-      // get profile updates
+      // we need to retrieve the id of  address we added (new)
+      // to the profile
       this.getProfile();
     });
 
@@ -223,12 +226,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   /* 
     Cache functions 
   */
-
-  getCache(): void {
-    // link the stepper with the cache
-    this.stepper.selectedIndex = this.cache.selectedIndex;
-    this.stepper.linear = this.cache.linear;
-  }
 
   storeCache(): void {
     this.cache.selectedIndex = this.stepper.selectedIndex;
