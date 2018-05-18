@@ -33,6 +33,7 @@ import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checko
 export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create('buy.component: ' + Math.floor((Math.random() * 1000) + 1));
+  private destroyed: boolean = false;
 
   @Output() onOrderPlaced: EventEmitter<number> = new EventEmitter<number>();
   @ViewChild('stepper') stepper: MatStepper;
@@ -71,10 +72,15 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     this.getProfile();
 
-    this.cartService.list().subscribe(cart => this.cart = cart);
+    this.cartService.list()
+    .takeWhile(() => !this.destroyed)
+    .subscribe(cart => this.cart = cart);
+
+    // this.cartService.update();
   }
 
   ngOnDestroy() {
+    this.destroyed = true;
     this.setShippingCache();
   }
 
@@ -200,6 +206,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   clearCache() {
+    console.log('Clearing the cache of checkout');
     this.checkoutProcessCacheService.stepper = 0;
     this.checkoutProcessCacheService.shippingDetails = new ShippingDetails()
   }

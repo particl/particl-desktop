@@ -1,5 +1,9 @@
+
+import * as _ from 'lodash';
+
 import { Listing } from '../listing/listing.model';
 import { Amount } from 'app/core/util/utils';
+
 export class Cart {
 
   public shoppingCartItems: Array<any>;
@@ -9,7 +13,8 @@ export class Cart {
   public escrowTotal: Amount = new Amount(0);
   public total: Amount = new Amount(0);
 
-  constructor(public object: any) {
+  constructor(private object: Array<any>) {
+      this.shoppingCartItems = _.cloneDeep(object)
       this.setCartItems();
   }
 
@@ -44,10 +49,8 @@ export class Cart {
     }
 
   private setCartItems(): void {
-    console.log(this.object);
-    this.shoppingCartItems = this.object.map(item => {
+    this.shoppingCartItems.map(item => {
       item.ListingItem = new Listing(item.ListingItem);
-      return item;
     });
 
     this.setSubTotal();

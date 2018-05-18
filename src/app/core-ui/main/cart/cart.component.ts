@@ -13,9 +13,9 @@ import { CartService } from 'app/core/market/api/cart/cart.service';
 })
 export class CartComponent implements OnInit, OnDestroy {
 
-  private log: any = Log.create('cart.component');
-
+  private log: any = Log.create('cart.component id: ' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
+
   cart: Cart;
 
   constructor(
@@ -26,9 +26,7 @@ export class CartComponent implements OnInit, OnDestroy {
     // Obtain total cart items
     this.cartService.list()
       .takeWhile(() => !this.destroyed)
-      .subscribe(cart => {
-        this.cart = cart;
-      });
+      .subscribe(cart => this.cart = cart);
   }
 
   ngOnDestroy() {

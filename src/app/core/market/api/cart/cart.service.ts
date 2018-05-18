@@ -33,7 +33,7 @@ export class CartService {
       err  => this.snackbar.open(err));
   }
 
-  list(): Observable<any> {
+  list(): Observable<Cart> {
     this.log.d(`Getting cart with id=1`);
     return this.marketState.observe('cartitem').map(c => new Cart(c));
   }
@@ -55,7 +55,7 @@ export class CartService {
   }
 
   update(): void {
-    this.marketState.register('cartitem', null, ['list', 1, true])
+    this.marketState.register('cartitem', null, ['list', 1, true]);
   }
 
 }
