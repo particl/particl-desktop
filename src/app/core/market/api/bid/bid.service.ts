@@ -12,21 +12,21 @@ import { Bid } from 'app/core/market/api/bid/bid.model';
 @Injectable()
 export class BidService {
 
-  private log: any = Log.create('cart.service id:' + Math.floor((Math.random() * 1000) + 1));
+  private log: any = Log.create('bid.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   constructor(private market: MarketService) {
   }
 
-  order(cart: Cart, profile: any): Observable<boolean> {
+  order(cart: Cart, profile: any, addressId: number): Observable<boolean> {
     let nBidsPlaced = 0;
     return new Observable((observer) => {
       cart.listings.forEach((listing: Listing) => {
         if (listing.hash) {
           // bid for item
-          this.market.call('bid', ['send', listing.hash, profile.id, profile.ShippingAddresses[0].id])
+          this.market.call('bid', ['send', listing.hash, profile.id, addressId])
             .subscribe(
               (res) => {
-                // this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressIdOfProfile}`);
+                this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressId}`);
                 if (++nBidsPlaced === cart.listings.length) {
                   observer.next(true);
                   observer.complete();

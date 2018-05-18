@@ -20,7 +20,10 @@ export class ProfileService {
   }
 
   get(profileIdOrName: number | string): Observable<any> {
-    return this.market.call('profile', ['get', profileIdOrName]);
+    return this.market.call('profile', ['get', profileIdOrName])
+    .do((profile) => {
+      console.log(profile);
+    });
   }
 
   add(profileName: string, profileAddress?: string): Observable<any> {
@@ -28,11 +31,13 @@ export class ProfileService {
     if (profileAddress === null) {
       params.pop(); // if null pop parent
     }
-    return this.market.call('profile', params);
+    return this.market.call('profile', params)
+    .do(() => {
+      this.refresh();
+    });
   }
 
   addShippingAddress(shippingAddress: any): Observable<any> {
-    console.log('addShippingAddress>>>', shippingAddress);
     return this.market.call('profile', [
       'address', 'add', 1,
       shippingAddress.firstName,
@@ -61,6 +66,10 @@ export class ProfileService {
       shippingAddress.country,
       shippingAddress.zipCode
     ]);
+  }
+
+  refresh(): void {
+
   }
 
   update(profileId: number, profileName: string): Observable<any> {

@@ -84,6 +84,10 @@ electron.app.on('before-quit', function beforeQuit(event) {
   event.preventDefault();
   electron.app.removeListener('before-quit', beforeQuit);
 
+  // destroy IPC listeners
+  rpc.destroy();
+  notification.destroy();
+
   daemon.stop().then(() => {
     log.info('daemon.stop() resolved!');
   })
