@@ -11,7 +11,6 @@ const multiwallet   = require('../multiwallet');
 
 let daemon = undefined;
 let exitCode = 0;
-let restarting = false;
 let chosenWallets = [];
 
 function daemonData(data, logger) {
@@ -21,9 +20,9 @@ function daemonData(data, logger) {
 
 exports.restart = function (cb) {
   log.info('restarting daemon...')
-  restarting = true;
 
-  return exports.stop().then(function waitForShutdown() {
+  const restarting = true;
+  return exports.stop(restarting).then(function waitForShutdown() {
     log.debug('waiting for daemon shutdown...')
 
     exports.check().then(waitForShutdown).catch((err) => {
@@ -32,7 +31,6 @@ exports.restart = function (cb) {
         setTimeout(() => {     /* wait for full daemon shutdown */
 
           exports.start(chosenWallets, cb)
-            .then(() => restarting = false)
             .catch(error => log.error(error));
 
         }, 10 * 1000);
@@ -48,7 +46,6 @@ exports.start = function (wallets, callback) {
 
     chosenWallets    = wallets;
 
-    rpc.init();
     exports.check().then(() => {
       log.info('daemon already started');
       resolve(undefined);
@@ -65,6 +62,7 @@ exports.start = function (wallets, callback) {
 
       const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
       .on('close', code => {
+        log.info('daemon exited - setting to undefined.');
         daemon = undefined;
         if (code !== 0) {
           reject();
@@ -74,7 +72,7 @@ exports.start = function (wallets, callback) {
         }
         // if (!restarting)
          // electron.app.quit();
-      })
+      });
 
       // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
@@ -132,9 +130,7 @@ exports.check = function() {
   return new Promise((resolve, reject) => {
 
     const _timeout = rpc.getTimeoutDelay();
-    rpc.init();
     rpc.call('getnetworkinfo', null, (error, response) => {
-      rxIpc.removeListeners();
       if (error) {
         reject(error);
       } else if (response) {
@@ -146,28 +142,37 @@ exports.check = function() {
   });
 }
 
-exports.stop = function() {
+exports.stop = function(restarting) {
+  log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
     if (daemon) {
+
+      // attach event to stop electron when daemon closes.
+      // do not close electron when restarting (e.g encrypting wallet)
+      if (!restarting) {
+        daemon.on('close', code => {
+          log.info('daemon exited successfully - we can now quit electron safely! :)');
+          electron.app.quit();
+        });
+      }
+
+      log.info('Call RPC stop!');
       rpc.call('stop', null, (error, response) => {
         if (error) {
-          log.error('Calling SIGINT!');
+          log.info('daemon errored to rpc stop - killing it brutally :(');
+          daemon.kill('SIGINT');
           reject();
         } else {
-          log.debug('Daemon stopping gracefully...');
+          log.info('Daemon stopping gracefully...');
           resolve();
         }
       });
     } else
     {
-        log.debug('Daemon not managed by gui.');
+        log.info('Daemon not managed by gui.');
         resolve();
-        electron.app.quit();
     }
 
-  }).catch(() => {
-    if (daemon)
-      daemon.kill('SIGINT')
   });
 }
