@@ -34,6 +34,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // countries: FormControl = new FormControl();
   search: string;
 
+  listingServiceSubcription: any;
   // categories: FormControl = new FormControl();
 
   _rootCategoryList: Category = new Category({});
@@ -97,7 +98,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const category = this.filters.category;
     const country = this.filters.country;
 
-    this.listingService.search(pageNumber, max, null, search, category, country)
+    // should unsubcribe previous search subcription to prevent the previous keyword search result overridding with the latest one ?
+
+    if (this.listingServiceSubcription) {
+      this.listingServiceSubcription.unsubscribe();
+    }
+
+    this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<Listing>) => {
       this.isLoading = false;
       // new page
