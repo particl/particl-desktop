@@ -188,7 +188,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
 
-  /* 
+  /*
     On click confirm order.
   */
 
@@ -223,8 +223,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
 
 
-  /* 
-    Cache functions 
+  /*
+    Cache functions
   */
 
   getCache(): void {
