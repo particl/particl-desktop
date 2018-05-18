@@ -1,5 +1,6 @@
 import { Category } from 'app/core/market/api/category/category.model';
 import { DateFormatter, Amount } from 'app/core/util/utils';
+import { ImageCollection } from 'app/core/market/api/template/image/imagecollection.model';
 
 export class Template {
 
@@ -16,19 +17,19 @@ export class Template {
   public internationalTotal: Amount = new Amount(0);
   public totalAmount: Amount = new Amount(0);
   public memo: string = '';
-  public allImages: Array<any> = new Array();
+  public imageCollection: ImageCollection;
 
   // @TODO: remove type any
   constructor(private object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
     this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
+    this.imageCollection = new ImageCollection(this.object.ItemInformation.ItemImages)
 
     this.setStatus();
     this.setBasePrice();
     this.setShippingPrice();
     this.setEscrowPrice();
     this.setTotal();
-    this.setImages();
     this.setMemo();
   }
 
@@ -146,14 +147,6 @@ export class Template {
     const msg = this.object.ActionMessages;
     if (msg) {
       this.memo = msg.filter((info) => info.MessageInfo.memo).map(obj => obj.MessageInfo.memo)[0] || '';
-    }
-  }
-  // May be required a model in future
-  setImages(): void {
-    const itemimage = this.object.ItemInformation.ItemImages;
-    if (itemimage) {
-      this.allImages = itemimage.filter((img, index) => (img.ItemImageDatas && index > 0))
-                        .map(data => data.ItemImageDatas.find(o => o.imageVersion === 'THUMBNAIL'));
     }
   }
 
