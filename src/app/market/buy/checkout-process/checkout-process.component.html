@@ -133,7 +133,7 @@
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
               <mat-select [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
-                          (change)="setValue(selectedAddress)"
+                          (change)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
                           disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
                 <mat-option *ngFor="let address of profile.ShippingAddresses"
@@ -267,9 +267,9 @@
         <div class="shipping-overview" fxFlex="0 0 250px">
           <div class="title">Shipping address</div>
           <p class="address">
-            {{valueOf('firstName')}} {{valueOf('lastName')}} <br>
-            {{valueOf('addressLine1')}}, {{valueOf('addressLine2')}},{{valueOf('city')}}, {{valueOf('state')}}<br>
-            {{valueOf('zipCode')}}, {{valueOf('country')}}
+            {{ shippingFormGroup.value.firstName?}} {{ shippingFormGroup.value.lastName?}} <br>
+            {{ shippingFormGroup.value.addressLine1?}}, {{shippingFormGroup.value.addressLine2?}},{{shippingFormGroup.value.city?}}, {{shippingFormGroup.value.state?}}<br>
+            {{ shippingFormGroup.value.zipCode?}}, {{shippingFormGroup.value.country?}}
           </p>
         </div>
 

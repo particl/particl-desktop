@@ -79,9 +79,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(cart => this.cart = cart);
 
-    // set stepper to values of cache
-    this.stepper.selectedIndex = this.cache.selectedIndex;
-    this.stepper.linear = this.cache.linear;
+    this.getCache();
   }
 
   ngOnDestroy() {
@@ -155,14 +153,27 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
       // we need to retrieve the id of  address we added (new)
       // to the profile
-      this.getProfile();
+      // this.getProfile();
+      console.log('upsert: address');
+      console.log(address);
+      this.select(address);
+
     });
 
   }
 
-  setValue(address: ShippingDetails) {
+  select(address: ShippingDetails) {
     this.log.d('Selecting address with id: ' + address.id);
+    this.selectedAddress = address;
+    this.shippingFormGroup.value.id = address.id;
     this.shippingFormGroup.patchValue(address);
+  }
+
+  clear() {
+    this.shippingFormGroup.reset();
+    this.cartService.clear().subscribe();
+    this.cache.clear();
+    this.getCache();
   }
 
   getProfile(): void {
@@ -171,26 +182,16 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         this.profile = profile;
         const addresses = profile.ShippingAddresses.filter((address) => address.title && address.type === 'SHIPPING_OWN');
         if (addresses.length > 0) {
-          this.selectedAddress = (
-            this.cache.shippingDetails
-          ) ? (
-              this.cache.shippingDetails
-            ) : addresses[0];
-          this.setValue(this.selectedAddress);
+          this.select(this.cache.shippingDetails || addresses[0]);
         }
       });
   }
-
-  valueOf(field: string) {
-    return this.shippingFormGroup ? this.shippingFormGroup.get(field).value : '';
-  }
-
 
 
   /* 
     On click confirm order.
   */
-  
+
   placeOrderModal(): void {
     const dialogRef = this.dialog.open(PlaceOrderComponent);
     dialogRef.componentInstance.type = 'place';
@@ -211,8 +212,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     const addressId = this.selectedAddress.id;
     this.bid.order(this.cart, this.profile, addressId).subscribe((res) => {
 
-      this.cartService.clear().subscribe();
-      this.cache.clear();
+      this.clear();
 
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
@@ -226,6 +226,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   /* 
     Cache functions 
   */
+
+  getCache(): void {
+    // set stepper to values of cache
+    this.stepper.selectedIndex = this.cache.selectedIndex;
+    this.stepper.linear = this.cache.linear;
+  }
 
   storeCache(): void {
     this.cache.selectedIndex = this.stepper.selectedIndex;
