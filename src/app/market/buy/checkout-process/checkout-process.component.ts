@@ -71,7 +71,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     this.getProfile();
 
-    this.getCart();
+    this.cartService.list().subscribe(cart => this.cart = cart);
   }
 
   ngOnDestroy() {
@@ -113,21 +113,15 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1)
-      .subscribe(this.getCart.bind(this));
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
   }
 
   clearCart(isSnack: boolean = true): void {
-    this.cartService.clearCart().subscribe(res => {
+    this.cartService.clear().subscribe(res => {
       if (isSnack) {
         this.snackbarService.open('All Items Cleared From Cart');
       }
-      this.getCart()
     });
-  }
-
-  getCart(): void {
-    this.cartService.getCart().take(1).subscribe(cart => this.cart = cart);
   }
 
   /* shipping */
@@ -139,7 +133,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     let upsert: Function;
-    if (this.profile.ShippingAddresses.length === 0 || this.newShipping) {
+    if (this.profile.ShippingAddresses.length === 0 || this.newShipping === true) {
       upsert = this.profileService.addShippingAddress.bind(this);
     } else {
       this.shippingFormGroup.value.id = this.selectedAddress.id;
@@ -161,7 +155,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.profileService.get(1).take(1).subscribe(
       profile => {
         this.profile = profile;
-        const addresses = profile.ShippingAddresses;
+        const addresses = profile.ShippingAddresses.filter((address) => address.type === "SHIPPING_OWN");
         if (addresses.length > 0) {
           this.setSteperIndex();
           this.selectedAddress = (

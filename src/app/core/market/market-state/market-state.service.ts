@@ -18,6 +18,7 @@ export class MarketStateService extends StateService implements OnDestroy {
     this.register('category', 60 * 1000, ['list']);
     this.register('cartitem', 60 * 1000, ['list', 1, true]);
     this.register('favorite', 60 * 1000, ['list', 1]);
+    this.register('profile', 60 * 1000, ['list']);
     this.register('bid', 60 * 1000, ['search', '*', '*', 'ASC'])
   }
 

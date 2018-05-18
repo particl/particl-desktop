@@ -9,8 +9,7 @@ export class Cart {
   public escrowTotal: Amount = new Amount(0);
   public total: Amount = new Amount(0);
 
-  constructor(public cartDbObj: any) {
-      this.shoppingCartItems = this.cartDbObj;
+  constructor(public object: any) {
       this.setCartItems();
   }
 
@@ -45,8 +44,10 @@ export class Cart {
     }
 
   private setCartItems(): void {
-    this.shoppingCartItems.map(shoppingCartItem => {
-      shoppingCartItem.ListingItem = new Listing(shoppingCartItem.ListingItem);
+    console.log(this.object);
+    this.shoppingCartItems = this.object.map(item => {
+      item.ListingItem = new Listing(item.ListingItem);
+      return item;
     });
 
     this.setSubTotal();

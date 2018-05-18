@@ -2,9 +2,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
-
 import { Cart } from 'app/core/market/api/cart/cart.model';
+import { CartService } from 'app/core/market/api/cart/cart.service';
 
 
 @Component({
@@ -20,14 +19,13 @@ export class CartComponent implements OnInit, OnDestroy {
   cart: Cart;
 
   constructor(
-    private _marketState: MarketStateService,
+    private cartService: CartService,
   ) { }
 
   ngOnInit() {
     // Obtain total cart items
-    this._marketState.observe('cartitem')
+    this.cartService.list()
       .takeWhile(() => !this.destroyed)
-      .map(c => new Cart(c))
       .subscribe(cart => {
         this.cart = cart;
       });

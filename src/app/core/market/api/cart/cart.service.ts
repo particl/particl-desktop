@@ -28,21 +28,14 @@ export class CartService {
     return this.market.call('cartitem', ['add', 1, listing.id]).take(1).do(
       data => {
         this.snackbar.open('Item successfully added in cart')
-        this.updateCart();
+        this.update();
       },
       err  => this.snackbar.open(err));
   }
 
-  getCart(): Observable<any> {
+  list(): Observable<any> {
     this.log.d(`Getting cart with id=1`);
-    // return this.market.call('cart', ['get', 1]).map(c => new Cart(c)).do(
-    //   data => console.log(data),
-    //   error => console.log(error)
-    //   );
-    return this.market.call('cartitem', ['list', 1, true]).map(c => new Cart(c)).do(
-      data => console.log(data),
-      error => console.log(error)
-      );
+    return this.marketState.observe('cartitem').map(c => new Cart(c));
   }
 
   removeItem(listingItemId: number): Observable<any> {
@@ -50,18 +43,18 @@ export class CartService {
     return this.market.call('cartitem', ['remove', 1, listingItemId]).do(
       data => {
         this.snackbar.open('Item successfully removed from cart');
-        this.updateCart();
+        this.update();
       },
       err => this.snackbar.open(err)
       );
   }
 
-  clearCart(): Observable<any> {
+  clear(): Observable<any> {
     this.log.d(`Clearing cart with id=1`);
-    return this.market.call('cart', ['clear', 1]).do(this.updateCart.bind(this), this.snackbar.open)
+    return this.market.call('cart', ['clear', 1]).do(this.update.bind(this))
   }
 
-  updateCart(): void {
+  update(): void {
     this.marketState.register('cartitem', null, ['list', 1, true])
   }
 
