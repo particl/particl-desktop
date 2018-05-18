@@ -5,6 +5,9 @@
   @extend %disable-select;
   margin-top: $header-main-height;
   padding: 24px 35px;
+  @media screen and (min-width: 1500px) {
+    padding: 24px 50px;
+  }
   .balance-item {
     border-right: 1px solid $bg-shadow;
     &:last-of-type {
@@ -16,6 +19,9 @@
 
 .overview { // area with widgets
   padding: 0 35px;
+  @media screen and (min-width: 1500px) {
+    padding: 10px 50px;
+  }
 }
 
 .action-buttons {
