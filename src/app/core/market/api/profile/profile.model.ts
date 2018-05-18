@@ -1,6 +1,6 @@
 export class Profile {
 
-    constructor(profile: any) {
+    constructor(private object: any) {
 
     }
 }

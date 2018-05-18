@@ -14,7 +14,6 @@ import { MatStepper } from '@angular/material';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { Cart } from 'app/core/market/api/cart/cart.model';
-import { ShippingDetails } from '../../shared/shipping-details.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { MarketService } from '../../../core/market/market.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
@@ -24,6 +23,7 @@ import { ModalsService } from 'app/modals/modals.service';
 import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
 import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checkout-process-cache.service';
+import { Address } from 'app/core/market/api/profile/address/address.model';
 
 @Component({
   selector: 'app-checkout-process',
@@ -38,7 +38,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   @Output() onOrderPlaced: EventEmitter<number> = new EventEmitter<number>();
 
 
-  public selectedAddress: ShippingDetails;
+  public selectedAddress: Address;
 
   public profile: any = {};
 
@@ -140,29 +140,26 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     let upsert: Function;
     if (this.profile.ShippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
-      upsert = this.profileService.addShippingAddress.bind(this);
+      upsert = this.profileService.address.add.bind(this);
     } else {
       this.shippingFormGroup.value.id = this.selectedAddress.id;
-      upsert = this.profileService.updateShippingAddress.bind(this);
+      upsert = this.profileService.address.update.bind(this);
     }
 
-    upsert(this.shippingFormGroup.value).take(1).subscribe(address => {
+    const address = this.shippingFormGroup.value as Address;
+    upsert(address).take(1).subscribe(address => {
       // update the cache
       this.allowGoingBack();
       this.storeCache();
 
       // we need to retrieve the id of  address we added (new)
-      // to the profile
-      // this.getProfile();
-      console.log('upsert: address');
-      console.log(address);
       this.select(address);
 
     });
 
   }
 
-  select(address: ShippingDetails) {
+  select(address: Address) {
     this.log.d('Selecting address with id: ' + address.id);
     this.selectedAddress = address;
     this.shippingFormGroup.value.id = address.id;
@@ -177,12 +174,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   getProfile(): void {
-    this.profileService.get(1).take(1).subscribe(
+    this.profileService.default().take(1).subscribe(
       profile => {
         this.profile = profile;
         const addresses = profile.ShippingAddresses.filter((address) => address.title && address.type === 'SHIPPING_OWN');
         if (addresses.length > 0) {
-          this.select(this.cache.shippingDetails || addresses[0]);
+          this.select(this.cache.address || addresses[0]);
         }
       });
   }
@@ -237,9 +234,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.cache.selectedIndex = this.stepper.selectedIndex;
     this.cache.linear = this.stepper.linear;
 
-    this.cache.shippingDetails = this.shippingFormGroup.value;
+    this.cache.address = this.shippingFormGroup.value;
     if (this.selectedAddress) {
-      this.cache.shippingDetails.id = this.selectedAddress.id
+      this.cache.address.id = this.selectedAddress.id
     }
   }
 

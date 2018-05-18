@@ -50,7 +50,7 @@ export class OrdersComponent implements OnInit {
   }
 
   loadProfile(): void {
-    this.profileService.get(1).take(1).subscribe(
+    this.profileService.default().take(1).subscribe(
       profile => {
         this.profile = profile;
         this.loadOrders();
