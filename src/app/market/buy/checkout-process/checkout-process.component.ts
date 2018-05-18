@@ -39,7 +39,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   @ViewChild('stepper') stepper: MatStepper;
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
-  public newShipping: boolean;
+
   public selectedAddress: ShippingDetails;
   public selectedIndex: number = 0;
   public isStepperLinear: boolean = true;
@@ -108,7 +108,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       country: ['', Validators.required],
       zipCode: ['', Validators.required],
       newShipping: [''],
-      title: ['']
+      title: ['', Validators.required]
     });
   }
 
@@ -138,8 +138,14 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.shippingFormGroup.value.newShipping === true) {
+      this.log.d('Creating new address for profile!');
+    } else {
+      this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
+    }
+
     let upsert: Function;
-    if (this.profile.ShippingAddresses.length === 0 || this.newShipping === true) {
+    if (this.profile.ShippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
       upsert = this.profileService.addShippingAddress.bind(this);
     } else {
       this.shippingFormGroup.value.id = this.selectedAddress.id;
@@ -154,6 +160,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   setValue(address: ShippingDetails) {
+    this.log.d('Selecting address with id: ' + address.id);
     this.shippingFormGroup.patchValue(address);
   }
 
@@ -161,7 +168,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.profileService.get(1).take(1).subscribe(
       profile => {
         this.profile = profile;
-        const addresses = profile.ShippingAddresses.filter((address) => address.type === "SHIPPING_OWN");
+        const addresses = profile.ShippingAddresses.filter((address) => address.title && address.type === 'SHIPPING_OWN');
         if (addresses.length > 0) {
           this.setSteperIndex();
           this.selectedAddress = (
@@ -195,7 +202,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   bidOrder() {
-    this.bid.order(this.cart, this.profile).subscribe((res) => {
+    const addressId = this.selectedAddress.id;
+    this.bid.order(this.cart, this.profile, addressId).subscribe((res) => {
       this.clearCart(false);
       this.clearCache();
       this.snackbarService.open('Order has been successfully placed');
@@ -207,8 +215,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   clearCache() {
     console.log('Clearing the cache of checkout');
+    this.isStepperLinear = true;
+    this.isShippingDetailsStepCompleted = false;
+    this.stepper.selectedIndex = 0;
+
     this.checkoutProcessCacheService.stepper = 0;
-    this.checkoutProcessCacheService.shippingDetails = new ShippingDetails()
+    this.checkoutProcessCacheService.shippingDetails = new ShippingDetails();
   }
 
   setSteperIndex() {
