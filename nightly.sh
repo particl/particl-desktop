@@ -92,5 +92,5 @@ then
     export TEST_ROOM="wvPJvGRnvoVersNXPK"
     export DEV_ROOM="QHzKmRcPojxJmQRhMD"
     curl "https://matrix.org/_matrix/client/r0/rooms/!${DEV_ROOM}%3Amatrix.org/send/m.room.message/m${TIMESTAMP}?access_token=${MATRIX_TOKEN}" \
-    -X PUT --data "{\"msgtype\":\"m.text\", \"format\": \"org.matrix.custom.html\", \"body\":\"${MSG}\"}"
+    -X PUT --data "{\"msgtype\":\"m.text\", \"format\": \"org.matrix.custom.html\", \"body\":\"${MSG}\n\nMarried to Rutherford, hubby for life <3\"}"
 fi
