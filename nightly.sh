@@ -12,8 +12,8 @@ then
     DEBUG=electron-builder yarn run travis:linux
 
     cd packages
-    mv `ls | grep "particl-desktop.*linux-x64.zip"` particl-desktop-linux-x64-PR$TRAVIS_PULL_REQUEST.zip
-    mv `ls | grep "particl-desktop.*linux-amd64.deb"` particl-desktop-linux-amd64-PR$TRAVIS_PULL_REQUEST.deb
+    mv `ls | grep "particl-desktop.*linux-x64.zip"` particl-desktop-linux-x64-PR$TRAVIS_PULL_REQUEST-$TRUE_COMMIT.zip
+    mv `ls | grep "particl-desktop.*linux-amd64.deb"` particl-desktop-linux-amd64-PR$TRAVIS_PULL_REQUEST-$TRUE_COMMIT.deb
     cd ..
 
     echo -en 'travis_fold:end:script.linux\\r'
@@ -27,7 +27,7 @@ then
     DEBUG=electron-builder yarn run travis:mac
 
     cd packages
-    mv `ls | grep "particl-desktop.*mac.zip"` particl-desktop-mac-PR$TRAVIS_PULL_REQUEST.zip
+    mv `ls | grep "particl-desktop.*mac.zip"` particl-desktop-mac-PR$TRAVIS_PULL_REQUEST-$TRUE_COMMIT.zip
     cd ..
 
     echo -en 'travis_fold:end:script.mac\\r'
@@ -51,13 +51,13 @@ then
     DEBUG=electron-builder yarn run travis:win64
 
     cd packages
-    zip -r particl-desktop-win-x64-PR$TRAVIS_PULL_REQUEST.zip win-unpacked
+    zip -r particl-desktop-win-x64-PR$TRAVIS_PULL_REQUEST-$TRUE_COMMIT.zip win-unpacked
     cd ..
 
     DEBUG=electron-builder yarn run travis:win32
 
     cd packages
-    zip -r particl-desktop-win-ia32-PR$TRAVIS_PULL_REQUEST.zip win-ia32-unpacked
+    zip -r particl-desktop-win-ia32-PR$TRAVIS_PULL_REQUEST-$TRUE_COMMIT.zip win-ia32-unpacked
     cd ..
 
     ls -l ./packages
@@ -70,7 +70,7 @@ if [[ $TRUE_COMMIT_MESSAGES != *"-upload"* ]]
 then 
     cd packages
     declare -a Uploads
-    Uploads=("Builds!\nNote: the download links expire after 10 days.\n")
+    Uploads=("$TRUE_COMMIT_MESSAGES!\nNote: the download links expire after 10 days.\n")
     for fn in `ls | grep "particl-desktop"`; do
         echo "Uploading $fn"
         url="$(curl  -H "Max-Days: 10" -s --upload-file $fn https://transfer.sh/$fn)\n"
