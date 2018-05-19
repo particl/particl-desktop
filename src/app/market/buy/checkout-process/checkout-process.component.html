@@ -47,7 +47,7 @@
           <tr *ngFor="let listing of cart?.listings">
             <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
               <div class="image" fxFlex="0 0 115px">
-                <img src="{{listing.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+                <img src="{{listing.imageCollection?.thumbnail}}">
               </div>
               <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                 <div class="title">
@@ -236,7 +236,7 @@
         <tr *ngFor="let listing of cart?.listings">
           <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
             <div class="image" fxFlex="0 0 115px">
-              <img src="{{listing.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+              <img src="{{listing.imageCollection?.thumbnail}}">
             </div>
             <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
               <div class="title">

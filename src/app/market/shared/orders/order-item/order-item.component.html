@@ -3,7 +3,7 @@
   <mat-expansion-panel-header class="header">
     <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
       <div class="photo" fxFlex="0 0 80px">
-        <img src="{{order?.listing?.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+        <img src="{{order?.listing?.imageCollection?.thumbnail}}">
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ order?.listing?.title }}</div>

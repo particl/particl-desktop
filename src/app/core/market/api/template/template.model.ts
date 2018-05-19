@@ -53,26 +53,6 @@ export class Template {
     return this.object.hash;
   }
 
-  get thumbnail(): any {
-    const itemimage = this.object.ItemInformation.ItemImages[0];
-    if (itemimage) {
-      return itemimage.ItemImageDatas.find(data => {
-        return data.imageVersion === 'THUMBNAIL';
-      });
-    }
-    return undefined;
-  }
-
-  get featuredImage(): any {
-    const itemimage = this.object.ItemInformation.ItemImages[0];
-    if (itemimage) {
-      return itemimage.ItemImageDatas.find(data => {
-        return data.imageVersion === 'MEDIUM';
-      });
-    }
-    return undefined;
-  }
-
   get images(): any {
     return this.object.ItemInformation.ItemImages;
   }
