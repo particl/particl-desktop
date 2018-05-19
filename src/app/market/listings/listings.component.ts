@@ -98,8 +98,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const category = this.filters.category;
     const country = this.filters.country;
 
-    // should unsubcribe previous search subcription to prevent the previous keyword search result overridding with the latest one ?
-
+    /*
+      We store the subscription each time, due to API delays.
+      A search might not resolve synchronically, so a previous search
+      may overwrite a search that was initiated later on.
+      So store the subscription, then stop listening if a new search
+      or page load is triggered.
+    */
     if (this.listingServiceSubcription) {
       this.listingServiceSubcription.unsubscribe();
     }
