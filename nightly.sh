@@ -1,4 +1,3 @@
-post=$(echo ${Uploads[@]})
 curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
 -d "{\"body\": \"A build has started for this pull request! \"}" \
 "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
@@ -71,6 +70,7 @@ then
     cd packages
     declare -a Uploads
     Uploads=("$TRUE_COMMIT_MESSAGES!\nNote: the download links expire after 10 days.\n")
+    Matrix=("<p>$TRUE_COMMIT_MESSAGES!</p>\n<p>Note: the download links expire after 10 days.</p>\n")
     for fn in `ls | grep "particl-desktop"`; do
         echo "Uploading $fn"
         url="$(curl  -H "Max-Days: 10" -s --upload-file $fn https://transfer.sh/$fn)\n"
@@ -79,18 +79,25 @@ then
         Uploads=(${Uploads[@]} $checksum)
         Uploads=(${Uploads[@]} $url)
         Uploads=(${Uploads[@]} "\`\`\`\n\n")
+
+        # Build message for Matrix
+        Matrix=(${Matrix[@]} "<pre><code>\n")
+        Matrix=(${Matrix[@]} $checksum)
+        Matrix=(${Matrix[@]} $url)
+        Matrix=(${Matrix[@]} "</code></pre>\n\n")
     done
     echo -e ${Uploads[@]}
 
-    MSG=$(echo ${Uploads[@]})
+    export MSG=$(echo ${Uploads[@]})
     curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
     -d "{\"body\": \"${MSG}\"}" \
     "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
 
 
+    export MATRIX_MSG=$(echo ${Matrix[@]})
     export TIMESTAMP=$(date +%s)
     export TEST_ROOM="wvPJvGRnvoVersNXPK"
     export DEV_ROOM="QHzKmRcPojxJmQRhMD"
-    curl "https://matrix.org/_matrix/client/r0/rooms/!${DEV_ROOM}%3Amatrix.org/send/m.room.message/m${TIMESTAMP}?access_token=${MATRIX_TOKEN}" \
-    -X PUT --data "{\"msgtype\":\"m.text\", \"format\": \"org.matrix.custom.html\", \"body\":\"${MSG}\n\nMarried to Rutherford, hubby for life <3\"}"
+    curl 'https://matrix.org/_matrix/client/r0/rooms/!'"${DEV_ROOM}"'%3Amatrix.org/send/m.room.message/m'"${TIMESTAMP}"'?access_token='"${MATRIX_TOKEN}" \
+    -X PUT --data '{"msgtype":"m.text", "format": "org.matrix.custom.html", "body": "'"${MSG}"'" ,"formatted_body":"'"${MATRIX_MSG}"'Married to Rutherford, hubby for life <3"}'
 fi
