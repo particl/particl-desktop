@@ -96,6 +96,7 @@ then
 
     # Request testing from the test channel.
     if [[ $TRUE_COMMIT_MESSAGES == *"+request"* ]]
+    then
         export MATRIX_MSG=$(echo ${Matrix[@]})
         export TIMESTAMP=$(date +%s)
         export TEST_ROOM="wvPJvGRnvoVersNXPK"
