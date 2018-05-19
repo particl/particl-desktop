@@ -1,4 +1,4 @@
-<mat-horizontal-stepper [selectedIndex]="selectedIndex" [linear]="isStepperLinear" [@.disabled]="true" class="no-bg container-block" #stepper>
+<mat-horizontal-stepper [@.disabled]="true" class="no-bg container-block" #stepper>
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
   <ng-template matStepperIcon="edit">
     <custom-icon>
@@ -14,7 +14,7 @@
 
   <!-- =========== YOUR CART =========== -->
 
-  <mat-step [stepControl]="cartFormGroup">
+  <mat-step [completed]="stepper.selectedIndex >= 1" [stepControl]="cartFormGroup">
     <form [formGroup]="cartFormGroup" class="cart">
       <ng-template matStepLabel>Your cart</ng-template>
 
@@ -122,7 +122,7 @@
   </mat-step>
 
   <!-- =========== SHIPPING DETAILS =========== -->
-  <mat-step [completed]="isShippingDetailsStepCompleted" [stepControl]="shippingFormGroup">
+  <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
       <div fxLayout="row" fxLayoutGap="30px">
@@ -133,7 +133,7 @@
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
               <mat-select [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
-                          (change)="setValue(selectedAddress)"
+                          (change)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
                           disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
                 <mat-option *ngFor="let address of profile.ShippingAddresses"
@@ -192,11 +192,10 @@
 
             <!--Hide shipping profile -->
             <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
-              <mat-checkbox formControlName="newShipping" [(ngModel)]="newShipping" fxFlex>Save as shipping profile
+              <mat-checkbox formControlName="newShipping" fxFlex>Save as shipping profile
               </mat-checkbox>
               <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="title" placeholder="Shipping profile name"
-                       [(ngModel)]="title">
+                <input matInput formControlName="title" placeholder="Shipping profile name">
               </mat-form-field>
             </div>
 
@@ -268,9 +267,9 @@
         <div class="shipping-overview" fxFlex="0 0 250px">
           <div class="title">Shipping address</div>
           <p class="address">
-            {{valueOf('firstName')}} {{valueOf('lastName')}} <br>
-            {{valueOf('addressLine1')}}, {{valueOf('addressLine2')}},{{valueOf('city')}}, {{valueOf('state')}}<br>
-            {{valueOf('zipCode')}}, {{valueOf('country')}}
+            {{ shippingFormGroup.value.firstName || '' }} {{ shippingFormGroup.value.lastName || '' }} <br>
+            {{ shippingFormGroup.value.addressLine1 || '' }}, {{shippingFormGroup.value.addressLine2 || '' }},{{shippingFormGroup.value.city || '' }}, {{shippingFormGroup.value.state || '' }}<br>
+            {{ shippingFormGroup.value.zipCode || '' }}, {{shippingFormGroup.value.country || '' }}
           </p>
         </div>
 

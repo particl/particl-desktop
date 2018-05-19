@@ -14,7 +14,6 @@ import { MatStepper } from '@angular/material';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { Cart } from 'app/core/market/api/cart/cart.model';
-import { ShippingDetails } from '../../shared/shipping-details.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { MarketService } from '../../../core/market/market.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
@@ -24,6 +23,7 @@ import { ModalsService } from 'app/modals/modals.service';
 import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
 import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checkout-process-cache.service';
+import { Address } from 'app/core/market/api/profile/address/address.model';
 
 @Component({
   selector: 'app-checkout-process',
@@ -33,21 +33,25 @@ import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checko
 export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create('buy.component: ' + Math.floor((Math.random() * 1000) + 1));
+  private destroyed: boolean = false;
 
   @Output() onOrderPlaced: EventEmitter<number> = new EventEmitter<number>();
-  @ViewChild('stepper') stepper: MatStepper;
-  public cartFormGroup: FormGroup;
-  public shippingFormGroup: FormGroup;
-  public newShipping: boolean;
-  public selectedAddress: ShippingDetails;
-  public selectedIndex: number = 0;
-  public isStepperLinear: boolean = true;
-  public isShippingDetailsStepCompleted: boolean = false;
+
+
+  public selectedAddress: Address;
 
   public profile: any = {};
 
   /* cart */
   public cart: Cart;
+
+  /* Stepper stuff */
+  @ViewChild('stepper') stepper: MatStepper;
+  // stepper form data
+  public cartFormGroup: FormGroup;
+  public shippingFormGroup: FormGroup;
+
+
 
   constructor(// 3rd party
     private formBuilder: FormBuilder,
@@ -61,7 +65,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private cartService: CartService,
     public countryList: CountryListService,
-    public checkoutProcessCacheService: CheckoutProcessCacheService,
+    public cache: CheckoutProcessCacheService,
     private bid: BidService,
     public dialog: MatDialog) {
   }
@@ -71,20 +75,16 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     this.getProfile();
 
-    this.getCart();
+    this.cartService.list()
+      .takeWhile(() => !this.destroyed)
+      .subscribe(cart => this.cart = cart);
+
+    this.getCache();
   }
 
   ngOnDestroy() {
-    this.setShippingCache();
-  }
-
-  // @TODO create separate service for checkout process.
-  setShippingCache() {
-    this.updateSteperIndex();
-    this.checkoutProcessCacheService.shippingDetails = this.shippingFormGroup.value;
-    if (this.selectedAddress) {
-      this.checkoutProcessCacheService.shippingDetails.id = this.selectedAddress.id
-    }
+    this.destroyed = true;
+    this.storeCache();
   }
 
   formBuild() {
@@ -102,7 +102,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       country: ['', Validators.required],
       zipCode: ['', Validators.required],
       newShipping: [''],
-      title: ['']
+      title: ['', Validators.required]
     });
   }
 
@@ -113,21 +113,15 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1)
-      .subscribe(this.getCart.bind(this));
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
   }
 
   clearCart(isSnack: boolean = true): void {
-    this.cartService.clearCart().subscribe(res => {
+    this.cartService.clear().subscribe(res => {
       if (isSnack) {
         this.snackbarService.open('All Items Cleared From Cart');
       }
-      this.getCart()
     });
-  }
-
-  getCart(): void {
-    this.cartService.getCart().take(1).subscribe(cart => this.cart = cart);
   }
 
   /* shipping */
@@ -138,45 +132,62 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let upsert: Function;
-    if (this.profile.ShippingAddresses.length === 0 || this.newShipping) {
-      upsert = this.profileService.addShippingAddress.bind(this);
+    if (this.shippingFormGroup.value.newShipping === true) {
+      this.log.d('Creating new address for profile!');
     } else {
-      this.shippingFormGroup.value.id = this.selectedAddress.id;
-      upsert = this.profileService.updateShippingAddress.bind(this);
+      this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
     }
 
-    this.setShippingCache();
-    upsert(this.shippingFormGroup.value).take(1).subscribe(address => {
-      this.getProfile();
+    let upsert: Function;
+    if (this.profile.ShippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
+      upsert = this.profileService.address.add.bind(this);
+    } else {
+      this.shippingFormGroup.value.id = this.selectedAddress.id;
+      upsert = this.profileService.address.update.bind(this);
+    }
+
+    const address = this.shippingFormGroup.value as Address;
+    upsert(address).take(1).subscribe(addressWithId => {
+      // update the cache
+      this.allowGoingBack();
+      this.storeCache();
+
+      // we need to retrieve the id of  address we added (new)
+      this.select(addressWithId);
+
     });
 
   }
 
-  setValue(address: ShippingDetails) {
+  select(address: Address) {
+    this.log.d('Selecting address with id: ' + address.id);
+    this.selectedAddress = address;
+    this.shippingFormGroup.value.id = address.id;
     this.shippingFormGroup.patchValue(address);
   }
 
+  clear() {
+    this.shippingFormGroup.reset();
+    this.cartService.clear().subscribe();
+    this.cache.clear();
+    this.getCache();
+  }
+
   getProfile(): void {
-    this.profileService.get(1).take(1).subscribe(
+    this.profileService.default().take(1).subscribe(
       profile => {
         this.profile = profile;
-        const addresses = profile.ShippingAddresses;
+        const addresses = profile.ShippingAddresses.filter((address) => address.title && address.type === 'SHIPPING_OWN');
         if (addresses.length > 0) {
-          this.setSteperIndex();
-          this.selectedAddress = (
-            this.checkoutProcessCacheService.shippingDetails
-          ) ? (
-            this.checkoutProcessCacheService.shippingDetails
-          ) : addresses[0];
-          this.setValue(this.selectedAddress);
+          this.select(this.cache.address || addresses[0]);
         }
       });
   }
 
-  valueOf(field: string) {
-    return this.shippingFormGroup ? this.shippingFormGroup.get(field).value : '';
-  }
+
+  /*
+    On click confirm order.
+  */
 
   placeOrderModal(): void {
     const dialogRef = this.dialog.open(PlaceOrderComponent);
@@ -187,7 +198,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   placeOrder() {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this)});
+      this.modals.open('unlock', { forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this) });
     } else {
       // wallet already unlocked
       this.bidOrder();
@@ -195,9 +206,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   bidOrder() {
-    this.bid.order(this.cart, this.profile).subscribe((res) => {
-      this.clearCart(false);
-      this.clearCache();
+    const addressId = this.selectedAddress.id;
+    this.bid.order(this.cart, this.profile, addressId).subscribe((res) => {
+
+      this.clear();
+
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
@@ -205,22 +218,29 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  clearCache() {
-    this.checkoutProcessCacheService.stepper = 0;
-    this.checkoutProcessCacheService.shippingDetails = new ShippingDetails()
+
+
+  /*
+    Cache functions
+  */
+
+  getCache(): void {
+    // set stepper to values of cache
+    this.stepper.selectedIndex = this.cache.selectedIndex;
+    this.stepper.linear = this.cache.linear;
   }
 
-  setSteperIndex() {
-    // set manually shipping details step completed.
-    if (this.checkoutProcessCacheService.stepper === 2) {
-      this.isStepperLinear = false;
-      this.isShippingDetailsStepCompleted = true;
+  storeCache(): void {
+    this.cache.selectedIndex = this.stepper.selectedIndex;
+    this.cache.linear = this.stepper.linear;
+
+    this.cache.address = this.shippingFormGroup.value;
+    if (this.selectedAddress) {
+      this.cache.address.id = this.selectedAddress.id
     }
-
-    this.selectedIndex = this.checkoutProcessCacheService.stepper;
   }
 
-  updateSteperIndex() {
-    this.checkoutProcessCacheService.stepper = this.stepper.selectedIndex;
+  allowGoingBack() {
+    this.stepper.linear = false;
   }
 }

@@ -20,7 +20,7 @@ export class Template {
   public imageCollection: ImageCollection;
 
   // @TODO: remove type any
-  constructor(private object: any) {
+  constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
     this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
     this.imageCollection = new ImageCollection(this.object.ItemInformation.ItemImages)
@@ -51,10 +51,6 @@ export class Template {
 
   get hash(): string {
     return this.object.hash;
-  }
-
-  get isMine(): boolean {
-    return this.object.ListingItemTemplate && this.object.ListingItemTemplate.hash;
   }
 
   get thumbnail(): any {
