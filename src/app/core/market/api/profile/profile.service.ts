@@ -1,26 +1,44 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ShippingDetails } from '../../../../market/shared/shipping-details.model';
+import { Address } from './address/address.model';
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+
+import { AddressService } from './address/address.service';
 
 // TODO: addresses & favourites!
 @Injectable()
 export class ProfileService {
 
+  private defaultProfileId: number;
+
   constructor(
     private market: MarketService,
-    private marketState: MarketStateService
-  ) { }
+    private marketState: MarketStateService,
+    public address: AddressService
+  ) {
+    // find default profile
+    this.list().subscribe((profiles: any[]) => {
+      this.defaultProfileId = profiles.find((e) => e.name === 'DEFAULT').id;
+    });
+  }
 
   list() {
     return this.marketState.observe('profile')
     .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b));
   }
 
+  // return the default profile
+  default() {
+    return this.get(this.defaultProfileId);
+  }
+
   get(profileIdOrName: number | string): Observable<any> {
-    return this.market.call('profile', ['get', profileIdOrName]);
+    return this.market.call('profile', ['get', profileIdOrName])
+    .do((profile) => {
+      console.log(profile);
+    });
   }
 
   add(profileName: string, profileAddress?: string): Observable<any> {
@@ -28,39 +46,14 @@ export class ProfileService {
     if (profileAddress === null) {
       params.pop(); // if null pop parent
     }
-    return this.market.call('profile', params);
+    return this.market.call('profile', params)
+    .do(() => {
+      this.refresh();
+    });
   }
 
-  addShippingAddress(shippingAddress: any): Observable<any> {
-    console.log('addShippingAddress>>>', shippingAddress);
-    return this.market.call('profile', [
-      'address', 'add', 1,
-      shippingAddress.firstName,
-      shippingAddress.lastName,
-      (shippingAddress.title) ? shippingAddress.title : 'DEFAULT', // title
-      shippingAddress.addressLine1,
-      shippingAddress.addressLine2,
-      shippingAddress.city,
-      shippingAddress.state,
-      shippingAddress.country,
-      shippingAddress.zipCode
-    ]);
-  }
+  refresh(): void {
 
-  updateShippingAddress(shippingAddress: any): Observable<any> {
-    return this.market.call('profile', [
-      'address', 'update',
-      shippingAddress.id,
-      shippingAddress.firstName,
-      shippingAddress.lastName,
-      (shippingAddress.title) ? shippingAddress.title : 'DEFAULT', // title
-      shippingAddress.addressLine1,
-      shippingAddress.addressLine2,
-      shippingAddress.city,
-      shippingAddress.state,
-      shippingAddress.country,
-      shippingAddress.zipCode
-    ]);
   }
 
   update(profileId: number, profileName: string): Observable<any> {
