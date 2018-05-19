@@ -103,8 +103,13 @@ export class SellComponent implements OnInit {
     const search = this.filters.search ? this.filters.search : null;
     const max = this.pagination.maxPerPage;
 
-    // should unsubcribe previous search subcription to prevent the previous keyword search result overridding with the latest one ?
-
+    /*
+      We store the subscription each time, due to API delays.
+      A search might not resolve synchronically, so a previous search
+      may overwrite a search that was initiated later on.
+      So store the subscription, then stop listening if a new search
+      or page load is triggered.
+    */
     if (this.templateSearchSubcription) {
       this.templateSearchSubcription.unsubscribe();
     }
