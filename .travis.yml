@@ -42,7 +42,7 @@ script:
   - yarn run travis:test
   - echo -en 'travis_fold:end:script.test\\r'
 
-  - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "\n")
+  - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "+build")
   - export TRUE_COMMIT=$(echo $TRUE_COMMIT_MESSAGES | awk '{print $1}')
   - echo $TRUE_COMMIT_MESSAGES
   
