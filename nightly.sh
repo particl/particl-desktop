@@ -100,7 +100,7 @@ then
         export TIMESTAMP=$(date +%s)
         export TEST_ROOM="wvPJvGRnvoVersNXPK"
         export DEV_ROOM="QHzKmRcPojxJmQRhMD"
-        curl 'https://matrix.org/_matrix/client/r0/rooms/!'"${DEV_ROOM}"'%3Amatrix.org/send/m.room.message/m'"${TIMESTAMP}"'?access_token='"${MATRIX_TOKEN}" \
+        curl 'https://matrix.org/_matrix/client/r0/rooms/!'"${TEST_ROOM}"'%3Amatrix.org/send/m.room.message/m'"${TIMESTAMP}"'?access_token='"${MATRIX_TOKEN}" \
         -X PUT --data '{"msgtype":"m.text", "format": "org.matrix.custom.html", "body": "'"${MSG}"'" ,"formatted_body":"'"${MATRIX_MSG}"'Married to Rutherford, hubby for life &lt;3"}'
     fi
 fi
