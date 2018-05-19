@@ -70,7 +70,8 @@ then
     cd packages
     declare -a Uploads
     Uploads=("$TRUE_COMMIT_MESSAGES!\nNote: the download links expire after 10 days.\n")
-    Matrix=("<p>$TRUE_COMMIT_MESSAGES!</p>\n<p>Note: the download links expire after 10 days.</p>\n")
+    export AUTHOR=$(git --no-pager show -s --format='%an <%ae>' $TRUE_COMMIT)
+    Matrix=("<p><strong>Help developer $AUTHOR by testing these builds and reporting any issues!</strong><br />$TRUE_COMMIT_MESSAGES!</p>\n<p>Note: the download links expire after 10 days.</p>\n")
     for fn in `ls | grep "particl-desktop"`; do
         echo "Uploading $fn"
         url="$(curl  -H "Max-Days: 10" -s --upload-file $fn https://transfer.sh/$fn)\n"
@@ -93,11 +94,13 @@ then
     -d "{\"body\": \"${MSG}\"}" \
     "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
 
-
-    export MATRIX_MSG=$(echo ${Matrix[@]})
-    export TIMESTAMP=$(date +%s)
-    export TEST_ROOM="wvPJvGRnvoVersNXPK"
-    export DEV_ROOM="QHzKmRcPojxJmQRhMD"
-    curl 'https://matrix.org/_matrix/client/r0/rooms/!'"${DEV_ROOM}"'%3Amatrix.org/send/m.room.message/m'"${TIMESTAMP}"'?access_token='"${MATRIX_TOKEN}" \
-    -X PUT --data '{"msgtype":"m.text", "format": "org.matrix.custom.html", "body": "'"${MSG}"'" ,"formatted_body":"'"${MATRIX_MSG}"'Married to Rutherford, hubby for life &lt;3"}'
+    # Request testing from the test channel.
+    if [[ $TRUE_COMMIT_MESSAGES == *"+request"* ]]
+        export MATRIX_MSG=$(echo ${Matrix[@]})
+        export TIMESTAMP=$(date +%s)
+        export TEST_ROOM="wvPJvGRnvoVersNXPK"
+        export DEV_ROOM="QHzKmRcPojxJmQRhMD"
+        curl 'https://matrix.org/_matrix/client/r0/rooms/!'"${DEV_ROOM}"'%3Amatrix.org/send/m.room.message/m'"${TIMESTAMP}"'?access_token='"${MATRIX_TOKEN}" \
+        -X PUT --data '{"msgtype":"m.text", "format": "org.matrix.custom.html", "body": "'"${MSG}"'" ,"formatted_body":"'"${MATRIX_MSG}"'Married to Rutherford, hubby for life &lt;3"}'
+    fi
 fi
