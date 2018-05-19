@@ -82,8 +82,15 @@ then
     done
     echo -e ${Uploads[@]}
 
-    post=$(echo ${Uploads[@]})
+    MSG=$(echo ${Uploads[@]})
     curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-    -d "{\"body\": \"${post}\"}" \
+    -d "{\"body\": \"${MSG}\"}" \
     "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
+
+
+    TIMESTAMP=$(date +%s)
+    TEST_ROOM="wvPJvGRnvoVersNXPK"
+    DEV_ROOM="QHzKmRcPojxJmQRhMD"
+    curl "https://matrix.org/_matrix/client/r0/rooms/!${DEV_ROOM}%3Amatrix.org/send/m.room.message/m${TIMESTAMP}?access_token=${MATRIX_TOKEN}" \
+    -X PUT --data "{\"msgtype\":\"m.text\",\"body\":\"${MSG}\"}"
 fi
