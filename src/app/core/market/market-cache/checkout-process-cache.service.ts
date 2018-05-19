@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { ShippingDetails } from 'app/market/shared/shipping-details.model';
+import { Address } from 'app/core/market/api/profile/address/address.model';
 
 @Injectable()
 export class CheckoutProcessCacheService {
-  public shippingDetails: ShippingDetails;
+  public address: Address;
 
   public selectedIndex: number = 0;
   public linear: boolean = true;
   public completed: boolean = false;
 
   constructor() {
-    this.shippingDetails = new ShippingDetails();
+    this.address = new Address();
   }
 
   public clear(): void {
     this.selectedIndex = 0;
     this.linear = true;
-    this.shippingDetails = new ShippingDetails();
+    this.address = new Address();
   }
 
 }
