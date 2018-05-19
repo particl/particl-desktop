@@ -175,7 +175,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   getProfile(): void {
     this.profileService.default().take(1).subscribe(
-      profile => {
+      (profile: any) => {
+        this.log.d('checkout got profile:')
+        console.log(profile);
         this.profile = profile;
         const addresses = profile.ShippingAddresses.filter((address) => address.title && address.type === 'SHIPPING_OWN');
         if (addresses.length > 0) {
