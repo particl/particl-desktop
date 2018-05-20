@@ -69,9 +69,9 @@ if [[ $TRUE_COMMIT_MESSAGES != *"-upload"* ]]
 then 
     cd packages
     declare -a Uploads
-    Uploads=("$TRUE_COMMIT_MESSAGES\nNote: the download links expire after 10 days.\n")
+    Uploads=("${TRUE_COMMIT_MESSAGES}\nNote: the download links expire after 10 days.\n")
     export AUTHOR=$(git --no-pager show -s --format='%an <%ae>' $TRUE_COMMIT)
-    Matrix=("<p><strong>Help developer $AUTHOR by testing these builds and reporting any issues!</strong><br />$TRUE_COMMIT_MESSAGES</p>\n<p>Note: the download links expire after 10 days.</p>\n")
+    Matrix=("<p><strong>Help developer ${AUTHOR} by testing these builds and reporting any issues!</strong><br />${TRUE_COMMIT_MESSAGES}</p>\n<p>Note: the download links expire after 10 days.</p>\n")
     for fn in `ls | grep "particl-desktop"`; do
         echo "Uploading $fn"
         url="$(curl  -H "Max-Days: 10" -s --upload-file $fn https://transfer.sh/$fn)\n"
