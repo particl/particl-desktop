@@ -104,9 +104,6 @@
     [infiniteScrollThrottle]="50"
     (scrolledUp)="loadPreviousPage()"
     (scrolled)="loadNextPage()">
-    <!-- <div class="no-results" *ngIf="listings?.length === 0">
-      You don't have any market listings yet
-    </div> -->
     <!--div class="subtitle first">Published listings</div-->
     <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
       <p>
