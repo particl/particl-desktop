@@ -34,6 +34,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // countries: FormControl = new FormControl();
   search: string;
 
+  listingServiceSubcription: any;
   // categories: FormControl = new FormControl();
 
   _rootCategoryList: Category = new Category({});
@@ -97,7 +98,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const category = this.filters.category;
     const country = this.filters.country;
 
-    this.listingService.search(pageNumber, max, null, search, category, country)
+    /*
+      We store the subscription each time, due to API delays.
+      A search might not resolve synchronically, so a previous search
+      may overwrite a search that was initiated later on.
+      So store the subscription, then stop listening if a new search
+      or page load is triggered.
+    */
+    if (this.listingServiceSubcription) {
+      this.listingServiceSubcription.unsubscribe();
+    }
+
+    this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<Listing>) => {
       this.isLoading = false;
       // new page
