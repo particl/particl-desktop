@@ -8,6 +8,7 @@ import { MarketStateService } from './market-state/market-state.service';
 
 import { CategoryService } from './api/category/category.service';
 import { ProfileService } from './api/profile/profile.service';
+import { AddressService } from './api/profile/address/address.service';
 import { TemplateService } from './api/template/template.service';
 import { ListingService } from './api/listing/listing.service';
 import { CartService } from './api/cart/cart.service';
@@ -37,6 +38,7 @@ export class MarketModule {
         // API
         CategoryService,
         ProfileService,
+        AddressService,
         TemplateService,
         ListingService,
         CartService,

@@ -1,4 +1,4 @@
-export class ShippingDetails {
+export class Address {
   id: number;
   title: string;
   firstName: string;

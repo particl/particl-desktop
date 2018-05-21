@@ -16,8 +16,8 @@ export class MarketStateService extends StateService implements OnDestroy {
     // fetch categories
     this.register('currencyprice', 30 * 1000, ['PART', 'USD']);
     this.register('category', 60 * 1000, ['list']);
-    this.register('cartitem', 60 * 1000, ['list', 1, true]);
     this.register('favorite', 60 * 1000, ['list', 1]);
+    this.register('profile', 60 * 1000, ['list']);
     this.register('bid', 60 * 1000, ['search', '*', '*', 'ASC'])
   }
 
@@ -36,7 +36,6 @@ export class MarketStateService extends StateService implements OnDestroy {
         .finally(() => {
           // re-start loop
           if (timeout) {
-            console.log('error count', errors);
             const restartAfter = this.determineTimeoutDuration(errors, timeout);
             setTimeout(_call, restartAfter);
           }
@@ -61,9 +60,9 @@ export class MarketStateService extends StateService implements OnDestroy {
 
     // if error occurred
     if (errors > 0) {
-      if (errors < 10) {
-        // might be booting up, let's retry after 500ms
-        restartAfter = 500;
+      if (errors < 20) {
+        // might be booting up, let's retry after 1s
+        restartAfter = 1000;
       } else {
         // wait 10 seconds or timeout duration
         // whichever is the longest.

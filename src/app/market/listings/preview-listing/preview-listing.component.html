@@ -48,7 +48,7 @@
       </tr> -->
     </table>
 
-    <p class="info message" *ngIf="data?.listing?.object.ListingItemTemplate?.hash">
+    <p class="info message" *ngIf="data?.listing?.isMine">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       This is your own listing
     </p>

@@ -18,8 +18,9 @@ export class Template {
   public totalAmountInternaltional: Amount = new Amount(0);
   public totalAmountDomestic: Amount = new Amount(0);
   public memo: string = '';
+
   // @TODO: remove type any
-  constructor(private object: any) {
+  constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
     this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
 
