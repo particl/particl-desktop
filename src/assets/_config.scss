@@ -1,4 +1,3 @@
-
 /* ------------------------------- *\
     Variables
 \* ------------------------------- */
@@ -29,9 +28,18 @@ $radius: 4px; // default border-radius
 // layouts
 $header-main-height: 64px;
 
+// Breakpoints (see _mixins.scss for details)
+$break-l: 1350px;
+$break-xl: 1500px;
+$break-xxl: 1700px;
+$break-hd: 1920px;
+
+
 /* ------------------------------- *\
     Mixins
 \* ------------------------------- */
+
+@import "mixins";
 
 
 /* ------------------------------- *\
