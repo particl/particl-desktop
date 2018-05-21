@@ -75,7 +75,7 @@
     </div>
 
     <div class="tx-amount">
-      <span  class="big">{{ bidItem.listing?.totalAmount(country).getIntegerPart() }}</span><span class="point">{{ bidItem.listing?.totalAmount(country).dot() }}</span><span class="small">{{ bidItem.listing?.totalAmount(country).getFractionalPart() }}</span>&ensp;
+      <span  class="big">{{ bidItem.listing?.totalAmount(country)?.getIntegerPart() }}</span><span class="point">{{ bidItem.listing?.totalAmount(country)?.dot() }}</span><span class="small">{{ bidItem.listing?.totalAmount(country)?.getFractionalPart() }}</span>&ensp;
       <span class="currency">PART</span>
       <!-- TODO: until fiat estimations are implemented, hide them -->
       <div class="fiat">&asymp; 3.42 USD</div>
@@ -91,11 +91,11 @@
       <!-- Transaction fee:<span class="amount">11 PART</span><span class="fiat">&asymp; 0.05 USD</span><br> -->
       Listing price:<span class="amount">{{ bidItem.listing?.basePrice?.getIntegerPart() }}{{ bidItem.listing?.basePrice?.dot() }}{{ bidItem.listing?.basePrice?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
 
-      Shipping:<span class="amount">{{ bidItem.listing?.shippingAmount(country).getIntegerPart() }}{{ bidItem.listing?.shippingAmount(country).dot() }}{{ bidItem.listing?.shippingAmount(country).getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Shipping:<span class="amount">{{ bidItem.listing?.shippingAmount(country)?.getIntegerPart() }}{{ bidItem.listing?.shippingAmount(country)?.dot() }}{{ bidItem.listing?.shippingAmount(country)?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
 
-      Escrow:<span class="amount">{{ bidItem.listing?.escrowAmount(country).getIntegerPart() }}{{ bidItem.listing?.escrowAmount(country).dot() }}{{ bidItem.listing?.escrowAmount(country).getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Escrow:<span class="amount">{{ bidItem.listing?.escrowAmount(country)?.getIntegerPart() }}{{ bidItem.listing?.escrowAmount(country)?.dot() }}{{ bidItem.listing?.escrowAmount(country)?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
 
-      Total amount:<span class="amount">{{ bidItem.listing?.totalAmount(country).getIntegerPart() }}{{ bidItem.listing?.totalAmount(country).dot() }}{{ bidItem.listing?.totalAmount(country).getFractionalPart() }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
+      Total amount:<span class="amount">{{ bidItem.listing?.totalAmount(country)?.getIntegerPart() }}{{ bidItem.listing?.totalAmount(country)?.dot() }}{{ bidItem.listing?.totalAmount(country)?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
     </p>
 
     <p class="escrow-info">

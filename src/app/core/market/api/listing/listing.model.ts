@@ -9,26 +9,26 @@ export class Listing extends Template {
 
   shippingAmount(country: string): Amount {
     return this.isDomestric(country) ? (
-          this.listing.domesticShippingPrice
+          this.domesticShippingPrice
         ) : (
-          this.listing.internationalShippingPrice
+          this.internationalShippingPrice
         )
   }
 
   escrowAmount(country: string): Amount {
-    return this.isDomestric(country)  ? this.escrowPriceDomestic : this.listing.escrowPriceInternational;
+    return this.isDomestric(country)  ? this.escrowPriceDomestic : this.escrowPriceInternational;
   }
 
   totalAmount(country: string): Amount {
-    return this.isDomestric(country)  ? this.totalAmountDomestic : this.listing.totalAmountInternaltional;
+    return this.isDomestric(country)  ? this.totalAmountDomestic : this.totalAmountInternaltional;
   }
 
   total(country: string): Amount {
-    return this.isDomestric(country) ? this.listing.domesticTotal : this.listing.internationalTotal
+    return this.isDomestric(country) ? this.domesticTotal : this.internationalTotal
   }
 
   isDomestric(country: string): boolean {
-    return this.listing.country === country;
+    return this.object.country === country;
   }
   /**
    * Returns if a listing is one of our own.
