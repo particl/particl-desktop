@@ -1,24 +1,24 @@
-import { Image } from './image.model';
+import { Image, DefaultImage } from './image.model';
 
 export class ImageCollection {
   constructor(private images: Image[]) {
     this.setImages();
   }
 
-  get thumbnail(): any {
+  get thumbnail(): Image {
     const itemimage = this.images[0];
     if (itemimage) {
-      return itemimage.thumbnail;
+      return itemimage;
     }
-    return './assets/images/placeholder_1-1.jpg';
+    return new DefaultImage();
   }
 
-  get featuredImage(): any {
+  get featuredImage(): Image {
     const itemimage = this.images[0];
     if (itemimage) {
-      return itemimage.medium;
+      return itemimage;
     }
-    return './assets/images/placeholder_1-1.jpg';
+    return new DefaultImage();
   }
 
   setImages() {

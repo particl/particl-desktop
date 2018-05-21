@@ -239,7 +239,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = template.id;
         this.log.d('Saved template', template);
         // Need to add location while saving the template
-        this.location.update(this.templateId, country, null, null, 'add').subscribe();
+        this.location.execute('add', this.templateId, country, null, null).subscribe();
 
         // Add escrow
         this.escrow.add(template.id, EscrowType.MAD).subscribe(
@@ -283,7 +283,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     );
     // update location
     const country = this.countryList.getCountryByName(item.country);
-    this.location.update(this.templateId, country, null, null, 'update').subscribe(success => {
+    this.location.execute('update', this.templateId, country, null, null).subscribe(success => {
       this.escrow.update(this.templateId, EscrowType.MAD).subscribe();
     }, error => error.error ? this.snackbar.open(error.error.message) : this.snackbar.open(error));
     // update shipping

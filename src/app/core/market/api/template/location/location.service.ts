@@ -15,7 +15,7 @@ export class LocationService {
   constructor(private market: MarketService) {
   }
 
-  update(itemTemplateId: number, region: Country, address: string, gps: GpsMarker, method: string): Observable<any> {
+  execute(method: string, itemTemplateId: number, region: Country, address: string, gps: GpsMarker): Observable<any> {
     return this.market.call('template',
       [
         'location',
