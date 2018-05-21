@@ -4,10 +4,17 @@
   display: inline-block;
   border-left: 1px solid $bg-shadow;
   padding: 15px 0 15px 22px;
+  @include break(l) {
+    padding: 15px 0 15px 36px;
+  }
 }
 
 .icon {
   padding: 1px;
+  @include break(l) {
+    padding: 1px 2px;
+  }
+
   .mat-icon {
     width: auto;
     height: auto;

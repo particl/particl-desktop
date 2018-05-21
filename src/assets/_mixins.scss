@@ -14,9 +14,6 @@
    @else if $media == xl {
      @media only screen and (min-width: $break-xl) { @content; }
    }
-   @else if $media == xxl {
-     @media only screen and (min-width: $break-xxl) { @content; }
-   }
    @else if $media == hd {
      @media only screen and (min-width: $break-hd) { @content; }
    }

@@ -27,11 +27,12 @@ $radius: 4px; // default border-radius
 
 // layouts
 $header-main-height: 64px;
+$sidebar-width: 250px;
+$scrollbar-width: 6px;
 
 // Breakpoints (see _mixins.scss for details)
-$break-l: 1350px;
-$break-xl: 1500px;
-$break-xxl: 1700px;
+$break-l: 1500px;
+$break-xl: 1700px;
 $break-hd: 1920px;
 
 
