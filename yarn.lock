@@ -7066,9 +7066,9 @@ parseurl@~1.3.1, parseurl@~1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
 
-particl-marketplace@^0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.12.tgz#9dcb7418f61dae83bdacc0ffc18538be17ca934d"
+particl-marketplace@^0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.15.tgz#62dfe42adfee158ed4a5e223679d255f52ccce03"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -8913,9 +8913,9 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
-sqlite3@particl/sqlite3-offline:
+"sqlite3@github:particl/sqlite3-offline":
   version "3.2.0"
-  resolved "https://codeload.github.com/particl/sqlite3-offline/tar.gz/b505d73bd34bfb5def82899b197fe8b84ae7c711"
+  resolved "https://codeload.github.com/particl/sqlite3-offline/tar.gz/1254d2e09a8168186740013ebb2e73bceea91547"
 
 sshpk@^1.7.0:
   version "1.14.1"
