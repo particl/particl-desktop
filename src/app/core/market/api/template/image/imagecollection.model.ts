@@ -5,14 +5,6 @@ export class ImageCollection {
     this.setImages();
   }
 
-  get thumbnail(): Image {
-    const itemimage = this.images[0];
-    if (itemimage) {
-      return itemimage;
-    }
-    return new DefaultImage();
-  }
-
   get featuredImage(): Image {
     const itemimage = this.images[0];
     if (itemimage) {

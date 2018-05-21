@@ -2,7 +2,7 @@
 
   <div class="image">
     <!-- TODO: this is a default placeholder image (show if no other image is available) -->
-    <img src="{{listing?.imageCollection?.thumbnail?.thumbnail}}" (click)="openListing()">
+    <img src="{{listing?.imageCollection?.featuredImage?.thumbnail}}" (click)="openListing()">
     <div class="icons">
       <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-zoom-bold-in" matTooltip="Preview"
                 matTooltipPosition="above" (click)="openListing()"></mat-icon>
