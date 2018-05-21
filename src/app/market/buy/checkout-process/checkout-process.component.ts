@@ -77,7 +77,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     this.cartService.list()
       .takeWhile(() => !this.destroyed)
-      .subscribe(cart => this.cart = cart);
+      .subscribe((cart: Cart) => {
+        this.cart = cart
+        this.setCartItemCount()
+      });
 
     this.getCache();
   }
@@ -87,9 +90,17 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.storeCache();
   }
 
+  setCartItemCount() {
+    this.cartFormGroup.patchValue({ itemsInCart: this.cart.countOfItems })
+  }
+
   formBuild() {
+
+    // itemsInCart validate, that cart should be have at least one item in cart to proceed checkout process.
+
     this.cartFormGroup = this.formBuilder.group({
-      firstCtrl: ['']
+      firstCtrl: [''],
+      itemsInCart: [0, Validators.min(1)]
     });
 
     this.shippingFormGroup = this.formBuilder.group({
@@ -113,7 +124,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe(() => this.setCartItemCount());
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -121,6 +132,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       if (isSnack) {
         this.snackbarService.open('All Items Cleared From Cart');
       }
+      this.setCartItemCount();
     });
   }
 
@@ -167,6 +179,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   clear() {
+    this.setCartItemCount();
     this.shippingFormGroup.reset();
     this.cartService.clear().subscribe();
     this.cache.clear();
