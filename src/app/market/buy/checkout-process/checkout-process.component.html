@@ -281,15 +281,15 @@
           </tr>
           <tr>
             <td class="desc">Shipping total</td>
-            <td class="value">{{cart?.setShippingTotal(valueOf('country')).getAmount()}} PART</td>
+            <td class="value">{{cart?.setShippingTotal(shippingFormGroup.values.country || '').getAmount()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Escrow</td>
-            <td class="value">{{cart?.setEscrowTotal(valueOf('country')).getAmount()}} PART</td>
+            <td class="value">{{cart?.setEscrowTotal(shippingFormGroup.values.country || '').getAmount()}} PART</td>
           </tr>
           <tr>
             <td class="desc total">Total</td>
-            <td class="value total">{{cart?.setTotal(valueOf('country')).getAmount()}} PART</td>
+            <td class="value total">{{cart?.setTotal(shippingFormGroup.values.country || '').getAmount()}} PART</td>
           </tr>
         </table>
 

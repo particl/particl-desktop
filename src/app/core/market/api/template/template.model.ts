@@ -149,24 +149,4 @@ export class Template {
     }
   }
 
-  shippingAmount(country: string): Amount {
-    return this.object.country === country ? (
-          this.domesticShippingPrice
-        ) : (
-          this.internationalShippingPrice
-        )
-  }
-
-  escrowAmount(country: string): Amount {
-    return this.object.country === country ? this.escrowPriceDomestic : this.escrowPriceInternational;
-  }
-
-  totalAmount(country: string): Amount {
-    return this.object.country === country ? this.totalAmountDomestic : this.totalAmountInternaltional;
-  }
-
-  total(country: string): Amount {
-    return this.object.country === country ? this.domesticTotal : this.internationalTotal
-  }
-
 }

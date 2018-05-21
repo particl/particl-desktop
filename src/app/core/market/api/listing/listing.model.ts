@@ -1,8 +1,33 @@
 import { Template } from '../template/template.model';
+import { Amount } from 'app/core/util/utils';
 
 export class Listing extends Template {
   public favorite: boolean;
-    constructor(listing: any) {
+    constructor(private listing: any) {
         super(listing);
     }
+
+  shippingAmount(country: string): Amount {
+    return this.isDomestric(country) ? (
+          this.listing.domesticShippingPrice
+        ) : (
+          this.listing.internationalShippingPrice
+        )
+  }
+
+  escrowAmount(country: string): Amount {
+    return this.isDomestric(country)  ? this.escrowPriceDomestic : this.listing.escrowPriceInternational;
+  }
+
+  totalAmount(country: string): Amount {
+    return this.isDomestric(country)  ? this.totalAmountDomestic : this.listing.totalAmountInternaltional;
+  }
+
+  total(country: string): Amount {
+    return this.isDomestric(country) ? this.listing.domesticTotal : this.listing.internationalTotal
+  }
+
+  isDomestric(country: string): boolean {
+    return this.listing.country === country;
+  }
 }
