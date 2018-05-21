@@ -37,11 +37,11 @@ $break-hd: 1920px;
 
 
 /* ------------------------------- *\
-    Mixins
+    Imports
 \* ------------------------------- */
 
-@import "mixins";
-
+@import "scss/mixins";
+@import "scss/helper";
 
 /* ------------------------------- *\
     Placeholder selectors

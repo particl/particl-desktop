@@ -117,7 +117,7 @@ button,
 
 mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   font-family: $font;
-  box-shadow: 0 1px 0 $bg-shadow !important;
+  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
 }
 
 
@@ -477,6 +477,26 @@ input {
     Dialogs
 \* ------------------------------- */
 
+.cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .cdk-overlay-pane {
+  position: absolute !important;
+  max-width: 100% !important;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: auto;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .mat-dialog-container {
+  position: fixed !important;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing +
+.cdk-global-overlay-wrapper .cdk-overlay-pane:not(.cdk-modal-full) .mat-dialog-container {
+  height: auto;
+  width: auto;
+}
+
 .cdk-overlay-container {
   .mat-dialog-container {
     position: relative;
@@ -632,6 +652,9 @@ input {
 
 .container-block { // main container for content
   padding: 35px;
+  @include break(l) {
+    padding: 45px 50px;
+  }
 }
 
 
