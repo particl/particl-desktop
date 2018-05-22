@@ -129,7 +129,15 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe(() => {
+      // cart not update immediately, while item removed from the cart one by one.
+      // @TODO refactoring required.
+      console.log(this.cart.countOfItems);
+      if (this.cart.countOfItems <= 1) {
+        this.resetStepper()
+      }
+      this.setCartItemCount()
+    });
   }
 
   clearCart(isSnack: boolean = true): void {
