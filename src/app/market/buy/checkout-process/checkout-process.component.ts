@@ -96,6 +96,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   resetStepper() {
     this.stepper.reset();
+    this.blockGoingBack()
   }
 
   formBuild() {
@@ -262,5 +263,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   allowGoingBack() {
     this.stepper.linear = false;
+  }
+
+  blockGoingBack() {
+    this.stepper.linear = true;
   }
 }
