@@ -2,9 +2,9 @@
 
 [mat-dialog-title] {
   text-align: center;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  margin: 0 3rem;
+  margin: 0 50px;
+  max-width: 320px;
+  word-wrap: break-word;
 }
 
 .dialog-content {

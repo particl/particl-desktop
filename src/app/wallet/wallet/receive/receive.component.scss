@@ -8,6 +8,9 @@
 
 .container-block {
   padding-top: calc(35px - 1.25em); // offset padding from search input
+  @include break(l) {
+    padding-top: 30px;
+  }
 }
 
 /* ------------------------------- *\
@@ -44,9 +47,6 @@
 .address-details {
   text-align: center;
   margin-top: 15px;
-  @media (max-width: 960px) {
-    text-align: left;
-  }
   .details-title {
     font-weight: bold;
     text-transform: uppercase;
@@ -57,17 +57,13 @@
     text-transform: uppercase;
     color: #515153;
     margin: 10px 0 25px;
-    @media (max-width: 960px) {
-      margin: 10px 0 20px;
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .details-address {
     font-family: monospace;
     color: $text-muted;
     margin: 0 25px 20px;
-    @media (max-width: 960px) {
-      margin: 0 0 20px;
-    }
   }
   .actions {
     button.copy {
