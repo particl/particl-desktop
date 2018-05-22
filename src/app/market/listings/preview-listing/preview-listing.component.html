@@ -13,12 +13,12 @@
 
   <div class="product-gallery" fxFlex="0 1 350px">
     <div class="featured image">
-      <img src="{{data?.listing?.featuredImage?.dataId || './assets/images/placeholder_4-3.jpg' }}">
+      <img src="{{data?.listing?.imageCollection?.featuredImage?.medium}}">
     </div>
     <div class="gallery" fxLayout="row" fxLayoutGap="24px">
       <!-- TODO: s/small/medium -->
-      <div class="small image" fxFlex="1 1 100px" *ngFor="let picture of pictures">
-        <img src="{{picture.dataId}}">
+      <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images">
+        <img src="{{img.thumbnail}}">
       </div>
     </div>
   </div>

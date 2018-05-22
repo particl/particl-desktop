@@ -92,7 +92,7 @@
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
             <div class="photo" fxFlex="0 0 110px">
-              <img src="{{ listing.featuredImage?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+              <img src="{{ listing.imageCollection?.featuredImage?.medium}}">
             </div>
             <div class="meta" fxFlex="1 1 100%">
               <div class="name">{{ listing.title }}</div>
