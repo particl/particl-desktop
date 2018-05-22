@@ -686,3 +686,16 @@ input {
     transform: rotate(359deg);
   }
 }
+
+@keyframes pulse-fade {
+  0% {
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}

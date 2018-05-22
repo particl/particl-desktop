@@ -13,7 +13,7 @@
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
       </div>
-      <div class="status {{ order?.status }}" fxFlex="0 0 120px"><span>&bull;</span>{{ order?.status }}</div>
+      <div class="status {{ order?.status }} {{ order?.type }}" fxFlex="0 0 120px"><span class="dot"></span>{{ order?.status }}</div>
     </div>
   </mat-expansion-panel-header>
 
