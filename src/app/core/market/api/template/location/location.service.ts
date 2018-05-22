@@ -6,11 +6,6 @@ import { MarketService } from 'app/core/market/market.service';
 import { GpsMarker } from './gps.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 
-export enum locationType {
-  add = 'add',
-  update = 'update'
-}
-
 @Injectable()
 export class LocationService {
 
@@ -18,7 +13,7 @@ export class LocationService {
   constructor(private market: MarketService) {
   }
 
-  execute(method: locationType, itemTemplateId: number, region: Country, address: string, gps: GpsMarker): Observable<any> {
+  execute(method: string, itemTemplateId: number, region: Country, address: string, gps: GpsMarker): Observable<any> {
     return this.market.call('template',
       [
         'location',

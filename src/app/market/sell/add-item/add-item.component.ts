@@ -15,7 +15,7 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsService } from 'app/modals/modals.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
-import { LocationService, locationType } from 'app/core/market/api/template/location/location.service';
+import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 
 @Component({
@@ -239,7 +239,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = template.id;
         this.log.d('Saved template', template);
         // Need to add location while saving the template
-        this.location.execute(locationType.add, this.templateId, country, null, null).subscribe();
+        this.location.execute('add', this.templateId, country, null, null).subscribe();
 
         // Add escrow
         this.escrow.add(template.id, EscrowType.MAD).subscribe(
@@ -283,7 +283,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     );
     // update location
     const country = this.countryList.getCountryByName(item.country);
-    this.location.execute(locationType.update, this.templateId, country, null, null).subscribe(success => {
+    this.location.execute('update', this.templateId, country, null, null).subscribe(success => {
       this.escrow.update(this.templateId, EscrowType.MAD).subscribe();
     }, error => error.error ? this.snackbar.open(error.error.message) : this.snackbar.open(error));
     // update shipping
