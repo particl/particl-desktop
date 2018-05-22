@@ -129,7 +129,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe(() => this.setCartItemCount());
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -138,7 +138,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         this.snackbarService.open('All Items Cleared From Cart');
       }
       this.resetStepper();
-      this.setCartItemCount();
     });
   }
 
@@ -185,7 +184,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    this.setCartItemCount();
     this.shippingFormGroup.reset();
     this.cartService.clear().subscribe();
     this.cache.clear();
