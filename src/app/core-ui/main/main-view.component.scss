@@ -53,8 +53,6 @@
   padding: 0 24px;
   .icon {
     @extend %tfx;
-    width: auto;
-    height: auto;
     margin: 0 16px 0 0;
     color: lighten($bg-black, 15%);
   }

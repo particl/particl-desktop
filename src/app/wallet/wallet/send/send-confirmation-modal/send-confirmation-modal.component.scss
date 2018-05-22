@@ -34,8 +34,6 @@
 .tx-info { // info about public/blind/anon TX
   @extend %disable-select;
   .icon {
-    width: auto;
-    height: auto;
     font-size: 32px;
     color: $color;
   }
@@ -66,8 +64,6 @@
 
 .icon.arrow {
   font-size: 18px;
-  width: auto;
-  height: auto;
   margin: 24px 0;
   color: mix($text-muted, $bg-shadow);
 }

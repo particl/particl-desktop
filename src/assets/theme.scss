@@ -24,8 +24,6 @@ button,
   font-family: $font;
   font-weight: 600;
   .mat-icon {
-    width: auto;
-    height: auto;
     margin-right: 5px;
     position: relative;
     top: -1px;
@@ -150,8 +148,6 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
       position: relative;
       top: 2px;
       opacity: 0.5;
-      width: auto;
-      height: auto;
     }
   }
   .tag { // notification tags in tabs - e.g. Orders [3]
@@ -165,9 +161,8 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 .mat-expansion-panel {
   @extend %disable-select;
+  @extend mat-card.mat-card;
   margin-bottom: 9px !important;
-  box-shadow: none !important;
-  border-bottom: 1px solid $bg-shadow;
   overflow: hidden;
   .mat-expansion-panel-header {
     font-family: $font;
@@ -251,8 +246,6 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
     font-size: 12px;
     color: darken($bg-shadow, 17%);
     .mat-icon {
-      width: auto;
-      height: auto;
       font-size: 13px;
       margin: 0 4px;
       position: relative;
@@ -345,8 +338,6 @@ kbd {
     position: absolute;
     right: 0;
     top: 2px;
-    width: auto;
-    height: auto;
     font-size: 21px;
     cursor: pointer;
   }
