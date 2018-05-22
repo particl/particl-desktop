@@ -8,6 +8,10 @@ import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 
+export enum errorType {
+  unspent = 'No unspent outputs available. Please complete active locked escrow.',
+  broke = 'Insufficient funds to place the order.'
+}
 
 @Injectable()
 export class BidService {
@@ -31,7 +35,10 @@ export class BidService {
                   observer.next(true);
                   observer.complete();
                 }
-              }, observer.error);
+              }, (error) => {
+                error = error.includes('unspent') ? errorType.unspent : errorType.broke
+                observer.error(error)
+              });
         }
       });
     });

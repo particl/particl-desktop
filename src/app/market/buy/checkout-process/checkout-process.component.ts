@@ -216,6 +216,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
+      this.snackbarService.open(error, 'warn');
       this.log.d(`Error while placing an order`);
     });
   }
