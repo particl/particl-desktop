@@ -94,6 +94,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.cartFormGroup.patchValue({ itemsInCart: this.cart.countOfItems })
   }
 
+  resetStepper() {
+    this.stepper.reset();
+  }
+
   formBuild() {
 
     // itemsInCart validate, that cart should be have at least one item in cart to proceed checkout process.
@@ -132,6 +136,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       if (isSnack) {
         this.snackbarService.open('All Items Cleared From Cart');
       }
+      this.resetStepper();
       this.setCartItemCount();
     });
   }
