@@ -50,7 +50,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   // stepper form data
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
-
+  public country: string = '';
 
 
   constructor(// 3rd party
@@ -72,6 +72,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.formBuild();
+
+    this.country = this.shippingFormGroup.value.country || '';
 
     this.getProfile();
 
