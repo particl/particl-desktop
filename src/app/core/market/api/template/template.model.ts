@@ -1,5 +1,6 @@
 import { Category } from 'app/core/market/api/category/category.model';
 import { DateFormatter, Amount } from 'app/core/util/utils';
+import { ImageCollection } from 'app/core/market/api/template/image/imagecollection.model';
 
 export class Template {
 
@@ -16,11 +17,13 @@ export class Template {
   public internationalTotal: Amount = new Amount(0);
   public totalAmount: Amount = new Amount(0);
   public memo: string = '';
+  public imageCollection: ImageCollection;
 
   // @TODO: remove type any
   constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
     this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
+    this.imageCollection = new ImageCollection(this.object.ItemInformation.ItemImages)
 
     this.setStatus();
     this.setBasePrice();
@@ -48,26 +51,6 @@ export class Template {
 
   get hash(): string {
     return this.object.hash;
-  }
-
-  get thumbnail(): any {
-    const itemimage = this.object.ItemInformation.ItemImages[0];
-    if (itemimage) {
-      return itemimage.ItemImageDatas.find(data => {
-        return data.imageVersion === 'THUMBNAIL';
-      });
-    }
-    return undefined;
-  }
-
-  get featuredImage(): any {
-    const itemimage = this.object.ItemInformation.ItemImages[0];
-    if (itemimage) {
-      return itemimage.ItemImageDatas.find(data => {
-        return data.imageVersion === 'MEDIUM';
-      });
-    }
-    return undefined;
   }
 
   get images(): any {

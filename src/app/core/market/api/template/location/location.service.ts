@@ -6,20 +6,20 @@ import { MarketService } from 'app/core/market/market.service';
 import { GpsMarker } from './gps.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 
+type Command = 'add' | 'update';
 
 @Injectable()
 export class LocationService {
 
   log: any = Log.create('location.service');
-
   constructor(private market: MarketService) {
   }
 
-  update(itemTemplateId: number, region: Country, address: string, gps: GpsMarker): Observable<any> {
+  execute(method: Command, itemTemplateId: number, region: Country, address: string, gps: GpsMarker): Observable<any> {
     return this.market.call('template',
       [
         'location',
-        'add',
+        method,
         itemTemplateId,
         region ? region.iso : null,
         address || 'a',
