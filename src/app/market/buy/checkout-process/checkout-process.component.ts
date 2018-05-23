@@ -50,7 +50,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   // stepper form data
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
-
+  public isInitialCartItemFetching: boolean = true;
 
 
   constructor(// 3rd party
@@ -79,6 +79,13 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe((cart: Cart) => {
         this.cart = cart
+
+        // no need to reset steper if cart is empty initially.
+        if (this.cart.countOfItems === 0 && !this.isInitialCartItemFetching) {
+          this.resetStepper()
+        } else {
+          this.isInitialCartItemFetching = false;
+        }
         this.setCartItemCount()
       });
 
@@ -129,15 +136,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe(() => {
-      // cart not update immediately, while item removed from the cart one by one.
-      // @TODO refactoring required.
-      console.log(this.cart.countOfItems);
-      if (this.cart.countOfItems <= 1) {
-        this.resetStepper()
-      }
-      this.setCartItemCount()
-    });
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -145,7 +144,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       if (isSnack) {
         this.snackbarService.open('All Items Cleared From Cart');
       }
-      this.resetStepper();
     });
   }
 
