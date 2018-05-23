@@ -10,7 +10,8 @@ import { Bid } from 'app/core/market/api/bid/bid.model';
 
 export enum errorType {
   unspent = 'Zero unspent outputs - insufficient funds to place the order.',
-  broke = 'Insufficient funds to place the order.'
+  broke = 'Insufficient funds to place the order.',
+  other = 'Something went wrong'
 }
 
 @Injectable()
@@ -36,7 +37,13 @@ export class BidService {
                   observer.complete();
                 }
               }, (error) => {
-                error = error.includes('unspent') ? errorType.unspent : errorType.broke
+                if (error.includes('unspent')) {
+                  error = errorType.unspent;
+                } else if (error.includes('broke')) {
+                  error = errorType.broke;
+                } else {
+                  error = errorType.other;
+                }
                 observer.error(error)
               });
         }
