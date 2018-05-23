@@ -55,18 +55,18 @@
         </tr>
         <tr>
           <th>Shipping</th>
-          <td>{{order?.listing?.domesticShippingPrice?.getIntegerPart()}}{{order?.listing?.domesticShippingPrice?.dot()}}<small>{{order?.listing?.domesticShippingPrice?.getFractionalPart()}}</small> PART
+          <td >{{order?.listing?.shippingAmount(country).getIntegerPart()}}{{order?.listing?.shippingAmount(country).dot()}}<small>{{order?.listing?.shippingAmount(country).getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td>{{order?.listing?.escrowPrice?.getIntegerPart()}}{{order?.listing?.escrowPrice?.dot()}}<small>{{order?.listing?.escrowPrice?.getFractionalPart()}}</small> PART
+          <td>{{order?.listing?.escrowAmount(country).getIntegerPart()}}{{order?.listing?.escrowAmount(country).dot()}}<small>{{order?.listing?.escrowAmount(country).getFractionalPart()}}</small> PART
           </td>
         </tr>
         <tr>
           <th>Total price</th>
           <td>
-            {{order?.listing?.totalAmount?.getIntegerPart()}}{{order?.listing?.totalAmount?.dot()}}<small>{{order?.listing?.totalAmount?.getFractionalPart()}}</small> PART
+            {{order?.listing?.totalAmount(country).getIntegerPart()}}{{order?.listing?.totalAmount(country).dot()}}<small>{{order?.listing?.totalAmount(country).getFractionalPart()}}</small> PART
           </td>
         </tr>
       </table>

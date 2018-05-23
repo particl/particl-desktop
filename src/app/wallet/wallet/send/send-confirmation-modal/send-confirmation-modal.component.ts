@@ -20,7 +20,7 @@ export class SendConfirmationModalComponent implements OnInit {
   public dialogContent: string;
   public send: TransactionBuilder;
   public bidItem: Bid;
-
+  public country: string = '';
   // send-confirmation-modal variables
   transactionType: string = '';
   sendAmount: Amount = new Amount(0);
@@ -35,6 +35,9 @@ export class SendConfirmationModalComponent implements OnInit {
   ngOnInit() {
     if (this.type === 'tx') {
       this.setTxDetails();
+    }
+    if (this.type === 'bid') {
+      this.country = this.bidItem.ShippingAddress.country;
     }
   }
 
