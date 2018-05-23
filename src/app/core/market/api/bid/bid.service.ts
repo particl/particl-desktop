@@ -8,6 +8,10 @@ import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 
+export enum errorType {
+  unspent = 'Zero unspent outputs - insufficient funds to place the order.',
+  broke = 'Insufficient funds to place the order.'
+}
 
 @Injectable()
 export class BidService {
@@ -31,7 +35,14 @@ export class BidService {
                   observer.next(true);
                   observer.complete();
                 }
-              }, observer.error);
+              }, (error) => {
+                if (error.includes('unspent')) {
+                  error = errorType.unspent;
+                } else if (error.includes('broke')) {
+                  error = errorType.broke;
+                }
+                observer.error(error)
+              });
         }
       });
     });
