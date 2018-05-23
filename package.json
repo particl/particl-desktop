@@ -46,7 +46,7 @@
   },
   "productName": "Particl Desktop",
   "build": {
-    "electronVersion": "1.7.12",
+    "electronVersion": "2.0.1",
     "appId": "io.particl.desktop",
     "npmRebuild": true,
     "directories": {
@@ -60,8 +60,8 @@
       "dist/**",
       "resources/**",
       "!node_modules/electron/**/*",
-      "!node_modules/**/*.node",
-      "node_modules/**/electron-v1.7-*/*.node"
+      "!node_modules/**/sqlite3*.node",
+      "node_modules/**/electron-v2.*-*/*.node"
     ],
     "mac": {
       "artifactName": "${name}-${version}-${os}.${ext}",
@@ -170,7 +170,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "1.7.12",
+    "electron": "2.0.1",
     "electron-builder": "^20.0.4",
     "htmlhint": "^0.9.13",
     "iso3166-2-db": "^2.2.1",
