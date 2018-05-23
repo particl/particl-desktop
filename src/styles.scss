@@ -1,5 +1,7 @@
-@import 'assets/common/helper';
+//@import './src/assets/scss/helper';
 @import "./src/assets/_config"; // import shared colors etc.
+@import "./src/assets/scss/fonts";
+
 
 body {
   font-family: $font;
@@ -106,49 +108,6 @@ input.verify-sucess {
   padding-left: 0px;
 }
 
-@font-face {
-  font-family: 'part';
-  src: url('assets/fonts/part.eot');
-  src: url('assets/fonts/part.eot') format('embedded-opentype'),
-       url('assets/fonts/part.woff2') format('woff2'),
-       url('assets/fonts/part.woff') format('woff'),
-       url('assets/fonts/part.ttf') format('truetype'),
-       url('assets/fonts/part.svg') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'OpenSans';
-  src: url("assets/fonts/OpenSans-Light.woff2") format("woff2"),
-       url("assets/fonts/OpenSans-Light.woff") format("woff");
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'OpenSans';
-  src: url("assets/fonts/OpenSans-Regular.woff2") format("woff2"),
-       url("assets/fonts/OpenSans-Regular.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'OpenSans';
-  src: url("assets/fonts/OpenSans-Semibold.woff2") format("woff2"), 
-       url("assets/fonts/OpenSans-Semibold.woff") format("woff");
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'OpenSans';
-  src: url("assets/fonts/OpenSans-Bold.woff2") format("woff2"),
-       url("assets/fonts/OpenSans-Bold.woff") format("woff");
-  font-weight: bold;
-  font-style: normal;
-}
 
 /*------------------------
   base class definition
@@ -670,24 +629,4 @@ input.verify-sucess {
 a.highlight {
   color: $color;
   text-decoration: none;
-}
-
-.cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .cdk-overlay-pane {
-    position: absolute !important;
-    max-width: 100% !important;
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: auto;
-}
-
-.cdk-overlay-container .cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .mat-dialog-container {
-    position: fixed !important;
-}
-
-.cdk-overlay-container .cdk-overlay-backdrop-showing +
-.cdk-global-overlay-wrapper .cdk-overlay-pane:not(.cdk-modal-full) .mat-dialog-container {
-    height: auto;
-    width: auto;
 }
