@@ -13,8 +13,6 @@
   .history_confirmation {
     color: $text-muted;
     .confirmations { // icon
-      height: auto;
-      width: auto;
       margin-right: 3px;
       font-size: 12px;
       position: relative;
@@ -40,8 +38,6 @@
   // TX icon
   .history_cat_icon {
     .mat-icon {
-      height: auto;
-      width: auto;
       font-size: 15px;
       position: relative;
       top: 3px;

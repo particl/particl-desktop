@@ -51,7 +51,7 @@
     color: $text-muted;
     font-size: 11px;
     .amount {
-      color: $color;
+      color: darken($color, 3%);
       font-weight: 600;
       margin-left: 5px;
     }
@@ -64,12 +64,6 @@
       top: 2px;
     }
   }
-}
-
-.mat-icon {
-  width: auto;
-  height: auto;
-  font-size: 16px;
 }
 
 

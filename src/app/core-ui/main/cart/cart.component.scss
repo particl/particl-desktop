@@ -5,10 +5,10 @@
   margin-right: 24px;
   cursor: pointer;
   outline: none;
+  @include break(l) {
+    margin-right: 36px;
+  }
   .mat-icon {
-    width: auto;
-    height: auto;
-    font-size: 16px;
     margin-right: 4px;
     position: relative;
     top: 2px;
