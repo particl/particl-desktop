@@ -9,7 +9,7 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 
 export enum errorType {
-  unspent = 'No unspent outputs available. Please complete active locked escrow.',
+  unspent = 'Zero unspent outputs - insufficient funds to place the order.',
   broke = 'Insufficient funds to place the order.'
 }
 
