@@ -52,16 +52,17 @@ class SafeIpcRenderer {
 
 window.ipc = new SafeIpcRenderer([
   'front-choosewallet',
-  'zmq',
-  'update',
   'front-walletready',
-  'rpc-channel',
-  'rx-ipc-check-reply:rpc-channel',
-  'rx-ipc-check-listener',
+
   'notification',
-  'rx-ipc-check-reply:front-choosewallet'
+  'update',
+
+  'zmq',
+  'rpc-channel',
+
+  'rx-ipc-check-reply',
+  'rx-ipc-check-listener',
+  'rx-ipc-check-reply'
 ]);
 
 window.electron = true;
-
-console.log('preloader end');

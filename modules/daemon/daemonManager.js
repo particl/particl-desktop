@@ -230,7 +230,6 @@ class DaemonManager extends EventEmitter {
 
           this._emit('downloading', 'Downloading binaries');
 
-          log.warn('abc - attached download emitter');
           mgr.on('download', (status) => {
             this._emit('download', status);
           });

@@ -18,7 +18,7 @@ export class UpdaterService {
   constructor(private _ipc: IpcService,
               private dialog: MatDialog) {
     this.log.d('Registering ipc listener for updater');
-    if (true) {
+    if (window.electron) {
       // Register a listener on the channel "updater" (ipc)
       this._ipc.registerListener(this.UPDATE_CHANNEL, this.updaterListener.bind(this));
     }
