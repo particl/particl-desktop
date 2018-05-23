@@ -53,6 +53,7 @@ class SafeIpcRenderer {
 window.ipc = new SafeIpcRenderer([
   'front-choosewallet',
   'zmq',
+  'update',
   'front-walletready',
   'rpc-channel',
   'rx-ipc-check-reply:rpc-channel',
@@ -62,3 +63,5 @@ window.ipc = new SafeIpcRenderer([
 ]);
 
 window.electron = true;
+
+console.log('preloader end');
