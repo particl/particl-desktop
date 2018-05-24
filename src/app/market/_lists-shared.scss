@@ -81,42 +81,81 @@
     font-weight: 600;
     padding: 6px 15px;
     margin-top: 0;
+    .dot { // status indicator
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      position: relative;
+      top: -1px;
+      margin-right: 8px;
+    }
     // listings
-    &.unpublished span {
-      color: $bg-shadow;
+    &.unpublished .dot {
+      background: $bg-shadow;
     }
-    &.pending span {
-      color: $color-warning;
+    &.pending .dot {
+      background: $color-warning;
     }
-    &.published span {
-      color: mix($color, $color-success);
+    &.published .dot {
+      background: mix($color, $color-success);
     }
-    &.expired span {
-      color: $color-alert;
+    &.expired .dot {
+      background: $color-alert;
     }
     // orders
-    &.Bidding span {
-      color: $color-warning;
+    &.Bidding {
+      .dot {
+        background: $color-warning;
+      }
     }
-    &.Awaiting span {
-      color: mix($color-warning, $color-alert, 60%);
+    &.Awaiting {
+      .dot {
+        background: mix($color-warning, $color-alert, 60%);
+      }
     }
-    &.Escrow span {
-      color: $color-alert;
+    &.Escrow {
+      .dot {
+        background: $color-alert;
+      }
     }
-    &.Shipping span {
-      color: mix($color, $color-success);
+    &.Shipping {
+      .dot {
+        background: mix($color, $color-success);
+      }
     }
-    &.Complete span {
-      color: $color-info;
+    &.Complete .dot {
+      background: $color-info;
     }
-    span { // status indicator
-      font-size: 24px;
-      line-height: 0;
-      font-weight: 700;
-      position: relative;
-      top: 4px;
-      margin-right: 5px;
+    // animated notifications in Order statuses
+    &.sell.Bidding,
+    &.buy.Awaiting,
+    &.sell.Escrow,
+    &.buy.Shipping {
+      .dot::after {
+        content: "";
+        animation: pulse-fade 1s infinite;
+        width: 7px;
+        height: 7px;
+        display: block;
+        border-radius: 50%;
+        border: 2px solid $bg-shadow;
+        position: absolute;
+        top: -2px;
+        left: -2px;
+      }
+    }
+    &.sell.Bidding .dot::after {
+      border-color: $color-warning;
+    }
+    &.buy.Awaiting .dot::after {
+      border-color: mix($color-warning, $color-alert, 60%);
+    }
+    &.sell.Escrow .dot::after {
+      border-color: $color-alert;
+    }
+    &.buy.Shipping .dot::after {
+      border-color: mix($color, $color-success);
     }
   }
 }

@@ -37,6 +37,7 @@ describe('SellComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SellComponent);
     component = fixture.componentInstance;
+    component.pagination.infinityScrollSelector = '.disable-select';
     fixture.detectChanges();
   });
 

@@ -51,6 +51,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
   public isInitialCartItemFetching: boolean = true;
+  public country: string = '';
 
 
   constructor(// 3rd party
@@ -72,6 +73,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.formBuild();
+
+    this.country = this.shippingFormGroup.value.country || '';
 
     this.getProfile();
 
@@ -239,6 +242,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
+      this.snackbarService.open(error, 'warn');
       this.log.d(`Error while placing an order`);
     });
   }

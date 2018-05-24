@@ -53,8 +53,8 @@ export class AddressTableComponent implements OnInit, OnChanges {
   };
   // Pagination
   currentPage: number = 1;
-  @Input() addressDisplayAmount: number = 5;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  @Input() addressDisplayAmount: number = 10;
+  PAGE_SIZE_OPTIONS: Array<number> = [10, 20, 50];
 
   log: any = Log.create('address-table.component');
 

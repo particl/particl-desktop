@@ -18,35 +18,35 @@ export class Cart {
       this.setCartItems();
   }
 
-    setSubTotal(): void {
-      let total = 0.0;
-      this.listings.forEach(listing => {
-        total += listing.basePrice.getAmount();
-      });
-      this.subTotal = new Amount(total);
-    }
+  setSubTotal(): void {
+    let total = 0.0;
+    this.listings.forEach(listing => {
+      total += listing.basePrice.getAmount();
+    });
+    this.subTotal = new Amount(total);
+  }
 
-    setShippingTotal(): void {
-      let total = 0.0;
-      this.listings.forEach(listing => {
-        total += listing.internationalShippingPrice.getAmount();
-      });
-      this.shippingTotal = new Amount(total);
-    }
+  getShippingTotal(country: string): Amount {
+    let total = 0.0;
+    this.listings.forEach(listing => {
+      total += listing.shippingAmount(country).getAmount();
+    });
+    return new Amount(total);
+  }
 
-    setEscrowTotal(): void {
-      let total = 0.0;
-      this.listings.forEach(listing => {
-        total += listing.escrowPrice.getAmount();
-      });
-      this.escrowTotal = new Amount(total);
-    }
+  getEscrowTotal(country: string): Amount {
+    let total = 0.0;
+    this.listings.forEach(listing => {
+      total += listing.escrowAmount(country).getAmount();
+    });
+    return new Amount(total);
+  }
 
-    setTotal(): void {
-      this.total = new Amount(this.subTotal.getAmount()
-               + this.shippingTotal.getAmount()
-               + this.escrowTotal.getAmount())
-    }
+  getTotal(country: string): Amount {
+    return new Amount(this.subTotal.getAmount()
+             + this.getShippingTotal(country).getAmount()
+             + this.getEscrowTotal(country).getAmount())
+  }
 
   private setCartItems(): void {
     this.shoppingCartItems.map(item => {
@@ -54,9 +54,6 @@ export class Cart {
     });
 
     this.setSubTotal();
-    this.setShippingTotal();
-    this.setEscrowTotal();
-    this.setTotal();
   }
 
   get countOfItems() {
