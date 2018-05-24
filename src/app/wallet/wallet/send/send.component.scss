@@ -47,8 +47,11 @@
     .name {
       font-weight: 700;
     }
-    .desc .amount {
-      color: darken($color, 3%);
+    .desc {
+      font-weight: 400;
+      .amount {
+        color: darken($color, 3%);
+      }
     }
   }
   .name { // balance type
