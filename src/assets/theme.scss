@@ -33,6 +33,7 @@ button,
     line-height: 29px;
     padding: 0 12px;
     font-size: 12px;
+    font-weight: 500;
   }
   &.full-width {
     width: 100%;
@@ -54,6 +55,13 @@ button,
 }
 
 // ------ SELECT BOX FIX ------ //
+
+.mat-select {
+  font-family: $font;
+  .mat-option {
+    font-family: $font;
+  }
+}
 
 .mat-select-panel {
   background: white;
@@ -131,7 +139,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 .mat-tab-group {
   .mat-tab-label {
     font-family: $font;
-    font-weight: 600;
+    font-weight: 500;
     &.mat-tab-label-active { // keep active tabs black (not grey)
       opacity: 1;
       .mat-icon {
@@ -219,6 +227,9 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 .mat-stepper-horizontal {
   font-family: $font;
+  .mat-step-label-selected {
+    font-weight: 700;
+  }
   // buy/cart-shipping: remove white background
   &.no-bg {
     background: none;
@@ -407,6 +418,13 @@ input {
 
 // ------ RADIOS ------ //
 
+.mat-radio-button {
+  font-family: $font;
+  &.mat-radio-checked {
+    font-weight: 500;
+  }
+}
+
 .mat-list-radio {
   .mat-radio-button {
     margin-bottom: 12px;
@@ -478,7 +496,7 @@ input {
 .cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .cdk-overlay-pane {
   position: absolute !important;
   max-width: 100% !important;
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -508,7 +526,7 @@ input {
     }
     [mat-dialog-title] { // dialog title
       font-family: $font;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 20px;
       margin-bottom: 15px;
       padding-right: 50px;
@@ -612,9 +630,10 @@ input {
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
+    @extend %tfx;
     &:hover {
       background-color: $color;
-      border-radius: $radius;
+      border-radius: 50%;
       .mat-paginator-increment,
       .mat-paginator-decrement {
         border-color: white;
