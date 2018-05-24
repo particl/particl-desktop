@@ -79,7 +79,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     this.cartService.list()
       .takeWhile(() => !this.destroyed)
-      .subscribe(cart => this.cart = cart);
+      .subscribe(cart => {
+        this.cart = cart;
+        this.cartFormGroup.patchValue({ itemsInCart: this.cart.countOfItems })
+      });
 
     this.getCache();
   }
@@ -91,7 +94,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   formBuild() {
     this.cartFormGroup = this.formBuilder.group({
-      firstCtrl: ['']
+      firstCtrl: [''],
+      itemsInCart: [0, Validators.min(1)]
     });
 
     this.shippingFormGroup = this.formBuilder.group({
