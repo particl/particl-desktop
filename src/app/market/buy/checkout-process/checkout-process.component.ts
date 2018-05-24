@@ -115,7 +115,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
+    this.cartService.removeItem(shoppingCartId, true).take(1).subscribe();
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -212,9 +212,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   bidOrder() {
     const addressId = this.selectedAddress.id;
     this.bid.order(this.cart, this.profile, addressId).subscribe((res) => {
-
-      this.clear();
-
+      // this.clear();
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {

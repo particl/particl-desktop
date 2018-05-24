@@ -69,11 +69,13 @@ export class CartService {
     return this.marketState.observe('cartitem').map(c => new Cart(c));
   }
 
-  removeItem(listingItemId: number): Observable<any> {
+  removeItem(listingItemId: number, showMsg: boolean): Observable<any> {
     this.log.d(`Removing listingItemId=${listingItemId} from cart with id=${this.defaultCartId}`);
     return this.market.call('cartitem', ['remove', this.defaultCartId, listingItemId]).do(
       data => {
-        this.snackbar.open('Item successfully removed from cart');
+        if (showMsg) {
+          this.snackbar.open('Item successfully removed from cart');
+        }
         this.update();
       },
       err => this.snackbar.open(err)
