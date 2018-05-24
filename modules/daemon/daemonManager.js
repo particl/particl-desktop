@@ -67,7 +67,7 @@ class DaemonManager extends EventEmitter {
 
     // fetch config
     return got(BINARY_URL, {
-      timeout: 5000,
+      timeout: 30000,
       json: true
     })
     .then((res) => {

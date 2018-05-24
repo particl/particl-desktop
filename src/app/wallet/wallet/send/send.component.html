@@ -25,12 +25,12 @@
       <div class="title">Pay from</div>
 
       <!-- Select "FROM" balance/account -->
-      <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" fxLayout="column"
-                       fxLayoutGap="10px" (change)="updateAmount()">
+      <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" 
+                       fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
         <mat-radio-button class="balance" value="part" checked="checked"
                           (click)="send.output = (type === 'sendPayment')? 'part': 'blind'" fxFlex>
           <div class="name">Public</div>
-          <div class="desc">Available balance: <span class="amount">{{ getBalance('part') }}</span></div>
+          <div class="desc">Available balance:<span class="amount">{{ getBalance('part') }}</span></div>
         </mat-radio-button>
         <mat-radio-button class="balance" value="blind" fxFlex (click)="send.output = 'part'">
           <div class="name">Blind</div>
@@ -101,11 +101,11 @@
                          fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
           <mat-radio-button class="balance" value="part" (click)="send.input = 'blind'" checked="checked" fxFlex>
             <div class="name">Public</div>
-            <div class="desc">Balance:<span class="amount">{{ getBalance('part') }}</span></div>
+            <div class="desc">Available balance:<span class="amount">{{ getBalance('part') }}</span></div>
           </mat-radio-button>
           <mat-radio-button class="balance" value="blind" (click)="send.input = 'part'" fxFlex>
             <div class="name">Blind</div>
-            <div class="desc">Balance:<span *ngIf="!checkBalance('blind')"
+            <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')"
                                             class="amount">{{ getBalance('blind') }}</span>
               <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question"
                         class="help-icon"
@@ -114,7 +114,7 @@
           </mat-radio-button>
           <mat-radio-button *ngIf="testnet" class="balance" value="anon" (click)="send.input = 'part'" fxFlex>
             <div class="name">Anon</div>
-            <div class="desc">Balance:<span class="amount">{{ getBalance('anon') }}</span></div>
+            <div class="desc">Available balance:<span class="amount">{{ getBalance('anon') }}</span></div>
           </mat-radio-button>
         </mat-radio-group><!-- .from-balance-type -->
         <p class="widget-help">

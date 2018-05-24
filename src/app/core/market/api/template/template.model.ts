@@ -11,11 +11,13 @@ export class Template {
   public basePrice: Amount = new Amount(0);
   public domesticShippingPrice: Amount = new Amount(0);
   public internationalShippingPrice: Amount = new Amount(0);
-  public escrowPrice: Amount = new Amount(0);
+  public escrowPriceInternational: Amount = new Amount(0);
+  public escrowPriceDomestic: Amount = new Amount(0);
 
   public domesticTotal: Amount = new Amount(0);
   public internationalTotal: Amount = new Amount(0);
-  public totalAmount: Amount = new Amount(0);
+  public totalAmountInternaltional: Amount = new Amount(0);
+  public totalAmountDomestic: Amount = new Amount(0);
   public memo: string = '';
   public imageCollection: ImageCollection;
 
@@ -99,9 +101,11 @@ export class Template {
       return;
     }
 
-    const total = (ratio.buyer / 100) * (basePrice + this.internationalShippingPrice.getAmount());
+    const totalDomestic = (ratio.buyer / 100) * (basePrice + this.domesticShippingPrice.getAmount());
+    const totalInternational = (ratio.buyer / 100) * (basePrice + this.internationalShippingPrice.getAmount());
 
-    this.escrowPrice = new Amount(total);
+    this.escrowPriceDomestic = new Amount(totalDomestic);
+    this.escrowPriceInternational = new Amount(totalInternational);
   }
 
   setTotal(): void {
@@ -115,8 +119,11 @@ export class Template {
     this.domesticTotal = new Amount(dTotal);
 
     // TODO add total for international and domestic.
-    const total = this.escrowPrice.getAmount() + iTotal;
-    this.totalAmount = new Amount(total);
+    const totalDomestic = this.escrowPriceDomestic.getAmount() + dTotal;
+    const totalInternational = this.escrowPriceInternational.getAmount() + iTotal;
+
+    this.totalAmountDomestic = new Amount(totalDomestic);
+    this.totalAmountInternaltional = new Amount(totalInternational);
   }
 
   setMemo(): void {

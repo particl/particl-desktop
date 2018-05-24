@@ -16,6 +16,10 @@ export class Bid {
     status: string,
     id: number
   }
+  // @TODO required its own model ?
+  public ShippingAddress: {
+    country: string
+  }
 
   constructor(public orders: any, public address: any, public type: any) {
     this.setFilter();
