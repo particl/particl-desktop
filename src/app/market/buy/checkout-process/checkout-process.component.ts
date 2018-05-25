@@ -138,7 +138,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
+      this.snackbarService.open('Item successfully removed from cart');
+    }, error => this.snackbarService.open(error));
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -193,7 +195,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   clear() {
     this.shippingFormGroup.reset();
-    this.cartService.clear().subscribe();
+    // this.cartService.clear().subscribe();
     this.cache.clear();
     this.getCache();
   }
@@ -235,9 +237,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   bidOrder() {
     const addressId = this.selectedAddress.id;
     this.bid.order(this.cart, this.profile, addressId).subscribe((res) => {
-
       this.clear();
-
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
