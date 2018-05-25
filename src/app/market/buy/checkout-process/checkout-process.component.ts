@@ -50,7 +50,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   // stepper form data
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
-  public isInitialCartItemFetching: boolean = true;
   public country: string = '';
 
 
@@ -81,15 +80,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.cartService.list()
       .takeWhile(() => !this.destroyed)
       .subscribe((cart: Cart) => {
-        this.cart = cart
-
-        // no need to reset steper if cart is empty initially.
-        if (this.cart.countOfItems === 0 && !this.isInitialCartItemFetching) {
-          this.resetStepper()
-        } else {
-          this.isInitialCartItemFetching = false;
+        // note: this.cart & cart, two different ones!
+        if (this.cart && cart.countOfItems === 0) {
+          this.resetStepper();
         }
-        this.setCartItemCount()
+        this.cart = cart
+        this.cartFormGroup.patchValue({ itemsInCart: this.cart.countOfItems });
       });
 
     this.getCache();
@@ -106,7 +102,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   resetStepper() {
     this.stepper.reset();
-    this.blockGoingBack()
+    this.stepper.linear = true;
   }
 
   formBuild() {
@@ -273,7 +269,4 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.stepper.linear = false;
   }
 
-  blockGoingBack() {
-    this.stepper.linear = true;
-  }
 }
