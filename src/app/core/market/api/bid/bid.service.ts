@@ -32,12 +32,13 @@ export class BidService {
             .subscribe(
               (res) => {
                 this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressId}`);
-                this.cartService.removeItem(listing.id, false).take(1).subscribe();
+                this.cartService.removeItem(listing.id).take(1).subscribe();
                 if (++nBidsPlaced === cart.listings.length) {
                   observer.next(true);
                   observer.complete();
                 }
               }, (error) => {
+                error = error.error ? error.error.error : error;
                 if (error.includes('unspent')) {
                   error = errorType.unspent;
                 } else if (error.includes('broke')) {
