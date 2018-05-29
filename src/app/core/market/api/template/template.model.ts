@@ -55,10 +55,6 @@ export class Template {
     return this.object.hash;
   }
 
-  get images(): any {
-    return this.object.ItemInformation.ItemImages;
-  }
-
   get country(): any {
     const itemlocation = this.object.ItemInformation.ItemLocation;
     if (itemlocation) {

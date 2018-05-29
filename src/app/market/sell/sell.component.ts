@@ -122,6 +122,7 @@ export class SellComponent implements OnInit {
         }
         return t;
       });
+      console.log(listings);
       this.isLoading = false;
       // new page
       const page = {
@@ -195,10 +196,10 @@ export class SellComponent implements OnInit {
     return this.pages[0].pageNumber;
   }
   // Triggered when the action button is clicked.
-  action(listing: any) {
+  action(listing: Listing) {
     switch (listing.status) {
       case 'unpublished':
-        this.postTemplate(listing.id);
+        this.postTemplate(listing);
         break;
       case 'awaiting':
       case 'published':
@@ -206,20 +207,16 @@ export class SellComponent implements OnInit {
     }
   }
 
-  postTemplate(id: any) {
+  postTemplate(template: Template) {
     if (this.rpcState.get('locked')) {
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callTemplate.bind(this, id)});
+      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callTemplate.bind(this, template)});
     } else {
-      this.callTemplate(id);
+      this.callTemplate(template);
     }
   }
 
-  callTemplate(id: any) {
-    this.template.post(id, 1).take(1).subscribe(listing => {
-        console.log(listing);
-        this.listing.cache.posting(id);
-        this.loadPage(1);
-      });
+  async callTemplate(template: Template) {
+    await this.template.post(template, 1).toPromise();
   }
 
   getStatus(status: string) {
