@@ -6,7 +6,7 @@ import { setOrderKeys } from 'app/core/util/utils';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { ListingService } from '../../../../core/market/api/listing/listing.service';
 
-import { ModalsService } from 'app/modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
 import { PlaceOrderComponent } from '../../../../modals/place-order/place-order.component';
@@ -27,7 +27,9 @@ export class OrderItemComponent implements OnInit {
     private listingService: ListingService,
     private bid: BidService,
     private rpcState: RpcStateService,
-    private modals: ModalsService,
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService,
     private dialog: MatDialog,
     private snackbarService: SnackbarService
   ) { }
@@ -96,7 +98,7 @@ export class OrderItemComponent implements OnInit {
   checkForWallet(type: string) {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callAction.bind(this, type)});
+      this.modals.unlock({forceOpen: true, timeout: 30, callback: this.callAction.bind(this, type)});
     } else {
       // wallet already unlocked
       this.callAction(type);
@@ -157,7 +159,7 @@ export class OrderItemComponent implements OnInit {
       // do other action after confirm
       if (this.rpcState.get('locked')) {
         // unlock wallet and send transaction
-        this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.escrowLock.bind(this)});
+        this.modals.unlock({forceOpen: true, timeout: 30, callback: this.escrowLock.bind(this)});
       } else {
         // wallet already unlocked
         this.escrowLock();

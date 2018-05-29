@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
 
 import { ModalsService } from 'app/modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
 import { ColdstakeService } from './coldstake.service'
 
@@ -22,7 +23,12 @@ export class ColdstakeComponent {
 
   constructor(
     private dialog: MatDialog,
+    /***
+     *  @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+     *  and replace with modals vars
+    */
     private _modals: ModalsService,
+    private _modalsService: ModalsHelperService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
     private _coldstake: ColdstakeService
@@ -30,7 +36,7 @@ export class ColdstakeComponent {
 
   zap() {
     if (this._rpcState.get('locked')) {
-      this._modals.open('unlock', {
+      this._modalsService.unlock({
         forceOpen: true,
         callback: this.openZapColdstakingModal.bind(this)
       });
@@ -41,7 +47,7 @@ export class ColdstakeComponent {
 
   revert() {
     if (this._rpcState.get('locked')) {
-      this._modals.open('unlock', {
+      this._modalsService.unlock({
         forceOpen: true,
         callback: this.openRevertColdstakingModal.bind(this)
       });
@@ -59,7 +65,7 @@ export class ColdstakeComponent {
   }
 
   openUnlockWalletModal(): void {
-    this._modals.open('unlock', { forceOpen: true, showStakeOnly: false, stakeOnly: true });
+    this._modalsService.unlock({ forceOpen: true, showStakeOnly: false, stakeOnly: true });
   }
 
   openColdStakeModal(): void {

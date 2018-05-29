@@ -19,7 +19,7 @@ import { MarketService } from '../../../core/market/market.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { ModalsService } from 'app/modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
 import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checkout-process-cache.service';
@@ -59,7 +59,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     // core
     private snackbarService: SnackbarService,
     private rpcState: RpcStateService,
-    private modals: ModalsService,
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService,
     // market
     private market: MarketService,
     private profileService: ProfileService,
@@ -226,7 +228,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   placeOrder() {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.open('unlock', { forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this) });
+      this.modals.unlock({ forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this) });
     } else {
       // wallet already unlocked
       this.bidOrder();

@@ -26,6 +26,7 @@ export class UnlockwalletComponent {
   showStakeOnly: boolean = false;
   stakeOnly: boolean = false;
   constructor(private _rpc: RpcService,
+              public _dialogRef: MatDialogRef<UnlockwalletComponent>,
               public dialogRef: MatDialogRef<ModalsComponent>) {
   }
 
@@ -68,7 +69,7 @@ export class UnlockwalletComponent {
     this.log.d('Closing modal!');
 
     if (this.autoClose ) {
-      this.dialogRef.componentInstance.close();
+      this._dialogRef.close();
       this.log.d('Closing modal!');
     }
   }

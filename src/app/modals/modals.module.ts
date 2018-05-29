@@ -8,6 +8,7 @@ import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsService } from './modals.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { ModalsComponent } from './modals.component';
 
 /* modals */
@@ -67,6 +68,9 @@ import { ShippingComponent } from './shipping/shipping.component';
   ],
   providers: [
     ModalsService,
+
+    // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
+    ModalsHelperService,
     PassphraseService,
     SnackbarService
   ],
@@ -95,5 +99,6 @@ export class ModalsModule {
   }
 }
 
+export { ModalsHelperService } from './modals-helper.service';
 export { ModalsService } from './modals.service';
 export { PassphraseService } from './createwallet/passphrase/passphrase.service';

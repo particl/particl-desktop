@@ -8,7 +8,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Template } from 'app/core/market/api/template/template.model';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { ModalsService } from 'app/modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { Status } from './status.class';
 
 interface IPage {
@@ -58,7 +58,7 @@ export class SellComponent implements OnInit {
     private template: TemplateService,
     private listing: ListingService,
     private rpcState: RpcStateService,
-    private modals: ModalsService,
+    private modals: ModalsHelperService,
   ) {}
 
   ngOnInit() {
@@ -209,7 +209,7 @@ export class SellComponent implements OnInit {
 
   postTemplate(template: Template) {
     if (this.rpcState.get('locked')) {
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callTemplate.bind(this, template)});
+      this.modals.unlock({forceOpen: true, timeout: 30, callback: this.callTemplate.bind(this, template)});
     } else {
       this.callTemplate(template);
     }

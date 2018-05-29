@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { ModalsService } from '../../../modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService } from '../../../core/rpc/rpc.service';
 import { RpcStateService } from '../../../core/rpc/rpc-state/rpc-state.service';
 
@@ -43,7 +43,9 @@ export class SendComponent implements OnInit {
     private sendService: SendService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-    private _modals: ModalsService,
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService,
     private dialog: MatDialog,
     private flashNotification: SnackbarService
   ) {
@@ -182,7 +184,7 @@ export class SendComponent implements OnInit {
   onSubmit(): void {
     if (this._rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.openSendConfirmationModal.bind(this)});
+      this.modals.unlock({forceOpen: true, timeout: 30, callback: this.openSendConfirmationModal.bind(this)});
     } else {
       // wallet already unlocked
       this.openSendConfirmationModal();
@@ -246,7 +248,7 @@ export class SendComponent implements OnInit {
 
     if (this._rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.sendTransaction.bind(this)});
+      this.modals.unlock({forceOpen: true, timeout: 30, callback: this.sendTransaction.bind(this)});
     } else {
       // wallet already unlocked
       this.sendTransaction();

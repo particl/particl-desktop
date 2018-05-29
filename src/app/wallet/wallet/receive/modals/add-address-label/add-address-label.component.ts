@@ -6,7 +6,7 @@ import { Log } from 'ng2-logger';
 import { RpcService, RpcStateService } from '../../../../../core/core.module';
 
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
-import { ModalsService } from '../../../../../modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 
 @Component({
   selector: 'app-add-address-label',
@@ -30,7 +30,9 @@ export class AddAddressLabelComponent implements OnInit {
     private rpcState: RpcStateService,
     private flashNotificationService: SnackbarService,
     private dialog: MatDialog,
-    private _modals: ModalsService) {
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService) {
   }
 
   ngOnInit() {
@@ -46,7 +48,7 @@ export class AddAddressLabelComponent implements OnInit {
   onSubmitForm(): void {
     if (this.rpcState.get('locked')) {
       // unlock wallet
-      this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.addNewLabel.bind(this)});
+      this.modals.unlock({forceOpen: true, timeout: 3, callback: this.addNewLabel.bind(this)});
     } else {
       // wallet already unlocked
       this.addNewLabel();

@@ -8,7 +8,7 @@ import { Address } from '../address.model';
 
 import { RpcService, RpcStateService } from '../../../../core/core.module';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
-import { ModalsService } from '../../../../modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 
 import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
@@ -64,7 +64,9 @@ export class AddressTableComponent implements OnInit, OnChanges {
     private _rpcState: RpcStateService,
     public dialog: MatDialog,
     public flashNotification: SnackbarService,
-    private _modals: ModalsService
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService
   ) {
     this._addressService._addresses.subscribe((addresses) => {
       this.addresses = addresses
@@ -144,7 +146,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
     dialogRef.componentInstance.onDelete.subscribe(() => {
       if (this._rpcState.get('locked')) {
         // unlock wallet and send transaction
-        this._modals.open('unlock', {
+        this.modals.unlock({
           forceOpen: true, timeout: 3, callback: this.deleteAddressCallBack.bind(this, address)
         });
       } else {

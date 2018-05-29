@@ -13,7 +13,7 @@ import { CountryListService } from 'app/core/market/api/countrylist/countrylist.
 import { ImageService } from 'app/core/market/api/template/image/image.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { ModalsService } from 'app/modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
@@ -56,7 +56,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private listing: ListingService,
     private snackbar: SnackbarService,
     private rpcState: RpcStateService,
-    private modals: ModalsService,
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService,
     private countryList: CountryListService,
     private escrow: EscrowService
   ) { }
@@ -324,7 +326,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     };
     this.log.d('Saving and publishing the listing.');
     if (this.rpcState.get('locked')) {
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.publish.bind(this)});
+      this.modals.unlock({forceOpen: true, timeout: 30, callback: this.publish.bind(this)});
     } else {
       this.publish();
     }
