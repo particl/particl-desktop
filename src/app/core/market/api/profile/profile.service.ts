@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Log } from 'ng2-logger';
 
@@ -11,11 +11,12 @@ import { AddressService } from './address/address.service';
 
 // TODO: addresses & favourites!
 @Injectable()
-export class ProfileService {
+export class ProfileService implements OnDestroy {
 
   private log: any = Log.create('profile.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   private defaultProfileId: number;
+  private destroyed: boolean = false;
 
   constructor(
     private market: MarketService,
@@ -23,7 +24,7 @@ export class ProfileService {
     public address: AddressService
   ) {
     // find default profile
-    this.defaultId().subscribe((id: number) => {
+    this.defaultId().takeWhile(() => !this.destroyed).subscribe((id: number) => {
       this.log.d('setting default profile id to ' + id);
       this.defaultProfileId = id;
     });
@@ -81,5 +82,9 @@ export class ProfileService {
 
   search(searchString: string): Observable<any> {
     return this.market.call('profile', ['search', searchString]);
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }

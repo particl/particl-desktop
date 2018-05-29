@@ -79,7 +79,21 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     this.cartService.list()
       .takeWhile(() => !this.destroyed)
-      .subscribe(cart => this.cart = cart);
+      .subscribe((cart: Cart) => {
+        /** If we add an item to cart and move the checkout process and complete first two steps,
+         * then we are on the third step.
+         * After then I change my mind and remove the all current item from my cart one by one,
+         * then still I can jump to other steps in the checkout process.
+         * We can handle that scenario with the stepper reset `this.resetStepper();`
+        **/
+
+        // note: this.cart & cart, two different ones!
+        if (this.cart && cart.countOfItems === 0) {
+          this.resetStepper();
+        }
+        this.cart = cart
+        this.cartFormGroup.patchValue({ itemsInCart: this.cart.countOfItems });
+      });
 
     this.getCache();
   }
@@ -89,9 +103,18 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.storeCache();
   }
 
+  resetStepper() {
+    this.stepper.reset();
+    this.stepper.linear = true;
+  }
+
   formBuild() {
+
+    // itemsInCart validate, that cart should be have at least one item in cart to proceed checkout process.
+
     this.cartFormGroup = this.formBuilder.group({
-      firstCtrl: ['']
+      firstCtrl: [''],
+      itemsInCart: [0, Validators.min(1)]
     });
 
     this.shippingFormGroup = this.formBuilder.group({
@@ -115,7 +138,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe();
+    this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
+      this.snackbarService.open('Item successfully removed from cart');
+    }, error => this.snackbarService.open(error));
   }
 
   clearCart(isSnack: boolean = true): void {
@@ -170,7 +195,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   clear() {
     this.shippingFormGroup.reset();
-    this.cartService.clear().subscribe();
+    // this.cartService.clear().subscribe();
     this.cache.clear();
     this.getCache();
   }
@@ -212,9 +237,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   bidOrder() {
     const addressId = this.selectedAddress.id;
     this.bid.order(this.cart, this.profile, addressId).subscribe((res) => {
-
       this.clear();
-
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
@@ -248,4 +271,5 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   allowGoingBack() {
     this.stepper.linear = false;
   }
+
 }
