@@ -128,7 +128,6 @@
     "asarUnpack": [
       "node_modules/sqlite3/**/*"
     ]
-    
   },
   "dependencies": {
     "bluebird": "^3.4.7",
