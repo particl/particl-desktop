@@ -19,7 +19,7 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 export class FavoritesService {
 
   private log: any = Log.create('favorite.service id:' + Math.floor((Math.random() * 1000) + 1));
-  private defaultFavId: number;
+  private defaultProfileId: number;
 
   constructor(
     private market: MarketService,
@@ -28,31 +28,24 @@ export class FavoritesService {
     public cache: FavoriteCacheService,
     private snackbar: SnackbarService
   ) {
-    this.default().subscribe((id: any) => {
-      this.defaultFavId = id;
-      this.marketState.register('favorite', 60 * 1000, ['list', id]);
+    this.profile.default().subscribe((prfile: any) => {
+      this.defaultProfileId = profile.id;
+      this.marketState.register('favorite', 60 * 1000, ['list', profile.id]);
     });
   }
 
   add(listing: Listing) {
-    return this.market.call('favorite', ['add', this.defaultFavId, listing.id])
+    return this.market.call('favorite', ['add', this.defaultProfileId, listing.id])
     .do((data) => {
       this.cache.update();
     });
   }
 
   remove(listing: Listing) {
-    return this.market.call('favorite', ['remove', this.defaultFavId, listing.id])
+    return this.market.call('favorite', ['remove', this.defaultProfileId, listing.id])
       .do((data) => {
         this.cache.update();
       });
-  }
-
-  default(): Observable<any> {
-      // get default profile
-      this.log.d('default(): getting default fav!');
-      return this.profile.default()
-      .map((profile: any) => profile.id)
   }
 
   toggle(listing: Listing): void {
