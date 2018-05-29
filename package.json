@@ -110,9 +110,9 @@
       ],
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
-        "Exec": "/usr/bin/particl-desktop %U",
-        "Icon": "/opt/particl-desktop/icon.png",
-        "Name": "Particl Desktop",
+        "Exec": "particl-desktop %U",
+        "Icon": "particl-desktop",
+        "Name": "particl-desktop",
         "Path": "/opt/particl-desktop",
         "StartupNotify": "true",
         "Terminal": "false",
