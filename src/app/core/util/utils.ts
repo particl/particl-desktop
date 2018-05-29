@@ -253,6 +253,25 @@ export const Messages = {
     },
     'status' : 'Bidding'
   },
+  'REJECTED': {
+    'buy': {
+      'action_button': 'Order rejected',
+      'tooltip': '',
+      'action_disabled': true,
+      'action_icon': 'part-error',
+      'allow_reject_order': false,
+      'status_info': 'Seller rejected bid on this item, order has been cancelled (no money was spent)'
+    },
+    'sell': {
+      'action_button': 'Order rejected',
+      'tooltip': '',
+      'action_icon': 'part-error',
+      'action_disabled': true,
+      'allow_reject_order': false,
+      'status_info': 'You have rejected this bid, order has been cancelled'
+    },
+    'status' : 'Rejected'
+  },
   'AWAITING_ESCROW': {
     'buy': {
       'action_button': 'Make payment',
@@ -315,7 +334,7 @@ export const Messages = {
       'action_button': 'Order complete',
       'tooltip': '',
       'action_icon': 'part-check',
-      'action_disabled': false,
+      'action_disabled': true,
       'allow_reject_order': false,
       'status_info': 'Successfully finalized order'
     },
@@ -323,7 +342,7 @@ export const Messages = {
       'action_button': 'Order Complete',
       'tooltip': '',
       'action_icon': 'part-check',
-      'action_disabled': false,
+      'action_disabled': true,
       'allow_reject_order': false,
       'status_info': 'Order delivery confirmed by Buyer - order successfully finalized'
     },
@@ -332,7 +351,7 @@ export const Messages = {
 }
 export const setOrderKeys = (ord: any, type: string) => {
   // once the order has been accepted then we get status in orderItem
-  const status = ord.OrderItem.status ? ord.OrderItem.status : 'BIDDING';
+  const status = ord.OrderItem.status ? ord.OrderItem.status : ord.action === 'MPA_REJECT' ? 'REJECTED' : 'BIDDING';
   ord.type = type;
   ord.added = new DateFormatter(new Date(ord.createdAt)).dateFormatter(true);
   ord.updated = new DateFormatter(new Date(ord.updatedAt)).dateFormatter(true);
