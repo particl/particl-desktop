@@ -7,8 +7,6 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
 import { Cart } from './cart.model';
-
-import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 
 
@@ -23,7 +21,6 @@ export class CartService {
     private market: MarketService,
     private marketState: MarketStateService,
     private profile: ProfileService,
-    private snackbar: SnackbarService,
     public cache: AddToCartCacheService
   ) {
     this.default().subscribe((cart: any) => {
@@ -37,10 +34,9 @@ export class CartService {
     this.log.d(`Adding listingItemId=${listing.id} to cart with id=${this.defaultCartId}`);
     return this.market.call('cartitem', ['add', this.defaultCartId, listing.id]).take(1).do(
       data => {
-        this.snackbar.open('Item successfully added in cart')
         this.update();
-      },
-      err => this.snackbar.open(err));
+      }
+    );
   }
 
   /**
@@ -73,10 +69,8 @@ export class CartService {
     this.log.d(`Removing listingItemId=${listingItemId} from cart with id=${this.defaultCartId}`);
     return this.market.call('cartitem', ['remove', this.defaultCartId, listingItemId]).do(
       data => {
-        this.snackbar.open('Item successfully removed from cart');
         this.update();
-      },
-      err => this.snackbar.open(err)
+      }
     );
   }
 

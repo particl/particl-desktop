@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
+import { CartService } from 'app/core/market/api/cart/cart.service';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
@@ -18,7 +19,7 @@ export class BidService {
 
   private log: any = Log.create('bid.service id:' + Math.floor((Math.random() * 1000) + 1));
 
-  constructor(private market: MarketService) {
+  constructor(private market: MarketService, private cartService: CartService) {
   }
 
   order(cart: Cart, profile: any, addressId: number): Observable<boolean> {
@@ -31,11 +32,13 @@ export class BidService {
             .subscribe(
               (res) => {
                 this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressId}`);
+                this.cartService.removeItem(listing.id).take(1).subscribe();
                 if (++nBidsPlaced === cart.listings.length) {
                   observer.next(true);
                   observer.complete();
                 }
               }, (error) => {
+                error = error.error ? error.error.error : error;
                 if (error.includes('unspent')) {
                   error = errorType.unspent;
                 } else if (error.includes('broke')) {
