@@ -94,6 +94,7 @@
     "linux": {
       "maintainer": "particl contributors <hello@particl.io>",
       "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
+      "executableName": "particl-desktop",
       "target": [
         {
           "target": "deb",
