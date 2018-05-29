@@ -264,7 +264,7 @@ export const Messages = {
     },
     'sell': {
       'action_button': 'Order rejected',
-      'tooltip': 'Approve this order and sell to this Buyer',
+      'tooltip': '',
       'action_icon': 'part-error',
       'action_disabled': true,
       'allow_reject_order': false,
