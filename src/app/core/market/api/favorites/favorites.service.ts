@@ -28,7 +28,7 @@ export class FavoritesService {
     public cache: FavoriteCacheService,
     private snackbar: SnackbarService
   ) {
-    this.profile.default().subscribe((prfile: any) => {
+    this.profile.default().subscribe((profile: any) => {
       this.defaultProfileId = profile.id;
       this.marketState.register('favorite', 60 * 1000, ['list', profile.id]);
     });
