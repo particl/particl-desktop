@@ -235,7 +235,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   bidOrder() {
     const addressId = this.selectedAddress.id;
-    this.bid.order(this.cart, this.profile, addressId).subscribe((res) => {
+    this.bid.order(this.cart, this.profile, addressId).then((res) => {
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
@@ -244,6 +244,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.log.d(`Error while placing an order`);
     });
   }
+
 
 
 
