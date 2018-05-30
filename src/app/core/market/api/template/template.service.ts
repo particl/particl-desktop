@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
+import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
+
 import { Template } from 'app/core/market/api/template/template.model';
 
 @Injectable()
@@ -11,7 +13,8 @@ export class TemplateService {
 
   constructor(
     private market: MarketService,
-    private marketState: MarketStateService
+    private marketState: MarketStateService,
+    public listingCache: PostListingCacheService
   ) { }
 
   get(templateId: number): Observable<Template> {
@@ -60,8 +63,9 @@ export class TemplateService {
     );
   }
 
-  post(listingTemplateId: number, marketId: number) {
-    return this.market.call('template', ['post', listingTemplateId, marketId]);
+  post(template: Template, marketId: number) {
+    return this.market.call('template', ['post', template.id, marketId])
+    .do(t => this.listingCache.posting(template));
   }
 
   remove(listingTemplateId: number) {

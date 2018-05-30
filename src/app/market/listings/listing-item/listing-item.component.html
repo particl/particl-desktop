@@ -17,7 +17,7 @@
 
   <div class="price-cart" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="price" fxFlex>{{listing?.object?.PaymentInformation?.ItemPrice?.basePrice?.toFixed(8)}}</div>
-    <app-add-to-cart [listing]="listing"></app-add-to-cart>
+    <app-add-to-cart [listing]="listing" [detail]="false"></app-add-to-cart>
   </div>
 
 </div>

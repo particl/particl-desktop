@@ -1,16 +1,15 @@
 const electron = require('electron');
-const log      = require('electron-log');
-const spawn    = require('child_process').spawn;
-const rxIpc    = require('rx-ipc-electron/lib/main').default;
+const log = require('electron-log');
+const spawn = require('child_process').spawn;
+const rxIpc = require('rx-ipc-electron/lib/main').default;
 
-const _options      = require('../options');
-const rpc           = require('../rpc/rpc');
-const cookie        = require('../rpc/cookie');
+const _options = require('../options');
+const rpc = require('../rpc/rpc');
+const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
-const multiwallet   = require('../multiwallet');
+const multiwallet = require('../multiwallet');
 
 let daemon = undefined;
-let exitCode = 0;
 let chosenWallets = [];
 
 function daemonData(data, logger) {
@@ -44,7 +43,7 @@ exports.restart = function (cb) {
 exports.start = function (wallets, callback) {
   return (new Promise((resolve, reject) => {
 
-    chosenWallets    = wallets;
+    chosenWallets = wallets;
 
     exports.check().then(() => {
       log.info('daemon already started');
@@ -52,81 +51,40 @@ exports.start = function (wallets, callback) {
 
     }).catch(() => {
 
-      let options      = _options.get();
+      let options = _options.get();
       const daemonPath = options.customdaemon
-                       ? options.customdaemon
-                       : daemonManager.getPath();
+        ? options.customdaemon
+        : daemonManager.getPath();
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
       const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
-      .on('close', code => {
-        log.info('daemon exited - setting to undefined.');
-        daemon = undefined;
-        if (code !== 0) {
-          reject();
-          log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
-        } else {
-          log.info('daemon exited successfully');
-        }
-        // if (!restarting)
-         // electron.app.quit();
-      });
+        .on('close', code => {
+          log.info('daemon exited - setting to undefined.');
+          daemon = undefined;
+          if (code !== 0) {
+            reject();
+            log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
+          } else {
+            log.info('daemon exited successfully');
+          }
+        });
 
       // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
-      child.stderr.on('data', data => daemonData(data, console.log));
+      child.stderr.on('data', data => {
+        daemonData(data, console.log);
+      });
 
       daemon = child;
-      callback = callback ? callback : () => { log.info('no callback specified') };
-      exports.wait(wallets, callback).then(resolve).catch(reject);
     });
 
   }));
 }
 
-exports.wait = function(wallets, callback) {
-  return new Promise((resolve, reject) => {
 
-    const maxRetries  = 100; // Some slow computers...
-    let   retries     = 0;
-    let   errorString = '';
-
-    const daemonStartup = () => {
-      exports.check()
-        .then(() => { callback(); resolve(); })
-        .catch(() => {
-          if (exitCode === 0 && retries < maxRetries)
-            setTimeout(daemonStartup, 1000);
-        });
-
-      if (exitCode !== 0 || ++retries >= maxRetries) {
-        // Rebuild block and transaction indexes
-        if (errorString.includes('-reindex')) {
-          log.info('Corrupted block database detected, '
-                 + 'restarting the daemon with the -reindex flag.');
-          process.argv.push('-reindex');
-          exitCode = 0; // Hack a bit here...
-          // We don't want it to exit at this stage if start was called..
-          // it will probably error again if it has to.
-          exports.start(wallets, callback);
-          return;
-        }
-        log.error('Could not connect to daemon.')
-        reject();
-      }
-    } /* daemonStartup */
-
-    if (daemon && exitCode === 0) {
-      daemon.stderr.on('data', data => errorString = data.toString('utf8'));
-      setTimeout(daemonStartup, 1000);
-    }
-
-  });
-}
-
-exports.check = function() {
+exports.check = function () {
   return new Promise((resolve, reject) => {
 
     const _timeout = rpc.getTimeoutDelay();
@@ -142,7 +100,7 @@ exports.check = function() {
   });
 }
 
-exports.stop = function(restarting) {
+exports.stop = function (restarting) {
   log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
@@ -151,7 +109,7 @@ exports.stop = function(restarting) {
       // attach event to stop electron when daemon closes.
       // do not close electron when restarting (e.g encrypting wallet)
       if (!restarting) {
-        daemon.on('close', code => {
+        daemon.once('close', code => {
           log.info('daemon exited successfully - we can now quit electron safely! :)');
           electron.app.quit();
         });
@@ -168,10 +126,9 @@ exports.stop = function(restarting) {
           resolve();
         }
       });
-    } else
-    {
-        log.info('Daemon not managed by gui.');
-        resolve();
+    } else {
+      log.info('Daemon not managed by gui.');
+      resolve();
     }
 
   });

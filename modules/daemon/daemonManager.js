@@ -230,6 +230,10 @@ class DaemonManager extends EventEmitter {
 
           this._emit('downloading', 'Downloading binaries');
 
+          mgr.on('download', (status) => {
+            this._emit('download', status);
+          });
+
           return Q.map(_.values(clients), (c) => {
             binariesDownloaded = true;
 

@@ -6,6 +6,7 @@ const rpc           = require('./rpc/rpc');
 const zmq           = require('./zmq/zmq');
 
 const daemon        = require('./daemon/daemon');
+const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
@@ -25,6 +26,15 @@ exports.start = function (mainWindow) {
   /* Initialize ZMQ */
   zmq.init(mainWindow);
   // zmq.test(); // loop, will send tests
+
+  /* Initialize daemonWarner */
+  // warns GUI that daemon is downloading
+  daemonWarner.init(mainWindow);
+  daemonManager.on('status', (status, msg) => {
+    if (status === "download") {
+      daemonWarner.send(msg);
+    }
+  });
 
   exports.startDaemonManager();
 }

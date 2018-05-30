@@ -28,7 +28,11 @@ export class Listing extends Template {
   }
 
   isDomestric(country: string): boolean {
-    return this.object.country === country;
+    const itemLocation = this.object.ItemInformation.ItemLocation;
+    if (itemLocation) {
+      return itemLocation.region === country;
+    }
+    return false;
   }
   /**
    * Returns if a listing is one of our own.

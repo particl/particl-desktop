@@ -43,15 +43,30 @@
   &:hover {
     background: $bg-hover;
   }
+  &.mat-radio-checked {
+    .name {
+      font-weight: 700;
+    }
+    .desc {
+      font-weight: 400;
+      .amount {
+        color: darken($color, 3%);
+      }
+    }
+  }
   .name { // balance type
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 1px;
+    padding-left: 4px;
   }
   .desc { // available balance
     color: $text-muted;
     font-size: 11px;
+    padding-left: 4px;
     .amount {
-      color: darken($color, 3%);
+      @extend %tfx;
+      color: $text-muted;
       font-weight: 600;
       margin-left: 5px;
     }

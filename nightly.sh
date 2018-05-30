@@ -75,7 +75,7 @@ then
     for fn in `ls | grep "particl-desktop"`; do
         echo "Uploading $fn"
         url="$(curl  -H "Max-Days: 10" -s --upload-file $fn https://transfer.sh/$fn)\n"
-        onion="$(echo $url | sed 's,https://transfer.sh,http://jxm5d6emw5rknovg.onion,g')\n"
+        onion="$(echo $url | sed 's,https://transfer.sh,http://jxm5d6emw5rknovg.onion,g')"
         checksum="$(sha256sum $fn)\n"
         Uploads=(${Uploads[@]} "\`\`\`\n")
         Uploads=(${Uploads[@]} $checksum)

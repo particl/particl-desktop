@@ -2,7 +2,7 @@ import { Image, DefaultImage } from './image.model';
 
 export class ImageCollection {
   private default: Image = new DefaultImage();
-  constructor(private images: Image[]) {
+  constructor(public images: Image[]) {
     this.setImages();
   }
 

@@ -26,14 +26,14 @@
         <div *ngFor="let image of images"
              class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
           <div class="photo" fxFLex>
-            <img src="{{image.dataId}}">
+            <img src="{{image.thumbnail}}">
             <div class="icons">
               <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
-                        matTooltip="Remove image" (click)="removeExistingImage(image.id)">
+                        matTooltip="Remove image" (click)="removeExistingImage(image)">
               </mat-icon>
-              <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+              <!--mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
                         matTooltip="Set as featured" (click)="featurePicture(i)">
-              </mat-icon>
+              </mat-icon-->
             </div>
           </div>
         </div>
