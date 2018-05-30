@@ -39,7 +39,6 @@ export class BidService {
             }
             throw error;
           });
-        
         this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressId}`);
         this.cartService.removeItem(listing.id).take(1).subscribe();
       }
