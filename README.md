@@ -62,11 +62,14 @@ You can directly interact with the daemon ran by the Electron version.
 
 ### Package Electron
 
-Building for Windows requires the 32-bit libraries to be available.
+Building for Windows requires:
+* WINE
+* the 32-bit libraries to be available.
 ```
 sudo apt-get install gcc-multilib
 sudo apt-get install g++-multilib
 ```
+
 
 * `yarn run package:win` – Windows
 * `yarn run package:mac` – OSX
