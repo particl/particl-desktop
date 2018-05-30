@@ -216,7 +216,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
-// template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
   private async save(): Promise<Template> {
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
