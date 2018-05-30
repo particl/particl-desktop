@@ -11,39 +11,55 @@ import { UpdaterComponent } from 'app/core/updater/modal/updater.component';
 export class UpdaterService {
 
   log: any = Log.create('updater.service');
-  private UPDATE_CHANNEL: string = 'update';
+  private DAEMON_CHANNEL: string = 'daemon';
 
   modal: MatDialogRef<UpdaterComponent> | null;
 
   constructor(private _ipc: IpcService,
-              private dialog: MatDialog) {
+    private dialog: MatDialog) {
     this.log.d('Registering ipc listener for updater');
     if (window.electron) {
       // Register a listener on the channel "updater" (ipc)
-      this._ipc.registerListener(this.UPDATE_CHANNEL, this.updaterListener.bind(this));
+      this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
     }
-   }
+  }
 
   /*
    This is called every incomming message on update channel.
    node -> GUI (and reply back)
   */
-   updaterListener(status: any): Observable<any> {
+  daemonListener(status: any): Observable<any> {
 
     return Observable.create(observer => {
-        // open modal
-        if (status.status === 'started') {
-          this.log.d('stating modal');
-          this.modal = this.dialog.open(UpdaterComponent);
-        }
 
-        // update modal
-        if (this.modal) {
-          this.modal.componentInstance.set(status);
-        }
+      switch (status.type) {
+        case 'update':
+          this.update(status.content);
+      }
 
-        // complete
-        observer.complete();
-      });
+      // complete
+      observer.complete();
+    });
+  }
+
+  update(status: any) {
+    // open modal
+    if (status.status === 'started') {
+      this.log.d('stating modal');
+      this.modal = this.dialog.open(UpdaterComponent);
+    }
+
+    // update modal
+    if (this.modal) {
+      this.modal.componentInstance.set(status);
+    }
+  }
+
+  public restart(): Promise<any> {
+    const data = {
+      type: 'restart'
+    };
+
+    return this._ipc.runCommand(this.DAEMON_CHANNEL, null, data).toPromise();
   }
 }

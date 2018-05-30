@@ -126,7 +126,8 @@
     },
     "asar": true,
     "asarUnpack": [
-      "node_modules/sqlite3/**/*"
+      "node_modules/sqlite3/**/*",
+      "node_modules/particl-marketplace/**/*"
     ]
   },
   "dependencies": {
