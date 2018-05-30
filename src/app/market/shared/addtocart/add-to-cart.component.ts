@@ -15,6 +15,7 @@ export class AddToCartComponent implements OnInit {
   private log: any = Log.create('add-to-cart.component id:' + Math.floor((Math.random() * 1000) + 1));
 
   @Input() listing: Listing;
+  @Input() detail: boolean = true; // is button on Listing's detail or on Listings overview?
 
   constructor(
     private cartService: CartService,
@@ -25,7 +26,7 @@ export class AddToCartComponent implements OnInit {
 
   addToCart() {
     this.cartService.add(this.listing).subscribe(res => {
-      this.snackbar.open('Item successfully added in cart');
+      this.snackbar.open('Item successfully added to cart');
     }, error => this.snackbar.open(error));
   }
 
