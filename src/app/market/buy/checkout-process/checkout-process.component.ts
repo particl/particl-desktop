@@ -73,8 +73,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.formBuild();
 
-    this.country = this.shippingFormGroup.value.country || '';
-
     this.getProfile();
 
     this.cartService.list()
@@ -173,6 +171,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       upsert = this.profileService.address.update.bind(this);
     }
 
+    this.country = this.shippingFormGroup.value.country || '';
     const address = this.shippingFormGroup.value as Address;
     upsert(address).take(1).subscribe(addressWithId => {
       // update the cache
