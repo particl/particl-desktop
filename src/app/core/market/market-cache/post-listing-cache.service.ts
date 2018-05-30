@@ -8,8 +8,9 @@ export class PostListingCacheService {
   // Contains templateId's currently being published
   private awaiting: number[] = [];
 
-  posting(templateId: number): void {
-    this.awaiting.push(templateId);
+  posting(template: Template): void {
+    this.awaiting.push(template.id);
+    template.status = 'awaiting';
   }
 
   isAwaiting(template: Template): boolean {

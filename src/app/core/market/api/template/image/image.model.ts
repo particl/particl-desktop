@@ -3,6 +3,10 @@ export class Image {
   constructor(private image: any) {
   }
 
+  get id(): number {
+    return this.image.id;
+  }
+
   get thumbnail(): string {
     const image = this.image.ItemImageDatas.find((o) => o.imageVersion === 'THUMBNAIL')
     return (image && image.dataId) || './assets/images/placeholder_1-1.jpg'

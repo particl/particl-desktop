@@ -10,6 +10,7 @@ import { environment } from '../../../environments/environment';
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { ModalsService } from '../../modals/modals.module';
+import { UpdaterService } from 'app/core/updater/updater.service';
 
 /*
  * The MainView is basically:
@@ -38,6 +39,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
+  marketVersion: string = environment.marketVersion;
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
@@ -46,6 +48,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
+    private _updater: UpdaterService,
     private _rpcState: RpcStateService,
     private _modals: ModalsService,
     private dialog: MatDialog,
