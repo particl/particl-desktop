@@ -172,6 +172,7 @@ export class OrderItemComponent implements OnInit {
       this.order.OrderItem.status = 'ESCROW_LOCKED';
       this.order = setOrderKeys(this.order, this.order.type)
     }, (error) => {
+      console.log(error);
       this.snackbarService.open(`${error}`);
     });
   }

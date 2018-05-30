@@ -22,33 +22,26 @@ export class BidService {
   constructor(private market: MarketService, private cartService: CartService) {
   }
 
-  order(cart: Cart, profile: any, addressId: number): Observable<boolean> {
-    let nBidsPlaced = 0;
-    return new Observable((observer) => {
-      cart.listings.forEach((listing: Listing) => {
-        if (listing.hash) {
-          // bid for item
-          this.market.call('bid', ['send', listing.hash, profile.id, addressId])
-            .subscribe(
-              (res) => {
-                this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressId}`);
-                this.cartService.removeItem(listing.id).take(1).subscribe();
-                if (++nBidsPlaced === cart.listings.length) {
-                  observer.next(true);
-                  observer.complete();
-                }
-              }, (error) => {
-                error = error.error ? error.error.error : error;
-                if (error.includes('unspent')) {
-                  error = errorType.unspent;
-                } else if (error.includes('broke')) {
-                  error = errorType.broke;
-                }
-                observer.error(error)
-              });
-        }
-      });
-    });
+  public async order(cart: Cart, profile: any, addressId: number): Promise<string> {
+
+    for (let i = 0; i < cart.listings.length; i++) {
+      const listing: Listing = cart.listings[i];
+      if (listing.hash) {
+        this.log.d(`Placing bid for hash=${listing.hash}`);
+        // bid for item
+        await this.market.call('bid', ['send', listing.hash, profile.id, addressId]).toPromise()
+          .catch((error) => {
+            error = error.error ? error.error.error : error;
+            if (error.includes('unspent')) {
+              error = errorType.unspent;
+            } else if (error.includes('broke')) {
+              error = errorType.broke;
+            }
+            throw error;
+          });
+      }
+    }
+    return 'Placed all orders!';
   }
 
   search(address: string, type: any): Observable<any> {
