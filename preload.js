@@ -55,14 +55,13 @@ window.ipc = new SafeIpcRenderer([
   'front-walletready',
 
   'notification',
-  'update',
+  'daemon',
 
   'zmq',
   'rpc-channel',
 
   'rx-ipc-check-reply',
-  'rx-ipc-check-listener',
-  'rx-ipc-check-reply'
+  'rx-ipc-check-listener'
 ]);
 
 window.electron = true;

@@ -2,8 +2,10 @@ const electron = require('electron');
 const log = require('electron-log');
 const spawn = require('child_process').spawn;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
+const Observable = require('rxjs/Observable').Observable;
 
 const _options = require('../options');
+const clearCookie = require('../webrequest/http-auth').removeWalletAuthentication;
 const rpc = require('../rpc/rpc');
 const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
@@ -17,30 +19,48 @@ function daemonData(data, logger) {
   logger(data);
 }
 
-exports.restart = function (cb) {
-  log.info('restarting daemon...')
-
-  const restarting = true;
-  return exports.stop(restarting).then(function waitForShutdown() {
-    log.debug('waiting for daemon shutdown...')
-
-    exports.check().then(waitForShutdown).catch((err) => {
-      if (err.status == 502) { /* daemon's net module shutdown  */
-        log.debug('daemon stopped network, waiting 10s before restarting...');
-        setTimeout(() => {     /* wait for full daemon shutdown */
-
-          exports.start(chosenWallets, cb)
-            .catch(error => log.error(error));
-
-        }, 10 * 1000);
+exports.init = function () {
+  console.log('daemon init listening for reboot')
+  rxIpc.registerListener('daemon', (data) => {
+    return Observable.create(observer => {
+      console.log('got data on daemon channel!');
+      if (data && data.type === 'restart') {
+        exports.restart(true);
+        observer.complete(true);
       } else {
-        waitForShutdown();
+        observer.complete(true);
       }
     });
   });
 }
 
-exports.start = function (wallets, callback) {
+exports.restart = function (alreadyStopping) {
+  log.info('restarting daemon...')
+
+  // setup a listener, waiting for the daemon
+  // to exit.
+  if (daemon) {
+    daemon.once('close', code => {
+      // clear authentication
+      clearCookie();
+      
+      // restart
+      this.start(chosenWallets);
+    });
+  }
+
+  // wallet encrypt will restart by itself
+  if (!alreadyStopping) {
+    // stop daemon but don't make it quit the app.
+    const restarting = true;
+    exports.stop(restarting).then(() => {
+      log.debug('waiting for daemon shutdown...')
+    });
+  }
+
+}
+
+exports.start = function (wallets) {
   return (new Promise((resolve, reject) => {
 
     chosenWallets = wallets;

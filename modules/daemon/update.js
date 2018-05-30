@@ -3,7 +3,7 @@ const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const log         = require('electron-log');
 
 /* Constants */
-const UPDATE_CHANNEL = "update";
+const UPDATE_CHANNEL = 'daemon';
 
 /* references */
 let mainReference = null;
@@ -21,6 +21,11 @@ exports.init = function (mainWindow) {
 */
 exports.send = function(data) {
     log.warn(" abc - Sending GUI updater information!");
+    data = {
+        type: 'update',
+        content: data
+    };
+
     try {
       rxIpc.runCommand(UPDATE_CHANNEL, mainReference.webContents, data)
         .subscribe(

@@ -13,14 +13,13 @@ const notification  = require('./notification/notification');
 const market        = require('./market/market');
 
 
-// TODO move to a proper place
-function daemonStarted() { log.info('daemon started'); }
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
   rpc.init();
   notification.init();
 
+  daemon.init();
   market.init();
 
   /* Initialize ZMQ */
@@ -60,7 +59,7 @@ daemonManager.on('status', (status, msg) => {
     multiwallet.get()
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
-    .then(chosenWallets => daemon.start(chosenWallets, daemonStarted))
+    .then(chosenWallets => daemon.start(chosenWallets))
     .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
     // .then(()            => ipc.daemonReady(mainWindow.webContents))
