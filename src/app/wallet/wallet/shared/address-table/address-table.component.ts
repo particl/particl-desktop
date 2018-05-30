@@ -146,9 +146,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
     dialogRef.componentInstance.onDelete.subscribe(() => {
       if (this._rpcState.get('locked')) {
         // unlock wallet and send transaction
-        this.modals.unlock({
-          forceOpen: true, timeout: 3, callback: this.deleteAddressCallBack.bind(this, address)
-        });
+        this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.deleteAddressCallBack(address));
       } else {
         // wallet already unlocked
         this.deleteAddressCallBack(address);

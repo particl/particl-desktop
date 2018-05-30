@@ -29,7 +29,7 @@ export class FixWalletModalComponent implements OnInit {
   fix(): void {
     if (this._rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.unlock({forceOpen: true, timeout: 3, callback: this.scanChain.bind(this)});
+      this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.scanChain());
     } else {
       // wallet already unlocked
       this.scanChain();

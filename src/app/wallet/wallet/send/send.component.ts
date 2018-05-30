@@ -184,7 +184,7 @@ export class SendComponent implements OnInit {
   onSubmit(): void {
     if (this._rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.unlock({forceOpen: true, timeout: 30, callback: this.openSendConfirmationModal.bind(this)});
+      this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.openSendConfirmationModal());
     } else {
       // wallet already unlocked
       this.openSendConfirmationModal();
@@ -248,7 +248,7 @@ export class SendComponent implements OnInit {
 
     if (this._rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.unlock({forceOpen: true, timeout: 30, callback: this.sendTransaction.bind(this)});
+      this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.sendTransaction());
     } else {
       // wallet already unlocked
       this.sendTransaction();

@@ -92,9 +92,7 @@ export class NewAddressModalComponent implements OnInit {
 
     if (this.label !== undefined && this.label.trim() && !this.isMine) {
       if (this._rpcState.get('locked')) {
-        this.modals.unlock({
-          forceOpen: true, timeout: 3, callback: this.addressCallBack.bind(this)
-        });
+        this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.addressCallBack());
       } else {
         // wallet already unlocked
         this.addressCallBack();

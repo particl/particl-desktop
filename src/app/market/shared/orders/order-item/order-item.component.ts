@@ -98,7 +98,7 @@ export class OrderItemComponent implements OnInit {
   checkForWallet(type: string) {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.unlock({forceOpen: true, timeout: 30, callback: this.callAction.bind(this, type)});
+      this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.callAction(type));
     } else {
       // wallet already unlocked
       this.callAction(type);
@@ -159,7 +159,7 @@ export class OrderItemComponent implements OnInit {
       // do other action after confirm
       if (this.rpcState.get('locked')) {
         // unlock wallet and send transaction
-        this.modals.unlock({forceOpen: true, timeout: 30, callback: this.escrowLock.bind(this)});
+        this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.escrowLock());
       } else {
         // wallet already unlocked
         this.escrowLock();

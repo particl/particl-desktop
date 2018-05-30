@@ -228,7 +228,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   placeOrder() {
     if (this.rpcState.get('locked')) {
       // unlock wallet and send transaction
-      this.modals.unlock({ forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this) });
+      this.modals.unlock({ forceOpen: true, timeout: 30}, (status) => this.bidOrder());
     } else {
       // wallet already unlocked
       this.bidOrder();

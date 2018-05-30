@@ -36,10 +36,7 @@ export class ColdstakeComponent {
 
   zap() {
     if (this._rpcState.get('locked')) {
-      this._modalsService.unlock({
-        forceOpen: true,
-        callback: this.openZapColdstakingModal.bind(this)
-      });
+      this._modalsService.unlock({forceOpen: true}, (status) => this.openZapColdstakingModal());
     } else {
       this.openZapColdstakingModal();
     }
@@ -47,10 +44,7 @@ export class ColdstakeComponent {
 
   revert() {
     if (this._rpcState.get('locked')) {
-      this._modalsService.unlock({
-        forceOpen: true,
-        callback: this.openRevertColdstakingModal.bind(this)
-      });
+      this._modalsService.unlock({forceOpen: true}, (status) => this.openRevertColdstakingModal());
     } else {
       this.openRevertColdstakingModal();
     }
