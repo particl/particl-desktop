@@ -93,7 +93,8 @@ export class ModalsModule {
     return {
       ngModule: ModalsModule,
       providers: [
-        ModalsService
+        ModalsService,
+        ModalsHelperService
       ]
     };
   }

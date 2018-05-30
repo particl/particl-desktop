@@ -9,6 +9,7 @@ import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { ModalsService } from '../../../modals/modals.service';
 
 import { AddressBookComponent } from './address-book.component';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 
 describe('AddressBookComponent', () => {
@@ -25,7 +26,7 @@ describe('AddressBookComponent', () => {
         BrowserAnimationsModule
       ],
       declarations: [ ],
-      providers: [ ModalsService ]
+      providers: [ ModalsHelperService ]
     })
     .compileComponents();
   }));
