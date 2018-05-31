@@ -31,11 +31,13 @@ export class BidService {
         // bid for item
         await this.market.call('bid', ['send', listing.hash, profile.id, addressId]).toPromise()
           .catch((error) => {
-            error = error.error ? error.error.error : error;
-            if (error.includes('unspent')) {
-              error = errorType.unspent;
-            } else if (error.includes('broke')) {
-              error = errorType.broke;
+            if (error) {
+              error = error.error ? error.error.error : error;
+              if (error.includes('unspent')) {
+                error = errorType.unspent;
+              } else if (error.includes('broke')) {
+                error = errorType.broke;
+              }
             }
             throw error;
           });
