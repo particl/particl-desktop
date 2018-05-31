@@ -2,9 +2,11 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
-
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+
 import { UnlockwalletComponent } from 'app/modals/unlockwallet/unlockwallet.component';
 import { ModalsConfig } from './models/modals.config.interface';
 
@@ -30,6 +32,7 @@ export class ModalsHelperService implements OnDestroy {
   };
 
   constructor (
+    private _rpcState: RpcStateService,
     private _dialog: MatDialog
   ) { }
 
@@ -39,13 +42,17 @@ export class ModalsHelperService implements OnDestroy {
     */
 
   unlock(data: ModalsConfig, callback?: Function) {
-    const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
-    if (!!data || callback) {
-      dialogRef.componentInstance.setData(data, callback);
+    if (this._rpcState.get('locked')) {
+      const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
+      if (!!data || callback) {
+        dialogRef.componentInstance.setData(data, callback);
+      }
+      dialogRef.afterClosed().subscribe(() => {
+        this.log.d('unlock modal closed');
+      });
+    } else if (!!callback) {
+      callback();
     }
-    dialogRef.afterClosed().subscribe(() => {
-      this.log.d('unlock modal closed');
-    });
   }
 
   ngOnDestroy() {

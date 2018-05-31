@@ -208,11 +208,7 @@ export class SellComponent implements OnInit {
   }
 
   postTemplate(template: Template) {
-    if (this.rpcState.get('locked')) {
-      this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.callTemplate(template));
-    } else {
-      this.callTemplate(template);
-    }
+    this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.callTemplate(template));
   }
 
   async callTemplate(template: Template) {

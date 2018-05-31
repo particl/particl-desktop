@@ -35,19 +35,11 @@ export class ColdstakeComponent {
   ) { }
 
   zap() {
-    if (this._rpcState.get('locked')) {
-      this._modalsService.unlock({forceOpen: true}, (status) => this.openZapColdstakingModal());
-    } else {
-      this.openZapColdstakingModal();
-    }
+    this._modalsService.unlock({forceOpen: true}, (status) => this.openZapColdstakingModal());
   }
 
   revert() {
-    if (this._rpcState.get('locked')) {
-      this._modalsService.unlock({forceOpen: true}, (status) => this.openRevertColdstakingModal());
-    } else {
-      this.openRevertColdstakingModal();
-    }
+    this._modalsService.unlock({forceOpen: true}, (status) => this.openRevertColdstakingModal());
   }
 
   openRevertColdstakingModal() {

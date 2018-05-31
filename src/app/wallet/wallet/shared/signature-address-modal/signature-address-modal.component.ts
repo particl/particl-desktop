@@ -107,13 +107,7 @@ export class SignatureAddressModalComponent implements OnInit {
   // copy code end
 
   onFormSubmit(): void {
-    if (this._rpcState.get('locked')) {
-      // unlock wallet
-      this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.signVerifyMessage());
-    } else {
-      // wallet already unlocked
-      this.signVerifyMessage();
-    }
+    this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.signVerifyMessage());
   }
 
   signVerifyMessage(): void {
