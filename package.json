@@ -13,6 +13,7 @@
     "webpack",
     "typescript"
   ],
+  
   "author": "Particl contributors",
   "main": "main.js",
   "scripts": {
