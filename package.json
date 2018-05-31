@@ -86,12 +86,11 @@
         }
       ]
     },
-    "nsis": {
-      "perMachine": true,
-      "oneClick": false
-    },
     "win": {
-      "artifactName": "${name}-${version}-${os}-${arch}.${ext}"
+      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
+      "target": [
+        "zip"
+      ]
     },
     "linux": {
       "maintainer": "particl contributors <hello@particl.io>",
