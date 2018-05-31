@@ -7,6 +7,7 @@ export const environment = {
   envName: 'docker1',
   particlHost: 'localhost',
   particlPort: 52935,
+  marketVersion: require('../../node_modules/particl-marketplace/package.json').version,
   marketHost: 'localhost',
   marketPort: 3100
 };
