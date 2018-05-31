@@ -59,7 +59,7 @@ export class MarketStateService extends StateService implements OnDestroy {
 
     // if error occurred
     if (errors > 0) {
-      if (errors < 20) {
+      if (errors < 30) {
         // might be booting up, let's retry after 1s
         restartAfter = 1000;
       } else {
