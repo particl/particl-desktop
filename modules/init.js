@@ -2,15 +2,28 @@ const electron      = require('electron');
 const log           = require('electron-log');
 
 const ipc           = require('./ipc/ipc');
+const rpc           = require('./rpc/rpc');
+const zmq           = require('./zmq/zmq');
+
 const daemon        = require('./daemon/daemon');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
+const notification  = require('./notification/notification');
+
 
 // TODO move to a proper place
 function daemonStarted() { log.info('daemon started'); }
 
 exports.start = function (mainWindow) {
-  ipc.init();
+
+  // Initialize IPC listeners
+  rpc.init();
+  notification.init();
+
+  /* Initialize ZMQ */
+  zmq.init(mainWindow);
+  // zmq.test(); // loop, will send tests
+
   exports.startDaemonManager();
 }
 
@@ -21,7 +34,7 @@ exports.startDaemonManager = function() {
     .catch((error)      => log.error(error));
 }
 
-/* 
+/*
   Start daemon when we get the GO sign from daemonManager.
   Listen for daemonManager errors too..
 
@@ -30,8 +43,8 @@ exports.startDaemonManager = function() {
 daemonManager.on('status', (status, msg) => {
 
   // Done -> means we have a binary!
-  if(status === 'done') {
-    log.info('daemonManager returned successfully, starting daemon!');
+  if (status === 'done') {
+    log.debug('daemonManager returned successfully, starting daemon!');
     multiwallet.get()
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
@@ -64,10 +77,15 @@ daemonManager.on('status', (status, msg) => {
 });
 
 electron.app.on('before-quit', function beforeQuit(event) {
+  log.info('received quit signal, cleaning up...');
+
   event.preventDefault();
-  log.debug('received quit signal');
-  electron.ipcMain.removeAllListeners(['rpc-channel']);
   electron.app.removeListener('before-quit', beforeQuit);
+
+  // destroy IPC listeners
+  rpc.destroy();
+  notification.destroy();
+
   daemon.stop();
 });
 

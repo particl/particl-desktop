@@ -134,7 +134,15 @@ var getHashesForPlatform = function (platform, path, hashes, promises) {
  */
 got(`${releasesURL}`).then(response => {
 
-  var release = JSON.parse(response.body)[0];
+  const body = JSON.parse(response.body);
+  let releaseIndex = 0;
+  let release;
+
+  while (body[releaseIndex].prerelease) {
+    releaseIndex++;
+  }
+  release = body[releaseIndex];
+
   var tag = release.tag_name.substring(1);
   var binaries = [];
 

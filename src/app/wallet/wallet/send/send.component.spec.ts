@@ -7,11 +7,13 @@ import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../modals/modals.module';
 
 import { SharedModule } from '../../shared/shared.module'; // is this even needed?
-import { WalletModule } from '../wallet.module';
 
 
 import { SendComponent } from './send.component';
+import { SendService } from 'app/wallet/wallet/send/send.service';
 
+import { RpcService } from '../../../core/core.module';
+import { RpcMockService } from '../../../_test/core-test/rpc-test/rpc-mock.service';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -19,16 +21,20 @@ describe('SendComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [ SendComponent ],
       imports: [
         SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
-        WalletModule.forRoot(), // a bit circular here..
+        // WalletModule.forRoot(), // a bit circular here..
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: MatDialogRef }
+        SendService,
+        {provide: RpcService, useClass: RpcMockService},
+        { provide: MatDialogRef },
+
       ]
     })
       .compileComponents();
@@ -124,10 +130,6 @@ describe('SendComponent', () => {
 
   it('should get advanced', () => {
     expect(component.advanced).toBe(false);
-  });
-
-  it('should get lookup', () => {
-    expect(component.lookup).toBe(undefined);
   });
 
   it('should get type', () => {

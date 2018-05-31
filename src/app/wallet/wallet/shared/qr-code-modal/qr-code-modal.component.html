@@ -8,7 +8,7 @@
 
   <div class="qr-code">
     <div #qrCode class="card qr">
-      <qr-code [level]="'H'" size="150" value="particl:{{ singleAddress.address }}"></qr-code>
+      <qrcode [level]="'H'" size="150" qrdata="particl:{{ singleAddress.address }}"></qrcode>
     </div>
   </div>
 
