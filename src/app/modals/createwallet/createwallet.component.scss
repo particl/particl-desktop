@@ -3,24 +3,20 @@
 @import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
 
 
-.actions {
-  margin-bottom: 80px;
+.title {
+  &.center {
+    text-align: center;
+  }
 }
 
 /* ------------------------------- *\
     Step 0: Choose action
 \* ------------------------------- */
 
-.section {
-  &.encrypt-first {
-    text-align: center;
-  }
-  &.create-restore {
-    text-align: center;
-  }
-  &.go-back {
-    margin-bottom: 20px;
-  }
+.encrypt-first {
+  background: mix($bg-shadow, $bg, 20%);
+  margin: 24px -24px 12px;
+  padding: 10px 24px;
 }
 
 

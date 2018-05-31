@@ -269,6 +269,9 @@ input {
   }
 }
 
+.mat-checkbox {
+  outline: none;
+}
 
 /* ------------------------------- *\
     Scrollbars
@@ -313,12 +316,16 @@ input {
 \* ------------------------------- */
 
 .cdk-overlay-container {
+  .cdk-overlay-pane { 
+    max-width: 800px !important; 
+  }
   .mat-dialog-container {
     position: relative;
+    /*
     max-width: 800px;
     height: calc(100% - 24px);
     margin: 24px auto auto auto;
-
+    */
     // Dialogs (small)
     .dialog-content {
       margin: 15px -24px;
@@ -328,7 +335,7 @@ input {
       font-weight: 600;
       font-size: 20px;
       margin-bottom: 15px;
-      padding-right: 50px;
+      //padding-right: 50px;
       &.text-center {
         padding: 0;
       }
@@ -384,14 +391,6 @@ input {
       }
     }
     .mat-wallet-content {
-      /*
-      max-height: 100% !important;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      */
       .mat-progress-spinner { // loading spinners
         width: 100px;
         height: 100px;
