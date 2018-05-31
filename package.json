@@ -1,6 +1,6 @@
 {
   "name": "particl-desktop",
-  "version": "1.2.1-alpha",
+  "version": "1.2.1-alpha-RC1",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
   "homepage": "https://particl.io",
@@ -34,6 +34,7 @@
     "package:mac": "yarn run build:electron:prod && electron-builder -m && yarn run checksum",
     "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
     "package:win": "yarn run build:electron:prod && electron-builder --win --x64 && yarn run checksum",
+    "package:win32": "yarn run build:electron:prod && electron-builder --win --ia32 && yarn run checksum",
     "package": "yarn run build:electron:prod && electron-builder -ml && electron-builder --win --x64 && yarn run checksum",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compodoc": "compodoc -p tsconfig.json -d docs",
