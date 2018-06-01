@@ -286,8 +286,9 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   cursor: help;
 }
 
-// Warnings (with icon)
-p.warning {
+// Warning & Info messages
+p.warning,
+p.info {
   font-weight: 500;
   font-size: 13px;
   background: $bg;
@@ -296,14 +297,38 @@ p.warning {
     margin: 24px -24px;
   }
   &::before {
-    content: "\ea03"; // part-alert icon
     font-family: "part";
-    color: $color-alert;
     font-size: 1.4em;
     line-height: 0;
     position: relative;
     top: 3px;
     margin-right: 8px;
+  }
+}
+p.warning {
+  &::before {
+    content: "\ea03"; // part-alert icon
+    color: $color-alert;
+  }
+  a {
+    @extend %tfx;
+    color: $color-alert;
+    &:hover {
+      color: darken($color-alert, 7%);
+    }
+  }
+}
+p.info {
+  &::before {
+    content: "\ea32"; // part-info icon
+    color: $color-info;
+  }
+  a {
+    @extend %tfx;
+    color: $color-info;
+    &:hover {
+      color: darken($color-info, 7%);
+    }
   }
 }
 
