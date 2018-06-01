@@ -325,7 +325,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       return;
     };
     this.log.d('Saving and publishing the listing.');
-    this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.publish());
+    this.modals.unlock({timeout: 30}, (status) => this.publish());
   }
 
   private async publish() {

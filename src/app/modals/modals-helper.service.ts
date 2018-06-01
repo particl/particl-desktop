@@ -8,13 +8,10 @@ import { Observable } from 'rxjs/Observable';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
 import { UnlockwalletComponent } from 'app/modals/unlockwallet/unlockwallet.component';
-import { ModalsConfig } from './models/modals.config.interface';
+import { UnlockModalConfig } from './models/unlock.modal.config.interface';
 
 interface ModalsSettings {
-    disableClose: boolean;
-    width: string;
-    height: string;
-    panelClass: string
+  disableClose: boolean;
 }
 
 @Injectable()
@@ -25,10 +22,7 @@ export class ModalsHelperService implements OnDestroy {
   private log: any = Log.create('modals.service');
   private destroyed: boolean = false;
   private modelSettings: ModalsSettings = {
-    disableClose: true,
-    width: '100%',
-    height: '100%',
-    panelClass: 'cdk-modal-full'
+    disableClose: true
   };
 
   constructor (
@@ -38,10 +32,10 @@ export class ModalsHelperService implements OnDestroy {
 
   /**
     * Unlock wallet
-    * @param {ModalsConfig} data       Optional - data to pass through to the modal.
+    * @param {UnlockModalConfig} data       Optional - data to pass through to the modal.
     */
 
-  unlock(data: ModalsConfig, callback?: Function) {
+  unlock(data: UnlockModalConfig, callback?: Function) {
     if (this._rpcState.get('locked')) {
       const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
       if (!!data || callback) {

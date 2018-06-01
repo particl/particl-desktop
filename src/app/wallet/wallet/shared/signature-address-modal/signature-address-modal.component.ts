@@ -107,7 +107,7 @@ export class SignatureAddressModalComponent implements OnInit {
   // copy code end
 
   onFormSubmit(): void {
-    this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.signVerifyMessage());
+    this.modals.unlock({timeout: 3}, (status) => this.signVerifyMessage());
   }
 
   signVerifyMessage(): void {

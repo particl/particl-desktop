@@ -182,7 +182,7 @@ export class SendComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.openSendConfirmationModal());
+    this.modals.unlock({timeout: 30}, (status) => this.openSendConfirmationModal());
   }
 
   /** Open Send Confirmation Modal */
@@ -239,7 +239,7 @@ export class SendComponent implements OnInit {
       }
 
     }
-    this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.sendTransaction());
+    this.modals.unlock({timeout: 30}, (status) => this.sendTransaction());
   }
 
   private sendTransaction(): void {

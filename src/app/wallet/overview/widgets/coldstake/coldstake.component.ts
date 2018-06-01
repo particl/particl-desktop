@@ -35,11 +35,11 @@ export class ColdstakeComponent {
   ) { }
 
   zap() {
-    this._modalsService.unlock({forceOpen: true}, (status) => this.openZapColdstakingModal());
+    this._modalsService.unlock({}, (status) => this.openZapColdstakingModal());
   }
 
   revert() {
-    this._modalsService.unlock({forceOpen: true}, (status) => this.openRevertColdstakingModal());
+    this._modalsService.unlock({}, (status) => this.openRevertColdstakingModal());
   }
 
   openRevertColdstakingModal() {
@@ -51,7 +51,7 @@ export class ColdstakeComponent {
   }
 
   openUnlockWalletModal(): void {
-    this._modalsService.unlock({ forceOpen: true, showStakeOnly: false, stakeOnly: true });
+    this._modalsService.unlock({ showStakeOnly: false, stakeOnly: true });
   }
 
   openColdStakeModal(): void {

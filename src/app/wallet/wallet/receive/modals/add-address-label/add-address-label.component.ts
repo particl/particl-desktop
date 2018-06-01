@@ -46,7 +46,7 @@ export class AddAddressLabelComponent implements OnInit {
   }
 
   onSubmitForm(): void {
-    this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.addNewLabel());
+    this.modals.unlock({timeout: 3}, (status) => this.addNewLabel());
   }
 
   addNewLabel(): void {

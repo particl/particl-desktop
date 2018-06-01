@@ -27,7 +27,7 @@ export class FixWalletModalComponent implements OnInit {
   }
 
   fix(): void {
-    this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.scanChain());
+    this.modals.unlock({timeout: 3}, (status) => this.scanChain());
   }
 
   scanChain() {

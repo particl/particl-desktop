@@ -144,7 +144,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
     const dialogRef = this.dialog.open(DeleteConfirmationModalComponent);
     dialogRef.componentInstance.dialogContent = `${label}: ${address}`;
     dialogRef.componentInstance.onDelete.subscribe(() => {
-      this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.deleteAddressCallBack(address));
+      this.modals.unlock({timeout: 3}, (status) => this.deleteAddressCallBack(address));
     });
   }
 

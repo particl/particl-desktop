@@ -96,7 +96,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   checkForWallet(type: string) {
-    this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.callAction(type));
+    this.modals.unlock({timeout: 30}, (status) => this.callAction(type));
   }
 
   callAction(type: string) {
@@ -151,7 +151,7 @@ export class OrderItemComponent implements OnInit {
     dialogRef.componentInstance.bidItem = this.order;
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       // do other action after confirm
-      this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.escrowLock());
+      this.modals.unlock({timeout: 30}, (status) => this.escrowLock());
     });
   }
 

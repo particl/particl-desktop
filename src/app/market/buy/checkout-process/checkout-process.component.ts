@@ -226,7 +226,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   placeOrder() {
-    this.modals.unlock({ forceOpen: true, timeout: 30}, (status) => this.bidOrder());
+    this.modals.unlock({timeout: 30}, (status) => this.bidOrder());
   }
 
   bidOrder() {

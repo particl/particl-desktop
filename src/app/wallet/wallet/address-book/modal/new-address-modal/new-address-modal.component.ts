@@ -91,7 +91,7 @@ export class NewAddressModalComponent implements OnInit {
     }
 
     if (this.label !== undefined && this.label.trim() && !this.isMine) {
-      this.modals.unlock({forceOpen: true, timeout: 3}, (status) => this.addressCallBack());
+      this.modals.unlock({timeout: 3}, (status) => this.addressCallBack());
       this.dialogRef.close();
     }
   }
