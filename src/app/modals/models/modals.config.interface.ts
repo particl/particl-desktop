@@ -3,5 +3,4 @@ export interface ModalsConfig {
   showStakeOnly?: boolean;
   stakeOnly?: boolean;
   autoClose?: boolean;
-  forceOpen?: boolean;
 }
