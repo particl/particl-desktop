@@ -55,6 +55,11 @@ export class Template {
     return this.object.hash;
   }
 
+  // TODO: check if expired.
+  get isPublished(): boolean {
+    return this.object.ListingItems && this.object.ListingItems.length > 0;
+  }
+
   get country(): any {
     const itemlocation = this.object.ItemInformation.ItemLocation;
     if (itemlocation) {
@@ -63,7 +68,7 @@ export class Template {
     return undefined;
   }
   setStatus(): void {
-    if (this.object.ListingItems && this.object.ListingItems.length > 0) {
+    if (this.isPublished) {
       this.status = 'published';
     } else {
       this.status = 'unpublished';

@@ -7,6 +7,7 @@ export const environment = {
   envName: 'docker2',
   particlHost: 'localhost',
   particlPort: 53935,
+  marketVersion: 'UNKNOWN',
   marketHost: 'localhost',
   marketPort: 3200
 };
