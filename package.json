@@ -176,7 +176,7 @@
     "@angular/compiler-cli": "^5.2.5",
     "@compodoc/compodoc": "^1.0.7",
     "@types/jasmine": "^2.8.6",
-    "@types/node": "^9.4.6",
+    "@types/node": "^10.1.4",
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
