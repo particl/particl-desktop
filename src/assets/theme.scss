@@ -286,6 +286,27 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   cursor: help;
 }
 
+// Warnings (with icon)
+p.warning {
+  font-weight: 500;
+  font-size: 13px;
+  background: $bg;
+  padding: 16px 24px;
+  mat-dialog-content & {
+    margin: 24px -24px;
+  }
+  &::before {
+    content: "\ea03"; // part-alert icon
+    font-family: "part";
+    color: $color-alert;
+    font-size: 1.4em;
+    line-height: 0;
+    position: relative;
+    top: 3px;
+    margin-right: 8px;
+  }
+}
+
 // ------ <kbd> ------ //
 
 kbd {
