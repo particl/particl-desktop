@@ -9,6 +9,11 @@ import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
 import { UnlockwalletComponent } from 'app/modals/unlockwallet/unlockwallet.component';
 import { UnlockModalConfig } from './models/unlock.modal.config.interface';
+import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
+import { SyncingComponent } from 'app/modals/syncing/syncing.component';
+import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
+import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
+import { DaemonComponent } from 'app/modals/daemon/daemon.component';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -47,6 +52,32 @@ export class ModalsHelperService implements OnDestroy {
     } else if (!!callback) {
       callback();
     }
+  }
+
+    /**
+    * coldStack
+    * @param {string} type       type contains type of the modal.
+    */
+
+  coldStake(type: string) {
+    const dialogRef = this._dialog.open(ColdstakeComponent, this.modelSettings);
+    dialogRef.afterClosed().subscribe(() => {
+      this.log.d('coldStack modal closed');
+    });
+  }
+
+  syncing() {
+    const dialogRef = this._dialog.open(SyncingComponent, this.modelSettings);
+    dialogRef.afterClosed().subscribe(() => {
+      this.log.d('syncing modal closed');
+    });
+  }
+
+  createWallet() {
+    const dialogRef = this._dialog.open(CreateWalletComponent, this.modelSettings);
+    dialogRef.afterClosed().subscribe(() => {
+      this.log.d('createWallet modal closed');
+    });
   }
 
   ngOnDestroy() {
