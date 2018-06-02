@@ -182,10 +182,4 @@ export class SellComponent implements OnInit {
     return this.pages[0].pageNumber;
   }
 
-  callAdd(params: any) {
-    this.addItem();
-  }
-
-
-
 }
