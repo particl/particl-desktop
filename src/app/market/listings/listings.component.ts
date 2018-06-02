@@ -27,9 +27,14 @@ interface IPage {
 })
 
 export class ListingsComponent implements OnInit, OnDestroy {
+  // general
   log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
-  public isLoading: boolean = false;
+
+  // loading
+  public isLoading: boolean = false; // small progress bars
+  public isLoadingBig: boolean = true; // big animation
+
   // filters
   // countries: FormControl = new FormControl();
   search: string;
@@ -53,7 +58,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // pagination
   pagination: any = {
     maxPages: 2,
-    maxPerPage: 30,
+    maxPerPage: 60,
     // hooks into the scroll bar of the main page..
     infinityScrollSelector: '.mat-drawer-content' // .mat-drawer-content
   };
@@ -112,6 +117,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<Listing>) => {
       this.isLoading = false;
+      this.isLoadingBig = false;
+
       // new page
       const page = {
         pageNumber: pageNumber,
