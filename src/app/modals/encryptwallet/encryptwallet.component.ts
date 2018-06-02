@@ -9,6 +9,7 @@ import { RpcService, RpcStateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service'; // TODO; import from module
 import { ModalsService } from '../modals.service';
 import { UpdaterService } from 'app/core/updater/updater.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Component({
   selector: 'app-encryptwallet',
@@ -25,6 +26,7 @@ export class EncryptwalletComponent {
   constructor(
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
+    private _modals: ModalsHelperService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
     private flashNotification: SnackbarService,
@@ -58,7 +60,7 @@ export class EncryptwalletComponent {
         this.log.d('restart was trigger, open create wallet again');
         this._rpcState.set('ui:spinner', false);
         if (!this._modalsService.initializedWallet) {
-          this._modalsService.open('createWallet', { forceOpen: true });
+          this._modals.createWallet();
         }
         this._dialogRef.close();
       });

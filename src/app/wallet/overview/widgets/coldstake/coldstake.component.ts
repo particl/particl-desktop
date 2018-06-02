@@ -25,21 +25,19 @@ export class ColdstakeComponent {
     private dialog: MatDialog,
     /***
      *  @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
-     *  and replace with modals vars
-    */
-    private _modals: ModalsService,
-    private _modalsService: ModalsHelperService,
+     */
+    private _modals: ModalsHelperService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
     private _coldstake: ColdstakeService
   ) { }
 
   zap() {
-    this._modalsService.unlock({}, (status) => this.openZapColdstakingModal());
+    this._modals.unlock({}, (status) => this.openZapColdstakingModal());
   }
 
   revert() {
-    this._modalsService.unlock({}, (status) => this.openRevertColdstakingModal());
+    this._modals.unlock({}, (status) => this.openRevertColdstakingModal());
   }
 
   openRevertColdstakingModal() {
@@ -51,11 +49,11 @@ export class ColdstakeComponent {
   }
 
   openUnlockWalletModal(): void {
-    this._modalsService.unlock({ showStakeOnly: false, stakeOnly: true });
+    this._modals.unlock({ showStakeOnly: false, stakeOnly: true });
   }
 
   openColdStakeModal(): void {
-    this._modals.open('coldStake', { forceOpen: true, type: 'cold' });
+    this._modals.coldStake('cold');
   }
 
   checkLockStatus(): boolean {

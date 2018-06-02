@@ -15,6 +15,7 @@ import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { MatDialog } from '@angular/material';
 import { ModalsComponent } from './modals.component';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Injectable()
 export class ModalsService implements OnDestroy {
@@ -35,11 +36,11 @@ export class ModalsService implements OnDestroy {
   private log: any = Log.create('modals.service');
 
   messages: Object = {
-    createWallet: CreateWalletComponent,
-    coldStake: ColdstakeComponent,
-    daemon: DaemonComponent,
-    syncing: SyncingComponent,
-    unlock: UnlockwalletComponent,
+    // createWallet: CreateWalletComponent,
+    // coldStake: ColdstakeComponent,
+    // daemon: DaemonComponent,
+    // syncing: SyncingComponent,
+    // unlock: UnlockwalletComponent,
     encrypt: EncryptwalletComponent,
     multiwallet: MultiwalletComponent
   };
@@ -48,7 +49,8 @@ export class ModalsService implements OnDestroy {
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
     private _blockStatusService: BlockStatusService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _modals: ModalsHelperService
   ) {
 
     /* Hook BlockStatus -> open syncing modal */
@@ -67,6 +69,7 @@ export class ModalsService implements OnDestroy {
       error => {
           this.enableClose = true;
           // this.open('daemon', error);
+          // this._modals.daemon(error);
       });
   }
 
@@ -150,11 +153,10 @@ export class ModalsService implements OnDestroy {
     */
   openSyncModal(status: any): void {
     // Open syncing Modal
-    if (!this.isOpen && !this.wasManuallyClosed(this.messages['syncing'].name)
-      && (status.networkBH <= 0
+    if ((status.networkBH <= 0
       || status.internalBH <= 0
       || status.networkBH - status.internalBH > 50)) {
-        this.open('syncing');
+        this._modals.syncing();
     }
   }
 
@@ -171,7 +173,7 @@ export class ModalsService implements OnDestroy {
             this.log.i('Wallet already initialized.');
             return;
           }
-          this.open('createWallet', {forceOpen: true});
+          this._modals.createWallet();
         });
   }
 
