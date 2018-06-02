@@ -7,9 +7,6 @@ import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Template } from 'app/core/market/api/template/template.model';
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { ModalsService } from 'app/modals/modals.service';
-import { Status } from './status.class';
 
 interface IPage {
   pageNumber: number,
@@ -22,7 +19,6 @@ interface IPage {
   styleUrls: ['./sell.component.scss']
 })
 export class SellComponent implements OnInit {
-  public status: Status = new Status();
   public isLoading: boolean = false;
   public isPageLoading: boolean = false;
 
@@ -56,9 +52,7 @@ export class SellComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private template: TemplateService,
-    private listing: ListingService,
-    private rpcState: RpcStateService,
-    private modals: ModalsService,
+    private listingService: ListingService,
   ) {}
 
   ngOnInit() {
@@ -85,14 +79,6 @@ export class SellComponent implements OnInit {
     this.selectedTab = index;
   }
 
-  confirmDeleteListing(template: Template): void {
-    const dialogRef = this.dialog.open(DeleteListingComponent);
-    dialogRef.componentInstance.templateToRemove = template;
-    dialogRef.afterClosed().subscribe(
-      () => this.loadPage(1)
-    );
-  }
-
   clearAndLoadPage() {
     this.loadPage(1, true);
   }
@@ -117,7 +103,7 @@ export class SellComponent implements OnInit {
     this.templateSearchSubcription = this.template.search(pageNumber, max, 1, category, search)
       .take(1).subscribe((listings: Array<Listing>) => {
         listings = listings.map((t) => {
-        if (this.listing.cache.isAwaiting(t)) {
+        if (this.listingService.cache.isAwaiting(t)) {
           t.status = 'awaiting';
         }
         return t;
@@ -195,31 +181,11 @@ export class SellComponent implements OnInit {
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
   }
-  // Triggered when the action button is clicked.
-  action(listing: Listing) {
-    switch (listing.status) {
-      case 'unpublished':
-        this.postTemplate(listing);
-        break;
-      case 'awaiting':
-      case 'published':
-        break;
-    }
+
+  callAdd(params: any) {
+    this.addItem();
   }
 
-  postTemplate(template: Template) {
-    if (this.rpcState.get('locked')) {
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callTemplate.bind(this, template)});
-    } else {
-      this.callTemplate(template);
-    }
-  }
 
-  async callTemplate(template: Template) {
-    await this.template.post(template, 1).toPromise();
-  }
 
-  getStatus(status: string) {
-    return [this.status.get(status)];
-  }
 }
