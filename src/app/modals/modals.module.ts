@@ -86,7 +86,8 @@ import { ShippingComponent } from './shipping/shipping.component';
     ManageWidgetsComponent,
     PlaceOrderComponent,
     ShippingComponent,
-    CreateWalletComponent
+    CreateWalletComponent,
+    ColdstakeComponent
   ],
 })
 export class ModalsModule {
