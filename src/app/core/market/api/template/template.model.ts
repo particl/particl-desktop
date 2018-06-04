@@ -1,5 +1,6 @@
 import { Category } from 'app/core/market/api/category/category.model';
 import { DateFormatter, Amount } from 'app/core/util/utils';
+import { ImageCollection } from 'app/core/market/api/template/image/imagecollection.model';
 
 export class Template {
 
@@ -10,22 +11,28 @@ export class Template {
   public basePrice: Amount = new Amount(0);
   public domesticShippingPrice: Amount = new Amount(0);
   public internationalShippingPrice: Amount = new Amount(0);
-  public escrowPrice: Amount = new Amount(0);
+  public escrowPriceInternational: Amount = new Amount(0);
+  public escrowPriceDomestic: Amount = new Amount(0);
 
   public domesticTotal: Amount = new Amount(0);
   public internationalTotal: Amount = new Amount(0);
-  public totalAmount: Amount = new Amount(0);
+  public totalAmountInternaltional: Amount = new Amount(0);
+  public totalAmountDomestic: Amount = new Amount(0);
+  public memo: string = '';
+  public imageCollection: ImageCollection;
 
   // @TODO: remove type any
-  constructor(private object: any) {
+  constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
     this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
+    this.imageCollection = new ImageCollection(this.object.ItemInformation.ItemImages)
 
     this.setStatus();
     this.setBasePrice();
     this.setShippingPrice();
     this.setEscrowPrice();
     this.setTotal();
+    this.setMemo();
   }
 
   get id(): number {
@@ -48,28 +55,9 @@ export class Template {
     return this.object.hash;
   }
 
-  get thumbnail(): any {
-    const itemimage = this.object.ItemInformation.ItemImages[0];
-    if (itemimage) {
-      return itemimage.ItemImageDatas.find(data => {
-        return data.imageVersion === 'THUMBNAIL';
-      });
-    }
-    return undefined;
-  }
-
-  get featuredImage(): any {
-    const itemimage = this.object.ItemInformation.ItemImages[0];
-    if (itemimage) {
-      return itemimage.ItemImageDatas.find(data => {
-        return data.imageVersion === 'MEDIUM';
-      });
-    }
-    return undefined;
-  }
-
-  get images(): any {
-    return this.object.ItemInformation.ItemImages;
+  // TODO: check if expired.
+  get isPublished(): boolean {
+    return this.object.ListingItems && this.object.ListingItems.length > 0;
   }
 
   get country(): any {
@@ -80,7 +68,7 @@ export class Template {
     return undefined;
   }
   setStatus(): void {
-    if (this.object.ListingItems && this.object.ListingItems.length > 0) {
+    if (this.isPublished) {
       this.status = 'published';
     } else {
       this.status = 'unpublished';
@@ -91,7 +79,6 @@ export class Template {
       ? new Amount(this.object.PaymentInformation.ItemPrice.basePrice)
       : this.basePrice);
   }
-
   setShippingPrice(): void {
     const itemPrice = this.object.PaymentInformation.ItemPrice;
     if (itemPrice && itemPrice.ShippingPrice) {
@@ -115,9 +102,11 @@ export class Template {
       return;
     }
 
-    const total = (ratio.buyer / 100) * (basePrice + this.internationalShippingPrice.getAmount());
+    const totalDomestic = (ratio.buyer / 100) * (basePrice + this.domesticShippingPrice.getAmount());
+    const totalInternational = (ratio.buyer / 100) * (basePrice + this.internationalShippingPrice.getAmount());
 
-    this.escrowPrice = new Amount(total);
+    this.escrowPriceDomestic = new Amount(totalDomestic);
+    this.escrowPriceInternational = new Amount(totalInternational);
   }
 
   setTotal(): void {
@@ -131,8 +120,18 @@ export class Template {
     this.domesticTotal = new Amount(dTotal);
 
     // TODO add total for international and domestic.
-    const total = this.escrowPrice.getAmount() + iTotal;
-    this.totalAmount = new Amount(total);
+    const totalDomestic = this.escrowPriceDomestic.getAmount() + dTotal;
+    const totalInternational = this.escrowPriceInternational.getAmount() + iTotal;
+
+    this.totalAmountDomestic = new Amount(totalDomestic);
+    this.totalAmountInternaltional = new Amount(totalInternational);
+  }
+
+  setMemo(): void {
+    const msg = this.object.ActionMessages;
+    if (msg) {
+      this.memo = msg.filter((info) => info.MessageInfo.memo).map(obj => obj.MessageInfo.memo)[0] || '';
+    }
   }
 
 }

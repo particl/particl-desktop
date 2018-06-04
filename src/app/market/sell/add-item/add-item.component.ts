@@ -17,6 +17,7 @@ import { ModalsService } from 'app/modals/modals.service';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
+import { Image } from 'app/core/market/api/template/image/image.model';
 
 @Component({
   selector: 'app-add-item',
@@ -35,7 +36,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
-  images: string[];
+  images: Image[];
 
   // file upload
   dropArea: any;
@@ -79,9 +80,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(1000)]],
       category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required]],
-      domesticShippingPrice:      ['', [Validators.required]],
-      internationalShippingPrice: ['', [Validators.required]]
+      basePrice:                  ['', [Validators.required, Validators.min(0)]],
+      domesticShippingPrice:      ['', [Validators.required, Validators.min(0)]],
+      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]
     });
 
     this.route.queryParams.take(1).subscribe(params => {
@@ -99,7 +100,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   isExistingTemplate() {
-    return (this.templateId !== undefined && this.templateId > 0);
+    return this.preloadedTemplate || (this.templateId !== undefined && this.templateId > 0);
   }
 
   uploadPicture() {
@@ -118,15 +119,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  removeExistingImage(imageId: number) {
-    this.image.remove(imageId).subscribe(
+  removeExistingImage(image: Image) {
+    this.image.remove(image.id).subscribe(
       success => {
         this.snackbar.open('Removed image successfully!')
 
         // find image in array and remove it.
         let indexToRemove: number;
-        this.images.find((element: any, index: number) => {
-          if (element.id === imageId) {
+        this.images.find((element: Image, index: number) => {
+          if (element.id === image.id) {
             indexToRemove = index;
             return true;
           }
@@ -177,11 +178,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.log.d(`preloaded id=${this.templateId}!`);
 
 
-      
+
       if (this.listing.cache.isAwaiting(template)) {
         template.status = 'awaiting';
       }
-      
+
 
       const t = {
         title: '',
@@ -200,7 +201,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.shortDescription = template.shortDescription;
       t.longDescription = template.longDescription;
       t.category = template.category.id;
-      t.country = country? country.name : '';
+      t.country = country ? country.name : '';
 
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
@@ -208,63 +209,54 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
       this.itemFormGroup.patchValue(t);
 
-      this.images = template.images.map(i => {
-        return {
-          dataId: i.ItemImageDatas[0].dataId,
-          id: i.id
-        }
-      })
+      this.images = template.imageCollection.images;
 
       this.preloadedTemplate = template;
       // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
     });
   }
 
-// template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
-  private save(): Observable<any> {
-
+  private async save(): Promise<Template> {
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
-    return new Observable((observer) => {
-      this.template.add(
-        item.title,
-        item.shortDescription,
-        item.longDescription,
-        item.category,
-        'SALE',
-        'PARTICL',
-        +item.basePrice,
-        +item.domesticShippingPrice,
-        +item.internationalShippingPrice
-      ).take(1).subscribe(template => {
-        this.templateId = template.id;
-        this.log.d('Saved template', template);
-        // Need to add location while saving the template
-        this.location.update(this.templateId, country, null, null).subscribe();
 
-        // Add escrow
-        this.escrow.add(template.id, EscrowType.MAD).subscribe(
-          success => {
-            if (this.picturesToUpload.length === 0) {
-              observer.next(template.id);
-              observer.complete()
-            }
-          }, error => this.snackbar.open(error));
+    const template: Template = await this.template.add(
+      item.title,
+      item.shortDescription,
+      item.longDescription,
+      item.category,
+      'SALE',
+      'PARTICL',
+      +item.basePrice,
+      +item.domesticShippingPrice,
+      +item.internationalShippingPrice
+    ).toPromise();
 
-        /* uploading images */
-        this.image.upload(template.id, this.picturesToUpload)
-          .then((templateId) => {
-            observer.next(template.id);
-            observer.complete()
-          });
+
+    this.templateId = template.id;
+    this.preloadedTemplate = template;
+
+    await this.location.execute('add', this.templateId, country, null, null).toPromise();
+    await this.escrow.add(template.id, EscrowType.MAD).toPromise();
+
+    if (this.picturesToUpload.length === 0) {
+      return template;
+    } else {
+      await this.image.upload(template, this.picturesToUpload);
+    }
+
+    return this.template.get(this.preloadedTemplate.id).toPromise();
+    /*
+
 
       }, error => error.error ? this.snackbar.open(error.error.message) : this.snackbar.open(error));
-    });
+          });
+      */
+
   }
 
-  private update() {
+  private async update() {
     const item = this.itemFormGroup.value;
-    console.log('country', item.country);
 
     // update information
     /*
@@ -277,70 +269,75 @@ export class AddItemComponent implements OnInit, OnDestroy {
      ).subscribe();*/
 
     // update images
-    this.image.upload(this.templateId, this.picturesToUpload).then(
-      (t) => {
-        this.log.d('Uploaded the new images!');
-      }
-    );
+    await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
+
     // update location
     const country = this.countryList.getCountryByName(item.country);
-    this.location.update(this.templateId, country, null, null).subscribe(success => {
-      this.escrow.update(this.templateId, EscrowType.MAD).subscribe();
-    }, error => error.error ? this.snackbar.open(error.error.message) : this.snackbar.open(error));
+    await this.location.execute('update', this.templateId, country, null, null).toPromise();
+    await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
     // update shipping
 
     // update messaging
     // update payment
     // update escrow
-   
 
+     return this.template.get(this.preloadedTemplate.id).toPromise();
   }
 
-  saveTemplate() {
+  validate() {
+    return this.itemFormGroup.valid || this.snackbar.open('Invalid Listing');
+  }
+
+  public async upsert() {
+    if (!this.validate()) {
+      return;
+    };
     this.log.d('Saving as a template.');
-    if (this.templateId) {
-      // update
-      this.update();
+
+    if (this.preloadedTemplate && this.preloadedTemplate.id) {
+      this.log.d(`Updating existing template ${this.preloadedTemplate.id}`);
+      return this.update();
     } else {
-      this.save().subscribe(id => {
-        console.log('returning to sell');
-        this.snackbar.open('Succesfully Saved!')
-        this.backToSell();
-      });
+      this.log.d(`Creating new template`);
+      return this.save();
+    }
+  }
+
+  public saveTemplate() {
+    if (this.preloadedTemplate && this.preloadedTemplate.status === 'published') {
+      this.snackbar.open('You can not update templates whilst they are published!');
+      return;
     }
 
+    this.upsert()
+    .then(t => {
+      this.snackbar.open('Succesfully updated template!')
+    })
+    .catch(err => {
+      this.snackbar.open('Failed to save template!')
+    });
   }
 
   saveAndPublish() {
+    if (!this.validate()) {
+      return;
+    };
     this.log.d('Saving and publishing the listing.');
     if (this.rpcState.get('locked')) {
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callPublish.bind(this)});
+      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.publish.bind(this)});
     } else {
-      this.callPublish();
+      this.publish();
     }
   }
 
-  callPublish() {
-    if (this.templateId) {
-      // update
-      this.update();
-    } else {
-      // save new
-      this.save().subscribe(id => {
-        console.log(id);
-        this.template.post(id, 1).take(1).subscribe(listing => {
-          
-          this.listing.cache.posting(id);
-          if (this.preloadedTemplate) {
-            this.preloadedTemplate.status = 'awaiting';
-          } 
-          
-          this.snackbar.open('Succesfully added Listing!')
-          console.log(listing);
-          this.backToSell();
-        });
+  private async publish() {
+    this.upsert().then(t => {
+      this.template.post(t, 1).toPromise().then(listing => {
+        this.snackbar.open('Succesfully added Listing!')
+        console.log(listing);
+        this.backToSell();
       });
-    }
+    }, err => this.snackbar.open(err));
   }
 
 }

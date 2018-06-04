@@ -24,8 +24,6 @@ button,
   font-family: $font;
   font-weight: 600;
   .mat-icon {
-    width: auto;
-    height: auto;
     margin-right: 5px;
     position: relative;
     top: -1px;
@@ -35,6 +33,7 @@ button,
     line-height: 29px;
     padding: 0 12px;
     font-size: 12px;
+    font-weight: 500;
   }
   &.full-width {
     width: 100%;
@@ -47,8 +46,22 @@ button,
   }
 }
 
+// ------ ICONS ------ //
+
+.mat-icon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 16px;
+}
 
 // ------ SELECT BOX FIX ------ //
+
+.mat-select {
+  font-family: $font;
+  .mat-option {
+    font-family: $font;
+  }
+}
 
 .mat-select-panel {
   background: white;
@@ -76,15 +89,15 @@ button,
 
 .loading-container {
   text-align: center;
-  position: absolute;
-  top: 113px;
-  left: 0;
+  position: fixed;
+  z-index: 10;
+  top: $header-main-height;
+  left: $sidebar-width;
   right: 0;
   bottom: 8px;
   display: flex;
-  margin: 30px;
-  border: 2px dashed darken($bg, 7%);
-  border-radius: 4px;
+  background: rgba($bg, 0.9);
+  pointer-events: none;
   .loading-info { // text info for loading screens (e.g. Listings)
     margin: auto;
     .loading-image {
@@ -117,7 +130,7 @@ button,
 
 mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   font-family: $font;
-  box-shadow: 0 1px 0 $bg-shadow !important;
+  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
 }
 
 
@@ -126,7 +139,7 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 .mat-tab-group {
   .mat-tab-label {
     font-family: $font;
-    font-weight: 600;
+    font-weight: 500;
     &.mat-tab-label-active { // keep active tabs black (not grey)
       opacity: 1;
       .mat-icon {
@@ -143,8 +156,6 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
       position: relative;
       top: 2px;
       opacity: 0.5;
-      width: auto;
-      height: auto;
     }
   }
   .tag { // notification tags in tabs - e.g. Orders [3]
@@ -158,9 +169,8 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 .mat-expansion-panel {
   @extend %disable-select;
+  @extend mat-card.mat-card;
   margin-bottom: 9px !important;
-  box-shadow: none !important;
-  border-bottom: 1px solid $bg-shadow;
   overflow: hidden;
   .mat-expansion-panel-header {
     font-family: $font;
@@ -217,6 +227,9 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 .mat-stepper-horizontal {
   font-family: $font;
+  .mat-step-label-selected {
+    font-weight: 700;
+  }
   // buy/cart-shipping: remove white background
   &.no-bg {
     background: none;
@@ -244,8 +257,6 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
     font-size: 12px;
     color: darken($bg-shadow, 17%);
     .mat-icon {
-      width: auto;
-      height: auto;
       font-size: 13px;
       margin: 0 4px;
       position: relative;
@@ -338,8 +349,6 @@ kbd {
     position: absolute;
     right: 0;
     top: 2px;
-    width: auto;
-    height: auto;
     font-size: 21px;
     cursor: pointer;
   }
@@ -409,6 +418,13 @@ input {
 
 // ------ RADIOS ------ //
 
+.mat-radio-button {
+  font-family: $font;
+  &.mat-radio-checked {
+    font-weight: 500;
+  }
+}
+
 .mat-list-radio {
   .mat-radio-button {
     margin-bottom: 12px;
@@ -452,8 +468,8 @@ input {
 
 ::-webkit-scrollbar,
 ::-webkit-scrollbar-thumb {
-  width: 6px;
-  height: 6px;
+  width: $scrollbar-width;
+  height: $scrollbar-width;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -477,6 +493,26 @@ input {
     Dialogs
 \* ------------------------------- */
 
+.cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .cdk-overlay-pane {
+  position: absolute !important;
+  max-width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: auto;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .mat-dialog-container {
+  position: fixed !important;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing +
+.cdk-global-overlay-wrapper .cdk-overlay-pane:not(.cdk-modal-full) .mat-dialog-container {
+  height: auto;
+  width: auto;
+}
+
 .cdk-overlay-container {
   .mat-dialog-container {
     position: relative;
@@ -490,7 +526,7 @@ input {
     }
     [mat-dialog-title] { // dialog title
       font-family: $font;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 20px;
       margin-bottom: 15px;
       padding-right: 50px;
@@ -594,9 +630,10 @@ input {
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
+    @extend %tfx;
     &:hover {
       background-color: $color;
-      border-radius: $radius;
+      border-radius: 50%;
       .mat-paginator-increment,
       .mat-paginator-decrement {
         border-color: white;
@@ -632,6 +669,9 @@ input {
 
 .container-block { // main container for content
   padding: 35px;
+  @include break(l) {
+    padding: 45px 50px;
+  }
 }
 
 
@@ -663,5 +703,18 @@ input {
   }
   100% {
     transform: rotate(359deg);
+  }
+}
+
+@keyframes pulse-fade {
+  0% {
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
   }
 }

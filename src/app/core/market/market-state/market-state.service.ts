@@ -16,14 +16,14 @@ export class MarketStateService extends StateService implements OnDestroy {
     // fetch categories
     this.register('currencyprice', 30 * 1000, ['PART', 'USD']);
     this.register('category', 60 * 1000, ['list']);
-    this.register('cartitem', 60 * 1000, ['list', 1, true]);
-    this.register('favorite', 60 * 1000, ['list', 1]);
+    this.register('profile', 60 * 1000, ['list']);
+    this.register('bid', 60 * 1000, ['search', '*', '*', 'ASC'])
   }
 
   /** Register a state call, executes every X seconds (timeout) */
   register(method: string, timeout: number, params?: Array<any> | null): void {
     // Keep track of errors, and poll accordingly
-    let errors: number = 0;
+    let errors = 0;
 
     // loop procedure
     const _call = () => {
@@ -35,7 +35,6 @@ export class MarketStateService extends StateService implements OnDestroy {
         .finally(() => {
           // re-start loop
           if (timeout) {
-            console.log('error count', errors);
             const restartAfter = this.determineTimeoutDuration(errors, timeout);
             setTimeout(_call, restartAfter);
           }
@@ -55,14 +54,14 @@ export class MarketStateService extends StateService implements OnDestroy {
     _call();
   }
 
-  determineTimeoutDuration(errors: number, timeout): number {
+  determineTimeoutDuration(errors: number, timeout: number): number {
     let restartAfter: number = timeout;
 
     // if error occurred
     if (errors > 0) {
-      if (errors < 10) {
-        // might be booting up, let's retry after 500ms
-        restartAfter = 500; 
+      if (errors < 30) {
+        // might be booting up, let's retry after 1s
+        restartAfter = 1000;
       } else {
         // wait 10 seconds or timeout duration
         // whichever is the longest.

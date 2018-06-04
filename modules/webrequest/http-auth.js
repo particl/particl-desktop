@@ -99,6 +99,13 @@ function loadWalletAuthentication() {
     whitelist.set(key, value);
 }
 
+// when restarting, delete authentication
+exports.removeWalletAuthentication = () => {
+    let options = _options.get();
+    let key = (options.rpcbind || 'localhost') + ":" + options.port;
+    whitelist.get(key).auth = undefined;
+}
+
 function loadDev() {
     let options = _options.get();
     let key = 'localhost:4200';

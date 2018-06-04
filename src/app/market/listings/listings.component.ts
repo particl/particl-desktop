@@ -9,6 +9,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 
+
 interface ISorting {
   value: string;
   viewValue: string;
@@ -26,17 +27,20 @@ interface IPage {
 })
 
 export class ListingsComponent implements OnInit, OnDestroy {
+  // general
   log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
-  public isLoading: boolean = false;
+
+  // loading
+  public isLoading: boolean = false; // small progress bars
+  public isLoadingBig: boolean = true; // big animation
 
   // filters
   // countries: FormControl = new FormControl();
   search: string;
 
-  // TODO? "Select with option groups" - https://material.angular.io/components/select/overview#creating-groups-of-options
+  listingServiceSubcription: any;
   // categories: FormControl = new FormControl();
-  categoryList: Array<Category> = [];
 
   _rootCategoryList: Category = new Category({});
 
@@ -54,7 +58,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // pagination
   pagination: any = {
     maxPages: 2,
-    maxPerPage: 30,
+    maxPerPage: 60,
     // hooks into the scroll bar of the main page..
     infinityScrollSelector: '.mat-drawer-content' // .mat-drawer-content
   };
@@ -86,7 +90,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
     .subscribe(
       list => {
         this._rootCategoryList = list;
-        this.categoryList = this._rootCategoryList.getFlatSubCategory();
       });
   }
 
@@ -100,9 +103,22 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const category = this.filters.category;
     const country = this.filters.country;
 
-    this.listingService.search(pageNumber, max, null, search, category, country)
+    /*
+      We store the subscription each time, due to API delays.
+      A search might not resolve synchronically, so a previous search
+      may overwrite a search that was initiated later on.
+      So store the subscription, then stop listening if a new search
+      or page load is triggered.
+    */
+    if (this.listingServiceSubcription) {
+      this.listingServiceSubcription.unsubscribe();
+    }
+
+    this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country)
       .take(1).subscribe((listings: Array<Listing>) => {
       this.isLoading = false;
+      this.isLoadingBig = false;
+
       // new page
       const page = {
         pageNumber: pageNumber,

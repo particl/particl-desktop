@@ -8,8 +8,8 @@
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
 
         <!--hide input -->
-        <input style="display: none;" type="file"
-               accept="image/*" multiple="true" id="fileInput">
+        <input class="hide-file" type="file"
+              accept="image/*" multiple="true" id="fileInput">
 
         <button mat-button color="primary" (click)="uploadPicture()">
           Upload a photo
@@ -26,14 +26,14 @@
         <div *ngFor="let image of images"
              class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
           <div class="photo" fxFLex>
-            <img src="{{image.dataId}}">
+            <img src="{{image.thumbnail}}">
             <div class="icons">
               <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
-                        matTooltip="Remove image" (click)="removeExistingImage(image.id)">
+                        matTooltip="Remove image" (click)="removeExistingImage(image)">
               </mat-icon>
-              <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+              <!--mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
                         matTooltip="Set as featured" (click)="featurePicture(i)">
-              </mat-icon>
+              </mat-icon-->
             </div>
           </div>
         </div>
@@ -96,7 +96,7 @@
       <!-- TODO: add another input for fiat value and inter-connect the two: -->
       <mat-form-field class="full-width">
         <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput placeholder="Price per item" formControlName="basePrice" type="number">
+        <input matInput min="0" placeholder="Price per item" formControlName="basePrice" type="number">
         <span matSuffix>PART</span>
       </mat-form-field>
 
@@ -105,11 +105,11 @@
           <input matInput placeholder="Quantity">
         </mat-form-field-->
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput placeholder="Domestic shipping price" formControlName="domesticShippingPrice" type="number">
+          <input matInput min="0" placeholder="Domestic shipping price" formControlName="domesticShippingPrice" type="number">
           <span matSuffix>PART</span>
         </mat-form-field>
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput placeholder="International shipping price" formControlName="internationalShippingPrice"
+          <input matInput min="0" placeholder="International shipping price" formControlName="internationalShippingPrice"
                  type="number">
           <span matSuffix>PART</span>
         </mat-form-field>

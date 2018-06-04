@@ -13,8 +13,6 @@
   .history_confirmation {
     color: $text-muted;
     .confirmations { // icon
-      height: auto;
-      width: auto;
       margin-right: 3px;
       font-size: 12px;
       position: relative;
@@ -40,12 +38,8 @@
   // TX icon
   .history_cat_icon {
     .mat-icon {
-      height: auto;
-      width: auto;
-      font-size: 15px;
-      position: relative;
-      top: 3px;
-      margin-right: 12px;
+      font-size: 14px;
+      position: absolute;
       // narration icon
       &.narration {
         margin: 0 0 0 2px;
@@ -56,6 +50,10 @@
       }
     }
     .tx-type {
+      .name {
+        font-weight: 500;
+        margin-left: 26px;
+      }
       &.staked {
         .mat-icon {
           color: $color-warning;
@@ -67,13 +65,11 @@
         }
       }
       &.sent {
-        font-weight: bold;
         .mat-icon {
           color: $color-alert;
         }
       }
       &.received {
-        font-weight: bold;
         .mat-icon {
           color: $color;
         }

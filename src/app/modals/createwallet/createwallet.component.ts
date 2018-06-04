@@ -79,7 +79,7 @@ export class CreateWalletComponent implements OnDestroy {
     this.errorString = '';
     this.step = 0;
     this.rpcState.observe('getwalletinfo', 'encryptionstatus')
-      .take(2)
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 

@@ -22,6 +22,7 @@
     </mat-tab-->
   </mat-tab-group>
 </app-header>
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== LISTINGS =========== -->
@@ -44,11 +45,11 @@
       <mat-card class="filter-card">
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
           <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search"
-                 (keyup)="loadPage()" (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
+                 (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()">
           <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
-                    (click)="filters.search=''; loadPage()"></mat-icon>
+                    (click)="filters.search=''; clearAndLoadPage()"></mat-icon>
           <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
-                    (click)="loadPage()"></mat-icon>
+                    (click)="clearAndLoadPage()"></mat-icon>
         </mat-form-field>
         <!--mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort listings">
@@ -79,20 +80,47 @@
 
   </div><!-- .filter -->
 
-   <!-- Listings > list -->
-  <div class="listings section" fxFlex="1 1 100%">
-
-    <div class="no-results" *ngIf="listings?.length === 0">
-      You don't have any market listings yet
+  <!-- .loading-container -->
+  <div class="loading-container" *ngIf="isPageLoading">
+    <div class="loading-info">
+      <div class="loading-image">
+        <img src="./assets/particl-logo-symbol.svg">
+      </div>
+      <p class="title">
+        Hang on, we're loading your listings
+      </p>
+      <p class="widget-help">
+        This might take a while
+      </p>
     </div>
-    <!--div class="subtitle first">Published listings</div-->
+  </div><!-- .loading-container -->
 
-    <mat-accordion>
-      <mat-expansion-panel class="listing list-item no-padding" *ngFor="let listing of listings">
+  <!-- Listings > list -->
+  <div class="listings section" fxFlex="1 1 100%"
+    infiniteScroll
+    [infiniteScrollContainer]="pagination.infinityScrollSelector"
+    [fromRoot]="true"
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolledUp)="loadPreviousPage()"
+    (scrolled)="loadNextPage()">
+    <!--div class="subtitle first">Published listings</div-->
+    <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
+      <p>
+        Sorry, no matching listings found
+      </p>
+    </div>
+    <button [disabled]="isLoading" mat-button class="previous-page" (click)="loadPreviousPage()"
+    *ngIf="pages[0] && pages[0].pageNumber !== 1">
+      <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+      Load previous page
+    </button>
+    <mat-accordion *ngFor="let page of pages">
+      <mat-expansion-panel class="listing list-item no-padding" *ngFor="let listing of page.listings">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
             <div class="photo" fxFlex="0 0 110px">
-              <img src="{{ listing.featuredImage?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+              <img src="{{ listing.imageCollection?.featuredImage?.medium}}">
             </div>
             <div class="meta" fxFlex="1 1 100%">
               <div class="name">{{ listing.title }}</div>
@@ -104,7 +132,7 @@
               </div>
             </div>
             <div *ngFor="let status of getStatus(listing.status)">
-              <div class="status {{ status.class }}" fxFlex="0 0 140px"><span>&bull;</span>{{ status.status }}</div>
+              <div class="status {{ status.class }}" fxFlex="0 0 140px"><span class="dot"></span>{{ status.status }}</div>
             </div>
           </div>
         </mat-expansion-panel-header>
@@ -126,7 +154,7 @@
               <!--tr><th>Quantity</th><td>2</td></tr-->
               <tr>
                 <th>Price per item</th>
-                <td>{{ listing.basePrice.getIntegerPart() }}.
+                <td>{{ listing.basePrice.getIntegerPart() }} {{ listing.basePrice.dot() }}
                   <small>{{ listing.basePrice.getFractionalPart() }}</small>
                   PART
                 </td>
@@ -138,14 +166,14 @@
 
         <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
           <div class="left">
-            <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(listing)"
+            <button mat-button color="warn" matTooltip="Delete listing" [disabled]="listing.isPublished" (click)="confirmDeleteListing(listing)"
                     class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
             </button>
             <button mat-button matTooltip="Clone listing" (click)="addItem(listing.id, true)" class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
             </button>
-            <button mat-button matTooltip="Edit listing details" (click)="addItem(listing.id)" class="small">
+            <button mat-button matTooltip="Edit listing details" [disabled]="listing.isPublished" (click)="addItem(listing.id)" class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
               Edit listing
             </button>
@@ -165,6 +193,7 @@
 
   </div><!-- .listings-list -->
 </div><!-- .container-block -->
+<mat-progress-bar mode="indeterminate" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== ORDERS =========== -->

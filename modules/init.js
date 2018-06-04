@@ -6,25 +6,34 @@ const rpc           = require('./rpc/rpc');
 const zmq           = require('./zmq/zmq');
 
 const daemon        = require('./daemon/daemon');
+const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const market        = require('./market/market');
 
 
-// TODO move to a proper place
-function daemonStarted() { log.info('daemon started'); }
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
   rpc.init();
   notification.init();
 
+  daemon.init();
   market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);
   // zmq.test(); // loop, will send tests
+
+  /* Initialize daemonWarner */
+  // warns GUI that daemon is downloading
+  daemonWarner.init(mainWindow);
+  daemonManager.on('status', (status, msg) => {
+    if (status === "download") {
+      daemonWarner.send(msg);
+    }
+  });
 
   exports.startDaemonManager();
 }
@@ -50,7 +59,7 @@ daemonManager.on('status', (status, msg) => {
     multiwallet.get()
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
-    .then(chosenWallets => daemon.start(chosenWallets, daemonStarted))
+    .then(chosenWallets => daemon.start(chosenWallets))
     .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
     // .then(()            => ipc.daemonReady(mainWindow.webContents))
@@ -89,10 +98,10 @@ electron.app.on('before-quit', function beforeQuit(event) {
   notification.destroy();
 
   daemon.stop().then(() => {
-    electron.app.quit();
+    log.info('daemon.stop() resolved!');
   })
 });
 
 electron.app.on('quit', (event, exitCode) => {
-  log.debug('doedoe');
+  log.info('Exiting!');
 });

@@ -5,15 +5,28 @@
   margin-right: 24px;
   cursor: pointer;
   outline: none;
+  &:hover {
+    .mat-icon {
+      color: darken($color, 1.5%);
+      transform: rotate(-10deg);
+    }
+  }
+  @include break(l) {
+    margin-right: 36px;
+  }
   .mat-icon {
-    width: auto;
-    height: auto;
-    font-size: 16px;
+    @extend %tfx;
     margin-right: 4px;
     position: relative;
     top: 2px;
   }
-  .amount {
+  .tag { // number of items in cart
+    font-weight: 500;
+  }
+  .amount { // PART value in cart
     color: $text-muted;
+    font-size: 13px;
+    font-weight: 400;
+    margin-left: 4px;
   }
 }

@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear [@.disabled]="true" class="no-bg container-block" #stepper>
+<mat-horizontal-stepper [@.disabled]="true" class="no-bg container-block" #stepper>
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
   <ng-template matStepperIcon="edit">
     <custom-icon>
@@ -14,7 +14,7 @@
 
   <!-- =========== YOUR CART =========== -->
 
-  <mat-step [stepControl]="cartFormGroup">
+  <mat-step [completed]="stepper.selectedIndex >= 1" [stepControl]="cartFormGroup">
     <form [formGroup]="cartFormGroup" class="cart">
       <ng-template matStepLabel>Your cart</ng-template>
 
@@ -47,7 +47,7 @@
           <tr *ngFor="let listing of cart?.listings">
             <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
               <div class="image" fxFlex="0 0 115px">
-                <img src="{{listing.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+                <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
               </div>
               <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                 <div class="title">
@@ -59,7 +59,7 @@
               </div>
             </td>
             <td class="price cell">
-              {{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
+              {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
             <!--<td class="quantity cell">1 &times;</td>-->
@@ -74,7 +74,7 @@
                  <button mat-button class="small">+</button>
                </div>
              </td> -->
-            <td class="total cell">{{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
+            <td class="total cell">{{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
             <td class="remove">
@@ -122,7 +122,7 @@
   </mat-step>
 
   <!-- =========== SHIPPING DETAILS =========== -->
-  <mat-step [stepControl]="shippingFormGroup">
+  <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
       <div fxLayout="row" fxLayoutGap="30px">
@@ -133,7 +133,7 @@
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
               <mat-select [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
-                          (change)="setValue(selectedAddress)"
+                          (change)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
                           disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
                 <mat-option *ngFor="let address of profile.ShippingAddresses"
@@ -144,7 +144,7 @@
             </mat-form-field>
             <p class="widget-help">
               To save time, you can save your frequently used shipping addresses as your personal shipping profiles.
-              You can create as much profiles as you need (e.g. home address, office address etc.).
+              You can create as many profiles as you need (e.g. home address, office address, etc.).
             </p>
             <p class="widget-help">
               To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
@@ -192,11 +192,10 @@
 
             <!--Hide shipping profile -->
             <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
-              <mat-checkbox formControlName="newShipping" [(ngModel)]="newShipping" fxFlex>Save as shipping profile
+              <mat-checkbox formControlName="newShipping" fxFlex>Save as shipping profile
               </mat-checkbox>
               <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="title" placeholder="Shipping profile name"
-                       [(ngModel)]="title">
+                <input matInput formControlName="title" placeholder="Shipping profile name">
               </mat-form-field>
             </div>
 
@@ -237,7 +236,7 @@
         <tr *ngFor="let listing of cart?.listings">
           <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
             <div class="image" fxFlex="0 0 115px">
-              <img src="{{listing.thumbnail?.dataId || './assets/images/placeholder_1-1.jpg'}}">
+              <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
             </div>
             <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
               <div class="title">
@@ -249,14 +248,14 @@
             </div>
           </td>
           <td class="price cell">
-            {{listing.basePrice?.getIntegerPart()}}.<small>{{listing.basePrice?.getFractionalPart()}}</small>
+            {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
-          <td class="shipping cell">{{listing.internationalShippingPrice?.getIntegerPart()}}.<small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
+          <td class="shipping cell">{{listing?.shippingAmount(country)?.getIntegerPart()}}{{listing?.shippingAmount(country)?.dot()}}<small>{{listing?.shippingAmount(country)?.getFractionalPart()}}</small>
             PART
           </td>
           <!--<td class="quantity cell">1 &times;</td>-->
-          <td class="total cell">{{listing.internationalTotal?.getIntegerPart()}}.<small>{{listing.internationalTotal?.getFractionalPart()}}</small>
+          <td class="total cell">{{listing?.total(country)?.getIntegerPart()}}{{listing?.total(country)?.dot()}}<small>{{listing?.total(country)?.getFractionalPart()}}</small>
             PART
           </td>
         </tr>
@@ -268,9 +267,9 @@
         <div class="shipping-overview" fxFlex="0 0 250px">
           <div class="title">Shipping address</div>
           <p class="address">
-            {{valueOf('firstName')}} {{valueOf('lastName')}} <br>
-            {{valueOf('addressLine1')}}, {{valueOf('addressLine2')}},{{valueOf('city')}}, {{valueOf('state')}}<br>
-            {{valueOf('zipCode')}}, {{valueOf('country')}}
+            {{ shippingFormGroup.value.firstName || '' }} {{ shippingFormGroup.value.lastName || '' }} <br>
+            {{ shippingFormGroup.value.addressLine1 || '' }}, {{shippingFormGroup.value.addressLine2 || '' }},{{shippingFormGroup.value.city || '' }}, {{shippingFormGroup.value.state || '' }}<br>
+            {{ shippingFormGroup.value.zipCode || '' }}, {{shippingFormGroup.value.country || '' }}
           </p>
         </div>
 
@@ -281,15 +280,15 @@
           </tr>
           <tr>
             <td class="desc">Shipping total</td>
-            <td class="value">{{cart?.shippingTotal.getAmount()}} PART</td>
+            <td class="value">{{cart?.getShippingTotal(country).getAmount()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Escrow</td>
-            <td class="value">{{cart?.escrowTotal.getAmount()}} PART</td>
+            <td class="value">{{cart?.getEscrowTotal(country).getAmount()}} PART</td>
           </tr>
           <tr>
             <td class="desc total">Total</td>
-            <td class="value total">{{cart?.total.amount}} PART</td>
+            <td class="value total">{{cart?.getTotal(country).getAmount()}} PART</td>
           </tr>
         </table>
 

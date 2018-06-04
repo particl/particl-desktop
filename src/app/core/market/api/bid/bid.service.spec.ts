@@ -7,7 +7,7 @@ describe('BidService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        MarketModule.forRoot(),
+        MarketModule.forRoot()
       ],
       providers: [BidService]
     });

@@ -22,6 +22,7 @@ export class OrderItemComponent implements OnInit {
 
   @Input() order: Bid;
   trackNumber: string;
+  country: string = '';
   constructor(
     private listingService: ListingService,
     private bid: BidService,
@@ -36,6 +37,11 @@ export class OrderItemComponent implements OnInit {
   }
 
   getItemDetails() {
+
+    if (!this.order) {
+      return;
+    }
+    this.country = this.order.ShippingAddress.country;
     this.listingService.get(this.order.listingItemId).subscribe(response => {
      this.order.listing = response;
     });
@@ -122,6 +128,8 @@ export class OrderItemComponent implements OnInit {
   rejectBid() {
     this.bid.rejectBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
+      this.order.OrderItem.status = 'REJECTED';
+      this.order = setOrderKeys(this.order, this.order.type)
     }, (error) => {
       this.snackbarService.open(`${error}`);
     });
@@ -164,6 +172,7 @@ export class OrderItemComponent implements OnInit {
       this.order.OrderItem.status = 'ESCROW_LOCKED';
       this.order = setOrderKeys(this.order, this.order.type)
     }, (error) => {
+      console.log(error);
       this.snackbarService.open(`${error}`);
     });
   }

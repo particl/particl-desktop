@@ -10,7 +10,7 @@ exports.init = function () {
     ? 'particl-desktop'
     : 'Particl Desktop';
   let logPath = options.testnet
-    ? 'testnet/particl-desktop.log'
+    ? 'particl-desktop-testnet.log'
     : 'particl-desktop.log';
   log.transports.file.file = log.transports.file
     .findLogPath(log.transports.file.appName)

@@ -1,12 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { MarketModule } from '../../core/market/market.module';
-
-import { CategoryService } from '../../core/market/api/category/category.service';
 
 import { ListingsComponent } from './listings.component';
 
@@ -22,12 +20,9 @@ describe('ListingsComponent', () => {
       ],
       imports: [
         BrowserAnimationsModule,
-        CoreUiModule.forRoot(),
+        HttpClientTestingModule,
         CoreModule.forRoot(),
-        MarketModule.forRoot()
-      ],
-      providers: [
-        CategoryService
+        CoreUiModule.forRoot()
       ]
     })
       .compileComponents();
@@ -36,6 +31,7 @@ describe('ListingsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ListingsComponent);
     component = fixture.componentInstance;
+    component.pagination.infinityScrollSelector = '.disable-select';
     fixture.detectChanges();
   });
 

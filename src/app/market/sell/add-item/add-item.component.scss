@@ -18,8 +18,6 @@
   }
 }
 
-
-
 // ------ GALLERY ------ //
 
 #drag-n-drop {
@@ -30,8 +28,6 @@
   padding: 50px 24px 45px;
   text-align: center;
   .mat-icon {
-    width: auto;
-    height: auto;
     display: block;
     margin-bottom: 16px;
     font-size: 42px;
@@ -75,8 +71,6 @@
     opacity: 0;
     .mat-icon {
       @extend %tfx;
-      width: auto;
-      height: auto;
       background: white;
       border-radius: 50%;
       box-shadow: 0 0 6px rgba(black, 0.25);
@@ -122,4 +116,8 @@
       margin-left: 8px;
     }
   }
+}
+
+.hide-file {
+  display: none;
 }

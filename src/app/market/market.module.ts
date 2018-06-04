@@ -15,6 +15,7 @@ import { FavoriteComponent } from './shared/favorite/favorite.component';
 import { OrdersComponent } from './shared/orders/orders.component';
 import { CheckoutProcessComponent } from './buy/checkout-process/checkout-process.component';
 import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
+import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { OrderItemComponent } from './shared/orders/order-item/order-item.compon
     FavoriteComponent,
     OrdersComponent,
     CheckoutProcessComponent,
-    OrderItemComponent
+    OrderItemComponent,
+    AddToCartComponent
   ],
   entryComponents: [
     PreviewListingComponent

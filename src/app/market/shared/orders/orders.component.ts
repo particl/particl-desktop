@@ -50,7 +50,7 @@ export class OrdersComponent implements OnInit {
   }
 
   loadProfile(): void {
-    this.profileService.get(1).take(1).subscribe(
+    this.profileService.default().take(1).subscribe(
       profile => {
         this.profile = profile;
         this.loadOrders();
@@ -59,7 +59,8 @@ export class OrdersComponent implements OnInit {
 
   loadOrders(): void {
     this.bid.search(this.profile.address, this.type).take(1).subscribe(orders => {
-      console.log('called >>>>>>>>>>>>>>>>>');
+      console.log('called >>>>>>>>>>>>>>>>>', orders);
+      orders.orders.reverse();
       this.orders = orders;
     });
   }

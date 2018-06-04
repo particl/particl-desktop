@@ -1,12 +1,10 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
-
+// Fav button in Listing's card in Listings
 .icon {
   background: #fff;
   border-radius: 50%;
   display: inline-block;
-  width: auto;
-  height: auto;
   padding: 7px;
   margin: 0 0 0 2px;
   font-size: 14px;
@@ -17,6 +15,18 @@
     &:hover,
     &.active {
       color: $color-alert;
+    }
+  }
+}
+
+// Fav button on Listing's detail modal
+button {
+  .icon {
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    &:hover {
+      color: inherit;
     }
   }
 }

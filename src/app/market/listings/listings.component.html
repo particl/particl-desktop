@@ -20,7 +20,11 @@
 
       <mat-select placeholder="All categories" (change)="clearAndLoadPage()" [(ngModel)]="filters.category"  class="filter category">
         <mat-option>All categories</mat-option>
-        <mat-option *ngFor="let category of categoryList" [value]="category.id">{{ category.name }}</mat-option>
+        <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
+          <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.id" [selected]="true">
+            {{ subcategory.name }}
+          </mat-option>
+        </mat-optgroup>
       </mat-select>
     </div>
 
@@ -81,8 +85,7 @@
       Load previous page
     </button>
 
-    <!-- FIXME: can we display this only on initial loading? (not when we're loading previous pages when being e.g. on page 3) -->
-    <div class="loading-container" *ngIf="isLoading">
+    <div class="loading-container" *ngIf="isLoadingBig">
       <div class="loading-info">
         <div class="loading-image">
           <img src="./assets/particl-logo-symbol.svg">
@@ -103,7 +106,9 @@
     </div>
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let item of page.listings">
-        <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
+        <mat-card fxFlex="0 0 calc(100% / 4 - 25px)"
+                  fxFlex.gt-md="0 0 calc(100% / 5 - 25px)"
+                  fxFlex.gt-lg="0 0 calc(100% / 7 - 25px)" class="listing">
           <app-listing-item [listing]="item"></app-listing-item>
         </mat-card>
       </ng-container>
