@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Log } from 'ng2-logger';
+
 import { dataURItoBlob } from 'app/core/util/utils';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class MarketService {
 
+  private log: any = Log.create('rpc-state.class');
+  
   // hostname: string = 'dev1.particl.xyz';
   // hostname: string = 'localhost';
   // port: number = 3000;
@@ -37,13 +41,11 @@ export class MarketService {
     return this._http.post(this.url, postData, { headers: headers })
         .map((response: any) => response.result)
         .catch((error: any) => {
-          let err = '';
-          if (error.status === 404) {
-            err = error.error.error;
-          } else {
-            err = error;
-          }
-          return Observable.throw(err);
+          
+          this.log.d('Market threw an error!');
+          console.log(error);
+
+          return Observable.throw(error);
         })
   }
 
