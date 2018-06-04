@@ -183,8 +183,8 @@ export class SellComponent implements OnInit {
   }
 
   // Delete the listing using index
-  deleteListing(listIndex: number, index: number) {
-    this.pages[index].listings.splice(listIndex, 1);
+  deleteListing(pageIndex: number, listingIndex: number) {
+    this.pages[pageIndex].listings.splice(listingIndex, 1);
   }
 
 }
