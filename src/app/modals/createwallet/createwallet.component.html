@@ -77,99 +77,92 @@
 
 <!-- STEP 2-4 (Create): Recovery Phrase -->
 <ng-template [ngIf]="[2,3,4].indexOf(step) != -1 && !isRestore">
-  <div class="container disable-select">
-    <div class="content">
+
+  <!-- STEP 2: Recovery Password -->
+  <div *ngIf="step === 2">
+    <div mat-dialog-title class="title">Choose a Recovery Password <small>(optional)</small></div>
+    <mat-dialog-content class="modal-content">
+      <p>
+        You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
+      </p>
+      <p class="warning">
+        Warning: if you lose Recovery Phrase OR Recovery Password, you will not be able to access your coins!
+      </p>
+      <!-- Password -->
+      <app-password
+        #passwordElement
+        label="Recovery Password (optional)"
+        [emitPassword]="true"
+        [showPass]="toggleShowPass"
+        (passwordEmitter)="passwordFromEmitter($event)"
+        (showPasswordToggle)="showPasswordToggle($event)"
+        [showStakeOnly]="false">
+      </app-password>
+      <!-- Password comfirmation -->
+      <app-password
+        #passwordElementVerify
+        label="Verify Password"
+        [emitPassword]="true"
+        [showPass]="toggleShowPass"
+        [showPassword]="true"
+        (passwordEmitter)="passwordFromEmitter($event, true)"
+        [showStakeOnly]="false">
+      </app-password>
+    </mat-dialog-content>
+  </div><!-- step == 2 -->
 
 
-      <!-- STEP 2: Recovery Password -->
-      <div *ngIf="step === 2">
-        <div class="title">Choose a Recovery Password <small>(optional)</small></div>
-        <p>
-          You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
-        </p>
-        <p class="warning">
-          <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-          Warning: if you lose Recovery Phrase OR Recovery Password, you won't be able to access your coins!
-        </p>
-      </div><!-- step == 2 -->
+  <!-- STEP 3: Recovery Passphrase -->
+  <div *ngIf="step === 3">
+    <div mat-dialog-title class="title">Recovery Phrase backup</div>
+    <mat-dialog-content class="modal-content">
+      <p>
+        Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
+      </p>
+      <p class="warning">
+        You must write this Recovery Phrase down and keep it safe or you'll lose access to your coins!
+      </p>
+    </mat-dialog-content>
+  </div><!-- step == 3 -->
 
 
-      <!-- STEP 3: Recovery Passphrase -->
-      <div *ngIf="step === 3">
-        <div class="title">Recovery Phrase</div>
-        <p>
-          Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
-        </p>
-        <p class="warning">
-          <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-          You must write this Recovery Phrase down and keep it safe or you'll lose access to your coins!
-        </p>
-      </div><!-- step == 3 -->
+  <!-- STEP 4: Recovery Password -->
+  <div *ngIf="step === 4">
+    <div mat-dialog-title class="title">Enter your Recovery Phrase</div>
+    <mat-dialog-content class="modal-content">
+      <p>
+        Confirm that you backed up your Recovery Phrase by filling in the missing words:
+      </p>
+    </mat-dialog-content>
+  </div><!-- step == 4 -->
 
 
-      <!-- STEP 4: Recovery Password -->
-      <div *ngIf="step === 4">
-        <div class="title">Enter your wallet Recovery Phrase</div>
-        <p>
-          Confirm that you backed up your Recovery Phrase by filling in the missing words:
-        </p>
-      </div><!-- step == 4 -->
+  <ng-template [ngIf]="[3,4].indexOf(step) != -1">
+    <app-passphrase
+      #passphraseComponent
+      [readOnly]="step === 3"
+      [words]="words"
+      [partialDisable]="step === 4"
+      (wordsEmitter)="wordsFromEmitter($event)"
+      [generate]="true">
+    </app-passphrase>
+  </ng-template>
 
 
-      <!--mat-form-field class="wallet-name">
-        <input matInput [(ngModel)]="name" placeholder="Wallet name" readonly />
-      </mat-form-field-->
-      <div *ngIf="step === 2">
-        <app-password
-          #passwordElement
-          label="Recovery Password (optional)"
-          [emitPassword]="true"
-          [showPass]="toggleShowPass"
-          (passwordEmitter)="passwordFromEmitter($event)"
-          (showPasswordToggle)="showPasswordToggle($event)"
-          [showStakeOnly]="false">
-        </app-password>
-      </div>
-      <!--Confirmation of password-->
-      <div *ngIf="step === 2">
-          <app-password
-            #passwordElementVerify
-            label="Verify Password"
-            [emitPassword]="true"
-            [showPass]="toggleShowPass"
-            [showPassword]="true"
-            (passwordEmitter)="passwordFromEmitter($event, true)"
-            [showStakeOnly]="false">
-          </app-password>
-        </div>
+  <p *ngIf="!!errorString" [@slideDown] class="warning">
+    {{ errorString }}
+  </p>
+  <mat-dialog-actions fxLayoutAlign="space-between center">
+    <button mat-button (click)="prevStep()">
+      <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+      Back
+    </button>
+    <button mat-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
+      <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+      Next
+    </button>
+  </mat-dialog-actions>
 
-      <ng-template [ngIf]="[3,4].indexOf(step) != -1">
-        <app-passphrase
-          #passphraseComponent
-          [readOnly]="step === 3"
-          [words]="words"
-          [partialDisable]="step === 4"
-          (wordsEmitter)="wordsFromEmitter($event)"
-          [generate]="true">
-        </app-passphrase>
-      </ng-template>
-
-      <div class="actions">
-        <p *ngIf="!!errorString" [@slideDown] class="warning">
-          {{ errorString }}
-        </p>
-        <button mat-button (click)="prevStep()">
-          <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
-          Back
-        </button>
-        <button mat-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
-          <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-          Next
-        </button>
-      </div><!-- .actions -->
-
-    </div><!-- .content -->
-  </div><!-- .container -->
 </ng-template><!-- Step 2,3 & 4 -->
 
 
