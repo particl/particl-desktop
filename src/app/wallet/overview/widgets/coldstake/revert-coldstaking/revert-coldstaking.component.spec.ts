@@ -9,6 +9,7 @@ import { CoreUiModule } from '../../../../../core-ui/core-ui.module';
 import { ModalsService } from '../../../../../modals/modals.service';
 
 import { RevertColdstakingComponent } from './revert-coldstaking.component';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 describe('RevertColdstakingComponent', () => {
   let component: RevertColdstakingComponent;
@@ -23,7 +24,7 @@ describe('RevertColdstakingComponent', () => {
         CoreUiModule.forRoot()
       ],
       declarations: [ RevertColdstakingComponent ],
-      providers: [{ provide: MatDialogRef}, ModalsService],
+      providers: [{ provide: MatDialogRef}, ModalsService, ModalsHelperService],
     })
     .compileComponents();
   }));
