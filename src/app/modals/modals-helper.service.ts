@@ -23,7 +23,7 @@ interface ModalsSettings {
 export class ModalsHelperService implements OnDestroy {
 
   // @TODO replace ModalsHelperService with ModalsService.
-
+  private isOpen: boolean = false;
   private log: any = Log.create('modals.service');
   private destroyed: boolean = false;
   private modelSettings: ModalsSettings = {
@@ -67,10 +67,14 @@ export class ModalsHelperService implements OnDestroy {
   }
 
   syncing() {
-    const dialogRef = this._dialog.open(SyncingComponent, this.modelSettings);
-    dialogRef.afterClosed().subscribe(() => {
-      this.log.d('syncing modal closed');
-    });
+    if (!this.isOpen) {
+      const dialogRef = this._dialog.open(SyncingComponent, this.modelSettings);
+      this.isOpen = true;
+      dialogRef.afterClosed().subscribe(() => {
+        this.log.d('syncing modal closed');
+        this.isOpen = false;
+      });
+    }
   }
 
   createWallet() {
