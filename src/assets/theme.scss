@@ -559,6 +559,26 @@ input {
       }
     }
 
+    mat-dialog-content {
+      .mat-progress-spinner { // loading spinners
+        width: 100px;
+        height: 100px;
+        padding: 0 !important;
+        position: absolute;
+        left: calc((100% - 100px) / 2);
+        top: calc((100% - 100px) / 2);
+        z-index: 10;
+        background: rgba(white, 0.9);
+        box-shadow: 0 0 70px silver;
+        border-radius: 50%;
+        svg {
+          width: 70px !important;
+          height: 70px !important;
+          transform-origin: 50px 35px;
+        }
+      }
+    }
+
     .small-close_button {
       position: absolute;
       right: 10px; // align with modal's content padding
@@ -605,25 +625,6 @@ input {
       &:hover {
         .mat-icon {
           color: $color-alert;
-        }
-      }
-    }
-    .mat-wallet-content {
-      .mat-progress-spinner { // loading spinners
-        width: 100px;
-        height: 100px;
-        padding: 0 !important;
-        position: absolute;
-        left: calc((100% - 100px) / 2);
-        top: calc((100% - 100px) / 2);
-        z-index: 10;
-        background: rgba(white, 0.9);
-        box-shadow: 0 0 70px silver;
-        border-radius: 50%;
-        svg {
-          width: 70px !important;
-          height: 70px !important;
-          transform-origin: 50px 35px;
         }
       }
     }
