@@ -9,10 +9,6 @@ import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 
-export enum errorType {
-  unspent = 'Zero unspent outputs - insufficient funds to place the order.',
-  broke = 'Insufficient funds to place the order.'
-}
 
 @Injectable()
 export class BidService {
@@ -31,14 +27,6 @@ export class BidService {
         // bid for item
         await this.market.call('bid', ['send', listing.hash, profile.id, addressId]).toPromise()
           .catch((error) => {
-            if (error) {
-              error = error.error ? error.error.error : error;
-              if (error.includes('unspent')) {
-                error = errorType.unspent;
-              } else if (error.includes('broke')) {
-                error = errorType.broke;
-              }
-            }
             throw error;
           });
         this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressId}`);
