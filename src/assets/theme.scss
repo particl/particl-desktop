@@ -292,7 +292,8 @@ p.info {
   font-weight: 500;
   font-size: 13px;
   background: $bg;
-  padding: 16px 24px;
+  padding: 16px 24px 16px 52px;
+  position: relative;
   mat-dialog-content & {
     margin: 24px -24px;
   }
@@ -300,8 +301,9 @@ p.info {
     font-family: "part";
     font-size: 1.4em;
     line-height: 0;
-    position: relative;
-    top: 3px;
+    position: absolute;
+    top: 25px;
+    left: 24px;
     margin-right: 8px;
   }
 }
@@ -560,6 +562,7 @@ input {
     }
 
     mat-dialog-content {
+      line-height: 1.5;
       .mat-progress-spinner { // loading spinners
         width: 100px;
         height: 100px;
