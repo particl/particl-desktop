@@ -4,6 +4,11 @@ import { Observable } from 'rxjs';
 import { dataURItoBlob } from 'app/core/util/utils';
 import { environment } from '../../../environments/environment';
 
+export enum errorType {
+  unspent = 'Zero unspent outputs - insufficient funds to place the order.',
+  broke = 'Insufficient funds to place the order.'
+}
+
 @Injectable()
 export class MarketService {
 
@@ -41,6 +46,14 @@ export class MarketService {
           if (error.status === 404) {
             err = error.error.error;
           } else {
+              if (error) {
+                error = error.error ? error.error.error : error;
+                if (error.includes('unspent')) {
+                  error = errorType.unspent;
+                } else if (error.includes('broke')) {
+                  error = errorType.broke;
+                }
+              }
             err = error;
           }
           return Observable.throw(err);
