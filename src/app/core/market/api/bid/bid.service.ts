@@ -55,7 +55,19 @@ export class BidService {
 
   acceptBidCommand(hash: string, id: number): Observable<any> {
     const params = ['accept', hash, id];
-    return this.market.call('bid', params);
+    return new Observable((observer) => {
+      this.market.call('bid', params).subscribe(res => console.log(res), (error) => {
+        if (error) {
+          error = error.error ? error.error.error : error;
+          if (error.includes('unspent')) {
+            error = errorType.unspent;
+          } else if (error.includes('broke')) {
+            error = errorType.broke;
+          }
+        }
+        observer.error(error);
+      });
+    });
   }
 
   rejectBidCommand(hash: string, id: number): Observable<any> {
