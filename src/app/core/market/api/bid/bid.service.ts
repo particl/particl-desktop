@@ -32,12 +32,7 @@ export class BidService {
         await this.market.call('bid', ['send', listing.hash, profile.id, addressId]).toPromise()
           .catch((error) => {
             if (error) {
-              error = error.error ? error.error.error : error;
-              if (error.includes('unspent')) {
-                error = errorType.unspent;
-              } else if (error.includes('broke')) {
-                error = errorType.broke;
-              }
+              error = this.errorHandle(error);
             }
             throw error;
           });
@@ -58,12 +53,7 @@ export class BidService {
     return new Observable((observer) => {
       this.market.call('bid', params).subscribe(res => console.log(res), (error) => {
         if (error) {
-          error = error.error ? error.error.error : error;
-          if (error.includes('unspent')) {
-            error = errorType.unspent;
-          } else if (error.includes('broke')) {
-            error = errorType.broke;
-          }
+          error = this.errorHandle(error);
         }
         observer.error(error);
       });
@@ -83,6 +73,16 @@ export class BidService {
   escrowLockCommand(id: number, nonce: any, memo: string): Observable<any> {
     const params = ['lock', id, nonce, memo];
     return this.market.call('escrow', params);
+  }
+
+  errorHandle(error: any) {
+    error = error.error ? error.error.error : error;
+    if (error.includes('unspent')) {
+      error = errorType.unspent;
+    } else if (error.includes('broke')) {
+      error = errorType.broke;
+    }
+    return error;
   }
 
 }
