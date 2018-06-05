@@ -16,6 +16,7 @@ import { PassphraseService } from './passphrase/passphrase.service';
 
 import { RpcStateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Component({
   selector: 'modal-createwallet',
@@ -56,6 +57,8 @@ export class CreateWalletComponent implements OnDestroy {
   constructor (
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
+    @Inject(forwardRef(() => ModalsHelperService))
+    private _modals: ModalsHelperService,
     private _passphraseService: PassphraseService,
     private rpcState: RpcStateService,
     private flashNotification: SnackbarService,
@@ -89,7 +92,7 @@ export class CreateWalletComponent implements OnDestroy {
     switch (type) {
       case 0: // Encrypt wallet
         this.dialogRef.close();
-        this._modalsService.open('encrypt', {forceOpen: true});
+        this._modals.encrypt();
         return;
       case 1: // Create
         break;

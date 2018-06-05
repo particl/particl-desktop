@@ -84,6 +84,13 @@ export class ModalsHelperService implements OnDestroy {
     });
   }
 
+  encrypt() {
+    const dialogRef = this._dialog.open(EncryptwalletComponent, this.modelSettings);
+    dialogRef.afterClosed().subscribe(() => {
+      this.log.d('createWallet modal closed');
+    });
+  }
+
   ngOnDestroy() {
     this.destroyed = true;
   }

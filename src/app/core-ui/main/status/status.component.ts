@@ -30,14 +30,12 @@ export class StatusComponent implements OnInit, OnDestroy {
   constructor(
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-    private _modals: ModalsService,
-
     /***
      *  @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
      *  and replace with modals vars
     */
 
-    private _modalsService: ModalsHelperService,
+    private _modals: ModalsHelperService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -94,7 +92,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
-        this._modals.open('encrypt', {'forceOpen': true});
+        this._modals.encrypt();
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':
@@ -104,7 +102,7 @@ export class StatusComponent implements OnInit, OnDestroy {
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':
-        this._modalsService.unlock({showStakeOnly: true});
+        this._modals.unlock({showStakeOnly: true});
         break;
       default:
         break;
