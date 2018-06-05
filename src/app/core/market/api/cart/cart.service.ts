@@ -34,6 +34,7 @@ export class CartService {
     this.log.d(`Adding listingItemId=${listing.id} to cart with id=${this.defaultCartId}`);
     return this.market.call('cartitem', ['add', this.defaultCartId, listing.id]).take(1).do(
       data => {
+        console.log('cart item added', data);
         this.update();
       }
     );
@@ -51,24 +52,26 @@ export class CartService {
    *  }
    */
   default(): Observable<any> {
-      // get default profile
-      this.log.d('default(): getting default cart!');
-      return this.profile.default()
-      .map((profile: any) => profile.ShoppingCart)
-      .map(carts => carts.find((cart: any) => cart.name === 'DEFAULT'))
-
-
+    // get default profile
+    this.log.d('default(): getting default cart!');
+    return this.profile.default()
+    .do((data) => console.log('default cart', data))
+    .map((profile: any) => profile.ShoppingCart)
+    .map(carts => carts.find((cart: any) => cart.name === 'DEFAULT'))
   }
 
   list(): Observable<Cart> {
     this.log.d(`Getting cart with id=${this.defaultCartId}`);
-    return this.marketState.observe('cartitem').map(c => new Cart(c));
+    return this.marketState.observe('cartitem')
+    .do((data) => console.log('cart list', data))
+    .map(c => new Cart(c));
   }
 
   removeItem(listingItemId: number): Observable<any> {
     this.log.d(`Removing listingItemId=${listingItemId} from cart with id=${this.defaultCartId}`);
-    return this.market.call('cartitem', ['remove', this.defaultCartId, listingItemId]).do(
-      data => {
+    return this.market.call('cartitem', ['remove', this.defaultCartId, listingItemId])
+    .do((data) => {
+        console.log('cart removed', data)
         this.update();
       }
     );
@@ -76,7 +79,12 @@ export class CartService {
 
   clear(): Observable<any> {
     this.log.d(`Clearing cart with id=${this.defaultCartId}`);
-    return this.market.call('cart', ['clear', this.defaultCartId]).do(this.update.bind(this))
+    return this.market.call('cart', ['clear', this.defaultCartId])
+    .do((data) => {
+        console.log('clear cart', data)
+        this.update.bind(this)
+      }
+    );
   }
 
   update(): void {

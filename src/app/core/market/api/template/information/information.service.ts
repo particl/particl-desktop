@@ -14,6 +14,7 @@ export class InformationService {
   public update(templateId: number, title: string, shortDesc: string, longDesc: string, categoryId: number) {
     return this.market.call('template',
       ['information', 'update', templateId, title, shortDesc, longDesc, categoryId]
-    );
+    )
+    .do((data) => console.log('Information update', data));
   }
 }

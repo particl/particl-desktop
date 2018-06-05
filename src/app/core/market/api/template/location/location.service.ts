@@ -27,6 +27,7 @@ export class LocationService {
         gps ? gps.description : null,
         gps ? gps.lat : null,
         gps ? gps.long : null
-      ]);
+      ])
+    .do((data) => console.log('execute location', data));
   }
 }

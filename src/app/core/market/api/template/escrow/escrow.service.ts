@@ -16,10 +16,12 @@ export class EscrowService {
   constructor(private market: MarketService) { }
 
   add(templateId: number, escrowType: EscrowType) {
-    return this.market.call('template', ['escrow', 'add', templateId, escrowType, 100, 100]);
+    return this.market.call('template', ['escrow', 'add', templateId, escrowType, 100, 100])
+    .do((data) => console.log('escrow add', data));
   }
 
   update(templateId: number, escrowType: EscrowType) {
-    return this.market.call('template', ['escrow', 'update', templateId, escrowType, 100, 100]);
+    return this.market.call('template', ['escrow', 'update', templateId, escrowType, 100, 100])
+    .do((data) => console.log('escrow update', data));
   }
 }

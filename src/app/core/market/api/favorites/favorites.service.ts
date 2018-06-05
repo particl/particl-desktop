@@ -38,6 +38,7 @@ export class FavoritesService implements OnDestroy {
   add(listing: Listing) {
     return this.market.call('favorite', ['add', this.defaultProfileId, listing.id])
     .do((data) => {
+      console.log('add favorite', data)
       this.cache.update();
     });
   }
@@ -45,6 +46,7 @@ export class FavoritesService implements OnDestroy {
   remove(listing: Listing) {
     return this.market.call('favorite', ['remove', this.defaultProfileId, listing.id])
       .do((data) => {
+        console.log('remove favorite', data)
         this.cache.update();
       });
   }

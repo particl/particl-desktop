@@ -18,7 +18,8 @@ export class TemplateService {
   ) { }
 
   get(templateId: number): Observable<Template> {
-    return this.market.call('template', ['get', templateId]).map(t => new Template(t));
+    return this.market.call('template', ['get', templateId]).map(t => new Template(t))
+    .do((data) => console.log('get template', data));
   }
 
   // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
@@ -50,12 +51,14 @@ export class TemplateService {
       if (paymentAddress === undefined) {
         params.pop();
       }
-      return this.market.call('template', params);
+      return this.market.call('template', params)
+      .do((data) => console.log('add template', data));
   }
 
   search(page: number, pageLimit: number, profileId: number, category: string, searchString: string): Observable<Array<Template>> {
     const params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
     return this.market.call('template', params)
+    .do((data) => console.log('search template', data))
     .map(
       (templates: any) => {
         return templates.map(t => new Template(t));
@@ -65,11 +68,15 @@ export class TemplateService {
 
   post(template: Template, marketId: number) {
     return this.market.call('template', ['post', template.id, marketId])
-    .do(t => this.listingCache.posting(template));
+    .do(t => {
+      console.log('post template', t);
+      this.listingCache.posting(template)
+    });
   }
 
   remove(listingTemplateId: number) {
-    return this.market.call('template', ['remove', listingTemplateId]);
+    return this.market.call('template', ['remove', listingTemplateId])
+    .do((data) => console.log('remove template', data));
   }
 
 }

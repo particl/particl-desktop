@@ -24,7 +24,8 @@ export class AddressService {
       address.state,
       address.country,
       address.zipCode
-    ]);
+    ])
+    .do((data) => console.log('Add address', data));
   }
 
   update(address: Address): Observable<any> {
@@ -40,7 +41,8 @@ export class AddressService {
       address.state,
       address.country,
       address.zipCode
-    ]);
+    ])
+    .do((data) => console.log('Update address', data));
   }
 
 }
