@@ -39,17 +39,19 @@ export class ListingService {
       (listings: Array<Listing>) => {
         return listings.map(t => new Listing(t));
       }
-    ).do(
-      listings => console.log(listings)
-    );
+    )
+    .do((listings) => console.log('Search listings', listings));
   }
 
   searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, '*', null, null, null); // OWN
+    return this.search(page, pageLimit, '*', null, null, null) // OWN
+    .do((listings) => console.log('Search own listings', listings));
   }
 
   get(id: number) {
-    return this.market.call('item', ['get', id]).map(listing => new Listing(listing));
+    return this.market.call('item', ['get', id])
+    .do((listing) => console.log('get listing by id', listing))
+    .map(listing => new Listing(listing));
   }
 
 }

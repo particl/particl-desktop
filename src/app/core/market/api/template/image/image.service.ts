@@ -12,11 +12,13 @@ export class ImageService {
   constructor(private market: MarketService) { }
 
   add(templateId: number, dataURI: any) {
-    return this.market.uploadImage(templateId, dataURI);
+    return this.market.uploadImage(templateId, dataURI)
+    .do((data) => console.log('Image added', data));
   }
 
   remove(imageId: number) {
-    return this.market.call('template', ['image', 'remove', imageId]);
+    return this.market.call('template', ['image', 'remove', imageId])
+    .do((data) => console.log('Image removed', data));
   }
 
   /**

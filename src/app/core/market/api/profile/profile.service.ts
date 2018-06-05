@@ -54,7 +54,8 @@ export class ProfileService implements OnDestroy {
   }
 
   get(profileIdOrName: number | string): Observable<any> {
-    return this.market.call('profile', ['get', profileIdOrName]);
+    return this.market.call('profile', ['get', profileIdOrName])
+    .do((data) => console.log('Get profile', data));
   }
 
   add(profileName: string, profileAddress?: string): Observable<any> {
@@ -63,7 +64,8 @@ export class ProfileService implements OnDestroy {
       params.pop(); // if null pop parent
     }
     return this.market.call('profile', params)
-    .do(() => {
+    .do((data) => {
+      console.log('add profile', data)
       this.refresh();
     });
   }
@@ -73,15 +75,18 @@ export class ProfileService implements OnDestroy {
   }
 
   update(profileId: number, profileName: string): Observable<any> {
-    return this.market.call('profile', ['update', profileId, profileName]);
+    return this.market.call('profile', ['update', profileId, profileName])
+    .do((data) => console.log('Update profile', data));
   }
 
   remove(profileIdOrName: number | string): Observable<any> {
-    return this.market.call('profile', ['remove', profileIdOrName]);
+    return this.market.call('profile', ['remove', profileIdOrName])
+    .do((data) => console.log('remove profile', data));
   }
 
   search(searchString: string): Observable<any> {
-    return this.market.call('profile', ['search', searchString]);
+    return this.market.call('profile', ['search', searchString])
+    .do((data) => console.log('search profile', data));
   }
 
   ngOnDestroy() {

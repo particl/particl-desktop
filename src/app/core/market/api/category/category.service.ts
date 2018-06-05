@@ -15,12 +15,13 @@ export class CategoryService {
 
   list() {
     return this.marketState.observe('category')
-      .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b))
-      .map(v => new Category(v));
+    .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b))
+    .map(v => new Category(v));
   }
 
   add(categoryName: string, description: string, parent: string | number): Observable<any> {
-    return this.market.call('category', ['add', categoryName, description, parent]);
+    return this.market.call('category', ['add', categoryName, description, parent])
+    .do((data) => console.log('add category', data))
   }
 
   update(categoryId: number, categoryName: string, description: string, parent?: number): Observable<any> {
@@ -28,14 +29,17 @@ export class CategoryService {
     if (parent === null) {
       params.pop(); // if null pop parent
     }
-    return this.market.call('category', params);
+    return this.market.call('category', params)
+    .do((data) => console.log('update category', data))
   }
 
   remove(categoryId: number): Observable<any> {
-    return this.market.call('category', ['remove', categoryId]);
+    return this.market.call('category', ['remove', categoryId])
+    .do((data) => console.log('remove category', data))
   }
 
   search(searchString: string): Observable<any> {
-    return this.market.call('category', ['search', searchString]);
+    return this.market.call('category', ['search', searchString])
+    .do((data) => console.log('search category', data))
   }
 }

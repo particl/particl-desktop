@@ -29,7 +29,9 @@ export class BidService {
       if (listing.hash) {
         this.log.d(`Placing bid for hash=${listing.hash}`);
         // bid for item
-        await this.market.call('bid', ['send', listing.hash, profile.id, addressId]).toPromise()
+        await this.market.call('bid', ['send', listing.hash, profile.id, addressId])
+          .do((place) => console.log('Order has been placed', place))
+          .toPromise()
           .catch((error) => {
             if (error) {
               error = error.error ? error.error.error : error;
@@ -50,27 +52,33 @@ export class BidService {
 
   search(address: string, type: any): Observable<any> {
     const params = ['search', '*', '*', 'ASC'];
-    return this.market.call('bid', params).map(o => new Bid(o, address, type))
+    return this.market.call('bid', params)
+    .do((search) => console.log('Searching bid lists', search))
+    .map(o => new Bid(o, address, type))
   }
 
   acceptBidCommand(hash: string, id: number): Observable<any> {
     const params = ['accept', hash, id];
-    return this.market.call('bid', params);
+    return  this.market.call('bid', params)
+    .do((accept) => console.log('Bid accepted', accept));
   }
 
   rejectBidCommand(hash: string, id: number): Observable<any> {
     const params = ['reject', hash, id];
-    return this.market.call('bid', params);
+    return this.market.call('bid', params)
+    .do((reject) => console.log('Bid rejected', reject));
   }
 
   escrowReleaseCommand(id: number, memo: string): Observable<any> {
     const params = ['release', id, memo];
-    return this.market.call('escrow', params);
+    return this.market.call('escrow', params)
+    .do((release) => console.log('Escrow release', release));
   }
 
   escrowLockCommand(id: number, nonce: any, memo: string): Observable<any> {
     const params = ['lock', id, nonce, memo];
-    return this.market.call('escrow', params);
+    return this.market.call('escrow', params)
+    .do((lock) => console.log('Escrow lock', lock))
   }
 
 }
