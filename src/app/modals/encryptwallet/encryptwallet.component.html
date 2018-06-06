@@ -1,12 +1,20 @@
 <div mat-dialog-title *ngIf="!password" class="title">Encrypt your wallet</div>
 <div mat-dialog-title *ngIf="password" class="title">Confirm your password</div>
 
+<button class="small-close_button" mat-dialog-close>
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
 
 <mat-dialog-content class="modal-content">
 
-  <div *ngIf="!password" class="section enter-password">
+  <div *ngIf="!password">
     <p>
       Please choose a password to encrypt your wallet
+    </p>
+    <p class="widget-help">
+      Wallet encryption protects you from unauthorized access to your coins (e.g. if someone steals your computer).<br>
+      It affects Particl wallet only on your current device.
     </p>
     <p class="warning">
       Do NOT forget this password or you will be unable to access your coins!
@@ -14,7 +22,7 @@
   </div><!-- !password -->
 
   <!-- @TODO: Do we really need a confirmation for the password with "show password" option? -->
-  <div *ngIf="password" class="section enter-password">
+  <div *ngIf="password">
     <p>
       Please enter your chosen password again to confirm it
     </p>
@@ -25,7 +33,7 @@
 
   <app-password
     #passwordElement
-    buttonText="Encrypt Wallet"
+    buttonText="Encrypt wallet"
     (passwordEmitter)="encryptwallet($event)"
     [unlockTimeout]="0"
     [showStakeOnly]="false"
@@ -35,9 +43,9 @@
 </mat-dialog-content>
 
 
-<mat-dialog-actions fxLayoutAlign="end center">
+<!--mat-dialog-actions fxLayoutAlign="end center">
   <button *ngIf="password" type="button" mat-button (click)="clearPassword()">
     <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
     Back
   </button>
-</mat-dialog-actions>
+</mat-dialog-actions-->
