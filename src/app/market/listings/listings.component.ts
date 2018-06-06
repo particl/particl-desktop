@@ -58,7 +58,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // pagination
   pagination: any = {
     maxPages: 3,
-    maxPerPage: 30,
+    maxPerPage: 24,
     // hooks into the scroll bar of the main page..
     infinityScrollSelector: '.mat-drawer-content' // .mat-drawer-content
   };
