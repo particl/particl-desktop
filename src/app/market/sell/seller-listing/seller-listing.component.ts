@@ -20,7 +20,7 @@ import { Status } from '../status.class';
 })
 export class SellerListingComponent {
 
-  @Output() callLoad: EventEmitter<any> = new EventEmitter();
+  @Output() onDelete: EventEmitter<any> = new EventEmitter();
 
   public status: Status = new Status();
   log: any = Log.create('seller-listing.component');
@@ -43,7 +43,7 @@ export class SellerListingComponent {
     const dialogRef = this.dialog.open(DeleteListingComponent);
     dialogRef.componentInstance.templateToRemove = template;
     dialogRef.afterClosed().subscribe(
-      () => this.callLoad.emit()
+      () => this.onDelete.emit()
     );
   }
 

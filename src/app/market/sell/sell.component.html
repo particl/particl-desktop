@@ -116,7 +116,7 @@
       Load previous page
     </button>
     <mat-accordion *ngFor="let page of pages;let pageIndex = index;">
-      <app-seller-listing *ngFor="let listing of page.listings; let listingIndex = index" [listing]="listing" (callLoad)="deleteListing(pageIndex, listingIndex)"></app-seller-listing>
+      <app-seller-listing *ngFor="let listing of page.listings; let listingIndex = index" [listing]="listing" (onDelete)="deleteListing(pageIndex, listingIndex)"></app-seller-listing>
     </mat-accordion>
 
     <!--div class="subtitle">Unpublished listings (templates)</div-->
