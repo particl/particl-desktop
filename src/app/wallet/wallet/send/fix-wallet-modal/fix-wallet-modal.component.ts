@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
 
 import { RpcService, RpcStateService } from 'app/core/core.module';
-import { ModalsService } from 'app/modals/modals.module';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { WalletFixedConfirmationComponent } from './wallet-fixed-confirmation/wallet-fixed-confirmation.component';
 

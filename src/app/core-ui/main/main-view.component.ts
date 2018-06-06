@@ -9,7 +9,6 @@ import { environment } from '../../../environments/environment';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
-import { ModalsService } from '../../modals/modals.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
@@ -51,7 +50,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _rpc: RpcService,
     private _updater: UpdaterService,
     private _rpcState: RpcStateService,
-    private _modals: ModalsService,
     private _modalsService: ModalsHelperService,
     private dialog: MatDialog,
     // the following imports are just 'hooks' to

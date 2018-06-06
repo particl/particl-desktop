@@ -10,7 +10,6 @@ import { IPassword } from '../shared/password/password.interface';
 
 import { slideDown } from '../../core-ui/core.animations';
 
-import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
 
@@ -55,8 +54,6 @@ export class CreateWalletComponent implements OnDestroy {
   private destroyed: boolean = false;
 
   constructor (
-    @Inject(forwardRef(() => ModalsService))
-    private _modalsService: ModalsService,
     @Inject(forwardRef(() => ModalsHelperService))
     private _modals: ModalsHelperService,
     private _passphraseService: PassphraseService,
@@ -72,7 +69,7 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   reset(): void {
-    this._modalsService.enableClose = true;
+    this._modals.enableClose = true;
     this.rpcState.set('modal:fullWidth:enableClose', true);
     this.words = Array(24).fill('');
     this.isRestore = false;
@@ -172,7 +169,7 @@ export class CreateWalletComponent implements OnDestroy {
 
         break;
     }
-    this._modalsService.enableClose = (this.step === 0);
+    this._modals.enableClose = (this.step === 0);
     this.rpcState.set('modal:fullWidth:enableClose', (this.step === 0));
   }
 
@@ -205,7 +202,7 @@ export class CreateWalletComponent implements OnDestroy {
           this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
-          this._modalsService.enableClose = true;
+          this._modals.enableClose = true;
           this.rpcState.set('ui:spinner', false);
           this.rpcState.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');

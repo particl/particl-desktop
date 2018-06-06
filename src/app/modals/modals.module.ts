@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
-import { ModalsService } from './modals.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 /* modals */
@@ -31,7 +30,6 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 import { PlaceOrderComponent } from './place-order/place-order.component';
 import { ShippingComponent } from './shipping/shipping.component';
-
 
 @NgModule({
   imports: [
@@ -64,8 +62,6 @@ import { ShippingComponent } from './shipping/shipping.component';
     ClipboardModule
   ],
   providers: [
-    ModalsService,
-
     // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
     ModalsHelperService,
     PassphraseService,
@@ -91,7 +87,6 @@ export class ModalsModule {
     return {
       ngModule: ModalsModule,
       providers: [
-        ModalsService,
         ModalsHelperService
       ]
     };
@@ -99,5 +94,4 @@ export class ModalsModule {
 }
 
 export { ModalsHelperService } from './modals-helper.service';
-export { ModalsService } from './modals.service';
 export { PassphraseService } from './createwallet/passphrase/passphrase.service';

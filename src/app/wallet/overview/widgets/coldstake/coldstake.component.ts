@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
 
-import { ModalsService } from 'app/modals/modals.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
 import { ColdstakeService } from './coldstake.service'

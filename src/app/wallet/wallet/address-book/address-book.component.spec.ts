@@ -6,11 +6,9 @@ import { WalletModule } from '../../wallet/wallet.module';
 import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
-import { ModalsService } from '../../../modals/modals.service';
-
-import { AddressBookComponent } from './address-book.component';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
+import { AddressBookComponent } from './address-book.component';
 
 describe('AddressBookComponent', () => {
   let component: AddressBookComponent;
