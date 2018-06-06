@@ -60,7 +60,7 @@ export class SellerListingComponent {
   }
 
   postTemplate(template: Template) {
-    this.modals.unlock({forceOpen: true, timeout: 30}, (status) => this.callTemplate(template));
+    this.modals.unlock({timeout: 30}, (status) => this.callTemplate(template));
   }
 
   async callTemplate(template: Template) {
