@@ -43,9 +43,7 @@ export class ProfileService implements OnDestroy {
       .subscribe(defaultProfile => {
         // do a new get request to get the _full_ profile.
         // includes ShippingAddresses, CryptoAddresses etc
-        this.get(defaultProfile.id)
-        .map((data) => new Profile(data))
-        .subscribe(full => observer.next(full));
+        this.get(defaultProfile.id).subscribe(full => observer.next(full));
       })
     });
   }
@@ -57,6 +55,7 @@ export class ProfileService implements OnDestroy {
 
   get(profileIdOrName: number | string): Observable<any> {
     return this.market.call('profile', ['get', profileIdOrName])
+            .map((data) => new Profile(data))
   }
 
   add(profileName: string, profileAddress?: string): Observable<any> {

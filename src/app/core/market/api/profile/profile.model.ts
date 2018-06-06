@@ -13,15 +13,15 @@ export class Profile {
     this.setFavoriteItems();
   }
 
-  get id() {
+  get id(): number {
     return this.object.id;
   }
 
-  get address() {
+  get address(): string {
     return this.object.address;
   }
 
-  get name() {
+  get name(): string {
     return this.object.name;
   }
 
