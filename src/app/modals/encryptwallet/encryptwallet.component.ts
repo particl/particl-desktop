@@ -26,6 +26,7 @@ export class EncryptwalletComponent {
   constructor(
     @Inject(forwardRef(() => ModalsService))
     private _modalsService: ModalsService,
+    @Inject(forwardRef(() => ModalsHelperService))
     private _modals: ModalsHelperService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,

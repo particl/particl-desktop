@@ -9,7 +9,6 @@ import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsService } from './modals.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
-import { ModalsComponent } from './modals.component';
 
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
@@ -45,7 +44,6 @@ import { ShippingComponent } from './shipping/shipping.component';
     DirectiveModule
   ],
   declarations: [
-    ModalsComponent,
     PassphraseComponent,
     PasswordComponent,
     CreateWalletComponent,
@@ -63,7 +61,6 @@ import { ShippingComponent } from './shipping/shipping.component';
     ShippingComponent
   ],
   exports: [
-    ModalsComponent,
     ClipboardModule
   ],
   providers: [
@@ -75,7 +72,6 @@ import { ShippingComponent } from './shipping/shipping.component';
     SnackbarService
   ],
   entryComponents: [
-    ModalsComponent,
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,

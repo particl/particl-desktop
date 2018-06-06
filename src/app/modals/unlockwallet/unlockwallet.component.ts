@@ -3,8 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { RpcService } from '../../core/core.module';
 import { MatDialogRef } from '@angular/material';
-import { ModalsComponent } from '../modals.component';
-import { ModalsConfig } from './../models/modals.config.interface';
+import { UnlockModalConfig } from 'app/modals/models/unlock.modal.config.interface';
 
 @Component({
   selector: 'app-unlockwallet',
@@ -25,9 +24,9 @@ export class UnlockwalletComponent {
   timeout: number = this.DEFAULT_TIMEOUT;
   showStakeOnly: boolean = false;
   stakeOnly: boolean = false;
-  constructor(private _rpc: RpcService,
-              public _dialogRef: MatDialogRef<UnlockwalletComponent>,
-              public dialogRef: MatDialogRef<ModalsComponent>) {
+  constructor(
+    private _rpc: RpcService,
+    public _dialogRef: MatDialogRef<UnlockwalletComponent>) {
   }
 
   unlock(encryptionStatus: string): void {
@@ -51,7 +50,7 @@ export class UnlockwalletComponent {
   /**
   * setData sets the callback information for when the wallet unlocks.
   */
-  setData(data: ModalsConfig, callback: Function): void {
+  setData(data: UnlockModalConfig, callback: Function): void {
     this.log.d('setting callback, timeout & showStakeOnly data');
 
     if (callback instanceof Function) {
