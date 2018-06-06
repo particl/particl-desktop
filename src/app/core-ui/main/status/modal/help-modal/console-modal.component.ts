@@ -52,7 +52,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     this.waitingForRPC = false;
     this.commandHistory.push(this.command);
     this.historyCount = this.commandHistory.length;
-    const params = this.command.trim().split(' ')
+    const params = this.command.trim().replace(/"|'/g, '').split(' ')
                     .filter(cmd => cmd.trim() !== '');
 
     if (params.length > 0) {
