@@ -6,7 +6,9 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 
+// modals
 import { UnlockwalletComponent } from 'app/modals/unlockwallet/unlockwallet.component';
 import { UnlockModalConfig } from './models/unlock.modal.config.interface';
 import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
@@ -22,17 +24,45 @@ interface ModalsSettings {
 export class ModalsHelperService implements OnDestroy {
 
   // @TODO replace ModalsHelperService with ModalsService.
-  private isOpen: boolean = false;
+  private progress: Subject<Number> = new Subject<Number>();
+
+  /* True if user already has a wallet (imported seed or created wallet) */
+  public initializedWallet: boolean = false;
   private log: any = Log.create('modals.service');
   private destroyed: boolean = false;
+  public enableClose: boolean = true;
+
   private modelSettings: ModalsSettings = {
     disableClose: true
   };
 
   constructor (
     private _rpcState: RpcStateService,
+    private _blockStatusService: BlockStatusService,
     private _dialog: MatDialog
-  ) { }
+  ) {
+
+    /* Hook BlockStatus -> open syncing modal only once */
+    this._blockStatusService.statusUpdates.asObservable().take(1).subscribe(status => {
+      this.openSyncModal(status);
+    });
+
+    /* Hook BlockStatus -> update % `progress` */
+    this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
+      this.progress.next(status.syncPercentage);
+    });
+
+    /* Hook wallet initialized -> open createwallet modal */
+    this.openInitialCreateWallet();
+
+    /* Hook daemon errors -> open daemon modal */
+    this._rpcState.errorsStateCall.asObservable()
+    .subscribe(
+      status => this.log.d('close demaon modal if already open'),
+      error => {
+          this.enableClose = true;
+      });
+  }
 
   /**
     * Unlock wallet
@@ -67,10 +97,8 @@ export class ModalsHelperService implements OnDestroy {
 
   syncing() {
     const dialogRef = this._dialog.open(SyncingComponent, this.modelSettings);
-    this.isOpen = true;
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('syncing modal closed');
-      this.isOpen = false;
     });
   }
 
@@ -86,6 +114,42 @@ export class ModalsHelperService implements OnDestroy {
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('encrypt modal closed');
     });
+  }
+
+  /**
+    * Open the Createwallet modal if wallet is not initialized
+    */
+
+  openInitialCreateWallet(): void {
+    this._rpcState.observe('ui:walletInitialized')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(
+        state => {
+          this.initializedWallet = state;
+          if (state) {
+            this.log.i('Wallet already initialized.');
+            return;
+          }
+          this.createWallet();
+        });
+  }
+
+  /**
+    * Open the Sync modal if it needs to be opened
+    * @param {any} status  Blockchain status
+    */
+  openSyncModal(status: any): void {
+    // Open syncing Modal
+    if ((status.networkBH <= 0
+      || status.internalBH <= 0
+      || status.networkBH - status.internalBH > 50)) {
+        this.syncing();
+    }
+  }
+
+  /** Get progress set by block status */
+  getProgress() {
+    return (this.progress.asObservable());
   }
 
   ngOnDestroy() {
