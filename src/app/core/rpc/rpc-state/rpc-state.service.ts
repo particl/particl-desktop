@@ -1,7 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Subject } from 'rxjs';
 
+import { Subject } from 'rxjs';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/takeWhile';
 
 import { StateService } from 'app/core/state/state.service';
 import { RpcService } from 'app/core/rpc/rpc.service';

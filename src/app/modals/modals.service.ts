@@ -2,7 +2,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
-import { RpcService, RpcStateService, BlockStatusService } from '../core/core.module';
+// import { RpcService, RpcStateService, BlockStatusService } from '../core/core.module';
+import { RpcService } from 'app/core/rpc/rpc.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';

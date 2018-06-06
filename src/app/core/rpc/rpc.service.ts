@@ -3,7 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { map, catchError } from 'rxjs/operators';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 import { IpcService } from '../ipc/ipc.service';
 import { environment } from '../../../environments/environment';
@@ -76,12 +78,12 @@ export class RpcService implements OnDestroy {
    */
   call(method: string, params?: Array<any> | null): Observable<any> {
     if (this.isElectron) {
-      return this._ipc.runCommand('rpc-channel', null, method, params).pipe(
-        map(response => response && (response.result !== undefined)
+      return this._ipc.runCommand('rpc-channel', null, method, params)
+        .map(response => response && (response.result !== undefined)
                       ? response.result
                       : response
         )
-      );
+
     } else {
       // Running in browser, delete?
       const postData = JSON.stringify({

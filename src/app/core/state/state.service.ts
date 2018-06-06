@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/Rx';
 import { Observer } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 export interface InternalStateType {
   [key: string]: any;
 }
 
 interface InternalStateCache {
-  [key: string]: BehaviorSubject<any>
+  [key: string]: ReplaySubject<any>
 }
 
 @Injectable()
@@ -41,7 +41,7 @@ export class StateService {
     const updated = this._state[prop] !== value;
     const state = this._state[prop] = value; // internally mutate our state
 
-    if (updated && this._getSubject(prop)) {
+    if (updated && this._getSubject(prop) && value) {
       this._getSubject(prop).next(value);
     }
 
@@ -66,7 +66,7 @@ export class StateService {
 
   private _getSubject(prop: string)  {
     if (!this._observerPairs[prop]) {
-      this._observerPairs[prop] = new BehaviorSubject('');
+      this._observerPairs[prop] = new ReplaySubject<any>(1);
     }
 
     return this._observerPairs[prop];

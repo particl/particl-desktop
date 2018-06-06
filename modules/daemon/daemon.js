@@ -81,8 +81,6 @@ exports.start = function (wallets) {
 
       const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
         .on('close', code => {
-          log.info('daemon exited - setting to undefined.');
-          daemon = undefined;
           if (code !== 0) {
             reject();
             log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
