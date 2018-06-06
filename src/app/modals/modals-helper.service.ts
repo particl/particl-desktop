@@ -13,7 +13,6 @@ import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
 import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
-import { DaemonComponent } from 'app/modals/daemon/daemon.component';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -67,14 +66,12 @@ export class ModalsHelperService implements OnDestroy {
   }
 
   syncing() {
-    if (!this.isOpen) {
-      const dialogRef = this._dialog.open(SyncingComponent, this.modelSettings);
-      this.isOpen = true;
-      dialogRef.afterClosed().subscribe(() => {
-        this.log.d('syncing modal closed');
-        this.isOpen = false;
-      });
-    }
+    const dialogRef = this._dialog.open(SyncingComponent, this.modelSettings);
+    this.isOpen = true;
+    dialogRef.afterClosed().subscribe(() => {
+      this.log.d('syncing modal closed');
+      this.isOpen = false;
+    });
   }
 
   createWallet() {
@@ -87,7 +84,7 @@ export class ModalsHelperService implements OnDestroy {
   encrypt() {
     const dialogRef = this._dialog.open(EncryptwalletComponent, this.modelSettings);
     dialogRef.afterClosed().subscribe(() => {
-      this.log.d('createWallet modal closed');
+      this.log.d('encrypt modal closed');
     });
   }
 

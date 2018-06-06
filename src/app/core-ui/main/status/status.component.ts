@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
-import { ModalsService } from '../../../modals/modals.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService, RpcStateService } from '../../../core/core.module';
 
@@ -32,7 +31,6 @@ export class StatusComponent implements OnInit, OnDestroy {
     private _rpcState: RpcStateService,
     /***
      *  @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
-     *  and replace with modals vars
     */
 
     private _modals: ModalsHelperService,

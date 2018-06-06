@@ -53,10 +53,14 @@ export class ModalsService implements OnDestroy {
     private _modals: ModalsHelperService
   ) {
 
-    /* Hook BlockStatus -> open syncing modal */
+    /* Hook BlockStatus -> open syncing modal only once */
+    this._blockStatusService.statusUpdates.asObservable().take(1).subscribe(status => {
+      this.openSyncModal(status);
+    });
+
+    /* Hook BlockStatus -> update % `progress` */
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
-      this.openSyncModal(status);
     });
 
     /* Hook wallet initialized -> open createwallet modal */
@@ -69,7 +73,6 @@ export class ModalsService implements OnDestroy {
       error => {
           this.enableClose = true;
           // this.open('daemon', error);
-          // this._modals.daemon(error);
       });
   }
 
