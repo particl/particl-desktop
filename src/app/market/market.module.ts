@@ -11,6 +11,7 @@ import { ListingsComponent } from './listings/listings.component';
 import { BuyComponent } from './buy/buy.component';
 import { SellComponent } from './sell/sell.component';
 import { AddItemComponent } from './sell/add-item/add-item.component';
+import { SellerListingComponent } from './sell/seller-listing/seller-listing.component';
 import { FavoriteComponent } from './shared/favorite/favorite.component';
 import { OrdersComponent } from './shared/orders/orders.component';
 import { CheckoutProcessComponent } from './buy/checkout-process/checkout-process.component';
@@ -31,6 +32,7 @@ import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
     BuyComponent,
     SellComponent,
     AddItemComponent,
+    SellerListingComponent,
     FavoriteComponent,
     OrdersComponent,
     CheckoutProcessComponent,
