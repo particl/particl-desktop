@@ -6,7 +6,6 @@ import { CoreModule } from '../../../../../core/core.module';
 import { CoreUiModule } from '../../../../../core-ui/core-ui.module';
 
 import { ZapColdstakingComponent } from './zap-coldstaking.component';
-import { ModalsService } from '../../../../../modals/modals.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 describe('ZapColdstakingComponent', () => {
@@ -21,7 +20,7 @@ describe('ZapColdstakingComponent', () => {
         CoreUiModule.forRoot()
       ],
       declarations: [ ZapColdstakingComponent ],
-      providers: [{ provide: MatDialogRef}, ModalsService, ModalsHelperService]
+      providers: [{ provide: MatDialogRef}, ModalsHelperService]
     })
     .compileComponents();
   }));
