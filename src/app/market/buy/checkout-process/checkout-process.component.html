@@ -135,8 +135,8 @@
               <mat-select [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
                           (change)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
-                          disabled="{{ !profile.ShippingAddresses || profile.ShippingAddresses.length === 0 }}">
-                <mat-option *ngFor="let address of profile.ShippingAddresses"
+                          disabled="{{ !profile?.shippingAddresses || profile?.shippingAddresses.length === 0 }}">
+                <mat-option *ngFor="let address of profile?.shippingAddresses"
                             [value]="address" >
                   {{address.title}}
                 </mat-option>

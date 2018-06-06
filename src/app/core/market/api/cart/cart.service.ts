@@ -54,7 +54,7 @@ export class CartService {
       // get default profile
       this.log.d('default(): getting default cart!');
       return this.profile.default()
-      .map((profile: any) => profile.ShoppingCart)
+      .map((profile: any) => profile.shoppingCarts)
       .map(carts => carts.find((cart: any) => cart.name === 'DEFAULT'))
 
 
