@@ -1,63 +1,8 @@
 @import "./src/assets/_config"; // import shared colors etc.
+@import "./src/app/wallet/shared/_filter-sorting"; // filtering & sorting
 
+// ------ LAYOUT ------ //
 
-// ------ FILTER ------ //
-
-.section {
-  .subtitle { // title
-    @extend %subtitle;
-    margin: 24px 0 14px;
-    &.first {
-      margin-top: 0;
-    }
-  }
-}
-
-.filter-card {
-  @extend %disable-select;
-  padding: 0;
-  margin-bottom: 16px;
-
-  // search & sorting
-  .search-sorting & {
-    padding: 10px 20px;
-    .filter-input {
-      width: 100%;
-    }
-    .icon-input {
-      .mat-icon {
-        top: 5px;
-        right: 2px;
-        font-size: 14px;
-      }
-    }
-  }
-
-  // selection list
-  .filter-list {
-    padding-top: 0;
-  }
-
-  // filter options
-  .filter-option {
-    /* Checkboxes:
-    .mat-list-item-content {
-      .mat-list-text {
-        padding: 0 16px 0 0 !important;
-      }
-    }*/
-  }
-
-  // radio buttons
-  .radio-group {
-    width: calc(100% - 32px);
-    padding: 8px 16px;
-    display: block;
-    .filter-option {
-      width: 100%;
-      margin: 5px 0;
-      font-family: $font;
-    }
-  }
-
+.tab-bar {
+  margin-top: $header-main-height;
 }

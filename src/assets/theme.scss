@@ -6,17 +6,6 @@
     UI Elements
 \* ------------------------------- */
 
-// ------ HELP DESCRIPTION ------ //
-
-.widget-help {
-  @extend %disable-select;
-  color: $text-muted;
-  font-size: 11px;
-  margin-bottom: 25px;
-  cursor: help;
-}
-
-
 // ------ ADDRESSES ------ //
 
 .address, .address-label {
@@ -32,9 +21,9 @@
 button,
 .mat-button,
 .mat-raised-button {
+  font-family: $font;
+  font-weight: 600;
   .mat-icon {
-    width: auto;
-    height: auto;
     margin-right: 5px;
     position: relative;
     top: -1px;
@@ -44,6 +33,10 @@ button,
     line-height: 29px;
     padding: 0 12px;
     font-size: 12px;
+    font-weight: 500;
+  }
+  &.full-width {
+    width: 100%;
   }
 }
 
@@ -53,8 +46,22 @@ button,
   }
 }
 
+// ------ ICONS ------ //
+
+.mat-icon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 16px;
+}
 
 // ------ SELECT BOX FIX ------ //
+
+.mat-select {
+  font-family: $font;
+  .mat-option {
+    font-family: $font;
+  }
+}
 
 .mat-select-panel {
   background: white;
@@ -78,11 +85,52 @@ button,
 }
 
 
+// ------ LOADING INFO ------ //
+
+.loading-container {
+  text-align: center;
+  position: fixed;
+  z-index: 10;
+  top: $header-main-height;
+  left: $sidebar-width;
+  right: 0;
+  bottom: 8px;
+  display: flex;
+  background: rgba($bg, 0.9);
+  pointer-events: none;
+  .loading-info { // text info for loading screens (e.g. Listings)
+    margin: auto;
+    .loading-image {
+      width: 50px;
+      height: 50px;
+      padding: 14px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 20px rgba(black, 0.07);
+      & > img {
+        animation: rotate 4s infinite;
+        display: inline-block;
+        position: relative;
+        top: 2px;
+      }
+    }
+    .title {
+      font-size: 17px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    p {
+      margin: 12px;
+    }
+  }
+}
+
 // ------ CARDS ------ //
 
 mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   font-family: $font;
-  box-shadow: 0 1px 0 $bg-shadow !important;
+  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
 }
 
 
@@ -90,18 +138,29 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 
 .mat-tab-group {
   .mat-tab-label {
+    font-family: $font;
+    font-weight: 500;
     &.mat-tab-label-active { // keep active tabs black (not grey)
       opacity: 1;
-      .mat-icon { opacity: 0.9; }
+      .mat-icon {
+        opacity: 0.9;
+      }
+      .tag {
+        background-color: $color;
+      }
     }
     .mat-icon {
       @extend %tfx;
       font-size: 14px;
-      margin-right: 8px;
+      margin-right: 6px;
       position: relative;
-      top: 0.02em;
+      top: 2px;
       opacity: 0.5;
     }
+  }
+  .tag { // notification tags in tabs - e.g. Orders [3]
+    @extend %tag;
+    background-color: darken($bg-shadow, 15%);
   }
 }
 
@@ -109,9 +168,36 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 // ------ EXPANSION PANELS ------ //
 
 .mat-expansion-panel {
+  @extend %disable-select;
+  @extend mat-card.mat-card;
+  margin-bottom: 9px !important;
+  overflow: hidden;
   .mat-expansion-panel-header {
+    font-family: $font;
+    font-size: 13px;
     &:hover {
       background: inherit !important; // disable darker bg on hover by default
+    }
+    .mat-expansion-panel-header-title {
+      text-transform: uppercase;
+      font-family: $font;
+    }
+  }
+  .mat-expansion-indicator {
+    position: relative;
+    top: -4px;
+    transform: none !important;
+    &::after {
+      transition: none !important;
+    }
+  }
+  &.mat-expanded { // while expanded..
+    .mat-expansion-indicator {
+      top: 0;
+      &::after {
+        position: relative;
+        transform: rotate(-135deg);
+      }
     }
   }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
@@ -137,6 +223,20 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
 }
 
 
+// ------ STEPPER ------ //
+
+.mat-stepper-horizontal {
+  font-family: $font;
+  .mat-step-label-selected {
+    font-weight: 700;
+  }
+  // buy/cart-shipping: remove white background
+  &.no-bg {
+    background: none;
+  }
+}
+
+
 // ------ NO RESULTS (no TXs, no addresses, ..) ------ //
 
 .no-results {
@@ -148,12 +248,57 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   padding: 170px 0;
   border: 2px dashed $bg-shadow;
   background: rgba(white, 0.5);
+  button {
+    margin-top: 12px;
+  }
+  .widget-help {
+    margin: 0;
+    text-transform: none;
+    font-size: 12px;
+    color: darken($bg-shadow, 17%);
+    .mat-icon {
+      font-size: 13px;
+      margin: 0 4px;
+      position: relative;
+      top: 2px;
+    }
+  }
 }
 
 
 /* ------------------------------- *\
     Typography
 \* ------------------------------- */
+
+// ------ PARAGRAPH STYLES ------ //
+
+// Highlighted "lead" paragraphs
+.lead {
+  font-size: 15px;
+}
+
+// Help descriptions
+.widget-help {
+  @extend %disable-select;
+  color: $text-muted;
+  font-size: 11px;
+  margin-bottom: 25px;
+  cursor: help;
+}
+
+// ------ <kbd> ------ //
+
+kbd {
+  font-size: 95%;
+  line-height: 1.3;
+  font-family: inherit;
+  border: 1px solid silver;
+  border-radius: 2px;
+  background: #fafafa;
+  display: inline-block;
+  padding: 2px 5px;
+  margin: 0 2px;
+}
 
 // ------ Page subtitles ------ //
 
@@ -183,6 +328,19 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   }
 }
 
+.mat-nav-list {
+  // MP Listings: category filter
+  &.category-items {
+    .mat-list-item {
+      .mat-list-item-content {
+        padding: 6px 26px 6px 36px !important;
+        font-size: 13px;
+        color: $text-muted;
+      }
+    }
+  }
+}
+
 .icon-input { // input with icon (eg. Search in Address Book)
   input.mat-input-element {
     height: 20px;
@@ -191,8 +349,6 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
     position: absolute;
     right: 0;
     top: 2px;
-    width: auto;
-    height: auto;
     font-size: 21px;
     cursor: pointer;
   }
@@ -229,6 +385,17 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   &.larger { // larger inputs
     font-size: 14px;
   }
+  &.auto-width {
+    .mat-form-field-infix {
+      width: auto;
+    }
+  }
+  &.full-width {
+    width: 100%;
+    .mat-form-field-infix {
+      width: 100%;
+    }
+  }
   &.no-top-padding { // remove top space reserved for floating placeholders (if disabled)
     .mat-input-infix {
       border-top: none;
@@ -251,6 +418,13 @@ input {
 
 // ------ RADIOS ------ //
 
+.mat-radio-button {
+  font-family: $font;
+  &.mat-radio-checked {
+    font-weight: 500;
+  }
+}
+
 .mat-list-radio {
   .mat-radio-button {
     margin-bottom: 12px;
@@ -261,9 +435,11 @@ input {
 }
 
 .mat-radio-group {
+  font-family: $font;
   // send: full-width clickable radios
   &.block-radio {
-    .mat-radio-button .mat-radio-label {
+    .mat-radio-button .mat-radio-label,
+    .mat-radio-button .mat-radio-label-content {
       width: 100%;
     }
   }
@@ -286,18 +462,23 @@ input {
 */
 
 ::-webkit-scrollbar-track {
-  border-radius: 15px;
-  background-color: $bg-shadow;
+  //border-radius: $radius;
+  background: lighten($bg-shadow, 3%);
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb {
+  width: $scrollbar-width;
+  height: $scrollbar-width;
 }
 
-::-webkit-scrollbar-thumb:vertical {
-  width: 6px;
-  //border-radius: 15px;
-  background-color: darken($bg-shadow, 20%);
+::-webkit-scrollbar-thumb {
+  @extend %tfx;
+  background: darken($bg-shadow, 15%);
+  border-radius: $radius;
+  &:hover {
+    background: darken($bg-shadow, 20%);
+  }
 }
 .mat-drawer-container {
   background: $bg;
@@ -312,12 +493,32 @@ input {
     Dialogs
 \* ------------------------------- */
 
+.cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .cdk-overlay-pane {
+  position: absolute !important;
+  max-width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: auto;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .mat-dialog-container {
+  position: fixed !important;
+}
+
+.cdk-overlay-container .cdk-overlay-backdrop-showing +
+.cdk-global-overlay-wrapper .cdk-overlay-pane:not(.cdk-modal-full) .mat-dialog-container {
+  height: auto;
+  width: auto;
+}
+
 .cdk-overlay-container {
   .mat-dialog-container {
     position: relative;
     max-width: 800px;
     height: calc(100% - 24px);
-    margin: 24px auto auto auto;
+    //margin: 24px auto auto auto;
 
     // Dialogs (small)
     .dialog-content {
@@ -325,7 +526,7 @@ input {
     }
     [mat-dialog-title] { // dialog title
       font-family: $font;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 20px;
       margin-bottom: 15px;
       padding-right: 50px;
@@ -429,9 +630,10 @@ input {
   border-bottom: 1px solid $bg-shadow;
   font-family: $font;
   .mat-icon-button {
+    @extend %tfx;
     &:hover {
       background-color: $color;
-      border-radius: $radius;
+      border-radius: 50%;
       .mat-paginator-increment,
       .mat-paginator-decrement {
         border-color: white;
@@ -455,7 +657,7 @@ input {
 \* ------------------------------- */
 
 .TO_DO {
-  box-shadow: 0 0 3px 1px hotpink;
+  box-shadow: 0 0 3px 1px hotpink !important;
 }
 
 
@@ -467,6 +669,9 @@ input {
 
 .container-block { // main container for content
   padding: 35px;
+  @include break(l) {
+    padding: 45px 50px;
+  }
 }
 
 
@@ -480,10 +685,36 @@ input {
   text-transform: capitalize;
 }
 
-// ------ QR-Code ------ //
+
+// ------ QR-CODE ------ //
 
 .qr-code {
   img {
     display: inline !important;
+  }
+}
+
+
+// ------ ANIMATIONS ------ //
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes pulse-fade {
+  0% {
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
   }
 }

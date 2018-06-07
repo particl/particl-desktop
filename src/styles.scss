@@ -1,5 +1,7 @@
-@import 'assets/common/helper';
+//@import './src/assets/scss/helper';
 @import "./src/assets/_config"; // import shared colors etc.
+@import "./src/assets/scss/fonts";
+
 
 body {
   font-family: $font;
@@ -106,13 +108,6 @@ input.verify-sucess {
   padding-left: 0px;
 }
 
-@font-face {
-  font-family: 'part';
-  src: url('assets/fonts/part.eot');
-  src: url('assets/fonts/part.eot') format('embedded-opentype'), url('assets/fonts/part.woff2') format('woff2'), url('assets/fonts/part.woff') format('woff'), url('assets/fonts/part.ttf') format('truetype'), url('assets/fonts/part.svg') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
 
 /*------------------------
   base class definition
@@ -235,351 +230,403 @@ input.verify-sucess {
     content: "\ea01";
 }
 
-.part-alert::before {
+.part-airplane::before {
     content: "\ea02";
 }
 
-.part-anon::before {
+.part-alert::before {
     content: "\ea03";
 }
 
-.part-arrow-down::before {
+.part-anon::before {
     content: "\ea04";
 }
 
-.part-arrow-left::before {
+.part-arrow-down::before {
     content: "\ea05";
 }
 
-.part-arrow-right::before {
+.part-arrow-left::before {
     content: "\ea06";
 }
 
-.part-arrow-up::before {
+.part-arrow-right::before {
     content: "\ea07";
 }
 
-.part-attach::before {
+.part-arrow-up::before {
     content: "\ea08";
 }
 
-.part-blind::before {
+.part-attach::before {
     content: "\ea09";
 }
 
-.part-bug::before {
+.part-bag-buy::before {
     content: "\ea0a";
 }
 
-.part-check::before {
+.part-bag-sell::before {
     content: "\ea0b";
 }
 
-.part-circle-alert::before {
+.part-bag::before {
     content: "\ea0c";
 }
 
-.part-circle-check::before {
+.part-blind::before {
     content: "\ea0d";
 }
 
-.part-circle-info::before {
+.part-bug::before {
     content: "\ea0e";
 }
 
-.part-circle-minus::before {
+.part-cart::before {
     content: "\ea0f";
 }
 
-.part-circle-plus::before {
+.part-check::before {
     content: "\ea10";
 }
 
-.part-circle-question::before {
+.part-circle-alert::before {
     content: "\ea11";
 }
 
-.part-circle-remove::before {
+.part-circle-check::before {
     content: "\ea12";
 }
 
-.part-circle-user::before {
+.part-circle-info::before {
     content: "\ea13";
 }
 
-.part-clear-all::before {
+.part-circle-minus::before {
     content: "\ea14";
 }
 
-.part-cog::before {
+.part-circle-plus::before {
     content: "\ea15";
 }
 
-.part-console-window::before {
+.part-circle-question::before {
     content: "\ea16";
 }
 
-.part-console::before {
+.part-circle-remove::before {
     content: "\ea17";
 }
 
-.part-copy::before {
+.part-circle-user::before {
     content: "\ea18";
 }
 
-.part-cross::before {
+.part-clear-all::before {
     content: "\ea19";
 }
 
-.part-cryptocurrency-bitcoin::before {
+.part-cog::before {
     content: "\ea1a";
 }
 
-.part-cryptocurrency-particl::before {
+.part-console-window::before {
     content: "\ea1b";
 }
 
-.part-currency-dollar::before {
+.part-console::before {
     content: "\ea1c";
 }
 
-.part-currency-euro::before {
+.part-copy::before {
     content: "\ea1d";
 }
 
-.part-currency-pound::before {
+.part-cross::before {
     content: "\ea1e";
 }
 
-.part-currency-yen::before {
+.part-cryptocurrency-bitcoin::before {
     content: "\ea1f";
 }
 
-.part-date::before {
+.part-cryptocurrency-particl::before {
     content: "\ea20";
 }
 
-.part-error::before {
+.part-currency-dollar::before {
     content: "\ea21";
 }
 
-.part-flash::before {
+.part-currency-euro::before {
     content: "\ea22";
 }
 
-.part-globe::before {
+.part-currency-pound::before {
     content: "\ea23";
 }
 
-.part-hamburger::before {
+.part-currency-yen::before {
     content: "\ea24";
 }
 
-.part-heart::before {
+.part-date::before {
     content: "\ea25";
 }
 
-.part-info::before {
+.part-document::before {
     content: "\ea26";
 }
 
-.part-label::before {
+.part-error::before {
     content: "\ea27";
 }
 
-.part-lightning::before {
+.part-filter::before {
     content: "\ea28";
 }
 
-.part-lock-open::before {
+.part-flag::before {
     content: "\ea29";
 }
 
-.part-lock::before {
+.part-flash::before {
     content: "\ea2a";
 }
 
-.part-minus::before {
+.part-globe::before {
     content: "\ea2b";
 }
 
-.part-next-double::before {
+.part-hamburger::before {
     content: "\ea2c";
 }
 
-.part-next-single::before {
+.part-heart-outline-add::before {
     content: "\ea2d";
 }
 
-.part-notification-bell::before {
+.part-heart-outline-remove::before {
     content: "\ea2e";
 }
 
-.part-notification-speaker::before {
+.part-heart-outline::before {
     content: "\ea2f";
 }
 
-.part-overview::before {
+.part-heart::before {
     content: "\ea30";
 }
 
-.part-past::before {
+.part-image-upload::before {
     content: "\ea31";
 }
 
-.part-pen-1::before {
+.part-info::before {
     content: "\ea32";
 }
 
-.part-pen-2::before {
+.part-label::before {
     content: "\ea33";
 }
 
-.part-people::before {
+.part-lightning::before {
     content: "\ea34";
 }
 
-.part-person-add::before {
+.part-listings::before {
     content: "\ea35";
 }
 
-.part-person-check::before {
+.part-lock-open::before {
     content: "\ea36";
 }
 
-.part-person-edit::before {
+.part-lock::before {
     content: "\ea37";
 }
 
-.part-person-heart::before {
+.part-minus::before {
     content: "\ea38";
 }
 
-.part-person-remove::before {
+.part-next-double::before {
     content: "\ea39";
 }
 
-.part-person::before {
+.part-next-single::before {
     content: "\ea3a";
 }
 
-.part-plus::before {
+.part-notification-bell::before {
     content: "\ea3b";
 }
 
-.part-preferences::before {
+.part-notification-speaker::before {
     content: "\ea3c";
 }
 
-.part-previous-double::before {
+.part-overview::before {
     content: "\ea3d";
 }
 
-.part-previous-single::before {
+.part-past::before {
     content: "\ea3e";
 }
 
-.part-public::before {
+.part-pen-1::before {
     content: "\ea3f";
 }
 
-.part-qr::before {
+.part-pen-2::before {
     content: "\ea40";
 }
 
-.part-receive::before {
+.part-people::before {
     content: "\ea41";
 }
 
-.part-refresh::before {
+.part-person-add::before {
     content: "\ea42";
 }
 
-.part-rocket::before {
+.part-person-check::before {
     content: "\ea43";
 }
 
-.part-search::before {
+.part-person-edit::before {
     content: "\ea44";
 }
 
-.part-select::before {
+.part-person-heart::before {
     content: "\ea45";
 }
 
-.part-send::before {
+.part-person-remove::before {
     content: "\ea46";
 }
 
-.part-small-cross::before {
+.part-person::before {
     content: "\ea47";
 }
 
-.part-small-minus::before {
+.part-plus::before {
     content: "\ea48";
 }
 
-.part-small-plus::before {
+.part-preferences::before {
     content: "\ea49";
 }
 
-.part-snowflake::before {
+.part-previous-double::before {
     content: "\ea4a";
 }
 
-.part-stake::before {
+.part-previous-single::before {
     content: "\ea4b";
 }
 
-.part-swap::before {
+.part-public::before {
     content: "\ea4c";
 }
 
-.part-tool::before {
+.part-qr::before {
     content: "\ea4d";
 }
 
-.part-transfer::before {
+.part-receive::before {
     content: "\ea4e";
 }
 
-.part-triangle-down::before {
+.part-refresh::before {
     content: "\ea4f";
 }
 
-.part-triangle-left::before {
+.part-rocket::before {
     content: "\ea50";
 }
 
-.part-triangle-right::before {
+.part-search::before {
     content: "\ea51";
 }
 
-.part-triangle-up::before {
+.part-select::before {
     content: "\ea52";
+}
+
+.part-send::before {
+    content: "\ea53";
+}
+
+.part-ship::before {
+    content: "\ea54";
+}
+
+.part-small-cross::before {
+    content: "\ea55";
+}
+
+.part-small-minus::before {
+    content: "\ea56";
+}
+
+.part-small-plus::before {
+    content: "\ea57";
+}
+
+.part-smiley::before {
+    content: "\ea58";
+}
+
+.part-snowflake::before {
+    content: "\ea59";
+}
+
+.part-stake::before {
+    content: "\ea5a";
+}
+
+.part-swap::before {
+    content: "\ea5b";
+}
+
+.part-tool::before {
+    content: "\ea5c";
+}
+
+.part-transfer::before {
+    content: "\ea5d";
+}
+
+.part-triangle-down::before {
+    content: "\ea5e";
+}
+
+.part-triangle-left::before {
+    content: "\ea5f";
+}
+
+.part-triangle-right::before {
+    content: "\ea60";
+}
+
+.part-triangle-up::before {
+    content: "\ea61";
+}
+
+.part-truck::before {
+    content: "\ea62";
+}
+
+.part-zoom-bold-in::before {
+    content: "\ea63";
+}
+
+.part-zoom-out::before {
+    content: "\ea64";
 }
 
 a.highlight {
   color: $color;
   text-decoration: none;
-}
-
-.cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .cdk-overlay-pane {
-    position: absolute !important;
-    max-width: 100% !important;
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: auto;
-}
-
-.cdk-overlay-container .cdk-overlay-backdrop-showing + .cdk-global-overlay-wrapper .mat-dialog-container {
-    position: fixed !important;
-}
-
-.cdk-overlay-container .cdk-overlay-backdrop-showing +
-.cdk-global-overlay-wrapper .cdk-overlay-pane:not(.cdk-modal-full) .mat-dialog-container {
-    height: auto;
-    width: auto;
 }

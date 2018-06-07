@@ -1,14 +1,16 @@
 <app-header class="disable-select">
-  <div fxLayout="row" fxlayout.lt-sm="column">
+  <div fxLayout="row" class="tab-bar">
     <div fxFlex="1 1 70%">
       <mat-tab-group (selectChange)="changeTab($event.index)">
         <mat-tab>
           <ng-template mat-tab-label>
+            <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
             Public
           </ng-template>
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
+            <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
             Private
           </ng-template>
         </mat-tab>

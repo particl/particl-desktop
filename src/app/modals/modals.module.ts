@@ -8,7 +8,6 @@ import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsService } from './modals.service';
-
 import { ModalsComponent } from './modals.component';
 
 /* modals */
@@ -19,6 +18,8 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
+import { DeleteListingComponent } from './delete-listing/delete-listing.component';
+
 /* shared in modals */
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PassphraseService } from './createwallet/passphrase/passphrase.service';
@@ -27,6 +28,9 @@ import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
+import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
+import { PlaceOrderComponent } from './place-order/place-order.component';
+import { ShippingComponent } from './shipping/shipping.component';
 
 
 @NgModule({
@@ -51,7 +55,11 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     AlertComponent,
     ColdstakeComponent,
     MultiwalletComponent,
-    DaemonConnectionComponent
+    DaemonConnectionComponent,
+    DeleteListingComponent,
+    ManageWidgetsComponent,
+    PlaceOrderComponent,
+    ShippingComponent
   ],
   exports: [
     ModalsComponent,
@@ -69,7 +77,11 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
-    DaemonConnectionComponent
+    DaemonConnectionComponent,
+    DeleteListingComponent,
+    ManageWidgetsComponent,
+    PlaceOrderComponent,
+    ShippingComponent
   ],
 })
 export class ModalsModule {

@@ -67,7 +67,7 @@ class DaemonManager extends EventEmitter {
 
     // fetch config
     return got(BINARY_URL, {
-      timeout: 5000,
+      timeout: 30000,
       json: true
     })
     .then((res) => {
@@ -204,7 +204,7 @@ class DaemonManager extends EventEmitter {
         const localConfigPath = path.join(app.getPath('userData'), 'clientBinaries.json');
         localConfig = (fs.existsSync(localConfigPath))
           ? require(localConfigPath)
-          : require('./clientBinaries.json');
+          : require('../clientBinaries/clientBinaries.json');
       }
 
       // scan for node
@@ -230,6 +230,10 @@ class DaemonManager extends EventEmitter {
 
           this._emit('downloading', 'Downloading binaries');
 
+          mgr.on('download', (status) => {
+            this._emit('download', status);
+          });
+
           return Q.map(_.values(clients), (c) => {
             binariesDownloaded = true;
 
@@ -254,6 +258,7 @@ class DaemonManager extends EventEmitter {
             };
           }
         });
+
 
         // restart if it downloaded while running
         // if (restart && binariesDownloaded) {

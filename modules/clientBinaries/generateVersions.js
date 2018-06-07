@@ -133,7 +133,6 @@ var getHashesForPlatform = function (platform, path, hashes, promises) {
  * get Particl latest release files
  */
 got(`${releasesURL}`).then(response => {
-
   const body = JSON.parse(response.body);
   let releaseIndex = 0;
   let release;

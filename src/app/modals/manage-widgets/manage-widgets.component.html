@@ -1,0 +1,76 @@
+<div mat-dialog-title class="title">Manage overview widgets</div>
+
+<mat-dialog-content class="modal-content">
+
+  <p>
+    These options allow you to customize your Overview. Enable the widgets you want to see, disable the rest. You can change this anytime in the future as you like.
+  </p>
+
+  <div class="balances area">
+    <mat-slide-toggle checked>Balance overview</mat-slide-toggle>
+    <p class="widget-help">
+      Display your wallet balances breakdown. Shows current public, blind, anon and staking balances.
+    </p>
+  </div><!-- .balances -->
+
+  <div class="row" fxLayout fxLayoutGap="24px">
+    <div class="main" fxFlex="50">
+      
+      <div class="sellers area">
+        <mat-slide-toggle checked>Seller's overview</mat-slide-toggle>
+        <p class="widget-help">
+          Provides a quick glance at your market listings and associated orders.
+        </p>
+      </div><!-- .sellers -->
+
+      <div class="recent-txs area">
+        <mat-slide-toggle checked>Recent transactions</mat-slide-toggle>
+        <p class="widget-help">
+          Lists your most recent transaction (both incoming, outgoing and staked).
+        </p>
+      </div><!-- .recent-txs -->
+      
+    </div><!-- .main -->
+  
+    <div class="sidebar" fxFlex="50">
+      
+      <div class="buyers area">
+        <mat-slide-toggle checked>Buyer's overview</mat-slide-toggle>
+        <p class="widget-help">
+          Quick overview of your active orders, that you're buying from others.
+        </p>
+      </div><!-- .buyers -->
+
+      <div class="cold-staking area">
+        <mat-slide-toggle checked>Cold staking</mat-slide-toggle>
+        <p class="widget-help">
+          Control and monitor your cold staking node. Allows enabling/disabling cold staking and shows current progress towards cold staking.
+        </p>
+      </div><!-- .cold-staking -->
+
+      <div class="staking-stats area">
+        <mat-slide-toggle checked>Staking statistics</mat-slide-toggle>
+        <p class="widget-help">
+          Displays current network staking stats, your staking weight and estimates next staking reward.
+        </p>
+      </div><!-- .staking-stats -->
+      
+    </div><!-- .sidebar -->
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+    Reset to defaults
+  </button>
+  <button mat-raised-button color="primary">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Save changes
+  </button>
+</mat-dialog-actions>

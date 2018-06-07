@@ -11,11 +11,11 @@ export class HistoryComponent implements OnInit {
   @ViewChild('transactions') transactions: any;
 
   categories: Array<any> = [
-    { title: 'All transactions',   value: 'all'               },
-    { title: 'Sent',               value: 'send'              },
-    { title: 'Received',           value: 'receive'           },
-    { title: 'Staked',             value: 'stake'             },
-    { title: 'Balance Transfers',  value: 'internal_transfer' },
+    { title: 'All transactions',   value: 'all',               icon: ''},
+    { title: 'Sent',               value: 'send',              icon: 'send'},
+    { title: 'Received',           value: 'receive',           icon: 'receive'},
+    { title: 'Staked',             value: 'stake',             icon: 'stake'},
+    { title: 'Balance Transfers',  value: 'internal_transfer', icon: 'transfer'},
     // { title: 'Immature',         value: 'immature'          },
     // { title: 'Coinbase',         value: 'coinbase'          },
     // { title: 'Orphan',           value: 'orphan'            },
@@ -33,9 +33,9 @@ export class HistoryComponent implements OnInit {
 
   types: Array<any> = [
     { title: 'All types', value: 'all'      },
-    { title: 'Standard',  value: 'standard' },
-    { title: 'Anonymous', value: 'anon'     },
+    { title: 'Public',  value: 'standard'   },
     { title: 'Blind',     value: 'blind'    },
+    { title: 'Anonymous', value: 'anon'     },
   ];
 
   filters: any = {

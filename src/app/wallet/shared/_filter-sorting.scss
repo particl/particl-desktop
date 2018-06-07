@@ -1,0 +1,67 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// ------ FILTER ------ //
+
+.section {
+  .subtitle { // title
+    @extend %subtitle;
+    margin: 24px 0 14px;
+    &.first {
+      margin-top: 0;
+    }
+  }
+}
+ 
+.filter-card {
+  @extend %disable-select;
+  padding: 0;
+  margin-bottom: 16px;
+
+  // search & sorting
+  .search-sorting & {
+    padding: 10px 20px;
+    .filter-input {
+      width: 100%;
+    }
+    .icon-input {
+      .mat-icon {
+        top: 5px;
+        right: 2px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // radio buttons
+  .radio-group {
+    width: calc(100% - 32px);
+    padding: 8px 16px;
+    display: block;
+    .filter-option {
+      @extend %tfx;
+      width: 100%;
+      margin: 0 -16px;
+      padding: 6px 16px;
+      font-family: $font;
+      &:hover {
+        background: $bg-hover;
+      }
+      &.mat-radio-checked .amount {
+        color: white;
+        background: $color;
+      }
+    }
+    .amount {
+      @extend %tfx;
+      font-weight: 600;
+      text-align: center;
+      background: $bg-shadow;
+      border-radius: $radius;
+      float: right;
+      display: inline-block;
+      width: 20px;
+      padding: 0 5px;
+    }
+  }
+
+}
