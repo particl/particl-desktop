@@ -102,17 +102,9 @@
     padding: 24px 16px 12px;
     flex: 0 0 calc((100% / 4) - 57px); // default screen: 4 per row
     max-width: calc((100% / 4) - 57px);
-    @include break(l) {
-      flex: 0 0 calc((100% / 5) - 57px); // larger: 5 per row
-      max-width: calc((100% / 5) - 57px);
-    }
-    @include break(xl) {
-      flex: 0 0 calc((100% / 6) - 57px); // large: 6 per row
+    @include break-from(1650px) {
+      flex: 0 0 calc((100% / 6) - 57px); // larger: 6 per row
       max-width: calc((100% / 6) - 57px);
-    }
-    @include break(xhd) {
-      flex: 0 0 calc((100% / 8) - 57px); // extra large: 8 per row
-      max-width: calc((100% / 8) - 57px);
     }
   }
 
