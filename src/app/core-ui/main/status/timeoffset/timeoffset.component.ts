@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { RpcStateService } from '../../../core/rpc/rpc-state/rpc-state.service';
+import { RpcStateService } from '../../../../core/rpc/rpc-state/rpc-state.service';
 
 @Component({
   selector: 'app-timeoffset',

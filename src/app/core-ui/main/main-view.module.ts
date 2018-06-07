@@ -15,7 +15,7 @@ import { ReleaseNotificationComponent } from './release-notification/release-not
 import { ClientVersionService } from '../../core/http/client-version.service';
 
 import { CartComponent } from './cart/cart.component';
-import { TimeoffsetComponent } from './timeoffset/timeoffset.component';
+import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
 
 
 @NgModule({
