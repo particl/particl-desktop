@@ -1,5 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CoreModule } from '../../../core/core.module';
+import { CoreUiModule } from '../../core-ui.module';
+
 import { TimeoffsetComponent } from './timeoffset.component';
 
 describe('TimeoffsetComponent', () => {
@@ -8,6 +11,10 @@ describe('TimeoffsetComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
+      ],
       declarations: [ TimeoffsetComponent ]
     })
     .compileComponents();
