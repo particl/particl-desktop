@@ -23,13 +23,14 @@ interface ModalsSettings {
 @Injectable()
 export class ModalsHelperService implements OnDestroy {
 
+  private log: any = Log.create('modals.service');
+  private destroyed: boolean = false;
+  
   // @TODO replace ModalsHelperService with ModalsService.
   private progress: Subject<Number> = new Subject<Number>();
 
   /* True if user already has a wallet (imported seed or created wallet) */
   public initializedWallet: boolean = false;
-  private log: any = Log.create('modals.service');
-  private destroyed: boolean = false;
   public enableClose: boolean = true;
 
   private modelSettings: ModalsSettings = {
