@@ -1,29 +1,28 @@
-process.env.NODE_ENV="alpha"
-process.env.TESTNET=true
-
-const _options    = require('../options');
+const log           = require('electron-log');
+const _options    = require('../options').get();
 const market    = require('particl-marketplace');
-// require('../../node_modules/particl-market/dist/core/App.js');
+
+// Stores the child process
+let child = undefined;
 
 exports.init = function() {
-  const options = _options.get();
 
-  if (!options.skipmarket) {
-    // market.startMarket();
-    market.initialize().then((result) => {
-      console.log("particl-market initialized: ", result);
-      market.createDefaultEnvFile().then((env) => {
-        console.log("particl-market env created?: ", env);
+  if (!_options.skipmarket) {
+    log.info('market process starting.');
+    child = market.start();
 
-        market.migrate().then(() => {
-          console.log('Migration done');
-          // TODO: this ugly hack starts the particl-market
-          const t = require('particl-marketplace/dist/app.js');
-        });
-
-      });
+    child.on('close', code => {
+      log.info('market process ended.');
     });
 
+    child.stdout.on('data', data => console.log(data.toString('utf8')));
+    child.stderr.on('data', data => console.log(data.toString('utf8')));
+  }
+}
+
+exports.stop = function() {
+  if (!_options.skipmarket && child) {
+    market.stop();
   }
 }
 

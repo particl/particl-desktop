@@ -20,7 +20,6 @@ exports.init = function (mainWindow) {
     Sends a message to the Angular frontend, on the channel "update".
 */
 exports.send = function(data) {
-    log.warn(" abc - Sending GUI updater information!");
     data = {
         type: 'update',
         content: data
