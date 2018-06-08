@@ -6,6 +6,15 @@
     UI Elements
 \* ------------------------------- */
 
+// ------ LAYOUT ------ //
+
+.container-block { // main container for content
+  padding: 35px;
+  @include break(l) {
+    padding: 45px 50px;
+  }
+}
+
 // ------ ADDRESSES ------ //
 
 .address, .address-label {
@@ -451,6 +460,8 @@ kbd {
   }
 }
 
+// ------ VERIFICATION ------ //
+
 input {
   &[type="text"] {
     border: none;
@@ -459,8 +470,10 @@ input {
   &.verify-sucess {
     color: darken($color, 7%) !important;
   }
-  &.verify-error {
+  &.verify-error,
+  &.verify-error::placeholder {
     color: darken($color-alert, 5%);
+    border-color: $color-alert;
   }
 }
 
@@ -510,7 +523,6 @@ input {
 */
 
 ::-webkit-scrollbar-track {
-  //border-radius: $radius;
   background: lighten($bg-shadow, 3%);
 }
 
@@ -672,69 +684,10 @@ input {
 }
 
 
-/* ------------------------------- *\
-    Helper classes
-\* ------------------------------- */
-
-.TO_DO {
-  box-shadow: 0 0 3px 1px hotpink !important;
-}
-
-
-// ------ LAYOUT ------ //
-
-.containerX {
-  width: 100%;
-}
-
-.container-block { // main container for content
-  padding: 35px;
-  @include break(l) {
-    padding: 45px 50px;
-  }
-}
-
-
-// ------ TEXT/FONTS ------ //
-
-.text-center {
-  text-align: center;
-}
-
-.capitalize {
-  text-transform: capitalize;
-}
-
-
 // ------ QR-CODE ------ //
 
 .qr-code {
   img {
     display: inline !important;
-  }
-}
-
-
-// ------ ANIMATIONS ------ //
-
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(359deg);
-  }
-}
-
-@keyframes pulse-fade {
-  0% {
-    transform: scale(0.3);
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.7);
   }
 }

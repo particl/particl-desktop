@@ -1,6 +1,6 @@
-//@import './src/assets/scss/helper';
-@import "./src/assets/_config"; // import shared colors etc.
-@import "./src/assets/scss/fonts";
+@import "./src/assets/config"; // import shared colors etc.
+@import "./src/assets/scss/helper"; // helper classes
+@import "./src/assets/scss/fonts"; // fonts and iconfonts
 
 
 body {
@@ -8,26 +8,6 @@ body {
   background-color: $bg;
   font-size: 12px;
 }
-
-
-// ------ VERIFICATION ------ //
-
-.verify-error,
-.warning-text {
-  color: $color-alert;
-}
-
-input {
-  &.verify-error,
-  &.verify-error::placeholder {
-    color: $color-alert;
-    border-color: $color-alert;
-  }
-  &.verify-success {
-    color: $color-success;
-  }
-}
-
 
 
 

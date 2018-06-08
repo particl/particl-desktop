@@ -1,27 +1,51 @@
-.cursor-pointer {
-  cursor: pointer;
+/* ------------------------------- *\
+    Helper classes
+\* ------------------------------- */
+
+.TO_DO {
+  box-shadow: 0 0 3px 1px hotpink !important;
 }
 
-.text-uppercase {
-  text-transform: uppercase;
-}
 
-.list-header {
-  box-sizing: border-box;
-  font-weight: bold;
-  font-size: 16px;
-}
+// ------ TEXT/FONTS ------ //
 
-.zindex {
-  z-index: 9999;
+.text-center {
+  text-align: center;
 }
 
 .text-right {
   text-align: right;
 }
 
-/*
-.uc-first{
-  text-transform: capitalize;
+.capitalize { 
+  text-transform: capitalize; 
 }
-*/
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+
+// ------ ANIMATIONS ------ //
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes pulse-fade {
+  0% {
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
