@@ -286,7 +286,14 @@ mat-card.mat-card { // FIXME: remove the !important and solve overwriting
   cursor: help;
 }
 
-// ------ <kbd> ------ //
+// ------ Basic styling ------ //
+
+code {
+  color: darken($color, 7%);
+  background: rgba($color, 0.1);
+  padding: 1px 6px;
+  border-radius: $radius;
+}
 
 kbd {
   font-size: 95%;
