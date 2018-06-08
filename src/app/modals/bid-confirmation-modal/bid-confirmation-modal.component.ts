@@ -18,7 +18,7 @@ export class BidConfirmationModalComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<BidConfirmationModalComponent>) { }
 
   ngOnInit() {
-    // this.country = this.bidItem.ShippingAddress.country;
+    this.country = this.bidItem ? this.bidItem.ShippingAddress.country : '';
   }
 
   confirm(): void {

@@ -64,13 +64,13 @@ export class ModalsHelperService implements OnDestroy {
   unlock(data: UnlockModalConfig, callback?: Function) {
     if (this._rpcState.get('locked')) {
       const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
-      if (!!data || callback) {
+      if (data || callback) {
         dialogRef.componentInstance.setData(data, callback);
       }
       dialogRef.afterClosed().subscribe(() => {
         this.log.d('unlock modal closed');
       });
-    } else if (!!callback) {
+    } else if (callback) {
       callback();
     }
   }
