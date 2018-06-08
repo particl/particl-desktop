@@ -8,11 +8,12 @@ import { ListingService } from '../../../../core/market/api/listing/listing.serv
 
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
 import { PlaceOrderComponent } from '../../../../modals/place-order/place-order.component';
 import { ShippingComponent } from '../../../../modals/shipping/shipping.component';
-import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
-import { SendConfirmationModalComponent } from '../../../../wallet/wallet/send/send-confirmation-modal/send-confirmation-modal.component';
+import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
+
 @Component({
   selector: 'app-order-item',
   templateUrl: './order-item.component.html',
@@ -145,9 +146,8 @@ export class OrderItemComponent implements OnInit {
 
   openPaymentConfirmationModal() {
     // @TODO need to be sets trasaction fee.
-    const dialogRef = this.dialog.open(SendConfirmationModalComponent);
+    const dialogRef = this.dialog.open(BidConfirmationModalComponent);
 
-    dialogRef.componentInstance.type = 'bid';
     dialogRef.componentInstance.bidItem = this.order;
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       // do other action after confirm

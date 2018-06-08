@@ -30,6 +30,8 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 import { PlaceOrderComponent } from './place-order/place-order.component';
 import { ShippingComponent } from './shipping/shipping.component';
+import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
+import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -56,7 +58,9 @@ import { ShippingComponent } from './shipping/shipping.component';
     DeleteListingComponent,
     ManageWidgetsComponent,
     PlaceOrderComponent,
-    ShippingComponent
+    ShippingComponent,
+    SendConfirmationModalComponent,
+    BidConfirmationModalComponent
   ],
   exports: [
     ClipboardModule
@@ -79,7 +83,9 @@ import { ShippingComponent } from './shipping/shipping.component';
     PlaceOrderComponent,
     ShippingComponent,
     CreateWalletComponent,
-    ColdstakeComponent
+    ColdstakeComponent,
+    SendConfirmationModalComponent,
+    BidConfirmationModalComponent
   ],
 })
 export class ModalsModule {

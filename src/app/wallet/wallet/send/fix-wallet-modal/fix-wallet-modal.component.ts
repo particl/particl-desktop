@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, forwardRef, OnInit } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
 
 import { RpcService, RpcStateService } from 'app/core/core.module';
@@ -17,6 +17,7 @@ export class FixWalletModalComponent implements OnInit {
     private _rpcState: RpcStateService,
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    @Inject(forwardRef(() => ModalsHelperService))
     private modals: ModalsHelperService,
     private dialogRef: MatDialogRef<FixWalletModalComponent>,
     private dialog: MatDialog

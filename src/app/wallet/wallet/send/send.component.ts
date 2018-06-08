@@ -12,10 +12,10 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
-import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 
 import { AddressHelper } from '../../../core/util/utils';
 import { TransactionBuilder, TxType } from './transaction-builder.model';
+import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
 
 @Component({
@@ -194,7 +194,6 @@ export class SendComponent implements OnInit {
       txt = `Do you really want to transfer the following balance ${this.send.amount} ${this.send.currency.toUpperCase()}?`
     }
 
-    dialogRef.componentInstance.type = 'tx';
     dialogRef.componentInstance.dialogContent = txt;
     dialogRef.componentInstance.send = this.send;
 
