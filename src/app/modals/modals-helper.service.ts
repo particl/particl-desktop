@@ -30,7 +30,6 @@ export class ModalsHelperService implements OnDestroy {
   public initializedWallet: boolean = false;
   private log: any = Log.create('modals.service');
   private destroyed: boolean = false;
-  public enableClose: boolean = true;
 
   private modelSettings: ModalsSettings = {
     disableClose: true
@@ -54,14 +53,6 @@ export class ModalsHelperService implements OnDestroy {
 
     /* Hook wallet initialized -> open createwallet modal */
     this.openInitialCreateWallet();
-
-    /* Hook daemon errors -> open daemon modal */
-    this._rpcState.errorsStateCall.asObservable()
-    .subscribe(
-      status => this.log.d('close demaon modal if already open'),
-      error => {
-          this.enableClose = true;
-      });
   }
 
   /**

@@ -69,7 +69,6 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   reset(): void {
-    this._modals.enableClose = true;
     this.rpcState.set('modal:fullWidth:enableClose', true);
     this.words = Array(24).fill('');
     this.isRestore = false;
@@ -169,7 +168,6 @@ export class CreateWalletComponent implements OnDestroy {
 
         break;
     }
-    this._modals.enableClose = (this.step === 0);
     this.rpcState.set('modal:fullWidth:enableClose', (this.step === 0));
   }
 
@@ -202,7 +200,6 @@ export class CreateWalletComponent implements OnDestroy {
           this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
-          this._modals.enableClose = true;
           this.rpcState.set('ui:spinner', false);
           this.rpcState.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');
