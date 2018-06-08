@@ -41,7 +41,7 @@ export class MarketService {
     return this._http.post(this.url, postData, { headers: headers })
         .map((response: any) => response.result)
         .catch((error: any) => {
-
+          // Inconsistency when you do add to cart
           this.log.d('Market threw an error!');
           console.log(error);
 

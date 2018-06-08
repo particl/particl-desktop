@@ -78,6 +78,6 @@
   </div>
   <div class="right" fxLayout fxLayoutAlign="end center">
     <app-favorite [listing]="data?.listing" [detail]="true"></app-favorite>
-    <app-add-to-cart [listing]="data?.listing" [detail]="true"></app-add-to-cart>
+    <app-add-to-cart [listing]="data?.listing" [detail]="true" (onClose)="dialogClose()"></app-add-to-cart>
   </div>
 </mat-dialog-actions>
