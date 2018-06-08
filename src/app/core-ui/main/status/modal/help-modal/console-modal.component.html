@@ -5,16 +5,16 @@
 
   <div mat-dialog-container>
     <mat-tab-group (selectChange)="selectTab($event.index)">
-      <mat-tab label="RpcConsole">
-        <p>
-          Welcome to the Particl Core RPC console.<br>
+      <mat-tab label="Core console">
+        <p class="console-info">
+          Welcome to the <strong>Particl Core RPC</strong> console (for interacting with wallet).<br>
           <!--Use up and down arrows to navigate history, and Ctrl-L to clear screen.-->
           Type <code>help</code> for an overview of available commands.
         </p>
       </mat-tab>
-      <mat-tab label="MarketConsole">
-        <p>
-          Welcome to the Particl MarketPlace console.<br>
+      <mat-tab label="Market console">
+        <p class="console-info">
+          Welcome to the <strong>Particl Marketplace</strong> console.<br>
           <!--Use up and down arrows to navigate history, and Ctrl-L to clear screen.-->
           Type <code>help</code> for an overview of available commands.
         </p>
@@ -30,10 +30,6 @@
     </div>
 
     <div class="content-modal" [ngClass]="{'input': list.type === 1}" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start" *ngFor="let list of commandList">
-      <!--div fxFlex="0 0 25px" *ngIf="list.type === 1">
-        <mat-icon fontSet="partIcon" fontIcon="part-send" *ngIf="list.type === 1"></mat-icon>
-        <mat-icon fontSet="partIcon" fontIcon="part-receive" *ngIf="list.type === 2"></mat-icon>
-      </div-->
       <div fxFlex="1 1 100%" class="command">
         <pre class="text-format" *ngIf="isJson(list.text)">{{ list.text | json }}</pre>
         <pre class="text-format" [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">{{ list.text }}</pre>
