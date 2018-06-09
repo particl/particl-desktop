@@ -118,6 +118,8 @@ exports.check = function () {
   });
 }
 
+// Note: this will resolve before the daemon has actually quit.
+// do not rely on it. Use daemon.on('close', ...) instead
 exports.stop = function (restarting) {
   log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
@@ -145,19 +147,20 @@ exports.stop = function (restarting) {
   });
 }
 
-function _stop() {
+function _stop(attempt = 0) {
   rpc.call('stop', null, (error, response) => {
     if (error) {
-      if (error.error && error.error.code) {
-        // daemon is busy cut it some slack.
-        setTimeout(_stop, 1000);
-      } else {
+      // just kill after 180s
+      if(attempt >= 180) {
         log.info('daemon errored to rpc stop - killing it brutally :(');
-        console.log(error);
+        log.info(error);
         daemon.kill('SIGINT');
-      }
+      } else {
+        // daemon is busy cut it some slack.
+        setTimeout(_stop, 1000, ++attempt);
+      } 
     } else {
-      log.info('Daemon stopping gracefully - we can not quit safely :)');
+      log.info('Daemon stopping gracefully - we can now quit safely :)');
     }
   });
 }
