@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { TransactionBuilder } from 'app/wallet/wallet/send/transaction-builder.model';
-import { Bid } from 'app/core/market/api/bid/bid.model';
+
 import { Amount, Fee } from 'app/core/util/utils';
 import { SendService } from 'app/wallet/wallet/send/send.service';
 

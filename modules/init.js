@@ -94,7 +94,6 @@ electron.app.on('before-quit', function beforeQuit(event) {
   rpc.destroy();
   notification.destroy();
   
-  market.stop();
   daemon.stop().then(() => {
     log.info('daemon.stop() resolved!');
   })
