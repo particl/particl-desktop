@@ -70,6 +70,9 @@ exports.start = function (wallets) {
       resolve(undefined);
 
     }).catch(() => {
+      // clear cookie authentication
+      // currently used by electron (if reboot)
+      clearCookie();
 
       let options = _options.get();
       const daemonPath = options.customdaemon
