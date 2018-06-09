@@ -139,6 +139,7 @@ exports.stop = function (restarting) {
       rpc.call('stop', null, (error, response) => {
         if (error) {
           log.info('daemon errored to rpc stop - killing it brutally :(');
+          console.log(error);
           daemon.kill('SIGINT');
           reject();
         } else {
