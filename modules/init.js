@@ -96,7 +96,7 @@ electron.app.on('before-quit', function beforeQuit(event) {
   
   daemon.stop().then(() => {
     log.info('daemon.stop() resolved!');
-  })
+  });
 });
 
 electron.app.on('quit', (event, exitCode) => {

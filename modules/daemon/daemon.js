@@ -43,7 +43,7 @@ exports.restart = function (alreadyStopping) {
     daemon.once('close', code => {
       // clear authentication
       clearCookie();
-      
+
       // restart
       this.start(chosenWallets);
     });
@@ -88,8 +88,6 @@ exports.start = function (wallets) {
           if (code !== 0) {
             reject();
             log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
-          } else {
-            log.info('daemon exited successfully');
           }
         });
 
@@ -130,27 +128,36 @@ exports.stop = function (restarting) {
       // do not close electron when restarting (e.g encrypting wallet)
       if (!restarting) {
         daemon.once('close', code => {
-          log.info('daemon exited successfully - we can now quit electron safely! :)');
+          log.info('daemon exited successfully - quiting electron');
           electron.app.quit();
         });
       }
 
       log.info('Call RPC stop!');
-      rpc.call('stop', null, (error, response) => {
-        if (error) {
-          log.info('daemon errored to rpc stop - killing it brutally :(');
-          console.log(error);
-          daemon.kill('SIGINT');
-          reject();
-        } else {
-          log.info('Daemon stopping gracefully...');
-          resolve();
-        }
-      });
+      _stop();
+      resolve();
+
     } else {
       log.info('Daemon not managed by gui.');
       resolve();
     }
 
+  });
+}
+
+function _stop() {
+  rpc.call('stop', null, (error, response) => {
+    if (error) {
+      if (error.error && error.error.code) {
+        // daemon is busy cut it some slack.
+        setTimeout(_stop, 1000);
+      } else {
+        log.info('daemon errored to rpc stop - killing it brutally :(');
+        console.log(error);
+        daemon.kill('SIGINT');
+      }
+    } else {
+      log.info('Daemon stopping gracefully - we can not quit safely :)');
+    }
   });
 }
