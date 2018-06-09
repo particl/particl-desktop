@@ -168,10 +168,4 @@ export class MainViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-  // Sample code for open modal box
-  openDemonConnectionModal() {
-    const dialogRef = this.dialog.open(DaemonConnectionComponent);
-    dialogRef.componentInstance.text = "Test";
-  }*/
 }

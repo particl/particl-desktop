@@ -12,7 +12,6 @@ import { ModalsHelperService } from 'app/modals/modals-helper.service';
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
-import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
@@ -25,7 +24,6 @@ import { PasswordComponent } from './shared/password/password.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
-import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
@@ -43,14 +41,12 @@ import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-mod
     PassphraseComponent,
     PasswordComponent,
     CreateWalletComponent,
-    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
     MultiwalletComponent,
-    DaemonConnectionComponent,
     ManageWidgetsComponent,
     SendConfirmationModalComponent
   ],
@@ -64,12 +60,10 @@ import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-mod
     SnackbarService
   ],
   entryComponents: [
-    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
-    DaemonConnectionComponent,
     ManageWidgetsComponent,
     CreateWalletComponent,
     ColdstakeComponent,
