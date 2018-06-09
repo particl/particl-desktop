@@ -66,13 +66,14 @@ exports.start = function (wallets) {
     chosenWallets = wallets;
 
     exports.check().then(() => {
-      log.info('daemon already started');
+      log.info('daemon already running');
       resolve(undefined);
 
     }).catch(() => {
       // clear cookie authentication
       // currently used by electron (if reboot)
       clearCookie();
+      daemon = undefined;
 
       let options = _options.get();
       const daemonPath = options.customdaemon
@@ -84,8 +85,6 @@ exports.start = function (wallets) {
 
       const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
         .on('close', code => {
-          log.info('daemon exited - setting to undefined.');
-          daemon = undefined;
           if (code !== 0) {
             reject();
             log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
@@ -96,9 +95,7 @@ exports.start = function (wallets) {
 
       // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
-      child.stderr.on('data', data => {
-        daemonData(data, console.log);
-      });
+      child.stderr.on('data', data => daemonData(data, console.log));
 
       daemon = child;
     });
