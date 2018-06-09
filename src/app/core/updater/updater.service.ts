@@ -46,7 +46,8 @@ export class UpdaterService {
     // open modal
     if (status.status === 'started') {
       this.log.d('stating modal');
-      this.modal = this.dialog.open(UpdaterComponent);
+      this.modal = this.dialog.open(UpdaterComponent, { disableClose: true });
+      this.modal.afterClosed().subscribe(() => this.modal = undefined);
     }
 
     // update modal
