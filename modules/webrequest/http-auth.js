@@ -14,7 +14,6 @@ let whitelist = new Map();
 
 exports.init = function () {
     loadDev();
-    loadMarketAuthentication();
     loadWalletAuthentication();
     loadGithub();
 
@@ -73,18 +72,6 @@ function getAuthentication(url) {
         }
         return undefined;
     }
-}
-
-function loadMarketAuthentication() {
-    let options = _options.get();
-    // let key = "dev1.particl.xyz:";
-    let key = "localhost:3000";
-    let value = {
-        name: "market",
-        auth: "test:test"
-    }
-
-    whitelist.set(key, value);
 }
 
 function loadWalletAuthentication() {

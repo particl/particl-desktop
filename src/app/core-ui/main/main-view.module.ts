@@ -14,7 +14,6 @@ import { PercentageBarComponent } from '../../modals/shared/percentage-bar/perce
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
 
-import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
 
 
@@ -36,7 +35,6 @@ import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
     PercentageBarComponent,
     ConsoleModalComponent,
     ReleaseNotificationComponent,
-    CartComponent,
     TimeoffsetComponent
   ],
   entryComponents: [

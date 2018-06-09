@@ -16,7 +16,7 @@ exports.init = function () {
         let notification = new Notification({
             'title': title,
             'body': desc,
-            'icon': path.join(__dirname, 'src/assets/icons/notification.png')
+            'icon': util.getRootOrResourcePath()
         })
         notification.show()
         return Observable.create(observer => {

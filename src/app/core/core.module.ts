@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
 import { RpcModule } from './rpc/rpc.module';
-import { MarketModule } from './market/market.module';
 
 import { IpcService } from './ipc/ipc.service';
 import { RpcService } from './rpc/rpc.service';
@@ -27,7 +26,6 @@ import { MatDialogModule } from '@angular/material';
   imports: [
     CommonModule,
     RpcModule.forRoot(), // TODO: should be here?
-    MarketModule.forRoot(),
     MatDialogModule
   ],
   exports: [

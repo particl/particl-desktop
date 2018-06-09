@@ -10,8 +10,6 @@ const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
-const market        = require('./market/market');
-
 
 
 exports.start = function (mainWindow) {
@@ -20,7 +18,6 @@ exports.start = function (mainWindow) {
   notification.init();
 
   daemon.init();
-  market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);

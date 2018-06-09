@@ -6,8 +6,5 @@ export const environment = {
   version: require('../../package.json').version,
   envName: 'docker2',
   particlHost: 'localhost',
-  particlPort: 53935,
-  marketVersion: 'UNKNOWN',
-  marketHost: 'localhost',
-  marketPort: 3200
+  particlPort: 53935
 };

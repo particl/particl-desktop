@@ -24,50 +24,6 @@
 
     <mat-content class="sidebar-section" *ngIf="walletInitialized">
       <mat-accordion [multi]="'multi'">
-        <mat-expansion-panel #panel2 expanded="true" class="no-padding arrow-colored">
-          <mat-expansion-panel-header>Market</mat-expansion-panel-header>
-          <mat-content>
-            <mat-list class="sidebar-item-group">
-
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/market/overview'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-listings"></mat-icon>
-                  <span class="text">Listings</span>
-                </mat-list-item>
-              </a>
-
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/market/buy'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-bag-buy"></mat-icon>
-                  <span class="text">Buy</span>
-                  <!-- TODO? add current number of Buy orders (maybe limit only to those who need action? e.g. "payment" or "confirm shipped"): -->
-                  <!-- <span class="tag TO_DO">4</span> -->
-                </mat-list-item>
-              </a>
-
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/market/sell'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-bag-sell"></mat-icon>
-                  <span class="text">Sell</span>
-                  <!-- TODO? add current number of Sell orders (maybe limit only to those who need action? e.g. "accept bid" or "mark shipped"): -->
-                  <!-- <span class="tag TO_DO">2</span> -->
-                </mat-list-item>
-              </a>
-
-            </mat-list><!-- .sidebar-item-group -->
-          </mat-content>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-content><!-- .sidebar-section -->
-
-    <mat-content class="sidebar-section" *ngIf="walletInitialized">
-      <mat-accordion [multi]="'multi'">
         <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
           <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
           <mat-content>
@@ -213,9 +169,6 @@
         <div class="client item">
           Client <span class="version">{{ clientVersion }}</span>
         </div>
-        <div class="client item">
-          Market <span class="version">{{ marketVersion }}</span>
-        </div>
         <div class="daemon item">
           Daemon <span class="version">{{ daemonVersion }}</span>
         </div>
@@ -246,7 +199,6 @@
       </div>
     </div><!-- .left -->
     <div class="right" fxFlex="1 1 60%">
-      <app-cart></app-cart>
       <app-status></app-status>
     </div><!-- .right -->
 

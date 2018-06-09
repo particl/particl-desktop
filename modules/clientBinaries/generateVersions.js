@@ -141,7 +141,7 @@ got(`${releasesURL}`).then(response => {
     releaseIndex++;
   }
   release = body[releaseIndex];
-  
+
   var tag = release.tag_name.substring(1);
   var binaries = [];
 

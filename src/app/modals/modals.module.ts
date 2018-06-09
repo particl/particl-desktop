@@ -17,7 +17,6 @@ import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
-import { DeleteListingComponent } from './delete-listing/delete-listing.component';
 
 /* shared in modals */
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
@@ -28,10 +27,7 @@ import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
-import { PlaceOrderComponent } from './place-order/place-order.component';
-import { ShippingComponent } from './shipping/shipping.component';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
-import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -55,12 +51,8 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     ColdstakeComponent,
     MultiwalletComponent,
     DaemonConnectionComponent,
-    DeleteListingComponent,
     ManageWidgetsComponent,
-    PlaceOrderComponent,
-    ShippingComponent,
-    SendConfirmationModalComponent,
-    BidConfirmationModalComponent
+    SendConfirmationModalComponent
   ],
   exports: [
     ClipboardModule
@@ -78,14 +70,10 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     EncryptwalletComponent,
     AlertComponent,
     DaemonConnectionComponent,
-    DeleteListingComponent,
     ManageWidgetsComponent,
-    PlaceOrderComponent,
-    ShippingComponent,
     CreateWalletComponent,
     ColdstakeComponent,
-    SendConfirmationModalComponent,
-    BidConfirmationModalComponent
+    SendConfirmationModalComponent
   ],
 })
 export class ModalsModule {

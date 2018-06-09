@@ -8,8 +8,7 @@ import { PreloadingStrategy, PreloadAllModules, Route } from '@angular/router';
 /* actual routing */
 const routes: Routes = [
   { path: '', redirectTo: 'wallet', pathMatch: 'full' },
-  { path: 'wallet', loadChildren: './wallet/wallet.module#WalletViewsModule'},
-  { path: 'market', loadChildren: './market/market.module#MarketModule'}
+  { path: 'wallet', loadChildren: './wallet/wallet.module#WalletViewsModule'}
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules});
