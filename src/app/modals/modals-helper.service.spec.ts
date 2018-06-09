@@ -1,13 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef } from '@angular/material';
 
 import { ModalsModule } from './modals.module';
 import { CoreModule } from '../core/core.module';
 
-import { ModalsService } from './modals.service';
-import { MatDialogModule, MatDialogRef } from '@angular/material';
+import { ModalsHelperService } from './modals-helper.service';
 
-
-  describe('ModalsService', () => {
+describe('ModalsHelperService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -16,12 +15,12 @@ import { MatDialogModule, MatDialogRef } from '@angular/material';
         CoreModule.forRoot()
       ],
       providers: [
-        { provide: MatDialogRef},
+        { provide: MatDialogRef}
       ]
     });
   });
 
-  it('should be created', inject([ModalsService], (service: ModalsService) => {
+  it('should be created', inject([ModalsHelperService], (service: ModalsHelperService) => {
     expect(service).toBeTruthy();
   }));
 });

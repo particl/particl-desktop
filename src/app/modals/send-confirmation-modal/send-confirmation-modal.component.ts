@@ -1,11 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-
-import { SendService } from '../send.service';
-
-import { Amount, Fee } from '../../../../core/util/utils';
-import { TransactionBuilder } from '../transaction-builder.model';
-import { Bid } from '../../../../core/market/api/bid/bid.model';
+import { TransactionBuilder } from 'app/wallet/wallet/send/transaction-builder.model';
+import { Bid } from 'app/core/market/api/bid/bid.model';
+import { Amount, Fee } from 'app/core/util/utils';
+import { SendService } from 'app/wallet/wallet/send/send.service';
 
 @Component({
   selector: 'app-send-confirmation-modal',
@@ -15,13 +13,10 @@ import { Bid } from '../../../../core/market/api/bid/bid.model';
 export class SendConfirmationModalComponent implements OnInit {
 
   @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
-  @Input() type: string;
 
   public dialogContent: string;
   public send: TransactionBuilder;
-  public bidItem: Bid;
-  public country: string = '';
-  // send-confirmation-modal variables
+
   transactionType: string = '';
   sendAmount: Amount = new Amount(0);
   sendAddress: string = '';
@@ -33,12 +28,7 @@ export class SendConfirmationModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.type === 'tx') {
-      this.setTxDetails();
-    }
-    if (this.type === 'bid') {
-      this.country = this.bidItem.ShippingAddress.country;
-    }
+    this.setTxDetails();
   }
 
   confirm(): void {

@@ -1,15 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MatFormFieldModule } from '@angular/material';
-import { MaterialModule } from '../../../../core-ui/material/material.module';
+import { MaterialModule } from '../../core-ui/material/material.module';
 
-import { SendService } from '../send.service';
-import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
+
+import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { SendConfirmationModalComponent } from './send-confirmation-modal.component';
-import { TransactionBuilder } from '../transaction-builder.model';
+import { SendService } from 'app/wallet/wallet/send/send.service';
+import { SendMockService } from 'app/_test/wallet-test/send-test/send-mock.service';
+import { TransactionBuilder } from 'app/wallet/wallet/send/transaction-builder.model';
 
-import { SendMockService } from '../../../../_test/wallet-test/send-test/send-mock.service';
 
 describe('SendConfirmationModalComponent', () => {
   let component: SendConfirmationModalComponent;
