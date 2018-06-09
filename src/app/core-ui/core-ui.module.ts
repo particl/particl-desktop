@@ -7,8 +7,6 @@ import { MainViewModule } from './main/main-view.module';
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
-// TODO: move to material
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -18,14 +16,12 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     CommonModule,
     MaterialModule,
     MainViewModule,
-    MatDialogModule, // todo move
-    InfiniteScrollModule
+    MatDialogModule // todo move
   ],
   exports: [
     MaterialModule,
     MainViewModule,
-    PaginatorComponent,
-    InfiniteScrollModule
+    PaginatorComponent
   ]
 })
 export class CoreUiModule {
