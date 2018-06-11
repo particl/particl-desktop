@@ -11,7 +11,7 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
   styleUrls: ['./add-to-cart.component.scss']
 })
 export class AddToCartComponent implements OnInit {
-  @Output() onClose: EventEmitter<any> = new EventEmitter();
+  @Output() onAdded: EventEmitter<any> = new EventEmitter();
   private log: any = Log.create('add-to-cart.component id:' + Math.floor((Math.random() * 1000) + 1));
 
   @Input() listing: Listing;
@@ -27,7 +27,7 @@ export class AddToCartComponent implements OnInit {
   addToCart() {
     this.cartService.add(this.listing).subscribe(res => {
       this.snackbar.open('Item successfully added to cart');
-      this.onClose.emit();
+      this.onAdded.emit();
     }, error => this.snackbar.open(error));
   }
 
