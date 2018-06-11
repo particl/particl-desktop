@@ -108,7 +108,7 @@ export class RpcService implements OnDestroy {
             } else if (error._body) {
               err = JSON.parse(error._body);
             } else {
-              err = error.message;
+              err = error.error ? error.error.error : error.message;
             }
 
             return Observable.throw(err)
