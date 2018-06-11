@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material';
 
 import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
@@ -17,6 +18,7 @@ describe('SyncingComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
        ],
+       providers: [ { provide: MatDialogRef } ],
        declarations: [SyncingComponent]
     })
     .compileComponents();
