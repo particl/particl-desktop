@@ -1,13 +1,19 @@
-/* ------------------------------- *\
-    Helper classes
-\* ------------------------------- */
+/*
 
-.TO_DO {
-  box-shadow: 0 0 3px 1px hotpink !important;
-}
+    _  _ ____ _    ___  ____ ____ 
+    |__| |___ |    |__] |___ |__/ 
+___ |  | |___ |___ |    |___ |  \ 
+                                  
+Helper & misc classes
 
+  TOC:
+    1. Texts/fonts
+    2. Animations
+    3. Misc
 
-// ------ TEXT/FONTS ------ //
+*/
+
+// ------ 1. TEXT/FONTS ------ //
 
 .text-center {
   text-align: center;
@@ -26,7 +32,7 @@
 }
 
 
-// ------ ANIMATIONS ------ //
+// ------ 2. ANIMATIONS ------ //
 
 @keyframes rotate {
   0% {
@@ -48,4 +54,12 @@
     opacity: 0;
     transform: scale(1.7);
   }
+}
+
+
+// ------ 3. MISC ------ //
+
+// for unfinished features
+.TO_DO {
+  box-shadow: 0 0 3px 1px hotpink !important;
 }
