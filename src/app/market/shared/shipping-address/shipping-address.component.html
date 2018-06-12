@@ -1,0 +1,5 @@
+<p class="address">
+  {{ shippingAddress?.firstName || '' }} {{ shippingAddress?.lastName || '' }} <br>
+  {{ shippingAddress?.addressLine1 || '' }}, {{ addressLine2 }} {{shippingAddress?.city || '' }}{{ state }}<br>
+  {{ shippingAddress?.zipCode || '' }}, {{ country }}
+</p>

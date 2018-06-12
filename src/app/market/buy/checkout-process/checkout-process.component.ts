@@ -2,6 +2,7 @@ import {
   Component, EventEmitter, OnDestroy, OnInit, Output,
   ViewChild
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -51,7 +52,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
   public country: string = '';
-
+  public invalid$: Observable<boolean>;
 
   constructor(// 3rd party
     private formBuilder: FormBuilder,
@@ -96,6 +97,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       });
 
     this.getCache();
+
+    // Disabled button until it gets validate
+    this.invalid$ = this.shippingFormGroup.statusChanges
+            .map((state) => state !== 'VALID');
+
   }
 
   ngOnDestroy() {
@@ -174,6 +180,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     this.country = this.shippingFormGroup.value.country || '';
+    console.log(this.country);
     const address = this.shippingFormGroup.value as Address;
     upsert(address).take(1).subscribe(addressWithId => {
       // update the cache

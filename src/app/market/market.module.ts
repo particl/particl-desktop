@@ -17,6 +17,7 @@ import { OrdersComponent } from './shared/orders/orders.component';
 import { CheckoutProcessComponent } from './buy/checkout-process/checkout-process.component';
 import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
 import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
+import { ShippingAddressComponent } from './shared/shipping-address/shipping-address.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
     OrdersComponent,
     CheckoutProcessComponent,
     OrderItemComponent,
-    AddToCartComponent
+    AddToCartComponent,
+    ShippingAddressComponent
   ],
   entryComponents: [
     PreviewListingComponent
