@@ -1,6 +1,6 @@
-# particl-desktop – UI
-
 ![UI Preview](preview.gif)
+
+# particl-desktop – UI
 
 > *"Particl is an open source project that aims to restore the balance of privacy on the internet."*
 
