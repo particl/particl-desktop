@@ -8,7 +8,7 @@ Global SCSS config file defining app-wide settings (included in every page)
 
   TOC:
     1. Variables
-    2. Imports
+    2. Global imports
     3. Templates
 
 */
@@ -54,7 +54,7 @@ $break-xhd: 2200px;
 
 
 /* ------------------------------- *\
-    2. Imports
+    2. Global imports
 \* ------------------------------- */
 
 @import "scss/mixins";

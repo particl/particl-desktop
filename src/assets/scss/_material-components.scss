@@ -472,6 +472,12 @@ input {
   background: white;
 }
 
+.underliningSelect {
+  border-bottom: .2px solid rgba(0, 0, 0, 0.507);
+  line-height: 1.6em;
+}
+
+
 // ------ 3.4. RADIOS ------ //
 
 .mat-radio-button {
