@@ -1,33 +1,64 @@
 <app-header class="disable-select">
-  <div fxLayout="row" class="tab-bar">
-    <div fxFlex="1 1 70%">
-      <mat-tab-group (selectChange)="changeTab($event.index)">
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
-            Public
-          </ng-template>
-        </mat-tab>
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
-            Private
-          </ng-template>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-    <mat-form-field class="icon-input search-address" fxFlex="0 1 400px" (click)="selectInput()">
-      <input matInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
-             placeholder="Search receive addresses" (ngModelChange)="resetPagination()">
-
-      <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
-                fontIcon="part-clear-all"></mat-icon>
-
-      <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address"
-                matTooltipPosition="after"></mat-icon>
-    </mat-form-field>
+  <div class="tab-bar">
+    <mat-tab-group (selectChange)="changeTab($event.index)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
+          Public address
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
+          Private address
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </app-header>
+
+
+<div class="container-block disable-select">
+
+  <mat-card class="receive-address">
+    Receive
+  </mat-card>
+
+  <div class="show-old">
+    <button mat-button class="small" matTooltip="Display and filter your previously used addresses">
+      <mat-icon fontSet="partIcon" fontIcon="part-triangle-down"></mat-icon>
+      Show older addresses
+    </button>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div class="container-block disable-select" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="40px">
   <!-- Address details & QR code -->
@@ -70,6 +101,17 @@
 
   <!-- Address list -->
   <div fxFlex="1 1 calc(100% - 260px)" *ngIf="getUnusedAddress()">
+
+    <mat-form-field class="icon-input search-address" (click)="selectInput()">
+      <input matInput type="text" class="header-input" id="searchbar" [(ngModel)]="query"
+              placeholder="Search receive addresses" (ngModelChange)="resetPagination()">
+
+      <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
+                fontIcon="part-clear-all"></mat-icon>
+
+      <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address"
+                matTooltipPosition="after"></mat-icon>
+    </mat-form-field>
 
     <mat-list class="list-data" *ngIf="inSearchMode() === false">
       <div mat-subheader class="address-title first">Unused address</div>

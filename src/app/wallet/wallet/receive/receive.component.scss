@@ -7,11 +7,38 @@
 }
 
 .container-block {
-  padding-top: calc(35px - 1.25em); // offset padding from search input
+  display: flex;
+  $padding: 35px;
+  padding: $padding;
+  height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - (2 * #{$padding}));
+  position: relative;
   @include break(l) {
-    padding-top: 30px;
+    $padding: 45px;
+    padding: $padding 50px;
+    height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - (2 * #{$padding}));
   }
 }
+
+// fresh unused receive address
+.receive-address {
+  margin: auto;
+  max-width: 700px;
+}
+
+// show old addresses
+.show-old {
+  text-align: center;
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+
+
+
+
 
 /* ------------------------------- *\
     Search Addresses
