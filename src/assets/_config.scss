@@ -1,5 +1,21 @@
+/*
+
+    ____ ____ _  _ ____ _ ____ 
+    |    |  | |\ | |___ | | __ 
+___ |___ |__| | \| |    | |__] 
+                               
+Global SCSS config file defining app-wide settings (included in every page)
+
+  TOC:
+    1. Variables
+    2. Global imports
+    3. Templates
+
+*/
+
+
 /* ------------------------------- *\
-    Variables
+    1. Variables
 \* ------------------------------- */
 
 $font: "Inter_UI", sans-serif;
@@ -36,15 +52,16 @@ $break-xl: 1700px;
 $break-hd: 1920px;
 $break-xhd: 2200px;
 
+
 /* ------------------------------- *\
-    Imports
+    2. Global imports
 \* ------------------------------- */
 
 @import "scss/mixins";
-@import "scss/helper";
+
 
 /* ------------------------------- *\
-    Placeholder selectors
+    3. Templates
     http://thesassway.com/intermediate/understanding-placeholder-selectors
 \* ------------------------------- */
 
