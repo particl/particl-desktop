@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import { Log } from 'ng2-logger';
+import { Observable } from 'rxjs';
 
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
@@ -10,7 +11,7 @@ import { ProfileService } from 'app/core/market/api/profile/profile.service';
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create('orders.component id:' + Math.floor((Math.random() * 1000) + 1));
   @Input() type: string;
@@ -40,6 +41,8 @@ export class OrdersComponent implements OnInit {
     search:   undefined,
     sort:     undefined
   };
+  timer: Observable<number>;
+  destroyed: boolean = false;
 
   constructor(
     private bid: BidService,
@@ -53,16 +56,30 @@ export class OrdersComponent implements OnInit {
     this.profileService.default().take(1).subscribe(
       profile => {
         this.profile = profile;
-        this.loadOrders();
+        this.callLoadOffers();
       });
   }
 
-  loadOrders(): void {
-    this.bid.search(this.profile.address, this.type).take(1).subscribe(orders => {
-      console.log('called >>>>>>>>>>>>>>>>>', orders);
-      orders.orders.reverse();
-      this.orders = orders;
+  callLoadOffers() {
+    this.loadOrders()
+    this.timer = Observable.interval(1000 * 30);
+
+    // call loadOrders in every 30 sec.
+    this.timer.takeWhile(() => !this.destroyed).subscribe((t) => {
+      this.loadOrders()
     });
   }
 
+  loadOrders(): void {
+    this.bid.search(this.profile.address, this.type)
+      .subscribe(orders => {
+        console.log('called >>>>>>>>>>>>>>>>>', orders);
+        orders.orders.reverse();
+        this.orders = orders;
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
 }
