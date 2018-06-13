@@ -9,20 +9,38 @@
 .container-block {
   display: flex;
   $padding: 35px;
-  padding: $padding;
-  height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - (2 * #{$padding}));
+  $padding-bottom: $padding + 45px; // offset "show older addys" button from bottom
+  padding: $padding $padding $padding-bottom;
+  height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - #{$padding} - #{$padding-bottom});
   position: relative;
   @include break(l) {
     $padding: 45px;
-    padding: $padding 50px;
-    height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - (2 * #{$padding}));
+    $padding-bottom: $padding + 45px; // offset "show older addys" button from bottom
+    padding: $padding 50px $padding-bottom;
+    height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - #{$padding} - #{$padding-bottom});
   }
 }
 
 // fresh unused receive address
-.receive-address {
-  margin: auto;
+mat-card.receive-address {
   max-width: 700px;
+  margin: auto;
+  padding: 24px 0 0;
+
+  .main {
+    padding-left: 35px;
+  }
+
+  .buttons {
+    width: 100%;
+    margin: 35px 0 0;
+    padding: 14px;
+    border-top: 1px dashed $bg-shadow;
+    .right {
+      text-align: right;
+    }
+  }
+
 }
 
 // show old addresses

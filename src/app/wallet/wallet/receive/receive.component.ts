@@ -20,8 +20,8 @@ export class ReceiveComponent implements OnInit {
 
   log: any = Log.create('receive.component');
 
-  MAX_ADDRESSES_PER_PAGE: number = 5;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  MAX_ADDRESSES_PER_PAGE: number = 10;
+  PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50];
 
   /* UI State */
   public type: string = 'public';
