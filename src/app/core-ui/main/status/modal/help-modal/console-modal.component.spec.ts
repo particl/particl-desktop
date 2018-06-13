@@ -11,7 +11,14 @@ import { ConsoleModalComponent } from './console-modal.component';
 describe('ConsoleModalComponent', () => {
   let component: ConsoleModalComponent;
   let fixture: ComponentFixture<ConsoleModalComponent>;
-
+  const cmds = [
+    'help',
+    'getaddressbalance rSoZtLcT1RySGgVKFchkwBXowFjJzufScc',
+    'walletpassphrase "passphrase" 9999',
+    'sendtypeto "part" "blind" [{ address: "rSoZtLcT1RySGgVKFchkwBXowFjJzufScc" }]',
+    'somecommand [ test1,  test2]',
+    'somecommand { test1: "testests",  testes2 : "testest1232"}'
+  ]
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -36,6 +43,21 @@ describe('ConsoleModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should parse mutiple commands', () => {
+    let mockParse = component.queryParser(cmds[0]);
+    expect(mockParse.length).toEqual(1);
+    mockParse = component.queryParser(cmds[1]);
+    expect(mockParse[1]).toEqual('rSoZtLcT1RySGgVKFchkwBXowFjJzufScc');
+    mockParse = component.queryParser(cmds[2]);
+    expect(mockParse[2]).toEqual('9999');
+    mockParse = component.queryParser(cmds[3]);
+    expect(mockParse[3]).toEqual('[{address:"rSoZtLcT1RySGgVKFchkwBXowFjJzufScc"}]');
+    mockParse = component.queryParser(cmds[4]);
+    expect(mockParse[1]).toEqual('[test1,test2]');
+    mockParse = component.queryParser(cmds[5]);
+    expect(mockParse[1]).toEqual('{test1:"testests",testes2:"testest1232"}');
   });
 
 });
