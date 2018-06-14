@@ -18,7 +18,7 @@
 </app-header>
 
 
-<div class="container-block disable-select">
+<div class="container-flex disable-select">
 
   <mat-card class="receive-address">
     <div class="address-info" fxLayout>
@@ -31,11 +31,12 @@
         </div><!-- qrcode -->
       </div>
   
-      <div class="main" fxFlex="1 1 500px">
+      <div class="main" fxFlex="1 1 480px">
   
         <!-- Address type (public/private)-->
         <div class="address-type">
-          <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
+          <mat-icon *ngIf="getAddressType() === 'public'" fontSet="partIcon" fontIcon="part-public"></mat-icon>
+          <mat-icon *ngIf="getAddressType() === 'private'" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
           {{ getAddressType() }} address
         </div>
   
@@ -49,14 +50,17 @@
         </div>
   
         <!-- Address string -->
-        <div class="address-string enable-select" fxLayoutWrap fxLayoutAlign="start center">
-          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="33.333">
+        <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected.address" (click)="copyToClipBoard()">
+          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="11.111">
             {{ word }}
           </div>
         </div>
   
-        <p class="widget-help">
-          This is a public address &ndash; its balance and transaction history is publicly available on blockchain. If you would like to increase your privacy, use Private address instead.
+        <p class="widget-help" *ngIf="getAddressType() === 'public'">
+          This is a public address &ndash; its balance and transaction history is publicly visible on blockchain. If you would like to increase your privacy, use Private address instead.
+        </p>
+        <p class="widget-help" *ngIf="getAddressType() === 'private'">
+          This is a private address &ndash; its balance and transaction history is hidden for public on blockchain. For auditable addresses, use Public addresses instead.
         </p>
   
       </div><!-- .main -->
@@ -70,13 +74,13 @@
         </button>
       </div>
       <div class="right" fxFlex="70%">
-        <button mat-button ngxClipboard [cbContent]="selected.address" (click)="copyToClipBoard()">
-          <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
-          Copy address
-        </button>
-        <button mat-button matTooltip="Display address' public information on Block Explorer">
+        <button mat-button matTooltip="Display address' public information on Block Explorer" class="TO_DO">
           <mat-icon fontSet="partIcon" fontIcon="part-info"></mat-icon>
           Show on Explorer
+        </button>
+        <button mat-raised-button color="primary" ngxClipboard [cbContent]="selected.address" (click)="copyToClipBoard()">
+          <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+          Copy address
         </button>
       </div>
     </div><!-- .buttons -->
