@@ -1,6 +1,7 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs';
+import * as _ from 'lodash';
 
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
@@ -72,10 +73,13 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   loadOrders(): void {
     this.bid.search(this.profile.address, this.type)
+      .take(1)
       .subscribe(orders => {
         console.log('called >>>>>>>>>>>>>>>>>', orders);
         orders.orders.reverse();
-        this.orders = orders;
+        if (!_.isEqual(this.orders, orders)) {
+          this.orders = orders;
+        }
       });
   }
 
