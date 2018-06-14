@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observer } from 'rxjs/Rx';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { ReplaySubject, Observable } from 'rxjs';
 
 export interface InternalStateType {
   [key: string]: any;
@@ -48,14 +46,14 @@ export class StateService {
     return state;
   }
 
-  observe(prop: string, subkey?: string) {
+  observe(prop: string, subkey?: string): Observable<any> {
     let observable: Observable<any> = this._getSubject(prop);
     if (subkey) {
       // TODO: maybe check if subkey exists?
       // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
       observable = observable.map(key => key[subkey]);
     }
-    return observable.distinctUntilChanged();
+    return observable; // .distinctUntilChanged();
   }
 
 
@@ -64,7 +62,7 @@ export class StateService {
     return JSON.parse(JSON.stringify(object));
   }
 
-  private _getSubject(prop: string)  {
+  private _getSubject(prop: string): ReplaySubject<any>  {
     if (!this._observerPairs[prop]) {
       this._observerPairs[prop] = new ReplaySubject<any>(1);
     }

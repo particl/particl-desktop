@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import 'rxjs/add/operator/finally';
+import { Observable } from 'rxjs';
 
 import { StateService } from 'app/core/state/state.service';
 import { MarketService } from 'app/core/market/market.service';

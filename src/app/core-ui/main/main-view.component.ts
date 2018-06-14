@@ -2,15 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/skip';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/observable/throw';
+import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 
