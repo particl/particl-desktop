@@ -9,7 +9,6 @@ export interface InternalStateType {
 
 interface InternalStateCache {
   [key: string]: ReplaySubject<any>
-  
 }
 
 @Injectable()
