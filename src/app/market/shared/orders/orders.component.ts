@@ -63,7 +63,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   callLoadOffers() {
     this.loadOrders()
-    this.timer = Observable.interval(1000 * 30);
+    this.timer = Observable.interval(1000 * 10);
 
     // call loadOrders in every 30 sec.
     this.timer.takeWhile(() => !this.destroyed).subscribe((t) => {
@@ -77,10 +77,22 @@ export class OrdersComponent implements OnInit, OnDestroy {
       .subscribe(orders => {
         console.log('called >>>>>>>>>>>>>>>>>', orders);
         orders.orders.reverse();
-        if (!_.isEqual(this.orders, orders)) {
+        if (
+          !this.orders ||
+          this.orders['orders'].length !== orders.orders.length ||
+          this.hasUpdatedOrders(this.orders['orders'], orders.orders)
+        ) {
           this.orders = orders;
         }
-      });
+     });
+  }
+
+  hasUpdatedOrders(newOrders: any, oldOrders: any): boolean {
+    return !! (
+      _.differenceWith(oldOrders, newOrders, (o1, o2) => {
+        return (o1.id === o2.id) && (o1['status'] === o2['status'])
+      }).length
+    )
   }
 
   ngOnDestroy() {
