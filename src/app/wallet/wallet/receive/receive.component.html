@@ -28,7 +28,7 @@
       <div class="sidebar" fxFlex="0 0 180px">
         <!-- QR code -->
         <div #qrCode class="qrcode">
-          <qrcode size="180" [level]="'H'" qrdata="particl:{{ selected.address }}">
+          <qrcode size="180" [level]="'H'" qrdata="particl:{{ selected?.address }}">
           </qrcode>
         </div><!-- qrcode -->
       </div>
@@ -45,15 +45,15 @@
         <!-- Address label -->
         <!-- TODO: remove label modal, use input instead -->
         <div class="address-label">
-          <span class="label">{{ selected.label }}</span>
+          <span class="label">{{ selected?.label }}</span>
           <button mat-button class="small" (click)="openNewAddress(getUnusedAddress().address)" matTooltip="Edit address label" matTooltipPosition="after">
             <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
           </button>
         </div>
   
         <!-- Address string -->
-        <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected.address" (click)="copyToClipBoard()">
-          <div *ngFor="let word of selected.readable" class="address-word" fxFlex="11.111">
+        <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
+          <div *ngFor="let word of selected?.readable" class="address-word" fxFlex="11.111">
             {{ word }}
           </div>
         </div>
@@ -76,11 +76,12 @@
         </button>
       </div>
       <div class="right" fxFlex="70%">
-        <button mat-button matTooltip="Display address' public information on Block Explorer" class="TO_DO">
+        <a mat-button matTooltip="Display address' public information on Block Explorer" class="TO_DO"  href="https://explorer{{testnet ? '-testnet' : ''}}.particl.io/address/{{selected?.address}}"
+              target="_blank" matTooltip="Show on Block Explorer">
           <mat-icon fontSet="partIcon" fontIcon="part-info"></mat-icon>
           Show on Explorer
-        </button>
-        <button mat-raised-button color="primary" ngxClipboard [cbContent]="selected.address" (click)="copyToClipBoard()">
+        </a>
+        <button mat-raised-button color="primary" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
           <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
           Copy address
         </button>
