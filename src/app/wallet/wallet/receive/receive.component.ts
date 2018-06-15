@@ -194,7 +194,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   copyToClipBoard(): void {
-    this.flashNotificationService.open('Address copied to clipboard.');
+    this.flashNotificationService.open('Address copied to clipboard');
   }
 
   openSignatureModal(address: string): void {

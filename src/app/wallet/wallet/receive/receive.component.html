@@ -39,16 +39,34 @@
         <div class="address-type">
           <mat-icon *ngIf="getAddressType() === 'public'" fontSet="partIcon" fontIcon="part-public"></mat-icon>
           <mat-icon *ngIf="getAddressType() === 'private'" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
-          {{ getAddressType() }} address
+          {{ getAddressType() }} address #{{ selected?.id }}
         </div>
   
         <!-- Address label -->
-        <!-- TODO: remove label modal, use input instead -->
         <div class="address-label">
-          <span class="label">{{ selected?.label }}</span>
+
+          <!--
+            FIXME/TODO:
+              1. default state: disabled input + "edit label" icon (pen-1)
+              2. when user clicks on "edit label" icon, input gets enabled + icon switches to "save label"
+              3. when user saves label, input value gets updated, input becomes disabled again + icon switches back to "edit label"
+            =====
+              4. remove `add-address-label` component/modal
+              5. new addresses will be created with default label as "address #51" (according to their {{ address.id }})
+          -->
+
+          <mat-form-field class="icon-input label-input full-width">
+            <input matInput class="label" type="text" value="{{ selected?.label }}" disabled>
+            <!-- TODO: default: -->
+            <mat-icon matTooltip="Edit label" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+            <!-- TODO: show in edit mode: -->
+            <mat-icon matTooltip="Save label" fontSet="partIcon" fontIcon="part-circle-check"></mat-icon>
+          </mat-form-field>
+
+          <!--span class="label">{{ selected?.label }}</span>
           <button mat-button class="small" (click)="openNewAddress(getUnusedAddress().address)" matTooltip="Edit address label" matTooltipPosition="after">
             <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
-          </button>
+          </button-->
         </div>
   
         <!-- Address string -->

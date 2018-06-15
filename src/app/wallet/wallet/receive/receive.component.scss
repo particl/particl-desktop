@@ -57,20 +57,21 @@ mat-card.receive-address {
     }
 
     .address-label {
-      font-size: 24px;
+      font-size: 20px;
       text-transform: none;
-      margin: 16px 0 10px;
-      text-overflow: none;
+      margin: 0;
+      padding-right: 40px;
+      text-overflow: initial;
       overflow: visible;
+      .label-input {
+        .mat-icon {
+          right: -36px;
+          top: 10px;
+        }
+      }
       .label {
         display: inline-block;
-        max-width: 390px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      button {
-        position: relative;
-        top: -10px;
+        height: 23px;
       }
     }
 
