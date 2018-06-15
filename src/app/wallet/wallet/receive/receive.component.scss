@@ -109,13 +109,42 @@ mat-card.receive-address {
 // show old addresses
 .show-old {
   text-align: center;
+  font-weight: 500;
+  color: mix($text-muted, $text);
   position: absolute;
   bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
+  .mat-icon {
+    position: relative;
+    top: 2px;
+    font-size: 13px;
+    margin-right: 3px;
+  }
 }
 
+.previous-addresses {
+  @extend %disable-select;
 
+  .filter {
+    .subtitle {
+      @extend %subtitle;
+      margin-top: 16px;
+    }
+    .filter-card {
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      .search-address {
+        .mat-icon {
+          top: 5px;
+          right: 2px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+}
 
 
 
