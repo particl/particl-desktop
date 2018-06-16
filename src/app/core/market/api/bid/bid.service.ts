@@ -50,8 +50,7 @@ export class BidService {
 
   search(address: string, type: any): Observable<any> {
     const params = ['search', '*', '*', 'ASC'];
-    return this.market.call('bid', params).distinctUntilChanged()
-      .map(o => new Bid(o, address, type))
+    return this.market.call('bid', params).map(o => new Bid(o, address, type))
   }
 
   acceptBidCommand(hash: string, id: number): Observable<any> {

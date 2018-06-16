@@ -57,15 +57,15 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.profileService.default().take(1).subscribe(
       profile => {
         this.profile = profile;
-        this.callLoadOffers();
+        this.initLoopLoadOrders();
       });
   }
 
-  callLoadOffers() {
+  initLoopLoadOrders() {
     this.loadOrders()
     this.timer = Observable.interval(1000 * 10);
 
-    // call loadOrders in every 30 sec.
+    // call loadOrders in every 10 sec.
     this.timer.takeWhile(() => !this.destroyed).subscribe((t) => {
       this.loadOrders()
     });
@@ -78,20 +78,20 @@ export class OrdersComponent implements OnInit, OnDestroy {
         console.log('called >>>>>>>>>>>>>>>>>', orders);
         orders.orders.reverse();
         if (
-          !this.orders ||
-          this.orders['orders'].length !== orders.orders.length ||
           this.hasUpdatedOrders(this.orders['orders'], orders.orders)
         ) {
           this.orders = orders;
         }
-     });
+      });
   }
 
   hasUpdatedOrders(newOrders: any, oldOrders: any): boolean {
-    return !! (
-      _.differenceWith(oldOrders, newOrders, (o1, o2) => {
+    return (
+      !this.orders ||
+      (this.orders['orders'].length !== newOrders.length) ||
+      (_.differenceWith(oldOrders, newOrders, (o1, o2) => {
         return (o1.id === o2.id) && (o1['status'] === o2['status'])
-      }).length
+      }).length)
     )
   }
 
