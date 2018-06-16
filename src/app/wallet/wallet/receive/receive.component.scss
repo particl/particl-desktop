@@ -67,11 +67,18 @@ mat-card.receive-address {
         .mat-icon {
           right: -36px;
           top: 10px;
+          &.part-circle-check {
+            color: $color;
+          }
         }
       }
       .label {
         display: inline-block;
         height: 23px;
+        font-weight: 500;
+        &:disabled {
+          color: lighten($text, 15%);
+        }
       }
     }
 
