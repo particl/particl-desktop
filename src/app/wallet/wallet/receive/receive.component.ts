@@ -26,6 +26,7 @@ export class ReceiveComponent implements OnInit {
   /* UI State */
   public type: string = 'public';
   public query: string = '';
+  public addressInput: boolean = true;
 
   testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */

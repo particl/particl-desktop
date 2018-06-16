@@ -56,11 +56,11 @@
           -->
 
           <mat-form-field class="icon-input label-input full-width">
-            <input matInput class="label" type="text" value="{{ selected?.label }}" disabled>
+            <input matInput class="label" type="text" value="{{ selected?.label }}" [disabled]="addressInput" (blur)="addressInput = true">
             <!-- TODO: default: -->
-            <mat-icon matTooltip="Edit label" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+            <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="addressInput = !addressInput"></mat-icon>
             <!-- TODO: show in edit mode: -->
-            <mat-icon matTooltip="Save label" fontSet="partIcon" fontIcon="part-circle-check"></mat-icon>
+            <mat-icon matTooltip="Save label" *ngIf="!addressInput" fontSet="partIcon" fontIcon="part-circle-check"></mat-icon>
           </mat-form-field>
 
           <!--span class="label">{{ selected?.label }}</span>
