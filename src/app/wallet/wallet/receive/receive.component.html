@@ -56,11 +56,11 @@
           -->
 
           <mat-form-field class="icon-input label-input full-width">
-            <input matInput class="label" type="text" value="{{ selected?.label }}" [disabled]="addressInput" (blur)="addressInput = true">
+            <input matInput class="label" type="text" value="{{ selected?.label }}" [disabled]="addressInput" [(ngModel)]="label">
             <!-- TODO: default: -->
             <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="addressInput = !addressInput"></mat-icon>
             <!-- TODO: show in edit mode: -->
-            <mat-icon matTooltip="Save label" *ngIf="!addressInput" fontSet="partIcon" fontIcon="part-circle-check"></mat-icon>
+            <mat-icon matTooltip="Save label" *ngIf="!addressInput" fontSet="partIcon" fontIcon="part-circle-check" (click)="updateLabel(getUnusedAddress().address)"></mat-icon>
           </mat-form-field>
 
           <!--span class="label">{{ selected?.label }}</span>
@@ -88,7 +88,7 @@
 
     <div class="buttons" fxLayout fxLayoutAlign="space-between center">
       <div class="left" fxFlex="30%">
-        <button mat-button color="primary" matTooltip="Generate fresh address" (click)="openNewAddress()">
+        <button mat-button color="primary" matTooltip="Generate fresh address" (click)="updateLabel()">
           <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
           New {{ getAddressType() }} address
         </button>

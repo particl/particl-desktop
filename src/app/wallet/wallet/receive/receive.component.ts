@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { RpcService, RpcStateService } from '../../../core/core.module';
+import { ModalsHelperService } from 'app/modals/modals.module';
 
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
@@ -27,7 +28,8 @@ export class ReceiveComponent implements OnInit {
   public type: string = 'public';
   public query: string = '';
   public addressInput: boolean = true;
-
+  public label: string = '';
+  public address: string = '';
   testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
   selected: any;
@@ -43,7 +45,8 @@ export class ReceiveComponent implements OnInit {
   constructor(private rpc: RpcService,
               public rpcState: RpcStateService,
               public dialog: MatDialog,
-              private flashNotificationService: SnackbarService) {
+              private flashNotificationService: SnackbarService,
+              private modals: ModalsHelperService) {
   }
 
   ngOnInit(): void {
@@ -151,7 +154,7 @@ export class ReceiveComponent implements OnInit {
     }
     /* @TODO: can be removed */
     if (this.addresses[type].length === 0) {
-      this.openNewAddress()
+      this.updateLabel()
     } else {
       this.selectAddress(this.addresses[type][0]);
     }
@@ -176,18 +179,6 @@ export class ReceiveComponent implements OnInit {
     */
   selectAddress(address: string): void {
     this.selected = address;
-  }
-
- /**
-   * Opens a dialog when creating a new address.
-   */
-  openNewAddress(address?: string): void {
-    const dialogRef = this.dialog.open(AddAddressLabelComponent);
-    dialogRef.componentInstance.type = this.type;
-    dialogRef.componentInstance.address = address ? address : '';
-
-    // update receive page after adding address
-    dialogRef.componentInstance.onAddressAdd.subscribe(result => this.rpc_update());
   }
 
   selectInput(): void {
@@ -222,7 +213,7 @@ export class ReceiveComponent implements OnInit {
     /*
     if (count ===) {
       console.log('openNewAddress()')
-      this.openNewAddress();
+      this.updateLabel();
       return;
     }
     */
@@ -357,6 +348,31 @@ export class ReceiveComponent implements OnInit {
         this.rpc_update();
       },
       error => this.log.er('error'));
+    }
+  }
+
+  updateLabel(address?: string) {
+    this.address = address;
+    this.modals.unlock({timeout: 3}, (status) => this.addNewLabel());
+  }
+
+  addNewLabel(): void {
+    let call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    let callParams = [this.label];
+    let msg = `New ${this.type} address generated, with label ${this.label}!`;
+    if (this.address !== '') {
+      call = 'manageaddressbook';
+      callParams = ['newsend', this.address, this.label];
+      msg = `Updated label of ${this.address} to ${this.label}`;
+    }
+    if (!!call) {
+      this.rpc.call(call, callParams)
+        .subscribe(response => {
+          this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
+          this.flashNotificationService.open(msg)
+          this.addressInput = true;
+          this.rpc_update();
+        });
     }
   }
 
