@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { RpcService } from '../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../core/core.module';
 
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
@@ -20,13 +20,14 @@ export class ReceiveComponent implements OnInit {
 
   log: any = Log.create('receive.component');
 
-  MAX_ADDRESSES_PER_PAGE: number = 5;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  MAX_ADDRESSES_PER_PAGE: number = 10;
+  PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50];
 
   /* UI State */
   public type: string = 'public';
   public query: string = '';
 
+  testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
   selected: any;
   page: number = 1;
@@ -39,11 +40,16 @@ export class ReceiveComponent implements OnInit {
   };
 
   constructor(private rpc: RpcService,
+              public rpcState: RpcStateService,
               public dialog: MatDialog,
               private flashNotificationService: SnackbarService) {
   }
 
   ngOnInit(): void {
+
+    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
+     .subscribe(chain => this.testnet = chain === 'test');
+
     // start rpc
     this.rpc_update();
   }

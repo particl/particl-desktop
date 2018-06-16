@@ -7,8 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
-import { ModalsService } from './modals.service';
-import { ModalsComponent } from './modals.component';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
@@ -31,7 +30,8 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 import { PlaceOrderComponent } from './place-order/place-order.component';
 import { ShippingComponent } from './shipping/shipping.component';
-
+import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
+import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -44,7 +44,6 @@ import { ShippingComponent } from './shipping/shipping.component';
     DirectiveModule
   ],
   declarations: [
-    ModalsComponent,
     PassphraseComponent,
     PasswordComponent,
     CreateWalletComponent,
@@ -59,19 +58,20 @@ import { ShippingComponent } from './shipping/shipping.component';
     DeleteListingComponent,
     ManageWidgetsComponent,
     PlaceOrderComponent,
-    ShippingComponent
+    ShippingComponent,
+    SendConfirmationModalComponent,
+    BidConfirmationModalComponent
   ],
   exports: [
-    ModalsComponent,
     ClipboardModule
   ],
   providers: [
-    ModalsService,
+    // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
+    ModalsHelperService,
     PassphraseService,
     SnackbarService
   ],
   entryComponents: [
-    ModalsComponent,
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
@@ -81,7 +81,11 @@ import { ShippingComponent } from './shipping/shipping.component';
     DeleteListingComponent,
     ManageWidgetsComponent,
     PlaceOrderComponent,
-    ShippingComponent
+    ShippingComponent,
+    CreateWalletComponent,
+    ColdstakeComponent,
+    SendConfirmationModalComponent,
+    BidConfirmationModalComponent
   ],
 })
 export class ModalsModule {
@@ -89,11 +93,11 @@ export class ModalsModule {
     return {
       ngModule: ModalsModule,
       providers: [
-        ModalsService
+        ModalsHelperService
       ]
     };
   }
 }
 
-export { ModalsService } from './modals.service';
+export { ModalsHelperService } from './modals-helper.service';
 export { PassphraseService } from './createwallet/passphrase/passphrase.service';
