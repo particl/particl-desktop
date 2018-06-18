@@ -12,6 +12,7 @@ import { Log } from 'ng2-logger';
 import { MatStepper } from '@angular/material';
 
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { Profile } from 'app/core/market/api/profile/profile.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
@@ -19,7 +20,7 @@ import { MarketService } from '../../../core/market/market.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { ModalsService } from 'app/modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
 import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checkout-process-cache.service';
@@ -40,7 +41,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   public selectedAddress: Address;
 
-  public profile: any = {};
+  public profile: Profile;
 
   /* cart */
   public cart: Cart;
@@ -59,7 +60,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     // core
     private snackbarService: SnackbarService,
     private rpcState: RpcStateService,
-    private modals: ModalsService,
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService,
     // market
     private market: MarketService,
     private profileService: ProfileService,
@@ -164,7 +167,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     let upsert: Function;
-    if (this.profile.ShippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
+    if (this.profile.shippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
       upsert = this.profileService.address.add.bind(this);
     } else {
       this.shippingFormGroup.value.id = this.selectedAddress.id;
@@ -203,9 +206,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.profileService.default().take(1).subscribe(
       (profile: any) => {
         this.log.d('checkout got profile:')
-        console.log(profile);
         this.profile = profile;
-        const addresses = profile.ShippingAddresses.filter((address) => address.title && address.type === 'SHIPPING_OWN');
+        console.log(this.profile);
+        const addresses = profile.shippingAddresses;
         if (addresses.length > 0) {
           this.select(this.cache.address || addresses[0]);
         }
@@ -224,13 +227,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   placeOrder() {
-    if (this.rpcState.get('locked')) {
-      // unlock wallet and send transaction
-      this.modals.open('unlock', { forceOpen: true, timeout: 30, callback: this.bidOrder.bind(this) });
-    } else {
-      // wallet already unlocked
-      this.bidOrder();
-    }
+    this.modals.unlock({timeout: 30}, (status) => this.bidOrder());
   }
 
   bidOrder() {

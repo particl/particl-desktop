@@ -7,8 +7,7 @@ import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketModule } from '../../../core/market/market.module';
 
-import { ModalsService } from '../../../modals/modals.service';
-
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { SellerListingComponent } from './seller-listing.component';
 
 describe('SellerListingComponent', () => {
@@ -25,7 +24,7 @@ describe('SellerListingComponent', () => {
         RouterTestingModule,
         MarketModule.forRoot()
       ],
-      providers: [ ModalsService ],
+      providers: [ ModalsHelperService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();

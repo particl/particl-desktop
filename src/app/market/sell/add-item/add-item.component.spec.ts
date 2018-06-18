@@ -9,7 +9,7 @@ import { MarketModule } from '../../../core/market/market.module';
 
 import { CategoryService } from '../../../core/market/api/category/category.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
-import { ModalsService } from '../../../modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 import { AddItemComponent } from './add-item.component';
 
@@ -27,7 +27,7 @@ describe('AddItemComponent', () => {
         RouterTestingModule,
         MarketModule.forRoot()
       ],
-      providers: [ CategoryService, SnackbarService, ModalsService ],
+      providers: [ CategoryService, SnackbarService, ModalsHelperService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();

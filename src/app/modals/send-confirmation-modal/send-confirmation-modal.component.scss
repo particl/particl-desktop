@@ -1,0 +1,107 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.fiat {
+  display: none; // hide until implemented (TODO)
+}
+
+// ------ UI ------ //
+
+.title {
+  // FIXME: swith to @extend %box-title;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.help-text {
+  // FIXME: switch to: @extend %help-text;
+  @extend %disable-select;
+  color: $text-muted;
+  font-size: 11px;
+  margin-bottom: 25px;
+  cursor: help;
+}
+
+
+// ------ LAYOUT ------ //
+
+.dialog-content {
+  width: 25rem;
+  padding: 20px 15px 10px;
+  text-align: center;
+}
+
+.tx-info { // info about public/blind/anon TX
+  @extend %disable-select;
+  .icon {
+    font-size: 32px;
+    color: $color;
+  }
+  .help-text {
+    margin: 5px auto 20px;
+    max-width: 20rem;
+  }
+}
+
+.tx-amount {
+  & > .big {
+    font-size: 20px;
+  }
+  & > .small {
+    font-size: 14px;
+  }
+  & > .point {
+    font-weight: bold;
+    margin: 0 2px;
+  }
+  & > .currency {
+    font-size: 17px;
+  }
+  & > .fiat {
+    color: $text-muted;
+  }
+}
+
+.icon.arrow {
+  font-size: 18px;
+  margin: 24px 0;
+  color: mix($text-muted, $bg-shadow);
+}
+
+.receiver-info {
+  & > .label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+    padding: 0 10px;
+  }
+  & > .address {
+    display: inline-block;
+    max-width: 270px;
+    padding: 3px 8px;
+    background: $bg;
+    border-radius: 4px;
+    color: mix($text, $text-muted);
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+}
+
+.fee-info {
+  // FIXME: switch to: @extend %help-text;
+  @extend %disable-select;
+  color: $text-muted;
+  font-size: 11px;
+  margin: 30px 0 0;
+  & > .amount {
+    margin: 0 0 0 10px;
+  }
+}
+
+.escrow-info {
+  @extend .fee-info;
+  margin-top: 20px;
+  padding: 0 70px;
+}

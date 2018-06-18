@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { ModalsService } from 'app/modals/modals.service';
 import { TemplateService } from 'app/core/market/api/template/template.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 import { DeleteListingComponent } from '../../../modals/delete-listing/delete-listing.component';
 
@@ -31,7 +31,7 @@ export class SellerListingComponent {
     public dialog: MatDialog,
     private router: Router,
     private rpcState: RpcStateService,
-    private modals: ModalsService,
+    private modals: ModalsHelperService,
     private template: TemplateService
   ) {}
 
@@ -60,11 +60,7 @@ export class SellerListingComponent {
   }
 
   postTemplate(template: Template) {
-    if (this.rpcState.get('locked')) {
-      this.modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.callTemplate.bind(this, template)});
-    } else {
-      this.callTemplate(template);
-    }
+    this.modals.unlock({timeout: 30}, (status) => this.callTemplate(template));
   }
 
   async callTemplate(template: Template) {

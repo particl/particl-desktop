@@ -70,12 +70,12 @@
   </div--><!-- .sidebar -->
 
 
-  <div class="content disable-select" fxLayout="row wrap" fxLayoutAlign="start start"
+  <div class="content disable-select"
        infiniteScroll
        [infiniteScrollContainer]="pagination.infinityScrollSelector"
        [fromRoot]="true"
-       [infiniteScrollDistance]="2"
-       [infiniteScrollThrottle]="50"
+       [infiniteScrollDistance]="3"
+       [infiniteScrollThrottle]="150"
        (scrolledUp)="loadPreviousPage()"
        (scrolled)="loadNextPage()">
 
@@ -106,9 +106,7 @@
     </div>
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let item of page.listings">
-        <mat-card fxFlex="0 0 calc(100% / 4 - 25px)"
-                  fxFlex.gt-md="0 0 calc(100% / 5 - 25px)"
-                  fxFlex.gt-lg="0 0 calc(100% / 7 - 25px)" class="listing">
+        <mat-card class="listing">
           <app-listing-item [listing]="item"></app-listing-item>
         </mat-card>
       </ng-container>

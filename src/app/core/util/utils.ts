@@ -349,12 +349,13 @@ export const Messages = {
     'status' : 'Complete'
   }
 }
+
 export const setOrderKeys = (ord: any, type: string) => {
   // once the order has been accepted then we get status in orderItem
   const status = ord.OrderItem.status ? ord.OrderItem.status : ord.action === 'MPA_REJECT' ? 'REJECTED' : 'BIDDING';
   ord.type = type;
-  ord.added = new DateFormatter(new Date(ord.createdAt)).dateFormatter(true);
-  ord.updated = new DateFormatter(new Date(ord.updatedAt)).dateFormatter(true);
+  ord.added = new DateFormatter(new Date(ord.createdAt)).dateFormatter(false);
+  ord.updated = new DateFormatter(new Date(ord.updatedAt)).dateFormatter(false);
   ord.messages = Messages[status][type];
   ord.status = Messages[status].status;
   return ord;
