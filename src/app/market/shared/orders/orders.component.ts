@@ -78,18 +78,18 @@ export class OrdersComponent implements OnInit, OnDestroy {
         console.log('called >>>>>>>>>>>>>>>>>', orders);
         orders.orders.reverse();
         if (
-          this.hasUpdatedOrders(this.orders['orders'], orders.orders)
+          this.hasUpdatedOrders(orders)
         ) {
           this.orders = orders;
         }
       });
   }
 
-  hasUpdatedOrders(newOrders: any, oldOrders: any): boolean {
+  hasUpdatedOrders(newOrders: any): boolean {
     return (
       !this.orders ||
-      (this.orders['orders'].length !== newOrders.length) ||
-      (_.differenceWith(oldOrders, newOrders, (o1, o2) => {
+      (this.orders['orders'].length !== newOrders['orders'].length) ||
+      (_.differenceWith(this.orders['orders'], newOrders['orders'], (o1, o2) => {
         return (o1.id === o2.id) && (o1['status'] === o2['status'])
       }).length)
     )
