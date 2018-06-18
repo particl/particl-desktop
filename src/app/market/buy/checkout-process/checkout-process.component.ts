@@ -12,6 +12,7 @@ import { Log } from 'ng2-logger';
 import { MatStepper } from '@angular/material';
 
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { Profile } from 'app/core/market/api/profile/profile.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
@@ -40,7 +41,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   public selectedAddress: Address;
 
-  public profile: any = {};
+  public profile: Profile;
 
   /* cart */
   public cart: Cart;
@@ -166,7 +167,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     let upsert: Function;
-    if (this.profile.ShippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
+    if (this.profile.shippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
       upsert = this.profileService.address.add.bind(this);
     } else {
       this.shippingFormGroup.value.id = this.selectedAddress.id;
@@ -205,9 +206,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.profileService.default().take(1).subscribe(
       (profile: any) => {
         this.log.d('checkout got profile:')
-        console.log(profile);
         this.profile = profile;
-        const addresses = profile.ShippingAddresses.filter((address) => address.title && address.type === 'SHIPPING_OWN');
+        console.log(this.profile);
+        const addresses = profile.shippingAddresses;
         if (addresses.length > 0) {
           this.select(this.cache.address || addresses[0]);
         }
