@@ -2,7 +2,6 @@
 
 ![UI Preview](preview.gif)
 
-
 > *"Particl is an open source project that aims to restore the balance of privacy on the internet."*
 
 We provide a decentralized privacy platform with a suite of tools to enhance your online privacy:
