@@ -76,10 +76,11 @@ export class OrdersComponent implements OnInit, OnDestroy {
       .take(1)
       .subscribe(orders => {
         console.log('called >>>>>>>>>>>>>>>>>', orders);
+        // reverse the orders
         orders.orders.reverse();
-        if (
-          this.hasUpdatedOrders(orders)
-        ) {
+
+        // Only update if needed
+        if (this.hasUpdatedOrders(orders)) {
           this.orders = orders;
         }
       });
