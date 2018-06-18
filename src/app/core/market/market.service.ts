@@ -41,10 +41,9 @@ export class MarketService {
     return this._http.post(this.url, postData, { headers: headers })
         .map((response: any) => response.result)
         .catch((error: any) => {
-
           this.log.d('Market threw an error!');
-          console.log(error);
-
+          console.log(error.error);
+          error = error.error ? error.error.message : error;
           return Observable.throw(error);
         })
   }
