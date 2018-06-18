@@ -7,13 +7,12 @@ import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../modals/modals.module';
 
 import { SharedModule } from '../../shared/shared.module'; // is this even needed?
-import { WalletModule } from '../wallet.module';
 
 
 import { SendComponent } from './send.component';
 import { SendService } from 'app/wallet/wallet/send/send.service';
 
-import { RpcService, RpcStateService } from '../../../core/core.module';
+import { RpcService } from '../../../core/core.module';
 import { RpcMockService } from '../../../_test/core-test/rpc-test/rpc-mock.service';
 
 describe('SendComponent', () => {
