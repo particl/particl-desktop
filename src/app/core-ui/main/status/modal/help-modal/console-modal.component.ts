@@ -52,9 +52,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     this.waitingForRPC = false;
     this.commandHistory.push(this.command);
     this.historyCount = this.commandHistory.length;
-    const params = this.command.trim().split(' ')
-                    .filter(cmd => cmd.trim() !== '');
-
+    const params = this.queryParser(this.command);
     if (params.length > 0) {
         params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
     }
@@ -83,6 +81,11 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       const erroMessage = (error.message) ? error.message : 'Method not found';
       this.snackbar.open(erroMessage);
     }
+  }
+
+  queryParser(com: string): Array<string> {
+    return com.trim().replace(/\s+(?=[^[\]]*\])|\s+(?=[^{\]]*\})|(("[^"]*")|\s)/g, '$1').split(' ')
+          .filter(cmd => cmd.trim() !== '')
   }
 
   isJson(text: any) {
