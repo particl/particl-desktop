@@ -52,7 +52,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
   public country: string = '';
-  public invalid$: Observable<boolean>;
 
   constructor(// 3rd party
     private formBuilder: FormBuilder,
@@ -97,11 +96,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       });
 
     this.getCache();
-
-    // Disabled button until it gets validate
-    this.invalid$ = this.shippingFormGroup.statusChanges
-            .map((state) => state !== 'VALID');
-
   }
 
   ngOnDestroy() {
