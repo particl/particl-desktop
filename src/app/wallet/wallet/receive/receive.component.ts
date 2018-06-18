@@ -180,6 +180,17 @@ export class ReceiveComponent implements OnInit {
   selectAddress(address: string): void {
     this.selected = address;
   }
+  /**
+   * Opens a dialog when creating a new address.
+   */
+  openNewAddress(address?: string): void {
+    const dialogRef = this.dialog.open(AddAddressLabelComponent);
+    dialogRef.componentInstance.type = this.type;
+    dialogRef.componentInstance.address = address ? address : '';
+
+    // update receive page after adding address
+    dialogRef.componentInstance.onAddressAdd.subscribe(result => this.rpc_update());
+  }
 
   selectInput(): void {
     (<HTMLInputElement>document.getElementsByClassName('header-input')[0]).select();
@@ -352,13 +363,13 @@ export class ReceiveComponent implements OnInit {
   }
 
   updateLabel(address?: string) {
-    this.address = address;
+    this.address = address ? address : '';
     this.modals.unlock({timeout: 3}, (status) => this.addNewLabel());
   }
 
   addNewLabel(): void {
     let call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
-    let callParams = [this.label];
+    let callParams = [this.label ? this.label : 'no label'];
     let msg = `New ${this.type} address generated, with label ${this.label}!`;
     if (this.address !== '') {
       call = 'manageaddressbook';
