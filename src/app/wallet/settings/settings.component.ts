@@ -16,6 +16,8 @@ export class SettingsComponent implements OnInit {
 
   tab: string = 'main';
   settings: Object;
+  public selectedTab: number = 0;
+  public tabLabels: Array<string> = ['main', 'network', 'window', 'display', 'help', 'I2P', 'TOR'];
 
   constructor(
     private _settingsService: SettingsService,
@@ -29,13 +31,6 @@ export class SettingsComponent implements OnInit {
       localStorage.setItem('settings', settings);
     }
     this.settings = this._settingsService.loadSettings();
-  }
-
-  settingsTab(tab: string) {
-    this.tab = tab;
-    if (tab === 'help') {
-      // const dialogRef = this.dialog.open(ConsoleModalComponent);
-    }
   }
 
   apply() {
@@ -52,4 +47,7 @@ export class SettingsComponent implements OnInit {
     this._location.back();
   }
 
+  changeTab(index: number): void {
+    this.selectedTab = index;
+  }
 }

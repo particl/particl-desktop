@@ -17,9 +17,7 @@
 }
 
 .title { // box titles
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 13px;
+  @extend %box-title;
   margin: -4px 0 16px !important;
   .advanced-options {
     float: right;
@@ -44,12 +42,10 @@
     background: $bg-hover;
   }
   .name { // balance type
-    font-weight: bold;
-    font-size: 14px;
+    @extend %box-item-title;
   }
   .desc { // available balance
-    color: $text-muted;
-    font-size: 11px;
+    @extend %help-text;
     .amount {
       color: $color;
       font-weight: 600;

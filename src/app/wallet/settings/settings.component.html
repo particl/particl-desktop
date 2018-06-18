@@ -1,312 +1,595 @@
-<app-header>
-  <div class="container-fluid">
-    <ul class="header-nav">
-      <li [class.active]="tab == 'main'">
-        <a href="javascript:void(0)" (click)="settingsTab('main')">
-          Main
-        </a>
-      </li>
-      <li [class.active]="tab == 'network'">
-        <a href="javascript:void(0)" (click)="settingsTab('network')">
-          Network
-        </a>
-      </li>
-      <li [class.active]="tab == 'window'">
-        <a href="javascript:void(0)" (click)="settingsTab('window')">
-          Window
-        </a>
-      </li>
-      <li [class.active]="tab == 'display'">
-        <a href="javascript:void(0)" (click)="settingsTab('display')">
-          Display
-        </a>
-      </li>
-      <li [class.active]="tab == 'help'">
-        <a href="javascript:void(0)" (click)="settingsTab('help')">
-          Help
-        </a>
-      </li>
-      <!--<li [class.active]="tab == 'i2p'">
-        <a href="javascript:void(0)" (click)="settingsTab('i2p')">
-          I2P
-        </a>
-      </li>
-      <li [class.active]="tab == 'tor'">
-        <a href="javascript:void(0)" (click)="settingsTab('tor')">
-          TOR
-        </a>
-      </li>-->
-    </ul>
-  </div>
+<app-header class="disable-select">
+  <mat-tab-group (selectChange)="changeTab($event.index)">
+    <mat-tab label="Main"></mat-tab>
+    <mat-tab label="Network"></mat-tab>
+    <mat-tab label="Window"></mat-tab>
+    <mat-tab label="Display"></mat-tab>
+    <mat-tab label="Help"></mat-tab>
+  </mat-tab-group>
 </app-header>
 
-<div class="container-fluid">
 
-  <div *ngIf="tab == 'main'">
+<div class="container-block disable-select">
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Start Particl on system login</div>
-      <input type="checkbox" [(ngModel)]="settings.main.autostart">
-    </div>
+  <!-- ===== MAIN ===== -->
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Detach databases at shutdown</div>
-      <input type="checkbox" [(ngModel)]="settings.main.detachDatabases">
-    </div>
+  <div *ngIf="tabLabels[selectedTab] == 'main'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Pay transaction fee</div>
-      <div class="col-xs-8">
-        <div class="input-comment row">
-          <p>Optionnal transaction fee per kB that helps make sure your transactions
-          are processed quickly. <br /> Most transactions are 1kB. Fee 0.01 recommended.</p>
-        </div>
-        <div class="row col-xs-6">
-          <input class="col-xs-4" type="text" [(ngModel)]="settings.main.feeAmount">
-          <div class="col-xs-6">
-            <select class="form-control" [(ngModel)]="settings.main.feeCurrency">
-              <option value="part">PART</option>
-            </select>
+      <div class="header-nav">General</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.autostart">
+              <h4 class="option">Start Particl on system login</h4>
+              <p class="desc">Start Particl wallet automatically?</p>
+            </mat-checkbox>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Pay transaction fee</div>
-      <div class="col-xs-8">
-        <div class="input-comment row">
-            <p>Optionnal transaction fee per kB that helps make sure your transactions are processed quickly.
-                <br /> Most transactions are 1kB. Fee 0.01 recommended.</p>
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.detachDatabases">
+              <h4 class="option">Detach databases at shutdown</h4>
+              <p class="desc">???</p>
+            </mat-checkbox>
+          </div>
+
         </div>
-        <div class="row col-xs-6">
-            <input class="col-xs-4" type="text" [(ngModel)]="settings.main.feeAmount">
-            <div class="col-xs-6">
-                <select class="form-control" [(ngModel)]="settings.main.feeCurrency">
-                    <option value="part">PART</option>
-                </select>
+      </mat-card>
+
+      <div class="header-nav">Transactions</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <h4 class="option">Transaction fees</h4>
+            <p class="desc">Optional transaction fee per kB that helps makes sure your transactions are processed
+              quickly (recommended: 0.01 PART)</p>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="settings.main.feeAmount">
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.main.feeCurrency">
+                <mat-option value="part">
+                  PART
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.autoRing">
+              <h4 class="option">Automatically select ring size</h4>
+              <p class="desc">Anon transactions: ???</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="row" fxLayout="row">
+            <div class="item" fxFlex="50">
+              <h4 class="option">Minimum ring size</h4>
+              <p class="desc">Anon transactions: ??? (default: 3)</p>
+              <mat-form-field>
+                <input matInput type="text" [(ngModel)]="settings.main.minRing">
+              </mat-form-field>
             </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-4">Enable staking</div>
-      <input type="checkbox" [(ngModel)]="settings.main.stake">
-    </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-4">Reserve</div>
-      <div class="col-xs-8">
-          <div class="input-comment row">
-              <p>Reserved amount does not participate in staking and is therefore spendable at any time.</p>
+            <div class="item" fxFlex="50">
+              <h4 class="option">Maximum ring size</h4>
+              <p class="desc">Anon transactions: ??? (default: 100)</p>
+              <mat-form-field>
+                <input matInput type="text" [(ngModel)]="settings.main.maxRing">
+              </mat-form-field>
+            </div>
           </div>
-          <div class="row col-xs-6">
-              <input class="col-xs-4" type="text" [(ngModel)]="settings.main.reserveAmount">
-              <div class="col-xs-6">
-                  <select class="form-control" [(ngModel)]="settings.main.reserveCurrency">
-                      <option value="part">PART</option>
-                  </select>
-              </div>
+
+
+        </div>
+      </mat-card>
+
+    </div>
+    <div fxFlex="50">
+
+      <div class="header-nav">Staking</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.stake">
+              <h4 class="option">Enable staking</h4>
+              <p class="desc">Get staking rewards by securing the network</p>
+            </mat-checkbox>
           </div>
-      </div>
-    </div>
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Minimum stake interval</div>
-      <input class="col-xs-3" type="text" [(ngModel)]="settings.main.stakeInterval">
-    </div>
+          <hr class="divider">
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Minimum ring size</div>
-      <input class="col-xs-3" type="text" [(ngModel)]="settings.main.minRing">
-    </div>
+          <!-- TODO: disable Reserve (inputs etc.) when Staking is not enabled -->
+          <div class="item">
+            <h4 class="option">Reserve</h4>
+            <p class="desc">Reserved amount does not participate in staking and is therefore spendable at any time</p>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="settings.main.reserveAmount">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.main.reserveCurrency">
+                <mat-option value="part">
+                  PART
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Maximum ring size</div>
-      <input class="col-xs-3" type="text" [(ngModel)]="settings.main.maxRing">
-    </div>
+          <hr class="divider">
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Automatically select ring size</div>
-      <input type="checkbox" [(ngModel)]="settings.main.autoRing">
-    </div>
+          <div class="item">
+            <h4 class="option">Minimum stake interval</h4>
+            <p class="desc">???</p>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="settings.main.stakeInterval">
+            </mat-form-field>
+          </div>
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Enable secure messaging</div>
-      <input type="checkbox" [(ngModel)]="settings.main.secureMessaging">
-    </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-4">Thin mode (requires restart)</div>
-      <input type="checkbox" [(ngModel)]="settings.main.thin">
-    </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-4">Thin full index</div>
-      <input type="checkbox" [(ngModel)]="settings.main.thinFullIndex">
-    </div>
-
-    <div class="card row">
-      <div class="input-label col-xs-4">Thin index window</div>
-      <input class="col-xs-3" type="text" [(ngModel)]="settings.main.thinIndexWindow">
-    </div>
-
-  </div>
-
-  <div *ngIf="tab == 'network'">
-    <div class="card row">
-        <div class="input-label col-xs-4">Map port using UPNP</div>
-        <input type="checkbox" [(ngModel)]="settings.network.upnp">
-    </div>
-
-    <div class="card row">
-        <div class="input-label col-xs-4">Connect through Socks proxy</div>
-        <input type="checkbox" [(ngModel)]="settings.network.proxy">
-    </div>
-
-    <div class="card row">
-        <div class="input-label col-xs-4">Proxy IP</div>
-        <input type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
-    </div>
-
-    <div class="card row">
-        <div class="input-label col-xs-4">Port</div>
-        <input type="text" id="port" [(ngModel)]="settings.network.proxyPort">
-    </div>
-
-    <div class="card row">
-        <div class="input-label col-xs-4">Socket version</div>
-        <div class="col-xs-4">
-            <select class="form-control no-margin-left" id="version" [(ngModel)]="settings.network.socketVersion">
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
         </div>
-    </div>
-  </div>
+      </mat-card>
 
-  <div *ngIf="tab == 'window'">
-    <div class="card row">
-      <div class="input-label col-xs-4">Minimize to the tray instead of the taskbar</div>
-      <input type="checkbox" [(ngModel)]="settings.window.tray">
-    </div>
+      <div class="header-nav">Messaging</div>
+      <mat-card class="card">
+        <div class="list section">
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Minimize on close</div>
-      <input type="checkbox" [(ngModel)]="settings.window.minimize">
-    </div>
-  </div>
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.secureMessaging">
+              <h4 class="option">Enable secure messaging</h4>
+              <p class="desc">Send and receive end-to-end encrypted messages to/from other Particl users</p>
+            </mat-checkbox>
+          </div>
 
-  <div *ngIf="tab == 'display'">
-    <div class="card row">
-        <div class="input-label col-xs-4">User interface language</div>
-        <div class="col-xs-4">
-            <select class="form-control no-margin-left" [(ngModel)]="settings.display.language">
-                <option value="default">(default)</option>
-            </select>
         </div>
-    </div>
+      </mat-card>
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Unit to show amounts in</div>
-      <div class="col-xs-4">
-          <select class="form-control no-margin-left" [(ngModel)]="settings.display.units">
-              <option value="part">PART</option>
-              <option value="usd">USD</option>
-          </select>
-      </div>
-    </div>
+      <div class="header-nav">Thin mode</div>
+      <mat-card class="card">
+        <div class="list section">
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Rows per page</div>
-      <div class="col-xs-4">
-          <select class="form-control no-margin-left" [(ngModel)]="settings.display.rows">
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option value="500">500</option>
-          </select>
-      </div>
-    </div>
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.thin">
+              <h4 class="option">Enable thin mode (requires restart)</h4>
+              <p class="desc">Thin mode doesn't download the whole blockchain, resulting in less space used on disk at a
+                cost of reduced security (???)</p>
+            </mat-checkbox>
+          </div>
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Display addresses in transaction list</div>
-      <input type="checkbox" [(ngModel)]="settings.display.addresses">
-    </div>
+          <hr class="divider">
 
-    <div class="card row">
-      <div class="input-label col-xs-4">Events</div>
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.thinFullIndex">
+              <h4 class="option">Thin full index</h4>
+              <p class="desc">???</p>
+            </mat-checkbox>
+          </div>
 
-      <div class="col-xs-8">
-        <table class="table">
-          <tr>
-            <th></th>
-            <th>Visible</th>
-            <th>Notifications</th>
-          </tr>
-          <tr>
-            <td>Incoming message</td>
-            <td></td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.notify.message"></td>
-          </tr>
-          <tr>
-            <td>Sent to</td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.show.sentTo"></td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.notify.sentTo"></td>
-          </tr>
-          <tr>
-            <td>Received with</td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.show.receivedWith"></td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.notify.receivedWith"></td>
-          </tr>
-          <tr>
-            <td>Received from</td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.show.receivedFrom"></td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.notify.receivedFrom"></td>
-          </tr>
-          <tr>
-            <td>Payment to yourself</td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.show.selfPayment"></td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.notify.selfPayment"></td>
-          </tr>
-          <tr>
-            <td>Received PART</td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.show.partReceived"></td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.notify.partReceived"></td>
-          </tr>
-          <tr>
-            <td>Sent PART</td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.show.partSent"></td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.notify.partSent"></td>
-          </tr>
-          <tr>
-            <td>Other</td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.show.other"></td>
-            <td><input type="checkbox" [(ngModel)]="settings.display.notify.other"></td>
-          </tr>
-        </table>
-      </div>
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Thin index window</h4>
+            <p class="desc">??? (default: 4096)</p>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="settings.main.thinIndexWindow">
+            </mat-form-field>
+          </div>
+
+        </div>
+      </mat-card>
+
     </div>
   </div>
 
-  <div *ngIf="tab == 'i2p'">
-    <div class="card">
+
+  <!-- ===== NETWORK ===== -->
+
+  <div *ngIf="tabLabels[selectedTab] == 'network'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
+
+      <div class="header-nav">Network settings</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.network.upnp">
+              <h4 class="option">Map port using UPnP</h4>
+              <p class="desc">UPnP is a set of networking protocols that permits networked devices to seamlessly
+                discover each other's presence on the network without the need for port forwarding. (???)</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+
+    </div>
+    <div fxFlex="50">
+
+      <div class="header-nav">Proxy</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.network.proxy">
+              <h4 class="option">Connect through Socks proxy</h4>
+              <p class="desc">???</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="row" fxLayout="row">
+            <div class="item" fxFlex="50">
+              <h4 class="option">Proxy IP</h4>
+              <p class="desc">??? (default: 127.0.0.1)</p>
+              <mat-form-field>
+                <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
+              </mat-form-field>
+            </div>
+            <div class="item" fxFlex="50">
+              <h4 class="option">Port</h4>
+              <p class="desc">??? (default: 9050)</p>
+              <mat-form-field>
+                <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Socket version</h4>
+            <p class="desc">??? (default: ???)</p>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.network.socketVersion">
+                <mat-option value="4">4</mat-option>
+                <mat-option value="5">5</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </div>
+      </mat-card>
+
+    </div>
+  </div>
+
+
+  <!-- ===== WINDOW ===== -->
+
+  <div *ngIf="tabLabels[selectedTab] == 'window'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
+
+      <div class="header-nav">Window behaviour</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.tray">
+              <h4 class="option">Minimize to the tray</h4>
+              <p class="desc">Minimizes the client window to tray instead of the taskbar</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.minimize">
+              <h4 class="option">Minimize on close</h4>
+              <p class="desc">Don't close the client, keep it running minimized</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+
+    </div>
+    <div fxFlex="50">
+
+      <!-- .. -->
+
+    </div>
+  </div>
+
+
+  <!-- ===== DISPLAY ===== -->
+
+  <div *ngIf="tabLabels[selectedTab] == 'display'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
+
+      <div class="header-nav">User interface</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <h4 class="option">Language</h4>
+            <p class="desc">Select your preferred language</p>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.language">
+                <mat-option value="default">English (default)</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Amount units</h4>
+            <p class="desc">Unit to show amounts in</p>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.units">
+                <mat-option value="part">PART</mat-option>
+                <!-- TODO: add mPART as well? -->
+                <!-- FIXME: USD needs implementation -->
+                <mat-option value="usd">USD</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Items per page</h4>
+            <p class="desc">Select number of items per page</p>
+            <!-- FIXME: needs implementation -->
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.rows">
+                <mat-option [value]="20">20</mat-option>
+                <mat-option [value]="50">50</mat-option>
+                <mat-option [value]="100">100</mat-option>
+                <mat-option [value]="500">500</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.XXXXXXXXXXX">
+              <h4 class="option">Advanced options by default</h4>
+              <p class="desc">Always display advanced options (like Coin control and narrations)</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+
+    </div>
+    <div fxFlex="50">
+
+      <div class="header-nav">???</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <!-- do we really need this when addresses are in TX details? -->
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.addresses">
+              <h4 class="option">Display addresses in transaction list</h4>
+              <p class="desc">...</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+
+      <div class="header-nav">Event notifications</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <table class="table" cellspacing="0">
+              <tr>
+                <th></th>
+                <th>Visible</th>
+                <th>Notifications</th>
+              </tr>
+              <tr>
+                <td>Incoming message</td>
+                <td></td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.notify.message"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Sent to</td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.show.sentTo"></mat-checkbox>
+                </td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.notify.sentTo"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Received with</td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.show.receivedWith"></mat-checkbox>
+                </td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.notify.receivedWith"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Received from</td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.show.receivedFrom"></mat-checkbox>
+                </td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.notify.receivedFrom"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Payment to yourself</td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.show.selfPayment"></mat-checkbox>
+                </td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.notify.selfPayment"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Received PART</td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.show.partReceived"></mat-checkbox>
+                </td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.notify.partReceived"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Sent PART</td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.show.partSent"></mat-checkbox>
+                </td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.notify.partSent"></mat-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>Other</td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.show.other"></mat-checkbox>
+                </td>
+                <td class="center">
+                  <mat-checkbox [(ngModel)]="settings.display.notify.other"></mat-checkbox>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+      </mat-card>
+
+    </div>
+  </div>
+
+
+  <!-- ===== HELP ===== -->
+
+  <div *ngIf="tabLabels[selectedTab] == 'help'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
+
+      <div class="header-nav">Documentation</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <h4 class="title">Particl Wiki</h4>
+          <p>
+            Particl wiki provides all the knowledge you need to get started, support if something breaks and a lot more.
+            This knowledge base is community-driven and still expanding – your are encouraged to register and
+            contribute!
+          </p>
+          <p>
+            <a href="https://particl.wiki/" target="_blank">Particl.wiki</a>
+          </p>
+
+        </div>
+      </mat-card>
+
+      <div class="header-nav">Social</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <ul>
+            <li><a href="https://twitter.com/particlProject" target="_blank">Twitter (General)</a></li>
+            <li><a href="https://twitter.com/particldev" target="_blank">Twitter (Developer account)</a></li>
+            <li><a href="https://www.facebook.com/ParticlProject/" target="_blank">Facebook</a></li>
+            <li><a href="https://www.youtube.com/c/Particl" target="_blank">YouTube</a></li>
+            <li><a href="https://www.reddit.com/r/Particl/" target="_blank">Reddit</a></li>
+            <li><a href="https://bitcointalk.org/index.php?topic=1835782.0" target="_blank">BitcoinTalk</a></li>
+            <li><a href="https://discord.gg/2tVJaZ9" target="_blank">Discord (Community channel)</a></li>
+          </ul>
+
+        </div>
+      </mat-card>
+
+    </div>
+    <div fxFlex="50">
+
+      <div class="header-nav">Support channels</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <h4 class="title"><a href="https://about.riot.im/" matTooltip="Learn more about Riot"
+                               matTooltipPosition="above" target="_blank">Riot.im</a></h4>
+          <p>
+            For team & community support, we recommend Riot as the best way to get in touch:
+          </p>
+          <ul>
+            <li><a href="https://riot.im/app/#/room/#particl:matrix.org" target="_blank">General room</a></li>
+            <li><a href="https://riot.im/app/#/room/#announcements:matrix.org" target="_blank">Announcements</a></li>
+            <li><a href="https://riot.im/app/#/room/#particlhelp:matrix.org" target="_blank">Help</a></li>
+            <li><a href="https://riot.im/app/#/room/#particlmedia:matrix.org" target="_blank">Media</a></li>
+            <li><a href="https://riot.im/app/#/room/#particl-trading:matrix.org" target="_blank">Trading</a></li>
+            <li><a href="https://riot.im/app/#/room/#particl-community-ideas:matrix.org" target="_blank">Suggestions</a>
+            </li>
+          </ul>
+
+          <hr class="divider">
+
+          <h4 class="title"><a href="https://slack.com/" matTooltip="Learn more about Slack" matTooltipPosition="above"
+                               target="_blank">Slack</a></h4>
+          <p>
+            As an alternative to Riot, we're also on Slack. To use it, request an invitation first:
+          </p>
+          <ul>
+            <li><a href="http://slack.particl.io/" target="_blank">Get Slack invitation</a></li>
+            <li><a href="https://particl.slack.com/" target="_blank">Particl Slack</a></li>
+          </ul>
+
+          <hr class="divider">
+
+          <h4 class="title">Telegram</h4>
+          <ul>
+            <li><a href="https://t.me/particlnews" target="_blank">News channel</a></li>
+            <li><a href="https://t.me/particlproject" target="_blank">Community channel</a></li>
+          </ul>
+
+        </div>
+      </mat-card>
+
+    </div>
+  </div>
+
+
+  <!-- ===== I2P ===== -->
+
+  <!--mat-tab label="I2P">
+    <div>
       I2P (coming soon)
     </div>
-  </div>
+  </mat-tab-->
 
-  <div *ngIf="tab == 'tor'">
-    <div class="card">
+
+  <!-- ===== TOR ===== -->
+
+  <!--mat-tab label="TOR">
+    <div class="container-block">
       TOR (coming soon)
     </div>
+  </mat-tab-->
+
+
+  <div class="actions" *ngIf="tabLabels[selectedTab] !== 'help'">
+    <!-- TODO: activate only when changes has been made (until then make the buttons disabled) -->
+    <button mat-button (click)="cancel()" color="warn">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button mat-button (click)="apply()">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Apply
+    </button>
+    <button mat-raised-button (click)="validate()" color="primary" class="validate">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock"></mat-icon>
+      Save changes
+    </button>
   </div>
 
-
-  <div class="pull-right" *ngIf="tab !== 'help'">
-    <button (click)="cancel()">Cancel</button>
-    <button (click)="apply()">Apply</button>
-    <button class="validate" (click)="validate()">OK</button>
-  </div>
-
-</div>
+</div><!-- .container-block.disable-select -->
