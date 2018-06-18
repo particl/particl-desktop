@@ -7,7 +7,7 @@ import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 import { AddressService } from './address/address.service';
-
+import { Profile } from './profile.model';
 
 // TODO: addresses & favourites!
 @Injectable()
@@ -54,7 +54,8 @@ export class ProfileService implements OnDestroy {
   }
 
   get(profileIdOrName: number | string): Observable<any> {
-    return this.market.call('profile', ['get', profileIdOrName]);
+    return this.market.call('profile', ['get', profileIdOrName])
+            .map((data) => new Profile(data))
   }
 
   add(profileName: string, profileAddress?: string): Observable<any> {
