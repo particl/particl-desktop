@@ -28,7 +28,7 @@ export class ReceiveComponent implements OnInit {
   public type: string = 'public';
   public query: string = '';
   public addressInput: boolean = true;
-  public label: string = '';
+  public label: string = 'no label';
   public address: string = '';
   testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
@@ -364,19 +364,25 @@ export class ReceiveComponent implements OnInit {
 
   updateLabel(address?: string) {
     this.address = address ? address : '';
-    this.modals.unlock({timeout: 3}, (status) => this.addNewLabel());
+    this.modals.unlock({timeout: 3}, (status) => address ? this.generateAddress() : this.addNewLabel());
   }
 
   addNewLabel(): void {
-    let call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
-    let callParams = [this.label ? this.label : 'no label'];
-    let msg = `New ${this.type} address generated, with label ${this.label}!`;
-    if (this.address !== '') {
-      call = 'manageaddressbook';
-      callParams = ['newsend', this.address, this.label];
-      msg = `Updated label of ${this.address} to ${this.label}`;
-    }
-    if (!!call) {
+    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    const callParams = [this.label];
+    const msg = `New ${this.type} address generated, with label ${this.label}!`;
+    this.callRpc(call, callParams, msg);
+  }
+
+  generateAddress(): void {
+    const call = 'manageaddressbook';
+    const callParams = ['newsend', this.address, this.label];
+    const msg = `Updated label of ${this.address} to ${this.label}`;
+    this.callRpc(call, callParams, msg);
+  }
+
+  callRpc(call: string, callParams: any, msg: string): void {
+    if (call) {
       this.rpc.call(call, callParams)
         .subscribe(response => {
           this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
