@@ -28,7 +28,7 @@ export class ReceiveComponent implements OnInit {
   public type: string = 'public';
   public query: string = '';
   public addressInput: boolean = true;
-  public label: string = 'no label';
+  public label: string = '';
   public address: string = '';
   testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
@@ -364,17 +364,17 @@ export class ReceiveComponent implements OnInit {
 
   updateLabel(address?: string) {
     this.address = address ? address : '';
-    this.modals.unlock({timeout: 3}, (status) => address ? this.generateAddress() : this.addNewLabel());
-  }
-
-  addNewLabel(): void {
-    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
-    const callParams = [this.label];
-    const msg = `New ${this.type} address generated, with label ${this.label}!`;
-    this.callRpc(call, callParams, msg);
+    this.modals.unlock({timeout: 3}, (status) => address ? this.addNewLabel() : this.generateAddress());
   }
 
   generateAddress(): void {
+    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    const callParams = ['no label'];
+    const msg = `New ${this.type} address generated, with label no label!`;
+    this.callRpc(call, callParams, msg);
+  }
+
+  addNewLabel(): void {
     const call = 'manageaddressbook';
     const callParams = ['newsend', this.address, this.label];
     const msg = `Updated label of ${this.address} to ${this.label}`;
