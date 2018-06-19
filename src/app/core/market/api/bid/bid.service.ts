@@ -50,7 +50,7 @@ export class BidService {
 
   acceptBidCommand(hash: string, id: number): Observable<any> {
     const params = ['accept', hash, id];
-    return this.market.call('bid', params).do(res => console.log(res), (error) => {
+    return this.market.call('bid', params).catch((error) => {
       if (error) {
         error = this.errorHandle(error);
       }
