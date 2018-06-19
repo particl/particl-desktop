@@ -56,7 +56,7 @@
           -->
 
           <mat-form-field class="icon-input label-input full-width">
-            <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === 'no label'}" [disabled]="addressInput" [(ngModel)]="label" (keyup.enter)="updateLabel(getUnusedAddress().address)">
+            <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === '(No label)'}" [disabled]="addressInput" [(ngModel)]="label" (keyup.enter)="updateLabel(getUnusedAddress().address)">
             <!-- TODO: default: -->
             <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="addressInput = !addressInput"></mat-icon>
             <!-- TODO: show in edit mode: -->
@@ -161,7 +161,7 @@
         <mat-card class="address-info">
           <div fxFlex="100%" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" layout-padding>
             <div fxFlex="0 0 45px" class="address-id">/{{ address.id }}</div>
-            <div fxFlex="1 1 20%" class="address-label cursor-pointer" (click)="openNewAddress(address.address)" matTooltip="Edit Label" matTooltipPosition="before">
+            <div fxFlex="1 1 20%" class="address-label cursor-pointer" [ngClass]="{'no-label': address.label === '(No label)'}" (click)="openNewAddress(address.address)" matTooltip="Edit label" matTooltipPosition="before">
               {{ address.label }}
             </div>
             <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address enable-select">

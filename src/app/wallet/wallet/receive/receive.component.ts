@@ -281,7 +281,7 @@ export class ReceiveComponent implements OnInit {
   addAddress(response: any, type: string): void {
     const tempAddress = {
       id: 0,
-      label: 'Empty label',
+      label: '(No label)',
       address: 'Empty address',
       balance: 0,
       readable: ['Empty']
@@ -369,15 +369,15 @@ export class ReceiveComponent implements OnInit {
 
   generateAddress(): void {
     const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
-    const callParams = ['no label'];
-    const msg = `New ${this.type} address generated, with label no label!`;
+    const callParams = ['(No label)'];
+    const msg = `New ${this.type} address generated`;
     this.callRpc(call, callParams, msg);
   }
 
   addNewLabel(): void {
     const call = 'manageaddressbook';
     const callParams = ['newsend', this.address, this.label];
-    const msg = `Updated label of ${this.address} to ${this.label}`;
+    const msg = `Label for ${this.address} updated`;
     this.callRpc(call, callParams, msg);
   }
 

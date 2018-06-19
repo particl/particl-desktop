@@ -79,6 +79,9 @@ mat-card.receive-address {
         &:disabled {
           color: lighten($text, 15%);
         }
+        &.no-label { // unlabeled address
+          font-style: italic;
+        }
       }
     }
 
@@ -193,10 +196,15 @@ mat-card.receive-address {
   }
   .address-label {
     text-transform: uppercase;
-    font-weight: bold;
+    font-weight: 700;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    &.no-label { // unlabeled address
+      font-style: italic;
+      font-weight: 500;
+      opacity: 0.75;
+    }
   }
   .address {
     overflow: hidden;
