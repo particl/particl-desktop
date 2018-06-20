@@ -154,7 +154,7 @@ export class ReceiveComponent implements OnInit {
     }
     /* @TODO: can be removed */
     if (this.addresses[type].length === 0) {
-      this.updateLabel()
+      this.generateAddress()
     } else {
       this.selectAddress(this.addresses[type][0]);
     }
@@ -362,26 +362,30 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  updateLabel(address?: string) {
-    this.address = address ? address : '';
-    this.modals.unlock({timeout: 3}, (status) => address ? this.addNewLabel() : this.generateAddress());
+  updateLabel(address: string) {
+    this.address = address
+    this.modals.unlock({timeout: 3}, (status) => this.editLabel());
   }
 
   generateAddress(): void {
+    this.modals.unlock({timeout: 3}, (status) => this.newAddress());
+  }
+
+  newAddress() {
     const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
     const callParams = ['(No label)'];
     const msg = `New ${this.type} address generated`;
-    this.callRpc(call, callParams, msg);
+    this.rpcCallAndNotify(call, callParams, msg);
   }
 
-  addNewLabel(): void {
+  editLabel(): void {
     const call = 'manageaddressbook';
     const callParams = ['newsend', this.address, this.label];
     const msg = `Label for ${this.address} updated`;
-    this.callRpc(call, callParams, msg);
+    this.rpcCallAndNotify(call, callParams, msg);
   }
 
-  callRpc(call: string, callParams: any, msg: string): void {
+  rpcCallAndNotify(call: string, callParams: any, msg: string): void {
     if (call) {
       this.rpc.call(call, callParams)
         .subscribe(response => {
