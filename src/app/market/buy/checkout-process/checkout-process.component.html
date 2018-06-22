@@ -209,7 +209,7 @@
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back to cart
         </button>
-        <button mat-raised-button color="primary" matStepperNext (click)="updateShippingAddress()">
+        <button mat-raised-button color="primary" [disabled]="!shippingFormGroup.valid" matStepperNext (click)="updateShippingAddress()">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Continue to confirmation
         </button>
@@ -263,16 +263,10 @@
       </table>
 
       <div class="order-detail" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="20px">
-
         <div class="shipping-overview" fxFlex="0 0 250px">
           <div class="title">Shipping address</div>
-          <p class="address">
-            {{ shippingFormGroup.value.firstName || '' }} {{ shippingFormGroup.value.lastName || '' }} <br>
-            {{ shippingFormGroup.value.addressLine1 || '' }}, {{shippingFormGroup.value.addressLine2 || '' }},{{shippingFormGroup.value.city || '' }}, {{shippingFormGroup.value.state || '' }}<br>
-            {{ shippingFormGroup.value.zipCode || '' }}, {{shippingFormGroup.value.country || '' }}
-          </p>
+          <app-shipping-address [shippingAddress]="shippingFormGroup.value"></app-shipping-address>
         </div>
-
         <table class="subtotals" fxFlex="0 0 250px">
           <tr>
             <td class="desc">Subtotal</td>
