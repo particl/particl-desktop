@@ -57,20 +57,31 @@ mat-card.receive-address {
     }
 
     .address-label {
-      font-size: 24px;
+      font-size: 20px;
       text-transform: none;
-      margin: 16px 0 10px;
-      text-overflow: none;
+      margin: 0;
+      padding-right: 40px;
+      text-overflow: initial;
       overflow: visible;
+      .label-input {
+        .mat-icon {
+          right: -36px;
+          top: 10px;
+          &.part-circle-check {
+            color: $color;
+          }
+        }
+      }
       .label {
         display: inline-block;
-        max-width: 390px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      button {
-        position: relative;
-        top: -10px;
+        height: 23px;
+        font-weight: 500;
+        &:disabled {
+          color: lighten($text, 15%);
+        }
+        &.no-label { // unlabeled address
+          font-style: italic;
+        }
       }
     }
 
@@ -185,10 +196,15 @@ mat-card.receive-address {
   }
   .address-label {
     text-transform: uppercase;
-    font-weight: bold;
+    font-weight: 700;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    &.no-label { // unlabeled address
+      font-style: italic;
+      font-weight: 500;
+      opacity: 0.75;
+    }
   }
   .address {
     overflow: hidden;
