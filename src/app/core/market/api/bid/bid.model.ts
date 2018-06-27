@@ -10,7 +10,9 @@ export class Bid {
   public listing: Listing;
   public listingItemId: number;
   public status: string;
-
+  // @TODO required its own models ?
+  public sellOrders: Array<any>;
+  public buyOrders: Array<any>;
   // @TODO some refactoring needed
   public OrderItem: {
     status: string,
@@ -27,25 +29,50 @@ export class Bid {
 
   setFilter() {
     this.orderItems = [];
-    const orders = [];
+    this.buyOrders = [];
+    this.sellOrders = [];
     _.each(this.orders, (order) => {
-      if (this.type === 'buy' && order.bidder === this.address) {
-        order = setOrderKeys(order, this.type);
+
+      if (order.bidder === this.address) {
+        order = setOrderKeys(order, 'buy');
         // this.orderItems.push(order)
-        orders.push(order);
+        this.buyOrders.push(order);
       }
-      if (this.type === 'sell' && order.ListingItem.seller  === this.address) {
-        order = setOrderKeys(order, this.type);
+      if (order.ListingItem.seller  === this.address) {
+        order = setOrderKeys(order, 'sell');
         // this.orderItems.push(order);
-        orders.push(order);
+        this.sellOrders.push(order);
       }
     })
-
-    this.orders = orders;
+    this.orders = this.type === 'buy' ? this.buyOrders : this.sellOrders;
   }
 
   get ordersCount() {
     return this.orders.length;
+  }
+
+  get sellOrdersCount() {
+    return this.sellOrders.length;
+  }
+
+  get buyOrdersCount() {
+    return this.buyOrders.length;
+  }
+
+  get activeSellOrderCount() {
+    if (this.sellOrdersCount > 0) {
+      return this.buyOrders.filter((ord) => ['Accept bid', 'Mark as shipped']
+        .includes(ord.messages.action_button)).length;
+    }
+    return 0;
+  }
+
+  get activeBuyOrderCount() {
+    if (this.buyOrdersCount > 0) {
+      return this.buyOrders.filter((ord) => ['Mark as delivered', 'Make payment']
+        .includes(ord.messages.action_button)).length;
+    }
+    return 0;
   }
 
 }

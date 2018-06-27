@@ -45,7 +45,7 @@
                     fontIcon="part-bag-buy"></mat-icon>
                   <span class="text">Buy</span>
                   <!-- TODO? add current number of Buy orders (maybe limit only to those who need action? e.g. "payment" or "confirm shipped"): -->
-                  <!-- <span class="tag TO_DO">4</span> -->
+                  <span class="tag">{{orders?.activeBuyOrderCount}}</span>
                 </mat-list-item>
               </a>
 
@@ -56,7 +56,7 @@
                     fontIcon="part-bag-sell"></mat-icon>
                   <span class="text">Sell</span>
                   <!-- TODO? add current number of Sell orders (maybe limit only to those who need action? e.g. "accept bid" or "mark shipped"): -->
-                  <!-- <span class="tag TO_DO">2</span> -->
+                  <span class="tag">{{orders?.activeSellOrderCount}}</span>
                 </mat-list-item>
               </a>
 
