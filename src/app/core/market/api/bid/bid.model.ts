@@ -13,6 +13,7 @@ export class Bid {
   // @TODO required its own models ?
   public sellOrders: Array<any>;
   public buyOrders: Array<any>;
+  public allOrders: Array<any>;
   // @TODO some refactoring needed
   public OrderItem: {
     status: string,
@@ -31,6 +32,7 @@ export class Bid {
     this.orderItems = [];
     this.buyOrders = [];
     this.sellOrders = [];
+    this.allOrders = [];
     _.each(this.orders, (order) => {
 
       if (order.bidder === this.address) {
@@ -43,6 +45,7 @@ export class Bid {
         // this.orderItems.push(order);
         this.sellOrders.push(order);
       }
+      this.allOrders.push(order);
     })
     this.orders = this.type === 'buy' ? this.buyOrders : this.sellOrders;
   }

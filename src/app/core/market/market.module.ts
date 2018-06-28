@@ -19,6 +19,7 @@ import { InformationService } from './api/template/information/information.servi
 import { LocationService } from './api/template/location/location.service';
 import { EscrowService } from './api/template/escrow/escrow.service';
 import { BidService } from './api/bid/bid.service';
+import { OrderStatusNotifierService } from './order-status-notifier/order-status-notifier.service';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ export class MarketModule {
         InformationService,
         LocationService,
         EscrowService,
-        BidService
+        BidService,
+        OrderStatusNotifierService
       ]
     };
   }
