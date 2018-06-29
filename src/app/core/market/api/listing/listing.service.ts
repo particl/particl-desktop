@@ -52,4 +52,12 @@ export class ListingService {
     return this.market.call('item', ['get', id]).map(listing => new Listing(listing));
   }
 
+  set selectedCountry(country: string) {
+    this.cache.selectedCountry = country;
+  }
+
+  get selectedCountry() {
+    return this.cache.selectedCountry;
+  }
+
 }
