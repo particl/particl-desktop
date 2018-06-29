@@ -7,6 +7,7 @@ export class PostListingCacheService {
 
   // Contains templateId's currently being published
   private awaiting: number[] = [];
+  selectedCountry: string = 'ZA'; // 'ZA' is country code of South-Africa.
 
   posting(template: Template): void {
     this.awaiting.push(template.id);
