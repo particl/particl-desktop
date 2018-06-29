@@ -11,7 +11,6 @@ import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../core/util/utils';
 import { RpcService, RpcStateService } from '../../../../../core/core.module';
-
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 
@@ -32,6 +31,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public disableScrollDown: boolean = false;
   public waitingForRPC: boolean = true;
   public historyCount: number = 0;
+  public activeTab: string = '_rpc';
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
@@ -48,17 +48,20 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   rpcCall() {
-
+    let commandString = 'runstrings'
     this.waitingForRPC = false;
     this.commandHistory.push(this.command);
     this.historyCount = this.commandHistory.length;
-    const params = this.command.trim().split(' ')
-                    .filter(cmd => cmd.trim() !== '');
+    let params = this.queryParser(this.command);
 
     if (params.length > 0) {
-        params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
+      params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
     }
-    this._rpc.call('runstrings', params)
+    if (this.activeTab === 'market') {
+      commandString = params.shift();
+      params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
+    }
+    this[this.activeTab].call(commandString, params)
       .subscribe(
         response => this.formatSuccessResponse(response),
         error => this.formatErrorResponse(error));
@@ -83,6 +86,11 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       const erroMessage = (error.message) ? error.message : 'Method not found';
       this.snackbar.open(erroMessage);
     }
+  }
+
+  queryParser(com: string): Array<string> {
+    return com.trim().replace(/\s+(?=[^[\]]*\])|\s+(?=[^{\]]*\})|(("[^"]*")|\s)/g, '$1').split(' ')
+          .filter(cmd => cmd.trim() !== '')
   }
 
   isJson(text: any) {
@@ -131,6 +139,11 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       }
     }
     this.command = this.commandHistory[this.historyCount];
+  }
+
+  selectTab(tabIndex: number) {
+    this.activeTab = tabIndex === 1 ? 'market' : '_rpc'
+    this.commandList = [];
   }
 
   // capture the enter button
