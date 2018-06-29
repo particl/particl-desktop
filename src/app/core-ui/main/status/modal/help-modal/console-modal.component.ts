@@ -11,7 +11,7 @@ import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../core/util/utils';
 import { RpcService, RpcStateService } from '../../../../../core/core.module';
-
+import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 
@@ -32,9 +32,11 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public disableScrollDown: boolean = false;
   public waitingForRPC: boolean = true;
   public historyCount: number = 0;
+  public activeTab: string = '_rpc';
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
+              private market: MarketService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
   }
@@ -48,15 +50,20 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   rpcCall() {
-
+    let commandString = 'runstrings'
     this.waitingForRPC = false;
     this.commandHistory.push(this.command);
     this.historyCount = this.commandHistory.length;
-    const params = this.queryParser(this.command);
+    let params = this.queryParser(this.command);
+
     if (params.length > 0) {
-        params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
+      params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
     }
-    this._rpc.call('runstrings', params)
+    if (this.activeTab === 'market') {
+      commandString = params.shift();
+      params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
+    }
+    this[this.activeTab].call(commandString, params)
       .subscribe(
         response => this.formatSuccessResponse(response),
         error => this.formatErrorResponse(error));
@@ -134,6 +141,11 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       }
     }
     this.command = this.commandHistory[this.historyCount];
+  }
+
+  selectTab(tabIndex: number) {
+    this.activeTab = tabIndex === 1 ? 'market' : '_rpc'
+    this.commandList = [];
   }
 
   // capture the enter button

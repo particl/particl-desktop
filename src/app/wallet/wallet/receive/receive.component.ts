@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { RpcService, RpcStateService } from '../../../core/core.module';
+import { ModalsHelperService } from 'app/modals/modals.module';
 
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
@@ -26,7 +27,9 @@ export class ReceiveComponent implements OnInit {
   /* UI State */
   public type: string = 'public';
   public query: string = '';
-
+  public addressInput: boolean = true;
+  public label: string = '';
+  public address: string = '';
   testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
   selected: any;
@@ -42,7 +45,8 @@ export class ReceiveComponent implements OnInit {
   constructor(private rpc: RpcService,
               public rpcState: RpcStateService,
               public dialog: MatDialog,
-              private flashNotificationService: SnackbarService) {
+              private flashNotificationService: SnackbarService,
+              private modals: ModalsHelperService) {
   }
 
   ngOnInit(): void {
@@ -150,7 +154,7 @@ export class ReceiveComponent implements OnInit {
     }
     /* @TODO: can be removed */
     if (this.addresses[type].length === 0) {
-      this.openNewAddress()
+      this.generateAddress()
     } else {
       this.selectAddress(this.addresses[type][0]);
     }
@@ -176,8 +180,7 @@ export class ReceiveComponent implements OnInit {
   selectAddress(address: string): void {
     this.selected = address;
   }
-
- /**
+  /**
    * Opens a dialog when creating a new address.
    */
   openNewAddress(address?: string): void {
@@ -194,7 +197,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   copyToClipBoard(): void {
-    this.flashNotificationService.open('Address copied to clipboard.');
+    this.flashNotificationService.open('Address copied to clipboard');
   }
 
   openSignatureModal(address: string): void {
@@ -221,7 +224,7 @@ export class ReceiveComponent implements OnInit {
     /*
     if (count ===) {
       console.log('openNewAddress()')
-      this.openNewAddress();
+      this.updateLabel();
       return;
     }
     */
@@ -278,7 +281,7 @@ export class ReceiveComponent implements OnInit {
   addAddress(response: any, type: string): void {
     const tempAddress = {
       id: 0,
-      label: 'Empty label',
+      label: '(No label)',
       address: 'Empty address',
       balance: 0,
       readable: ['Empty']
@@ -356,6 +359,41 @@ export class ReceiveComponent implements OnInit {
         this.rpc_update();
       },
       error => this.log.er('error'));
+    }
+  }
+
+  updateLabel(address: string) {
+    this.address = address
+    this.modals.unlock({timeout: 3}, (status) => this.editLabel());
+  }
+
+  generateAddress(): void {
+    this.modals.unlock({timeout: 3}, (status) => this.newAddress());
+  }
+
+  newAddress() {
+    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    const callParams = ['(No label)'];
+    const msg = `New ${this.type} address generated`;
+    this.rpcCallAndNotify(call, callParams, msg);
+  }
+
+  editLabel(): void {
+    const call = 'manageaddressbook';
+    const callParams = ['newsend', this.address, this.label];
+    const msg = `Label for ${this.address} updated`;
+    this.rpcCallAndNotify(call, callParams, msg);
+  }
+
+  rpcCallAndNotify(call: string, callParams: any, msg: string): void {
+    if (call) {
+      this.rpc.call(call, callParams)
+        .subscribe(response => {
+          this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
+          this.flashNotificationService.open(msg)
+          this.addressInput = true;
+          this.rpc_update();
+        });
     }
   }
 

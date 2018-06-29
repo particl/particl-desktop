@@ -53,3 +53,5 @@ export class MarketModule {
     };
   }
 }
+
+export { MarketService } from './market.service';

@@ -32,12 +32,7 @@ export class BidService {
         await this.market.call('bid', ['send', listing.hash, profile.id, addressId]).toPromise()
           .catch((error) => {
             if (error) {
-              error = error.error ? error.error.error : error;
-              if (error.includes('unspent')) {
-                error = errorType.unspent;
-              } else if (error.includes('broke')) {
-                error = errorType.broke;
-              }
+              error = this.errorHandle(error);
             }
             throw error;
           });
@@ -55,7 +50,12 @@ export class BidService {
 
   acceptBidCommand(hash: string, id: number): Observable<any> {
     const params = ['accept', hash, id];
-    return this.market.call('bid', params);
+    return this.market.call('bid', params).catch((error) => {
+      if (error) {
+        error = this.errorHandle(error);
+      }
+      throw error;
+    });
   }
 
   rejectBidCommand(hash: string, id: number): Observable<any> {
@@ -71,6 +71,15 @@ export class BidService {
   escrowLockCommand(id: number, nonce: any, memo: string): Observable<any> {
     const params = ['lock', id, nonce, memo];
     return this.market.call('escrow', params);
+  }
+
+  errorHandle(error: any) {
+    if (error.includes('unspent')) {
+      error = errorType.unspent;
+    } else if (error.includes('broke')) {
+      error = errorType.broke;
+    }
+    return error;
   }
 
 }

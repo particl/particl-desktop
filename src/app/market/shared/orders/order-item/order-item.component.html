@@ -34,12 +34,7 @@
   <div class="detail" fxLayout="row" fxLayoutGap="30px">
     <div class="buyer-info" fxFlex="27%">
       <div class="title">Shipping address</div>
-      <p>
-        {{order?.ShippingAddress.firstName}} {{order?.ShippingAddress.lastName}}<br>
-        {{order?.ShippingAddress.addressLine1}},
-        {{order?.ShippingAddress.addressLine2}}, {{order?.ShippingAddress.city}}, {{order?.ShippingAddress.state}}<br>
-        {{order?.ShippingAddress.zipCode}}, {{order?.ShippingAddress.country}}
-      </p>
+      <app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address>
     </div><!-- .buyer-info -->
     <div class="info" fxFlex="35%">
       <div class="title">Price<!-- & Qty--></div>
