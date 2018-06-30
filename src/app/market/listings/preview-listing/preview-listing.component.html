@@ -69,9 +69,7 @@
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <div class="left">
-    <!--button mat-button class="small TO_DO" matTooltip="Report" matTooltipPosition="above">
-      <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
-    </button-->
+    <app-report [listing]="listing" [flag]="true"></app-report>
     <div class="date">
       <strong>Date added</strong> {{ data?.listing?.createdAt }}
     </div>

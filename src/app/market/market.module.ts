@@ -13,6 +13,7 @@ import { SellComponent } from './sell/sell.component';
 import { AddItemComponent } from './sell/add-item/add-item.component';
 import { SellerListingComponent } from './sell/seller-listing/seller-listing.component';
 import { FavoriteComponent } from './shared/favorite/favorite.component';
+import { ReportComponent } from './shared/report/report.component';
 import { OrdersComponent } from './shared/orders/orders.component';
 import { CheckoutProcessComponent } from './buy/checkout-process/checkout-process.component';
 import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
@@ -39,7 +40,8 @@ import { ShippingAddressComponent } from './shared/shipping-address/shipping-add
     CheckoutProcessComponent,
     OrderItemComponent,
     AddToCartComponent,
-    ShippingAddressComponent
+    ShippingAddressComponent,
+    ReportComponent
   ],
   entryComponents: [
     PreviewListingComponent
