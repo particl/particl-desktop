@@ -25,6 +25,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/finally';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/takeWhile';
+import 'rxjs/observable/of';
 
 @NgModule({
   declarations: [
