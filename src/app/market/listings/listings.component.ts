@@ -78,7 +78,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private countryList: CountryListService
   ) {
     console.warn('overview created');
-    this.selectedCountry = this.listingService.selectedCountry;
+    this.selectedCountry = this.listingService.cache.selectedCountry;
   }
 
   ngOnInit() {
@@ -198,7 +198,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   changeLocation() {
-    this.listingService.selectedCountry = this.selectedCountry;
+    this.listingService.cache.selectedCountry = this.selectedCountry;
   }
 
   ngOnDestroy() {

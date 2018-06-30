@@ -29,8 +29,6 @@
     </div>
     <div class="filtering">
       <mat-select placeholder="Select any country" class="filter country" (change)="changeLocation()" [(ngModel)]="selectedCountry">
-          <!-- [(ngModel)]="filters.country" -->
-        <mat-option>Select any country</mat-option>
         <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}
         </mat-option>
       </mat-select>

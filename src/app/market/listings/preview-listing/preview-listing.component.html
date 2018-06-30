@@ -41,10 +41,10 @@
           Local in {{ data?.listing?.country }} &ndash; {{ data?.listing?.domesticShippingPrice.getAmount() }} PART
         </td>
       </tr>
-      <!-- @TODO how we calculate escrow as we don't know the shipping country -->
-      <tr *ngIf="listingService?.selectedCountry">
+
+      <tr *ngIf="listingServiceCache?.selectedCountry">
         <th class="escrow price">Escrow</th>
-        <td class="escrow price">{{ data?.listing?.escrowAmount(listingService.selectedCountry)?.getAmount() }} PART</td>
+        <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry)?.getAmount() }} PART</td>
       </tr>
     </table>
 

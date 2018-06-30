@@ -5,7 +5,7 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
 @Component({
   selector: 'app-preview-listing',
@@ -27,7 +27,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<PreviewListingComponent>,
     private favoritesService: FavoritesService,
     private marketState: MarketStateService,
-    private listingService: ListingService,
+    private listingServiceCache: PostListingCacheService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 

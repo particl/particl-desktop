@@ -7,7 +7,7 @@ export class PostListingCacheService {
 
   // Contains templateId's currently being published
   private awaiting: number[] = [];
-  selectedCountry: string = 'ZA'; // 'ZA' is country code of South-Africa.
+  country: string = 'ZA'; // 'ZA' is country code of South-Africa.
 
   posting(template: Template): void {
     this.awaiting.push(template.id);
@@ -20,6 +20,14 @@ export class PostListingCacheService {
 
   constructor() {
 
-   }
+  }
 
+
+  set selectedCountry(country: string) {
+    this.country = country;
+  }
+
+  get selectedCountry() {
+    return this.country;
+  }
 }
