@@ -1,6 +1,6 @@
 {
   "name": "particl-desktop",
-  "version": "1.2.2-alpha-RC1",
+  "version": "1.2.2",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
   "homepage": "https://particl.io",
@@ -30,6 +30,7 @@
     "start:electron:dev": "electron . --dev",
     "start:electron:fast": "yarn run build:electron:fast && electron .",
     "start:electron": "yarn run build:electron && electron .",
+    "start:mainnet": "yarn run build:electron:prod && electron .",
     "package:mac": "yarn run build:electron:prod && electron-builder -m && yarn run checksum",
     "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
     "package:win": "yarn run build:electron:prod && electron-builder --win --x64 && yarn run checksum",

@@ -162,6 +162,7 @@ export class ReceiveComponent implements OnInit {
 
   changeTab(tab: number): void {
     this.page = 1;
+    this.exitLabelEditingMode();
     if (tab) {
       this.setAddressType('private');
     } else {
@@ -391,10 +392,13 @@ export class ReceiveComponent implements OnInit {
         .subscribe(response => {
           this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
           this.flashNotificationService.open(msg)
-          this.addressInput = true;
+          this.exitLabelEditingMode();
           this.rpc_update();
         });
     }
   }
 
+  exitLabelEditingMode(): void {
+    this.addressInput = true; 
+  }
 }

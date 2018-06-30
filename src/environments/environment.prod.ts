@@ -6,5 +6,5 @@ export const environment = {
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
   envName: 'prod',
   particlHost: 'localhost',
-  particlPort: 51935
+  particlPort: 51735
 };
