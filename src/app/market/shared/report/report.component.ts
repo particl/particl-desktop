@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { FavoritesService } from '../../../core/market/api/favorites/favorites.service';
+import { ReportService } from '../../../core/market/api/report/report.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { MarketStateService } from '../../../core/market/market-state/market-state.service';
 
 import { Listing } from '../../../core/market/api/listing/listing.model';
-import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
+import { ReportCacheService } from 'app/core/market/market-cache/report-cache.service';
 
 
 @Component({
@@ -21,16 +21,16 @@ export class ReportComponent {
   @Input() listing: Listing;
   @Input() flag: boolean = true;
   constructor(
-    public favorites: FavoritesService,
+    public report: ReportService,
     private snackbar: SnackbarService,
     private marketState: MarketStateService
   ) {}
 
   toggle() {
-    this.favorites.toggle(this.listing);
+    this.report.toggle(this.listing);
   }
 
-  get isFavorited(): boolean {
-    return this.listing && this.favorites.cache.isFavorited(this.listing);
+  get isReported(): boolean {
+    return this.listing && this.report.cache.isReported(this.listing);
   }
 }

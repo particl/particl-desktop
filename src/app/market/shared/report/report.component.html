@@ -4,9 +4,10 @@
           [ngClass]="{ 'active': isFavorited }"
           [matTooltip]="(isFavorited)? 'Remove from Favorites' : 'Add to Favorites'"
           matTooltipPosition="above" (click)="toggle()"></mat-icon> -->
-  <mat-icon *ngIf="flag === false" fontSet="partIcon" matTooltip="Report" fontIcon="part-flag"
-
-  ></mat-icon>
+<mat-icon *ngIf="flag === false" fontSet="partIcon" fontIcon="part-flag"
+        [ngClass]="{ 'active': isReported }"
+        [matTooltip]="(isReported)? 'Remove from Report' : 'Report'"
+        (click)="toggle()"></mat-icon>
 
 <!-- Fav button on Listing's detail modal -->
 <!-- <button *ngIf="detail === true" class="favorite small" mat-button color="warn" 
@@ -18,6 +19,11 @@
         (click)="toggle()"></mat-icon> 
 </button> -->
 
-<button *ngIf="flag === true" mat-button class="small" matTooltip="Report" matTooltipPosition="above">
-  <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+<button *ngIf="flag === true" mat-button class="small" 
+        [color]="(isReported)? 'warn' : 'basic'" 
+        [matTooltip]="(isReported)? 'Remove from Report' : 'Report'"
+        matTooltipPosition="above">
+  <mat-icon fontSet="partIcon" fontIcon="part-flag"
+      [ngClass]="{ 'active': isReported }"
+      (click)="toggle()"></mat-icon>
 </button>
