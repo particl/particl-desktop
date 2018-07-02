@@ -16,7 +16,7 @@ export class OrderStatusNotifierService implements OnDestroy {
             'Make payment',
             'Mark as shipped'
           ];
-  public oldOrders: any;
+  public oldOrders: Array<any>;
 
   constructor(
     private _marketState: MarketStateService,
@@ -33,26 +33,30 @@ export class OrderStatusNotifierService implements OnDestroy {
       return;
     }
 
-    if (!this.oldOrders || this.oldOrders.allOrders.length === 0) {
-      this.oldOrders = orders;
+    if (!this.oldOrders || this.oldOrders.length === 0) {
+      this.oldOrders = orders.bid.orders;
     } else {
-      this.oldOrders.allOrders.forEach(order => {
-        orders.allOrders.forEach(newOrder => {
-          if (
-            order.id === newOrder.id &&
-            order.messages.action_button !== newOrder.messages.action_button &&
-            this.actionStatus.includes(newOrder.messages.action_button)
-          ) {
-            this.notifyNewStatus(newOrder);
-          }
-        });
-      });
-      this.oldOrders = orders;
+      this.compareOrders(orders.bid.orders);
+      this.oldOrders = orders.bid.orders;
     }
   }
 
   private notifyNewStatus(newOrder: any) {
     this._notification.sendNotification('New status update for', newOrder.type + 'order');
+  }
+
+  compareOrders(newOrders: any) {
+    this.oldOrders.forEach(order => {
+      newOrders.forEach(newOrder => {
+        if (
+          order.id === newOrder.id &&
+          order.messages.action_button !== newOrder.messages.action_button &&
+          this.actionStatus.includes(newOrder.messages.action_button)
+        ) {
+          this.notifyNewStatus(newOrder);
+        }
+      });
+    });
   }
 
   ngOnDestroy() {
