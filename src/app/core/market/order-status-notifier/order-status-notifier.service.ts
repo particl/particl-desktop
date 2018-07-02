@@ -36,7 +36,7 @@ export class OrderStatusNotifierService implements OnDestroy {
     if (!this.oldOrders || this.oldOrders.length === 0) {
       this.oldOrders = orders.bid.orders;
     } else {
-      this.compareOrders(orders.bid.orders);
+      this.checkOrders(orders.bid.orders);
       this.oldOrders = orders.bid.orders;
     }
   }
@@ -45,18 +45,20 @@ export class OrderStatusNotifierService implements OnDestroy {
     this._notification.sendNotification('New status update for', newOrder.type + 'order');
   }
 
-  compareOrders(newOrders: any) {
+  checkOrders(newOrders: any) {
     this.oldOrders.forEach(order => {
       newOrders.forEach(newOrder => {
-        if (
-          order.id === newOrder.id &&
-          order.messages.action_button !== newOrder.messages.action_button &&
-          this.actionStatus.includes(newOrder.messages.action_button)
-        ) {
+        if (this.compareOrder(order, newOrder)) {
           this.notifyNewStatus(newOrder);
         }
       });
     });
+  }
+
+  compareOrder(order: any, newOrder: any) {
+    return order.id === newOrder.id &&
+            order.messages.action_button !== newOrder.messages.action_button &&
+            this.actionStatus.includes(newOrder.messages.action_button)
   }
 
   ngOnDestroy() {
