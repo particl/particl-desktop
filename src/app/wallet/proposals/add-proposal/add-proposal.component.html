@@ -1,50 +1,94 @@
-<div class="container-block disable-select" style="margin-top: 37px;">
-
-  <div class="row" fxLayout="row" fxLayoutGap="30px">
-
-    <mat-card class="details" fxFlex="50" [formGroup]="itemFormGroup">
-      <div class="title">Proposals details</div>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Listing title (product name)" formControlName="title">
-      </mat-form-field>
-
-      <mat-form-field class="full-width">
-        <textarea matInput rows="12" placeholder="Description"
-                  formControlName="longDescription"></textarea>
-      </mat-form-field>
+<div class="hero-block">
+  <div class="title">New community Proposal</div>
+  <p>
+    Every Particl user can submit new proposals to Particl network.<br>
+    As a part of community governance, anybody can post new proposals (or polls). Community initiatives, suggestions for features, in short: anything Particl related.
+  </p>
+  <p class="widget-help">
+    <span class="TO_DO">RE-WORD!</span> Keep in mind, that each Proposal costs 10 PART (paid back to the network) and its results are not obligatory for development of Particl.
+  </p>
+</div>
 
 
-      <!-- TODO: add another input for fiat value and inter-connect the two: -->
-      <mat-form-field class="full-width">
-        <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput min="0" placeholder="Price per item" formControlName="basePrice" type="number">
-        <span matSuffix>PART</span>
-      </mat-form-field>
+<div class="container-block disable-select">
 
-      <div class="row" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="25px">
-        <!--mat-form-field fxFlex="0 0 70px" class="auto-width">
-          <input matInput placeholder="Quantity">
-        </mat-form-field-->
-        <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" placeholder="Domestic shipping price" formControlName="domesticShippingPrice" type="number">
-          <span matSuffix>PART</span>
-        </mat-form-field>
-        <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" placeholder="International shipping price" formControlName="internationalShippingPrice"
-                 type="number">
-          <span matSuffix>PART</span>
-        </mat-form-field>
-      </div>
+  <div class="column">
+    
+    <mat-card>
+      <div class="title">Proposal details</div>
+    </mat-card>
+
+    <mat-card>
+      <div class="title">Terms &amp; Conditions</div>
+    </mat-card>
+
+  </div><!-- .column -->
+  
+
+  <div class="column">
+    
+    <mat-card>
+      <div class="title">Voting options</div>
+    </mat-card>
+
+    <mat-card>
+      <div class="title">Author info <small>(optional)</small></div>
     </mat-card>
 
   </div>
-    <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
-    <div class="left">
-      <button mat-raised-button color="primary" matTooltip="Save and put up for sale" >
-        <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        Add Proposal
-      </button>
-    </div>
-  </div>
 
+  
+</div><!-- .container-block -->
+
+
+<div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
+  <!-- FIXME: this buttons should discard changes and redirect user back to Proposals page -->
+  <button mat-button color="basic">
+    <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
+    Cancel &amp; Discard
+  </button>
+  <button mat-raised-button color="primary" matTooltip="Submit new proposal to Particl users">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Submit new Proposal
+  </button>
 </div>
+
+
+
+
+
+
+
+
+
+<!--mat-card class="details" fxFlex="50" [formGroup]="itemFormGroup">
+  <div class="title">Proposals details</div>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Listing title (product name)" formControlName="title">
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <textarea matInput rows="12" placeholder="Description"
+              formControlName="longDescription"></textarea>
+  </mat-form-field>
+
+
+  <mat-form-field class="full-width">
+    <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
+    <input matInput min="0" placeholder="Price per item" formControlName="basePrice" type="number">
+    <span matSuffix>PART</span>
+  </mat-form-field>
+
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="25px">
+    <mat-form-field fxFlex="50%" class="auto-width">
+      <input matInput min="0" placeholder="Domestic shipping price" formControlName="domesticShippingPrice" type="number">
+      <span matSuffix>PART</span>
+    </mat-form-field>
+    <mat-form-field fxFlex="50%" class="auto-width">
+      <input matInput min="0" placeholder="International shipping price" formControlName="internationalShippingPrice"
+             type="number">
+      <span matSuffix>PART</span>
+    </mat-form-field>
+  </div>
+</mat-card-->
+

@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } },
   // { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
   { path: 'proposals', component: ProposalsComponent, data: { title: 'Proposals' } },
-  { path: 'proposal', component: AddProposalComponent, data: { title: 'Proposals › Add/Edit Proposal' } }
+  { path: 'proposal', component: AddProposalComponent, data: { title: 'Proposals › Submit new' } }
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);

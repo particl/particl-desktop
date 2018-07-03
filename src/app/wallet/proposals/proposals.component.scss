@@ -32,3 +32,12 @@
   flex: 1 1 100%;
   margin-left: 35px;
 }
+
+.loading-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 800;
+  height: 7px;
+}
