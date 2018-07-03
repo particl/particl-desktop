@@ -10,23 +10,14 @@
       <ng-template mat-tab-label>
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
         test2
-        <!-- TODO? add current number of orders (maybe limit only to those who need action? e.g. payment or "confirm shipped"): -->
-        <!-- <span class="tag TO_DO">2</span> -->
       </ng-template>
     </mat-tab>
-    <!--mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-        Sell item
-      </ng-template>
-    </mat-tab-->
   </mat-tab-group>
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
+
+<!--mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar-->
 
 
-<!-- =========== LISTINGS =========== -->
-
-<div fxLayout="row" fxLayoutGap="30px" class="container-block" *ngIf="selectedTab === 0">
+<div fxLayout="row" fxLayoutGap="30px" class="container-block">
 
   <!-- Listings > Filter -->
   <div class="filter" fxFlex="0 0 230px">
@@ -41,63 +32,5 @@
 
  </div><!-- .container-block -->
 </div>
-<mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
 
-
-<!-- =========== ORDERS =========== -->
-
-<div class="container-block disable-select" *ngIf="selectedTab === 1">
-  <form [formGroup]="proposalsFormGroup" class="shipping">
-    <div class="shipping-info" fxFlex>
-          <mat-card>
-            <div class="title">test2</div>
-            <div class="row" fxLayout fxLayoutGap="30px">
-              <!-- FIXME: First and Last name should be required as well (waiting for dapp shell integration) -->
-              <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="firstName" placeholder="First name">
-              </mat-form-field>
-              <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="lastName" placeholder="Last name">
-              </mat-form-field>
-            </div>
-            <mat-form-field class="full-width">
-              <input matInput formControlName="addressLine1" placeholder="Address line 1">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-              <input matInput formControlName="addressLine2" placeholder="Address line 2">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-              <input matInput formControlName="city" placeholder="City">
-            </mat-form-field>
-            <div class="row" fxLayout fxLayoutGap="30px">
-              <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="zipCode" placeholder="ZIP / Postal code">
-              </mat-form-field>
-              <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="state" placeholder="State">
-              </mat-form-field>
-            </div>
-            <mat-form-field class="full-width">
-              <mat-select formControlName="country" placeholder="Country">
-                <mat-option >test1
-                </mat-option>
-                <mat-option >test1
-                </mat-option>
-                <mat-option >test1
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <!--Hide shipping profile -->
-            <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
-              <mat-checkbox formControlName="newShipping" fxFlex>Save as shipping profile
-              </mat-checkbox>
-              <mat-form-field class="full-width" fxFlex>
-                <input matInput formControlName="title" placeholder="Shipping profile name">
-              </mat-form-field>
-            </div>
-
-          </mat-card>
-        </div>
-    </form>
-
+<!--mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar-->

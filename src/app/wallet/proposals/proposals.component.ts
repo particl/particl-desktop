@@ -24,7 +24,7 @@ export class ProposalsComponent implements OnInit {
   }
 
   formBuild() {
-
+    /*
     this.proposalsFormGroup = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -37,6 +37,7 @@ export class ProposalsComponent implements OnInit {
       newShipping: [''],
       title: ['', Validators.required]
     });
+    */
   }
 
   addProposal() {
