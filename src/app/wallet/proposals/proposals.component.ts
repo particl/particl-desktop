@@ -8,6 +8,13 @@ import { Component, OnInit } from '@angular/core';
 
 export class ProposalsComponent {
 
+  public selectedTab: number = 0;
+  public tabLabels: Array<string> = ['active', 'past'];
+
   constructor() { }
+  
+  changeTab(index: number): void {
+    this.selectedTab = index;
+  }
 
 }
