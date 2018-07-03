@@ -8,6 +8,7 @@ import { WalletModule } from './wallet/wallet.module';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ProposalsComponent } from './proposals/proposals.component';
+import { AddProposalComponent } from './proposals/add-proposal/add-proposal.component';
 import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
 import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
 import { ZapColdstakingComponent } from './overview/widgets/coldstake/zap-coldstaking/zap-coldstaking.component';
@@ -23,6 +24,7 @@ import { routing } from './wallet.routing';
     OverviewComponent,
     SettingsComponent,
     ProposalsComponent,
+    AddProposalComponent,
     StakinginfoComponent,
     ColdstakeComponent,
     ZapColdstakingComponent,
