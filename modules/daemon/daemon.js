@@ -69,10 +69,12 @@ exports.start = function (wallets) {
       log.info('daemon already running');
       resolve(undefined);
 
-    }).catch(() => {
+    }).catch(async () => {
       // clear cookie authentication
       // currently used by electron (if reboot)
       clearCookie();
+      await askForDeletingCookie().catch(() => log.info('cookie: already existed and re-using.'));
+
       daemon = undefined;
 
       let options = _options.get();
@@ -161,6 +163,30 @@ function _stop(attempt = 0) {
       } 
     } else {
       log.info('Daemon stopping gracefully - we can now quit safely :)');
+    }
+  });
+}
+
+function askForDeletingCookie() {
+  return new Promise((resolve, reject) => {
+    if(cookie.checkCookieExists()) {
+      // alert for cookie
+      log.info('cookie: dialog open');
+      electron.dialog.showMessageBox({
+        type: 'warning',
+        buttons: ['Yes', 'No'],
+        message: 'Are you running a special configuration (external daemon)? If you have no idea, select no.'
+      }, (response) => {
+        if(response === 1) {
+          log.info('cookie: deleting');
+          cookie.clearCookieFile();
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    } else {
+      resolve();
     }
   });
 }
