@@ -1,1 +1,34 @@
 @import "./src/assets/_config"; // import shared colors etc.
+@import "./src/app/wallet/shared/_filter-sorting"; // filtering & sorting
+
+// ------ LAYOUT ------ //
+
+.tab-bar {
+  position: fixed;
+  top: $header-main-height;
+  z-index: 100;
+  width: 100%;
+  background: rgba($bg, 0.95);
+}
+
+.container-block {
+  position: relative;
+  margin-top: ($header-main-height + $tab-bar-height);
+  padding: 35px;
+  display: flex;
+  @include break(l) {
+    padding: 45px 50px;
+  }
+}
+
+.sidebar {
+  flex: 0 0 230px;
+  .new-proposal {
+    margin-bottom: 25px;
+  }
+}
+
+.content {
+  flex: 1 1 100%;
+  margin-left: 35px;
+}

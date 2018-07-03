@@ -14,8 +14,10 @@ import {
 
 export class ProposalsComponent implements OnInit {
 
+  // FIXME: needs clean-up?
   public selectedTab: number = 0;
   public proposalsFormGroup: FormGroup;
+  public tabLabels: Array<string> = ['active', 'past'];
 
   constructor(private router: Router, private formBuilder: FormBuilder) { }
 
@@ -43,6 +45,7 @@ export class ProposalsComponent implements OnInit {
   addProposal() {
     this.router.navigate(['/wallet/proposal']);
   }
+
 
   changeTab(index: number): void {
     this.selectedTab = index;

@@ -1,36 +1,67 @@
-
-  <mat-tab-group (selectChange)="changeTab($event.index)" style="margin-top: 60px;">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
-        test1
-      </ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-        test2
-      </ng-template>
-    </mat-tab>
-  </mat-tab-group>
+<app-header class="disable-select">
+  <div class="tab-bar">
+    <mat-tab-group (selectChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+          Active proposals
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-document"></mat-icon>
+          Past proposals
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
 
 <!--mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar-->
 
+<div class="container-block">
+  
+  <div class="sidebar">
 
-<div fxLayout="row" fxLayoutGap="30px" class="container-block">
-
-  <!-- Listings > Filter -->
-  <div class="filter" fxFlex="0 0 230px">
-
-    <div class="sell-item">
-      <button mat-raised-button color="primary" (click)="addProposal()" class="full-width"
-              matTooltip="Enter a new item for sale" matTooltipPosition="above">
+    <div class="new-proposal">
+      <button mat-raised-button color="primary" class="full-width" (click)="addProposal()"
+              matTooltip="Add new voting proposal" matTooltipPosition="above">
         <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-        Add new Proposal
+        Submit new proposal
       </button>
     </div>
+    
+    <div class="section search-sorting">
+      <div class="subtitle">Search & Sort</div>
+      <mat-card class="filter-card TO_DO">
+        <mat-form-field class="icon-input search-address">
+          <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}"
+                placeholder="Search Proposals" (keyup.escape)="query = ''">
+          <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
+                    fontIcon="part-clear-all"></mat-icon>
+          <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address" matTooltipPosition="before"></mat-icon>
+        </mat-form-field>
+      </mat-card>
 
- </div><!-- .container-block -->
-</div>
+      <div class="subtitle">Filter</div>
+      <mat-card class="filter-card TO_DO">
+        [ ] Hide proposals I've voted on
+      </mat-card>
+    </div><!-- .search-sorting -->
 
-<!--mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar-->
+    <p class="widget-help">
+      As a part of our decentralized governance, Proposals let any user suggest changes to anything related to Particl. Once proposal is submitted, every Particl owner can vote on it.
+    </p>
+
+  </div><!-- .sidebar -->
+
+
+  <div class="content">
+    <mat-card>
+      <p *ngIf="tabLabels[selectedTab] == 'active'">ACTIVE</p>
+      <p *ngIf="tabLabels[selectedTab] == 'past'">PAST</p>
+    </mat-card>
+  </div><!-- .content -->
+
+
+</div><!-- .container-block -->
