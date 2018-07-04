@@ -15,22 +15,26 @@ export class AddProposalComponent implements OnInit {
   private destroyed: boolean = false;
   itemFormGroup: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.itemFormGroup = this.formBuilder.group({
-      title:                      ['', [Validators.required]],
-      shortDescription:           ['', [Validators.required,
-                                        Validators.maxLength(200)]],
-      longDescription:            ['', [Validators.required,
-                                        Validators.maxLength(1000)]],
-      category:                   ['', [Validators.required]],
+      title:                      ['', [Validators.required,
+                                        Validators.maxLength(50)]],
+      description:                ['', [Validators.required,
+                                        Validators.maxLength(2000)]],
+      /*category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
       basePrice:                  ['', [Validators.required, Validators.min(0)]],
       domesticShippingPrice:      ['', [Validators.required, Validators.min(0)]],
-      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]
+      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]*/
     });
 
 
   }
+
+  cancelAndDiscard() {
+    this.router.navigate(['/wallet/proposals']);
+  }
+
 }

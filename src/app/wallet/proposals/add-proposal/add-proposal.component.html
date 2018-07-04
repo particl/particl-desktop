@@ -1,8 +1,8 @@
 <div class="hero-block">
   <div class="title">New community Proposal</div>
   <p>
-    Every Particl user can submit new proposals to Particl network.<br>
-    As a part of community governance, anybody can post new proposals (or polls). Community initiatives, suggestions for features, in short: anything Particl related.
+    As a part of community governance, anybody can post new proposals to Particl network.<br>
+    Community initiatives, suggestions for features, in short: anything Particl related.
   </p>
   <p class="widget-help">
     <span class="TO_DO">RE-WORD!</span> Keep in mind, that each Proposal costs 10 PART (paid back to the network) and its results are not obligatory for development of Particl.
@@ -16,10 +16,28 @@
     
     <mat-card>
       <div class="title">Proposal details</div>
+
+      <mat-form-field class="full-width">
+        <input matInput #title placeholder="Title – short and descriptive" formControlName="title">
+        <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
+      </mat-form-field>
+      
+      <mat-form-field class="full-width">
+        <textarea matInput #description rows="18" placeholder="Proposal description" formControlName="description"></textarea>
+        <mat-hint align="end">{{ description.value?.length || 0 }}/2000</mat-hint>
+      </mat-form-field>
+      
+      <p class="widget-help">
+        Describe your proposal in detail &ndash; explain what to change, how and why. Stay objective, honest and to-the-point.
+      </p>
     </mat-card>
 
     <mat-card>
       <div class="title">Terms &amp; Conditions</div>
+      <p>
+        I agree to behave, not to post BS and I understand that each submitted Proposal costs 10 PART (non-refundable, paid back to network).
+      </p>
+      <mat-checkbox>Yes, I agree</mat-checkbox>
     </mat-card>
 
   </div><!-- .column -->
@@ -28,11 +46,61 @@
   <div class="column">
     
     <mat-card>
-      <div class="title">Voting options</div>
+      <div class="title">
+        Voting options
+        <button mat-button color="basic" class="small">
+          <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+          Add new option
+        </button>
+      </div>
+
+      <div class="voting item">
+        <span class="no">1</span>
+        <div class="content">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Option #1 (e.g. 'Yes')" formControlName="?????">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="voting item">
+        <span class="no">2</span>
+        <div class="content">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Option #2 (e.g. 'No')" formControlName="?????">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <p class="widget-help">
+        Add at least 2 possible voting options for your proposal. Less is more, max. 5 options are recommended.
+      </p>
     </mat-card>
 
     <mat-card>
-      <div class="title">Author info <small>(optional)</small></div>
+      <div class="title">
+        Author info <small>(optional)</small>
+        <button mat-button color="basic" class="small">
+          <mat-icon fontSet="partIcon" fontIcon="part-person-add"></mat-icon>
+          Add contributor
+        </button>
+      </div>
+
+      <div class="author item">
+        <span class="no">1</span>
+        <div class="content">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Author name/nickname" formControlName="?????">
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Author's Riot/Discord/GitHub username" formControlName="?????">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <p class="widget-help">
+        Including author info &amp; contact is optional, but it helps when discussing submitted proposals (users might have unanswered questions regarding proposal etc.).
+      </p>
     </mat-card>
 
   </div>
@@ -43,10 +111,11 @@
 
 <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
   <!-- FIXME: this buttons should discard changes and redirect user back to Proposals page -->
-  <button mat-button color="basic">
+  <button mat-button color="basic" (click)="cancelAndDiscard()">
     <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
     Cancel &amp; Discard
   </button>
+  <!-- FIXME: button disabled until user checks Terms & Conditions checkbox -->
   <button mat-raised-button color="primary" matTooltip="Submit new proposal to Particl users">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Submit new Proposal
