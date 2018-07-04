@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
 
+import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
@@ -14,11 +15,13 @@ export class OrderStatusNotifierService implements OnDestroy {
             'Accept bid',
             'Mark as delivered',
             'Make payment',
-            'Mark as shipped'
+            'Mark as shipped',
+            'Order rejected'
           ];
   public oldOrders: Array<any>;
 
   constructor(
+    private listingService: ListingService,
     private _marketState: MarketStateService,
     private _notification: NotificationService
   ) {
@@ -42,7 +45,12 @@ export class OrderStatusNotifierService implements OnDestroy {
   }
 
   private notifyNewStatus(newOrder: any) {
-    this._notification.sendNotification('New status update for', newOrder.type + 'order');
+    this.listingService.get(newOrder.listingItemId).subscribe(response => {
+     newOrder.listing = response;
+
+     const message = this.getMessage(newOrder.listing.title, newOrder.messages.action_button);
+     this._notification.sendNotification(message);
+    });
   }
 
   checkOrders(newOrders: any) {
@@ -59,6 +67,28 @@ export class OrderStatusNotifierService implements OnDestroy {
     return order.id === newOrder.id &&
             order.messages.action_button !== newOrder.messages.action_button &&
             this.actionStatus.includes(newOrder.messages.action_button)
+  }
+
+  private getMessage(title: string, msg: string) {
+    switch (msg) {
+      case 'Accept bid' :
+        return 'New bid on' + title + ' - accept';
+
+      case 'Make payment' :
+        return 'Seller accepted your bid, order ' + title + ' ready for payment';
+
+      case 'Mark as shipped' :
+        return 'Buyer locked funds, order ' + title + ' ready for shipping';
+
+      case 'Mark as delivered' :
+        return 'Seller just shipped ' + title;
+
+      case 'Order rejected' :
+        return 'New bid on ' + title + ' - rejected';
+
+      default:
+        break;
+    }
   }
 
   ngOnDestroy() {
