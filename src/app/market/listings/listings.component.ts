@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
-
+import { Observable } from 'rxjs'
 import { Category } from 'app/core/market/api/category/category.model';
 import { Listing } from '../../core/market/api/listing/listing.model';
 
@@ -192,6 +192,16 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // Returns the pageNumber if the first page that is currently visible
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
+  }
+
+  onCountryChange(country: any): void {
+    this.filters.country = country ? country.iso : undefined;
+    this.clearAndLoadPage();
+  }
+
+  onCategoryChange(category: any): void {
+    this.filters.category = category ? category.id : undefined;
+    this.clearAndLoadPage();
   }
 
   ngOnDestroy() {
