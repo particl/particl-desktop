@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs'
+
 import { Category } from 'app/core/market/api/category/category.model';
 import { Listing } from '../../core/market/api/listing/listing.model';
 

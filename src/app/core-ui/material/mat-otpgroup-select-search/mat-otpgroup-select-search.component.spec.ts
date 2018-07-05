@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search.component';
+import { MaterialModule } from 'app/core-ui/material/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('MatOtpGroupSelectSearchComponent', () => {
   let component: MatOtpGroupSelectSearchComponent;
@@ -8,7 +10,10 @@ describe('MatOtpGroupSelectSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MatOtpGroupSelectSearchComponent ]
+      imports: [
+        BrowserAnimationsModule,
+        MaterialModule
+      ]
     })
     .compileComponents();
   }));

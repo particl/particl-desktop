@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MatSelectSearchComponent } from './mat-select-search.component';
+import { MaterialModule } from 'app/core-ui/material/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('MatSelectSearchComponent', () => {
   let component: MatSelectSearchComponent;
@@ -8,7 +10,10 @@ describe('MatSelectSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MatSelectSearchComponent ]
+      imports: [
+        MaterialModule,
+        BrowserAnimationsModule
+      ]
     })
     .compileComponents();
   }));
