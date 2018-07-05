@@ -22,7 +22,7 @@ export class MatSelectSearchComponent implements OnInit {
   ngOnInit() {
     this.filteredOptions = this.formControl.valueChanges
       .pipe(
-        startWith<string | any>(''),
+        startWith(''),
         map(value => {
           if (!value) {
             return;

@@ -3,16 +3,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
-export const _filter = (opt: any[], value: string): string[] => {
-  if (!value) {
-    return opt || []
-  }
-
-  const filterValue = typeof value === 'string' ? value.toLowerCase() : value['name'].toLowerCase();
-
-  return opt.filter(item => item.name.toLowerCase().indexOf(filterValue) === 0);
-};
-
 @Component({
   selector: 'mat-otpgroup-select-search',
   templateUrl: './mat-otpgroup-select-search.component.html',
@@ -47,14 +37,24 @@ export class MatOtpGroupSelectSearchComponent implements OnInit {
 
     if (value) {
       return this.options
-        .map(group => ({ name: group.name, subCategoryList: _filter(group.subCategoryList, value) }))
+        .map(group => ({ name: group.name, subCategoryList: this._filter(group.subCategoryList, value) }))
         .filter(group => group.subCategoryList.length > 0);
     }
     return this.options;
   }
 
-  displayFn(option?: any): string | undefined {
+  displayFn(option?: any): any {
     this.change.emit(option);
     return option ? option.name : this.defaultOption;
   }
+
+  private _filter = (opt: any[], value: string): string[] => {
+    if (!value) {
+      return opt || []
+    }
+
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value['name'].toLowerCase();
+
+    return opt.filter(item => item.name.toLowerCase().indexOf(filterValue) === 0);
+  };
 }
