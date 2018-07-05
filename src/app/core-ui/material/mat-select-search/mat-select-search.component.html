@@ -1,0 +1,12 @@
+<form>
+  <mat-form-field>
+    <input type="text" placeholder="{{placeHolder}}" aria-label="placeHolder" matInput [formControl]="formControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
+      <mat-option *ngIf="defaultOption">{{defaultOption}}</mat-option>
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{showValueOf ? option[showValueOf] : option}}
+      </mat-option>
+      <mat-option *ngIf="!(filteredOptions | async).length" [disabled]="true">No Options Found</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
