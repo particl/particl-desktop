@@ -1,21 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef } from '@angular/material';
-import { CoreModule } from '../../core/core.module';
-import { SharedModule } from '../../wallet/shared/shared.module';
-import { CoreUiModule } from '../../core-ui/core-ui.module';
+import { MatDialogModule, MatDialogRef } from '@angular/material';
 import { TermsComponent } from './terms.component';
 
 describe('TermsComponent', () => {
   let component: TermsComponent;
   let fixture: ComponentFixture<TermsComponent>;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ MatDialogModule ],
       declarations: [ TermsComponent ],
-      imports: [
-        SharedModule,
-        CoreModule.forRoot(),
-        CoreUiModule.forRoot()
-      ],
       providers: [
         /* deps */
         { provide: MatDialogRef }

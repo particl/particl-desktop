@@ -1,6 +1,6 @@
 <div>
   <div mat-dialog-title class="title">Accept Terms and Condition</div>
-  <mat-dialog-content class="modal-content" fxLayout>
+  <mat-dialog-content class="modal-content" fxLayout (scroll)="onScroll($event)">
     <div class="text" fxFlex="1 1 350px">
       <p class="widget-help">
         Before paying for this order, your bid needs to be accepted by the Seller.
@@ -77,7 +77,7 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="end center">
-    <button mat-raised-button color="primary" (click)="acceptTerms()">
+    <button mat-raised-button color="primary" [disabled]="!isScrolled" (click)="acceptTerms()">
       Accept
     </button>
   </mat-dialog-actions>
