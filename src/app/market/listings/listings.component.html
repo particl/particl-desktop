@@ -17,7 +17,6 @@
       <mat-select-search
         class="filter country"
         [options]= "countryList?.countries"
-        [placeHolder]="'Countries'"
         [defaultOption]="'All countries'"
         [showValueOf]="'name'"
         (onChange)="onCountryChange($event)">
@@ -35,9 +34,7 @@
       <mat-otpgroup-select-search
         [options] = "_rootCategoryList?.subCategoryList"
         [defaultOption]="'All categories'"
-        [placeHolder]="'Categories'"
-        (change) = "onCategoryChange($event)"
-        >
+        (change) = "onCategoryChange($event)">
       </mat-otpgroup-select-search>
       <!--mat-otpgroup-select-search -->
 
