@@ -57,4 +57,9 @@ export class MatOtpGroupSelectSearchComponent implements OnInit {
 
     return opt.filter(item => item.name.toLowerCase().indexOf(filterValue) === 0);
   };
+
+  public _selectAllContent($event: any): void {
+    console.log('$event.target', $event.target);
+    $event.target.select();
+  }
 }

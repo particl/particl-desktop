@@ -1,6 +1,6 @@
 <form [formGroup]="stateForm">
   <mat-form-field>
-    <input type="text" matInput placeholder="{{placeHolder}}" formControlName="stateGroup" [matAutocomplete]="autoGroup">
+    <input type="text" (focus)="selectAllContent($event)" matInput placeholder="{{placeHolder}}" formControlName="stateGroup" [matAutocomplete]="autoGroup">
     <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="displayFn.bind(this)">
       <mat-option>{{defaultOption}}</mat-option>
       <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.name">

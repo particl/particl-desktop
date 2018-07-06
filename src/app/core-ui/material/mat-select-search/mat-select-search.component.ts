@@ -46,4 +46,8 @@ export class MatSelectSearchComponent implements OnInit {
     const filterValue = val.toLowerCase();
     return this.options.filter(option => option[this.showValueOf].toLowerCase().indexOf(filterValue) === 0);
   }
+
+  public _selectAllContent($event: any): void {
+    $event.target.select();
+  }
 }
