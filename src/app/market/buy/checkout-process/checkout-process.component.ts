@@ -26,6 +26,7 @@ import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
 import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checkout-process-cache.service';
 import { Address } from 'app/core/market/api/profile/address/address.model';
+import { Country } from 'app/core/market/api/countrylist/country.model';
 
 @Component({
   selector: 'app-checkout-process',
@@ -187,6 +188,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     });
 
+  }
+
+  onCountryChange(country: Country): void {
+    this.shippingFormGroup.patchValue({
+      country: (country ? country.iso : undefined)
+    })
   }
 
   select(address: Address) {

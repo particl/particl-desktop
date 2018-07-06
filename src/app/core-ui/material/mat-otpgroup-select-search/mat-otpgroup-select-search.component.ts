@@ -14,8 +14,10 @@ export class MatOtpGroupSelectSearchComponent implements OnInit {
   });
   @Input() defaultOption: string = '';
   @Input() options: any[] = [];
-  @Output() change: EventEmitter<any> = new EventEmitter<any>()
-  @Input() placeHolder: string = ''
+  @Output() change: EventEmitter<any> = new EventEmitter<any>();
+  @Input() placeHolder: string = '';
+  @Input() isRequired: boolean = false;
+
   stateGroupOptions: Observable<any[]>;
 
   constructor(private fb: FormBuilder) { }
@@ -55,7 +57,7 @@ export class MatOtpGroupSelectSearchComponent implements OnInit {
 
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value['name'].toLowerCase();
 
-    return opt.filter(item => item.name.toLowerCase().indexOf(filterValue) === 0);
+    return opt.filter(item => item.name.toLowerCase().includes(filterValue));
   };
 
   public _selectAllContent($event: any): void {

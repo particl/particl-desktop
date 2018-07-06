@@ -14,7 +14,8 @@ export class MatSelectSearchComponent implements OnInit {
   @Input() public placeHolder: string = '';
   @Input() public options: any[] = [];
   @Input() public defaultOption: string = '';
-  @Output() onChange: EventEmitter<string | any> = new EventEmitter<string | any>()
+  @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
+  @Input() isRequired: boolean = false;
 
   public formControl: FormControl = new FormControl();
   public filteredOptions: Observable<any[]>;
@@ -31,6 +32,7 @@ export class MatSelectSearchComponent implements OnInit {
         }),
         map(val => val ? this._filter(val) : this.options.slice())
       );
+      // this.formControl.setValue(this._filter('india')[0])
   }
 
   displayFn(option?: any): string | undefined {
@@ -44,7 +46,7 @@ export class MatSelectSearchComponent implements OnInit {
       return [];
     }
     const filterValue = val.toLowerCase();
-    return this.options.filter(option => option[this.showValueOf].toLowerCase().indexOf(filterValue) === 0);
+    return this.options.filter(option => option[this.showValueOf].toLowerCase().includes(filterValue));
   }
 
   public _selectAllContent($event: any): void {
