@@ -18,34 +18,13 @@
 
     <!-- price section with shipping and total price  -->
     <div *ngIf="listingCacheService?.selectedCountry" class="price" fxFlex>
-      <table class="subtotals" fxFlex="0 0 250px">
-        <tr>
-          <td class="desc">Price</td>
-          <td class="value">
-            {{ listing?.object?.PaymentInformation?.ItemPrice?.basePrice?.toFixed(8) }} PART
-          </td>
-        </tr>
-        <tr>
-          <td class="desc">Shipping Price</td>
-          <td class="value">{{
-            listing.country === listingCacheService.selectedCountry ? (
-              listing?.domesticShippingPrice?.getAmount().toFixed(8)
-            ) : (
-              listing?.internationalShippingPrice?.getAmount().toFixed(8)
-            )
-          }} PART</td>
-        </tr>
-        <tr>
-          <td class="desc">Total</td>
-          <td class="value">{{
-            listing.country === listingCacheService.selectedCountry ? (
-              listing?.domesticTotal?.getAmount().toFixed(8)
-            ) : (
-              listing?.internationalTotal?.getAmount().toFixed(8)
-            )
-          }} PART</td>
-        </tr>
-      </table>
+      {{
+        listing.country === listingCacheService.selectedCountry ? (
+          listing?.domesticTotal?.getAmount().toFixed(8)
+        ) : (
+          listing?.internationalTotal?.getAmount().toFixed(8)
+        )
+      }}
     </div>
     <!-- price section with shipping and total price  -->
 
