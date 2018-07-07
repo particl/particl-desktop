@@ -3,8 +3,8 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger'
 import { Observable } from 'rxjs/Observable';
 
-import { TermsComponent } from 'app/core/terms/modal/terms.component';
-import { termsObj } from 'app/core/terms/terms-txt';
+import { TermsComponent } from 'app/core-ui/main/terms/modal/terms.component';
+import { termsObj } from 'app/core-ui/main/terms/terms-txt';
 
 @Injectable()
 export class TermsService {

@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { CoreModule } from './../core.module';
+import { CoreUiModule } from '../../core-ui.module';
 import { TermsService } from './terms.service';
 
 describe('TermsService', () => {
@@ -11,7 +11,7 @@ describe('TermsService', () => {
       imports: [
         BrowserAnimationsModule,
         MatDialogModule,
-        CoreModule.forRoot()
+        CoreUiModule.forRoot()
       ],
       providers: [ TermsService ]
     });

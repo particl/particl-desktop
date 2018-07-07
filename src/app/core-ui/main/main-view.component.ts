@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
-import { TermsService } from 'app/core/terms/terms.service';
+import { TermsService } from 'app/core-ui/main/terms/terms.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 
 /*

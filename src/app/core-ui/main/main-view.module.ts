@@ -13,10 +13,11 @@ import { PercentageBarComponent } from '../../modals/shared/percentage-bar/perce
 
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
+import { TermsService } from './terms/terms.service';
 
 import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
-
+import { TermsComponent } from './terms/modal/terms.component';
 
 @NgModule({
   imports: [
@@ -37,14 +38,18 @@ import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
     ConsoleModalComponent,
     ReleaseNotificationComponent,
     CartComponent,
-    TimeoffsetComponent
+    TimeoffsetComponent,
+    TermsComponent
+
   ],
   entryComponents: [
     ConsoleModalComponent,
-    ReleaseNotificationComponent
+    ReleaseNotificationComponent,
+    TermsComponent
   ],
   providers: [
-    ClientVersionService
+    ClientVersionService,
+    TermsService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

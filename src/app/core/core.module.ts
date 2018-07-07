@@ -10,14 +10,13 @@ import { RpcService } from './rpc/rpc.service';
 import { ZmqService } from './zmq/zmq.service';
 
 import { UpdaterService } from './updater/updater.service';
-import { TermsService } from './terms/terms.service';
+
 import { NotificationService } from './notification/notification.service';
 
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 import { PeerService } from './rpc/peer/peer.service';
 import { SnackbarService } from './snackbar/snackbar.service';
 import { UpdaterComponent } from './updater/modal/updater.component';
-import { TermsComponent } from './terms/modal/terms.component';
 
 // This is seriously the only UI import.
 import { MatDialogModule } from '@angular/material';
@@ -35,8 +34,8 @@ import { MatDialogModule } from '@angular/material';
   exports: [
     HttpClientModule
   ],
-  declarations: [UpdaterComponent, TermsComponent],
-  entryComponents: [ UpdaterComponent, TermsComponent ]
+  declarations: [UpdaterComponent],
+  entryComponents: [ UpdaterComponent ]
 })
 export class CoreModule {
   static forRoot(): ModuleWithProviders {
@@ -46,7 +45,6 @@ export class CoreModule {
         IpcService,
         ZmqService,
         UpdaterService,
-        TermsService,
         SnackbarService,
         NotificationService
       ]
@@ -58,7 +56,6 @@ export { IpcService } from './ipc/ipc.service';
 export { RpcService } from './rpc/rpc.service';
 export { RpcStateService } from './rpc/rpc-state/rpc-state.service';
 export { UpdaterService } from './updater/updater.service';
-export { TermsService } from './terms/terms.service';
 export { NotificationService } from './notification/notification.service';
 export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 export { PeerService } from './rpc/peer/peer.service';
