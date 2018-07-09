@@ -8,11 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
-import { ProfileService } from 'app/core/market/api/profile/profile.service';
-import { Bid } from 'app/core/market/api/bid/bid.model';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
-import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 
@@ -37,7 +33,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   title: string = '';
   testnet: boolean = false;
   address: string = '';
-  profile: any = {};
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
@@ -48,7 +43,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   marketVersion: string = environment.marketVersion;
   unSubscribeTimer: any;
   time: string = '5:00';
-  orders: Bid;
   public unlocked_until: number = 0;
 
   constructor(
@@ -57,21 +51,16 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _rpc: RpcService,
     private _updater: UpdaterService,
     private _rpcState: RpcStateService,
-    private marketState: MarketStateService,
     private _modalsService: ModalsHelperService,
     private dialog: MatDialog,
-    private profileService: ProfileService,
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
-    private _orderStatusNotifierService: OrderStatusNotifierService
   ) { }
 
   ngOnInit() {
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
-    this.loadProfile();
-
     this._router.events
       .filter(event => event instanceof NavigationEnd)
       .map(() => this._route)
@@ -119,15 +108,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
           }
         }
       });
-
-    this.marketState.observe('bid')
-      .takeWhile(() => !this.destroyed)
-      .distinctUntilChanged()
-      .map(o => new Bid(o, this.profile.address, ''))
-      .subscribe(orders => {
-        this.orders = orders;
-        this._orderStatusNotifierService.checkForNewStatus(orders);
-      })
 
     /* versions */
     // Obtains the current daemon version
@@ -179,13 +159,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   checkSecond(sec: number): number {
     sec = sec > 0 ? (sec - 1) : 59;
     return sec;
-  }
-
-  loadProfile(): void {
-    this.profileService.default().take(1).subscribe(
-      profile => {
-        this.profile = profile;
-      });
   }
 
   // Paste Event Handle

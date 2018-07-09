@@ -34,4 +34,8 @@ export class Bid {
     return this.orders.length;
   }
 
+  get buySellCount() {
+    return this.type === 'buy' ? this.bid.activeBuyOrderCount : this.bid.activeSellOrderCount;
+  }
+
 }

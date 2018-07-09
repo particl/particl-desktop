@@ -44,8 +44,8 @@
                   <mat-icon class="icon" fontSet="partIcon"
                     fontIcon="part-bag-buy"></mat-icon>
                   <span class="text">Buy</span>
-                  <!-- TODO? add current number of Buy orders (maybe limit only to those who need action? e.g. "payment" or "confirm shipped"): -->
-                  <span class="tag">{{orders?.bid?.activeBuyOrderCount}}</span>
+                  <app-order-count [type]="'buy'"></app-order-count>
+                  <!-- <span class="tag">{{orders?.bid?.activeBuyOrderCount}}</span> -->
                 </mat-list-item>
               </a>
 
@@ -55,8 +55,8 @@
                   <mat-icon class="icon" fontSet="partIcon"
                     fontIcon="part-bag-sell"></mat-icon>
                   <span class="text">Sell</span>
-                  <!-- TODO? add current number of Sell orders (maybe limit only to those who need action? e.g. "accept bid" or "mark shipped"): -->
-                  <span class="tag">{{orders?.bid?.activeSellOrderCount}}</span>
+                  <!-- <span class="tag">{{orders?.bid?.activeSellOrderCount}}</span> -->
+                  <app-order-count [type]="'sell'"></app-order-count>
                 </mat-list-item>
               </a>
 
