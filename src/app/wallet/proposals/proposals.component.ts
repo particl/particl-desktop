@@ -26,6 +26,13 @@ export class ProposalsComponent implements OnInit {
     { title: 'Voted by you',      value: 'voted'    },
   ];
 
+  // FIXME: remove, just placeholder values for voting:
+  votings: Array<any> = [
+    { title: 'Yes',           value: 'yes'  },
+    { title: 'No',            value: 'no'   },
+    { title: 'Don\'t care..', value: 'meh'  },
+  ];
+
   filters: any = {
     search:   undefined,
     filter:   undefined,
