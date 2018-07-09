@@ -17,7 +17,6 @@ import { TermsService } from './terms/terms.service';
 
 import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
-import { TermsComponent } from './terms/modal/terms.component';
 
 @NgModule({
   imports: [
@@ -38,14 +37,12 @@ import { TermsComponent } from './terms/modal/terms.component';
     ConsoleModalComponent,
     ReleaseNotificationComponent,
     CartComponent,
-    TimeoffsetComponent,
-    TermsComponent
+    TimeoffsetComponent
 
   ],
   entryComponents: [
     ConsoleModalComponent,
-    ReleaseNotificationComponent,
-    TermsComponent
+    ReleaseNotificationComponent
   ],
   providers: [
     ClientVersionService,

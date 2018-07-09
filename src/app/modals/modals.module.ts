@@ -30,6 +30,7 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 import { PlaceOrderComponent } from './place-order/place-order.component';
 import { ShippingComponent } from './shipping/shipping.component';
+import { TermsComponent } from './terms/terms.component';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
 
@@ -59,6 +60,7 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     ManageWidgetsComponent,
     PlaceOrderComponent,
     ShippingComponent,
+    TermsComponent,
     SendConfirmationModalComponent,
     BidConfirmationModalComponent
   ],
@@ -82,6 +84,7 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     ManageWidgetsComponent,
     PlaceOrderComponent,
     ShippingComponent,
+    TermsComponent,
     CreateWalletComponent,
     ColdstakeComponent,
     SendConfirmationModalComponent,

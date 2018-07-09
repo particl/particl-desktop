@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger'
 import { Observable } from 'rxjs/Observable';
 
-import { TermsComponent } from 'app/core-ui/main/terms/modal/terms.component';
+import { TermsComponent } from 'app/modals/terms/terms.component';
 import { termsObj } from 'app/core-ui/main/terms/terms-txt';
 
 @Injectable()
@@ -19,6 +19,7 @@ export class TermsService {
   checkForNewVersion() {
     if (!this.getVersion() || (this.getVersion() && this.getVersion().version !== termsObj.version)) {
       const dialogRef = this.dialog.open(TermsComponent, { disableClose: true })
+      dialogRef.componentInstance.text = termsObj.text;
       dialogRef.afterClosed().subscribe(() => {
         this.setVersion();
       });

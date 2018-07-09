@@ -7,6 +7,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 })
 export class TermsComponent {
   isScrolled: boolean = false;
+  public text: string;
   constructor(private dialog: MatDialogRef<TermsComponent>) { }
 
   acceptTerms(): void {
