@@ -94,3 +94,16 @@ mat-card {
     margin-left: 20px;
   }
 }
+
+
+// ------ SPECIFIC ------ //
+
+// Terms & Conditions
+.terms {
+  ul {
+    margin: 16px 0;
+    padding: 0 0 0 28px;
+    line-height: 1.6;
+    color: mix($text, $text-muted);
+  }
+}

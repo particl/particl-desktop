@@ -418,8 +418,17 @@ mat-card.mat-card {
 // ------ 3.1. INPUTS ------ //
 
 .mat-form-field {
-  font-family: $font;
+  font-family: $font !important;
   line-height: normal;
+  .mat-form-field-label {
+    overflow: visible; // fix cropped labels
+  }
+  .mat-input-element {
+    height: 100%; // fix cropped text in inputs
+  }
+  textarea.mat-input-element {
+    line-height: 1.45;
+  }
   &.larger { // larger inputs
     font-size: 14px;
   }

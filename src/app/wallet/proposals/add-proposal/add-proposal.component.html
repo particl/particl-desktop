@@ -1,11 +1,11 @@
 <div class="hero-block">
-  <div class="title">New community Proposal</div>
+  <div class="title">New Community Proposal</div>
   <p>
-    As a part of community governance, anybody can post new proposals to Particl network.<br>
-    Community initiatives, suggestions for features, in short: anything Particl related.
+    Submit a proposal on the Particl network for the community to vote on.<br>
+    Proposals can include: suggestions for features, community-led initiatives, partnership opportunities, protocol improvement ideas, and much more.
   </p>
   <p class="widget-help">
-    <span class="TO_DO">RE-WORD!</span> Keep in mind, that each Proposal costs 10 PART (paid back to the network) and its results are not obligatory for development of Particl.
+    Keep in mind that each proposal costs 10 PART to submit and that voting results do not guarantee implementation from the Particl team.
   </p>
 </div>
 
@@ -18,26 +18,18 @@
       <div class="title">Proposal details</div>
 
       <mat-form-field class="full-width">
-        <input matInput #title placeholder="Title – short and descriptive" formControlName="title">
+        <input matInput #title placeholder="Proposal's title" formControlName="title">
         <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
       </mat-form-field>
       
       <mat-form-field class="full-width">
-        <textarea matInput #description rows="18" placeholder="Proposal description" formControlName="description"></textarea>
+        <textarea matInput #description rows="30" placeholder="Description" formControlName="description"></textarea>
         <mat-hint align="end">{{ description.value?.length || 0 }}/2000</mat-hint>
       </mat-form-field>
       
       <p class="widget-help">
-        Describe your proposal in detail &ndash; explain what to change, how and why. Stay objective, honest and to-the-point.
+        Objectively describe your proposal in detail; explain what to change, how to do it and why.
       </p>
-    </mat-card>
-
-    <mat-card>
-      <div class="title">Terms &amp; Conditions</div>
-      <p>
-        I agree to behave, not to post BS and I understand that each submitted Proposal costs 10 PART (non-refundable, paid back to network).
-      </p>
-      <mat-checkbox>Yes, I agree</mat-checkbox>
     </mat-card>
 
   </div><!-- .column -->
@@ -73,13 +65,13 @@
       </div>
 
       <p class="widget-help">
-        Add at least 2 possible voting options for your proposal. Less is more, max. 5 options are recommended.
+        Add a minimum of 2 voting options for your proposal. In this case, less is usually more. As such, we recommend a maximum of 5 voting options to be added.
       </p>
     </mat-card>
 
     <mat-card>
       <div class="title">
-        Author info <small>(optional)</small>
+        Contact information <small>(optional)</small>
         <button mat-button color="basic" class="small">
           <mat-icon fontSet="partIcon" fontIcon="part-person-add"></mat-icon>
           Add contributor
@@ -90,17 +82,42 @@
         <span class="no">1</span>
         <div class="content">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Author name/nickname" formControlName="?????">
+            <input matInput placeholder="Your name/nickname" formControlName="?????">
           </mat-form-field>
           <mat-form-field class="full-width">
-            <input matInput placeholder="Author's Riot/Discord/GitHub username" formControlName="?????">
+            <input matInput placeholder="Your Riot/Discord/Github username or an email address" formControlName="?????">
           </mat-form-field>
         </div>
       </div>
 
+      <!-- FIXME: when clicked on [Add countributor] button, add these: -->
+      <!--div class="author item">
+        <span class="no">2</span>
+        <div class="content">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Contributor's name/nickname" formControlName="?????">
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Contibutor's Riot/Discord/Github username or an email address" formControlName="?????">
+          </mat-form-field>
+        </div>
+      </div-->
+
       <p class="widget-help">
-        Including author info &amp; contact is optional, but it helps when discussing submitted proposals (users might have unanswered questions regarding proposal etc.).
+        Including your contact information is optional, but it can help when discussing submitted proposals. For example, users might have unanswered questions or improvements regarding your proposal.
       </p>
+    </mat-card>
+
+    <mat-card class="terms">
+      <div class="title">Terms &amp; Conditions</div>
+      <ul>
+        <li>Proposal fee costs 10 PART</li>
+        <li>Fees are non-refundable</li>
+        <li>Fees are distributed to network staking nodes</li>
+        <li>Voting results do not represent any form of finality</li>
+        <li>Proposals may still be denied even though they were voted in favour of, and vice versa</li>
+      </ul>
+      <mat-checkbox>Yes, I understand &amp; agree</mat-checkbox>
     </mat-card>
 
   </div>
@@ -121,43 +138,3 @@
     Submit new Proposal
   </button>
 </div>
-
-
-
-
-
-
-
-
-
-<!--mat-card class="details" fxFlex="50" [formGroup]="itemFormGroup">
-  <div class="title">Proposals details</div>
-  <mat-form-field class="full-width">
-    <input matInput placeholder="Listing title (product name)" formControlName="title">
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <textarea matInput rows="12" placeholder="Description"
-              formControlName="longDescription"></textarea>
-  </mat-form-field>
-
-
-  <mat-form-field class="full-width">
-    <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-    <input matInput min="0" placeholder="Price per item" formControlName="basePrice" type="number">
-    <span matSuffix>PART</span>
-  </mat-form-field>
-
-  <div class="row" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="25px">
-    <mat-form-field fxFlex="50%" class="auto-width">
-      <input matInput min="0" placeholder="Domestic shipping price" formControlName="domesticShippingPrice" type="number">
-      <span matSuffix>PART</span>
-    </mat-form-field>
-    <mat-form-field fxFlex="50%" class="auto-width">
-      <input matInput min="0" placeholder="International shipping price" formControlName="internationalShippingPrice"
-             type="number">
-      <span matSuffix>PART</span>
-    </mat-form-field>
-  </div>
-</mat-card-->
-
