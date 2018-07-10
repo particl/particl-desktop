@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger'
 import { Observable } from 'rxjs/Observable';
 
 import { TermsComponent } from 'app/modals/terms/terms.component';
-import { termsObj } from 'app/core-ui/main/terms/terms-txt';
+import { termsObj } from './terms-txt';
 
 @Injectable()
 export class TermsService {

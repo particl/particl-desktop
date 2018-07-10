@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
-
 // modals
 import { UnlockwalletComponent } from 'app/modals/unlockwallet/unlockwallet.component';
 import { UnlockModalConfig } from './models/unlock.modal.config.interface';

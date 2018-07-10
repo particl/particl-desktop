@@ -8,7 +8,7 @@ import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
-
+import { TermsService } from 'app/modals/terms/terms.service';
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
@@ -71,7 +71,8 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
     ModalsHelperService,
     PassphraseService,
-    SnackbarService
+    SnackbarService,
+    TermsService
   ],
   entryComponents: [
     DaemonComponent,
@@ -104,3 +105,4 @@ export class ModalsModule {
 
 export { ModalsHelperService } from './modals-helper.service';
 export { PassphraseService } from './createwallet/passphrase/passphrase.service';
+export { TermsService } from 'app/modals/terms/terms.service';

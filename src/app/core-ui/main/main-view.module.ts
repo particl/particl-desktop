@@ -13,7 +13,6 @@ import { PercentageBarComponent } from '../../modals/shared/percentage-bar/perce
 
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
-import { TermsService } from './terms/terms.service';
 
 import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
@@ -45,8 +44,7 @@ import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
     ReleaseNotificationComponent
   ],
   providers: [
-    ClientVersionService,
-    TermsService
+    ClientVersionService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
