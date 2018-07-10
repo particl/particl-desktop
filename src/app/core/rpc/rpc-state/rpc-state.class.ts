@@ -1,13 +1,25 @@
 import { Log } from 'ng2-logger';
 import { RpcService } from '../rpc.service';
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, OnInit } from '@angular/core';
+import { ConnectionCheckerService } from 'app/loading/connection-checker.service';
 
-export class RpcStateClass implements OnDestroy {
+export class RpcStateClass implements OnDestroy, OnInit {
   private log: any = Log.create('rpc-state.class');
 
   private destroyed: boolean = false;
-  constructor(private _rpc: RpcService) {
+  constructor(
+    private _rpc: RpcService,
+    private con: ConnectionCheckerService
+  ) { }
 
+  ngOnInit() {
+    this.con.whenRpcIsResponding().subscribe(
+      (getwalletinfo) => this.callRegisterStateCalls(),
+      (error) => this.log.d('whenRpcIsResponding errored')
+    );
+  }
+
+  callRegisterStateCalls() {
     // Start polling...
     this._rpc.registerStateCall('getwalletinfo', 1000);
     this._rpc.registerStateCall('getblockchaininfo', 5000);
