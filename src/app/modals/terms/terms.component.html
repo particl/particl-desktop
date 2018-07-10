@@ -1,15 +1,17 @@
 <div>
-  <div mat-dialog-title class="title">Accept Terms and Condition</div>
+  <div mat-dialog-title class="title">Terms &amp; Conditions</div>
   <mat-dialog-content class="modal-content" fxLayout (scroll)="onScroll($event)">
-    <div class="text" fxFlex="1 1 350px">
-      <p class="widget-help">
-        {{text}}
-      </p>
-    </div>
+    {{ text }}
   </mat-dialog-content>
-  <mat-dialog-actions fxLayoutAlign="end center">
+  <mat-dialog-actions fxLayoutAlign="space-between center">
+    <!-- TODO: implement shut-down of the app if declined -->
+    <button mat-button color="warn" matTooltip="Particl Desktop will be closed">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      Decline &amp; Close
+    </button>
     <button mat-raised-button color="primary" [disabled]="!isScrolled" (click)="acceptTerms()">
-      Accept
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Accept terms
     </button>
   </mat-dialog-actions>
 </div>
