@@ -72,7 +72,7 @@ export class OrderStatusNotifierService implements OnDestroy {
   private getMessage(title: string, msg: string) {
     switch (msg) {
       case 'Accept bid' :
-        return 'New bid on' + title + ' - accept';
+        return 'New bid on' + title + ' - accept or reject it';
 
       case 'Make payment' :
         return 'Seller accepted your bid, order ' + title + ' ready for payment';
@@ -84,7 +84,7 @@ export class OrderStatusNotifierService implements OnDestroy {
         return 'Seller just shipped ' + title;
 
       case 'Order rejected' :
-        return 'New bid on ' + title + ' - rejected';
+        return 'Your bid on ' + title + ' was rejected by Seller';
 
       default:
         break;
