@@ -29,6 +29,10 @@
   .new-proposal {
     margin-bottom: 25px;
   }
+  .only-official { // filter > show only official proposals
+    margin: 6px 0;
+    display: inline-block;
+  }
 }
 
 .content {
@@ -74,6 +78,18 @@
         flex: 1 1 100%;
         margin-left: 16px;
         font-weight: 500;
+        .tag {
+          color: darken($color, 5%);
+          font-size: 11px;
+          font-weight: 400;
+          text-transform: uppercase;
+          margin: 0 0 0 7px;
+          padding: 0px 4px;
+          position: relative;
+          top: -1px;
+          border: 1px solid $color;
+          border-radius: 2px;
+        }
       }
     }
     .blocks-left {

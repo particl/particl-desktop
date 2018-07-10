@@ -59,6 +59,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <mat-checkbox class="only-official">Show official proposals only</mat-checkbox>
       </mat-card>
     </div><!-- .search-sorting -->
 
@@ -94,7 +95,11 @@
       <div class="header">
         <div class="meta">
           <div class="id">#13</div>
-          <div class="title">Wallet dark theme</div>
+          <div class="title">
+            Wallet dark theme
+            <!-- TODO: show only on Proposals created by team (how to implement this?) -->
+            <span class="tag" matTooltip="This proposal has been submitted by Particl team" matTooltipPosition="after">Official</span>
+          </div>
         </div>
         <!-- TODO: only show "blocks-left" on ACTIVE proposals -->
         <div class="blocks-left" *ngIf="tabLabels[selectedTab] == 'active'">
