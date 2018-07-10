@@ -1,4 +1,4 @@
-<div mat-dialog-title>Confirm transaction</div>
+<div mat-dialog-title>Confirm vote</div>
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
@@ -7,33 +7,30 @@
 
   <!--TX confirmation-->
   <div class="tx-confirmation">
+
     <div class="tx-info">
-      <!-- if public -->
-      <div class="public">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-public"></mat-icon>
-        <div class="title">Public transaction</div>
-        <p class="help-text">
-          Sender, Receiver & transaction amount will be publicly visible on the blockchain
-        </p>
-      </div>
-      <!-- if blind / anon-->
-      <div class="blind" *ngIf="transactionType === 'blind'">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-blind"></mat-icon>
-        <div class="title">Blind transaction</div>
-        <p class="help-text">
-          Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
-        </p>
-      </div>
-      <div class="anon" *ngIf="transactionType === 'anon'">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
-        <div class="title">Anon transaction</div>
-        <p class="help-text">
-          Sender, Receiver & transaction amount will be hidden on the blockchain for highest privacy
-        </p>
-      </div>
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
+      <div class="title">You're voting</div>
+      <p class="help-text">
+        You're voting for a proposal &ndash; weight of your vote is the same as amount of PART you own
+      </p>
+    </div>
+
+    <div class="vote-choice">
+      Yes
     </div>
 
     <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
+
+    <div class="proposal-name">
+      Dark wallet theme
+    </div>
+
+    <!-- IF voting costs tx fees.. (I don't think so) -->
+    <p class="fee-info">
+      Transaction fee:<span class="amount">{{ transactionAmount.getFee() }} PART</span><span class="fiat">&asymp; 0.05 USD</span>
+    </p>
+
   </div><!-- TX confirmation -->
 
 </div><!-- .dialog-content -->
@@ -45,6 +42,6 @@
   </button>
   <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-    Confirm &amp; Send
+    Confirm &amp; Vote
   </button>
 </mat-dialog-actions>
