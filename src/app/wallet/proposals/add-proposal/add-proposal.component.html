@@ -41,6 +41,7 @@
       <div class="title">
         Voting options
         <button mat-button color="basic" class="small">
+          <!-- TODO: allow max of 5 options total -->
           <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
           Add new option
         </button>
@@ -63,6 +64,49 @@
           </mat-form-field>
         </div>
       </div>
+
+      <!-- TODO: when user adds more options, show these: -->
+      <div class="voting item">
+        <span class="no">3</span>
+        <div class="content">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Option #3" formControlName="?????">
+          </mat-form-field>
+        </div>
+        <div class="remove-option">
+          <button mat-button class="small" color="warn" matTooltip="Remove option" matTooltipPosition="before">
+            <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!--div class="voting item">
+        <span class="no">4</span>
+        <div class="content">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Option #4" formControlName="?????">
+          </mat-form-field>
+        </div>
+        <div class="remove-option">
+          <button mat-button class="small" color="warn" matTooltip="Remove option" matTooltipPosition="before">
+            <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="voting item">
+        <span class="no">5</span>
+        <div class="content">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Option #5" formControlName="?????">
+          </mat-form-field>
+        </div>
+        <div class="remove-option">
+          <button mat-button class="small" color="warn" matTooltip="Remove option" matTooltipPosition="before">
+            <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+          </button>
+        </div>
+      </div-->
 
       <p class="widget-help">
         Add a minimum of 2 voting options for your proposal. In this case, less is usually more. As such, we recommend a maximum of 5 voting options to be added.
