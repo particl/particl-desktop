@@ -1,40 +1,35 @@
-<div mat-dialog-title>Confirm transaction</div>
+<div mat-dialog-title>Confirm proposal</div>
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">
 
-  <!--TX confirmation-->
-  <div class="tx-confirmation">
+  <!-- Confirm proposal submission -->
+  <div class="confirmation">
     <div class="tx-info">
-      <!-- if public -->
       <div class="public">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-public"></mat-icon>
-        <div class="title">Public transaction</div>
+        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+        <div class="title">You're proposing</div>
         <p class="help-text">
-          Sender, Receiver & transaction amount will be publicly visible on the blockchain
-        </p>
-      </div>
-      <!-- if blind / anon-->
-      <div class="blind" *ngIf="transactionType === 'blind'">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-blind"></mat-icon>
-        <div class="title">Blind transaction</div>
-        <p class="help-text">
-          Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
-        </p>
-      </div>
-      <div class="anon" *ngIf="transactionType === 'anon'">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
-        <div class="title">Anon transaction</div>
-        <p class="help-text">
-          Sender, Receiver & transaction amount will be hidden on the blockchain for highest privacy
+          Your Proposal would be distributed to Particl network for others to vote on
         </p>
       </div>
     </div>
 
     <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
-  </div><!-- TX confirmation -->
+
+    <div class="name">
+      <span class="currency">Dark wallet theme</span>
+    </div>
+
+    <p class="fee-info">
+      Transaction fee:<span class="amount">{{ transactionAmount.getFee() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Total amount:<span
+      class="amount">{{ transactionAmount.getAmountWithFee(sendAmount.getAmount()) }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
+    </p>
+
+  </div><!-- .confirmation  -->
 
 </div><!-- .dialog-content -->
 
@@ -45,6 +40,6 @@
   </button>
   <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-    Confirm &amp; Send
+    Confirm &amp; Propose
   </button>
 </mat-dialog-actions>
