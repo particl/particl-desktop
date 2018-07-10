@@ -177,7 +177,7 @@
     Cancel &amp; Discard
   </button>
   <!-- FIXME: button disabled until user checks Terms & Conditions checkbox -->
-  <button mat-raised-button color="primary" matTooltip="Submit new proposal to Particl users">
+  <button mat-raised-button color="primary" (click)="submitProposal()" matTooltip="Submit new proposal to Particl users">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Submit new Proposal
   </button>

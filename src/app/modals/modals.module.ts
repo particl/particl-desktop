@@ -31,6 +31,12 @@ import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.componen
 import { PlaceOrderComponent } from './place-order/place-order.component';
 import { ShippingComponent } from './shipping/shipping.component';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
+import {
+  ProposalConfirmationComponent
+} from 'app/modals/proposal-confirmation/proposal-confirmation.component';
+import {
+  ProposalVoteConfirmationComponent 
+} from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
 
 @NgModule({
@@ -60,6 +66,8 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     PlaceOrderComponent,
     ShippingComponent,
     SendConfirmationModalComponent,
+    ProposalConfirmationComponent,
+    ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent
   ],
   exports: [
@@ -85,6 +93,8 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     CreateWalletComponent,
     ColdstakeComponent,
     SendConfirmationModalComponent,
+    ProposalConfirmationComponent,
+    ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent
   ],
 })

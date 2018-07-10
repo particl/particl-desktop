@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
 import {
   FormBuilder,
   FormGroup,
   Validators
 } from '@angular/forms';
-
+import {
+  ProposalVoteConfirmationComponent 
+} from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 @Component({
   selector: 'app-proposals',
   templateUrl: './proposals.component.html',
@@ -44,7 +47,9 @@ export class ProposalsComponent implements OnInit {
   public proposalsFormGroup: FormGroup;
   public tabLabels: Array<string> = ['active', 'past'];
 
-  constructor(private router: Router, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private formBuilder: FormBuilder,
+              private dialog: MatDialog
+            ) { }
 
   ngOnInit() {
     this.formBuild();
@@ -74,6 +79,10 @@ export class ProposalsComponent implements OnInit {
 
   changeTab(index: number): void {
     this.selectedTab = index;
+  }
+
+  vote() {
+    this.dialog.open(ProposalVoteConfirmationComponent);
   }
 
 }

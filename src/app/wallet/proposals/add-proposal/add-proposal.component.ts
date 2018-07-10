@@ -1,8 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
+import {
+  ProposalConfirmationComponent 
+} from 'app/modals/proposal-confirmation/proposal-confirmation.component';
 
 @Component({
   selector: 'app-add-proposal',
@@ -15,7 +19,9 @@ export class AddProposalComponent implements OnInit {
   private destroyed: boolean = false;
   itemFormGroup: FormGroup;
 
-  constructor(private router: Router, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private formBuilder: FormBuilder,
+              private dialog: MatDialog
+            ) { }
 
   ngOnInit() {
     this.itemFormGroup = this.formBuilder.group({
@@ -35,6 +41,10 @@ export class AddProposalComponent implements OnInit {
 
   cancelAndDiscard() {
     this.router.navigate(['/wallet/proposals']);
+  }
+
+  submitProposal() {
+    this.dialog.open(ProposalConfirmationComponent);
   }
 
 }
