@@ -116,11 +116,6 @@
     "directive-class-suffix": [true, "Directive"],
     "templates-use-public": true,
     "no-access-missing-member": true,
-    "invoke-injectable": true,
-    "linterOptions": {
-      "exclude": [
-        "src/app/modals/terms/terms-txt.ts"
-      ]
-    }
+    "invoke-injectable": true
   }
 }
