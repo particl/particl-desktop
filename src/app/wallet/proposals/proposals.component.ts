@@ -7,7 +7,7 @@ import {
   Validators
 } from '@angular/forms';
 import {
-  ProposalVoteConfirmationComponent 
+  ProposalVoteConfirmationComponent
 } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 @Component({
   selector: 'app-proposals',

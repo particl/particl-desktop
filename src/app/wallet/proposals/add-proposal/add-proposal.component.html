@@ -14,7 +14,7 @@
 
   <div class="column">
     
-    <mat-card>
+    <mat-card [formGroup]="detailFormGroup">
       <div class="title">Proposal details</div>
 
       <mat-form-field class="full-width">
@@ -37,7 +37,7 @@
 
   <div class="column">
     
-    <mat-card>
+    <mat-card [formGroup]="voteFormGroup">
       <div class="title">
         Voting options
         <button mat-button color="basic" class="small">
@@ -51,7 +51,7 @@
         <span class="no">1</span>
         <div class="content">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Option #1 (e.g. 'Yes')" formControlName="?????">
+            <input matInput placeholder="Option #1 (e.g. 'Yes')" formControlName="option1">
           </mat-form-field>
         </div>
       </div>
@@ -60,7 +60,7 @@
         <span class="no">2</span>
         <div class="content">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Option #2 (e.g. 'No')" formControlName="?????">
+            <input matInput placeholder="Option #2 (e.g. 'No')" formControlName="option2">
           </mat-form-field>
         </div>
       </div>
@@ -70,7 +70,7 @@
         <span class="no">3</span>
         <div class="content">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Option #3" formControlName="?????">
+            <input matInput placeholder="Option #3" formControlName="option3">
           </mat-form-field>
         </div>
         <div class="remove-option">
@@ -113,7 +113,7 @@
       </p>
     </mat-card>
 
-    <mat-card>
+    <mat-card [formGroup]="infoFormGroup">
       <div class="title">
         Contact information <small>(optional)</small>
         <button mat-button color="basic" class="small">
@@ -126,10 +126,10 @@
         <span class="no">1</span>
         <div class="content">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Your name/nickname" formControlName="?????">
+            <input matInput placeholder="Your name/nickname" formControlName="nickname">
           </mat-form-field>
           <mat-form-field class="full-width">
-            <input matInput placeholder="Your Riot/Discord/Github username or an email address" formControlName="?????">
+            <input matInput placeholder="Your Riot/Discord/Github username or an email address" formControlName="email">
           </mat-form-field>
         </div>
       </div>

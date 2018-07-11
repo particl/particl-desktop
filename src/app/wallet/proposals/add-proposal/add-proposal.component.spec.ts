@@ -21,7 +21,6 @@ describe('AddProposalComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
       ],
-      providers: [ CategoryService, SnackbarService, ModalsHelperService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();

@@ -35,7 +35,7 @@ import {
   ProposalConfirmationComponent
 } from 'app/modals/proposal-confirmation/proposal-confirmation.component';
 import {
-  ProposalVoteConfirmationComponent 
+  ProposalVoteConfirmationComponent
 } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
 

@@ -1,21 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
 import { MatDialogRef, MatFormFieldModule } from '@angular/material';
-import { MaterialModule } from '../../core-ui/material/material.module';
-
+import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
+import { ProposalConfirmationComponent } from './proposal-confirmation.component';
 
 describe('ProposalConfirmationComponent', () => {
   let component: ProposalConfirmationComponent;
   let fixture: ComponentFixture<ProposalConfirmationComponent>;
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [ ProposalConfirmationComponent ],
       imports: [
-        CommonModule,
-        MaterialModule,
-        MatFormFieldModule // check if this is required. If so, move into CoreUi.
+        SharedModule,
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
       ],
-      declarations: [ ProposalConfirmationComponent ]
+      providers: [
+        /* deps */
+        { provide: MatDialogRef }
+      ]
     })
     .compileComponents();
   }));
@@ -23,7 +27,6 @@ describe('ProposalConfirmationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProposalConfirmationComponent);
     component = fixture.componentInstance;
-    component.send = new TransactionBuilder();
     fixture.detectChanges();
   });
 

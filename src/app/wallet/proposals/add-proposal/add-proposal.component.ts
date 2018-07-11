@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
 import {
-  ProposalConfirmationComponent 
+  ProposalConfirmationComponent
 } from 'app/modals/proposal-confirmation/proposal-confirmation.component';
 
 @Component({
@@ -17,26 +17,37 @@ export class AddProposalComponent implements OnInit {
 
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
-  itemFormGroup: FormGroup;
+  detailFormGroup: FormGroup;
+  voteFormGroup: FormGroup;
+  infoFormGroup: FormGroup;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
               private dialog: MatDialog
             ) { }
 
   ngOnInit() {
-    this.itemFormGroup = this.formBuilder.group({
+    this.detailFormGroup = this.formBuilder.group({
       title:                      ['', [Validators.required,
                                         Validators.maxLength(50)]],
       description:                ['', [Validators.required,
-                                        Validators.maxLength(2000)]],
-      /*category:                   ['', [Validators.required]],
-      country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required, Validators.min(0)]],
-      domesticShippingPrice:      ['', [Validators.required, Validators.min(0)]],
-      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]*/
+                                        Validators.maxLength(2000)]]
     });
 
+    this.voteFormGroup = this.formBuilder.group({
+      option1:                      ['', [Validators.required,
+                                        Validators.maxLength(50)]],
+      option2:                ['', [Validators.required,
+                                        Validators.maxLength(50)]],
+      option3:                ['', [Validators.required,
+                                        Validators.maxLength(50)]]
+    });
 
+    this.infoFormGroup = this.formBuilder.group({
+      nickname:                      ['', [Validators.required,
+                                        Validators.maxLength(50)]],
+      email:                ['', [Validators.required,
+                                        Validators.maxLength(50)]]
+    });
   }
 
   cancelAndDiscard() {
