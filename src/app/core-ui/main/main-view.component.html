@@ -151,7 +151,7 @@
     </div><!-- .menu-links -->
 
 
-    <footer class="pin-to-bottom">
+    <footer class="footer">
 
       <mat-content *ngIf="!daemonRunning || !walletInitialized">
         <mat-list class="notification error sidebar-item-group">
@@ -224,10 +224,7 @@
       </mat-content>
 
       <!-- Sync progress -->
-      <mat-content class="sync-progress cursor-pointer" (click)="syncScreen()">
-        <!-- reused from syncing dialog -->
-        <app-percentage-bar #progress></app-percentage-bar>
-      </mat-content>
+      <app-percentage-bar #progress (click)="syncScreen()"></app-percentage-bar>
 
     </footer><!-- .pin-to-bottom -->
 

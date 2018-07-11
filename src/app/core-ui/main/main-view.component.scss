@@ -154,6 +154,7 @@ a.sidebar-item-link {
   .menu-links {
     flex: 1 1 100%;
     overflow-y: auto;
+    margin-bottom: -1px;
     &::-webkit-scrollbar-thumb {
       background: lighten($bg-black, 20%);
       border-radius: 4px;
@@ -164,13 +165,15 @@ a.sidebar-item-link {
   }
 
   // widgets stuck to the bottom (sidebar's footer)
-  .pin-to-bottom {
-    flex: 1 1 100px;
+  .footer {
+    @extend %menu-divider;
+    flex: 1 1 10px;
 
     // Versions
     .client-version {
       @extend %enable-select;
-      padding: 0 24px;
+      margin: 0 0 14px;
+      padding: 14px 24px 0;
       display: block;
       font-size: 11px;
       line-height: 1.6;
