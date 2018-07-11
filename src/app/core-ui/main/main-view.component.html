@@ -1,154 +1,155 @@
 <mat-sidenav-container fullscreen>
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
 
-    <div class="logo-area">
-      <div class="logo">
-        <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg"
-          alt="Particl">
-      </div>
+    <div class="logo">
+      <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
     </div>
 
     <mat-divider></mat-divider>
 
-    <mat-content class="sidebar-section">
-      <mat-list class="sidebar-item-group">
-        <a class="sidebar-item-link"
-          routerLinkActive="active" routerLink="/wallet/overview">
-          <mat-list-item class="sidebar-item">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
-            <span class="text">Overview</span>
-          </mat-list-item>
-        </a>
-      </mat-list><!-- .sidebar-item-group -->
-    </mat-content><!-- .sidebar-section -->
+    <div class="menu-links">
 
-    <mat-content class="sidebar-section" *ngIf="walletInitialized">
-      <mat-accordion [multi]="'multi'">
-        <mat-expansion-panel #panel2 expanded="true" class="no-padding arrow-colored">
-          <mat-expansion-panel-header>Market</mat-expansion-panel-header>
-          <mat-content>
-            <mat-list class="sidebar-item-group">
+      <mat-content class="sidebar-section">
+        <mat-list class="sidebar-item-group">
+          <a class="sidebar-item-link"
+            routerLinkActive="active" routerLink="/wallet/overview">
+            <mat-list-item class="sidebar-item">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
+              <span class="text">Overview</span>
+            </mat-list-item>
+          </a>
+        </mat-list><!-- .sidebar-item-group -->
+      </mat-content><!-- .sidebar-section -->
 
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/market/overview'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-listings"></mat-icon>
-                  <span class="text">Listings</span>
-                </mat-list-item>
-              </a>
+      <mat-content class="sidebar-section" *ngIf="walletInitialized">
+        <mat-accordion [multi]="'multi'">
+          <mat-expansion-panel #panel2 expanded="true" class="no-padding arrow-colored">
+            <mat-expansion-panel-header>Market</mat-expansion-panel-header>
+            <mat-content>
+              <mat-list class="sidebar-item-group">
 
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/market/buy'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-bag-buy"></mat-icon>
-                  <span class="text">Buy</span>
-                  <!-- TODO? add current number of Buy orders (maybe limit only to those who need action? e.g. "payment" or "confirm shipped"): -->
-                  <!-- <span class="tag TO_DO">4</span> -->
-                </mat-list-item>
-              </a>
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" [routerLink]="'/market/overview'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon"
+                      fontIcon="part-listings"></mat-icon>
+                    <span class="text">Listings</span>
+                  </mat-list-item>
+                </a>
 
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/market/sell'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-bag-sell"></mat-icon>
-                  <span class="text">Sell</span>
-                  <!-- TODO? add current number of Sell orders (maybe limit only to those who need action? e.g. "accept bid" or "mark shipped"): -->
-                  <!-- <span class="tag TO_DO">2</span> -->
-                </mat-list-item>
-              </a>
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" [routerLink]="'/market/buy'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon"
+                      fontIcon="part-bag-buy"></mat-icon>
+                    <span class="text">Buy</span>
+                    <!-- TODO? add current number of Buy orders (maybe limit only to those who need action? e.g. "payment" or "confirm shipped"): -->
+                    <!-- <span class="tag TO_DO">4</span> -->
+                  </mat-list-item>
+                </a>
 
-            </mat-list><!-- .sidebar-item-group -->
-          </mat-content>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-content><!-- .sidebar-section -->
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" [routerLink]="'/market/sell'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon"
+                      fontIcon="part-bag-sell"></mat-icon>
+                    <span class="text">Sell</span>
+                    <!-- TODO? add current number of Sell orders (maybe limit only to those who need action? e.g. "accept bid" or "mark shipped"): -->
+                    <!-- <span class="tag TO_DO">2</span> -->
+                  </mat-list-item>
+                </a>
 
-    <mat-content class="sidebar-section" *ngIf="walletInitialized">
-      <mat-accordion [multi]="'multi'">
-        <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
-          <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
-          <mat-content>
-            <mat-list class="sidebar-item-group">
+              </mat-list><!-- .sidebar-item-group -->
+            </mat-content>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-content><!-- .sidebar-section -->
 
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/send'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-send"></mat-icon>
-                  <span class="text">Send</span>
-                </mat-list-item>
-              </a>
+      <mat-content class="sidebar-section" *ngIf="walletInitialized">
+        <mat-accordion [multi]="'multi'">
+          <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
+            <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
+            <mat-content>
+              <mat-list class="sidebar-item-group">
 
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/receive'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-receive"></mat-icon>
-                  <span class="text">Receive</span>
-                </mat-list-item>
-              </a>
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" [routerLink]="'/wallet/send'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon"
+                      fontIcon="part-send"></mat-icon>
+                    <span class="text">Send</span>
+                  </mat-list-item>
+                </a>
 
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/history'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon"
-                    fontSet="partIcon" fontIcon="part-date"></mat-icon>
-                  <span class="text">History</span>
-                </mat-list-item>
-              </a>
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" [routerLink]="'/wallet/receive'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon"
+                      fontIcon="part-receive"></mat-icon>
+                    <span class="text">Receive</span>
+                  </mat-list-item>
+                </a>
 
-              <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/address-book'">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-people"></mat-icon>
-                  <span class="text">Address Book</span>
-                </mat-list-item>
-              </a>
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" [routerLink]="'/wallet/history'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon"
+                      fontSet="partIcon" fontIcon="part-date"></mat-icon>
+                    <span class="text">History</span>
+                  </mat-list-item>
+                </a>
 
-            </mat-list><!-- .sidebar-item-group -->
-          </mat-content>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-content><!-- .sidebar-section -->
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" [routerLink]="'/wallet/address-book'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon"
+                      fontIcon="part-people"></mat-icon>
+                    <span class="text">Address Book</span>
+                  </mat-list-item>
+                </a>
 
-    <mat-content class="sidebar-section" *ngIf="walletInitialized === false">
-      <mat-accordion [multi]="'multi'">
-        <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
-          <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
-          <mat-content>
-            <mat-list class="sidebar-item-group">
+              </mat-list><!-- .sidebar-item-group -->
+            </mat-content>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-content><!-- .sidebar-section -->
 
-              <a class="sidebar-item-link"
-                routerLinkActive="active" href="javascript:void(0)"
-                (click)="createWallet()">
-                <mat-list-item class="sidebar-item">
-                  <mat-icon class="icon" fontSet="partIcon"
-                    fontIcon="part-add-account"></mat-icon>
-                  <span class="text">Add Account</span>
-                </mat-list-item>
-              </a>
+      <mat-content class="sidebar-section" *ngIf="walletInitialized === false">
+        <mat-accordion [multi]="'multi'">
+          <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
+            <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
+            <mat-content>
+              <mat-list class="sidebar-item-group">
 
-            </mat-list><!-- .sidebar-item-group -->
-          </mat-content>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-content><!-- .sidebar-section -->
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" href="javascript:void(0)"
+                  (click)="createWallet()">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon"
+                      fontIcon="part-add-account"></mat-icon>
+                    <span class="text">Add Account</span>
+                  </mat-list-item>
+                </a>
 
+              </mat-list><!-- .sidebar-item-group -->
+            </mat-content>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-content><!-- .sidebar-section -->
+    
+      <!--mat-content class="sidebar-section">
+        <mat-list class="sidebar-item-group">
+          <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/settings">
+            <mat-list-item class="sidebar-item">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
+              <span class="text">Settings</span>
+            </mat-list-item>
+          </a>
+        </mat-list>
+      </mat-content-->
 
-    <!-- <mat-content class="sidebar-section">
-      <mat-list class="sidebar-item-group">
-        <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/settings">
-          <mat-list-item class="sidebar-item">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
-            <span class="text">Settings</span>
-          </mat-list-item>
-        </a>
-      </mat-list>
-    </mat-content> --><!-- .sidebar-section -->
+    </div><!-- .menu-links -->
+
 
     <footer class="pin-to-bottom">
 
@@ -181,6 +182,7 @@
 
           </mat-list-item>
 
+          <!-- FIXME: can we remove this as we don't allow browsers alltogether?  -->
           <mat-list-item class="sidebar-item"
             *ngIf="daemonError && daemonError.electron === false">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
@@ -217,7 +219,7 @@
           Market <span class="version">{{ marketVersion }}</span>
         </div>
         <div class="daemon item">
-          Daemon <span class="version">{{ daemonVersion }}</span>
+          Core <span class="version">{{ daemonVersion }}</span>
         </div>
       </mat-content>
 
@@ -231,7 +233,10 @@
 
   </mat-sidenav><!-- .sidebar -->
 
-  <!-- Page header -->
+
+
+  <!-- ======= Page Header ======= -->
+
   <!-- info/warning notification -->
   <app-release-notification></app-release-notification>
 
