@@ -32,6 +32,23 @@
     }
   }
 
+  // checkboxes
+  .checkbox {
+    padding: 3px 18px;
+    &:first-of-type {
+      padding-top: 12px;
+    }
+    &:last-of-type {
+      padding-bottom: 12px;
+    }
+    &.highlight {
+      font-weight: 500;
+    }
+    .mat-checkbox {
+      margin: 3px 0;
+    }
+  }
+
   // radio buttons
   .radio-group {
     width: calc(100% - 32px);

@@ -1,7 +1,7 @@
 <!-- Orders > Filter (HIDDEN IN CSS) -->
 <div class="filter" fxFlex="0 0 230px">
 
-  <div class="section search-sorting TO_DO">
+  <div class="section search-sorting">
     <div class="subtitle first">Search &amp; sort</div>
     <mat-card class="filter-card">
       <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
@@ -22,10 +22,27 @@
     </mat-card>
   </div>
 
-  <div class="section filter-by-type TO_DO">
+  <div class="section filter">
+    <div class="subtitle">Filter</div>
+    <mat-card class="filter-card">
+      <div class="checkbox highlight">
+        <mat-checkbox>Orders requiring attention</mat-checkbox>
+      </div>
+      <div class="checkbox">
+        <!-- TODO: checked by default -->
+        <mat-checkbox>Hide completed</mat-checkbox>
+      </div>
+      <div class="checkbox">
+        <mat-checkbox matTooltip="Hide orders not updated in last 30 days">Hide old orders</mat-checkbox>
+      </div>
+    </mat-card>
+  </div><!-- .filter-by-type -->
+  
+  <div class="section filter-by-type">
     <div class="subtitle">Filter by status</div>
     <mat-card class="filter-card">
       <mat-radio-group class="radio-group block-radio">
+        <!-- TODO: "All orders" checked by default -->
         <mat-radio-button class="filter-option" *ngFor="let status of order_filtering" value="{{ status.value }}">
           {{ status.title }}
           <!-- FIXME: show amount (below) only if higher than 1 -->
