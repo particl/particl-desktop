@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, forwardRef, Inject, OnDestroy } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { Log } from 'ng2-logger';
 
@@ -16,7 +16,10 @@ export class ConnectionCheckerService implements OnDestroy {
   observer: Observer<any>;
 
   // shareReplay
-  constructor(private rpc: RpcService) {
+  constructor(
+    @Inject(forwardRef(() => RpcService))
+    private rpc: RpcService
+  ) {
     this.check = Observable.create(observer => {
       this.observer = observer;
     }).shareReplay();

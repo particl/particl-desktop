@@ -10,6 +10,7 @@ import { StateService } from '../state/state.service';
 import { RpcStateClass } from './rpc-state/rpc-state.class';
 import { ZmqService } from 'app/core/zmq/zmq.service';
 import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
+import { ConnectionCheckerService } from 'app/loading/connection-checker.service';
 
 const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
@@ -225,7 +226,7 @@ export class RpcService implements OnDestroy {
     this._enableState = enable ? enable : !this._enableState;
     if (this._enableState) {
       // We just execute it.. Might convert it to a service later on
-      this._rpcState = new RpcStateClass(this);
+      this._rpcState = new RpcStateClass(this, new ConnectionCheckerService(this));
     }
   }
 
