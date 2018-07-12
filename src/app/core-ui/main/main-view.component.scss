@@ -98,33 +98,54 @@ a.sidebar-item-link {
 // ------ ERROR & INFO MESSAGES ------ //
 
 .notification {
-  margin-bottom: 6px;
+  padding-top: 1px;
   .sidebar-item {
-    margin: 4px 0;
+    @extend %tfx;
+    padding: 3px 14px 3px 16px;
     .icon {
       margin: 0 14px 0 0;
     }
     .text {
-      color: white;
-      font-size: 11px;
+      color: darken($bg, 30%);
+      font-size: 12px;
+      font-weight: 400;
       line-height: 1.5;
       padding: 0;
       display: inline-block;
+      strong {
+        font-weight: 500;
+        color: $bg;
+      }
     }
     &:hover {
       background: none;
     }
   }
-  &.error {
+  .error { // red
     .icon,
     &:hover .icon {
       color: $color-alert;
     }
+    &:hover {
+      background: rgba($color-alert, 0.05);
+    }
   }
-  &.info {
+  .info { // blue
     .icon,
     &:hover .icon {
       color: $color-info;
+    }
+    &:hover {
+      background: rgba($color-info, 0.05);
+    }
+  }
+  .message { // green
+    .icon,
+    &:hover .icon {
+      color: $color;
+    }
+    &:hover {
+      background: rgba($color, 0.05);
     }
   }
 }
@@ -140,25 +161,46 @@ a.sidebar-item-link {
   width: $sidebar-width;
   background-color: $bg-black;
   color: white;
+  display: flex;
+  flex-direction: column;
 
   .logo {
+    flex: 0 0 60px;
     display: block;
     height: 60px;
     width: 144px;
     margin: 30px auto;
   }
 
+  .menu-links {
+    flex: 1 1 100%;
+    overflow-y: auto;
+    margin-bottom: -1px;
+    &::-webkit-scrollbar-thumb {
+      background: lighten($bg-black, 20%);
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $bg-black;
+    }
+  }
+
   // widgets stuck to the bottom (sidebar's footer)
-  .pin-to-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  .footer {
+    flex: 1 1 10px;
+
+    // Erros & Notifications
+    .errors-notifications {
+      @extend %menu-divider;
+      display: block;
+    }
 
     // Versions
     .client-version {
       @extend %enable-select;
-      padding: 0 24px;
+      //@extend %menu-divider;
+      margin: 0 0 14px;
+      padding: 14px 24px 0;
       display: block;
       font-size: 11px;
       line-height: 1.6;

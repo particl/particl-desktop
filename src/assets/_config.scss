@@ -91,6 +91,11 @@ $break-xhd: 2200px;
   padding: 0 11px;
 }
 
+%menu-divider { // diviers in sidebar menu
+  border-top: 1px solid #15191A;
+  box-shadow: 0 1px 0 #333 inset;
+}
+
 // enable/disable text selection
 %disable-select,
 .disable-select {
