@@ -32,7 +32,7 @@ export class ClientVersionService {
    */
   private handleError<T>(operation: string = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      this.log(`${operation} failed: ${error.message}`);
+      this.log.er(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);
