@@ -35,7 +35,11 @@ export class Bid {
   }
 
   get buySellCount() {
-    return this.type === 'buy' ? this.bid.activeBuyOrderCount : this.bid.activeSellOrderCount;
+    const count = this.type === 'buy' ? this.bid.activeBuyOrderCount : this.bid.activeSellOrderCount;
+    if (count > 0) {
+      return count;
+    }
+    return undefined;
   }
 
 }
