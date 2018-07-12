@@ -18,21 +18,13 @@
 
     <!-- price section with shipping and total price  -->
     <div *ngIf="listingCacheService?.selectedCountry" class="price" fxFlex>
-      {{
-        listing.country === listingCacheService.selectedCountry ? (
-          listing?.domesticTotal?.getAmount().toFixed(8)
-        ) : (
-          listing?.internationalTotal?.getAmount().toFixed(8)
-        )
-      }}
+      {{ listing?.total(listingCacheService.selectedCountry)?.getAmount().toFixed(8) }}
     </div>
     <!-- price section with shipping and total price  -->
 
     <!-- price section without shipping and total price  -->
     <div *ngIf="!listingCacheService?.selectedCountry" class="price" fxFlex>
-      {{
-        listing?.object?.PaymentInformation?.ItemPrice?.basePrice?.toFixed(8)
-      }}
+      {{ listing?.basePrice?.getAmount()?.toFixed(8) }}
     </div>
     <!-- price section without shipping and total price  -->
 
