@@ -12,6 +12,7 @@ import { ZmqService } from './zmq/zmq.service';
 import { UpdaterService } from './updater/updater.service';
 
 import { NotificationService } from './notification/notification.service';
+import { CloseGuiService } from './close-gui/close-gui.service';
 
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 import { PeerService } from './rpc/peer/peer.service';
@@ -46,7 +47,8 @@ export class CoreModule {
         ZmqService,
         UpdaterService,
         SnackbarService,
-        NotificationService
+        NotificationService,
+        CloseGuiService
       ]
     };
   }
@@ -57,6 +59,7 @@ export { RpcService } from './rpc/rpc.service';
 export { RpcStateService } from './rpc/rpc-state/rpc-state.service';
 export { UpdaterService } from './updater/updater.service';
 export { NotificationService } from './notification/notification.service';
+export { CloseGuiService } from './close-gui/close-gui.service';
 export { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 export { PeerService } from './rpc/peer/peer.service';
 export { SnackbarService } from './snackbar/snackbar.service';

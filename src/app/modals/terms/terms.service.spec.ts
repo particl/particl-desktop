@@ -3,6 +3,7 @@ import { MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreUiModule } from '../../core-ui/core-ui.module';
+import { CoreModule } from '../../core/core.module';
 import { ModalsModule } from './../modals.module';
 import { TermsService } from './terms.service';
 
@@ -13,6 +14,7 @@ describe('TermsService', () => {
         BrowserAnimationsModule,
         MatDialogModule,
         CoreUiModule.forRoot(),
+        CoreModule.forRoot(),
         ModalsModule.forRoot()
       ],
       providers: [ TermsService ]
