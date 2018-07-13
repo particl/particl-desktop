@@ -69,6 +69,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     country: undefined
   };
 
+  selectedCountry: string;
+
   constructor(
     private category: CategoryService,
     private listingService: ListingService,
@@ -76,6 +78,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private countryList: CountryListService
   ) {
     console.warn('overview created');
+    this.selectedCountry = this.listingService.cache.selectedCountry;
   }
 
   ngOnInit() {
@@ -196,12 +199,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   onCountryChange(country: any): void {
     this.filters.country = country ? country.iso : undefined;
+    this.listingService.cache.selectedCountry = country;
     this.clearAndLoadPage();
   }
 
   onCategoryChange(category: any): void {
     this.filters.category = category ? category.id : undefined;
     this.clearAndLoadPage();
+
   }
 
   ngOnDestroy() {
