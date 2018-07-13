@@ -23,7 +23,6 @@ import { DeleteListingComponent } from './delete-listing/delete-listing.componen
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PassphraseService } from './createwallet/passphrase/passphrase.service';
 import { PasswordComponent } from './shared/password/password.component';
-import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
@@ -53,7 +52,6 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
-    MultiwalletComponent,
     DaemonConnectionComponent,
     DeleteListingComponent,
     ManageWidgetsComponent,

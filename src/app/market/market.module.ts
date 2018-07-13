@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ListingItemComponent } from 'app/market/listings/listing-item/listing-item.component';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
 
-import { routing } from './market.routing';
 import { WalletModule } from '../wallet/wallet/wallet.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ListingsComponent } from './listings/listings.component';
@@ -22,7 +21,6 @@ import { ShippingAddressComponent } from './shared/shipping-address/shipping-add
 @NgModule({
   imports: [
     CommonModule,
-    routing,
     CoreUiModule.forRoot(),
     WalletModule.forRoot()
   ],

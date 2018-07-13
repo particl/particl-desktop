@@ -14,8 +14,6 @@ import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-
 
 import 'hammerjs';
 
-import { routing } from './wallet.routing';
-
 
 @NgModule({
   declarations: [
@@ -28,7 +26,6 @@ import { routing } from './wallet.routing';
   ],
   imports: [
     CommonModule,
-    routing,
     SharedModule,
     WalletModule.forRoot(),
     CoreUiModule

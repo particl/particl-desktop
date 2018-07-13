@@ -1,18 +1,19 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InstallerComponent } from './installer.component';
+import { InstallerRouterComponent } from './installer.component';
 
 import { installer_routing } from './installer.routing';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    installer_routing
+    //installer_routing
   ],
   exports: [
-    InstallerComponent
+    InstallerRouterComponent
   ],
-  declarations: [InstallerComponent],
+  declarations: [InstallerRouterComponent, TestComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InstallerModule { }

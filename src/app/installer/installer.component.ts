@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-installer',
-  templateUrl: './installer.component.html',
-  styleUrls: ['./installer.component.scss']
+  template: `<router-outlet></router-outlet>`
 })
-export class InstallerComponent implements OnInit {
+export class InstallerRouterComponent implements OnInit {
 
   constructor() { }
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-multiwallet-router',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MultiwalletRouterComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _router: Router,
+    private _route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    console.log('multiwallet loaded!');
+    //this._router.navigate(['multi/installer/test']);
   }
 
 }

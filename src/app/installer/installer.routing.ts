@@ -1,21 +1,19 @@
 import { ModuleWithProviders } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
 
-import { InstallerComponent } from './installer.component';
+import { InstallerRouterComponent } from './installer.component';
+import { TestComponent } from './test/test.component';
 //import { EncryptWalletComponent } from './encrypt-wallet/encrypt-wallet.component';
 //import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 
 
-const routes: Routes = [
+export const installer_routing =
   {
     path: 'installer',
-    component: InstallerComponent,
+    component: InstallerRouterComponent,
     children: [
-      { path: '', redirectTo: 'encrypt', pathMatch: 'full' },
+      { path: '', redirectTo: 'test', pathMatch: 'full' },
+      { path: 'test', component: TestComponent },
      // { path: 'encrypt', component: EncryptWalletComponent },
      //  { path: 'create', component: CreateWalletComponent },
     ]
-  }
-];
-
-export const installer_routing: ModuleWithProviders = RouterModule.forChild(routes);
+  };

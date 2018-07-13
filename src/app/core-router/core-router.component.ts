@@ -1,10 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
+/*
+        Core Router
+        -----------
+        
+This is the parent router for the whole application.
+
+core-router
+    loading-component
+    multi-router: (multiwallet sidebar + router)
+        main-router (navigation sidebar + page router)
+            wallet (pages)
+            market (pages)
+        installer-component
+
+*/
 @Component({
   selector: 'app-core-router',
-  templateUrl: './core-router.component.html',
-  styleUrls: ['./core-router.component.scss']
+  template: `<router-outlet></router-outlet>`
 })
 export class CoreRouterComponent implements OnInit {
 

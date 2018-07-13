@@ -46,17 +46,17 @@ export class LoadingComponent implements OnInit {
 
   goToInstaller() {
     this.log.d('Going to installer');
-    this.router.navigate(['installer']);
+    this.router.navigate(['multi/installer']);
   }
 
   goToCreateWallet() {
     this.log.d('Going to installer/create');
-    this.router.navigate(['installer/create']);
+    this.router.navigate(['multi/installer/create']);
   }
 
   goToWallet() {
     this.log.d('Going to wallet');
-    this.router.navigate(['wallet/main']);
+    this.router.navigate(['multi/main/overview']);
   }
 
 }

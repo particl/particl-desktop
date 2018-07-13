@@ -9,7 +9,8 @@ import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
 // TODO: move to material
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { CoreRouterModule } from './core-router/core-router.module';
+
+import { DirectiveModule } from './directive/directive.module';
 
 @NgModule({
   declarations: [
@@ -21,14 +22,14 @@ import { CoreRouterModule } from './core-router/core-router.module';
     MainViewModule,
     MatDialogModule, // todo move
     InfiniteScrollModule,
-    CoreRouterModule
+    DirectiveModule
   ],
   exports: [
     MaterialModule,
     MainViewModule,
     PaginatorComponent,
     InfiniteScrollModule,
-    CoreRouterModule
+    DirectiveModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -1,25 +1,5 @@
-
-    <!-- Small sidebar for Multiwallet, Settings etc. -->
-    <div class="mini-sidebar-menu">
-      <div class="multiwallet">
-        <!-- TODO: add `.active` class to currently selected wallet -->
-        <!-- TODO: replace tooltip's content by wallets' names -->
-        <!-- TODO: letter in the button as 1st letter of wallet name -->
-        <button mat-raised-button color="primary" class="active" matTooltip="Active wallet: wallet.dat" matTooltipPosition="after">W</button>
-        <button mat-raised-button color="primary" matTooltip="Switch to: shop.dat" matTooltipPosition="after">S</button>
-        <button mat-raised-button color="primary" matTooltip="Add new wallet" matTooltipPosition="after">+</button>
-      </div>
-      <div class="buttons">
-        <button mat-button class="small" color="basic" matTooltip="Settings" matTooltipPosition="after" routerLinkActive="active" routerLink="/wallet/settings">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
-        </button>
-        <a mat-button href="https://github.com/particl/particl-desktop/issues" target="_blank" class="small" color="basic" matTooltip="Report bug" matTooltipPosition="after">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bug"></mat-icon>
-        </a>
-      </div>
-    </div><!-- .mini-sidebar-menu -->
-    
-<mat-sidenav-container fullscreen>
+<!-- fullscreen will make it okay again -->
+<mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
 
     <!-- Main sidebar for menu, error/info messages and syncing -->
@@ -36,7 +16,7 @@
         <mat-content class="sidebar-section">
           <mat-list class="sidebar-item-group">
             <a class="sidebar-item-link"
-              routerLinkActive="active" routerLink="/wallet/overview">
+              routerLinkActive="active" routerLink="/multi/main/overview">
               <mat-list-item class="sidebar-item">
                 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
                 <span class="text">Overview</span>
@@ -53,7 +33,7 @@
                 <mat-list class="sidebar-item-group">
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/market/overview'">
+                    routerLinkActive="active" [routerLink]="'/multi/main/listings'">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-listings"></mat-icon>
@@ -62,7 +42,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/market/buy'">
+                    routerLinkActive="active" [routerLink]="'/multi/main/buy'">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-bag-buy"></mat-icon>
@@ -73,7 +53,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/market/sell'">
+                    routerLinkActive="active" [routerLink]="'/multi/main/sell'">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-bag-sell"></mat-icon>
@@ -97,7 +77,7 @@
                 <mat-list class="sidebar-item-group">
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/wallet/send'">
+                    routerLinkActive="active" [routerLink]="'/multi/main/send'">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-send"></mat-icon>
@@ -106,7 +86,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/wallet/receive'">
+                    routerLinkActive="active" [routerLink]="'/multi/main/receive'">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-receive"></mat-icon>
@@ -115,7 +95,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/wallet/history'">
+                    routerLinkActive="active" [routerLink]="'/multi/main/history'">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon"
                         fontSet="partIcon" fontIcon="part-date"></mat-icon>
@@ -124,7 +104,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/wallet/address-book'">
+                    routerLinkActive="active" [routerLink]="'/multi/main/address-book'">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-people"></mat-icon>
