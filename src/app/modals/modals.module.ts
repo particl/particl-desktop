@@ -29,9 +29,10 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 
-import { PlaceOrderComponent } from './place-order/place-order.component';
-import { ShippingComponent } from './shipping/shipping.component';
 import { TermsComponent } from './terms/terms.component';
+import { PlaceOrderComponent } from './market-place-order/place-order.component';
+import { ShippingComponent } from './market-shipping/shipping.component';
+
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 
