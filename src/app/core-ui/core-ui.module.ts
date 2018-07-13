@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from './material/material.module';
@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
 // TODO: move to material
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { CoreRouterModule } from './core-router/core-router.module';
 
 @NgModule({
   declarations: [
@@ -19,14 +20,17 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     MaterialModule,
     MainViewModule,
     MatDialogModule, // todo move
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    CoreRouterModule
   ],
   exports: [
     MaterialModule,
     MainViewModule,
     PaginatorComponent,
-    InfiniteScrollModule
-  ]
+    InfiniteScrollModule,
+    CoreRouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CoreUiModule {
   static forRoot(): ModuleWithProviders {
@@ -40,4 +44,4 @@ export class CoreUiModule {
 }
 
 export { MaterialModule } from './material/material.module';
-export { MainViewModule } from './main/main-view.module';
+// export { CoreUi } from './main/main-view.module';

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestComponent } from './test.component';
+import { MultiwalletRouterComponent } from './multiwallet-router.component';
 
-describe('TestComponent', () => {
-  let component: TestComponent;
-  let fixture: ComponentFixture<TestComponent>;
+describe('MultiwalletRouterComponent', () => {
+  let component: MultiwalletRouterComponent;
+  let fixture: ComponentFixture<MultiwalletRouterComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TestComponent ]
+      declarations: [ MultiwalletRouterComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestComponent);
+    fixture = TestBed.createComponent(MultiwalletRouterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
