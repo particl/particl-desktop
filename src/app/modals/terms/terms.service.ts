@@ -17,7 +17,8 @@ export class TermsService {
   }
 
   checkForNewVersion() {
-    if (!this.getVersion() || (this.getVersion() && this.getVersion().version !== termsObj.version)) {
+    if (!this.getVersion() || (this.getVersion() && this.getVersion().createdAt !== termsObj.createdAt
+      && this.getVersion().text !== termsObj.text)) {
       const dialogRef = this.dialog.open(TermsComponent, { disableClose: true })
       dialogRef.componentInstance.text = termsObj.text;
       dialogRef.afterClosed().subscribe(() => {
