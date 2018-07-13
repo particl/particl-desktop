@@ -30,7 +30,7 @@ import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
   exports: [
     MainViewComponent,
     PercentageBarComponent,
-    //OrderCountComponent
+    // OrderCountComponent
   ],
   declarations: [
     MainViewComponent,
