@@ -69,6 +69,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     country: undefined
   };
 
+  selectedCountry: string;
+
   constructor(
     private category: CategoryService,
     private listingService: ListingService,
@@ -76,6 +78,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private countryList: CountryListService
   ) {
     console.warn('overview created');
+    this.selectedCountry = this.listingService.cache.selectedCountry;
   }
 
   ngOnInit() {
@@ -192,6 +195,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // Returns the pageNumber if the first page that is currently visible
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
+  }
+
+  changeLocation() {
+    this.listingService.cache.selectedCountry = this.selectedCountry;
   }
 
   ngOnDestroy() {

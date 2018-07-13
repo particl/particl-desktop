@@ -27,6 +27,13 @@
         </mat-optgroup>
       </mat-select>
     </div>
+    <div class="filtering">
+      <mat-select placeholder="All countries" class="filter country" (change)="changeLocation()" [(ngModel)]="selectedCountry" matTooltip="Select your country to calculate exact shipping & escrow prices">
+        <mat-option>All countries</mat-option>
+        <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}
+        </mat-option>
+      </mat-select>
+    </div>
 
     <!-- Sorting -->
     <!--mat-select placeholder="Sort by" class="filter sorting TO_DO" fxFlex="0 1 300px">
