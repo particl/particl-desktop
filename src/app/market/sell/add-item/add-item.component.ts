@@ -18,6 +18,7 @@ import { InformationService } from 'app/core/market/api/template/information/inf
 import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { Image } from 'app/core/market/api/template/image/image.model';
+import { Country } from 'app/core/market/api/countrylist/country.model';
 
 @Component({
   selector: 'app-add-item',
@@ -43,6 +44,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
   fileInput: any;
   picturesToUpload: string[];
   featuredPicture: number = 0;
+
+  selectedCountryCode: string;
+  selectedCategoryId: number;
 
   constructor(
     private router: Router,
@@ -179,12 +183,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.template.get(this.templateId).subscribe((template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
 
-
-
       if (this.listing.cache.isAwaiting(template)) {
         template.status = 'awaiting';
       }
-
 
       const t = {
         title: '',
@@ -197,7 +198,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         country: ''
       };
 
-      console.log(template);
+      this.log.d('template', template);
       const country = this.countryList.getCountryByRegion(template.country);
       t.title = template.title;
       t.shortDescription = template.shortDescription;
@@ -205,10 +206,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.category = template.category.id;
       t.country = country ? country.name : '';
 
+      // set default value as selected.
+      this.setDefaultCountry(country.iso);
+      this.setDefaultCategory(template.category.id);
+
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
       t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
-
       this.itemFormGroup.patchValue(t);
 
       this.images = template.imageCollection.images;
@@ -216,6 +220,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.preloadedTemplate = template;
       // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
     });
+  }
+
+  setDefaultCountry(countryCode: string) {
+    this.selectedCountryCode = countryCode;
+  }
+
+
+  setDefaultCategory(categoryId: number) {
+    this.selectedCategoryId = categoryId;
   }
 
   private async save(): Promise<Template> {
@@ -326,6 +339,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
     };
     this.log.d('Saving and publishing the listing.');
     this.modals.unlock({timeout: 30}, (status) => this.publish());
+  }
+
+  onCountryChange(country: Country): void {
+    console.log('country', country);
+    this.itemFormGroup.patchValue({ country: country ? country.name : '' })
+  }
+
+
+  onCategoryChange(category: Category): void {
+    this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
   private async publish() {

@@ -44,6 +44,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public selectedAddress: Address;
 
   public profile: Profile;
+  public selectedCountryCode: string;
 
   /* cart */
   public cart: Cart;
@@ -190,9 +191,13 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   }
 
+  setDefaultCountry(countryCode: string) {
+    this.selectedCountryCode = countryCode;
+  }
+
   onCountryChange(country: Country): void {
     this.shippingFormGroup.patchValue({
-      country: (country ? country.iso : undefined)
+      country: (country ? country.iso : null)
     })
   }
 
@@ -200,6 +205,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.log.d('Selecting address with id: ' + address.id);
     this.selectedAddress = address;
     this.shippingFormGroup.value.id = address.id;
+    this.setDefaultCountry(address.country);
     this.shippingFormGroup.patchValue(address);
   }
 
