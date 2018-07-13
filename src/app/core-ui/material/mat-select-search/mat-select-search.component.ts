@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 
 
 @Component({
@@ -9,16 +10,31 @@ import { map, startWith } from 'rxjs/operators';
   templateUrl: './mat-select-search.component.html',
   styleUrls: ['./mat-select-search.component.scss']
 })
-export class MatSelectSearchComponent implements OnInit {
+export class MatSelectSearchComponent implements OnInit, OnChanges {
   @Input() public showValueOf: string = 'name'; // default key as 'name'.
   @Input() public placeHolder: string = '';
   @Input() public options: any[] = [];
   @Input() public defaultOption: string = '';
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() isRequired: boolean = false;
+  @Input() defaultSelectedValue: any;
 
   public formControl: FormControl = new FormControl();
   public filteredOptions: Observable<any[]>;
+
+  constructor(private countryService: CountryListService) { }
+
+  ngOnChanges (change: any) {
+    if (this.defaultSelectedValue && this.options) {
+
+      // @TODO change the set value methods generic.
+
+      // find country by country code and set as default selected value in country field.
+      this.formControl.patchValue(
+        this.countryService.getCountryByRegion(this.defaultSelectedValue)
+      )
+    }
+  }
 
   ngOnInit() {
     this.filteredOptions = this.formControl.valueChanges
@@ -32,7 +48,6 @@ export class MatSelectSearchComponent implements OnInit {
         }),
         map(val => val ? this._filter(val) : this.options.slice())
       );
-      // this.formControl.setValue(this._filter('india')[0])
   }
 
   displayFn(option?: any): string | undefined {
@@ -47,6 +62,14 @@ export class MatSelectSearchComponent implements OnInit {
     }
     const filterValue = val.toLowerCase();
     return this.options.filter(option => option[this.showValueOf].toLowerCase().includes(filterValue));
+  }
+
+  public _onBlur($event: any): void {
+    const val = $event.target.value;
+    const options = this._filter(val);
+    if (options.length === 0 || this.formControl.value) {
+      this.onChange.emit(null)
+    }
   }
 
   public _selectAllContent($event: any): void {

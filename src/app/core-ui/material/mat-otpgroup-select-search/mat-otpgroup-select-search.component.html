@@ -1,13 +1,16 @@
 <form [formGroup]="stateForm">
   <mat-form-field>
-    <input type="text" (focus)="_selectAllContent($event)" matInput placeholder="{{placeHolder}}" formControlName="stateGroup" [matAutocomplete]="autoGroup">
+    <input type="text" (focus)="_selectAllContent($event)" matInput placeholder="{{placeHolder}}" formControlName="stateGroup" [matAutocomplete]="autoGroup" [required]="isRequired">
     <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="displayFn.bind(this)">
-      <mat-option>{{defaultOption}}</mat-option>
+      <mat-option *ngIf="defaultOption">{{defaultOption}}</mat-option>
       <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.name">
-        <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory">
-          {{subcategory.name}}
+        <mat-option *ngFor="let option of group.subCategoryList" [value]="option">
+          {{option.name}}
         </mat-option>
       </mat-optgroup>
+      <mat-option *ngIf="!((stateGroupOptions | async).length || defaultOption)">
+        No Option Found / Options are loading...
+      </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 </form>
