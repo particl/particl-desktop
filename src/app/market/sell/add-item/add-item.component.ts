@@ -167,7 +167,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   backToSell() {
-    this.router.navigate(['/market/sell']);
+    this.router.navigate(['multi/main/sell']);
   }
 
   ngOnDestroy() {

@@ -27,8 +27,8 @@ exports.get = function () {
     }
 
     // TODO remove when other platforms tested
-    resolve([]);
-    return;
+    //resolve([]);
+    //return;
 
     spawn('ls', [ exports.getPath() ]).then(files => {
 

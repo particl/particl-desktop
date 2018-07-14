@@ -1,9 +1,16 @@
-import { ModuleWithProviders } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { InstallerRouterComponent } from './installer.component';
 import { TestComponent } from './test/test.component';
 //import { EncryptWalletComponent } from './encrypt-wallet/encrypt-wallet.component';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
+
+
+
+@Component({
+    template: `<router-outlet></router-outlet>`
+})
+export class InstallerRouterComponent { }
+  
 
 
 export const installer_routing =
@@ -16,3 +23,7 @@ export const installer_routing =
       { path: 'create', component: CreateWalletComponent },
     ]
   };
+
+
+
+  

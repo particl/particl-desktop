@@ -1,3 +1,35 @@
+
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+
+/*
+        Core Router
+        -----------
+
+This is the parent router for the whole application.
+
+core-router
+    loading-component
+    multi-router: (multiwallet sidebar + router)
+        main-router (navigation sidebar + page router)
+            wallet (pages)
+            market (pages)
+        installer-router
+            create-wallet
+
+*/
+@Component({
+  selector: 'app-core-router',
+  template: `<router-outlet></router-outlet>`
+})
+export class CoreRouterComponent implements OnInit {
+  constructor(private _router: Router, private _route: ActivatedRoute) { }
+  ngOnInit() { this._router.navigate(['loading']) }
+}
+
+
+
+
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -15,6 +47,7 @@ import { MainViewComponent } from 'app/core-ui/main/main-view.component';
 
 import { wallet_routes_children } from 'app/wallet/wallet.routing';
 import { market_routes_children } from 'app/market/market.routing';
+
 
 const walletAndMarketRoutes = wallet_routes_children.concat(<any>market_routes_children);
 

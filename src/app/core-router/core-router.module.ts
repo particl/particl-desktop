@@ -2,8 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { routing } from './app.routing';
-import { CoreRouterComponent } from './core-router.component';
+import { routing, CoreRouterComponent } from './app.routing';
 
 import { LoadingComponent } from '../loading/loading.component';
 import { MultiwalletRouterComponent } from './multiwallet/multiwallet-router.component';
