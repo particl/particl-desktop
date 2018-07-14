@@ -18,4 +18,7 @@ export class MultiwalletRouterComponent implements OnInit {
     //this._router.navigate(['multi/installer/test']);
   }
 
+  goToCreateWallet() {
+    this._router.navigate(['multi/installer/create']);
+  }
 }

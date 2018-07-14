@@ -8,6 +8,7 @@ import { CoreRouterComponent } from './core-router.component';
 import { LoadingComponent } from '../loading/loading.component';
 import { MultiwalletRouterComponent } from './multiwallet/multiwallet-router.component';
 import { InstallerModule } from 'app/installer/installer.module';
+
 import { WalletViewsModule } from 'app/wallet/wallet.module';
 import { MarketModule } from 'app/market/market.module';
 

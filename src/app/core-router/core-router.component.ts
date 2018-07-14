@@ -4,7 +4,7 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 /*
         Core Router
         -----------
-        
+
 This is the parent router for the whole application.
 
 core-router
@@ -13,7 +13,8 @@ core-router
         main-router (navigation sidebar + page router)
             wallet (pages)
             market (pages)
-        installer-component
+        installer-router
+            create-wallet
 
 */
 @Component({
