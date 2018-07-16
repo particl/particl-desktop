@@ -45,8 +45,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
   picturesToUpload: string[];
   featuredPicture: number = 0;
 
-  selectedCountryCode: string;
-  selectedCategoryId: number;
+  selectedCountry: Country;
+  selectedCategory: Category;
 
   constructor(
     private router: Router,
@@ -207,8 +207,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.country = country ? country.name : '';
 
       // set default value as selected.
-      this.setDefaultCountry(country.iso);
-      this.setDefaultCategory(template.category.id);
+      this.setDefaultCountry(country);
+      this.setDefaultCategory(template.category);
 
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
@@ -222,13 +222,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  setDefaultCountry(countryCode: string) {
-    this.selectedCountryCode = countryCode;
+  setDefaultCountry(country: Country) {
+    this.selectedCountry = country;
   }
 
 
-  setDefaultCategory(categoryId: number) {
-    this.selectedCategoryId = categoryId;
+  setDefaultCategory(category: Category) {
+    this.selectedCategory = category;
   }
 
   private async save(): Promise<Template> {

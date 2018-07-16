@@ -4,7 +4,7 @@
     <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="displayFn.bind(this)">
       <mat-option *ngIf="defaultOption">{{defaultOption}}</mat-option>
       <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.name">
-        <mat-option *ngFor="let option of group.subCategoryList" [value]="option">
+        <mat-option *ngFor="let option of group.list" [value]="option">
           {{option.name}}
         </mat-option>
       </mat-optgroup>

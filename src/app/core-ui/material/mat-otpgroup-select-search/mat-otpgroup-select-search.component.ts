@@ -24,21 +24,16 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   stateGroupOptions: Observable<any[]>;
 
   constructor(
-    private fb: FormBuilder,
-    private countryListService: CategoryService
+    private fb: FormBuilder
   ) { }
 
-  // detect default value change and set the selected value.
+  /* set default values when options and defaultValue both available.
+   * Or if any update.
+   */
+
   ngOnChanges(changes: any) {
     if (this.defaultSelectedValue && this.options) {
-      // @TODO change the set value mechanism more generic.
-
-      this.stateForm.patchValue({
-        stateGroup: this.countryListService.getCategoryByCategoryId(
-          this.options,
-          this.defaultSelectedValue
-        )
-      })
+      this.stateForm.patchValue({ stateGroup: this.defaultSelectedValue })
     }
   }
 
@@ -59,9 +54,10 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
 
     if (value) {
       return this.options
-        .map(group => ({ name: group.name, subCategoryList: this._filter(group.subCategoryList, value) }))
-        .filter(group => group.subCategoryList.length > 0);
+        .map(group => ({ name: group.name, list: this._filter(group.subCategoryList, value) }))
+        .filter(group => group.list.length > 0);
     }
+    console.log('this.options', this.options)
     return this.options;
   }
 

@@ -22,17 +22,13 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   public formControl: FormControl = new FormControl();
   public filteredOptions: Observable<any[]>;
 
-  constructor(private countryService: CountryListService) { }
+  /* set default values when options and defaultValue both available.
+   * Or if any update.
+   */
 
   ngOnChanges (change: any) {
     if (this.defaultSelectedValue && this.options) {
-
-      // @TODO change the set value methods generic.
-
-      // find country by country code and set as default selected value in country field.
-      this.formControl.patchValue(
-        this.countryService.getCountryByRegion(this.defaultSelectedValue)
-      )
+      this.formControl.patchValue(this.defaultSelectedValue)
     }
   }
 
@@ -67,7 +63,7 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   public _onBlur($event: any): void {
     const val = $event.target.value;
     const options = this._filter(val);
-    if (options.length === 0 || this.formControl.value) {
+    if ((options.length === 0 && this.formControl.value) || !this.formControl.value) {
       this.onChange.emit(null)
     }
   }

@@ -44,7 +44,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public selectedAddress: Address;
 
   public profile: Profile;
-  public selectedCountryCode: string;
+  public selectedCountry: Country;
 
   /* cart */
   public cart: Cart;
@@ -192,7 +192,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   setDefaultCountry(countryCode: string) {
-    this.selectedCountryCode = countryCode;
+    this.selectedCountry = this.countryList.getCountryByRegion(countryCode);
   }
 
   onCountryChange(country: Country): void {
