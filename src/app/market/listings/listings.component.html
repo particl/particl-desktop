@@ -10,11 +10,12 @@
     </div>
 
     <!-- Filtering -->
-    <div class="filtering" fxFlex="1 1 100%">
+    <div class="filtering" fxFlex="1 1 100%" fxLayout>
       <!-- removed multiple as I guess currently the api returning data on the basis of only one selected country -->
 
       <!-- mat-select-search -->
       <mat-select-search
+        fxFlex="0 0 180px"
         matTooltip="Filter by Seller country"
         matTooltipPosition="before"
         class="filter country"
@@ -34,6 +35,7 @@
 
       <!--mat-otpgroup-select-search -->
       <mat-otpgroup-select-search
+        fxFlex="0 0 180px"
         [options]="_rootCategoryList?.subCategoryList"
         [defaultOption]="'All categories'"
         (change)="onCategoryChange($event)">
