@@ -169,13 +169,14 @@ function _stop(attempt = 0) {
 
 function askForDeletingCookie() {
   return new Promise((resolve, reject) => {
-    if(cookie.checkCookieExists()) {
+    if(cookie.checkCookieExists() || cookie.checkLockExists()) {
       // alert for cookie
       log.info('cookie: dialog open');
       electron.dialog.showMessageBox({
         type: 'warning',
         buttons: ['Yes', 'No'],
-        message: 'Are you running a special configuration (external daemon)? If you have no idea, select no.'
+        message: `It seems like you already have an instance of Particl running, do you want to connect to that instead? 
+                  If you think you're having issues starting the application, select no.`
       }, (response) => {
         if(response === 1) {
           log.info('cookie: deleting');
