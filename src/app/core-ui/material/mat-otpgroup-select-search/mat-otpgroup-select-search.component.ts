@@ -52,13 +52,9 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
       return []
     }
 
-    if (value) {
-      return this.options
-        .map(group => ({ name: group.name, list: this._filter(group.subCategoryList, value) }))
-        .filter(group => group.list.length > 0);
-    }
-    console.log('this.options', this.options)
-    return this.options;
+    return this.options
+      .map(group => ({ name: group.name, list: this._filter(group.subCategoryList, value) }))
+      .filter(group => group.list.length > 0);
   }
 
   displayFn(option?: any): any {
