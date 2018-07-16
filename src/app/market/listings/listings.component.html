@@ -15,8 +15,10 @@
 
       <!-- mat-select-search -->
       <mat-select-search
+        matTooltip="Filter by Seller country"
+        matTooltipPosition="before"
         class="filter country"
-        [options]= "countryList?.countries"
+        [options]="countryList?.countries"
         [defaultOption]="'All countries'"
         [showValueOf]="'name'"
         (onChange)="onCountryChange($event)">
@@ -32,9 +34,9 @@
 
       <!--mat-otpgroup-select-search -->
       <mat-otpgroup-select-search
-        [options] = "_rootCategoryList?.subCategoryList"
+        [options]="_rootCategoryList?.subCategoryList"
         [defaultOption]="'All categories'"
-        (change) = "onCategoryChange($event)">
+        (change)="onCategoryChange($event)">
       </mat-otpgroup-select-search>
       <!--mat-otpgroup-select-search -->
 
@@ -47,7 +49,7 @@
         </mat-optgroup>
       </mat-select> -->
     </div>
-    <div class="filtering">
+    <div class="buyer-country" fxFlex="0 0 180px">
       <!-- <mat-select placeholder="All countries" class="filter country" (change)="changeLocation()" [(ngModel)]="selectedCountry">
         <mat-option>All countries</mat-option>
         <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}
@@ -55,10 +57,11 @@
       </mat-select> -->
         <!-- mat-select-search -->
       <mat-select-search
-        matTooltip = "Select your country to calculate exact shipping & escrow prices"
+        matTooltip="Select your country to calculate exact shipping & escrow prices"
+        matTooltipPosition="before"
         class="filter country"
-        [options]= "countryList?.countries"
-        [defaultOption]="'All countries'"
+        [options]="countryList?.countries"
+        [defaultOption]="'Your country'"
         [showValueOf]="'name'"
         (onChange)="changeLocation($event)">
       </mat-select-search>

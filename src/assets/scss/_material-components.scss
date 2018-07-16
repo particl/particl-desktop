@@ -421,6 +421,9 @@ mat-card.mat-card {
 .mat-form-field {
   font-family: $font;
   line-height: normal;
+  input {
+    height: 100%; // fix cropped text
+  }
   &.larger { // larger inputs
     font-size: 14px;
   }
