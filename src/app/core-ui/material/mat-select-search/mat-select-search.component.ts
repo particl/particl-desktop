@@ -18,7 +18,6 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() isRequired: boolean = false;
   @Input() defaultSelectedValue: any;
-
   public formControl: FormControl = new FormControl();
   public filteredOptions: Observable<any[]>;
 
