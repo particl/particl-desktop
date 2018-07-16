@@ -39,17 +39,4 @@ export class CategoryService {
     return this.market.call('category', ['search', searchString]);
   }
 
-  getCategoryByCategoryId(categories: any[], categoryId: number)  {
-    let category;
-    categories
-      .map(group => {
-        group.subCategoryList.map(item => {
-          if (item.id === categoryId) {
-            category = item;
-          }
-        });
-      })
-
-    return category;
-  }
 }
