@@ -27,7 +27,8 @@ Customizations and modifiers for default Material components
       3.1. Inputs
       3.2. Verification
       3.3. Selects
-      3.4. Radios
+      3.4. Select/Autocomplete
+      3.5. Radios
 
 */
 
@@ -488,7 +489,13 @@ input {
 }
 
 
-// ------ 3.4. RADIOS ------ //
+// ------ 3.4. SELECT/AUTOCOMPLETE ------ //
+
+.mat-autocomplete-panel {
+  min-width: 280px !important; // prevent cropped text in select's options
+}
+
+// ------ 3.5. RADIOS ------ //
 
 .mat-radio-button {
   font-family: $font;

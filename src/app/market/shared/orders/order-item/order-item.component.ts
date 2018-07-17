@@ -10,9 +10,9 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
-import { PlaceOrderComponent } from '../../../../modals/place-order/place-order.component';
-import { ShippingComponent } from '../../../../modals/shipping/shipping.component';
-import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
+import { PlaceOrderComponent } from '../../../../modals/market-place-order/place-order.component';
+import { ShippingComponent } from '../../../../modals/market-shipping/shipping.component';
+import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 
 @Component({
   selector: 'app-order-item',

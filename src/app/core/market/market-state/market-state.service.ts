@@ -15,7 +15,13 @@ export class MarketStateService extends StateService implements OnDestroy {
     this.log.d('MarketState: initialized');
     // fetch categories
     this.register('currencyprice', 30 * 1000, ['PART', 'USD']);
-    this.register('category', 60 * 1000, ['list']);
+
+    /*
+     * @TODO change 'category' timmer '(3 * 1000)' as '(60 * 1000)' once category loading got fixed.
+     * Or Once improve-router branch got merged.
+     */
+
+    this.register('category', 3 * 1000, ['list']);
     this.register('profile', 60 * 1000, ['list']);
     this.register('bid', 60 * 1000, ['search', '*', '*', 'ASC'])
   }
