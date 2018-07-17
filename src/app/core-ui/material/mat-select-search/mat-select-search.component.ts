@@ -26,7 +26,7 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
    */
 
   ngOnChanges (change: any) {
-    if (this.defaultSelectedValue && this.options) {
+    if (this.defaultSelectedValue || this.options) {
       this.formControl.patchValue(this.defaultSelectedValue)
     }
   }

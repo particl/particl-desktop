@@ -12,9 +12,9 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
 })
 export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   stateForm: FormGroup = this.fb.group({
-    stateGroup: '',
+    stateGroup: [],
   });
-  @Input() defaultOption: string = '';
+  @Input() defaultOption: any;
   @Input() options: any[] = [];
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
   @Input() placeHolder: string = '';
@@ -32,7 +32,7 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
    */
 
   ngOnChanges(changes: any) {
-    if (this.defaultSelectedValue && this.options) {
+    if (this.defaultSelectedValue || this.options) {
       this.stateForm.patchValue({ stateGroup: this.defaultSelectedValue })
     }
   }

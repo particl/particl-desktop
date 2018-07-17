@@ -8,8 +8,7 @@
           {{option.name}}
         </mat-option>
       </mat-optgroup>
-      <mat-option *ngIf="!((stateGroupOptions | async).length || defaultOption)" disabled>
-        Loading&hellip;
+      <mat-option *ngIf="!((stateGroupOptions | async).length || defaultOption)" disabled>Not found
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
