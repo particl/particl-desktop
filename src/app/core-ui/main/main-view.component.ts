@@ -32,7 +32,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   title: string = '';
   testnet: boolean = false;
-  address: string = '';
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;

@@ -9,8 +9,7 @@ describe('OrderStatusNotifierService', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        CoreModule.forRoot(),
-        // RpcModule.forRoot()
+        CoreModule.forRoot()
       ],
       providers: [OrderStatusNotifierService]
     });

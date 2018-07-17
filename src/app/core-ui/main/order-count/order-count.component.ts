@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
+import * as _ from 'lodash';
 
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
@@ -26,13 +27,17 @@ export class OrderCountComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    // @TODO need to replace with marketplace command so this should probably gone :)
     this.marketState.observe('bid')
       .takeWhile(() => !this.destroyed)
-      .distinctUntilChanged()
       .map(o => new Bid(o, this.profile.address, this.type))
       .subscribe(orders => {
-        this.orders = orders;
-        this._orderStatusNotifierService.checkForNewStatus(orders);
+
+        // Only update if needed
+        if (this.hasUpdatedOrders(orders)) {
+          this.orders = orders;
+          this._orderStatusNotifierService.checkForNewStatus(orders);
+        }
       })
     this.loadProfile();
   }
@@ -42,6 +47,16 @@ export class OrderCountComponent implements OnInit, OnDestroy {
       profile => {
         this.profile = profile;
       });
+  }
+
+  hasUpdatedOrders(newOrders: any): boolean {
+    return (
+      !this.orders ||
+      (this.orders['orders'].length !== newOrders['orders'].length) ||
+      (_.differenceWith(this.orders['orders'], newOrders['orders'], (o1, o2) => {
+        return (o1.id === o2.id) && (o1['status'] === o2['status'])
+      }).length)
+    )
   }
 
   ngOnDestroy() {
