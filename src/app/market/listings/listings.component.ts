@@ -8,6 +8,7 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
+import { Country } from 'app/core/market/api/countrylist/country.model';
 
 
 interface ISorting {
@@ -197,8 +198,20 @@ export class ListingsComponent implements OnInit, OnDestroy {
     return this.pages[0].pageNumber;
   }
 
-  changeLocation() {
-    this.listingService.cache.selectedCountry = this.selectedCountry;
+
+  changeLocation(country: Country) {
+    this.listingService.cache.selectedCountry = country ? country.iso : '';
+  }
+
+  onCountryChange(country: Country): void {
+    this.filters.country = country ? country.iso : undefined;
+    this.clearAndLoadPage();
+  }
+
+  onCategoryChange(category: any): void {
+    this.filters.category = category ? category.id : undefined;
+    this.clearAndLoadPage();
+
   }
 
   ngOnDestroy() {

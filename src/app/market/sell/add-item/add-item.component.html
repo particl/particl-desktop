@@ -100,7 +100,7 @@
         <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
       </mat-form-field>
 
-      <mat-form-field class="full-width">
+      <!-- <mat-form-field class="full-width">
         <mat-select placeholder="Select category" formControlName="category">
           <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
             <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.id" [selected]="true">
@@ -108,14 +108,35 @@
             </mat-option>
           </mat-optgroup>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
+      <!--mat-otpgroup-select-search -->
+      <mat-otpgroup-select-search
+        [options]="_rootCategoryList?.subCategoryList"
+        [placeHolder]="'Select category'"
+        [isRequired]="'true'"
+        [defaultSelectedValue]="selectedCategory"
+        (change)="onCategoryChange($event)">
+      </mat-otpgroup-select-search>
+      <!--mat-otpgroup-select-search -->
 
-      <mat-form-field class="full-width">
-        <mat-select placeholder="Shipping from (your country)" formControlName="country">
+      <!-- <mat-form-field class="full-width">
+        <mat-select placeholder="Country" formControlName="country">
           <mat-option *ngFor="let country of countryList.getList()" value="{{country.name}}">{{country.name}}
           </mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
+
+      <!-- mat-select-search -->
+      <mat-select-search
+        class="full-width"
+        [options]="countryList.getList()"
+        [showValueOf]="'name'"
+        [placeHolder]="'Shipping from (your country)'"
+        [isRequired]="'true'"
+        [defaultSelectedValue]="selectedCountry"
+        (onChange)="onCountryChange($event)">
+      </mat-select-search>
+      <!-- mat-select-search -->
 
       <!-- TODO: add another input for fiat value and inter-connect the two: -->
       <mat-form-field class="full-width">
