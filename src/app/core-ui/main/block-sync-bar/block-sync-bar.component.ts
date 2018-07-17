@@ -4,13 +4,13 @@ import { Log } from 'ng2-logger';
 import { BlockStatusService } from '../../../core/rpc/rpc.module';
 
 @Component({
-  selector: 'app-percentage-bar',
-  templateUrl: './percentage-bar.component.html',
-  styleUrls: ['./percentage-bar.component.scss']
+  selector: 'block-sync-bar',
+  templateUrl: './block-sync-bar.component.html',
+  styleUrls: ['./block-sync-bar.component.scss']
 })
-export class PercentageBarComponent implements OnInit {
+export class BlockSyncBarComponent implements OnInit {
 
-  private log: any = Log.create('app-percentage-bar.component');
+  private log: any = Log.create('app-block-sync-bar.component');
 
   @Input() sidebar: boolean = false;
 
@@ -21,13 +21,13 @@ export class PercentageBarComponent implements OnInit {
   public syncPercentage: number = 0;
   public syncString: string;
 
-  constructor( private _blockStatusService: BlockStatusService) { this.log.d('initiated percentage-bar'); }
+  constructor( private _blockStatusService: BlockStatusService) { this.log.d('initiated block-sync-bar'); }
 
   ngOnInit(): void {
-    this.log.d('initiated percentage-bar');
+    this.log.d('initiated block-sync-bar');
     /* Hook BlockStatus -> open syncing modal */
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
-      this.log.d(`updating percentage-bar`);
+      this.log.d(`updating block-sync-bar`);
       this.updateProgress(status.syncPercentage);
     });
   }

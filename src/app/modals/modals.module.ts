@@ -10,7 +10,6 @@ import { DirectiveModule } from '../core-ui/directive/directive.module';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 /* modals */
-import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
@@ -20,8 +19,6 @@ import { AlertComponent } from './shared/alert/alert.component';
 import { DeleteListingComponent } from './delete-listing/delete-listing.component';
 
 /* shared in modals */
-import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
-import { PassphraseService } from './createwallet/passphrase/passphrase.service';
 import { PasswordComponent } from './shared/password/password.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
@@ -31,6 +28,7 @@ import { PlaceOrderComponent } from './place-order/place-order.component';
 import { ShippingComponent } from './shipping/shipping.component';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
+
 
 @NgModule({
   imports: [
@@ -43,9 +41,7 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     DirectiveModule
   ],
   declarations: [
-    PassphraseComponent,
     PasswordComponent,
-    CreateWalletComponent,
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
@@ -61,12 +57,11 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     BidConfirmationModalComponent
   ],
   exports: [
-    ClipboardModule
+    PasswordComponent
   ],
   providers: [
     // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
     ModalsHelperService,
-    PassphraseService,
     SnackbarService
   ],
   entryComponents: [
@@ -80,7 +75,6 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
     ManageWidgetsComponent,
     PlaceOrderComponent,
     ShippingComponent,
-    CreateWalletComponent,
     ColdstakeComponent,
     SendConfirmationModalComponent,
     BidConfirmationModalComponent
@@ -98,4 +92,3 @@ export class ModalsModule {
 }
 
 export { ModalsHelperService } from './modals-helper.service';
-export { PassphraseService } from './createwallet/passphrase/passphrase.service';

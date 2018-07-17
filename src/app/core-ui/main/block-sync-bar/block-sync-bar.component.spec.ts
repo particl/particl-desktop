@@ -4,11 +4,11 @@ import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 
-import { PercentageBarComponent } from './percentage-bar.component';
+import { BlockSyncBarComponent } from './block-sync-bar.component';
 
-describe('PercentageBarComponent', () => {
-  let component: PercentageBarComponent;
-  let fixture: ComponentFixture<PercentageBarComponent>;
+describe('BlockSyncBarComponent', () => {
+  let component: BlockSyncBarComponent;
+  let fixture: ComponentFixture<BlockSyncBarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -22,7 +22,7 @@ describe('PercentageBarComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PercentageBarComponent);
+    fixture = TestBed.createComponent(BlockSyncBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,7 +9,7 @@ import { DirectiveModule } from '../directive/directive.module';
 import { MainRouterComponent } from './main.router';
 import { StatusComponent } from './status/status.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
-import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
+import { BlockSyncBarComponent } from './block-sync-bar/block-sync-bar.component';
 
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
@@ -29,13 +29,12 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
     MultiwalletModule
   ],
   exports: [
-    MainRouterComponent,
-    PercentageBarComponent
+    MainRouterComponent
   ],
   declarations: [
     MainRouterComponent,
     StatusComponent,
-    PercentageBarComponent,
+    BlockSyncBarComponent,
     ConsoleModalComponent,
     ReleaseNotificationComponent,
     CartComponent,

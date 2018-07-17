@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { TestComponent } from './test/test.component';
 // import { EncryptWalletComponent } from './encrypt-wallet/encrypt-wallet.component';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 
@@ -14,8 +13,7 @@ export const installer_routing = {
   path: 'installer',
   component: InstallerRouterComponent,
   children: [
-    { path: '', redirectTo: 'test', pathMatch: 'full' },
-    { path: 'test', component: TestComponent },
+    { path: '', redirectTo: 'create', pathMatch: 'full' },
     { path: 'create', component: CreateWalletComponent },
   ]
 };

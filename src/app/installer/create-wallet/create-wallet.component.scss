@@ -1,0 +1,33 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// TODO: move to %placeholders
+.subtitle {
+  font-weight: 700;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin: 26px 0 10px;
+}
+
+/* ------------------------------- *\
+    Step 0: Choose action
+\* ------------------------------- */
+
+
+/* ------------------------------- *\
+    Step 1: Create/Restore
+\* ------------------------------- */
+
+
+/* ------------------------------- *\
+    Step 2: Recovery Phrase
+\* ------------------------------- */
+
+
+app-password > div {
+  margin-top: 20px;
+}
+
+input.recovery-word {
+  max-width: 100%;
+}
+
