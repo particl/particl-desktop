@@ -1,19 +1,15 @@
-<mat-sidenav-container fullscreen>
+<div class="installer">
 
-    <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
+  <div class="sidebar">
+    <img class="logo" src="./assets/particl-logo-vertical.svg">
+    <div class="title">Installer</div>
+    <p>
+      Some stuff about the current page (if possible, that would be super-cool)!
+    </p>
+  </div>
 
-        <div class="left" fxFlex="1 1 40%">
-            <div class="title">
-                Installer
-            </div>
-        </div>
-        <!-- .left -->
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 
-    </mat-toolbar>
-    <!-- .header-main -->
-
-    <div class="margin-left-right-50">
-        <router-outlet></router-outlet>
-    </div>
-
-</mat-sidenav-container>
+</div>
