@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
-import { MainViewComponent } from 'app/core-ui/main/main-view.component';
+import { MainRouter } from 'app/core-ui/main/main.router';
 
 //   { path: '', redirectTo: '/wallet/overview', pathMatch: 'full' },
 export const wallet_routes_children =

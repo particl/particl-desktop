@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { routing, CoreRouterComponent } from './app.routing';
 
 import { LoadingComponent } from '../loading/loading.component';
-import { MultiwalletRouterComponent } from './multiwallet/multiwallet-router.component';
 import { InstallerModule } from 'app/installer/installer.module';
 
 import { WalletViewsModule } from 'app/wallet/wallet.module';
@@ -22,8 +21,7 @@ import { MarketModule } from 'app/market/market.module';
   ],
   declarations: [
     CoreRouterComponent,
-    LoadingComponent,
-    MultiwalletRouterComponent,
+    LoadingComponent
   ],
   exports: [
     CoreRouterComponent

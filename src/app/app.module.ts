@@ -6,12 +6,10 @@ import { CoreModule } from './core/core.module';
 import { CoreUiModule } from './core-ui/core-ui.module';
 import { CoreRouterModule } from './core-router/core-router.module'
 import { ModalsModule } from './modals/modals.module';
-
-//import { MultiwalletRouterModule } from './multiwallet/multiwallet-router.module';
-// import { WalletViewsModule } from './wallet/wallet.module';
-
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 import { AppComponent } from './app.component';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +23,7 @@ import { AppComponent } from './app.component';
     CoreUiModule.forRoot(),
     CoreRouterModule,
     ModalsModule.forRoot(),
+    MultiwalletModule
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

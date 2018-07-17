@@ -4,9 +4,9 @@
         <!-- TODO: add `.active` class to currently selected wallet -->
         <!-- TODO: replace tooltip's content by wallets' names -->
         <!-- TODO: letter in the button as 1st letter of wallet name -->
-        <button mat-raised-button color="primary" class="active" matTooltip="Active wallet: wallet.dat" matTooltipPosition="after">W</button>
+        <button mat-raised-button color="primary" matTooltip="Active wallet: wallet.dat" matTooltipPosition="after">W</button>
         <button mat-raised-button color="primary" matTooltip="Switch to: shop.dat" matTooltipPosition="after">S</button>
-        <button mat-raised-button color="primary" matTooltip="Add new wallet" matTooltipPosition="after" (click)="goToCreateWallet()">+</button>
+        <button mat-raised-button color="primary" routerLink="/installer/create" routerLinkActive="active" matTooltip="Add new wallet" matTooltipPosition="after">+</button>
       </div>
       <div class="buttons">
         <button mat-button class="small" color="basic" matTooltip="Settings" matTooltipPosition="after" routerLinkActive="active" routerLink="/wallet/settings">
@@ -17,5 +17,3 @@
         </a>
       </div>
     </div><!-- .mini-sidebar-menu -->
-
-<router-outlet></router-outlet>

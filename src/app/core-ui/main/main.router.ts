@@ -19,13 +19,12 @@ import { ModalsHelperService } from 'app/modals/modals.module';
  * and display wallet + market views.
  */
 @Component({
-  selector: 'app-main-view',
-  templateUrl: './main-view.component.html',
-  styleUrls: ['./main-view.component.scss']
+  templateUrl: './main.router.html',
+  styleUrls: ['./main.router.scss']
 })
-export class MainViewComponent implements OnInit, OnDestroy {
+export class MainRouter implements OnInit, OnDestroy {
 
-  log: any = Log.create('main-view.component');
+  log: any = Log.create('main.router');
   private destroyed: boolean = false;
 
   /* UI States */

@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/
 import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from './material/material.module';
-import { MainViewModule } from './main/main-view.module';
+import { MainViewModule } from './main/main.module';
 
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -45,4 +45,4 @@ export class CoreUiModule {
 }
 
 export { MaterialModule } from './material/material.module';
-// export { CoreUi } from './main/main-view.module';
+

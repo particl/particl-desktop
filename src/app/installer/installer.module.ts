@@ -1,22 +1,26 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InstallerRouterComponent } from './installer.routing';
+import { RouterModule } from '@angular/router';
 
-import { installer_routing } from './installer.routing';
+import { MaterialModule } from 'app/core-ui/material/material.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
+
+import { InstallerRouter, installer_routing } from './installer.router';
 import { TestComponent } from './test/test.component';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    MaterialModule,
+    MultiwalletModule
   ],
   exports: [
-    InstallerRouterComponent
+    InstallerRouter
   ],
   declarations: [
-    InstallerRouterComponent,
+    InstallerRouter,
       TestComponent,
       CreateWalletComponent
     ],
