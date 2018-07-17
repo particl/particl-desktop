@@ -22,7 +22,7 @@ import { ModalsHelperService } from 'app/modals/modals.module';
   templateUrl: './main.router.html',
   styleUrls: ['./main.router.scss']
 })
-export class MainRouter implements OnInit, OnDestroy {
+export class MainRouterComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('main.router');
   private destroyed: boolean = false;

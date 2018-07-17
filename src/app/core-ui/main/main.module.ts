@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material';
 import { MaterialModule } from '../material/material.module';
 import { DirectiveModule } from '../directive/directive.module';
 
-import { MainRouter } from './main.router';
+import { MainRouterComponent } from './main.router';
 import { StatusComponent } from './status/status.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
 import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
@@ -29,11 +29,11 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
     MultiwalletModule
   ],
   exports: [
-    MainRouter,
+    MainRouterComponent,
     PercentageBarComponent
   ],
   declarations: [
-    MainRouter,
+    MainRouterComponent,
     StatusComponent,
     PercentageBarComponent,
     ConsoleModalComponent,

@@ -41,7 +41,7 @@ import { LoadingComponent } from '../loading/loading.component';
 
 import { installer_routing } from 'app/installer/installer.router';
 
-import { MainRouter } from 'app/core-ui/main/main.router';
+import { MainRouterComponent } from 'app/core-ui/main/main.router';
 
 import { wallet_routes_children } from 'app/wallet/wallet.routing';
 import { market_routes_children } from 'app/market/market.routing';
@@ -54,7 +54,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'multi', pathMatch: 'full' },
   { path: 'loading', component: LoadingComponent },
   installer_routing,
-  { path: 'main', component: MainRouter, children: walletAndMarketRoutes }
+  { path: 'main', component: MainRouterComponent, children: walletAndMarketRoutes }
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules});

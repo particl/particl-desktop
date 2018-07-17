@@ -19,7 +19,7 @@ export class LoadingComponent implements OnInit {
   constructor(
     private router: Router,
     private con: ConnectionCheckerService
-  ) { 
+  ) {
     console.log('loading component')
   }
 

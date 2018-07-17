@@ -13,7 +13,7 @@ export class MultiwalletSidebarComponent implements OnInit {
 
   ngOnInit() {
     console.log('multiwallet loaded!');
-    //this._router.navigate(['multi/installer/test']);
+    // this._router.navigate(['multi/installer/test']);
   }
 
 }

@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'app/core-ui/material/material.module';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
-import { InstallerRouter, installer_routing } from './installer.router';
+import { InstallerRouterComponent, installer_routing } from './installer.router';
 import { TestComponent } from './test/test.component';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 
@@ -17,10 +17,10 @@ import { CreateWalletComponent } from './create-wallet/create-wallet.component';
     MultiwalletModule
   ],
   exports: [
-    InstallerRouter
+    InstallerRouterComponent
   ],
   declarations: [
-    InstallerRouter,
+    InstallerRouterComponent,
       TestComponent,
       CreateWalletComponent
     ],
