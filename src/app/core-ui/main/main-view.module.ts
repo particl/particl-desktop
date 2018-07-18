@@ -8,6 +8,7 @@ import { DirectiveModule } from '../directive/directive.module';
 
 import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
+import { OrderCountComponent } from './order-count/order-count.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
 import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
 
@@ -32,6 +33,7 @@ import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
   declarations: [
     MainViewComponent,
     StatusComponent,
+    OrderCountComponent,
     PercentageBarComponent,
     ConsoleModalComponent,
     ReleaseNotificationComponent,

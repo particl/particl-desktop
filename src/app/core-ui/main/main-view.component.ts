@@ -55,7 +55,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     // the following imports are just 'hooks' to
     // get the singleton up and running
-    private _newtxnotifier: NewTxNotifierService
+    private _newtxnotifier: NewTxNotifierService,
   ) { }
 
   ngOnInit() {
