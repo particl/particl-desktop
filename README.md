@@ -13,6 +13,7 @@ We provide a decentralized privacy platform with a suite of tools to enhance you
 This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
 
 
+
 [![Download the packaged wallet for Mac, Windows and Linux](download-button.png)](https://github.com/particl/particl-desktop/releases)
 
 # Contribute
