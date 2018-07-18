@@ -81,23 +81,15 @@ export class ProposalsComponent implements OnInit {
         tooltip: {
           enabled: true,
           hideDelay: 0,
-          useInteractiveGuideline: false,
-          position:  () => {
-            console.log('d3', d3);
-            const data = {
-              left: d3.event !== null ? d3.event['clientX'] : 0,
-              top: d3.event !== null ? d3.event['clientY'] : 0
-            }
-            console.log('data', data)
-            return data;
-          }
+          useInteractiveGuideline: false
         }
       }
     }
     this.data = [
       { key: 'Yes', y: 4651813.18567841 },
-      { key: 'No', y: 1624413.51774001 },
-      { key: 'I don\'t care', y: 591354.18681621 }
+      { key: 'Rather yes', y: 2624413.51774001 },
+      { key: 'Rather no', y: 251813.18567841 },
+      { key: 'No', y: 1624413.51774001 }
     ];
   }
 
