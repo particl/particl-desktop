@@ -39,6 +39,12 @@ body {
   font-size: 12px;
 }
 
+.nvtooltip {
+  z-index: 1000;
+  background: rgba($bg-black, 0.85);
+  color: $color-white;
+}
+
 /* ------------------------------- *\
     2. LAYOUT
 \* ------------------------------- */
