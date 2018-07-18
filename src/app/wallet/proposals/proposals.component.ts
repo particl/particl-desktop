@@ -63,50 +63,25 @@ export class ProposalsComponent implements OnInit {
     this.options = {
       chart: {
         type: 'pieChart',
-        height: 300,
-        width: 300,
+        height: 250,
+        width: 250,
         x: (d) => {return d.key; },
         y: (d) => {return d.y; },
-        showLabels: true,
-        duration: 5,
-        labelThreshold: 0.01,
-        labelSunbeamLayout: true,
+        showLabels: false,
+        donut: true,
         legend: {
-            margin: {
-                top: 5,
-                right: 35,
-                bottom: 5,
-                left: 0
-            }
+          margin: {
+            top: 5,
+            right: 35,
+            bottom: 5,
+            left: 0
+          }
         },
+        color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
         tooltip: {
           enabled: true,
+          hideDelay: 0,
           useInteractiveGuideline: false,
-          contentGenerator: (e) => {
-            const series = e.series[0];
-            if (series.value === null) { return; }
-
-            const rows =
-              '<tr>' +
-                '<td class=\'key\'>' + 'Value: ' + '</td>' +
-                '<td class=\'x-value\'><strong>' + (series.value ? series.value.toFixed(2) : 0) + '</strong></td>' +
-              '</tr>';
-
-            const header =
-              '<thead>' +
-                '<tr>' +
-                  '<td class=\'legend-color-guide\'><div style=\'background-color: ' + series.color + ';\'></div></td>' +
-                  '<td class=\'key\'><strong>' + series.key + '</strong></td>' +
-                '</tr>' +
-              '</thead>';
-
-            return '<table>' +
-                header +
-                '<tbody>' +
-                  rows +
-                '</tbody>' +
-              '</table>';
-          },
           position:  () => {
             console.log('d3', d3);
             const data = {
@@ -115,15 +90,14 @@ export class ProposalsComponent implements OnInit {
             }
             console.log('data', data)
             return data;
-        }
+          }
         }
       }
     }
     this.data = [
-      { key: 'One', y: 5 },
-      { key: 'Two', y: 2 },
-      { key: 'Three', y: 9 },
-      { key: 'Four', y: 7 }
+      { key: 'Yes', y: 4651813.18567841 },
+      { key: 'No', y: 1624413.51774001 },
+      { key: 'I don\'t care', y: 591354.18681621 }
     ];
   }
 

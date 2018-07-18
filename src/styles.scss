@@ -41,8 +41,17 @@ body {
 
 .nvtooltip {
   z-index: 1000;
-  background: rgba($bg-black, 0.85);
+  font-family: $font;
   color: $color-white;
+  background: rgba($bg-black, 0.85);
+  padding: 1px 4px;
+  .legend-color-guide > div {
+    min-height: 5px;
+    min-width: 5px;
+  }
+  .key {
+    font-weight: 500;
+  }
 }
 
 /* ------------------------------- *\
