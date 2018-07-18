@@ -49,7 +49,6 @@ export class ProposalsComponent implements OnInit {
 
   // FIXME: needs clean-up?
   public selectedTab: number = 0;
-  public proposalsFormGroup: FormGroup;
   public tabLabels: Array<string> = ['active', 'past'];
   public options: any;
   public data: any;
@@ -59,7 +58,6 @@ export class ProposalsComponent implements OnInit {
             ) { }
 
   ngOnInit() {
-    const chart = nv.models.pieChart();
     this.options = {
       chart: {
         type: 'pieChart',

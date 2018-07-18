@@ -40,73 +40,33 @@
     <mat-card [formGroup]="voteFormGroup">
       <div class="title">
         Voting options
-        <button mat-button color="basic" class="small">
+        <button [disabled]="voteFormGroup.controls.options.length >= 5" (click)="addNewInputField()" mat-button color="basic" class="small">
           <!-- TODO: allow max of 5 options total -->
           <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
           Add new option
         </button>
       </div>
 
-      <div class="voting item">
-        <span class="no">1</span>
-        <div class="content">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Option #1 (e.g. 'Yes')" formControlName="option1">
-          </mat-form-field>
+      <!-- voting options -->
+      <div formArrayName="options">
+        <div class="voting item" [formGroupName]="i"
+        *ngFor="let option of voteFormGroup.controls.options.controls; let i = index">
+          <span class="no">{{i+1}}</span>
+          <div class="content">
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Option #{{i+1}}" formControlName="option">
+            </mat-form-field>
+          </div>
+
+          <!-- remove button only visible from 3rd option -->
+          <div class="remove-option" *ngIf="i > 1">
+            <button (click)="removeInputField(i)" mat-button class="small" color="warn" matTooltip="Remove option" matTooltipPosition="before">
+              <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+            </button>
+          </div>
         </div>
       </div>
-
-      <div class="voting item">
-        <span class="no">2</span>
-        <div class="content">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Option #2 (e.g. 'No')" formControlName="option2">
-          </mat-form-field>
-        </div>
-      </div>
-
-      <!-- TODO: when user adds more options, show these: -->
-      <div class="voting item">
-        <span class="no">3</span>
-        <div class="content">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Option #3" formControlName="option3">
-          </mat-form-field>
-        </div>
-        <div class="remove-option">
-          <button mat-button class="small" color="warn" matTooltip="Remove option" matTooltipPosition="before">
-            <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
-          </button>
-        </div>
-      </div>
-
-      <!--div class="voting item">
-        <span class="no">4</span>
-        <div class="content">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Option #4" formControlName="?????">
-          </mat-form-field>
-        </div>
-        <div class="remove-option">
-          <button mat-button class="small" color="warn" matTooltip="Remove option" matTooltipPosition="before">
-            <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
-          </button>
-        </div>
-      </div>
-
-      <div class="voting item">
-        <span class="no">5</span>
-        <div class="content">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Option #5" formControlName="?????">
-          </mat-form-field>
-        </div>
-        <div class="remove-option">
-          <button mat-button class="small" color="warn" matTooltip="Remove option" matTooltipPosition="before">
-            <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
-          </button>
-        </div>
-      </div-->
+      <!-- voting options -->
 
       <p class="widget-help">
         Add a minimum of 2 voting options for your proposal. In this case, less is usually more. As such, we recommend a maximum of 5 voting options to be added.

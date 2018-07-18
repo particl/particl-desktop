@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import {
   ProposalConfirmationComponent
 } from 'app/modals/proposal-confirmation/proposal-confirmation.component';
+import { FormArray } from '@angular/forms/src/model';
 
 @Component({
   selector: 'app-add-proposal',
@@ -34,13 +35,12 @@ export class AddProposalComponent implements OnInit {
     });
 
     this.voteFormGroup = this.formBuilder.group({
-      option1:                      ['', [Validators.required,
-                                        Validators.maxLength(50)]],
-      option2:                ['', [Validators.required,
-                                        Validators.maxLength(50)]],
-      option3:                ['', [Validators.required,
-                                        Validators.maxLength(50)]]
-    });
+      options     : this.formBuilder.array([
+         this.initTechnologyFields(),
+         this.initTechnologyFields()
+      ])
+   });
+
 
     this.infoFormGroup = this.formBuilder.group({
       nickname:                      ['', [Validators.required,
@@ -48,6 +48,38 @@ export class AddProposalComponent implements OnInit {
       email:                ['', [Validators.required,
                                         Validators.maxLength(50)]]
     });
+  }
+
+  initTechnologyFields(): FormGroup {
+    return this.formBuilder.group({
+      option : ['', Validators.compose([Validators.required, Validators.maxLength(50)])]
+    });
+  }
+
+  /**
+   * Programmatically generates a new technology input field
+   *
+   * @public
+   * @method addNewInputField
+   * @return {none}
+   */
+  addNewInputField(): void {
+    const control = <FormArray>this.voteFormGroup.controls.options;
+    control.push(this.initTechnologyFields());
+  }
+
+
+  /**
+   * Programmatically removes a recently generated technology input field
+   *
+   * @public
+   * @method removeInputField
+   * @param i    {number}      The position of the object in the array that needs to removed
+   * @return {none}
+   */
+  removeInputField(i: number): void {
+    const control = <FormArray>this.voteFormGroup.controls.options;
+    control.removeAt(i);
   }
 
   cancelAndDiscard() {
