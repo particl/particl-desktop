@@ -147,7 +147,8 @@
             <div class="subtitle">Voting progress</div>
             <div class="graph">
               <!-- TODO: implement graphs (I suggest: https://github.com/krispo/ng2-nvd3) -->
-              <img src="assets/graph-placeholder.gif">
+              <!-- <img src="assets/graph-placeholder.gif"> -->
+              <nvd3 [options]="options" [data]="data"></nvd3>
             </div>
             <div class="percentage-voted">
               <!-- TODO: implement % of coins voted in total for this proposal -->

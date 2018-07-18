@@ -9,10 +9,15 @@ import {
 import {
   ProposalVoteConfirmationComponent
 } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
+import * as d3 from 'd3';
+
 @Component({
   selector: 'app-proposals',
   templateUrl: './proposals.component.html',
-  styleUrls: ['./proposals.component.scss']
+  styleUrls: [
+    './proposals.component.scss',
+    '../../../../node_modules/nvd3/build/nv.d3.css'
+  ]
 })
 
 export class ProposalsComponent implements OnInit {
@@ -46,30 +51,80 @@ export class ProposalsComponent implements OnInit {
   public selectedTab: number = 0;
   public proposalsFormGroup: FormGroup;
   public tabLabels: Array<string> = ['active', 'past'];
+  public options: any;
+  public data: any;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
               private dialog: MatDialog
             ) { }
 
   ngOnInit() {
-    this.formBuild();
-  }
+    const chart = nv.models.pieChart();
+    this.options = {
+      chart: {
+        type: 'pieChart',
+        height: 300,
+        width: 300,
+        x: (d) => {return d.key; },
+        y: (d) => {return d.y; },
+        showLabels: true,
+        duration: 5,
+        labelThreshold: 0.01,
+        labelSunbeamLayout: true,
+        legend: {
+            margin: {
+                top: 5,
+                right: 35,
+                bottom: 5,
+                left: 0
+            }
+        },
+        tooltip: {
+          enabled: true,
+          useInteractiveGuideline: false,
+          contentGenerator: (e) => {
+            const series = e.series[0];
+            if (series.value === null) { return; }
 
-  formBuild() {
-    /*
-    this.proposalsFormGroup = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      addressLine1: ['', Validators.required],
-      addressLine2: [''],
-      city: ['', Validators.required],
-      state: [''],
-      country: ['', Validators.required],
-      zipCode: ['', Validators.required],
-      newShipping: [''],
-      title: ['', Validators.required]
-    });
-    */
+            const rows =
+              '<tr>' +
+                '<td class=\'key\'>' + 'Value: ' + '</td>' +
+                '<td class=\'x-value\'><strong>' + (series.value ? series.value.toFixed(2) : 0) + '</strong></td>' +
+              '</tr>';
+
+            const header =
+              '<thead>' +
+                '<tr>' +
+                  '<td class=\'legend-color-guide\'><div style=\'background-color: ' + series.color + ';\'></div></td>' +
+                  '<td class=\'key\'><strong>' + series.key + '</strong></td>' +
+                '</tr>' +
+              '</thead>';
+
+            return '<table>' +
+                header +
+                '<tbody>' +
+                  rows +
+                '</tbody>' +
+              '</table>';
+          },
+          position:  () => {
+            console.log('d3', d3);
+            const data = {
+              left: d3.event !== null ? d3.event['clientX'] : 0,
+              top: d3.event !== null ? d3.event['clientY'] : 0
+            }
+            console.log('data', data)
+            return data;
+        }
+        }
+      }
+    }
+    this.data = [
+      { key: 'One', y: 5 },
+      { key: 'Two', y: 2 },
+      { key: 'Three', y: 9 },
+      { key: 'Four', y: 7 }
+    ];
   }
 
   addProposal() {
