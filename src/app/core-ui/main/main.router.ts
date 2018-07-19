@@ -27,7 +27,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
   /* UI States */
 
-  title: string = '';
+  title: string = 'Overview';
   testnet: boolean = false;
   /* errors */
   walletInitialized: boolean = undefined;
