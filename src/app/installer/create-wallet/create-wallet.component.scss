@@ -4,14 +4,6 @@ $installer-sidebar-width: 260px;
 $installer-sidebar-padding: 30px;
 
 
-// ------ BASICS ------ //
-
-p {
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-
 // ------ UI ELEMENTS ------ //
 
 .container-block {
@@ -87,19 +79,42 @@ p {
 }
 
 p {
+  font-size: 14px;
+  line-height: 1.45;
   &.widget-help {
     font-size: 13px;
   }
-  &.info {
-    @extend %mat-card;
-    font-weight: 400;
-    padding: 24px 24px 28px 72px;
+  &.info, &.warning {
+    padding: 24px 24px 24px 78px;
+    margin: 32px -45px;
     &:before { // info icon
       top: 32px;
       left: 45px;
     }
+    .mat-card & { // messages in cards
+      margin: -24px -24px 24px;
+      padding: 20px 24px 20px 56px;
+      &:before {
+        top: 29px;
+        left: 26px;
+      }
+    }
+  }
+  &.info {
+    background: rgba($color-info, 0.07);
+    .mat-card & {
+      border-bottom: 1px solid rgba($color-info, 0.22);
+    }
+  }
+  &.warning {
+    background: rgba($color-alert, 0.07);
+    .mat-card & {
+      border-bottom: 1px solid rgba($color-alert, 0.22);
+    }
   }
 }
+
+
 // ------ LAYOUT ------ //
 
 .installer {
@@ -165,17 +180,16 @@ p {
       }
       &:hover {
         background: $color-white;
-        .icon {
-          color: $color;
-        }
         &.create {
           .icon {
             transform: scale(1.1);
+            color: $color;
           }
         }
         &.restore {
           .icon {
             transform: rotate(45deg) scale(1.1);
+            color: $color-info;
           }
         }
       }
@@ -187,8 +201,15 @@ p {
 }
 
 /* ------------------------------- *\
-    Step 0: Choose action
+    Step 1: Name wallet
 \* ------------------------------- */
+
+.wallet-name {
+  margin-top: 45px;
+  .mat-form-field {
+    width: 260px;
+  }
+}
 
 
 /* ------------------------------- *\

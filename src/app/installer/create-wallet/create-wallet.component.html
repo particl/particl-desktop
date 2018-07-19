@@ -71,7 +71,7 @@
         <p class="choice-desc">
           If you already have existing wallet seed (Recovery Phrase) that you would like to restore
         </p>
-        <button mat-raised-button color="primary" (click)="initialize(2);">
+        <button mat-raised-button color="accent" (click)="initialize(2);">
           <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
           Restore wallet
         </button>
@@ -87,18 +87,22 @@
 
     <div class="title">Name your wallet</div>
     <div class="container-block">
+      <div class="subtitle">Choose a name for your wallet</div>
       <p>
-        Choose a name for your wallet (e.g. Personal wallet, Shop income, Savings, &hellip;)
+        Naming your wallets is useful, when you want to use multiple wallets &ndash; this helps you to separate e.g. your personal and market funds.<br>
+        Short and descriptive names work the best!
       </p>
-      <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)"
-      [@slideDown]>
-        <span [hidden]="!validation.errors.required">
+      <mat-card class="wallet-name">
+        <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)">
           Wallet name is required
-        </span>
-      </p><!-- validation errors -->
-      <mat-form-field>
-        <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
-      </mat-form-field>      
+        </p><!-- validation errors -->
+        <mat-form-field>
+          <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name (required)" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
+        </mat-form-field> 
+        <p class="widget-help">
+          Wallet name should contain only letters, numbers, spaces (<code> </code>) and dashes (<code>-</code>).
+        </p>     
+      </mat-card>
     </div>
     
     <div class="action-buttons container-block" fxLayoutAlign="space-between center">

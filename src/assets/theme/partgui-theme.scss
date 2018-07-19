@@ -40,7 +40,7 @@ $app-secondary-color: (
   200: #a3f6e2,
   300: #75f2d4,
   400: #47edc5,
-  500: #03e8b0,
+  500: #22aaff,
   600: #03be91,
   700: #029470,
   800: #029471,
@@ -101,7 +101,7 @@ $app-red: (
 );
 
 $partgui-app-primary: mat-palette($app-primary-color);
-$partgui-app-accent: mat-palette($app-secondary-color, A200, A100, A400);
+$partgui-app-accent: mat-palette($app-secondary-color);
 // The warn palette is optional (defaults to red).
 $partgui-app-warn: mat-palette($app-red);
 
