@@ -5,6 +5,8 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { SharedModule } from './shared/shared.module';
 import { WalletModule } from './wallet/wallet.module';
 
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ProposalsComponent } from './proposals/proposals.component';
@@ -42,6 +44,9 @@ import { routing } from './wallet.routing';
     RevertColdstakingComponent
   ],
   exports: [],
+  providers: [
+    ProposalsService
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class WalletViewsModule {
