@@ -20,7 +20,7 @@ import { ModalsHelperService } from 'app/modals/modals-helper.service';
 @Component({
   templateUrl: './create-wallet.component.html',
   styleUrls: ['./create-wallet.component.scss'],
-  providers: [PassphraseService],
+  providers: [PassphraseService, RpcStateService],
   animations: [slideDown()]
 })
 export class CreateWalletComponent implements OnDestroy {
@@ -66,7 +66,6 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   reset(): void {
-    this.rpcState.set('modal:fullWidth:enableClose', true);
     this.words = Array(24).fill('');
     this.isRestore = false;
     this.name = '';
@@ -164,7 +163,6 @@ export class CreateWalletComponent implements OnDestroy {
 
         break;
     }
-    this.rpcState.set('modal:fullWidth:enableClose', (this.step === 0));
   }
 
 
@@ -187,8 +185,6 @@ export class CreateWalletComponent implements OnDestroy {
         success => {
           this._passphraseService.generateDefaultAddresses();
           this.step = 5;
-          this.rpcState.set('ui:walletInitialized', true);
-          this.rpcState.set('ui:spinner', false);
           this.log.i('Mnemonic imported successfully');
 
         },
@@ -196,8 +192,6 @@ export class CreateWalletComponent implements OnDestroy {
           this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
-          this.rpcState.set('ui:spinner', false);
-          this.rpcState.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');
         });
   }

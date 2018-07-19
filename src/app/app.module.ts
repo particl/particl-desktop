@@ -21,7 +21,7 @@ import { LoadingComponent } from 'app/loading/loading.component';
     /* own */
     app_routing,
     InstallerModule,
-    RpcModule
+    RpcModule.forRoot()
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
