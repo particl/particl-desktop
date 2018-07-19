@@ -19,7 +19,7 @@
         <mat-content class="sidebar-section">
           <mat-list class="sidebar-item-group">
             <a class="sidebar-item-link"
-              routerLinkActive="active" routerLink="/main/overview">
+              routerLinkActive="active" routerLink="wallet/overview">
               <mat-list-item class="sidebar-item">
                 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
                 <span class="text">Overview</span>
@@ -28,7 +28,7 @@
           </mat-list><!-- .sidebar-item-group -->
         </mat-content><!-- .sidebar-section -->
 
-        <mat-content class="sidebar-section" *ngIf="walletInitialized">
+        <mat-content class="sidebar-section">
           <mat-accordion [multi]="'multi'">
             <mat-expansion-panel #panel2 expanded="true" class="no-padding arrow-colored">
               <mat-expansion-panel-header>Market</mat-expansion-panel-header>
@@ -36,7 +36,7 @@
                 <mat-list class="sidebar-item-group">
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/main/listings'">
+                    routerLinkActive="active" routerLink="market/listings">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-listings"></mat-icon>
@@ -45,7 +45,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/main/buy'">
+                    routerLinkActive="active" routerLink="market/buy">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-bag-buy"></mat-icon>
@@ -56,7 +56,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/main/sell'">
+                    routerLinkActive="active" routerLink="market/sell">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-bag-sell"></mat-icon>
@@ -72,7 +72,7 @@
           </mat-accordion>
         </mat-content><!-- .sidebar-section -->
 
-        <mat-content class="sidebar-section" *ngIf="walletInitialized">
+        <mat-content class="sidebar-section">
           <mat-accordion [multi]="'multi'">
             <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
               <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
@@ -80,7 +80,7 @@
                 <mat-list class="sidebar-item-group">
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/main/send'">
+                    routerLinkActive="active" routerLink="wallet/send">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-send"></mat-icon>
@@ -89,7 +89,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/main/receive'">
+                    routerLinkActive="active" routerLink="wallet/receive">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-receive"></mat-icon>
@@ -98,7 +98,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/main/history'">
+                    routerLinkActive="active" routerLink="wallet/history">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon"
                         fontSet="partIcon" fontIcon="part-date"></mat-icon>
@@ -107,7 +107,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'/main/address-book'">
+                    routerLinkActive="active" routerLink="wallet/address-book">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-people"></mat-icon>
@@ -166,10 +166,6 @@
               </div>
             </mat-list-item>
 
-            <mat-list-item class="error sidebar-item" *ngIf="walletInitialized === false && daemonRunning">
-              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-error"></mat-icon>
-              <span class="text"><strong>No wallet found</strong> &ndash; create or restore wallet first</span>
-            </mat-list-item>
 
             <mat-list-item class="info sidebar-item" *ngIf="unlocked_until > 0">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
@@ -192,6 +188,10 @@
           </div>
           <div class="daemon item">
             Core <span class="version">{{ daemonVersion }}</span>
+          </div>
+          <!-- Remove me after testing, good to know which wallet were on -->
+          <div class="daemon item">
+            Wallet <span class="version">{{ wallet }}</span>
           </div>
         </mat-content>
 

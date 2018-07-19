@@ -17,12 +17,14 @@ import { CheckoutProcessComponent } from './buy/checkout-process/checkout-proces
 import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
 import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
 import { ShippingAddressComponent } from './shared/shipping-address/shipping-address.component';
+import { market_routing } from './market.routing';
 
 @NgModule({
   imports: [
     CommonModule,
-    CoreUiModule.forRoot(),
-    WalletModule.forRoot()
+    CoreUiModule,
+    WalletModule,
+    market_routing
   ],
   declarations: [
     ListingItemComponent,

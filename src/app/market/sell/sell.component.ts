@@ -61,7 +61,7 @@ export class SellComponent implements OnInit {
   }
 
   addItem(id?: number, clone?: boolean) {
-    this.router.navigate(['multi/main/template'], {
+    this.router.navigate(['../template'], {
       queryParams: {'id': id, 'clone': clone }
     });
   }

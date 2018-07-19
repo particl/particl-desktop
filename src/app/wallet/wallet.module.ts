@@ -12,7 +12,8 @@ import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.compo
 import { ZapColdstakingComponent } from './overview/widgets/coldstake/zap-coldstaking/zap-coldstaking.component';
 import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-coldstaking/revert-coldstaking.component';
 
-import 'hammerjs';
+import 'hammerjs'; // hmmm??
+import { wallet_routing } from './wallet.routing';
 
 
 @NgModule({
@@ -28,11 +29,8 @@ import 'hammerjs';
     CommonModule,
     SharedModule,
     WalletModule.forRoot(),
-    CoreUiModule
-  ],
-  entryComponents: [
-    ZapColdstakingComponent,
-    RevertColdstakingComponent
+    CoreUiModule,
+    wallet_routing
   ],
   exports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

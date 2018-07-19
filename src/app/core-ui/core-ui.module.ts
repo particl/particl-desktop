@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/
 import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from './material/material.module';
-import { MainViewModule } from './main/main.module';
 
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -19,14 +18,12 @@ import { DirectiveModule } from './directive/directive.module';
   imports: [
     CommonModule,
     MaterialModule,
-    MainViewModule,
     MatDialogModule, // todo move
     InfiniteScrollModule,
     DirectiveModule
   ],
   exports: [
     MaterialModule,
-    MainViewModule,
     PaginatorComponent,
     InfiniteScrollModule,
     DirectiveModule
@@ -38,7 +35,7 @@ export class CoreUiModule {
     return {
       ngModule: CoreUiModule,
       providers: [
-        MatDialog
+        MatDialog // TODO; move to material module
       ]
     };
   }

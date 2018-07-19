@@ -132,12 +132,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  /* cart */
-
-  goToListings(): void {
-    this.router.navigate(['multi/main/listings']);
-  }
-
   removeFromCart(shoppingCartId: number): void {
     this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
       this.snackbarService.open('Item successfully removed from cart');

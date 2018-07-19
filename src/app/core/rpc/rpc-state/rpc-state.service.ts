@@ -9,7 +9,7 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 @Injectable()
 export class RpcStateService extends StateService implements OnDestroy {
 
-  private log: any = Log.create('rpc-state.class');
+  private log: any = Log.create('rpc-state.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
 
   private _enableState: boolean = true;
@@ -95,8 +95,7 @@ export class RpcStateService extends StateService implements OnDestroy {
   private stateCallSuccess(method: string, response: any) {
     // no error
     this.errorsStateCall.next({
-      error: false,
-      electron: this._rpc.isElectron
+      error: false
     });
 
     this.set(method, response);
@@ -109,8 +108,7 @@ export class RpcStateService extends StateService implements OnDestroy {
     // if not first error, show modal
     if (!firstError) {
       this.errorsStateCall.next({
-        error: error.target ? error.target : error,
-        electron: this._rpc.isElectron
+        error: error.target ? error.target : error
       });
     }
   }

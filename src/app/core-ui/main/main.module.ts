@@ -1,35 +1,52 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, ModuleWithProviders, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material';
+import { RouterModule, Routes, ParamMap, Router, NavigationStart } from '@angular/router';
 
+import { CoreModule, RpcService } from '../../core/core.module';
 import { MaterialModule } from '../material/material.module';
 import { DirectiveModule } from '../directive/directive.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 import { MainRouterComponent } from './main.router';
+
 import { StatusComponent } from './status/status.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
 import { BlockSyncBarComponent } from './block-sync-bar/block-sync-bar.component';
-
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
-import { ClientVersionService } from '../../core/http/client-version.service';
-
 import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
-import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
+import { ClientVersionService } from '../../core/http/client-version.service';
+
+
+const routes: Routes = [
+  { path: '', redirectTo: 'main', pathMatch: 'full' },
+  { 
+    path: 'main', 
+    component: MainRouterComponent,
+    children: [
+      { path: '', redirectTo: 'wallet', pathMatch: 'full' },
+      { path: 'wallet', loadChildren: '../../wallet/wallet.module#WalletViewsModule'},
+      { path: 'market', loadChildren: '../../market/market.module#MarketModule'}
+    ]
+  }
+];
+
+const main_routing: ModuleWithProviders = RouterModule.forChild(routes);
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule,
+    main_routing,
+    CoreModule.forChild(), 
+    ModalsModule,
     MaterialModule,
-    MatIconModule,
     DirectiveModule,
     MultiwalletModule
   ],
   exports: [
-    MainRouterComponent
+    RouterModule
   ],
   declarations: [
     MainRouterComponent,
@@ -41,6 +58,7 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
     TimeoffsetComponent
   ],
   entryComponents: [
+    MainRouterComponent,
     ConsoleModalComponent,
     ReleaseNotificationComponent
   ],
@@ -49,4 +67,24 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class MainViewModule { }
+export class MainModule implements OnDestroy {
+  constructor(
+    private _router: Router,
+    private _rpc: RpcService
+  ) {
+    console.log('MainModule launched!');
+    // Not the prettiest code, but it listens to all router events
+    // and if one includes the wallet parameter, it will grab it 
+    // and set the rpc wallet.
+    const loadWallet = this._router.events.subscribe((event: any) => {
+      if(event.snapshot && event.snapshot.params['wallet']) {
+        this._rpc.wallet = event.snapshot.params['wallet'];
+        loadWallet.unsubscribe();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    console.log('MainModule destroyed!');
+  }
+ }

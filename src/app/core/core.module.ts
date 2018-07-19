@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
-import { RpcModule } from './rpc/rpc.module';
+import { RpcWithStateModule } from './rpc/rpc.module';
 import { MarketModule } from './market/market.module';
 
 import { IpcService } from './ipc/ipc.service';
@@ -26,18 +26,15 @@ import { MatDialogModule } from '@angular/material';
 @NgModule({
   imports: [
     CommonModule,
-    RpcModule.forRoot(), // TODO: should be here?
+    RpcWithStateModule.forRoot(), // TODO: should be here?
     MarketModule.forRoot(),
     MatDialogModule
-  ],
-  exports: [
-    HttpClientModule
   ],
   declarations: [UpdaterComponent],
   entryComponents: [ UpdaterComponent ]
 })
 export class CoreModule {
-  static forRoot(): ModuleWithProviders {
+  static forChild(): ModuleWithProviders {
     return {
       ngModule: CoreModule,
       providers: [

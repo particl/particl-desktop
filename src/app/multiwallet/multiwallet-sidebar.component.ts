@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'multiwallet-sidebar',
@@ -12,8 +11,6 @@ export class MultiwalletSidebarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('multiwallet loaded!');
-    // this._router.navigate(['multi/installer/test']);
   }
 
 }

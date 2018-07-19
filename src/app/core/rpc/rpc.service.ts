@@ -46,18 +46,34 @@ export class RpcService implements OnDestroy {
   private username: string = 'test';
   private password: string = 'test';
 
-  public isElectron: boolean = false;
+  private _wallet: string;
 
   constructor(
-    private _http: HttpClient,
-    private _ipc: IpcService
+    private _http: HttpClient
   ) {
-    this.isElectron = false;  // window.electron
   }
 
   ngOnDestroy() {
     this.destroyed = true;
   }
+
+  /**
+   * Set the wallet to execute commands against.
+   * @param w the wallet filename .
+   */
+  set wallet(w: string) {
+    if(this.wallet) {
+      throw new Error('Wallet was already loaded!');
+    } else {
+      this.log.d('wallet set to ', w);
+      this._wallet = w;
+    }
+  }
+
+  get wallet() {
+    return this._wallet;
+  }
+
 
   /**
    * The call method will perform a single call to the particld daemon and perform a callback to
@@ -75,15 +91,6 @@ export class RpcService implements OnDestroy {
    * ```
    */
   call(method: string, params?: Array<any> | null): Observable<any> {
-    if (this.isElectron) {
-      return this._ipc.runCommand('rpc-channel', null, method, params).pipe(
-        map(response => response && (response.result !== undefined)
-                      ? response.result
-                      : response
-        )
-      );
-    } else {
-      // Running in browser, delete?
       const postData = JSON.stringify({
         method: method,
         params: params,
@@ -113,7 +120,6 @@ export class RpcService implements OnDestroy {
 
             return Observable.throw(err)
           })
-    }
   }
 
 }

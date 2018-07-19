@@ -68,7 +68,7 @@ export class SellerListingComponent {
   }
   // @TODO create a shared compoment
   addItem(id?: number, clone?: boolean) {
-    this.router.navigate(['multi/main/template'], {
+    this.router.navigate(['../template'], {
       queryParams: {'id': id, 'clone': clone }
     });
   }

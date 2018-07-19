@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
@@ -34,7 +33,6 @@ import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal
   imports: [
     CommonModule,
     FormsModule,
-    BrowserAnimationsModule,
     ClipboardModule,
     /* own */
     MaterialModule,

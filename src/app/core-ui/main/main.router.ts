@@ -1,15 +1,13 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Component, OnInit, OnDestroy, HostListener, NgModuleRef } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd, ParamMap } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
-
 import { environment } from '../../../environments/environment';
+import { MainModule } from 'app/core-ui/main/main.module';
 
-import { RpcService, RpcStateService } from '../../core/core.module';
+import { RpcService, RpcStateService } from '../../core/rpc/rpc.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
-import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 
 /*
@@ -46,15 +44,31 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
+    private main: NgModuleRef<MainModule>,
     private _rpc: RpcService,
-    private _updater: UpdaterService,
     private _rpcState: RpcStateService,
     private _modalsService: ModalsHelperService,
-    private dialog: MatDialog,
     // the following imports are just 'hooks' to
     // get the singleton up and running
-    private _newtxnotifier: NewTxNotifierService
-  ) { }
+     private _newtxnotifier: NewTxNotifierService
+  ) { 
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
+
+    // This component only gets destroyed when changing wallets.
+    // Destroys the whole main module and all the underlying services:
+    // destroys modals, rpc services, rpc state services, ..
+    // ModalsModule, CoreModule, etc..
+
+    try {
+      this.main.destroy();
+    } catch(e) {
+      this.log.e('Main module was already destroyed!')
+    }
+
+  }
 
   ngOnInit() {
     // Change the header title derived from route data
@@ -119,10 +133,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
-    this.destroyed = true;
-  }
-
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
   syncScreen() {
     this._modalsService.syncing();
@@ -155,6 +165,10 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     return sec;
   }
 
+  get wallet() {
+    return this._rpc.wallet;
+  }
+
   // Paste Event Handle
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
@@ -164,10 +178,4 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-  // Sample code for open modal box
-  openDemonConnectionModal() {
-    const dialogRef = this.dialog.open(DaemonConnectionComponent);
-    dialogRef.componentInstance.text = "Test";
-  }*/
 }
