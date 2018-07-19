@@ -124,8 +124,8 @@ button,
 // ------ 2.1. CARDS ------ //
 
 mat-card.mat-card {
+  @extend %mat-card;
   font-family: $font;
-  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
 }
 
 
@@ -164,7 +164,7 @@ mat-card.mat-card {
 
 .mat-expansion-panel {
   @extend %disable-select;
-  @extend mat-card.mat-card;
+  @extend %mat-card;
   margin-bottom: 9px !important;
   overflow: hidden;
   .mat-expansion-panel-header {

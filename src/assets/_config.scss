@@ -25,7 +25,7 @@ $color: #02E8B0; // primary green-ish color
 $color-success: #4f8a10;
 $color-alert: #ec4b50;
 $color-warning: #f1cc00; // yellow-ish
-$color-info: #108cda; // blue-ish (e.g. status cold staking icon)
+$color-info: #22aaff; // blue-ish (e.g. status cold staking icon)
 $color-white: #fff;
 
 // text colors
@@ -35,7 +35,7 @@ $text-muted: #7E8790; // grey (for section titles, descriptions etc.)
 // bg/element colors
 $bg: #fafafa; // light grey bg color
 $bg-hover: darken($bg, 2%);
-$bg-black: #222828; // sidebar
+$bg-black: #232323; // sidebar
 $bg-shadow: #dcdcdc; // lines, box shadows etc.
 
 // UI
@@ -89,6 +89,11 @@ $break-xhd: 2200px;
   display: inline-block;
   margin-left: 8px;
   padding: 0 11px;
+}
+
+%mat-card {
+  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
+  background: $color-white;
 }
 
 %menu-divider { // diviers in sidebar menu
