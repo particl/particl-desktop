@@ -63,15 +63,14 @@
         <div class="title">Listing expiration &amp; fees</div>
         <div class="row" fxLayout fxLayoutAlign="center center">
           <mat-form-field class="full-width" fxFlex="1 1 100%">
-            <mat-select placeholder="Listing expiration" formControlName="expiration">
-              <mat-option value="one-week">1 week</mat-option>
-              <mat-option value="two-week">2 weeks</mat-option>
-              <mat-option value="three-week">3 weeks</mat-option>
-              <mat-option value="four-week">4 weeks</mat-option>
+            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration">
+              <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
+                {{ expire.title }}
+              </mat-option>
             </mat-select>
           </mat-form-field>
           <div class="est-fee" fxFlex="0 0 210px">
-            Estimated fee: XX.xxxxxxxx PART
+            Approximate Listing Fee: {{ expiration }} PART
           </div>
         </div>
         <p class="widget-help">

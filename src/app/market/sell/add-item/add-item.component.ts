@@ -44,10 +44,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
   fileInput: any;
   picturesToUpload: string[];
   featuredPicture: number = 0;
-
+  expiration: number = 4;
   selectedCountry: Country;
   selectedCategory: Category;
 
+  expiredList: Array<any> = [
+    { title: '4 day',     value: 4  },
+    { title: '1 week',    value: 7  },
+    { title: '2 weeks',   value: 14 },
+    { title: '3 weeks',   value: 21 },
+    { title: '4 weeks',   value: 28 }
+  ];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
