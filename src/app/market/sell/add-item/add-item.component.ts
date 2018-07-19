@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
+import { Amount } from '../../../core/util/utils';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
@@ -45,6 +46,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   picturesToUpload: string[];
   featuredPicture: number = 0;
   expiration: number = 4;
+  txFee: Amount = new Amount(0)
   selectedCountry: Country;
   selectedCategory: Category;
 
@@ -110,6 +112,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = undefined;
       }
     });
+
+    this.loadTransactionFee();
   }
 
   isExistingTemplate() {
@@ -365,6 +369,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.backToSell();
       });
     }, err => this.snackbar.open(err));
+  }
+
+  loadTransactionFee() {
+    /* @TODO transaction fee will be calculated from backend
+     * currently we have assumed days_retention=1 costs 0.26362200
+     */
+    this.txFee = new Amount(0.26362200 * this.expiration)
   }
 
 }

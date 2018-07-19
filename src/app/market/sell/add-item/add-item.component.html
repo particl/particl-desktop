@@ -63,14 +63,14 @@
         <div class="title">Listing expiration &amp; fees</div>
         <div class="row" fxLayout fxLayoutAlign="center center">
           <mat-form-field class="full-width" fxFlex="1 1 100%">
-            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration">
+            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration" (change)="loadTransactionFee()">
               <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
                 {{ expire.title }}
               </mat-option>
             </mat-select>
           </mat-form-field>
           <div class="est-fee" fxFlex="0 0 210px">
-            Approximate Listing Fee: {{ expiration }} PART
+            Approximate Listing Fee: {{ txFee.getIntegerPart() }} {{ txFee.dot() }} {{ txFee.getFractionalPart() }}PART
           </div>
         </div>
         <p class="widget-help">
