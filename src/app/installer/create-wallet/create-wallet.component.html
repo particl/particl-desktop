@@ -39,39 +39,45 @@
 
 <!-- STEP 0: Choose action -->
 <ng-template [ngIf]="step === 0">
-
   <div class="title">Create or restore wallet</div>
   <div class="container-block">
+    <div class="subtitle">Welcome to Particl Desktop!</div>
     <p>
-      In order to connect to Particl network, you need to have a wallet. If you're using Particl for the first time, create a new wallet or restore existing wallet (using your Recovery Passphrase) if you have one already.
+      In order to connect to Particl network, you need to have a wallet. If you're using Particl for the first time, create a new wallet or restore existing wallet (using your Recovery Passphrase) if you have one already. You can create as many wallets as you need.
     </p>
     <p class="widget-help" *ngIf="!isCrypted">
-      It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
-    </p>
-    <p class="info bottom-fixed">
-      Visit <a href="https://particl.io" target="_blank" tabindex="-1">particl.io</a> official site for more info, <a href="https://particl.news" target="_blank" tabindex="-1">particl.news</a> for latest news and <a href="https://particl.wiki" target="_blank" tabindex="-1">particl.wiki</a> if you need any help
-    </p>
-  </div>
-
-  <div class="action-buttons container-block" fxLayoutAlign="space-between center">
-    <div class="left">
-      <button *ngIf="!isCrypted" mat-button color="basic" (click)="initialize(0);">
+      It is recommended to
+      <button mat-button color="basic" class="small" (click)="initialize(0);">
         <mat-icon fontSet="partIcon" fontIcon="part-lock"></mat-icon>
         Encrypt wallet
       </button>
-    </div>
-    <div class="right" fxLayoutAlign="end center">
-      <button mat-button color="primary" (click)="initialize(2);" matTooltip="You have existing wallet you would like to restore">
-        <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
-        Restore wallet
-      </button>
-      <button mat-raised-button color="primary" (click)="initialize(1);" matTooltip="If you haven't used Particl before or want to create a new, separate wallet">
-        <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
-        Create new wallet
-      </button>
-    </div>
-  </div>
-
+      before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
+    </p>
+    <div class="huge action-buttons">
+      <mat-card class="create half">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+        <div class="choice-title">Create wallet</div>
+        <p class="choice-desc">
+          You don't have a&nbsp;wallet yet and/or you want to create a&nbsp;new one
+        </p>
+        <button mat-raised-button color="primary" (click)="initialize(1);">
+          <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+          Create new wallet
+        </button>
+      </mat-card>
+      <mat-card class="restore half">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+        <div class="choice-title">Restore wallet</div>
+        <p class="choice-desc">
+          If you already have existing wallet seed (Recovery Phrase) that you would like to restore
+        </p>
+        <button mat-raised-button color="primary" (click)="initialize(2);">
+          <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+          Restore wallet
+        </button>
+      </mat-card>
+    </div><!-- .huge.action-buttons -->
+  </div><!-- .container-block -->
 </ng-template><!-- step 0 -->
 
 
