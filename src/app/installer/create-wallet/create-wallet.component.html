@@ -1,24 +1,59 @@
+<div class="installer">
+
+  <div class="sidebar">
+    <img class="logo" src="./assets/particl-logo-vertical.svg">
+    <div class="progress">
+      <div class="step first" [ngClass]="{'active': step === 0, 'done': step > 0}">
+        <div class="number">1</div>
+        <div class="desc">Create/restore</div>
+      </div>
+      <div class="step" [ngClass]="{'active': step === 1, 'done': step > 1}">
+        <div class="number">2</div>
+        <div class="desc">Name wallet</div>
+      </div>
+      <div class="step" [ngClass]="{'active': step === 2, 'done': step > 2}">
+        <div class="number">3</div>
+        <div class="desc">Recovery Phrase</div>
+      </div>
+      <div class="step" [ngClass]="{'active': step === 3, 'done': step > 3}">
+        <div class="number">4</div>
+        <div class="desc">Recovery Password</div>
+      </div>
+      <div class="step" [ngClass]="{'active': step === 4, 'done': step > 4}">
+        <div class="number">5</div>
+        <div class="desc">Encrypt wallet</div>
+      </div>
+      <div class="step" [ngClass]="{'active': step === 5, 'done': step > 5}">
+        <div class="number">6</div>
+        <div class="desc">Basic settings</div>
+      </div>
+      <div class="step last" [ngClass]="{'active': step === 6}">
+        <div class="number">7</div>
+        <div class="desc">Summary</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+
 <!-- STEP 0: Choose action -->
 <ng-template [ngIf]="step === 0">
 
-  <div mat-dialog-title class="title">Welcome to Particl Desktop</div>
-  <mat-dialog-content class="modal-content">
-    <p>
-      Particl Desktop is a feature-rich client for interacting with Particl network.<br>
-    </p>
-    <p class="info">
-      Visit <a href="https://particl.io" target="_blank" tabindex="-1">particl.io</a> official site for more info, <a href="https://particl.news" target="_blank" tabindex="-1">particl.news</a> for latest news and <a href="https://particl.wiki" target="_blank" tabindex="-1">particl.wiki</a> if you need any help
-    </p>
-    <div class="subtitle">Create or restore wallet</div>
+  <div class="title">Create or restore wallet</div>
+  <div class="container-block">
     <p>
       In order to connect to Particl network, you need to have a wallet. If you're using Particl for the first time, create a new wallet or restore existing wallet (using your Recovery Passphrase) if you have one already.
     </p>
     <p class="widget-help" *ngIf="!isCrypted">
       It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
     </p>
-  </mat-dialog-content>
+    <p class="info bottom-fixed">
+      Visit <a href="https://particl.io" target="_blank" tabindex="-1">particl.io</a> official site for more info, <a href="https://particl.news" target="_blank" tabindex="-1">particl.news</a> for latest news and <a href="https://particl.wiki" target="_blank" tabindex="-1">particl.wiki</a> if you need any help
+    </p>
+  </div>
 
-  <mat-dialog-actions fxLayoutAlign="space-between center">
+  <div class="action-buttons container-block" fxLayoutAlign="space-between center">
     <div class="left">
       <button *ngIf="!isCrypted" mat-button color="basic" (click)="initialize(0);">
         <mat-icon fontSet="partIcon" fontIcon="part-lock"></mat-icon>
@@ -35,7 +70,7 @@
         Create new wallet
       </button>
     </div>
-  </mat-dialog-actions>
+  </div>
 
 </ng-template><!-- step 0 -->
 
@@ -44,8 +79,8 @@
 <ng-template [ngIf]="step === 1">
   <form #nameForm="ngForm" (ngSubmit)="nextStep()">
 
-    <div mat-dialog-title class="title">Name your wallet</div>
-    <mat-dialog-content class="modal-content">
+    <div class="title">Name your wallet</div>
+    <div class="container-block">
       <p>
         Choose a name for your wallet (e.g. Personal wallet, Shop income, Savings, &hellip;)
       </p>
@@ -58,9 +93,9 @@
       <mat-form-field>
         <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
       </mat-form-field>      
-    </mat-dialog-content>
+    </div>
     
-    <mat-dialog-actions fxLayoutAlign="space-between center">
+    <div class="action-buttons container-block" fxLayoutAlign="space-between center">
       <button mat-button (click)="prevStep()">
         <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
         Back
@@ -69,7 +104,7 @@
         <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
         Continue
       </button>
-    </mat-dialog-actions>
+    </div>
     
   </form>
 </ng-template><!-- step 1 -->
@@ -80,8 +115,8 @@
 
   <!-- STEP 2: Recovery Password -->
   <div *ngIf="step === 2">
-    <div mat-dialog-title class="title">Choose a Recovery Password <small>(optional)</small></div>
-    <mat-dialog-content class="modal-content">
+    <div class="title">Choose a Recovery Password <small>(optional)</small></div>
+    <div class="container-block">
       <p>
         You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
       </p>
@@ -111,32 +146,32 @@
       <p class="widget-help">
         Note that you can safely skip this step, but it is recommended to choose a Recovery Password as it keeps your coins safer.
       </p>
-    </mat-dialog-content>
+    </div>
   </div><!-- step == 2 -->
 
 
   <!-- STEP 3: Recovery Passphrase -->
   <div *ngIf="step === 3">
-    <div mat-dialog-title class="title">Recovery Phrase backup</div>
-    <mat-dialog-content class="modal-content">
+    <div class="title">Recovery Phrase backup</div>
+    <div class="container-block">
       <p>
         Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
       </p>
       <p class="warning">
         You must write this Recovery Phrase down and keep it safe or you'll lose access to your coins!
       </p>
-    </mat-dialog-content>
+    </div>
   </div><!-- step == 3 -->
 
 
   <!-- STEP 4: Recovery Password -->
   <div *ngIf="step === 4">
-    <div mat-dialog-title class="title">Enter your Recovery Phrase</div>
-    <mat-dialog-content class="modal-content">
+    <div class="title">Enter your Recovery Phrase</div>
+    <div class="container-block">
       <p>
         Confirm that you backed up your Recovery Phrase by filling in the missing words:
       </p>
-    </mat-dialog-content>
+    </div>
   </div><!-- step == 4 -->
 
 
@@ -154,7 +189,7 @@
   <p *ngIf="!!errorString" [@slideDown] class="warning">
     {{ errorString }}
   </p>
-  <mat-dialog-actions fxLayoutAlign="space-between center">
+  <div class="action-buttons container-block" fxLayoutAlign="space-between center">
     <button mat-button (click)="prevStep()">
       <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
       Back
@@ -163,15 +198,15 @@
       <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
       Continue
     </button>
-  </mat-dialog-actions>
+  </div>
 
 </ng-template><!-- Step 2,3 & 4 -->
 
 
 <!-- STEP 2-4 (Restore) -->
 <ng-template [ngIf]="step === 4 && isRestore">
-  <div mat-dialog-title class="title">Restore existing wallet</div>
-  <mat-dialog-content class="modal-content">
+  <div class="title">Restore existing wallet</div>
+  <div class="container-block">
 
     <div class="recovery-phrase">
       <app-passphrase
@@ -199,8 +234,8 @@
       </app-password>
     </div><!-- .recovery-password -->
 
-  </mat-dialog-content>
-  <mat-dialog-actions fxLayoutAlign="space-between center">
+  </div>
+  <div class="action-buttons container-block" fxLayoutAlign="space-between center">
     <button mat-button (click)="prevStep();initialize(2)">
       <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
       Back
@@ -209,15 +244,15 @@
       <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
       Continue
     </button>
-  </mat-dialog-actions>
+  </div>
 
 </ng-template><!-- Step 2,3 & 4 -->
 
 
 <!-- STEP 5: Gratz -->
 <ng-template [ngIf]="step === 5">
-  <div mat-dialog-title class="title">Your wallet is ready</div>
-  <mat-dialog-content class="modal-content">
+  <div class="title">Your wallet is ready</div>
+  <div class="container-block">
     <p>
       Congratulations &ndash; your new wallet was created successfully and set as the default wallet!
     </p>
@@ -227,13 +262,13 @@
     <p>
       You can now safely close this window and start experiencing Particl!
     </p>
-  </mat-dialog-content>
-  <mat-dialog-actions fxLayoutAlign="end center">
+  </div>
+  <div class="action-buttons container-block" fxLayoutAlign="end center">
     <button mat-raised-button color="primary" mat-dialog-close>
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Close
     </button>
-  </mat-dialog-actions>
+  </div>
 </ng-template>
 
 
@@ -242,3 +277,7 @@
   <app-unlockwallet (unlockEmitter)="importMnemonicSeed($event)" [autoClose]="false">
   </app-unlockwallet>
 </ng-template>
+
+
+  </div><!-- .content -->
+</div><!-- .installer -->

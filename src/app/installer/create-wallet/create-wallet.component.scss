@@ -1,12 +1,135 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
-// TODO: move to %placeholders
-.subtitle {
-  font-weight: 700;
-  font-size: 15px;
-  text-transform: uppercase;
-  margin: 26px 0 10px;
+$installer-sidebar-width: 260px;
+$installer-sidebar-padding: 30px;
+
+
+// ------ BASICS ------ //
+
+p {
+  font-size: 14px;
+  line-height: 1.45;
 }
+
+
+// ------ UI ELEMENTS ------ //
+
+.subtitle {
+  @extend %subtitle;
+}
+
+.progress {
+  .step {
+    margin-bottom: 12px;
+    position: relative;
+    .number {
+      display: inline-block;
+      background: lighten($bg-black, 10%);
+      border: 4px solid $bg-black;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      position: relative;
+      top: -1px;
+      z-index: 10;
+    }
+    .desc {
+      display: inline-block;
+      font-size: 14px;
+      margin-left: 8px;
+      color: darken($bg, 50%);
+    }
+    &:not(.last):after { // lines connecting numbers
+      content: "";
+      display: block;
+      background: lighten($bg-black, 10%);
+      width: 2px;
+      position: absolute;
+      top: 12px;
+      bottom: -24px;
+      left: 15px;
+      z-index: 1;
+    }
+    &.active { // active steps
+      .number {
+        background: $color;
+        font-weight: 700;
+        color: $bg-black;
+      }
+      .desc {
+        font-weight: 500;
+        color: $bg;
+      }
+    }
+    &.done { // finished steps
+      &:after {
+        background: rgba($color, 0.2);
+      }
+      .number {
+        background: mix($color, $bg-black);
+        color: $bg-black;
+      }
+      .desc {
+        font-weight: 400;
+        color: rgba($bg, 0.8);
+      }
+    }
+  }
+}
+
+p.info {
+  border-top: 1px solid rgba($color-info, 0.12);
+  background: rgba($color-info, 0.05);
+  padding: 24px 24px 28px 52px;
+  &:before { // info icon
+    top: 31px;
+  }
+  &.bottom-fixed {
+    position: fixed;
+    bottom: -13px;
+    left: $installer-sidebar-width;
+    right: 0;
+  }
+}
+// ------ LAYOUT ------ //
+
+.installer {
+  @extend %disable-select;
+  display: flex;
+  height: 100vh;
+  .sidebar {
+    width: ($installer-sidebar-width - (2 * $installer-sidebar-padding));
+    padding: $installer-sidebar-padding;
+    background: url("/assets/splash-bg.png") no-repeat bottom left $bg-black;
+    background-size: 300px;
+    color: $bg;
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    .logo {
+      display: block;
+      width: 120px;
+      margin: 20px auto 80px;
+    }
+    .title {
+      text-align: center;
+    }
+  }
+  .content {
+    background: $bg;
+    width: 100%;
+    margin-left: $installer-sidebar-width;
+    .title {
+      @extend %mat-card;
+      padding: 35px 45px;
+      font-size: 22px;
+      font-weight: 500;
+    }
+  }
+}
+
 
 /* ------------------------------- *\
     Step 0: Choose action
