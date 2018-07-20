@@ -90,7 +90,6 @@ function loadMarketAuthentication() {
 function loadWalletAuthentication() {
     let options = _options.get();
     let key = (options.rpcbind || 'localhost') + ":" + options.port;
-    console.log('adding key=' + key);
     let value = {
         name: "wallet",
         auth: cookie.getAuth(options)

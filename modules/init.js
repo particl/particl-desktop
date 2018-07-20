@@ -1,7 +1,6 @@
 const electron      = require('electron');
 const log           = require('electron-log');
 
-const ipc           = require('./ipc/ipc');
 const rpc           = require('./rpc/rpc');
 const zmq           = require('./zmq/zmq');
 
