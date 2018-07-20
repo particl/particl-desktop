@@ -65,7 +65,8 @@ You can directly interact with the daemon ran by the Electron version.
 Building for Windows requires:
 * WINE
 * the 32-bit libraries to be available.
-```
+
+```bash
 sudo apt-get install gcc-multilib
 sudo apt-get install g++-multilib
 ```
