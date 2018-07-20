@@ -15,19 +15,19 @@
         <div class="number">3</div>
         <div class="desc">Recovery Phrase</div>
       </div>
-      <div class="step" [ngClass]="{'active': step === 3, 'done': step > 3}">
+      <div class="step" [ngClass]="{'active': step === 4, 'done': step > 4}">
         <div class="number">4</div>
         <div class="desc">Recovery Password</div>
       </div>
-      <div class="step" [ngClass]="{'active': step === 4, 'done': step > 4}">
+      <div class="step" [ngClass]="{'active': step === 5, 'done': step > 5}">
         <div class="number">5</div>
         <div class="desc">Encrypt wallet</div>
       </div>
-      <div class="step" [ngClass]="{'active': step === 5, 'done': step > 5}">
+      <div class="step" [ngClass]="{'active': step === 6, 'done': step > 6}">
         <div class="number">6</div>
         <div class="desc">Basic settings</div>
       </div>
-      <div class="step last" [ngClass]="{'active': step === 6}">
+      <div class="step last" [ngClass]="{'active': step === 7}">
         <div class="number">7</div>
         <div class="desc">Summary</div>
       </div>
@@ -41,7 +41,6 @@
 <ng-template [ngIf]="step === 0">
   <div class="title">Create or restore wallet</div>
   <div class="container-block">
-    <div class="subtitle">Welcome to Particl Desktop!</div>
     <p>
       In order to connect to Particl network, you need to have a wallet. If you're using Particl for the first time, create a new wallet or restore existing wallet (using your Recovery Passphrase) if you have one already. You can create as many wallets as you need.
     </p>
@@ -87,7 +86,6 @@
 
     <div class="title">Name your wallet</div>
     <div class="container-block">
-      <div class="subtitle">Choose a name for your wallet</div>
       <p>
         Naming your wallets is useful, when you want to use multiple wallets &ndash; this helps you to separate e.g. your personal and market funds.<br>
         Short and descriptive names work the best!
@@ -96,6 +94,7 @@
         <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)">
           Wallet name is required
         </p><!-- validation errors -->
+        <div class="box-title">Choose wallet name</div>
         <mat-form-field>
           <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name (required)" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
         </mat-form-field> 
@@ -124,10 +123,10 @@
 
   <div class="title" *ngIf="step === 2">Recovery Phrase</div>
   <div class="title" *ngIf="step === 3">Confirm Recovery Phrase</div>
+  <div class="title" *ngIf="step === 4">Choose a Recovery Password <small>(optional)</small></div>
   <div class="container-block">
 
     <div *ngIf="step === 2">
-      <div class="subtitle">Backup your Recovery Phrase</div>
       <p>
         Recovery Phrase (sometimes also called "wallet seed") is a backup key to your coins. Anyone with access to these 24 words can recover your wallet, so make sure they are safe and ideally backed-up on multiple locations.
       </p>
@@ -137,66 +136,69 @@
     </div>
 
     <div *ngIf="step === 3">
-      <div class="subtitle">Confirm you backed-up your Recovery Phrase</div>
       <p>
         Confirm that you backed up your Recovery Phrase by filling in the missing words:
       </p>
+      <p class="widget-help">
+        If you're not absolutely sure, that you have all Recovery Passphrase words correctly saved, you can always go one step back and automatically generate new words.
+      </p>
     </div>
 
+    <!-- Passphrase (step 2-3) -->
     <ng-template [ngIf]="[2,3].indexOf(step) != -1">
       <mat-card class="action-card">
         <app-passphrase
-        #passphraseComponent
-        [readOnly]="step === 2"
-        [words]="words"
-        [partialDisable]="step === 3"
-        [generate]="true">
-      </app-passphrase>
-      <p class="warning bottom" *ngIf="step === 2">
-        It's only up to you to keep these words safe! If you lose them (or someone steals them),<br>
-        Particl can't help you recover your funds! You have been warned.
-      </p>
-    </mat-card>
+          #passphraseComponent
+          [readOnly]="step === 2"
+          [words]="words"
+          [partialDisable]="step === 3"
+          [generate]="true">
+        </app-passphrase>
+        <p class="warning bottom" *ngIf="step === 2">
+          It's only up to you to keep these words safe! If you lose them (or someone steals them),<br>
+          Particl can't help you recover your funds! You have been warned.
+        </p>
+      </mat-card>
     </ng-template>
-  </div><!-- .container-block -->
 
-
-  <!-- STEP 4: Recovery Password -->
-  <div *ngIf="step === 4">
-    <div class="title">Choose a Recovery Password <small>(optional)</small></div>
-    <div class="container-block">
+    <!-- Recovery Password (step 4) -->
+    <div *ngIf="step === 4">
       <p>
-        You can further increase your wallet protection by setting a Recovery Password. It will be needed together with Recovery Passphrase to access your coins.
+        You can further increase your wallet protection by setting a Recovery Password.<br>
+        It will be needed together with Recovery Phrase to access your coins.
       </p>
-      <p class="warning">
-        If you set up a Recovery Password and forget it, you won't be able to access your coins in the future!
-      </p>
-      <!-- Password -->
-      <app-password
-        #passwordElement
-        label="Recovery Password (optional)"
-        [emitPassword]="true"
-        [showPass]="toggleShowPass"
-        (passwordEmitter)="passwordFromEmitter($event)"
-        (showPasswordToggle)="showPasswordToggle($event)"
-        [showStakeOnly]="false">
-      </app-password>
-      <!-- Password comfirmation -->
-      <app-password
-        #passwordElementVerify
-        label="Verify Password"
-        [emitPassword]="true"
-        [showPass]="toggleShowPass"
-        [showPassword]="true"
-        (passwordEmitter)="passwordFromEmitter($event, true)"
-        [showStakeOnly]="false">
-      </app-password>
       <p class="widget-help">
         Note that you can safely skip this step, but it is recommended to choose a Recovery Password as it keeps your coins safer.
       </p>
+      <mat-card class="action-card">
+        <div class="box-title">Choose Recovery Password</div>
+        <!-- Password -->
+        <app-password
+          #passwordElement
+          label="Recovery Password (optional)"
+          [emitPassword]="true"
+          [showPass]="toggleShowPass"
+          (passwordEmitter)="passwordFromEmitter($event)"
+          (showPasswordToggle)="showPasswordToggle($event)"
+          [showStakeOnly]="false">
+        </app-password>
+        <!-- Password comfirmation -->
+        <app-password
+          #passwordElementVerify
+          label="Verify Password"
+          [emitPassword]="true"
+          [showPass]="toggleShowPass"
+          [showPassword]="true"
+          (passwordEmitter)="passwordFromEmitter($event, true)"
+          [showStakeOnly]="false">
+        </app-password>
+        <p class="warning bottom">
+          If you set up a Recovery Password, be sure to keep it safe along with your Recovery Phrase. If you forget any of these, you won't be able to access your coins!
+        </p>
+      </mat-card><!-- .action-card -->
     </div>
-  </div><!-- step == 4 -->
-
+    
+  </div><!-- .container-block -->
 
   <p *ngIf="!!errorString" [@slideDown] class="warning">
     {{ errorString }}
@@ -265,13 +267,13 @@
   <div class="title">Your wallet is ready</div>
   <div class="container-block">
     <p>
-      Congratulations &ndash; your new wallet was created successfully and set as the default wallet!
+      Congratulations &ndash; your new wallet was created successfully!
     </p>
     <p class="info">
-      Please ensure that your Recovery Phrase (and Passphrase if you set it up) is written down and stored in a secure location!
+      Please ensure that your Recovery Phrase (and Recovery Password if you've set it up) is written down and stored in a secure location!
     </p>
     <p>
-      You can now safely close this window and start experiencing Particl!
+      You can now safely close this wizard and start experiencing Particl!
     </p>
   </div>
   <div class="action-buttons" fxLayoutAlign="end center">
