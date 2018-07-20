@@ -143,6 +143,7 @@ exports.stop = function (restarting) {
 
     } else {
       log.info('Daemon not managed by gui.');
+      electron.app.quit();
       resolve();
     }
 
@@ -169,7 +170,7 @@ function _stop(attempt = 0) {
 
 function askForDeletingCookie() {
   return new Promise((resolve, reject) => {
-    if(cookie.checkCookieExists() || cookie.checkLockExists()) {
+    if(cookie.checkCookieExists()) {
       // alert for cookie
       log.info('cookie: dialog open');
       electron.dialog.showMessageBox({

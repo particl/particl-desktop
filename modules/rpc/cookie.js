@@ -46,14 +46,6 @@ function getCookieFilePath() {
   return COOKIE_FILE;
 }
 
-function getLockFilePath() {
-  let dataDir = options.datadir ? options.datadir : getDefaultParticlCorePath();
-  const LOCK_FILE = dataDir
-                    + (options.testnet ? '/testnet' : '')
-                    + '/.lock';
-  return LOCK_FILE;
-}
-
 /*
 ** directory resolver
 */
@@ -132,17 +124,12 @@ function getAuth(options) {
 */
 function clearCookieFile() {
   const COOKIE_FILE = getCookieFilePath();
-  const LOCK_FILE = getLockFilePath();
 
   // remove cookie file
   if (checkCookieExists()) {
     fs.unlinkSync(COOKIE_FILE);
   }
 
-  // remove lock file (when winblows fucks up)
-  if(checkLockExists()) {
-    fs.unlinkSync(LOCK_FILE);
-  }
 }
 
 /*
@@ -153,17 +140,7 @@ function checkCookieExists() {
   return fs.existsSync(f)
 }
 
-/*
-** Checks if the .lock file exists.
-*/
-function checkLockExists() {
-  let f = getLockFilePath();
-  const exists = fs.existsSync(f);
-  console.log('.lock = ', exists)
-  return exists;
-}
 
 exports.getAuth = getAuth;
 exports.checkCookieExists = checkCookieExists;
-exports.checkLockExists = checkLockExists;
 exports.clearCookieFile = clearCookieFile;
