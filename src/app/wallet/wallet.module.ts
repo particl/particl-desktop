@@ -12,7 +12,6 @@ import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.compo
 import { ZapColdstakingComponent } from './overview/widgets/coldstake/zap-coldstaking/zap-coldstaking.component';
 import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-coldstaking/revert-coldstaking.component';
 
-import 'hammerjs'; // hmmm??
 import { wallet_routing } from './wallet.routing';
 
 
@@ -31,6 +30,10 @@ import { wallet_routing } from './wallet.routing';
     WalletModule.forRoot(),
     CoreUiModule,
     wallet_routing
+  ],
+  entryComponents: [
+    ZapColdstakingComponent,
+    RevertColdstakingComponent
   ],
   exports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -54,7 +54,7 @@ export class ColdstakeService implements OnDestroy {
         this.update();
       });
 
-    this._rpcState.observe('ui:coldstaking')
+    this._rpcState.observe('getcoldstakinginfo', 'enabled')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingEnabled = status);
 
@@ -71,10 +71,8 @@ export class ColdstakeService implements OnDestroy {
 
       if ('enabled' in coldstakinginfo) {
         const enabled = coldstakinginfo['enabled'];
-        this._rpcState.set('ui:coldstaking', enabled);
         this.coldStakingEnabled = enabled;
       } else { // ( < 0.15.1.2) enabled = undefined ( => false)
-        this._rpcState.set('ui:coldstaking', false);
         this.coldStakingEnabled = false;
       }
       this.updateStakingInfo();

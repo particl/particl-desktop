@@ -45,7 +45,7 @@ export class StatusComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.encryptionStatus = status);
 
-    this._rpcState.observe('ui:coldstaking')
+    this._rpcState.observe('getcoldstakinginfo', 'enabled')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingStatus = status);
 
