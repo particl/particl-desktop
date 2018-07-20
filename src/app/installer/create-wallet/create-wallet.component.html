@@ -100,12 +100,12 @@
           <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name (required)" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
         </mat-form-field> 
         <p class="widget-help">
-          Wallet name should contain only letters, numbers, spaces (<code> </code>) and dashes (<code>-</code>).
+          Wallet name should contain only letters, numbers, spaces (<code> </code>), dashes (<code>-</code>) and underscores (<code>_</code>).
         </p>     
       </mat-card>
-    </div>
+    </div><!-- .container-block -->
     
-    <div class="action-buttons container-block" fxLayoutAlign="space-between center">
+    <div class="action-buttons" fxLayoutAlign="space-between center">
       <button mat-button (click)="prevStep()">
         <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
         Back
@@ -114,17 +114,56 @@
         <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
         Continue
       </button>
-    </div>
-    
+    </div><!-- .action-buttons -->
   </form>
 </ng-template><!-- step 1 -->
 
 
-<!-- STEP 2-4 (Create): Recovery Phrase -->
+<!-- STEP 2-3 (Create): Recovery Phrase -->
 <ng-template [ngIf]="[2,3,4].indexOf(step) != -1 && !isRestore">
 
-  <!-- STEP 2: Recovery Password -->
-  <div *ngIf="step === 2">
+  <div class="title" *ngIf="step === 2">Recovery Phrase</div>
+  <div class="title" *ngIf="step === 3">Confirm Recovery Phrase</div>
+  <div class="container-block">
+
+    <div *ngIf="step === 2">
+      <div class="subtitle">Backup your Recovery Phrase</div>
+      <p>
+        Recovery Phrase (sometimes also called "wallet seed") is a backup key to your coins. Anyone with access to these 24 words can recover your wallet, so make sure they are safe and ideally backed-up on multiple locations.
+      </p>
+      <p class="widget-help">
+        You can further increase security of your Recovery Phrase in the next step.
+      </p>
+    </div>
+
+    <div *ngIf="step === 3">
+      <div class="subtitle">Confirm you backed-up your Recovery Phrase</div>
+      <p>
+        Confirm that you backed up your Recovery Phrase by filling in the missing words:
+      </p>
+    </div>
+
+    <ng-template [ngIf]="[2,3].indexOf(step) != -1">
+      <mat-card class="action-card">
+        <app-passphrase
+        #passphraseComponent
+        [readOnly]="step === 2"
+        [words]="words"
+        [partialDisable]="step === 3"
+        (wordsEmitter)="wordsFromEmitter($event)"
+        [generate]="true">
+      </app-passphrase>
+      <p class="warning bottom" *ngIf="step === 2">
+        It's only up to you to keep these words safe! If you lose them (or someone steals them),<br>
+        Particl can't help you recover your funds! You have been warned.
+      </p>
+    </mat-card>
+    </ng-template>
+  </div><!-- .container-block -->
+
+
+  <!-- STEP 4: Recovery Password -->
+  <div *ngIf="step === 4">
     <div class="title">Choose a Recovery Password <small>(optional)</small></div>
     <div class="container-block">
       <p>
@@ -157,49 +196,13 @@
         Note that you can safely skip this step, but it is recommended to choose a Recovery Password as it keeps your coins safer.
       </p>
     </div>
-  </div><!-- step == 2 -->
-
-
-  <!-- STEP 3: Recovery Passphrase -->
-  <div *ngIf="step === 3">
-    <div class="title">Recovery Phrase backup</div>
-    <div class="container-block">
-      <p>
-        Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
-      </p>
-      <p class="warning">
-        You must write this Recovery Phrase down and keep it safe or you'll lose access to your coins!
-      </p>
-    </div>
-  </div><!-- step == 3 -->
-
-
-  <!-- STEP 4: Recovery Password -->
-  <div *ngIf="step === 4">
-    <div class="title">Enter your Recovery Phrase</div>
-    <div class="container-block">
-      <p>
-        Confirm that you backed up your Recovery Phrase by filling in the missing words:
-      </p>
-    </div>
   </div><!-- step == 4 -->
 
-
-  <ng-template [ngIf]="[3,4].indexOf(step) != -1">
-    <app-passphrase
-      #passphraseComponent
-      [readOnly]="step === 3"
-      [words]="words"
-      [partialDisable]="step === 4"
-      (wordsEmitter)="wordsFromEmitter($event)"
-      [generate]="true">
-    </app-passphrase>
-  </ng-template>
 
   <p *ngIf="!!errorString" [@slideDown] class="warning">
     {{ errorString }}
   </p>
-  <div class="action-buttons container-block" fxLayoutAlign="space-between center">
+  <div class="action-buttons" fxLayoutAlign="space-between center">
     <button mat-button (click)="prevStep()">
       <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
       Back
@@ -245,7 +248,7 @@
     </div><!-- .recovery-password -->
 
   </div>
-  <div class="action-buttons container-block" fxLayoutAlign="space-between center">
+  <div class="action-buttons" fxLayoutAlign="space-between center">
     <button mat-button (click)="prevStep();initialize(2)">
       <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
       Back
@@ -273,7 +276,7 @@
       You can now safely close this window and start experiencing Particl!
     </p>
   </div>
-  <div class="action-buttons container-block" fxLayoutAlign="end center">
+  <div class="action-buttons" fxLayoutAlign="end center">
     <button mat-raised-button color="primary" mat-dialog-close>
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Close

@@ -9,7 +9,24 @@
 }
 
 .word-list {
-  margin-right: -3.25%; // offset flex wrap layout
+  margin: 24px -4% 24px 0; // offset flex wrap layout
+  .word-no {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border: 1px solid $bg-shadow;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 500;
+    color: $text-muted;
+    text-align: center;
+  }
+  .word {
+    display: inline-block;
+    width: calc(100% - 32px);
+    margin-left: 6px;
+  }
 }
 
 .mat-form-field {

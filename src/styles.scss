@@ -255,6 +255,14 @@ p.info {
   }
 }
 
+// code
+code {
+  color: darken($color, 10%);
+  background: rgba($color, 0.1);
+  border-radius: $radius;
+  padding: 2px 5px;
+  margin: 0 1px;
+}
 
 // kbd
 kbd {

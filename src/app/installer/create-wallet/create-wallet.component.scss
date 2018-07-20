@@ -17,6 +17,11 @@ $installer-sidebar-padding: 30px;
   }
 }
 
+.action-card {
+  margin-top: 45px;
+  padding: 32px 42px;
+}
+
 .progress {
   .step {
     margin-bottom: 12px;
@@ -91,25 +96,36 @@ p {
       top: 32px;
       left: 45px;
     }
-    .mat-card & { // messages in cards
-      margin: -24px -24px 24px;
-      padding: 20px 24px 20px 56px;
+    .action-card & { // messages in cards
+      margin: -32px -42px 24px;
+      padding: 20px 24px 20px 74px;
+      &.bottom {
+        margin: 24px -42px -32px;
+      }
       &:before {
         top: 29px;
-        left: 26px;
+        left: 42px;
       }
     }
   }
   &.info {
     background: rgba($color-info, 0.07);
-    .mat-card & {
+    .action-card & {
       border-bottom: 1px solid rgba($color-info, 0.22);
+      &.bottom {
+        border-bottom: none;
+        border-top: 1px solid rgba($color-info, 0.22);
+      }
     }
   }
   &.warning {
     background: rgba($color-alert, 0.07);
-    .mat-card & {
+    .action-card & {
       border-bottom: 1px solid rgba($color-alert, 0.22);
+      &.bottom {
+        border-bottom: none;
+        border-top: 1px solid rgba($color-alert, 0.22);
+      }
     }
   }
 }
@@ -124,7 +140,7 @@ p {
   .sidebar {
     width: ($installer-sidebar-width - (2 * $installer-sidebar-padding));
     padding: $installer-sidebar-padding;
-    background: url("/assets/splash-bg.png") no-repeat bottom left $bg-black;
+    background: $bg-black;
     background-size: 300px;
     color: $bg;
     position: fixed;
@@ -153,10 +169,11 @@ p {
 }
 
 .action-buttons {
+  margin: 6px 45px 45px;
   &.huge {
+    margin: 46px 0 0;
     display: flex;
     align-items: stretch;
-    margin-top: 46px;
     .half {
       @extend %tfx;
       flex: 1 1 50%;
@@ -205,9 +222,10 @@ p {
 \* ------------------------------- */
 
 .wallet-name {
-  margin-top: 45px;
+  @extend .action-card;
   .mat-form-field {
     width: 260px;
+    font-size: 15px;
   }
 }
 
