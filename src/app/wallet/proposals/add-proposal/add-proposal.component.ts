@@ -8,6 +8,11 @@ import {
   ProposalConfirmationComponent
 } from 'app/modals/proposal-confirmation/proposal-confirmation.component';
 import { FormArray } from '@angular/forms/src/model';
+import { RpcService } from 'app/core/rpc/rpc.service';
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { Profile } from 'app/core/market/api/profile/profile.model';
 
 @Component({
   selector: 'app-add-proposal',
@@ -18,41 +23,45 @@ export class AddProposalComponent implements OnInit {
 
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
-  detailFormGroup: FormGroup;
-  voteFormGroup: FormGroup;
-  infoFormGroup: FormGroup;
+  public isTnCAccepted: boolean = false;
+  private address: string;
+  // form controls
+  public proposalFormGroup: FormGroup;
 
-  constructor(private router: Router, private formBuilder: FormBuilder,
-              private dialog: MatDialog
-            ) { }
+  constructor(
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private _rpc: RpcService,
+    private proposalsService: ProposalsService,
+    private profileService: ProfileService,
+    private snackbarService: SnackbarService
+  ) { }
 
   ngOnInit() {
-    this.detailFormGroup = this.formBuilder.group({
-      title:                      ['', [Validators.required,
-                                        Validators.maxLength(50)]],
-      description:                ['', [Validators.required,
-                                        Validators.maxLength(2000)]]
+    // get default profile address.
+    this.profileService.default().takeWhile(() => true).subscribe((profile: Profile) => {
+      this.address = profile.address;
+    })
+
+    this.proposalFormGroup = this.formBuilder.group({
+      title: ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+      desc: ['', Validators.compose([Validators.required, Validators.maxLength(2000)])],
+      options: this.formBuilder.array([
+        this.initTechnologyFields(),
+        this.initTechnologyFields()
+      ]),
+
+      // @TODO `nickname` and `email` use in the "Contact Information" section.
+      // nickname: ['', Validators.compose([Validators.maxLength(50)])],
+      // email: ['',  Validators.compose([Validators.maxLength(150)])]
     });
 
-    this.voteFormGroup = this.formBuilder.group({
-      options     : this.formBuilder.array([
-         this.initTechnologyFields(),
-         this.initTechnologyFields()
-      ])
-   });
-
-
-    this.infoFormGroup = this.formBuilder.group({
-      nickname:                      ['', [Validators.required,
-                                        Validators.maxLength(50)]],
-      email:                ['', [Validators.required,
-                                        Validators.maxLength(50)]]
-    });
   }
 
   initTechnologyFields(): FormGroup {
     return this.formBuilder.group({
-      option : ['', Validators.compose([Validators.required, Validators.maxLength(50)])]
+      option: ['', Validators.compose([Validators.required, Validators.maxLength(50)])]
     });
   }
 
@@ -64,7 +73,7 @@ export class AddProposalComponent implements OnInit {
    * @return {none}
    */
   addNewInputField(): void {
-    const control = <FormArray>this.voteFormGroup.controls.options;
+    const control = <FormArray>this.proposalFormGroup.controls.options;
     control.push(this.initTechnologyFields());
   }
 
@@ -78,7 +87,7 @@ export class AddProposalComponent implements OnInit {
    * @return {none}
    */
   removeInputField(i: number): void {
-    const control = <FormArray>this.voteFormGroup.controls.options;
+    const control = <FormArray>this.proposalFormGroup.controls.options;
     control.removeAt(i);
   }
 
@@ -87,7 +96,45 @@ export class AddProposalComponent implements OnInit {
   }
 
   submitProposal() {
-    this.dialog.open(ProposalConfirmationComponent);
+    const dialogRef = this.dialog.open(ProposalConfirmationComponent);
+
+    dialogRef.componentInstance.setData({
+        ... this.proposalFormGroup.value,
+        options: this.proposalFormGroup.value.options.map(v => v.option),
+      },
+      (proposal) => this.addPost(proposal)
+    );
   }
+
+  addPost(proposal: any): void {
+    // get current block count.
+    this._rpc.call('getblockcount').subscribe((startBlock) => {
+      /**
+       *  endBlockCount calculated based on formula <startBlockCount>.
+       *  endBlockCount = startBlockCount + 7 Days * 720 (particl block generate in a day).
+       */
+
+      const endBlockCount = startBlock + 7 * 720;
+      // add proposal.
+
+      this.proposalsService.post('proposal', [
+        'post',
+        proposal.title,
+        proposal.desc,
+        startBlock,
+        endBlockCount,
+        this.address,
+        proposal.options
+      ]).subscribe((response) => {
+        this.snackbarService.open('Proposal posted successfully.')
+
+        // redirect to proposals page.
+        this.cancelAndDiscard();
+      }, (error) => {
+        this.snackbarService.open(error.message, 'warn')
+      })
+    })
+  }
+
 
 }

@@ -3,6 +3,8 @@ import { MatDialogRef, MatFormFieldModule } from '@angular/material';
 import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+
 import { ProposalConfirmationComponent } from './proposal-confirmation.component';
 
 describe('ProposalConfirmationComponent', () => {
@@ -14,10 +16,11 @@ describe('ProposalConfirmationComponent', () => {
       imports: [
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
       ],
       providers: [
         /* deps */
+        ProposalsService,
         { provide: MatDialogRef }
       ]
     })

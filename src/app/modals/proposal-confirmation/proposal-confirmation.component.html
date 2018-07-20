@@ -19,13 +19,16 @@
     <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
 
     <div class="name">
-      Dark wallet theme
+      {{data?.title}}
     </div>
 
     <p class="fee-info">
-      Transaction fee:<span class="amount">12 PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-      Total amount:<span
-      class="amount">12 PART</span><span class="fiat">&asymp; 3.47 USD</span>
+      Transaction fee:
+      <span class="amount">{{proposalTransactionFee.getAmount()}} PART</span>
+      <span class="fiat">&asymp; 0.05 USD</span><br>
+      Total amount:
+      <span class="amount">{{proposalTransactionFee.getAmount()}} PART</span>
+      <span class="fiat">&asymp; 3.47 USD</span>
     </p>
 
   </div><!-- .confirmation  -->

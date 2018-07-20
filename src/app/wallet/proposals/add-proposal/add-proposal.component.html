@@ -5,28 +5,27 @@
     Proposals can include: suggestions for features, community-led initiatives, partnership opportunities, protocol improvement ideas, and much more.
   </p>
   <p class="widget-help">
-    Keep in mind that each proposal costs 10 PART to submit and that voting results do not guarantee implementation from the Particl team.
+    Keep in mind that each Proposal fee costs depands on the content size to submit and that voting results do not guarantee implementation from the Particl team.
   </p>
 </div>
 
-
-<div class="container-block disable-select">
+<div class="container-block disable-select" [formGroup]="proposalFormGroup">
 
   <div class="column">
-    
-    <mat-card [formGroup]="detailFormGroup">
+
+    <mat-card >
       <div class="title">Proposal details</div>
 
       <mat-form-field class="full-width">
         <input matInput #title placeholder="Proposal's title" formControlName="title">
         <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
       </mat-form-field>
-      
+
       <mat-form-field class="full-width">
-        <textarea matInput #description rows="30" placeholder="Description" formControlName="description"></textarea>
-        <mat-hint align="end">{{ description.value?.length || 0 }}/2000</mat-hint>
+        <textarea matInput #desc rows="30" placeholder="Description" formControlName="desc"></textarea>
+        <mat-hint align="end">{{ desc.value?.length || 0 }}/2000</mat-hint>
       </mat-form-field>
-      
+
       <p class="widget-help">
         Objectively describe your proposal in detail; explain what to change, how to do it and why.
       </p>
@@ -37,10 +36,10 @@
 
   <div class="column">
     
-    <mat-card [formGroup]="voteFormGroup">
+    <mat-card>
       <div class="title">
         Voting options
-        <button [disabled]="voteFormGroup.controls.options.length >= 5" (click)="addNewInputField()" mat-button color="basic" class="small">
+        <button [disabled]="proposalFormGroup.controls.options.length >= 5" (click)="addNewInputField()" mat-button color="basic" class="small">
           <!-- TODO: allow max of 5 options total -->
           <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
           Add new option
@@ -50,7 +49,7 @@
       <!-- voting options -->
       <div formArrayName="options">
         <div class="voting item" [formGroupName]="i"
-        *ngFor="let option of voteFormGroup.controls.options.controls; let i = index">
+        *ngFor="let option of proposalFormGroup.controls.options.controls; let i = index">
           <span class="no">{{i+1}}</span>
           <div class="content">
             <mat-form-field class="full-width">
@@ -73,16 +72,16 @@
       </p>
     </mat-card>
 
-    <mat-card [formGroup]="infoFormGroup">
+    <!-- <mat-card [formGroup]="infoFormGroup">
       <div class="title">
         Contact information <small>(optional)</small>
-        <button mat-button color="basic" class="small">
+        <button mat-button color="basic" class="small TO_DO">
           <mat-icon fontSet="partIcon" fontIcon="part-person-add"></mat-icon>
           Add contributor
         </button>
       </div>
 
-      <div class="author item">
+      <div class="author item TO_DO">
         <span class="no">1</span>
         <div class="content">
           <mat-form-field class="full-width">
@@ -92,7 +91,7 @@
             <input matInput placeholder="Your Riot/Discord/Github username or an email address" formControlName="email">
           </mat-form-field>
         </div>
-      </div>
+      </div> -->
 
       <!-- FIXME: when clicked on [Add countributor] button, add these: -->
       <!--div class="author item">
@@ -107,21 +106,21 @@
         </div>
       </div-->
 
-      <p class="widget-help">
+    <!--  <p class="widget-help">
         Including your contact information is optional, but it can help when discussing submitted proposals. For example, users might have unanswered questions or improvements regarding your proposal.
       </p>
-    </mat-card>
+    </mat-card> -->
 
     <mat-card class="terms">
       <div class="title">Terms &amp; Conditions</div>
       <ul>
-        <li>Proposal fee costs 10 PART</li>
+        <li>Proposal fee costs depands on the content size of the Proposal</li>
         <li>Fees are non-refundable</li>
         <li>Fees are distributed to network staking nodes</li>
         <li>Voting results do not represent any form of finality</li>
         <li>Proposals may still be denied even though they were voted in favour of, and vice versa</li>
       </ul>
-      <mat-checkbox>Yes, I understand &amp; agree</mat-checkbox>
+      <mat-checkbox (change)="isTnCAccepted = !isTnCAccepted">Yes, I understand &amp; agree</mat-checkbox>
     </mat-card>
 
   </div>
@@ -137,7 +136,15 @@
     Cancel &amp; Discard
   </button>
   <!-- FIXME: button disabled until user checks Terms & Conditions checkbox -->
-  <button mat-raised-button color="primary" (click)="submitProposal()" matTooltip="Submit new proposal to Particl users">
+  <button
+    [disabled]="(
+      !isTnCAccepted ||
+      !proposalFormGroup.valid
+    )"
+    mat-raised-button
+    color="primary"
+    (click)="submitProposal()"
+    matTooltip="Submit new proposal to Particl users">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Submit new Proposal
   </button>
