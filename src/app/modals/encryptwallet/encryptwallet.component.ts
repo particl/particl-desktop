@@ -44,18 +44,16 @@ export class EncryptwalletComponent {
     // already had password, check equality
     this.log.d(`check password equality: ${password.password === this.password}`);
     if (this.password !== password.password) {
-      this._rpcState.set('ui:spinner', false);
       this.flashNotification.open('The passwords do not match!', 'err');
       return;
     }
 
     // passwords match, encrypt wallet
 
-    this._rpcState.set('ui:spinner', true);
 
     if (window.electron) {
       this._daemon.restart().then(res => {
-        // TDO: move to loading screen
+        // TODO: move to loading screen
         this._dialogRef.close();
       });
     }
@@ -63,7 +61,6 @@ export class EncryptwalletComponent {
     this._rpc.call('encryptwallet', [password.password]).toPromise()
       .catch(error => {
         // Handle error appropriately
-        this._rpcState.set('ui:spinner', false);
         this.flashNotification.open('Wallet failed to encrypt properly!', 'err');
         this.log.er('error encrypting wallet', error)
       });

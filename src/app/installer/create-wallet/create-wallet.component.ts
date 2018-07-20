@@ -40,20 +40,19 @@ export class CreateWalletComponent implements OnDestroy {
   toggleShowPass: boolean = false;
 
   @ViewChild('passphraseComponent')
-    passphraseComponent: ComponentRef<PassphraseComponent>;
+  passphraseComponent: ComponentRef<PassphraseComponent>;
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
   @ViewChild('passwordElementVerify') passwordElementVerify: PasswordComponent;
   @ViewChild('passwordRestoreElement') passwordRestoreElement: PasswordComponent;
 
   // Used for verification
   private wordsVerification: string[];
-  private validating: boolean = false;
   private passcount: number = 0;
 
   errorString: string = '';
   private destroyed: boolean = false;
 
-  constructor (
+  constructor(
     private _passphraseService: PassphraseService,
     private rpcState: RpcStateService,
     private flashNotification: SnackbarService
@@ -88,28 +87,19 @@ export class CreateWalletComponent implements OnDestroy {
       case 1: // Create
         break;
       case 2: // Restore
-          this.isRestore = true;
+        this.isRestore = true;
         break;
     }
     this.nextStep();
   }
 
   nextStep(): void {
-    this.validating = true;
-
-    /* Recovery password entered */
-    if (this.step === 2) {
-      this.password = '';
-      this.passwordVerify = '';
-      this.passwordElement.sendPassword();
-      this.passwordElementVerify.sendPassword();
-      return;
-    }
 
     if (this.validate()) {
-      this.validating = false;
       this.step++;
       this.doStep();
+    } else if(this.step === 3) {
+      this.errorString = 'You have entered an invalid Recovery Phrase';
     }
 
     this.log.d(`moving to step: ${this.step}`);
@@ -127,13 +117,6 @@ export class CreateWalletComponent implements OnDestroy {
         setTimeout(() => this.nameField.nativeElement.focus(this), 1);
         break;
       case 2:
-        if (this.isRestore) {
-          this.step = 4;
-        }
-        this.password = '';
-        this.passwordVerify = '';
-        break;
-      case 3:
         this._passphraseService.generateMnemonic(
           this.mnemonicCallback.bind(this), this.password
         );
@@ -141,7 +124,7 @@ export class CreateWalletComponent implements OnDestroy {
           'Please remember to write down your Recovery Passphrase',
           'warning');
         break;
-      case 4:
+      case 3:
         while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
           const k = Math.floor(Math.random() * 23);
           this.words[k] = '';
@@ -150,12 +133,22 @@ export class CreateWalletComponent implements OnDestroy {
           'Did you write your password at the previous step?',
           'warning');
         break;
+      case 4:
+        if (this.isRestore) {
+          this.step = 4;
+        }
+        this.password = '';
+        this.passwordVerify = '';
+        this.passwordElement.sendPassword();
+        this.passwordElementVerify.sendPassword();
+        break;
       case 5:
         this.step = 4;
         this.errorString = '';
+        // TODO get rid of state service
         if (this.rpcState.get('locked')) {
           // unlock wallet
-          this.step = 6
+          // this.step = 6
         } else {
           // wallet already unlocked
           this.importMnemonicSeed();
@@ -178,32 +171,31 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   public importMnemonicSeed(): void {
-    this.rpcState.set('ui:spinner', true);
 
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
-        success => {
-          this._passphraseService.generateDefaultAddresses();
-          this.step = 5;
-          this.log.i('Mnemonic imported successfully');
+      success => {
+        this._passphraseService.generateDefaultAddresses();
+        this.step = 5;
+        this.log.i('Mnemonic imported successfully');
 
-        },
-        error => {
-          this.step = 4;
-          this.log.er(error);
-          this.errorString = error.message;
-          this.log.er('Mnemonic import failed');
-        });
+      },
+      error => {
+        this.step = 4;
+        this.log.er(error);
+        this.errorString = error.message;
+        this.log.er('Mnemonic import failed');
+      });
   }
 
   validate(): boolean {
-    if (this.validating && this.step === 1) {
+    if (this.step === 1) {
       return !!this.name;
     }
-    if (this.validating && this.step === 4 && !this.isRestore) {
-      const valid = !this.words.filter(
-        (value, index) => this.wordsVerification[index] !== value).length;
-      this.errorString = valid ? '' : 'You have entered an invalid Recovery Phrase';
+    if (this.step === 3 && !this.isRestore) {
+      const unmatched = this.words.filter(
+        (value, index) => this.wordsVerification[index] !== value);
+      const valid = unmatched.length === 0;
       return valid;
     }
 
@@ -246,25 +238,15 @@ export class CreateWalletComponent implements OnDestroy {
 
   /** verify if passwords match */
   verifyPasswords() {
-    if (!this.validating) {
-      return;
-    }
-
     if (this.password !== this.passwordVerify) {
       this.flashNotification.open('Passwords do not match!', 'warning');
     } else {
       // We should probably make this a function because it isn't reusing code??
-      this.validating = false;
       this.step++;
       this.doStep();
     }
     this.passwordVerify = ''
     this.password = '';
-  }
-
-  /** Triggered when the password is emitted from PassphraseComponent */
-  wordsFromEmitter(words: string): void {
-    this.words = words.split(',');
   }
 
   close(): void {
@@ -273,7 +255,7 @@ export class CreateWalletComponent implements OnDestroy {
       new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   }
 
-  public countWords (count: number): boolean {
+  public countWords(count: number): boolean {
     if ([12, 15, 18, 24].indexOf(count) !== -1) {
       return false;
     }

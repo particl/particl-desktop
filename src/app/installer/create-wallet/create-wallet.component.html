@@ -150,7 +150,6 @@
         [readOnly]="step === 2"
         [words]="words"
         [partialDisable]="step === 3"
-        (wordsEmitter)="wordsFromEmitter($event)"
         [generate]="true">
       </app-passphrase>
       <p class="warning bottom" *ngIf="step === 2">
@@ -207,7 +206,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
       Back
     </button>
-    <button mat-raised-button color="primary" (click)="nextStep()"> <!-- TODO: Move sendPassword to .ts   -->
+    <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="!validate()"> <!-- TODO: Move sendPassword to .ts   -->
       <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
       Continue
     </button>
@@ -225,7 +224,6 @@
       <app-passphrase
         #passphraseComponent
         [words]="words"
-        (wordsEmitter)="wordsFromEmitter($event)"
         [generate]="false">
       </app-passphrase>
       <p *ngIf="!!errorString" [@slideDown] class="warning">
