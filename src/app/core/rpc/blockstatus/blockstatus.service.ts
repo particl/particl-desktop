@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
 
@@ -6,9 +6,10 @@ import { RpcStateService } from '../rpc-state/rpc-state.service';
 import { PeerService } from '../peer/peer.service';
 
 @Injectable()
-export class BlockStatusService {
+export class BlockStatusService implements OnDestroy{
 
   private log: any = Log.create('blockstatus.service id:' + Math.floor((Math.random() * 1000) + 1));
+  private destroyed: boolean = false;
 
   /* Block variables */
   private highestBlockHeightNetwork: number = -1;
@@ -44,6 +45,7 @@ export class BlockStatusService {
     this.log.d('constructor blockstatus');
     // this._state.observe('blocks')
     this._peerService.getBlockCount()
+      .takeWhile(() => !this.destroyed)
       .subscribe(
         height => {
           this.log.d('getBlockCount(): triggered');
@@ -65,6 +67,7 @@ export class BlockStatusService {
 
     // Get heighest block count of peers and calculate remainerders.
     this._peerService.getBlockCountNetwork()
+      .takeWhile(() => !this.destroyed)
       .subscribe(
         height => {
           this.log.d(`getBlockCountNetwork(): new height ${height}`);
@@ -77,6 +80,7 @@ export class BlockStatusService {
         error => this.log.error('constructor blockstatus: getBlockCountNetwork() subscription error:' + error));
 
     this._rpcState.observe('getblockchaininfo', 'mediantime')
+      .takeWhile(() => !this.destroyed)
       .subscribe(
         (mediantime: number) => this.status.lastBlockTime = new Date(mediantime * 1000)
     );
@@ -190,4 +194,7 @@ export class BlockStatusService {
     return averageEstimatedTimeLeft;
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
 }
