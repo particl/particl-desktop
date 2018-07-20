@@ -399,6 +399,6 @@ export class ReceiveComponent implements OnInit {
   }
 
   exitLabelEditingMode(): void {
-    this.addressInput = true; 
+    this.addressInput = true;
   }
 }
