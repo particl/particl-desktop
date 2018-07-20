@@ -8,7 +8,7 @@ import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
-
+import { TermsService } from 'app/modals/terms/terms.service';
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
@@ -28,8 +28,11 @@ import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
+
+import { TermsComponent } from './terms/terms.component';
 import { PlaceOrderComponent } from './market-place-order/place-order.component';
 import { ShippingComponent } from './market-shipping/shipping.component';
+
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 import {
   ProposalConfirmationComponent
@@ -66,6 +69,7 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     ManageWidgetsComponent,
     PlaceOrderComponent,
     ShippingComponent,
+    TermsComponent,
     SendConfirmationModalComponent,
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
@@ -78,7 +82,8 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
     ModalsHelperService,
     PassphraseService,
-    SnackbarService
+    SnackbarService,
+    TermsService
   ],
   entryComponents: [
     DaemonComponent,
@@ -91,6 +96,7 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     ManageWidgetsComponent,
     PlaceOrderComponent,
     ShippingComponent,
+    TermsComponent,
     CreateWalletComponent,
     ColdstakeComponent,
     SendConfirmationModalComponent,
@@ -112,3 +118,4 @@ export class ModalsModule {
 
 export { ModalsHelperService } from './modals-helper.service';
 export { PassphraseService } from './createwallet/passphrase/passphrase.service';
+export { TermsService } from 'app/modals/terms/terms.service';

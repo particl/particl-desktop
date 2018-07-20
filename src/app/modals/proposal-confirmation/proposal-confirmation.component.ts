@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { Amount, sizeof } from 'app/core/util/utils';
+import { Amount, ProposalTrasactionFee } from 'app/core/util/utils';
 
 @Component({
   selector: 'app-proposal-confirmation',
@@ -20,21 +20,12 @@ export class ProposalConfirmationComponent {
   }
 
   /**
-    * setData sets the callback information for when the wallet unlocks.
-    */
+   * setData sets the callback information for ProposalConfirmationComponent.
+   */
 
   setData(data: any, callback: Function): void {
     this.data = data;
-
-    /* @TODO
-     * calculate proposalTransactionFee based on message of size 512kb costs 0.26362200 PART for 1 day.
-     * and for 1kb memory = cost (0.00050696538)
-     * totalCost = (memorySize / 1000) (in kb(s)) * 0.00050696538 (1kb memory cost) *  7 (days)
-     */
-
-    const memorySize = sizeof(this.data);
-    const totalCost = (memorySize / 1000) * 0.00050696538 * 7;
-    this.proposalTransactionFee = new Amount(totalCost);
+    this.proposalTransactionFee = new ProposalTrasactionFee(this.data).transactionFee;
     this.callback = callback;
   }
 
