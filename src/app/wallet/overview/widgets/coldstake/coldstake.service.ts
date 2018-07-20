@@ -23,7 +23,7 @@ export class ColdstakeService implements OnDestroy {
   };
 
   coldStakingEnabled: boolean = undefined;
-  walletInitialized: boolean = undefined;
+
   public encryptionStatus: string = 'Locked';
 
   private progress: Amount = new Amount(0, 2);
@@ -58,9 +58,6 @@ export class ColdstakeService implements OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingEnabled = status);
 
-    this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.walletInitialized = status);
     this.update();
   }
 
