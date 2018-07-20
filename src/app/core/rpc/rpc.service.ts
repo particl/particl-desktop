@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { map, catchError } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
+import { environment } from '../../../environments/environment';
 
 const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
@@ -32,13 +33,16 @@ export class RpcService implements OnDestroy {
   /**
    * IP/URL for daemon (default = localhost)
    */
-  private hostname: String = HOSTNAME; // TODO: URL Flag / Settings
+  // private hostname: String = HOSTNAME; // TODO: URL Flag / Settings
+  private hostname: String = environment.particlHost;
 
   /**
    * Port number of of daemon (default = 51935)
    */
-  private port: number = TESTNET_PORT; // TODO: Mainnet / testnet flag...
+  // private port: number = TESTNET_PORT; // TODO: Mainnet / testnet flag...
+  private port: number = environment.particlPort;
 
+  // note: basic64 equiv= dGVzdDp0ZXN0
   private username: string = 'test';
   private password: string = 'test';
 
@@ -48,7 +52,7 @@ export class RpcService implements OnDestroy {
     private _http: HttpClient,
     private _ipc: IpcService
   ) {
-    this.isElectron = window.electron;
+    this.isElectron = false;  // window.electron
   }
 
   ngOnDestroy() {
@@ -86,20 +90,29 @@ export class RpcService implements OnDestroy {
         id: 1
       });
 
-      const headers = new HttpHeaders();
-      headers.append('Content-Type', 'application/json');
-      headers.append('Authorization', 'Basic ' + btoa(`${this.username}:${this.password}`));
-      headers.append('Accept', 'application/json');
+
+      const headerJson = {
+       'Content-Type': 'application/json',
+       'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`),
+       'Accept': 'application/json',
+      };
+      const headers = new HttpHeaders(headerJson);
 
       return this._http
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
-        .pipe(
-          map((response: any) => response.result),
-          catchError(error => Observable.throw(typeof error._body === 'object'
-            ? error._body
-            : JSON.parse(error._body))
-          )
-        );
+          .map((response: any) => response.result)
+          .catch(error => {
+            let err: string;
+            if (typeof error._body === 'object') {
+              err =  error._body
+            } else if (error._body) {
+              err = JSON.parse(error._body);
+            } else {
+              err = error.error && error.error.error ? error.error.error : error.message;
+            }
+
+            return Observable.throw(err)
+          })
     }
   }
 

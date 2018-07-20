@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { RpcStateService, BlockStatusService } from '../../core/core.module';
 
@@ -28,7 +29,8 @@ export class SyncingComponent implements OnDestroy {
 
   constructor(
     private _blockStatusService: BlockStatusService,
-    private _rpcState: RpcStateService
+    private _rpcState: RpcStateService,
+    public _dialogRef: MatDialogRef<SyncingComponent>
   ) {
     _rpcState.observe('getnetworkinfo', 'connections')
       .takeWhile(() => !this.destroyed)
@@ -64,11 +66,13 @@ export class SyncingComponent implements OnDestroy {
         // BUG: this constructor is on a loop when we're syncing?
         // run particld with -reindex flag to trigger the bug
         this.log.d(`syncPercentage is 100%, closing automatically!`);
-
-        document.body.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        this.close();
         this.alreadyClosedOnce = true;
       }
+  }
+
+  close() {
+    this._dialogRef.close();
   }
 
   ngOnDestroy() {

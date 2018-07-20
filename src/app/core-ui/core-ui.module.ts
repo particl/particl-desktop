@@ -7,7 +7,6 @@ import { MainViewModule } from './main/main-view.module';
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
-// TODO: move to material
 
 @NgModule({
   declarations: [

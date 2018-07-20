@@ -152,26 +152,22 @@ function initIpcListener() {
   // Register new listener
   rxIpc.registerListener('rpc-channel', (method, params) => {
     return Observable.create(observer => {
-      if (['restart-daemon'].includes(method)) {
-        daemon.restart(() => observer.next(true));
-      } else {
-        exports.call(method, params, (error, response) => {
-          try {
-            if(error) {
-              observer.error(error);
-            } else {
-              observer.next(response || undefined);
-              observer.complete();
-            }
-          } catch (err) {
-            if (err.message == 'Object has been destroyed') {
-              // suppress error
-            } else {
-              log.error(err);
-            }
+      exports.call(method, params, (error, response) => {
+        try {
+          if(error) {
+            observer.error(error);
+          } else {
+            observer.next(response || undefined);
+            observer.complete();
           }
-        });
-      }
+        } catch (err) {
+          if (err.message == 'Object has been destroyed') {
+            // suppress error
+          } else {
+            log.error(err);
+          }
+        }
+      });
     });
   });
 }

@@ -90,7 +90,7 @@ export class IpcService {
     return new Observable((observer) => {
       this.checkRemoteListener(channel, receiver)
         .catch(() => {
-          observer.error('Invalid channel: ' + channel);
+          // observer.error('Invalid channel: ' + channel);
         });
       window.ipc.on(subChannel, function listener(event: Event, type: string, data: Object) {
         self.zone.run(() => {

@@ -30,12 +30,14 @@ export class Amount {
    * -25.9 -> '9'
    * 25 -> '0'
    * 25.9 -> '9'
+   *
+   * We have to return this as a string, else the leading zero's are gone.
    */
-  public getFractionalPart(): number {
+  public getFractionalPart(): string {
     if (this.ifDotExist()) {
-      return +(this.getAmount().toString()).split('.')[1];
+      return (this.getAmount().toString()).split('.')[1];
     }
-    return 0;
+    return '';
   }
 
   /**
@@ -203,12 +205,12 @@ export class DateFormatter {
   constructor(private date: Date) {
   }
 
-  public dateFormatter() {
+  public dateFormatter(onlyShowDate?: boolean) {
     return (
       (this.date.getDate() < 10 ? '0' + this.date.getDate() : this.date.getDate()) + '-' +
       ((this.date.getMonth() + 1) < 10 ? '0' + (this.date.getMonth() + 1) : (this.date.getMonth() + 1)) + '-' +
-      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear()) + ' ' +
-      this.hourSecFormatter()
+      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear())
+      + (onlyShowDate === false ?  ' ' + this.hourSecFormatter() : '')
     )
   }
 

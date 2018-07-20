@@ -1,0 +1,16 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// ------ ... ------ //
+
+.area {
+  border: 2px dashed $bg-shadow;
+  padding: 24px 32px;
+  margin: 0 0 24px;
+  p.widget-help {
+    margin-bottom: 0;
+  }
+  &.balances {
+    margin-top: 32px;
+  }
+}
+

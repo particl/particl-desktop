@@ -25,7 +25,6 @@ import { AddressLookupComponent } from './addresslookup/addresslookup.component'
 import { AddAddressLabelComponent } from './receive/modals/add-address-label/add-address-label.component';
 import { NewAddressModalComponent } from './address-book/modal/new-address-modal/new-address-modal.component';
 import { QrCodeModalComponent } from './shared/qr-code-modal/qr-code-modal.component';
-import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
 import { SignatureAddressModalComponent } from './shared/signature-address-modal/signature-address-modal.component';
 import { FixWalletModalComponent } from './send/fix-wallet-modal/fix-wallet-modal.component';
 import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet-fixed-confirmation/wallet-fixed-confirmation.component';
@@ -51,7 +50,6 @@ import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet
     AddAddressLabelComponent,
     NewAddressModalComponent,
     QrCodeModalComponent,
-    SendConfirmationModalComponent,
     SignatureAddressModalComponent,
     FixWalletModalComponent,
     WalletFixedConfirmationComponent
@@ -72,7 +70,6 @@ import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet
     NewAddressModalComponent,
     QrCodeModalComponent,
     AddressLookupComponent,
-    SendConfirmationModalComponent,
     SignatureAddressModalComponent,
     /* modals for wallet fix */
     FixWalletModalComponent,

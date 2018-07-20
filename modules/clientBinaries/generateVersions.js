@@ -9,10 +9,14 @@ var maintainer = "tecnovert";
  * Filters a hash file to find this asset's hash
  */
 var getHash = function (platform, name, hashes) {
-  var filter = new RegExp(`.*${name}`);
+  const escapedName = name.replace(/\./g, '\.');
+  var filter = new RegExp(`.*${escapedName}`);
+
   var sha256 = hashes[platform].match(filter);
+
   if (sha256) {
     sha256 = sha256[0].trim().split(" ")[0];
+    console.log("plaform: " + platform + " name: " + name + " hash=", sha256)
   } else {
     sha256 = undefined;
   }
@@ -104,24 +108,24 @@ var getAssetDetails = function (asset, hashes, version) {
 /*
  * Gets all hashes of current version for a specific platform
  */
-var getHashesForPlatform = function (platform, path, hashes, promises) {
+var getHashesForPlatform = function (platform, path, hashes) {
   // this promise is resolved when both HTTP calls returned
   return new Promise((resolve, reject) => {
 
     got(`${signaturesURL}/${path}/${maintainer}`).then(response => {
 
       var files = JSON.parse(response.body);
+      const f = files.find((file) => (file.path.indexOf(path) === 0) && !file.name.includes("assert.sig"));
 
-      files.forEach(file => {
+      if(f === undefined) {
+        console.error('getHashesForPlatform(): unable to retrieve hash files for ' + version + ' and ' + platform);
+        reject();
+      }
 
-        if (!file.name.includes("assert.sig")) {
-          got(`${file.download_url}`).then(response => {
-            hashes[platform] = response.body;
-            resolve(response.body);
-          }).catch(error => reject(error)); /* sig file */
-        }
-
-      })
+      got(`${f.download_url}`).then(response => {
+        hashes[platform] = response.body;
+        resolve(response.body);
+      }).catch(error => reject(error)); /* sig file */
 
     }).catch(error => reject(error)); /* folder containing sig files */
 
@@ -133,7 +137,6 @@ var getHashesForPlatform = function (platform, path, hashes, promises) {
  * get Particl latest release files
  */
 got(`${releasesURL}`).then(response => {
-
   const body = JSON.parse(response.body);
   let releaseIndex = 0;
   let release;
@@ -142,7 +145,7 @@ got(`${releasesURL}`).then(response => {
     releaseIndex++;
   }
   release = body[releaseIndex];
-
+  
   var tag = release.tag_name.substring(1);
   var binaries = [];
 
@@ -155,7 +158,7 @@ got(`${releasesURL}`).then(response => {
 
     versions.forEach(version => {
       // select folders that match the current version
-      if (version.name.includes(tag)) {
+      if (version.name.includes(tag+".0-")) {
         // extract matching folder's platform
         var platformIndex = version.name.indexOf("-");
         var platform = version.name.substring(platformIndex + 1);
@@ -182,6 +185,7 @@ got(`${releasesURL}`).then(response => {
           binaries.push(entry);
         }
       })
+      
       // include entries in JSON object
       var platforms = json.clients.particld.platforms;
       binaries.forEach(binary => {

@@ -18,7 +18,7 @@
         </mat-icon>
       </mat-form-field>
 
-      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type uc-first"
+      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type"
                   *ngIf="allowFilter" (ngModelChange)="resetPagination()">
         <mat-option *ngFor="let addressType of addressTypes" [value]="addressType">
           {{ addressType }}
@@ -33,8 +33,8 @@
 
     <mat-list-item class="list-header">
       <div class="address-list-header" fxFlex="row" fxLayoutGap="10px" layout-padding>
-        <div fxFlex="1 0 150px">Label</div>
-        <div fxFlex="1 1 470px">Address</div>
+        <div fxFlex="0 0 350px">Label</div>
+        <div fxFlex="0 0 300px">Address</div>
         <div fxFlex="0 0 80px" class="text-right">Type</div>
       </div>
     </mat-list-item>
@@ -43,8 +43,8 @@
       <mat-divider></mat-divider>
       <mat-list-item class="address-entry" (click)="onSelectAddress(address.getAddress(), address.getLabel())">
         <div class="address-list" fxFlex="row" fxLayoutGap="10px" layout-padding>
-          <div fxFlex="1 0 150px" class="label">{{address.getLabel()}}</div>
-          <div fxFlex="1 1 470px" class="address">{{address.getAddress()}}</div>
+          <div fxFlex="0 0 350px" class="label">{{address.getLabel()}}</div>
+          <div fxFlex="0 0 300px" class="address">{{address.getAddress()}}</div>
           <div fxFlex="0 0 80px" class="type text-right">{{cheatPublicAddress(address.getAddress())}}</div>
         </div>
       </mat-list-item>

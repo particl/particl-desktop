@@ -7,6 +7,8 @@ declare const require: any;
 export const environment = {
   production: false,
   envName: 'dev',
+  version: require('../../package.json').version,
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
-  version: require('../../package.json').version
+  particlHost: 'localhost',
+  particlPort: 51935
 };

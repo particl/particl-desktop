@@ -6,6 +6,28 @@
 .header-nav { // overview section titles
   @extend %subtitle;
   list-style-type: none;
+  li {
+    display: inline-block;
+  }
+  .buttons { // widget control buttons
+    float: right;
+    margin-top: 2px;
+    .mat-icon {
+      @extend %tfx;
+      margin-left: 6px;
+      font-size: 14px;
+      color: $text-muted;
+      opacity: 0.5;
+      cursor: pointer;
+      &:hover {
+        opacity: 1;
+        color: $text;
+      }
+      &.move {
+        cursor: move;
+      }
+    }
+  }
 }
 
 /*
@@ -18,4 +40,39 @@ span.point {
 
 mat-card.multiple {
   margin-bottom: 20px;
+}
+
+.list { // overview of listings/orders
+  @extend %disable-select;
+  .total {
+    .value {
+      font-size: 22px;
+      margin: 2px 0 8px;
+    }
+  }
+  .breakdown {
+    .item {
+      line-height: 1.5;
+      margin: 6px 0;
+    }
+    .value {
+      display: inline-block;
+      width: 30px;
+      margin-right: 12px;
+      background: $bg-shadow;
+      border-radius: $radius;
+      text-align: center;
+      font-weight: 600;
+    }
+  }
+  .desc {
+    display: inline-block;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+  &.listings { // specifics for listings overview
+    border-right: 1px solid $bg-shadow;
+    padding-right: 32px;
+    margin-right: 32px;
+  }
 }
