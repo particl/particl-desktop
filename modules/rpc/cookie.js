@@ -6,13 +6,17 @@ const log  = require('electron-log');
 /*
 ** returns Particl config folder
 */
-function findCookiePath() {
+function getParticlDatadirPath() {
 
-  var homeDir = os.homedir ? os.homedir() : process.env['HOME'];
+  const homeDir = os.homedir ? os.homedir() : process.env['HOME'];
+  const appName = 'Particl';
 
-  var dir,
-      appName = 'Particl';
-  switch (process.platform) {
+  const platform = process.platform
+                  .replace('freebsd', 'linux')
+                  .replace('sunos',   'linux');
+
+  let dir;
+  switch (platform) {
     case 'linux': {
       dir = prepareDir(homeDir, '.' + appName.toLowerCase()).result;
       break;
@@ -97,7 +101,7 @@ function getAuth(options) {
   }
 
   let auth;
-  var dataDir = options.datadir ? options.datadir : findCookiePath();
+  var dataDir = options.datadir ? options.datadir : getParticlDatadirPath();
   const COOKIE_FILE = dataDir
                     + (options.testnet ? '/testnet' : '')
                     + '/.cookie';
@@ -113,3 +117,4 @@ function getAuth(options) {
 }
 
 exports.getAuth = getAuth;
+exports.getParticlDatadirPath = getParticlDatadirPath;

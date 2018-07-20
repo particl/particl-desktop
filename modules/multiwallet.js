@@ -2,22 +2,9 @@ const app   = require('electron').app;
 const spawn = require('buffered-spawn');
 const path  = require('path');
 const log   = require('electron-log');
+const cookie = require('./rpc/cookie');
 
 let wallets = [];
-
-// TODO: move to a path.js module
-exports.getPath = function () {
-
-  const platform = process.platform
-    .replace('freebsd', 'linux')
-    .replace('sunos',   'linux');
-
-  if (platform == 'linux') {
-    return path.join(app.getPath('home'), '.particl');
-  } else {
-    return app.getPath('userData');
-  }
-}
 
 exports.get = function () {
   return new Promise((resolve, reject) => {
@@ -30,7 +17,7 @@ exports.get = function () {
     //resolve([]);
     //return;
 
-    spawn('ls', [ exports.getPath() ]).then(files => {
+    spawn('ls', [ cookie.getParticlDatadirPath() ]).then(files => {
 
       files = files.stdout.split('\n');
       // keep only wallet.dat and wallet_xxxx.dat files

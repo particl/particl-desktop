@@ -9,6 +9,7 @@ import { InstallerModule } from 'app/installer/installer.module';
 import { RpcModule } from 'app/core/rpc/rpc.module';
 
 import { LoadingComponent } from 'app/loading/loading.component';
+import { CoreModule } from 'app/core/core.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { LoadingComponent } from 'app/loading/loading.component';
     /* own */
     app_routing,
     InstallerModule,
-    RpcModule.forRoot()
+    RpcModule.forRoot(),
+    CoreModule.forRoot()
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
