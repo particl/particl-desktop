@@ -17,6 +17,14 @@ $installer-sidebar-padding: 30px;
   }
 }
 
+// TODO: move to %placeholders
+.box-title {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 5px 0 20px;
+}
+
 .action-card {
   margin-top: 45px;
   padding: 32px 42px;
@@ -247,4 +255,3 @@ app-password > div {
 input.recovery-word {
   max-width: 100%;
 }
-
