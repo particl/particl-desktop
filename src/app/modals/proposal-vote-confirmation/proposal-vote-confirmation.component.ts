@@ -7,8 +7,8 @@ import { MatDialogRef } from '@angular/material';
   styleUrls: ['./proposal-vote-confirmation.component.scss']
 })
 export class ProposalVoteConfirmationComponent implements OnInit {
-
-
+  public data: any;
+  public callback: Function;
   public dialogContent: string;
 
   constructor(private dialogRef: MatDialogRef<ProposalVoteConfirmationComponent>) {
@@ -17,9 +17,15 @@ export class ProposalVoteConfirmationComponent implements OnInit {
   ngOnInit() {
   }
 
+  setData(data: any, callback: Function) {
+    console.log('data', data);
+    this.data = data;
+    this.callback = callback;
+  }
+
   confirm(): void {
-    // this.onConfirm.emit();
     this.dialogClose();
+    this.callback();
   }
 
   dialogClose(): void {
