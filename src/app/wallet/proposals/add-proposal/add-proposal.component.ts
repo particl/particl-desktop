@@ -4,15 +4,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
-import {
-  ProposalConfirmationComponent
-} from 'app/modals/proposal-confirmation/proposal-confirmation.component';
+
 import { FormArray } from '@angular/forms/src/model';
-import { RpcService } from 'app/core/rpc/rpc.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
+import { PeerService } from 'app/core/rpc/peer/peer.service';
+
+import {
+  ProposalConfirmationComponent
+} from 'app/modals/proposal-confirmation/proposal-confirmation.component';
 
 @Component({
   selector: 'app-add-proposal',
@@ -32,7 +34,7 @@ export class AddProposalComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
-    private _rpc: RpcService,
+    private peerService: PeerService,
     private proposalsService: ProposalsService,
     private profileService: ProfileService,
     private snackbarService: SnackbarService
@@ -108,7 +110,7 @@ export class AddProposalComponent implements OnInit {
 
   addPost(proposal: any): void {
     // get current block count.
-    this._rpc.call('getblockcount').subscribe((startBlock) => {
+    this.peerService.getBlockCount().take(1).subscribe((startBlock: number) => {
       /**
        *  endBlockCount calculated based on formula <startBlockCount>.
        *  endBlockCount = startBlockCount + 7 Days * 720 (particl block generate in a day).
@@ -117,7 +119,7 @@ export class AddProposalComponent implements OnInit {
       const endBlockCount = startBlock + 7 * 720;
       // add proposal.
 
-      this.proposalsService.post('proposal', [
+      this.proposalsService.post([
         'post',
         proposal.title,
         proposal.desc,
