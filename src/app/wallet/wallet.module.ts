@@ -19,6 +19,7 @@ import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-
 import 'hammerjs';
 
 import { routing } from './wallet.routing';
+import { ProposalDetailsComponent } from './proposals/proposal-details/proposal-details.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { routing } from './wallet.routing';
     StakinginfoComponent,
     ColdstakeComponent,
     ZapColdstakingComponent,
-    RevertColdstakingComponent
+    RevertColdstakingComponent,
+    ProposalDetailsComponent
   ],
   imports: [
     CommonModule,

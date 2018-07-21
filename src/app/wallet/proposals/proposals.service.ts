@@ -7,8 +7,13 @@ export class ProposalsService {
   constructor(private _rpc: RpcService) { }
 
   // post proposal.
-  post(method: string, options: Array<any> = []) {
-    return this._rpc.call(method, options);
+  post(params: Array<any> = []) {
+    return this._rpc.call('proposal', params);
   }
 
+  // post vote.
+  vote(options: Array<any>) {
+    const params = ['post', ... options]
+    return this._rpc.call('vote', params);
+  }
 }
