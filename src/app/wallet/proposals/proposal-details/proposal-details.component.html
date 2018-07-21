@@ -2,22 +2,23 @@
 
   <div class="header">
     <div class="meta">
-      <div class="id">#13</div>
+      <div class="id TO_DO">#13</div>
       <div class="title">
         {{proposal?.title}}
         <!-- TODO: show only on Proposals created by team (how to implement this?) -->
+        <!-- may depadsn on the proposal type. *ngIf="proposal?.type !== 'PUBLIC_VOTE'" -->
         <!-- <span class="tag TO_DO" matTooltip="This proposal has been submitted by Particl team" matTooltipPosition="after">Official</span> -->
       </div>
     </div>
     <!-- TODO: only show "blocks-left" on ACTIVE proposals -->
-    <div class="blocks-left TO_DO" *ngIf="selectedTab == 'active'">
-      <mat-progress-bar mode="determinate" value="67" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
-      <div class="text">{{currentBlockCount}} blocks left</div>
+    <div class="blocks-left" *ngIf="selectedTab == 'active'">
+      <mat-progress-bar mode="determinate" value="{{proposal.votingProgressPercentage(currentBlockCount)}}" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
+      <div class="text">{{proposal.leftVotingEndBlockCount(currentBlockCount)}} blocks left</div>
     </div>
     <!-- TODO: only show "blocks-left.results" on PAST proposals -->
-    <div class="blocks-left results TO_DO" *ngIf="selectedTab == 'past'">
+    <div class="blocks-left results" *ngIf="selectedTab == 'past'">
       <mat-progress-bar mode="determinate" value="100"></mat-progress-bar>
-      <div class="text">voting finished on block {{currentBlockCount}}</div>
+      <div class="text">voting finished on block {{proposal?.blockEnd}}</div>
     </div>
   </div>
 
@@ -63,13 +64,13 @@
   </div>
 
   <!-- TODO: only show "action bar" on ACTIVE proposals -->
-  <div class="action-bar TO_DO" *ngIf="selectedTab == 'active'">
+  <div class="action-bar" *ngIf="selectedTab == 'active'">
     <div class="text item">Select your vote for this Proposal:</div>
 
     <div class="options item">
       <mat-form-field class="voting-options" floatPlaceholder="never">
         <mat-select placeholder="Select to vote" [(ngModel)]="selectedOption">
-          <mat-option *ngFor="let option of proposal?.options" [value]="option.optionId">
+          <mat-option *ngFor="let option of proposal?.options" [value]="option">
             {{ option.description }}
           </mat-option>
         </mat-select>

@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProposalDetailsComponent } from './proposal-details.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from 'app/wallet/shared/shared.module';
+import { CoreModule } from 'app/core/core.module';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 
 describe('ProposalDetailsComponent', () => {
   let component: ProposalDetailsComponent;
@@ -8,6 +13,13 @@ describe('ProposalDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        BrowserAnimationsModule,
+        SharedModule,
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
+      ],
+      providers: [ ProposalsService ],
       declarations: [ ProposalDetailsComponent ]
     })
     .compileComponents();

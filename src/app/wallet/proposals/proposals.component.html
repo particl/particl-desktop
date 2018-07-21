@@ -74,27 +74,53 @@
 
   <div class="content">
 
-    <app-proposal-details
-      [proposal]="proposal"
-      [submitterAddress]="address"
-      [selectedTab]="tabLabels[selectedTab]"
-      [currentBlockCount]="currentBlockCount"
-      *ngFor="let proposal of proposals;">
-    </app-proposal-details>
+    <div *ngIf="tabLabels[selectedTab] === 'active'">
+      <app-proposal-details
+        [proposal]="proposal"
+        [submitterAddress]="address"
+        [selectedTab]="tabLabels[selectedTab]"
+        [currentBlockCount]="currentBlockCount"
+        *ngFor="let proposal of activeProposals;">
+      </app-proposal-details>
+      <!-- FIXME: implement no results -->
+      <div class="no-results" *ngIf="activeProposals?.length == 0">
+        <p>
+          No active proposals at the moment
+        </p>
+        <p class="widget-help">
+          If you have a Proposal for Particl, you can always submit it to Particl network:<br>
+          <button mat-button (click)="addProposal()">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+            Submit new proposal
+          </button>
+        </p>
+      </div><!-- .no-results -->
+    </div>
 
-    <!-- FIXME: implement no results -->
-    <div class="no-results" *ngIf="proposals?.length == 0">
-      <p>
-        No active proposals at the moment
-      </p>
-      <p class="widget-help">
-        If you have a Proposal for Particl, you can always submit it to Particl network:<br>
-        <button mat-button (click)="addProposal()">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-          Submit new proposal
-        </button>
-      </p>
-    </div><!-- .no-results -->
+
+    <div *ngIf="tabLabels[selectedTab] === 'past'">
+      <app-proposal-details
+        [proposal]="proposal"
+        [submitterAddress]="address"
+        [selectedTab]="tabLabels[selectedTab]"
+        [currentBlockCount]="currentBlockCount"
+        *ngFor="let proposal of pastProposals;">
+      </app-proposal-details>
+
+      <!-- FIXME: implement no results -->
+      <div class="no-results" *ngIf="pastProposals?.length == 0">
+        <p>
+          No active proposals at the moment
+        </p>
+        <p class="widget-help">
+          If you have a Proposal for Particl, you can always submit it to Particl network:<br>
+          <button mat-button (click)="addProposal()">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+            Submit new proposal
+          </button>
+        </p>
+      </div><!-- .no-results -->
+    </div>
 
     <!--
       *ngIf="tabLabels[selectedTab] == 'active'"

@@ -36,8 +36,8 @@ export class ProposalDetailsComponent implements OnInit {
         type: 'pieChart',
         height: 250,
         width: 250,
-        x: (d) => {return d.key; },
-        y: (d) => {return d.y; },
+        x: (d) => { return d.key; },
+        y: (d) => { return d.y; },
         showLabels: false,
         donut: true,
         legend: {
@@ -67,7 +67,8 @@ export class ProposalDetailsComponent implements OnInit {
   vote() {
     const dialog = this.dialog.open(ProposalVoteConfirmationComponent);
     dialog.componentInstance.setData({
-      ... this.proposal
+      ... this.proposal,
+      selectedOption: this.selectedOption
     }, () => this.callVote())
   }
 

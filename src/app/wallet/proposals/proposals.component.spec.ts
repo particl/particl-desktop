@@ -6,14 +6,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+
 import { ProposalsComponent } from './proposals.component';
+import { ProposalDetailsComponent } from 'app/wallet/proposals/proposal-details/proposal-details.component';
 
 describe('ProposalsComponent', () => {
   let component: ProposalsComponent;
   let fixture: ComponentFixture<ProposalsComponent>;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProposalsComponent ],
+      declarations: [ ProposalsComponent, ProposalDetailsComponent],
       imports: [
         RouterTestingModule,
         BrowserAnimationsModule,
@@ -22,6 +25,7 @@ describe('ProposalsComponent', () => {
         CoreUiModule.forRoot()
       ],
       providers: [
+        ProposalsService,
         /* deps */
         { provide: MatDialogRef }
       ]

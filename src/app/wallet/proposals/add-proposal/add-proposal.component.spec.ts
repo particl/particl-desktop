@@ -7,6 +7,7 @@ import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { AddProposalComponent } from './add-proposal.component';
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 
 describe('AddProposalComponent', () => {
   let component: AddProposalComponent;
@@ -21,6 +22,7 @@ describe('AddProposalComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
       ],
+      providers: [ProposalsService],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
