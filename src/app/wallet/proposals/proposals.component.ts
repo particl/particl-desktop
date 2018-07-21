@@ -6,17 +6,17 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import {
-  ProposalVoteConfirmationComponent
-} from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
-import * as d3 from 'd3';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { Profile } from 'app/core/market/api/profile/profile.model';
+import { RpcService } from 'app/core/rpc/rpc.service';
+import { PeerService } from 'app/core/rpc/peer/peer.service';
+import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 
 @Component({
   selector: 'app-proposals',
   templateUrl: './proposals.component.html',
   styleUrls: [
-    './proposals.component.scss',
-    '../../../../node_modules/nvd3/build/nv.d3.css'
+    './proposals.component.scss'
   ]
 })
 
@@ -34,13 +34,6 @@ export class ProposalsComponent implements OnInit {
     { title: 'Voted by you',      value: 'voted'    },
   ];
 
-  // FIXME: remove, just placeholder values for voting:
-  votings: Array<any> = [
-    { title: 'Yes',           value: 'yes'  },
-    { title: 'No',            value: 'no'   },
-    { title: 'Don\'t care..', value: 'meh'  },
-  ];
-
   filters: any = {
     search:   undefined,
     filter:   undefined,
@@ -50,58 +43,83 @@ export class ProposalsComponent implements OnInit {
   // FIXME: needs clean-up?
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['active', 'past'];
-  public options: any;
-  public data: any;
+  public address: string;
+  public currentBlockCount: number;
 
-  constructor(private router: Router, private formBuilder: FormBuilder,
-              private dialog: MatDialog
-            ) { }
+  public proposals: Array<any> = [{
+    'title': 'post 1 title',
+    'submitter': 'submitter',
+    'blockStart': 1,
+    'blockEnd': 1,
+      // tslint:disable-next-line
+    'description': 'Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand\'s Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately. <br/> Efforts to locate them were hampered by rising water levels, and no contact was made for over a week. The rescue effort expanded into a massive operation amid intense worldwide media coverage and public interest.',
+    'options': [
+        {
+            'optionId': 0,
+            'description': 'option - 1'
+        },
+        {
+            'optionId': 1,
+            'description': 'option - 2'
+        },
+        {
+            'optionId': 2,
+            'description': 'option -3'
+        }
+    ],
+    'type': 'PUBLIC_VOTE',
+    'hash': '3928631d2c53450e6c7f207ce239dd29677dc50daaf21d574cec3e2d4c412b98'
+  }, {
+    'title': 'post 2 title',
+    'submitter': 'submitter',
+    'blockStart': 1,
+    'blockEnd': 1,
+    // tslint:disable-next-line
+    'description': 'Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand\'s Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately.',
+    'options': [
+        {
+            'optionId': 0,
+            'description': 'option 1'
+        },
+        {
+            'optionId': 1,
+            'description': 'option 2'
+        },
+        {
+            'optionId': 2,
+            'description': 'option 3'
+        }
+    ],
+    'type': 'PUBLIC_VOTE',
+    'hash': '3928631d2c53450e6c7f207ce239ddsa677dc50daaf21d574cec3e2d4c412b98'
+  }];
+
+  constructor(
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private profileService: ProfileService,
+    private _rpc: RpcService,
+    private peerService: PeerService,
+    private blockStatusService: BlockStatusService
+  ) { }
 
   ngOnInit() {
-    this.options = {
-      chart: {
-        type: 'pieChart',
-        height: 250,
-        width: 250,
-        x: (d) => {return d.key; },
-        y: (d) => {return d.y; },
-        showLabels: false,
-        donut: true,
-        legend: {
-          margin: {
-            top: 5,
-            right: 35,
-            bottom: 5,
-            left: 0
-          }
-        },
-        color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
-        tooltip: {
-          enabled: true,
-          hideDelay: 0,
-          useInteractiveGuideline: false
-        }
-      }
-    }
-    this.data = [
-      { key: 'Yes', y: 4651813.18567841 },
-      { key: 'Rather yes', y: 2624413.51774001 },
-      { key: 'Rather no', y: 251813.18567841 },
-      { key: 'No', y: 1624413.51774001 }
-    ];
+    // get default profile address.
+    this.profileService.default().takeWhile(() => true).subscribe((profile: Profile) => {
+      this.address = profile.address;
+    });
+
+    this.peerService.getBlockCount().subscribe((count: number) => {
+      this.currentBlockCount = count;
+    })
   }
 
   addProposal() {
     this.router.navigate(['/wallet/proposal']);
   }
 
-
   changeTab(index: number): void {
     this.selectedTab = index;
-  }
-
-  vote() {
-    this.dialog.open(ProposalVoteConfirmationComponent);
   }
 
 }

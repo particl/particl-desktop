@@ -74,8 +74,16 @@
 
   <div class="content">
 
+    <app-proposal-details
+      [proposal]="proposal"
+      [submitterAddress]="address"
+      [selectedTab]="tabLabels[selectedTab]"
+      [currentBlockCount]="currentBlockCount"
+      *ngFor="let proposal of proposals;">
+    </app-proposal-details>
+
     <!-- FIXME: implement no results -->
-    <div class="no-results" *ngIf="xxxx?.length == 0">
+    <div class="no-results" *ngIf="proposals?.length == 0">
       <p>
         No active proposals at the moment
       </p>
@@ -92,99 +100,6 @@
       *ngIf="tabLabels[selectedTab] == 'active'"
       *ngIf="tabLabels[selectedTab] == 'past'"
     -->
-    <mat-card class="proposal">
-
-      <div class="header">
-        <div class="meta">
-          <div class="id">#13</div>
-          <div class="title">
-            Wallet dark theme
-            <!-- TODO: show only on Proposals created by team (how to implement this?) -->
-            <span class="tag" matTooltip="This proposal has been submitted by Particl team" matTooltipPosition="after">Official</span>
-          </div>
-        </div>
-        <!-- TODO: only show "blocks-left" on ACTIVE proposals -->
-        <div class="blocks-left" *ngIf="tabLabels[selectedTab] == 'active'">
-          <mat-progress-bar mode="determinate" value="67" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
-          <div class="text">84612 blocks left</div>
-        </div>
-        <!-- TODO: only show "blocks-left.results" on PAST proposals -->
-        <div class="blocks-left results" *ngIf="tabLabels[selectedTab] == 'past'">
-          <mat-progress-bar mode="determinate" value="100"></mat-progress-bar>
-          <div class="text">voting finished on block 153589</div>
-        </div>
-      </div>
-
-      <div class="body">
-
-        <div class="content">
-          <div class="description">
-            <div class="subtitle">Proposal description</div>
-            <p>
-              <!-- TODO: proposal description (start) -->
-              Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand's Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately. 
-            </p>
-            <p>
-              Efforts to locate them were hampered by rising water levels, and no contact was made for over a week. The rescue effort expanded into a massive operation amid intense worldwide media coverage and public interest.
-              <!-- TODO: proposal description (end) -->
-            </p>
-          </div><!-- .description -->
-          <div class="more-links">
-            <!-- TODO: link to proposal's Github PIP page (@kewde: if we can connect it) -->
-            <a href="https://github.com" target="_blank" mat-button class="small" color="basic">
-              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-globe"></mat-icon>
-              Link to discussion
-            </a>
-            <!-- TODO: ability to trigger reporting/governance for each proposal -->
-            <a href="https://github.com" mat-button class="small" color="basic"
-               *ngIf="tabLabels[selectedTab] == 'active'">
-              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-flag"></mat-icon>
-              Report
-            </a>
-          </div>
-        </div>
-        
-        <div class="sidebar">
-          <div class="graph">
-            <div class="subtitle">Voting progress</div>
-            <div class="graph">
-              <!-- TODO: implement graphs (I suggest: https://github.com/krispo/ng2-nvd3) -->
-              <!-- <img src="assets/graph-placeholder.gif"> -->
-              <nvd3 [options]="options" [data]="data"></nvd3>
-            </div>
-            <div class="percentage-voted">
-              <!-- TODO: implement % of coins voted in total for this proposal -->
-              <span class="value">24.65&thinsp;%</span>
-              coins voted
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-
-      <!-- TODO: only show "action bar" on ACTIVE proposals -->
-      <div class="action-bar" *ngIf="tabLabels[selectedTab] == 'active'">
-        <div class="text item">Select your vote for this Proposal:</div>
-
-        <div class="options item">
-          <mat-form-field class="voting-options" floatPlaceholder="never">
-            <mat-select placeholder="Select to vote">
-              <mat-option *ngFor="let voting of votings" [value]="voting.value">
-                {{ voting.title }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <button mat-raised-button color="primary" class="vote-button item" (click)="vote()">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
-          Vote
-        </button>
-      </div>
-
-    </mat-card>
-
   </div><!-- .content -->
 
 
