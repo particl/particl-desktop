@@ -6,25 +6,22 @@ import { MatDialogRef } from '@angular/material';
   templateUrl: './proposal-vote-confirmation.component.html',
   styleUrls: ['./proposal-vote-confirmation.component.scss']
 })
-export class ProposalVoteConfirmationComponent implements OnInit {
+export class ProposalVoteConfirmationComponent {
   public data: any;
   public callback: Function;
-  public dialogContent: string;
 
   constructor(private dialogRef: MatDialogRef<ProposalVoteConfirmationComponent>) {
   }
 
-  ngOnInit() {
-  }
-
   setData(data: any, callback: Function) {
-    console.log('data', data);
     this.data = data;
     this.callback = callback;
   }
 
   confirm(): void {
     this.dialogClose();
+
+    // call callback.
     this.callback();
   }
 
