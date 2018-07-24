@@ -54,13 +54,17 @@ export class OrderStatusNotifierService implements OnDestroy {
   }
 
   checkOrders(newOrders: any) {
-    this.oldOrders.forEach(order => {
-      newOrders.forEach(newOrder => {
-        if (this.compareOrder(order, newOrder)) {
-          this.notifyNewStatus(newOrder);
-        }
+    if (this.oldOrders.length !== newOrders.length) {
+      this.notifyNewStatus(newOrders.reverse()[0]);
+    } else {
+      this.oldOrders.forEach(order => {
+        newOrders.forEach(newOrder => {
+          if (this.compareOrder(order, newOrder)) {
+            this.notifyNewStatus(newOrder);
+          }
+        });
       });
-    });
+    }
   }
 
   compareOrder(order: any, newOrder: any) {
@@ -70,6 +74,7 @@ export class OrderStatusNotifierService implements OnDestroy {
   }
 
   private getMessage(title: string, msg: string) {
+    console.log('testtset', msg);
     switch (msg) {
       case 'Accept bid' :
         return 'New bid on' + title + ' - accept or reject it';
