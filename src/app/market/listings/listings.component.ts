@@ -70,7 +70,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     country: undefined
   };
 
-  selectedCountry: string;
+  selectedCountry: Country;
 
   constructor(
     private category: CategoryService,
@@ -79,7 +79,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private countryList: CountryListService
   ) {
     console.warn('overview created');
-    this.selectedCountry = this.listingService.cache.selectedCountry;
+    if (this.listingService.cache.selectedCountry) {
+      this.selectedCountry = this.countryList.getCountryByRegion(
+        this.listingService.cache.selectedCountry
+      );
+    }
   }
 
   ngOnInit() {

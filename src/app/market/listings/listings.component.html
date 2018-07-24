@@ -65,6 +65,7 @@
         [options]="countryList?.countries"
         [defaultOption]="'Your country'"
         [showValueOf]="'name'"
+        [defaultSelectedValue]="this.selectedCountry"
         (onChange)="changeLocation($event)">
       </mat-select-search>
       <!-- mat-select-search -->

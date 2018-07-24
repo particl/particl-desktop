@@ -2,5 +2,11 @@
      matTooltip="View cart" matTooltipPosition="before">
   <mat-icon fontSet="partIcon" fontIcon="part-cart"></mat-icon>
   <strong class="tag">{{ cart?.countOfItems }}</strong>
-  <span *ngIf="cart?.countOfItems > 0" class="amount">({{ cart?.subTotal.amount }} PART)</span>
+  <!-- cart total without shipping price -->
+  <span *ngIf="cart?.countOfItems > 0 && !listCache?.selectedCountry" class="amount">({{cart?.subTotal.amount}} PART)</span>
+
+  <!-- cart total with shipping price -->
+  <span *ngIf="cart?.countOfItems > 0 && listCache?.selectedCountry" class="amount">({{
+      cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry)?.getAmount()
+    }} PART)</span>
 </div>
