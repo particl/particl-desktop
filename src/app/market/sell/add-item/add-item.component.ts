@@ -338,7 +338,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       return;
     };
     this.log.d('Saving and publishing the listing.');
-    this.modals.unlock({timeout: 30}, (status) => this.publish());
+    this.modals.unlock({timeout: 60}, (status) => this.publish());
   }
 
   onCountryChange(country: Country): void {
