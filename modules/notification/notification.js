@@ -1,4 +1,5 @@
 /* electron */
+const electron = require('electron').app;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const log = require('electron-log');
 const Notification = require('electron').Notification;
@@ -13,6 +14,8 @@ const Observable = require('rxjs/Observable').Observable;
 */
 exports.init = function () {
     rxIpc.registerListener('notification', function (title, desc, params) {
+        // Fix for windows 10
+        electron.setAppUserModelId("io.particl.desktop");
         let notification = new Notification({
             'title': title,
             'body': desc,
