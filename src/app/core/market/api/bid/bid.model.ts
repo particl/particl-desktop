@@ -1,15 +1,15 @@
 import * as _ from 'lodash';
-import { Amount, DateFormatter, Messages, setOrderKeys } from 'app/core/util/utils';
+import { Order } from 'app/core/market/api/bid/order.model';
 import { Listing
 } from '../listing/listing.model';
 
 export class Bid {
   public id: number;
-  public orderItems: Array<any>;
   //  @TODO replace with product model
   public listing: Listing;
   public listingItemId: number;
   public status: string;
+  private bid: Order;
 
   // @TODO some refactoring needed
   public OrderItem: {
@@ -26,26 +26,20 @@ export class Bid {
   }
 
   setFilter() {
-    this.orderItems = [];
-    const orders = [];
-    _.each(this.orders, (order) => {
-      if (this.type === 'buy' && order.bidder === this.address) {
-        order = setOrderKeys(order, this.type);
-        // this.orderItems.push(order)
-        orders.push(order);
-      }
-      if (this.type === 'sell' && order.ListingItem.seller  === this.address) {
-        order = setOrderKeys(order, this.type);
-        // this.orderItems.push(order);
-        orders.push(order);
-      }
-    })
-
-    this.orders = orders;
+    this.bid = new Order(this.orders, this.address);
+    this.orders = this.type === 'buy' ? this.bid.buyOrders : this.bid.sellOrders;
   }
 
   get ordersCount() {
     return this.orders.length;
+  }
+
+  get buySellCount() {
+    const count = this.type === 'buy' ? this.bid.activeBuyOrderCount : this.bid.activeSellOrderCount;
+    if (count > 0) {
+      return count;
+    }
+    return undefined;
   }
 
 }
