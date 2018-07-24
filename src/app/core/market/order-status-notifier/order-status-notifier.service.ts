@@ -77,19 +77,19 @@ export class OrderStatusNotifierService implements OnDestroy {
     console.log('testtset', msg);
     switch (msg) {
       case 'Accept bid' :
-        return 'New bid on' + title + ' - accept or reject it';
+        return 'New bid on \"' + title + '\" - accept or reject it';
 
       case 'Make payment' :
-        return 'Seller accepted your bid, order ' + title + ' ready for payment';
+        return 'Seller accepted your bid, order \"' + title + '\" ready for payment';
 
       case 'Mark as shipped' :
-        return 'Buyer locked funds, order ' + title + ' ready for shipping';
+        return 'Buyer locked funds, order \"' + title + '\" ready for shipping';
 
       case 'Mark as delivered' :
-        return 'Seller just shipped ' + title;
+        return 'Seller just shipped \"' + title + '\"';
 
       case 'Order rejected' :
-        return 'Your bid on ' + title + ' was rejected by Seller';
+        return 'Your bid on \"' + title + '\" was rejected by Seller';
 
       default:
         break;
