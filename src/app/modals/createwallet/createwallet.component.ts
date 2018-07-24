@@ -123,7 +123,6 @@ export class CreateWalletComponent implements OnDestroy {
   prevStep(): void {
     this.step--;
     this.errorString = '';
-    this.doStep();
   }
 
   doStep(): void {
@@ -148,7 +147,7 @@ export class CreateWalletComponent implements OnDestroy {
           'warning');
         break;
       case 4:
-        while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 0) {
+        while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
           const k = Math.floor(Math.random() * 23);
           this.words[k] = '';
         }
@@ -276,12 +275,6 @@ export class CreateWalletComponent implements OnDestroy {
     this.words = words.split(',');
   }
 
-  close(): void {
-    this.reset();
-    document.body.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-  }
-
   public countWords (count: number): boolean {
     if ([12, 15, 18, 24].indexOf(count) !== -1) {
       return false;
@@ -293,7 +286,12 @@ export class CreateWalletComponent implements OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
     if (event.keyCode === 13) {
-      this.nextStep();
+      if(this.step < 7) {
+        this.nextStep();
+      } else {
+        this.dialogRef.close()
+      }
+
     }
   }
 }
