@@ -187,6 +187,10 @@
 
     <div class="recovery-password">
       <div class="subtitle">Recovery Password</div>
+      <p class="warning">
+        Wallets created using particl-desktop 1.1.0 did not import with a password due to a bug.
+        Please leave the password field empty if you're restoring a recovery phrase dating from that release.
+      </p>
       <p>
         If you set up a Recovery Password during wallet creation as well, enter it below:
       </p>
@@ -214,8 +218,28 @@
 </ng-template><!-- Step 2,3 & 4 -->
 
 
-<!-- STEP 5: Gratz -->
+<!-- STEP 5: Waiting -->
 <ng-template [ngIf]="step === 5">
+  <div mat-dialog-title class="title">Your wallet is ready</div>
+  <mat-dialog-content class="modal-content">
+    <p>
+      Please wait a moment while we're importing your wallet!
+    </p>
+    <p class="info">
+      Please ensure that your Recovery Phrase (and Passphrase if you set it up) is written down and stored in a secure location!
+    </p>
+  </mat-dialog-content>
+</ng-template>
+
+
+<!-- STEP 6 -->
+<ng-template [ngIf]="step === 6">
+  <app-unlockwallet (unlockEmitter)="importMnemonicSeed($event)" [autoClose]="false">
+  </app-unlockwallet>
+</ng-template>
+
+<!-- STEP 7: Gratz -->
+<ng-template [ngIf]="step === 7">
   <div mat-dialog-title class="title">Your wallet is ready</div>
   <mat-dialog-content class="modal-content">
     <p>
@@ -234,11 +258,4 @@
       Close
     </button>
   </mat-dialog-actions>
-</ng-template>
-
-
-<!-- STEP 6 -->
-<ng-template [ngIf]="step === 6">
-  <app-unlockwallet (unlockEmitter)="importMnemonicSeed($event)" [autoClose]="false">
-  </app-unlockwallet>
 </ng-template>

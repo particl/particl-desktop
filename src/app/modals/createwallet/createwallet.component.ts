@@ -139,6 +139,7 @@ export class CreateWalletComponent implements OnDestroy {
         this.passwordVerify = '';
         break;
       case 3:
+      this.log.d('step 3 execution, password=', this.password)
         this._passphraseService.generateMnemonic(
           this.mnemonicCallback.bind(this), this.password
         );
@@ -147,7 +148,7 @@ export class CreateWalletComponent implements OnDestroy {
           'warning');
         break;
       case 4:
-        while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
+        while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 0) {
           const k = Math.floor(Math.random() * 23);
           this.words[k] = '';
         }
@@ -156,7 +157,6 @@ export class CreateWalletComponent implements OnDestroy {
           'warning');
         break;
       case 5:
-        this.step = 4;
         this.errorString = '';
         if (this.rpcState.get('locked')) {
           // unlock wallet
@@ -185,12 +185,13 @@ export class CreateWalletComponent implements OnDestroy {
 
   public importMnemonicSeed(): void {
     this.rpcState.set('ui:spinner', true);
+    this.step = 5;
 
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {
           this._passphraseService.generateDefaultAddresses();
-          this.step = 5;
+          this.step = 7;
           this.rpcState.set('ui:walletInitialized', true);
           this.rpcState.set('ui:spinner', false);
           this.log.i('Mnemonic imported successfully');
@@ -268,8 +269,6 @@ export class CreateWalletComponent implements OnDestroy {
       this.step++;
       this.doStep();
     }
-    this.passwordVerify = ''
-    this.password = '';
   }
 
   /** Triggered when the password is emitted from PassphraseComponent */
