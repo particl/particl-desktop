@@ -10,6 +10,7 @@ import { RpcModule } from 'app/core/rpc/rpc.module';
 
 import { LoadingComponent } from 'app/loading/loading.component';
 import { CoreModule } from 'app/core/core.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 @NgModule({
   declarations: [
@@ -22,8 +23,8 @@ import { CoreModule } from 'app/core/core.module';
     /* own */
     app_routing,
     InstallerModule,
-    RpcModule.forRoot(),
-    CoreModule.forRoot()
+    CoreModule.forRoot(),
+    MultiwalletModule.forRoot()
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

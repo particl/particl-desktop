@@ -8,7 +8,6 @@ import { DirectiveModule } from 'app/core-ui/directive/directive.module';
 
 // PasswordComponent
 import { ModalsModule } from 'app/modals/modals.module';
-import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 import { InstallerRouterComponent, installer_routing } from './installer.router';
 
@@ -24,9 +23,7 @@ import { PassphraseComponent } from 'app/installer/create-wallet/passphrase/pass
     RouterModule,
     ClipboardModule,
     MaterialModule,
-    DirectiveModule,
-    ModalsModule, // Only imported for the shared components, TODO: move them.
-    MultiwalletModule
+    DirectiveModule
   ],
   exports: [
     InstallerRouterComponent

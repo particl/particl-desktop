@@ -4,8 +4,7 @@
     <!-- TODO: add `.active` class to currently selected wallet -->
     <!-- TODO: replace tooltip's content by wallets' names -->
     <!-- TODO: letter in the button as 1st letter of wallet name -->
-    <button mat-raised-button color="primary" [routerLink]="['/loading']" [queryParams]="{wallet: 'wallet'}" routerLinkActive="active" matTooltip="Active wallet: wallet.dat" matTooltipPosition="after">W</button>
-    <button mat-raised-button color="primary" [routerLink]="['/loading']" [queryParams]="{wallet: 'shop'}" routerLinkActive="active" matTooltip="Switch to: shop.dat" matTooltipPosition="after">S</button>
+    <button *ngFor="let wallet of list" mat-raised-button color="primary" (click)="switchToWallet(wallet)" [ngClass]="{'active': isWalletActive(wallet) }" matTooltip="{{wallet.fakename.toUpperCase()}}" matTooltipPosition="after">{{wallet.fakename.toUpperCase()[0]}}</button>
     <button mat-raised-button color="primary" routerLink="/installer/create" routerLinkActive="active" matTooltip="Add new wallet" matTooltipPosition="after">+</button>
   </div>
   <div class="buttons">

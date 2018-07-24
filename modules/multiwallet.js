@@ -1,12 +1,50 @@
-const app   = require('electron').app;
+const {app, protocol} = require('electron');
 const spawn = require('buffered-spawn');
 const path  = require('path');
 const log   = require('electron-log');
 const cookie = require('./rpc/cookie');
 
-let wallets = [];
+// directory watcher
+const chokidar = require('chokidar');
+const { readdirSync, statSync } = require('fs')
+const { join, basename } = require('path')
+// Single line directory grabber.
+const dirs = p => readdirSync(p).filter(f => statSync(join(p, f)).isDirectory())
 
-exports.get = function () {
+let wallets = [
+  {
+    name: 'wallet.dat',
+    alreadyLoaded: true
+  }
+];
+
+function add(wallet) {
+  wallets.push({ name: wallet })
+}
+
+
+function init() {
+  const particlDataDir = cookie.getParticlDatadirPath();
+
+  // watch the folders
+  const glob = join(particlDataDir, 'wallet_*');
+  chokidar.watch(glob).on('addDir', dir => add(basename(dir)));
+
+  // Register a custom protocol, which is polled by the front end.
+  protocol.registerBufferProtocol('wallets', function(request, callback) {
+    const list = new Buffer(JSON.stringify(
+      {
+        wallets: wallets
+      }
+    ));
+    callback({mimeType: 'application/json', data: list});
+  }, function (error) {
+    if (error)
+      console.error('Failed to register protocol')
+  });
+}
+
+ function get () {
   return new Promise((resolve, reject) => {
 
     if (wallets.length > 0) {
@@ -14,8 +52,8 @@ exports.get = function () {
     }
 
     // TODO remove when other platforms tested
-    //resolve([]);
-    //return;
+    resolve([]);
+    return;
 
     spawn('ls', [ cookie.getParticlDatadirPath() ]).then(files => {
 
@@ -30,3 +68,6 @@ exports.get = function () {
 
   });
 }
+
+exports.init = init;
+exports.get = get;

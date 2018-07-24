@@ -4,15 +4,16 @@ import { Log } from 'ng2-logger';
 
 import { ConnectionCheckerService } from './connection-checker.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
+import { IWallet, MultiwalletService } from 'app/multiwallet/multiwallet.service';
 
-const DEFAULT_WALLET: string = "main";
+const DEFAULT_WALLET ='wallet.dat';
 
 @Component({
   selector: 'app-loading',
   encapsulation: ViewEncapsulation.None,
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
-  providers: [ ConnectionCheckerService, RpcService ]
+  providers: [RpcService, ConnectionCheckerService]
 })
 export class LoadingComponent implements OnInit {
 
@@ -23,17 +24,41 @@ export class LoadingComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private rpc: RpcService,
+    private multi: MultiwalletService,
     private con: ConnectionCheckerService
   ) {
-    console.log('loading component')
+    console.log('loading component');
+
+    // we wait until the multiwallet has retrieved the wallets
+    this.multi.list.take(1).subscribe(wallets => {
+      // we also pass through the loading screen to switch wallets
+      // check if a wallet was specified
+      this.route.queryParamMap.take(1).subscribe((params: ParamMap) => {
+        console.log('loading params', params);
+        // we can only pass strings through
+        const switching = params.get('wallet');
+        if (switching) {
+          // one was specified
+          this.walletToLoad = switching;
+        } // else just load DEFAULT_WALLET
+
+        // either load the switching wallet or the default
+        this.rpc.wallet = this.walletToLoad;
+
+        // kick off the connection checker
+        // only after we have a wallet or default
+        this.con.whenRpcIsResponding().subscribe(
+          (getwalletinfo) => this.decideWhereToGoTo(getwalletinfo),
+          (error) => this.log.d('whenRpcIsResponding errored')
+        );
+      });
+    })
+
   }
 
   ngOnInit() {
     this.log.i('Loading component booted!');
-    this.con.whenRpcIsResponding().subscribe(
-      (getwalletinfo) => this.decideWhereToGoTo(getwalletinfo),
-      (error) => this.log.d('whenRpcIsResponding errored')
-    );
   }
 
   decideWhereToGoTo(getwalletinfo: any) {
@@ -60,10 +85,6 @@ export class LoadingComponent implements OnInit {
   }
 
   goToWallet() {
-    this.route.queryParamMap.subscribe((params: ParamMap) => {
-      console.log('loading params', params);
-      this.walletToLoad = params.get('wallet') || DEFAULT_WALLET;
-    });
     this.log.d('MainModule: moving to new wallet', this.walletToLoad);
     this.router.navigate([this.walletToLoad]);
   }

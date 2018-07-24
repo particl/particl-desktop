@@ -4,7 +4,7 @@ const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const Observable  = require('rxjs/Observable').Observable;
 
 const cookie      = require('./cookie');
-const _options    = require('../options');
+const _options    = require('../options').get()
 
 const daemon      = require('../daemon/daemon');
 
@@ -18,11 +18,9 @@ let rpcOptions;
 let auth;
 
 exports.init = function() {
-  let options = _options.get();
-
-  HOSTNAME = options.rpcbind || 'localhost';
-  PORT     = options.port;
-  auth     = cookie.getAuth(_options.get());
+  HOSTNAME = _options.rpcbind || 'localhost';
+  PORT     = _options.port;
+  auth     = cookie.getAuth();
 
 }
 

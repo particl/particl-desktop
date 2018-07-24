@@ -7,6 +7,7 @@ import { map, catchError } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
 import { environment } from '../../../environments/environment';
+import { IWallet, MultiwalletService } from 'app/multiwallet/multiwallet.service';
 
 const MAINNET_PORT = 51735;
 const TESTNET_PORT = 51935;
@@ -27,7 +28,7 @@ declare global {
 @Injectable()
 export class RpcService implements OnDestroy {
 
-  private log: any = Log.create('rpc.service');
+  private log: any = Log.create('rpc.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
 
   /**
@@ -49,7 +50,8 @@ export class RpcService implements OnDestroy {
   private _wallet: string;
 
   constructor(
-    private _http: HttpClient
+    private _http: HttpClient,
+    private multi: MultiwalletService
   ) {
   }
 
@@ -62,18 +64,22 @@ export class RpcService implements OnDestroy {
    * @param w the wallet filename .
    */
   set wallet(w: string) {
-    if(this.wallet) {
-      throw new Error('Wallet was already loaded!');
-    } else {
-      this.log.d('wallet set to ', w);
-      this._wallet = w;
-    }
+    this._wallet = w;
   }
 
   get wallet() {
     return this._wallet;
   }
 
+
+
+  get url() {
+    let url = `http://${this.hostname}:${this.port}`;
+    if(this._wallet) {
+      url = url.concat('/wallet/', this._wallet);
+    }
+    return url;
+  }
 
   /**
    * The call method will perform a single call to the particld daemon and perform a callback to
@@ -106,7 +112,7 @@ export class RpcService implements OnDestroy {
       const headers = new HttpHeaders(headerJson);
 
       return this._http
-        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+        .post(this.url, postData, { headers: headers })
           .map((response: any) => response.result)
           .catch(error => {
             let err: string;

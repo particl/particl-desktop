@@ -1,16 +1,17 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MultiwalletSidebarComponent } from './multiwallet-sidebar.component';
 import { MaterialModule } from 'app/core-ui/material/material.module';
 import { RouterModule } from '@angular/router';
+
+import { MultiwalletSidebarComponent } from './multiwallet-sidebar.component';
+import { MultiwalletService } from './multiwallet.service';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     MaterialModule
-
   ],
   exports: [
     MultiwalletSidebarComponent
@@ -18,4 +19,14 @@ import { RouterModule } from '@angular/router';
   declarations: [MultiwalletSidebarComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class MultiwalletModule { }
+export class MultiwalletModule { 
+  
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: MultiwalletModule,
+      providers: [
+        MultiwalletService
+      ]
+    };
+  }
+}

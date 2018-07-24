@@ -26,7 +26,9 @@ function isVerboseLevel(arg) {
 
 exports.parse = function() {
 
-  let options = {};
+  let options = {
+    // customdaemon: '/home/user/projects/particl/particl-core/src/particld'
+  };
   if (process.argv[0].match(/[Ee]lectron/)) {
     process.argv = process.argv.splice(2); /* striping 'electron .' from argv */
   } else {

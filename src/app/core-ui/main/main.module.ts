@@ -5,7 +5,6 @@ import { RouterModule, Routes, ParamMap, Router, NavigationStart } from '@angula
 import { CoreModule, RpcService } from '../../core/core.module';
 import { MaterialModule } from '../material/material.module';
 import { DirectiveModule } from '../directive/directive.module';
-import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 import { ModalsModule } from 'app/modals/modals.module';
 
 import { MainRouterComponent } from './main.router';
@@ -18,6 +17,7 @@ import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
 
 import { ClientVersionService } from '../../core/http/client-version.service';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 
 const routes: Routes = [

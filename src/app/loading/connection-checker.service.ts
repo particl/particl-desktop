@@ -17,6 +17,7 @@ export class ConnectionCheckerService implements OnDestroy {
 
   // shareReplay
   constructor(private rpc: RpcService) {
+    this.log.d(`connection-checker created`);
     this.check = Observable.create(observer => {
       this.observer = observer;
     }).shareReplay();
@@ -36,6 +37,7 @@ export class ConnectionCheckerService implements OnDestroy {
   private performCheck() {
     if (!this.destroyed) {
       this.log.d('performing check');
+      this.log.d(`connection-checker wallet:`, this.rpc.wallet);
       this.rpc.call('getwalletinfo', []).subscribe(
         (getwalletinfo: any) => this.RpcHasResponded(getwalletinfo),
         (error: any) => this.log.d('performCheck on rpc (error is normal here) ', error)

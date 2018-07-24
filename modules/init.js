@@ -15,9 +15,10 @@ const market        = require('./market/market');
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
-  rpc.init();
   notification.init();
 
+  rpc.init();
+  multiwallet.init();
   daemon.init();
   market.init();
 
@@ -99,6 +100,7 @@ electron.app.on('before-quit', function beforeQuit(event) {
   market.stop();
   daemon.stop().then(() => {
     log.info('daemon.stop() resolved!');
+    electron.app.quit();
   })
 });
 

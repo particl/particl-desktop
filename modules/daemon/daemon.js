@@ -49,7 +49,8 @@ exports.restart = function (alreadyStopping) {
     });
   }
 
-  // wallet encrypt will restart by itself
+  // wallet encrypt will stop by itself,
+  // so no need to force it to stop.
   if (!alreadyStopping) {
     // stop daemon but don't make it quit the app.
     const restarting = true;
@@ -76,10 +77,10 @@ exports.start = function (wallets) {
         ? options.customdaemon
         : daemonManager.getPath();
 
-      wallets = wallets.map(wallet => `-wallet=${wallet}`);
-      log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
+      // wallets = wallets.map(wallet => `-wallet=${wallet}`);
+      log.info(`starting daemon ${daemonPath} ${process.argv}`);
 
-      const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
+      const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200"])
         .on('close', code => {
           log.info('daemon exited - setting to undefined.');
           daemon = undefined;
@@ -120,7 +121,7 @@ exports.check = function () {
   });
 }
 
-exports.stop = function (restarting) {
+exports.stop = function () {
   log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
@@ -128,12 +129,12 @@ exports.stop = function (restarting) {
 
       // attach event to stop electron when daemon closes.
       // do not close electron when restarting (e.g encrypting wallet)
-      if (!restarting) {
-        daemon.once('close', code => {
-          log.info('daemon exited successfully - we can now quit electron safely! :)');
-          electron.app.quit();
-        });
-      }
+      
+      daemon.once('close', code => {
+        log.info('daemon exited successfully - (we can now quit electron safely!) :)');
+        resolve();
+      });
+      
 
       log.info('Call RPC stop!');
       rpc.call('stop', null, (error, response) => {
@@ -143,7 +144,6 @@ exports.stop = function (restarting) {
           reject();
         } else {
           log.info('Daemon stopping gracefully...');
-          resolve();
         }
       });
     } else {

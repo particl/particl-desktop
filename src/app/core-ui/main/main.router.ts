@@ -30,7 +30,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   title: string = 'Overview';
   testnet: boolean = false;
   /* errors */
-  walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
   daemonError: any;
   /* version */
@@ -102,11 +101,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
         }
       });
 
-    // Updates the error box in the sidenav if wallet is not initialized.
-    this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.walletInitialized = status);
-
 
     this._rpcState.observe('getwalletinfo', 'unlocked_until')
       .takeWhile(() => !this.destroyed)
@@ -163,10 +157,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   checkSecond(sec: number): number {
     sec = sec > 0 ? (sec - 1) : 59;
     return sec;
-  }
-
-  get wallet() {
-    return this._rpc.wallet;
   }
 
   // Paste Event Handle

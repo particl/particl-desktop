@@ -9,7 +9,6 @@ import { MarketModule } from './market/market.module';
 import { IpcService } from './ipc/ipc.service';
 import { RpcService } from './rpc/rpc.service';
 import { ZmqService } from './zmq/zmq.service';
-import { MultiwalletService } from './multiwallet/multiwallet.service';
 
 import { UpdaterService } from './updater/updater.service';
 import { NotificationService } from './notification/notification.service';
@@ -43,8 +42,7 @@ export class CoreModule {
         ZmqService,
         UpdaterService,
         SnackbarService,
-        NotificationService,
-        MultiwalletService
+        NotificationService
       ]
     };
   }
