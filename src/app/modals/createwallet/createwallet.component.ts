@@ -286,7 +286,7 @@ export class CreateWalletComponent implements OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
     if (event.keyCode === 13) {
-      if(this.step < 7) {
+      if (this.step < 7) {
         this.nextStep();
       } else {
         this.dialogRef.close()
