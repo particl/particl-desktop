@@ -45,7 +45,7 @@
     "travis:test": "ng test --single-run --code-coverage",
     "start": "yarn run start:electron:fast"
   },
-  "productName": "particl-desktop-alpha",
+  "productName": "particl-desktop",
   "build": {
     "electronVersion": "1.7.12",
     "appId": "io.particl.desktop",
@@ -113,10 +113,10 @@
       ],
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
-        "Exec": "particl-desktop-alpha %U",
-        "Icon": "particl-desktop-alpha",
-        "Name": "Particl Desktop Alpha (testnet)",
-        "Path": "/opt/particl-desktop-alpha",
+        "Exec": "particl-desktop %U",
+        "Icon": "particl-desktop",
+        "Name": "Particl Desktop",
+        "Path": "/opt/particl-desktop",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
