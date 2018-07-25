@@ -63,12 +63,8 @@
               {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
-            <td *ngIf="listCache?.selectedCountry && listCache?.selectedCountry === listing.country" class="price cell">
-              {{ listing.domesticShippingPrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.domesticShippingPrice?.getFractionalPart()}}</small>
-              PART
-            </td>
-            <td *ngIf="listCache?.selectedCountry && listCache?.selectedCountry !== listing.country" class="price cell">
-              {{ listing.internationalShippingPrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.internationalShippingPrice?.getFractionalPart()}}</small>
+            <td *ngIf="listCache?.selectedCountry" class="price cell">
+              {{ listing.shippingAmount(listCache?.selectedCountry)?.getIntegerPart()}}{{listing.shippingAmount(listCache?.selectedCountry)?.dot()}}<small>{{listing.shippingAmount(listCache?.selectedCountry)?.getFractionalPart()}}</small>
               PART
             </td>
             <!--<td class="quantity cell">1 &times;</td>-->
