@@ -70,7 +70,8 @@
             </mat-select>
           </mat-form-field>
           <div class="est-fee" fxFlex="0 0 210px">
-            Approximate Listing Fee: {{ txFee.getIntegerPart() }} {{ txFee.dot() }} {{ txFee.getFractionalPart() }}PART
+            Approximate listing fee:<br>
+            {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
           </div>
         </div>
         <p class="widget-help">
