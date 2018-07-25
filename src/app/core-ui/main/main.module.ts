@@ -22,8 +22,8 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
-  { 
-    path: 'main', 
+  {
+    path: 'main',
     component: MainRouterComponent,
     children: [
       { path: '', redirectTo: 'wallet', pathMatch: 'full' },
@@ -39,7 +39,7 @@ const main_routing: ModuleWithProviders = RouterModule.forChild(routes);
   imports: [
     CommonModule,
     main_routing,
-    CoreModule.forChild(), 
+    CoreModule.forChild(),
     ModalsModule,
     MaterialModule,
     DirectiveModule,
@@ -74,10 +74,10 @@ export class MainModule implements OnDestroy {
   ) {
     console.log('MainModule launched!');
     // Not the prettiest code, but it listens to all router events
-    // and if one includes the wallet parameter, it will grab it 
+    // and if one includes the wallet parameter, it will grab it
     // and set the rpc wallet.
     const loadWallet = this._router.events.subscribe((event: any) => {
-      if(event.snapshot && event.snapshot.params['wallet']) {
+      if (event.snapshot && event.snapshot.params['wallet']) {
         this._rpc.wallet = event.snapshot.params['wallet'];
         loadWallet.unsubscribe();
       }

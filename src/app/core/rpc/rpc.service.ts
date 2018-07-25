@@ -75,7 +75,7 @@ export class RpcService implements OnDestroy {
 
   get url() {
     let url = `http://${this.hostname}:${this.port}`;
-    if(this._wallet) {
+    if (this._wallet) {
       url = url.concat('/wallet/', this._wallet);
     }
     return url;

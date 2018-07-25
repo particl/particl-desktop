@@ -19,8 +19,8 @@ import { MultiwalletService } from './multiwallet.service';
   declarations: [MultiwalletSidebarComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class MultiwalletModule { 
-  
+export class MultiwalletModule {
+
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MultiwalletModule,

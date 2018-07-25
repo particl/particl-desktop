@@ -22,7 +22,7 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
     private walletRpc: RpcService,
     private router: Router,
     private multi: MultiwalletService
-  ) { 
+  ) {
     // get wallet list
     this.multi.list
       .takeWhile(() => !this.destroyed)
@@ -30,7 +30,7 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
         this.list = list;
       });
 
-    this.activeWallet = { 
+    this.activeWallet = {
       name: this.walletRpc.wallet,
       fakename: this.walletRpc.wallet.replace('wallet_', '')
     };
@@ -48,7 +48,7 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
       (error) => this.log.er('failed loading wallet', error));
 
     this.router.navigate(['/loading'], { queryParams: { wallet: wallet.name } });
-    
+
   }
 
   ngOnInit() {

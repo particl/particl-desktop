@@ -36,7 +36,7 @@ export class CreateWalletComponent implements OnDestroy {
 
   log: any = Log.create('createwallet.component');
   private destroyed: boolean = false;
-  Steps = Steps; // so we can use it in HTML
+  Steps: any = Steps; // so we can use it in HTML
 
   step: number = 0;
   isRestore: boolean = false;
@@ -103,7 +103,7 @@ export class CreateWalletComponent implements OnDestroy {
     if (this.validate()) {
       this.step++;
       this.doStep();
-    } else if(this.step === Steps.MNEMONIC_VERIFY) {
+    } else if (this.step === Steps.MNEMONIC_VERIFY) {
       this.errorString = 'You have entered an invalid Recovery Phrase';
     }
 
@@ -121,7 +121,7 @@ export class CreateWalletComponent implements OnDestroy {
         setTimeout(() => this.nameField.nativeElement.focus(this), 1);
         break;
       case Steps.MNEMONIC_INITIAL:
-        if(this.isRestore) {
+        if (this.isRestore) {
           break;
         }
         this._passphraseService.generateMnemonic()
@@ -131,7 +131,7 @@ export class CreateWalletComponent implements OnDestroy {
           'warning');
         break;
       case Steps.MNEMONIC_VERIFY:
-        if(this.isRestore) {
+        if (this.isRestore) {
           this.step = Steps.WAITING;
           this.doStep();
         } else {
@@ -217,12 +217,12 @@ export class CreateWalletComponent implements OnDestroy {
       return valid;
     }
 
-    if(this.step === Steps.MNEMONIC_INITIAL && this.isRestore) {
+    if (this.step === Steps.MNEMONIC_INITIAL && this.isRestore) {
       // when restoring, count much be 12, 15, 18 or 24
       const count = this.words.filter((value: string) => value).length;
       const valid = ([12, 15, 18, 24].indexOf(count) !== -1);
       return valid;
-    } else if(this.step === Steps.PASSWORD && !this.isRestore){
+    } else if (this.step === Steps.PASSWORD && !this.isRestore) {
       // when creating new, passwords must match
       const valid = this.password === this.passwordVerify;
       this.errorString = !valid ? 'Passwords do not match!' : '';

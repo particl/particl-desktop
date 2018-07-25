@@ -50,7 +50,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
      private _newtxnotifier: NewTxNotifierService
-  ) { 
+  ) {
   }
 
   ngOnDestroy() {
@@ -63,7 +63,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
     try {
       this.main.destroy();
-    } catch(e) {
+    } catch (e) {
       this.log.e('Main module was already destroyed!')
     }
 

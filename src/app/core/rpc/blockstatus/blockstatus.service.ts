@@ -6,7 +6,7 @@ import { RpcStateService } from '../rpc-state/rpc-state.service';
 import { PeerService } from '../peer/peer.service';
 
 @Injectable()
-export class BlockStatusService implements OnDestroy{
+export class BlockStatusService implements OnDestroy {
 
   private log: any = Log.create('blockstatus.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;

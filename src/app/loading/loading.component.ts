@@ -6,7 +6,7 @@ import { ConnectionCheckerService } from './connection-checker.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { IWallet, MultiwalletService } from 'app/multiwallet/multiwallet.service';
 
-const DEFAULT_WALLET ='wallet.dat';
+const DEFAULT_WALLET = 'wallet.dat';
 
 @Component({
   selector: 'app-loading',

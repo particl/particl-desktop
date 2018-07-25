@@ -17,12 +17,12 @@ export class MultiwalletService implements OnDestroy {
   log: any = Log.create('multiwallet.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
 
-  private timer = Observable.interval(1000);
+  private timer: any = Observable.interval(1000);
   private _list: BehaviorSubject<Array<IWallet>> = new BehaviorSubject([]);
 
   constructor(
     private _http: HttpClient,
-  ) { 
+  ) {
     this.listen();
   }
 
