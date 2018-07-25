@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { NotificationService } from 'app/core/notification/notification.service';
@@ -55,7 +56,7 @@ export class OrderStatusNotifierService implements OnDestroy {
 
   checkOrders(newOrders: any) {
     if (this.oldOrders.length !== newOrders.length) {
-      this.notifyNewStatus(newOrders.reverse()[0]);
+      this.checkForNewOrders(newOrders);
     } else {
       this.oldOrders.forEach(order => {
         newOrders.forEach(newOrder => {
@@ -67,14 +68,22 @@ export class OrderStatusNotifierService implements OnDestroy {
     }
   }
 
-  compareOrder(order: any, newOrder: any) {
+  private compareOrder(order: any, newOrder: any): any {
     return order.id === newOrder.id &&
             order.messages.action_button !== newOrder.messages.action_button &&
             this.actionStatus.includes(newOrder.messages.action_button)
   }
 
+  private checkForNewOrders(newOrders: any): void {
+    const compOrders = _(newOrders)
+                        .differenceBy(this.oldOrders, 'id')
+                        .value();
+    compOrders.forEach(newOrder => {
+      this.notifyNewStatus(newOrder);
+    });
+  }
+
   private getMessage(title: string, msg: string) {
-    console.log('testtset', msg);
     switch (msg) {
       case 'Accept bid' :
         return 'New bid on \"' + title + '\" - accept or reject it';
