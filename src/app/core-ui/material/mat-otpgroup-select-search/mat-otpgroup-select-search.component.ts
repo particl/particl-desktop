@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter, SimpleChange, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChange,
+  OnChanges,
+  ViewChild,
+  ElementRef,
+  OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -11,6 +20,8 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
   styleUrls: ['./mat-otpgroup-select-search.component.scss']
 })
 export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
+  @ViewChild('textInput') textInput: ElementRef;
+
   stateForm: FormGroup = this.fb.group({
     stateGroup: [],
   });
@@ -76,15 +87,20 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
    * and input constains any value then selected value should
    */
 
-  public _onBlur($event: any): void {
-    const val = $event.target.value;
+  public _onBlur(): void {
+    const val = this.textInput.nativeElement.value;
     const options = this._filterGroup(val);
     if (options.length === 0 || this.stateForm.get('stateGroup').value) {
       this.change.emit(null)
     }
   }
 
-  public _selectAllContent($event: any): void {
-    $event.target.select();
+  // Removed focus from the input box when user select any option from the listed options.
+  onSelectionChanged(): void {
+    this.textInput.nativeElement.blur();
+  }
+
+  public _selectAllContent(): void {
+    this.textInput.nativeElement.select();
   }
 }

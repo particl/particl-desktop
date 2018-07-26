@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  ViewChild,
+  ElementRef,
+  OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -11,6 +19,7 @@ import { CountryListService } from 'app/core/market/api/countrylist/countrylist.
   styleUrls: ['./mat-select-search.component.scss']
 })
 export class MatSelectSearchComponent implements OnInit, OnChanges {
+  @ViewChild('textInput') textInput: ElementRef;
   @Input() public showValueOf: string = 'name'; // default key as 'name'.
   @Input() public placeHolder: string = '';
   @Input() public options: any[] = [];
@@ -59,15 +68,20 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
     return this.options.filter(option => option[this.showValueOf].toLowerCase().includes(filterValue));
   }
 
-  public _onBlur($event: any): void {
-    const val = $event.target.value;
+  public _onBlur(): void {
+    const val = this.textInput.nativeElement.value;
     const options = this._filter(val);
     if ((options.length === 0 && this.formControl.value) || !this.formControl.value) {
       this.onChange.emit(null)
     }
   }
 
-  public _selectAllContent($event: any): void {
-    $event.target.select();
+  // Removed focus from the input box when user select any option from the listed options.
+  onSelectionChanged(): void {
+    this.textInput.nativeElement.blur();
+  }
+
+  public _selectAllContent(): void {
+    this.textInput.nativeElement.select();
   }
 }

@@ -2,16 +2,20 @@
   <mat-form-field class="full-width">
     <input
       type="text"
-      (focus)="_selectAllContent($event)"
-      (blur)="_onBlur($event)"
+      (focus)="_selectAllContent()"
+      (blur)="_onBlur()"
       placeholder="{{placeHolder}}"
       aria-label="placeHolder"
       matInput
+      #textInput
       [formControl]="formControl"
       [matAutocomplete]="auto"
       [required]="isRequired">
 
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="onSelectionChanged()"
+      [displayWith]="displayFn.bind(this)">
       <mat-option *ngIf="defaultOption">{{defaultOption}}</mat-option>
       <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
         {{showValueOf ? option[showValueOf] : option}}
