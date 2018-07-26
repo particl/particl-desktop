@@ -358,8 +358,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
         console.log(listing);
         this.backToSell();
         });
-      }, err => this.snackbar.open(err));
-    });
+      });
+    }, err => this.snackbar.open(err));
   }
 
 }
