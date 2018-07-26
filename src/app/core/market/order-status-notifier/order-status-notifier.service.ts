@@ -36,13 +36,10 @@ export class OrderStatusNotifierService implements OnDestroy {
     if (orders.orders.length === 0) {
       return;
     }
-
-    if (!this.oldOrders || this.oldOrders.length === 0) {
-      this.oldOrders = orders.bid.orders;
-    } else {
-      this.checkOrders(orders.bid.orders);
-      this.oldOrders = orders.bid.orders;
+    if (this.oldOrders && this.oldOrders.length) {
+      this.checkOrders(orders.bid.orders.reverse());
     }
+    this.oldOrders = orders.bid.orders.reverse();
   }
 
   private notifyNewStatus(newOrder: any) {
@@ -50,37 +47,35 @@ export class OrderStatusNotifierService implements OnDestroy {
      newOrder.listing = response;
 
      const message = this.getMessage(newOrder.listing.title, newOrder.messages.action_button);
-     this._notification.sendNotification(message);
+       this._notification.sendNotification(message);
     });
   }
 
   checkOrders(newOrders: any) {
+    let compOrders = [];
+    // For New Orders
     if (this.oldOrders.length !== newOrders.length) {
-      this.checkForNewOrders(newOrders);
-    } else {
-      this.oldOrders.forEach(order => {
-        newOrders.forEach(newOrder => {
-          if (this.compareOrder(order, newOrder)) {
-            this.notifyNewStatus(newOrder);
-          }
-        });
-      });
+      compOrders = this.checkForNewOrders(newOrders);
     }
+    // OldOrders that are changed
+    this.oldOrders.forEach(oldOrder => {
+      compOrders.push(newOrders.find(newOrder => this.compareOrder(oldOrder, newOrder)))
+    })
+
+    _.without(compOrders, undefined)
+      .forEach(newOrder => {
+        this.notifyNewStatus(newOrder);
+      });
   }
 
   private compareOrder(order: any, newOrder: any): any {
     return order.id === newOrder.id &&
-            order.messages.action_button !== newOrder.messages.action_button &&
-            this.actionStatus.includes(newOrder.messages.action_button)
+      order.messages.action_button !== newOrder.messages.action_button &&
+      this.actionStatus.includes(newOrder.messages.action_button)
   }
 
-  private checkForNewOrders(newOrders: any): void {
-    const compOrders = _(newOrders)
-                        .differenceBy(this.oldOrders, 'id')
-                        .value();
-    compOrders.forEach(newOrder => {
-      this.notifyNewStatus(newOrder);
-    });
+  private checkForNewOrders(newOrders: any): any {
+    return _(newOrders).differenceBy(this.oldOrders, 'id').value();
   }
 
   private getMessage(title: string, msg: string) {
