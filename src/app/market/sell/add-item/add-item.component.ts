@@ -338,7 +338,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       return;
     };
     this.log.d('Saving and publishing the listing.');
-    this.modals.unlock({timeout: 30}, (status) => this.publish());
+    this.publish();
   }
 
   onCountryChange(country: Country): void {
@@ -352,10 +352,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private async publish() {
     this.upsert().then(t => {
-      this.template.post(t, 1).toPromise().then(listing => {
+      this.modals.unlock({timeout: 30}, (status) => {
+        this.template.post(t, 1).toPromise().then(listing => {
         this.snackbar.open('Succesfully added Listing!')
         console.log(listing);
         this.backToSell();
+        });
       });
     }, err => this.snackbar.open(err));
   }
