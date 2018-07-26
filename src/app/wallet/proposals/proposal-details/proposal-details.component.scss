@@ -6,6 +6,7 @@
 .proposal {
   @extend %disable-select;
   padding: 0;
+  margin-bottom: 30px;
 
   // Proposal's header bar (top)
   .header {

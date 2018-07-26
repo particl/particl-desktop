@@ -27,24 +27,24 @@
     <div class="content">
       <div class="description">
         <div class="subtitle">Proposal description</div>
-        <p [innerHtml]="proposal?.description">
+          <p [innerHtml]="proposal?.description">
         </p>
       </div>
       <!-- .description -->
 
-      <!-- <div class="more-links">
-              <!- TODO: link to proposal's Github PIP page (@kewde: if we can connect it) ->
-              <a href="https://github.com" target="_blank" mat-button class="small" color="basic">
-                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-globe"></mat-icon>
-                Link to discussion
-              </a>
-              <!- TODO: ability to trigger reporting/governance for each proposal ->
-              <a href="https://github.com" mat-button class="small" color="basic"
-                 *ngIf="selectedTab == 'active'">
-                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-flag"></mat-icon>
-                Report
-              </a>
-            </div> -->
+      <div class="more-links TO_DO">
+        <!-- TODO: link to proposal's Github PIP page (@kewde: if we can connect it) -->
+        <a href="https://github.com" target="_blank" mat-button class="small" color="basic">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+          Link to discussion
+        </a>
+        <!-- TODO: ability to trigger reporting/governance for each proposal -->
+        <a href="https://github.com" mat-button class="small" color="basic"
+            *ngIf="selectedTab == 'active'">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+          Report
+        </a>
+      </div>
     </div>
 
     <div class="sidebar TO_DO">
@@ -55,7 +55,7 @@
         </div>
         <div class="percentage-voted">
           <!-- TODO: implement % of coins voted in total for this proposal -->
-          <span class="value">24.65&thinsp;%</span>
+          <span class="value TO_DO">24.65&thinsp;%</span>
           coins voted
         </div>
       </div>
