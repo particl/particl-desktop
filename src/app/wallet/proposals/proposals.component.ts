@@ -44,7 +44,7 @@ export class ProposalsComponent implements OnInit {
 
   // FIXME: needs clean-up?
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['active', 'past'];
+  public tabLabels: Array<string> = ['active', 'planned', 'past'];
   public address: string;
   public currentBlockCount: number;
   public proposals: Proposal[];
@@ -115,6 +115,29 @@ export class ProposalsComponent implements OnInit {
       submitter: 'submitter',
       blockStart: 1247,
       blockEnd: 204150,
+      // tslint:disable-next-line
+      description: 'Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand\'s Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately.',
+      options: [
+        {
+          optionId: 0,
+          description: 'option 1'
+        },
+        {
+          optionId: 1,
+          description: 'option 2'
+        },
+        {
+          optionId: 2,
+          description: 'option 3'
+        }
+      ],
+      type: 'PUBLIC_VOTE',
+      hash: '3928631d2c53450e6c7f207ce239ddsa677dc50daaf21d574cec3e2d4c412b98'
+    }, {
+      title: 'Planned feature',
+      submitter: 'submitter',
+      blockStart: 12462527,
+      blockEnd: 12485125,
       // tslint:disable-next-line
       description: 'Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand\'s Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately.',
       options: [

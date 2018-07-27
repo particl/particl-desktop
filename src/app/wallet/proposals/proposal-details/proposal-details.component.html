@@ -15,6 +15,11 @@
       <mat-progress-bar mode="determinate" value="{{proposal.votingProgressPercentage(currentBlockCount)}}" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
       <div class="text">{{proposal.leftVotingEndBlockCount(currentBlockCount)}} blocks left</div>
     </div>
+    <!-- TODO: only show "blocks-left" on PLANNED/future proposals -->
+    <div class="blocks-left" *ngIf="selectedTab == 'planned'">
+      <mat-progress-bar mode="determinate" value="0" matTooltip="Blocks left until voting starts" matTooltipPosition="before"></mat-progress-bar>
+      <div class="text">{{proposal.leftVotingEndBlockCount(currentBlockCount)}} blocks left until voting starts</div>
+    </div>
     <!-- TODO: only show "blocks-left.results" on PAST proposals -->
     <div class="blocks-left results" *ngIf="selectedTab == 'past'">
       <mat-progress-bar mode="determinate" value="100"></mat-progress-bar>
@@ -47,7 +52,7 @@
       </div>
     </div>
 
-    <div class="sidebar TO_DO">
+    <div class="sidebar TO_DO" *ngIf="selectedTab !== 'planned'">
       <div class="graph">
         <div class="subtitle">Voting progress</div>
         <div class="graph">
