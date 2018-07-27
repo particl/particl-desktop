@@ -21,7 +21,7 @@ export class Bid {
     country: string
   }
 
-  constructor(public orders: any, public address: any, public type: any) {
+  constructor(public orders: any, public address: any, public type?: any) {
     this.setFilter();
   }
 
@@ -34,8 +34,16 @@ export class Bid {
     return this.orders.length;
   }
 
-  get buySellCount() {
-    const count = this.type === 'buy' ? this.bid.activeBuyOrderCount : this.bid.activeSellOrderCount;
+  get buyCount() {
+    const count = this.bid.activeBuyOrderCount;
+    if (count > 0) {
+      return count;
+    }
+    return undefined;
+  }
+
+  get sellCount() {
+    const count = this.bid.activeSellOrderCount;
     if (count > 0) {
       return count;
     }

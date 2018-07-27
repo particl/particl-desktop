@@ -6,12 +6,16 @@ import * as _ from 'lodash';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { Bid } from 'app/core/market/api/bid/bid.model';
 
 @Injectable()
 export class OrderStatusNotifierService implements OnDestroy {
 
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
+
   private destroyed: boolean = false;
+  profile: any = {};
   private actionStatus: Array<any> =  [
             'Accept bid',
             'Mark as delivered',
@@ -20,14 +24,29 @@ export class OrderStatusNotifierService implements OnDestroy {
             'Order rejected'
           ];
   public oldOrders: Array<any>;
-
+  orders: Bid;
   constructor(
     private listingService: ListingService,
     private _marketState: MarketStateService,
-    private _notification: NotificationService
+    private _notification: NotificationService,
+    private profileService: ProfileService
   ) {
     this.log.d('order status notifier service running!');
+    this.loadOrders();
   }
+
+  loadOrders() {
+    // @TODO need to replace with marketplace command so this should probably gone :)
+    this._marketState.observe('bid')
+      .takeWhile(() => !this.destroyed)
+      .map(o => new Bid(o, this.profile.address))
+      .subscribe(orders => {
+        this.orders = orders;
+        this.checkForNewStatus(orders);
+      })
+    this.loadProfile();
+  }
+
 
   // TODO: trigger by ZMQ in the future
   checkForNewStatus(orders: any): void {
@@ -91,6 +110,13 @@ export class OrderStatusNotifierService implements OnDestroy {
       default:
         break;
     }
+  }
+
+  loadProfile(): void {
+    this.profileService.default().take(1).subscribe(
+      profile => {
+        this.profile = profile;
+      });
   }
 
   ngOnDestroy() {
