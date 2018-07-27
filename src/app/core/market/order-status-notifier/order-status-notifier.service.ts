@@ -36,10 +36,12 @@ export class OrderStatusNotifierService implements OnDestroy {
     if (orders.orders.length === 0) {
       return;
     }
+    orders.bid.orders.reverse();
+
     if (this.oldOrders && this.oldOrders.length) {
-      this.checkOrders(orders.bid.orders.reverse());
+      this.checkOrders(orders.bid.orders);
     }
-    this.oldOrders = orders.bid.orders.reverse();
+    this.oldOrders = orders.bid.orders;
   }
 
   private notifyNewStatus(newOrder: any) {
@@ -52,30 +54,21 @@ export class OrderStatusNotifierService implements OnDestroy {
   }
 
   checkOrders(newOrders: any) {
-    let compOrders = [];
-    // For New Orders
-    if (this.oldOrders.length !== newOrders.length) {
-      compOrders = this.checkForNewOrders(newOrders);
-    }
-    // OldOrders that are changed
-    this.oldOrders.forEach(oldOrder => {
-      compOrders.push(newOrders.find(newOrder => this.compareOrder(oldOrder, newOrder)))
-    })
-
-    _.without(compOrders, undefined)
-      .forEach(newOrder => {
+    this.checkForNewOrders(newOrders).forEach(newOrder => {
+      if (this.hasOrderChanged(newOrder.messages.action_button)) {
         this.notifyNewStatus(newOrder);
-      });
+      }
+    });
   }
 
-  private compareOrder(order: any, newOrder: any): any {
-    return order.id === newOrder.id &&
-      order.messages.action_button !== newOrder.messages.action_button &&
-      this.actionStatus.includes(newOrder.messages.action_button)
+  private hasOrderChanged(msg: string): boolean {
+    return this.actionStatus.includes(msg)
   }
 
-  private checkForNewOrders(newOrders: any): any {
-    return _(newOrders).differenceBy(this.oldOrders, 'id').value();
+  public checkForNewOrders(newOrders: any): any {
+    return  _.differenceWith(newOrders, this.oldOrders, (o1, o2) => {
+      return o1.id === o2.id && o1.messages.action_button === o2.messages.action_button
+    });
   }
 
   private getMessage(title: string, msg: string) {
