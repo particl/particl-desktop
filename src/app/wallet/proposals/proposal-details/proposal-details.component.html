@@ -35,7 +35,23 @@
           <p [innerHtml]="proposal?.description">
         </p>
       </div>
-      <!-- .description -->
+      
+      <table class="authors">
+        <tr>
+          <th>Author</th>
+          <th>Contributors</th>
+        </tr>
+        <tr>
+          <td>
+            <span class="name" matTooltip="@author-contact-info" matTooltipPosition="before">author1-name-whatever</span>
+          </td>
+          <td>
+            <span class="name" matTooltip="Github: contributor-contact-info" matTooltipPosition="after">contributor1-name</span><br>
+            <span class="name" matTooltip="@contributor-contact-info" matTooltipPosition="after">contributor2-long-name</span><br>
+            <span class="name" matTooltip="contributor-contact-info" matTooltipPosition="after">contributor3-name</span>
+          </td>
+        </tr>
+      </table>
 
       <div class="more-links TO_DO">
         <!-- TODO: link to proposal's Github PIP page (@kewde: if we can connect it) -->

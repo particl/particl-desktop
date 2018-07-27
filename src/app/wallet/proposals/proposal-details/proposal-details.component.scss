@@ -73,6 +73,20 @@
       p {
         color: $text-muted;
       }
+      .authors {
+        text-align: left;
+        color: mix($text-muted, $text);
+        th {
+          color: $text;
+          font-weight: 500;
+        }
+        td {
+          vertical-align: top;
+          &:first-child {
+            padding-right: 16px;
+          }
+        }
+      }
       .more-links {
         margin-top: 24px;
         .mat-icon {
