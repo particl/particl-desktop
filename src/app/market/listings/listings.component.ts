@@ -80,9 +80,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   ) {
     console.warn('overview created');
     if (this.listingService.cache.selectedCountry) {
-      this.selectedCountry = this.countryList.getCountryByRegion(
-        this.listingService.cache.selectedCountry
-      );
+      this.selectedCountry = this.listingService.cache.selectedCountry
     }
   }
 
@@ -204,7 +202,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   changeLocation(country: Country) {
-    this.listingService.cache.selectedCountry = country ? country.iso : '';
+    this.listingService.cache.selectedCountry = country || undefined;
   }
 
   onCountryChange(country: Country): void {
