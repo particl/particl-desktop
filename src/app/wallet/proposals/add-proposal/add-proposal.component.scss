@@ -123,6 +123,18 @@ mat-card {
 
 // ------ SPECIFIC ------ //
 
+// Voting period
+.voting-period {
+  display: flex;
+  align-items: center;
+  .half-width {
+    flex: 1 1 50%;
+    &:first-child {
+      margin-right: 3%;
+    }
+  }
+}
+
 // Terms & Conditions
 .terms {
   ul {

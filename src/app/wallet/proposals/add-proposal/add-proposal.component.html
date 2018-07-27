@@ -13,7 +13,7 @@
 
   <div class="column">
 
-    <mat-card >
+    <mat-card>
       <div class="title">Proposal details</div>
 
       <mat-form-field class="full-width">
@@ -22,12 +22,37 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <textarea matInput #desc rows="30" placeholder="Description" formControlName="desc"></textarea>
+        <textarea matInput #desc rows="25" placeholder="Description" formControlName="desc"></textarea>
         <mat-hint align="end">{{ desc.value?.length || 0 }}/2000</mat-hint>
       </mat-form-field>
 
       <p class="widget-help">
         Objectively describe your proposal in detail; explain what to change, how to do it and why.
+      </p>
+    </mat-card>
+    
+    <mat-card>
+      <div class="title TO_DO">Voting period</div>
+      <p>
+        Specify when will the proposal be active for voting:
+      </p>
+      <div class="voting-period">
+        <!-- TODO: populate the "voting-starts" input with: <current block> + 2000 (~ 3 days in future) -->
+        <!-- TODO: implement "min" attribe which should be equal to current block (= can't submit new proposal retroactively) -->
+        <mat-form-field class="half-width">
+          <input matInput type="number" placeholder="Voting starts on block #" formControlName="voting-starts">
+        </mat-form-field>
+        <mat-form-field class="half-width voting-length" floatPlaceholder="never">
+          <mat-select placeholder="Voting period">
+            <mat-option value="9500">9500 blocks (~ 2 weeks)</mat-option>
+            <mat-option value="20000">20000 blocks (~ 1 month)</mat-option>
+            <mat-option value="40000">40000 blocks (~ 2 months)</mat-option>
+            <mat-option value="60000">60000 blocks (~ 3 months)</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <p class="widget-help">
+        Note: 1 day equals to approx. 670 blocks. Current block: <strong class="TO_DO">XXXXXX</strong>
       </p>
     </mat-card>
 
@@ -72,7 +97,7 @@
       </p>
     </mat-card>
 
-    <!-- <mat-card [formGroup]="infoFormGroup">
+    <mat-card [formGroup]="infoFormGroup">
       <div class="title">
         Contact information <small>(optional)</small>
         <button mat-button color="basic" class="small TO_DO">
@@ -91,7 +116,7 @@
             <input matInput placeholder="Your Riot/Discord/Github username or an email address" formControlName="email">
           </mat-form-field>
         </div>
-      </div> -->
+      </div>
 
       <!-- FIXME: when clicked on [Add countributor] button, add these: -->
       <!--div class="author item">
@@ -106,10 +131,10 @@
         </div>
       </div-->
 
-    <!--  <p class="widget-help">
+      <p class="widget-help">
         Including your contact information is optional, but it can help when discussing submitted proposals. For example, users might have unanswered questions or improvements regarding your proposal.
       </p>
-    </mat-card> -->
+    </mat-card>
 
     <mat-card class="terms">
       <div class="title">Terms &amp; Conditions</div>
