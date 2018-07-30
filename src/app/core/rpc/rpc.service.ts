@@ -50,8 +50,7 @@ export class RpcService implements OnDestroy {
   private _wallet: string;
 
   constructor(
-    private _http: HttpClient,
-    private multi: MultiwalletService
+    private _http: HttpClient
   ) {
   }
 

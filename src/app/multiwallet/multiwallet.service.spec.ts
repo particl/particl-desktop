@@ -2,10 +2,16 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { MultiwalletService } from './multiwallet.service';
 
+import { CoreModule } from '../core/core.module';
+import { MultiwalletModule } from './multiwallet.module';
+
 describe('MultiwalletService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MultiwalletService]
+      imports: [
+        CoreModule.forTest(),
+        MultiwalletModule.forTest()
+      ]
     });
   });
 

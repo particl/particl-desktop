@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef, MatIconModule } from '@angular/material';
 
-import { ModalsModule, PassphraseService } from '../../modals.module';
+import { PassphraseService } from './passphrase.service'
 
 /* modules (own) */
 import { SharedModule } from '../../../wallet/shared/shared.module';
@@ -24,18 +24,15 @@ describe('PassphraseComponent', () => {
       imports: [
        /* own */
         SharedModule,
-        CoreModule.forRoot(),
+        CoreModule.forTest(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot(),
         /* deps */
         BrowserAnimationsModule,
         MatIconModule,
        ],
       providers: [
         /* own */
-        PassphraseService,
-        /* deps */
-        { provide: MatDialogRef},
+        PassphraseService
       ]
     })
     .compileComponents();

@@ -1,20 +1,30 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import { MultiwalletRouterComponent } from './multiwallet-router.component';
+import { MultiwalletSidebarComponent } from './multiwallet-sidebar.component';
 
-describe('MultiwalletRouterComponent', () => {
-  let component: MultiwalletRouterComponent;
-  let fixture: ComponentFixture<MultiwalletRouterComponent>;
+import { CoreModule } from '../core/core.module';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { MultiwalletModule } from './multiwallet.module'
+
+describe('MultiwalletSidebarComponent', () => {
+  let component: MultiwalletSidebarComponent;
+  let fixture: ComponentFixture<MultiwalletSidebarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MultiwalletRouterComponent ]
+      imports: [
+        RouterTestingModule,
+        CoreModule.forTest(),
+        CoreUiModule.forRoot(),
+        MultiwalletModule.forTest()
+      ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MultiwalletRouterComponent);
+    fixture = TestBed.createComponent(MultiwalletSidebarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

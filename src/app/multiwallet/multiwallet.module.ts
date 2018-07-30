@@ -1,11 +1,13 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 import { MaterialModule } from 'app/core-ui/material/material.module';
 import { RouterModule } from '@angular/router';
 
 import { MultiwalletSidebarComponent } from './multiwallet-sidebar.component';
 import { MultiwalletService } from './multiwallet.service';
+
 
 @NgModule({
   imports: [
@@ -28,5 +30,11 @@ export class MultiwalletModule {
         MultiwalletService
       ]
     };
+  }
+
+  static forTest(): ModuleWithProviders {
+    let root = this.forRoot();
+    root.providers.push(HttpClient);
+    return root;
   }
 }

@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReleaseNotificationComponent } from './release-notification.component';
-import { MainViewModule } from '../main.module';
+
 import { HttpClientModule } from '@angular/common/http';
+import { CoreModule } from 'app/core/core.module';
 
 describe('ReleaseNotificationComponent', () => {
   let component: ReleaseNotificationComponent;
@@ -11,8 +12,8 @@ describe('ReleaseNotificationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MainViewModule,
-        HttpClientModule
+        HttpClientModule,
+        CoreModule.forTest()
       ]
     })
     .compileComponents();

@@ -32,7 +32,7 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
 
     this.activeWallet = {
       name: this.walletRpc.wallet,
-      fakename: this.walletRpc.wallet.replace('wallet_', '')
+      fakename: (this.walletRpc.wallet || '').replace('wallet_', '')
     };
   }
 

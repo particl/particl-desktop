@@ -54,6 +54,13 @@ export class CoreModule {
       ]
     };
   }
+  static forTest(): ModuleWithProviders {
+    let root = this.forRoot();
+    // TODO: provide useValue for RpcService and
+    // set a default wallet
+    return root;
+  }
+
 }
 
 export { IpcService } from './ipc/ipc.service';
