@@ -95,7 +95,7 @@
           Wallet name is required
         </p><!-- validation errors -->
         <div class="box-title">Choose wallet name</div>
-        <mat-form-field>
+        <mat-form-field class="largest">
           <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name (required)" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
         </mat-form-field> 
         <p class="widget-help">
@@ -170,19 +170,27 @@
       <p class="widget-help">
         Note that you can safely skip this step, but it is recommended to choose a Recovery Password as it keeps your coins safer.
       </p>
-      <mat-card class="action-card">
+      <mat-card class="action-card recovery-password">
         <div class="box-title">Choose Recovery Password</div>
         <!-- Password -->
-        <mat-form-field class="password-input larger">
+        <mat-form-field class="password-input largest">
           <input #passwordElem matInput placeholder="Enter your password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="password">
-          <mat-icon fontSet="partIcon" fontIcon="{{passwordElem.show ? 'part-blind' : 'part-public'}}" (click)="passwordElem.show = !passwordElem.show"></mat-icon>
+          <!-- FIXME: mat-error not working.. if replaced with mat-hint, then it works -->
+          <mat-error *ngIf="!!errorString">
+            {{ errorString }}
+          </mat-error>
         </mat-form-field>
         <!-- Password comfirmation -->
-        <mat-form-field class="password-input larger">
-          <input matInput placeholder="Enter your password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="passwordVerify">
+        <mat-form-field class="password-input largest">
+          <input matInput placeholder="Confirm your password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="passwordVerify">
         </mat-form-field>
+        <button mat-button class="small show-password" (click)="passwordElem.show = !passwordElem.show">
+          <mat-icon fontSet="partIcon" fontIcon="{{passwordElem.show ? 'part-anon' : 'part-public'}}"></mat-icon>
+          {{ passwordElem.show ? 'Hide' : 'Show' }} password
+        </button>
         <p class="warning bottom">
-          If you set up a Recovery Password, be sure to keep it safe along with your Recovery Phrase. If you forget any of these, you won't be able to access your coins!
+          If you set up a Recovery Password, be sure to keep it safe along with your Recovery Phrase.<br>
+          If you forget any of these, you won't be able to access your coins!
         </p>
       </mat-card><!-- .action-card -->
     </div>

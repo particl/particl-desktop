@@ -226,25 +226,31 @@ p {
 }
 
 /* ------------------------------- *\
-    Step 1: Name wallet
+    Name wallet
 \* ------------------------------- */
 
 .wallet-name {
   @extend .action-card;
   .mat-form-field {
     width: 260px;
-    font-size: 15px;
   }
 }
 
 
 /* ------------------------------- *\
-    Step 1: Create/Restore
+    Recovery Password
 \* ------------------------------- */
+
+.recovery-password {
+  .mat-form-field {
+    width: 200px;
+    margin-right: 20px;
+  }
+}
 
 
 /* ------------------------------- *\
-    Step 2: Recovery Phrase
+    Recovery Phrase
 \* ------------------------------- */
 
 

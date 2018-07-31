@@ -423,6 +423,9 @@ mat-card.mat-card {
   &.larger { // larger inputs
     font-size: 14px;
   }
+  &.largest { // largest inputs
+    font-size: 16px;
+  }
   &.auto-width {
     .mat-form-field-infix {
       width: auto;
