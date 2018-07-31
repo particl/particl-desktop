@@ -1,12 +1,13 @@
-<div mat-dialog-title *ngIf="!password" class="title">Encrypt your wallet</div>
-<div mat-dialog-title *ngIf="password" class="title">Confirm your password</div>
+<div mat-dialog-title *ngIf="!password && !pleaseWait" class="title">Encrypt your wallet</div>
+<div mat-dialog-title *ngIf="password && !pleaseWait" class="title">Confirm your password</div>
+<div mat-dialog-title *ngIf="pleaseWait" class="title">Please wait</div>
 
-<button class="small-close_button" mat-dialog-close>
+<button *ngIf="!pleaseWait" class="small-close_button" mat-dialog-close>
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 
-<mat-dialog-content class="modal-content">
+<mat-dialog-content class="modal-content" *ngIf="!pleaseWait">
 
   <div *ngIf="!password">
     <p>
@@ -42,6 +43,15 @@
 
 </mat-dialog-content>
 
+<mat-dialog-content class="modal-content" *ngIf="pleaseWait">
+
+  <div>
+    <p class="warning">
+      The daemon is restarting, this may take  while!
+    </p>
+  </div>
+
+</mat-dialog-content>
 
 <!--mat-dialog-actions fxLayoutAlign="end center">
   <button *ngIf="password" type="button" mat-button (click)="clearPassword()">

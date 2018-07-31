@@ -3,7 +3,7 @@ const os          = require('os');
 const path        = require('path');
 const log         = require('electron-log');
 const options    = require('../options').get();
-
+const removeWalletAuthentication = require('../webrequest/http-auth').removeWalletAuthentication;
 /*
 ** returns Particl config folder
 */
@@ -110,6 +110,7 @@ function getAuth(options) {
 
   if (checkCookieExists()) {
     auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();
+    console.log('getAuth(): got cookie', auth)
   } else {
     auth = undefined;
     log.debug('could not find cookie file! path:', COOKIE_FILE);
@@ -129,6 +130,8 @@ function clearCookieFile() {
   if (checkCookieExists()) {
     fs.unlinkSync(COOKIE_FILE);
   }
+
+  removeWalletAuthentication();
 
 }
 
