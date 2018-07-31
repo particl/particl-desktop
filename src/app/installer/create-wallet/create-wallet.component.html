@@ -197,6 +197,7 @@
     
   </div><!-- .container-block -->
 
+  <!-- FIXME: improve/replace -->
   <p *ngIf="!!errorString" [@slideDown] class="warning">
     {{ errorString }}
   </p>
@@ -219,27 +220,42 @@
   <div class="title">Restore existing wallet</div>
   <div class="container-block">
 
-    <div class="recovery-phrase">
-      <app-passphrase
-        #passphraseComponent
-        [words]="words"
-        [generate]="false">
-      </app-passphrase>
-      <p *ngIf="!!errorString" [@slideDown] class="warning">
-        {{ errorString }}
-      </p>
-    </div><!-- .recovery-phrase -->
+    <p>
+      For restoring your existing wallet, you will need its Recovery Phrase (and also Recovery Password if you have set it up):
+    </p>
+    <p class="widget-help">
+      <strong>Friendly reminder:</strong> Don't forget that the Recovery Phrase (and Password) are very important for keeping your funds safe. Anyone with access to them has access to your coins. If you think your Recovery Phrase (and Password) might have been exposed, it would be better to create a new wallet instead and send your coins there.
+    </p>
 
-    <div class="recovery-password">
-      <div class="subtitle">Recovery Password</div>
+    <mat-card class="action-card">
+      <div class="recovery-phrase">
+        <app-passphrase
+          #passphraseComponent
+          [words]="words"
+          [generate]="false">
+        </app-passphrase>
+        <p *ngIf="!!errorString" class="warning bottom">
+          {{ errorString }}
+        </p>
+      </div><!-- .recovery-phrase -->
+    </mat-card>
+
+    <mat-card class="action-card recovery-password">
+      <div class="box-title">Recovery Password</div>
       <p>
         If you set up a Recovery Password during wallet creation as well, enter it below:
       </p>
+      <p class="widget-help TO_DO">
+        If you created your wallet in Particl Desktop 1.0, a bug prevented Recovery Password to be set. If that's your case, don't enter any password even if you set one up.
+      </p>
       <mat-form-field class="password-input larger">
         <input #passwordRestoreElem matInput placeholder="Enter your password" [type]="passwordRestoreElem.show ? 'text' : 'password'" [(ngModel)]="password">
-        <mat-icon fontSet="partIcon" fontIcon="{{passwordRestoreElem.show ? 'part-blind' : 'part-public'}}" (click)="passwordRestoreElem.show = !passwordRestoreElem.show"></mat-icon>
       </mat-form-field>
-    </div><!-- .recovery-password -->
+      <button mat-button class="small show-password" (click)="passwordRestoreElem.show = !passwordRestoreElem.show">
+        <mat-icon fontSet="partIcon" fontIcon="{{passwordRestoreElem.show ? 'part-anon' : 'part-public'}}"></mat-icon>
+        {{ passwordRestoreElem.show ? 'Hide' : 'Show' }} password
+      </button>
+    </mat-card><!-- .recovery-password -->
 
   </div>
   <div class="action-buttons" fxLayoutAlign="space-between center">
@@ -276,17 +292,19 @@
     <p>
       Congratulations &ndash; your new wallet was created successfully!
     </p>
-    <p class="info">
-      Please ensure that your Recovery Phrase (and Recovery Password if you've set it up) is written down and stored in a secure location!
-    </p>
-    <p>
-      You can now safely close this wizard and start experiencing Particl!
-    </p>
+    <mat-card class="action-card">
+      <p class="info">
+        Please ensure that your Recovery Phrase (and Recovery Password if you've set it up) is written down and stored in a secure location!
+      </p>
+      <p>
+        You can now safely close this wizard and start experiencing Particl!
+      </p>
+    </mat-card>
   </div>
   <div class="action-buttons" fxLayoutAlign="end center">
     <button mat-raised-button color="primary" (click)="close()">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-      Close
+      Finish setup & Close
     </button>
   </div>
 </ng-template>
