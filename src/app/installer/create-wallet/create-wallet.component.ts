@@ -135,7 +135,7 @@ export class CreateWalletComponent implements OnDestroy {
           this.step = Steps.WAITING;
           this.doStep();
         } else {
-          while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 0/*5*/) {
+          while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
             const k = Math.floor(Math.random() * 23);
             this.words[k] = '';
           }
