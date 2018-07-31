@@ -363,7 +363,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private async publish() {
     this.upsert().then(t => {
-      this.template.post(t, 1).toPromise().then(listing => {
+      this.template.post(t, 1, this.expiration).toPromise().then(listing => {
         this.snackbar.open('Succesfully added Listing!')
         console.log(listing);
         this.backToSell();

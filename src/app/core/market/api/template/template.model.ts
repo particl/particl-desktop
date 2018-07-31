@@ -20,6 +20,7 @@ export class Template {
   public totalAmountDomestic: Amount = new Amount(0);
   public memo: string = '';
   public imageCollection: ImageCollection;
+  public expireTime: number = 4;
 
   // @TODO: remove type any
   constructor(public object: any) {
@@ -33,6 +34,7 @@ export class Template {
     this.setEscrowPrice();
     this.setTotal();
     this.setMemo();
+    this.setExpiryTime();
   }
 
   get id(): number {
@@ -131,6 +133,12 @@ export class Template {
     const msg = this.object.ActionMessages;
     if (msg) {
       this.memo = msg.filter((info) => info.MessageInfo.memo).map(obj => obj.MessageInfo.memo)[0] || '';
+    }
+  }
+
+  setExpiryTime(): void {
+    if (this.object.ListingItems.length > 0) {
+      this.expireTime = this.object.ListingItems[0].expiryTime;
     }
   }
 
