@@ -19,6 +19,7 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     /* own */
     app_routing,
     InstallerModule,
