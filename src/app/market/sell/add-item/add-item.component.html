@@ -151,11 +151,11 @@
       </button>
     </div>
     <div class="right">
-      <button mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
+      <button [disabled]="isInProcess" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
-      <button mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+      <button [disabled]="isInProcess" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
         {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
