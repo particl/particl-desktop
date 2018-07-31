@@ -1,6 +1,5 @@
 import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from './material/material.module';
 
@@ -18,7 +17,6 @@ import { DirectiveModule } from './directive/directive.module';
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
     MaterialModule,
     MatDialogModule, // todo move
     InfiniteScrollModule,
