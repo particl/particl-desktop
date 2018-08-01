@@ -2,7 +2,7 @@
 
 $installer-sidebar-width: 260px;
 $installer-sidebar-padding: 30px;
-
+$installer-header-height: 96px;
 
 // ------ UI ELEMENTS ------ //
 
@@ -138,6 +138,10 @@ p {
   }
 }
 
+mat-hint.error {
+  color: $color-alert;
+}
+
 
 // ------ LAYOUT ------ //
 
@@ -172,6 +176,7 @@ p {
       padding: 35px 45px;
       font-size: 22px;
       font-weight: 500;
+      height: ($installer-header-height - (2 * 35px));
     }
   }
 }
@@ -260,4 +265,23 @@ app-password > div {
 
 input.recovery-word {
   max-width: 100%;
+}
+
+
+/* ------------------------------- *\
+    Preparing wallet (~ Waiting)
+\* ------------------------------- */
+
+.preparing-wallet {
+  text-align: center;
+  display: flex;
+  padding: 0 45px;
+  height: calc(100% - #{$installer-header-height});
+  position: relative;
+  & > .center {
+    margin: auto;
+  }
+  p.lead {
+    font-size: 17px;
+  }
 }

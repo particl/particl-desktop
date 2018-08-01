@@ -216,18 +216,18 @@ export class CreateWalletComponent implements OnDestroy {
       const valid = unmatched.length === 0;
       return valid;
     }
-
     if (this.step === Steps.MNEMONIC_INITIAL && this.isRestore) {
       // when restoring, count much be 12, 15, 18 or 24
       const count = this.words.filter((value: string) => value).length;
       const valid = ([12, 15, 18, 24].indexOf(count) !== -1);
       return valid;
-    } else if (this.step === Steps.PASSWORD && !this.isRestore) {
+    }
+    else if (this.step === Steps.PASSWORD && !this.isRestore) {
       // when creating new, passwords must match
       const valid = this.password === this.passwordVerify;
       this.errorString = !valid ? 'Passwords do not match!' : '';
+      return valid;
     }
-
     return true;
   }
 
