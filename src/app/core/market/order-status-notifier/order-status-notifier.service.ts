@@ -7,6 +7,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 
 @Injectable()
@@ -23,8 +24,8 @@ export class OrderStatusNotifierService implements OnDestroy {
             'Mark as shipped',
             'Order rejected'
           ];
-  public oldOrders: Array<any>;
-  orders: Bid;
+  public oldOrders: Bid[];
+  bids: BidCollection;
   constructor(
     private listingService: ListingService,
     private _marketState: MarketStateService,
@@ -39,31 +40,32 @@ export class OrderStatusNotifierService implements OnDestroy {
     // @TODO need to replace with marketplace command so this should probably gone :)
     this._marketState.observe('bid')
       .takeWhile(() => !this.destroyed)
-      .map(o => new Bid(o, this.profile.address))
-      .subscribe(orders => {
-        this.orders = orders;
-        this.checkForNewStatus(orders);
+      .map(o => new BidCollection(o, this.profile.address))
+      .subscribe(bids => {
+        this.bids = bids;
+        if (bids.address) {
+          this.checkForNewStatus(bids.orders);
+        }
       })
     this.loadProfile();
   }
 
 
   // TODO: trigger by ZMQ in the future
-  checkForNewStatus(orders: any): void {
+  checkForNewStatus(orders: Bid[]): void {
     this.log.d('new orders', orders);
     // if no orders: stop
-    if (orders.orders.length === 0) {
+    if (orders.length === 0) {
       return;
     }
-    orders.bid.orders.reverse();
-
+    orders.reverse();
     if (this.oldOrders && this.oldOrders.length) {
-      this.checkOrders(orders.bid.orders);
+      this.checkOrders(orders);
     }
-    this.oldOrders = orders.bid.orders;
+    this.oldOrders = orders;
   }
 
-  private notifyNewStatus(newOrder: any) {
+  private notifyNewStatus(newOrder: Bid) {
     this.listingService.get(newOrder.listingItemId).subscribe(response => {
      newOrder.listing = response;
 
@@ -72,8 +74,8 @@ export class OrderStatusNotifierService implements OnDestroy {
     });
   }
 
-  checkOrders(newOrders: any) {
-    this.checkForNewOrders(newOrders).forEach(newOrder => {
+  checkOrders(newOrders: Bid[]) {
+    this.getOrdersToNotifyFor(newOrders).forEach(newOrder => {
       if (this.hasOrderChanged(newOrder.messages.action_button)) {
         this.notifyNewStatus(newOrder);
       }
@@ -84,7 +86,7 @@ export class OrderStatusNotifierService implements OnDestroy {
     return this.actionStatus.includes(msg)
   }
 
-  public checkForNewOrders(newOrders: any): any {
+  public getOrdersToNotifyFor(newOrders: Bid[]): Bid[] {
     return  _.differenceWith(newOrders, this.oldOrders, (o1, o2) => {
       return o1.id === o2.id && o1.messages.action_button === o2.messages.action_button
     });

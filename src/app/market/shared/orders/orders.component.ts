@@ -74,24 +74,24 @@ export class OrdersComponent implements OnInit, OnDestroy {
   loadOrders(): void {
     this.bid.search(this.profile.address, this.type)
       .take(1)
-      .subscribe(orders => {
-        console.log('called >>>>>>>>>>>>>>>>>', orders);
+      .subscribe(bids => {
+        console.log('called >>>>>>>>>>>>>>>>>', bids);
         // reverse the orders
-        orders.orders.reverse();
+        bids.filterOrders.reverse();
 
         // Only update if needed
-        if (this.hasUpdatedOrders(orders)) {
-          this.orders = orders;
+        if (this.hasUpdatedOrders(bids.filterOrders)) {
+          this.orders = bids.filterOrders;
         }
       });
   }
 
-  hasUpdatedOrders(newOrders: any): boolean {
+  hasUpdatedOrders(newOrders: Bid[]): boolean {
     return (
       !this.orders ||
-      (this.orders['orders'].length !== newOrders['orders'].length) ||
-      (_.differenceWith(this.orders['orders'], newOrders['orders'], (o1, o2) => {
-        return (o1.id === o2.id) && (o1['status'] === o2['status'])
+      (this.orders.length !== newOrders.length) ||
+      (_.differenceWith(this.orders, newOrders, (o1, o2) => {
+        return (o1.order.id === o2.order.id) && (o1.order['status'] === o2.order['status'])
       }).length)
     )
   }
