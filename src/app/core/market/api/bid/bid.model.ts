@@ -8,6 +8,10 @@ export class Bid extends Product {
     this.setActiveOrders();
   }
 
+  get id() {
+    return this.order.id;
+  }
+
   get type() {
     return this.ordType;
   }
