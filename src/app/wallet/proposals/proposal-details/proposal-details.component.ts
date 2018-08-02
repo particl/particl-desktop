@@ -5,6 +5,9 @@ import * as d3 from 'd3';
 import { ProposalVoteConfirmationComponent } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { VoteOption } from 'app/wallet/proposals/models/vote-option';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
+import { Proposal } from 'app/wallet/proposals/models/proposal';
 
 @Component({
   selector: 'app-proposal-details',
@@ -15,19 +18,20 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
   ]
 })
 export class ProposalDetailsComponent implements OnInit {
-  @Input() proposal: any;
+  @Input() proposal: Proposal;
   @Input() selectedTab: string;
-  @Input() submitterAddress: string;
+  @Input() submitterProfileId: number;
   @Input() currentBlockCount: number;
 
   public graphOptions: any;
   public graphData: any;
-  public selectedOption: string;
+  public selectedOption: VoteOption;
 
   constructor(
     private dialog: MatDialog,
     private proposalService: ProposalsService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private modelsService: ModalsHelperService
   ) { }
 
   ngOnInit() {
@@ -69,20 +73,24 @@ export class ProposalDetailsComponent implements OnInit {
     dialog.componentInstance.setData({
       ... this.proposal,
       selectedOption: this.selectedOption
-    }, () => this.callVote())
+    }, () => this.vateConfirmed())
+  }
+  vateConfirmed(): void {
+    this.modelsService.unlock({}, (status) => this.callVote())
+
   }
 
   callVote(): void {
-    const params = [
-      this.proposal.hash,
-      this.selectedOption,
-      this.submitterAddress
-    ];
+      const params = [
+        this.submitterProfileId,
+        this.proposal.hash,
+        this.selectedOption.optionId
+      ];
 
-    this.proposalService.vote(params).subscribe((response) => {
-      this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`);
-    }, (error) => {
-      this.snackbarService.open(error.message, 'warn');
-    })
+      this.proposalService.vote(params).subscribe((response) => {
+        this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
+      }, (error) => {
+        this.snackbarService.open(error.message, 'warn');
+      })
   }
 }

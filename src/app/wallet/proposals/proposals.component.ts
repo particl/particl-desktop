@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { Log } from 'ng2-logger';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { RpcService } from 'app/core/rpc/rpc.service';
@@ -23,6 +24,8 @@ import { Proposal } from 'app/wallet/proposals/models/proposal';
 })
 
 export class ProposalsComponent implements OnInit {
+
+  log: any = Log.create('proposal.component');
 
   sortings: Array<any> = [
     { title: 'By date of creation', value: 'created' },
@@ -44,155 +47,85 @@ export class ProposalsComponent implements OnInit {
 
   // FIXME: needs clean-up?
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['active', 'planned', 'past'];
-  public address: string;
+  public tabLabels: Array<string> = ['active', 'past'];
+  // ['active', 'planned', 'past']
+  public submitterProfileId: number;
   public currentBlockCount: number;
-  public proposals: Proposal[];
+  public proposals: Proposal[] = [];
   public activeProposals: Proposal[] = [];
   public pastProposals: Proposal[] = [];
+  destroyed: boolean;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private profileService: ProfileService,
-    private _rpc: RpcService,
     private peerService: PeerService,
     private blockStatusService: BlockStatusService,
     private proposalsService: ProposalsService
   ) { }
 
   ngOnInit() {
-
-    //  sample data.
-    this.proposals = [{
-      title: 'post 1 title',
-      submitter: 'submitter',
-      blockStart: 124,
-      blockEnd: 204065,
-      // tslint:disable-next-line
-      description: 'Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand\'s Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately. <br/> Efforts to locate them were hampered by rising water levels, and no contact was made for over a week. The rescue effort expanded into a massive operation amid intense worldwide media coverage and public interest.',
-      options: [
-        {
-          optionId: 0,
-          description: 'option - 1'
-        },
-        {
-          optionId: 1,
-          description: 'option - 2'
-        },
-        {
-          optionId: 2,
-          description: 'option -3'
-        }
-      ],
-      type: 'PUBLIC_VOTE',
-      hash: '3928631d2c53450e6c7f207ce239dd29677dc50daaf21d574cec3e2d4c412b98'
-    }, {
-      title: 'post 2 title',
-      submitter: 'submitter',
-      blockStart: 1247,
-      blockEnd: 205831,
-      // tslint:disable-next-line
-      description: 'Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand\'s Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately.',
-      options: [
-        {
-          optionId: 0,
-          description: 'option 1'
-        },
-        {
-          optionId: 1,
-          description: 'option 2'
-        },
-        {
-          optionId: 2,
-          description: 'option 3'
-        }
-      ],
-      type: 'PUBLIC_VOTE',
-      hash: '3928631d2c53450e6c7f207ce239ddsa677dc50daaf21d574cec3e2d4c412b98'
-    }, {
-      title: 'post 2 title',
-      submitter: 'submitter',
-      blockStart: 1247,
-      blockEnd: 204150,
-      // tslint:disable-next-line
-      description: 'Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand\'s Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately.',
-      options: [
-        {
-          optionId: 0,
-          description: 'option 1'
-        },
-        {
-          optionId: 1,
-          description: 'option 2'
-        },
-        {
-          optionId: 2,
-          description: 'option 3'
-        }
-      ],
-      type: 'PUBLIC_VOTE',
-      hash: '3928631d2c53450e6c7f207ce239ddsa677dc50daaf21d574cec3e2d4c412b98'
-    }, {
-      title: 'Planned feature',
-      submitter: 'submitter',
-      blockStart: 12462527,
-      blockEnd: 12485125,
-      // tslint:disable-next-line
-      description: 'Twelve boys aged 11 to 17 and a 25-year-old man became stranded in Tham Luang Nang Non (Thai: ถ้ำหลวงนางนอน), a cave in Thailand\'s Chiang Rai Province, on 23 June 2018. Heavy rains partially flooded the cave during their visit. The boys – all members of a local association football team – and their assistant coach were reported missing a few hours later, and search operations began immediately.',
-      options: [
-        {
-          optionId: 0,
-          description: 'option 1'
-        },
-        {
-          optionId: 1,
-          description: 'option 2'
-        },
-        {
-          optionId: 2,
-          description: 'option 3'
-        }
-      ],
-      type: 'PUBLIC_VOTE',
-      hash: '3928631d2c53450e6c7f207ce239ddsa677dc50daaf21d574cec3e2d4c412b98'
-    }].map(v => new Proposal(v))
-
-    // get default profile address.
-    this.profileService.default().take(1).subscribe((profile: Profile) => {
-      this.address = profile.address;
-    });
+    // get default profile submitterProfileId.
+    this.profileService.default()
+      .take(1)
+      .subscribe((profile: Profile) => {
+        this.submitterProfileId = profile.id;
+      });
 
 
     // get current BlockCounts
-    this.peerService.getBlockCount().subscribe((count: number) => {
-      this.currentBlockCount = count;
-      this.filterProposal();
-    })
-
-    // get proposal list
-
-    // this.getProposalsListing();
+    this.peerService.getBlockCount()
+      .takeWhile(() => !this.destroyed)
+      .subscribe((count: number) => {
+        this.currentBlockCount = count;
+        this.loadProposals();
+      })
   }
 
-  // getProposalsListing() {
-  //   this.proposalsService.list().subscribe((proposals: Proposal[]) => {
-  //     this.proposals = proposals;
-  //     this.filterProposal();
-  //   })
-  // }
+  loadProposals(): void {
+    if (this.tabLabels[this.selectedTab] === 'active') {
 
-  filterProposal(): void {
-    this.activeProposals = [];
-    this.pastProposals = [];
+      // get active proposal list
+      this.getActiveProposalsListing();
+    } else {
 
-    this.proposals.map(proposal => {
-      if (proposal.isActiveProposal(this.currentBlockCount)) {
-        this.activeProposals.push(proposal)
-      } else {
-        this.pastProposals.push(proposal)
-      }
-    })
+      // get past proposal list
+      this.getPastProposalsListing();
+    }
+  }
+
+  getActiveProposalsListing() {
+    /*
+     * In the case of active proposals fetching.
+     * startBlockCount  = currentBlockCount.
+     * endBlockCount = this.currentBlockCount +  7d * 720;
+     */
+    const startBlock = this.currentBlockCount;
+    const endBlock = this.currentBlockCount + 7 * 720;
+
+    this.proposalsService.list(startBlock, endBlock)
+      .takeWhile(() => !this.destroyed)
+      .subscribe((activeProposal: Proposal[]) => {
+        this.log.d('activeProposal', activeProposal)
+        this.activeProposals = activeProposal;
+      })
+  }
+
+  getPastProposalsListing() {
+    /*
+     * In the case of past proposals fetching.
+     * startBlockCount  = 0.
+     * endBlockCount = this.currentBlockCount;
+     */
+    const startBlock = 0;
+    const endBlock = this.currentBlockCount - 1;
+
+    this.proposalsService.list(startBlock, endBlock)
+      .takeWhile(() => !this.destroyed)
+      .subscribe((pastProposal: Proposal[]) => {
+        this.activeProposals = pastProposal;
+      })
   }
 
   addProposal() {
@@ -201,6 +134,7 @@ export class ProposalsComponent implements OnInit {
 
   changeTab(index: number): void {
     this.selectedTab = index;
+    this.loadProposals();
   }
 
 }

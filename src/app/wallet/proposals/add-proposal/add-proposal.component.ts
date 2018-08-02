@@ -15,6 +15,7 @@ import { PeerService } from 'app/core/rpc/peer/peer.service';
 import {
   ProposalConfirmationComponent
 } from 'app/modals/proposal-confirmation/proposal-confirmation.component';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Component({
   selector: 'app-add-proposal',
@@ -26,7 +27,7 @@ export class AddProposalComponent implements OnInit {
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
   public isTnCAccepted: boolean = false;
-  private address: string;
+  private profileId: number;
   // form controls
   public proposalFormGroup: FormGroup;
 
@@ -34,6 +35,7 @@ export class AddProposalComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
+    private modalService: ModalsHelperService,
     private peerService: PeerService,
     private proposalsService: ProposalsService,
     private profileService: ProfileService,
@@ -43,15 +45,15 @@ export class AddProposalComponent implements OnInit {
   ngOnInit() {
     // get default profile address.
     this.profileService.default().takeWhile(() => true).subscribe((profile: Profile) => {
-      this.address = profile.address;
+      this.profileId = profile.id;
     })
 
     this.proposalFormGroup = this.formBuilder.group({
       title: ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
       desc: ['', Validators.compose([Validators.required, Validators.maxLength(2000)])],
       options: this.formBuilder.array([
-        this.initTechnologyFields(),
-        this.initTechnologyFields()
+        this.initOptionFields(),
+        this.initOptionFields()
       ]),
 
       // @TODO `nickname` and `email` use in the "Contact Information" section.
@@ -61,14 +63,14 @@ export class AddProposalComponent implements OnInit {
 
   }
 
-  initTechnologyFields(): FormGroup {
+  initOptionFields(): FormGroup {
     return this.formBuilder.group({
       option: ['', Validators.compose([Validators.required, Validators.maxLength(50)])]
     });
   }
 
   /**
-   * Programmatically generates a new technology input field
+   * Programmatically generates a new option input field
    *
    * @public
    * @method addNewInputField
@@ -76,12 +78,12 @@ export class AddProposalComponent implements OnInit {
    */
   addNewInputField(): void {
     const control = <FormArray>this.proposalFormGroup.controls.options;
-    control.push(this.initTechnologyFields());
+    control.push(this.initOptionFields());
   }
 
 
   /**
-   * Programmatically removes a recently generated technology input field
+   * Programmatically removes a recently generated option input field
    *
    * @public
    * @method removeInputField
@@ -101,14 +103,20 @@ export class AddProposalComponent implements OnInit {
     const dialogRef = this.dialog.open(ProposalConfirmationComponent);
 
     dialogRef.componentInstance.setData({
-        ... this.proposalFormGroup.value,
-        options: this.proposalFormGroup.value.options.map(v => v.option),
-      },
+      ... this.proposalFormGroup.value,
+      options: this.proposalFormGroup.value.options.map(v => v.option),
+    },
       (proposal) => this.addPost(proposal)
     );
   }
 
   addPost(proposal: any): void {
+
+    // check wallet status (unlock if locked ?).
+    this.modalService.unlock({}, () => this.addPostCall(proposal))
+  }
+
+  addPostCall(proposal: any): void {
     // get current block count.
     this.peerService.getBlockCount().take(1).subscribe((startBlock: number) => {
       /**
@@ -121,14 +129,17 @@ export class AddProposalComponent implements OnInit {
 
       this.proposalsService.post([
         'post',
+        this.profileId,
         proposal.title,
         proposal.desc,
         startBlock,
         endBlockCount,
-        this.address,
-        proposal.options
+        ...proposal.options
       ]).subscribe((response) => {
-        this.snackbarService.open('Proposal posted successfully.')
+        this.snackbarService.open(
+          'Proposal posted successfully. Your proposal will get published shortly !',
+          'info'
+        )
 
         // redirect to proposals page.
         this.cancelAndDiscard();
@@ -137,6 +148,5 @@ export class AddProposalComponent implements OnInit {
       })
     })
   }
-
 
 }
