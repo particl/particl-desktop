@@ -29,11 +29,11 @@ export class Bid extends Product {
   }
 
   get added() {
-    return new DateFormatter(new Date(this.order.createdAt)).dateFormatter(false);
+    return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
   }
 
   get updated() {
-    return new DateFormatter(new Date(this.order.updatedAt)).dateFormatter(false);
+    return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
   }
 
   get messages() {
@@ -50,6 +50,14 @@ export class Bid extends Product {
 
   get allStatus() {
     return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.action === 'MPA_REJECT' ? 'REJECTED' : 'BIDDING';
+  }
+
+  get createdAt() {
+    return this.order.createdAt;
+  }
+
+  get updatedAt() {
+    return this.order.updatedAt;
   }
 
   setActiveOrders() {
