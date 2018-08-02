@@ -19,6 +19,7 @@ export class Template {
   public totalAmountInternaltional: Amount = new Amount(0);
   public totalAmountDomestic: Amount = new Amount(0);
   public memo: string = '';
+  public proposalOption: boolean = false;
   public imageCollection: ImageCollection;
 
   // @TODO: remove type any
@@ -33,6 +34,7 @@ export class Template {
     this.setEscrowPrice();
     this.setTotal();
     this.setMemo();
+    this.setProposalOption();
   }
 
   get id(): number {
@@ -132,6 +134,11 @@ export class Template {
     if (msg) {
       this.memo = msg.filter((info) => info.MessageInfo.memo).map(obj => obj.MessageInfo.memo)[0] || '';
     }
+  }
+
+  setProposalOption() {
+    // this.proposalOption = this.object.proposalOption;
+    this.proposalOption = true;
   }
 
 }

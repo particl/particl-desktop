@@ -5,7 +5,6 @@ import { MarketModule } from '../../market.module';
 import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 
 import { ReportService } from './report.service';
-import { SnackbarService } from '../../../snackbar/snackbar.service';
 
 
 describe('ReportService', () => {
@@ -15,7 +14,7 @@ describe('ReportService', () => {
         CoreUiModule,
         MarketModule.forRoot()
       ],
-      providers: [ReportService, SnackbarService, MatSnackBar]
+      providers: [ ReportService ]
     });
   });
 

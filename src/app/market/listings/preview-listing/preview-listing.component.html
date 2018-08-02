@@ -69,7 +69,7 @@
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <div class="left">
-    <app-report [listing]="listing" [flag]="true"></app-report>
+    <app-report [listing]="data?.listing" [flag]="true"></app-report>
     <div class="date">
       <strong>Date added</strong> {{ data?.listing?.createdAt }}
     </div>

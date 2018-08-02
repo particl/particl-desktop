@@ -1,13 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Log } from 'ng2-logger';
+import { MatDialog } from '@angular/material';
 
-import { ReportService } from '../../../core/market/api/report/report.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
-import { MarketStateService } from '../../../core/market/market-state/market-state.service';
-
+import { ReportService } from '../../../core/market/api/report/report.service';
 import { Listing } from '../../../core/market/api/listing/listing.model';
-import { ReportCacheService } from 'app/core/market/market-cache/report-cache.service';
-
+import { ReportModalComponent } from '../../../modals/report-modal/report-modal.component';
 
 @Component({
   selector: 'app-report',
@@ -21,16 +19,17 @@ export class ReportComponent {
   @Input() listing: Listing;
   @Input() flag: boolean = true;
   constructor(
-    public report: ReportService,
+    public reportService: ReportService,
     private snackbar: SnackbarService,
-    private marketState: MarketStateService
+    private dialog: MatDialog
   ) {}
 
   toggle() {
-    this.report.toggle(this.listing);
-  }
-
-  get isReported(): boolean {
-    return this.listing && this.report.cache.isReported(this.listing);
+    const dialogRef = this.dialog.open(ReportModalComponent);
+    dialogRef.componentInstance.title = this.listing.title;
+    dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
+      this.listing.proposalOption = !this.listing.proposalOption;
+      this.reportService.post(this.listing);
+    });
   }
 }

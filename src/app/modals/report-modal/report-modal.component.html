@@ -1,0 +1,20 @@
+<div>
+  <div mat-dialog-title class="title">Report Listing</div>
+  <mat-dialog-content class="modal-content" fxLayout>
+    <div class="text" fxFlex="1 1 350px">
+      <p class="lead">
+        Are you sure you want to flag {{title}}?
+      </p>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      No, cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="flag()">
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Yes
+    </button>
+  </mat-dialog-actions>
+</div>
