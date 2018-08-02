@@ -1,4 +1,4 @@
-<mat-card class="proposal">
+<mat-card class="proposal" *ngIf="proposal">
 
   <div class="header">
     <div class="meta">
@@ -12,13 +12,13 @@
     </div>
     <!-- TODO: only show "blocks-left" on ACTIVE proposals -->
     <div class="blocks-left" *ngIf="selectedTab == 'active'">
-      <mat-progress-bar mode="determinate" value="{{proposal.votingProgressPercentage(currentBlockCount)}}" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
-      <div class="text">{{proposal.leftVotingEndBlockCount(currentBlockCount)}} blocks left</div>
+      <mat-progress-bar mode="determinate" value="{{proposal?.votingProgressPercentage(currentBlockCount)}}" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
+      <div class="text">{{proposal?.leftVotingEndBlockCount(currentBlockCount)}} blocks left</div>
     </div>
     <!-- TODO: only show "blocks-left" on PLANNED/future proposals -->
     <div class="blocks-left" *ngIf="selectedTab == 'planned'">
       <mat-progress-bar mode="determinate" value="0" matTooltip="Blocks left until voting starts" matTooltipPosition="before"></mat-progress-bar>
-      <div class="text">{{proposal.leftVotingEndBlockCount(currentBlockCount)}} blocks left until voting starts</div>
+      <div class="text">{{proposal?.leftVotingEndBlockCount(currentBlockCount)}} blocks left until voting starts</div>
     </div>
     <!-- TODO: only show "blocks-left.results" on PAST proposals -->
     <div class="blocks-left results" *ngIf="selectedTab == 'past'">
@@ -36,7 +36,7 @@
         </p>
       </div>
       
-      <table class="authors TO_DO">
+      <!-- <table class="authors TO_DO">
         <tr>
           <th>Author</th>
           <th>Contributors</th>
@@ -51,21 +51,21 @@
             <span class="name" matTooltip="contributor-contact-info" matTooltipPosition="after">contributor3-name</span>
           </td>
         </tr>
-      </table>
+      </table> -->
 
-      <div class="more-links TO_DO">
-        <!-- TODO: link to proposal's Github PIP page (@kewde: if we can connect it) -->
+      <!-- <div class="more-links TO_DO">
+        <!- TODO: link to proposal's Github PIP page (@kewde: if we can connect it) ->
         <a href="https://github.com" target="_blank" mat-button class="small" color="basic">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-globe"></mat-icon>
           Link to discussion
         </a>
-        <!-- TODO: ability to trigger reporting/governance for each proposal -->
+        <!- TODO: ability to trigger reporting/governance for each proposal ->
         <a href="https://github.com" mat-button class="small" color="basic"
             *ngIf="selectedTab == 'active'">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-flag"></mat-icon>
           Report
         </a>
-      </div>
+      </div> -->
     </div>
 
     <div class="sidebar TO_DO" *ngIf="selectedTab !== 'planned'">
