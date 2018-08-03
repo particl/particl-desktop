@@ -100,7 +100,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   /** Returns the unused addresses to display in the UI. */
-  getUnusedAddress(): Object {
+  getUnusedAddress(): any {
     return this.addresses[this.type][0];
   }
 

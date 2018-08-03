@@ -55,6 +55,8 @@ export class SendComponent implements OnInit {
     this.setFormDefaultValue();
   }
 
+  TxType: any = TxType;
+
   setFormDefaultValue() {
     this.send = new TransactionBuilder();
   }
