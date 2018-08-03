@@ -1,42 +1,26 @@
 import { VoteOption } from './vote-option.model';
 
 export class Proposal {
-  constructor(private proposal: any) { }
+  public title: any
+  public options: any
+  public submitter: any
+  public blockStart: any
+  public blockEnd: any
+  public description: any
+  public type: any
+  public hash: any
+  public id: any
 
-  get title(): string {
-    return this.proposal.title;
-  }
-
-  get options(): VoteOption[] {
-    return this.proposal.ProposalOptions.map(v => new VoteOption(v));
-  }
-
-  get submitter(): string {
-    return this.proposal.submitter;
-  }
-
-  get blockStart(): number {
-    return this.proposal.blockStart;
-  }
-
-  get blockEnd(): number {
-    return this.proposal.blockEnd;
-  }
-
-  get description(): string {
-    return this.proposal.description;
-  }
-
-  get type(): string {
-    return this.proposal.type;
-  }
-
-  get hash(): string {
-    return this.proposal.hash;
-  }
-
-  get id () {
-    return this.proposal.id;
+  constructor(private proposal: any) {
+    this.title = this.proposal.title;
+    this.options = this.proposal.ProposalOptions.map(v => new VoteOption(v));
+    this.submitter = this.proposal.submitter;
+    this.blockStart = this.proposal.blockStart;
+    this.blockEnd = this.proposal.blockEnd;
+    this.description = this.proposal.description;
+    this.type = this.proposal.type;
+    this.hash = this.proposal.hash;
+    this.id = this.proposal.id;
   }
 
   public isActiveProposal(currentBlockCount: number): boolean {
