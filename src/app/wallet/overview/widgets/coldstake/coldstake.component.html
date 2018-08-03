@@ -26,10 +26,6 @@
     <div class="subtitle">Inactive</div>
   </mat-card>
 
-  <p class="widget-help" *ngIf="_coldstake.walletInitialized && _coldstake.coldStakingEnabled">
-    Cold staking allows you to spend from one machine and stake from another, this greatly increases the safety of your coins.
-  </p>
-
   <!-- Edit cold stake key, might be useful for later.
   <mat-card *ngIf="false" class="staking-node">
     <div class="title">
@@ -62,20 +58,12 @@
       You can close your wallet if you need to, but it is advised to keep it online until it reaches 100%.
     </p>
     <!-- TODO: component ? -->
-    <p class="buttons">
-      <button mat-button class="small" color="primary"
-        matTooltip="Fast-forward to 100%"
-        (click)="zap()"
-        *ngIf="_coldstake.hotstake.txs.length">
+    <p class="zap-buttons">
+      <button mat-button class="small" color="primary" matTooltip="Fast-forward to 100%" (click)="zap()" *ngIf="_coldstake.hotstake.txs.length">
         Zap
-        <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
       </button>
-      <button mat-button class="small" color="warn"
-        matTooltip="Disable Cold Staking"
-        (click)="revert()"
-        >
+      <button mat-button class="small" color="warn" matTooltip="Disable Cold Staking" (click)="revert()">
         Disable
-        <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
       </button>
     </p>
   </mat-card>
@@ -100,24 +88,19 @@
       will continue to stake on your staking node.
     </p>
     <!-- TODO: component ? -->
-    <p class="buttons">
-      <button mat-button class="small" color="primary"
-        matTooltip="Fast-forward to 100%"
-        (click)="zap()"
-        *ngIf="_coldstake.hotstake.txs.length">
+    <p class="zap-buttons">
+      <button mat-button class="small" color="primary" matTooltip="Fast-forward to 100%" (click)="zap()" *ngIf="_coldstake.hotstake.txs.length">
         Zap
-        <!-- <span class="tag zap">{{ hotstaking.txs.length }}</span> -->
       </button>
-      <button mat-button class="small" color="warn"
-        matTooltip="Disable Cold Staking"
-        (click)="revert()"
-        >
+      <button mat-button class="small" color="warn" matTooltip="Disable Cold Staking" (click)="revert()">
         Disable
-        <!-- <span class="tag cancel">{{ coldstaking.txs.length }}</span> -->
       </button>
     </p>
   </mat-card>
 
+  <p class="widget-help" *ngIf="_coldstake.walletInitialized && _coldstake.coldStakingEnabled">
+    Cold staking allows you to spend from one machine and stake from another, this greatly increases the safety of your coins.
+  </p>
 
   <!-- if Cold staking is at 100% show Disable button etc.
   <mat-card *ngIf="????" class="staking-node">
