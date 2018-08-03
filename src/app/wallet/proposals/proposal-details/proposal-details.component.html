@@ -1,4 +1,4 @@
-<mat-card class="proposal" *ngIf="proposal">
+<mat-card class="proposal">
 
   <div class="header">
     <div class="meta">
@@ -68,17 +68,27 @@
       </div> -->
     </div>
 
-    <div class="sidebar TO_DO" *ngIf="selectedTab !== 'planned'">
+    <div class="sidebar" *ngIf="selectedTab !== 'planned'">
       <div class="graph">
         <div class="subtitle">Voting progress</div>
         <div class="graph">
-          <nvd3 *ngIf="graphData && graphData.length" [options]="graphOptions" [data]="graphData"></nvd3>
+          <nvd3
+            *ngIf="proposalResult?.graphData && proposalResult?.graphData.length"
+            [options]="graphOptions"
+            [data]="proposalResult?.graphData">
+          </nvd3>
+          <!-- @TODO show demo image for no vote yet? -->
+          <!--  <img *ngIf="!proposalResult?.totalVotes"> -->
         </div>
         <div class="percentage-voted">
-          <!-- TODO: implement % of coins voted in total for this proposal -->
+          <!-- @TODO may be total vote count replaced with  % of coins voted ? -->
+          Total Votes: <span class="value">{{proposalResult?.totalVotes}}</span> Voted.
+        </div>
+        <!-- <div class="percentage-voted">
+          <!- TODO: implement % of coins voted in total for this proposal ->
           <span class="value TO_DO">24.65&thinsp;%</span>
           coins voted
-        </div>
+        </div> -->
       </div>
     </div>
 

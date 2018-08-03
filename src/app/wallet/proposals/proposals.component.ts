@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import {
@@ -7,13 +7,15 @@ import {
   Validators
 } from '@angular/forms';
 import { Log } from 'ng2-logger';
+import * as _ from 'lodash';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
 import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
-import { Proposal } from 'app/wallet/proposals/models/proposal';
+import { Proposal } from 'app/wallet/proposals/models/proposal.model';
+
 
 @Component({
   selector: 'app-proposals',
@@ -23,7 +25,7 @@ import { Proposal } from 'app/wallet/proposals/models/proposal';
   ]
 })
 
-export class ProposalsComponent implements OnInit {
+export class ProposalsComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('proposal.component');
 
@@ -102,13 +104,17 @@ export class ProposalsComponent implements OnInit {
      * endBlockCount = this.currentBlockCount +  7d * 720;
      */
     const startBlock = this.currentBlockCount;
-    const endBlock = this.currentBlockCount + 7 * 720;
+    const endBlock = this.currentBlockCount + (7 * 720000);
 
     this.proposalsService.list(startBlock, endBlock)
-      .takeWhile(() => !this.destroyed)
+      .take(1)
       .subscribe((activeProposal: Proposal[]) => {
         this.log.d('activeProposal', activeProposal)
-        this.activeProposals = activeProposal;
+        if (this.isNewProposalArrived(this.activeProposals, activeProposal)) {
+          this.log.d('updated activeProposal ?', activeProposal)
+
+          this.activeProposals = activeProposal;
+        }
       })
   }
 
@@ -119,13 +125,20 @@ export class ProposalsComponent implements OnInit {
      * endBlockCount = this.currentBlockCount;
      */
     const startBlock = 0;
-    const endBlock = this.currentBlockCount - 1;
+    const endBlock = this.currentBlockCount;
 
     this.proposalsService.list(startBlock, endBlock)
-      .takeWhile(() => !this.destroyed)
+      .take(1)
       .subscribe((pastProposal: Proposal[]) => {
-        this.activeProposals = pastProposal;
+        this.log.d('pastProposal', pastProposal)
+        if (this.isNewProposalArrived(this.pastProposals, pastProposal)) {
+          this.pastProposals = pastProposal;
+        }
       })
+  }
+
+  isNewProposalArrived(oldProposals: Proposal[], newProposals: Proposal[]): boolean {
+    return !oldProposals || (oldProposals.length !== newProposals.length)
   }
 
   addProposal() {
@@ -137,4 +150,7 @@ export class ProposalsComponent implements OnInit {
     this.loadProposals();
   }
 
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
 }
