@@ -1,5 +1,6 @@
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalOptionResult } from 'app/wallet/proposals/models/proposal-option-result.model';
+import { GraphOption } from 'app/wallet/proposals/models/proposal-result-graph-option.model';
 
 export class ProposalResult {
     id: number;
@@ -9,7 +10,7 @@ export class ProposalResult {
     createdAt: Date;
     proposalId: number;
     updatedAt: Date;
-    graphData: any[] = [];
+    graphData: GraphOption[] = [];
     totalVoteCounts: number = 0;
 
     constructor(object: any) {
@@ -25,12 +26,16 @@ export class ProposalResult {
 
     setGraphInformation() {
         this.ProposalOptionResults.map((optionResult) => {
-            this.totalVoteCounts += optionResult.voters;
-            this.graphData.push({
-                option: optionResult.ProposalOption.description,
-                voters: optionResult.voters
-            })
+            this.addGraphOption(optionResult);
         })
+    }
+
+    addGraphOption(optionResult: ProposalOptionResult) {
+        this.totalVoteCounts += optionResult.voters;
+        this.graphData.push(new GraphOption({
+            option: optionResult.ProposalOption.description,
+            voters: optionResult.voters
+        }))
     }
 
     get graphInformation(): any {

@@ -98,7 +98,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     ];
 
     this.proposalService.vote(params).subscribe((response) => {
-      // this.proposalResult.graphData = [];
+      this.getProposalResult();
       this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
     }, (error) => {
       this.snackbarService.open(error.message, 'warn');
