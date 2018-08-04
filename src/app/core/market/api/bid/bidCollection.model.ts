@@ -27,26 +27,26 @@ export class BidCollection {
     return ord;
   }
 
-  get filterOrders() {
+  get filterOrders(): Bid[] {
     return (this.type === 'sell' ? this.sellOrders : this.buyOrders);
   }
 
-  get sellOrdersCount() {
+  get sellOrdersCount(): number {
     return this.sellOrders.length;
   }
 
-  get buyOrdersCount() {
+  get buyOrdersCount(): number {
     return this.buyOrders.length;
   }
 
-  get activeSellOrderCount() {
+  get activeSellOrderCount(): number {
     if (this.sellOrdersCount > 0) {
       return this.sellOrders.filter((ord) => ord.activeBuySell).length;
     }
     return 0;
   }
 
-  get activeBuyOrderCount() {
+  get activeBuyOrderCount(): number {
     if (this.buyOrdersCount > 0) {
       return this.buyOrders.filter((ord) => ord.activeBuySell).length;
     }
@@ -54,11 +54,11 @@ export class BidCollection {
   }
 
 
-  get ordersCount() {
+  get ordersCount(): number {
     return this.orders.length;
   }
 
-  get buyCount() {
+  get buyCount(): number {
     const count = this.activeBuyOrderCount;
     if (count > 0) {
       return count;
@@ -66,7 +66,7 @@ export class BidCollection {
     return undefined;
   }
 
-  get sellCount() {
+  get sellCount(): number {
     const count = this.activeSellOrderCount;
     if (count > 0) {
       return count;

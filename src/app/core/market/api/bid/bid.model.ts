@@ -8,55 +8,55 @@ export class Bid extends Product {
     this.setActiveOrders();
   }
 
-  get id() {
+  get id(): number {
     return this.order.id;
   }
 
-  get type() {
+  get type(): string {
     return this.ordType;
   }
 
-  get listingItemId() {
+  get listingItemId(): number {
     return this.order.listingItemId
   }
 
-  get ShippingAddress() {
+  get ShippingAddress(): any {
     return this.order.ShippingAddress;
   }
 
-  get status() {
+  get status(): string {
     return Messages[this.allStatus].status;
   }
 
-  get added() {
+  get added(): string {
     return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
   }
 
-  get updated() {
+  get updated(): string {
     return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
   }
 
-  get messages() {
+  get messages(): any {
     return Messages[this.allStatus][this.type];
   }
 
-  get OrderItem() {
+  get OrderItem(): any {
     return this.order.OrderItem;
   }
 
-  get ListingItem() {
+  get ListingItem(): any {
     return this.order.ListingItem;
   }
 
-  get allStatus() {
+  get allStatus(): string {
     return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.action === 'MPA_REJECT' ? 'REJECTED' : 'BIDDING';
   }
 
-  get createdAt() {
+  get createdAt(): number {
     return this.order.createdAt;
   }
 
-  get updatedAt() {
+  get updatedAt(): number {
     return this.order.updatedAt;
   }
 
