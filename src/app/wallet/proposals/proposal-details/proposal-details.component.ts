@@ -1,10 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import * as d3 from 'd3';
+import { Log } from 'ng2-logger';
 
-import { ProposalVoteConfirmationComponent } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
+import {
+  ProposalVoteConfirmationComponent
+} from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
+import { Proposal } from 'app/wallet/proposals/models/proposal.model';
+import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 
 @Component({
   selector: 'app-proposal-details',
@@ -14,54 +21,77 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
     '../../../../../node_modules/nvd3/build/nv.d3.css'
   ]
 })
-export class ProposalDetailsComponent implements OnInit {
-  @Input() proposal: any;
+export class ProposalDetailsComponent implements OnInit, OnDestroy {
+  log: any = Log.create('proposal.component');
+  @Input() proposal: Proposal;
   @Input() selectedTab: string;
-  @Input() submitterAddress: string;
   @Input() currentBlockCount: number;
 
-  public graphOptions: any;
-  public graphData: any;
-  public selectedOption: string;
+  // pie chart config(s).
+  public graphOptions: any = {
+    chart: {
+      type: 'pieChart',
+      height: 250,
+      width: 250,
+      x: (d) => { return d.option; },
+      y: (d) => { return d.voters; },
+      showLabels: false,
+      donut: true,
+      legend: {
+        margin: {
+          top: 5,
+          right: 35,
+          bottom: 5,
+          left: 0
+        }
+      },
+      color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
+      tooltip: {
+        enabled: true,
+        hideDelay: 0,
+        useInteractiveGuideline: false
+      }
+    }
+  };
+
+  public selectedOption: VoteOption;
+  public proposalResult: ProposalResult;
+  // @TODO create exact type.
+  public voteDetails: any;
+
+  destroyed: boolean = false;
 
   constructor(
     private dialog: MatDialog,
     private proposalService: ProposalsService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private modelsService: ModalsHelperService
   ) { }
 
   ngOnInit() {
-    this.graphOptions = {
-      chart: {
-        type: 'pieChart',
-        height: 250,
-        width: 250,
-        x: (d) => { return d.key; },
-        y: (d) => { return d.y; },
-        showLabels: false,
-        donut: true,
-        legend: {
-          margin: {
-            top: 5,
-            right: 35,
-            bottom: 5,
-            left: 0
-          }
-        },
-        color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
-        tooltip: {
-          enabled: true,
-          hideDelay: 0,
-          useInteractiveGuideline: false
-        }
-      }
+    if (this.proposal) {
+      this.getProposalResult();
+      this.getVoteDetails();
     }
-    this.graphData = [
-      { key: 'Yes', y: 4651813.18567841 },
-      { key: 'Rather yes', y: 2624413.51774001 },
-      { key: 'Rather no', y: 251813.18567841 },
-      { key: 'No', y: 1624413.51774001 }
-    ];
+  }
+
+  getVoteDetails(): void {
+    this.proposalService.get(this.proposal.hash)
+    .takeWhile(() => !this.destroyed)
+    .subscribe((result: any) => {
+      this.log.d('result', result);
+      // @TODO use the voteDetails variable for managing the current vote stuff.
+      this.voteDetails = result;
+    })
+  }
+
+  getProposalResult(): void {
+    this.proposalService.result(this.proposal.hash)
+      .takeWhile(() => !this.destroyed)
+      .subscribe((result: any) => {
+        this.log.d('result', result);
+        this.proposalResult = result;
+      })
   }
 
   vote() {
@@ -69,20 +99,27 @@ export class ProposalDetailsComponent implements OnInit {
     dialog.componentInstance.setData({
       ... this.proposal,
       selectedOption: this.selectedOption
-    }, () => this.callVote())
+    }, () => this.vateConfirmed())
+  }
+  vateConfirmed(): void {
+    this.modelsService.unlock({}, (status) => this.callVote())
   }
 
   callVote(): void {
     const params = [
       this.proposal.hash,
-      this.selectedOption,
-      this.submitterAddress
+      this.selectedOption.optionId
     ];
 
     this.proposalService.vote(params).subscribe((response) => {
-      this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`);
+      this.getProposalResult();
+      this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
     }, (error) => {
       this.snackbarService.open(error.message, 'warn');
     })
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }

@@ -7,12 +7,12 @@
           Active proposals
         </ng-template>
       </mat-tab>
-      <mat-tab>
+      <!-- <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-rocket"></mat-icon>
           Planned proposals
         </ng-template>
-      </mat-tab>
+      </mat-tab> -->
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-document"></mat-icon>
@@ -36,7 +36,7 @@
     </div>
 
     <!-- .search-sorting -->
-    <div class="section search-sorting TO_DO">
+    <!-- <div class="section search-sorting TO_DO">
       <div class="subtitle">Search & Sort</div>
       <mat-card class="filter-card">
 
@@ -68,7 +68,7 @@
         </mat-form-field>
         <mat-checkbox class="only-official">Show official proposals only</mat-checkbox>
       </mat-card>
-    </div>
+    </div> -->
     <!-- .search-sorting -->
 
     <p class="widget-help">
@@ -83,7 +83,6 @@
     <div *ngIf="tabLabels[selectedTab] === 'active'">
       <app-proposal-details
         [proposal]="proposal"
-        [submitterAddress]="address"
         [selectedTab]="tabLabels[selectedTab]"
         [currentBlockCount]="currentBlockCount"
         *ngFor="let proposal of activeProposals;">
@@ -107,7 +106,6 @@
     <div *ngIf="tabLabels[selectedTab] === 'past'">
       <app-proposal-details
         [proposal]="proposal"
-        [submitterAddress]="address"
         [selectedTab]="tabLabels[selectedTab]"
         [currentBlockCount]="currentBlockCount"
         *ngFor="let proposal of pastProposals;">
