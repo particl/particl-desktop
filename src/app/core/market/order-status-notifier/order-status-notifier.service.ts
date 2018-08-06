@@ -58,7 +58,6 @@ export class OrderStatusNotifierService implements OnDestroy {
     if (orders.length === 0) {
       return;
     }
-    orders.reverse();
     if (this.oldOrders && this.oldOrders.length) {
       this.checkOrders(orders);
     }

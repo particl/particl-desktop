@@ -76,9 +76,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
       .take(1)
       .subscribe(bids => {
         console.log('called >>>>>>>>>>>>>>>>>', bids);
-        // reverse the orders
-        bids.filterOrders.reverse();
-
         // Only update if needed
         if (this.hasUpdatedOrders(bids.filterOrders)) {
           this.orders = bids.filterOrders;

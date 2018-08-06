@@ -13,6 +13,9 @@ export class BidCollection {
     this.orders = this.orders.map(ord => {
       return this.setBuySellOrder(ord);
     })
+    this.sellOrders.reverse()
+    this.buyOrders.reverse()
+    this.orders.reverse();
   }
 
   setBuySellOrder(ord: Bid) {
