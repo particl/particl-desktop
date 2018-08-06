@@ -69,8 +69,10 @@
     </div>
 
     <div class="sidebar" *ngIf="selectedTab !== 'planned'">
-      <div class="graph">
+      <div class="voting-progress">
         <div class="subtitle">Voting progress</div>
+
+        <!-- if someone already voted, show graph: -->
         <div class="graph">
           <nvd3
             *ngIf="proposalResult?.graphData && proposalResult?.graphData.length"
@@ -80,6 +82,12 @@
           <!-- @TODO show demo image for no vote yet? -->
           <!--  <img *ngIf="!proposalResult?.totalVotes"> -->
         </div>
+        
+        <!-- if no votes yet, show placeholder: -->
+        <div class="graph-placeholder">
+          <div class="title">No<br>votes<br>yet</div>
+        </div>
+
         <div class="percentage-voted">
           <!-- @TODO may be total vote count replaced with  % of coins voted ? -->
           Total Votes: <span class="value">{{proposalResult?.totalVotes}}</span> Voted.
