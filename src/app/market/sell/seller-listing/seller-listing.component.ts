@@ -64,7 +64,7 @@ export class SellerListingComponent {
   }
 
   async callTemplate(template: Template) {
-    console.log(template);
+    this.log.d('template', template)
     await this.template.post(template, 1, template.expireTime).toPromise();
   }
   // @TODO create a shared compoment

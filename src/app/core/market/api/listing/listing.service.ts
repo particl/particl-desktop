@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
@@ -8,7 +9,7 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 
 @Injectable()
 export class ListingService {
-
+  private log: any = Log.create('listing.service id:' + Math.floor((Math.random() * 1000) + 1));
   constructor(
     private market: MarketService,
     public cache: PostListingCacheService
@@ -37,11 +38,10 @@ export class ListingService {
     return this.market.call('item', params)
     .map(
       (listings: Array<Listing>) => {
-        console.log(listings);
         return listings.map(t => new Listing(t));
       }
     ).do(
-      listings => console.log(listings)
+      listings => this.log.d('Listings', listings)
     );
   }
 

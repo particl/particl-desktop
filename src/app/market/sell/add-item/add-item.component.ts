@@ -366,7 +366,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.modals.unlock({timeout: 30}, (status) => {
         this.template.post(t, 1, this.expiration).toPromise().then(listing => {
         this.snackbar.open('Succesfully added Listing!')
-        console.log(listing);
+        this.log.d('listing.', listing);
         this.backToSell();
         });
       });

@@ -137,7 +137,7 @@ export class Template {
   }
 
   setExpiryTime(): void {
-    if (this.object.ListingItems.length > 0) {
+    if (this.object.ListingItems && this.object.ListingItems.length > 0) {
       this.expireTime = this.object.ListingItems[0].expiryTime;
     }
   }
