@@ -6,6 +6,7 @@ import { SharedModule } from 'app/wallet/shared/shared.module';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 describe('ProposalDetailsComponent', () => {
   let component: ProposalDetailsComponent;
@@ -19,7 +20,7 @@ describe('ProposalDetailsComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
       ],
-      providers: [ ProposalsService ],
+      providers: [ ProposalsService, ModalsHelperService ],
       declarations: [ ProposalDetailsComponent ]
     })
     .compileComponents();

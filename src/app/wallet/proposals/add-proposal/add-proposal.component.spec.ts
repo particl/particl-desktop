@@ -8,6 +8,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { AddProposalComponent } from './add-proposal.component';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 describe('AddProposalComponent', () => {
   let component: AddProposalComponent;
@@ -22,7 +23,10 @@ describe('AddProposalComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
       ],
-      providers: [ProposalsService],
+      providers: [
+        ProposalsService,
+        ModalsHelperService
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
