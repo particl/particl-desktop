@@ -101,10 +101,10 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     /*
      * In the case of active proposals fetching.
      * startBlockCount  = currentBlockCount.
-     * endBlockCount = this.currentBlockCount +  7d * 720;
+     * endBlockCount = '*';
      */
     const startBlock = this.currentBlockCount;
-    const endBlock = this.currentBlockCount + (7 * 720000);
+    const endBlock = '*';
 
     this.proposalsService.list(startBlock, endBlock)
       .take(1)
@@ -121,10 +121,10 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   getPastProposalsListing() {
     /*
      * In the case of past proposals fetching.
-     * startBlockCount  = 0.
+     * startBlockCount  = '*'.
      * endBlockCount = this.currentBlockCount;
      */
-    const startBlock = 0;
+    const startBlock = '*';
     const endBlock = this.currentBlockCount;
 
     this.proposalsService.list(startBlock, endBlock)
