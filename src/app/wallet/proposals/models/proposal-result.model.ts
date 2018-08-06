@@ -43,6 +43,6 @@ export class ProposalResult {
     }
 
     get totalVotes(): number {
-        return this.totalVoteCounts;
+        return this.totalVoteCounts || 0;
     }
 }

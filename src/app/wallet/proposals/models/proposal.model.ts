@@ -1,15 +1,15 @@
 import { VoteOption } from './vote-option.model';
 
 export class Proposal {
-  public title: any
-  public options: any
-  public submitter: any
-  public blockStart: any
-  public blockEnd: any
-  public description: any
-  public type: any
-  public hash: any
-  public id: any
+  public title: string;
+  public options: VoteOption[];
+  public submitter: string;
+  public blockStart: number;
+  public blockEnd: number;
+  public description: string;
+  public type: string;
+  public hash: string;
+  public id: number;
 
   constructor(private proposal: any) {
     this.title = this.proposal.title;

@@ -51,7 +51,6 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['active', 'past'];
   // ['active', 'planned', 'past']
-  public submitterProfileId: number;
   public currentBlockCount: number;
   public proposals: Proposal[] = [];
   public activeProposals: Proposal[] = [];
@@ -68,13 +67,6 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // get default profile submitterProfileId.
-    this.profileService.default()
-      .take(1)
-      .subscribe((profile: Profile) => {
-        this.submitterProfileId = profile.id;
-      });
-
 
     // get current BlockCounts
     this.peerService.getBlockCount()

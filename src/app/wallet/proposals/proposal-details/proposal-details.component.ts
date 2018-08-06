@@ -25,7 +25,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   log: any = Log.create('proposal.component');
   @Input() proposal: Proposal;
   @Input() selectedTab: string;
-  @Input() submitterProfileId: number;
   @Input() currentBlockCount: number;
 
   // pie chart config(s).
@@ -57,6 +56,9 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   public selectedOption: VoteOption;
   public proposalResult: ProposalResult;
+  // @TODO create exact type.
+  public voteDetails: any;
+
   destroyed: boolean = false;
 
   constructor(
@@ -67,7 +69,20 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.getProposalResult();
+    if (this.proposal) {
+      this.getProposalResult();
+      this.getVoteDetails();
+    }
+  }
+
+  getVoteDetails(): void {
+    this.proposalService.get(this.proposal.hash)
+    .takeWhile(() => !this.destroyed)
+    .subscribe((result: any) => {
+      this.log.d('result', result);
+      // @TODO use the voteDetails variable for managing the current vote stuff.
+      this.voteDetails = result;
+    })
   }
 
   getProposalResult(): void {
@@ -92,7 +107,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   callVote(): void {
     const params = [
-      this.submitterProfileId,
       this.proposal.hash,
       this.selectedOption.optionId
     ];

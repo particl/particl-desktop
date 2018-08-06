@@ -128,8 +128,6 @@ export class AddProposalComponent implements OnInit {
       // add proposal.
 
       this.proposalsService.post([
-        'post',
-        this.profileId,
         proposal.title,
         proposal.desc,
         startBlock,

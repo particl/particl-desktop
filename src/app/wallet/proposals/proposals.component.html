@@ -83,7 +83,6 @@
     <div *ngIf="tabLabels[selectedTab] === 'active'">
       <app-proposal-details
         [proposal]="proposal"
-        [submitterProfileId]="submitterProfileId"
         [selectedTab]="tabLabels[selectedTab]"
         [currentBlockCount]="currentBlockCount"
         *ngFor="let proposal of activeProposals;">
