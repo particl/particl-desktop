@@ -111,6 +111,19 @@
           font-weight: 500;
         }
       }
+      .graph-placeholder {
+        display: flex;
+        width: 72px;
+        height: 72px;
+        margin: 24px auto;
+        border: 26px solid $bg;
+        border-radius: 50%;
+        .title {
+          margin: auto;
+          color: $text-muted;
+          line-height: 1.2;
+        }
+      }
     }
 
     .subtitle {
