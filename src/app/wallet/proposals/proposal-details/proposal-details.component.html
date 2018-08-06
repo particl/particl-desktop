@@ -73,18 +73,16 @@
         <div class="subtitle">Voting progress</div>
 
         <!-- if someone already voted, show graph: -->
-        <div class="graph">
+        <div class="graph" *ngIf="proposalResult?.totalVotes">
           <nvd3
             *ngIf="proposalResult?.graphData && proposalResult?.graphData.length"
             [options]="graphOptions"
             [data]="proposalResult?.graphData">
           </nvd3>
-          <!-- @TODO show demo image for no vote yet? -->
-          <!--  <img *ngIf="!proposalResult?.totalVotes"> -->
         </div>
         
         <!-- if no votes yet, show placeholder: -->
-        <div class="graph-placeholder">
+        <div *ngIf="!proposalResult?.totalVotes" class="graph-placeholder">
           <div class="title">No<br>votes<br>yet</div>
         </div>
 
