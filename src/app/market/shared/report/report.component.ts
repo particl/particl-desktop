@@ -27,9 +27,15 @@ export class ReportComponent {
   toggle() {
     const dialogRef = this.dialog.open(ReportModalComponent);
     dialogRef.componentInstance.title = this.listing.title;
+    dialogRef.componentInstance.option = this.listing.proposalOption
+
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
-      this.listing.proposalOption = !this.listing.proposalOption;
-      this.reportService.post(this.listing);
+
+      this.reportService.post(this.listing).subscribe(report => {
+        this.listing.proposalOption = !this.listing.proposalOption;
+        this.snackbar.open(`Listing ${this.listing.title}`);
+      })
+
     });
   }
 }

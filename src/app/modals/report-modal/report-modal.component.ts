@@ -7,6 +7,7 @@ import { MatDialogRef } from '@angular/material';
 })
 export class ReportModalComponent implements OnInit {
   public title: string = '';
+  public option: boolean;
   @Output() isConfirmed: EventEmitter<string> = new EventEmitter();
   constructor(public _dialogRef: MatDialogRef<ReportModalComponent>) { }
 
