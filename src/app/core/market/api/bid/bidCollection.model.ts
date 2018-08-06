@@ -2,20 +2,18 @@ import { Bid } from './bid.model';
 import * as _ from 'lodash';
 
 export class BidCollection {
+  orders: Bid[] = [];
   sellOrders: Array<Bid> = [];
   buyOrders: Array<Bid> = [];
 
-  constructor(public orders: Bid[], public address: string, public type?: string) {
-    this.setOrders();
+  constructor(orders: Bid[], public address: string, public type?: string) {
+    this.setOrders(orders);
   }
 
-  setOrders() {
-    this.orders = this.orders.map(ord => {
+  setOrders(orders: Bid[]) {
+    this.orders = orders.reverse().map(ord => {
       return this.setBuySellOrder(ord);
     })
-    this.sellOrders.reverse()
-    this.buyOrders.reverse()
-    this.orders.reverse();
   }
 
   setBuySellOrder(ord: Bid) {
