@@ -23,12 +23,19 @@ export class Proposal {
     this.id = this.proposal.id;
   }
 
-  public isActiveProposal(currentBlockCount: number): boolean {
-    return currentBlockCount < this.blockEnd;
-  }
-
   public leftVotingEndBlockCount(currentBlockCount: number): number {
-    const leftBlocks = this.blockEnd - currentBlockCount;
+    /*
+     * i.e.
+     *  current block count = 100;
+     *  blockEnd = 100;
+     *  So leftBlock = 0;
+     *  And in that case use can vote for that active proposal for the perticular block count?
+     *  So :
+     *            leftBlocks = (this.blockEnd - currentBlockCount) + 1 ```
+     *  for that last block count.
+     */
+
+    const leftBlocks = (this.blockEnd - currentBlockCount) + 1 ;
     return leftBlocks > 0 ? leftBlocks : 0;
   }
 
