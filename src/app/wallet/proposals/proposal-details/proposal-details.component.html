@@ -70,7 +70,7 @@
 
     <div class="sidebar" *ngIf="selectedTab !== 'planned'">
       <div class="voting-progress">
-        <div class="subtitle">Voting progress</div>
+        <div class="subtitle">Voting {{selectedTab !== 'planned' ? 'progress' : 'finished'}}</div>
 
         <!-- if someone already voted, show graph: -->
         <div class="graph" *ngIf="proposalResult?.totalVotes">

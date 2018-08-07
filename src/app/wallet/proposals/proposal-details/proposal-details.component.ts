@@ -71,7 +71,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.proposal) {
       this.getProposalResult();
-      this.getVoteDetails();
     }
   }
 
@@ -82,16 +81,20 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       this.log.d('result', result);
       // @TODO use the voteDetails variable for managing the current vote stuff.
       this.voteDetails = result;
-    })
+    });
   }
 
   getProposalResult(): void {
     this.proposalService.result(this.proposal.hash)
       .takeWhile(() => !this.destroyed)
       .subscribe((result: any) => {
-        this.log.d('result', result);
         this.proposalResult = result;
-      })
+
+        // don't call this.getVoteDetails() until propsal doesn't have any vote!!
+        if (this.proposalResult.totalVotes) {
+          this.getVoteDetails();
+        }
+      });
   }
 
   vote() {
@@ -110,9 +113,8 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       this.proposal.hash,
       this.selectedOption.optionId
     ];
-
     this.proposalService.vote(params).subscribe((response) => {
-      this.getProposalResult();
+      // @TODO update graph data.
       this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
     }, (error) => {
       this.snackbarService.open(error.message, 'warn');
