@@ -10,8 +10,8 @@ export class ProposalResult {
     createdAt: Date;
     proposalId: number;
     updatedAt: Date;
-    graphData: GraphOption[] = [];
-    totalVoteCounts: number = 0;
+    private graphOptions: GraphOption[] = [];
+    private totalVoteCounts: number = 0;
 
     constructor(object: any) {
         this.id = object.id;
@@ -25,21 +25,22 @@ export class ProposalResult {
     }
 
     setGraphInformation() {
-        this.ProposalOptionResults.map((optionResult) => {
-            this.addGraphOption(optionResult);
+        this.ProposalOptionResults.map((optionResult: ProposalOptionResult) => {
+            const option = new GraphOption({
+                description: optionResult.ProposalOption.description,
+                voters: optionResult.voters
+            });
+            this.addGraphOption(option);
         })
     }
 
-    addGraphOption(optionResult: ProposalOptionResult) {
-        this.totalVoteCounts += optionResult.voters;
-        this.graphData.push(new GraphOption({
-            option: optionResult.ProposalOption.description,
-            voters: optionResult.voters
-        }))
+    addGraphOption(option: GraphOption) {
+        this.totalVoteCounts += option.voters;
+        this.graphOptions.push(option)
     }
 
-    get graphInformation(): any {
-        return this.graphData;
+    get graphData(): GraphOption[] {
+        return this.graphOptions;
     }
 
     get totalVotes(): number {
