@@ -2,7 +2,7 @@
   <mat-form-field class="full-width">
     <input
       type="text"
-      (focus)="_selectAllContent()"
+      (focus)="_selectAllContent($event)"
       matInput placeholder="{{placeHolder}}"
       formControlName="stateGroup"
       [matAutocomplete]="autoGroup"

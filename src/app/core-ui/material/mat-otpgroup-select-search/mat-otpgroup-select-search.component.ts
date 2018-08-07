@@ -83,24 +83,12 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
     return opt.filter(item => item.name.toLowerCase().includes(filterValue));
   };
 
-  /* `_onBlur` detect if any option not selected
-   * and input constains any value then selected value should
-   */
-
-  public _onBlur(): void {
-    const val = this.textInput.nativeElement.value;
-    const options = this._filterGroup(val);
-    if (options.length === 0 || this.stateForm.get('stateGroup').value) {
-      this.change.emit(null)
-    }
-  }
-
   // Removed focus from the input box when user select any option from the listed options.
   onSelectionChanged(): void {
     this.textInput.nativeElement.blur();
   }
 
-  public _selectAllContent(): void {
+  public _selectAllContent($event: any): void {
     this.textInput.nativeElement.select();
   }
 }

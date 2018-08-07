@@ -2,8 +2,7 @@
   <mat-form-field class="full-width">
     <input
       type="text"
-      (focus)="_selectAllContent()"
-      (blur)="_onBlur()"
+      (focus)="_selectAllContent($event)"
       placeholder="{{placeHolder}}"
       aria-label="placeHolder"
       matInput

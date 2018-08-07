@@ -68,20 +68,12 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
     return this.options.filter(option => option[this.showValueOf].toLowerCase().includes(filterValue));
   }
 
-  public _onBlur(): void {
-    const val = this.textInput.nativeElement.value;
-    const options = this._filter(val);
-    if ((options.length === 0 && this.formControl.value) || !this.formControl.value) {
-      this.onChange.emit(null)
-    }
-  }
-
   // Removed focus from the input box when user select any option from the listed options.
   onSelectionChanged(): void {
     this.textInput.nativeElement.blur();
   }
 
-  public _selectAllContent(): void {
-    this.textInput.nativeElement.select();
+  public _selectAllContent($event: any): void {
+    $event.target.select();
   }
 }
