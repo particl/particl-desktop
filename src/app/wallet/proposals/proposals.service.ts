@@ -33,9 +33,9 @@ export class ProposalsService {
     return this.marketService.call('proposal', params);
   }
 
-  // proposal results.
+  // proposal result.
   result(proposalHash: string) {
-    const params = ['results', proposalHash]
+    const params = ['result', proposalHash]
     return this.marketService.call('proposal', params).map((r) => new ProposalResult(r));
   }
 
