@@ -30,10 +30,12 @@ export class OrdersComponent implements OnInit, OnDestroy {
   // TODO: disable radios for 0 amount-statuses
   order_filtering: Array<any> = [
     { title: 'All orders', value: '*',     amount: 0 },
-    { title: 'Bidding',    value: 'AWAITING_ESCROW', amount: 0 },
+    { title: 'Bidding',    value: 'MPA_BID', amount: 0 },
+    { title: 'Awaiting',   value: 'AWAITING_ESCROW', amount: 0 },
     { title: 'In escrow',  value: 'ESCROW_LOCKED',  amount: 0 },
     { title: 'Shipped',    value: 'SHIPPING', amount: 0 },
-    { title: 'Sold',       value: 'COMPLETE',    amount: 0 }
+    { title: 'Sold',       value: 'COMPLETE',    amount: 0 },
+    { title: 'Rejected',   value: 'MPA_REJECT',    amount: 0 }
   ];
   public orders: Bid[];
   public profile: any = {};
