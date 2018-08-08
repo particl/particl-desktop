@@ -11,16 +11,16 @@ export class Proposal {
   public hash: string;
   public id: number;
 
-  constructor(private proposal: any) {
-    this.title = this.proposal.title;
-    this.options = this.proposal.ProposalOptions.map(v => new VoteOption(v));
-    this.submitter = this.proposal.submitter;
-    this.blockStart = this.proposal.blockStart;
-    this.blockEnd = this.proposal.blockEnd;
-    this.description = this.proposal.description;
-    this.type = this.proposal.type;
-    this.hash = this.proposal.hash;
-    this.id = this.proposal.id;
+  constructor(object: any) {
+    this.title = object.title;
+    this.options = object.ProposalOptions.map(v => new VoteOption(v));
+    this.submitter = object.submitter;
+    this.blockStart = object.blockStart;
+    this.blockEnd = object.blockEnd;
+    this.description = object.description;
+    this.type = object.type;
+    this.hash = object.hash;
+    this.id = object.id;
   }
 
   public leftVotingEndBlockCount(currentBlockCount: number): number {

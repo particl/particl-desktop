@@ -2,7 +2,7 @@
 
   <div class="header">
     <div class="meta">
-      <div class="id TO_DO">#13</div>
+      <div class="id">#{{proposal?.id}}</div>
       <div class="title">
         {{proposal?.title}}
         <!-- TODO: show only on Proposals created by team (how to implement this?) -->
@@ -101,7 +101,7 @@
   </div>
 
   <!-- TODO: only show "action bar" on ACTIVE proposals -->
-  <div class="action-bar" *ngIf="selectedTab == 'active'">
+  <div class="action-bar" *ngIf="selectedTab == 'active' && !aleradyVoted">
     <div class="text item">Select your vote for this Proposal:</div>
 
     <div class="options item">
@@ -120,4 +120,16 @@
     </button>
   </div>
 
+  <div class="action-bar" *ngIf="selectedTab == 'active' && aleradyVoted">
+    <div class="text item">Your vote for this Proposal:</div>
+
+    <div class="options item">
+      {{voteDetails?.ProposalOption?.description}}
+    </div>
+
+    <button mat-raised-button color="primary" class="vote-button item" (click)="aleradyVoted = !aleradyVoted">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Change
+    </button>
+  </div>
 </mat-card>

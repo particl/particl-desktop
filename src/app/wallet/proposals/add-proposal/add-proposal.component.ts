@@ -16,6 +16,7 @@ import {
   ProposalConfirmationComponent
 } from 'app/modals/proposal-confirmation/proposal-confirmation.component';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
+import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 
 @Component({
   selector: 'app-add-proposal',
@@ -50,7 +51,7 @@ export class AddProposalComponent implements OnInit {
 
     this.proposalFormGroup = this.formBuilder.group({
       title: ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
-      desc: ['', Validators.compose([Validators.required, Validators.maxLength(2000)])],
+      description: ['', Validators.compose([Validators.required, Validators.maxLength(2000)])],
       options: this.formBuilder.array([
         this.initOptionFields(),
         this.initOptionFields()
@@ -110,13 +111,13 @@ export class AddProposalComponent implements OnInit {
     );
   }
 
-  addPost(proposal: any): void {
+  addPost(proposal: Proposal): void {
 
     // check wallet status (unlock if locked ?).
     this.modalService.unlock({}, () => this.addPostCall(proposal))
   }
 
-  addPostCall(proposal: any): void {
+  addPostCall(proposal: Proposal): void {
     // get current block count.
     this.peerService.getBlockCount().take(1).subscribe((startBlock: number) => {
       /**
@@ -129,7 +130,7 @@ export class AddProposalComponent implements OnInit {
 
       this.proposalsService.post([
         proposal.title,
-        proposal.desc,
+        proposal.description,
         startBlock,
         endBlockCount,
         ...proposal.options

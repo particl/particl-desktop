@@ -5,6 +5,7 @@ import { MarketService } from 'app/core/market/market.service';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
+import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 
 @Injectable()
 export class ProposalsService {
@@ -23,7 +24,6 @@ export class ProposalsService {
   list(startBlock: any, endBlock: any) {
     const params = ['list', startBlock, endBlock];
     return this.marketService.call('proposal', params)
-      .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b))
       .map((v) => v.map(p => new Proposal(p)));
   }
 
@@ -48,6 +48,6 @@ export class ProposalsService {
   // get current vote details.
   get(proposalHash: string) {
     const params = ['get', this.submitterId, proposalHash];
-    return this.marketService.call('vote', params);
+    return this.marketService.call('vote', params).map((v) => new VoteDetails(v));
   }
 }

@@ -1,8 +1,10 @@
 export class GraphOption {
     description: string;
     voters: number;
-    constructor(obj: any) {
-        this.description = obj.description;
-        this.voters = obj.voters;
+    optionId: number;
+    constructor(object: any) {
+        this.description = object.description;
+        this.voters = object.voters;
+        this.optionId = object.optionId;
     }
 }

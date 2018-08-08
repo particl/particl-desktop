@@ -101,10 +101,8 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     this.proposalsService.list(startBlock, endBlock)
       .take(1)
       .subscribe((activeProposal: Proposal[]) => {
-        this.log.d('activeProposal', activeProposal)
         if (this.isNewProposalArrived(this.activeProposals, activeProposal)) {
-          this.log.d('updated activeProposal ?', activeProposal)
-
+          activeProposal.reverse()
           this.activeProposals = activeProposal;
         }
       })
@@ -122,8 +120,8 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     this.proposalsService.list(startBlock, endBlock)
       .take(1)
       .subscribe((pastProposal: Proposal[]) => {
-        this.log.d('pastProposal', pastProposal)
         if (this.isNewProposalArrived(this.pastProposals, pastProposal)) {
+          pastProposal.reverse()
           this.pastProposals = pastProposal;
         }
       })
