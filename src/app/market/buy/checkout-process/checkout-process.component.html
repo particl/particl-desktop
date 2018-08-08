@@ -183,12 +183,24 @@
                 <input matInput formControlName="state" placeholder="State">
               </mat-form-field>
             </div>
-            <mat-form-field class="full-width">
+
+            <!-- <mat-form-field class="full-width">
               <mat-select formControlName="country" placeholder="Country">
                 <mat-option *ngFor="let country of countryList.getList()" value="{{country.iso}}">{{country.name}}
                 </mat-option>
               </mat-select>
-            </mat-form-field>
+            </mat-form-field> -->
+
+            <!-- mat-select-search -->
+            <mat-select-search
+              [options]= "countryList.getList()"
+              [showValueOf]="'name'"
+              [placeHolder]="'Select Country'"
+              [isRequired]="'true'"
+              [defaultSelectedValue]="selectedCountry"
+              (onChange)="onCountryChange($event)">
+            </mat-select-search>
+            <!-- mat-select-search -->
 
             <!--Hide shipping profile -->
             <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">

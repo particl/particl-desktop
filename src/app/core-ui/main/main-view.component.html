@@ -43,8 +43,7 @@
                     <mat-icon class="icon" fontSet="partIcon"
                       fontIcon="part-bag-buy"></mat-icon>
                     <span class="text">Buy</span>
-                    <!-- TODO? add current number of Buy orders (maybe limit only to those who need action? e.g. "payment" or "confirm shipped"): -->
-                    <!-- <span class="tag TO_DO">4</span> -->
+                    <app-order-count [type]="'buy'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count>
                   </mat-list-item>
                 </a>
 
@@ -54,8 +53,7 @@
                     <mat-icon class="icon" fontSet="partIcon"
                       fontIcon="part-bag-sell"></mat-icon>
                     <span class="text">Sell</span>
-                    <!-- TODO? add current number of Sell orders (maybe limit only to those who need action? e.g. "accept bid" or "mark shipped"): -->
-                    <!-- <span class="tag TO_DO">2</span> -->
+                    <app-order-count [type]="'sell'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count>
                   </mat-list-item>
                 </a>
 

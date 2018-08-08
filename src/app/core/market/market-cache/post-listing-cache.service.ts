@@ -7,6 +7,7 @@ export class PostListingCacheService {
 
   // Contains templateId's currently being published
   private awaiting: number[] = [];
+  country: string;
 
   posting(template: Template): void {
     this.awaiting.push(template.id);
@@ -19,6 +20,14 @@ export class PostListingCacheService {
 
   constructor() {
 
-   }
+  }
 
+
+  set selectedCountry(country: string) {
+    this.country = country;
+  }
+
+  get selectedCountry() {
+    return this.country;
+  }
 }
