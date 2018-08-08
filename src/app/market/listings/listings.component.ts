@@ -85,7 +85,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.log('overview created');
+    this.log.d('overview created');
     this.loadCategories();
     this.loadPage(1);
   }

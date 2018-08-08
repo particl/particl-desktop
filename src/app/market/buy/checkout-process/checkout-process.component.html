@@ -37,7 +37,7 @@
           <tr>
             <th>Items</th>
             <th>Price</th>
-            <th *ngIf="listCache?.selectedCountry?.iso">Shipping Price</th>
+            <th *ngIf="listCache?.selectedCountry">Shipping Price</th>
             <th class="text-right">Total</th>
             <th></th>
           </tr>
@@ -63,7 +63,7 @@
               {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
-            <td *ngIf="listCache?.selectedCountry?.iso" class="price cell">
+            <td *ngIf="listCache?.selectedCountry" class="price cell">
               {{ listing.shippingAmount(listCache?.selectedCountry?.iso)?.getIntegerPart()}}{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.dot()}}<small>{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.getFractionalPart()}}</small>
               PART
             </td>
@@ -79,11 +79,11 @@
                  <button mat-button class="small">+</button>
                </div>
              </td> -->
-            <td *ngIf="!listCache?.selectedCountry?.iso" class="total cell">
+            <td *ngIf="!listCache?.selectedCountry" class="total cell">
               {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
             </td>
-            <td *ngIf="listCache?.selectedCountry?.iso" class="total cell">
+            <td *ngIf="listCache?.selectedCountry" class="total cell">
               {{ listing.total(listCache?.selectedCountry?.iso)?.getIntegerPart()}}{{listing.total(listCache?.selectedCountry?.iso)?.dot()}}<small>{{listing.total(listCache?.selectedCountry?.iso)?.getFractionalPart()}}</small>
               PART
             </td>
@@ -100,7 +100,7 @@
         <div class="order-detail"
              fxLayout fxLayoutAlign="space-between start">
           <div class="subtotal-notice" fxFlex="0 1 500px">
-            {{ listCache?.selectedCountry?.iso ? (
+            {{ listCache?.selectedCountry ? (
               "Subtotal doesn't include escrow costs. You can review these in the summary before placing your order."
             ) : (
               "Subtotal doesn't include shipping and escrow costs. You can review these in the summary before placing your order."
@@ -109,10 +109,10 @@
           <table class="subtotals" fxFlex="0 0 250px">
             <tr>
               <td class="desc total">Subtotal</td>
-              <td *ngIf="!listCache?.selectedCountry?.iso" class="value total">
+              <td *ngIf="!listCache?.selectedCountry" class="value total">
                 {{cart?.subTotal.amount}} PART
               </td>
-              <td *ngIf="listCache?.selectedCountry?.iso" class="value total">
+              <td *ngIf="listCache?.selectedCountry" class="value total">
                 {{cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry?.iso)?.amount}} PART
               </td>
             </tr>

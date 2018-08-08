@@ -89,6 +89,6 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   }
 
   public _selectAllContent($event: any): void {
-    this.textInput.nativeElement.select();
+    $event.target.select();
   }
 }
