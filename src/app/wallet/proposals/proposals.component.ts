@@ -55,7 +55,8 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   public proposals: Proposal[] = [];
   public activeProposals: Proposal[] = [];
   public pastProposals: Proposal[] = [];
-  destroyed: boolean;
+  public isLoading: boolean = false;
+  private destroyed: boolean;
 
   constructor(
     private router: Router,
@@ -78,6 +79,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   loadProposals(): void {
+    this.isLoading = true;
     if (this.tabLabels[this.selectedTab] === 'active') {
 
       // get active proposal list
@@ -101,10 +103,14 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     this.proposalsService.list(startBlock, endBlock)
       .take(1)
       .subscribe((activeProposal: Proposal[]) => {
+        this.isLoading = false;
         if (this.isNewProposalArrived(this.activeProposals, activeProposal)) {
           activeProposal.reverse()
           this.activeProposals = activeProposal;
         }
+      }, (error) => {
+        this.isLoading = false;
+        this.log.d(error);
       })
   }
 
@@ -120,10 +126,14 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     this.proposalsService.list(startBlock, endBlock)
       .take(1)
       .subscribe((pastProposal: Proposal[]) => {
+        this.isLoading = false;
         if (this.isNewProposalArrived(this.pastProposals, pastProposal)) {
           pastProposal.reverse()
           this.pastProposals = pastProposal;
         }
+      }, (error) => {
+        this.isLoading = false;
+        this.log.d(error);
       })
   }
 

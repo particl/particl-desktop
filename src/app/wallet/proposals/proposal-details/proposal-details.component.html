@@ -83,7 +83,7 @@
         
         <!-- if no votes yet, show placeholder: -->
         <div *ngIf="!proposalResult?.totalVotes" class="graph-placeholder">
-          <div class="title">No<br>votes<br>yet</div>
+          <div class="title">No<br>votes<br>{{selectedTab !== 'active' ? "yet" : "received"}}</div>
         </div>
 
         <div class="percentage-voted">

@@ -104,7 +104,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
     if (previousVote && previousVote.optionId === this.selectedOption.optionId) {
       this.snackbarService.open(
-        `You already voted with option ${this.selectedOption.description} for proposal ${this.proposal.title}`,
+        `You already voted with option "${this.selectedOption.description}" for this proposal: ${this.proposal.title}.`,
         'info'
       );
       return;
