@@ -44,7 +44,7 @@
 
       <tr *ngIf="listingServiceCache?.selectedCountry">
         <th class="escrow price">Escrow</th>
-        <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry)?.getAmount() }} PART</td>
+        <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART</td>
       </tr>
     </table>
 
