@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
-import { ModalsHelperService } from 'app/modals/modals.module';
+import { ModalsHelperService, TermsService } from 'app/modals/modals.module';
 
 /*
  * The MainView is basically:
@@ -49,12 +49,13 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _rpc: RpcService,
     private _updater: UpdaterService,
+    private _terms: TermsService,
     private _rpcState: RpcStateService,
     private _modalsService: ModalsHelperService,
     private dialog: MatDialog,
     // the following imports are just 'hooks' to
     // get the singleton up and running
-    private _newtxnotifier: NewTxNotifierService
+    private _newtxnotifier: NewTxNotifierService,
   ) { }
 
   ngOnInit() {

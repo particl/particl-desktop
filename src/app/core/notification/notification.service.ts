@@ -12,7 +12,7 @@ export class NotificationService {
   }
 
   /** Send Notification to the backend */
-  public sendNotification(title: string, desc: string) {
+  public sendNotification(title: string, desc?: string) {
     if (window.electron) {
       this.runNotification(title, desc);
     }

@@ -6,7 +6,7 @@ import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
 import { ModalsModule } from 'app/modals/modals.module';
 
-import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
+import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 
 describe('BidConfirmationModalComponent', () => {
   let component: BidConfirmationModalComponent;
