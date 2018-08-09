@@ -356,12 +356,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.upsert().then(t => {
       this.modals.unlock({timeout: 30}, (status) => {
         this.template.post(t, 1)
-        .finally(() => this.isInProcess = false)
-        .toPromise().then(listing => {
+        .subscribe(listing => {
           this.snackbar.open('Succesfully added Listing!')
           this.log.d(listing);
           this.backToSell();
-        });
+        },
+        (error) => this.log.d(error),
+        () => this.isInProcess = false)
       });
     }, err => this.snackbar.open(err));
   }
