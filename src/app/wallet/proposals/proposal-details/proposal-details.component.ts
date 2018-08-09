@@ -118,7 +118,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   vateConfirmed(): void {
-    this.modelsService.unlock({}, (status) => this.callVote())
+    this.modelsService.unlock({timeout: 3}, (status) => this.callVote())
   }
 
   callVote(): void {
@@ -138,16 +138,9 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateGraphData() {
-    if (this.proposalResult.totalVotes) {
-      const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
-      this.proposalResult.updateVote(this.selectedOption, previousVote);
-    } else {
-      this.proposalResult.addGraphOption(new GraphOption({
-        ...this.selectedOption,
-        voters: 1
-      }))
-    }
 
+    const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
+    this.proposalResult.updateVote(this.selectedOption, previousVote);
     this.voteDetails = new VoteDetails({
       ProposalOption: this.selectedOption
     });

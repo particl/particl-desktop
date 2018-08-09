@@ -37,7 +37,7 @@ export class ProposalResult {
     }
 
     addGraphOption(option: GraphOption) {
-        this.totalVoteCounts += option.voters;
+        this.addVoteCount(option.voters);
         this.graphOptions.push(option)
     }
 
@@ -52,11 +52,20 @@ export class ProposalResult {
             if (previousOption && previousOption.optionId === option.optionId) {
                 --option.voters
             }
-            if (selectedOption.optionId  === option.optionId) {
+            if (selectedOption.optionId === option.optionId) {
                 ++option.voters
             }
             return new GraphOption(option);
         })
+
+        // increase vote count if new vote.
+        if (!previousOption) {
+            this.addVoteCount(1);
+        }
+    }
+
+    addVoteCount(counts: number): void {
+        this.totalVoteCounts += counts;
     }
 
     get graphData(): GraphOption[] {
