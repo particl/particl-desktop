@@ -47,6 +47,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   selectedCountry: Country;
   selectedCategory: Category;
+  isInProcess: boolean = false;
 
   constructor(
     private router: Router,
@@ -337,6 +338,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     if (!this.validate()) {
       return;
     };
+    this.isInProcess = true;
     this.log.d('Saving and publishing the listing.');
     this.publish();
   }
@@ -353,11 +355,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
   private async publish() {
     this.upsert().then(t => {
       this.modals.unlock({timeout: 30}, (status) => {
-        this.template.post(t, 1).toPromise().then(listing => {
-        this.snackbar.open('Succesfully added Listing!')
-        console.log(listing);
-        this.backToSell();
-        });
+        this.template.post(t, 1)
+        .subscribe(listing => {
+          this.snackbar.open('Succesfully added Listing!')
+          this.log.d(listing);
+          this.backToSell();
+        },
+        (error) => this.log.d(error),
+        () => this.isInProcess = false)
       });
     }, err => this.snackbar.open(err));
   }
