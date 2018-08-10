@@ -1,28 +1,28 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { Log } from 'ng2-logger';
 import { HttpClient } from '@angular/common/http';
+import { RpcService } from 'app/core/rpc/rpc.service';
 import * as _ from 'lodash';
 
 export interface IWallet {
-  name: string,
-  fakename: string,
-  alreadyLoaded?: boolean
+  name: string;
+  fakename: string;
+  alreadyLoaded?: boolean;
 }
 
 @Injectable()
 export class MultiwalletService implements OnDestroy {
-
-  log: any = Log.create('multiwallet.service id:' + Math.floor((Math.random() * 1000) + 1));
+  log: any = Log.create(
+    'multiwallet.service id:' + Math.floor(Math.random() * 1000 + 1)
+  );
   private destroyed: boolean = false;
 
   private timer: any = Observable.interval(1000);
   private _list: BehaviorSubject<Array<IWallet>> = new BehaviorSubject([]);
 
-  constructor(
-    private _http: HttpClient,
-  ) {
+  constructor(private rpc: RpcService) {
     this.listen();
   }
 
@@ -34,28 +34,38 @@ export class MultiwalletService implements OnDestroy {
     // http request
     // subscribe to server side stream
     // and load the wallets in _list.
-    this.timer.takeWhile(() => !this.destroyed)
-      .subscribe(() => {
-        this._http.get('wallets://lists')
-        .map((response: any) => response.wallets)
-        .do((wallets) => wallets.forEach(w => w.fakename = w.name.replace('wallet_', '')))
-        .subscribe((wallets: IWallet[]) => this._list.next(wallets));
-      })
+    this.timer.takeWhile(() => !this.destroyed).subscribe(() => {
+      this.rpc.call('listwallets').subscribe(
+        response => {
+          const wallets = response.map(w => ({
+            name: w,
+            fakename: w.replace('wallet_', '')
+          }));
+          this._list.next(wallets);
+        },
+        error => {
+          this.log.er(error);
+        }
+      );
+    });
   }
 
   /**
    * Returns a list of available wallets on the system.
    */
   get list(): Observable<Array<IWallet>> {
-    return this._list.asObservable()
-      .distinctUntilChanged((x, y: any) => _.isEqual(x, y)) // deep compare
+    return this._list
+      .asObservable()
+      .distinctUntilChanged((x, y: any) => _.isEqual(x, y)); // deep compare
   }
 
   /**
    * Returns one wallet by name.
    */
   get(w: string): Observable<IWallet> {
-    return this.list.map(wallets => wallets.find(wallet => wallet.name === w)).take(1);
+    return this.list
+      .map(wallets => wallets.find(wallet => wallet.name === w))
+      .take(1);
   }
 
   ngOnDestroy() {

@@ -24,9 +24,7 @@ if (app.getVersion().includes('RC'))
 const options = require('./modules/options').parse();
 const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
-const rpc     = require('./modules/rpc/rpc');
 const _auth = require('./modules/webrequest/http-auth');
-const daemon  = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

@@ -15,7 +15,7 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
   private log: any = Log.create('multiwallet-sidebar.component id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
 
-  private list: Array<IWallet> = [];
+  public list: Array<IWallet> = [];
   public activeWallet: IWallet;
 
   constructor(
