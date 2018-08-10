@@ -372,7 +372,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
           this.log.d(listing);
           this.backToSell();
         },
-        (error) => this.snackbar.open(error),
+        (error) => {
+          this.isInProcess = false;
+          this.snackbar.open(error)
+        },
         () => this.isInProcess = false)
       });
     }, err => this.snackbar.open(err));
