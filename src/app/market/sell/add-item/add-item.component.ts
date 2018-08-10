@@ -49,6 +49,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   txFee: Amount = new Amount(0)
   selectedCountry: Country;
   selectedCategory: Category;
+  isInProcess: boolean = false;
 
   expiredList: Array<any> = [
     { title: '4 day',     value: 4  },
@@ -348,6 +349,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     if (!this.validate()) {
       return;
     };
+    this.isInProcess = true;
     this.log.d('Saving and publishing the listing.');
     this.publish();
   }
@@ -364,11 +366,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
   private async publish() {
     this.upsert().then(t => {
       this.modals.unlock({timeout: 30}, (status) => {
-        this.template.post(t, 1, this.expiration).toPromise().then(listing => {
-        this.snackbar.open('Succesfully added Listing!')
-        this.log.d('listing.', listing);
-        this.backToSell();
-        });
+        this.template.post(t, 1, this.expiration)
+        .subscribe(listing => {
+          this.snackbar.open('Succesfully added Listing!')
+          this.log.d(listing);
+          this.backToSell();
+        },
+        (error) => this.log.d('error', error),
+        () => this.isInProcess = false)
       });
     }, err => this.snackbar.open(err));
   }

@@ -1,16 +1,22 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
+import { Bid } from 'app/core/market/api/bid/bid.model';
 
 @Injectable()
 export class OrderStatusNotifierService implements OnDestroy {
 
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
+
   private destroyed: boolean = false;
+  profile: any = {};
   private actionStatus: Array<any> =  [
             'Accept bid',
             'Mark as delivered',
@@ -18,77 +24,100 @@ export class OrderStatusNotifierService implements OnDestroy {
             'Mark as shipped',
             'Order rejected'
           ];
-  public oldOrders: Array<any>;
-
+  public oldOrders: Bid[];
+  bids: BidCollection;
   constructor(
     private listingService: ListingService,
     private _marketState: MarketStateService,
-    private _notification: NotificationService
+    private _notification: NotificationService,
+    private profileService: ProfileService
   ) {
     this.log.d('order status notifier service running!');
+    this.loadOrders();
   }
+
+  loadOrders() {
+    // @TODO need to replace with marketplace command so this should probably gone :)
+    this._marketState.observe('bid')
+      .takeWhile(() => !this.destroyed)
+      .map(o => new BidCollection(o, this.profile.address))
+      .subscribe(bids => {
+        this.bids = bids;
+        if (bids.address) {
+          this.checkForNewStatus(bids.orders);
+        }
+      })
+    this.loadProfile();
+  }
+
 
   // TODO: trigger by ZMQ in the future
-  checkForNewStatus(orders: any): void {
+  checkForNewStatus(orders: Bid[]): void {
     this.log.d('new orders', orders);
     // if no orders: stop
-    if (orders.orders.length === 0) {
+    if (orders.length === 0) {
       return;
     }
-
-    if (!this.oldOrders || this.oldOrders.length === 0) {
-      this.oldOrders = orders.bid.orders;
-    } else {
-      this.checkOrders(orders.bid.orders);
-      this.oldOrders = orders.bid.orders;
+    if (this.oldOrders && this.oldOrders.length) {
+      this.checkOrders(orders);
     }
+    this.oldOrders = orders;
   }
 
-  private notifyNewStatus(newOrder: any) {
+  private notifyNewStatus(newOrder: Bid) {
     this.listingService.get(newOrder.listingItemId).subscribe(response => {
      newOrder.listing = response;
 
      const message = this.getMessage(newOrder.listing.title, newOrder.messages.action_button);
-     this._notification.sendNotification(message);
+       this._notification.sendNotification(message);
     });
   }
 
-  checkOrders(newOrders: any) {
-    this.oldOrders.forEach(order => {
-      newOrders.forEach(newOrder => {
-        if (this.compareOrder(order, newOrder)) {
-          this.notifyNewStatus(newOrder);
-        }
-      });
+  checkOrders(newOrders: Bid[]) {
+    this.getOrdersToNotifyFor(newOrders).forEach(newOrder => {
+      if (this.hasOrderChanged(newOrder.messages.action_button)) {
+        this.notifyNewStatus(newOrder);
+      }
     });
   }
 
-  compareOrder(order: any, newOrder: any) {
-    return order.id === newOrder.id &&
-            order.messages.action_button !== newOrder.messages.action_button &&
-            this.actionStatus.includes(newOrder.messages.action_button)
+  private hasOrderChanged(msg: string): boolean {
+    return this.actionStatus.includes(msg)
+  }
+
+  public getOrdersToNotifyFor(newOrders: Bid[]): Bid[] {
+    return  _.differenceWith(newOrders, this.oldOrders, (o1, o2) => {
+      return o1.id === o2.id && o1.messages.action_button === o2.messages.action_button
+    });
   }
 
   private getMessage(title: string, msg: string) {
     switch (msg) {
       case 'Accept bid' :
-        return 'New bid on' + title + ' - accept or reject it';
+        return 'New bid on \"' + title + '\" - accept or reject it';
 
       case 'Make payment' :
-        return 'Seller accepted your bid, order ' + title + ' ready for payment';
+        return 'Seller accepted your bid, order \"' + title + '\" ready for payment';
 
       case 'Mark as shipped' :
-        return 'Buyer locked funds, order ' + title + ' ready for shipping';
+        return 'Buyer locked funds, order \"' + title + '\" ready for shipping';
 
       case 'Mark as delivered' :
-        return 'Seller just shipped ' + title;
+        return 'Seller just shipped \"' + title + '\"';
 
       case 'Order rejected' :
-        return 'Your bid on ' + title + ' was rejected by Seller';
+        return 'Your bid on \"' + title + '\" was rejected by Seller';
 
       default:
         break;
     }
+  }
+
+  loadProfile(): void {
+    this.profileService.default().take(1).subscribe(
+      profile => {
+        this.profile = profile;
+      });
   }
 
   ngOnDestroy() {

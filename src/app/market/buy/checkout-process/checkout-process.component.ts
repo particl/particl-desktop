@@ -27,6 +27,7 @@ import { PlaceOrderComponent } from '../../../modals/market-place-order/place-or
 import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checkout-process-cache.service';
 import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
 @Component({
   selector: 'app-checkout-process',
@@ -72,6 +73,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     public countryList: CountryListService,
     public cache: CheckoutProcessCacheService,
     private bid: BidService,
+    private listCache: PostListingCacheService,
     public dialog: MatDialog) {
   }
 
