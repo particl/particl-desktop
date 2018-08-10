@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Rx';
-import { Observer } from 'rxjs/Rx';
+import { ReplaySubject, Observable } from 'rxjs';
 
 
 export interface InternalStateType {
@@ -9,10 +8,7 @@ export interface InternalStateType {
 }
 
 interface InternalStateCache {
-  [key: string]: {
-    observer: Observer<InternalStateType>,
-    observable: Observable<any>
-  }
+  [key: string]: ReplaySubject<any>
 }
 
 @Injectable()
@@ -44,16 +40,15 @@ export class StateService {
     const updated = this._state[prop] !== value;
     const state = this._state[prop] = value; // internally mutate our state
 
-    if (updated && this._getObservablePair(prop).observer) {
-      this._getObservablePair(prop)
-        .observer.next(value);
+    if (updated && this._getSubject(prop) && value) {
+      this._getSubject(prop).next(value);
     }
 
     return state;
   }
 
   observe(prop: string, subkey?: string) {
-    let observable = this._getObservablePair(prop).observable;
+    let observable: Observable<any> = this._getSubject(prop);
     if (subkey) {
       // TODO: maybe check if subkey exists?
       // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
@@ -68,16 +63,9 @@ export class StateService {
     return JSON.parse(JSON.stringify(object));
   }
 
-  private _getObservablePair(prop: string)  {
+  private _getSubject(prop: string): ReplaySubject<any>  {
     if (!this._observerPairs[prop]) {
-      this._observerPairs[prop] = {
-        observable: null,
-        observer: null
-      };
-
-      this._observerPairs[prop].observable = Observable.create(
-          _observer => this._observerPairs[prop].observer = _observer
-      ).shareReplay(1);
+      this._observerPairs[prop] = new ReplaySubject<any>(1);
     }
 
     return this._observerPairs[prop];

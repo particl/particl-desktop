@@ -9,7 +9,7 @@ export class SendMockService {
   constructor() { }
 
   public getTransactionFee(): Observable<any> {
-    return Observable.of(SendService_OBJECT);
+    return of(SendService_OBJECT);
   }
 
 }
