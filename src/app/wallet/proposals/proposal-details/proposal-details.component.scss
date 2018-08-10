@@ -27,6 +27,8 @@
         flex: 1 1 100%;
         margin-left: 16px;
         font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
         .tag {
           color: darken($color, 5%);
           font-size: 11px;
