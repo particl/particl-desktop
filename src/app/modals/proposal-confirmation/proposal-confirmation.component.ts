@@ -16,7 +16,11 @@ export class ProposalConfirmationComponent {
   constructor(private dialogRef: MatDialogRef<ProposalConfirmationComponent>) { }
 
   confirm(): void {
-    this.callback(this.data);
+
+    // check to prevent this.callback = null?.
+    if (this.callback) {
+      this.callback(this.data);
+    }
   }
 
   /**

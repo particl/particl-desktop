@@ -58,7 +58,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   public selectedOption: VoteOption;
   public proposalResult: ProposalResult;
-  // @TODO create exact type.
   public voteDetails: VoteDetails;
   public aleradyVoted: boolean = false
   destroyed: boolean = false;
@@ -83,7 +82,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       this.voteDetails = voteDetail;
       this.aleradyVoted = true;
     }, (error) => {
-      this.log.d('you not yet?', error)
+      this.log.d(error)
     });
   }
 
@@ -100,7 +99,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  vote() {
+  vote(): void {
     const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
     if (previousVote && previousVote.optionId === this.selectedOption.optionId) {
       this.snackbarService.open(
@@ -133,11 +132,11 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
       this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
     }, (error) => {
-      this.snackbarService.open(error.message, 'warn');
+      this.snackbarService.open(error, 'warn');
     })
   }
 
-  updateGraphData() {
+  updateGraphData(): void {
 
     const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
     this.proposalResult.updateVote(this.selectedOption, previousVote);

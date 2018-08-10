@@ -21,8 +21,10 @@ export class ProposalVoteConfirmationComponent {
   confirm(): void {
     this.dialogClose();
 
-    // call callback.
-    this.callback();
+    // check to prevent this.callback = null?.
+    if (this.callback) {
+      this.callback();
+    }
   }
 
   dialogClose(): void {

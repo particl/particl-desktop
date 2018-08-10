@@ -91,7 +91,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     }
   }
 
-  getActiveProposalsListing() {
+  getActiveProposalsListing(): void {
     /*
      * In the case of active proposals fetching.
      * startBlockCount  = currentBlockCount.
@@ -114,7 +114,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
       })
   }
 
-  getPastProposalsListing() {
+  getPastProposalsListing(): void {
     /*
      * In the case of past proposals fetching.
      * startBlockCount  = '*'.
@@ -141,7 +141,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     return !oldProposals || (oldProposals.length !== newProposals.length)
   }
 
-  addProposal() {
+  addProposal(): void {
     this.router.navigate(['/wallet/proposal']);
   }
 

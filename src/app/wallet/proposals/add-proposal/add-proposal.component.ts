@@ -96,7 +96,7 @@ export class AddProposalComponent implements OnInit {
     control.removeAt(i);
   }
 
-  cancelAndDiscard() {
+  backToProposals(): void {
     this.router.navigate(['/wallet/proposals']);
   }
 
@@ -141,9 +141,9 @@ export class AddProposalComponent implements OnInit {
         )
 
         // redirect to proposals page.
-        this.cancelAndDiscard();
+        this.backToProposals();
       }, (error) => {
-        this.snackbarService.open(error.message, 'warn')
+        this.snackbarService.open(error, 'warn')
       })
     })
   }

@@ -25,7 +25,7 @@ export class ProposalResult {
         this.setGraphInformation()
     }
 
-    setGraphInformation() {
+    setGraphInformation(): void {
         this.ProposalOptionResults.map((optionResult: ProposalOptionResult) => {
             const option = new GraphOption({
                 description: optionResult.ProposalOption.description,
@@ -36,7 +36,7 @@ export class ProposalResult {
         })
     }
 
-    addGraphOption(option: GraphOption) {
+    addGraphOption(option: GraphOption): void {
         this.addVoteCount(option.voters);
         this.graphOptions.push(option)
     }

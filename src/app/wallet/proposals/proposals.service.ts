@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { RpcService } from 'app/core/rpc/rpc.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { MarketService } from 'app/core/market/market.service';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
