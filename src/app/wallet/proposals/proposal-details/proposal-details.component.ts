@@ -20,7 +20,7 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
   templateUrl: './proposal-details.component.html',
   styleUrls: [
     './proposal-details.component.scss',
-    '../../../../../node_modules/nvd3/build/nv.d3.css'
+    './../../../../assets/css/nvd3/nv.d3.css'
   ]
 })
 export class ProposalDetailsComponent implements OnInit, OnDestroy {
@@ -117,7 +117,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   vateConfirmed(): void {
-    this.modelsService.unlock({timeout: 3}, (status) => this.callVote())
+    this.modelsService.unlock({timeout: 10}, (status) => this.callVote())
   }
 
   callVote(): void {

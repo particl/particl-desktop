@@ -114,7 +114,7 @@ export class AddProposalComponent implements OnInit {
   addPost(proposal: Proposal): void {
 
     // check wallet status (unlock if locked ?).
-    this.modalService.unlock({timeout: 3}, () => this.addPostCall(proposal))
+    this.modalService.unlock({timeout: 10}, () => this.addPostCall(proposal))
   }
 
   addPostCall(proposal: Proposal): void {
