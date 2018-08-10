@@ -44,6 +44,7 @@ $sidebar-margin: 35px;
 
 .content {
   width: 100%;
+  max-width: calc(100% - (#{$fixed-sidebar-width} + #{$sidebar-margin}));
   margin-left: $fixed-sidebar-width + $sidebar-margin;
   /*
   flex: 1 1 100%;
