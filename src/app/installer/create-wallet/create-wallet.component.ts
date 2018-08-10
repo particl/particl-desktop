@@ -178,7 +178,7 @@ export class CreateWalletComponent implements OnDestroy {
     this.rpc.call('createwallet', [this.walletName]).subscribe(
       wallet => {
         this.log.d('createwallet: ', wallet);
-
+        this.errorString = '';
         this.rpc.wallet = this.walletName;
 
         this.rpcState
@@ -189,6 +189,12 @@ export class CreateWalletComponent implements OnDestroy {
         this.nextStep();
       },
       error => {
+        if (error.code === -4) {
+          this.errorString = error.message.replace('wallet_', '');
+        } else {
+          this.flashNotification.open(error, 'error');
+        }
+
         this.log.er(error);
       }
     );
