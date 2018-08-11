@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { TransactionBuilder } from 'app/wallet/wallet/send/transaction-builder.model';
+import { TransactionBuilder, TxType } from 'app/wallet/wallet/send/transaction-builder.model';
 
 import { Amount, Fee } from 'app/core/util/utils';
 import { SendService } from 'app/wallet/wallet/send/send.service';
@@ -17,7 +17,8 @@ export class SendConfirmationModalComponent implements OnInit {
   public dialogContent: string;
   public send: TransactionBuilder;
 
-  transactionType: string = '';
+  TxType = TxType;
+  transactionType: TxType;
   sendAmount: Amount = new Amount(0);
   sendAddress: string = '';
   receiverName: string = '';
