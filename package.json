@@ -151,7 +151,7 @@
     "angularx-qrcode": "^1.0.1",
     "bluebird": "^3.4.7",
     "buffered-spawn": "^3.3.2",
-    "cli-progress": "^1.7.0",
+    "cli-progress": "^2.1.0",
     "core-js": "^2.4.1",
     "electron-log": "^2.2.14",
     "electron-native-notification": "^1.2.1",
