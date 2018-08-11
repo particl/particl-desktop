@@ -63,8 +63,8 @@ export class TemplateService {
     );
   }
 
-  post(template: Template, marketId: number) {
-    return this.market.call('template', ['post', template.id, marketId])
+  post(template: Template, marketId: number, expTime: number) {
+    return this.market.call('template', ['post', template.id, expTime, marketId])
     .do(t => this.listingCache.posting(template));
   }
 
