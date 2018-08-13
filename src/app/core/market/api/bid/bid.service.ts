@@ -43,7 +43,7 @@ export class BidService {
     return 'Placed all orders!';
   }
 
-  search(address: string, type?: any, status?: string, search?: string): Observable<any> {
+  search(address: string, type?: any, status?: string, search?: string): Observable<BidCollection> {
     const params = ['search', 0, 99999, 'ASC', '*', status, search ];
     this.log.d('params', params);
     return this.market.call('bid', params).map(o => new BidCollection(o, address, type))

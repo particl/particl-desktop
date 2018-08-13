@@ -32,11 +32,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   public profile: any = {};
   order_filters: OrderFilter;
 
-  filters: any = {
-    search:   undefined,
-    sort:     undefined,
-    status:   undefined
-  };
+  filters: any;
   timer: Observable<number>;
   destroyed: boolean = false;
 
@@ -103,13 +99,12 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   filter(): void {
-    console.log(this.filters.status);
     this.loadOrders();
   }
 
   clear(): void {
-    this.filters.status = '*';
-    this.filters.search = '';
+    this.default();
+    this.loadOrders();
   }
 
   ngOnDestroy() {
