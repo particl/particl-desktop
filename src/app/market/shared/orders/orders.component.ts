@@ -82,6 +82,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
         console.log('called >>>>>>>>>>>>>>>>>', bids);
         // Only update if needed
         if (this.hasUpdatedOrders(bids.filterOrders)) {
+          // Initialize model only when its fetching for all orders.
           if (this.filters.status === '*') {
             this.order_filters = new OrderFilter();
           }

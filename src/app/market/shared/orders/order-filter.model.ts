@@ -45,6 +45,7 @@ export class OrderFilter {
         break;
     }
   }
+
   allStatusCount(orders: Bid[]): void {
     this.resetAllCount();
     this.setAllCount(orders.length);

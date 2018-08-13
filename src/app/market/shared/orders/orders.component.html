@@ -6,12 +6,13 @@
     <mat-card class="filter-card">
       <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
         <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search"
-               (keyup.enter)="loadOrders()" (keyup.escape)="filters.search = ''; loadOrders()">
+            (keyup)="loadOrders()" (keyup.enter)="loadOrders()" (keyup.escape)="filters.search = ''; loadOrders()">
         <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
                   (click)="filters.search=''; loadOrders()"></mat-icon>
         <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                   (click)="loadOrders()"></mat-icon>
       </mat-form-field>
+
       <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
         <mat-select placeholder="Sort orders" [(ngModel)]="filters.sort" (change)="filter()">
           <mat-option *ngFor="let sorting of order_sortings" [value]="sorting.value">
