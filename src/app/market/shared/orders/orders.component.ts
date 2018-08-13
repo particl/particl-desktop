@@ -81,7 +81,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       .subscribe(bids => {
         console.log('called >>>>>>>>>>>>>>>>>', bids);
         // Only update if needed
-        if (this.hasUpdatedOrders(bids.filterOrders)) {         
+        if (this.hasUpdatedOrders(bids.filterOrders)) {
           if (this.filters.status === '*') {
             this.order_filters = new OrderFilter();
           }
