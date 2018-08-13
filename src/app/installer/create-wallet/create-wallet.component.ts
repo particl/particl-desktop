@@ -218,7 +218,7 @@ export class CreateWalletComponent implements OnDestroy {
         this.step = Steps.COMPLETED;
       },
       error => {
-        this.step = Steps.PASSWORD;
+        this.step = this.isRestore ? Steps.MNEMONIC_INITIAL : Steps.PASSWORD;
         this.errorString = error.message;
         this.log.er('Mnemonic import failed', error);
       }

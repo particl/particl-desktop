@@ -48,11 +48,11 @@
         </p>
         <p class="widget-help" *ngIf="!isCrypted">
           It is recommended to
-          <button mat-button color="basic" class="small" (click)="initialize(0);">
+          <span>
             <mat-icon fontSet="partIcon" fontIcon="part-lock"></mat-icon>
             Encrypt wallet
-          </button>
-          before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
+          </span>
+          when creating or restoring a wallet, in order to not leave any possible key fragments lying around.
         </p>
         <div class="huge action-buttons">
           <mat-card class="create half">
