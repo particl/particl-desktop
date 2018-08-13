@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { FormArray } from '@angular/forms/src/model';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
-import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
@@ -28,7 +27,6 @@ export class AddProposalComponent implements OnInit {
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
   public isTnCAccepted: boolean = false;
-  private profileId: number;
   // form controls
   public proposalFormGroup: FormGroup;
 
@@ -39,15 +37,10 @@ export class AddProposalComponent implements OnInit {
     private modalService: ModalsHelperService,
     private peerService: PeerService,
     private proposalsService: ProposalsService,
-    private profileService: ProfileService,
     private snackbarService: SnackbarService
   ) { }
 
   ngOnInit() {
-    // get default profile address.
-    this.profileService.default().takeWhile(() => true).subscribe((profile: Profile) => {
-      this.profileId = profile.id;
-    })
 
     this.proposalFormGroup = this.formBuilder.group({
       title: ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
