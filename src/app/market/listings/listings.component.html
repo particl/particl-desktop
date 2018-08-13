@@ -26,13 +26,6 @@
       </mat-select-search>
       <!-- mat-select-search -->
 
-      <!-- <mat-select placeholder="All countries" class="filter country" (change)="clearAndLoadPage()" [(ngModel)]="filters.country">
-        <mat-option>All countries</mat-option>
-        <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}
-        </mat-option>
-      </mat-select> -->
-
-
       <!--mat-otpgroup-select-search -->
       <mat-otpgroup-select-search
         fxFlex="0 0 180px"
@@ -41,23 +34,8 @@
         (change)="onCategoryChange($event)">
       </mat-otpgroup-select-search>
       <!--mat-otpgroup-select-search -->
-
-      <!-- <mat-select placeholder="All categories" (change)="clearAndLoadPage()" [(ngModel)]="filters.category"  class="filter category">
-        <mat-option>All categories</mat-option>
-        <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
-          <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.id" [selected]="true">
-            {{ subcategory.name }}
-          </mat-option>
-        </mat-optgroup>
-      </mat-select> -->
     </div>
     <div class="buyer-country" fxFlex="0 0 180px">
-      <!-- <mat-select placeholder="All countries" class="filter country" (change)="changeLocation()" [(ngModel)]="selectedCountry">
-        <mat-option>All countries</mat-option>
-        <mat-option *ngFor="let country of countryList?.countries" [value]="country.iso">{{ country.name }}
-        </mat-option>
-      </mat-select> -->
-        <!-- mat-select-search -->
       <mat-select-search
         matTooltip="Select your country to calculate exact shipping & escrow prices"
         matTooltipPosition="before"
@@ -65,6 +43,7 @@
         [options]="countryList?.countries"
         [defaultOption]="'Your country'"
         [showValueOf]="'name'"
+        [defaultSelectedValue]="this.selectedCountry"
         (onChange)="changeLocation($event)">
       </mat-select-search>
       <!-- mat-select-search -->

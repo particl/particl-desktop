@@ -2,61 +2,85 @@
 
   <div class="row" fxLayout="row" fxLayoutGap="30px">
 
-    <mat-card class="photos" fxFlex="50">
-      <div class="title">Upload photos</div>
-      <div id="drag-n-drop">
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
+    <div class="left" fxFlex="50">
 
-        <!--hide input -->
-        <input class="hide-file" type="file"
-              accept="image/*" multiple="true" id="fileInput">
-
-        <button mat-button color="primary" (click)="uploadPicture()">
-          Upload a photo
-        </button>
-        <!-- TODO: drag n drop -->
-        <!-- <p>or drag'n'drop it here</p> -->
-      </div>
-      <p class="widget-help">
-        Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on
-        market). Be sure to upload high quality &amp; focused images in good lighting where possible.
-      </p>
-      <div class="gallery" fxLayoutWrap>
-
-        <div *ngFor="let image of images"
-             class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
-          <div class="photo" fxFLex>
-            <img src="{{image.thumbnail}}">
-            <div class="icons">
-              <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
-                        matTooltip="Remove image" (click)="removeExistingImage(image)">
-              </mat-icon>
-              <!--mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
-                        matTooltip="Set as featured" (click)="featurePicture(i)">
-              </mat-icon-->
+      <mat-card class="photos">
+        <div class="title">Upload photos</div>
+        <div id="drag-n-drop">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
+  
+          <!--hide input -->
+          <input class="hide-file" type="file"
+                accept="image/*" multiple="true" id="fileInput">
+  
+          <button mat-button color="primary" (click)="uploadPicture()">
+            Upload a photo
+          </button>
+          <!-- TODO: drag n drop -->
+          <!-- <p>or drag'n'drop it here</p> -->
+        </div>
+        <p class="widget-help">
+          Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible.
+        </p>
+        <div class="gallery" fxLayoutWrap>
+  
+          <div *ngFor="let image of images"
+              class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+            <div class="photo" fxFLex>
+              <img src="{{image.thumbnail}}">
+              <div class="icons">
+                <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
+                          matTooltip="Remove image" (click)="removeExistingImage(image)">
+                </mat-icon>
+                <!--mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                          matTooltip="Set as featured" (click)="featurePicture(i)">
+                </mat-icon-->
+              </div>
             </div>
           </div>
-        </div>
-
-        <div *ngFor="let picture of picturesToUpload ; index as i"
-             class="photo-wrapper {{i === featuredPicture ? 'featured' : ''}}" fxFlex="0 0 123px"
-             fxLayoutAlign="center center">
-          <!-- TODO: maybe not gif, but removing is 'unsafe' -->
-          <div class="photo" fxFLex>
-            <img src="{{picture}}">
-            <div class="icons">
-              <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
-                        matTooltip="Remove image" (click)="removePicture(i)">
-              </mat-icon>
-              <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
-                        matTooltip="Set as featured" (click)="featurePicture(i)">
-              </mat-icon>
+  
+          <div *ngFor="let picture of picturesToUpload ; index as i"
+              class="photo-wrapper {{i === featuredPicture ? 'featured' : ''}}" fxFlex="0 0 123px"
+              fxLayoutAlign="center center">
+            <!-- TODO: maybe not gif, but removing is 'unsafe' -->
+            <div class="photo" fxFLex>
+              <img src="{{picture}}">
+              <div class="icons">
+                <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
+                          matTooltip="Remove image" (click)="removePicture(i)">
+                </mat-icon>
+                <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                          matTooltip="Set as featured" (click)="featurePicture(i)">
+                </mat-icon>
+              </div>
             </div>
           </div>
-        </div>
+  
+        </div><!-- .gallery -->
+      </mat-card><!-- .photos -->
 
-      </div><!-- .gallery -->
-    </mat-card><!-- .photos -->
+      <mat-card class="fees-expiration">
+        <div class="title">Listing expiration &amp; fees</div>
+        <div class="row" fxLayout fxLayoutAlign="center center">
+          <mat-form-field class="full-width" fxFlex="1 1 100%">
+            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration" (change)="loadTransactionFee()">
+              <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
+                {{ expire.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="est-fee" fxFlex="0 0 210px">
+            Approximate listing fee:<br>
+            {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
+          </div>
+        </div>
+        <p class="widget-help">
+          Choose for how long should your listing be published. Longer expiration results in higher fees.
+        </p>
+      </mat-card><!-- .fees-expiration -->
+
+    </div><!-- .left -->
+
 
     <mat-card class="details" fxFlex="50" [formGroup]="itemFormGroup">
       <div class="title">Listing details</div>
@@ -107,7 +131,7 @@
         class="full-width"
         [options]="countryList.getList()"
         [showValueOf]="'name'"
-        [placeHolder]="'Select Country'"
+        [placeHolder]="'Shipping from (your country)'"
         [isRequired]="'true'"
         [defaultSelectedValue]="selectedCountry"
         (onChange)="onCountryChange($event)">
@@ -151,11 +175,11 @@
       </button>
     </div>
     <div class="right">
-      <button mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
+      <button [disabled]="isInProcess" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
-      <button mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+      <button [disabled]="isInProcess" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
         {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>

@@ -1,45 +1,70 @@
-import * as _ from 'lodash';
-import { Order } from 'app/core/market/api/bid/order.model';
-import { Listing
-} from '../listing/listing.model';
+import { Messages, DateFormatter } from 'app/core/util/utils';
+import { Product } from './product.model';
 
-export class Bid {
-  public id: number;
-  //  @TODO replace with product model
-  public listing: Listing;
-  public listingItemId: number;
-  public status: string;
-  private bid: Order;
-
-  // @TODO some refactoring needed
-  public OrderItem: {
-    status: string,
-    id: number
-  }
-  // @TODO required its own model ?
-  public ShippingAddress: {
-    country: string
+export class Bid extends Product {
+  activeBuySell: boolean;
+  constructor(private order: any, public ordType: string ) {
+    super();
+    this.setActiveOrders();
   }
 
-  constructor(public orders: any, public address: any, public type: any) {
-    this.setFilter();
+  get id(): number {
+    return this.order.id;
   }
 
-  setFilter() {
-    this.bid = new Order(this.orders, this.address);
-    this.orders = this.type === 'buy' ? this.bid.buyOrders : this.bid.sellOrders;
+  get type(): string {
+    return this.ordType;
   }
 
-  get ordersCount() {
-    return this.orders.length;
+  get listingItemId(): number {
+    return this.order.listingItemId
   }
 
-  get buySellCount() {
-    const count = this.type === 'buy' ? this.bid.activeBuyOrderCount : this.bid.activeSellOrderCount;
-    if (count > 0) {
-      return count;
-    }
-    return undefined;
+  get ShippingAddress(): any {
+    return this.order.ShippingAddress;
+  }
+
+  get status(): string {
+    return Messages[this.allStatus].status;
+  }
+
+  get added(): string {
+    return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
+  }
+
+  get updated(): string {
+    return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
+  }
+
+  get messages(): any {
+    return Messages[this.allStatus][this.type];
+  }
+
+  get OrderItem(): any {
+    return this.order.OrderItem;
+  }
+
+  get ListingItem(): any {
+    return this.order.ListingItem;
+  }
+
+  get allStatus(): string {
+    return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.action === 'MPA_REJECT' ? 'REJECTED' : 'BIDDING';
+  }
+
+  get createdAt(): number {
+    return this.order.createdAt;
+  }
+
+  get updatedAt(): number {
+    return this.order.updatedAt;
+  }
+
+  setActiveOrders() {
+    this.activeBuySell = ['Accept bid', 'Mark as shipped', 'Mark as delivered', 'Make payment']
+                          .includes(this.messages.action_button);
   }
 
 }
+
+
