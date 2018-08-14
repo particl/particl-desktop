@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
-import { HttpClient } from '@angular/common/http';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import * as _ from 'lodash';
 
