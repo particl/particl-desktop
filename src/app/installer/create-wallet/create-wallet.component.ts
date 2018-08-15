@@ -15,8 +15,6 @@ import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { PassphraseService } from './passphrase/passphrase.service';
 
-const DEFAULT_WALLET = 'wallet.dat';
-
 export enum Steps {
   START = 0,
   WALLET_NAME = 1,
