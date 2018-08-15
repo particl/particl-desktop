@@ -29,7 +29,7 @@ var getHash = function (platform, name, hashes) {
 var getWinAsset = function(data, asset, hashes) {
   data.platform = "win";
   data.arch = asset.name.includes("win64") ? "x64" : "ia32";
-  data.type = asset.content_type === "application/zip" ? "zip" : undefined;
+  data.type = asset.content_type === "application/zip" ? "zip" : 'zip';
   data.sha256 = getHash(data.platform, asset.name, hashes);
 }
 
@@ -182,13 +182,14 @@ got(`${releasesURL}`).then(response => {
       var entry;
       release.assets.forEach(asset => {
         if ((entry = getAssetDetails(asset, hashes, tag))) {
+          console.log(entry)
           binaries.push(entry);
         }
       })
-      
       // include entries in JSON object
       var platforms = json.clients.particld.platforms;
       binaries.forEach(binary => {
+        console.log(binary.platform)
         // define an empty object for current platform if not already defined
         if (!platforms[binary.platform]) {
           platforms[binary.platform] = {};
