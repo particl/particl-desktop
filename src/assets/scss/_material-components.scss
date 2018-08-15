@@ -30,6 +30,7 @@ Customizations and modifiers for default Material components
       3.3. Selects
       3.4. Select/Autocomplete
       3.5. Radios
+      3.6. Checkboxes
 
 */
 
@@ -525,4 +526,11 @@ input {
       width: 100%;
     }
   }
+}
+
+
+// ------ 3.6. CHECKBOXES ------ //
+
+.mat-checkbox {
+  font-family: $font !important;
 }
