@@ -29,7 +29,7 @@ var getHash = function (platform, name, hashes) {
 var getWinAsset = function(data, asset, hashes) {
   data.platform = "win";
   data.arch = asset.name.includes("win64") ? "x64" : "ia32";
-  data.type = asset.content_type === "application/zip" ? "zip" : undefined;
+  data.type = asset.content_type === "application/zip" ? "zip" : 'zip';
   data.sha256 = getHash(data.platform, asset.name, hashes);
 }
 

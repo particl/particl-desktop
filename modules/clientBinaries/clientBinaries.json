@@ -86,6 +86,48 @@
               }
             }
           }
+        },
+        "win": {
+          "ia32": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.16.2.0/particl-0.16.2.0-win32.zip",
+              "type": "zip",
+              "sha256": "7790717f29b209708609737525379acae97061fd8d098714749a94a6914c0d9f",
+              "bin": "particl-0.16.2.0/bin/particld.exe"
+            },
+            "bin": "particld.exe",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.16.2.0"
+                ]
+              }
+            }
+          },
+          "x64": {
+            "download": {
+              "url": "https://github.com/particl/particl-core/releases/download/v0.16.2.0/particl-0.16.2.0-win64.zip",
+              "type": "zip",
+              "sha256": "c03ce9400e1b90b38618ee7a7fb08752d9981edadf1f31ba90d7e53f2d80fbbb",
+              "bin": "particl-0.16.2.0/bin/particld.exe"
+            },
+            "bin": "particld.exe",
+            "commands": {
+              "sanity": {
+                "args": [
+                  "-version"
+                ],
+                "output": [
+                  "Particl Core Daemon",
+                  "0.16.2.0"
+                ]
+              }
+            }
+          }
         }
       }
     }
