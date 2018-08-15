@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 
 import { ConnectionCheckerService } from './connection-checker.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
-import { IWallet, MultiwalletService } from 'app/multiwallet/multiwallet.service';
+import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
 
 const DEFAULT_WALLET = 'wallet.dat';
 
@@ -16,7 +16,6 @@ const DEFAULT_WALLET = 'wallet.dat';
   providers: [RpcService, ConnectionCheckerService]
 })
 export class LoadingComponent implements OnInit {
-
   log: any = Log.create('loading.component');
 
   private walletToLoad: string = DEFAULT_WALLET;
@@ -48,13 +47,14 @@ export class LoadingComponent implements OnInit {
 
         // kick off the connection checker
         // only after we have a wallet or default
-        this.con.whenRpcIsResponding().subscribe(
-          (getwalletinfo) => this.decideWhereToGoTo(getwalletinfo),
-          (error) => this.log.d('whenRpcIsResponding errored')
-        );
+        this.con
+          .whenRpcIsResponding()
+          .subscribe(
+            getwalletinfo => this.decideWhereToGoTo(getwalletinfo),
+            error => this.log.d('whenRpcIsResponding errored')
+          );
       });
-    })
-
+    });
   }
 
   ngOnInit() {
@@ -76,7 +76,11 @@ export class LoadingComponent implements OnInit {
 
   goToInstaller() {
     this.log.d('Going to installer');
-    this.router.navigate(['installer']);
+    const qParams: any =
+      this.walletToLoad === DEFAULT_WALLET ? { initDefaultWallet: true } : {};
+    this.router.navigate(['installer'], {
+      queryParams: qParams
+    });
   }
 
   goToCreateWallet() {
@@ -88,5 +92,4 @@ export class LoadingComponent implements OnInit {
     this.log.d('MainModule: moving to new wallet', this.walletToLoad);
     this.router.navigate([this.walletToLoad]);
   }
-
 }

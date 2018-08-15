@@ -1,26 +1,21 @@
 import {
   Component,
-  Inject,
-  forwardRef,
   ViewChild,
   ElementRef,
-  ComponentRef,
   HostListener,
+  OnInit,
   OnDestroy
 } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Router } from '@angular/router';
-import { take } from 'rxjs/operator/take';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { PassphraseService } from './passphrase/passphrase.service';
-import {
-  IWallet,
-  MultiwalletService
-} from 'app/multiwallet/multiwallet.service';
+import { of } from 'rxjs/observable/of';
+import { switchMap } from 'rxjs/operators';
 
 export enum Steps {
   START = 0,
@@ -40,7 +35,7 @@ export enum Steps {
   styleUrls: ['./create-wallet.component.scss'],
   providers: [PassphraseService, RpcService, RpcStateService]
 })
-export class CreateWalletComponent implements OnDestroy {
+export class CreateWalletComponent implements OnInit, OnDestroy {
   log: any = Log.create('createwallet.component');
   private destroyed: boolean = false;
   Steps: any = Steps; // so we can use it in HTML
@@ -49,13 +44,14 @@ export class CreateWalletComponent implements OnDestroy {
   isRestore: boolean = false;
   isCrypted: boolean = false;
   errorString: string = '';
+  isDefaultWallet: boolean = false;
 
   // wallet name
   @ViewChild('nameField')
   nameField: ElementRef;
   public name: string;
   get walletName() {
-    return 'wallet_' + this.name;
+    return this.isDefaultWallet ? this.name : 'wallet_' + this.name;
   }
 
   // recovery passphrase
@@ -71,10 +67,17 @@ export class CreateWalletComponent implements OnDestroy {
     private rpcState: RpcStateService,
     private rpc: RpcService,
     private router: Router,
-    private multi: MultiwalletService,
+    private _route: ActivatedRoute,
     private flashNotification: SnackbarService
   ) {
     this.reset();
+  }
+
+  ngOnInit() {
+    this.isDefaultWallet =
+      (
+        this._route.snapshot.queryParamMap.get('initDefaultWallet') || ''
+      ).toLowerCase() === 'true';
   }
 
   ngOnDestroy() {
@@ -104,6 +107,12 @@ export class CreateWalletComponent implements OnDestroy {
         this.isRestore = true;
         break;
     }
+    if (this.isDefaultWallet) {
+      // Skip the name wallet step if configuring the default wallet
+      this.step++;
+      this.name = 'wallet.dat';
+      this.rpc.wallet = this.name;
+    }
     this.nextStep();
   }
 
@@ -120,6 +129,10 @@ export class CreateWalletComponent implements OnDestroy {
 
   prevStep(): void {
     this.step--;
+    if (this.step === Steps.WALLET_NAME && this.isDefaultWallet) {
+      // Skip the wallet naming step if configuring the defautl wallet
+      this.step--;
+    }
     this.errorString = '';
   }
 
