@@ -146,8 +146,7 @@
       <div class="container-block">
 
         <div *ngIf="step === Steps.MNEMONIC_INITIAL">
-          <div class="title" *ngIf="isDefaultWallet">Default Wallet</div>
-          <div class="title" *ngIf="!isDefaultWallet">{{ walletName }}</div>
+          <div class="title">{{ walletName }}</div>
           <p>
             Recovery Phrase (sometimes also called "wallet seed") is a backup key to your coins. Anyone with access to these 24 words
             can recover your wallet, so make sure they are safe and ideally backed-up on multiple locations.

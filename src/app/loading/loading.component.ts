@@ -76,10 +76,8 @@ export class LoadingComponent implements OnInit {
 
   goToInstaller() {
     this.log.d('Going to installer');
-    const qParams: any =
-      this.walletToLoad === DEFAULT_WALLET ? { initDefaultWallet: true } : {};
     this.router.navigate(['installer'], {
-      queryParams: qParams
+      queryParams: { wallet: this.walletToLoad }
     });
   }
 

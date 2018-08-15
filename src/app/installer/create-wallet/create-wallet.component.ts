@@ -14,8 +14,8 @@ import { RpcStateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { PassphraseService } from './passphrase/passphrase.service';
-import { of } from 'rxjs/observable/of';
-import { switchMap } from 'rxjs/operators';
+
+const DEFAULT_WALLET = 'wallet.dat';
 
 export enum Steps {
   START = 0,
@@ -44,14 +44,14 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   isRestore: boolean = false;
   isCrypted: boolean = false;
   errorString: string = '';
-  isDefaultWallet: boolean = false;
+  isExistingWallet: boolean = false;
 
   // wallet name
   @ViewChild('nameField')
   nameField: ElementRef;
   public name: string;
   get walletName() {
-    return this.isDefaultWallet ? this.name : 'wallet_' + this.name;
+    return this.isExistingWallet ? this.name : 'wallet_' + this.name;
   }
 
   // recovery passphrase
@@ -74,10 +74,12 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.isDefaultWallet =
-      (
-        this._route.snapshot.queryParamMap.get('initDefaultWallet') || ''
-      ).toLowerCase() === 'true';
+    // For when an existing wallet has not been correctly initialized
+    const w = this._route.snapshot.queryParamMap.get('wallet');
+    if (w) {
+      this.name = w;
+      this.isExistingWallet = true;
+    }
   }
 
   ngOnDestroy() {
@@ -95,7 +97,12 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   }
 
   initialize(type: number): void {
+    const wName: string = this.name;
     this.reset();
+
+    if (this.isExistingWallet) {
+      this.name = wName;
+    }
 
     switch (type) {
       case 0: // Encrypt wallet
@@ -107,10 +114,9 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
         this.isRestore = true;
         break;
     }
-    if (this.isDefaultWallet) {
-      // Skip the name wallet step if configuring the default wallet
+    if (this.isExistingWallet) {
+      // Skip the name wallet step if initializing an existing wallet
       this.step++;
-      this.name = 'wallet.dat';
       this.rpc.wallet = this.name;
     }
     this.nextStep();
@@ -129,8 +135,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
   prevStep(): void {
     this.step--;
-    if (this.step === Steps.WALLET_NAME && this.isDefaultWallet) {
-      // Skip the wallet naming step if configuring the defautl wallet
+    if (this.step === Steps.WALLET_NAME && this.isExistingWallet) {
+      // Skip the wallet naming step if initializing an existing wallet
       this.step--;
     }
     this.errorString = '';
