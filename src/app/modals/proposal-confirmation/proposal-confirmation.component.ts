@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { Amount, ProposalTrasactionFee } from 'app/core/util/utils';
+import { Amount, ProposalTransactionFee } from 'app/core/util/utils';
 
 @Component({
   selector: 'app-proposal-confirmation',
@@ -29,7 +29,7 @@ export class ProposalConfirmationComponent {
 
   setData(data: any, callback: Function): void {
     this.data = data;
-    this.proposalTransactionFee = new ProposalTrasactionFee(this.data).transactionFee;
+    this.proposalTransactionFee = new ProposalTransactionFee(this.data).transactionFee;
     this.callback = callback;
   }
 

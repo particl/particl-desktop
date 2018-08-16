@@ -225,50 +225,76 @@ export class DateFormatter {
   }
 }
 
-export class ProposalTrasactionFee {
-  private ECMA_SIZES: any  = {
-    STRING: 2,
-    BOOLEAN: 4,
-    NUMBER: 8
-  };
+export class ProposalTransactionFee {
 
   constructor(private obj: any) {
   }
 
-  private sizeof (object: any) {
-    if (object !== null && typeof (object) === 'object') {
-      if (Buffer.isBuffer(object)) {
-        return object.length;
-      } else {
-        let bytes = 0;
-        for (const key in object) {
+  sizeof(object: any) {
+    const type = Object.prototype.toString.call(object);
+    const valid =
+      type === '[object Boolean]' ||
+      type === '[object Number]' ||
+      type === '[object String]' ||
+      type === '[object Object]' ||
+      type === '[object Array]';
 
-          if (!Object.hasOwnProperty.call(object, key)) {
-            continue;
-          }
-
-          bytes += this.sizeof(key);
-          try {
-            bytes += this.sizeof(object[key]);
-          } catch (ex) {
-            if (ex instanceof RangeError) {
-              // circular reference detected, final result might be incorrect
-              // let's be nice and not throw an exception
-              bytes = 0;
-            }
-          }
-        }
-        return bytes;
-      }
-    } else if (typeof (object) === 'string') {
-      return object.length * this.ECMA_SIZES.STRING;
-    } else if (typeof (object) === 'boolean') {
-      return this.ECMA_SIZES.BOOLEAN;
-    } else if (typeof (object) === 'number') {
-      return this.ECMA_SIZES.NUMBER;
-    } else {
+    if (!valid) {
+      console.log(`${type} is not supported!`);
       return 0;
     }
+
+    const objects = [object];
+    let size = 0;
+    let gbDeflection = 0; // V8 Garbage Collection Deflection
+
+    for (let index = 0; index < objects.length; index++) {
+      switch (typeof objects[index]) {
+        case 'boolean':
+          size += 4;
+          break;
+
+        case 'number':
+          size += 8;
+          break;
+
+        case 'string':
+          size += 2 * objects[index].length;
+          break;
+
+        case 'object':
+          gbDeflection += 16;
+          if (
+            Object.prototype.toString.call(objects[index]) !== '[object Array]'
+          ) {
+            gbDeflection += (4 - Object.keys(objects[index]).length % 4) * 8;
+            for (const key in objects[index]) {
+              if (Object(objects[index]).hasOwnProperty(key)) {
+                size += 2 * key.length;
+              }
+            }
+          }
+
+          for (const key in objects[index]) {
+            if (Object(objects[index]).hasOwnProperty(key)) {
+
+              let processed = false;
+              for (let search = 0; search < objects.length; search++) {
+                if (objects[search] === objects[index][key]) {
+                  processed = true;
+                  break;
+                }
+              }
+              if (!processed) {
+                objects.push(objects[index][key]);
+              }
+          }
+
+          }
+      }
+    }
+
+    return size;
   }
 
   get transactionFee(): Amount {
@@ -276,12 +302,12 @@ export class ProposalTrasactionFee {
      * proposal TransactionFee calculated on
      * the basis of message of size 512kb costs 0.26362200 PART for 1 day.
      * and for 1kb memory = cost (0.00050696538) PART for 1 day.
-     * totalCost = (memorySize / 1000) (in kb(s)) * 0.00050696538 (1kb memory cost) *  7 (days)
+     * totalCost = (memorySize / 1024) (in kb(s)) * 0.00050696538 (1kb memory cost) *  7 (days)
      */
 
     const memorySize = this.sizeof(this.obj); // in bytes.
 
-    const totalCost = (memorySize / 1000) * 0.00050696538 * 7;
+    const totalCost = (memorySize / 1024) * 0.00050696538 * 7;
     return new Amount(totalCost);
   }
 
