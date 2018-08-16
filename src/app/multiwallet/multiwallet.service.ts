@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
-import { RpcService } from 'app/core/rpc/rpc.service';
+import { HttpClient } from '@angular/common/http';
 import * as _ from 'lodash';
 
 export interface IWallet {
@@ -21,7 +21,7 @@ export class MultiwalletService implements OnDestroy {
   private timer: any = Observable.interval(1000);
   private _list: BehaviorSubject<Array<IWallet>> = new BehaviorSubject([]);
 
-  constructor(private rpc: RpcService) {
+  constructor(private _http: HttpClient) {
     this.listen();
   }
 
@@ -34,18 +34,15 @@ export class MultiwalletService implements OnDestroy {
     // subscribe to server side stream
     // and load the wallets in _list.
     this.timer.takeWhile(() => !this.destroyed).subscribe(() => {
-      this.rpc.call('listwallets').subscribe(
-        response => {
-          const wallets = response.map(w => ({
-            name: w,
-            fakename: w.replace('wallet_', '')
-          }));
-          this._list.next(wallets);
-        },
-        error => {
-          this.log.er(error);
-        }
-      );
+      this._http
+        .get('wallets://lists')
+        .map((response: any) => {
+          return response.wallets;
+        })
+        .do(wallets =>
+          wallets.forEach(w => (w.fakename = w.name.replace('wallet_', '')))
+        )
+        .subscribe((wallets: IWallet[]) => this._list.next(wallets));
     });
   }
 

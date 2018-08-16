@@ -6240,9 +6240,17 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-needle@^2.2.0, needle@^2.2.1:
+needle@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/needle/-/needle-2.2.1.tgz#b5e325bd3aae8c2678902fa296f729455d1d3a7d"
+  dependencies:
+    debug "^2.1.2"
+    iconv-lite "^0.4.4"
+    sax "^1.2.4"
+
+needle@^2.2.1:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/needle/-/needle-2.2.2.tgz#1120ca4c41f2fcc6976fd28a8968afe239929418"
   dependencies:
     debug "^2.1.2"
     iconv-lite "^0.4.4"
@@ -8791,9 +8799,9 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
-"sqlite3@git+https://github.com/particl/sqlite3-offline.git":
+"sqlite3@https://github.com/particl/sqlite3-offline.git":
   version "3.2.0"
-  resolved "git+https://github.com/particl/sqlite3-offline.git#aa30e720e5d06e30c864e1f1865d6dc16de99af0"
+  resolved "https://github.com/particl/sqlite3-offline.git#aa30e720e5d06e30c864e1f1865d6dc16de99af0"
 
 sshpk@^1.7.0:
   version "1.14.1"
