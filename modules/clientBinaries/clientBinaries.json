@@ -92,7 +92,7 @@
             "download": {
               "url": "https://github.com/particl/particl-core/releases/download/v0.16.2.0/particl-0.16.2.0-win32.zip",
               "type": "zip",
-              "sha256": "7790717f29b209708609737525379acae97061fd8d098714749a94a6914c0d9f",
+              "sha256": "b6bfe2b1947ed39548933bca26ced1832d7470ac2d9552e8570ce080666db3e8",
               "bin": "particl-0.16.2.0/bin/particld.exe"
             },
             "bin": "particld.exe",
@@ -112,7 +112,7 @@
             "download": {
               "url": "https://github.com/particl/particl-core/releases/download/v0.16.2.0/particl-0.16.2.0-win64.zip",
               "type": "zip",
-              "sha256": "c03ce9400e1b90b38618ee7a7fb08752d9981edadf1f31ba90d7e53f2d80fbbb",
+              "sha256": "39cd202c04aa6e86e03ec5e9e7ce119fdeb9641bedce9be349eccbcfb991d713",
               "bin": "particl-0.16.2.0/bin/particld.exe"
             },
             "bin": "particld.exe",
