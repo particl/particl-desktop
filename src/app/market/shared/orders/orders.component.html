@@ -13,13 +13,13 @@
                   (click)="loadOrders()"></mat-icon>
       </mat-form-field>
 
-      <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+     <!--  <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
         <mat-select placeholder="Sort orders" [(ngModel)]="filters.sort" (change)="filter()">
           <mat-option *ngFor="let sorting of order_sortings" [value]="sorting.value">
             {{ sorting.title }}
           </mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
     </mat-card>
   </div>
 
@@ -27,22 +27,22 @@
     <div class="subtitle">Filter</div>
     <mat-card class="filter-card">
       <div class="checkbox highlight">
-        <mat-checkbox>Orders requiring attention</mat-checkbox>
+        <mat-checkbox [(ngModel)]="additionalFilter.requiredAttention" (change)="loadOrders()">Orders requiring attention</mat-checkbox>
       </div>
       <div class="checkbox">
         <!-- TODO: checked by default -->
-        <mat-checkbox>Hide completed</mat-checkbox>
+        <mat-checkbox [(ngModel)]="additionalFilter.hideCompleted" (change)="loadOrders()">Hide completed</mat-checkbox>
       </div>
-      <div class="checkbox">
+<!--       <div class="checkbox">
         <mat-checkbox matTooltip="Hide orders not updated in last 30 days">Hide old orders</mat-checkbox>
-      </div>
+      </div> -->
     </mat-card>
   </div><!-- .filter-by-type -->
   
   <div class="section filter-by-type">
     <div class="subtitle">Filter by status</div>
     <mat-card class="filter-card">
-      <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.status" (change)="filter()">
+      <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.status" (change)="loadOrders()">
         <!-- TODO: "All orders" checked by default -->
         <mat-radio-button class="filter-option" *ngFor="let status of order_filters?.order_filtering" value="{{ status.value }}" [disabled]="status.amount === 0">
           {{ status.title }}

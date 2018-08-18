@@ -36,7 +36,7 @@ export class OrderFilter {
         this.setSoldCount(orders.length);
         break;
 
-      case 'Rejected':
+      case 'MPA_REJECT':
         this.setRejectedCount(orders.length);
         break;
 
