@@ -31,7 +31,8 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
 
     this.activeWallet = {
       name: this.walletRpc.wallet,
-      fakename: (this.walletRpc.wallet || '').replace('wallet_', '')
+      fakename: (this.walletRpc.wallet || '').replace('wallet_', ''),
+      alreadyLoaded: true
     };
   }
 
@@ -44,13 +45,25 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
 
     this.walletRpc.wallet = wallet.name;
 
-    // load the wallet, even possible with the wrong active rpc.
-    await this.walletRpc
-      .call('loadwallet', [wallet.name])
-      .catch(error => this.log.er('failed loading wallet', error));
+    await this.walletRpc.call('listwallets', []).subscribe(
+      walletList => {
+        if (walletList.includes(wallet.name)) {
+          // Wallet is already loaded, so just requires switching to it
+          this.navigateToLoading(wallet.name);
+        } else {
+          // load the wallet, even possible with the wrong active rpc.
+          this.walletRpc.call('loadwallet', [wallet.name]).subscribe(w => {
+            this.navigateToLoading(wallet.name);
+          });
+        }
+      },
+      error => this.log.er('failed loading wallet', error)
+    );
+  }
 
+  private navigateToLoading(walletName: string) {
     this.router.navigate(['/loading'], {
-      queryParams: { wallet: wallet.name }
+      queryParams: { wallet: walletName }
     });
   }
 
