@@ -7,7 +7,7 @@ hr.divider {
   border-top: 1px solid mix($bg, $bg-shadow);
   margin: 24px -24px;
 }
-
+/*
 table.table {
   width: 100%;
   th {
@@ -31,7 +31,7 @@ table.table {
     }
   }
 }
-
+*/
 .card {
   margin-bottom: 16px;
   .section {
@@ -65,11 +65,15 @@ table.table {
   margin: 0;
 }
 
+mat-slider {
+  width: 100%;
+}
 
 // ------ LAYOUT ------ //
 
 .tab-group {
   position: fixed;
+  top: 0;
   left: $sidebar-width;
   right: 0;
   z-index: 100;
@@ -88,12 +92,24 @@ table.table {
 
 .subtitle { // section titles
   @extend %subtitle;
+  margin-top: 35px;
 }
 
 .actions { // buttons (cancel/apply/save)
-  text-align: right;
   margin-top: 16px;
-  button {
-    margin: 0 0 0 10px;
+  display: flex;
+  align-content: space-between;
+  .left {
+    flex: 1 1 50%;
+    button {
+      margin: 0 10px 0 0;
+    }
+  }
+  .right {
+    flex: 1 1 50%;
+    text-align: right;
+    button {
+      margin: 0 0 0 10px;
+    }
   }
 }

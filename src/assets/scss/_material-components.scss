@@ -43,7 +43,9 @@ Customizations and modifiers for default Material components
 
 button,
 .mat-button,
-.mat-raised-button {
+.mat-raised-button,
+button.mat-button,
+button.mat-raised-button {
   font-family: $font;
   font-weight: 600;
   .mat-icon {
