@@ -206,11 +206,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   onCountryChange(country: Country): void {
+    console.log('country------209', country);
     this.filters.country = country ? country.iso : undefined;
     this.clearAndLoadPage();
   }
 
   onCategoryChange(category: any): void {
+    console.log('category------215', category);
     this.filters.category = category ? category.id : undefined;
     this.clearAndLoadPage();
 

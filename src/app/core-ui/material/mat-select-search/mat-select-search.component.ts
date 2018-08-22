@@ -55,8 +55,6 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   }
 
   displayFn(option?: any): string | undefined {
-    // omit selected value.
-    this.onChange.emit(option);
     return option ? option[this.showValueOf] : this.defaultOption;
   }
 
@@ -68,8 +66,14 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
     return this.options.filter(option => option[this.showValueOf].toLowerCase().includes(filterValue));
   }
 
-  // Removed focus from the input box when user select any option from the listed options.
-  onSelectionChanged(): void {
+  /*
+   * Removed focus from the input box when user select any option from the listed options.
+   * and emit the selected country value.
+   */
+
+   onSelectionChanged($event: any): void {
+    // omit selected value.
+    this.onChange.emit($event.option.value);
     this.textInput.nativeElement.blur();
   }
 
