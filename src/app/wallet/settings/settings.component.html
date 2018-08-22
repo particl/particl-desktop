@@ -1,11 +1,63 @@
 <app-header class="disable-select">
-  <mat-tab-group (selectChange)="changeTab($event.index)">
-    <mat-tab label="Main"></mat-tab>
-    <mat-tab label="Network"></mat-tab>
-    <mat-tab label="Window"></mat-tab>
-    <mat-tab label="Display"></mat-tab>
-    <mat-tab label="Help"></mat-tab>
-  </mat-tab-group>
+  <div class="tab-group">
+    <mat-tab-group (selectChange)="changeTab($event.index)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-overview"></mat-icon>
+          Main
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-attach"></mat-icon>
+          dApps
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
+          Display
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+          Network
+        </ng-template>
+      </mat-tab>
+      <!-- ================== -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-overview"></mat-icon>
+          Main (old)
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+          Network (old)
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+          Window (old)
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
+          Display (old)
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-info"></mat-icon>
+          Help (old)
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </app-header>
 
 
@@ -13,10 +65,10 @@
 
   <!-- ===== MAIN ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'main'" fxLayout="row" fxLayoutGap="30px">
+  <div *ngIf="tabLabels[selectedTab] == 'main2'" fxLayout="row" fxLayoutGap="30px">
     <div fxFlex="50">
 
-      <div class="header-nav">General</div>
+      <div class="subtitle">General</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -39,7 +91,7 @@
         </div>
       </mat-card>
 
-      <div class="header-nav">Transactions</div>
+      <div class="subtitle">Transactions</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -95,7 +147,7 @@
     </div>
     <div fxFlex="50">
 
-      <div class="header-nav">Staking</div>
+      <div class="subtitle">Staking</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -137,7 +189,7 @@
         </div>
       </mat-card>
 
-      <div class="header-nav">Messaging</div>
+      <div class="subtitle">Messaging</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -151,7 +203,7 @@
         </div>
       </mat-card>
 
-      <div class="header-nav">Thin mode</div>
+      <div class="subtitle">Thin mode</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -191,10 +243,10 @@
 
   <!-- ===== NETWORK ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'network'" fxLayout="row" fxLayoutGap="30px">
+  <div *ngIf="tabLabels[selectedTab] == 'network2'" fxLayout="row" fxLayoutGap="30px">
     <div fxFlex="50">
 
-      <div class="header-nav">Network settings</div>
+      <div class="subtitle">Network settings</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -212,7 +264,7 @@
     </div>
     <div fxFlex="50">
 
-      <div class="header-nav">Proxy</div>
+      <div class="subtitle">Proxy</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -264,10 +316,10 @@
 
   <!-- ===== WINDOW ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'window'" fxLayout="row" fxLayoutGap="30px">
+  <div *ngIf="tabLabels[selectedTab] == 'window2'" fxLayout="row" fxLayoutGap="30px">
     <div fxFlex="50">
 
-      <div class="header-nav">Window behaviour</div>
+      <div class="subtitle">Window behaviour</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -301,10 +353,10 @@
 
   <!-- ===== DISPLAY ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'display'" fxLayout="row" fxLayoutGap="30px">
+  <div *ngIf="tabLabels[selectedTab] == 'display2'" fxLayout="row" fxLayoutGap="30px">
     <div fxFlex="50">
 
-      <div class="header-nav">User interface</div>
+      <div class="subtitle">User interface</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -364,7 +416,7 @@
     </div>
     <div fxFlex="50">
 
-      <div class="header-nav">???</div>
+      <div class="subtitle">???</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -379,7 +431,7 @@
         </div>
       </mat-card>
 
-      <div class="header-nav">Event notifications</div>
+      <div class="subtitle">Event notifications</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -472,10 +524,10 @@
 
   <!-- ===== HELP ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'help'" fxLayout="row" fxLayoutGap="30px">
+  <div *ngIf="tabLabels[selectedTab] == 'help2'" fxLayout="row" fxLayoutGap="30px">
     <div fxFlex="50">
 
-      <div class="header-nav">Documentation</div>
+      <div class="subtitle">Documentation</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -492,7 +544,7 @@
         </div>
       </mat-card>
 
-      <div class="header-nav">Social</div>
+      <div class="subtitle">Social</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -512,7 +564,7 @@
     </div>
     <div fxFlex="50">
 
-      <div class="header-nav">Support channels</div>
+      <div class="subtitle">Support channels</div>
       <mat-card class="card">
         <div class="list section">
 
@@ -576,7 +628,7 @@
   </mat-tab-->
 
 
-  <div class="actions" *ngIf="tabLabels[selectedTab] !== 'help'">
+  <div class="actions" *ngIf="tabLabels[selectedTab] !== 'help2'">
     <!-- TODO: activate only when changes has been made (until then make the buttons disabled) -->
     <button mat-button (click)="cancel()" color="warn">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>

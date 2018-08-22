@@ -56,6 +56,7 @@ table.table {
 .option { // main description of setting option
   @extend %box-item-title;
   margin: 0 0 3px;
+  font-weight: 500;
   line-height: 1.5;
 }
 
@@ -67,13 +68,26 @@ table.table {
 
 // ------ LAYOUT ------ //
 
-.container-block {
-  padding-top: 0; // offset title's margin -- FIXME: why does this affect Send page layout? O_o
+.tab-group {
+  position: fixed;
+  left: $sidebar-width;
+  right: 0;
+  z-index: 100;
+  margin-top: 64px;
+  background: rgba($bg, 0.95);
 }
 
-.header-nav { // section titles
+.container-block {
+  $padding: 35px;
+  padding: ($header-main-height + $tab-bar-height) $padding $padding;
+  @include break(l) {
+    $padding: 45px;
+    padding: ($header-main-height + $tab-bar-height) $padding $padding;
+  }
+}
+
+.subtitle { // section titles
   @extend %subtitle;
-  list-style-type: none;
 }
 
 .actions { // buttons (cancel/apply/save)
