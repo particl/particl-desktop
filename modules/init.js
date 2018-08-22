@@ -9,13 +9,11 @@ const daemon        = require('./daemon/daemon');
 const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
-const notification  = require('./notification/notification');
 
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
   rpc.init();
-  notification.init();
 
   daemon.init();
 
@@ -92,7 +90,6 @@ electron.app.on('before-quit', function beforeQuit(event) {
 
   // destroy IPC listeners
   rpc.destroy();
-  notification.destroy();
   
   daemon.stop().then(() => {
     log.info('daemon.stop() resolved!');
