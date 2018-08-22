@@ -200,8 +200,7 @@ body {
 // Help descriptions
 .widget-help {
   @extend %disable-select;
-  color: $text-muted;
-  font-size: 11px;
+  @extend %help-text;
   margin-bottom: 25px;
   cursor: help;
 }

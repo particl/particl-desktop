@@ -1,66 +1,85 @@
-/* TODO: remove this completely */
-
-/* @import '~https://fonts.googleapis.com/icon?family=Material+Icons'; */
-/* @import '~@angular/material/prebuilt-themes/indigo-pink.css'; */
 @import "./src/assets/_config"; // import shared colors etc.
 
-/* card element */
-// test
+// ------ UI ------ //
 
-/*
-.card {
-  position: relative;
-  background-color: white;
-  padding: 20px;
-  margin: 0 0 20px 0;
-  border-bottom: 1px solid #F1F1F1;
-}
-
-
-.col-xs-6 {
-  padding-left: 0;
-}
-
-.col-xs-4 {
-  padding-left: 0;
-} 
-*/
-
-/* label of an input in a card */
-/*
-.input-label {
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.9em;
-}*/
-
-/* Particl buttons */
-/*
-button {
-  background-color: white;
+hr.divider {
   border: none;
-  padding: 8px 30px;
-  margin: 0 5px 20px 5px;
-  font-weight: bold;
-  font-size: 0.8em;
-  border-bottom: 1px solid #F1F1F1;
+  border-top: 1px solid mix($bg, $bg-shadow);
+  margin: 24px -24px;
 }
-button:active {
-  border: 0px;
-  transform: translateY(2px);
-}
-.warning {
-  color: white;
-  background-color: #ED4B4D;
-}
-.validate {
-  color: white;
-  background-color: #03E8B0;
-}*/
 
-/* Particl inputs */
-/*input[type="text"] {
-  background-color: #fff;
-  border: 1px solid #EDEDED;
-  padding: 4px;
-}*/
+table.table {
+  width: 100%;
+  th {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: normal;
+    color: $text-muted;
+    padding: 5px 0;
+  }
+  td {
+    @extend %tfx;
+    border-top: 1px solid $bg-shadow;
+    padding: 5px 0;
+    &.center {
+      text-align: center;
+    }
+  }
+  tr:hover {
+    td {
+      background: $bg;
+    }
+  }
+}
+
+.card {
+  margin-bottom: 16px;
+  .section {
+    & > .title {
+      @extend %box-title;
+      margin-top: 0;
+    }
+    a {
+      color: darken($color, 5%);
+      text-decoration: none;
+      &:hover {
+        color: $color;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+
+// ------ FORMS ------ //
+
+.option { // main description of setting option
+  @extend %box-item-title;
+  margin: 0 0 3px;
+  line-height: 1.5;
+}
+
+.desc { // help text for ^
+  @extend %help-text;
+  margin: 0;
+}
+
+
+// ------ LAYOUT ------ //
+
+.container-block {
+  padding-top: 0; // offset title's margin -- FIXME: why does this affect Send page layout? O_o
+}
+
+.header-nav { // section titles
+  @extend %subtitle;
+  list-style-type: none;
+}
+
+.actions { // buttons (cancel/apply/save)
+  text-align: right;
+  margin-top: 16px;
+  button {
+    margin: 0 0 0 10px;
+  }
+}
