@@ -1,0 +1,39 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// ------ UI ------ //
+
+.subtitle { // section titles
+  @extend %subtitle;
+}
+
+hr.divider {
+  border: none;
+  border-top: 1px solid mix($bg, $bg-shadow);
+  margin: 24px -24px;
+}
+
+.card {
+  margin-bottom: 16px;
+  .section {
+    & > .title {
+      @extend %box-title;
+      margin-top: 0;
+    }
+    a {
+      color: darken($color, 5%);
+      text-decoration: none;
+      &:hover {
+        color: $color;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+
+// ------ LAYOUT ------ //
+
+.container-block {
+  margin-top: $header-main-height;
+  padding-top: 0;
+}

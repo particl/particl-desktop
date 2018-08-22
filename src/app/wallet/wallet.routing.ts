@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
+import { HelpComponent } from './help/help.component';
 import { ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
 
 //   { path: '', redirectTo: '/wallet/overview', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'history', component: HistoryComponent, data: { title: 'History' } },
   { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } },
   { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
+  { path: 'help', component: HelpComponent, data: { title: 'Help & Support' } },
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);

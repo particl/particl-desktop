@@ -36,9 +36,11 @@ export class SettingsComponent implements OnInit {
 
   settingsTab(tab: string) {
     this.tab = tab;
+    /* TODO: unused? remove?
     if (tab === 'help') {
       // const dialogRef = this.dialog.open(ConsoleModalComponent);
     }
+    */
   }
 
   apply() {
