@@ -6,17 +6,13 @@ import { AppComponent } from './app.component';
 
 import { app_routing } from './app.routing';
 import { InstallerModule } from 'app/installer/installer.module';
-import { RpcModule } from 'app/core/rpc/rpc.module';
 
 import { LoadingComponent } from 'app/loading/loading.component';
 import { CoreModule } from 'app/core/core.module';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoadingComponent
-  ],
+  declarations: [AppComponent, LoadingComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -26,11 +22,9 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
     CoreModule.forRoot(),
     MultiwalletModule.forRoot()
   ],
-  bootstrap: [ AppComponent ],
+  bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-
 export class AppModule {
-  constructor() {
-  }
+  constructor() {}
 }

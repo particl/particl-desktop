@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { MultiwalletService, IWallet } from './multiwallet.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
@@ -11,11 +11,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./multiwallet-sidebar.component.scss']
 })
 export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
-
-  private log: any = Log.create('multiwallet-sidebar.component id:' + Math.floor((Math.random() * 1000) + 1));
+  private log: any = Log.create(
+    'multiwallet-sidebar.component id:' + Math.floor(Math.random() * 1000 + 1)
+  );
   private destroyed: boolean = false;
 
-  private list: Array<IWallet> = [];
+  public list: Array<IWallet> = [];
   public activeWallet: IWallet;
 
   constructor(
@@ -24,38 +25,51 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
     private multi: MultiwalletService
   ) {
     // get wallet list
-    this.multi.list
-      .takeWhile(() => !this.destroyed)
-      .subscribe((list) => {
-        this.list = list;
-      });
+    this.multi.list.takeWhile(() => !this.destroyed).subscribe(list => {
+      this.list = list;
+    });
 
     this.activeWallet = {
       name: this.walletRpc.wallet,
-      fakename: (this.walletRpc.wallet || '').replace('wallet_', '')
+      fakename: (this.walletRpc.wallet || '').replace('wallet_', ''),
+      alreadyLoaded: true
     };
   }
 
   isWalletActive(w: IWallet): boolean {
-    return (this.activeWallet && this.activeWallet.name === w.name);
+    return this.activeWallet && this.activeWallet.name === w.name;
   }
 
   async switchToWallet(wallet: IWallet) {
-    this.log.d('setting wallet to ', wallet)
+    this.log.d('setting wallet to ', wallet);
 
-    // load the wallet, even possible with the wrong active rpc.
-    await this.walletRpc.call('loadwallet', [wallet.name]).catch(
-      (error) => this.log.er('failed loading wallet', error));
+    this.walletRpc.wallet = wallet.name;
 
-    this.router.navigate(['/loading'], { queryParams: { wallet: wallet.name } });
-
+    await this.walletRpc.call('listwallets', []).subscribe(
+      walletList => {
+        if (walletList.includes(wallet.name)) {
+          // Wallet is already loaded, so just requires switching to it
+          this.navigateToLoading(wallet.name);
+        } else {
+          // load the wallet, even possible with the wrong active rpc.
+          this.walletRpc.call('loadwallet', [wallet.name]).subscribe(w => {
+            this.navigateToLoading(wallet.name);
+          });
+        }
+      },
+      error => this.log.er('failed loading wallet', error)
+    );
   }
 
-  ngOnInit() {
+  private navigateToLoading(walletName: string) {
+    this.router.navigate(['/loading'], {
+      queryParams: { wallet: walletName }
+    });
   }
+
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.destroyed = true;
   }
-
 }

@@ -1,5 +1,11 @@
-import { Component, OnInit, OnDestroy, HostListener, NgModuleRef } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd, ParamMap } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  NgModuleRef
+} from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
 
@@ -21,7 +27,6 @@ import { ModalsHelperService } from 'app/modals/modals.module';
   styleUrls: ['./main.router.scss']
 })
 export class MainRouterComponent implements OnInit, OnDestroy {
-
   log: any = Log.create('main.router');
   private destroyed: boolean = false;
 
@@ -49,9 +54,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     private _modalsService: ModalsHelperService,
     // the following imports are just 'hooks' to
     // get the singleton up and running
-     private _newtxnotifier: NewTxNotifierService
-  ) {
-  }
+    private _newtxnotifier: NewTxNotifierService
+  ) {}
 
   ngOnDestroy() {
     this.destroyed = true;
@@ -64,9 +68,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     try {
       this.main.destroy();
     } catch (e) {
-      this.log.e('Main module was already destroyed!')
+      this.log.er('Main module was already destroyed!');
     }
-
   }
 
   ngOnInit() {
@@ -83,12 +86,12 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       })
       .filter(route => route.outlet === 'primary')
       .flatMap(route => route.data)
-      .subscribe(data => this.title = data['title']);
-
+      .subscribe(data => (this.title = data['title']));
 
     /* errors */
     // Updates the error box in the sidenav whenever a stateCall returns an error.
-    this._rpcState.errorsStateCall.asObservable()
+    this._rpcState.errorsStateCall
+      .asObservable()
       .distinctUntilChanged()
       .subscribe(update => {
         // if error exists & != false
@@ -101,8 +104,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
         }
       });
 
-
-    this._rpcState.observe('getwalletinfo', 'unlocked_until')
+    this._rpcState
+      .observe('getwalletinfo', 'unlocked_until')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => {
         this.unlocked_until = status;
@@ -117,14 +120,19 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
     /* versions */
     // Obtains the current daemon version
-    this._rpcState.observe('getnetworkinfo', 'subversion')
+    this._rpcState
+      .observe('getnetworkinfo', 'subversion')
       .takeWhile(() => !this.destroyed)
-      .subscribe(subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
+      .subscribe(
+        subversion =>
+          (this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0])
+      );
 
     /* check if testnet -> block explorer url */
-    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
-      .subscribe(chain => this.testnet = chain === 'test');
-
+    this._rpcState
+      .observe('getblockchaininfo', 'chain')
+      .take(1)
+      .subscribe(chain => (this.testnet = chain === 'test'));
   }
 
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
@@ -133,10 +141,10 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   }
 
   checkTimeDiff(time: number) {
-    const currentUtcTimeStamp = Math.floor((new Date()).getTime() / 1000);
+    const currentUtcTimeStamp = Math.floor(new Date().getTime() / 1000);
     const diff = Math.floor(time - currentUtcTimeStamp);
     const minutes = Math.floor((diff % (60 * 60)) / 60);
-    const sec = Math.ceil((diff % (60 * 60) % 60));
+    const sec = Math.ceil((diff % (60 * 60)) % 60);
     this.startTimer(minutes, sec);
   }
 
@@ -147,25 +155,29 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     }
     if (min >= 0 && sec >= 0) {
       this.time = min + ':' + ('0' + sec).slice(-2);
-      this.unSubscribeTimer = Observable.timer(1000).
-        subscribe(() => this.startTimer(min, sec));
+      this.unSubscribeTimer = Observable.timer(1000).subscribe(() =>
+        this.startTimer(min, sec)
+      );
     } else {
       this.unSubscribeTimer.unsubscribe();
     }
   }
 
   checkSecond(sec: number): number {
-    sec = sec > 0 ? (sec - 1) : 59;
+    sec = sec > 0 ? sec - 1 : 59;
     return sec;
   }
 
   // Paste Event Handle
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
-    if (event.metaKey && event.keyCode === 86 && navigator.platform.indexOf('Mac') > -1) {
+    if (
+      event.metaKey &&
+      event.keyCode === 86 &&
+      navigator.platform.indexOf('Mac') > -1
+    ) {
       document.execCommand('Paste');
       event.preventDefault();
     }
   }
-
 }
