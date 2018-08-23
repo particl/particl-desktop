@@ -7,6 +7,8 @@ import { SharedModule } from '../shared/shared.module';
 import { SettingsService } from './settings.service';
 
 import { SettingsComponent } from './settings.component';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -14,7 +16,12 @@ describe('SettingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ RouterTestingModule, SharedModule ],
+      imports: [
+        CoreUiModule.forRoot(),
+        RouterTestingModule,
+        SharedModule,
+        BrowserAnimationsModule
+      ],
       declarations: [ SettingsComponent ],
       providers: [ SettingsService, Location ]
     })
