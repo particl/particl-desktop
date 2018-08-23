@@ -25,13 +25,6 @@
           Network
         </ng-template>
       </mat-tab>
-      <!-- ================== -->
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
-          Display (old)
-        </ng-template>
-      </mat-tab>
     </mat-tab-group>
   </div>
 </app-header>
@@ -228,7 +221,7 @@
           <hr class="divider">
 
           <div class="item">
-            <h4 class="option"><span class="tag">Buyer</span> Default shipping country</h4>
+            <h4 class="option">Default shipping country <span class="tag">Buyer</span></h4>
             <p class="desc">Select your country for exact shipping and escrow prices calculation</p>
             <mat-form-field>
               <mat-select><!-- [(ngModel)]="settings.market.defaultCountry" [disabled]="!settings.market.enabled" -->
@@ -246,7 +239,7 @@
           <hr class="divider">
 
           <div class="item">
-            <h4 class="option"><span class="tag">Buyer</span> Listings per page</h4>
+            <h4 class="option">Listings per page <span class="tag">Buyer</span></h4>
             <p class="desc">How many listings will be shown per page on Marketplace</p>
             <mat-form-field>
               <mat-select><!-- [(ngModel)]="settings.market.listingsPerPage" [disabled]="!settings.market.enabled" -->
@@ -266,7 +259,7 @@
           <hr class="divider">
 
           <div class="item">
-            <h4 class="option"><span class="tag">Seller</span> Default listing expiration</h4>
+            <h4 class="option">Default listing expiration <span class="tag">Seller</span></h4>
             <p class="desc">Choose default listing expiration time for your listings (for how long should the listings be published on Marketplace)</p>
             <mat-form-field>
               <mat-select><!-- [(ngModel)]="settings.market.listingExpiration" [disabled]="!settings.market.enabled"-->
@@ -293,13 +286,172 @@
       </mat-card>
 
     </div>
+    <div fxFlex="50">
+      &nbsp;
+    </div>
   </div><!-- << DAPPS -->
 
 
   <!-- ===== DISPLAY ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'display'">
+  <div *ngIf="tabLabels[selectedTab] == 'display'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
 
+      <div class="subtitle">User interface</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="row" fxLayout="row">
+            <div class="item" fxFlex="50">
+              <h4 class="option">Language</h4>
+              <p class="desc">Select your preferred language</p>
+              <mat-form-field>
+                <mat-select [(ngModel)]="settings.display.language">
+                  <mat-option value="default">English (default)</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="item" fxFlex="50">
+              <h4 class="option">Theme</h4>
+              <p class="desc">Select default theme</p>
+              <mat-form-field>
+                <mat-select [(ngModel)]="settings.display.theme">
+                  <mat-option [value]="light">Light (default)</mat-option>
+                  <mat-option [value]="dark">Dark</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Items per page</h4>
+            <p class="desc">Select number of items per page (receive addresses, history transactions, address book entries)</p>
+            <!-- FIXME: needs implementation -->
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.rows">
+                <mat-option [value]="10">10</mat-option>
+                <mat-option [value]="20">20</mat-option>
+                <mat-option [value]="50">50</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.advanced">
+              <h4 class="option">Advanced options by default</h4>
+              <p class="desc">Always display advanced options (coin control and narrations)</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+
+      <div class="subtitle">Navigation</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <h4 class="option">Expanded menu sections</h4>
+            <p class="desc">Select which menu section should be expanded by default</p>
+            <hr class="divider transparent">
+            <div class="row" fxLayout>
+              <div class="item" fxFlex="50">
+                <mat-checkbox class="checkbox align-top wrap"><!-- [(ngModel)]="settings.navigation.marketExpanded" -->
+                  <h4 class="option">Market</h4>
+                </mat-checkbox>
+              </div>
+              <div class="item" fxFlex="50">
+                <mat-checkbox class="checkbox align-top wrap"><!-- [(ngModel)]="settings.navigation.walletExpanded" -->
+                  <h4 class="option">Wallet</h4>
+                </mat-checkbox>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </mat-card>
+
+    </div>
+    <div fxFlex="50">
+
+      <div class="subtitle">Units &amp; Currencies</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <h4 class="option">Amount units</h4>
+            <p class="desc">Unit to show amounts in (PART)</p>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.units">
+                <mat-option value="part">PART (default)</mat-option>
+                <mat-option value="mpart">mPART (0.001 PART)</mat-option>
+                <mat-option value="upart">µPART (0.000001 PART)</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Fiat countervalue</h4>
+            <p class="desc">Default fiat currency values</p>
+            <mat-form-field>
+              <mat-select [(ngModel)]="settings.display.fiat">
+                <mat-option value="usd">US Dollar (USD)</mat-option>
+                <mat-option value="eur">Eurozone Euro (EUR)</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </div>
+      </mat-card>
+
+      <div class="subtitle">Notifications</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyPayments">
+              <h4 class="option">Received payments</h4>
+              <p class="desc">Show notification for incoming payments</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyStakes">
+              <h4 class="option">Staking rewards</h4>
+              <p class="desc">Show notification for new staking rewards</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyOrders">
+              <h4 class="option">Order changes <span class="tag">Marketplace</span></h4>
+              <p class="desc">Show notifications for order updates that need your attention</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyProposals">
+              <h4 class="option">Active Proposals</h4>
+              <p class="desc">Show notification for Proposals that are ready for voting</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+
+    </div>
   </div><!-- << DISPLAY -->
 
 
@@ -324,7 +476,7 @@
 
           <div class="item">
             <h4 class="option">Port forwarding</h4>
-            <p class="desc">Alternatively, you can configure your router to forward to port <code>51738</code></p>
+            <p class="desc">Alternatively, you can configure your router to forward port <code>51738</code></p>
           </div>
 
         </div>
@@ -395,98 +547,7 @@
 
     </div>
   </div><!-- << NETWORK -->
-  
-  
-  
-  
-  
-  
 
-
-
-
-  <!-- ===== DISPLAY ===== -->
-
-  <div *ngIf="tabLabels[selectedTab] == 'display2'" fxLayout="row" fxLayoutGap="30px">
-    <div fxFlex="50">
-
-      <div class="subtitle">User interface</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <div class="item">
-            <h4 class="option">Language</h4>
-            <p class="desc">Select your preferred language</p>
-            <mat-form-field>
-              <mat-select [(ngModel)]="settings.display.language">
-                <mat-option value="default">English (default)</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <h4 class="option">Amount units</h4>
-            <p class="desc">Unit to show amounts in</p>
-            <mat-form-field>
-              <mat-select [(ngModel)]="settings.display.units">
-                <mat-option value="part">PART</mat-option>
-                <!-- TODO: add mPART as well? -->
-                <!-- FIXME: USD needs implementation -->
-                <mat-option value="usd">USD</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <h4 class="option">Items per page</h4>
-            <p class="desc">Select number of items per page</p>
-            <!-- FIXME: needs implementation -->
-            <mat-form-field>
-              <mat-select [(ngModel)]="settings.display.rows">
-                <mat-option [value]="20">20</mat-option>
-                <mat-option [value]="50">50</mat-option>
-                <mat-option [value]="100">100</mat-option>
-                <mat-option [value]="500">500</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.XXXXXXXXXXX">
-              <h4 class="option">Advanced options by default</h4>
-              <p class="desc">Always display advanced options (like Coin control and narrations)</p>
-            </mat-checkbox>
-          </div>
-
-        </div>
-      </mat-card>
-
-    </div>
-    <div fxFlex="50">
-
-      <div class="subtitle">???</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <!-- do we really need this when addresses are in TX details? -->
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.addresses">
-              <h4 class="option">Display addresses in transaction list</h4>
-              <p class="desc">...</p>
-            </mat-checkbox>
-          </div>
-
-        </div>
-      </mat-card>
-
-    </div>
-  </div>
 
 
   <div class="actions">
@@ -497,7 +558,7 @@
       </button>
       <button mat-button color="basic">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-        Reset to defaults
+        Reset all to defaults
       </button>
     </div>
     <div class="right">
