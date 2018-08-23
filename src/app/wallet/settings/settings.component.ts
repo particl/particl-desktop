@@ -18,7 +18,7 @@ export class SettingsComponent implements OnInit {
   settings: Object;
 
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['main', 'dapps', 'display', 'network', 'main2', 'network2', 'window2', 'display2', 'help2'];
+  public tabLabels: Array<string> = ['main', 'dapps', 'display', 'network', 'network2', 'display2'];
 
   constructor(
     private _settingsService: SettingsService,

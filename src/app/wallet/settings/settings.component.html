@@ -28,20 +28,8 @@
       <!-- ================== -->
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon fontSet="partIcon" fontIcon="part-overview"></mat-icon>
-          Main (old)
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
           <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
           Network (old)
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
-          Window (old)
         </ng-template>
       </mat-tab>
       <mat-tab>
@@ -181,7 +169,6 @@
 
           <hr class="divider">
 
-          <!-- TODO: disable Reserve (inputs etc.) when Staking is not enabled -->
           <div class="item">
             <h4 class="option">Reserve</h4>
             <p class="desc">Reserved amount does not participate in staking and is therefore spendable at any time</p>
@@ -215,6 +202,7 @@
           <div class="item">
             <h4 class="option">Foundation donations</h4>
             <p class="desc">Percentage of your stakes donated to Particl Foundation to support development</p>
+            <!-- TODO: implement https://material.angular.io/components/slider/overview instead of input if possible (I couldn't get it to work): -->
             <mat-form-field>
               <input matInput type="number" min="10" max="100" placeholder="10" [(ngModel)]="settings.main.foundationDonation" [disabled]="!settings.main.stake">
             </mat-form-field>%
@@ -229,8 +217,88 @@
 
   <!-- ===== DAPPS ===== -->
 
-  <div *ngIf="tabLabels[selectedTab] == 'dapps'">
+  <div *ngIf="tabLabels[selectedTab] == 'dapps'" fxLayout="row" fxLayoutGap="30px">
+    <div fxFlex="50">
 
+      <div class="subtitle">Marketplace</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap"><!-- [(ngModel)]="settings.market.enabled" -->
+              <h4 class="option">Enable Marketplace</h4>
+              <p class="desc">Enable/disable Marketplace dApp in Particl Desktop</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option"><span class="tag">Buyer</span> Default shipping country</h4>
+            <p class="desc">Select your country for exact shipping and escrow prices calculation</p>
+            <mat-form-field>
+              <mat-select><!-- [(ngModel)]="settings.market.defaultCountry" [disabled]="!settings.market.enabled" -->
+                <!-- TODO: list all countries -->
+                <mat-option value="AL">
+                  Algeria
+                </mat-option>
+                <mat-option value="AF">
+                  Afghanistan
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option"><span class="tag">Buyer</span> Listings per page</h4>
+            <p class="desc">How many listings will be shown per page on Marketplace</p>
+            <mat-form-field>
+              <mat-select><!-- [(ngModel)]="settings.market.listingsPerPage" [disabled]="!settings.market.enabled" -->
+                <mat-option value="x">
+                  X per page <!-- default: listings per page we currently have now -->
+                </mat-option>
+                <mat-option value="xx">
+                  XX per page <!-- 2× ^ -->
+                </mat-option>
+                <mat-option value="xxx">
+                  XXX per page <!-- 3× ^ -->
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option"><span class="tag">Seller</span> Default listing expiration</h4>
+            <p class="desc">Choose default listing expiration time for your listings (for how long should the listings be published on Marketplace)</p>
+            <mat-form-field>
+              <mat-select><!-- [(ngModel)]="settings.market.listingExpiration" [disabled]="!settings.market.enabled"-->
+                <mat-option value="4days">
+                  4 days <!-- default -->
+                </mat-option>
+                <mat-option value="1week">
+                  1 week
+                </mat-option>
+                <mat-option value="2weeks">
+                  2 weeks
+                </mat-option>
+                <mat-option value="3weeks">
+                  3 weeks
+                </mat-option>
+                <mat-option value="4weeks">
+                  4 weeks
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </div>
+      </mat-card>
+
+    </div>
   </div><!-- << DAPPS -->
 
 
@@ -251,184 +319,6 @@
   
   
   
-  
-  
-  <!-- ===== MAIN ===== -->
-
-  <div *ngIf="tabLabels[selectedTab] == 'main2'" fxLayout="row" fxLayoutGap="30px">
-    <div fxFlex="50">
-
-      <div class="subtitle">General</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.autostart">
-              <h4 class="option">Start Particl on system login</h4>
-              <p class="desc">Start Particl wallet automatically?</p>
-            </mat-checkbox>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.detachDatabases">
-              <h4 class="option">Detach databases at shutdown</h4>
-              <p class="desc">???</p>
-            </mat-checkbox>
-          </div>
-
-        </div>
-      </mat-card>
-
-      <div class="subtitle">Transactions</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <div class="item">
-            <h4 class="option">Transaction fees</h4>
-            <p class="desc">Optional transaction fee per kB that helps makes sure your transactions are processed
-              quickly (recommended: 0.01 PART)</p>
-            <mat-form-field>
-              <input matInput type="text" [(ngModel)]="settings.main.feeAmount">
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-select [(ngModel)]="settings.main.feeCurrency">
-                <mat-option value="part">
-                  PART
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.autoRing">
-              <h4 class="option">Automatically select ring size</h4>
-              <p class="desc">Anon transactions: ???</p>
-            </mat-checkbox>
-          </div>
-
-          <hr class="divider">
-
-          <div class="row" fxLayout="row">
-            <div class="item" fxFlex="50">
-              <h4 class="option">Minimum ring size</h4>
-              <p class="desc">Anon transactions: ??? (default: 3)</p>
-              <mat-form-field>
-                <input matInput type="text" [(ngModel)]="settings.main.minRing">
-              </mat-form-field>
-            </div>
-            <div class="item" fxFlex="50">
-              <h4 class="option">Maximum ring size</h4>
-              <p class="desc">Anon transactions: ??? (default: 100)</p>
-              <mat-form-field>
-                <input matInput type="text" [(ngModel)]="settings.main.maxRing">
-              </mat-form-field>
-            </div>
-          </div>
-
-
-        </div>
-      </mat-card>
-
-    </div>
-    <div fxFlex="50">
-
-      <div class="subtitle">Staking</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.stake">
-              <h4 class="option">Enable staking</h4>
-              <p class="desc">Get staking rewards by securing the network</p>
-            </mat-checkbox>
-          </div>
-
-          <hr class="divider">
-
-          <!-- TODO: disable Reserve (inputs etc.) when Staking is not enabled -->
-          <div class="item">
-            <h4 class="option">Reserve</h4>
-            <p class="desc">Reserved amount does not participate in staking and is therefore spendable at any time</p>
-            <mat-form-field>
-              <input matInput type="text" [(ngModel)]="settings.main.reserveAmount">
-            </mat-form-field>
-            <mat-form-field>
-              <mat-select [(ngModel)]="settings.main.reserveCurrency">
-                <mat-option value="part">
-                  PART
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <h4 class="option">Minimum stake interval</h4>
-            <p class="desc">???</p>
-            <mat-form-field>
-              <input matInput type="text" [(ngModel)]="settings.main.stakeInterval">
-            </mat-form-field>
-          </div>
-
-        </div>
-      </mat-card>
-
-      <div class="subtitle">Messaging</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.secureMessaging">
-              <h4 class="option">Enable secure messaging</h4>
-              <p class="desc">Send and receive end-to-end encrypted messages to/from other Particl users</p>
-            </mat-checkbox>
-          </div>
-
-        </div>
-      </mat-card>
-
-      <div class="subtitle">Thin mode</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.thin">
-              <h4 class="option">Enable thin mode (requires restart)</h4>
-              <p class="desc">Thin mode doesn't download the whole blockchain, resulting in less space used on disk at a
-                cost of reduced security (???)</p>
-            </mat-checkbox>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.thinFullIndex">
-              <h4 class="option">Thin full index</h4>
-              <p class="desc">???</p>
-            </mat-checkbox>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <h4 class="option">Thin index window</h4>
-            <p class="desc">??? (default: 4096)</p>
-            <mat-form-field>
-              <input matInput type="text" [(ngModel)]="settings.main.thinIndexWindow">
-            </mat-form-field>
-          </div>
-
-        </div>
-      </mat-card>
-
-    </div>
-  </div>
 
 
   <!-- ===== NETWORK ===== -->
@@ -499,22 +389,6 @@
 
         </div>
       </mat-card>
-
-    </div>
-  </div>
-
-
-  <!-- ===== WINDOW ===== -->
-
-  <div *ngIf="tabLabels[selectedTab] == 'window2'" fxLayout="row" fxLayoutGap="30px">
-    <div fxFlex="50">
-
-      ...
-
-    </div>
-    <div fxFlex="50">
-
-      <!-- .. -->
 
     </div>
   </div>
