@@ -28,12 +28,6 @@
       <!-- ================== -->
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
-          Network (old)
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
           <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
           Display (old)
         </ng-template>
@@ -308,22 +302,10 @@
 
   </div><!-- << DISPLAY -->
 
-  <!-- ===== NETWORK ===== -->
-  
-  <div *ngIf="tabLabels[selectedTab] == 'network'">
-
-  </div><!-- << NETWORK -->
-  
-  
-  
-  
-  
-  
-
 
   <!-- ===== NETWORK ===== -->
-
-  <div *ngIf="tabLabels[selectedTab] == 'network2'" fxLayout="row" fxLayoutGap="30px">
+  
+  <div *ngIf="tabLabels[selectedTab] == 'network'" fxLayout="row" fxLayoutGap="30px">
     <div fxFlex="50">
 
       <div class="subtitle">Network settings</div>
@@ -338,8 +320,29 @@
             </mat-checkbox>
           </div>
 
+          <hr class="divider">
+
+          <div class="item">
+            <h4 class="option">Port forwarding</h4>
+            <p class="desc">Alternatively, you can configure your router to forward to port <code>51738</code></p>
+          </div>
+
         </div>
       </mat-card>
+
+      <!--div class="subtitle">TOR</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap">
+              <h4 class="option">Enable TOR</h4>
+              <p class="desc">xxx</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card-->
 
     </div>
     <div fxFlex="50">
@@ -362,14 +365,14 @@
               <h4 class="option">Proxy IP</h4>
               <p class="desc">??? (default: 127.0.0.1)</p>
               <mat-form-field>
-                <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
+                <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP" [disabled]="!settings.network.proxy">
               </mat-form-field>
             </div>
             <div class="item" fxFlex="50">
               <h4 class="option">Port</h4>
               <p class="desc">??? (default: 9050)</p>
               <mat-form-field>
-                <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+                <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort" [disabled]="!settings.network.proxy">
               </mat-form-field>
             </div>
           </div>
@@ -380,7 +383,7 @@
             <h4 class="option">Socket version</h4>
             <p class="desc">??? (default: ???)</p>
             <mat-form-field>
-              <mat-select [(ngModel)]="settings.network.socketVersion">
+              <mat-select [(ngModel)]="settings.network.socketVersion" [disabled]="!settings.network.proxy">
                 <mat-option value="4">4</mat-option>
                 <mat-option value="5">5</mat-option>
               </mat-select>
@@ -391,7 +394,15 @@
       </mat-card>
 
     </div>
-  </div>
+  </div><!-- << NETWORK -->
+  
+  
+  
+  
+  
+  
+
+
 
 
   <!-- ===== DISPLAY ===== -->
