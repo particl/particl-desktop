@@ -30,13 +30,13 @@ var getWinAsset = function(data, asset, hashes) {
 }
 
 var getOSXAsset = function (data, asset, hashes) {
-  data.platform = "mac";
+  data.platform = "osx";
   data.arch = asset.name.includes("osx64") ? "x64" : "ia32";
-  if (asset.content_type === "application/x-apple-diskimage") {
+  if (asset.name.endsWith('dmg')) {
     data.type = "dmg";
-  } else if (asset.content_type === "application/gzip") {
+  } else if (asset.name.endsWith('.tar.gz') || asset.name.endsWith('.tar')) {
     data.type = "tar";
-  }
+  } 
   data.sha256 = getHash("osx", asset.name, hashes);
 }
 
@@ -69,7 +69,7 @@ var getAssetDetails = function (asset, hashes, version) {
   if (asset.name.includes("win")) {
     getWinAsset(data, asset, hashes);
   } // osx binaries
-  else if (asset.name.includes("osx")) {
+  else if (asset.name.includes("osx") && !asset.name.includes("dmg")) {
     getOSXAsset(data, asset, hashes);
   } // linux binaries
   else if (asset.name.includes("linux")) {
@@ -157,7 +157,8 @@ got(`${releasesURL}`).then(response => {
       if (version.name.includes(tag)) {
         // extract matching folder's platform
         var platformIndex = version.name.indexOf("-");
-        var platform = version.name.substring(platformIndex + 1);
+        var platform = version.name.substring(platformIndex + 1).replace('-unsigned', '');
+
         // wait for hashes to be added to our hashes array
         promises.push(getHashesForPlatform(platform, version.name, hashes));
       }
