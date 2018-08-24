@@ -3,12 +3,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SharedModule } from '../shared/shared.module';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CoreModule } from 'app/core/core.module';
+import { HttpClientModule } from '@angular/common/http';
 
 import { SettingsService } from './settings.service';
 
 import { SettingsComponent } from './settings.component';
-import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -20,6 +22,9 @@ describe('SettingsComponent', () => {
         CoreUiModule.forRoot(),
         RouterTestingModule,
         SharedModule,
+        HttpClientModule,
+        SharedModule,
+        CoreModule.forRoot(),
         BrowserAnimationsModule
       ],
       declarations: [ SettingsComponent ],
