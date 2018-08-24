@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core';
+import { RpcService } from 'app/core/rpc/rpc.service';
+import { MarketService } from 'app/core/market/market.service';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { Profile } from 'app/core/market/api/profile/profile.model';
 
 @Injectable()
 export class SettingsService {
@@ -63,6 +67,18 @@ export class SettingsService {
     tor: {}
   };
 
+  profileId: number;
+
+  constructor(
+    private _rpc: RpcService,
+    private marketService: MarketService,
+    private profileService: ProfileService
+  ) {
+    this.profileService.default().subscribe((profile: Profile) => {
+      this.profileId = profile.id;
+    })
+  }
+
   loadSettings(): Object {
     return (JSON.parse(localStorage.getItem('settings')));
   }
@@ -77,5 +93,29 @@ export class SettingsService {
     if (oldSettings !== newSettings) {
       this.needsUpdate = true;
     }
+  }
+
+  // list market setting.
+  list(): any {
+    const params = ['list', this.profileId];
+    return this.marketService.call('setting', params);
+  }
+
+  // set market setting.
+  set(key: string, value: any): any {
+    const params = ['set', this.profileId, key, value]
+    return this.marketService.call('setting', params);
+  }
+
+  // remove market setting.
+  remove(key: string): any {
+    const params = ['remove', this.profileId, key]
+    return this.marketService.call('setting', params);
+  }
+
+  // get market setting.
+  get(key: string): any {
+    const params = ['get', this.profileId, key]
+    return this.marketService.call('setting', params);
   }
 }
