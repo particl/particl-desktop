@@ -13,7 +13,7 @@
 
     <mat-autocomplete
       #auto="matAutocomplete"
-      (optionSelected)="onSelectionChanged()"
+      (optionSelected)="onSelectionChanged($event)"
       [displayWith]="displayFn.bind(this)">
       <mat-option *ngIf="defaultOption">{{defaultOption}}</mat-option>
       <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
