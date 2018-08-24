@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
+import { OrderFilter } from './order-filter.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 
 @Component({
@@ -27,21 +28,11 @@ export class OrdersComponent implements OnInit, OnDestroy {
     { title: 'By price',         value: 'price'         }
   ];
 
-  // TODO: disable radios for 0 amount-statuses
-  order_filtering: Array<any> = [
-    { title: 'All orders', value: 'all',     amount: '3' },
-    { title: 'Bidding',    value: 'bidding', amount: '1' },
-    { title: 'In escrow',  value: 'escrow',  amount: '0' },
-    { title: 'Shipped',    value: 'shipped', amount: '1' },
-    { title: 'Sold',       value: 'sold',    amount: '1' }
-  ];
   public orders: Bid[];
   public profile: any = {};
+  order_filters: OrderFilter;
 
-  filters: any = {
-    search:   undefined,
-    sort:     undefined
-  };
+  filters: any;
   timer: Observable<number>;
   destroyed: boolean = false;
 
@@ -50,7 +41,16 @@ export class OrdersComponent implements OnInit, OnDestroy {
     private profileService: ProfileService) { }
 
   ngOnInit() {
+    this.default();
     this.loadProfile();
+  }
+
+  default(): void {
+    this.filters = {
+      status: '*',
+      search: '',
+      sort: 'time',
+    };
   }
 
   loadProfile(): void {
@@ -72,12 +72,17 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   loadOrders(): void {
-    this.bid.search(this.profile.address, this.type)
+    this.bid.search(this.profile.address, this.type, this.filters.status, this.filters.search)
       .take(1)
       .subscribe(bids => {
         console.log('called >>>>>>>>>>>>>>>>>', bids);
         // Only update if needed
         if (this.hasUpdatedOrders(bids.filterOrders)) {
+          // Initialize model only when its fetching for all orders.
+          if (this.filters.status === '*') {
+            this.order_filters = new OrderFilter();
+          }
+          this.order_filters.setOrderStatusCount(this.filters.status, bids.filterOrders)
           this.orders = bids.filterOrders;
         }
       });
@@ -91,6 +96,15 @@ export class OrdersComponent implements OnInit, OnDestroy {
         return (o1.id === o2.id) && (o1.status === o2.status)
       }).length)
     )
+  }
+
+  filter(): void {
+    this.loadOrders();
+  }
+
+  clear(): void {
+    this.default();
+    this.loadOrders();
   }
 
   ngOnDestroy() {
