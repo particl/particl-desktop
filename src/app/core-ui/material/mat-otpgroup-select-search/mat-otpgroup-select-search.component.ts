@@ -69,7 +69,6 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   }
 
   displayFn(option?: any): any {
-    this.change.emit(option);
     return option ? option.name : this.defaultOption;
   }
 
@@ -83,8 +82,14 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
     return opt.filter(item => item.name.toLowerCase().includes(filterValue));
   };
 
-  // Removed focus from the input box when user select any option from the listed options.
-  onSelectionChanged(): void {
+  /*
+   * Removed focus from the input box when user select any option from the listed options.
+   * and emit the selected country value.
+   */
+
+  onSelectionChanged($event: any): void {
+    // omit selected value.
+    this.change.emit($event.option.value);
     this.textInput.nativeElement.blur();
   }
 

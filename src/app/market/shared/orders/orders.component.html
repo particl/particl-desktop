@@ -1,19 +1,20 @@
 <!-- Orders > Filter (HIDDEN IN CSS) -->
 <div class="filter" fxFlex="0 0 230px">
 
-  <div class="section search-sorting TO_DO">
+  <div class="section search-sorting">
     <div class="subtitle first">Search &amp; sort</div>
     <mat-card class="filter-card">
       <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
         <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search"
-               (keyup.enter)="loadPage()" (keyup.escape)="filters.search = ''; loadPage()">
+            (keyup)="loadOrders()" (keyup.enter)="loadOrders()" (keyup.escape)="filters.search = ''; loadOrders()">
         <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
-                  (click)="filters.search=''; loadPage()"></mat-icon>
+                  (click)="filters.search=''; loadOrders()"></mat-icon>
         <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
-                  (click)="loadPage()"></mat-icon>
+                  (click)="loadOrders()"></mat-icon>
       </mat-form-field>
+
       <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
-        <mat-select placeholder="Sort orders">
+        <mat-select placeholder="Sort orders" [(ngModel)]="filters.sort" (change)="filter()">
           <mat-option *ngFor="let sorting of order_sortings" [value]="sorting.value">
             {{ sorting.title }}
           </mat-option>
@@ -22,11 +23,28 @@
     </mat-card>
   </div>
 
-  <div class="section filter-by-type TO_DO">
+  <div class="section filter">
+    <div class="subtitle">Filter</div>
+    <mat-card class="filter-card">
+      <div class="checkbox highlight">
+        <mat-checkbox>Orders requiring attention</mat-checkbox>
+      </div>
+      <div class="checkbox">
+        <!-- TODO: checked by default -->
+        <mat-checkbox>Hide completed</mat-checkbox>
+      </div>
+      <div class="checkbox">
+        <mat-checkbox matTooltip="Hide orders not updated in last 30 days">Hide old orders</mat-checkbox>
+      </div>
+    </mat-card>
+  </div><!-- .filter-by-type -->
+  
+  <div class="section filter-by-type">
     <div class="subtitle">Filter by status</div>
     <mat-card class="filter-card">
-      <mat-radio-group class="radio-group block-radio">
-        <mat-radio-button class="filter-option" *ngFor="let status of order_filtering" value="{{ status.value }}">
+      <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.status" (change)="filter()">
+        <!-- TODO: "All orders" checked by default -->
+        <mat-radio-button class="filter-option" *ngFor="let status of order_filters?.order_filtering" value="{{ status.value }}" [disabled]="status.amount === 0">
           {{ status.title }}
           <!-- FIXME: show amount (below) only if higher than 1 -->
           <span class="amount">{{ status.amount }}</span>
@@ -44,7 +62,7 @@
 <!-- Orders > list -->
 <div class="orders section" fxFlex="1 1 100%">
 
-  <div class="no-results" *ngIf="orders?.ordersCount === 0">
+  <div class="no-results" *ngIf="orders?.length === 0">
     You don't have any market orders yet
   </div>
 
