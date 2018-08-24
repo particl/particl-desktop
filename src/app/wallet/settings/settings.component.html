@@ -223,9 +223,9 @@
           <div class="item">
             <h4 class="option">Default shipping country <span class="tag">Buyer</span></h4>
             <p class="desc">Select your country for exact shipping and escrow prices calculation</p>
-            <mat-form-field>
-              <mat-select><!-- [(ngModel)]="settings.market.defaultCountry" [disabled]="!settings.market.enabled" -->
-                <!-- TODO: list all countries -->
+            <!-- <mat-form-field>
+              <mat-select><!- [(ngModel)]="settings.market.defaultCountry" [disabled]="!settings.market.enabled" ->
+                <!- TODO: list all countries ->
                 <mat-option value="AL">
                   Algeria
                 </mat-option>
@@ -233,7 +233,17 @@
                   Afghanistan
                 </mat-option>
               </mat-select>
-            </mat-form-field>
+            </mat-form-field> -->
+            <mat-select-search
+              fxFlex="0 0 180px"
+              matTooltip="Select country"
+              matTooltipPosition="before"
+              class="filter country"
+              [options]="countryList?.countries"
+              [defaultSelectedValue]="settings?.market?.defaultCountry"
+              [showValueOf]="'name'"
+              (onChange)="onCountryChange($event)">
+            </mat-select-search>
           </div>
 
           <hr class="divider">

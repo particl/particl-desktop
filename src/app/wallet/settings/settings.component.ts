@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { SettingsService } from './settings.service';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+import { Log } from 'ng2-logger';
+import { Country } from 'app/core/market/api/countrylist/country.model';
 
 @Component({
   selector: 'app-settings',
@@ -13,7 +16,7 @@ import { SettingsService } from './settings.service';
 })
 
 export class SettingsComponent implements OnInit {
-
+  log: any = Log.create('settings.component');
   tab: string = 'main';
   settings: Object;
 
@@ -22,7 +25,8 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private _settingsService: SettingsService,
-    private _location: Location
+    private _location: Location,
+    private countryList: CountryListService
   ) { }
 
   ngOnInit() {
@@ -36,11 +40,6 @@ export class SettingsComponent implements OnInit {
 
   settingsTab(tab: string) {
     this.tab = tab;
-    /* TODO: unused? remove?
-    if (tab === 'help') {
-      // const dialogRef = this.dialog.open(ConsoleModalComponent);
-    }
-    */
   }
 
   apply() {
@@ -61,4 +60,8 @@ export class SettingsComponent implements OnInit {
     this.selectedTab = index;
   }
 
+  onCountryChange(country: Country): void {
+    this.log.d('selectedCountry', country);
+    // @TODO set and use the selected Country Code and set defaut selected country by cmd?.
+  }
 }
