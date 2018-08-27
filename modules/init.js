@@ -11,6 +11,7 @@ const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
+const settingsGui   = require('./settings-gui/settings-gui');
 const market        = require('./market/market');
 
 
@@ -20,6 +21,7 @@ exports.start = function (mainWindow) {
   rpc.init();
   notification.init();
   closeGui.init();
+  settingsGui.init();
   daemon.init();
   market.init();
 
@@ -98,7 +100,7 @@ electron.app.on('before-quit', function beforeQuit(event) {
   rpc.destroy();
   notification.destroy();
   closeGui.destroy();
-
+  settingsGui.destroy();
   market.stop();
   daemon.stop().then(() => {
     log.info('daemon.stop() resolved!');

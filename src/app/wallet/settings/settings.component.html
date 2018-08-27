@@ -134,7 +134,7 @@
           <hr class="divider">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.minimize">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.minimize" (change)="minimize()">
               <h4 class="option">Minimize on close</h4>
               <p class="desc">Don't close the client, keep it running minimized</p>
             </mat-checkbox>

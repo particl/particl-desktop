@@ -27,6 +27,7 @@ const init    = require('./modules/init');
 const rpc     = require('./modules/rpc/rpc');
 const _auth = require('./modules/webrequest/http-auth');
 const daemon  = require('./modules/daemon/daemon');
+const settings    = require('./modules/settings-gui/settings-gui');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -53,8 +54,11 @@ app.on('ready', () => {
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  
   if (process.platform !== 'darwin') {
-    app.quit()
+    // app.quit()
+    // Passing the mainWindow reference to apply operations on settings.js
+    settings.minimizeWindow(mainWindow);
   }
 });
 

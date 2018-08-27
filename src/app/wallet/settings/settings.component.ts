@@ -5,6 +5,7 @@ import { SettingsService } from './settings.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { Log } from 'ng2-logger';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { SettingsGuiService } from 'app/core/settings-gui/settings-gui.service';
 
 @Component({
   selector: 'app-settings',
@@ -25,6 +26,7 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private _settingsService: SettingsService,
+    private _settingsGuiService: SettingsGuiService,
     private _location: Location,
     private countryList: CountryListService
   ) { }
@@ -63,5 +65,12 @@ export class SettingsComponent implements OnInit {
   onCountryChange(country: Country): void {
     this.log.d('selectedCountry', country);
     // @TODO set and use the selected Country Code and set defaut selected country by cmd?.
+  }
+
+  /*
+    Should be remove once we have everything with saving button stuff.
+  */
+  minimize(): void {
+    this._settingsGuiService.minimizeElectronOnClose(this.settings);
   }
 }
