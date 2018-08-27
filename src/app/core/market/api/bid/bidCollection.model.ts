@@ -31,8 +31,7 @@ export class BidCollection {
   get filterOrders(): Bid[] {
     // @TODO additionalFilter stuff should be remove once it handles via backend
     if (this.additionalFilter) {
-      if ((this.additionalFilter.hideCompleted && this.additionalFilter.requiredAttention) ||
-        this.additionalFilter.requiredAttention) {
+      if (this.additionalFilter.requiredAttention) {
         return (this.type === 'sell' ? this.activeSellOrders : this.activeBuyOrders)
       }
 
