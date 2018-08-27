@@ -17,7 +17,7 @@ export class SendConfirmationModalComponent implements OnInit {
   public dialogContent: string;
   public send: TransactionBuilder;
 
-  TxType = TxType;
+  TxType: Enum = TxType;
   transactionType: TxType;
   sendAmount: Amount = new Amount(0);
   sendAddress: string = '';

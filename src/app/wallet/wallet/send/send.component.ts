@@ -39,6 +39,8 @@ export class SendComponent implements OnInit {
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
 
+  TxType: any = TxType;
+
   constructor(
     private sendService: SendService,
     private _rpc: RpcService,
@@ -54,8 +56,6 @@ export class SendComponent implements OnInit {
 
     this.setFormDefaultValue();
   }
-
-  TxType: any = TxType;
 
   setFormDefaultValue() {
     this.send = new TransactionBuilder();

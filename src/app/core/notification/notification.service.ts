@@ -14,7 +14,7 @@ export class NotificationService {
 
   /** Send Notification to the backend */
   public sendNotification(title: string, desc: string) {
-    new Notification(title, {body: desc, icon: "./assets/icons/notification.png"});
+    return new Notification(title, {body: desc, icon: './assets/icons/notification.png'});
   }
 
 }

@@ -61,7 +61,7 @@ export class EncryptwalletComponent {
             this._modals.createWallet();
             this._dialogRef.close();
           });
-          
+
         }
       });
     }
