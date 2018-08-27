@@ -171,7 +171,7 @@
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
     "electron": "1.7.13",
-    "electron-builder": "^20.0.4",
+    "electron-builder": "^20.28.2",
     "htmlhint": "^0.9.13",
     "iso3166-2-db": "^2.2.1",
     "jasmine-core": "^2.99.1",
