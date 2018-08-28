@@ -28,6 +28,16 @@ export class ProposalsService {
 
   // proposal post.
   post(options: Array<any> = []) {
+    /*
+     * get poposal fee by passing the estimatedFee = true.
+     // tslint:disable-next-line
+     * cmd ['proposal', ['post', submitterId, ttitle<string>, desc<string>, startBlockCount<number>,
+        endBlockCount<number>, estimationFee<boolean>, option-1<string> ,..... option-N<string>
+     * i.e.:
+     * estimationFee = true to get proposal fee.
+     * estimationFee = false to post proposal.
+     */
+
     const params = ['post', this.submitterId, ...options]
     return this.marketService.call('proposal', params);
   }
