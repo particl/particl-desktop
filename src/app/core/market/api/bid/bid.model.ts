@@ -1,5 +1,6 @@
 import { Messages, DateFormatter } from 'app/core/util/utils';
 import { Product } from './product.model';
+import { Listing } from '../listing/listing.model';
 
 export class Bid extends Product {
   activeBuySell: boolean;
@@ -58,6 +59,14 @@ export class Bid extends Product {
 
   get updatedAt(): number {
     return this.order.updatedAt;
+  }
+
+  set listing(listing: Listing) {
+    this.order.listing = listing;
+  }
+
+  get listing(): Listing {
+    return this.order.listing;
   }
 
   setActiveOrders() {
