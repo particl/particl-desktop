@@ -8,24 +8,27 @@ import { Profile } from 'app/core/market/api/profile/profile.model';
 export class SettingsService {
 
   needsUpdate: boolean = false;
-
+  currentSettings: any;
   defaultSettings: Object = {
     main: {
       autostart: false,
-      detachDatabases: true,
-      feeAmount: 0.01,
-      feeCurrency: 'part',
-      stake: true,
-      reserveAmount: 0,
-      reservceCurrency: 'part',
-      stakeInterval: 30,
-      minRing: 3,
-      maxRing: 100,
-      autoRing: false,
+      detachDatabases: 1,
+      feeAmount: 1,
+      feeCurrency: 1,
+      autoRing: 1,
+      minRing: 1,
+      maxRing: 1,
+      stake: 1,
+      reserveAmount: 1,
+      reserveCurrency: 1,
+      rewardAddressEnabled: 1,
+      rewardAddress: 1,
+      foundationDonation: 1,
       secureMessaging: false,
       thin: false,
       thinFullIndex: false,
-      thinIndexWindow: 4096
+      thinIndexWindow: 4096,
+      stakeInterval: 30
     },
     network: {
       upnp: false,
@@ -39,9 +42,10 @@ export class SettingsService {
       minimize: true
     },
     display: {
-      language: 'default',
+      language: 'en',
       units: 'part',
-      rows: 20,
+      theme: 'light',
+      rows: 10,
       addresses: true,
       notify: {
         message: true,
@@ -61,7 +65,17 @@ export class SettingsService {
         partReceived: true,
         partSent: true,
         other: true
-      }
+      },
+    },
+    navigation: {
+      marketExpanded: true,
+      walletExpanded: true
+    },
+    market: {
+      enabled: true,
+      listingsPerPage: 30,
+      defaultCountry: undefined,
+      listingExpiration: 4
     },
     i2p: {},
     tor: {}
@@ -77,18 +91,34 @@ export class SettingsService {
     this.profileService.default().subscribe((profile: Profile) => {
       this.profileId = profile.id;
     })
+
+    // @TODO change with the cmd calling and update settings after settings cmd response.
+
+    /* Preload default settings if none found */
+    if (localStorage.getItem('gui-settings') == null) {
+      this.currentSettings = this.defaultSettings;
+      const settings: string = JSON.stringify(this.defaultSettings);
+      localStorage.setItem('gui-settings', settings);
+
+    } else {
+
+      this.currentSettings = this.loadSettings();
+
+      this.list().subscribe((settings: any) => {
+        console.log('settings', settings)
+      })
+    }
   }
 
   loadSettings(): Object {
-    return (JSON.parse(localStorage.getItem('settings')));
+    return (JSON.parse(localStorage.getItem('gui-settings')));
   }
 
   applySettings(settings: Object): void {
-
-    const oldSettings: string = localStorage.getItem('settings');
+    const oldSettings: string = localStorage.getItem('gui-settings');
     const newSettings: string = JSON.stringify(settings);
 
-    localStorage.setItem('settings', newSettings);
+    localStorage.setItem('gui-settings', newSettings);
 
     if (oldSettings !== newSettings) {
       this.needsUpdate = true;

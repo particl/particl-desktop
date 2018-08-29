@@ -212,7 +212,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap"><!-- [(ngModel)]="settings.market.enabled" -->
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.market.enabled">
               <h4 class="option">Enable Marketplace</h4>
               <p class="desc">Enable/disable Marketplace dApp in Particl Desktop</p>
             </mat-checkbox>
@@ -223,24 +223,13 @@
           <div class="item">
             <h4 class="option">Default shipping country <span class="tag">Buyer</span></h4>
             <p class="desc">Select your country for exact shipping and escrow prices calculation</p>
-            <!-- <mat-form-field>
-              <mat-select><!- [(ngModel)]="settings.market.defaultCountry" [disabled]="!settings.market.enabled" ->
-                <!- TODO: list all countries ->
-                <mat-option value="AL">
-                  Algeria
-                </mat-option>
-                <mat-option value="AF">
-                  Afghanistan
-                </mat-option>
-              </mat-select>
-            </mat-form-field> -->
             <mat-select-search
               fxFlex="0 0 180px"
               matTooltip="Select country"
               matTooltipPosition="before"
               class="filter country"
               [options]="countryList?.countries"
-              [defaultSelectedValue]="settings?.market?.defaultCountry"
+              [defaultSelectedValue]="settings.market.defaultCountry"
               [showValueOf]="'name'"
               (onChange)="onCountryChange($event)">
             </mat-select-search>
@@ -252,15 +241,18 @@
             <h4 class="option">Listings per page <span class="tag">Buyer</span></h4>
             <p class="desc">How many listings will be shown per page on Marketplace</p>
             <mat-form-field>
-              <mat-select><!-- [(ngModel)]="settings.market.listingsPerPage" [disabled]="!settings.market.enabled" -->
-                <mat-option value="x">
-                  X per page <!-- default: listings per page we currently have now -->
+              <mat-select [(ngModel)]="settings.market.listingsPerPage" [disabled]="!settings.market.enabled">
+                <mat-option [value]="15">
+                  15 per page
                 </mat-option>
-                <mat-option value="xx">
-                  XX per page <!-- 2× ^ -->
+                <mat-option [value]="30">
+                  30 per page (default) <!-- 2× ^ -->
                 </mat-option>
-                <mat-option value="xxx">
-                  XXX per page <!-- 3× ^ -->
+                <mat-option [value]="45">
+                  45 per page <!-- 3× ^ -->
+                </mat-option>
+                <mat-option [value]="60">
+                  45 per page <!-- 3× ^ -->
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -272,20 +264,20 @@
             <h4 class="option">Default listing expiration <span class="tag">Seller</span></h4>
             <p class="desc">Choose default listing expiration time for your listings (for how long should the listings be published on Marketplace)</p>
             <mat-form-field>
-              <mat-select><!-- [(ngModel)]="settings.market.listingExpiration" [disabled]="!settings.market.enabled"-->
-                <mat-option value="4days">
-                  4 days <!-- default -->
+              <mat-select [(ngModel)]="settings.market.listingExpiration" [disabled]="!settings.market.enabled">
+                <mat-option [value]="4">
+                  4 days (default)
                 </mat-option>
-                <mat-option value="1week">
+                <mat-option [value]="7">
                   1 week
                 </mat-option>
-                <mat-option value="2weeks">
+                <mat-option [value]="14">
                   2 weeks
                 </mat-option>
-                <mat-option value="3weeks">
+                <mat-option [value]="21">
                   3 weeks
                 </mat-option>
-                <mat-option value="4weeks">
+                <mat-option [value]="28">
                   4 weeks
                 </mat-option>
               </mat-select>
@@ -317,7 +309,7 @@
               <p class="desc">Select your preferred language</p>
               <mat-form-field>
                 <mat-select [(ngModel)]="settings.display.language">
-                  <mat-option value="default">English (default)</mat-option>
+                  <mat-option [value]="'en'">English (default)</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -326,8 +318,8 @@
               <p class="desc">Select default theme</p>
               <mat-form-field>
                 <mat-select [(ngModel)]="settings.display.theme">
-                  <mat-option [value]="light">Light (default)</mat-option>
-                  <mat-option [value]="dark">Dark</mat-option>
+                  <mat-option [value]="'light'">Light (default)</mat-option>
+                  <mat-option [value]="'dark'">Dark</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -370,12 +362,12 @@
             <hr class="divider transparent">
             <div class="row" fxLayout>
               <div class="item" fxFlex="50">
-                <mat-checkbox class="checkbox align-top wrap"><!-- [(ngModel)]="settings.navigation.marketExpanded" -->
+                <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.navigation.marketExpanded">
                   <h4 class="option">Market</h4>
                 </mat-checkbox>
               </div>
               <div class="item" fxFlex="50">
-                <mat-checkbox class="checkbox align-top wrap"><!-- [(ngModel)]="settings.navigation.walletExpanded" -->
+                <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.navigation.walletExpanded">
                   <h4 class="option">Wallet</h4>
                 </mat-checkbox>
               </div>

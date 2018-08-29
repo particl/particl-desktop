@@ -32,12 +32,7 @@ export class SettingsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    /* Preload default settings if none found */
-    if (localStorage.getItem('settings') == null) {
-      const settings: string = JSON.stringify(this._settingsService.defaultSettings);
-      localStorage.setItem('settings', settings);
-    }
-    this.settings = this._settingsService.loadSettings();
+    this.settings = this._settingsService.currentSettings;
   }
 
   settingsTab(tab: string) {
@@ -64,6 +59,7 @@ export class SettingsComponent implements OnInit {
 
   onCountryChange(country: Country): void {
     this.log.d('selectedCountry', country);
+    this.settings['market'].defaultCountry = country || undefined
     // @TODO set and use the selected Country Code and set defaut selected country by cmd?.
   }
 
