@@ -23,7 +23,7 @@
 
       <mat-content class="sidebar-section" *ngIf="walletInitialized">
         <mat-accordion [multi]="'multi'">
-          <mat-expansion-panel #panel2 expanded="true" class="no-padding arrow-colored">
+          <mat-expansion-panel #panel2 [expanded]="settings?.navigation?.marketExpanded" class="no-padding arrow-colored">
             <mat-expansion-panel-header>Market</mat-expansion-panel-header>
             <mat-content>
               <mat-list class="sidebar-item-group">
@@ -65,7 +65,7 @@
 
       <mat-content class="sidebar-section" *ngIf="walletInitialized">
         <mat-accordion [multi]="'multi'">
-          <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
+          <mat-expansion-panel #panel1 [expanded]="settings?.navigation?.walletExpanded" class="no-padding arrow-colored">
             <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
             <mat-content>
               <mat-list class="sidebar-item-group">

@@ -11,6 +11,7 @@ import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService, TermsService } from 'app/modals/modals.module';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 
 /*
  * The MainView is basically:
@@ -21,7 +22,11 @@ import { ModalsHelperService, TermsService } from 'app/modals/modals.module';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
-  styleUrls: ['./main-view.component.scss']
+  styleUrls: ['./main-view.component.scss'],
+  // @TODO add a settings service in common module as provider.
+  providers: [
+    SettingsService
+  ]
 })
 export class MainViewComponent implements OnInit, OnDestroy {
 
@@ -43,7 +48,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
-
+  public settings: any;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -56,7 +61,10 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
-  ) { }
+    private settingsService: SettingsService
+  ) {
+    this.settings = this.settingsService.currentSettings;
+  }
 
   ngOnInit() {
     // Change the header title derived from route data
