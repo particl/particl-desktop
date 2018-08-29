@@ -5,6 +5,7 @@ import { Log } from 'ng2-logger'
 import { slideDown } from 'app/core-ui/core.animations';
 import { Transaction } from '../transaction.model';
 import { TransactionService } from '../transaction.service';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 
 @Component({
   selector: 'transaction-table',
@@ -47,8 +48,11 @@ export class TransactionsTableComponent implements OnInit {
   pageEvent: PageEvent; /* MatPaginator output */
   log: any = Log.create('transaction-table.component');
 
-  constructor(public txService: TransactionService) {
-
+  constructor(
+    public txService: TransactionService,
+    private settingsService: SettingsService
+  ) {
+    this._defaults.txDisplayAmount = this.settingsService.currentSettings.display.rows;
   }
 
   ngOnInit(): void {

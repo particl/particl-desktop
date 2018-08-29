@@ -13,6 +13,7 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { SignatureAddressModalComponent } from '../signature-address-modal/signature-address-modal.component';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 
 @Component({
   selector: 'address-table',
@@ -66,11 +67,14 @@ export class AddressTableComponent implements OnInit, OnChanges {
     public flashNotification: SnackbarService,
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
-    private modals: ModalsHelperService
+    private modals: ModalsHelperService,
+    private settingsService: SettingsService
   ) {
     this._addressService._addresses.subscribe((addresses) => {
       this.addresses = addresses
     })
+
+    this.addressDisplayAmount = this.settingsService.currentSettings.display.rows;
   }
 
   ngOnInit(): void {

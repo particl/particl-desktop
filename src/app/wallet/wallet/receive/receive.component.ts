@@ -9,6 +9,7 @@ import { AddAddressLabelComponent } from './modals/add-address-label/add-address
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
 
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 
 @Component({
   selector: 'app-receive',
@@ -22,7 +23,7 @@ export class ReceiveComponent implements OnInit {
   log: any = Log.create('receive.component');
 
   MAX_ADDRESSES_PER_PAGE: number = 10;
-  PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50];
+  PAGE_SIZE_OPTIONS: Array<number> = [10, 20, 50];
 
   /* UI State */
   public type: string = 'public';
@@ -42,11 +43,15 @@ export class ReceiveComponent implements OnInit {
     query: []
   };
 
-  constructor(private rpc: RpcService,
-              public rpcState: RpcStateService,
-              public dialog: MatDialog,
-              private flashNotificationService: SnackbarService,
-              private modals: ModalsHelperService) {
+  constructor(
+    private rpc: RpcService,
+    public rpcState: RpcStateService,
+    public dialog: MatDialog,
+    private flashNotificationService: SnackbarService,
+    private modals: ModalsHelperService,
+    private settingsService: SettingsService
+  ) {
+    this.MAX_ADDRESSES_PER_PAGE = this.settingsService.currentSettings.display.rows;
   }
 
   ngOnInit(): void {
