@@ -11,8 +11,8 @@ const Observable = require('rxjs/Observable').Observable;
 
 let settings;
 exports.init = function () {
-  rxIpc.registerListener('settings-gui', function (settings) {
-    settings = settings;
+  rxIpc.registerListener('settings-gui', function (options) {
+    settings = options;
     return Observable.create(observer => {
       observer.complete(true);
     });
