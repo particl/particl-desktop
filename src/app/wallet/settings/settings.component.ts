@@ -26,7 +26,6 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private _settingsService: SettingsService,
-    private _settingsGuiService: SettingsGuiService,
     private _location: Location,
     private countryList: CountryListService
   ) { }
@@ -63,10 +62,4 @@ export class SettingsComponent implements OnInit {
     // @TODO set and use the selected Country Code and set defaut selected country by cmd?.
   }
 
-  /*
-    Should be remove once we have everything with saving button stuff.
-  */
-  minimize(): void {
-    this._settingsGuiService.minimizeElectronOnClose(this.settings);
-  }
 }
