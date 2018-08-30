@@ -106,9 +106,8 @@ export class SettingsService {
 
       this.currentSettings = this.loadSettings();
 
-      this.list().subscribe((settings: any) => {
-        console.log('settings', settings)
-      })
+      // this.list().subscribe((settings: any) => {
+      // })
     }
     this._settingsGUIService.updateSettings(this.currentSettings);
   }
