@@ -11,8 +11,8 @@ export class SettingsGuiService {
   ) {
   }
 
-  /** Minimize electron on Close */
-  public minimizeElectronOnClose(settings: object) {
+  /** update electron settings */
+  public updateSettings(settings: object) {
     if (window.electron) {
       this._ipc.runCommand('settings-gui', null, settings);
     }

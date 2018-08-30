@@ -3,6 +3,7 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { MarketService } from 'app/core/market/market.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
+import { SettingsGuiService } from 'app/core/settings-gui/settings-gui.service';
 
 @Injectable()
 export class SettingsService {
@@ -86,7 +87,8 @@ export class SettingsService {
   constructor(
     private _rpc: RpcService,
     private marketService: MarketService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private _settingsGUIService: SettingsGuiService,
   ) {
     this.profileService.default().subscribe((profile: Profile) => {
       this.profileId = profile.id;
@@ -108,6 +110,7 @@ export class SettingsService {
         console.log('settings', settings)
       })
     }
+    this._settingsGUIService.updateSettings(this.currentSettings);
   }
 
   loadSettings(): Object {
@@ -119,7 +122,7 @@ export class SettingsService {
     const newSettings: string = JSON.stringify(settings);
 
     localStorage.setItem('gui-settings', newSettings);
-
+    this._settingsGUIService.updateSettings(settings);
     if (oldSettings !== newSettings) {
       this.needsUpdate = true;
     }
