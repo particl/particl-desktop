@@ -10,7 +10,6 @@ const Observable = require('rxjs/Observable').Observable;
 */
 
 let settings;
-let appQuitting = false;
 exports.init = function () {
   rxIpc.registerListener('settings-gui', function (options) {
     settings = options;
@@ -20,11 +19,11 @@ exports.init = function () {
   });
 }
 
-exports.minimizeWindow = function(mainWindow) {
+exports.minimizeWindow = function(mainWindow, event) {
   // Minimize when clicking the close button of electron window
-  if (!settings.window.minimize) {
-    electron.appQuitting = true;
-    electron.quit();
+  if (settings.window.minimize) {
+    mainWindow.minimize();
+    event.preventDefault();
   }
 }
 

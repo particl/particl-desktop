@@ -56,9 +56,7 @@ app.on('window-all-closed', function () {
   // to stay active until the user quits explicitly with Cmd + Q
   
   if (process.platform !== 'darwin') {
-    // app.quit()
-    // Passing the mainWindow reference to apply operations on settings.js
-    settings.minimizeWindow(mainWindow);
+    app.quit();
   }
 });
 
@@ -127,16 +125,18 @@ function initMainWindow() {
     electron.shell.openExternal(url);
   });
 
+   // Emitted before window getting closed.
+  mainWindow.on('close', function (event) {
+    // Passing the mainWindow reference to apply operations on settings.js
+    settings.minimizeWindow(mainWindow, event);
+  });
+
   // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
+  mainWindow.on('closed', function (event) {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    if (app.appQuitting) {
       mainWindow = null
-    } else {
-      mainWindow.minimize(); 
-    }
   });
 }
 
