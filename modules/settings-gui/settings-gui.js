@@ -10,7 +10,6 @@ const Observable = require('rxjs/Observable').Observable;
 */
 
 let settings;
-let appQuitting = false;
 exports.init = function () {
   rxIpc.registerListener('settings-gui', function (options) {
     settings = options;
