@@ -25,6 +25,10 @@ exports.minimizeWindow = function(mainWindow, event) {
     mainWindow.minimize();
     event.preventDefault();
   }
+  if (settings.window.tray) {
+    mainWindow.hide();
+    event.preventDefault();
+  }
 }
 
 // todo: test
