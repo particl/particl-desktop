@@ -125,6 +125,12 @@ function initMainWindow() {
     electron.shell.openExternal(url);
   });
 
+  // Emitted when gui minimize.
+  mainWindow.on('minimize', function (event) {
+    // Passing the mainWindow reference to apply operations on settings.js
+    settings.minimizeToTray(mainWindow, event);
+  });
+
    // Emitted before window getting closed.
   mainWindow.on('close', function (event) {
     // Passing the mainWindow reference to apply operations on settings.js

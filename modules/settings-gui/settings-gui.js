@@ -25,9 +25,12 @@ exports.minimizeWindow = function(mainWindow, event) {
     mainWindow.minimize();
     event.preventDefault();
   }
+}
+
+exports.minimizeToTray = function(mainWindow, event) {
+  // Minimize to tray
   if (settings.window.tray) {
     mainWindow.hide();
-    event.preventDefault();
   }
 }
 
