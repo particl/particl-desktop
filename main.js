@@ -132,9 +132,9 @@ function initMainWindow() {
   });
 
    // Emitted before window getting closed.
-  mainWindow.on('close', function (event) {
+  mainWindow.on('close', function () {
     // Passing the mainWindow reference to apply operations on settings.js
-    settings.minimizeWindow(mainWindow, event);
+    settings.minimizeWindow(mainWindow);
   });
 
   // Emitted when the window is closed.

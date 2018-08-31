@@ -21,15 +21,15 @@ exports.init = function () {
 
 exports.minimizeWindow = function(mainWindow, event) {
   // Minimize when clicking the close button of electron window
-  if (settings.window.minimize) {
+  if (settings && settings.window.minimize) {
     mainWindow.minimize();
     event.preventDefault();
   }
 }
 
-exports.minimizeToTray = function(mainWindow, event) {
+exports.minimizeToTray = function(mainWindow) {
   // Minimize to tray
-  if (settings.window.tray) {
+  if (settings && settings.window.tray) {
     mainWindow.hide();
   }
 }
