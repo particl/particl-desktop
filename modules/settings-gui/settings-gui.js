@@ -1,5 +1,6 @@
 /* electron */
 const electron      = require('electron').app;
+const AutoLaunch = require('auto-launch');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const log = require('electron-log');
 
@@ -10,16 +11,32 @@ const Observable = require('rxjs/Observable').Observable;
 */
 
 let settings;
+let autoLauncher = new AutoLaunch({
+  name: electron.getName()
+});
 exports.init = function () {
   rxIpc.registerListener('settings-gui', function (options) {
     settings = options;
+    // autolaunch if setting says autostart
+    if (settings.main.autostart) {
+      autoLauncher.isEnabled()
+      .then(function(isEnabled){
+        if(isEnabled){
+          return;
+        }
+        autoLauncher.enable();
+      })
+    }
+    else {
+      autoLauncher.disable();
+    }
     return Observable.create(observer => {
       observer.complete(true);
     });
   });
 }
 
-exports.minimizeWindow = function(mainWindow, event) {
+exports.minimizeOnClose = function(mainWindow, event) {
   // Minimize when clicking the close button of electron window
   if (settings && settings.window.minimize) {
     mainWindow.minimize();

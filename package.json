@@ -131,6 +131,7 @@
     ]
   },
   "dependencies": {
+    "auto-launch": "^5.0.5",
     "bluebird": "^3.4.7",
     "buffered-spawn": "^3.3.2",
     "cli-progress": "^1.7.0",
