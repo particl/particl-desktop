@@ -3,6 +3,7 @@ const electron      = require('electron').app;
 const AutoLaunch = require('auto-launch');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const log = require('electron-log');
+const market = require('./../market/market');
 
 const Observable = require('rxjs/Observable').Observable;
 
@@ -17,6 +18,10 @@ let autoLauncher = new AutoLaunch({
     useLaunchAgent: true
   }
 });
+
+// market enabled state update?
+let marketRunningState;
+
 exports.init = function () {
   rxIpc.registerListener('settings-gui', function (options) {
     settings = options;
@@ -33,6 +38,24 @@ exports.init = function () {
     else {
       autoLauncher.disable();
     }
+
+
+    /*
+     * Start market-place if market is enalbed.
+     */
+
+    // @TODO need to refactor code?
+
+    if(marketRunningState != settings.market.enabled) {
+      marketRunningState = settings.market.enabled;
+      if(marketRunningState) {
+        market.init();
+      } else {
+        market.stop();
+      }
+    }
+
+
     return Observable.create(observer => {
       observer.complete(true);
     });

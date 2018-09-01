@@ -23,7 +23,8 @@ exports.start = function (mainWindow) {
   closeGui.init();
   settingsGui.init();
   daemon.init();
-  market.init();
+  // Moved market.init() in ./settings-gui/settings-gui.js file
+  // market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);
