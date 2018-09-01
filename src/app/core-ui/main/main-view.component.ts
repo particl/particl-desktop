@@ -137,6 +137,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed = true;
   }
+
   /** Open createwallet modal when clicking on error in sidenav */
   createWallet() {
     this._modalsService.createWallet();

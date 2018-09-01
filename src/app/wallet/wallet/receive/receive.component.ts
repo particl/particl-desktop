@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -10,13 +10,14 @@ import { SignatureAddressModalComponent } from '../shared/signature-address-moda
 
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { SettingsService } from 'app/wallet/settings/settings.service';
+import { Settings } from 'app/wallet/settings/models/settings.model';
 
 @Component({
   selector: 'app-receive',
   templateUrl: './receive.component.html',
   styleUrls: ['./receive.component.scss']
 })
-export class ReceiveComponent implements OnInit {
+export class ReceiveComponent implements OnInit, OnDestroy {
 
   @ViewChild('paginator') paginator: any;
 
@@ -42,6 +43,7 @@ export class ReceiveComponent implements OnInit {
     public: [],
     query: []
   };
+  destroyed: boolean = false;
 
   constructor(
     private rpc: RpcService,
@@ -51,7 +53,16 @@ export class ReceiveComponent implements OnInit {
     private modals: ModalsHelperService,
     private settingsService: SettingsService
   ) {
+    // current settings.
     this.MAX_ADDRESSES_PER_PAGE = this.settingsService.currentSettings.display.rows;
+
+    // observe the changes.
+    this.rpcState.observe('currentGUISettings')
+    .takeWhile(() => !this.destroyed)
+    .subscribe((settings: Settings) => {
+      this.MAX_ADDRESSES_PER_PAGE = settings.display.rows
+    });
+
   }
 
   ngOnInit(): void {
@@ -61,6 +72,11 @@ export class ReceiveComponent implements OnInit {
 
     // start rpc
     this.rpc_update();
+  }
+
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   /**

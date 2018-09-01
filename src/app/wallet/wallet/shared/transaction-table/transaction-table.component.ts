@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { Log } from 'ng2-logger'
 
@@ -6,6 +6,8 @@ import { slideDown } from 'app/core-ui/core.animations';
 import { Transaction } from '../transaction.model';
 import { TransactionService } from '../transaction.service';
 import { SettingsService } from 'app/wallet/settings/settings.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { Settings } from 'app/wallet/settings/models/settings.model';
 
 @Component({
   selector: 'transaction-table',
@@ -15,7 +17,7 @@ import { SettingsService } from 'app/wallet/settings/settings.service';
   animations: [slideDown()]
 })
 
-export class TransactionsTableComponent implements OnInit {
+export class TransactionsTableComponent implements OnInit, OnDestroy {
 
   @Input() display: any;
   @ViewChild('paginator') paginator: any;
@@ -40,6 +42,7 @@ export class TransactionsTableComponent implements OnInit {
     expand: false
   };
 
+  destroyed: boolean = false;
   /*
     This shows the expanded table for a specific unique identifier = (tx.txid + tx.getAmountObject().getAmount() + tx.category).
     If the unique identifier is present, then the details will be expanded.
@@ -50,15 +53,30 @@ export class TransactionsTableComponent implements OnInit {
 
   constructor(
     public txService: TransactionService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private _rpcState: RpcStateService
   ) {
+
+    // current settings.
     this._defaults.txDisplayAmount = this.settingsService.currentSettings.display.rows;
+
+    // observe the changes.
+    this._rpcState.observe('currentGUISettings')
+    .takeWhile(() => !this.destroyed)
+    .subscribe((settings: Settings) => {
+      this._defaults.txDisplayAmount = settings.display.rows
+    });
+
   }
 
   ngOnInit(): void {
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   public filter(filters: any) {

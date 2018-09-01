@@ -1,4 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnChanges } from '@angular/core';
+import {
+  Component, OnInit, Input, Output, EventEmitter, ViewChild, OnChanges, OnDestroy
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
@@ -14,13 +16,14 @@ import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { SignatureAddressModalComponent } from '../signature-address-modal/signature-address-modal.component';
 import { SettingsService } from 'app/wallet/settings/settings.service';
+import { Settings } from 'app/wallet/settings/models/settings.model';
 
 @Component({
   selector: 'address-table',
   templateUrl: './address-table.component.html',
   styleUrls: ['./address-table.component.scss']
 })
-export class AddressTableComponent implements OnInit, OnChanges {
+export class AddressTableComponent implements OnInit, OnChanges, OnDestroy {
 
   // Determines what fields are displayed in the Transaction Table.
   // header and utils
@@ -58,6 +61,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
   PAGE_SIZE_OPTIONS: Array<number> = [10, 20, 50];
 
   log: any = Log.create('address-table.component');
+  destroyed: boolean = false;
 
   constructor(
     public _addressService: AddressService,
@@ -74,7 +78,15 @@ export class AddressTableComponent implements OnInit, OnChanges {
       this.addresses = addresses
     })
 
+    // current settings.
     this.addressDisplayAmount = this.settingsService.currentSettings.display.rows;
+
+    // observe the changes.
+    this._rpcState.observe('currentGUISettings')
+    .takeWhile(() => !this.destroyed)
+    .subscribe((settings: Settings) => {
+      this.addressDisplayAmount = settings.display.rows
+    });
   }
 
   ngOnInit(): void {
@@ -83,6 +95,11 @@ export class AddressTableComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.resetPagination();
+  }
+
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   /** Returns the addresses to display in the UI with regards to both pagination and search/query. */
