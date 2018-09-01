@@ -12,6 +12,7 @@ import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService, TermsService } from 'app/modals/modals.module';
 import { SettingsService } from 'app/wallet/settings/settings.service';
+import { Settings } from 'app/wallet/settings/models/settings.model';
 
 /*
  * The MainView is basically:
@@ -48,7 +49,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
-  public settings: any;
+  public settings: Settings;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -61,9 +62,13 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
-    private settingsService: SettingsService
+    public settingsService: SettingsService
   ) {
-    this.settings = this.settingsService.currentSettings;
+    this._rpcState.observe('currentGUISettings')
+      .takeWhile(() => !this.destroyed)
+      .subscribe((settings: Settings) => {
+        this.settings = settings
+      });
   }
 
   ngOnInit() {

@@ -20,8 +20,7 @@
           </a>
         </mat-list><!-- .sidebar-item-group -->
       </mat-content><!-- .sidebar-section -->
-
-      <mat-content class="sidebar-section" *ngIf="walletInitialized">
+      <mat-content class="sidebar-section" *ngIf="walletInitialized && settings?.market?.enabled">
         <mat-accordion [multi]="'multi'">
           <mat-expansion-panel #panel2 [expanded]="settings?.navigation?.marketExpanded" class="no-padding arrow-colored">
             <mat-expansion-panel-header>Market</mat-expansion-panel-header>
