@@ -126,15 +126,19 @@ function initMainWindow() {
   });
 
   // Emitted when gui minimize.
-  mainWindow.on('minimize', function (event) {
+  mainWindow.on('minimize', function () {
     // Passing the mainWindow reference to apply operations on settings.js
-    settings.minimizeToTray(mainWindow, event);
+    settings.minimizeToTray(mainWindow);
   });
 
    // Emitted before window getting closed.
   mainWindow.on('close', function (event) {
-    // Passing the mainWindow reference to apply operations on settings.js
-    settings.minimizeWindow(mainWindow, event);
+    // Bydefault mac always in task bar when close 
+    if (process.platform !== 'darwin') {
+      // Passing the mainWindow reference to apply operations on settings.js
+      settings.minimizeOnClose(mainWindow, event);
+    }
+    
   });
 
   // Emitted when the window is closed.
