@@ -133,8 +133,12 @@ function initMainWindow() {
 
    // Emitted before window getting closed.
   mainWindow.on('close', function (event) {
-    // Passing the mainWindow reference to apply operations on settings.js
-    settings.minimizeOnClose(mainWindow, event);
+    // Bydefault mac always in task bar when close 
+    if (process.platform !== 'darwin') {
+      // Passing the mainWindow reference to apply operations on settings.js
+      settings.minimizeOnClose(mainWindow, event);
+    }
+    
   });
 
   // Emitted when the window is closed.

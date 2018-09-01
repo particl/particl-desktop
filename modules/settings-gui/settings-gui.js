@@ -12,7 +12,10 @@ const Observable = require('rxjs/Observable').Observable;
 
 let settings;
 let autoLauncher = new AutoLaunch({
-  name: electron.getName()
+  name: electron.getName(),
+  mac: {
+    useLaunchAgent: true
+  }
 });
 exports.init = function () {
   rxIpc.registerListener('settings-gui', function (options) {
