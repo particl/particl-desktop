@@ -82,8 +82,6 @@
                 "output": [
                   "Particl Core Daemon",
                   "0.16.2.0"
-<<<<<<< HEAD
-=======
                 ]
               }
             }
@@ -126,7 +124,6 @@
                 "output": [
                   "Particl Core Daemon",
                   "0.16.2.0"
->>>>>>> 2b556639a819e497255add5435e93e62f2c9f30b
                 ]
               }
             }
