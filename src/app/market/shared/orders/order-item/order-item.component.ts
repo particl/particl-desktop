@@ -45,7 +45,7 @@ export class OrderItemComponent implements OnInit {
     }
     this.country = this.order.ShippingAddress.country;
     this.listingService.get(this.order.listingItemId).subscribe(response => {
-     this.order.listing = response;
+      this.order.listing = response;
     });
   }
 

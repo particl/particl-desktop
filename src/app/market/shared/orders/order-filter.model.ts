@@ -7,7 +7,7 @@ export class OrderFilter {
     { title: 'Awaiting',   value: 'AWAITING_ESCROW', amount: 0 },
     { title: 'In escrow',  value: 'ESCROW_LOCKED',  amount: 0 },
     { title: 'Shipped',    value: 'SHIPPING', amount: 0 },
-    { title: 'Sold',       value: 'COMPLETE',    amount: 0 },
+    { title: 'Completed',  value: 'COMPLETE',    amount: 0 },
     { title: 'Rejected',   value: 'MPA_REJECT',    amount: 0 }
   ];
   constructor() {
@@ -36,7 +36,7 @@ export class OrderFilter {
         this.setSoldCount(orders.length);
         break;
 
-      case 'Rejected':
+      case 'MPA_REJECT':
         this.setRejectedCount(orders.length);
         break;
 
