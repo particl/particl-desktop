@@ -1,5 +1,3 @@
-import { Buffer } from 'buffer';
-
 export class Amount {
 
   constructor(private amount: number, private maxRoundingDigits: number = 8) {
