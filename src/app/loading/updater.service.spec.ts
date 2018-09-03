@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material';
 
-import { IpcService } from '../ipc/ipc.service';
+import { IpcService } from 'app/core/ipc/ipc.service';
 import { UpdaterService } from './updater.service';
 
 

@@ -5,6 +5,7 @@ import { Log } from 'ng2-logger';
 import { ConnectionCheckerService } from './connection-checker.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
+import { UpdaterService } from './updater.service';
 
 const DEFAULT_WALLET = 'wallet.dat';
 
@@ -13,28 +14,41 @@ const DEFAULT_WALLET = 'wallet.dat';
   encapsulation: ViewEncapsulation.None,
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
-  providers: [RpcService, ConnectionCheckerService]
+  providers: [RpcService, ConnectionCheckerService, UpdaterService]
 })
 export class LoadingComponent implements OnInit {
   log: any = Log.create('loading.component');
 
-  private walletToLoad: string = DEFAULT_WALLET;
+  private walletToLoad: string;
+  loadingMessage: string;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private rpc: RpcService,
     private multi: MultiwalletService,
-    private con: ConnectionCheckerService
+    private con: ConnectionCheckerService,
+    private updater: UpdaterService
   ) {
-    console.log('loading component');
+    this.log.i('loading component initialized');
+    this.walletToLoad = DEFAULT_WALLET;
+  }
+
+  ngOnInit() {
+    this.log.i('Loading component booted!');
+
+    /* Daemon download  */
+    this.updater.status.asObservable().subscribe(status => {
+      this.log.d(`updating statusMessage: `, status);
+      this.loadingMessage = status;
+    });
 
     // we wait until the multiwallet has retrieved the wallets
     this.multi.list.take(1).subscribe(wallets => {
       // we also pass through the loading screen to switch wallets
       // check if a wallet was specified
       this.route.queryParamMap.take(1).subscribe((params: ParamMap) => {
-        console.log('loading params', params);
+        this.log.d('loading params', params);
         // we can only pass strings through
         const switching = params.get('wallet');
         if (switching) {
@@ -55,10 +69,6 @@ export class LoadingComponent implements OnInit {
           );
       });
     });
-  }
-
-  ngOnInit() {
-    this.log.i('Loading component booted!');
   }
 
   decideWhereToGoTo(getwalletinfo: any) {
