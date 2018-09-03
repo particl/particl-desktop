@@ -20,6 +20,8 @@ import { LocationService } from 'app/core/market/api/template/location/location.
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { SettingsService } from 'app/wallet/settings/settings.service';
+import { Settings } from 'app/wallet/settings/models/settings.model';
 
 @Component({
   selector: 'app-add-item',
@@ -74,7 +76,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     private countryList: CountryListService,
-    private escrow: EscrowService
+    private escrow: EscrowService,
+    private settingsService: SettingsService
   ) { }
 
   ngOnInit() {
@@ -113,6 +116,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = undefined;
       }
     });
+
+    // set default expiration.
+    this.expiration = this.settingsService.currentSettings.market.listingExpiration;
+
+    // update settings.
+    this.rpcState.observe('currentGUISetting')
+      .takeWhile(() => (!this.destroyed))
+      .subscribe((settings: Settings) => {
+        this.expiration = settings.market.listingExpiration;
+        this.loadTransactionFee();
+      })
 
     this.loadTransactionFee();
   }

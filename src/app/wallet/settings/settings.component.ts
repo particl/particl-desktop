@@ -6,6 +6,7 @@ import { CountryListService } from 'app/core/market/api/countrylist/countrylist.
 import { Log } from 'ng2-logger';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { SettingsGuiService } from 'app/core/settings-gui/settings-gui.service';
+import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-settings',
@@ -27,7 +28,8 @@ export class SettingsComponent implements OnInit {
   constructor(
     private _settingsService: SettingsService,
     private _location: Location,
-    private countryList: CountryListService
+    private countryList: CountryListService,
+    private snackbar: SnackbarService
   ) { }
 
   ngOnInit() {
@@ -40,16 +42,27 @@ export class SettingsComponent implements OnInit {
 
   apply() {
     this._settingsService.applySettings(this.settings);
+    // @TODO move in apply() subscription once cmd are available for settings.
+    this.snackbar.open(
+      'Settings applied sucessfully.',
+      'info'
+    );
   }
 
   cancel() {
     this.settings = this._settingsService.loadSettings();
-    this._location.back();
+    // this._location.back();
   }
 
   validate() {
     this.apply();
-    this._location.back();
+
+    // @TODO move in save () subscription once cmd are available for settings.
+    this.snackbar.open(
+      'Settings saved sucessfully.',
+      'info'
+    );
+
   }
 
   changeTab(index: number): void {
@@ -60,6 +73,16 @@ export class SettingsComponent implements OnInit {
     this.log.d('selectedCountry', country);
     this.settings['market'].defaultCountry = country || undefined
     // @TODO set and use the selected Country Code and set defaut selected country by cmd?.
+  }
+
+  // set all settings as defaults.
+  resetAll(): void {
+    this._settingsService.applyDefaultSettings();
+    // @TODO move in apply() subscription once cmd are available for settings.
+    this.snackbar.open(
+      'Default settings applied sucessfully.',
+      'info'
+    );
   }
 
 }

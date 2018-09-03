@@ -71,6 +71,19 @@ export class SettingsService {
     }
   }
 
+  applyDefaultSettings(): void {
+    localStorage.setItem('gui-settings', JSON.stringify(this.defaultSettings));
+
+    // update core settings.
+    this._settingsGUIService.updateSettings(this.defaultSettings);
+
+    // update current settings
+    this.currentSettings = new Settings(this.defaultSettings);
+
+    // set currentGUISettings state.
+    this._rpcState.set('currentGUISettings', this.defaultSettings);
+  }
+
   // list market setting.
   list(): any {
     const params = ['list', this.profileId];

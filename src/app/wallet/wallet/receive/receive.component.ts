@@ -60,7 +60,7 @@ export class ReceiveComponent implements OnInit, OnDestroy {
     this.rpcState.observe('currentGUISettings')
     .takeWhile(() => !this.destroyed)
     .subscribe((settings: Settings) => {
-      this.MAX_ADDRESSES_PER_PAGE = settings.display.rows
+      this.MAX_ADDRESSES_PER_PAGE = settings.display.rows;
     });
 
   }
