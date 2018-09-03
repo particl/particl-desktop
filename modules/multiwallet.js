@@ -27,7 +27,7 @@ function init() {
   const particlDataDir = cookie.getParticlDatadirPath();
 
   // watch the folders
-  const glob = join(particlDataDir, 'wallet_*');
+  const glob = ['', 'wallets'].map(str => join(particlDataDir, str, 'wallet_*'));
   chokidar.watch(glob).on('addDir', dir => add(basename(dir)));
 
   // Register a custom protocol, which is polled by the front end.

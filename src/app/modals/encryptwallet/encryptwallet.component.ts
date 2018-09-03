@@ -5,9 +5,8 @@ import { MatDialogRef } from '@angular/material';
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
 
-import { RpcService, RpcStateService } from '../../core/core.module';
+import { RpcService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service'; // TODO; import from module
-import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Component({
@@ -24,11 +23,8 @@ export class EncryptwalletComponent {
 
   constructor(
     @Inject(forwardRef(() => ModalsHelperService))
-    private _modals: ModalsHelperService,
     private _rpc: RpcService,
-    private _rpcState: RpcStateService,
     private flashNotification: SnackbarService,
-    private _daemon: UpdaterService,
     public _dialogRef: MatDialogRef<EncryptwalletComponent>
   ) { }
 
@@ -49,14 +45,6 @@ export class EncryptwalletComponent {
     }
 
     // passwords match, encrypt wallet
-
-
-    if (window.electron) {
-      this._daemon.restart().then(res => {
-        // TODO: move to loading screen
-        this._dialogRef.close();
-      });
-    }
 
     this._rpc.call('encryptwallet', [password.password]).toPromise()
       .catch(error => {
