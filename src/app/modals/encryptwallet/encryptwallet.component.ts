@@ -22,7 +22,6 @@ export class EncryptwalletComponent {
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
 
   constructor(
-    @Inject(forwardRef(() => ModalsHelperService))
     private _rpc: RpcService,
     private flashNotification: SnackbarService,
     public _dialogRef: MatDialogRef<EncryptwalletComponent>
