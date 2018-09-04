@@ -64,6 +64,10 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _newtxnotifier: NewTxNotifierService,
     public settingsService: SettingsService
   ) {
+    // current settings.
+    this.settings = this.settingsService.currentSettings;
+
+    // updated settings.
     this._rpcState.observe('currentGUISettings')
       .takeWhile(() => !this.destroyed)
       .subscribe((settings: Settings) => {

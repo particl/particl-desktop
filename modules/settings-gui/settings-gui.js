@@ -40,20 +40,22 @@ exports.init = function () {
     }
 
 
-    /*
-     * Start market-place if market is enalbed.
-     */
+    // @TODO use the code for stop market.
 
-    // @TODO need to refactor code?
+    // /*
+    //  * Start market-place if market is enalbed.
+    //  */
 
-    if(marketRunningState != settings.market.enabled) {
-      marketRunningState = settings.market.enabled;
-      if(marketRunningState) {
-        market.init();
-      } else {
-        market.stop();
-      }
-    }
+    // // @TODO need to refactor code?
+
+    // if(marketRunningState != settings.market.enabled) {
+    //   marketRunningState = settings.market.enabled;
+    //   if(marketRunningState) {
+    //     market.init();
+    //   } else {
+    //     market.stop();
+    //   }
+    // }
 
 
     return Observable.create(observer => {
