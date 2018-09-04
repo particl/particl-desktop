@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
@@ -29,6 +29,7 @@ export class SellerListingComponent {
 
   constructor(
     public dialog: MatDialog,
+    private route: ActivatedRoute,
     private router: Router,
     private rpcState: RpcStateService,
     private modals: ModalsHelperService,
@@ -67,9 +68,10 @@ export class SellerListingComponent {
     await this.template.post(template, 1).toPromise();
   }
   // @TODO create a shared compoment
-  addItem(id?: number, clone?: boolean) {
+  clone(id: number) {
     this.router.navigate(['../template'], {
-      queryParams: {'id': id, 'clone': clone }
+      relativeTo: this.route,
+      queryParams: {'id': id, 'clone': true }
     });
   }
 

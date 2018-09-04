@@ -52,7 +52,7 @@
                     class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
             </button>
-            <button mat-button matTooltip="Clone listing" (click)="addItem(listing?.id, true)" class="small">
+            <button mat-button matTooltip="Clone listing" (click)="clone(listing.id)" class="small">
               <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
             </button>
             <button mat-button matTooltip="Edit listing details" [disabled]="listing?.isPublished" (click)="addItem(listing?.id)" class="small">

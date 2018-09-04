@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
 
 import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
@@ -49,6 +49,7 @@ export class SellComponent implements OnInit {
   public category: string = '';
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
     private template: TemplateService,
@@ -62,6 +63,7 @@ export class SellComponent implements OnInit {
 
   addItem(id?: number, clone?: boolean) {
     this.router.navigate(['../template'], {
+      relativeTo: this.route,
       queryParams: {'id': id, 'clone': clone }
     });
   }

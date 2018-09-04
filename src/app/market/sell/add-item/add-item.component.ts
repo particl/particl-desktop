@@ -91,18 +91,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
       const id = params['id'];
       const clone: boolean = params['clone'];
       if (id) {
-        this.templateId = +id;
-        this.preload();
-      }
-      if (clone) {
-        this.log.d('Cloning listing!');
-        this.templateId = undefined;
+        this.preload(+id, clone);
       }
     });
   }
 
   isExistingTemplate() {
-    return this.preloadedTemplate || (this.templateId !== undefined && this.templateId > 0);
+    return (this.preloadedTemplate.id !== undefined && this.preloadedTemplate.id > 0);
+  }
+
+  isExistingAndPublished() {
+    return this.isExistingTemplate() && this.preloadedTemplate && this.preloadedTemplate.status === 'published';
   }
 
   uploadPicture() {
@@ -174,14 +173,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.destroyed = true;
   }
 
-  preload() {
-    this.log.d(`preloading for id=${this.templateId}`);
-    this.template.get(this.templateId).subscribe((template: Template) => {
-      this.log.d(`preloaded id=${this.templateId}!`);
+  preload(id: number, clone: boolean) {
+    this.log.d(`preloading for id=${id}`);
+    this.template.get(id).subscribe((template: Template) => {
+      this.log.d(`preloaded id=${id}!`);
 
-
-
-      if (this.listing.cache.isAwaiting(template)) {
+      if (!clone && this.listing.cache.isAwaiting(template)) {
         template.status = 'awaiting';
       }
 
@@ -214,6 +211,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.images = template.imageCollection.images;
 
       this.preloadedTemplate = template;
+
+      if(clone) {
+        this.preloadedTemplate.id = undefined;
+      }
       // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
     });
   }
@@ -234,11 +235,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       +item.internationalShippingPrice
     ).toPromise();
 
-
-    this.templateId = template.id;
     this.preloadedTemplate = template;
 
-    await this.location.execute('add', this.templateId, country, null, null).toPromise();
+    await this.location.execute('add', template.id, country, null, null).toPromise();
     await this.escrow.add(template.id, EscrowType.MAD).toPromise();
 
     if (this.picturesToUpload.length === 0) {
@@ -275,8 +274,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     // update location
     const country = this.countryList.getCountryByName(item.country);
-    await this.location.execute('update', this.templateId, country, null, null).toPromise();
-    await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
+    await this.location.execute('update', this.preloadedTemplate.id, country, null, null).toPromise();
+    await this.escrow.update(this.preloadedTemplate.id, EscrowType.MAD).toPromise();
     // update shipping
 
     // update messaging
@@ -306,7 +305,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   public saveTemplate() {
-    if (this.preloadedTemplate && this.preloadedTemplate.status === 'published') {
+    if (this.isExistingAndPublished()) {
       this.snackbar.open('You can not update templates whilst they are published!');
       return;
     }

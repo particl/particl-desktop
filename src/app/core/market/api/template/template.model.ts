@@ -39,6 +39,10 @@ export class Template {
     return this.object.id
   }
 
+  set id(id: number) {
+    this.object.id = id;
+  }
+
   get title(): string {
     return this.object.ItemInformation.title
   }
