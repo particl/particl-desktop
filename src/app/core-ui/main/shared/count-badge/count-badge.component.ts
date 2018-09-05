@@ -1,0 +1,11 @@
+import { Component, OnInit, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-count-badge',
+  templateUrl: './count-badge.component.html',
+  styleUrls: ['./count-badge.component.scss']
+})
+export class CountBadgeComponent {
+  @Input() count: number = 0;
+  counter: number = 10;
+}
