@@ -25,6 +25,8 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
     4. Typography
       4.1. Page subtitles
       4.2. Paragraph styles
+    5. Plug-ins
+      5.1. Charts
 
 */
 
@@ -38,6 +40,7 @@ body {
   background-color: $bg;
   font-size: 12px;
 }
+
 
 /* ------------------------------- *\
     2. LAYOUT
@@ -141,6 +144,13 @@ body {
       margin: 0 4px;
       position: relative;
       top: 2px;
+    }
+    .mat-button {
+      .mat-icon {
+        top: -2px;
+        margin: 0 5px 0 0;
+        font-size: 16px;
+      }
     }
   }
 }
@@ -265,4 +275,50 @@ kbd {
   display: inline-block;
   padding: 2px 5px;
   margin: 0 2px;
+}
+
+
+/* ------------------------------- *\
+    5. PLUG-INS
+\* ------------------------------- */
+
+// ------ 5.1. Charts ------ //
+
+.nvd3-svg {
+  // Pie/donut chart
+  .nv-slice {
+    stroke: $color-white;
+    stroke-width: 2px;
+  }
+  .nv-legend-text {
+    fill: $text;
+  }
+}
+.nvtooltip { // tooltips
+  z-index: 1000;
+  font-family: $font;
+  font-size: 12px;
+  color: $color-white;
+  background: rgba($bg-black, 0.85);
+  border-radius: $radius;
+  padding: 1px 4px;
+  .legend-color-guide > div {
+    height: 6px;
+    width: 6px;
+    margin-right: 2px;
+    display: inline-block;
+    border-radius: $radius;
+    position: relative;
+    top: -1px;
+  }
+  .key {
+    font-weight: 500;
+    margin: 0 3px;
+  }
+  .value {
+    font-size: 10px;
+    color: lighten($bg-black, 50%);
+    position: relative;
+    top: 1px;
+  }
 }

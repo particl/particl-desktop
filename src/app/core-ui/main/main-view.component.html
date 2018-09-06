@@ -7,6 +7,7 @@
 
     <mat-divider></mat-divider>
 
+
     <div class="menu-links">
 
       <mat-content class="sidebar-section">
@@ -132,6 +133,18 @@
             </mat-content>
           </mat-expansion-panel>
         </mat-accordion>
+      </mat-content><!-- .sidebar-section -->
+      
+      <mat-content class="sidebar-section" *ngIf="walletInitialized">
+        <mat-list class="sidebar-item-group">
+          <a class="sidebar-item-link"
+            routerLinkActive="active" routerLink="/wallet/proposals">
+            <mat-list-item class="sidebar-item">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+              <span class="text">Proposals</span>
+            </mat-list-item>
+          </a>
+        </mat-list><!-- .sidebar-item-group -->
       </mat-content><!-- .sidebar-section -->
     
       <mat-content class="sidebar-section">
