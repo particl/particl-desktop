@@ -1,4 +1,4 @@
-# particl-desktop – UI
+# particl-desktop – UI (proposal)
 
 ![UI Preview](preview.gif)
 
