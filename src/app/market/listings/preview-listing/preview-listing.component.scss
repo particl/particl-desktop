@@ -83,6 +83,12 @@ button.small .mat-icon {
       color: $text;
       font-size: 14px;
     }
+    &.detailed {
+      p {
+        white-space: pre-line;
+        margin-top: -20px;
+      }
+    }
   }
   .pricing {
     margin: 8px 0 24px;

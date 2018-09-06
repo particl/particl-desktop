@@ -53,6 +53,12 @@
       color: $text;
       margin-bottom: 10px;
     }
+    .description {
+      p {
+        white-space: pre-line;
+        margin-top: -17px;
+      }
+    }
     table.prices {
       color: $text-muted;
       border-collapse: collapse;
