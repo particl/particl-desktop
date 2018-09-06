@@ -70,7 +70,9 @@ export class ProposalsNotificationsService implements OnDestroy {
     proposals.map((proposal: Proposal) => {
       // get user vote status.
 
-      this.proposalsService.get(proposal.hash).subscribe((result) => {}, (message) => {
+      this.proposalsService.get(proposal.hash)
+      .take(1)
+      .subscribe((result) => {}, (message) => {
         // proposal has no vote count yet.
         if (message === 'User has not voted for that Proposal yet.') {
           this.proposalsRerquiredActionsCount += 1;

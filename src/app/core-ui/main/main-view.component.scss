@@ -62,7 +62,7 @@
     font-weight: 600;
     color: white;
   }
-  app-order-count.tag { // order notifications
+  .tag { // order notifications
     @extend %tfx;
     position: absolute;
     right: 0;

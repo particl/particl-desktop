@@ -13,14 +13,11 @@ import 'nvd3';
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
-import { CountBadgeComponent } from './main/shared/count-badge/count-badge.component';
-
 
 
 @NgModule({
   declarations: [
-    PaginatorComponent,
-    CountBadgeComponent
+    PaginatorComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +31,6 @@ import { CountBadgeComponent } from './main/shared/count-badge/count-badge.compo
     MaterialModule,
     MainViewModule,
     PaginatorComponent,
-    CountBadgeComponent,
     InfiniteScrollModule,
     NvD3Module
   ]

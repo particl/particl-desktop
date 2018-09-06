@@ -7,5 +7,4 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class CountBadgeComponent {
   @Input() count: number = 0;
-  counter: number = 10;
 }

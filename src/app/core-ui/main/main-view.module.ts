@@ -17,6 +17,8 @@ import { ClientVersionService } from '../../core/http/client-version.service';
 
 import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
+import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-badge.component';
+// import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 @NgModule({
   imports: [
@@ -28,7 +30,8 @@ import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
   ],
   exports: [
     MainViewComponent,
-    PercentageBarComponent
+    PercentageBarComponent,
+    CountBadgeComponent
   ],
   declarations: [
     MainViewComponent,
@@ -38,8 +41,8 @@ import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
     ConsoleModalComponent,
     ReleaseNotificationComponent,
     CartComponent,
-    TimeoffsetComponent
-
+    TimeoffsetComponent,
+    CountBadgeComponent
   ],
   entryComponents: [
     ConsoleModalComponent,
