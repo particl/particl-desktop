@@ -19,11 +19,11 @@ export class ProposalsNotificationsService implements OnDestroy {
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
   public proposals: Proposal[] = [];
   public destroyed: boolean = false;
-  private proposalsRerquiredActionsCount: number = 0;
+  private proposalsCountRequiredVoteActions: number = 0;
   private profile: Profile;
 
-  get proposalsCountRerquiredActions(): number {
-    return this.proposalsRerquiredActionsCount;
+  get proposalsCountRequiredVoteAction(): number {
+    return this.proposalsCountRequiredVoteActions;
   }
 
   constructor(
@@ -59,23 +59,22 @@ export class ProposalsNotificationsService implements OnDestroy {
       }
 
       if (this.proposals.length !== proposals.length) {
-        this.checkProposalsRerquiredVoteActions(proposals);
+        this.checkProposalsRequiredVoteActions(proposals);
       }
       this.proposals = proposals;
     });
   }
 
-  checkProposalsRerquiredVoteActions(proposals: Proposal[]): void {
-    this.proposalsRerquiredActionsCount = 0;
+  checkProposalsRequiredVoteActions(proposals: Proposal[]): void {
+    this.proposalsCountRequiredVoteActions = 0;
     proposals.map((proposal: Proposal) => {
       // get user vote status.
 
       this.proposalsService.get(proposal.hash)
-      .take(1)
-      .subscribe((result) => {}, (message) => {
+      .take(1).subscribe((result) => {}, (message) => {
         // proposal has no vote count yet.
         if (message === 'User has not voted for that Proposal yet.') {
-          this.proposalsRerquiredActionsCount += 1;
+          this.proposalsCountRequiredVoteActions += 1;
         }
       })
     })
