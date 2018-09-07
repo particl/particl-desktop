@@ -64,7 +64,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _newtxnotifier: NewTxNotifierService,
     public settingsService: SettingsService
   ) {
-    // current settings.
+    // current settings needs to be remove ?
     this.settings = this.settingsService.currentSettings;
 
     // updated settings.

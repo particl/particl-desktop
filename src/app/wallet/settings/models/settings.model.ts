@@ -24,7 +24,6 @@ export class Settings {
         this.window = new WindowSettings(obj.window);
         this.display = new DisplaySettings(obj.display);
         this.navigation = new NavigationSettings(obj.navigation);
-        console.log('obj.market', obj.market);
         this.market = new MarketSettings(obj.market);
         this.i2p = obj.i2p;
         this.tor = obj.tor;

@@ -7,6 +7,7 @@ export class DisplaySettings {
     theme: string;
     rows: number;
     addresses: boolean;
+    advanced: boolean;
     notify: Notify;
     show: Show;
 
@@ -15,6 +16,7 @@ export class DisplaySettings {
         this.units = obj.units;
         this.theme = obj.theme;
         this.rows = obj.rows;
+        this.advanced = obj.advanced;
         this.addresses = obj.addresses;
         this.notify = new Notify(obj.notify);
         this.show = new Show(obj.show);

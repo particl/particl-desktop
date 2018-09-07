@@ -40,23 +40,14 @@ export class SettingsComponent implements OnInit {
     this.tab = tab;
   }
 
-  apply() {
-    this._settingsService.applySettings(this.settings);
-    // @TODO move in apply() subscription once cmd are available for settings.
-    this.snackbar.open(
-      'Settings applied sucessfully.',
-      'info'
-    );
-  }
-
   cancel() {
     this.settings = this._settingsService.loadSettings();
     // this._location.back();
   }
 
-  validate() {
-    this.apply();
-
+  save() {
+    console.log(this.settings);
+    this._settingsService.applySettings(this.settings);
     // @TODO move in save () subscription once cmd are available for settings.
     this.snackbar.open(
       'Settings saved sucessfully.',

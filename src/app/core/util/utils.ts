@@ -388,6 +388,7 @@ export const DEFAULT_GUI_SETTINGS  = {
         theme: 'light',
         rows: 10,
         addresses: true,
+        advanced: false,
         notify: {
             message: true,
             sentTo: false,

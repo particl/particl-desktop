@@ -30,6 +30,7 @@ export class SendComponent implements OnInit {
   // General
   log: any = Log.create('send.component');
   private addressHelper: AddressHelper;
+  private destroyed: boolean = false;
   testnet: boolean = false;
   // UI logic
   @ViewChild('address') address: ElementRef;
@@ -53,6 +54,12 @@ export class SendComponent implements OnInit {
     this.addressHelper = new AddressHelper();
 
     this.setFormDefaultValue();
+    // observe advance setting
+    this._rpcState.observe('currentGUISettings', 'display')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(display => {
+        this.advanced = display.advanced;
+      });
   }
 
   setFormDefaultValue() {
