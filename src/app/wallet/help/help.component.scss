@@ -4,30 +4,20 @@
 
 .subtitle { // section titles
   @extend %subtitle;
-}
-
-hr.divider {
-  border: none;
-  border-top: 1px solid mix($bg, $bg-shadow);
-  margin: 24px -24px;
+  .tag {
+    font-size: 9px;
+    border: 1px solid rgba($text-muted, 0.7);
+    border-radius: 2px;
+    margin-left: 6px;
+    padding: 1px 4px;
+    position: relative;
+    top: -1px;
+  }
 }
 
 .card {
+  padding: 0;
   margin-bottom: 16px;
-  .section {
-    & > .title {
-      @extend %box-title;
-      margin-top: 0;
-    }
-    a {
-      color: darken($color, 5%);
-      text-decoration: none;
-      &:hover {
-        color: $color;
-        text-decoration: underline;
-      }
-    }
-  }
 }
 
 
@@ -36,4 +26,52 @@ hr.divider {
 .container-block {
   margin-top: $header-main-height;
   padding-top: 0;
+}
+
+.section {
+  &.list {
+    .item {
+      border-top: 1px dashed mix($bg, $bg-shadow);
+      &:first-of-type {
+        border: none;
+      }
+    }
+  }
+
+  // link item
+  .item {
+    @extend %tfx;
+    display: flex;
+    align-items: stretch;
+    text-decoration: none;
+    color: $text;
+    padding: 20px 26px 20px 6px;
+    &:hover, &:focus {
+      background: rgba($color, 0.015);
+      .icon .mat-icon {
+        color: $color;
+      }
+    }
+    .icon {
+      flex: 0 0 75px;
+      margin: auto;
+      text-align: center;
+      .mat-icon {
+        @extend %tfx;
+        font-size: 20px;
+        color: $text-muted;
+      }
+    }
+    .text {
+      flex: 1 1 100%;
+      .title {
+        @extend %box-title;
+      }
+      .desc {
+        color: $text-muted;
+        margin: 6px 0 0;
+      }
+    }
+  }
+
 }
