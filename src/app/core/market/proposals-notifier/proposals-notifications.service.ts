@@ -12,10 +12,6 @@ import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 @Injectable()
 export class ProposalsNotificationsService implements OnDestroy {
 
-  get activeProposalCount(): number {
-    return this.proposals.length;
-  };
-
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
   public proposals: Proposal[] = [];
   public destroyed: boolean = false;
@@ -99,6 +95,12 @@ export class ProposalsNotificationsService implements OnDestroy {
   notifyNewProposal(proposal: Proposal): void {
     const message = `${proposal.title} newly arrivied in you proposal list.`;
     this._notification.sendNotification(message);
+  }
+
+  votedForProposal() {
+    if (this.proposalsCountRequiredVoteActions) {
+      this.proposalsCountRequiredVoteActions -= 1
+    }
   }
 
   ngOnDestroy() {
