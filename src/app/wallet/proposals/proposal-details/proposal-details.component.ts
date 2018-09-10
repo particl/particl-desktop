@@ -128,10 +128,15 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       this.selectedOption.optionId
     ];
     this.proposalService.vote(params).subscribe((response) => {
+
+      // call votedForProposal() only if user voted for first time to any proposal.
+      if (!this.voteDetails) {
+        this.proposalsNotificationsService.votedForProposal();
+      }
+
       this.aleradyVoted = true;
       // update graph data.
       this.updateGraphData();
-      this.proposalsNotificationsService.votedForProposal();
       this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
     }, (error) => {
       this.snackbarService.open(error, 'warn');

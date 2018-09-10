@@ -26,9 +26,9 @@ export class ProposalsNotificationsService implements OnDestroy {
     private proposalsService: ProposalsService,
     private peerService: PeerService,
     private _notification: NotificationService,
-    private propfileService: ProfileService
+    private profileService: ProfileService
   ) {
-    this.propfileService.default()
+    this.profileService.default()
       .takeWhile(() => !this.destroyed)
       .subscribe((profile: Profile) => {
         this.profile = profile;
@@ -77,8 +77,6 @@ export class ProposalsNotificationsService implements OnDestroy {
   }
 
   checkProposals(proposals: Proposal[]): void {
-
-    const newProposals = this.getProposalsToNotifyFor(proposals);
     this.getProposalsToNotifyFor(proposals).filter((proposal) => {
         return proposal.submitter !== this.profile.address;
       }).forEach(proposal => {
