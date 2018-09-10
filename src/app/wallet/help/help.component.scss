@@ -29,23 +29,54 @@
 }
 
 .section {
+  
+  // vertical list
   &.list {
     .item {
+      display: flex;
+      align-items: stretch;
       border-top: 1px dashed mix($bg, $bg-shadow);
+      padding: 20px 26px 20px 6px;
       &:first-of-type {
         border: none;
+      }
+      .icon {
+        flex: 0 0 75px;
+      }
+      .text {
+        flex: 1 1 100%;
       }
     }
   }
 
-  // link item
+  // block grid
+  &.grid {
+    display: flex;
+    flex-wrap: wrap;
+    .item {
+      flex: 1 1 calc(25% - 1px);
+      display: block;
+      padding: 24px 0;
+      text-align: center;
+      border-right: 1px dashed mix($bg, $bg-shadow);
+      border-bottom: 1px dashed mix($bg, $bg-shadow);
+      &:nth-of-type(4n) {
+        border-right: none;
+      }
+      &:nth-last-of-type(1), &:nth-last-of-type(2), &:nth-last-of-type(3), &:nth-last-of-type(4) {
+        border-bottom: none;
+      }
+      .icon {
+        margin: auto auto 4px;
+      }
+    }
+  }
+
+  // link item (shared)
   .item {
     @extend %tfx;
-    display: flex;
-    align-items: stretch;
     text-decoration: none;
     color: $text;
-    padding: 20px 26px 20px 6px;
     &:hover, &:focus {
       background: rgba($color, 0.015);
       .icon .mat-icon {
@@ -53,7 +84,6 @@
       }
     }
     .icon {
-      flex: 0 0 75px;
       margin: auto;
       text-align: center;
       .mat-icon {
@@ -63,7 +93,6 @@
       }
     }
     .text {
-      flex: 1 1 100%;
       .title {
         @extend %box-title;
       }
