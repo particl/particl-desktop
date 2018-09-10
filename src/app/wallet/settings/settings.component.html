@@ -48,14 +48,14 @@
             </mat-checkbox>
           </div>
 
-          <hr class="divider">
+          <!--hr class="divider">
 
-          <!-- <div class="item">
+          <div class="item">
             <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.detachDatabases">
               <h4 class="option">Detach databases at shutdown</h4>
               <p class="desc">???</p>
             </mat-checkbox>
-          </div> -->
+          </div-->
 
         </div>
       </mat-card>
@@ -191,7 +191,7 @@
             <p class="desc">Percentage of your stakes donated to Particl Foundation to support development</p>
             <!-- TODO: implement https://material.angular.io/components/slider/overview instead of input if possible (I couldn't get it to work): -->
             <mat-form-field>
-              <input matInput type="number" min="10" max="100" placeholder="10" [(ngModel)]="settings.main.foundationDonation" [disabled]="!settings.main.stake">
+              <input matInput type="number" min="10" max="100" [(ngModel)]="settings.main.foundationDonation" [disabled]="!settings.main.stake">
             </mat-form-field>%
           </div>
 
