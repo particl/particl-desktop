@@ -31,7 +31,7 @@ export class AddToCartCacheService implements OnDestroy {
   }
 
   update() {
-    this.marketState.register('bid', null, ['search', '*', '*', 'ASC'])
+    this.marketState.register('bid', null, ['search', 0, 9999, 'ASC'])
   }
 
   getBids() {
