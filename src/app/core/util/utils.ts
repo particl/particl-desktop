@@ -389,6 +389,9 @@ export const DEFAULT_GUI_SETTINGS  = {
         rows: 10,
         addresses: true,
         advanced: false,
+        notifyPayments: false,
+        notifyStakes: false,
+        // Should be removed as it in unusual ?
         notify: {
             message: true,
             sentTo: false,

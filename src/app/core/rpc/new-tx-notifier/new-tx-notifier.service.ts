@@ -11,7 +11,8 @@ export class NewTxNotifierService implements OnDestroy {
 
   log: any = Log.create('new-tx-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
-
+  private stake: boolean = false;
+  private receive: boolean = false;
   private lastTxId: string = undefined;
 
 
@@ -27,6 +28,13 @@ export class NewTxNotifierService implements OnDestroy {
       .subscribe(txcount => {
         this.log.d(`--- update by txcount${txcount} ---`);
         this.checkForNewTransaction();
+      });
+
+    this._rpcState.observe('currentGUISettings', 'display')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(display => {
+        this.stake = display.notifyStakes;
+        this.receive = display.notifyPayments;
       });
   }
 
@@ -67,9 +75,9 @@ export class NewTxNotifierService implements OnDestroy {
 
   private notifyNewTransaction(tx: any) {
     this.log.d('notify new tx: ' + tx);
-    if (tx.category === 'receive') {
+    if (tx.category === 'receive' && this.receive) {
       this._notification.sendNotification('Incoming transaction', tx.amount + ' PART received');
-    } else if (tx.category === 'stake') {
+    } else if (tx.category === 'stake' && this.stake) {
       this._notification.sendNotification('New stake reward', tx.amount + ' PART received');
     }
   }

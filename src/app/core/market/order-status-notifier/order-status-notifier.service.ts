@@ -66,10 +66,10 @@ export class OrderStatusNotifierService implements OnDestroy {
 
   private notifyNewStatus(newOrder: Bid) {
     this.listingService.get(newOrder.listingItemId).subscribe(response => {
-     newOrder.listing = response;
+      newOrder.listing = response;
 
-     const message = this.getMessage(newOrder.listing.title, newOrder.messages.action_button);
-       this._notification.sendNotification(message);
+      const message = this.getMessage(newOrder.listing.title, newOrder.messages.action_button);
+      this._notification.sendNotification(message);
     });
   }
 
