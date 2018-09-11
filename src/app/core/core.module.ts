@@ -22,6 +22,7 @@ import { UpdaterComponent } from './updater/modal/updater.component';
 
 // This is seriously the only UI import.
 import { MatDialogModule } from '@angular/material';
+import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 
   /*
     Loading the core library will intialize IPC & RPC
@@ -50,7 +51,8 @@ export class CoreModule {
         SnackbarService,
         NotificationService,
         CloseGuiService,
-        SettingsGuiService
+        SettingsGuiService,
+        ProposalsNotificationsService
       ]
     };
   }
