@@ -46,7 +46,7 @@ export class OrderStatusNotifierService implements OnDestroy {
       .map(o => new BidCollection(o, this.profile.address))
       .subscribe(bids => {
         this.bids = bids;
-        if (bids.address && this.notifyOrders) {
+        if (bids.address) {
           this.checkForNewStatus(bids.orders);
         }
       })
@@ -67,7 +67,7 @@ export class OrderStatusNotifierService implements OnDestroy {
     if (orders.length === 0) {
       return;
     }
-    if (this.oldOrders && this.oldOrders.length) {
+    if (this.oldOrders && this.oldOrders.length && this.notifyOrders) {
       this.checkOrders(orders);
     }
     this.oldOrders = orders;

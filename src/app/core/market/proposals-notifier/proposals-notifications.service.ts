@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
@@ -15,6 +16,7 @@ export class ProposalsNotificationsService implements OnDestroy {
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
   public proposals: Proposal[] = [];
   public destroyed: boolean = false;
+  private notifyProposals: boolean = false;
   private proposalsCountRequiredVoteActions: number = 0;
   private profile: Profile;
 
@@ -25,6 +27,7 @@ export class ProposalsNotificationsService implements OnDestroy {
   constructor(
     private proposalsService: ProposalsService,
     private peerService: PeerService,
+    private _rpcState: RpcStateService,
     private _notification: NotificationService,
     private profileService: ProfileService
   ) {
@@ -42,6 +45,12 @@ export class ProposalsNotificationsService implements OnDestroy {
             this.loadProposals(blockCount);
         });
       });
+
+    this._rpcState.observe('currentGUISettings', 'display')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(display => {
+        this.notifyProposals = display.notifyProposals;
+      });
   }
 
   loadProposals(startBlockCount: number): void {
@@ -50,7 +59,7 @@ export class ProposalsNotificationsService implements OnDestroy {
     .take(1)
     .subscribe((proposals: Proposal[]) => {
       proposals.reverse();
-      if (this.proposals.length && this.proposals.length !== proposals.length) {
+      if (this.proposals.length && this.proposals.length !== proposals.length && this.notifyProposals) {
         this.checkProposals(proposals);
       }
 
