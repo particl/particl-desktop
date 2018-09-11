@@ -143,6 +143,7 @@
             <mat-list-item class="sidebar-item">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
               <span class="text">Proposals</span>
+              <app-count-badge class="tag" [count]="proposalsNotificationsService?.proposalsCountRequiredVoteAction"></app-count-badge>
             </mat-list-item>
           </a>
         </mat-list><!-- .sidebar-item-group -->

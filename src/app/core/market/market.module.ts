@@ -20,6 +20,7 @@ import { LocationService } from './api/template/location/location.service';
 import { EscrowService } from './api/template/escrow/escrow.service';
 import { BidService } from './api/bid/bid.service';
 import { OrderStatusNotifierService } from './order-status-notifier/order-status-notifier.service';
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ export class MarketModule {
         LocationService,
         EscrowService,
         BidService,
-        OrderStatusNotifierService
+        OrderStatusNotifierService,
+        ProposalsService
       ]
     };
   }

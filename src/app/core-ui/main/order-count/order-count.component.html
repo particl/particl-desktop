@@ -1,3 +1,8 @@
-<!-- TODO: hide if 1) not loaded, 2) equals to 0 -->
-<span class="tag" *ngIf="type === 'buy'">{{ notify.bids?.buyCount}}</span>
-<span class="tag" *ngIf="type === 'sell'">{{ notify.bids?.sellCount}}</span>
+<app-count-badge
+    *ngIf="type === 'sell'"
+    [count]="notify.bids?.sellCount">
+</app-count-badge>
+<app-count-badge
+    *ngIf="type === 'buy'"
+    [count]="notify.bids?.buyCount">
+</app-count-badge>
