@@ -10,6 +10,7 @@ export class DisplaySettings {
     advanced: boolean;
     notifyPayments: boolean;
     notifyStakes: boolean;
+    notifyOrders: boolean;
     notify: Notify;
     show: Show;
 
@@ -21,6 +22,7 @@ export class DisplaySettings {
         this.advanced = obj.advanced;
         this.notifyPayments = obj.notifyPayments;
         this.notifyStakes = obj.notifyStakes;
+        this.notifyOrders = obj.notifyOrders;
         this.addresses = obj.addresses;
         this.notify = new Notify(obj.notify);
         this.show = new Show(obj.show);

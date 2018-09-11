@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
 import { Bid } from 'app/core/market/api/bid/bid.model';
@@ -16,6 +17,7 @@ export class OrderStatusNotifierService implements OnDestroy {
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   private destroyed: boolean = false;
+  private notifyOrders: boolean = false;
   profile: any = {};
   private actionStatus: Array<any> =  [
             'Accept bid',
@@ -29,6 +31,7 @@ export class OrderStatusNotifierService implements OnDestroy {
   constructor(
     private listingService: ListingService,
     private _marketState: MarketStateService,
+    private _rpcState: RpcStateService,
     private _notification: NotificationService,
     private profileService: ProfileService
   ) {
@@ -43,10 +46,16 @@ export class OrderStatusNotifierService implements OnDestroy {
       .map(o => new BidCollection(o, this.profile.address))
       .subscribe(bids => {
         this.bids = bids;
-        if (bids.address) {
+        if (bids.address && this.notifyOrders) {
           this.checkForNewStatus(bids.orders);
         }
       })
+
+    this._rpcState.observe('currentGUISettings', 'display')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(display => {
+        this.notifyOrders = display.notifyOrders;
+      });
     this.loadProfile();
   }
 

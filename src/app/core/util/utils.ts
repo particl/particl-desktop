@@ -391,6 +391,7 @@ export const DEFAULT_GUI_SETTINGS  = {
         advanced: false,
         notifyPayments: false,
         notifyStakes: false,
+        notifyOrders: false,
         // Should be removed as it in unusual ?
         notify: {
             message: true,
