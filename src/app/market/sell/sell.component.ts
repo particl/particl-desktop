@@ -176,7 +176,7 @@ export class SellComponent implements OnInit {
 
   // Returns the pageNumber of the last page that is currently visible
   getLastPageCurrentlyLoaded() {
-    return this.pages[this.pages.length - 1].pageNumber;
+    return this.pages.length > 0 && this.pages[this.pages.length - 1].pageNumber;
   }
 
   // Returns the pageNumber if the first page that is currently visible

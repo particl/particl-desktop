@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
+import { Amount } from '../../../core/util/utils';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
@@ -18,6 +19,7 @@ import { InformationService } from 'app/core/market/api/template/information/inf
 import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { Image } from 'app/core/market/api/template/image/image.model';
+import { Country } from 'app/core/market/api/countrylist/country.model';
 
 @Component({
   selector: 'app-add-item',
@@ -43,7 +45,19 @@ export class AddItemComponent implements OnInit, OnDestroy {
   fileInput: any;
   picturesToUpload: string[];
   featuredPicture: number = 0;
+  expiration: number = 4;
+  txFee: Amount = new Amount(0)
+  selectedCountry: Country;
+  selectedCategory: Category;
+  isInProcess: boolean = false;
 
+  expiredList: Array<any> = [
+    { title: '4 day',     value: 4  },
+    { title: '1 week',    value: 7  },
+    { title: '2 weeks',   value: 14 },
+    { title: '3 weeks',   value: 21 },
+    { title: '4 weeks',   value: 28 }
+  ];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -94,6 +108,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.preload(+id, clone);
       }
     });
+
+    this.loadTransactionFee();
   }
 
   isExistingTemplate() {
@@ -182,7 +198,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
         template.status = 'awaiting';
       }
 
-
       const t = {
         title: '',
         shortDescription: '',
@@ -194,7 +209,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         country: ''
       };
 
-      console.log(template);
+      this.log.d('template', template);
       const country = this.countryList.getCountryByRegion(template.country);
       t.title = template.title;
       t.shortDescription = template.shortDescription;
@@ -202,21 +217,33 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.category = template.category.id;
       t.country = country ? country.name : '';
 
+      // set default value as selected.
+      this.setDefaultCountry(country);
+      this.setDefaultCategory(template.category);
+
       t.basePrice = template.basePrice.getAmount();
       t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
       t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
-
       this.itemFormGroup.patchValue(t);
 
       this.images = template.imageCollection.images;
 
       this.preloadedTemplate = template;
 
-      if(clone) {
+      if (clone) {
         this.preloadedTemplate.id = undefined;
       }
       // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
     });
+  }
+
+  setDefaultCountry(country: Country) {
+    this.selectedCountry = country;
+  }
+
+
+  setDefaultCategory(category: Category) {
+    this.selectedCategory = category;
   }
 
   private async save(): Promise<Template> {
@@ -323,18 +350,43 @@ export class AddItemComponent implements OnInit, OnDestroy {
     if (!this.validate()) {
       return;
     };
+    this.isInProcess = true;
     this.log.d('Saving and publishing the listing.');
-    this.modals.unlock({timeout: 30}, (status) => this.publish());
+    this.publish();
+  }
+
+  onCountryChange(country: Country): void {
+    this.itemFormGroup.patchValue({ country: country ? country.name : '' })
+  }
+
+
+  onCategoryChange(category: Category): void {
+    this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
   private async publish() {
     this.upsert().then(t => {
-      this.template.post(t, 1).toPromise().then(listing => {
-        this.snackbar.open('Succesfully added Listing!')
-        console.log(listing);
-        this.backToSell();
+      this.modals.unlock({timeout: 30}, (status) => {
+        this.template.post(t, 1, this.expiration)
+        .subscribe(listing => {
+          this.snackbar.open('Succesfully added Listing!')
+          this.log.d(listing);
+          this.backToSell();
+        },
+        (error) => {
+          this.isInProcess = false;
+          this.snackbar.open(error)
+        },
+        () => this.isInProcess = false)
       });
     }, err => this.snackbar.open(err));
+  }
+
+  loadTransactionFee() {
+    /* @TODO transaction fee will be calculated from backend
+     * currently we have assumed days_retention=1 costs 0.26362200
+     */
+    this.txFee = new Amount(0.26362200 * this.expiration)
   }
 
 }

@@ -62,19 +62,20 @@
     font-weight: 600;
     color: white;
   }
-  .tag {
-    @extend %tag;
-    background: lighten($bg-black, 15%);;
-    margin-left: auto;
-    font-size: 70%;
+  .tag { // order notifications
+    @extend %tfx;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    opacity: 0.6;
   }
   &:hover {
     background: darken($bg-black, 1.5%);
     .icon {
       color: lighten($bg-black, 30%);
     }
-    .tag {
-      background-color: lighten($bg-black, 20%);
+    app-order-count.tag {
+      opacity: 1;
     }
   }
 }
@@ -86,9 +87,6 @@ a.sidebar-item-link {
   &.active .sidebar-item {
     .icon { // highlight active menu item
       color: $color !important;
-    }
-    .tag {
-      //background: $color !important;
     }
   }
 }

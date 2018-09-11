@@ -9,6 +9,7 @@ const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
 const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
+const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
 
 
@@ -19,6 +20,7 @@ exports.start = function (mainWindow) {
 
   rpc.init();
   multiwallet.init();
+  closeGui.init();
   daemon.init();
   market.init();
 
@@ -96,6 +98,7 @@ electron.app.on('before-quit', function beforeQuit(event) {
   // destroy IPC listeners
   rpc.destroy();
   notification.destroy();
+  closeGui.destroy();
 
   market.stop();
   daemon.stop().then(() => {

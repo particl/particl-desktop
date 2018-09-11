@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
+import { OrderFilter } from './order-filter.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 
 @Component({
@@ -27,21 +28,12 @@ export class OrdersComponent implements OnInit, OnDestroy {
     { title: 'By price',         value: 'price'         }
   ];
 
-  // TODO: disable radios for 0 amount-statuses
-  order_filtering: Array<any> = [
-    { title: 'All orders', value: 'all',     amount: '3' },
-    { title: 'Bidding',    value: 'bidding', amount: '1' },
-    { title: 'In escrow',  value: 'escrow',  amount: '0' },
-    { title: 'Shipped',    value: 'shipped', amount: '1' },
-    { title: 'Sold',       value: 'sold',    amount: '1' }
-  ];
   public orders: Bid[];
   public profile: any = {};
+  order_filters: OrderFilter;
 
-  filters: any = {
-    search:   undefined,
-    sort:     undefined
-  };
+  filters: any;
+  additionalFilter: any;
   timer: Observable<number>;
   destroyed: boolean = false;
 
@@ -50,7 +42,21 @@ export class OrdersComponent implements OnInit, OnDestroy {
     private profileService: ProfileService) { }
 
   ngOnInit() {
+    this.default();
     this.loadProfile();
+  }
+
+  default(): void {
+    this.filters = {
+      status: '*',
+      search: '',
+      sort: 'time',
+    };
+
+    this.additionalFilter = {
+      requiredAttention: false,
+      hideCompleted: true
+    }
   }
 
   loadProfile(): void {
@@ -72,28 +78,35 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   loadOrders(): void {
-    this.bid.search(this.profile.address, this.type)
+    this.bid.search(this.profile.address, this.type, this.filters.status, this.filters.search, this.additionalFilter)
       .take(1)
-      .subscribe(orders => {
-        console.log('called >>>>>>>>>>>>>>>>>', orders);
-        // reverse the orders
-        orders.orders.reverse();
-
+      .subscribe(bids => {
+        console.log('called >>>>>>>>>>>>>>>>>', bids);
         // Only update if needed
-        if (this.hasUpdatedOrders(orders)) {
-          this.orders = orders;
+        if (this.hasUpdatedOrders(bids.filterOrders)) {
+          // Initialize model only when its fetching for all orders.
+          if (this.filters.status === '*') {
+            this.order_filters = new OrderFilter();
+          }
+          this.order_filters.setOrderStatusCount(this.filters.status, bids.filterOrders)
+          this.orders = bids.filterOrders;
         }
       });
   }
 
-  hasUpdatedOrders(newOrders: any): boolean {
+  hasUpdatedOrders(newOrders: Bid[]): boolean {
     return (
       !this.orders ||
-      (this.orders['orders'].length !== newOrders['orders'].length) ||
-      (_.differenceWith(this.orders['orders'], newOrders['orders'], (o1, o2) => {
-        return (o1.id === o2.id) && (o1['status'] === o2['status'])
+      (this.orders.length !== newOrders.length) ||
+      (_.differenceWith(this.orders, newOrders, (o1, o2) => {
+        return (o1.id === o2.id) && (o1.status === o2.status)
       }).length)
     )
+  }
+
+  clear(): void {
+    this.default();
+    this.loadOrders();
   }
 
   ngOnDestroy() {

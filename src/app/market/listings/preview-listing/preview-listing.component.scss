@@ -35,6 +35,9 @@ button.small .mat-icon {
     border-radius: 8px;
     text-align: center;
     font-size: 14px;
+    &:before {
+      content: none;
+    }
   }
   .mat-icon {
     margin-right: 6px;
@@ -79,6 +82,12 @@ button.small .mat-icon {
       font-weight: 600;
       color: $text;
       font-size: 14px;
+    }
+    &.detailed {
+      p {
+        white-space: pre-line;
+        margin-top: -20px;
+      }
     }
   }
   .pricing {

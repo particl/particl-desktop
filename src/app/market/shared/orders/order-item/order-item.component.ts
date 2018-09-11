@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { Bid } from '../../../../core/market/api/bid/bid.model';
-import { setOrderKeys } from 'app/core/util/utils';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { ListingService } from '../../../../core/market/api/listing/listing.service';
 
@@ -10,9 +9,9 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
-import { PlaceOrderComponent } from '../../../../modals/place-order/place-order.component';
-import { ShippingComponent } from '../../../../modals/shipping/shipping.component';
-import { BidConfirmationModalComponent } from 'app/modals/bid-confirmation-modal/bid-confirmation-modal.component';
+import { PlaceOrderComponent } from '../../../../modals/market-place-order/place-order.component';
+import { ShippingComponent } from '../../../../modals/market-shipping/shipping.component';
+import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 
 @Component({
   selector: 'app-order-item',
@@ -46,7 +45,7 @@ export class OrderItemComponent implements OnInit {
     }
     this.country = this.order.ShippingAddress.country;
     this.listingService.get(this.order.listingItemId).subscribe(response => {
-     this.order.listing = response;
+      this.order.listing = response;
     });
   }
 
@@ -116,7 +115,7 @@ export class OrderItemComponent implements OnInit {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
       // Reload same order without calling api
       this.order.OrderItem.status = 'AWAITING_ESCROW';
-      this.order = setOrderKeys(this.order, this.order.type)
+      this.order = new Bid(this.order, this.order.type);
     }, (error) => {
       this.snackbarService.open(`${error}`);
     });
@@ -126,7 +125,7 @@ export class OrderItemComponent implements OnInit {
     this.bid.rejectBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
-      this.order = setOrderKeys(this.order, this.order.type)
+      this.order = new Bid(this.order, this.order.type)
     }, (error) => {
       this.snackbarService.open(`${error}`);
     });
@@ -137,7 +136,7 @@ export class OrderItemComponent implements OnInit {
     this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).take(1).subscribe(res => {
       this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
       this.order.OrderItem.status = ordStatus === 'shipping' ? 'SHIPPING' : 'COMPLETE';
-      this.order = setOrderKeys(this.order, this.order.type)
+      this.order = new Bid(this.order, this.order.type)
     }, (error) => {
       this.snackbarService.open(`${error}`);
     });
@@ -160,7 +159,7 @@ export class OrderItemComponent implements OnInit {
     this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').take(1).subscribe(res => {
       this.snackbarService.open(`Payment done for order ${this.order.listing.title}`);
       this.order.OrderItem.status = 'ESCROW_LOCKED';
-      this.order = setOrderKeys(this.order, this.order.type)
+      this.order = new Bid(this.order, this.order.type)
     }, (error) => {
       console.log(error);
       this.snackbarService.open(`${error}`);

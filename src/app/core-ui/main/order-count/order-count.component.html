@@ -1,0 +1,8 @@
+<app-count-badge
+    *ngIf="type === 'sell'"
+    [count]="notify.bids?.sellCount">
+</app-count-badge>
+<app-count-badge
+    *ngIf="type === 'buy'"
+    [count]="notify.bids?.buyCount">
+</app-count-badge>

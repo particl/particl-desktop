@@ -2,12 +2,15 @@ import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/
 import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from './material/material.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NvD3Module } from 'ng2-nvd3';
+// d3 and nvd3 required dependecies of 'ng2-nvd3' module.
+import 'd3';
+import 'nvd3';
 
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
-// TODO: move to material
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { DirectiveModule } from './directive/directive.module';
 
@@ -20,12 +23,14 @@ import { DirectiveModule } from './directive/directive.module';
     MaterialModule,
     MatDialogModule, // todo move
     InfiniteScrollModule,
-    DirectiveModule
+    DirectiveModule,
+    NvD3Module
   ],
   exports: [
     MaterialModule,
     PaginatorComponent,
     InfiniteScrollModule,
+    NvD3Module,
     DirectiveModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

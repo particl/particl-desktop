@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 import { MainModule } from 'app/core-ui/main/main.module';
 
-import { RpcService, RpcStateService } from '../../core/rpc/rpc.module';
+import { RpcStateService } from '../../core/rpc/rpc.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { ModalsHelperService } from 'app/modals/modals.module';
 
@@ -49,7 +49,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private main: NgModuleRef<MainModule>,
-    private _rpc: RpcService,
     private _rpcState: RpcStateService,
     private _modalsService: ModalsHelperService,
     // the following imports are just 'hooks' to

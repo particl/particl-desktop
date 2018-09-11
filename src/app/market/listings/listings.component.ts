@@ -8,6 +8,7 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
+import { Country } from 'app/core/market/api/countrylist/country.model';
 
 
 interface ISorting {
@@ -69,17 +70,22 @@ export class ListingsComponent implements OnInit, OnDestroy {
     country: undefined
   };
 
+  selectedCountry: Country;
+
   constructor(
     private category: CategoryService,
     private listingService: ListingService,
     private favoritesService: FavoritesService,
     private countryList: CountryListService
   ) {
-    console.warn('overview created');
+    this.log.d('overview created');
+    if (this.listingService.cache.selectedCountry) {
+      this.selectedCountry = this.listingService.cache.selectedCountry
+    }
   }
 
   ngOnInit() {
-    console.log('overview created');
+    this.log.d('overview created');
     this.loadCategories();
     this.loadPage(1);
   }
@@ -145,11 +151,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     // previous page
     if (this.pages[0] && this.pages[0].pageNumber > newPageNumber) {
-      console.log('adding page to top');
+      this.log.d('adding page to top');
       this.pages.unshift(page);
       goingDown = false;
     } else { // next page
-      console.log('adding page to bottom');
+      this.log.d('adding page to bottom');
       this.pages.push(page);
     }
 
@@ -169,10 +175,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   // TODO: fix scroll up!
   loadPreviousPage() {
-    console.log('prev page trigered');
+    this.log.d('prev page trigered');
     let previousPage = this.getFirstPageCurrentlyLoaded();
     previousPage--;
-    console.log('loading prev page' + previousPage);
+    this.log.d('loading prev page' + previousPage);
     if (previousPage > 0) {
       this.loadPage(previousPage);
     }
@@ -180,7 +186,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   loadNextPage() {
     let nextPage = this.getLastPageCurrentlyLoaded(); nextPage++;
-    console.log('loading next page: ' + nextPage);
+    this.log.d('loading next page: ' + nextPage);
     this.loadPage(nextPage);
   }
 
@@ -192,6 +198,22 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // Returns the pageNumber if the first page that is currently visible
   getFirstPageCurrentlyLoaded() {
     return this.pages[0].pageNumber;
+  }
+
+
+  changeLocation(country: Country) {
+    this.listingService.cache.selectedCountry = country || undefined;
+  }
+
+  onCountryChange(country: Country): void {
+    this.filters.country = country ? country.iso : undefined;
+    this.clearAndLoadPage();
+  }
+
+  onCategoryChange(category: any): void {
+    this.filters.category = category ? category.id : undefined;
+    this.clearAndLoadPage();
+
   }
 
   ngOnDestroy() {
