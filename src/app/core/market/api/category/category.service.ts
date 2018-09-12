@@ -15,7 +15,7 @@ export class CategoryService {
 
   list() {
     return this.marketState.observe('category')
-      // .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b))
+      .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b))
       .map(v => new Category(v));
   }
 
@@ -38,4 +38,5 @@ export class CategoryService {
   search(searchString: string): Observable<any> {
     return this.market.call('category', ['search', searchString]);
   }
+
 }

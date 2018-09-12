@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
+import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   constructor(
     private cartService: CartService,
+    private listCache: PostListingCacheService
   ) { }
 
   ngOnInit() {

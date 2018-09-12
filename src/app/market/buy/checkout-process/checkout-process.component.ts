@@ -23,9 +23,11 @@ import { BidService } from 'app/core/market/api/bid/bid.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { MatDialog } from '@angular/material';
-import { PlaceOrderComponent } from '../../../modals/place-order/place-order.component';
+import { PlaceOrderComponent } from '../../../modals/market-place-order/place-order.component';
 import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checkout-process-cache.service';
 import { Address } from 'app/core/market/api/profile/address/address.model';
+import { Country } from 'app/core/market/api/countrylist/country.model';
+import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
 @Component({
   selector: 'app-checkout-process',
@@ -43,6 +45,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public selectedAddress: Address;
 
   public profile: Profile;
+  public selectedCountry: Country;
 
   /* cart */
   public cart: Cart;
@@ -70,6 +73,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     public countryList: CountryListService,
     public cache: CheckoutProcessCacheService,
     private bid: BidService,
+    private listCache: PostListingCacheService,
     public dialog: MatDialog) {
   }
 
@@ -183,10 +187,21 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   }
 
+  setDefaultCountry(countryCode: string) {
+    this.selectedCountry = this.countryList.getCountryByRegion(countryCode);
+  }
+
+  onCountryChange(country: Country): void {
+    this.shippingFormGroup.patchValue({
+      country: (country ? country.iso : null)
+    })
+  }
+
   select(address: Address) {
     this.log.d('Selecting address with id: ' + address.id);
     this.selectedAddress = address;
     this.shippingFormGroup.value.id = address.id;
+    this.setDefaultCountry(address.country);
     this.shippingFormGroup.patchValue(address);
   }
 

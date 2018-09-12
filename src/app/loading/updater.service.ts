@@ -44,7 +44,7 @@ export class UpdaterService {
       this.status.next('Downloading new daemon...');
     } else if (status.status === 'busy') {
       const statusCalc = Math.trunc((status.transferred / status.total) * 100);
-      this.status.next(`Downloading a new daemon...  ${statusCalc}%`);
+      this.status.next(`Downloading a new daemon...  ${statusCalc.toFixed(0)}%`);
     } else if (['error', 'done'].includes(status.status)) {
       // TODO: Do we need to display indication to the user if an error occurred
       this.status.complete();

@@ -64,4 +64,8 @@ export class Cart {
     return this.shoppingCartItems.map((sci: any) => sci.ListingItem);
   }
 
+  getSubTotalWithShippingTotal(country: string): Amount {
+    const total = this.subTotal.getAmount() + this.getShippingTotal(country).getAmount();
+    return  new Amount(total);
+  }
 }

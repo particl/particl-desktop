@@ -50,8 +50,7 @@
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-bag-buy"></mat-icon>
                       <span class="text">Buy</span>
-                      <!-- TODO? add current number of Buy orders (maybe limit only to those who need action? e.g. "payment" or "confirm shipped"): -->
-                      <!-- <span class="tag TO_DO">4</span> -->
+                      <app-order-count [type]="'buy'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count>
                     </mat-list-item>
                   </a>
 
@@ -61,8 +60,7 @@
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-bag-sell"></mat-icon>
                       <span class="text">Sell</span>
-                      <!-- TODO? add current number of Sell orders (maybe limit only to those who need action? e.g. "accept bid" or "mark shipped"): -->
-                      <!-- <span class="tag TO_DO">2</span> -->
+                      <app-order-count [type]="'sell'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count>
                     </mat-list-item>
                   </a>
 
@@ -119,6 +117,20 @@
               </mat-content>
             </mat-expansion-panel>
           </mat-accordion>
+        </mat-content><!-- .sidebar-section -->
+
+
+        <mat-content class="sidebar-section">
+          <mat-list class="sidebar-item-group">
+            <a class="sidebar-item-link"
+              routerLinkActive="active" routerLink="wallet/proposals">
+              <mat-list-item class="sidebar-item">
+                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+                <span class="text">Proposals</span>
+                <app-count-badge class="tag" [count]="proposalsNotificationsService?.proposalsCountRequiredVoteAction"></app-count-badge>
+              </mat-list-item>
+            </a>
+          </mat-list><!-- .sidebar-item-group -->
         </mat-content><!-- .sidebar-section -->
 
         <!--mat-content class="sidebar-section">

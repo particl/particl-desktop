@@ -10,12 +10,13 @@ import { ModalsModule } from 'app/modals/modals.module';
 import { MainRouterComponent } from './main.router';
 
 import { StatusComponent } from './status/status.component';
+import { OrderCountComponent } from './order-count/order-count.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
 import { BlockSyncBarComponent } from './block-sync-bar/block-sync-bar.component';
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
-
+import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-badge.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
@@ -51,11 +52,13 @@ const main_routing: ModuleWithProviders = RouterModule.forChild(routes);
   declarations: [
     MainRouterComponent,
     StatusComponent,
+    OrderCountComponent,
     BlockSyncBarComponent,
     ConsoleModalComponent,
     ReleaseNotificationComponent,
     CartComponent,
-    TimeoffsetComponent
+    TimeoffsetComponent,
+    CountBadgeComponent
   ],
   entryComponents: [
     MainRouterComponent,

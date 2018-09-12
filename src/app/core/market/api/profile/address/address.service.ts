@@ -15,9 +15,9 @@ export class AddressService {
   add(address: Address): Observable<any> {
     return this.market.call('profile', [
       'address', 'add', 1,
+      address.title,
       address.firstName,
       address.lastName,
-      address.title,
       address.addressLine1,
       address.addressLine2,
       address.city,
