@@ -4,11 +4,11 @@ import { CommonModule } from '@angular/common';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { SharedModule } from './shared/shared.module';
 import { WalletModule } from './wallet/wallet.module';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 
 import { OverviewComponent } from './overview/overview.component';
-import { SettingsComponent } from './settings/settings.component';
 import { ProposalsComponent } from './proposals/proposals.component';
 import { AddProposalComponent } from './proposals/add-proposal/add-proposal.component';
 import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
@@ -26,7 +26,6 @@ import { routing } from './wallet.routing';
 @NgModule({
   declarations: [
     OverviewComponent,
-    SettingsComponent,
     ProposalsComponent,
     AddProposalComponent,
     StakinginfoComponent,
@@ -41,16 +40,14 @@ import { routing } from './wallet.routing';
     routing,
     SharedModule,
     WalletModule.forRoot(),
-    CoreUiModule
+    CoreUiModule,
+    SettingsModule.forRoot()
   ],
   entryComponents: [
     ZapColdstakingComponent,
     RevertColdstakingComponent
   ],
   exports: [],
-  providers: [
-    ProposalsService
-  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class WalletViewsModule {

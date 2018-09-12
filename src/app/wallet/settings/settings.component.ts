@@ -11,10 +11,7 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
-  providers: [
-    SettingsService
-  ]
+  styleUrls: ['./settings.component.scss']
 })
 
 export class SettingsComponent implements OnInit {

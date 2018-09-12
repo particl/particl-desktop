@@ -21,7 +21,7 @@ export class SettingsService {
     private _rpcState: RpcStateService,
     private marketService: MarketService,
     private profileService: ProfileService,
-    private _settingsGUIService: SettingsGuiService,
+    private _settingsGUIService: SettingsGuiService
   ) {
 
     this.defaultSettings = new Settings(DEFAULT_GUI_SETTINGS);

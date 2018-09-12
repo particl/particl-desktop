@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material';
 
 import { MaterialModule } from '../material/material.module';
 import { DirectiveModule } from '../directive/directive.module';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 import { MainViewComponent } from './main-view.component';
 import { StatusComponent } from './status/status.component';
@@ -26,7 +27,8 @@ import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-b
     RouterModule,
     MaterialModule,
     MatIconModule,
-    DirectiveModule
+    DirectiveModule,
+    SettingsModule.forRoot()
   ],
   exports: [
     MainViewComponent,

@@ -25,11 +25,7 @@ import { Settings } from 'app/wallet/settings/models/settings.model';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
-  styleUrls: ['./main-view.component.scss'],
-  // @TODO add a settings service in common module as provider.
-  providers: [
-    SettingsService
-  ]
+  styleUrls: ['./main-view.component.scss']
 })
 export class MainViewComponent implements OnInit, OnDestroy {
 
