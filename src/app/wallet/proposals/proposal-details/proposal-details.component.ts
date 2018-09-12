@@ -45,7 +45,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
           top: 5,
           right: 35,
           bottom: 5,
-          left: 0
+          left: 30
         }
       },
       color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
