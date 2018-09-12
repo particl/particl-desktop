@@ -88,7 +88,7 @@
 
         <div class="percentage-voted">
           <!-- @TODO may be total vote count replaced with  % of coins voted ? -->
-          Total Votes: <span class="value">{{proposalResult?.totalVotes}}</span> Voted.
+          <span class="value">{{proposalResult?.totalVotes}}</span>&ensp;persons voted
         </div>
         <!-- <div class="percentage-voted">
           <!- TODO: implement % of coins voted in total for this proposal ->
@@ -128,8 +128,8 @@
     </div>
 
     <button mat-raised-button color="primary" class="vote-button item" (click)="aleradyVoted = !aleradyVoted">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
-      Change
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+      Change vote
     </button>
   </div>
 </mat-card>

@@ -113,6 +113,8 @@
     padding: 0 5px;
     &.narration {
       padding: 0;
+      background: none;
+      color: $text;
     }
   }
   // to/from address
@@ -122,10 +124,6 @@
     color: lighten($text, 10%);
     background: lighten($bg-shadow, 10%);
     border-radius: 4px;
-    &:focus {
-      background: lighten($bg-black, 10%);
-      color: white;
-    }
   }
   // explorer link
   .tx-detail-link {
