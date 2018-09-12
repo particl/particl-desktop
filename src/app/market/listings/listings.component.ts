@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { Category } from 'app/core/market/api/category/category.model';
 import { Listing } from '../../core/market/api/listing/listing.model';
 
+import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
@@ -76,12 +77,20 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private category: CategoryService,
     private listingService: ListingService,
     private favoritesService: FavoritesService,
-    private countryList: CountryListService
+    private countryList: CountryListService,
+    private _rpcState: RpcStateService
   ) {
     this.log.d('overview created');
     if (this.listingService.cache.selectedCountry) {
       this.selectedCountry = this.listingService.cache.selectedCountry
     }
+
+    this._rpcState.observe('currentGUISettings', 'market')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(market => {
+        this.listingService.cache.selectedCountry = market.defaultCountry;
+        this.pagination.maxPerPage = market.listingsPerPage;
+      });
   }
 
   ngOnInit() {
