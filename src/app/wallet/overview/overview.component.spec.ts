@@ -13,6 +13,7 @@ import { TransactionService } from 'app/wallet/wallet/shared/transaction.service
 
 import { TransactionsTableComponent } from 'app/wallet/wallet/shared/transaction-table/transaction-table.component';
 import { MockTransactionService } from 'app/wallet/wallet/shared/transaction.mockservice';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 
 describe('OverviewComponent', () => {
@@ -26,6 +27,7 @@ describe('OverviewComponent', () => {
         WalletModule.forRoot(),
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
+        SettingsModule.forRoot(),
         ModalsModule.forRoot(),
       ],
       declarations: [

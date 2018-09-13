@@ -23,11 +23,9 @@ describe('SettingsComponent', () => {
         RouterTestingModule,
         SharedModule,
         HttpClientModule,
-        SharedModule,
         CoreModule.forRoot(),
         BrowserAnimationsModule
       ],
-      declarations: [ SettingsComponent ],
       providers: [ SettingsService, Location ]
     })
     .compileComponents();

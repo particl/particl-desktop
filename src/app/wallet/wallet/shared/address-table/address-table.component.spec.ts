@@ -5,6 +5,7 @@ import { WalletModule } from '../../../wallet/wallet.module';
 import { CoreModule } from '../../../../core/core.module';
 import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../../modals/modals.module';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 import { AddressTableComponent } from './address-table.component';
 
@@ -19,7 +20,8 @@ describe('AddressTableComponent', () => {
         WalletModule.forRoot(),  // is this even needed?
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        SettingsModule.forRoot()
       ],
     })
       .compileComponents();
