@@ -74,6 +74,7 @@
       margin: 0;
       p {
         color: $text-muted;
+        white-space: pre-line;
       }
       .authors {
         text-align: left;
