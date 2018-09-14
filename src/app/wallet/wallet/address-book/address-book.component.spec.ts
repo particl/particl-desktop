@@ -9,6 +9,7 @@ import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 import { AddressBookComponent } from './address-book.component';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 describe('AddressBookComponent', () => {
   let component: AddressBookComponent;
@@ -21,7 +22,8 @@ describe('AddressBookComponent', () => {
         WalletModule.forRoot(),
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        SettingsModule.forRoot()
       ],
       declarations: [ ],
       providers: [ ModalsHelperService ]

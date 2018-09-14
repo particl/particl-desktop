@@ -7,6 +7,7 @@ import { Log } from 'ng2-logger';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { SettingsGuiService } from 'app/core/settings-gui/settings-gui.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { Settings } from 'app/wallet/settings/models/settings.model';
 
 @Component({
   selector: 'app-settings',
@@ -17,7 +18,7 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 export class SettingsComponent implements OnInit {
   log: any = Log.create('settings.component');
   tab: string = 'main';
-  settings: Object;
+  settings: Settings;
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['main', 'dapps', 'display', 'network'];
@@ -59,7 +60,7 @@ export class SettingsComponent implements OnInit {
 
   onCountryChange(country: Country): void {
     this.log.d('selectedCountry', country);
-    this.settings['market'].defaultCountry = country || undefined
+    this.settings.market.defaultCountry = country || undefined
     // @TODO set and use the selected Country Code and set defaut selected country by cmd?.
   }
 

@@ -5,6 +5,7 @@ import { RpcModule } from '../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 import { CoreModule } from '../../../../core/core.module';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 import { TransactionsTableComponent } from './transaction-table.component';
 import { TransactionService } from 'app/wallet/wallet/shared/transaction.service';
@@ -23,6 +24,7 @@ describe('TransactionTableComponent', () => {
         WalletModule.forRoot(),
         RpcModule.forRoot(),
         CoreModule.forRoot(),
+        SettingsModule.forRoot(),
         BrowserAnimationsModule
       ]
     })

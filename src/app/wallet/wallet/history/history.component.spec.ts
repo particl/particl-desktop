@@ -5,6 +5,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { RpcModule } from '../../../core/rpc/rpc.module';
 import { CoreModule } from '../../../core/core.module';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 import { HistoryComponent } from './history.component';
 import { TransactionService } from 'app/wallet/wallet/shared/transaction.service';
@@ -24,7 +25,8 @@ describe('HistoryComponent', () => {
         SharedModule,
         WalletModule.forRoot(),
         RpcModule.forRoot(),
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        SettingsModule.forRoot()
       ]
     })
 

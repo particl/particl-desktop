@@ -5,6 +5,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../modals/modals.module';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 import { SharedModule } from '../../shared/shared.module';  // is this even needed?
 
@@ -25,7 +26,8 @@ describe('ReceiveComponent', () => {
         SharedModule,  // is this even needed?
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       providers: [ ]
     })
