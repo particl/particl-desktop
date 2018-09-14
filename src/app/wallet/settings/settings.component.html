@@ -60,6 +60,30 @@
         </div>
       </mat-card>
 
+
+      <div class="subtitle">Window behaviour</div>
+      <mat-card class="card">
+        <div class="list section">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.tray">
+              <h4 class="option">Minimize to the tray</h4>
+              <p class="desc">Minimizes the client window to tray instead of the taskbar</p>
+            </mat-checkbox>
+          </div>
+
+          <hr class="divider">
+
+          <div class="item">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.minimize">
+              <h4 class="option">Minimize on close</h4>
+              <p class="desc">Don't close the client, keep it running minimized</p>
+            </mat-checkbox>
+          </div>
+
+        </div>
+      </mat-card>
+
       <div class="subtitle">Transactions</div>
       <mat-card class="card">
         <div class="list section">
@@ -118,31 +142,7 @@
       </mat-card> -->
 
     </div>
-    <div fxFlex="50">
-
-      <div class="subtitle">Window behaviour</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.tray">
-              <h4 class="option">Minimize to the tray</h4>
-              <p class="desc">Minimizes the client window to tray instead of the taskbar</p>
-            </mat-checkbox>
-          </div>
-
-          <hr class="divider">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.minimize">
-              <h4 class="option">Minimize on close</h4>
-              <p class="desc">Don't close the client, keep it running minimized</p>
-            </mat-checkbox>
-          </div>
-
-        </div>
-      </mat-card>
-
+    <div>
       <div class="subtitle">Staking</div>
       <mat-card class="card">
         <div class="list section">
