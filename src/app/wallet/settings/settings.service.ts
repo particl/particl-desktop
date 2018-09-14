@@ -47,11 +47,11 @@ export class SettingsService {
     this._settingsGUIService.updateSettings(this.currentSettings);
   }
 
-  loadSettings(): Object {
+  loadSettings(): Settings {
     return (JSON.parse(localStorage.getItem('gui-settings')));
   }
 
-  applySettings(settings: Object): void {
+  applySettings(settings: Settings): void {
     const oldSettings: string = localStorage.getItem('gui-settings');
     const newSettings: string = JSON.stringify(settings);
 
