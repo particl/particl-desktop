@@ -2,10 +2,10 @@ import { Image, DefaultImage } from './image.model';
 
 export class ImageCollection {
   private default: Image = new DefaultImage();
-  private image: Image;
+  private preview: Image;
   constructor(public images: Image[]) {
     this.setImages();
-    this.image = this.images[0]
+    this.preview = this.images[0]
   }
 
   get featuredImage(): Image {
@@ -13,7 +13,7 @@ export class ImageCollection {
   }
 
   get previewImage(): Image {
-    return this.image || this.default;
+    return this.preview || this.default;
   }
 
   setImages() {
@@ -21,7 +21,7 @@ export class ImageCollection {
   }
 
   setPreviewImage(image: Image) {
-    this.image = image;
+    this.preview = image;
   }
 
 }
