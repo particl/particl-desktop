@@ -19,7 +19,6 @@ import { CheckoutProcessComponent } from './buy/checkout-process/checkout-proces
 import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
 import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
 import { ShippingAddressComponent } from './shared/shipping-address/shipping-address.component';
-import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 @NgModule({
   imports: [
