@@ -63,15 +63,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private proposalsNotificationsService: ProposalsNotificationsService,
     public settingsService: SettingsService
   ) {
-    // current settings needs to be remove ?
-    this.settings = this.settingsService.currentSettings;
 
-    // updated settings.
-    this._rpcState.observe('currentGUISettings')
-      .takeWhile(() => !this.destroyed)
-      .subscribe((settings: Settings) => {
-        this.settings = settings
-      });
   }
 
   ngOnInit() {
@@ -111,6 +103,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.walletInitialized = status);
 
+       // updated settings.
+    this._rpcState.observe('currentGUISettings')
+      .takeWhile(() => !this.destroyed)
+      .subscribe((settings: Settings) => {
+        this.settings = settings
+      });
 
     this._rpcState.observe('getwalletinfo', 'unlocked_until')
       .takeWhile(() => !this.destroyed)

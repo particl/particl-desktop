@@ -89,6 +89,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(market => {
         this.listingService.cache.selectedCountry = market.defaultCountry;
+        this.selectedCountry = this.listingService.cache.selectedCountry;
         this.pagination.maxPerPage = market.listingsPerPage;
       });
   }
