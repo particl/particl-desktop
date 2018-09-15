@@ -11,7 +11,7 @@ import { DEFAULT_GUI_SETTINGS } from 'app/core/util/utils';
 @Injectable()
 export class SettingsService {
 
-  defaultSettings: Settings;
+  defaultSettings: Settings = new Settings(DEFAULT_GUI_SETTINGS);
 
   profileId: number;
   currentSettings: Settings;
@@ -24,27 +24,29 @@ export class SettingsService {
     private _settingsGUIService: SettingsGuiService
   ) {
 
-    this.defaultSettings = new Settings(DEFAULT_GUI_SETTINGS);
-
+    // get default profile id.
     this.profileService.default().subscribe((profile: Profile) => {
       this.profileId = profile.id;
-    })
+    });
+
+    this.init();
+  }
+
+  init(): void {
 
     // @TODO change with the cmd calling and update settings after settings cmd response.
 
-    /* Preload default settings if none found */
-    if (localStorage.getItem('gui-settings') == null) {
-      this.currentSettings = new Settings(this.defaultSettings);
-      const settings: string = JSON.stringify(this.defaultSettings);
-      localStorage.setItem('gui-settings', settings);
+    const settings = this.loadSettings();
+    if (settings) {
 
+      // use existing settings.
+      this.updateSettings(settings);
     } else {
-      this.currentSettings = new Settings(this.loadSettings());
+
+      // use default settings.
+      this.applyDefaultSettings();
     }
 
-    // set currentGUISettings state.
-    this._rpcState.set('currentGUISettings', this.currentSettings);
-    this._settingsGUIService.updateSettings(this.currentSettings);
   }
 
   loadSettings(): Settings {
@@ -56,32 +58,33 @@ export class SettingsService {
     const newSettings: string = JSON.stringify(settings);
 
     if (oldSettings !== newSettings) {
-
-      // update web-storage gui-settings.
-      localStorage.setItem('gui-settings', newSettings);
-
-      // update core settings.
-      this._settingsGUIService.updateSettings(settings);
-
-      // update current settings
-      this.currentSettings = new Settings(settings);
-
-      // set currentGUISettings state.
-      this._rpcState.set('currentGUISettings', this.currentSettings);
+      this.updateSettings(settings);
     }
   }
 
   applyDefaultSettings(): void {
-    localStorage.setItem('gui-settings', JSON.stringify(this.defaultSettings));
+    this.updateSettings(this.defaultSettings);
+  }
+
+
+  /**
+    * @param {Settings} settings
+    * updateSettings responsible to update the settings where needed.
+    */
+
+  updateSettings(settings: Settings): void {
+
+    // update settings in web storage.
+    localStorage.setItem('gui-settings', JSON.stringify(settings));
 
     // update core settings.
-    this._settingsGUIService.updateSettings(this.defaultSettings);
+    this._settingsGUIService.updateSettings(settings);
 
     // update current settings
-    this.currentSettings = new Settings(this.defaultSettings);
+    this.currentSettings = new Settings(settings);
 
     // set currentGUISettings state.
-    this._rpcState.set('currentGUISettings', this.defaultSettings);
+    this._rpcState.set('currentGUISettings', new Settings(settings));
   }
 
   // list market setting.
