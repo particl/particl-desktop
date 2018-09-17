@@ -3,6 +3,7 @@ import { Image, DefaultImage } from './image.model';
 export class ImageCollection {
   private default: Image = new DefaultImage();
   private preview: Image;
+
   constructor(public images: Image[]) {
     this.setImages();
     this.preview = this.images[0]
