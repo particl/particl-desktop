@@ -12,7 +12,8 @@ import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService, TermsService } from 'app/modals/modals.module';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
-import { SettingsService } from 'app/wallet/settings/settings.service';
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+
 
 import { Settings } from 'app/wallet/settings/models/settings.model';
 
@@ -48,6 +49,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   time: string = '5:00';
   public unlocked_until: number = 0;
   public settings: Settings;
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -61,9 +63,15 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
     private proposalsNotificationsService: ProposalsNotificationsService,
-    public settingsService: SettingsService
+    private settingStateService: SettingStateService,
   ) {
 
+    // @TODO create the states for all settings instead of currentGUISettings.
+    this.settingStateService.observe('currentGUISettings')
+    .takeWhile(() => !this.destroyed)
+      .subscribe((settings: Settings) => {
+        this.settings = settings
+      });
   }
 
   ngOnInit() {
@@ -103,12 +111,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
       .takeWhile(() => !this.destroyed)
       .subscribe(status => this.walletInitialized = status);
 
-       // updated settings.
-    this._rpcState.observe('currentGUISettings')
-      .takeWhile(() => !this.destroyed)
-      .subscribe((settings: Settings) => {
-        this.settings = settings
-      });
 
     this._rpcState.observe('getwalletinfo', 'unlocked_until')
       .takeWhile(() => !this.destroyed)
