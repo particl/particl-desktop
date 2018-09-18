@@ -27,7 +27,7 @@ describe('ReceiveComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
-        SettingsModule.forRoot()
+        SettingsModule
       ],
       providers: [ ]
     })

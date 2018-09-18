@@ -9,8 +9,9 @@ import { AddAddressLabelComponent } from './modals/add-address-label/add-address
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
 
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
-import { SettingsService } from 'app/wallet/settings/settings.service';
-import { Settings } from 'app/wallet/settings/models/settings.model';
+
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
 
 @Component({
   selector: 'app-receive',
@@ -51,16 +52,14 @@ export class ReceiveComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private flashNotificationService: SnackbarService,
     private modals: ModalsHelperService,
-    private settingsService: SettingsService
+    private settingStateService: SettingStateService
   ) {
-    // current settings.
-    this.MAX_ADDRESSES_PER_PAGE = this.settingsService.currentSettings.display.rows;
 
     // observe the changes.
-    this.rpcState.observe('currentGUISettings')
+    this.settingStateService.observe('currentGUISettings', 'display')
     .takeWhile(() => !this.destroyed)
-    .subscribe((settings: Settings) => {
-      this.MAX_ADDRESSES_PER_PAGE = settings.display.rows;
+    .subscribe((display: DisplaySettings) => {
+      this.MAX_ADDRESSES_PER_PAGE = display.rows;
     });
 
   }

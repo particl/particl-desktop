@@ -15,8 +15,9 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { SignatureAddressModalComponent } from '../signature-address-modal/signature-address-modal.component';
-import { SettingsService } from 'app/wallet/settings/settings.service';
-import { Settings } from 'app/wallet/settings/models/settings.model';
+
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
 
 @Component({
   selector: 'address-table',
@@ -72,20 +73,17 @@ export class AddressTableComponent implements OnInit, OnChanges, OnDestroy {
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
-    private settingsService: SettingsService
+    private settingStateService: SettingStateService
   ) {
     this._addressService._addresses.subscribe((addresses) => {
       this.addresses = addresses
     })
 
-    // current settings.
-    this.addressDisplayAmount = this.settingsService.currentSettings.display.rows;
-
     // observe the changes.
-    this._rpcState.observe('currentGUISettings')
+    this.settingStateService.observe('currentGUISettings', 'display')
     .takeWhile(() => !this.destroyed)
-    .subscribe((settings: Settings) => {
-      this.addressDisplayAmount = settings.display.rows
+    .subscribe((display: DisplaySettings) => {
+      this.addressDisplayAmount = display.rows
     });
   }
 

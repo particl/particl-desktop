@@ -23,7 +23,7 @@ describe('AddressBookComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         BrowserAnimationsModule,
-        SettingsModule.forRoot()
+        SettingsModule
       ],
       declarations: [ ],
       providers: [ ModalsHelperService ]

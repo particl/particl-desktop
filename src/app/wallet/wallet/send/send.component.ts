@@ -17,6 +17,8 @@ import { AddressHelper } from '../../../core/util/utils';
 import { TransactionBuilder, TxType } from './transaction-builder.model';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
 
 @Component({
   selector: 'app-send',
@@ -48,16 +50,17 @@ export class SendComponent implements OnInit {
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     private dialog: MatDialog,
-    private flashNotification: SnackbarService
+    private flashNotification: SnackbarService,
+    private settingStateService: SettingStateService
   ) {
     this.progress = 50;
     this.addressHelper = new AddressHelper();
 
     this.setFormDefaultValue();
     // observe advance setting
-    this._rpcState.observe('currentGUISettings', 'display')
+    this.settingStateService.observe('currentGUISettings', 'display')
       .takeWhile(() => !this.destroyed)
-      .subscribe(display => {
+      .subscribe((display: DisplaySettings) => {
         this.advanced = display.advanced;
       });
   }

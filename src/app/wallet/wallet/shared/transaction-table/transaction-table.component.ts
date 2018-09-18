@@ -5,9 +5,9 @@ import { Log } from 'ng2-logger'
 import { slideDown } from 'app/core-ui/core.animations';
 import { Transaction } from '../transaction.model';
 import { TransactionService } from '../transaction.service';
-import { SettingsService } from 'app/wallet/settings/settings.service';
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { Settings } from 'app/wallet/settings/models/settings.model';
+
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
 
 @Component({
   selector: 'transaction-table',
@@ -53,18 +53,14 @@ export class TransactionsTableComponent implements OnInit, OnDestroy {
 
   constructor(
     public txService: TransactionService,
-    private settingsService: SettingsService,
-    private _rpcState: RpcStateService
+    private settingStateService: SettingStateService
   ) {
 
-    // current settings.
-    this._defaults.txDisplayAmount = this.settingsService.currentSettings.display.rows;
-
-    // observe the changes.
-    this._rpcState.observe('currentGUISettings')
+    // // observe the changes.
+    this.settingStateService.observe('currentGUISettings', 'display')
     .takeWhile(() => !this.destroyed)
-    .subscribe((settings: Settings) => {
-      this._defaults.txDisplayAmount = settings.display.rows
+    .subscribe((display: DisplaySettings) => {
+      this._defaults.txDisplayAmount = display.rows
     });
 
   }
