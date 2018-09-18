@@ -161,7 +161,7 @@ export class SellComponent implements OnInit {
     let previousPage = this.getFirstPageCurrentlyLoaded();
     previousPage--;
     console.log('loading prev page' + previousPage);
-    if (previousPage > 0) {
+    if (previousPage > -1) {
       this.loadPage(previousPage);
     }
   }
