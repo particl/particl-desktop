@@ -4,13 +4,14 @@ import { Log } from 'ng2-logger';
 import { Category } from 'app/core/market/api/category/category.model';
 import { Listing } from '../../core/market/api/listing/listing.model';
 
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+import { MarketSettings } from 'app/wallet/settings/models/market.settings.model';
 
 interface ISorting {
   value: string;
@@ -78,16 +79,16 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private listingService: ListingService,
     private favoritesService: FavoritesService,
     private countryList: CountryListService,
-    private _rpcState: RpcStateService
+    private settingStateService: SettingStateService
   ) {
     this.log.d('overview created');
     if (this.listingService.cache.selectedCountry) {
       this.selectedCountry = this.listingService.cache.selectedCountry
     }
 
-    this._rpcState.observe('currentGUISettings', 'market')
+    this.settingStateService.observe('currentGUISettings', 'market')
       .takeWhile(() => !this.destroyed)
-      .subscribe(market => {
+      .subscribe((market: MarketSettings) => {
         this.listingService.cache.selectedCountry = market.defaultCountry;
         this.selectedCountry = market.defaultCountry;
         this.pagination.maxPerPage = market.listingsPerPage;
