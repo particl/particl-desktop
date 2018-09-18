@@ -8,8 +8,11 @@ import { NotificationService } from 'app/core/notification/notification.service'
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+
 import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
 import { Bid } from 'app/core/market/api/bid/bid.model';
+import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
 
 @Injectable()
 export class OrderStatusNotifierService implements OnDestroy {
@@ -33,7 +36,8 @@ export class OrderStatusNotifierService implements OnDestroy {
     private _marketState: MarketStateService,
     private _rpcState: RpcStateService,
     private _notification: NotificationService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private settingStateService: SettingStateService
   ) {
     this.log.d('order status notifier service running!');
     this.loadOrders();
@@ -51,9 +55,9 @@ export class OrderStatusNotifierService implements OnDestroy {
         }
       })
 
-    this._rpcState.observe('currentGUISettings', 'display')
+    this.settingStateService.observe('currentGUISettings', 'display')
       .takeWhile(() => !this.destroyed)
-      .subscribe(display => {
+      .subscribe((display: DisplaySettings) => {
         this.notifyOrders = display.notifyOrders;
       });
     this.loadProfile();

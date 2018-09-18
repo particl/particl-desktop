@@ -6,6 +6,9 @@ import { NotificationService } from 'app/core/notification/notification.service'
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
+
 @Injectable()
 export class NewTxNotifierService implements OnDestroy {
 
@@ -19,7 +22,8 @@ export class NewTxNotifierService implements OnDestroy {
   constructor(
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-    private _notification: NotificationService
+    private _notification: NotificationService,
+    private settingStateService: SettingStateService
   ) {
 
     this.log.d('tx notifier service running!');
@@ -30,9 +34,9 @@ export class NewTxNotifierService implements OnDestroy {
         this.checkForNewTransaction();
       });
 
-    this._rpcState.observe('currentGUISettings', 'display')
+    this.settingStateService.observe('currentGUISettings', 'display')
       .takeWhile(() => !this.destroyed)
-      .subscribe(display => {
+      .subscribe((display: DisplaySettings) => {
         this.stake = display.notifyStakes;
         this.receive = display.notifyPayments;
       });

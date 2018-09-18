@@ -5,10 +5,12 @@ import * as _ from 'lodash';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { NotificationService } from 'app/core/notification/notification.service';
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
+import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
 
 @Injectable()
 export class ProposalsNotificationsService implements OnDestroy {
@@ -27,9 +29,9 @@ export class ProposalsNotificationsService implements OnDestroy {
   constructor(
     private proposalsService: ProposalsService,
     private peerService: PeerService,
-    private _rpcState: RpcStateService,
     private _notification: NotificationService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private settingStateService: SettingStateService
   ) {
     this.profileService.default()
       .takeWhile(() => !this.destroyed)
@@ -46,9 +48,9 @@ export class ProposalsNotificationsService implements OnDestroy {
         });
       });
 
-    this._rpcState.observe('currentGUISettings', 'display')
+    this.settingStateService.observe('currentGUISettings', 'display')
       .takeWhile(() => !this.destroyed)
-      .subscribe(display => {
+      .subscribe((display: DisplaySettings) => {
         this.notifyProposals = display.notifyProposals;
       });
   }
