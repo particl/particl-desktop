@@ -7,7 +7,6 @@ import { PreviewListingComponent } from 'app/market/listings/preview-listing/pre
 import { routing } from './market.routing';
 import { WalletModule } from '../wallet/wallet/wallet.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { SettingsModule } from 'app/wallet/settings/settings.module';
 import { ListingsComponent } from './listings/listings.component';
 import { BuyComponent } from './buy/buy.component';
 import { SellComponent } from './sell/sell.component';
@@ -25,8 +24,7 @@ import { ShippingAddressComponent } from './shared/shipping-address/shipping-add
     CommonModule,
     routing,
     CoreUiModule.forRoot(),
-    WalletModule.forRoot(),
-    SettingsModule.forRoot()
+    WalletModule.forRoot()
   ],
   declarations: [
     ListingItemComponent,

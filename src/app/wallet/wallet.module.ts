@@ -41,7 +41,7 @@ import { routing } from './wallet.routing';
     SharedModule,
     WalletModule.forRoot(),
     CoreUiModule,
-    SettingsModule.forRoot()
+    SettingsModule
   ],
   entryComponents: [
     ZapColdstakingComponent,
