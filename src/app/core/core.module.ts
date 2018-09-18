@@ -14,6 +14,7 @@ import { UpdaterService } from './updater/updater.service';
 import { NotificationService } from './notification/notification.service';
 import { CloseGuiService } from './close-gui/close-gui.service';
 import { SettingsGuiService } from './settings-gui/settings-gui.service';
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
 
 import { BlockStatusService } from './rpc/blockstatus/blockstatus.service'
 import { PeerService } from './rpc/peer/peer.service';
@@ -52,6 +53,7 @@ export class CoreModule {
         NotificationService,
         CloseGuiService,
         SettingsGuiService,
+        SettingStateService,
         ProposalsNotificationsService
       ]
     };
