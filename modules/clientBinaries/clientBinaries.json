@@ -1,7 +1,7 @@
 {
   "clients": {
     "particld": {
-      "version": "0.17.0.1rc2",
+      "version": "0.17.0.1",
       "platforms": {
         "linux": {
           "arm": {
@@ -9,7 +9,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-arm-linux-gnueabihf.tar.gz",
               "type": "tar",
               "sha256": "d6bfaa5f015d612e4b548175155bbdb82172ff74abaae95f56108075bf041b8d",
-              "bin": "particl-0.17.0.1rc2/bin/particld"
+              "bin": "particl-0.17.0.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -19,7 +19,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.17.0.1rc2"
+                  "0.17.0.1"
                 ]
               }
             }
@@ -29,7 +29,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-i686-pc-linux-gnu_nousb.tar.gz",
               "type": "tar",
               "sha256": "37206912528005bf02186c25e1a90ba641111c5b71275f5e810ff803af1ac79a",
-              "bin": "particl-0.17.0.1rc2/bin/particld"
+              "bin": "particl-0.17.0.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -39,7 +39,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.17.0.1rc2"
+                  "0.17.0.1"
                 ]
               }
             }
@@ -49,7 +49,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-x86_64-linux-gnu_nousb.tar.gz",
               "type": "tar",
               "sha256": "520f3f5e40bf482b262a55492a9dd8ec56712c54f3371d9a4902fd6dad27e895",
-              "bin": "particl-0.17.0.1rc2/bin/particld"
+              "bin": "particl-0.17.0.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -59,7 +59,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.17.0.1rc2"
+                  "0.17.0.1"
                 ]
               }
             }
@@ -71,7 +71,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-osx64.tar.gz",
               "type": "tar",
               "sha256": "72fb2e4d588341b5516af6224a8c71e14e4b86f1edad29e0fb55d0fb5e8356a0",
-              "bin": "particl-0.17.0.1rc2/bin/particld"
+              "bin": "particl-0.17.0.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -81,7 +81,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.17.0.1rc2"
+                  "0.17.0.1"
                 ]
               }
             }
@@ -93,7 +93,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-win32.zip",
               "type": "zip",
               "sha256": "9644d9b375f58642d223756f78436dbdd488676204ac2225b1d1099a528dfe04",
-              "bin": "particl-0.17.0.1rc2/bin/particld.exe"
+              "bin": "particl-0.17.0.1/bin/particld.exe"
             },
             "bin": "particld.exe",
             "commands": {
@@ -103,7 +103,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.17.0.1rc2"
+                  "0.17.0.1"
                 ]
               }
             }
@@ -113,7 +113,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-win64.zip",
               "type": "zip",
               "sha256": "1dc53f878a5a39a426781980ea8fc15bb5da20ff868cb708136c3342c5ce6acd",
-              "bin": "particl-0.17.0.1rc2/bin/particld.exe"
+              "bin": "particl-0.17.0.1/bin/particld.exe"
             },
             "bin": "particld.exe",
             "commands": {
@@ -123,7 +123,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.17.0.1rc2"
+                  "0.17.0.1"
                 ]
               }
             }
