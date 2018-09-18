@@ -12,6 +12,7 @@ import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.modu
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { routing } from './app.routing';
     CoreModule.forRoot(),
     CoreUiModule.forRoot(),
     ModalsModule.forRoot(),
+    SettingsModule.forRoot(),
     // WalletViewsModule, // shouldn't be needed?
     MultiwalletModule,
   ],
