@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SettingsService } from './settings.service';
 
 import { SettingsComponent } from './settings.component';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -24,9 +25,10 @@ describe('SettingsComponent', () => {
         SharedModule,
         HttpClientModule,
         CoreModule.forRoot(),
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        SettingsModule.forRoot()
       ],
-      providers: [ SettingsService, Location ]
+      providers: [ Location ]
     })
     .compileComponents();
   }));
