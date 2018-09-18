@@ -11,6 +11,7 @@ import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService, TermsService } from 'app/modals/modals.module';
+import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 
 /*
  * The MainView is basically:
@@ -56,6 +57,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
+    private proposalsNotificationsService: ProposalsNotificationsService
   ) { }
 
   ngOnInit() {
@@ -118,7 +120,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
     /* check if testnet -> block explorer url */
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
-
   }
 
   ngOnDestroy() {

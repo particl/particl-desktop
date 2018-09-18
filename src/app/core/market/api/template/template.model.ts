@@ -21,6 +21,7 @@ export class Template {
   public memo: string = '';
   public proposalOption: boolean = false;
   public imageCollection: ImageCollection;
+  public expireTime: number = 4;
 
   // @TODO: remove type any
   constructor(public object: any) {
@@ -35,6 +36,7 @@ export class Template {
     this.setTotal();
     this.setMemo();
     this.setProposalOption();
+    this.setExpiryTime();
   }
 
   get id(): number {
@@ -136,9 +138,16 @@ export class Template {
     }
   }
 
+
   setProposalOption() {
     // this.proposalOption = this.object.proposalOption;
     this.proposalOption = true;
+  }
+
+  setExpiryTime(): void {
+    if (this.object.ListingItems && this.object.ListingItems.length > 0) {
+      this.expireTime = this.object.ListingItems[0].expiryTime;
+    }
   }
 
 }

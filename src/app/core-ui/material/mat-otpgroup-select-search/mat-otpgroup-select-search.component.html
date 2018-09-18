@@ -1,7 +1,17 @@
 <form [formGroup]="stateForm">
   <mat-form-field class="full-width">
-    <input type="text" (focus)="_selectAllContent($event)" matInput placeholder="{{placeHolder}}" formControlName="stateGroup" [matAutocomplete]="autoGroup" [required]="isRequired">
-    <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="displayFn.bind(this)">
+    <input
+      type="text"
+      (focus)="_selectAllContent($event)"
+      matInput placeholder="{{placeHolder}}"
+      formControlName="stateGroup"
+      [matAutocomplete]="autoGroup"
+      #textInput
+      [required]="isRequired">
+    <mat-autocomplete
+    #autoGroup="matAutocomplete"
+    (optionSelected)="onSelectionChanged($event)"
+    [displayWith]="displayFn.bind(this)">
       <mat-option *ngIf="defaultOption">{{defaultOption}}</mat-option>
       <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.name">
         <mat-option *ngFor="let option of group.list" [value]="option">

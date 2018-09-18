@@ -6,7 +6,7 @@ export class BidCollection {
   sellOrders: Array<Bid> = [];
   buyOrders: Array<Bid> = [];
 
-  constructor(orders: Bid[], public address: string, public type?: string) {
+  constructor(orders: Bid[], public address: string, public type?: string, public additionalFilter?: any) {
     this.setOrders(orders);
   }
 
@@ -29,8 +29,21 @@ export class BidCollection {
   }
 
   get filterOrders(): Bid[] {
+    // @TODO additionalFilter stuff should be remove once it handles via backend
+    if (this.additionalFilter) {
+      if (this.additionalFilter.requiredAttention) {
+        return (this.type === 'sell' ? this.activeSellOrders : this.activeBuyOrders)
+      }
+
+      if (this.additionalFilter.hideCompleted) {
+        return (this.type === 'sell' ? this.sellOrders : this.buyOrders).filter((o) => {
+          return o.status !== 'Complete'
+        });
+      }
+    }
     return (this.type === 'sell' ? this.sellOrders : this.buyOrders);
   }
+
 
   get sellOrdersCount(): number {
     return this.sellOrders.length;
@@ -40,20 +53,27 @@ export class BidCollection {
     return this.buyOrders.length;
   }
 
-  get activeSellOrderCount(): number {
+  get activeSellOrders(): Bid[] {
     if (this.sellOrdersCount > 0) {
-      return this.sellOrders.filter((ord) => ord.activeBuySell).length;
+      return this.sellOrders.filter((ord) => ord.activeBuySell);
     }
-    return 0;
+    return [];
+  }
+
+  get activeBuyOrders(): Bid[] {
+    if (this.buyOrdersCount > 0) {
+      return this.buyOrders.filter((ord) => ord.activeBuySell);
+    }
+    return [];
+  }
+
+  get activeSellOrderCount(): number {
+    return this.activeSellOrders.length;
   }
 
   get activeBuyOrderCount(): number {
-    if (this.buyOrdersCount > 0) {
-      return this.buyOrders.filter((ord) => ord.activeBuySell).length;
-    }
-    return 0;
+    return this.activeBuyOrders.length;
   }
-
 
   get ordersCount(): number {
     return this.orders.length;

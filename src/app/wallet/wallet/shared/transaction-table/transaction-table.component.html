@@ -50,7 +50,7 @@
                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
         </span>
         <span *ngSwitchCase="'multisig'" class="tx-type sent">
-          <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>
+          <mat-icon fontSet="partIcon" fontIcon="part-lock-open" color="warn"></mat-icon>
           <span class="name">Multisig / escrow</span>
           <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
                     matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
@@ -66,7 +66,7 @@
           <span class="name">Balance transfer</span>
         </span>
         <span *ngSwitchCase="'listing_fee'" class="tx-type sent">
-          <mat-icon fontSet="partIcon" fontIcon="part-send" color="primary"></mat-icon>
+          <mat-icon fontSet="partIcon" fontIcon="part-bag-buy" color="primary"></mat-icon>
           <span class="name">Posted Listing</span>
         </span>
       </mat-panel-title>
@@ -109,7 +109,7 @@
         <!-- To/from (detail) -->
         <div class="tx-detail-item" fxFlex>
           <span fxFlex="0 0 80px">To/from:</span>
-          <input fxFlex="1 1 calc(100% - 80px)" value="{{ tx.getAddress() }}" class="to-from-address input">
+          <input disabled fxFlex="1 1 calc(100% - 80px)" value="{{ tx.getAddress() }}" class="to-from-address input">
         </div>
         <!-- TX ID (detail) -->
         <div class="tx-detail-item" fxFlex>
@@ -137,7 +137,7 @@
       <!-- Narration -->
       <div class="tx-detail-item" fxFlex="1 1 100%" *ngIf="tx.getNarration()">
         <span fxFlex="0 0 80px">Narration:</span>
-        <input fxFlex="1 1 calc(100% - 80px)" value="{{tx.getNarration()}}" class="narration input">
+        <input disabled fxFlex="1 1 calc(100% - 80px)" value="{{tx.getNarration()}}" class="narration input">
       </div>
 
     </div><!-- .history_cointainer -->

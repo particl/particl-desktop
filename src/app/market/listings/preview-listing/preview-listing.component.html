@@ -13,11 +13,11 @@
 
   <div class="product-gallery" fxFlex="0 1 350px">
     <div class="featured image">
-      <img src="{{data?.listing?.imageCollection?.featuredImage?.medium}}">
+      <img src="{{data?.listing?.imageCollection?.previewImage?.medium}}">
     </div>
     <div class="gallery" fxLayout="row" fxLayoutGap="24px">
       <!-- TODO: s/small/medium -->
-      <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images">
+      <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
         <img src="{{img.thumbnail}}">
       </div>
     </div>
@@ -44,7 +44,7 @@
 
       <tr *ngIf="listingServiceCache?.selectedCountry">
         <th class="escrow price">Escrow</th>
-        <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry)?.getAmount() }} PART</td>
+        <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART</td>
       </tr>
     </table>
 
@@ -57,7 +57,7 @@
         {{ data?.listing?.shortDescription }}
       </p>
     </div>
-    <div class="description">
+    <div class="detailed description">
       <p>
         {{ data?.listing?.longDescription }}
       </p>

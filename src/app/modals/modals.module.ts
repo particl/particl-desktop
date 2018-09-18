@@ -36,6 +36,13 @@ import { PlaceOrderComponent } from './market-place-order/place-order.component'
 import { ShippingComponent } from './market-shipping/shipping.component';
 
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
+import {
+  ProposalConfirmationComponent
+} from 'app/modals/proposal-confirmation/proposal-confirmation.component';
+import {
+  ProposalVoteConfirmationComponent
+} from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
+
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 
 @NgModule({
@@ -67,6 +74,8 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     ShippingComponent,
     TermsComponent,
     SendConfirmationModalComponent,
+    ProposalConfirmationComponent,
+    ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent
   ],
   exports: [
@@ -95,6 +104,8 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     CreateWalletComponent,
     ColdstakeComponent,
     SendConfirmationModalComponent,
+    ProposalConfirmationComponent,
+    ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent
   ],
 })

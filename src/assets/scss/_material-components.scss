@@ -30,6 +30,7 @@ Customizations and modifiers for default Material components
       3.3. Selects
       3.4. Select/Autocomplete
       3.5. Radios
+      3.6. Checkboxes
 
 */
 
@@ -298,6 +299,7 @@ mat-card.mat-card {
       margin: 15px -24px;
     }
     [mat-dialog-title] { // dialog title
+      @extend %disable-select;
       font-family: $font;
       font-weight: 500;
       font-size: 20px;
@@ -429,10 +431,16 @@ mat-card.mat-card {
 // ------ 3.1. INPUTS ------ //
 
 .mat-form-field {
-  font-family: $font;
+  font-family: $font !important;
   line-height: normal;
-  input {
-    height: 100%; // fix cropped text
+  .mat-form-field-label {
+    overflow: visible; // fix cropped labels
+  }
+  .mat-input-element {
+    height: 100%; // fix cropped text in inputs
+  }
+  textarea.mat-input-element {
+    line-height: 1.45;
   }
   &.larger { // larger inputs
     font-size: 14px;
@@ -525,4 +533,11 @@ input {
       width: 100%;
     }
   }
+}
+
+
+// ------ 3.6. CHECKBOXES ------ //
+
+.mat-checkbox {
+  font-family: $font !important;
 }

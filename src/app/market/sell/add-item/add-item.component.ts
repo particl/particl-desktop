@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
+import { Amount } from '../../../core/util/utils';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
@@ -44,10 +45,19 @@ export class AddItemComponent implements OnInit, OnDestroy {
   fileInput: any;
   picturesToUpload: string[];
   featuredPicture: number = 0;
-
+  expiration: number = 4;
+  txFee: Amount = new Amount(0)
   selectedCountry: Country;
   selectedCategory: Category;
+  isInProcess: boolean = false;
 
+  expiredList: Array<any> = [
+    { title: '4 day',     value: 4  },
+    { title: '1 week',    value: 7  },
+    { title: '2 weeks',   value: 14 },
+    { title: '3 weeks',   value: 21 },
+    { title: '4 weeks',   value: 28 }
+  ];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -103,6 +113,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.templateId = undefined;
       }
     });
+
+    this.loadTransactionFee();
   }
 
   isExistingTemplate() {
@@ -337,6 +349,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     if (!this.validate()) {
       return;
     };
+    this.isInProcess = true;
     this.log.d('Saving and publishing the listing.');
     this.publish();
   }
@@ -353,13 +366,26 @@ export class AddItemComponent implements OnInit, OnDestroy {
   private async publish() {
     this.upsert().then(t => {
       this.modals.unlock({timeout: 30}, (status) => {
-        this.template.post(t, 1).toPromise().then(listing => {
-        this.snackbar.open('Succesfully added Listing!')
-        console.log(listing);
-        this.backToSell();
-        });
+        this.template.post(t, 1, this.expiration)
+        .subscribe(listing => {
+          this.snackbar.open('Succesfully added Listing!')
+          this.log.d(listing);
+          this.backToSell();
+        },
+        (error) => {
+          this.isInProcess = false;
+          this.snackbar.open(error)
+        },
+        () => this.isInProcess = false)
       });
     }, err => this.snackbar.open(err));
+  }
+
+  loadTransactionFee() {
+    /* @TODO transaction fee will be calculated from backend
+     * currently we have assumed days_retention=1 costs 0.26362200
+     */
+    this.txFee = new Amount(0.26362200 * this.expiration)
   }
 
 }

@@ -21,7 +21,7 @@ $bg-shadow: #dcdcdc; // lines, box shadows etc.
 $radius: 4px; // default border-radius
 */
 
-.intro {
+.intro.section {
   background: #222828;
   color: white;
   text-align: center;
@@ -40,17 +40,17 @@ $radius: 4px; // default border-radius
   max-width: 600px;
 }
 
-.logo {
+.intro > .content > .logo {
   width: 240px;
   height: auto;
   margin: 20px 0 40px;
 }
 
-.quote {
+.intro > .content > .quote {
   font-size: 17px;
 }
 
-.author {
+.intro > .content > .quote > .author {
   font-size: 13px;
   color: #7E8790;
 }

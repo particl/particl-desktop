@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter, SimpleChange, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChange,
+  OnChanges,
+  ViewChild,
+  ElementRef,
+  OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -11,6 +20,8 @@ import { CategoryService } from 'app/core/market/api/category/category.service';
   styleUrls: ['./mat-otpgroup-select-search.component.scss']
 })
 export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
+  @ViewChild('textInput') textInput: ElementRef;
+
   stateForm: FormGroup = this.fb.group({
     stateGroup: [],
   });
@@ -58,7 +69,6 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   }
 
   displayFn(option?: any): any {
-    this.change.emit(option);
     return option ? option.name : this.defaultOption;
   }
 
@@ -72,16 +82,15 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
     return opt.filter(item => item.name.toLowerCase().includes(filterValue));
   };
 
-  /* `_onBlur` detect if any option not selected
-   * and input constains any value then selected value should
+  /*
+   * Removed focus from the input box when user select any option from the listed options.
+   * and emit the selected country value.
    */
 
-  public _onBlur($event: any): void {
-    const val = $event.target.value;
-    const options = this._filterGroup(val);
-    if (options.length === 0 || this.stateForm.get('stateGroup').value) {
-      this.change.emit(null)
-    }
+  onSelectionChanged($event: any): void {
+    // omit selected value.
+    this.change.emit($event.option.value);
+    this.textInput.nativeElement.blur();
   }
 
   public _selectAllContent($event: any): void {
