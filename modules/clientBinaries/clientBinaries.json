@@ -65,7 +65,7 @@
             }
           }
         },
-        "osx": {
+        "mac": {
           "x64": {
             "download": {
               "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-osx64.tar.gz",
