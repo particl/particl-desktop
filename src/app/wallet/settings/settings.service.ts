@@ -14,7 +14,7 @@ export class SettingsService {
   log: any = Log.create('settings.service');
 
   defaultSettings: Settings = new Settings(DEFAULT_GUI_SETTINGS);
-
+  needUpdate: boolean = true;
   profileId: number;
   currentSettings: Settings;
 
@@ -33,13 +33,9 @@ export class SettingsService {
     this.profileService.default().subscribe((profile: Profile) => {
       this.profileId = profile.id;
     });
-
-    this.init();
   }
 
   init(): void {
-
-    // @TODO change with the cmd calling and update settings after settings cmd response.
 
     const settings = this.loadSettings();
     if (settings) {

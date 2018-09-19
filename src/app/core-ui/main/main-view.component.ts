@@ -16,6 +16,7 @@ import { SettingStateService } from 'app/core/settings/setting-state/setting-sta
 
 
 import { Settings } from 'app/wallet/settings/models/settings.model';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 
 /*
  * The MainView is basically:
@@ -64,9 +65,20 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _newtxnotifier: NewTxNotifierService,
     private proposalsNotificationsService: ProposalsNotificationsService,
     private settingStateService: SettingStateService,
+    private settingsService: SettingsService
   ) {
 
-    // @TODO create the states for all settings instead of currentGUISettings.
+    // @TODO move?
+
+    /**
+     * init the setting service,
+     * Which is responsible to trigger the setting observers?
+     * for initial stage of the app loading.
+     */
+
+    this.settingsService.init();
+
+
     this.settingStateService.observe('currentGUISettings')
     .takeWhile(() => !this.destroyed)
       .subscribe((settings: Settings) => {
