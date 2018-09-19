@@ -6,9 +6,9 @@
         "linux": {
           "arm": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-arm-linux-gnueabihf.tar.gz",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc3/particl-0.17.0.1-arm-linux-gnueabihf.tar.gz",
               "type": "tar",
-              "sha256": "d6bfaa5f015d612e4b548175155bbdb82172ff74abaae95f56108075bf041b8d",
+              "sha256": "52cf958219b78a723d26e7a58054a64cef793a756b6b9932194bea3d112f6733",
               "bin": "particl-0.17.0.1/bin/particld"
             },
             "bin": "particld",
@@ -26,9 +26,9 @@
           },
           "ia32": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-i686-pc-linux-gnu_nousb.tar.gz",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc3/particl-0.17.0.1-i686-pc-linux-gnu_nousb.tar.gz",
               "type": "tar",
-              "sha256": "37206912528005bf02186c25e1a90ba641111c5b71275f5e810ff803af1ac79a",
+              "sha256": "85d76fd1633403fba96f3b836000be1904fc06237a5796b7c0e33de272e1e9b8",
               "bin": "particl-0.17.0.1/bin/particld"
             },
             "bin": "particld",
@@ -46,9 +46,9 @@
           },
           "x64": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-x86_64-linux-gnu_nousb.tar.gz",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc3/particl-0.17.0.1-x86_64-linux-gnu_nousb.tar.gz",
               "type": "tar",
-              "sha256": "520f3f5e40bf482b262a55492a9dd8ec56712c54f3371d9a4902fd6dad27e895",
+              "sha256": "9cea1903104dafc793b088b13bc38cec5ec29fd67eac8a1172843f7991e6dae0",
               "bin": "particl-0.17.0.1/bin/particld"
             },
             "bin": "particld",
@@ -68,9 +68,9 @@
         "mac": {
           "x64": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-osx64.tar.gz",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc3/particl-0.17.0.1-osx64.tar.gz",
               "type": "tar",
-              "sha256": "72fb2e4d588341b5516af6224a8c71e14e4b86f1edad29e0fb55d0fb5e8356a0",
+              "sha256": "92edf837267faf3477f9aff2b52a2c2a525308fda6c937b1384a6b3bd2a98dd0",
               "bin": "particl-0.17.0.1/bin/particld"
             },
             "bin": "particld",
@@ -90,9 +90,9 @@
         "win": {
           "ia32": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-win32.zip",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc3/particl-0.17.0.1-win32.zip",
               "type": "zip",
-              "sha256": "9644d9b375f58642d223756f78436dbdd488676204ac2225b1d1099a528dfe04",
+              "sha256": "42b32bdddac172f276dd4846168d906148343507a4a2cb575f54638b99321b1c",
               "bin": "particl-0.17.0.1/bin/particld.exe"
             },
             "bin": "particld.exe",
@@ -110,9 +110,9 @@
           },
           "x64": {
             "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc2/particl-0.17.0.1-win64.zip",
+              "url": "https://github.com/particl/particl-core/releases/download/v0.17.0.1rc3/particl-0.17.0.1-win64.zip",
               "type": "zip",
-              "sha256": "1dc53f878a5a39a426781980ea8fc15bb5da20ff868cb708136c3342c5ce6acd",
+              "sha256": "4ba0ba60566dd5f0fcc0d70448ebf69124229825ac2bbccdcde229d6c5cfe595",
               "bin": "particl-0.17.0.1/bin/particld.exe"
             },
             "bin": "particld.exe",

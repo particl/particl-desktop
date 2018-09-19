@@ -34,7 +34,7 @@ var getWinAsset = function(data, asset, hashes) {
 }
 
 var getOSXAsset = function (data, asset, hashes) {
-  data.platform = "osx";
+  data.platform = "mac";
   data.arch = asset.name.includes("osx64") ? "x64" : "ia32";
   if (asset.name.endsWith('dmg')) {
     data.type = "dmg";
@@ -81,12 +81,13 @@ var getAssetDetails = function (asset, hashes, version) {
   }
 
   // add .exe extension for windows binaries
-  var bin = `particld${data.platform === 'win' ? '.exe' : ''}`
+  let bin = `particld${data.platform === 'win' ? '.exe' : ''}`
+  
   // return asset only if it is fully compliant
   return (data.platform && data.arch && data.type ? {
     platform: data.platform,
     arch: data.arch,
-    name: asset.name,
+    name: version,
     entry: {
       download: {
         url: asset.browser_download_url,
@@ -140,14 +141,14 @@ got(`${releasesURL}`).then(response => {
   const body = JSON.parse(response.body);
   let releaseIndex = 0;
   let release;
-
-  while (body[releaseIndex].prerelease) {
+  const skipPrerelease = !(process.argv.includes('-prerelease'))
+  while (body[releaseIndex].prerelease && skipPrerelease) {
     releaseIndex++;
   }
   release = body[releaseIndex];
   
-  var tag = release.tag_name.substring(1);
-  var binaries = [];
+  let tag = release.tag_name.substring(1).replace(/rc./g, "");
+  let binaries = [];
 
   // get gitian repository of hashes
   got(`${signaturesURL}`).then(response => {
@@ -180,7 +181,7 @@ got(`${releasesURL}`).then(response => {
         }
       }
       // get asset details for each release entry
-      var entry;
+      let entry;
       release.assets.forEach(asset => {
         if ((entry = getAssetDetails(asset, hashes, tag))) {
           binaries.push(entry);
