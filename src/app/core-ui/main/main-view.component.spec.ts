@@ -10,6 +10,7 @@ import { ModalsModule } from '../../modals/modals.module';
 
 import { MatDialogModule, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material'; // TODO: move to material
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -23,6 +24,7 @@ describe('MainViewComponent', () => {
         RouterTestingModule,
         CoreModule.forRoot(),
         ModalsModule.forRoot(),
+        SettingsModule.forRoot(),
         MatDialogModule
       ],
       providers: [

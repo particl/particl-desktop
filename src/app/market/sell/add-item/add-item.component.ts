@@ -22,6 +22,7 @@ import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { SettingsService } from 'app/wallet/settings/settings.service';
 import { Settings } from 'app/wallet/settings/models/settings.model';
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
 
 @Component({
   selector: 'app-add-item',
@@ -77,7 +78,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private modals: ModalsHelperService,
     private countryList: CountryListService,
     private escrow: EscrowService,
-    private settingsService: SettingsService
+    private settingStateService: SettingStateService
   ) { }
 
   ngOnInit() {
@@ -117,11 +118,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     });
 
-    // set default expiration.
-    this.expiration = this.settingsService.currentSettings.market.listingExpiration;
-
     // update settings.
-    this.rpcState.observe('currentGUISetting')
+    this.settingStateService.observe('currentGUISettings')
       .takeWhile(() => (!this.destroyed))
       .subscribe((settings: Settings) => {
         this.expiration = settings.market.listingExpiration;
