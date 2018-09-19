@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
+import { Log } from 'ng2-logger';
+
 import { MarketService } from 'app/core/market/market.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
-import { Profile } from 'app/core/market/api/profile/profile.model';
 import { SettingsGuiService } from 'app/core/settings-gui/settings-gui.service';
-import { Settings } from 'app/wallet/settings/models/settings.model';
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { DEFAULT_GUI_SETTINGS } from 'app/core/util/utils';
 import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
-import { Log } from 'ng2-logger';
+
+import { Profile } from 'app/core/market/api/profile/profile.model';
+import { Settings } from 'app/wallet/settings/models/settings.model';
+
+import { DEFAULT_GUI_SETTINGS } from 'app/core/util/utils';
 
 @Injectable()
 export class SettingsService {
   log: any = Log.create('settings.service');
 
   defaultSettings: Settings = new Settings(DEFAULT_GUI_SETTINGS);
-  needUpdate: boolean = true;
   profileId: number;
   currentSettings: Settings;
 

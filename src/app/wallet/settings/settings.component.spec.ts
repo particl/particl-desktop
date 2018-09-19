@@ -27,8 +27,7 @@ describe('SettingsComponent', () => {
         CoreModule.forRoot(),
         BrowserAnimationsModule,
         SettingsModule.forRoot()
-      ],
-      providers: [ Location ]
+      ]
     })
     .compileComponents();
   }));

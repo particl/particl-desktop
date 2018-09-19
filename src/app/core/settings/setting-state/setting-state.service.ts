@@ -12,7 +12,7 @@ export class SettingStateService extends StateService {
 
   constructor() {
     super();
-    this.log.d('SettingStateService: initialized');
+    this.log.d('SettingStateService initialized.');
   }
 
   // @TODO register the settings keys for all settings keys.

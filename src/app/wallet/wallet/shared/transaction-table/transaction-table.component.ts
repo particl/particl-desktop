@@ -6,8 +6,7 @@ import { slideDown } from 'app/core-ui/core.animations';
 import { Transaction } from '../transaction.model';
 import { TransactionService } from '../transaction.service';
 
-import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
-import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 
 @Component({
   selector: 'transaction-table',
@@ -53,16 +52,9 @@ export class TransactionsTableComponent implements OnInit, OnDestroy {
 
   constructor(
     public txService: TransactionService,
-    private settingStateService: SettingStateService
+    private settingService: SettingsService
   ) {
-
-    // // observe the changes.
-    this.settingStateService.observe('currentGUISettings', 'display')
-    .takeWhile(() => !this.destroyed)
-    .subscribe((display: DisplaySettings) => {
-      this._defaults.txDisplayAmount = display.rows
-    });
-
+    this._defaults.txDisplayAmount = this.settingService.currentSettings.display.rows;
   }
 
   ngOnInit(): void {

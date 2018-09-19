@@ -10,8 +10,7 @@ import { SignatureAddressModalComponent } from '../shared/signature-address-moda
 
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
-import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
-import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 
 @Component({
   selector: 'app-receive',
@@ -52,16 +51,9 @@ export class ReceiveComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private flashNotificationService: SnackbarService,
     private modals: ModalsHelperService,
-    private settingStateService: SettingStateService
+    private settingService: SettingsService
   ) {
-
-    // observe the changes.
-    this.settingStateService.observe('currentGUISettings', 'display')
-    .takeWhile(() => !this.destroyed)
-    .subscribe((display: DisplaySettings) => {
-      this.MAX_ADDRESSES_PER_PAGE = display.rows;
-    });
-
+    this.MAX_ADDRESSES_PER_PAGE = this.settingService.currentSettings.display.rows;
   }
 
   ngOnInit(): void {

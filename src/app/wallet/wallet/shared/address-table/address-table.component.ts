@@ -11,13 +11,12 @@ import { Address } from '../address.model';
 import { RpcService, RpcStateService } from '../../../../core/core.module';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 
 import { QrCodeModalComponent} from '../qr-code-modal/qr-code-modal.component';
 import { DeleteConfirmationModalComponent } from '../../../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { SignatureAddressModalComponent } from '../signature-address-modal/signature-address-modal.component';
 
-import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
-import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
 
 @Component({
   selector: 'address-table',
@@ -73,21 +72,15 @@ export class AddressTableComponent implements OnInit, OnChanges, OnDestroy {
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
-    private settingStateService: SettingStateService
+    private settingService: SettingsService
   ) {
     this._addressService._addresses.subscribe((addresses) => {
       this.addresses = addresses
     })
-
-    // observe the changes.
-    this.settingStateService.observe('currentGUISettings', 'display')
-    .takeWhile(() => !this.destroyed)
-    .subscribe((display: DisplaySettings) => {
-      this.addressDisplayAmount = display.rows
-    });
   }
 
   ngOnInit(): void {
+    this.addressDisplayAmount = this.settingService.currentSettings.display.rows;
     this._addressService.getAddresses();
   }
 

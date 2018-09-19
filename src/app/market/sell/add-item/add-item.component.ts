@@ -18,11 +18,12 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
+import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+
+// models
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
-import { SettingsService } from 'app/wallet/settings/settings.service';
-import { Settings } from 'app/wallet/settings/models/settings.model';
-import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+import { MarketSettings } from 'app/wallet/settings/models/market.settings.model';
 
 @Component({
   selector: 'app-add-item',
@@ -119,10 +120,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
 
     // update settings.
-    this.settingStateService.observe('currentGUISettings')
+    this.settingStateService.observe('currentGUISettings', 'market')
       .takeWhile(() => (!this.destroyed))
-      .subscribe((settings: Settings) => {
-        this.expiration = settings.market.listingExpiration;
+      .subscribe((market: MarketSettings) => {
+        this.expiration = market.listingExpiration;
         this.loadTransactionFee();
       })
 

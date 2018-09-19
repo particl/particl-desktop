@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 
 import { SettingsService } from './settings.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
@@ -25,7 +24,6 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private _settingsService: SettingsService,
-    private _location: Location,
     private countryList: CountryListService,
     private snackbar: SnackbarService
   ) { }
@@ -40,7 +38,6 @@ export class SettingsComponent implements OnInit {
 
   cancel() {
     this.settings = this._settingsService.loadSettings();
-    // this._location.back();
   }
 
   save() {
