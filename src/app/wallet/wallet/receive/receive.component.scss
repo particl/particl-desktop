@@ -2,25 +2,17 @@
 
 // ------ LAYOUT ------ //
 
-.tab-bar {
-  margin-top: $header-main-height;
-  position: fixed;
-  width: 100%;
-  z-index: 100;
-  background: rgba($bg, 0.95);
-}
-
 .container-flex {
   display: flex;
   $padding: 35px;
   $padding-bottom: $padding + 45px; // offset "show older addys" button from bottom
-  padding: ($header-main-height + $tab-bar-height + $padding) $padding $padding-bottom;
+  padding: $padding $padding $padding-bottom;
   height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - #{$padding} - #{$padding-bottom});
   position: relative;
   @include break(l) {
     $padding: 45px;
     $padding-bottom: $padding + 45px; // offset "show older addys" button from bottom
-    padding: ($header-main-height + $tab-bar-height + $padding) 50px $padding-bottom;
+    padding: $padding 50px $padding-bottom;
     height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - #{$padding} - #{$padding-bottom});
   }
 }

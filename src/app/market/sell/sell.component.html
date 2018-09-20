@@ -1,32 +1,34 @@
 <app-header class="disable-select">
-  <mat-tab-group (selectChange)="changeTab($event.index)">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
-        Listings
-      </ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-        Orders
-        <!--app-order-count [type]="'sell'" class="tag"></app-order-count-->
-      </ng-template>
-    </mat-tab>
-    <!--mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-        Sell item
-      </ng-template>
-    </mat-tab-->
-  </mat-tab-group>
+  <div class="tab-bar">
+    <mat-tab-group (selectChange)="changeTab($event.index)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
+          Listings
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+          Orders
+          <!--app-order-count [type]="'sell'" class="tag"></app-order-count-->
+        </ng-template>
+      </mat-tab>
+      <!--mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+          Sell item
+        </ng-template>
+      </mat-tab-->
+    </mat-tab-group>
+  </div>
 </app-header>
 <mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== LISTINGS =========== -->
 
-<div fxLayout="row" fxLayoutGap="30px" class="container-block" *ngIf="tabLabels[selectedTab] == 'listings'">
+<div fxLayout="row" fxLayoutGap="30px" class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'listings'">
 
   <!-- Listings > Filter -->
   <div class="filter" fxFlex="0 0 230px">
@@ -127,6 +129,6 @@
 
 <!-- =========== ORDERS =========== -->
 
-<div class="container-block disable-select" *ngIf="tabLabels[selectedTab] == 'orders'">
+<div class="container-block disable-select with-tab-bar" *ngIf="tabLabels[selectedTab] == 'orders'">
   <app-orders type="sell" fxLayout fxLayoutGap="30px"></app-orders>
 </div><!-- "Orders" tab -->

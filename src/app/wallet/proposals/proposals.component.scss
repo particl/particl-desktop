@@ -6,17 +6,8 @@ $sidebar-margin: 35px;
 
 // ------ LAYOUT ------ //
 
-.tab-bar {
-  position: fixed;
-  top: $header-main-height;
-  z-index: 100;
-  width: 100%;
-  background: rgba($bg, 0.95);
-}
-
 .container-block {
   position: relative;
-  margin-top: ($header-main-height + $tab-bar-height);
   padding: 35px;
   display: flex;
   @include break(l) {

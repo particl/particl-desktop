@@ -22,6 +22,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       3.4. No results
       3.5. Input with icon
       3.6. QR codes
+      3.7. Tab bars
     4. Typography
       4.1. Page subtitles
       4.2. Paragraph styles
@@ -51,6 +52,11 @@ body {
   @include break(l) {
     padding: 45px 50px;
   }
+}
+
+// offsetted from top for tab bars
+.with-tab-bar {
+  margin-top: ($header-main-height + $tab-bar-height);
 }
 
 
@@ -181,6 +187,28 @@ body {
   img {
     display: inline !important;
   }
+}
+
+
+// ------ 3.7. TAB BARS ------ //
+
+// sticky tabs under status bar
+.tab-bar {
+  position: fixed;
+  top: $header-main-height;
+  z-index: 100;
+  width: 100%;
+  background: rgba($bg, 0.95);
+}
+
+// sticky control bars (eg. on Listings page)
+.control-bar {
+  @extend .tab-bar;
+  left: $sidebar-width;
+  right: 6px;
+  width: auto;
+  padding: 0 28px 0 35px;
+  border-bottom: 1px solid $bg-shadow;
 }
 
 

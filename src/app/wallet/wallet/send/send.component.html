@@ -1,5 +1,5 @@
 <app-header class="disable-select">
-  <div class="container-fluid">
+  <div class="tab-bar">
     <mat-tab-group (selectChange)="selectTab($event.index)">
       <mat-tab>
         <ng-template mat-tab-label>
@@ -18,7 +18,7 @@
 </app-header>
 
 
-<div class="container-block disable-select" fxLayout="row" fxLayoutGap="35px">
+<div class="container-block disable-select with-tab-bar" fxLayout="row" fxLayoutGap="35px">
 
   <div class="from-box" fxFlex="0 0 320px">
     <mat-card>
