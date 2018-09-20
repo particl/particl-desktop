@@ -52,11 +52,12 @@ export class ReceiveComponent implements OnInit, OnDestroy {
     private flashNotificationService: SnackbarService,
     private modals: ModalsHelperService,
     private settingService: SettingsService
-  ) {
-    this.MAX_ADDRESSES_PER_PAGE = this.settingService.currentSettings.display.rows;
-  }
+  ) { }
 
   ngOnInit(): void {
+    if (this.settingService.currentSettings) {
+      this.MAX_ADDRESSES_PER_PAGE = this.settingService.currentSettings.display.rows;
+    }
 
     this.rpcState.observe('getblockchaininfo', 'chain').take(1)
      .subscribe(chain => this.testnet = chain === 'test');

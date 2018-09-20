@@ -53,11 +53,12 @@ export class TransactionsTableComponent implements OnInit, OnDestroy {
   constructor(
     public txService: TransactionService,
     private settingService: SettingsService
-  ) {
-    this._defaults.txDisplayAmount = this.settingService.currentSettings.display.rows;
-  }
+  ) { }
 
   ngOnInit(): void {
+    if (this.settingService.currentSettings) {
+      this._defaults.txDisplayAmount = this.settingService.currentSettings.display.rows;
+    }
     this.display = Object.assign({}, this._defaults, this.display); // Set defaults
     this.log.d(`transaction-table: amount of transactions per page ${this.display.txDisplayAmount}`)
     this.txService.postConstructor(this.display.txDisplayAmount);

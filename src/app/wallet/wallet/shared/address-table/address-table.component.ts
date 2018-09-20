@@ -80,7 +80,9 @@ export class AddressTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.addressDisplayAmount = this.settingService.currentSettings.display.rows;
+    if (this.settingService.currentSettings) {
+      this.addressDisplayAmount = this.settingService.currentSettings.display.rows;
+    }
     this._addressService.getAddresses();
   }
 

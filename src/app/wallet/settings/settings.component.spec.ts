@@ -12,6 +12,8 @@ import { SettingsService } from './settings.service';
 
 import { SettingsComponent } from './settings.component';
 import { SettingsModule } from 'app/wallet/settings/settings.module';
+import { Settings } from 'app/wallet/settings/models/settings.model';
+import { DEFAULT_GUI_SETTINGS } from 'app/core/util/utils';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -33,6 +35,8 @@ describe('SettingsComponent', () => {
   }));
 
   beforeEach(() => {
+    const settingService = TestBed.get(SettingsService);
+    settingService.init();
     fixture = TestBed.createComponent(SettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -26,7 +26,7 @@ describe('HistoryComponent', () => {
         WalletModule.forRoot(),
         RpcModule.forRoot(),
         CoreModule.forRoot(),
-        SettingsModule
+        SettingsModule.forRoot()
       ]
     })
 

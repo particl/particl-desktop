@@ -41,7 +41,7 @@ export class SettingsComponent implements OnInit {
   }
 
   save() {
-    console.log(this.settings);
+    this.log.d(this.settings);
     this._settingsService.applySettings(this.settings);
     // @TODO move in save () subscription once cmd are available for settings.
     this.snackbar.open(
