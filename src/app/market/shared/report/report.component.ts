@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { ReportService } from '../../../core/market/api/report/report.service';
 import { Listing } from '../../../core/market/api/listing/listing.model';
@@ -17,25 +18,35 @@ export class ReportComponent {
   private log: any = Log.create('report.component id:' + Math.floor((Math.random() * 1000) + 1));
 
   @Input() listing: Listing;
-  @Input() flag: boolean = true;
+  @Input() flag: boolean;
   constructor(
     public reportService: ReportService,
+    private modals: ModalsHelperService,
     private snackbar: SnackbarService,
     private dialog: MatDialog
   ) {}
 
-  toggle() {
+  toggle(): void | boolean {
+
+    if (this.listing.isFlagged) {
+      return false;
+    }
     const dialogRef = this.dialog.open(ReportModalComponent);
     dialogRef.componentInstance.title = this.listing.title;
-    dialogRef.componentInstance.option = this.listing.proposalOption
+    dialogRef.componentInstance.option = this.listing.isFlagged
 
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
-
-      this.reportService.post(this.listing).subscribe(report => {
-        this.listing.proposalOption = !this.listing.proposalOption;
-        this.snackbar.open(`Listing ${this.listing.title}`);
-      })
-
+      this.modals.unlock({timeout: 30}, (status) => this.reportItem());
     });
   }
+
+  reportItem(): void {
+    this.reportService.post(this.listing).subscribe(report => {
+      this.listing.isFlagged = !this.listing.isFlagged;
+      this.snackbar.open(`Listing ${this.listing.title} Flagged Successfully`);
+    }, err => {
+      console.log(err);
+    })
+  }
+
 }

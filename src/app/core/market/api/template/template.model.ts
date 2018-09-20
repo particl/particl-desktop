@@ -19,9 +19,9 @@ export class Template {
   public totalAmountInternaltional: Amount = new Amount(0);
   public totalAmountDomestic: Amount = new Amount(0);
   public memo: string = '';
-  public proposalOption: boolean = false;
   public imageCollection: ImageCollection;
   public expireTime: number = 4;
+  public isFlagged: boolean = false;
 
   // @TODO: remove type any
   constructor(public object: any) {
@@ -35,7 +35,7 @@ export class Template {
     this.setEscrowPrice();
     this.setTotal();
     this.setMemo();
-    this.setProposalOption();
+    this.setListingFlagged();
     this.setExpiryTime();
   }
 
@@ -139,9 +139,8 @@ export class Template {
   }
 
 
-  setProposalOption() {
-    // this.proposalOption = this.object.proposalOption;
-    this.proposalOption = true;
+  setListingFlagged() {
+    this.isFlagged = this.object.Proposal && Object.keys(this.object.Proposal).length > 0;
   }
 
   setExpiryTime(): void {

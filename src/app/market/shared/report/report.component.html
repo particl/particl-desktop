@@ -1,13 +1,14 @@
 <mat-icon *ngIf="flag === false" fontSet="partIcon" fontIcon="part-flag"
-        [ngClass]="{ 'active': listing?.proposalOption }"
-        [matTooltip]="listing?.proposalOption ?  'Remove from Report' : 'Report'"
+        [ngClass]="{ 'active': listing?.isFlagged }"
+        [color]="listing?.isFlagged ? 'warn' : 'basic'" 
+        [matTooltip]="listing?.isFlagged ?  'Remove from Report' : 'Report'"
         (click)="toggle()"></mat-icon>
 
 <button *ngIf="flag === true" mat-button class="small" 
-        [color]="listing?.proposalOption ? 'warn' : 'basic'" 
-        [matTooltip]="listing?.proposalOption? 'Remove from Report' : 'Report'"
+        [color]="listing?.isFlagged ? 'warn' : 'basic'" 
+        [matTooltip]="listing?.isFlagged ? 'Remove from Report' : 'Report'"
         matTooltipPosition="above">
   <mat-icon fontSet="partIcon" fontIcon="part-flag"
-      [ngClass]="{ 'active': listing?.proposalOption }"
+      [ngClass]="{ 'active': listing?.isFlagged }"
       (click)="toggle()"></mat-icon>
 </button>

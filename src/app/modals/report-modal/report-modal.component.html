@@ -2,10 +2,10 @@
   <div mat-dialog-title class="title">Report Listing</div>
   <mat-dialog-content class="modal-content" fxLayout>
     <div class="text" fxFlex="1 1 350px">
-      <p class="lead" *ngIf="option">
+      <p class="lead" *ngIf="!option">
         Are you sure you want to report {{title}} as an inappropriate listing ?
       </p>
-      <p class="lead" *ngIf="!option">
+      <p class="lead" *ngIf="option">
         You are about to change your vote on {{title}}, are you sure the listing is market appropriate?
       </p>
     </div>

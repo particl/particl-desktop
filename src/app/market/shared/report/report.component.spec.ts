@@ -4,6 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 import { ReportComponent } from './report.component';
 
@@ -16,7 +17,8 @@ describe('ReportComponent', () => {
       imports: [
         CommonModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        ModalsModule.forRoot()
       ],
       declarations: [ ReportComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]

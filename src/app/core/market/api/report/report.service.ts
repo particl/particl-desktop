@@ -1,24 +1,36 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 
 
 @Injectable()
-export class ReportService {
+export class ReportService implements OnDestroy {
 
   private log: any = Log.create('report.service id:' + Math.floor((Math.random() * 1000) + 1));
+  private defaultProfileId: number;
   private destroyed: boolean = false;
 
   constructor(
     private market: MarketService,
+    private profile: ProfileService
   ) {
+
+    this.profile.default().takeWhile(() => !this.destroyed).subscribe((prof: any) => {
+      this.defaultProfileId = prof.id;
+    });
   }
 
   post(listing: Listing) {
-    return this.market.call('report', ['add', listing.id, listing.proposalOption])
+    console.log(listing.hash);
+    return this.market.call('item', ['flag', listing.hash, this.defaultProfileId])
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }
