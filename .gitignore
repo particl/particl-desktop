@@ -49,3 +49,7 @@ Thumbs.db
 /packages
 
 yarn-error.log
+modules/clientBinaries/clientBinaries.json
+modules/clientBinaries/generateVersions.js
+modules/clientBinaries/clientBinaries.json
+modules/clientBinaries/generateVersions.js

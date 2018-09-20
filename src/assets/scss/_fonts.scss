@@ -82,11 +82,11 @@
 }
 
 .part-anon::before {
-  content: "\ea04";
+  content: "\ea05";
 }
 
 .part-arrow-down::before {
-  content: "\ea05";
+  content: "\ea04";
 }
 
 .part-arrow-left::before {
@@ -129,51 +129,51 @@
   content: "\ea0f";
 }
 
-.part-check::before {
+.part-chat-discussion::before {
   content: "\ea10";
 }
 
-.part-circle-alert::before {
+.part-chat::before {
   content: "\ea11";
 }
 
-.part-circle-check::before {
+.part-check-in-a-box::before {
   content: "\ea12";
 }
 
-.part-circle-info::before {
+.part-check::before {
   content: "\ea13";
 }
 
-.part-circle-minus::before {
+.part-circle-alert::before {
   content: "\ea14";
 }
 
-.part-circle-plus::before {
+.part-circle-check::before {
   content: "\ea15";
 }
 
-.part-circle-question::before {
+.part-circle-minus::before {
   content: "\ea16";
 }
 
-.part-circle-remove::before {
+.part-circle-plus::before {
   content: "\ea17";
 }
 
-.part-circle-user::before {
+.part-circle-question::before {
   content: "\ea18";
 }
 
-.part-clear-all::before {
+.part-circle-remove::before {
   content: "\ea19";
 }
 
-.part-cog::before {
+.part-clear-all::before {
   content: "\ea1a";
 }
 
-.part-console-window::before {
+.part-cog::before {
   content: "\ea1b";
 }
 
@@ -213,51 +213,51 @@
   content: "\ea24";
 }
 
-.part-date::before {
+.part-dapps::before {
   content: "\ea25";
 }
 
-.part-document::before {
+.part-date::before {
   content: "\ea26";
 }
 
-.part-error::before {
+.part-discord::before {
   content: "\ea27";
 }
 
-.part-filter::before {
+.part-display::before {
   content: "\ea28";
 }
 
-.part-flag::before {
+.part-document::before {
   content: "\ea29";
 }
 
-.part-flash::before {
+.part-error::before {
   content: "\ea2a";
 }
 
-.part-globe::before {
+.part-facebook::before {
   content: "\ea2b";
 }
 
-.part-hamburger::before {
+.part-flag::before {
   content: "\ea2c";
 }
 
-.part-heart-outline-add::before {
+.part-github::before {
   content: "\ea2d";
 }
 
-.part-heart-outline-remove::before {
+.part-globe::before {
   content: "\ea2e";
 }
 
-.part-heart-outline::before {
+.part-google::before {
   content: "\ea2f";
 }
 
-.part-heart::before {
+.part-handshake::before {
   content: "\ea30";
 }
 
@@ -265,11 +265,11 @@
   content: "\ea31";
 }
 
-.part-info::before {
+.part-label::before {
   content: "\ea32";
 }
 
-.part-label::before {
+.part-lightbulb::before {
   content: "\ea33";
 }
 
@@ -289,182 +289,202 @@
   content: "\ea37";
 }
 
-.part-minus::before {
+.part-medium::before {
   content: "\ea38";
 }
 
-.part-next-double::before {
+.part-minus::before {
   content: "\ea39";
 }
 
-.part-next-single::before {
+.part-next-double::before {
   content: "\ea3a";
 }
 
-.part-notification-bell::before {
+.part-next-single::before {
   content: "\ea3b";
 }
 
-.part-notification-speaker::before {
+.part-nodes::before {
   content: "\ea3c";
 }
 
-.part-overview::before {
+.part-notification-bell::before {
   content: "\ea3d";
 }
 
-.part-past::before {
+.part-notification-speaker-2::before {
   content: "\ea3e";
 }
 
-.part-pen-1::before {
+.part-notification-speaker::before {
   content: "\ea3f";
 }
 
-.part-pen-2::before {
+.part-overview::before {
   content: "\ea40";
 }
 
-.part-people::before {
+.part-past::before {
   content: "\ea41";
 }
 
-.part-person-add::before {
+.part-pen-1::before {
   content: "\ea42";
 }
 
-.part-person-check::before {
+.part-pen-2::before {
   content: "\ea43";
 }
 
-.part-person-edit::before {
+.part-people::before {
   content: "\ea44";
 }
 
-.part-person-heart::before {
+.part-person-add::before {
   content: "\ea45";
 }
 
-.part-person-remove::before {
+.part-person-check::before {
   content: "\ea46";
 }
 
-.part-person::before {
+.part-person-edit::before {
   content: "\ea47";
 }
 
-.part-plus::before {
+.part-person-heart::before {
   content: "\ea48";
 }
 
-.part-preferences::before {
+.part-person-remove::before {
   content: "\ea49";
 }
 
-.part-previous-double::before {
+.part-person::before {
   content: "\ea4a";
 }
 
-.part-previous-single::before {
+.part-plus::before {
   content: "\ea4b";
 }
 
-.part-public::before {
+.part-previous-double::before {
   content: "\ea4c";
 }
 
-.part-qr::before {
+.part-previous-single::before {
   content: "\ea4d";
 }
 
-.part-receive::before {
+.part-public::before {
   content: "\ea4e";
 }
 
-.part-refresh::before {
+.part-qr::before {
   content: "\ea4f";
 }
 
-.part-rocket::before {
+.part-receive::before {
   content: "\ea50";
 }
 
-.part-search::before {
+.part-reddit::before {
   content: "\ea51";
 }
 
-.part-select::before {
+.part-refresh::before {
   content: "\ea52";
 }
 
-.part-send::before {
+.part-select::before {
   content: "\ea53";
 }
 
-.part-ship::before {
+.part-send::before {
   content: "\ea54";
 }
 
-.part-small-cross::before {
+.part-ship::before {
   content: "\ea55";
 }
 
-.part-small-minus::before {
+.part-small-cross::before {
   content: "\ea56";
 }
 
-.part-small-plus::before {
+.part-small-minus::before {
   content: "\ea57";
 }
 
-.part-smiley::before {
+.part-small-plus::before {
   content: "\ea58";
 }
 
-.part-snowflake::before {
+.part-smiley::before {
   content: "\ea59";
 }
 
-.part-stake::before {
+.part-snowflake::before {
   content: "\ea5a";
 }
 
-.part-swap::before {
+.part-stake::before {
   content: "\ea5b";
 }
 
-.part-tool::before {
+.part-support-help::before {
   content: "\ea5c";
 }
 
-.part-transfer::before {
+.part-swap::before {
   content: "\ea5d";
 }
 
-.part-triangle-down::before {
+.part-telegram::before {
   content: "\ea5e";
 }
 
-.part-triangle-left::before {
+.part-thumb-down-2::before {
   content: "\ea5f";
 }
 
-.part-triangle-right::before {
+.part-thumb-down::before {
   content: "\ea60";
 }
 
-.part-triangle-up::before {
+.part-transfer::before {
   content: "\ea61";
 }
 
-.part-truck::before {
+.part-triangle-down::before {
   content: "\ea62";
 }
 
-.part-zoom-bold-in::before {
+.part-triangle-left::before {
   content: "\ea63";
 }
 
-.part-zoom-out::before {
+.part-triangle-right::before {
   content: "\ea64";
+}
+
+.part-triangle-up::before {
+  content: "\ea65";
+}
+
+.part-truck::before {
+  content: "\ea66";
+}
+
+.part-twitter::before {
+  content: "\ea67";
+}
+
+.part-wikipedia::before {
+  content: "\ea68";
+}
+
+.part-youtube::before {
+  content: "\ea69";
 }
