@@ -90,19 +90,19 @@
 }
 
 .part-arrow-left::before {
-  content: "\ea06";
-}
-
-.part-arrow-right::before {
   content: "\ea07";
 }
 
+.part-arrow-right::before {
+  content: "\ea06";
+}
+
 .part-arrow-up::before {
-  content: "\ea09";
+  content: "\ea08";
 }
 
 .part-attach::before {
-  content: "\ea08";
+  content: "\ea09";
 }
 
 .part-bag-buy::before {
@@ -110,11 +110,11 @@
 }
 
 .part-bag-sell::before {
-  content: "\ea0c";
+  content: "\ea0b";
 }
 
 .part-bag::before {
-  content: "\ea0b";
+  content: "\ea0c";
 }
 
 .part-bitcointalk::before {
@@ -254,11 +254,11 @@
 }
 
 .part-globe::before {
-  content: "\ea30";
+  content: "\ea2f";
 }
 
 .part-google::before {
-  content: "\ea2f";
+  content: "\ea30";
 }
 
 .part-handshake::before {
@@ -457,11 +457,11 @@
   content: "\ea61";
 }
 
-.part-thumb-down-2::before {
+.part-thumb-down::before {
   content: "\ea62";
 }
 
-.part-thumb-down::before {
+.part-thumb-up::before {
   content: "\ea63";
 }
 
