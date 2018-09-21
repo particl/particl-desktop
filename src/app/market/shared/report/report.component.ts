@@ -18,7 +18,7 @@ export class ReportComponent {
   private log: any = Log.create('report.component id:' + Math.floor((Math.random() * 1000) + 1));
 
   @Input() listing: Listing;
-  @Input() flag: boolean;
+  @Input() from: boolean;
   constructor(
     public reportService: ReportService,
     private modals: ModalsHelperService,
