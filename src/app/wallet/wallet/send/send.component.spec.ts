@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../modals/modals.module';
+import { SettingsModule } from 'app/wallet/settings/settings.module';
 
 import { SharedModule } from '../../shared/shared.module'; // is this even needed?
 
@@ -27,6 +28,7 @@ describe('SendComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
+        SettingsModule.forRoot(),
         // WalletModule.forRoot(), // a bit circular here..
         BrowserAnimationsModule
       ],
