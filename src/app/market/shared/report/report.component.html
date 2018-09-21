@@ -1,12 +1,12 @@
 <mat-icon *ngIf="flag === false" fontSet="partIcon" fontIcon="part-flag"
         [ngClass]="{ 'active': listing?.isFlagged }"
         [color]="listing?.isFlagged ? 'warn' : 'basic'" 
-        [matTooltip]="listing?.isFlagged ?  'Remove from Report' : 'Report'"
+        [matTooltip]="listing?.isFlagged ?  'this item has been reported' : 'Report'"
         (click)="toggle()"></mat-icon>
 
 <button *ngIf="flag === true" mat-button class="small" 
         [color]="listing?.isFlagged ? 'warn' : 'basic'" 
-        [matTooltip]="listing?.isFlagged ? 'Remove from Report' : 'Report'"
+        [matTooltip]="listing?.isFlagged ? 'this item has been reported' : 'Report'"
         matTooltipPosition="above">
   <mat-icon fontSet="partIcon" fontIcon="part-flag"
       [ngClass]="{ 'active': listing?.isFlagged }"

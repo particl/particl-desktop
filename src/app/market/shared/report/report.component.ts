@@ -43,7 +43,7 @@ export class ReportComponent {
   reportItem(): void {
     this.reportService.post(this.listing).subscribe(report => {
       this.listing.isFlagged = !this.listing.isFlagged;
-      this.snackbar.open(`Listing ${this.listing.title} Flagged Successfully`);
+      this.snackbar.open(`${this.listing.title} has been reported successfully`);
     }, err => {
       console.log(err);
     })

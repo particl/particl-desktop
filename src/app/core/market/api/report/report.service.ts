@@ -26,7 +26,6 @@ export class ReportService implements OnDestroy {
   }
 
   post(listing: Listing) {
-    console.log(listing.hash);
     return this.market.call('item', ['flag', listing.hash, this.defaultProfileId])
   }
 
