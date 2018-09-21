@@ -4,7 +4,6 @@ import { SettingsService } from './settings.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { Log } from 'ng2-logger';
 import { Country } from 'app/core/market/api/countrylist/country.model';
-import { SettingsGuiService } from 'app/core/settings-gui/settings-gui.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { Settings } from 'app/wallet/settings/models/settings.model';
 

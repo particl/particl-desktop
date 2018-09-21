@@ -17,7 +17,7 @@ import { AddressHelper } from '../../../core/util/utils';
 import { TransactionBuilder, TxType } from './transaction-builder.model';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
-import { SettingStateService } from 'app/core/settings/setting-state/setting-state.service';
+import { SettingsService } from 'app/wallet/settings/settings.service';
 import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
 
 @Component({
@@ -51,18 +51,12 @@ export class SendComponent implements OnInit {
     private modals: ModalsHelperService,
     private dialog: MatDialog,
     private flashNotification: SnackbarService,
-    private settingStateService: SettingStateService
+    private settingService: SettingsService
   ) {
     this.progress = 50;
     this.addressHelper = new AddressHelper();
 
     this.setFormDefaultValue();
-    // observe advance setting
-    this.settingStateService.observe('currentGUISettings', 'display')
-      .takeWhile(() => !this.destroyed)
-      .subscribe((display: DisplaySettings) => {
-        this.advanced = display.advanced;
-      });
   }
 
   setFormDefaultValue() {
@@ -71,8 +65,13 @@ export class SendComponent implements OnInit {
 
   ngOnInit() {
     /* check if testnet -> Show/Hide Anon Balance */
-     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
      .subscribe(chain => this.testnet = chain === 'test');
+
+    // I don't think observe required here ?
+    if (this.settingService.currentSettings) {
+      this.advanced = this.settingService.currentSettings.display.advanced;
+    }
   }
   /** Select tab */
   selectTab(tabIndex: number): void {
