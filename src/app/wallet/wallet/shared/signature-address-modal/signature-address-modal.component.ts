@@ -96,13 +96,16 @@ export class SignatureAddressModalComponent implements OnInit {
     }
 
     const validateAddressCB = (response) => {
-       this.validAddress = response.isvalid;
+       this.validAddress = true;
     };
 
-    this._rpc.call('validateaddress', [this.formData.address])
+    this._rpc.call('getaddressinfo', [this.formData.address])
       .subscribe(
         response => validateAddressCB(response),
-        error => this.log.er('verifyAddress: validateAddressCB failed'));
+        error => {
+          this.validAddress = false;
+          this.log.er('verifyAddress: validateAddressCB failed')
+        });
   }
   // copy code end
 
