@@ -125,9 +125,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       .subscribe((market: MarketSettings) => {
         this.expiration = market.listingExpiration;
         this.loadTransactionFee();
-      })
-
-    this.loadTransactionFee();
+      });
   }
 
   isExistingTemplate() {
