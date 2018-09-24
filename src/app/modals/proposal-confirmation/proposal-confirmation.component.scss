@@ -15,7 +15,6 @@
 
 .help-text {
   // FIXME: switch to: @extend %help-text;
-  @extend %disable-select;
   color: $text-muted;
   font-size: 11px;
   margin-bottom: 25px;
@@ -32,7 +31,6 @@
 }
 
 .tx-info { // info about public/blind/anon TX
-  @extend %disable-select;
   .icon {
     font-size: 24px;
     color: $color;
@@ -56,7 +54,6 @@
 
 .fee-info {
   // FIXME: switch to: @extend %help-text;
-  @extend %disable-select;
   color: $text-muted;
   font-size: 11px;
   margin: 30px 0 0;

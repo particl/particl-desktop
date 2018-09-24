@@ -15,6 +15,10 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
   TOC:
     1. General styles
     2. Layout
+      2.1. Containers
+      2.2. Modifiers
+      2.3. Tab/control bars
+      2.4. Filters (sidebars)
     3. UI elements
       3.1. Buttons
       3.2. Addresses
@@ -22,7 +26,6 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       3.4. No results
       3.5. Input with icon
       3.6. QR codes
-      3.7. Tab bars
     4. Typography
       4.1. Page subtitles
       4.2. Paragraph styles
@@ -37,6 +40,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
 \* ------------------------------- */
 
 body {
+  @extend %disable-select;
   font-family: $font;
   background-color: $bg;
   font-size: 12px;
@@ -47,16 +51,69 @@ body {
     2. LAYOUT
 \* ------------------------------- */
 
-.container-block { // main container for content
-  padding: 35px;
+// ------ 2.1. CONTAINERS ------ //
+
+// main container for content
+.container-block {
+  @extend %clearfix;
+  padding: $padding;
   @include break(l) {
-    padding: 45px 50px;
+    padding: 45px $padding-l;
   }
 }
 
-// offsetted from top for tab bars
+
+// ------ 2.2. MODIFIERS ------ //
+
+// offset content from top (due to fixed status bar)
 .with-tab-bar {
   margin-top: ($header-main-height + $tab-bar-height);
+}
+.without-tab-bar {
+  margin-top: $header-main-height;
+}
+
+// content offset from left, when sticky sidebar is present
+.with-filter {
+  margin-left: $filter-width + $padding;
+  @include break(l) {
+    margin-left: $filter-width + $padding-l;
+  }
+}
+
+
+// ------ 2.3. TAB/CONTROL BARS ------ //
+
+// sticky tabs under status bar
+.tab-bar {
+  position: fixed;
+  top: $header-main-height;
+  z-index: 100;
+  width: 100%;
+  background: rgba($bg, 0.95);
+}
+
+// sticky control bars (eg. on Listings page)
+.control-bar {
+  @extend .tab-bar;
+  left: $sidebar-width;
+  right: 6px;
+  width: auto;
+  padding: 0 28px 0 $padding;
+  border-bottom: 1px solid $bg-shadow;
+}
+
+
+// ------ 2.4. FILTERS ------ //
+
+.filter { // sticky sidebars in content area
+  position: sticky;
+  top: ($header-main-height + $tab-bar-height + $padding);
+  width: $filter-width;
+  float: left;
+  .without-tab-bar & {
+    top: ($header-main-height + $padding);
+  }
 }
 
 
@@ -129,7 +186,6 @@ body {
 // ------ 3.4. NO RESULTS (no TXs, no addresses, ..) ------ //
 
 .no-results {
-  @extend %disable-select;
   font-size: 18px;
   color: darken($bg-shadow, 15%);
   text-transform: uppercase;
@@ -190,28 +246,6 @@ body {
 }
 
 
-// ------ 3.7. TAB BARS ------ //
-
-// sticky tabs under status bar
-.tab-bar {
-  position: fixed;
-  top: $header-main-height;
-  z-index: 100;
-  width: 100%;
-  background: rgba($bg, 0.95);
-}
-
-// sticky control bars (eg. on Listings page)
-.control-bar {
-  @extend .tab-bar;
-  left: $sidebar-width;
-  right: 6px;
-  width: auto;
-  padding: 0 28px 0 35px;
-  border-bottom: 1px solid $bg-shadow;
-}
-
-
 /* ------------------------------- *\
     4. TYPOGRAPHY
 \* ------------------------------- */
@@ -237,7 +271,6 @@ body {
 
 // Help descriptions
 .widget-help {
-  @extend %disable-select;
   color: $text-muted;
   font-size: 11px;
   margin-bottom: 25px;

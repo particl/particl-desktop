@@ -4,7 +4,6 @@
 // ------ SPECIFIC ------ //
 
 .proposal {
-  @extend %disable-select;
   padding: 0;
   margin-bottom: 30px;
 
@@ -73,6 +72,7 @@
       flex: 1 1 65%;
       margin: 0;
       p {
+        @extend %enable-select;
         color: $text-muted;
         white-space: pre-line;
       }

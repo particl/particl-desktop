@@ -6,7 +6,6 @@
 }
 
 .staking-overview { // listing of staking stats
-  @extend %disable-select;
   width: 100%;
   td, th {
     padding: 10px 20px;

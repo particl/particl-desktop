@@ -17,13 +17,6 @@
   }
 }
 
-.container-block {
-  padding: 35px;
-  @include break(l) {
-    padding: 45px 50px;
-  }
-}
-
 // fresh unused receive address
 mat-card.receive-address {
   width: 720px;
@@ -127,12 +120,11 @@ mat-card.receive-address {
 }
 
 .previous-addresses {
-  @extend %disable-select;
 
   .filter {
     .subtitle {
       @extend %subtitle;
-      margin-top: 16px;
+      margin-top: 0;
     }
     .filter-card {
       padding: 10px 20px;
@@ -148,9 +140,6 @@ mat-card.receive-address {
   }
 
 }
-
-
-
 
 
 /* ------------------------------- *\
@@ -179,6 +168,7 @@ mat-card.receive-address {
 
 .address-title { // section title (used/unused)
   @extend %subtitle;
+  margin-top: 0;
 }
 
 .address-info { // address "card"

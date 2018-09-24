@@ -1,4 +1,4 @@
-<app-header class="disable-select">
+<app-header>
   <div class="tab-bar">
     <mat-tab-group (selectChange)="changeTab($event.index)">
       <mat-tab>
@@ -20,7 +20,7 @@
 
 <!-- ====== FRESH RECEIVE ADDRESS ====== -->
 
-<div class="container-flex disable-select with-tab-bar">
+<div class="container-flex with-tab-bar">
 
   <mat-card class="receive-address">
     <div class="address-info" fxLayout>
@@ -122,7 +122,7 @@
 
 <!-- ====== OLD, USED ADDRESS ====== -->
 
-<div class="previous-addresses container-block" fxLayout="row" fxLayoutGap="40px">
+<div class="previous-addresses container-block">
 
   <!-- Sorting, filtering -->
   <div class="filter">
@@ -148,13 +148,13 @@
 
 
   <!-- Address list -->
-  <div fxFlex="1 1 calc(100% - 260px)" *ngIf="getUnusedAddress()">
+  <div class="with-filter" *ngIf="getUnusedAddress()">
 
     <div class="no-results" *ngIf="(getSinglePage().length === 0) && (inSearchMode() === true)">
       No addresses found
     </div>
 
-    <mat-list *ngIf="getSinglePage().length" class="list-data">
+    <div *ngIf="getSinglePage().length" class="list-data">
       <div mat-subheader class="address-title">Used addresses</div>
       <div *ngFor="let address of getSinglePage()">
 
@@ -187,7 +187,7 @@
         </mat-card>
 
       </div>
-    </mat-list><!-- .list-data -->
+    </div><!-- .list-data -->
 
     <!-- use two paginator for reset pagination after tab change. -->
     <div class="receive-pagination">

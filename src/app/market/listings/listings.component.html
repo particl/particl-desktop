@@ -1,4 +1,4 @@
-<app-header class="disable-select">
+<app-header>
   <div class="control-bar" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
 
     <!-- Search-->
@@ -18,7 +18,7 @@
         fxFlex="0 0 180px"
         matTooltip="Filter by Seller country"
         matTooltipPosition="before"
-        class="filter country"
+        class="filter-by country"
         [options]="countryList?.countries"
         [defaultOption]="'All countries'"
         [showValueOf]="'name'"
@@ -39,7 +39,7 @@
       <mat-select-search
         matTooltip="Select your country to calculate exact shipping & escrow prices"
         matTooltipPosition="before"
-        class="filter country"
+        class="filter-by country"
         [options]="countryList?.countries"
         [defaultOption]="'Your country'"
         [showValueOf]="'name'"
@@ -91,7 +91,7 @@
   </div--><!-- .sidebar -->
 
 
-  <div class="content disable-select"
+  <div class="content"
        infiniteScroll
        [infiniteScrollContainer]="pagination.infinityScrollSelector"
        [fromRoot]="true"

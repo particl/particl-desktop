@@ -43,7 +43,6 @@ mat-card.multiple {
 }
 
 .list { // overview of listings/orders
-  @extend %disable-select;
   .total {
     .value {
       font-size: 22px;

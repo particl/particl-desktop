@@ -1,4 +1,4 @@
-<app-header class="disable-select">
+<app-header>
   <div class="tab-bar">
     <mat-tab-group (selectChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
       <mat-tab>
@@ -25,7 +25,7 @@
 
 
 <div class="container-block with-tab-bar">  
-  <div class="sidebar">
+  <div class="filter">
 
     <div class="new-proposal">
       <button mat-raised-button color="primary" class="full-width" (click)="addProposal()"
@@ -78,7 +78,7 @@
   </div><!-- .sidebar -->
 
 
-  <div class="content">
+  <div class="content with-filter">
 
     <div *ngIf="tabLabels[selectedTab] === 'active'">
       <app-proposal-details

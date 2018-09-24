@@ -1,29 +1,18 @@
 @import "./src/assets/_config"; // import shared colors etc.
 @import "./src/app/wallet/shared/_filter-sorting"; // filtering & sorting
 
-$fixed-sidebar-width: 230px;
-$sidebar-margin: 35px;
 
 // ------ LAYOUT ------ //
 
 .container-block {
   position: relative;
-  padding: 35px;
-  display: flex;
+  padding: $padding;
   @include break(l) {
-    padding: 45px 50px;
+    padding: 45px $padding-l;
   }
 }
 
-.sidebar {
-  width: $fixed-sidebar-width;
-  position: fixed;
-  /*
-  flex: 0 0 230px;
-  @include break(l) {
-    flex: 0 0 270px;
-  }
-  */
+.filter {
   .new-proposal {
     margin-bottom: 25px;
   }
@@ -31,19 +20,6 @@ $sidebar-margin: 35px;
     margin: 6px 0;
     display: inline-block;
   }
-}
-
-.content {
-  width: 100%;
-  max-width: calc(100% - (#{$fixed-sidebar-width} + #{$sidebar-margin}));
-  margin-left: $fixed-sidebar-width + $sidebar-margin;
-  /*
-  flex: 1 1 100%;
-  margin-left: 35px;
-  @include break(l) {
-    margin-left: 55px;
-  }
-  */
 }
 
 .loading-bar {
