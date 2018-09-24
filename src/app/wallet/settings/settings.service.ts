@@ -89,25 +89,49 @@ export class SettingsService {
     this.settingStateService.set('currentGUISettings', new Settings(settings));
   }
 
-  // list market setting.
+
+
+
+  /**
+   * Marketplace setting related method.
+   * list(), set(), remove() and get() are responsible to manage the marketplace setting from the GUI.
+   */
+
+  /**
+   * list() fetch the settings from marketplace.
+   */
+
   list(): any {
     const params = ['list', this.profileId];
     return this.marketService.call('setting', params);
   }
 
-  // set market setting.
+  /**
+   * set() set the settings to marketplace.
+   * @param {string} key: setting key (settting name)
+   * @param {any} value: value of the setting.
+   */
+
   set(key: string, value: any): any {
     const params = ['set', this.profileId, key, value]
     return this.marketService.call('setting', params);
   }
 
-  // remove market setting.
+  /**
+   * remove() remove the settings from marketplace.
+   * @param {string} key: setting key (settting name)
+   */
+
   remove(key: string): any {
     const params = ['remove', this.profileId, key]
     return this.marketService.call('setting', params);
   }
 
-  // get market setting.
+  /**
+   * get() get the settings from marketplace.
+   * @param {string} key: setting key (settting name)
+   */
+
   get(key: string): any {
     const params = ['get', this.profileId, key]
     return this.marketService.call('setting', params);
