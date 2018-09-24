@@ -5,7 +5,6 @@ import { Log } from 'ng2-logger';
 import { flyInOut } from '../../core-ui/core.animations';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
-import { ModalsService } from '../modals.service';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 @Component({
@@ -32,8 +31,6 @@ export class ColdstakeComponent {
   finalMessage: string = '';
 
   constructor(
-    @Inject(forwardRef(() => ModalsService))
-    private _modalsService: ModalsService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
     private _flashNotificationService: SnackbarService,

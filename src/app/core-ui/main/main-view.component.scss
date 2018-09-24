@@ -28,13 +28,20 @@
   border-bottom: 1px solid darken($bg-black, 5%);
   box-shadow: 0 1px 0 lighten($bg-black, 5%) !important;
   background: $bg-black;
+  margin: 8px 0 0 !important;
   // submenu toggle
   .mat-expansion-panel-header {
+    @extend %tfx;
     font-family: $font;
     font-size: 11.5px;
     color: lighten($text-muted, 5%);
     text-transform: uppercase;
+    min-height: 32px !important;
+    max-height: 32px !important;
     padding: 0 32px;
+    &:hover {
+      color: lighten($text-muted, 20%);
+    }
   }
 }
 
@@ -46,8 +53,6 @@
   padding: 0 24px;
   .icon {
     @extend %tfx;
-    width: auto;
-    height: auto;
     margin: 0 16px 0 0;
     color: lighten($bg-black, 15%);
   }
@@ -57,10 +62,19 @@
     font-weight: 600;
     color: white;
   }
+  .tag {
+    @extend %tag;
+    background: lighten($bg-black, 15%);;
+    margin-left: auto;
+    font-size: 70%;
+  }
   &:hover {
     background: darken($bg-black, 1.5%);
     .icon {
       color: lighten($bg-black, 30%);
+    }
+    .tag {
+      background-color: lighten($bg-black, 20%);
     }
   }
 }
@@ -69,8 +83,13 @@ a.sidebar-item-link {
   text-decoration: none;
   text-transform: uppercase;
   outline: none;
-  &.active > .sidebar-item .icon { // highlight active menu item
-    color: $color !important;
+  &.active .sidebar-item {
+    .icon { // highlight active menu item
+      color: $color !important;
+    }
+    .tag {
+      //background: $color !important;
+    }
   }
 }
 
@@ -118,7 +137,7 @@ a.sidebar-item-link {
 
 .sidebar { // AKA .mat-sidenav
   @extend %disable-select;
-  width: 250px;
+  width: $sidebar-width;
   background-color: $bg-black;
   color: white;
 
@@ -175,10 +194,24 @@ a.sidebar-item-link {
   @extend %disable-select;
   border-bottom: 1px solid $bg-shadow;
   background: #fff;
+  width: calc(100% - #{$sidebar-width} - #{$scrollbar-width});
   padding-left: 35px;
   padding-right: 26px;
   font-family: $font;
-  text-transform: uppercase;
   font-size: 15px;
-  font-weight: 700;
+  text-transform: uppercase;
+  position: fixed;
+  top: 0;
+  left: $sidebar-width;
+  right: 0;
+  z-index: 100;
+  @include break(l) {
+    padding: 0 calc(50px - #{$scrollbar-width}) 0 50px;
+  }
+  .title {
+    font-weight: 700;
+  }
+  .right {
+    text-align: right;
+  }
 }

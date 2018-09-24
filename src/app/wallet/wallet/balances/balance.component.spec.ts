@@ -36,7 +36,7 @@ describe('BalanceComponent', () => {
   });
 
   it('should return a balance equal to 0 (getFractionalPart)', () => {
-    expect(component.balance.getFractionalPart()).toBe(0);
+    expect(component.balance.getFractionalPart()).toBe('');
   });
 
   it('should not return a dot because its just 0, not 0.0 ', () => {

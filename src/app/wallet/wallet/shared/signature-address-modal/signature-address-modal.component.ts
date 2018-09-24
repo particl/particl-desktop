@@ -6,13 +6,12 @@ import { Log } from 'ng2-logger';
 import { SignVerifyMessage } from './sign-verify-message.model';
 
 import { RpcService, RpcStateService } from '../../../../core/core.module';
-import { ModalsService } from '../../../../modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
 
 import { AddressLookUpCopy } from '../../models/address-look-up-copy';
 import { AddressLookupComponent } from '../../addresslookup/addresslookup.component';
-
 
 
 @Component({
@@ -40,7 +39,9 @@ export class SignatureAddressModalComponent implements OnInit {
               private _rpcState: RpcStateService,
               private flashNotification: SnackbarService,
               private formBuilder: FormBuilder,
-              private _modals: ModalsService,
+
+              // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+              private modals: ModalsHelperService,
               private dialogRef: MatDialogRef<SignatureAddressModalComponent>) {
   }
 
@@ -106,13 +107,7 @@ export class SignatureAddressModalComponent implements OnInit {
   // copy code end
 
   onFormSubmit(): void {
-    if (this._rpcState.get('locked')) {
-      // unlock wallet
-      this._modals.open('unlock', {forceOpen: true, timeout: 3, callback: this.signVerifyMessage.bind(this)});
-    } else {
-      // wallet already unlocked
-      this.signVerifyMessage();
-    }
+    this.modals.unlock({timeout: 3}, (status) => this.signVerifyMessage());
   }
 
   signVerifyMessage(): void {

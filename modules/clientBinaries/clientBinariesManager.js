@@ -50,7 +50,7 @@ function checksum(filePath, algorithm) {
   });
 }
 
-class Manager {
+class Manager extends EventEmitter {
   /**
    * Construct a new instance.
    *
@@ -58,6 +58,7 @@ class Manager {
    * default configuration (`DefaultConfig`) will be used.
    */
   constructor (config) {
+    super();
     this._config = config;
 
     this._logger = log;
@@ -209,15 +210,33 @@ class Manager {
       stream.on('downloadProgress', (info) => {
         if (progressBar) {
           progressBar.update(info.transferred);
+
+          this.emit('download', {
+            status: 'busy',
+            transferred: info.transferred,
+            total: info.total
+          });
+
         } else {
           progressBar = new progress.Bar({}, progress.Presets.shades_classic);
           progressBar.start(info.total, info.transferred);
+
+          this.emit('download', {
+            status: 'started',
+            transferred: info.transferred,
+            total: info.total
+          });
+
         }
       });
 
       stream.on('error', (err) => {
         if (progressBar) {
           progressBar.stop();
+
+          this.emit('download', {
+            status: 'error'
+          });
         }
         this._logger.error(err);
         reject(new Error(`Error downloading package for ${clientId}: ${err.message}`));
@@ -226,6 +245,10 @@ class Manager {
       stream.on('end', () => {
         if (progressBar) {
           progressBar.stop();
+
+          this.emit('download', {
+            status: 'done'
+          });
         }
         this._logger.debug(`Downloaded ${downloadCfg.url} to ${downloadFile}`);
         try {

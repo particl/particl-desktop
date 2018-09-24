@@ -5,8 +5,7 @@ const path          = require('path');
 const fs            = require('fs');
 const url           = require('url');
 const platform      = require('os').platform();
-const rxIpc         = require('rx-ipc-electron/lib/main').default;
-const Observable    = require('rxjs/Observable').Observable;
+
 
 /* correct appName and userData to respect Linux standards */
 if (process.platform === 'linux') {
@@ -19,10 +18,14 @@ if (process.platform === 'linux') {
   app.getPath('userData') + '/testnet'
 ].map(path => !fs.existsSync(path) && fs.mkdir(path));
 
+if (app.getVersion().includes('RC'))
+  process.argv.push(...['-testnet']);
+
 const options = require('./modules/options').parse();
 const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
 const rpc     = require('./modules/rpc/rpc');
+const _auth = require('./modules/webrequest/http-auth');
 const daemon  = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -30,16 +33,20 @@ const daemon  = require('./modules/daemon/daemon');
 let mainWindow;
 let tray;
 
-if (app.getVersion().includes('RC'))
-  process.argv.push(...['-testnet', '-printtoconsole']);
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+
   log.info('app ready')
   log.debug('argv', process.argv);
   log.debug('options', options);
+  
+  app.setAppUserModelId("io.particl.desktop");
+  
+  // initialize the authentication filter
+  _auth.init();
+  
   initMainWindow();
   init.start(mainWindow);
 });
@@ -88,9 +95,10 @@ function initMainWindow() {
     icon:      path.join(__dirname, 'resources/icon.png'),
 
     webPreferences: {
+      webviewTag: false,
       nodeIntegration: false,
       sandbox: true,
-      contextIsolation: true,
+      contextIsolation: false,
       preload: path.join(__dirname, 'preload.js')
     },
   });

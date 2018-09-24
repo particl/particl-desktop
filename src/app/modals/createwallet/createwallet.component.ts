@@ -10,12 +10,12 @@ import { IPassword } from '../shared/password/password.interface';
 
 import { slideDown } from '../../core-ui/core.animations';
 
-import { ModalsService } from '../modals.service';
 import { PassphraseComponent } from './passphrase/passphrase.component';
 import { PassphraseService } from './passphrase/passphrase.service';
 
 import { RpcStateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Component({
   selector: 'modal-createwallet',
@@ -54,8 +54,8 @@ export class CreateWalletComponent implements OnDestroy {
   private destroyed: boolean = false;
 
   constructor (
-    @Inject(forwardRef(() => ModalsService))
-    private _modalsService: ModalsService,
+    @Inject(forwardRef(() => ModalsHelperService))
+    private _modals: ModalsHelperService,
     private _passphraseService: PassphraseService,
     private rpcState: RpcStateService,
     private flashNotification: SnackbarService,
@@ -69,7 +69,6 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   reset(): void {
-    this._modalsService.enableClose = true;
     this.rpcState.set('modal:fullWidth:enableClose', true);
     this.words = Array(24).fill('');
     this.isRestore = false;
@@ -79,7 +78,7 @@ export class CreateWalletComponent implements OnDestroy {
     this.errorString = '';
     this.step = 0;
     this.rpcState.observe('getwalletinfo', 'encryptionstatus')
-      .take(2)
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 
@@ -89,7 +88,7 @@ export class CreateWalletComponent implements OnDestroy {
     switch (type) {
       case 0: // Encrypt wallet
         this.dialogRef.close();
-        this._modalsService.open('encrypt', {forceOpen: true});
+        this._modals.encrypt();
         return;
       case 1: // Create
         break;
@@ -124,7 +123,6 @@ export class CreateWalletComponent implements OnDestroy {
   prevStep(): void {
     this.step--;
     this.errorString = '';
-    this.doStep();
   }
 
   doStep(): void {
@@ -140,11 +138,12 @@ export class CreateWalletComponent implements OnDestroy {
         this.passwordVerify = '';
         break;
       case 3:
+      this.log.d('step 3 execution, password=', this.password)
         this._passphraseService.generateMnemonic(
           this.mnemonicCallback.bind(this), this.password
         );
         this.flashNotification.open(
-          'Please remember to write down your recovery passphrase',
+          'Please remember to write down your Recovery Passphrase',
           'warning');
         break;
       case 4:
@@ -153,11 +152,10 @@ export class CreateWalletComponent implements OnDestroy {
           this.words[k] = '';
         }
         this.flashNotification.open(
-          'Did you write your password at the previous step ?',
+          'Did you write your password at the previous step?',
           'warning');
         break;
       case 5:
-        this.step = 4;
         this.errorString = '';
         if (this.rpcState.get('locked')) {
           // unlock wallet
@@ -169,7 +167,6 @@ export class CreateWalletComponent implements OnDestroy {
 
         break;
     }
-    this._modalsService.enableClose = (this.step === 0);
     this.rpcState.set('modal:fullWidth:enableClose', (this.step === 0));
   }
 
@@ -187,12 +184,13 @@ export class CreateWalletComponent implements OnDestroy {
 
   public importMnemonicSeed(): void {
     this.rpcState.set('ui:spinner', true);
+    this.step = 5;
 
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {
           this._passphraseService.generateDefaultAddresses();
-          this.step = 5;
+          this.step = 7;
           this.rpcState.set('ui:walletInitialized', true);
           this.rpcState.set('ui:spinner', false);
           this.log.i('Mnemonic imported successfully');
@@ -202,7 +200,6 @@ export class CreateWalletComponent implements OnDestroy {
           this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
-          this._modalsService.enableClose = true;
           this.rpcState.set('ui:spinner', false);
           this.rpcState.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');
@@ -216,7 +213,7 @@ export class CreateWalletComponent implements OnDestroy {
     if (this.validating && this.step === 4 && !this.isRestore) {
       const valid = !this.words.filter(
         (value, index) => this.wordsVerification[index] !== value).length;
-      this.errorString = valid ? '' : 'You have entered an invalid recovery phrase';
+      this.errorString = valid ? '' : 'You have entered an invalid Recovery Phrase';
       return valid;
     }
 
@@ -264,26 +261,18 @@ export class CreateWalletComponent implements OnDestroy {
     }
 
     if (this.password !== this.passwordVerify) {
-      this.flashNotification.open('Passwords Do Not Match!', 'warning');
+      this.flashNotification.open('Passwords do not match!', 'warning');
     } else {
       // We should probably make this a function because it isn't reusing code??
       this.validating = false;
       this.step++;
       this.doStep();
     }
-    this.passwordVerify = ''
-    this.password = '';
   }
 
   /** Triggered when the password is emitted from PassphraseComponent */
   wordsFromEmitter(words: string): void {
     this.words = words.split(',');
-  }
-
-  close(): void {
-    this.reset();
-    document.body.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   }
 
   public countWords (count: number): boolean {
@@ -297,7 +286,12 @@ export class CreateWalletComponent implements OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
     if (event.keyCode === 13) {
-      this.nextStep();
+      if (this.step < 7) {
+        this.nextStep();
+      } else {
+        this.dialogRef.close()
+      }
+
     }
   }
 }

@@ -65,7 +65,6 @@ exports.parse = function() {
     : options.testnet
       ? 51935  // default testnet port
       : 51735; // default mainnet port
-
   _options = options;
   return options;
 }

@@ -7,19 +7,14 @@ import { IpcService } from '../ipc/ipc.service';
 @Injectable()
 export class NotificationService {
   constructor(
-    private _ipc: IpcService
   ) {
+    window.sendNotification = this.sendNotification.bind(this)
+
   }
 
   /** Send Notification to the backend */
   public sendNotification(title: string, desc: string) {
-    if (window.electron) {
-      this.runNotification(title, desc);
-    }
-  }
-
-  private runNotification(...args: any[]): Observable<any> {
-    return this._ipc.runCommand('notification', null, ...args);
+    return new Notification(title, {body: desc, icon: './assets/icons/notification.png'});
   }
 
 }

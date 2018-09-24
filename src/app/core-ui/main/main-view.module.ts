@@ -14,6 +14,8 @@ import { PercentageBarComponent } from '../../modals/shared/percentage-bar/perce
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
 
+import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
+
 
 @NgModule({
   imports: [
@@ -32,7 +34,8 @@ import { ClientVersionService } from '../../core/http/client-version.service';
     StatusComponent,
     PercentageBarComponent,
     ConsoleModalComponent,
-    ReleaseNotificationComponent
+    ReleaseNotificationComponent,
+    TimeoffsetComponent
   ],
   entryComponents: [
     ConsoleModalComponent,

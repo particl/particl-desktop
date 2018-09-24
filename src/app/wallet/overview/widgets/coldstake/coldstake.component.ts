@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
 
-import { ModalsService } from 'app/modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
 import { ColdstakeService } from './coldstake.service'
 
@@ -22,32 +22,21 @@ export class ColdstakeComponent {
 
   constructor(
     private dialog: MatDialog,
-    private _modals: ModalsService,
+    /***
+     *  @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+     */
+    private _modals: ModalsHelperService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-    private _coldstake: ColdstakeService
+    public coldstake: ColdstakeService
   ) { }
 
   zap() {
-    if (this._rpcState.get('locked')) {
-      this._modals.open('unlock', {
-        forceOpen: true,
-        callback: this.openZapColdstakingModal.bind(this)
-      });
-    } else {
-      this.openZapColdstakingModal();
-    }
+    this._modals.unlock({}, (status) => this.openZapColdstakingModal());
   }
 
   revert() {
-    if (this._rpcState.get('locked')) {
-      this._modals.open('unlock', {
-        forceOpen: true,
-        callback: this.openRevertColdstakingModal.bind(this)
-      });
-    } else {
-      this.openRevertColdstakingModal();
-    }
+    this._modals.unlock({}, (status) => this.openRevertColdstakingModal());
   }
 
   openRevertColdstakingModal() {
@@ -59,11 +48,11 @@ export class ColdstakeComponent {
   }
 
   openUnlockWalletModal(): void {
-    this._modals.open('unlock', { forceOpen: true, showStakeOnly: false, stakeOnly: true });
+    this._modals.unlock({ showStakeOnly: false, stakeOnly: true });
   }
 
   openColdStakeModal(): void {
-    this._modals.open('coldStake', { forceOpen: true, type: 'cold' });
+    this._modals.coldStake('cold');
   }
 
   checkLockStatus(): boolean {
@@ -71,6 +60,6 @@ export class ColdstakeComponent {
       'Unlocked',
       'Unlocked, staking only',
       'Unencrypted'
-    ].includes(this._coldstake.encryptionStatus);
+    ].includes(this.coldstake.encryptionStatus);
   }
 }

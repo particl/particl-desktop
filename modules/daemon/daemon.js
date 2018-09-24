@@ -1,17 +1,17 @@
 const electron = require('electron');
-const log      = require('electron-log');
-const spawn    = require('child_process').spawn;
-const rxIpc    = require('rx-ipc-electron/lib/main').default;
+const log = require('electron-log');
+const spawn = require('child_process').spawn;
+const rxIpc = require('rx-ipc-electron/lib/main').default;
+const Observable = require('rxjs/Observable').Observable;
 
-const _options      = require('../options');
-const rpc           = require('../rpc/rpc');
-const cookie        = require('../rpc/cookie');
+const _options = require('../options');
+const removeWalletAuthentication = require('../webrequest/http-auth').removeWalletAuthentication;
+const rpc = require('../rpc/rpc');
+const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
-const multiwallet   = require('../multiwallet');
+const multiwallet = require('../multiwallet');
 
 let daemon = undefined;
-let exitCode = 0;
-let restarting = false;
 let chosenWallets = [];
 
 function daemonData(data, logger) {
@@ -19,122 +19,105 @@ function daemonData(data, logger) {
   logger(data);
 }
 
-exports.restart = function (cb) {
-  log.info('restarting daemon...')
-  restarting = true;
-
-  return exports.stop().then(function waitForShutdown() {
-    log.debug('waiting for daemon shutdown...')
-
-    exports.check().then(waitForShutdown).catch((err) => {
-      if (err.status == 502) { /* daemon's net module shutdown  */
-        log.debug('daemon stopped network, waiting 10s before restarting...');
-        setTimeout(() => {     /* wait for full daemon shutdown */
-
-          exports.start(chosenWallets, cb)
-            .then(() => restarting = false)
-            .catch(error => log.error(error));
-
-        }, 10 * 1000);
+exports.init = function () {
+  console.log('daemon init listening for reboot')
+  rxIpc.registerListener('daemon', (data) => {
+    return Observable.create(observer => {
+      console.log('got data on daemon channel!');
+      if (data && data.type === 'restart') {
+        exports.restart(true).then(() => {
+          observer.complete(true);
+        });
       } else {
-        waitForShutdown();
+        observer.complete(true);
       }
     });
   });
 }
 
-exports.start = function (wallets, callback) {
+exports.restart = function (alreadyStopping) {
+  log.info('restarting daemon...')
+  return (new Promise((resolve, reject) => {
+    // setup a listener, waiting for the daemon
+    // to exit.
+    if (daemon) {
+      daemon.once('close', code => {
+        log.info('clearing cookie, encrypt wallet')
+        // clear authentication
+        removeWalletAuthentication();
+
+        // restart
+        this.start(chosenWallets);
+        resolve();
+      });
+    } else {
+      // daemon not in our control
+      resolve();
+    }
+
+    // wallet encrypt will restart by itself
+    if (!alreadyStopping) {
+      // stop daemon but don't make it quit the app.
+      const restarting = true;
+      exports.stop(restarting).then(() => {
+        log.debug('waiting for daemon shutdown...')
+      });
+    }
+  }));
+
+
+
+}
+
+exports.start = function (wallets) {
   return (new Promise((resolve, reject) => {
 
-    chosenWallets    = wallets;
+    chosenWallets = wallets;
 
-    rpc.init();
     exports.check().then(() => {
-      log.info('daemon already started');
+      log.info('daemon already running');
       resolve(undefined);
 
-    }).catch(() => {
+    }).catch(async () => {
+      // clear cookie authentication
+      // currently used by electron (if reboot)
+      removeWalletAuthentication();
+      await askForDeletingCookie().catch(() => log.info('cookie: already existed and re-using.'));
 
-      let options      = _options.get();
+      daemon = undefined;
+
+      let options = _options.get();
       const daemonPath = options.customdaemon
-                       ? options.customdaemon
-                       : daemonManager.getPath();
+        ? options.customdaemon
+        : daemonManager.getPath();
 
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
-      const child = spawn(daemonPath, [...process.argv, ...wallets])
-      .on('close', code => {
-        daemon = undefined;
-        if (code !== 0) {
-          reject();
-          log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
-        } else {
-          log.info('daemon exited successfully');
-        }
-        if (!restarting)
-          electron.app.quit();
-      })
+      const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
+        .on('close', code => {
+          if (code !== 0) {
+            reject();
+            log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
+          }
+        });
 
       // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
       child.stderr.on('data', data => daemonData(data, console.log));
 
       daemon = child;
-      callback = callback ? callback : () => { log.info('no callback specified') };
-      exports.wait(wallets, callback).then(resolve).catch(reject);
     });
 
   }));
 }
 
-exports.wait = function(wallets, callback) {
-  return new Promise((resolve, reject) => {
 
-    const maxRetries  = 100; // Some slow computers...
-    let   retries     = 0;
-    let   errorString = '';
-
-    const daemonStartup = () => {
-      exports.check()
-        .then(() => { callback(); resolve(); })
-        .catch(() => {
-          if (exitCode === 0 && retries < maxRetries)
-            setTimeout(daemonStartup, 1000);
-        });
-
-      if (exitCode !== 0 || ++retries >= maxRetries) {
-        // Rebuild block and transaction indexes
-        if (errorString.includes('-reindex')) {
-          log.info('Corrupted block database detected, '
-                 + 'restarting the daemon with the -reindex flag.');
-          process.argv.push('-reindex');
-          exitCode = 0; // Hack a bit here...
-          // We don't want it to exit at this stage if start was called..
-          // it will probably error again if it has to.
-          exports.start(wallets, callback);
-          return;
-        }
-        log.error('Could not connect to daemon.')
-        reject();
-      }
-    } /* daemonStartup */
-
-    if (daemon && exitCode === 0) {
-      daemon.stderr.on('data', data => errorString = data.toString('utf8'));
-      setTimeout(daemonStartup, 1000);
-    }
-
-  });
-}
-
-exports.check = function() {
+exports.check = function () {
   return new Promise((resolve, reject) => {
 
     const _timeout = rpc.getTimeoutDelay();
-    rpc.init();
     rpc.call('getnetworkinfo', null, (error, response) => {
-      rxIpc.removeListeners();
       if (error) {
         reject(error);
       } else if (response) {
@@ -146,28 +129,76 @@ exports.check = function() {
   });
 }
 
-exports.stop = function() {
+// Note: this will resolve before the daemon has actually quit.
+// do not rely on it. Use daemon.on('close', ...) instead
+exports.stop = function (restarting) {
+  log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
     if (daemon) {
-      rpc.call('stop', null, (error, response) => {
-        if (error) {
-          log.error('Calling SIGINT!');
-          reject();
-        } else {
-          log.debug('Daemon stopping gracefully...');
-          resolve();
-        }
-      });
-    } else
-    {
-        log.debug('Daemon not managed by gui.');
-        resolve();
-        electron.app.quit();
+
+      // attach event to stop electron when daemon closes.
+      // do not close electron when restarting (e.g encrypting wallet)
+      if (!restarting) {
+        daemon.once('close', code => {
+          log.info('daemon exited successfully - quiting electron');
+          electron.app.quit();
+        });
+      }
+
+      log.info('Call RPC stop!');
+      _stop();
+      resolve();
+
+    } else {
+      log.info('Daemon not managed by gui.');
+      electron.app.quit();
+      resolve();
     }
 
-  }).catch(() => {
-    if (daemon)
-      daemon.kill('SIGINT')
+  });
+}
+
+function _stop(attempt = 0) {
+  rpc.call('stop', null, (error, response) => {
+    if (error) {
+      log.info('daemon errored - trying again in a second..')
+      // just kill after 180s
+      if (attempt >= 180) {
+        log.info('daemon errored to rpc stop - killing it brutally :(');
+        log.info(error);
+        daemon.kill('SIGINT');
+      } else {
+        // daemon is busy cut it some slack.
+        setTimeout(_stop, 1000, ++attempt);
+      }
+    } else {
+      log.info('Daemon stopping gracefully - we can now quit safely :)');
+    }
+  });
+}
+
+function askForDeletingCookie() {
+  return new Promise((resolve, reject) => {
+    if (cookie.checkCookieExists()) {
+      // alert for cookie
+      log.info('cookie: dialog open');
+      electron.dialog.showMessageBox({
+        type: 'warning',
+        buttons: ['Yes', 'No'],
+        message: `It seems like you already have an instance of Particl running, do you want to connect to that instead? 
+                  If you think you're having issues starting the application, select no.`
+      }, (response) => {
+        if (response === 1) {
+          log.info('cookie: deleting');
+          cookie.clearCookieFile();
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    } else {
+      resolve();
+    }
   });
 }

@@ -7,18 +7,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
-import { ModalsService } from './modals.service';
-
-import { ModalsComponent } from './modals.component';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
-import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
+
 /* shared in modals */
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
 import { PassphraseService } from './createwallet/passphrase/passphrase.service';
@@ -26,8 +24,8 @@ import { PasswordComponent } from './shared/password/password.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
-import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
-
+import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
+import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -40,36 +38,36 @@ import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-con
     DirectiveModule
   ],
   declarations: [
-    ModalsComponent,
     PassphraseComponent,
     PasswordComponent,
     CreateWalletComponent,
-    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
     MultiwalletComponent,
-    DaemonConnectionComponent
+    ManageWidgetsComponent,
+    SendConfirmationModalComponent
   ],
   exports: [
-    ModalsComponent,
     ClipboardModule
   ],
   providers: [
-    ModalsService,
+    // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
+    ModalsHelperService,
     PassphraseService,
     SnackbarService
   ],
   entryComponents: [
-    ModalsComponent,
-    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
-    DaemonConnectionComponent
+    ManageWidgetsComponent,
+    CreateWalletComponent,
+    ColdstakeComponent,
+    SendConfirmationModalComponent
   ],
 })
 export class ModalsModule {
@@ -77,11 +75,11 @@ export class ModalsModule {
     return {
       ngModule: ModalsModule,
       providers: [
-        ModalsService
+        ModalsHelperService
       ]
     };
   }
 }
 
-export { ModalsService } from './modals.service';
+export { ModalsHelperService } from './modals-helper.service';
 export { PassphraseService } from './createwallet/passphrase/passphrase.service';

@@ -6,10 +6,9 @@ import { WalletModule } from '../../wallet/wallet.module';
 import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
-import { ModalsService } from '../../../modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 import { AddressBookComponent } from './address-book.component';
-
 
 describe('AddressBookComponent', () => {
   let component: AddressBookComponent;
@@ -25,7 +24,7 @@ describe('AddressBookComponent', () => {
         BrowserAnimationsModule
       ],
       declarations: [ ],
-      providers: [ ModalsService ]
+      providers: [ ModalsHelperService ]
     })
     .compileComponents();
   }));

@@ -6,9 +6,9 @@ import { Log } from 'ng2-logger';
 import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 
-import { ModalsService } from '../../../../../modals/modals.service';
 
 import { AddressService } from '../../../shared/address.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 
 @Component({
   selector: 'app-new-address-modal',
@@ -37,7 +37,9 @@ export class NewAddressModalComponent implements OnInit {
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
     private flashNotificationService: SnackbarService,
-    private _modals: ModalsService,
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService,
     private _addressService: AddressService) {
   }
 
@@ -89,15 +91,7 @@ export class NewAddressModalComponent implements OnInit {
     }
 
     if (this.label !== undefined && this.label.trim() && !this.isMine) {
-      if (this._rpcState.get('locked')) {
-        // unlock wallet and send transaction
-        this._modals.open('unlock', {
-          forceOpen: true, timeout: 3, callback: this.addressCallBack.bind(this)
-        });
-      } else {
-        // wallet already unlocked
-        this.addressCallBack();
-      }
+      this.modals.unlock({timeout: 3}, (status) => this.addressCallBack());
       this.dialogRef.close();
     }
   }

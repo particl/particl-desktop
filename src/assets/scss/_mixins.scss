@@ -1,0 +1,32 @@
+/* ------------------------------- *\
+    Breakpoints
+\* ------------------------------- */
+
+// ------ DEFAULT ------ //
+
+// Default breakpoints with widths defined in _config.scss
+// Usage: @include break(l|xl|xxl|hd) { .. }
+
+@mixin break($media) {
+  @if $media == l { 
+    @media only screen and (min-width: $break-l) { @content; }
+  }
+  @else if $media == xl {
+    @media only screen and (min-width: $break-xl) { @content; }
+  }
+  @else if $media == hd {
+    @media only screen and (min-width: $break-hd) { @content; }
+  }
+  @else if $media == xhd {
+    @media only screen and (min-width: $break-xhd) { @content; }
+  }
+}
+
+// ------ CUSTOM BREAKPOINTS ------ //
+
+// Custom responsivity (px-based, for when default breakpoints aren't enough)
+// Usage: @include break-from(741px) { .. }
+
+@mixin break-from($size) {
+   @media only screen and (min-width: $size) { @content; }
+}

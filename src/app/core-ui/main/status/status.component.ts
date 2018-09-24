@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
-import { ModalsService } from '../../../modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService, RpcStateService } from '../../../core/core.module';
 
 import { ConsoleModalComponent } from './modal/help-modal/console-modal.component';
@@ -29,7 +29,11 @@ export class StatusComponent implements OnInit, OnDestroy {
   constructor(
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-    private _modalsService: ModalsService,
+    /***
+     *  @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    */
+
+    private _modals: ModalsHelperService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -86,7 +90,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   toggle() {
     switch (this.encryptionStatus) {
       case 'Unencrypted':
-        this._modalsService.open('encrypt', {'forceOpen': true});
+        this._modals.encrypt();
         break;
       case 'Unlocked':
       case 'Unlocked, staking only':
@@ -96,7 +100,7 @@ export class StatusComponent implements OnInit, OnDestroy {
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':
-        this._modalsService.open('unlock', {forceOpen: true, showStakeOnly: true});
+        this._modals.unlock({showStakeOnly: true});
         break;
       default:
         break;

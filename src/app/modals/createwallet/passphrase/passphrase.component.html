@@ -1,8 +1,8 @@
 <div class="passphrase">
   <div class="subtitle">Your Recovery Phrase</div>
 
-  <div fxLayoutWrap fxLayoutGap="1.66%" class="word-list">
-    <div fxFlex="15%" *ngFor="let k of Arr(24).fill(); let i = index">
+  <div fxLayoutWrap fxLayoutGap="3.66%" class="word-list">
+    <div fxFlex="13%" *ngFor="let k of Arr(24).fill(); let i = index">
       <mat-form-field>
         <input
           #phrase
@@ -22,11 +22,13 @@
   <div class="actions" fxLayoutAlign="center center" *ngIf="!isDisabled && !partialDisable">
 
     <button mat-button *ngIf="generate" (click)="copyToClipBoard()" ngxClipboard [cbContent]="words.join(' ')" class="copy">
-      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon> Copy to Clipboard
+      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+      Copy to Clipboard
     </button>
 
     <button mat-button *ngIf="!generate" class="paste" (click)="pasteContent()">
-      <mat-icon fontSet="partIcon" fontIcon="part-past"></mat-icon> Paste
+      <mat-icon fontSet="partIcon" fontIcon="part-past"></mat-icon>
+      Paste
     </button>
 
   </div><!-- .actions -->

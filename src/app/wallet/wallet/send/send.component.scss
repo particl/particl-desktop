@@ -43,15 +43,30 @@
   &:hover {
     background: $bg-hover;
   }
+  &.mat-radio-checked {
+    .name {
+      font-weight: 700;
+    }
+    .desc {
+      font-weight: 400;
+      .amount {
+        color: darken($color, 3%);
+      }
+    }
+  }
   .name { // balance type
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 1px;
+    padding-left: 4px;
   }
   .desc { // available balance
     color: $text-muted;
     font-size: 11px;
+    padding-left: 4px;
     .amount {
-      color: $color;
+      @extend %tfx;
+      color: $text-muted;
       font-weight: 600;
       margin-left: 5px;
     }
@@ -66,20 +81,18 @@
   }
 }
 
-.mat-icon {
-  width: auto;
-  height: auto;
-  font-size: 16px;
-}
-
 
 // ------ LAYOUT ------ //
 
 app-header {
+  mat-tab-group {
+    margin-top: $header-main-height;
+  }
   .bottom-line { // line under tabs
     border-bottom: 1px solid $bg-shadow;
   }
 }
+
 
 .privacy-level { // slider in Anon TXs
   margin: 0 0 20px;

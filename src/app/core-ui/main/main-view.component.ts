@@ -4,12 +4,13 @@ import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
+
 import { environment } from '../../../environments/environment';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
-import { ModalsService } from '../../modals/modals.module';
-
+import { UpdaterService } from 'app/core/updater/updater.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 
 /*
  * The MainView is basically:
@@ -31,7 +32,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   title: string = '';
   testnet: boolean = false;
-
   /* errors */
   walletInitialized: boolean = undefined;
   daemonRunning: boolean = undefined;
@@ -43,15 +43,17 @@ export class MainViewComponent implements OnInit, OnDestroy {
   time: string = '5:00';
   public unlocked_until: number = 0;
 
-
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
+    private _updater: UpdaterService,
     private _rpcState: RpcStateService,
-    private _newtxnotifier: NewTxNotifierService,
-    private _modals: ModalsService,
-    private dialog: MatDialog
+    private _modalsService: ModalsHelperService,
+    private dialog: MatDialog,
+    // the following imports are just 'hooks' to
+    // get the singleton up and running
+    private _newtxnotifier: NewTxNotifierService
   ) { }
 
   ngOnInit() {
@@ -114,6 +116,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     /* check if testnet -> block explorer url */
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
+
   }
 
   ngOnDestroy() {
@@ -121,12 +124,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
   }
   /** Open createwallet modal when clicking on error in sidenav */
   createWallet() {
-    this._modals.open('createWallet', { forceOpen: true });
+    this._modalsService.createWallet();
   }
 
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
   syncScreen() {
-    this._modals.open('syncing', { forceOpen: true });
+    this._modalsService.syncing();
   }
 
   checkTimeDiff(time: number) {
@@ -165,10 +168,4 @@ export class MainViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-  // Sample code for open modal box
-  openDemonConnectionModal() {
-    const dialogRef = this.dialog.open(DaemonConnectionComponent);
-    dialogRef.componentInstance.text = "Test";
-  }*/
 }

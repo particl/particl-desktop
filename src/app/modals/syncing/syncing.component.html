@@ -1,52 +1,44 @@
-
-<div class="container">
-  <div class="content">
-    <div class="section wallet-syncing">
-      <div class="title">Wallet is syncing</div>
-      <p>
-        Your wallet automatically synchronizes with the Particl network after a connection is established, but this
-        process has not completed yet. This means that recent transactions will not be visible, and the balance may not
-        be up-to-date until this process has completed.
-      </p>
-      <p>
-        Spending Particl may not be possible during this phase
-      </p>
-      <p *ngIf="nPeers < 1" class="warning">
-        <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-        Warning: No peers connected. Please check your internet connection
-      </p>
-    </div><!-- .wallet-syncing -->
+<div mat-dialog-title class="title">Syncing with network</div>
 
 
-    <!-- @TODO: resize and align spinner  -->
-    <div class="section sync-stats" fxLayout="row" fxLayoutWrap>
-      <div fxFlex="30" class="big item">
-        <span class="value">
-          {{ remainder }}
-          <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-            <mat-spinner class="sync-spinner"></mat-spinner>
-          </div>
-        </span>
-        <div class="description">Blocks to sync</div>
-      </div>
-      <div fxFlex="70" class="big item">
-        <span class="value">
-          {{ estimatedTimeLeft }}
-          <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-            <mat-spinner class="sync-spinner"></mat-spinner>
-          </div>
-        </span>
-        <div class="description">Estimated time left</div>
-      </div>
-      <div fxFlex="100" class="small item">
-        <span class="value">
-          {{ lastBlockTime }}
-          <div fxLayoutAlign="center center" *ngIf="!syncPercentage">
-            <mat-spinner class="sync-spinner"></mat-spinner>
-          </div>
-        </span>
-        <div class="description">Last Block time</div>
-      </div>
-    </div><!-- .sync-stats -->
-  </div><!-- .content -->
-</div><!-- .container -->
+<mat-dialog-content class="modal-content">
+  <mat-spinner *ngIf="!syncPercentage" class="sync-spinner"></mat-spinner>
+
+  <p>
+    Your wallet automatically synchronizes with the Particl network after a connection is established, but this process has not completed yet. This means that recent transactions will not be visible, and the balance may not be up-to-date until this process has completed.
+  </p>
+  <p class="info">
+    Spending Particl may not be possible during this phase
+  </p>
+  <p class="widget-help">
+    You can safely close this window and continue syncing in background or wait till syncing is complete &ndash; this window will automatically close when finished.
+  </p>
+  <p *ngIf="nPeers < 1" class="warning">
+    Warning: No peers connected &ndash; please check your internet connection
+  </p>
+
+  <div class="subtitle">Sync progress</div>
+  <table class="sync-progress">
+    <tr>
+      <th>Blocks to sync</th>
+      <td>{{ remainder }}</td>
+    </tr>
+    <tr>
+      <th>Estimated time left</th>
+      <td>{{ estimatedTimeLeft }}</td>
+    </tr>
+    <tr>
+      <th>Last block time</th>
+      <td>{{ lastBlockTime }}</td>
+    </tr>
+  </table>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Close & sync in background
+  </button>
+</mat-dialog-actions>

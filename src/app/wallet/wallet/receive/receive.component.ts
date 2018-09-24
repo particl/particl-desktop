@@ -2,7 +2,8 @@ import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { RpcService } from '../../../core/core.module';
+import { RpcService, RpcStateService } from '../../../core/core.module';
+import { ModalsHelperService } from 'app/modals/modals.module';
 
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
@@ -20,13 +21,16 @@ export class ReceiveComponent implements OnInit {
 
   log: any = Log.create('receive.component');
 
-  MAX_ADDRESSES_PER_PAGE: number = 5;
-  PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
+  MAX_ADDRESSES_PER_PAGE: number = 10;
+  PAGE_SIZE_OPTIONS: Array<number> = [10, 25, 50];
 
   /* UI State */
   public type: string = 'public';
   public query: string = '';
-
+  public addressInput: boolean = true;
+  public label: string = '';
+  public address: string = '';
+  testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
   selected: any;
   page: number = 1;
@@ -39,11 +43,17 @@ export class ReceiveComponent implements OnInit {
   };
 
   constructor(private rpc: RpcService,
+              public rpcState: RpcStateService,
               public dialog: MatDialog,
-              private flashNotificationService: SnackbarService) {
+              private flashNotificationService: SnackbarService,
+              private modals: ModalsHelperService) {
   }
 
   ngOnInit(): void {
+
+    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
+     .subscribe(chain => this.testnet = chain === 'test');
+
     // start rpc
     this.rpc_update();
   }
@@ -90,7 +100,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   /** Returns the unused addresses to display in the UI. */
-  getUnusedAddress(): Object {
+  getUnusedAddress(): any {
     return this.addresses[this.type][0];
   }
 
@@ -144,7 +154,7 @@ export class ReceiveComponent implements OnInit {
     }
     /* @TODO: can be removed */
     if (this.addresses[type].length === 0) {
-      this.openNewAddress()
+      this.generateAddress()
     } else {
       this.selectAddress(this.addresses[type][0]);
     }
@@ -152,6 +162,7 @@ export class ReceiveComponent implements OnInit {
 
   changeTab(tab: number): void {
     this.page = 1;
+    this.exitLabelEditingMode();
     if (tab) {
       this.setAddressType('private');
     } else {
@@ -170,8 +181,7 @@ export class ReceiveComponent implements OnInit {
   selectAddress(address: string): void {
     this.selected = address;
   }
-
- /**
+  /**
    * Opens a dialog when creating a new address.
    */
   openNewAddress(address?: string): void {
@@ -188,7 +198,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   copyToClipBoard(): void {
-    this.flashNotificationService.open('Address copied to clipboard.');
+    this.flashNotificationService.open('Address copied to clipboard');
   }
 
   openSignatureModal(address: string): void {
@@ -215,7 +225,7 @@ export class ReceiveComponent implements OnInit {
     /*
     if (count ===) {
       console.log('openNewAddress()')
-      this.openNewAddress();
+      this.updateLabel();
       return;
     }
     */
@@ -272,7 +282,7 @@ export class ReceiveComponent implements OnInit {
   addAddress(response: any, type: string): void {
     const tempAddress = {
       id: 0,
-      label: 'Empty label',
+      label: '(No label)',
       address: 'Empty address',
       balance: 0,
       readable: ['Empty']
@@ -353,4 +363,42 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
+  updateLabel(address: string) {
+    this.address = address
+    this.modals.unlock({timeout: 3}, (status) => this.editLabel());
+  }
+
+  generateAddress(): void {
+    this.modals.unlock({timeout: 3}, (status) => this.newAddress());
+  }
+
+  newAddress() {
+    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    const callParams = ['(No label)'];
+    const msg = `New ${this.type} address generated`;
+    this.rpcCallAndNotify(call, callParams, msg);
+  }
+
+  editLabel(): void {
+    const call = 'manageaddressbook';
+    const callParams = ['newsend', this.address, this.label];
+    const msg = `Label for ${this.address} updated`;
+    this.rpcCallAndNotify(call, callParams, msg);
+  }
+
+  rpcCallAndNotify(call: string, callParams: any, msg: string): void {
+    if (call) {
+      this.rpc.call(call, callParams)
+        .subscribe(response => {
+          this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
+          this.flashNotificationService.open(msg)
+          this.exitLabelEditingMode();
+          this.rpc_update();
+        });
+    }
+  }
+
+  exitLabelEditingMode(): void {
+    this.addressInput = true;
+  }
 }

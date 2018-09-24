@@ -1,5 +1,5 @@
 /*
-$font: "Open Sans", sans-serif;
+$font: "Inter_UI", sans-serif;
 
 // main colors
 $color: #02E8B0; // primary green-ish color
@@ -25,7 +25,7 @@ $radius: 4px; // default border-radius
   background: #222828;
   color: white;
   text-align: center;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Inter_UI", sans-serif;
   display: flex;
   position: absolute;
   top: 0;

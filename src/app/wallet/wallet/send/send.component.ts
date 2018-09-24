@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
-import { ModalsService } from '../../../modals/modals.service';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService } from '../../../core/rpc/rpc.service';
 import { RpcStateService } from '../../../core/rpc/rpc-state/rpc-state.service';
 
@@ -12,10 +12,10 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { AddressLookupComponent } from '../addresslookup/addresslookup.component';
 import { AddressLookUpCopy } from '../models/address-look-up-copy';
-import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 
 import { AddressHelper } from '../../../core/util/utils';
 import { TransactionBuilder, TxType } from './transaction-builder.model';
+import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
 
 @Component({
@@ -39,11 +39,15 @@ export class SendComponent implements OnInit {
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
 
+  TxType: any = TxType;
+
   constructor(
     private sendService: SendService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-    private _modals: ModalsService,
+
+    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
+    private modals: ModalsHelperService,
     private dialog: MatDialog,
     private flashNotification: SnackbarService
   ) {
@@ -180,13 +184,7 @@ export class SendComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this._rpcState.get('locked')) {
-      // unlock wallet and send transaction
-      this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.openSendConfirmationModal.bind(this)});
-    } else {
-      // wallet already unlocked
-      this.openSendConfirmationModal();
-    }
+    this.modals.unlock({timeout: 30}, (status) => this.openSendConfirmationModal());
   }
 
   /** Open Send Confirmation Modal */
@@ -242,14 +240,7 @@ export class SendComponent implements OnInit {
       }
 
     }
-
-    if (this._rpcState.get('locked')) {
-      // unlock wallet and send transaction
-      this._modals.open('unlock', {forceOpen: true, timeout: 30, callback: this.sendTransaction.bind(this)});
-    } else {
-      // wallet already unlocked
-      this.sendTransaction();
-    }
+    this.modals.unlock({timeout: 30}, (status) => this.sendTransaction());
   }
 
   private sendTransaction(): void {

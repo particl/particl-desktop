@@ -36,6 +36,10 @@ describe('Amount', () => {
   const mockAmount = 5.6;
   const mockDescimalDigits = 10
   const amount = new Amount(mockAmount, mockDescimalDigits);
+
+  const mockAmountTwo = 0.006;
+  const amountTwo = new Amount(mockAmountTwo, 8);
+
   it('should be created', () => {
     expect(amount).toBeTruthy();
   });
@@ -43,10 +47,18 @@ describe('Amount', () => {
   it('should return amount', () => {
     expect(amount.getAmount()).toEqual(mockAmount);
     expect(amount.getIntegerPart()).toEqual(5);
-    expect(amount.getFractionalPart()).toEqual(6);
+    expect(amount.getFractionalPart()).toEqual('6');
     expect(amount.positiveOrZero(-5)).toBe('0');
     expect(amount.dot()).toBe('.');
     expect(amount.truncateToDecimals(-25.99999, 3)).toEqual(-25.999);
+  });
+
+
+  it('should validate 0.001', () => {
+    expect(amountTwo.getAmount()).toEqual(mockAmountTwo);
+    expect(amountTwo.getIntegerPart()).toEqual(0);
+    expect(amountTwo.getFractionalPart()).toEqual('006');
+    expect(amountTwo.dot()).toBe('.');
   });
 
 });

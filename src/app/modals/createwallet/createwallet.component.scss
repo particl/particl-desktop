@@ -1,27 +1,16 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
-@import "../shared/_modal-layout"; // shared layout for modals (dialog titles etc.)
-
-
-.actions {
-  margin-bottom: 80px;
+// TODO: move to %placeholders
+.subtitle {
+  font-weight: 700;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin: 26px 0 10px;
 }
 
 /* ------------------------------- *\
     Step 0: Choose action
 \* ------------------------------- */
-
-.section {
-  &.encrypt-first {
-    text-align: center;
-  }
-  &.create-restore {
-    text-align: center;
-  }
-  &.go-back {
-    margin-bottom: 20px;
-  }
-}
 
 
 /* ------------------------------- *\
@@ -34,11 +23,11 @@
 \* ------------------------------- */
 
 
-/deep/ app-password > div {
+app-password > div {
   margin-top: 20px;
 }
 
-/deep/ input.recovery-word {
+input.recovery-word {
   max-width: 100%;
 }
 

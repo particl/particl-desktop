@@ -34,7 +34,7 @@ export class AddressLookupComponent implements OnInit {
   addressLookups: Contact[] = [];
 
   // @TODO: Move static pagination prams into global variable
-  MAX_ADDRESSES_PER_PAGE: number = 5;
+  MAX_ADDRESSES_PER_PAGE: number = 15;
   // PAGE_SIZE_OPTIONS: Array<number> = [5, 10, 20];
   current_page: number = 1;
 

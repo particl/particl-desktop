@@ -1,19 +1,28 @@
-<div class="container disable-select">
-  <div class="content">
-    <div class="title">Unlock your wallet</div>
-    <p>
-      Please enter your password to unlock your wallet
-    </p>
+<div mat-dialog-title class="title">Unlock your wallet</div>
 
-    <app-password
-      label="Enter your password"
-      buttonText="Unlock wallet"
-      (unlockEmitter)="unlock($event)"
-      [unlockTimeout]="timeout"
-      [showStakeOnly]="showStakeOnly"
-      [stakeOnly]="stakeOnly"
-      [emitUnlock]="true">
-    </app-password>
+<mat-dialog-content class="modal-content">
+  <p>
+    Please enter your password to unlock your wallet
+  </p>
+  <app-password
+    label="Enter your password"
+    buttonText="Unlock wallet"
+    (unlockEmitter)="unlock($event)"
+    [unlockTimeout]="timeout"
+    [showStakeOnly]="showStakeOnly"
+    [stakeOnly]="stakeOnly"
+    [emitUnlock]="true">
+  </app-password>
+</mat-dialog-content>
 
-  </div><!-- .content -->
-</div><!-- .container -->
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <!-- TODO: can we move the main action button here? (in this case "unlock wallet" button) -->
+  <!--button mat-raised-button color="primary">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Unlock wallet
+  </button-->
+</mat-dialog-actions>

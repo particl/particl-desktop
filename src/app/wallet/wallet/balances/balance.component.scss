@@ -1,8 +1,5 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
-@media screen and (min-width: 1280px) {
-}
-
 .balance {
   @extend %enable-select;
   padding-top: 7px;
@@ -15,13 +12,13 @@
   }
   & > .big {
     font-size: 22px;
-    @media screen and (min-width: 1500px) {
+    @include break(l) {
       font-size: 28px;
     }
   }
   & > .small {
     font-size: 11px;
-    @media screen and (min-width: 1500px) {
+    @include break(l) {
       font-size: 15px;
     }
   }

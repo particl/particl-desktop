@@ -20,10 +20,10 @@ export class RpcStateService extends StateService implements OnDestroy {
   constructor(private _rpc: RpcService) {
     super();
 
-    this.registerStateCall('getwalletinfo', 1000);
-    this.registerStateCall('getblockchaininfo', 5000);
-    this.registerStateCall('getnetworkinfo', 10000);
-    this.registerStateCall('getstakinginfo', 10000);
+    this.register('getwalletinfo', 1000);
+    this.register('getblockchaininfo', 5000);
+    this.register('getnetworkinfo', 10000);
+    this.register('getstakinginfo', 10000);
 
     // TODO: get rid of these
     this.walletLockedState();
@@ -55,7 +55,7 @@ export class RpcStateService extends StateService implements OnDestroy {
   }
 
   /** Register a state call, executes every X seconds (timeout) */
-  registerStateCall(method: string, timeout: number, params?: Array<any> | null): void {
+  register(method: string, timeout: number, params?: Array<any> | null): void {
     if (timeout) {
       let firstError = true;
 

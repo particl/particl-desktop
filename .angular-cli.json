@@ -19,8 +19,6 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "../node_modules/font-awesome/css/font-awesome.min.css",
-        "../node_modules/open-sans-all/css/open-sans.min.css",
         "styles.scss",
         "assets/theme.scss"
       ],
@@ -29,6 +27,8 @@
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
+        "docker1": "environments/environment.docker1.ts",
+        "docker2": "environments/environment.docker2.ts",
         "prod": "environments/environment.prod.ts"
       }
     }

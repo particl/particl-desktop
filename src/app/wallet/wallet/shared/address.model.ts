@@ -2,6 +2,12 @@ interface Deserializable {
     getTypes(): Object;
 }
 
+export enum AddressType {
+    NORMAL,
+    STEALTH,
+    MULTISIG
+}
+
 export class Address implements Deserializable {
   address: string;
   publicKey: string;

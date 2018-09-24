@@ -1,0 +1,5 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.warning {
+    color: $color-alert;
+}

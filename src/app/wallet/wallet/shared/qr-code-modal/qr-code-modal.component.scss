@@ -2,6 +2,9 @@
 
 [mat-dialog-title] {
   text-align: center;
+  margin: 0 50px;
+  max-width: 320px;
+  word-wrap: break-word;
 }
 
 .dialog-content {
@@ -26,8 +29,6 @@
 .actions {
   .mat-icon {
     margin-right: 7px;
-    width: auto;
-    height: auto;
     font-size: 14px;
     position: relative;
     top: -1px;
