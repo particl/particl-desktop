@@ -12,7 +12,7 @@
 }
 
 .container-block {
-  padding: 35px 35px 35px 5px; // temp fix until the sidebar will be shown again
+  padding: $padding $padding $padding 5px; // temp fix until the sidebar will be shown again
   .content {
     width: 100%;
   }
@@ -27,7 +27,7 @@
     border-right: 1px solid $bg-shadow;
     position: relative;
     input {
-      padding: 15px 26px 15px 0;
+      padding: 17px 26px 17px 0;
       width: calc(100% - 26px);
       background: none;
       outline: none;
@@ -39,9 +39,13 @@
       font-size: 14px;
     }
   }
+  .icon {
+    color: $text-muted;
+  }
+  /*
   // filtering
   .filtering {
-    .filter {
+    .filter-by {
       margin-right: 18px;
       float: left;
     }
@@ -59,11 +63,12 @@
       }
     }
   }
+  */
 }
 
 
 // ------ SIDEBAR (left) ------ //
-
+/*
 .category-filter { // category expansion panel
   margin-bottom: 4px !important;
   &.mat-expanded {
@@ -85,7 +90,7 @@
     }
   }
 }
-
+*/
 
 // ------ CONTENT (right) ------ //
 

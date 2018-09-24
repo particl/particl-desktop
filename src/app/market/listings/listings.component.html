@@ -1,8 +1,8 @@
 <app-header>
-  <div class="control-bar" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+  <div class="control-bar" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
 
     <!-- Search-->
-    <div class="icon-input search-listings" fxFlex="0 0 250px">
+    <div class="icon-input search-listings" fxFlex="0 0 215px">
       <input type="text" class="header-input" id="searchbar" placeholder="Search items for sale.."
              [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
              (keyup.escape)="filters.search = ''; clearAndLoadPage()">
@@ -10,44 +10,38 @@
     </div>
 
     <!-- Filtering -->
-    <div class="filtering" fxFlex="1 1 100%" fxLayout>
-      <!-- removed multiple as I guess currently the api returning data on the basis of only one selected country -->
+    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
 
-      <!-- mat-select-search -->
-      <mat-select-search
-        fxFlex="0 0 180px"
-        matTooltip="Filter by Seller country"
-        matTooltipPosition="before"
-        class="filter-by country"
-        [options]="countryList?.countries"
-        [defaultOption]="'All countries'"
-        [showValueOf]="'name'"
-        (onChange)="onCountryChange($event)">
-      </mat-select-search>
-      <!-- mat-select-search -->
+    <!-- mat-select-search -->
+    <mat-select-search
+      fxFlex="0 0 150px"
+      class="filter-by seller-country"
+      [options]="countryList?.countries"
+      [defaultOption]="'All seller countries'"
+      [showValueOf]="'name'"
+      (onChange)="onCountryChange($event)">
+    </mat-select-search>
 
-      <!--mat-otpgroup-select-search -->
-      <mat-otpgroup-select-search
-        fxFlex="0 0 180px"
-        [options]="_rootCategoryList?.subCategoryList"
-        [defaultOption]="'All categories'"
-        (change)="onCategoryChange($event)">
-      </mat-otpgroup-select-search>
-      <!--mat-otpgroup-select-search -->
-    </div>
-    <div class="buyer-country" fxFlex="0 0 180px">
-      <mat-select-search
-        matTooltip="Select your country to calculate exact shipping & escrow prices"
-        matTooltipPosition="before"
-        class="filter-by country"
-        [options]="countryList?.countries"
-        [defaultOption]="'Your country'"
-        [showValueOf]="'name'"
-        [defaultSelectedValue]="this.selectedCountry"
-        (onChange)="changeLocation($event)">
-      </mat-select-search>
-      <!-- mat-select-search -->
-    </div>
+    <mat-otpgroup-select-search
+      fxFlex="0 0 180px"
+      class="filter-by category"
+      [options]="_rootCategoryList?.subCategoryList"
+      [defaultOption]="'All categories'"
+      (change)="onCategoryChange($event)">
+    </mat-otpgroup-select-search>
+
+    <div class="spacer" fxFlex="1 1 100%"></div>
+
+    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-globe" fxFlex="0 0 16px" matTooltip="Select your country to calculate exact shipping & escrow prices" matTooltipPosition="below"></mat-icon>
+    <mat-select-search
+      fxFlex="0 0 150px"
+      class="filter-by buyer-country"
+      [options]="countryList?.countries"
+      [defaultOption]="'Your country'"
+      [showValueOf]="'name'"
+      [defaultSelectedValue]="this.selectedCountry"
+      (onChange)="changeLocation($event)">
+    </mat-select-search>
 
     <!-- Sorting -->
     <!--mat-select placeholder="Sort by" class="filter sorting TO_DO" fxFlex="0 1 300px">
