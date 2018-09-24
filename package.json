@@ -27,7 +27,7 @@
     "checksum": "cd packages && checksum -a sha256 *.*",
     "build:electron:prod": "ng build --aot --base-href=./ --env=prod",
     "build:electron:fast": "ng build --aot --base-href=./ --sourcemap=false",
-    "build:electron": "ng build --aot --base-href=./",
+    "build:electron": "ng build --aot --base-href=./ --env=dev",
     "start:electron:dev": "electron . --dev",
     "start:electron:fast": "yarn run build:electron:fast && electron .",
     "start:electron": "yarn run build:electron && electron .",
