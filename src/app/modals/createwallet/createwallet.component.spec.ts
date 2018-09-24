@@ -1,12 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogRef } from '@angular/material';
 
-import { SharedModule } from '../../shared/shared.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
+import { ModalsModule } from '../modals.module';
+import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { CreateWalletComponent } from './createwallet.component';
-import { ModalsModule } from '../modals.module';
-import { MdSnackBarModule } from '@angular/material';
+
 
 describe('CreateWalletComponent', () => {
   let component: CreateWalletComponent;
@@ -18,9 +20,12 @@ describe('CreateWalletComponent', () => {
       imports: [
         BrowserAnimationsModule,
         SharedModule,
-        RpcModule.forRoot(),
+        CoreModule.forRoot(),
         ModalsModule,
-        MdSnackBarModule
+        CoreUiModule.forRoot()
+      ],
+      providers: [
+        { provide: MatDialogRef}
       ]
     })
     .compileComponents();

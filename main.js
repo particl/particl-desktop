@@ -1,57 +1,104 @@
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
-
-// Module to create native browser window.
+const electron      = require('electron');
+const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const path          = require('path');
+const fs            = require('fs');
+const url           = require('url');
+const platform      = require('os').platform();
 
-const path = require('path');
-const url = require('url');
-const platform = require('os').platform();
-const log = require('electron-log');
 
-log.transports.file.appName = (process.platform == 'linux' ? '.particl' : 'Particl');
-log.transports.file.file = log.transports.file
-  .findLogPath(log.transports.file.appName)
-  .replace('log.log', 'partgui.log');
+/* correct appName and userData to respect Linux standards */
+if (process.platform === 'linux') {
+  app.setName('particl-desktop');
+  app.setPath('userData', `${app.getPath('appData')}/${app.getName()}`);
+}
 
-const daemon = require('./modules/rpc/daemon');
+/* check for paths existence and create */
+[ app.getPath('userData'),
+  app.getPath('userData') + '/testnet'
+].map(path => !fs.existsSync(path) && fs.mkdir(path));
+
+if (app.getVersion().includes('RC'))
+  process.argv.push(...['-testnet']);
+
+const options = require('./modules/options').parse();
+const log     = require('./modules/logger').init();
+const init    = require('./modules/init');
+const rpc     = require('./modules/rpc/rpc');
+const _auth = require('./modules/webrequest/http-auth');
+const daemon  = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let tray;
-let options;
 
-let openDevTools = false;
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', () => {
 
-function createWindow () {
-  const _initWindow = () => {
-    if (!mainWindow) {
-      initMainWindow(makeTray());
-    }
-  };
+  log.info('app ready')
+  log.debug('argv', process.argv);
+  log.debug('options', options);
+  
+  app.setAppUserModelId("io.particl.desktop");
+  
+  // initialize the authentication filter
+  _auth.init();
+  
+  initMainWindow();
+  init.start(mainWindow);
+});
 
-  daemon.init(_initWindow);
-  options = daemon.getOptions();
-}
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+});
+
+app.on('activate', function () {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    initMainWindow()
+  }
+});
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.
+app.on('browser-window-created', function (e, window) {
+  window.setMenu(null);
+});
 
 /*
 ** initiates the Main Window
 */
-function initMainWindow(trayImage) {
+function initMainWindow() {
+  if (platform !== "darwin") {
+    let trayImage = makeTray();
+  }
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1270, // on Win, the width of app is few px smaller than it should be => triggers smaller breakpoints; this size should cause the same layout results on all OSes
-    minWidth: 961,
-    maxWidth: 1920,
-    height: 720,
-    resizable: false,
-    icon: trayImage,
+    // width: on Win, the width of app is few px smaller than it should be
+    // (this triggers smaller breakpoints) - this size should cause
+    // the same layout results on all OSes
+    // minWidth/minHeight: both need to be specified or none will work
+    width:     1270,
+    minWidth:  1270,
+    height:    675,
+    minHeight: 675,
+    icon:      path.join(__dirname, 'resources/icon.png'),
+
     webPreferences: {
+      webviewTag: false,
       nodeIntegration: false,
       sandbox: true,
-      contextIsolation: true,
+      contextIsolation: false,
       preload: path.join(__dirname, 'preload.js')
     },
   });
@@ -61,14 +108,14 @@ function initMainWindow(trayImage) {
     mainWindow.loadURL('http://localhost:4200');
   } else {
     mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
+      pathname: path.join(__dirname, 'dist/index.html'),
       slashes: true
     }));
   }
 
   // Open the DevTools.
-  if (openDevTools || options.devtools) {
+  if (options.devtools) {
     mainWindow.webContents.openDevTools()
   }
 
@@ -95,7 +142,6 @@ function makeTray() {
   // Default tray image + icon
   let trayImage = path.join(__dirname, 'resources/icon.png');
 
-
   // Determine appropriate icon for platform
   // if (platform === 'darwin') {
   //    trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
@@ -111,11 +157,11 @@ function makeTray() {
       submenu: [
         {
           label: 'Reload',
-          click () { mainWindow.webContents.reloadIgnoringCache(); }
+          click() { mainWindow.webContents.reloadIgnoringCache(); }
         },
         {
           label: 'Open Dev Tools',
-          click () { mainWindow.openDevTools(); }
+          click() { mainWindow.openDevTools(); }
         }
       ]
     },
@@ -124,19 +170,19 @@ function makeTray() {
       submenu: [
         {
           label: 'Close',
-          click () { app.quit() }
+          click() { app.quit() }
         },
         {
           label: 'Hide',
-          click () { mainWindow.hide(); }
+          click() { mainWindow.hide(); }
         },
         {
           label: 'Show',
-          click () { mainWindow.show(); }
+          click() { mainWindow.show(); }
         },
         {
           label: 'Maximize',
-          click () { mainWindow.maximize(); }
+          click() { mainWindow.maximize(); }
         } /* TODO: stop full screen somehow,
         {
           label: 'Toggle Full Screen',
@@ -151,15 +197,15 @@ function makeTray() {
       submenu: [
         {
           label: 'About ' + app.getName(),
-          click () { electron.shell.openExternal('https://particl.io/#about'); }
+          click() { electron.shell.openExternal('https://particl.io/#about'); }
         },
         {
           label: 'Visit Particl.io',
-          click () { electron.shell.openExternal('https://particl.io'); }
+          click() { electron.shell.openExternal('https://particl.io'); }
         },
         {
           label: 'Visit Electron',
-          click () { electron.shell.openExternal('https://electron.atom.io'); }
+          click() { electron.shell.openExternal('https://electron.atom.io'); }
         }
       ]
     }
@@ -178,37 +224,9 @@ function makeTray() {
   tray.setContextMenu(contextMenu)
 
   // Always show window when tray icon clicked
-  tray.on('click',function() {
+  tray.on('click', function () {
     mainWindow.show();
   });
 
   return trayImage;
 }
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
-
-// Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-});
-
-app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-app.on('browser-window-created',function(e, window) {
-  window.setMenu(null);
-});

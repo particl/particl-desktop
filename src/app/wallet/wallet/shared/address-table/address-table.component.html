@@ -1,0 +1,78 @@
+<div class="address-table">
+
+  <div class="grid-row grid-header" *ngIf="displayHeader">
+    <mat-list class="list-data">
+      <div *ngFor="let address of getSinglePage()">
+        <mat-list-item>
+        </mat-list-item>
+      </div>
+    </mat-list>
+    <div *ngIf="displayLabel">Label</div>
+    <div *ngIf="displayAddress">Address</div>
+    <div *ngIf="displayPublicKey">Public Key</div>
+    <div *ngIf="displayType">Type</div>
+    <div *ngIf="displayPurpose">Purpose</div>
+    <div *ngIf="displayToolsMenu">Tools</div>
+    <div *ngIf="displayQrMenu">QR Code</div>
+  </div>
+
+  <mat-list class="list-data disable-select">
+    <div class="no-results" *ngIf="getSinglePage().length === 0">
+      No matching addresses found
+    </div>
+    <div *ngFor="let address of getSinglePage()">
+
+      <mat-card class="address-entry">
+
+        <!-- Label -->
+        <div class="label cursor-pointer" *ngIf="displayLabel" (click)="editLabel(address.address)" matTooltip="Edit Address label" matTooltipPosition="before">
+          {{ address.label }}
+        </div>
+
+        <!-- Address -->
+        <div class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)"
+              matTooltip="Show Address" matTooltipPosition="above">
+          <!--mat-icon *ngIf="!displayQrMenu" class="qr-icon" fontSet="partIcon" fontIcon="part-qr"></mat-icon-->
+          <span class="address-string enable-select">{{ address.address }}</span>
+        </div>
+
+        <!-- Pubkey -->
+        <!--div fxFlex="25" class="grid-cell" *ngIf="displayPublicKey">
+          <span class="title">Public Key</span>
+          <span class="pubkey enable-select">{{ address.publicKey }}</span>
+        </div-->
+
+        <!-- Type -->
+        <!--div fxFlex="25" clas="grid-cell" *ngIf="displayType">
+          <span class="title">Type</span>
+          <span class="type">{{ address.type }}</span>
+        </div-->
+
+        <!-- Actions/controls -->
+        <div *ngIf="displayToolsMenu" class="address-actions">
+          <!-- ICO: copy address -->
+          <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
+          <!-- ICO: verify message -->
+          <mat-icon fontSet="partIcon" fontIcon="part-person-check" (click)="openSignatureModal(address.address)"
+                      class="cursor-pointer" matTooltip="Sign / Verify message"
+                      ngxClipboard></mat-icon>
+          <!-- ICO: delete -->
+          <mat-icon color="warn" fontSet="partIcon" fontIcon="part-circle-remove"
+                      class="cursor-pointer"
+                      (click)="deleteAddress(address.label, address.address)" matTooltip="Delete address"></mat-icon>
+        </div>
+
+      </mat-card>
+    </div>
+
+  </mat-list>
+</div><!-- .address-table -->
+
+<app-paginator
+  *ngIf="displayPagination && getSinglePage().length>0"
+  #paginator
+  [length]="getTotalAddressCount()"
+  [pageSize]="getMaxAddressesPerPage()"
+  [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+  (page)="pageChanged($event)">
+</app-paginator>

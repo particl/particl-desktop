@@ -1,0 +1,21 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.signature-address-container {
+  max-width: 600px;
+}
+
+.signature-address-modal-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  .icons { // address lookup/paste icons
+    text-align: right;
+    .icon {
+      margin-left: 10px;
+    }
+  }
+}
+
+.signature-address-modal-form > * {
+  width: 100%;
+}

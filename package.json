@@ -1,12 +1,14 @@
 {
-  "name": "particl",
-  "version": "1.0.1",
+  "name": "particl-desktop",
+  "version": "1.3.0",
   "license": "GPL-2.0",
-  "description": "Particl Electron GUI - The source for the Particl GUI.",
+  "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
+  "homepage": "https://particl.io",
   "keywords": [
     "particl",
     "angular2",
     "angular4",
+    "angular5",
     "angular-cli",
     "electron",
     "webpack",
@@ -16,29 +18,40 @@
   "main": "main.js",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/docs/**,**/packages/** && sass-lint -v",
     "e2e": "ng e2e",
-    "build:electron:prod": "ng build --base-href=./ --env=prod",
-    "build:electron:fast": "ng build --base-href=./ --sourcemap=false",
-    "build:electron": "ng build --base-href=./",
+    "generate:versions": "node modules/clientBinaries/generateVersions.js",
+    "generate:documentation": "",
+    "checksum": "cd packages && checksum -a sha256 *.*",
+    "build:electron:prod": "ng build --aot --base-href=./ --env=prod",
+    "build:electron:fast": "ng build --aot --base-href=./ --sourcemap=false",
+    "build:electron": "ng build --aot --base-href=./ --env=dev",
     "start:electron:dev": "electron . --dev",
-    "start:electron:fast": "npm run build:electron:fast && electron .",
-    "start:electron": "npm run build:electron && electron .",
-    "package:mac": "npm run build:electron:prod && electron-builder -m",
-    "package:linux": "npm run build:electron:prod && electron-builder -l",
-    "package:win": "npm run build:electron:prod && electron-builder --win --x64",
-    "package": "npm run build:electron:prod && electron-builder -ml && npm run package:win",
+    "start:electron:fast": "yarn run build:electron:fast && electron .",
+    "start:electron": "yarn run build:electron && electron .",
+    "start:mainnet": "yarn run build:electron:prod && electron .",
+    "package:mac": "yarn run build:electron:prod && electron-builder -m && yarn run checksum",
+    "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
+    "package:win": "yarn run build:electron:prod && electron-builder --win --x64 && yarn run checksum",
+    "package:win32": "yarn run build:electron:prod && electron-builder --win --ia32 && yarn run checksum",
+    "package": "yarn run build:electron:prod && electron-builder -ml && electron-builder --win --x64 && yarn run checksum",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compodoc": "compodoc -p tsconfig.json -d docs",
-    "generate-release": "node ./modules/clientBinaries/generateVersions.js"
+    "generate-release": "node ./modules/clientBinaries/generateVersions.js",
+    "travis:mac": "electron-builder -m && yarn run checksum",
+    "travis:linux": "electron-builder -l && yarn run checksum",
+    "travis:win64": "electron-builder --win --x64 && yarn run checksum",
+    "travis:win32": "electron-builder --win --ia32 && yarn run checksum",
+    "travis:test": "ng test --single-run --code-coverage",
+    "start": "yarn run start:electron:fast"
   },
-  "productName": "Particl Wallet",
+  "productName": "particl-desktop",
   "build": {
-    "electronVersion": "1.7.9",
-    "appId": "io.particl.partgui",
+    "electronVersion": "1.7.16",
+    "appId": "io.particl.desktop",
+    "npmRebuild": true,
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -48,107 +61,146 @@
       "preload.js",
       "modules/**",
       "dist/**",
-      "resources/**"
+      "resources/**",
+      "!node_modules/electron/**/*"
     ],
     "mac": {
+      "artifactName": "${name}-${version}-${os}.${ext}",
       "category": "public.app-category.wallet",
       "target": [
-        "dmg",
         "zip"
       ]
     },
-    "nsis": {
-      "perMachine": true,
-      "oneClick": false
+    "dmg": {
+      "background": "background-mac.png",
+      "contents": [
+        {
+          "x": 129,
+          "y": 250
+        },
+        {
+          "x": 410,
+          "y": 247,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     },
     "win": {
+      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
       "target": [
-        "nsis",
-        "zip"
+      	{
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+	}, 
+	{
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ]
     },
     "linux": {
       "maintainer": "particl contributors <hello@particl.io>",
+      "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
+      "executableName": "particl-desktop",
       "target": [
-        "deb",
-        "tar.gz"
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "desktop": {
-        "Comment": "Particl, P2P Privacy project",
-        "Exec": "/opt/particl/particl %U",
-        "Icon": "particl",
-        "Name": "Particl",
-        "Path": "/opt/particl/",
+        "Comment": "Particl, P2P Privacy ecosystem",
+        "Exec": "particl-desktop %U",
+        "Icon": "particl-desktop",
+        "Name": "Particl Desktop",
+        "Path": "/opt/particl-desktop",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
-        "Categories": "P2P;Development;Finance"
+        "Categories": "P2P;Finance;Security"
       },
-      "category": "ecommerce",
+      "category": "Finance",
       "packageCategory": "wallet",
       "icon": "resources/linux"
     },
-    "asar": true
+    "asar": true,
+    "asarUnpack": [
+    ]
   },
   "dependencies": {
-    "@angular/animations": "^4.4.6",
-    "@angular/cdk": "2.0.0-beta.9",
-    "@angular/common": "^4.4.6",
-    "@angular/compiler": "^4.4.6",
-    "@angular/core": "^4.4.6",
-    "@angular/flex-layout": "^2.0.0-beta.9",
-    "@angular/forms": "^4.4.6",
-    "@angular/http": "^4.4.6",
-    "@angular/material": "2.0.0-beta.9",
-    "@angular/platform-browser": "^4.4.6",
-    "@angular/platform-browser-dynamic": "^4.4.6",
-    "@angular/router": "^4.4.6",
-    "angular2-qrcode": "^2.0.1",
     "bluebird": "^3.4.7",
     "buffered-spawn": "^3.3.2",
+    "cli-progress": "^1.7.0",
     "core-js": "^2.4.1",
-    "electron-log": "^2.2.10",
-    "font-awesome": "^4.7.0",
-    "got": "^8.0.0",
+    "electron-log": "^2.2.14",
+    "got": "^8.1.0",
     "hammerjs": "^2.0.8",
-    "lodash": "^4.17.4",
-    "lodash.get": "^4.4.2",
-    "lodash.isempty": "^4.4.0",
-    "lodash.values": "^4.3.0",
-    "ng2-logger": "^1.0.3",
-    "ngx-clipboard": "8.1.1",
+    "lodash": "^4.17.5",
     "node-unzip-2": "^0.2.1",
-    "open-sans-all": "^0.1.2",
     "rx-ipc-electron": "^0.1.2",
-    "rxjs": "5.5.0",
-    "tmp": "0.0.33",
-    "zone.js": "0.8.18"
+    "rxjs": "^5.5.6",
+    "tmp": "^0.0.33",
+    "zone.js": "^0.8.20"
   },
   "devDependencies": {
-    "@angular/cli": "^1.4.9",
-    "@angular/compiler-cli": "^4.4.6",
-    "@compodoc/compodoc": "^1.0.0-beta.12",
-    "@types/jasmine": "^2.6.1",
-    "@types/node": "^8.0.47",
-    "codelyzer": "^4.0.0",
+    "@angular/animations": "^5.2.5",
+    "@angular/cdk": "^5.2.1",
+    "@angular/cli": "^1.6.8",
+    "@angular/common": "^5.2.5",
+    "@angular/compiler": "^5.2.5",
+    "@angular/compiler-cli": "^5.2.5",
+    "@angular/core": "^5.2.5",
+    "@angular/flex-layout": "2.0.0-beta.12",
+    "@angular/forms": "^5.2.5",
+    "@angular/http": "^5.2.5",
+    "@angular/material": "^5.2.1",
+    "@angular/platform-browser": "^5.2.5",
+    "@angular/platform-browser-dynamic": "^5.2.5",
+    "@angular/platform-server": "^5.2.5",
+    "@angular/router": "^5.2.5",
+    "@compodoc/compodoc": "^1.0.7",
+    "@types/jasmine": "^2.8.6",
+    "@types/node": "^9.4.6",
+    "angularx-qrcode": "^1.0.1",
+    "checksum": "^0.1.1",
+    "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "1.7.9",
-    "electron-builder": "^19.41.0",
+    "electron": "1.7.16",
+    "electron-builder": "^20.0.4",
     "htmlhint": "^0.9.13",
-    "jasmine-core": "~2.8.0",
-    "jasmine-spec-reporter": "~4.2.0",
-    "karma": "^1.7.0",
-    "karma-chrome-launcher": "~2.2.0",
-    "karma-cli": "~1.0.1",
-    "karma-coverage-istanbul-reporter": "^1.3.0",
+    "iso3166-2-db": "^2.2.1",
+    "jasmine-core": "^2.99.1",
+    "jasmine-spec-reporter": "^4.2.0",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cli": "^1.0.1",
+    "karma-coverage-istanbul-reporter": "^1.4.1",
     "karma-jasmine": "^1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "node-sass": "^4.5.3",
-    "protractor": "~5.2.1",
+    "ng2-logger": "^1.0.11",
+    "ngx-clipboard": "^10.0.0",
+    "ngx-infinite-scroll": "^0.8.3",
+    "node-sass": "^4.7.2",
+    "protractor": "^5.3.0",
     "sass-lint": "^1.10.2",
-    "ts-node": "~3.3.0",
-    "tslint": "~5.8.0",
-    "tslint-microsoft-contrib": "^5.0.1",
-    "typescript": "~2.6.1"
+    "ts-node": "^5.0.0",
+    "tslint": "^5.9.0",
+    "tslint-microsoft-contrib": "^5.0.3",
+    "typescript": ">=2.4.2 <2.6.0"
   }
 }

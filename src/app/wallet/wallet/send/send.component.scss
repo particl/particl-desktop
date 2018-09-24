@@ -1,0 +1,143 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+
+// ------ UI ------ //
+
+.section {
+  &.advanced { // "advanced options" fields
+    background: mix(white, $bg);
+    border-top: 1px dashed darken($bg, 7%);
+    margin: 0 -24px 0 !important;
+    padding: 8px 24px;
+  }
+}
+
+.mat-card {
+  margin-bottom: 20px;
+}
+
+.title { // box titles
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 13px;
+  margin: -4px 0 16px !important;
+  .advanced-options {
+    float: right;
+    position: relative;
+    top: -5px;
+    right: -13px;
+  }
+}
+
+.subtitle { // subtitles (eg. "privacy level" in anon
+  text-transform: uppercase;
+  margin: 20px 0 10px;
+  color: grey;
+}
+
+.balance { // balance selection radio buttons
+  @extend %tfx;
+  padding: 8px 24px;
+  margin: 0 -24px !important;
+  font-family: $font;
+  &:hover {
+    background: $bg-hover;
+  }
+  &.mat-radio-checked {
+    .name {
+      font-weight: 700;
+    }
+    .desc {
+      font-weight: 400;
+      .amount {
+        color: darken($color, 3%);
+      }
+    }
+  }
+  .name { // balance type
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 1px;
+    padding-left: 4px;
+  }
+  .desc { // available balance
+    color: $text-muted;
+    font-size: 11px;
+    padding-left: 4px;
+    .amount {
+      @extend %tfx;
+      color: $text-muted;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+    .help-icon { // explanation of "1e-8" at blind balances (after sending all blind)
+      margin-left: 3px;
+      font-size: 14px;
+      color: $color-info;
+      line-height: 0;
+      position: relative;
+      top: 2px;
+    }
+  }
+}
+
+
+// ------ LAYOUT ------ //
+
+app-header {
+  mat-tab-group {
+    margin-top: $header-main-height;
+  }
+  .bottom-line { // line under tabs
+    border-bottom: 1px solid $bg-shadow;
+  }
+}
+
+
+.privacy-level { // slider in Anon TXs
+  margin: 0 0 20px;
+  .privacy-label {
+    font-weight: bold;
+    padding-bottom: 10px;
+    cursor: pointer;
+    &.medium {
+      text-align: center;
+    }
+    &.high {
+      text-align: right;
+    }
+  }
+}
+
+.pay-to { // whole "pay to" card
+  padding-bottom: 1px;
+
+  .receiver-address { // recipient's addy & label
+    margin-bottom: 30px !important;
+  }
+  .widget-help {
+    margin-top: 0;
+  }
+
+}
+
+.actions {
+  text-align: right;
+  margin: 0;
+  button {
+    margin: 0 0 0 12px;
+  }
+}
+
+
+// ------ FORMS ------ //
+
+mat-form-field {
+  &.full-width {
+    width: 100%;
+  }
+}
+
+.underliningSelect {
+  position: relative;
+}

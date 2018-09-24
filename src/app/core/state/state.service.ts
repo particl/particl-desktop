@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Rx';
+import { Observer } from 'rxjs/Rx';
 
 
 export interface InternalStateType {
   [key: string]: any;
-};
+}
 
 interface InternalStateCache {
   [key: string]: {
@@ -52,9 +52,16 @@ export class StateService {
     return state;
   }
 
-  observe(prop: string) {
-    return this._getObservablePair(prop).observable;
+  observe(prop: string, subkey?: string) {
+    let observable = this._getObservablePair(prop).observable;
+    if (subkey) {
+      // TODO: maybe check if subkey exists?
+      // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
+      observable = observable.map(key => key[subkey]);
+    }
+    return observable.distinctUntilChanged();
   }
+
 
   private _clone(object: InternalStateType) {
     // simple object clone
@@ -70,7 +77,7 @@ export class StateService {
 
       this._observerPairs[prop].observable = Observable.create(
           _observer => this._observerPairs[prop].observer = _observer
-      ).shareReplay();
+      ).shareReplay(1);
     }
 
     return this._observerPairs[prop];

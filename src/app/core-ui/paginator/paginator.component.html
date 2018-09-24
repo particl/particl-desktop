@@ -1,0 +1,47 @@
+<div class="mat-paginator-page-size">
+  <div class="mat-paginator-page-size-label">
+    {{_intl.itemsPerPageLabel}}
+  </div>
+  <mat-form-field *ngIf="pageSizeOptions.length> 1"
+    class="mat-paginator-page-size-select">
+    <mat-select [value]="pageSize" [aria-label]="_intl.itemsPerPageLabel"
+      (change)="_changePageSize($event.value)">
+      <mat-option *ngFor="let pageSizeOption of pageSizeOptions" [value]="pageSizeOption">
+        {{pageSizeOption}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div *ngIf="pageSizeOptions.length <= 1">{{pageSize}}</div>
+</div>
+
+<div class="mat-paginator-range-label">
+  {{getRangeLabel(pageIndex, pageSize, length)}}
+</div>
+
+<button mat-icon-button type="button" class="mat-paginator-navigation-previous"
+  (click)="firstPage()"
+  [matTooltip]="_intl.firstPageLable"
+  [matTooltipPosition]="'above'" [disabled]="!hasPreviousPage()">
+  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-double"></mat-icon>
+</button>
+
+<button mat-icon-button type="button" class="mat-paginator-navigation-previous"
+  (click)="previousPage()"
+  [matTooltip]="_intl.previousPageLabel"
+  [matTooltipPosition]="'above'" [disabled]="!hasPreviousPage()">
+  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+</button>
+
+<button mat-icon-button type="button" class="mat-paginator-navigation-next"
+  (click)="nextPage()"
+  [matTooltip]="_intl.nextPageLabel" [matTooltipPosition]="'above'"
+  [disabled]="!hasNextPage()">
+  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+</button>
+
+<button mat-icon-button type="button" class="mat-paginator-navigation-next"
+  (click)="lastPage()"
+  [matTooltip]="_intl.lastPageLable" [matTooltipPosition]="'above'"
+  [disabled]="!hasNextPage()">
+  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-double"></mat-icon>
+</button>

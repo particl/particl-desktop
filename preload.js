@@ -1,7 +1,7 @@
 // This file is loaded whenever a javascript context is created. It runs in a
 // private scope that can access a subset of electron renderer APIs. We must be
 // careful to not leak any objects into the global scope!
-const {ipcRenderer} = require('electron');
+const { ipcRenderer } = require('electron');
 
 const flatten = (obj) => Object.keys(obj)
   .reduce((acc, key) => {
@@ -23,6 +23,7 @@ class SafeIpcRenderer {
     const validEvents = flatten(events);
     const protect = (fn) => {
       return (channel, ...args) => {
+
         let validChannel = channel;
         if (channel.indexOf(':') !== -1) {
           if (Number.isInteger(+channel.substr(channel.indexOf(':') + 1))) {
@@ -37,19 +38,28 @@ class SafeIpcRenderer {
         return fn.apply(ipcRenderer, [channel].concat(args));
       };
     };
-    this.on = protect(ipcRenderer.on);
-    this.once = protect(ipcRenderer.once);
-    this.removeListener = protect(ipcRenderer.removeListener);
+
+    this.on                 = protect(ipcRenderer.on);
+    this.once               = protect(ipcRenderer.once);
+    this.send               = protect(ipcRenderer.send);
+    this.sendSync           = protect(ipcRenderer.sendSync);
+    this.sendToHost         = protect(ipcRenderer.sendToHost);
+    this.removeListener     = protect(ipcRenderer.removeListener);
     this.removeAllListeners = protect(ipcRenderer.removeAllListeners);
-    this.send = protect(ipcRenderer.send);
-    this.sendSync = protect(ipcRenderer.sendSync);
-    this.sendToHost = protect(ipcRenderer.sendToHost);
+    this.listenerCount      = protect(ipcRenderer.listenerCount);
   }
 }
 
 window.ipc = new SafeIpcRenderer([
+  'front-choosewallet',
+  'front-walletready',
+
+  'daemon',
+
+  'zmq',
   'rpc-channel',
-  'rx-ipc-check-reply:rpc-channel',
+
+  'rx-ipc-check-reply',
   'rx-ipc-check-listener'
 ]);
 

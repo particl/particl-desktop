@@ -1,0 +1,31 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.balance {
+  @extend %enable-select;
+  padding-top: 7px;
+  & > .number {
+    color: $text;
+  }
+  & > .point {
+    color: $color;
+    margin: 0 2px;
+  }
+  & > .big {
+    font-size: 22px;
+    @include break(l) {
+      font-size: 28px;
+    }
+  }
+  & > .small {
+    font-size: 11px;
+    @include break(l) {
+      font-size: 15px;
+    }
+  }
+  & > .description {
+    @extend %disable-select;
+    color: $text-muted;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+}

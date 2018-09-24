@@ -1,0 +1,213 @@
+<app-header class="disable-select">
+  <div class="tab-bar">
+    <mat-tab-group (selectChange)="changeTab($event.index)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
+          Public address
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
+          Private address
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+
+<!-- ====== FRESH RECEIVE ADDRESS ====== -->
+
+<div class="container-flex disable-select">
+
+  <mat-card class="receive-address">
+    <div class="address-info" fxLayout>
+
+      <div class="sidebar" fxFlex="0 0 180px">
+        <!-- QR code -->
+        <div #qrCode class="qrcode">
+          <qrcode size="180" [level]="'H'" qrdata="particl:{{ selected?.address }}">
+          </qrcode>
+        </div><!-- qrcode -->
+      </div>
+  
+      <div class="main" fxFlex="1 1 480px">
+  
+        <!-- Address type (public/private)-->
+        <div class="address-type">
+          <mat-icon *ngIf="getAddressType() === 'public'" fontSet="partIcon" fontIcon="part-public"></mat-icon>
+          <mat-icon *ngIf="getAddressType() === 'private'" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
+          {{ getAddressType() }} address #{{ selected?.id }}
+        </div>
+  
+        <!-- Address label -->
+        <div class="address-label">
+
+          <!--
+            FIXME/TODO:
+              1. default state: disabled input + "edit label" icon (pen-1)
+              2. when user clicks on "edit label" icon, input gets enabled + icon switches to "save label"
+              3. when user saves label, input value gets updated, input becomes disabled again + icon switches back to "edit label"
+            =====
+              4. remove `add-address-label` component/modal
+              5. new addresses will be created with default label as "address #51" (according to their {{ address.id }})
+          -->
+
+          <mat-form-field class="icon-input label-input full-width">
+            <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === '(No label)'}" [disabled]="addressInput" [(ngModel)]="label" (keyup.enter)="updateLabel(getUnusedAddress().address)">
+            <!-- TODO: default: -->
+            <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="addressInput = !addressInput"></mat-icon>
+            <!-- TODO: show in edit mode: -->
+            <mat-icon matTooltip="Save label" *ngIf="!addressInput" fontSet="partIcon" fontIcon="part-circle-check" (click)="updateLabel(getUnusedAddress().address)"></mat-icon>
+          </mat-form-field>
+
+          <!--span class="label">{{ selected?.label }}</span>
+          <button mat-button class="small" (click)="openNewAddress(getUnusedAddress().address)" matTooltip="Edit address label" matTooltipPosition="after">
+            <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+          </button-->
+        </div>
+  
+        <!-- Address string -->
+        <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
+          <div *ngFor="let word of selected?.readable" class="address-word" fxFlex="11.111">
+            {{ word }}
+          </div>
+        </div>
+  
+        <p class="widget-help" *ngIf="getAddressType() === 'public'">
+          This is your public address &ndash; its balance and transaction history is publicly visible on blockchain. If you would like to increase your privacy, use Private address instead.
+        </p>
+        <p class="widget-help" *ngIf="getAddressType() === 'private'">
+          This is your private address &ndash; its balance and transaction history is hidden for public on blockchain. For auditable addresses, use Public addresses instead.
+        </p>
+  
+      </div><!-- .main -->
+    </div><!-- .address-info -->
+
+    <div class="buttons" fxLayout fxLayoutAlign="space-between center">
+      <div class="left" fxFlex="30%">
+        <button mat-button color="primary" matTooltip="Generate fresh address" (click)="generateAddress()">
+          <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
+          New {{ getAddressType() }} address
+        </button>
+      </div>
+      <div class="right" fxFlex="70%">
+        <a mat-button matTooltip="Display address' public information on Block Explorer" href="https://explorer{{testnet ? '-testnet' : ''}}.particl.io/address/{{selected?.address}}" target="_blank">
+          <mat-icon fontSet="partIcon" fontIcon="part-info"></mat-icon>
+          Show on Explorer
+        </a>
+        <button mat-raised-button color="primary" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
+          <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+          Copy address
+        </button>
+      </div>
+    </div><!-- .buttons -->
+
+  </mat-card><!-- .receive-address -->
+
+
+  <div class="show-old">
+    <mat-icon fontSet="partIcon" fontIcon="part-triangle-down"></mat-icon>
+    Show older addresses
+    <!--button mat-button class="small" matTooltip="Display and filter your previously used addresses">
+      <mat-icon fontSet="partIcon" fontIcon="part-triangle-down"></mat-icon>
+      Show older addresses
+    </button-->
+  </div>
+
+</div>
+
+
+<!-- ====== OLD, USED ADDRESS ====== -->
+
+<div class="previous-addresses container-block" fxLayout="row" fxLayoutGap="40px">
+
+  <!-- Sorting, filtering -->
+  <div class="filter">
+
+    <div class="section search-sorting">
+      <div class="subtitle">Search addresses</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="icon-input search-address">
+          <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}"
+                placeholder="Search Addresses" (keyup.escape)="query = ''">
+          <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
+                    fontIcon="part-clear-all"></mat-icon>
+          <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address" matTooltipPosition="before"></mat-icon>
+        </mat-form-field>
+      </mat-card>
+
+      <p class="widget-help">
+        These are your previously used addresses. It is recommended not to reuse your old addresses &ndash; to increase your privacy, you should use a new address for each transaction.
+      </p>
+    </div><!-- .search-sorting -->
+
+  </div><!-- .filter -->
+
+
+  <!-- Address list -->
+  <div fxFlex="1 1 calc(100% - 260px)" *ngIf="getUnusedAddress()">
+
+    <div class="no-results" *ngIf="(getSinglePage().length === 0) && (inSearchMode() === true)">
+      No addresses found
+    </div>
+
+    <mat-list *ngIf="getSinglePage().length" class="list-data">
+      <div mat-subheader class="address-title">Used addresses</div>
+      <div *ngFor="let address of getSinglePage()">
+
+        <mat-card class="address-info">
+          <div fxFlex="100%" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" layout-padding>
+            <div fxFlex="0 0 45px" class="address-id">/{{ address.id }}</div>
+            <div fxFlex="1 1 20%" class="address-label cursor-pointer" [ngClass]="{'no-label': address.label === '(No label)'}" (click)="openNewAddress(address.address)" matTooltip="Edit label" matTooltipPosition="before">
+              {{ address.label }}
+            </div>
+            <div fxFlex="1 1 80%" fxFlex.lt-md="40px" class="address enable-select">
+              {{ address.address }}
+              <!--div class="total"><span>Total received: </span>
+                <span class="received-amount">{{ address.balance }}</span>
+              </div-->
+            </div>
+            <div class="address-actions" fxFlex="0 0 50px" fxLayoutAlign="end center" fxLayoutGap="10px">
+              <!-- Copy address -->
+              <span fxFlex="50%">
+                <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer"
+                          matTooltip="Copy address" (click)="copyToClipBoard()"
+                          ngxClipboard [cbContent]="address.address"></mat-icon>
+              </span>
+              <!-- Sign/Verify public address only  -->
+              <span fxFlex="50%" *ngIf="type == 'public'">
+                <mat-icon fontSet="partIcon" fontIcon="part-person-check" matTooltip="Sign / Verify message"
+                          (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></mat-icon>
+              </span>
+            </div>
+          </div>
+        </mat-card>
+
+      </div>
+    </mat-list><!-- .list-data -->
+
+    <!-- use two paginator for reset pagination after tab change. -->
+    <div class="receive-pagination">
+      <app-paginator
+        #paginator
+        *ngIf="type == 'private' && getSinglePage().length > 0"
+        [length]="getTotalCountForPagination()"
+        [pageSize]="MAX_ADDRESSES_PER_PAGE"
+        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+        (page)="pageChanged($event)">
+      </app-paginator>
+
+      <app-paginator
+        *ngIf="type == 'public' && getSinglePage().length > 0"
+        #paginator
+        [length]="getTotalCountForPagination()"
+        [pageSize]="MAX_ADDRESSES_PER_PAGE"
+        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+        (page)="pageChanged($event)">
+      </app-paginator>
+    </div>
+  </div>
+</div>

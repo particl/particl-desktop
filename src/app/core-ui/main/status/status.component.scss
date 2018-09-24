@@ -1,0 +1,42 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.status-icons {
+  display: inline-block;
+  border-left: 1px solid $bg-shadow;
+  padding: 15px 0 15px 22px;
+  @include break(l) {
+    padding: 15px 0 15px 36px;
+  }
+}
+
+.icon {
+  padding: 1px;
+  @include break(l) {
+    padding: 1px 2px;
+  }
+
+  // Encryption
+  &.encryption {
+    cursor: pointer;
+  }
+
+  // Staking icon
+  &.staking {
+    font-size: 0.8em;
+    &.enabled {
+      color: $color-info;
+    }
+    &.disabled {
+      color: darken($bg-shadow, 15%);
+    }
+  }
+
+  // Console
+  &.console {
+    margin-left: 6px;
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+  }
+
+}

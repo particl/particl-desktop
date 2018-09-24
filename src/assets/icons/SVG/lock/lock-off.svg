@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg249"
+   version="1.1"
+   height="16"
+   width="26"
+   viewBox="517 419 26 16"
+   style="isolation:isolate">
+  <metadata
+     id="metadata255">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs253" />
+  <path
+     style="fill:#e3223c;fill-opacity:1"
+     fill="rgb(2,232,176)"
+     id="path165"
+     d=" M 523 434 C 523 434.6 523.4 435 524 435 L 536 435 C 536.6 435 537 434.6 537 434 L 537 425 C 537 424.4 536.6 424 536 424 L 528 424 L 528 423 C 528 421.9 528.9 421 530 421 C 530.6 421 531.1 421.2 531.5 421.7 L 532.2 422.4 L 533.7 421.1 L 533 420.3 C 532.2 419.5 531.1 419 530 419 C 527.8 419 526 420.8 526 423 L 526 424 L 524 424 C 523.4 424 523 424.4 523 425 L 523 434 Z  M 530 427 C 531.1 427 532 427.9 532 429 C 532 429.7 531.6 430.4 531 430.7 L 531 432 L 529 432 L 529 430.7 C 528.4 430.4 528 429.7 528 429 C 528 427.9 528.9 427 530 427 Z " />
+</svg>

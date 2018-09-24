@@ -1,0 +1,154 @@
+<mat-progress-bar mode="indeterminate" *ngIf="!txService.txs.length && txService.loading"></mat-progress-bar>
+<div class="no-results" *ngIf="txService.txs.length === 0 && !txService.loading">
+  No transactions yet
+</div>
+
+<div class="grid-row grid-header" *ngIf="display.header">
+  <div class="cell-date" *ngIf="display.date">date</div>
+  <div class="cell-category" *ngIf="display.category">category</div>
+  <div class="cell-senderAddress" *ngIf="display.senderAddress">address</div>
+  <div class="cell-txid" *ngIf="display.txid">txid</div>
+  <div class="cell-blockIndex" *ngIf="display.blockIndex">blockindex</div>
+  <div class="cell-confirmations" *ngIf="display.confirmations">confirmations</div>
+  <div class="cell-amount" *ngIf="display.amount">amount</div>
+</div>
+
+<ng-container *ngFor="let tx of txService.txs">
+  <mat-expansion-panel class="history-list" [expanded]="checkExpandDetails(tx)">
+
+    <mat-expansion-panel-header fxLayout="row" fxLayoutGap="10px" (click)="showExpandedTransactionDetail(tx)" layout-padding>
+
+      <!-- Date -->
+      <mat-panel-title fxFlex="0 0 85px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
+        {{ tx.getDate() }}
+      </mat-panel-title>
+
+      <!-- Confirmations -->
+      <mat-panel-title fxFlex="0 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation"
+                        [ngClass]="styleConfimations(tx.getConfirmationCount())">
+        <span mat-line matTooltip="Confirmations" matTooltipPosition="before">
+          <mat-icon fontSet="partIcon" fontIcon="part-circle-check" class="confirmations"></mat-icon>
+          {{ tx.getConfirmationCount() }}
+        </span>
+      </mat-panel-title>
+
+      <!-- Category icon -->
+      <mat-panel-title fxFlex="1 0 175px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon"
+                        [ngSwitch]="tx.getCategory()">
+        <span *ngSwitchCase="'stake'" class="tx-type staked">
+          <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+          <span class="name">Staked</span>
+        </span>
+        <span *ngSwitchCase="'orphaned_stake'" class="tx-type orphan">
+          <mat-icon fontSet="partIcon" fontIcon="part-alert" color="warn"></mat-icon>
+          <span class="name">Orphaned Stake</span>
+        </span>
+        <span *ngSwitchCase="'send'" class="tx-type sent">
+          <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>
+          <span class="name">Sent</span>
+          <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
+                    matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
+        </span>
+        <span *ngSwitchCase="'multisig'" class="tx-type sent">
+          <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>
+          <span class="name">Multisig / escrow</span>
+          <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
+                    matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
+        </span>
+        <span *ngSwitchCase="'receive'" class="tx-type received">
+          <mat-icon fontSet="partIcon" fontIcon="part-receive" color="primary"></mat-icon>
+          <span class="name">Received</span>
+          <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
+                    matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
+        </span>
+        <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
+          <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>
+          <span class="name">Balance transfer</span>
+        </span>
+        <span *ngSwitchCase="'listing_fee'" class="tx-type sent">
+          <mat-icon fontSet="partIcon" fontIcon="part-send" color="primary"></mat-icon>
+          <span class="name">Posted Listing</span>
+        </span>
+      </mat-panel-title>
+
+      <!-- Address -->
+      <!--mat-panel-title fxFlex.lg="57" fxFlex.lt-md="100" *ngIf="display.senderAddress" class="history_longAddress">
+        {{ tx.getAddress() }}
+      </mat-panel-title-->
+
+      <mat-panel-title fxFlex="20" fxFlex.lt-md="100" *ngIf="display.txid" class="history_txt">
+        <span mat-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row">
+          <span fxFlex="10"><b>TxId</b></span>
+          <span fxFlex="80">{{ tx.txid }} </span>
+        </span>
+      </mat-panel-title>
+
+      <mat-panel-title fxFlex="20" fxFlex.lt-md="100" *ngIf="display.blockIndex" class="history_blockIndex">
+        <span mat-line>Blockindex {{ tx.blockindex }}</span>
+      </mat-panel-title>
+
+      <!-- Amount -->
+      <mat-panel-title fxFlex="1 0 155px" fxFlex.lt-md="100" *ngIf="display.amount" class="history_amount">
+        <span mat-line>
+          <span class="amount"
+                [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }">
+            <span class="big number">{{ tx.getAmountObject().getIntegerPart() }}</span><!-- inline element comment hack
+            --><span class="point">{{ tx.getAmountObject().dot() }}</span><!--
+            --><small class="small number">{{ tx.getAmountObject().getFractionalPart() || '' }}</small>
+            <span class="currency">PART</span>
+          </span>
+        </span>
+      </mat-panel-title>
+
+    </mat-expansion-panel-header>
+
+
+    <div class="container history_container" fxLayoutWrap layout-padding>
+
+      <div fxFlex="1 1 calc(100% - 260px)" fxLayout="column">
+        <!-- To/from (detail) -->
+        <div class="tx-detail-item" fxFlex>
+          <span fxFlex="0 0 80px">To/from:</span>
+          <input fxFlex="1 1 calc(100% - 80px)" value="{{ tx.getAddress() }}" class="to-from-address input">
+        </div>
+        <!-- TX ID (detail) -->
+        <div class="tx-detail-item" fxFlex>
+          <span fxFlex="0 0 80px">TXID:</span>
+          <a fxFlex="1 1 calc(100% - 80px)" class="tx-detail-link"
+              href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}"
+              target="_blank" matTooltip="Show on Block Explorer">
+            {{tx.txid}}</a>
+        </div>
+      </div>
+
+      <div fxFlex="0 0 260px" fxLayout="column">
+        <!-- TX fee (detail) -->
+        <div class="tx-detail-item text-right" fxFlex>
+          <span>Fee:</span>
+          <span class="mat-right">{{tx.fee ? tx.fee : 0}} PART</span>
+        </div>
+        <!-- Net amount (detail) -->
+        <div class="tx-detail-item text-right" fxFlex>
+          <span>Net amount:</span>
+          <span class="mat-right">{{ tx.getNetAmount()}} PART</span>
+        </div>
+      </div>
+
+      <!-- Narration -->
+      <div class="tx-detail-item" fxFlex="1 1 100%" *ngIf="tx.getNarration()">
+        <span fxFlex="0 0 80px">Narration:</span>
+        <input fxFlex="1 1 calc(100% - 80px)" value="{{tx.getNarration()}}" class="narration input">
+      </div>
+
+    </div><!-- .history_cointainer -->
+  </mat-expansion-panel>
+</ng-container>
+
+<app-paginator
+  #paginator
+  *ngIf="display.pagination && txService.txs.length > 0"
+  [length]="txService.txCount"
+  [pageSize]="txService.MAX_TXS_PER_PAGE"
+  [pageSizeOptions]="txService.PAGE_SIZE_OPTIONS"
+  (page)="pageChanged($event)">
+</app-paginator>

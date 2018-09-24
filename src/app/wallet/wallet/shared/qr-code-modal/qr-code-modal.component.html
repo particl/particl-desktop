@@ -1,0 +1,28 @@
+<div mat-dialog-title class="text-center">{{singleAddress.label}}</div>
+
+<button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+<div mat-dialog-content class="dialog-content">
+
+  <div class="qr-code">
+    <div #qrCode class="card qr">
+      <qrcode [level]="'H'" size="150" qrdata="particl:{{ singleAddress.address }}"></qrcode>
+    </div>
+  </div>
+
+  <div class="address-string">
+    <div class="details-address enable-select" fxLayoutWrap layout-padding>
+      <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
+        {{ word }}
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button mat-button class="copy" ngxClipboard [cbContent]="singleAddress.address" (click)="copyToClipBoard()">
+      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>Copy to clipboard
+    </button>
+  </div>
+</div><!-- .dialog-content -->

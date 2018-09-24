@@ -1,0 +1,312 @@
+<app-header>
+  <div class="container-fluid">
+    <ul class="header-nav">
+      <li [class.active]="tab == 'main'">
+        <a href="javascript:void(0)" (click)="settingsTab('main')">
+          Main
+        </a>
+      </li>
+      <li [class.active]="tab == 'network'">
+        <a href="javascript:void(0)" (click)="settingsTab('network')">
+          Network
+        </a>
+      </li>
+      <li [class.active]="tab == 'window'">
+        <a href="javascript:void(0)" (click)="settingsTab('window')">
+          Window
+        </a>
+      </li>
+      <li [class.active]="tab == 'display'">
+        <a href="javascript:void(0)" (click)="settingsTab('display')">
+          Display
+        </a>
+      </li>
+      <li [class.active]="tab == 'help'">
+        <a href="javascript:void(0)" (click)="settingsTab('help')">
+          Help
+        </a>
+      </li>
+      <!--<li [class.active]="tab == 'i2p'">
+        <a href="javascript:void(0)" (click)="settingsTab('i2p')">
+          I2P
+        </a>
+      </li>
+      <li [class.active]="tab == 'tor'">
+        <a href="javascript:void(0)" (click)="settingsTab('tor')">
+          TOR
+        </a>
+      </li>-->
+    </ul>
+  </div>
+</app-header>
+
+<div class="container-fluid">
+
+  <div *ngIf="tab == 'main'">
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Start Particl on system login</div>
+      <input type="checkbox" [(ngModel)]="settings.main.autostart">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Detach databases at shutdown</div>
+      <input type="checkbox" [(ngModel)]="settings.main.detachDatabases">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Pay transaction fee</div>
+      <div class="col-xs-8">
+        <div class="input-comment row">
+          <p>Optionnal transaction fee per kB that helps make sure your transactions
+          are processed quickly. <br /> Most transactions are 1kB. Fee 0.01 recommended.</p>
+        </div>
+        <div class="row col-xs-6">
+          <input class="col-xs-4" type="text" [(ngModel)]="settings.main.feeAmount">
+          <div class="col-xs-6">
+            <select class="form-control" [(ngModel)]="settings.main.feeCurrency">
+              <option value="part">PART</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Pay transaction fee</div>
+      <div class="col-xs-8">
+        <div class="input-comment row">
+            <p>Optionnal transaction fee per kB that helps make sure your transactions are processed quickly.
+                <br /> Most transactions are 1kB. Fee 0.01 recommended.</p>
+        </div>
+        <div class="row col-xs-6">
+            <input class="col-xs-4" type="text" [(ngModel)]="settings.main.feeAmount">
+            <div class="col-xs-6">
+                <select class="form-control" [(ngModel)]="settings.main.feeCurrency">
+                    <option value="part">PART</option>
+                </select>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Enable staking</div>
+      <input type="checkbox" [(ngModel)]="settings.main.stake">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Reserve</div>
+      <div class="col-xs-8">
+          <div class="input-comment row">
+              <p>Reserved amount does not participate in staking and is therefore spendable at any time.</p>
+          </div>
+          <div class="row col-xs-6">
+              <input class="col-xs-4" type="text" [(ngModel)]="settings.main.reserveAmount">
+              <div class="col-xs-6">
+                  <select class="form-control" [(ngModel)]="settings.main.reserveCurrency">
+                      <option value="part">PART</option>
+                  </select>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Minimum stake interval</div>
+      <input class="col-xs-3" type="text" [(ngModel)]="settings.main.stakeInterval">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Minimum ring size</div>
+      <input class="col-xs-3" type="text" [(ngModel)]="settings.main.minRing">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Maximum ring size</div>
+      <input class="col-xs-3" type="text" [(ngModel)]="settings.main.maxRing">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Automatically select ring size</div>
+      <input type="checkbox" [(ngModel)]="settings.main.autoRing">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Enable secure messaging</div>
+      <input type="checkbox" [(ngModel)]="settings.main.secureMessaging">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Thin mode (requires restart)</div>
+      <input type="checkbox" [(ngModel)]="settings.main.thin">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Thin full index</div>
+      <input type="checkbox" [(ngModel)]="settings.main.thinFullIndex">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Thin index window</div>
+      <input class="col-xs-3" type="text" [(ngModel)]="settings.main.thinIndexWindow">
+    </div>
+
+  </div>
+
+  <div *ngIf="tab == 'network'">
+    <div class="card row">
+        <div class="input-label col-xs-4">Map port using UPNP</div>
+        <input type="checkbox" [(ngModel)]="settings.network.upnp">
+    </div>
+
+    <div class="card row">
+        <div class="input-label col-xs-4">Connect through Socks proxy</div>
+        <input type="checkbox" [(ngModel)]="settings.network.proxy">
+    </div>
+
+    <div class="card row">
+        <div class="input-label col-xs-4">Proxy IP</div>
+        <input type="text" id="ip" [(ngModel)]="settings.network.proxyIP">
+    </div>
+
+    <div class="card row">
+        <div class="input-label col-xs-4">Port</div>
+        <input type="text" id="port" [(ngModel)]="settings.network.proxyPort">
+    </div>
+
+    <div class="card row">
+        <div class="input-label col-xs-4">Socket version</div>
+        <div class="col-xs-4">
+            <select class="form-control no-margin-left" id="version" [(ngModel)]="settings.network.socketVersion">
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+    </div>
+  </div>
+
+  <div *ngIf="tab == 'window'">
+    <div class="card row">
+      <div class="input-label col-xs-4">Minimize to the tray instead of the taskbar</div>
+      <input type="checkbox" [(ngModel)]="settings.window.tray">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Minimize on close</div>
+      <input type="checkbox" [(ngModel)]="settings.window.minimize">
+    </div>
+  </div>
+
+  <div *ngIf="tab == 'display'">
+    <div class="card row">
+        <div class="input-label col-xs-4">User interface language</div>
+        <div class="col-xs-4">
+            <select class="form-control no-margin-left" [(ngModel)]="settings.display.language">
+                <option value="default">(default)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Unit to show amounts in</div>
+      <div class="col-xs-4">
+          <select class="form-control no-margin-left" [(ngModel)]="settings.display.units">
+              <option value="part">PART</option>
+              <option value="usd">USD</option>
+          </select>
+      </div>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Rows per page</div>
+      <div class="col-xs-4">
+          <select class="form-control no-margin-left" [(ngModel)]="settings.display.rows">
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+          </select>
+      </div>
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Display addresses in transaction list</div>
+      <input type="checkbox" [(ngModel)]="settings.display.addresses">
+    </div>
+
+    <div class="card row">
+      <div class="input-label col-xs-4">Events</div>
+
+      <div class="col-xs-8">
+        <table class="table">
+          <tr>
+            <th></th>
+            <th>Visible</th>
+            <th>Notifications</th>
+          </tr>
+          <tr>
+            <td>Incoming message</td>
+            <td></td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.notify.message"></td>
+          </tr>
+          <tr>
+            <td>Sent to</td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.show.sentTo"></td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.notify.sentTo"></td>
+          </tr>
+          <tr>
+            <td>Received with</td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.show.receivedWith"></td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.notify.receivedWith"></td>
+          </tr>
+          <tr>
+            <td>Received from</td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.show.receivedFrom"></td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.notify.receivedFrom"></td>
+          </tr>
+          <tr>
+            <td>Payment to yourself</td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.show.selfPayment"></td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.notify.selfPayment"></td>
+          </tr>
+          <tr>
+            <td>Received PART</td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.show.partReceived"></td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.notify.partReceived"></td>
+          </tr>
+          <tr>
+            <td>Sent PART</td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.show.partSent"></td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.notify.partSent"></td>
+          </tr>
+          <tr>
+            <td>Other</td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.show.other"></td>
+            <td><input type="checkbox" [(ngModel)]="settings.display.notify.other"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="tab == 'i2p'">
+    <div class="card">
+      I2P (coming soon)
+    </div>
+  </div>
+
+  <div *ngIf="tab == 'tor'">
+    <div class="card">
+      TOR (coming soon)
+    </div>
+  </div>
+
+
+  <div class="pull-right" *ngIf="tab !== 'help'">
+    <button (click)="cancel()">Cancel</button>
+    <button (click)="apply()">Apply</button>
+    <button class="validate" (click)="validate()">OK</button>
+  </div>
+
+</div>

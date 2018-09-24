@@ -1,0 +1,143 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.mat-expansion-panel-header {
+  min-height: 67px !important;
+
+  // TX date/time
+  .history_date {
+    color: $text-muted;
+    border-right: 1px solid lighten($text-muted, 35%);
+  }
+
+  // confirmations
+  .history_confirmation {
+    color: $text-muted;
+    .confirmations { // icon
+      margin-right: 3px;
+      font-size: 12px;
+      position: relative;
+      top: 1px;
+    }
+    &.confirm-none { // unconfirmed TXs
+      color: mix($color-alert, $color-warning, 100%);
+    }
+    &.confirm-1 { // 1-4 confirmations
+      color: mix($color-alert, $color-warning, 66%);
+    }
+    &.confirm-2 { // 5-8 conf.
+      color: mix($color-alert, $color-warning, 33%);
+    }
+    &.confirm-3 { // 9-12 conf.
+      color: mix($color-alert, $color-warning, 0%);
+    }
+    &.confirm-ok {
+      color: lighten($text-muted, 20%);
+    }
+  }
+
+  // TX icon
+  .history_cat_icon {
+    .mat-icon {
+      font-size: 14px;
+      position: absolute;
+      // narration icon
+      &.narration {
+        margin: 0 0 0 2px;
+        font-size: 12px;
+        color: lighten($text-muted, 20%) !important;
+        padding: 3px;
+        top: 1px;
+      }
+    }
+    .tx-type {
+      .name {
+        font-weight: 500;
+        margin-left: 26px;
+      }
+      &.staked {
+        .mat-icon {
+          color: $color-warning;
+        }
+      }
+      &.orphan {
+        .mat-icon {
+          color: mix($bg-shadow, $text-muted);
+        }
+      }
+      &.sent {
+        .mat-icon {
+          color: $color-alert;
+        }
+      }
+      &.received {
+        .mat-icon {
+          color: $color;
+        }
+      }
+    }
+  }
+
+  // TX amount
+  .history_amount {
+    text-align: right;
+    display: block;
+    .amount {
+      .big {
+        font-weight: bold;        
+      }
+      .point,
+      .small {
+        color: $text-muted;
+      }
+    }
+    .negative {
+      color: $color-alert;
+      .point,
+      .small {
+        color: mix(white, $color-alert, 30%);
+      }
+    }
+  }
+}
+
+// detail item of TX info
+.tx-detail-item {
+  padding: 5px 0;
+  color: $text-muted;
+  font-size: 13px;
+  font-family: $font;
+  // shared across inputs
+  .input {
+    border: none;
+    outline: none;
+    padding: 0 5px;
+    &.narration {
+      padding: 0;
+    }
+  }
+  // to/from address
+  .to-from-address {
+    width: 100%;
+    font-family: monospace;   
+    color: lighten($text, 10%);
+    background: lighten($bg-shadow, 10%);
+    border-radius: 4px;
+    &:focus {
+      background: lighten($bg-black, 10%);
+      color: white;
+    }
+  }
+  // explorer link
+  .tx-detail-link {
+    width: 100%;
+    color: $text-muted;
+    font-family: monospace;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    &:hover {
+      color: $color;
+    }
+  }
+}

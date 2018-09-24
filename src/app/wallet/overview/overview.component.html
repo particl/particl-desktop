@@ -1,0 +1,115 @@
+<mat-card class="balance-overview">
+  <div class="total balance-item">
+    <app-balance type="total_balance"></app-balance>
+  </div>
+  <div class="public balance-item">
+    <app-balance type="balance"></app-balance>
+  </div>
+  <div class="blind balance-item">
+    <app-balance type="blind_balance"></app-balance>
+  </div>
+  <div *ngIf="testnet" class="anon balance-item">
+    <app-balance type="anon_balance"></app-balance>
+  </div>
+  <div class="stake balance-item">
+    <app-balance type="staked_balance"></app-balance>
+  </div>
+</mat-card>
+
+
+<div class="overview">
+  <div class="overview-content">
+    <!-- @TODO comment out the code for widget for total listing, sell orders -->
+    <!-- <div class="seller-overview TO_DO">
+      <app-header>
+        <ul class="header-nav">
+          <li>Seller overview</li>
+          li class="buttons">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
+            <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
+          </li
+        </ul>
+      </app-header>
+      <mat-card fxLayout>
+        <div class="list listings" fxFlex="1 1 50%" fxLayout>
+          <div class="total" fxFlex="1 1 40%">
+            <div class="value">3</div>
+            <div class="desc">Total<br>listings</div>
+          </div>
+          <div class="breakdown" fxFlex="1 1 60%">
+            <div class="item"><div class="value">2</div><div class="desc">Published</div></div>
+            <div class="item"><div class="value">1</div><div class="desc">Expired</div></div>
+            <div class="item"><div class="value">0</div><div class="desc">Unpublished</div></div>
+          </div>
+        </div>.list.listings
+        <div class="list orders" fxFlex="1 1 50%" fxLayout>
+          <div class="total" fxFlex="1 1 40%">
+            <div class="value">12</div>
+            <div class="desc">Sell<br>orders</div>
+          </div>
+          <div class="breakdown" fxFlex="1 1 60%">
+            <div class="item"><div class="value">8</div><div class="desc">Bidding</div></div>
+            <div class="item"><div class="value">1</div><div class="desc">In escrow</div></div>
+            <div class="item"><div class="value">3</div><div class="desc">Shipped</div></div>
+          </div>
+        </div>.list.orders
+      </mat-card>
+    </div>.seller-overview -->
+
+    <div class="recent-transactions">
+      <app-header>
+        <ul class="header-nav">
+          <li>Recent Transactions</li>
+          <!-- TODO: uncomment when widget management is ready -->
+          <!--li class="buttons">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
+            <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
+          </li-->
+        </ul>
+      </app-header>
+      <transaction-table
+        [display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': true, 'confirmations': true}">
+      </transaction-table>
+    </div><!-- .recent-transactions -->
+
+  </div><!-- .overview-content -->
+
+
+  <div class="overview-sidebar">
+    <!-- @TODO comment out the code for widget for total buy orders -->
+    <!-- <div class="buy-orders TO_DO">
+      <app-header>
+        <ul class="header-nav">
+          <li>Your buy orders</li>
+          li class="buttons">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
+            <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
+          </li
+        </ul>
+      </app-header>
+      <mat-card class="list orders" fxLayout>
+        <div class="total" fxFlex="1 1 40%">
+          <div class="value">5</div>
+          <div class="desc">Buy<br>orders</div>
+        </div>
+        <div class="breakdown" fxFlex="1 1 60%">
+          <div class="item"><div class="value">3</div><div class="desc">Bidding</div></div>
+          <div class="item"><div class="value">0</div><div class="desc">In escrow</div></div>
+          <div class="item"><div class="value">2</div><div class="desc">Shipped</div></div>
+        </div>
+      </mat-card>.list.orders
+    </div>.buy-orders -->
+
+    <app-coldstake></app-coldstake>
+    <app-stakinginfo></app-stakinginfo>
+
+    <!-- TODO: uncomment when widget management is ready -->
+    <!--div class="action-buttons">
+      <button mat-button (click)="openWidgetManager()">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
+        Manage widgets
+      </button>
+    </div--><!-- .action-buttons -->
+
+  </div><!-- .overview-sidebar -->
+</div><!-- .overview-content -->

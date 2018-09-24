@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdDialogRef, MdSnackBarModule } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 
-import { SharedModule } from '../../shared/shared.module';
-import { RpcModule } from '../../core/rpc/rpc.module';
 import { ModalsModule } from '../modals.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
+import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
 
 import { ColdstakeComponent } from './coldstake.component';
-import { FlashNotificationService } from '../../services/flash-notification.service';
+
 
 describe('ColdstakeComponent', () => {
   let component: ColdstakeComponent;
@@ -16,15 +16,13 @@ describe('ColdstakeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
         SharedModule,
-        RpcModule.forRoot(),
-        ModalsModule,
-        MdSnackBarModule
+        CoreUiModule.forRoot(),
+        CoreModule.forRoot(),
+        ModalsModule
       ],
       providers: [
-        { provide: MdDialogRef},
-        FlashNotificationService
+        { provide: MatDialogRef }
       ]
     })
     .compileComponents();

@@ -1,10 +1,16 @@
-import { Component, Input,  OnChanges, Output, EventEmitter } from '@angular/core';
-import { ClipboardModule } from 'ngx-clipboard';
+import {
+  Component,
+  Input,
+  OnChanges,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+import { Log } from 'ng2-logger';
 
 import { PassphraseService } from './passphrase.service';
-
-import { Log } from 'ng2-logger';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 const MAX_WORDS = 24;
 
@@ -20,6 +26,7 @@ export class PassphraseComponent implements  OnChanges {
   focused: number = 0;
   public editable: number[] = [];
 
+  @ViewChild('phrase') phrase: ElementRef;
   @Input() words: string[] = Array(MAX_WORDS).fill('');
 
   @Input() readOnly: boolean = false;
@@ -34,31 +41,40 @@ export class PassphraseComponent implements  OnChanges {
 
   constructor(
     private _passphraseService: PassphraseService,
-    private flashNotificationService: FlashNotificationService) {
+    private flashNotificationService: SnackbarService) {
   }
 
   ngOnChanges(): void {
     this.editable = [];
   }
 
-  checkFocus(event: KeyboardEvent, index: number) {
+  checkFocus(event: KeyboardEvent, index: number): void {
     if (event.key === ' ') {
       this.focused = index + 1;
+      while (this.partialDisable && this.validateWord(this.words[this.focused], this.focused)) {
+        this.focused++;
+      }
     }
   }
 
+  onBlur(index: number): void {
+    this.words[index] = this.words[index].trim();
+  }
+
   splitAndFill(index: number): void {
-    if (this.partialDisable || this.words[index].indexOf(' ') === -1) {
-      return;
-    }
-
-    const words = this.words[index].split(' ');
-
-    words.forEach((word, i) => {
-      if (i + index < MAX_WORDS) {
-        this.words[i + index] = this.validateWord(word, -1) ? word : 'INVALID';
+    setTimeout(() => { // Paste event is called before input (modal change)
+      if (this.partialDisable || this.words[index].indexOf(' ') === -1) {
+        return;
       }
-    });
+
+      const words = this.words[index].split(' ');
+
+      words.forEach((word, i) => {
+        if (i + index < MAX_WORDS) {
+          this.words[i + index] = this.validateWord(word.trim(), -1) ? word.trim() : 'INVALID';
+        }
+      });
+    }, 1);
   }
 
   validateWord(word: string, index: number): boolean {
@@ -69,19 +85,26 @@ export class PassphraseComponent implements  OnChanges {
     return this._passphraseService.validateWord(word);
   }
 
-  canEdit(index: number) {
+  canEdit(index: number): boolean {
     return (this.editable.indexOf(index) === -1);
   }
 
   sendWords(): void {
-    this.wordsEmitter.emit(this.words.join(' '));
+    this.wordsEmitter.emit(
+      this.words.map(Function.prototype.call, String.prototype.trim)
+      .join(' '));
   }
 
-  clear() {
+  clear(): void {
     this.words = Array(MAX_WORDS).fill('');
   }
 
   copyToClipBoard(): void {
     this.flashNotificationService.open('Wallet recovery phrase copied to clipboard.');
+  }
+
+  pasteContent() {
+    this.phrase.nativeElement.focus();
+    document.execCommand('Paste');
   }
 }

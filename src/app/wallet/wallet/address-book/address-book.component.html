@@ -1,0 +1,61 @@
+<div class="container-block address-book disable-select">
+
+  <div class="filter">
+
+    <div class="add-address">
+      <button mat-raised-button color="primary" (click)="openNewAddress()" class="full-width"
+              matTooltip="Save new address to your Address book" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Add new address
+      </button>
+    </div>
+
+    <div class="section search-sorting">
+      <div class="subtitle">Search</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="icon-input search-address">
+          <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}"
+                placeholder="Search Addresses" (keyup.escape)="query = ''">
+          <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
+                    fontIcon="part-clear-all"></mat-icon>
+          <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address" matTooltipPosition="before"></mat-icon>
+        </mat-form-field>
+      </mat-card>
+
+      <div class="subtitle">Filter by type</div>
+      <mat-card class="filter-card">
+        <!-- FIXME: needs connecting to pagination (so that number of results/pages gets updated on selecting some type filter) -->
+        <mat-select class="type-filter" name="type" (change)="filterType($event)" value="">
+          <mat-option value="">All types</mat-option>
+          <mat-option value="public">Public</mat-option>
+          <mat-option value="private">Private</mat-option>
+        </mat-select>
+      </mat-card>
+    </div><!-- .search-sorting -->
+
+    <p class="widget-help">
+      Address Book is your personal collection of saved addresses belonging to other parties. Kindly note that as re-using the same address for more than one transaction increases traceability &ndash; it is recommended that you mostly save private addresses (if possible) so that both parties’ identities remain private.
+    </p>
+
+  </div><!-- .filter -->
+
+
+  <div class="addresses section">
+
+    <address-table
+      [query]="query"
+      [filter]="filter"
+      [displayHeader]="false"
+      [displayInternalHeader]="true"
+      [displayPagination]="true"
+      [displayLabel]="true"
+      [displayAddress]="true"
+      [displayPurpose]="true"
+      [displayToolsMenu]="true"
+      [displayQrMenu]="false"
+      (editLabelEmitter)="editLabel($event)">
+    </address-table>
+
+  </div><!-- addresses -->
+
+</div>

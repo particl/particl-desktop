@@ -1,14 +1,17 @@
 "use strict";
 
-const got = require('got'),
-  _ = require('lodash'),
-  fs = require('fs'),
-  crypto = require('crypto'),
-  path = require('path'),
-  tmp = require('tmp'),
-  mkdirp = require('mkdirp'),
-  unzip = require('node-unzip-2'),
-  spawn = require('buffered-spawn');
+const got  = require('got'),
+         _ = require('lodash'),
+        fs = require('fs'),
+    crypto = require('crypto'),
+      path = require('path'),
+       tmp = require('tmp'),
+    mkdirp = require('mkdirp'),
+     unzip = require('node-unzip-2'),
+     spawn = require('buffered-spawn'),
+       log = require('electron-log'),
+  progress = require('cli-progress'),
+  EventEmitter = require('events').EventEmitter;
 
 
 function copyFile(src, dst) {
@@ -47,14 +50,7 @@ function checksum(filePath, algorithm) {
   });
 }
 
-const DUMMY_LOGGER = {
-  debug: function() {},
-  info: function() {},
-  warn: function() {},
-  error: function() {}
-};
-
-class Manager {
+class Manager extends EventEmitter {
   /**
    * Construct a new instance.
    *
@@ -62,9 +58,10 @@ class Manager {
    * default configuration (`DefaultConfig`) will be used.
    */
   constructor (config) {
+    super();
     this._config = config;
 
-    this._logger = DUMMY_LOGGER;
+    this._logger = log;
   }
 
   /**
@@ -73,21 +70,6 @@ class Manager {
    */
   get config () {
     return this._config;
-  }
-
-  /**
-   * Set the logger.
-   * @param {Object} val Should have same methods as global `console` object.
-   */
-  set logger (val) {
-    this._logger = {};
-
-    for (let key in DUMMY_LOGGER) {
-      this._logger[key] = (val && typeof val[key] === 'function')
-        ? val[key].bind(val)
-        : DUMMY_LOGGER[key]
-      ;
-    }
   }
 
   /**
@@ -128,7 +110,7 @@ class Manager {
    * @return {Promise}
    */
   init(options) {
-    this._logger.info('Initializing Manager...');
+    this._logger.debug('Initializing Manager...');
 
     this._resolvePlatform();
 
@@ -216,33 +198,61 @@ class Manager {
 
       const downloadFile = path.join(downloadFolder, `archive.${downloadCfg.type}`);
 
-      this._logger.info(`Downloading package from ${downloadCfg.url} to ${downloadFile} ...`);
+      this._logger.debug(`Downloading package from ${downloadCfg.url} to ${downloadFile} ...`);
 
       const writeStream = fs.createWriteStream(downloadFile);
 
       const stream = got.stream(downloadCfg.url);
-
-      // stream.pipe(progress({
-      //   time: 100
-      // }));
+      let progressBar = undefined;
 
       stream.pipe(writeStream);
 
-      // stream.on('progress', (info) => );
+      stream.on('downloadProgress', (info) => {
+        if (progressBar) {
+          progressBar.update(info.transferred);
+
+          this.emit('download', {
+            status: 'busy',
+            transferred: info.transferred,
+            total: info.total
+          });
+
+        } else {
+          progressBar = new progress.Bar({}, progress.Presets.shades_classic);
+          progressBar.start(info.total, info.transferred);
+
+          this.emit('download', {
+            status: 'started',
+            transferred: info.transferred,
+            total: info.total
+          });
+
+        }
+      });
 
       stream.on('error', (err) => {
-        this._logger.error(err);
+        if (progressBar) {
+          progressBar.stop();
 
+          this.emit('download', {
+            status: 'error'
+          });
+        }
+        this._logger.error(err);
         reject(new Error(`Error downloading package for ${clientId}: ${err.message}`));
-      })
+      });
 
       stream.on('end', () => {
-        this._logger.debug(`Downloaded ${downloadCfg.url} to ${downloadFile}`);
+        if (progressBar) {
+          progressBar.stop();
 
-        // quick sanity check
+          this.emit('download', {
+            status: 'done'
+          });
+        }
+        this._logger.debug(`Downloaded ${downloadCfg.url} to ${downloadFile}`);
         try {
           fs.accessSync(downloadFile, fs.F_OK | fs.R_OK);
-
           resolve({
             downloadFolder: downloadFolder,
             downloadFile: downloadFile
@@ -272,9 +282,9 @@ class Manager {
       if (algorithm) {
         return checksum(dInfo.downloadFile, algorithm)
           .then((hash) => {
-              this._logger.error(algorithm);
-              this._logger.error(hash);
-              this._logger.error(expectedHash);
+              this._logger.silly('algorithm: ', algorithm);
+              this._logger.silly('file hash: ', hash);
+              this._logger.silly('expected: ', expectedHash);
             if (expectedHash !== hash) {
               throw new Error(`Hash mismatch: ${expectedHash}`);
             }
@@ -371,14 +381,13 @@ class Manager {
       })
       .then(() => {
         info.client = client;
-
         return info;
       });
     });
   }
 
   _resolvePlatform () {
-    this._logger.info('Resolving platform...');
+    this._logger.debug('Resolving platform...');
 
     // platform
     switch (process.platform) {
@@ -417,13 +426,13 @@ class Manager {
 
       const count = Object.keys(this._clients).length;
 
-      this._logger.info(`${count} possible clients.`);
+      this._logger.debug(`${count} possible clients.`);
 
       if (_.isEmpty(this._clients)) {
         return;
       }
 
-      this._logger.info(`Verifying status of all ${count} possible clients...`);
+      this._logger.debug(`Verifying status of all ${count} possible clients...`);
 
       return Promise.all(_.values(this._clients).map(
         (client) => this._verifyClientStatus(client, options)
@@ -439,7 +448,7 @@ class Manager {
     return Promise.resolve()
     .then(() => {
       // get possible clients
-      this._logger.info('Calculating possible clients...');
+      this._logger.debug('Calculating possible clients...');
 
       const possibleClients = {};
 
@@ -472,7 +481,7 @@ class Manager {
       folders: []
     }, options);
 
-    this._logger.info(`Verify ${client.id} status ...`);
+    this._logger.debug(`Verify ${client.id} status ...`);
 
     return Promise.resolve().then(() => {
       const binName = client.activeCli.bin;
@@ -583,7 +592,7 @@ class Manager {
   _runSanityCheck (client, binPath) {
     this._logger.debug(`${client.id} binary path: ${binPath}`);
 
-    this._logger.info(`Checking for ${client.id} sanity check ...`);
+    this._logger.debug(`Checking for ${client.id} sanity check ...`);
 
     const sanityCheck = _.get(client, 'activeCli.commands.sanity');
 
@@ -594,7 +603,7 @@ class Manager {
       }
     })
     .then(() => {
-      this._logger.info(`Checking sanity for ${client.id} ...`)
+      this._logger.debug(`Checking sanity for ${client.id} ...`)
 
       return this._spawn(binPath, sanityCheck.args);
     })
@@ -611,7 +620,7 @@ class Manager {
         }
       }
 
-      this._logger.debug(`Sanity check passed for ${binPath}`);
+      this._logger.info(`Sanity check passed for ${binPath}`);
 
       // set it!
       client.activeCli.fullPath = binPath;

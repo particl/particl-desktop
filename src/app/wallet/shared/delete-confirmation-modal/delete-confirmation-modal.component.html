@@ -1,0 +1,24 @@
+<div mat-dialog-title>Delete address?</div>
+<button class="small-close_button" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+<div mat-dialog-content class="dialog-content">
+  <p>
+    Are you sure you want to delete this address from your Address book?
+  </p>
+  <p>
+    {{ dialogContent }}
+  </p>
+</div>
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="warn" mat-dialog-close (click)="onConfirmDelete()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+    Yes, delete
+  </button>
+</mat-dialog-actions>

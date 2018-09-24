@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>Disable Cold Staking</h2>
+
+<mat-dialog-content>
+  <p>
+    Disable Cold Staking and move your funds back to your wallet from your staking device.
+    Note that you don't need to disable Cold Staking to spend your coins.
+  </p>
+  <p>
+    Staked coins won't be affected. If the outputs you want to move are in your staked balance, you must wait for them to mature.
+  </p>
+  <!--p>
+    Alternatively, you can just disable Cold Staking activation. That will stop sending staked coins to your staking device. Coins already there will stay there.
+  </p-->
+  <p class="warning">
+    <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+    Disabling Cold Staking will create {{ utxos.txs.length }} transaction(s) and will consume <strong>{{ fee }} PART</strong> in fees.
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <!--button mat-button color="warn" (click)="disableColdstaking()">
+    <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
+    Disable Cold Staking
+  </button-->
+  <button mat-raised-button color="warn" (click)="revert()">
+    <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+    Disable Cold Staking
+  </button>
+</mat-dialog-actions>

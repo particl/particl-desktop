@@ -1,0 +1,61 @@
+<div mat-dialog-title class="title">Address lookup</div>
+<button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+<div mat-dialog-content class="modal-content">
+  <form name="addressLookupfilter">
+    <div fxLayout="row" fxLayoutGap="35px">
+
+      <mat-form-field fxFlex="1 1 100%" class="search-address icon-input">
+        <input matInput type="text" name="query" (ngModelChange)="resetPagination()"
+               placeholder="Filter by label or address..." [(ngModel)]="query">
+
+        <mat-icon *ngIf="query" (click)="query=''" matTooltip="Clear" fontSet="partIcon"
+                  fontIcon="part-clear-all"></mat-icon>
+
+        <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search" matTooltip="Search">
+        </mat-icon>
+      </mat-form-field>
+
+      <mat-select fxFlex="1 0 130px" name="filter" [(ngModel)]="filter" class="address-type"
+                  *ngIf="allowFilter" (ngModelChange)="resetPagination()">
+        <mat-option *ngFor="let addressType of addressTypes" [value]="addressType">
+          {{ addressType }}
+        </mat-option>
+      </mat-select>
+
+    </div>
+  </form>
+
+
+  <mat-list class="list-data">
+
+    <mat-list-item class="list-header">
+      <div class="address-list-header" fxFlex="row" fxLayoutGap="10px" layout-padding>
+        <div fxFlex="0 0 350px">Label</div>
+        <div fxFlex="0 0 300px">Address</div>
+        <div fxFlex="0 0 80px" class="text-right">Type</div>
+      </div>
+    </mat-list-item>
+
+    <div *ngFor="let address of getPageData()">
+      <mat-divider></mat-divider>
+      <mat-list-item class="address-entry" (click)="onSelectAddress(address.getAddress(), address.getLabel())">
+        <div class="address-list" fxFlex="row" fxLayoutGap="10px" layout-padding>
+          <div fxFlex="0 0 350px" class="label">{{address.getLabel()}}</div>
+          <div fxFlex="0 0 300px" class="address">{{address.getAddress()}}</div>
+          <div fxFlex="0 0 80px" class="type text-right">{{cheatPublicAddress(address.getAddress())}}</div>
+        </div>
+      </mat-list-item>
+    </div>
+
+  </mat-list>
+
+  <app-paginator
+    #paginator
+    [length]="getTotalCountForPagination()"
+    [pageSize]="MAX_ADDRESSES_PER_PAGE"
+    (page)="pageChanged($event)">
+  </app-paginator>
+</div>

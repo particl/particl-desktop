@@ -1,12 +1,13 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { BlockStatusService } from './blockstatus.service'
-import { PeerService } from './peer.service';
-import { RPCService } from './rpc.service';
-import { RPXService } from './rpx.service';
-import { StateService } from '../state/state.service';
 
+import { RpcService } from './rpc.service';
+import { RpcStateService } from './rpc-state/rpc-state.service';
+
+import { BlockStatusService } from './blockstatus/blockstatus.service';
+import { NewTxNotifierService } from './new-tx-notifier/new-tx-notifier.service';
+import { PeerService } from './peer/peer.service';
 
 @NgModule({
   imports: [
@@ -18,15 +19,20 @@ export class RpcModule {
     return {
       ngModule: RpcModule,
       providers: [
+        RpcService,
+        RpcStateService,
         BlockStatusService,
-        PeerService,
-        RPCService,
-        RPXService,
-        StateService
+        NewTxNotifierService,
+        PeerService
       ]
     };
   }
 }
-export { BlockStatusService } from './blockstatus.service';
-export { PeerService } from './peer.service';
-export { RPCService } from './rpc.service';
+
+
+export { RpcService } from './rpc.service';
+export { RpcStateService } from './rpc-state/rpc-state.service';
+
+export { BlockStatusService } from './blockstatus/blockstatus.service'
+export { PeerService } from './peer/peer.service';
+export { NewTxNotifierService } from './new-tx-notifier/new-tx-notifier.service';

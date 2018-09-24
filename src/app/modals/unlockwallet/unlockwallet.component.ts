@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { RPCService } from '../../core/rpc/rpc.service';
-import { MdDialogRef } from '@angular/material';
-import { ModalsComponent } from '../modals.component';
-
+import { RpcService } from '../../core/core.module';
+import { MatDialogRef } from '@angular/material';
+import { UnlockModalConfig } from 'app/modals/models/unlock.modal.config.interface';
 
 @Component({
   selector: 'app-unlockwallet',
@@ -14,7 +13,8 @@ import { ModalsComponent } from '../modals.component';
 export class UnlockwalletComponent {
 
   // constants
-  DEFAULT_TIMEOUT: number = 60;
+  // DEFAULT_TIMEOUT: number = 60;
+  DEFAULT_TIMEOUT: number = 300;
   log: any = Log.create('unlockwallet.component');
 
   @Output() unlockEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -23,12 +23,13 @@ export class UnlockwalletComponent {
   private callback: Function;
   timeout: number = this.DEFAULT_TIMEOUT;
   showStakeOnly: boolean = false;
-
-  constructor(private _rpc: RPCService,
-              public dialogRef: MdDialogRef<ModalsComponent>) {
+  stakeOnly: boolean = false;
+  constructor(
+    private _rpc: RpcService,
+    public _dialogRef: MatDialogRef<UnlockwalletComponent>) {
   }
 
-  unlock(encryptionStatus: string) {
+  unlock(encryptionStatus: string): void {
     // unlock actually happened in password.component.ts
     this.log.d('Unlock signal emitted! = ' + encryptionStatus );
 
@@ -49,24 +50,29 @@ export class UnlockwalletComponent {
   /**
   * setData sets the callback information for when the wallet unlocks.
   */
-  setData(data: any) {
+  setData(data: UnlockModalConfig, callback: Function): void {
     this.log.d('setting callback, timeout & showStakeOnly data');
-    this.callback = data.callback;
+
+    if (callback instanceof Function) {
+      this.callback = callback;
+    }
+
     if (Number.isInteger(data.timeout)) {
       this.timeout = data.timeout;
     }
     this.showStakeOnly = Boolean(data.showStakeOnly);
+    this.stakeOnly = Boolean(data.stakeOnly)
     this.autoClose = (data.autoClose !== false)
   }
 
-  closeModal() {
+  closeModal(): void {
     // clear callback data
     this.timeout = this.DEFAULT_TIMEOUT;
     this.showStakeOnly = true;
     this.log.d('Closing modal!');
 
     if (this.autoClose ) {
-      this.dialogRef.componentInstance.close();
+      this._dialogRef.close();
       this.log.d('Closing modal!');
     }
   }

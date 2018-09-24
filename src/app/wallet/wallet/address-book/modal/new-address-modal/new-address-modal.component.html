@@ -1,0 +1,35 @@
+<div mat-dialog-title>{{modalTitle}}</div>
+<button class="small-close_button pull-right" tabindex="-1" (click)="closeModal()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+<form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <input matInput type="text" formControlName="address"
+             [(ngModel)]="address" (ngModelChange)="verifyAddress()"
+             placeholder="Enter Address"
+             [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
+             #addressInput
+             required>
+    </mat-form-field>
+    <!-- @TODO: CRZ please replace copy icon to paste icon-->
+    <span matTooltip="Paste" (click)="pasteAddress()">
+      <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+    </span>
+    <mat-form-field>
+      <input matInput type="text" placeholder="Enter Label" name="label" formControlName="label" [(ngModel)]="label"
+             required />
+    </mat-form-field>
+  </div>
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button type="button" mat-button mat-dialog-close (click)="closeModal()">
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button mat-button mat-raised-button color="primary" [disabled]="(!label || !label.trim())||!validAddress||isMine">
+      <mat-icon fontSet="partIcon" fontIcon="part-person-add"></mat-icon>
+      Add Address
+    </button>
+  </mat-dialog-actions>
+</form>

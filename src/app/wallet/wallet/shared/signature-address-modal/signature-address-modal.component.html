@@ -1,0 +1,79 @@
+<div class="signature-address-container disable-select">
+  <button class="small-close_button pull-right" (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  </button>
+  <!--<h2 mat-dialog-title>Signatures</h2>-->
+
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-container>
+      <mat-tab-group (selectChange)="selectTab($event.index)" [(selectedIndex)]="tabIndex">
+        <mat-tab label="Sign Message">
+          <p>
+            You can sign messages/agreements with your address to prove you can receive Particl sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.
+          </p>
+        </mat-tab>
+        <mat-tab label="Verify Message">
+          <p>
+            Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!
+          </p>
+        </mat-tab>
+      </mat-tab-group>
+
+      <div class="signature-address-modal-form">
+
+        <div class="address-field" fxLayout="row" fxLayoutAlign="center center">
+          <mat-form-field fxFlex="1 1 100%">
+            <input matInput formControlName="address" [(ngModel)]="formData.address" #addressInput
+                   [ngClass]="{'verify-sucess': validAddress === true, 'verify-error': validAddress === false }"
+                   placeholder="Enter a Particl address (e.g. PuMnFoGouqFkFZ1rs2PmVDUqp9psfQssre)"
+                   (input)="verifyAddress()">
+          </mat-form-field>
+
+          <div class="icons" fxFlex="0 0 65px">
+            <span class="icon" matTooltip="Address Lookup" (click)="openLookup()">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-people"></mat-icon>
+            </span>
+            <span class="icon" matTooltip="Paste" (click)="pasteAddress()">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
+            </span>
+          </div>
+
+        </div><!-- .address-field -->
+
+        <mat-form-field>
+          <textarea matInput formControlName="message" [(ngModel)]="formData.message" rows="10" cols="100"
+                    placeholder="Enter message to sign/verify"></textarea>
+        </mat-form-field>
+
+        <div class="address-field" fxLayout="row" fxLayoutAlign="center center">
+          <mat-form-field fxFlex="1 1 100%">
+            <input matInput formControlName="signature" [(ngModel)]="formData.signature"
+                   [disabled]="isDisabled"
+                   #signatureInput
+                   placeholder="{{(type == 'sign')? 'Click [Sign Message] to generate signature': 'Signature'}}">
+          </mat-form-field>
+
+          <div class="icons" fxFlex="0 0 45px">
+            <span class="icon" matTooltip="Copy" (click)="copyToClipBoard()" *ngIf="type == 'sign'" ngxClipboard
+                  [cbContent]="formData.signature">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+            </span>
+            <span class="icon" matTooltip="Paste" (click)="pasteSignature()" *ngIf="type == 'verify'">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
+            </span>
+          </div>
+        </div>
+      </div><!-- .signature-address-modal-form -->
+    </div>
+    <mat-dialog-actions fxLayoutAlign="end center">
+      <button type="reset" mat-button (click)="resetForm()">
+        <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+        Clear all
+      </button>
+      <button mat-raised-button color="primary" class="capitalize" type="submit" [disabled]="!addressForm.valid">
+        <mat-icon fontSet="partIcon" fontIcon="{{ (type == 'verify' ? 'part-check': 'part-pen-2') }}"></mat-icon>
+        {{type}} message
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

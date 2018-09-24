@@ -1,0 +1,51 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.mat-list {
+  padding-top: 0;
+}
+
+mat-card.address-entry {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  & > div {
+    margin: 0 20px 0 0;
+  }
+  .label {
+    text-transform: uppercase;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 0 0 200px;
+    @include break(l) {
+      flex: 0 0 300px;
+    }
+  }
+  
+  .address {
+    flex: 1 1 200px;
+    /*.qr-icon {
+      position: relative;
+      top: 3px;
+      margin-right: 8px;
+      cursor: pointer;
+    }*/
+    .address-string {
+      @extend %tfx;
+      font-family: monospace;
+      color: $text-muted;
+      cursor: pointer;
+      &:hover {
+        color: darken($color, 3%);
+      }
+    }
+  }
+  
+  .address-actions { // copy, verify, delete & QR
+    margin: 0;
+    flex: 0 0 86px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+

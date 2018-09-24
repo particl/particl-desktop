@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalsModule } from '../../modals.module';
+import { CoreModule } from '../../../core/core.module';
+import { SharedModule } from '../../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../../core-ui/core-ui.module';
+
 import { PasswordComponent } from './password.component';
-
-
-import { SharedModule } from '../../../shared/shared.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
-import { MdSnackBarModule } from '@angular/material';
 
 
 describe('PasswordComponent', () => {
@@ -17,9 +16,9 @@ describe('PasswordComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        RpcModule.forRoot(),
+        CoreModule.forRoot(),
         ModalsModule,
-        MdSnackBarModule
+        CoreUiModule.forRoot()
       ]
     })
     .compileComponents();

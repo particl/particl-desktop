@@ -1,0 +1,50 @@
+@import "./src/assets/_config"; // import shared colors etc.
+@import "widgets/shared/shared.scss";
+
+.balance-overview { // list of balances
+  @extend %disable-select;
+  display: flex;
+  margin-top: $header-main-height;
+  padding: 24px 35px;
+  @include break(l) {
+    padding: 24px 50px;
+  }
+  .balance-item {
+    border-right: 1px solid $bg-shadow;
+    margin-right: 3%;
+    flex: 0 1 200px;
+    &:last-of-type {
+      border: none;
+      margin: none;
+      margin-right: 0;
+    }
+  }
+}
+
+.overview { // area with widgets
+  display: flex;
+  padding: 0 35px;
+  @include break(l) {
+    padding: 10px 50px;
+  }
+}
+
+.overview-content {
+  flex: 1 1 100%;
+  margin-right: 40px;
+}
+
+.overview-sidebar {
+  flex: 0 0 275px;
+  @include break(l) {
+    flex: 0 0 320px;
+  }
+  @include break(hd) {
+    flex: 0 0 370px;
+  }
+}
+
+.action-buttons {
+  text-align: right;
+  margin: 24px 0 48px;
+}

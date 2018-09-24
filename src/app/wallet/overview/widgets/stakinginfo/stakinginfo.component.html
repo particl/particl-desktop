@@ -1,0 +1,29 @@
+<div class="staking-info">
+  <app-header>
+    <ul class="header-nav">
+      <li>Staking stats</li>
+    </ul>
+    <!--ul class="header-nav pull-right">
+      <li><a href="javascript:void(0)"><span class="icon fa fa-cog color-green"></span></a></li>
+    </ul-->
+  </app-header>
+  <mat-card>
+    <table class="staking-overview" cellspacing="0">
+      <tr>
+        <th>Next reward</th>
+        <td>~{{expectedtime.getShortReadableDuration()}}</td>
+      </tr>
+      <tr>
+        <th>Your Stake weight</th>
+        <!-- (your weight) / (network weight) * 1000 -->
+        <td>{{ownPercentageOfActiveStakingSupply.getIntegerPart()}}.<small>{{ownPercentageOfActiveStakingSupply.getFractionalPart()}}</small>&nbsp;&permil;</td>
+      </tr>
+      <tr>
+        <th>Stake percentage</th>
+        <td>{{curStakeReward.getIntegerPart()}}.<small>{{curStakeReward.getFractionalPart()}}</small>&nbsp;%</td>
+      </tr>
+    </table>
+    <!-- .staking-overview -->
+  </mat-card>
+</div>
+<!-- .staking-info -->

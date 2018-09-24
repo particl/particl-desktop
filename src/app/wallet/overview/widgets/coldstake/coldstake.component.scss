@@ -1,0 +1,69 @@
+@import "./src/assets/_config"; // import shared colors etc.
+@import '../shared/shared.scss';
+
+.cold-staking {
+  @extend %disable-select;
+  .staking-node {
+    padding: 24px 24px 30px;
+    margin-bottom: 20px;
+    &.active .subtitle {
+      color: $color;
+    }
+    &.inactive {
+      padding: 24px;
+      .subtitle {
+        color: $text-muted;
+      }
+    }
+    &.warning .subtitle {
+      color: $color-alert;
+    }
+
+    .title {
+      display: inline-block;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .subtitle {
+      display: block;
+      margin-top: 4px;
+      &.in-progress {
+        margin: 10px 0 5px;
+      }
+      .progress {
+        float: right;
+      }
+    }
+    .progress-bar {
+      margin: 5px 0 15px;
+    }
+    .zap-buttons { // Zap/revert buttons
+      margin: -12px 0 -20px;
+      button {
+        margin: 0;
+        float: none;
+      }
+    }
+
+    button {
+      font-size: 12px;
+      text-transform: uppercase;
+      min-width: 0;
+      padding: 0 10px;
+      margin-right: 20px;
+      border: 1px solid transparent;
+      top: -2px;
+      float: left;
+      &.secondary {
+        border-color: $bg-shadow;
+      }
+      .mat-icon {
+        font-size: 14px;
+        margin: 0;
+        width: 24px;
+      }
+    }
+
+  }
+}

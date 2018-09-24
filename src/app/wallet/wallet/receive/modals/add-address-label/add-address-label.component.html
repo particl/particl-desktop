@@ -1,0 +1,25 @@
+<div mat-dialog-title>Label for new {{ type }} address</div>
+
+<button class="small-close_button" tabindex="-1" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+<form [formGroup]="addLableForm" (ngSubmit)="onSubmitForm()" novalidate>
+
+  <mat-form-field>
+    <input matInput type="text" formControlName="label" class="form-control" [(ngModel)]="label"
+           placeholder="Enter label..." required>
+  </mat-form-field>
+
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button type="button" mat-button mat-dialog-close (click)="dialogClose()">
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button mat-button [disabled]="!addLableForm.valid" mat-raised-button color="primary">
+      <mat-icon fontSet="partIcon" fontIcon="part-circle-check"></mat-icon>
+      {{address ? 'Update Label' : 'Add Label'}}
+    </button>
+  </mat-dialog-actions>
+
+</form>

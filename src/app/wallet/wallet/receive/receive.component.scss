@@ -1,0 +1,217 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// ------ LAYOUT ------ //
+
+.tab-bar {
+  margin-top: $header-main-height;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  background: rgba($bg, 0.95);
+}
+
+.container-flex {
+  display: flex;
+  $padding: 35px;
+  $padding-bottom: $padding + 45px; // offset "show older addys" button from bottom
+  padding: ($header-main-height + $tab-bar-height + $padding) $padding $padding-bottom;
+  height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - #{$padding} - #{$padding-bottom});
+  position: relative;
+  @include break(l) {
+    $padding: 45px;
+    $padding-bottom: $padding + 45px; // offset "show older addys" button from bottom
+    padding: ($header-main-height + $tab-bar-height + $padding) 50px $padding-bottom;
+    height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - #{$padding} - #{$padding-bottom});
+  }
+}
+
+.container-block {
+  padding: 35px;
+  @include break(l) {
+    padding: 45px 50px;
+  }
+}
+
+// fresh unused receive address
+mat-card.receive-address {
+  width: 720px;
+  margin: auto;
+  padding: 24px 0 0;
+
+  .address-info {
+    padding: 0 24px;
+  }
+
+  .main {
+    padding-left: 35px;
+
+    .address-type {
+      text-transform: uppercase;
+      color: $text-muted;
+      .mat-icon {
+        margin-right: 4px;
+        position: relative;
+        top: 3px;
+        color: lighten($text-muted, 20%);
+      }
+    }
+
+    .address-label {
+      font-size: 20px;
+      text-transform: none;
+      margin: 0;
+      padding-right: 40px;
+      text-overflow: initial;
+      overflow: visible;
+      .label-input {
+        .mat-icon {
+          right: -36px;
+          top: 10px;
+          &.part-circle-check {
+            color: $color;
+          }
+        }
+      }
+      .label {
+        display: inline-block;
+        height: 23px;
+        font-weight: 500;
+        &:disabled {
+          color: lighten($text, 15%);
+        }
+        &.no-label { // unlabeled address
+          font-style: italic;
+        }
+      }
+    }
+
+    .address-string {
+      @extend %enable-select;
+      font-size: 15px;
+      line-height: 1.45;
+      color: darken($color, 7%);
+      background: rgba($color, 0.04);
+      padding: 7px 14px;
+      margin-bottom: 18px;
+      cursor: pointer;
+    }
+
+    p.widget-help {
+      margin-bottom: 0;
+    }
+
+  }
+
+  .buttons {
+    width: 100%;
+    margin: 24px 0 0;
+    padding: 14px;
+    border-top: 1px dashed $bg-shadow;
+    .right {
+      text-align: right;
+      button {
+        margin-left: 8px;
+      }
+    }
+  }
+
+}
+
+// show old addresses
+.show-old {
+  text-align: center;
+  font-weight: 500;
+  color: mix($text-muted, $text);
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  .mat-icon {
+    position: relative;
+    top: 2px;
+    font-size: 13px;
+    margin-right: 3px;
+  }
+}
+
+.previous-addresses {
+  @extend %disable-select;
+
+  .filter {
+    .subtitle {
+      @extend %subtitle;
+      margin-top: 16px;
+    }
+    .filter-card {
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      .search-address {
+        .mat-icon {
+          top: 5px;
+          right: 2px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+}
+
+
+
+
+
+/* ------------------------------- *\
+    Search Addresses
+\* ------------------------------- */
+
+.search-address {
+  margin-top: 9px;
+  .mat-input-element {
+    width: calc(100% - 50px);
+    height: 20px;
+    margin-left: 0;
+    padding-right: 50px;
+  }
+  .mat-icon {
+    top: 4px;
+    right: 18px;
+    font-size: 14px;
+  }
+}
+
+
+/* ------------------------------- *\ 
+    Address list 
+\* ------------------------------- */ 
+
+.address-title { // section title (used/unused)
+  @extend %subtitle;
+}
+
+.address-info { // address "card"
+  margin-bottom: 12px;
+  .address-id {
+    color: $text-muted;
+  }
+  .address-label {
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    &.no-label { // unlabeled address
+      font-style: italic;
+      font-weight: 500;
+      opacity: 0.75;
+    }
+  }
+  .address {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: monospace;
+    color: $text-muted;
+    background: transparent;
+    transition: background .3s;
+  }
+}

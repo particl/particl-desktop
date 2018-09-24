@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { RPCService } from '../../../core/rpc/rpc.service';
+import { RpcService } from '../../../core/core.module';
 
 import { Log } from 'ng2-logger';
 
@@ -12,7 +12,7 @@ export class PassphraseService {
 
   private validWords: string[];
 
-  constructor(private _rpc: RPCService) {
+  constructor(private _rpc: RpcService) {
     this.validateWord('initWords');
   }
 

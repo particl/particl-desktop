@@ -1,31 +1,32 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, Output } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { IPassword } from './password.interface';
 
-import { RPCService } from '../../../core/rpc/rpc.module';
-import { FlashNotificationService } from '../../../services/flash-notification.service';
-
+import { RpcService, RpcStateService } from '../../../core/core.module';
+import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent {
+export class PasswordComponent implements OnDestroy {
 
 
   // UI State
   password: string;
-  stakeOnly: boolean = false;
-  showPass: boolean = false;
+  private destroyed: boolean = false;
 
-  @Input() label: string = 'YOUR WALLET PASSWORD';
+  @Input() showPass: boolean = false;
+  @Input() label: string = 'Your Wallet password';
   @Input() buttonText: string;
+  @Input() stakeOnly: boolean = false;
   @Input() unlockTimeout: number = 60;
   @Input() showStakeOnly: boolean = true;
   @Input() isDisabled: boolean = false;
   @Input() isButtonDisable: boolean = false;
+  @Input() showPassword: boolean = false;
 
   /**
     * The password emitter will send over an object with the password and stakingOnly info.
@@ -33,7 +34,7 @@ export class PasswordComponent {
     */
   @Input() emitPassword: boolean = false;
   @Output() passwordEmitter: EventEmitter<IPassword> = new EventEmitter<IPassword>();
-
+  @Output() showPasswordToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
   /**
     * The unlock emitter will automatically unlock the wallet for a given time and emit the JSON result
     * of 'getwalletinfo'. This can be used to automatically request an unlock and instantly do a certain things:
@@ -44,8 +45,13 @@ export class PasswordComponent {
 
   log: any = Log.create('password.component');
 
-  constructor(private _rpc: RPCService,
-              private flashNotification: FlashNotificationService) {
+  constructor(private _rpc: RpcService,
+              private _rpcState: RpcStateService,
+              private flashNotification: SnackbarService) {
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   /** Get the input type - password or text */
@@ -55,11 +61,11 @@ export class PasswordComponent {
 
   // -- RPC logic starts here --
 
-  unlock () {
+  unlock (): void {
     this.forceEmit();
   }
 
-  public forceEmit() {
+  public forceEmit(): void {
     if (this.emitPassword) {
       // emit password
       this.sendPassword();
@@ -71,25 +77,25 @@ export class PasswordComponent {
     }
   }
 
-  clear() {
+  clear(): void {
     this.password = undefined;
   }
 
   /**
   * Emit password only!
   */
-  sendPassword() {
+  sendPassword(): void {
     const pass: IPassword = {
       password: this.password,
       stakeOnly: this.stakeOnly
-    }
+    };
     this.passwordEmitter.emit(pass);
   }
 
   /** Unlock the wallet
     * TODO: This should be moved to a service...
     */
-  private rpc_unlock() {
+  private rpc_unlock(): void {
     this.log.i('rpc_unlock: calling unlock! timeout=' + this.unlockTimeout);
     this.checkAndFallbackToStaking();
     this._rpc.call('walletpassphrase', [
@@ -100,9 +106,9 @@ export class PasswordComponent {
       .subscribe(
         success => {
           // update state
-          this._rpc.stateCall('getwalletinfo');
+          this._rpcState.stateCall('getwalletinfo');
 
-          let _subs = this._rpc.state.observe('encryptionstatus').skip(1)
+          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus').skip(1)
             .subscribe(
               encryptionstatus => {
                 this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
@@ -126,8 +132,8 @@ export class PasswordComponent {
     * if(staking === true) then fallback to staking instead of locked after timeout!
     * else lock wallet
     */
-  private checkAndFallbackToStaking() {
-    if (this._rpc.state.get('encryptionstatus') === 'Unlocked, staking only') {
+  private checkAndFallbackToStaking(): void {
+    if (this._rpcState.get('getwalletinfo').encryptionstatus === 'Unlocked, staking only') {
 
       const password = this.password;
       const timeout = this.unlockTimeout;
@@ -145,8 +151,13 @@ export class PasswordComponent {
     }
   }
 
-  private reset() {
+  private reset(): void {
     this.password = '';
+  }
+
+  // emit showpassword change
+  toggle(): void {
+    this.showPasswordToggle.emit(this.showPass);
   }
 
   // capture the enter button

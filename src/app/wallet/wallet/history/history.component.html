@@ -1,0 +1,73 @@
+<app-header class="disable-select">
+  <div class="container-fluid tab-bar">
+    <mat-tab-group (selectChange)="changeCategory($event.index)" [selectedIndex]="selectedTab">
+      <!-- [(selectedIndex)]="categories.indexOf(filters.category)"> -->
+      <mat-tab *ngFor="let category of categories">
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-{{ category.icon }}"></mat-icon>
+          {{ category.title }}
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+<div fxLayout="row" fxLayoutGap="30px" class="container-block">
+
+  <div class="filter" fxFlex="0 0 230px">
+
+    <div class="section search-sorting">
+      <div class="subtitle first"><!--Search &amp; -->Sort</div>
+      <mat-card class="filter-card">
+
+        <!--mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+          <input matInput type="text" class="header-input"
+                 placeholder="Search transactions" [(ngModel)]="filters.search"
+                 (keyup.enter)="filter()" (keyup.escape)="filters.search = ''; filter()">
+
+          <mat-icon *ngIf="filters.search" (click)="filters.search=''; filter()" matTooltip="Clear" fontSet="partIcon"
+                    fontIcon="part-clear-all"></mat-icon>
+
+          <mat-icon *ngIf="!filters.search" fontSet="partIcon" fontIcon="part-search" (click)="filter()"
+                    matTooltip="Search">
+          </mat-icon>
+        </mat-form-field-->
+
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+          <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (change)="filter()">
+            <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
+              {{ sorting.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+    </div>
+
+    <p class="widget-help">
+      Transaction filter gives you the most granular control over displayed transactions.
+    </p>
+
+    <div class="section filter-by-type">
+      <div class="subtitle">Filter by type</div>
+      <mat-card class="filter-card">
+        <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.type" (change)="filter()">
+          <mat-radio-button class="filter-option" *ngFor="let type of types" value="{{ type.value }}">
+            {{ type.title }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div>
+
+    <button mat-button color="warn" class="clear-filters" (click)="clear()">
+      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div>
+
+  <div class="tx-list section" fxFlex="1 1 100%">
+    <transaction-table #transactions [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
+    </transaction-table>
+  </div><!-- .tx-list -->
+
+</div>

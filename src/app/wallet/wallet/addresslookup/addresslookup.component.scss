@@ -1,0 +1,73 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+.modal-content {
+  overflow: visible; // gets rid of vertical scrollbars (not needed here)
+}
+
+.search-address { // address/label search
+  margin-top: 15px;
+  .mat-icon {
+    top: 4px;
+    right: 18px;
+    font-size: 14px;
+  }
+}
+
+.address-type { // address type filter (select)
+  margin-top: 25px;
+}
+
+.mat-list {
+  margin: 0 -24px;
+  .mat-list-item {
+    &:not(.list-header):hover {
+      background: rgba($color, 0.04);
+      .address {
+        color: darken($color, 5%);
+      }
+    }
+  }
+  .mat-divider {
+    margin: 0;
+  }
+}
+
+.list-header {
+  padding: 0 8px;
+  .address-list-header { // list column labels
+    font-family: $font;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400;
+    color: $text-muted;
+  }
+}
+
+.address-entry { // single address item
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 8px;
+  font-family: $font;
+  .label {
+    font-weight: 700;
+    text-transform: uppercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .address {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: monospace;
+    color: $text-muted;
+    background: transparent;
+    transition: background .3s;
+  }
+}
+
+.mat-paginator {
+  border-bottom: 0;
+  border-top: 1px solid $bg-shadow;
+  margin: 0 -24px -24px;
+}

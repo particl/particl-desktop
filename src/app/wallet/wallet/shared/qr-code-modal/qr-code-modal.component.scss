@@ -1,0 +1,36 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+[mat-dialog-title] {
+  text-align: center;
+  margin: 0 50px;
+  max-width: 320px;
+  word-wrap: break-word;
+}
+
+.dialog-content {
+  text-align: center;
+  min-width: 250px;
+  margin-bottom: 5px !important;
+}
+
+.address-string {
+  width: 170px;
+  margin: 20px auto 10px;
+  .details-address {
+    margin-bottom: 15px;    
+    .address-word {
+      font-family: monospace;
+      font-size: 13px;
+      color: $text-muted;
+    }
+  }
+}
+
+.actions {
+  .mat-icon {
+    margin-right: 7px;
+    font-size: 14px;
+    position: relative;
+    top: -1px;
+  }
+}
