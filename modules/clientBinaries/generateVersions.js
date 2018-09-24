@@ -147,7 +147,7 @@ got(`${releasesURL}`).then(response => {
   }
   release = body[releaseIndex];
   
-  let tag = release.tag_name.substring(1).replace(/rc./g, "");
+  let tag = release.tag_name.substring(1);
   let binaries = [];
 
   // get gitian repository of hashes
@@ -159,7 +159,8 @@ got(`${releasesURL}`).then(response => {
     console.log('looking for tag=', tag)
     versions.forEach(version => {
       // select folders that match the current version
-      if (version.name.includes(tag)) {
+      if (version.name.includes(tag + "-")) {
+        console.log('extractingt from version:', version.name)
         // extract matching folder's platform
         var platformIndex = version.name.indexOf("-");
         var platform = version.name.substring(platformIndex + 1).replace('-unsigned', '');
@@ -169,13 +170,14 @@ got(`${releasesURL}`).then(response => {
       }
     })
 
+    const tagWithoutRc = tag.replace(/rc./g, "");
     // once we have all hashes
     Promise.all(promises).then(function () {
       // prepare JSON object for the output file
       var json = {
         clients: {
           particld: {
-            version: tag,
+            version: tagWithoutRc,
             platforms: {}
           }
         }
@@ -183,7 +185,7 @@ got(`${releasesURL}`).then(response => {
       // get asset details for each release entry
       let entry;
       release.assets.forEach(asset => {
-        if ((entry = getAssetDetails(asset, hashes, tag))) {
+        if ((entry = getAssetDetails(asset, hashes, tagWithoutRc))) {
           binaries.push(entry);
         }
       })
