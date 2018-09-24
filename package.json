@@ -30,7 +30,7 @@
     "build:electron": "ng build --aot --base-href=./ --env=dev",
     "start:electron:dev": "electron . --dev",
     "start:electron:fast": "yarn run build:electron:fast && electron .",
-    "start:electron": "yarn run build:electron && electron .",
+    "start:electron": "yarn run build:electron && electron . -testnet",
     "start:mainnet": "yarn run build:electron:prod && electron .",
     "package:mac": "yarn run build:electron:prod && electron-builder -m && yarn run checksum",
     "package:linux": "yarn run build:electron:prod && electron-builder -l && yarn run checksum",
@@ -45,7 +45,7 @@
     "travis:win64": "electron-builder --win --x64 && yarn run checksum",
     "travis:win32": "electron-builder --win --ia32 && yarn run checksum",
     "travis:test": "ng test --single-run --code-coverage",
-    "start": "yarn run start:electron:fast"
+    "start": "yarn run start:mainnet"
   },
   "productName": "particl-desktop",
   "build": {
