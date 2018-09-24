@@ -98,7 +98,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.log.d('overview created');
     this.loadCategories();
-    this.loadPage(1);
+    this.loadPage(0);
   }
 
   loadCategories() {
@@ -181,7 +181,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   clearAndLoadPage() {
-    this.loadPage(1, true);
+    this.loadPage(0, true);
   }
 
   // TODO: fix scroll up!
@@ -190,7 +190,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     let previousPage = this.getFirstPageCurrentlyLoaded();
     previousPage--;
     this.log.d('loading prev page' + previousPage);
-    if (previousPage > 0) {
+    if (previousPage > -1) {
       this.loadPage(previousPage);
     }
   }

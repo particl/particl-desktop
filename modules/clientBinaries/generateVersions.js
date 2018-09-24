@@ -36,11 +36,11 @@ var getWinAsset = function(data, asset, hashes) {
 var getOSXAsset = function (data, asset, hashes) {
   data.platform = "mac";
   data.arch = asset.name.includes("osx64") ? "x64" : "ia32";
-  if (asset.content_type === "application/x-apple-diskimage") {
+  if (asset.name.endsWith('dmg')) {
     data.type = "dmg";
-  } else if (asset.content_type === "application/gzip") {
+  } else if (asset.name.endsWith('.tar.gz') || asset.name.endsWith('.tar')) {
     data.type = "tar";
-  }
+  } 
   data.sha256 = getHash("osx", asset.name, hashes);
 }
 
@@ -73,7 +73,7 @@ var getAssetDetails = function (asset, hashes, version) {
   if (asset.name.includes("win")) {
     getWinAsset(data, asset, hashes);
   } // osx binaries
-  else if (asset.name.includes("osx")) {
+  else if (asset.name.includes("osx") && !asset.name.includes("dmg")) {
     getOSXAsset(data, asset, hashes);
   } // linux binaries
   else if (asset.name.includes("linux")) {
@@ -81,12 +81,13 @@ var getAssetDetails = function (asset, hashes, version) {
   }
 
   // add .exe extension for windows binaries
-  var bin = `particld${data.platform === 'win' ? '.exe' : ''}`
+  let bin = `particld${data.platform === 'win' ? '.exe' : ''}`
+  
   // return asset only if it is fully compliant
   return (data.platform && data.arch && data.type ? {
     platform: data.platform,
     arch: data.arch,
-    name: asset.name,
+    name: version,
     entry: {
       download: {
         url: asset.browser_download_url,
@@ -140,14 +141,14 @@ got(`${releasesURL}`).then(response => {
   const body = JSON.parse(response.body);
   let releaseIndex = 0;
   let release;
-
-  while (body[releaseIndex].prerelease) {
+  const skipPrerelease = !(process.argv.includes('-prerelease'))
+  while (body[releaseIndex].prerelease && skipPrerelease) {
     releaseIndex++;
   }
   release = body[releaseIndex];
   
-  var tag = release.tag_name.substring(1);
-  var binaries = [];
+  let tag = release.tag_name.substring(1).replace(/rc./g, "");
+  let binaries = [];
 
   // get gitian repository of hashes
   got(`${signaturesURL}`).then(response => {
@@ -155,13 +156,14 @@ got(`${releasesURL}`).then(response => {
     var versions = JSON.parse(response.body);
     var hashes = {};
     var promises = [];
-
+    console.log('looking for tag=', tag)
     versions.forEach(version => {
       // select folders that match the current version
-      if (version.name.includes(tag+".0-")) {
+      if (version.name.includes(tag)) {
         // extract matching folder's platform
         var platformIndex = version.name.indexOf("-");
-        var platform = version.name.substring(platformIndex + 1);
+        var platform = version.name.substring(platformIndex + 1).replace('-unsigned', '');
+
         // wait for hashes to be added to our hashes array
         promises.push(getHashesForPlatform(platform, version.name, hashes));
       }
@@ -179,7 +181,7 @@ got(`${releasesURL}`).then(response => {
         }
       }
       // get asset details for each release entry
-      var entry;
+      let entry;
       release.assets.forEach(asset => {
         if ((entry = getAssetDetails(asset, hashes, tag))) {
           binaries.push(entry);

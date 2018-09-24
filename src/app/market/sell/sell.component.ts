@@ -57,7 +57,7 @@ export class SellComponent implements OnInit {
 
   ngOnInit() {
     this.isPageLoading = true;
-    this.loadPage(1);
+    this.loadPage(0);
   }
 
   addItem(id?: number, clone?: boolean) {
@@ -72,7 +72,7 @@ export class SellComponent implements OnInit {
       sort:     undefined,
       status:   undefined
     };
-    this.loadPage(1, true);
+    this.loadPage(0, true);
   }
 
   changeTab(index: number): void {
@@ -80,7 +80,7 @@ export class SellComponent implements OnInit {
   }
 
   clearAndLoadPage() {
-    this.loadPage(1, true);
+    this.loadPage(0, true);
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
@@ -161,7 +161,7 @@ export class SellComponent implements OnInit {
     let previousPage = this.getFirstPageCurrentlyLoaded();
     previousPage--;
     console.log('loading prev page' + previousPage);
-    if (previousPage > 0) {
+    if (previousPage > -1) {
       this.loadPage(previousPage);
     }
   }
