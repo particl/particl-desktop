@@ -298,6 +298,10 @@
   version "10.0.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.0.4.tgz#130598ee56e9a1210a53f557d64935571f05390d"
 
+"@types/node@^10.11.0":
+  version "10.11.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.11.0.tgz#ddd0d67a3b6c3810dd1a59e36675fa82de5e19ae"
+
 "@types/node@^6.0.46":
   version "6.0.108"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.108.tgz#852e8496bcfc5e74cae83a5eb3b30e5661e9b7b9"
@@ -305,10 +309,6 @@
 "@types/node@^7.0.18":
   version "7.0.65"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.65.tgz#c160979ff66c4842adc76cc181a11b5e8722d13d"
-
-"@types/node@^9.4.6":
-  version "9.6.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.12.tgz#ab2d716505858ebc8ee94b347b5c9d311eb81b72"
 
 "@types/q@^0.0.32":
   version "0.0.32"
