@@ -22,7 +22,7 @@ export class Template {
   public imageCollection: ImageCollection;
   public expireTime: number = 4;
   public isFlagged: boolean = false;
-
+  public proposalHash: string = '';
   // @TODO: remove type any
   constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
@@ -37,6 +37,7 @@ export class Template {
     this.setMemo();
     this.setListingFlagged();
     this.setExpiryTime();
+    this.setProposalHash();
   }
 
   get id(): number {
@@ -139,8 +140,16 @@ export class Template {
   }
 
 
-  setListingFlagged() {
-    this.isFlagged = this.object.Proposal && Object.keys(this.object.Proposal).length > 0;
+  setListingFlagged(): void {
+    if (this.object.proposalId) {
+      this.isFlagged = true;
+    }
+  }
+
+  setProposalHash(): void {
+    if (this.object.proposalId) {
+      this.proposalHash = this.object.Proposal.hash;
+    }
   }
 
   setExpiryTime(): void {

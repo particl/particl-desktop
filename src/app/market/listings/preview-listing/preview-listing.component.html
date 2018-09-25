@@ -10,6 +10,22 @@
 </button>
 
 <div mat-dialog-content class="dialog-content" fxLayout="row" fxLayoutGap="40px">
+  <div class="gallery" fxLayout="row" fxLayoutGap="24px" *ngIf="data?.listing?.isFlagged">
+    <app-report [listing]="data?.listing" [from]="'listing'"></app-report>
+    <div class="small image" fxFlex="1 1 100px">
+      This item has been flagged
+      Vote blah blah to keep or report it 
+      <div *ngIf="data?.listing?.VoteDetails"> 
+        <p *ngIf="data?.listing?.VoteDetails?.isReported">you have reported the listing </p>
+        <p *ngIf="!data?.listing?.VoteDetails?.isReported" >you have already voted the listing</p>
+      </div>
+      <div *ngIf="!data?.listing?.VoteDetails">
+        <button class="to-cart small" mat-button color="primary" *ngFor="let option of data?.listing?.Proposal?.ProposalOptions" (click)="voteForListing(option.optionId)">
+          {{ option.description }}
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div class="product-gallery" fxFlex="0 1 350px">
     <div class="featured image">
@@ -68,7 +84,7 @@
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <div class="left">
-    <app-report [listing]="data?.listing" [from]="'preview'"></app-report>
+    <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'"></app-report>
     <div class="date">
       <strong>Date added</strong> {{ data?.listing?.createdAt }}
     </div>

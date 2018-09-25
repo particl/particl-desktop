@@ -1,11 +1,13 @@
 import { Template } from '../template/template.model';
 import { Amount } from 'app/core/util/utils';
+import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 
 export class Listing extends Template {
   public favorite: boolean;
-    constructor(private listing: any) {
-        super(listing);
-    }
+  public VoteDetails: VoteDetails;
+  constructor(private listing: any) {
+      super(listing);
+  }
 
   shippingAmount(country: string): Amount {
     return this.isDomestric(country) ? (
