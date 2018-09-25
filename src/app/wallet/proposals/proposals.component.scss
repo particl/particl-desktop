@@ -4,14 +4,6 @@
 
 // ------ LAYOUT ------ //
 
-.container-block {
-  position: relative;
-  padding: $padding;
-  @include break(l) {
-    padding: 45px $padding-l;
-  }
-}
-
 .filter {
   .new-proposal {
     margin-bottom: 25px;
