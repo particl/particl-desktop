@@ -3,7 +3,6 @@
 // ------ ALERTS/NOTIFICATIONS ------ //
 
 mat-card.notification {
-  @extend %disable-select;
   padding: 12px 28px;
   background: $bg;
   box-shadow: 0 1px $bg-shadow !important;

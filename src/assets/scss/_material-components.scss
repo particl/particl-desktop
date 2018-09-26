@@ -175,7 +175,6 @@ mat-card.mat-card {
 // ------ 2.3. EXPANSION PANELS ------ //
 
 .mat-expansion-panel {
-  @extend %disable-select;
   @extend mat-card.mat-card;
   margin-bottom: 9px !important;
   overflow: hidden;
@@ -299,7 +298,6 @@ mat-card.mat-card {
       margin: 15px -24px;
     }
     [mat-dialog-title] { // dialog title
-      @extend %disable-select;
       font-family: $font;
       font-weight: 500;
       font-size: 20px;

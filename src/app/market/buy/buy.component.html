@@ -1,47 +1,49 @@
-<app-header class="disable-select">
-  <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
-        Your cart
-        <!-- TODO? add current number of items in cart: -->
-        <!--span class="tag TO_DO">2</span-->
-      </ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-        Orders
-        <!--app-order-count [type]="'buy'" class="tag"></app-order-count-->
-      </ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart-outline"></mat-icon>
-        Favourites
-      </ng-template>
-    </mat-tab>
-  </mat-tab-group>
+<app-header>
+  <div class="tab-bar">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
+          Your cart
+          <!-- TODO? add current number of items in cart: -->
+          <!--span class="tag TO_DO">2</span-->
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+          Orders
+          <!--app-order-count [type]="'buy'" class="tag"></app-order-count-->
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-heart-outline"></mat-icon>
+          Favourites
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </app-header>
 
 
 <!-- =========== CART =========== -->
 
-<div class="your-cart disable-select" *ngIf="tabLabels[selectedTab] == 'cart'">
+<div class="your-cart with-tab-bar" *ngIf="tabLabels[selectedTab] == 'cart'">
   <app-checkout-process (onOrderPlaced)="changeTab($event)"></app-checkout-process>
 </div><!-- "Your cart" tab -->
 
 
 <!-- =========== ORDERS =========== -->
 
-<div class="container-block disable-select" *ngIf="tabLabels[selectedTab] == 'orders'">
-  <app-orders type="buy" fxLayout fxLayoutGap="30px"></app-orders>
+<div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'orders'">
+  <app-orders type="buy"></app-orders>
 </div><!-- "Orders" tab -->
 
 
 <!-- =========== FAVORITES =========== -->
 
-<div class="favourites container-block disable-select"
+<div class="favourites container-block with-tab-bar"
      *ngIf="tabLabels[selectedTab] == 'favourites'">
 
   <div class="no-results" *ngIf="favorites === undefined || favorites?.length == 0">
