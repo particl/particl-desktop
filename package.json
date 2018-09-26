@@ -181,7 +181,7 @@
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
     "electron": "1.7.16",
-    "electron-builder": "https://github.com/kewde/electron-builder.git",
+    "electron-builder": "https://github.com/kewde/electron-builder.git#820fc24",
     "htmlhint": "^0.9.13",
     "iso3166-2-db": "^2.2.1",
     "jasmine-core": "^2.99.1",
