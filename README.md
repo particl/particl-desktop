@@ -39,15 +39,12 @@ yarn install
 
 ### Development with Electron
 
-1. `git submodule init` (needed only for the first time setup)
-2. `git submodule update` (needed only for the first time setup)
-3. run `ng serve` to start the dev server and keep it running
-4. in other terminal, install the Marketplace module: `yarn run install:marketplace` (needed only for the first time setup)
-5. and then start it: `yarn run start:marketplace`
-6. in 3rd terminal, run `yarn run start:electron:dev -testnet -opendevtools` to start the electron application. Daemon will be updated and launched automatically.
+1. run `ng serve` to start the dev server and keep it running
+2. and then start it: `yarn run start:electron:dev`
    * note: this command will auto-refresh the client on each saved change
    * `-testnet` – for running on testnet (omit for running the client on mainnet)
    * `-opendevtools` – automatically opens Developer Tools on client launch
+   * `-skipmarket` – skip launching internal market process
 
 #### Interact with particl-core daemon
 
@@ -65,11 +62,15 @@ You can directly interact with the daemon ran by the Electron version.
 
 ### Package Electron
 
-Building for Windows requires the 32-bit libraries to be available.
-```
+Building for Windows requires:
+* WINE
+* the 32-bit libraries to be available.
+
+```bash
 sudo apt-get install gcc-multilib
 sudo apt-get install g++-multilib
 ```
+
 
 * `yarn run package:win` – Windows
 * `yarn run package:mac` – OSX

@@ -155,7 +155,6 @@ a.sidebar-item-link {
 // ------ SIDEBAR ------ //
 
 .sidebar { // AKA .mat-sidenav
-  @extend %disable-select;
   width: $sidebar-width;
   background-color: $bg-black;
   color: white;
@@ -231,7 +230,6 @@ a.sidebar-item-link {
 \* ----------------------------------- */
 
 .header-main {
-  @extend %disable-select;
   border-bottom: 1px solid $bg-shadow;
   background: #fff;
   width: calc(100% - #{$sidebar-width} - #{$scrollbar-width});
