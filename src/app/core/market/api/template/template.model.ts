@@ -1,7 +1,7 @@
 import { Category } from 'app/core/market/api/category/category.model';
 import { DateFormatter, Amount } from 'app/core/util/utils';
 import { ImageCollection } from 'app/core/market/api/template/image/imagecollection.model';
-
+import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 export class Template {
 
   public category: Category = new Category({});
@@ -141,15 +141,20 @@ export class Template {
 
 
   setListingFlagged(): void {
-    if (this.object.proposalId) {
-      this.isFlagged = true;
-    }
+    this.isFlagged = Object.keys(this.object.FlaggedItem).length > 0;
   }
 
   setProposalHash(): void {
-    if (this.object.proposalId) {
-      this.proposalHash = this.object.Proposal.hash;
+    if (this.isFlagged) {
+      this.proposalHash = this.object.FlaggedItem.Proposal.hash;
     }
+  }
+
+  get proposalOptions(): VoteOption[] {
+    if (this.isFlagged) {
+      return this.object.FlaggedItem.Proposal.ProposalOptions;
+    }
+    return [];
   }
 
   setExpiryTime(): void {

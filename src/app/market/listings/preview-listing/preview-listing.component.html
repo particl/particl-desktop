@@ -20,7 +20,7 @@
         <p *ngIf="!data?.listing?.VoteDetails?.isReported" >you have already voted the listing</p>
       </div>
       <div *ngIf="!data?.listing?.VoteDetails">
-        <button class="to-cart small" mat-button color="primary" *ngFor="let option of data?.listing?.Proposal?.ProposalOptions" (click)="voteForListing(option.optionId)">
+        <button class="to-cart small" mat-button color="primary" *ngFor="let option of data?.listing?.proposalOptions" (click)="voteForListing(option)">
           {{ option.description }}
         </button>
       </div>
