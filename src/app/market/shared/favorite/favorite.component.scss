@@ -1,7 +1,7 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
 // Fav button in Listing's card in Listings
-.icon {
+.fav.icon {
   background: #fff;
   border-radius: 50%;
   display: inline-block;
@@ -10,12 +10,9 @@
   font-size: 14px;
   color: $text;
   cursor: pointer;
-  // favourites
-  &.fav {
-    &:hover,
-    &.active {
-      color: $color-alert;
-    }
+  &:hover,
+  &.active {
+    color: $color-alert;
   }
 }
 

@@ -1,12 +1,14 @@
 <mat-icon *ngIf="from === 'listing'" fontSet="partIcon" fontIcon="part-flag"
+        class="report icon"
         [ngClass]="{ 'active': listing?.isFlagged }"
         [color]="listing?.isFlagged ? 'warn' : 'basic'" 
-        [matTooltip]="listing?.isFlagged ?  'this item has been reported' : 'Report'"
+        [matTooltip]="listing?.isFlagged ?  'Reported item, voting active' : 'Report'"
+        matTooltipPosition="above"
         (click)="toggle()"></mat-icon>
 
 <button *ngIf="from === 'preview'" mat-button class="small" 
         [color]="listing?.isFlagged ? 'warn' : 'basic'" 
-        [matTooltip]="listing?.isFlagged ? 'this item has been reported' : 'Report'"
+        [matTooltip]="listing?.isFlagged ? 'Item has been reported' : 'Report'"
         matTooltipPosition="above">
   <mat-icon fontSet="partIcon" fontIcon="part-flag"
       [ngClass]="{ 'active': listing?.isFlagged }"

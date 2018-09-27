@@ -10,22 +10,34 @@
 </button>
 
 <div mat-dialog-content class="dialog-content" fxLayout="row" fxLayoutGap="40px">
-  <div class="gallery" fxLayout="row" fxLayoutGap="24px" *ngIf="data?.listing?.isFlagged">
-    <app-report [listing]="data?.listing" [from]="'listing'"></app-report>
-    <div class="small image" fxFlex="1 1 100px">
-      This item has been flagged
-      Vote blah blah to keep or report it 
+
+  <div class="report-voting" *ngIf="data?.listing?.isFlagged">
+    <mat-icon fontSet="partIcon" fontIcon="part-flag" class="icon"></mat-icon>
+    <div class="text">
+      <div class="title">This item has been flagged</div>
       <div *ngIf="data?.listing?.VoteDetails"> 
-        <p *ngIf="data?.listing?.VoteDetails?.isReported">you have reported the listing </p>
-        <p *ngIf="!data?.listing?.VoteDetails?.isReported" >you have already voted the listing</p>
+        <p *ngIf="data?.listing?.VoteDetails?.isReported">You have reported this listing as inappropriate. Voting is enabled for other Particl users for whether to keep it or remove it from the Marketplace.</p>
+        <p *ngIf="!data?.listing?.VoteDetails?.isReported">You have already voted on this item &ndash; thanks for participating in community governance!</p>
       </div>
       <div *ngIf="!data?.listing?.VoteDetails">
-        <button class="to-cart small" mat-button color="primary" *ngFor="let option of data?.listing?.Proposal?.ProposalOptions" (click)="voteForListing(option.optionId)">
+        <p>Particl user reported this item as inappropriate. You, and others in Particl community, decide which items are allowed on Marketplace.</p>
+        <p>Please vote on whether this item should be kept online or taken down:</p>
+        <!-- FIXME: this button doesn't show up: -->
+        <button class="small" mat-button color="primary" *ngFor="let option of data?.listing?.Proposal?.ProposalOptions" (click)="voteForListing(option.optionId)">
           {{ option.description }}
+        </button>
+        <!-- FIXME: or replace by these two & implement functionality: -->
+        <button mat-button class="small" color="primary">
+          <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
+          It's OK, keep it
+        </button>
+        <button mat-button class="small" color="warn">
+          <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
+          Remove item
         </button>
       </div>
     </div>
-  </div>
+  </div><!-- .report-voting -->
 
   <div class="product-gallery" fxFlex="0 1 350px">
     <div class="featured image">

@@ -1,1 +1,24 @@
 @import "./src/assets/_config"; // import shared colors etc.
+
+// Fav button in Listing's card in Listings
+.report.icon {
+  @extend %tfx;
+  background: $color-white;
+  border-radius: 50%;
+  display: inline-block;
+  padding: 7px;
+  margin: 0 0 0 2px;
+  font-size: 14px;
+  color: $text;
+  cursor: pointer;
+  &:hover {
+    color: $color-alert;
+  }
+  &.active {
+    background: $color-alert;
+    color: $color-white;
+    &:hover {
+      background: darken($color-alert, 10%);
+    }
+  }
+}
