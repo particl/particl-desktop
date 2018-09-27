@@ -20,8 +20,7 @@
       </div>
       <div *ngIf="!data?.listing?.VoteDetails">
         <p>A Particl user thinks this item is inappropriate. Please vote on whether this item should be kept online or taken down:</p>
-        <!-- FIXME: this button doesn't show up: -->
-        <button class="small" mat-button color="primary" *ngFor="let option of data?.listing?.Proposal?.ProposalOptions" (click)="voteForListing(option.optionId)">
+        <button class="small" mat-button color="primary" *ngFor="let option of data?.listing?.proposalOptions" (click)="voteForListing(option)">
           {{ option.description }}
         </button>
         <!-- FIXME: or replace by these two & implement functionality: -->
