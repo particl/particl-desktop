@@ -87,7 +87,7 @@
       <mat-card class="section to-balance-type" *ngIf="type === 'balanceTransfer'">
         <div class="title">
           Convert to
-          <button mat-button (click)="advanced = !advanced" class="small advanced-options">
+          <button mat-button (click)="toggleAdvanceOption()" class="small advanced-options">
             <mat-icon fontSet="partIcon"
                       fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
             <span>Advanced options</span>
@@ -121,7 +121,7 @@
       <mat-card class="pay-to" *ngIf="type === 'sendPayment' || advanced">
         <div class="title">
           Pay to
-          <button mat-button (click)="advanced = !advanced" *ngIf="type === 'sendPayment'"
+          <button mat-button (click)="toggleAdvanceOption()" *ngIf="type === 'sendPayment'"
                   class="small advanced-options">
             <mat-icon fontSet="partIcon"
                       fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
@@ -172,6 +172,24 @@
             be recorded and publicly visible on the blockchain. Blind & Anon transactions make narrations visible only
             for Sender and Receiver.
           </p>
+          <hr class="divider">
+          <div class="list section">
+            <div class="title">
+              Ring size
+            </div>
+            {{ringSize}}
+            <mat-form-field class="full-width larger" floatPlaceholder="never">
+              <input type="number" name="ringsize" matInput max="32" min="3" [(ngModel)]="ringSize"
+                (keyup)="updatePrivacy()"
+                [ngClass]="{
+                  'verify-sucess': isRingSizeValid(),
+                  'verify-error': !isRingSizeValid()
+                }">
+            </mat-form-field>
+            <mat-error *ngIf="!isRingSizeValid()">
+              Ring size should lie between the range of min 3 and max 32.
+            </mat-error>
+          </div>
         </div><!-- .narration.section -->
       </mat-card><!-- .pay-to -->
 

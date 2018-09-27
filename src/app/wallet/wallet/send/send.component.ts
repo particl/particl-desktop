@@ -38,6 +38,7 @@ export class SendComponent implements OnInit {
   progress: number = 10;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
+  ringSize: number = 8; // ringSize min = 3, max = 32.
 
   constructor(
     private sendService: SendService,
@@ -300,6 +301,60 @@ export class SendComponent implements OnInit {
       .subscribe(
         response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
         error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
+  }
+
+  toggleAdvanceOption(): void {
+    this.advanced = !this.advanced;
+    this.ringSize = this.send.ringsize;
+  }
+
+  isRingSizeValid(): boolean {
+    if (
+      !this.ringSize ||
+      this.ringSize > 32 ||
+      this.ringSize < 3
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  calculateProgress(ringSize: number): number {
+    /**
+     * Ring Size: min = 3, max = 32.
+     * progress percantage divided as bellow:
+     * when ring size lies between (a-b) then progress bar should lies between (y-z)% as bellow:
+     * (3-7)   -- (0-49)
+     *  (8)    --  (50)
+     * (9-15)  -- (51-99)
+     * (16-32) --  (100)
+     */
+
+    if (ringSize >= 16) { // 16-32.
+      return 100;
+    }
+    if (ringSize === 8) { // 8.
+      return 50;
+    }
+
+    if (ringSize > 2 && ringSize < 8) { // 3-7.
+      return (ringSize - 2) * 9
+    }
+
+    if (ringSize > 8  && ringSize < 16) { // 9-15
+      return 50 + (ringSize - 8) * 6.3;
+    }
+  }
+
+
+  updatePrivacy(): void | boolean {
+    const ringSize = this.ringSize;
+    if (ringSize < 3 || ringSize > 32) {
+      return;
+    }
+    const prog = this.calculateProgress(ringSize);
+    this.setPrivacy(ringSize, prog);
   }
 
   setPrivacy(level: number, prog: number): void {
