@@ -9,10 +9,9 @@
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-<div mat-dialog-content class="dialog-content" fxLayout="row" fxLayoutGap="40px">
+<div mat-dialog-content class="dialog-content">
 
   <div class="report-voting" *ngIf="data?.listing?.isFlagged">
-    <mat-icon fontSet="partIcon" fontIcon="part-flag" class="icon"></mat-icon>
     <div class="text">
       <div class="title">This item has been flagged</div>
       <div *ngIf="data?.listing?.VoteDetails"> 
@@ -20,8 +19,7 @@
         <p *ngIf="!data?.listing?.VoteDetails?.isReported">You have already voted on this item &ndash; thanks for participating in community governance!</p>
       </div>
       <div *ngIf="!data?.listing?.VoteDetails">
-        <p>Particl user reported this item as inappropriate. You, and others in Particl community, decide which items are allowed on Marketplace.</p>
-        <p>Please vote on whether this item should be kept online or taken down:</p>
+        <p>A Particl user thinks this item is inappropriate. Please vote on whether this item should be kept online or taken down:</p>
         <!-- FIXME: this button doesn't show up: -->
         <button class="small" mat-button color="primary" *ngFor="let option of data?.listing?.Proposal?.ProposalOptions" (click)="voteForListing(option.optionId)">
           {{ option.description }}
@@ -39,59 +37,63 @@
     </div>
   </div><!-- .report-voting -->
 
-  <div class="product-gallery" fxFlex="0 1 350px">
-    <div class="featured image">
-      <img src="{{data?.listing?.imageCollection?.previewImage?.medium}}">
-    </div>
-    <div class="gallery" fxLayout="row" fxLayoutGap="24px">
-      <!-- TODO: s/small/medium -->
-      <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
-        <img src="{{img.thumbnail}}">
+
+  <div class="product" fxLayout="row" fxLayoutGap="40px">
+
+    <div class="product-gallery" fxFlex="0 1 350px">
+      <div class="featured image">
+        <img src="{{data?.listing?.imageCollection?.previewImage?.medium}}">
+      </div>
+      <div class="gallery" fxLayout="row" fxLayoutGap="24px">
+        <!-- TODO: s/small/medium -->
+        <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
+          <img src="{{img.thumbnail}}">
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="product-info" fxFlex="1 1 100%">
+    <div class="product-info" fxFlex="1 1 100%">
 
-    <table class="pricing">
-      <tr>
-        <th class="item price">Price</th>
-        <td class="item price">
-          <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
-          <span class="currency">PART</span>
-          <!--span class="fiat">&asymp; {{price?.usd}} USD</span-->
-        </td>
-      </tr>
-      <tr>
-        <th class="shipping price">Shipping</th>
-        <td class="shipping price">
-          International &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} PART<br>
-          Local in {{ data?.listing?.country }} &ndash; {{ data?.listing?.domesticShippingPrice.getAmount() }} PART
-        </td>
-      </tr>
+      <table class="pricing">
+        <tr>
+          <th class="item price">Price</th>
+          <td class="item price">
+            <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
+            <span class="currency">PART</span>
+            <!--span class="fiat">&asymp; {{price?.usd}} USD</span-->
+          </td>
+        </tr>
+        <tr>
+          <th class="shipping price">Shipping</th>
+          <td class="shipping price">
+            International &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} PART<br>
+            Local in {{ data?.listing?.country }} &ndash; {{ data?.listing?.domesticShippingPrice.getAmount() }} PART
+          </td>
+        </tr>
 
-      <tr *ngIf="listingServiceCache?.selectedCountry">
-        <th class="escrow price">Escrow</th>
-        <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART</td>
-      </tr>
-    </table>
+        <tr *ngIf="listingServiceCache?.selectedCountry">
+          <th class="escrow price">Escrow</th>
+          <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART</td>
+        </tr>
+      </table>
 
-    <p class="info message" *ngIf="data?.listing?.isMine">
-      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-      This is your own listing
-    </p>
-    <div class="summary description">
-      <p>
-        {{ data?.listing?.shortDescription }}
+      <p class="info message" *ngIf="data?.listing?.isMine">
+        <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+        This is your own listing
       </p>
-    </div>
-    <div class="detailed description">
-      <p>
-        {{ data?.listing?.longDescription }}
-      </p>
-    </div>
+      <div class="summary description">
+        <p>
+          {{ data?.listing?.shortDescription }}
+        </p>
+      </div>
+      <div class="detailed description">
+        <p>
+          {{ data?.listing?.longDescription }}
+        </p>
+      </div>
 
-  </div><!-- .product-info -->
+    </div><!-- .product-info -->
+  </div><!-- .product -->
 </div><!-- .dialog-content -->
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
