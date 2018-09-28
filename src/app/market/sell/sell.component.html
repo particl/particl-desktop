@@ -1,4 +1,5 @@
-<app-header>
+<!-- Do not remove the below class it is using for test case -->
+<app-header class="test-case-container">
   <div class="tab-bar">
     <mat-tab-group (selectChange)="changeTab($event.index)">
       <mat-tab>
@@ -128,7 +129,7 @@
 
 
 <!-- =========== ORDERS =========== -->
-
-<div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'orders'">
+<!-- Do not remove the below class it is using for test case -->
+<div class="container-block with-tab-bar test-case-container" *ngIf="tabLabels[selectedTab] == 'orders'">
   <app-orders type="sell"></app-orders>
 </div><!-- "Orders" tab -->
