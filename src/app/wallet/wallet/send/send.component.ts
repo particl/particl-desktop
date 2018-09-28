@@ -334,31 +334,8 @@ export class SendComponent implements OnInit {
   }
 
   calculateProgress(ringSize: number): number {
-    /**
-     * Ring Size: min = 3, max = 32.
-     * progress percantage divided as bellow:
-     * when ring size lies between (a-b) then progress bar should lies between (y-z)% as bellow:
-     * (3-7)   -- (0-49)
-     *  (8)    --  (50)
-     * (9-15)  -- (51-99)
-     * (16-32) --  (100)
-     */
-
-    if (ringSize >= 16) { // 16-32.
-      return 100;
-    }
-    if (ringSize === 8) { // 8.
-      return 50;
-    }
-
-    if (ringSize > 2 && ringSize < 8) { // 3-7.
-      return (ringSize - 2) * 9
-    }
-
-    if (ringSize > 8  && ringSize < 16) { // 9-15
-      return +((this.ringSize - this.ringSizeConfig.min) * ((0.25 * this.ringSizeConfig.max) + 1)).toFixed(0)
-
-    }
+      const full = +(0.5 * this.ringSizeConfig.max).toFixed(0);
+      return ringSize >= full ? 100 : +( (ringSize % full) / full * 100 ).toFixed(0);
   }
 
 
