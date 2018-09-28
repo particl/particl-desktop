@@ -7,6 +7,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { ReportService } from '../../../core/market/api/report/report.service';
 import { Listing } from '../../../core/market/api/listing/listing.model';
 import { ReportModalComponent } from '../../../modals/report-modal/report-modal.component';
+import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 
 @Component({
   selector: 'app-report',
@@ -17,6 +18,12 @@ export class ReportComponent {
 
   private log: any = Log.create('report.component id:' + Math.floor((Math.random() * 1000) + 1));
 
+  // setting dummy object rather calling api
+  public defaultVoteDetails: VoteDetails = new VoteDetails({
+    ProposalOption: {
+      description: 'REMOVE'
+    }
+  })
   @Input() listing: Listing;
   @Input() from: boolean;
   constructor(
@@ -43,9 +50,10 @@ export class ReportComponent {
   reportItem(): void {
     this.reportService.post(this.listing).subscribe(report => {
       this.listing.isFlagged = !this.listing.isFlagged;
+      this.listing.VoteDetails = this.defaultVoteDetails;
       this.snackbar.open(`${this.listing.title} has been reported successfully`);
     }, err => {
-      console.log(err);
+      this.snackbar.open(err);
     })
   }
 

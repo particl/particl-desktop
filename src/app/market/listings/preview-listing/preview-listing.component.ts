@@ -50,7 +50,6 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       this.proposalsService.get(this.data.listing.proposalHash)
         .take(1)
         .subscribe((vote: any) => {
-          console.log(vote);
           this.data.listing.VoteDetails = vote;
         })
     }
