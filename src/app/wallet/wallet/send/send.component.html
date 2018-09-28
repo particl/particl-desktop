@@ -177,10 +177,11 @@
             <div class="title">
               Ring size
             </div>
-            {{ringSize}}
             <mat-form-field class="full-width larger" floatPlaceholder="never">
-              <input type="number" name="ringsize" matInput max="32" min="3" [(ngModel)]="ringSize"
-                (keyup)="updatePrivacy()"
+              <input type="number" name="ringsize" matInput
+                [max]="this.ringSizeConfig.max"
+                [min]="this.ringSizeConfig.min"
+                [(ngModel)]="ringSize" (keyup)="updatePrivacy()"
                 [ngClass]="{
                   'verify-sucess': isRingSizeValid(),
                   'verify-error': !isRingSizeValid()

@@ -17,6 +17,15 @@ import { AddressHelper } from '../../../core/util/utils';
 import { TransactionBuilder, TxType } from './transaction-builder.model';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
+// @TODO create/export from seperate file if needed in future?
+class RingSizeConfig {
+  max: number;
+  min: number;
+  constructor(obj: any) {
+    this.max = obj.max;
+    this.min = obj.min
+  }
+}
 
 @Component({
   selector: 'app-send',
@@ -39,6 +48,10 @@ export class SendComponent implements OnInit {
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
   ringSize: number = 8; // ringSize min = 3, max = 32.
+  ringSizeConfig: RingSizeConfig  = new RingSizeConfig({
+    max: 32,
+    min: 3
+  })
 
   constructor(
     private sendService: SendService,
@@ -311,8 +324,8 @@ export class SendComponent implements OnInit {
   isRingSizeValid(): boolean {
     if (
       !this.ringSize ||
-      this.ringSize > 32 ||
-      this.ringSize < 3
+      this.ringSize > this.ringSizeConfig.max ||
+      this.ringSize < this.ringSizeConfig.min
     ) {
       return false;
     }
@@ -343,14 +356,15 @@ export class SendComponent implements OnInit {
     }
 
     if (ringSize > 8  && ringSize < 16) { // 9-15
-      return 50 + (ringSize - 8) * 6.3;
+      return +((this.ringSize - this.ringSizeConfig.min) * ((0.25 * this.ringSizeConfig.max) + 1)).toFixed(0)
+
     }
   }
 
 
   updatePrivacy(): void | boolean {
     const ringSize = this.ringSize;
-    if (ringSize < 3 || ringSize > 32) {
+    if (!this.isRingSizeValid()) {
       return;
     }
     const prog = this.calculateProgress(ringSize);
