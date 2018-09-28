@@ -23,6 +23,8 @@ export class Template {
   public expireTime: number = 4;
   public isFlagged: boolean = false;
   public proposalHash: string = '';
+  public keepItem: VoteOption;
+  public removeItem: VoteOption;
   // @TODO: remove type any
   constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
@@ -38,6 +40,7 @@ export class Template {
     this.setListingFlagged();
     this.setExpiryTime();
     this.setProposalHash();
+    this.setProposalOptions();
   }
 
   get id(): number {
@@ -141,20 +144,29 @@ export class Template {
 
 
   setListingFlagged(): void {
-    this.isFlagged = Object.keys(this.object.FlaggedItem).length > 0;
+    this.isFlagged = this.flaggedItem && Object.keys(this.flaggedItem).length > 0;
   }
 
   setProposalHash(): void {
-    if (this.isFlagged) {
-      this.proposalHash = this.object.FlaggedItem.Proposal.hash;
+    if (this.flaggedItem && this.flaggedItem.Proposal) {
+      this.proposalHash = this.flaggedItem.Proposal.hash;
     }
   }
 
-  get proposalOptions(): VoteOption[] {
-    if (this.isFlagged) {
-      return this.object.FlaggedItem.Proposal.ProposalOptions;
+  setProposalOptions(): void {
+    if (this.flaggedItem && this.flaggedItem.Proposal) {
+      this.flaggedItem.Proposal.ProposalOptions.forEach(opt => {
+        if (opt.description === 'KEEP') {
+          this.keepItem = opt;
+        } else {
+          this.removeItem = opt;
+        }
+      });
     }
-    return [];
+  }
+
+  get flaggedItem(): any {
+    return this.object.FlaggedItem;
   }
 
   setExpiryTime(): void {

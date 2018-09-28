@@ -20,15 +20,12 @@
       </div>
       <div *ngIf="!data?.listing?.VoteDetails">
         <p>A Particl user thinks this item is inappropriate. Please vote on whether this item should be kept online or taken down:</p>
-        <button class="small" mat-button color="primary" *ngFor="let option of data?.listing?.proposalOptions" (click)="voteForListing(option)">
-          {{ option.description }}
-        </button>
-        <!-- FIXME: or replace by these two & implement functionality: -->
-        <button mat-button class="small" color="primary">
+
+        <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)">
           <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
           It's OK, keep it
         </button>
-        <button mat-button class="small" color="warn">
+        <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)">
           <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
           Remove item
         </button>
