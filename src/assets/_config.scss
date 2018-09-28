@@ -44,8 +44,11 @@ $radius: 4px; // default border-radius
 // layouts
 $header-main-height: 64px;
 $tab-bar-height: 48px;
-$sidebar-width: 250px;
+$sidebar-width: 250px; // main navigation
+$filter-width: 230px; // sidebar in content area (filter/sort, search)
 $scrollbar-width: 6px;
+$padding: 35px; // spacing between elements
+$padding-l: 50px; // ..for large screens
 
 // Breakpoints (see _mixins.scss for details)
 $break-l: 1500px;
@@ -67,7 +70,6 @@ $break-xhd: 2200px;
 \* ------------------------------- */
 
 %subtitle { // section titles / H2's
-  @extend %disable-select;
   font-size: 15px;
   font-family: $font;
   font-weight: normal;
@@ -97,8 +99,7 @@ $break-xhd: 2200px;
 }
 
 // enable/disable text selection
-%disable-select,
-.disable-select {
+%disable-select {
   user-select: none;
   cursor: default;
 }
@@ -108,6 +109,10 @@ $break-xhd: 2200px;
   cursor: text;
 }
 
+%clearfix {
+  &::before, &::after { content: ""; display: table; }
+  &::after { clear: both; }
+}
 
 // Transition effects
 %tfx {

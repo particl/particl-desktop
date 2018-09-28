@@ -5,10 +5,10 @@
 .container-block {
   position: relative;
   //margin-top: $header-main-height;
-  padding: 35px;
+  padding: $padding;
   display: flex;
   @include break(l) {
-    padding: 45px 50px;
+    padding: 45px $padding-l;
   }
 }
 
@@ -20,9 +20,9 @@
 }
 
 .action-buttons {
-  padding: 0 35px 35px;
+  padding: 0 $padding $padding;
   @include break(l) {
-    padding: 0 45px 50px;
+    padding: 0 45px $padding-l;
   }
 }
 
@@ -30,13 +30,12 @@
 // ------ UI ------ //
 
 .hero-block { // intro text
-  @extend %disable-select;
   margin-top: $header-main-height;
-  padding: 42px 35px;
+  padding: 42px $padding;
   background: rgba($color-white, 0.6);
   border-bottom: 1px dashed $bg-shadow;
   @include break(l) {
-    padding: 54px 50px;
+    padding: 54px $padding-l;
   }
   .title {
     font-size: 24px;
