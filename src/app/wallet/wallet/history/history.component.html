@@ -1,5 +1,5 @@
-<app-header class="disable-select">
-  <div class="container-fluid tab-bar">
+<app-header>
+  <div class="tab-bar">
     <mat-tab-group (selectChange)="changeCategory($event.index)" [selectedIndex]="selectedTab">
       <!-- [(selectedIndex)]="categories.indexOf(filters.category)"> -->
       <mat-tab *ngFor="let category of categories">
@@ -12,9 +12,9 @@
   </div>
 </app-header>
 
-<div fxLayout="row" fxLayoutGap="30px" class="container-block">
+<div class="container-block with-tab-bar">
 
-  <div class="filter" fxFlex="0 0 230px">
+  <div class="filter">
 
     <div class="section search-sorting">
       <div class="subtitle first"><!--Search &amp; -->Sort</div>
@@ -65,7 +65,7 @@
 
   </div>
 
-  <div class="tx-list section" fxFlex="1 1 100%">
+  <div class="tx-list section with-filter">
     <transaction-table #transactions [display]="{'header': false, 'internalHeader': true, 'pagination': true, 'category': true, 'expand': true}">
     </transaction-table>
   </div><!-- .tx-list -->

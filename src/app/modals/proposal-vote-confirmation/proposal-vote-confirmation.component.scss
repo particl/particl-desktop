@@ -1,46 +1,13 @@
 @import "./src/assets/_config"; // import shared colors etc.
-
-.fiat {
-  display: none; // hide until implemented (TODO)
-}
-
-// ------ UI ------ //
-
-.title {
-  // FIXME: swith to @extend %box-title;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 13px;
-}
-
-.help-text {
-  // FIXME: switch to: @extend %help-text;
-  @extend %disable-select;
-  color: $text-muted;
-  font-size: 11px;
-  margin-bottom: 25px;
-  cursor: help;
-}
+@import "./src/app/modals/_confirmations-shared"; // shared stuff for confirmation modals
 
 
 // ------ LAYOUT ------ //
 
-.dialog-content {
-  width: 25rem;
-  padding: 20px 15px 10px;
-  text-align: center;
-}
-
 .tx-info { // info about public/blind/anon TX
-  @extend %disable-select;
   .icon {
     font-size: 24px;
-    color: $color;
     margin-bottom: 8px;
-  }
-  .help-text {
-    margin: 5px auto 20px;
-    max-width: 20rem;
   }
 }
 
@@ -48,26 +15,9 @@
   font-size: 17px;
 }
 
-.icon.arrow {
-  font-size: 18px;
-  margin: 24px 0;
-  color: mix($text-muted, $bg-shadow);
-}
-
 .proposal-name {
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 8px;
   padding: 0 10px;
-}
-
-.fee-info {
-  // FIXME: switch to: @extend %help-text;
-  @extend %disable-select;
-  color: $text-muted;
-  font-size: 11px;
-  margin: 30px 0 0;
-  & > .amount {
-    margin: 0 0 0 10px;
-  }
 }

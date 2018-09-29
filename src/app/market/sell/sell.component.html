@@ -1,35 +1,38 @@
-<app-header class="disable-select">
-  <mat-tab-group (selectChange)="changeTab($event.index)">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
-        Listings
-      </ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-        Orders
-        <!--app-order-count [type]="'sell'" class="tag"></app-order-count-->
-      </ng-template>
-    </mat-tab>
-    <!--mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-        Sell item
-      </ng-template>
-    </mat-tab-->
-  </mat-tab-group>
+<!-- Do not remove the below class it is using for test case -->
+<app-header class="test-case-container">
+  <div class="tab-bar">
+    <mat-tab-group (selectChange)="changeTab($event.index)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
+          Listings
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+          Orders
+          <!--app-order-count [type]="'sell'" class="tag"></app-order-count-->
+        </ng-template>
+      </mat-tab>
+      <!--mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+          Sell item
+        </ng-template>
+      </mat-tab-->
+    </mat-tab-group>
+  </div>
 </app-header>
 <mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== LISTINGS =========== -->
 
-<div fxLayout="row" fxLayoutGap="30px" class="container-block" *ngIf="tabLabels[selectedTab] == 'listings'">
+<div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'listings'">
 
   <!-- Listings > Filter -->
-  <div class="filter" fxFlex="0 0 230px">
+  <div class="filter">
 
     <div class="sell-item">
       <button mat-raised-button color="primary" (click)="addItem()" class="full-width"
@@ -95,7 +98,7 @@
   </div><!-- .loading-container -->
 
   <!-- Listings > list -->
-  <div class="listings section" fxFlex="1 1 100%"
+  <div class="listings section with-filter"
     infiniteScroll
     [infiniteScrollContainer]="pagination.infinityScrollSelector"
     [fromRoot]="true"
@@ -126,7 +129,7 @@
 
 
 <!-- =========== ORDERS =========== -->
-
-<div class="container-block disable-select" *ngIf="tabLabels[selectedTab] == 'orders'">
-  <app-orders type="sell" fxLayout fxLayoutGap="30px"></app-orders>
+<!-- Do not remove the below class it is using for test case -->
+<div class="container-block with-tab-bar test-case-container" *ngIf="tabLabels[selectedTab] == 'orders'">
+  <app-orders type="sell"></app-orders>
 </div><!-- "Orders" tab -->

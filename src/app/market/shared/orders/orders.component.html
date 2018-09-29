@@ -1,5 +1,5 @@
-<!-- Orders > Filter (HIDDEN IN CSS) -->
-<div class="filter" fxFlex="0 0 230px">
+<!-- Orders > Filter -->
+<div class="filter">
 
   <div class="section search-sorting">
     <div class="subtitle first">Search &amp; sort</div>
@@ -23,7 +23,7 @@
     </mat-card>
   </div>
 
-  <div class="section filter">
+  <div class="section filter-by-group">
     <div class="subtitle">Filter</div>
     <mat-card class="filter-card">
       <div class="checkbox highlight">
@@ -59,8 +59,10 @@
   </button>
 
 </div><!-- .filter -->
+
+
 <!-- Orders > list -->
-<div class="orders section" fxFlex="1 1 100%">
+<div class="orders section with-filter">
 
   <div class="no-results" *ngIf="orders?.length === 0">
     You don't have any market orders yet

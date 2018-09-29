@@ -1,9 +1,6 @@
 @import "./src/assets/_config"; // import shared colors etc.
 @import "./src/app/wallet/shared/_filter-sorting"; // filtering & sorting
 
-$fixed-sidebar-width: 230px;
-$sidebar-margin: 35px;
-
 // ------ UI ELEMENTS ------ //
 
 .search-address {
@@ -15,22 +12,5 @@ $sidebar-margin: 35px;
 }
 
 
-
 // ------ LAYOUT ------ //
-
-.address-book {
-  margin-top: $header-main-height;
-
-  .filter {
-    width: $fixed-sidebar-width;
-    position: fixed;
-  }
-
-  .addresses {
-    width: 100%;
-    max-width: calc(100% - (#{$fixed-sidebar-width} + #{$sidebar-margin}));
-    margin-left: $fixed-sidebar-width + $sidebar-margin;
-  }
-
-}
 
