@@ -48,7 +48,7 @@ export class SendComponent implements OnInit {
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
   ringSize: number = 8; // ringSize min = 3, max = 32.
-  ringSizeConfig: RingSizeConfig  = new RingSizeConfig({
+  ringSizeConfig: RingSizeConfig = new RingSizeConfig({
     max: 32,
     min: 3
   })
@@ -75,8 +75,8 @@ export class SendComponent implements OnInit {
 
   ngOnInit() {
     /* check if testnet -> Show/Hide Anon Balance */
-     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
-     .subscribe(chain => this.testnet = chain === 'test');
+    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+      .subscribe(chain => this.testnet = chain === 'test');
   }
   /** Select tab */
   selectTab(tabIndex: number): void {
@@ -149,8 +149,7 @@ export class SendComponent implements OnInit {
       return;
     }
     // is amount in range of 0...CurrentBalance
-    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input)
-                            && this.send.amount > 0);
+    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input) && this.send.amount > 0);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
@@ -215,7 +214,7 @@ export class SendComponent implements OnInit {
       dialogRef.close();
       this.pay();
     });
-}
+  }
 
   /** Payment function */
   pay(): void {
@@ -236,7 +235,7 @@ export class SendComponent implements OnInit {
         return;
       }
 
-    // Balance transfer - validation
+      // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
 
       if (!this.send.output) {
@@ -252,7 +251,7 @@ export class SendComponent implements OnInit {
       }
 
     }
-    this.modals.unlock({timeout: 30}, (status) => this.sendTransaction());
+    this.modals.unlock({ timeout: 30 }, (status) => this.sendTransaction());
   }
 
   private sendTransaction(): void {
@@ -312,8 +311,8 @@ export class SendComponent implements OnInit {
 
     this._rpc.call('manageaddressbook', ['newsend', addr, label])
       .subscribe(
-        response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
-        error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
+      response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
+      error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
   }
 
   toggleAdvanceOption(): void {
@@ -334,8 +333,15 @@ export class SendComponent implements OnInit {
   }
 
   calculateProgress(ringSize: number): number {
-      const full = +(0.5 * this.ringSizeConfig.max).toFixed(0);
-      return ringSize >= full ? 100 : +( (ringSize % full) / full * 100 ).toFixed(0);
+    const full = +(0.5 * this.ringSizeConfig.max).toFixed(0);
+    const half = (full / 2);
+    let weighting = 1.0;
+    let adjustment = 0;
+    if (ringSize < half) {
+      weighting = half / (half - this.ringSizeConfig.min + 1);
+      adjustment = this.ringSizeConfig.min - 1;
+    }
+    return ringSize > full ? 100 : +((ringSize - adjustment) * weighting / full * 100).toFixed(0);
   }
 
 
