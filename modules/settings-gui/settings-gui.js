@@ -39,25 +39,6 @@ exports.init = function () {
       autoLauncher.disable();
     }
 
-
-    // @TODO use the code for stop market.
-
-    // /*
-    //  * Start market-place if market is enalbed.
-    //  */
-
-    // // @TODO need to refactor code?
-
-    // if(marketRunningState != settings.market.enabled) {
-    //   marketRunningState = settings.market.enabled;
-    //   if(marketRunningState) {
-    //     market.init();
-    //   } else {
-    //     market.stop();
-    //   }
-    // }
-
-
     return Observable.create(observer => {
       observer.complete(true);
     });
