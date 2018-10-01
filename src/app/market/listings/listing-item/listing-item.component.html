@@ -3,9 +3,10 @@
   <div class="image">
     <img src="{{listing?.imageCollection?.featuredImage?.thumbnail}}" (click)="openListing()">
     <div class="icons">
-      <mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-zoom-in" matTooltip="Preview"
-                matTooltipPosition="above" (click)="openListing()"></mat-icon>
+      <!--mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-zoom-in" matTooltip="Preview"
+                matTooltipPosition="above" (click)="openListing()"></mat-icon-->
       <app-favorite [listing]="listing" [detail]="false"></app-favorite>
+      <app-report *ngIf="!listing?.isMine" [listing]="listing" [from]="'listing'"></app-report>
     </div>
   </div>
 

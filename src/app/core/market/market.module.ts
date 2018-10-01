@@ -14,6 +14,7 @@ import { ListingService } from './api/listing/listing.service';
 import { CartService } from './api/cart/cart.service';
 import { CountryListService } from './api/countrylist/countrylist.service';
 import { FavoritesService } from './api/favorites/favorites.service';
+import { ReportService } from './api/report/report.service';
 import { ImageService } from './api/template/image/image.service';
 import { InformationService } from './api/template/information/information.service';
 import { LocationService } from './api/template/location/location.service';
@@ -46,6 +47,7 @@ export class MarketModule {
         CartService,
         CountryListService,
         FavoritesService,
+        ReportService,
         ImageService,
         InformationService,
         LocationService,

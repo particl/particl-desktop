@@ -63,6 +63,27 @@ button.small .mat-icon {
   }
 }
 
+// Listing governance voting
+.report-voting {
+  background: $bg;
+  padding: 20px 24px 10px;
+  margin: 0 -24px 24px;
+  text-align: center;
+  .title {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+  p {
+    color: $text-muted;
+  }
+  .mat-button {
+    .mat-icon {
+      margin-right: 5px;
+    }
+  }
+}
+
 .product-gallery {
   .featured.image {
     margin-bottom: 24px;

@@ -9,68 +9,92 @@
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-<div mat-dialog-content class="dialog-content" fxLayout="row" fxLayoutGap="40px">
+<div mat-dialog-content class="dialog-content">
 
-  <div class="product-gallery" fxFlex="0 1 350px">
-    <div class="featured image">
-      <img src="{{data?.listing?.imageCollection?.previewImage?.medium}}">
-    </div>
-    <div class="gallery" fxLayout="row" fxLayoutGap="24px">
-      <!-- TODO: s/small/medium -->
-      <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
-        <img src="{{img.thumbnail}}">
+  <div class="report-voting" *ngIf="data?.listing?.isFlagged">
+    <div class="text">
+      <div class="title">This item has been flagged</div>
+      <div *ngIf="data?.listing?.VoteDetails"> 
+        <p *ngIf="data?.listing?.VoteDetails?.isReported">You have reported this listing as inappropriate. Voting is enabled for other Particl users for whether to keep it or remove it from the Marketplace.</p>
+        <p *ngIf="!data?.listing?.VoteDetails?.isReported">You have already voted on this item &ndash; thanks for participating in community governance!</p>
+      </div>
+      <div *ngIf="!data?.listing?.VoteDetails">
+        <p>A Particl user thinks this item is inappropriate. Please vote on whether this item should be kept online or taken down:</p>
+
+        <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)">
+          <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
+          It's OK, keep it
+        </button>
+        <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)">
+          <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
+          Remove item
+        </button>
       </div>
     </div>
-  </div>
+  </div><!-- .report-voting -->
 
-  <div class="product-info" fxFlex="1 1 100%">
 
-    <table class="pricing">
-      <tr>
-        <th class="item price">Price</th>
-        <td class="item price">
-          <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
-          <span class="currency">PART</span>
-          <!--span class="fiat">&asymp; {{price?.usd}} USD</span-->
-        </td>
-      </tr>
-      <tr>
-        <th class="shipping price">Shipping</th>
-        <td class="shipping price">
-          International &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} PART<br>
-          Local in {{ data?.listing?.country }} &ndash; {{ data?.listing?.domesticShippingPrice.getAmount() }} PART
-        </td>
-      </tr>
+  <div class="product" fxLayout="row" fxLayoutGap="40px">
 
-      <tr *ngIf="listingServiceCache?.selectedCountry">
-        <th class="escrow price">Escrow</th>
-        <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART</td>
-      </tr>
-    </table>
-
-    <p class="info message" *ngIf="data?.listing?.isMine">
-      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-      This is your own listing
-    </p>
-    <div class="summary description">
-      <p>
-        {{ data?.listing?.shortDescription }}
-      </p>
-    </div>
-    <div class="detailed description">
-      <p>
-        {{ data?.listing?.longDescription }}
-      </p>
+    <div class="product-gallery" fxFlex="0 1 350px">
+      <div class="featured image">
+        <img src="{{data?.listing?.imageCollection?.previewImage?.medium}}">
+      </div>
+      <div class="gallery" fxLayout="row" fxLayoutGap="24px">
+        <!-- TODO: s/small/medium -->
+        <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
+          <img src="{{img.thumbnail}}">
+        </div>
+      </div>
     </div>
 
-  </div><!-- .product-info -->
+    <div class="product-info" fxFlex="1 1 100%">
+
+      <table class="pricing">
+        <tr>
+          <th class="item price">Price</th>
+          <td class="item price">
+            <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
+            <span class="currency">PART</span>
+            <!--span class="fiat">&asymp; {{price?.usd}} USD</span-->
+          </td>
+        </tr>
+        <tr>
+          <th class="shipping price">Shipping</th>
+          <td class="shipping price">
+            International &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} PART<br>
+            Local in {{ data?.listing?.country }} &ndash; {{ data?.listing?.domesticShippingPrice.getAmount() }} PART
+          </td>
+        </tr>
+
+        <tr *ngIf="listingServiceCache?.selectedCountry">
+          <th class="escrow price">Escrow</th>
+          <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART</td>
+        </tr>
+      </table>
+
+      <p class="info message" *ngIf="data?.listing?.isMine">
+        <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+        This is your own listing
+      </p>
+      <div class="summary description">
+        <p>
+          {{ data?.listing?.shortDescription }}
+        </p>
+      </div>
+      <div class="detailed description">
+        <p>
+          {{ data?.listing?.longDescription }}
+        </p>
+      </div>
+
+    </div><!-- .product-info -->
+  </div><!-- .product -->
 </div><!-- .dialog-content -->
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <div class="left">
-    <!--button mat-button class="small TO_DO" matTooltip="Report" matTooltipPosition="above">
-      <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
-    </button-->
+    <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'"></app-report>
     <div class="date">
       <strong>Date added</strong> {{ data?.listing?.createdAt }}
     </div>
