@@ -25,7 +25,6 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   public date: string;
   public profileAddress: string = '';
   private currencyprice: number = 0;
-
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
     private marketState: MarketStateService,
@@ -51,6 +50,8 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
         .take(1)
         .subscribe((vote: any) => {
           this.data.listing.VoteDetails = vote;
+        }, (err: any) => {
+          // Handle unknown user vote here (log it perhaps, or do nothing)
         })
     }
   }
