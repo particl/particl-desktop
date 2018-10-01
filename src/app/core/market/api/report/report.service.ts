@@ -1,6 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import * as _ from 'lodash';
 import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
