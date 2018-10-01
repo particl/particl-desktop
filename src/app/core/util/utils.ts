@@ -392,27 +392,7 @@ export const DEFAULT_GUI_SETTINGS  = {
         notifyPayments: false,
         notifyStakes: false,
         notifyOrders: false,
-        notifyProposals: false,
-        // Should be removed as it in unusual ?
-        notify: {
-            message: true,
-            sentTo: false,
-            receivedWith: false,
-            receivedFrom: false,
-            selfPayment: false,
-            partReceived: true,
-            partSent: false,
-            other: false
-        },
-        show: {
-            sentTo: true,
-            receivedWith: true,
-            receivedFrom: true,
-            selfPayment: true,
-            partReceived: true,
-            partSent: true,
-            other: true
-        },
+        notifyProposals: false
     },
     navigation: {
         marketExpanded: true,
