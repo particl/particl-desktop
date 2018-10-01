@@ -29,6 +29,8 @@ import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 
+import { ReportModalComponent } from './report-modal/report-modal.component';
+
 import { TermsComponent } from './terms/terms.component';
 import { PlaceOrderComponent } from './market-place-order/place-order.component';
 import { ShippingComponent } from './market-shipping/shipping.component';
@@ -68,6 +70,7 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     DeleteListingComponent,
     ManageWidgetsComponent,
     PlaceOrderComponent,
+    ReportModalComponent,
     ShippingComponent,
     TermsComponent,
     SendConfirmationModalComponent,
@@ -95,6 +98,7 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     DeleteListingComponent,
     ManageWidgetsComponent,
     PlaceOrderComponent,
+    ReportModalComponent,
     ShippingComponent,
     TermsComponent,
     CreateWalletComponent,

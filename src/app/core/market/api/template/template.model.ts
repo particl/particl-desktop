@@ -1,7 +1,7 @@
 import { Category } from 'app/core/market/api/category/category.model';
 import { DateFormatter, Amount } from 'app/core/util/utils';
 import { ImageCollection } from 'app/core/market/api/template/image/imagecollection.model';
-
+import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 export class Template {
 
   public category: Category = new Category({});
@@ -21,7 +21,10 @@ export class Template {
   public memo: string = '';
   public imageCollection: ImageCollection;
   public expireTime: number = 4;
-
+  public isFlagged: boolean = false;
+  public proposalHash: string = '';
+  public keepItem: VoteOption;
+  public removeItem: VoteOption;
   // @TODO: remove type any
   constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
@@ -34,7 +37,10 @@ export class Template {
     this.setEscrowPrice();
     this.setTotal();
     this.setMemo();
+    this.setListingFlagged();
     this.setExpiryTime();
+    this.setProposalHash();
+    this.setProposalOptions();
   }
 
   get id(): number {
@@ -134,6 +140,33 @@ export class Template {
     if (msg) {
       this.memo = msg.filter((info) => info.MessageInfo.memo).map(obj => obj.MessageInfo.memo)[0] || '';
     }
+  }
+
+
+  setListingFlagged(): void {
+    this.isFlagged = this.flaggedItem && Object.keys(this.flaggedItem).length > 0;
+  }
+
+  setProposalHash(): void {
+    if (this.flaggedItem && this.flaggedItem.Proposal) {
+      this.proposalHash = this.flaggedItem.Proposal.hash;
+    }
+  }
+
+  setProposalOptions(): void {
+    if (this.flaggedItem && this.flaggedItem.Proposal) {
+      this.flaggedItem.Proposal.ProposalOptions.forEach(opt => {
+        if (opt.description === 'KEEP') {
+          this.keepItem = opt;
+        } else {
+          this.removeItem = opt;
+        }
+      });
+    }
+  }
+
+  get flaggedItem(): any {
+    return this.object.FlaggedItem;
   }
 
   setExpiryTime(): void {

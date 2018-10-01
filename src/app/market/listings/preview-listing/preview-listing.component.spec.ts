@@ -3,8 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { CoreModule } from 'app/core/core.module';
 import { MarketModule } from '../../../core/market/market.module';
 
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { CartService } from '../../../core/market/api/cart/cart.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
@@ -20,13 +22,15 @@ describe('PreviewListingComponent', () => {
       declarations: [ PreviewListingComponent ],
       imports: [
         CoreUiModule.forRoot(),
+        CoreModule.forRoot(),
         MarketModule.forRoot()
       ],
       providers: [
         { provide: MatDialogRef},
         { provide: MAT_DIALOG_DATA, useValue: {} },
         CartService,
-        SnackbarService
+        SnackbarService,
+        ModalsHelperService
       ]
     })
       .compileComponents();
