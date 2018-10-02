@@ -45,36 +45,61 @@
         </mat-radio-button>
       </mat-radio-group><!-- .from-balance-type -->
 
-      <!-- Show privacy slider if anonymous TX -->
-      <div *ngIf="send.input === 'anon'">
-        <div class="subtitle">Select privacy level</div>
-        <div class="privacy-level">
-          <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
-            <span fxFlex="0 0 50px" class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Low privacy"
-                  matTooltipPosition="below">Low</span>
-            <span fxFlex="0 0 50px" class="privacy-label medium" (click)="setPrivacy(8,50)"
-                  matTooltip="Standard privacy" matTooltipPosition="below">Normal</span>
-            <span fxFlex="0 0 50px" class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="High privacy"
-                  matTooltipPosition="below">High</span>
-          </div><!-- .privacy-labels -->
-          <mat-progress-bar [color]="'primary'" [bufferValue]="send.ringsize" [mode]="'determinate'"
-                            [value]="progress"></mat-progress-bar>
-        </div><!-- .privacy-level -->
-      </div><!-- /if Anon -->
-
       <!-- TX info help -->
       <p class="widget-help" *ngIf="send.input === 'part'">
-        In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver
-        addresses.
+        In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver addresses.
       </p>
       <p class="widget-help" *ngIf="send.input === 'blind'">
         Blinded transactions hide transaction amounts, but the sender and receiver addresses are still visible.
       </p>
       <p class="widget-help" *ngIf="send.input === 'anon'">
         Anon transaction offer the highest privacy &ndash; transaction amounts and not even sender and receiver
-        addresses are publicly visible. You can further adjust the privacy level to your needs ("Normal" privacy level
-        is fine for most users). The higher privacy level is, the larger fee needs to be paid.
+        addresses are publicly visible. The higher privacy level is, the larger fee needs to be paid. Advanced users can further adjust the number of ring signatures.
       </p>
+
+      <!-- Show privacy slider if anonymous TX -->
+      <div *ngIf="send.input === 'anon' && advanced" class="advanced">
+        <div class="subtitle">Privacy level (no. of ring sigs)</div>
+        <div class="privacy-level">
+          <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
+            <span fxFlex="0 0 50px" class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Set low privacy"
+                  matTooltipPosition="below">Low</span>
+            <span fxFlex="0 0 50px" class="privacy-label medium" (click)="setPrivacy(8,50)"
+                  matTooltip="Set default privacy" matTooltipPosition="below">Default</span>
+            <span fxFlex="0 0 50px" class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="Set high privacy"
+                  matTooltipPosition="below">High</span>
+          </div><!-- .privacy-labels -->
+          <!--mat-progress-bar [color]="'primary'" [bufferValue]="send.ringsize" [mode]="'determinate'"
+                            [value]="progress"></mat-progress-bar-->
+          <!-- TODO: implement slider (may need HammerJS) & remove progress-bar ^ -->
+          <mat-slider thumbLabel min="3" max="32" value="8"></mat-slider>
+          <!-- TODO: set default value after clicking the button (8 signatures?) -->
+          <button mat-button class="small" matTooltip="Set default, recommended privacy level">
+            <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
+            Auto privacy
+          </button>
+        </div><!-- .privacy-level -->
+      </div><!-- /if Anon -->
+
+<!-- only for reference, remove afterwards: -->
+<!--div class="list section">
+  <div class="title">
+    Ring size
+  </div>
+  <mat-form-field class="full-width larger" floatPlaceholder="never">
+    <input type="number" name="ringsize" matInput
+      [max]="this.ringSizeConfig.max"
+      [min]="this.ringSizeConfig.min"
+      [(ngModel)]="ringSize" (keyup)="updatePrivacy()"
+      [ngClass]="{
+        'verify-sucess': isRingSizeValid(),
+        'verify-error': !isRingSizeValid()
+      }">
+  </mat-form-field>
+  <mat-error *ngIf="!isRingSizeValid()">
+    Ring size should lie between the range of min 3 and max 32.
+  </mat-error>
+</div-->
 
     </mat-card>
   </div><!-- .from-box -->
@@ -172,25 +197,6 @@
             be recorded and publicly visible on the blockchain. Blind & Anon transactions make narrations visible only
             for Sender and Receiver.
           </p>
-          <hr class="divider">
-          <div class="list section">
-            <div class="title">
-              Ring size
-            </div>
-            <mat-form-field class="full-width larger" floatPlaceholder="never">
-              <input type="number" name="ringsize" matInput
-                [max]="this.ringSizeConfig.max"
-                [min]="this.ringSizeConfig.min"
-                [(ngModel)]="ringSize" (keyup)="updatePrivacy()"
-                [ngClass]="{
-                  'verify-sucess': isRingSizeValid(),
-                  'verify-error': !isRingSizeValid()
-                }">
-            </mat-form-field>
-            <mat-error *ngIf="!isRingSizeValid()">
-              Ring size should lie between the range of min 3 and max 32.
-            </mat-error>
-          </div>
         </div><!-- .narration.section -->
       </mat-card><!-- .pay-to -->
 
