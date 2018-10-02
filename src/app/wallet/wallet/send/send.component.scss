@@ -4,7 +4,7 @@
 
 .section {
   &.advanced { // "advanced options" fields
-    background: mix(white, $bg);
+    background: mix($color-white, $bg);
     border-top: 1px dashed darken($bg, 7%);
     margin: 0 -24px 0 !important;
     padding: 8px 24px;
@@ -83,6 +83,14 @@
 
 // ------ LAYOUT ------ //
 
+.from-box {
+  .advanced {
+    background: mix($bg, $color-white);
+    border-top: 1px dashed darken($bg, 7%);
+    margin: 8px -24px -24px;
+    padding: 1px 24px;
+  }
+}
 .privacy-level { // slider in Anon TXs
   margin: 0 0 20px;
   .privacy-label {

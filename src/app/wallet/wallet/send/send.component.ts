@@ -17,6 +17,15 @@ import { AddressHelper } from '../../../core/util/utils';
 import { TransactionBuilder, TxType } from './transaction-builder.model';
 import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
+// @TODO create/export from seperate file if needed in future?
+class RingSizeConfig {
+  max: number;
+  min: number;
+  constructor(obj: any) {
+    this.max = obj.max;
+    this.min = obj.min
+  }
+}
 
 @Component({
   selector: 'app-send',
@@ -38,6 +47,11 @@ export class SendComponent implements OnInit {
   progress: number = 10;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
+  ringSize: number = 8; // ringSize min = 3, max = 32.
+  ringSizeConfig: RingSizeConfig = new RingSizeConfig({
+    max: 32,
+    min: 3
+  })
 
   constructor(
     private sendService: SendService,
@@ -61,8 +75,8 @@ export class SendComponent implements OnInit {
 
   ngOnInit() {
     /* check if testnet -> Show/Hide Anon Balance */
-     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
-     .subscribe(chain => this.testnet = chain === 'test');
+    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+      .subscribe(chain => this.testnet = chain === 'test');
   }
   /** Select tab */
   selectTab(tabIndex: number): void {
@@ -135,8 +149,7 @@ export class SendComponent implements OnInit {
       return;
     }
     // is amount in range of 0...CurrentBalance
-    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input)
-                            && this.send.amount > 0);
+    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input) && this.send.amount > 0);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
@@ -201,7 +214,7 @@ export class SendComponent implements OnInit {
       dialogRef.close();
       this.pay();
     });
-}
+  }
 
   /** Payment function */
   pay(): void {
@@ -222,7 +235,7 @@ export class SendComponent implements OnInit {
         return;
       }
 
-    // Balance transfer - validation
+      // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
 
       if (!this.send.output) {
@@ -238,7 +251,7 @@ export class SendComponent implements OnInit {
       }
 
     }
-    this.modals.unlock({timeout: 30}, (status) => this.sendTransaction());
+    this.modals.unlock({ timeout: 30 }, (status) => this.sendTransaction());
   }
 
   private sendTransaction(): void {
@@ -298,8 +311,47 @@ export class SendComponent implements OnInit {
 
     this._rpc.call('manageaddressbook', ['newsend', addr, label])
       .subscribe(
-        response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
-        error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
+      response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
+      error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
+  }
+
+  toggleAdvanceOption(): void {
+    this.advanced = !this.advanced;
+    this.ringSize = this.send.ringsize;
+  }
+
+  isRingSizeValid(): boolean {
+    if (
+      !this.ringSize ||
+      this.ringSize > this.ringSizeConfig.max ||
+      this.ringSize < this.ringSizeConfig.min
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  calculateProgress(ringSize: number): number {
+    const full = +(0.5 * this.ringSizeConfig.max).toFixed(0);
+    const half = (full / 2);
+    let weighting = 1.0;
+    let adjustment = 0;
+    if (ringSize < half) {
+      weighting = half / (half - this.ringSizeConfig.min + 1);
+      adjustment = this.ringSizeConfig.min - 1;
+    }
+    return ringSize > full ? 100 : +((ringSize - adjustment) * weighting / full * 100).toFixed(0);
+  }
+
+
+  updatePrivacy(): void | boolean {
+    const ringSize = this.ringSize;
+    if (!this.isRingSizeValid()) {
+      return;
+    }
+    const prog = this.calculateProgress(ringSize);
+    this.setPrivacy(ringSize, prog);
   }
 
   setPrivacy(level: number, prog: number): void {

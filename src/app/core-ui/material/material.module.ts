@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatGridListModule, MatIconModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatGridListModule, MatIconModule, MatSliderModule,
   MatListModule,
   MatMenuModule,
   MatProgressBarModule,
@@ -40,6 +40,7 @@ import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/m
     MatMenuModule,
     MatProgressBarModule,
     MatIconModule,
+    MatSliderModule,
     MatSidenavModule,
     MatGridListModule,
     MatCardModule,
@@ -68,6 +69,7 @@ import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/m
     MatMenuModule,
     MatProgressBarModule,
     MatIconModule,
+    MatSliderModule,
     MatSidenavModule,
     MatGridListModule,
     MatCardModule,
