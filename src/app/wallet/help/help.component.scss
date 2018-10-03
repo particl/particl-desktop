@@ -100,8 +100,7 @@
     }
     .text {
       .title {
-        // @TODO please fix the error related with %box-title.
-        // @extend %box-title;
+        @extend %box-title;
       }
       .desc {
         color: $text-muted;
