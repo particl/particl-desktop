@@ -15,6 +15,7 @@ import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo
 import { ColdstakeComponent } from './overview/widgets/coldstake/coldstake.component';
 import { ZapColdstakingComponent } from './overview/widgets/coldstake/zap-coldstaking/zap-coldstaking.component';
 import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-coldstaking/revert-coldstaking.component';
+import { HelpComponent } from './help/help.component';
 
 import 'hammerjs';
 
@@ -32,7 +33,8 @@ import { ProposalDetailsComponent } from './proposals/proposal-details/proposal-
     ColdstakeComponent,
     ZapColdstakingComponent,
     RevertColdstakingComponent,
-    ProposalDetailsComponent
+    ProposalDetailsComponent,
+    HelpComponent
   ],
   imports: [
     CommonModule,
