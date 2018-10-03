@@ -2,7 +2,6 @@ import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
-import 'hammerjs';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService } from '../../../core/rpc/rpc.service';
@@ -16,26 +15,20 @@ import { AddressLookUpCopy } from '../models/address-look-up-copy';
 
 import { AddressHelper } from '../../../core/util/utils';
 import { TransactionBuilder, TxType } from './transaction-builder.model';
-import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
-
-// @TODO create/export from seperate file if needed in future?
-class RingSizeConfig {
-  max: number;
-  min: number;
-  constructor(obj: any) {
-    this.max = obj.max;
-    this.min = obj.min
-  }
-}
+import {
+  SendConfirmationModalComponent
+} from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
 @Component({
   selector: 'app-send',
   templateUrl: './send.component.html',
   // TODO merge / globalize styles
-  styleUrls: ['./send.component.scss', '../../settings/settings.component.scss']
+  styleUrls: [
+    './send.component.scss',
+    '../../settings/settings.component.scss'
+  ]
 })
 export class SendComponent implements OnInit {
-
 
   // General
   log: any = Log.create('send.component');
@@ -45,14 +38,8 @@ export class SendComponent implements OnInit {
   @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
   advanced: boolean = false;
-  progress: number = 10;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
-  ringSize: number = 8; // ringSize min = 3, max = 32.
-  ringSizeConfig: RingSizeConfig = new RingSizeConfig({
-    max: 32,
-    min: 3
-  })
 
   constructor(
     private sendService: SendService,
@@ -64,7 +51,6 @@ export class SendComponent implements OnInit {
     private dialog: MatDialog,
     private flashNotification: SnackbarService
   ) {
-    this.progress = 50;
     this.addressHelper = new AddressHelper();
 
     this.setFormDefaultValue();
@@ -314,10 +300,6 @@ export class SendComponent implements OnInit {
       .subscribe(
       response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
       error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
-  }
-
-  setDefaultPrivacy(): void {
-    this.setPrivacy(8); // default ring size.
   }
 
   setPrivacy(level: number): void {
