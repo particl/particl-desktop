@@ -156,8 +156,11 @@
           <div class="item">
             <h4 class="option">Reserve</h4>
             <p class="desc">Reserved amount does not participate in staking and is therefore spendable at any time</p>
+            <p class="widget-help">
+              Note: changing this option requires you to unlock your wallet (if encrypted) upon save.
+            </p>
             <mat-form-field>
-              <input matInput type="text" [(ngModel)]="settings.main.reserveAmount" [disabled]="!settings.main.stake">
+              <input matInput type="number" min="0.01" step="0.01" [(ngModel)]="settings.main.reserveAmount" [disabled]="!settings.main.stake">
             </mat-form-field>
             <mat-form-field>
               <mat-select [(ngModel)]="settings.main.reserveCurrency" [disabled]="!settings.main.stake">

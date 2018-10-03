@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
+import { RpcService } from 'app/core/rpc/rpc.service';
 import { SettingsService } from './settings.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { Log } from 'ng2-logger';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { Settings } from 'app/wallet/settings/models/settings.model';
+import { AddressHelper } from '../../core/util/utils';
 
 @Component({
   selector: 'app-settings',
@@ -20,14 +22,16 @@ export class SettingsComponent implements OnInit {
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['main', 'dapps', 'display', 'network'];
-
+  private addressHelper: AddressHelper;
   constructor(
     private _settingsService: SettingsService,
     private countryList: CountryListService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private _rpc: RpcService
   ) { }
 
   ngOnInit() {
+    this.addressHelper = new AddressHelper();
     this.settings = this._settingsService.currentSettings;
   }
 
@@ -42,12 +46,30 @@ export class SettingsComponent implements OnInit {
   save() {
     this.log.d(this.settings);
     this._settingsService.applySettings(this.settings);
+    this.callRpc()
     // @TODO move in save () subscription once cmd are available for settings.
     this.snackbar.open(
       'Settings saved sucessfully.',
       'info'
     );
 
+  }
+
+  callRpc(): void {
+    const rpcSetting = this.settings.main;
+    this._rpc.call('reservebalance', [rpcSetting.reserveAmount])
+      .subscribe(
+        response => console.log(response),
+        error => console.log(error));
+
+    this._rpc.call('walletsettings', ['stakingoptions', {
+      enabled: rpcSetting.stake,
+      foundationdonationpercent: rpcSetting.foundationDonation,
+      rewardAddress: rpcSetting.rewardAddress
+    }])
+    .subscribe(
+      response => console.log(response),
+      error => console.log(error));
   }
 
   changeTab(index: number): void {

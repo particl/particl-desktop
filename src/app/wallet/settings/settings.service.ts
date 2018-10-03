@@ -84,13 +84,9 @@ export class SettingsService {
 
     // update current settings
     this.currentSettings = new Settings(settings);
-
     // set currentGUISettings state.
     this.settingStateService.set('currentGUISettings', new Settings(settings));
   }
-
-
-
 
   /**
    * Marketplace setting related method.
