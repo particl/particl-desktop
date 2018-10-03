@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
+import 'hammerjs';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService } from '../../../core/rpc/rpc.service';
@@ -315,48 +316,12 @@ export class SendComponent implements OnInit {
       error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
   }
 
-  toggleAdvanceOption(): void {
-    this.advanced = !this.advanced;
-    this.ringSize = this.send.ringsize;
+  setDefaultPrivacy(): void {
+    this.setPrivacy(8); // default ring size.
   }
 
-  isRingSizeValid(): boolean {
-    if (
-      !this.ringSize ||
-      this.ringSize > this.ringSizeConfig.max ||
-      this.ringSize < this.ringSizeConfig.min
-    ) {
-      return false;
-    }
-
-    return true;
-  }
-
-  calculateProgress(ringSize: number): number {
-    const full = +(0.5 * this.ringSizeConfig.max).toFixed(0);
-    const half = (full / 2);
-    let weighting = 1.0;
-    let adjustment = 0;
-    if (ringSize < half) {
-      weighting = half / (half - this.ringSizeConfig.min + 1);
-      adjustment = this.ringSizeConfig.min - 1;
-    }
-    return ringSize > full ? 100 : +((ringSize - adjustment) * weighting / full * 100).toFixed(0);
-  }
-
-
-  updatePrivacy(): void | boolean {
-    const ringSize = this.ringSize;
-    if (!this.isRingSizeValid()) {
-      return;
-    }
-    const prog = this.calculateProgress(ringSize);
-    this.setPrivacy(ringSize, prog);
-  }
-
-  setPrivacy(level: number, prog: number): void {
+  setPrivacy(level: number): void {
     this.send.ringsize = level;
-    this.progress = prog;
   }
 
   pasteAddress(): void {

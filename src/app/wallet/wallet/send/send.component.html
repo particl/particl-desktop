@@ -62,45 +62,59 @@
         <div class="subtitle">Privacy level <small>(no. of ring sigs)</small></div>
         <div class="privacy-level">
           <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
-            <span fxFlex="0 0 50px" class="privacy-label low" (click)="setPrivacy(4,10)" matTooltip="Set low privacy"
-                  matTooltipPosition="below">Low</span>
-            <span fxFlex="0 0 50px" class="privacy-label medium" (click)="setPrivacy(8,50)"
-                  matTooltip="Set default privacy" matTooltipPosition="below">Default</span>
-            <span fxFlex="0 0 50px" class="privacy-label high" (click)="setPrivacy(16,100)" matTooltip="Set high privacy"
-                  matTooltipPosition="below">High</span>
+            <span
+              fxFlex="0 0 50px"
+              class="privacy-label low"
+              (click)="setPrivacy(4)"
+              matTooltip="Set low privacy"
+              matTooltipPosition="below">Low
+            </span>
+
+            <span
+              fxFlex="0 0 50px"
+              class="privacy-label medium"
+              (click)="setPrivacy(8)"
+              matTooltip="Set default privacy"
+              matTooltipPosition="below">Default
+            </span>
+
+            <span
+              fxFlex="0 0 50px"
+              class="privacy-label high"
+              (click)="setPrivacy(16)"
+              matTooltip="Set high privacy"
+              matTooltipPosition="below">High
+            </span>
+
+            <!-- @TODO we should add a new level 'Heghest' for ringsize 32 ? -->
+            <!-- <span
+              fxFlex="0 0 50px"
+              class="privacy-label high"
+              (click)="setPrivacy(32)"
+              matTooltip="Set high privacy"
+              matTooltipPosition="below">Highest
+          </span> -->
           </div><!-- .privacy-labels -->
-          <!--mat-progress-bar [color]="'primary'" [bufferValue]="send.ringsize" [mode]="'determinate'"
-                            [value]="progress"></mat-progress-bar-->
-          <!-- TODO: implement slider (may need HammerJS) & remove progress-bar ^ -->
-          <mat-slider thumbLabel color="primary" min="3" max="32" value="8"></mat-slider>
-          <!-- TODO: set default value after clicking the button (8 signatures?) -->
-          <button mat-button class="small" matTooltip="Set default, recommended privacy level">
+
+          <mat-slider
+            thumbLabel
+            color="primary"
+            [min]="3"
+            [max]="32"
+            [value]="send.ringsize">
+          </mat-slider>
+
+          <!-- set default value after clicking the button (8 signatures?) -->
+          <button
+            (click)="setPrivacy(8)"
+            mat-button
+            class="small"
+            matTooltip="Set default, recommended privacy level">
             <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
             Auto privacy
           </button>
         </div><!-- .privacy-level -->
       </div><!-- /if Anon -->
-
-<!-- only for reference, remove afterwards: -->
-<!--div class="list section">
-  <div class="title">
-    Ring size
-  </div>
-  <mat-form-field class="full-width larger" floatPlaceholder="never">
-    <input type="number" name="ringsize" matInput
-      [max]="this.ringSizeConfig.max"
-      [min]="this.ringSizeConfig.min"
-      [(ngModel)]="ringSize" (keyup)="updatePrivacy()"
-      [ngClass]="{
-        'verify-sucess': isRingSizeValid(),
-        'verify-error': !isRingSizeValid()
-      }">
-  </mat-form-field>
-  <mat-error *ngIf="!isRingSizeValid()">
-    Ring size should lie between the range of min 3 and max 32.
-  </mat-error>
-</div-->
-
     </mat-card>
   </div><!-- .from-box -->
 
@@ -112,7 +126,7 @@
       <mat-card class="section to-balance-type" *ngIf="type === 'balanceTransfer'">
         <div class="title">
           Convert to
-          <button mat-button (click)="toggleAdvanceOption()" class="small advanced-options">
+          <button mat-button (click)="advanced = !advanced" class="small advanced-options">
             <mat-icon fontSet="partIcon"
                       fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
             <span>Advanced options</span>
@@ -146,7 +160,7 @@
       <mat-card class="pay-to" *ngIf="type === 'sendPayment' || advanced">
         <div class="title">
           Pay to
-          <button mat-button (click)="toggleAdvanceOption()" *ngIf="type === 'sendPayment'"
+          <button mat-button (click)="advanced = !advanced" *ngIf="type === 'sendPayment'"
                   class="small advanced-options">
             <mat-icon fontSet="partIcon"
                       fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
