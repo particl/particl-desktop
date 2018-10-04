@@ -7,10 +7,9 @@
 
 <!-- Fav button on Listing's detail modal -->
 <button *ngIf="detail === true" class="favorite small" mat-button color="warn" 
-        [color]="(isFavorited)? 'warn' : 'basic'" 
+        [color]="(isFavorited)? 'warn' : 'basic'" (click)="toggle()"
         [matTooltip]="(isFavorited)? 'Remove from Favorites' : 'Add to Favorites'" matTooltipPosition="above"> 
   <mat-icon class="fav icon" fontSet="partIcon" 
         [fontIcon]="(isFavorited)? 'part-heart-outline-remove' : 'part-heart-outline-add'" 
-        [ngClass]="{ 'active': isFavorited }" 
-        (click)="toggle()"></mat-icon> 
+        [ngClass]="{ 'active': isFavorited }"></mat-icon> 
 </button>
