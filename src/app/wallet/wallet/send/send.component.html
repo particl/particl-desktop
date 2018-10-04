@@ -72,28 +72,19 @@
 
             <span
               fxFlex="0 0 50px"
-              class="privacy-label medium"
-              (click)="setPrivacy(8)"
-              matTooltip="Set default privacy"
-              matTooltipPosition="below">Default
-            </span>
-
-            <span
-              fxFlex="0 0 50px"
               class="privacy-label high"
               (click)="setPrivacy(16)"
               matTooltip="Set high privacy"
               matTooltipPosition="below">High
             </span>
 
-            <!-- @TODO we should add a new level 'highest' for ringsize 32 ? -->
-            <!-- <span
+            <span
               fxFlex="0 0 50px"
               class="privacy-label highest"
               (click)="setPrivacy(32)"
-              matTooltip="Set high privacy"
+              matTooltip="Set highest privacy"
               matTooltipPosition="below">Highest
-          </span> -->
+            </span>
           </div><!-- .privacy-labels -->
 
           <mat-slider
