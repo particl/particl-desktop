@@ -385,6 +385,10 @@ export class ReceiveComponent implements OnInit {
     this.rpcCallAndNotify(call, callParams, msg);
   }
 
+  emptyLabel(): void {
+    this.selected.label = '';
+  }
+
   rpcCallAndNotify(call: string, callParams: any, msg: string): void {
     if (call) {
       this.rpc.call(call, callParams)
