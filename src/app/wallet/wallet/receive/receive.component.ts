@@ -385,7 +385,8 @@ export class ReceiveComponent implements OnInit {
     this.rpcCallAndNotify(call, callParams, msg);
   }
 
-  emptyLabel(): void {
+  changeLabel(): void {
+    this.addressInput = !this.addressInput
     if (this.selected.label === '(No label)') {
       this.selected.label = '';
     }
