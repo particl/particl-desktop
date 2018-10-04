@@ -58,11 +58,14 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
     return option ? option[this.showValueOf] : this.defaultOption;
   }
 
-  private _filter(val: string): any[] {
+  private _filter(val: string, from?: string): any[] {
     if (!val) {
       return [];
     }
     const filterValue = val.toLowerCase();
+    if (from) {
+      return this.options.filter(option => option[this.showValueOf].toLowerCase() === filterValue);
+    }
     return this.options.filter(option => option[this.showValueOf].toLowerCase().includes(filterValue));
   }
 
@@ -75,6 +78,12 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
     // omit selected value.
     this.onChange.emit($event.option.value);
     this.textInput.nativeElement.blur();
+  }
+
+  onBlur($event: any): void {
+    if (this._filter($event.target.value, 'blur').length === 0) {
+      this.textInput.nativeElement.value = '';
+    }
   }
 
   public _selectAllContent($event: any): void {

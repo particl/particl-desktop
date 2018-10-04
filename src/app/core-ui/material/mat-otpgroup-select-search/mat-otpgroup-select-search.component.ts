@@ -58,13 +58,13 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
       );
   }
 
-  private _filterGroup(value: string): any[] {
+  private _filterGroup(value: string, from?: string): any[] {
     if (!this.options || !this.options.length) {
       return []
     }
 
     return this.options
-      .map(group => ({ name: group.name, list: this._filter(group.subCategoryList, value) }))
+      .map(group => ({ name: group.name, list: this._filter(group.subCategoryList, value, from) }))
       .filter(group => group.list.length > 0);
   }
 
@@ -72,13 +72,16 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
     return option ? option.name : this.defaultOption;
   }
 
-  private _filter = (opt: any[], value: string): string[] => {
+  private _filter = (opt: any[], value: string, from: string): string[] => {
     if (!value) {
       return opt || []
     }
 
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value['name'].toLowerCase();
 
+    if (from) {
+      return opt.filter(item => item.name.toLowerCase() === filterValue);
+    }
     return opt.filter(item => item.name.toLowerCase().includes(filterValue));
   };
 
@@ -91,6 +94,12 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
     // omit selected value.
     this.change.emit($event.option.value);
     this.textInput.nativeElement.blur();
+  }
+
+  onBlur($event: any): void {
+    if (this._filterGroup($event.target.value, 'blur').length === 0) {
+      this.textInput.nativeElement.value = '';
+    }
   }
 
   public _selectAllContent($event: any): void {
