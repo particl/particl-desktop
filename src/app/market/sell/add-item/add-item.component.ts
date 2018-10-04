@@ -315,6 +315,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     return this.itemFormGroup.valid || this.snackbar.open('Invalid Listing');
   }
 
+  inputValidate(event: any) {
+    // Special character validation
+    const keys = ['-', 'e', 'E', '+']
+    if (keys.includes(event.key)) {
+      return false;
+    }
+  }
+
   public async upsert() {
     if (!this.validate()) {
       return;
@@ -378,7 +386,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
         },
         () => this.isInProcess = false)
       });
-    }, err => this.snackbar.open(err));
+    }, err => {
+      this.isInProcess = false;
+      this.snackbar.open(err)
+    });
   }
 
   loadTransactionFee() {
