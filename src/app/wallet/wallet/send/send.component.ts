@@ -22,11 +22,7 @@ import {
 @Component({
   selector: 'app-send',
   templateUrl: './send.component.html',
-  // TODO merge / globalize styles
-  styleUrls: [
-    './send.component.scss',
-    '../../settings/settings.component.scss'
-  ]
+  styleUrls: ['./send.component.scss']
 })
 export class SendComponent implements OnInit {
 
