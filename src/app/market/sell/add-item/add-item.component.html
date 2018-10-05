@@ -83,19 +83,19 @@
 
 
     <mat-card class="details" fxFlex="50" [formGroup]="itemFormGroup">
-      <div class="title">Listing details</div>
+      <div class="title">Listing details *</div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="Listing title (product name)" formControlName="title">
+        <input matInput placeholder="Listing title (product name) *" formControlName="title">
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <textarea matInput #summary rows="3" placeholder="Summary (short description)"
+        <textarea matInput #summary rows="3" placeholder="Summary (short description) *"
                   formControlName="shortDescription"></textarea>
         <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <textarea matInput #description rows="12" placeholder="Description"
+        <textarea matInput #description rows="12" placeholder="Description *"
                   formControlName="longDescription"></textarea>
         <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
       </mat-form-field>
@@ -141,7 +141,7 @@
       <!-- TODO: add another input for fiat value and inter-connect the two: -->
       <mat-form-field class="full-width">
         <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput min="0" placeholder="Price per item" formControlName="basePrice" type="number">
+        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" formControlName="basePrice" type="number">
         <span matSuffix>PART</span>
       </mat-form-field>
 
@@ -150,11 +150,11 @@
           <input matInput placeholder="Quantity">
         </mat-form-field-->
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" placeholder="Domestic shipping price" formControlName="domesticShippingPrice" type="number">
+          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *" formControlName="domesticShippingPrice" type="number">
           <span matSuffix>PART</span>
         </mat-form-field>
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" placeholder="International shipping price" formControlName="internationalShippingPrice"
+          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *" formControlName="internationalShippingPrice"
                  type="number">
           <span matSuffix>PART</span>
         </mat-form-field>
@@ -175,11 +175,11 @@
       </button>
     </div>
     <div class="right">
-      <button [disabled]="isInProcess" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
+      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
-      <button [disabled]="isInProcess" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
         {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
