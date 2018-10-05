@@ -4,7 +4,7 @@
 
 .section {
   &.advanced { // "advanced options" fields
-    background: mix(white, $bg);
+    background: mix($color-white, $bg);
     border-top: 1px dashed darken($bg, 7%);
     margin: 0 -24px 0 !important;
     padding: 8px 24px;
@@ -30,8 +30,14 @@
 
 .subtitle { // subtitles (eg. "privacy level" in anon
   text-transform: uppercase;
-  margin: 20px 0 10px;
-  color: grey;
+  margin: 20px 0 16px;
+  color: $text;
+  font-weight: 700;
+  small {
+    color: $text-muted;
+    font-weight: 400;
+    font-size: inherit;
+  }
 }
 
 .balance { // balance selection radio buttons
@@ -83,18 +89,31 @@
 
 // ------ LAYOUT ------ //
 
+.from-box {
+  .advanced {
+    background: mix($bg, $color-white);
+    border-top: 1px dashed darken($bg, 7%);
+    margin: 8px -24px -24px;
+    padding: 1px 24px;
+  }
+}
+
 .privacy-level { // slider in Anon TXs
   margin: 0 0 20px;
   .privacy-label {
-    font-weight: bold;
-    padding-bottom: 10px;
+    font-weight: 500;
     cursor: pointer;
-    &.medium {
+    &.high {
       text-align: center;
     }
-    &.high {
+    &.highest {
       text-align: right;
     }
+  }
+  .mat-slider {
+    width: 100%;
+    padding: 0;
+    margin: -4px 0 -6px;
   }
 }
 
