@@ -6,17 +6,12 @@ import { NavigationSettings } from './navigation.settings.model';
 import { MarketSettings } from './market.settings.model';
 
 export class Settings {
-    // @TODO update the models when settings object got finalized.
     main: MainSettings;
     network: NetworkSettings;
     window: WindowSettings;
     display: DisplaySettings;
     navigation: NavigationSettings;
     market: MarketSettings;
-
-    // @TODO propar type?
-    i2p: any;
-    tor: any;
 
     constructor(obj: any) {
         this.main = new MainSettings(obj.main);
@@ -25,8 +20,5 @@ export class Settings {
         this.display = new DisplaySettings(obj.display);
         this.navigation = new NavigationSettings(obj.navigation);
         this.market = new MarketSettings(obj.market);
-        this.i2p = obj.i2p;
-        this.tor = obj.tor;
     }
-
 }

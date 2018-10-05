@@ -352,13 +352,8 @@ export const Messages = {
 
 export const DEFAULT_GUI_SETTINGS  = {
     main: {
-        autostart: false,
-        detachDatabases: 1,
         feeAmount: 1,
         feeCurrency: 1,
-        autoRing: 1,
-        minRing: 1,
-        maxRing: 1,
         stake: 1,
         reserveAmount: 1,
         reserveCurrency: 1,
@@ -366,9 +361,6 @@ export const DEFAULT_GUI_SETTINGS  = {
         rewardAddress: 1,
         foundationDonation: 1,
         secureMessaging: false,
-        thin: false,
-        thinFullIndex: false,
-        thinIndexWindow: 4096,
         stakeInterval: 30
     },
     network: {
@@ -380,7 +372,8 @@ export const DEFAULT_GUI_SETTINGS  = {
     },
     window: {
         tray: false,
-        minimize: true
+        minimize: true,
+        autostart: false
     },
     display: {
         language: 'en',
@@ -403,8 +396,5 @@ export const DEFAULT_GUI_SETTINGS  = {
         listingsPerPage: 30,
         defaultCountry: undefined,
         listingExpiration: 4
-    },
-    i2p: {},
-    tor: {}
+    }
 }
-

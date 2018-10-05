@@ -26,7 +26,7 @@ exports.init = function () {
   rxIpc.registerListener('settings-gui', function (options) {
     settings = options;
     // autolaunch if setting says autostart
-    if (settings.main.autostart) {
+    if (settings.window.autostart) {
       autoLauncher.isEnabled()
       .then(function(isEnabled){
         if(isEnabled){

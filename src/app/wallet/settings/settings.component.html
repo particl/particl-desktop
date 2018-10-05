@@ -41,20 +41,11 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.autostart">
+            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.autostart">
               <h4 class="option">Start Particl on system login</h4>
               <p class="desc">Start Particl wallet automatically?</p>
             </mat-checkbox>
           </div>
-
-          <!--hr class="divider">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.detachDatabases">
-              <h4 class="option">Detach databases at shutdown</h4>
-              <p class="desc">???</p>
-            </mat-checkbox>
-          </div-->
 
         </div>
       </mat-card>
@@ -527,19 +518,6 @@
             </div>
           </div>
 
-          <!-- <hr class="divider">
-
-          <div class="item">
-            <h4 class="option">Socket version</h4>
-            <p class="desc">??? (default: ???)</p>
-            <mat-form-field>
-              <mat-select [(ngModel)]="settings.network.socketVersion" [disabled]="!settings.network.proxy">
-                <mat-option value="4">4</mat-option>
-                <mat-option value="5">5</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div> -->
-
         </div>
       </mat-card>
 
@@ -560,11 +538,6 @@
       </button>
     </div>
     <div class="right">
-      <!-- TODO: activate only when changes has been made (until then make the buttons disabled) -->
-      <!-- <button mat-button (click)="apply()" color="primary">
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        Apply
-      </button> -->
       <button mat-raised-button (click)="save()" color="primary" class="validate">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock"></mat-icon>
         Save changes
