@@ -34,7 +34,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   // template id
   templateId: number;
   preloadedTemplate: Template;
-
+  keys: string[] = ['-', 'e', 'E', '+'];
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
@@ -315,10 +315,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
     return this.itemFormGroup.valid || this.snackbar.open('Invalid Listing');
   }
 
-  inputValidate(event: any) {
+  numericValidator(event: any) {
     // Special character validation
-    const keys = ['-', 'e', 'E', '+']
-    if (keys.includes(event.key)) {
+    console.log(event);
+    if (this.keys.includes(event.key)) {
       return false;
     }
   }
