@@ -15,7 +15,9 @@ import { AddressLookUpCopy } from '../models/address-look-up-copy';
 
 import { AddressHelper } from '../../../core/util/utils';
 import { TransactionBuilder, TxType } from './transaction-builder.model';
-import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
+import {
+  SendConfirmationModalComponent
+} from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
 import { SettingsService } from 'app/wallet/settings/settings.service';
 import { DisplaySettings } from 'app/wallet/settings/models/display/display.settings.model';
@@ -23,11 +25,9 @@ import { DisplaySettings } from 'app/wallet/settings/models/display/display.sett
 @Component({
   selector: 'app-send',
   templateUrl: './send.component.html',
-  // TODO merge / globalize styles
   styleUrls: ['./send.component.scss']
 })
 export class SendComponent implements OnInit {
-
 
   // General
   log: any = Log.create('send.component');
@@ -38,7 +38,6 @@ export class SendComponent implements OnInit {
   @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
   advanced: boolean = false;
-  progress: number = 10;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
 
@@ -53,7 +52,6 @@ export class SendComponent implements OnInit {
     private flashNotification: SnackbarService,
     private settingService: SettingsService
   ) {
-    this.progress = 50;
     this.addressHelper = new AddressHelper();
 
     this.setFormDefaultValue();
@@ -144,8 +142,7 @@ export class SendComponent implements OnInit {
       return;
     }
     // is amount in range of 0...CurrentBalance
-    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input)
-                            && this.send.amount > 0);
+    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input) && this.send.amount > 0);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
@@ -210,7 +207,7 @@ export class SendComponent implements OnInit {
       dialogRef.close();
       this.pay();
     });
-}
+  }
 
   /** Payment function */
   pay(): void {
@@ -231,7 +228,7 @@ export class SendComponent implements OnInit {
         return;
       }
 
-    // Balance transfer - validation
+      // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
 
       if (!this.send.output) {
@@ -247,7 +244,7 @@ export class SendComponent implements OnInit {
       }
 
     }
-    this.modals.unlock({timeout: 30}, (status) => this.sendTransaction());
+    this.modals.unlock({ timeout: 30 }, (status) => this.sendTransaction());
   }
 
   private sendTransaction(): void {
@@ -307,13 +304,12 @@ export class SendComponent implements OnInit {
 
     this._rpc.call('manageaddressbook', ['newsend', addr, label])
       .subscribe(
-        response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
-        error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
+      response => this.log.er('rpc_addLabel_success: successfully added label to address.'),
+      error => this.log.er('rpc_addLabel_failed: failed to add label to address.'))
   }
 
-  setPrivacy(level: number, prog: number): void {
+  setPrivacy(level: number): void {
     this.send.ringsize = level;
-    this.progress = prog;
   }
 
   pasteAddress(): void {

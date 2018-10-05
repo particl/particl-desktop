@@ -32,8 +32,8 @@ import { routing } from './wallet.routing';
     ColdstakeComponent,
     ZapColdstakingComponent,
     RevertColdstakingComponent,
-    HelpComponent,
-    ProposalDetailsComponent
+    ProposalDetailsComponent,
+    HelpComponent
   ],
   imports: [
     CommonModule,

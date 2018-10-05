@@ -58,7 +58,7 @@
           <mat-form-field class="icon-input label-input full-width">
             <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === '(No label)'}" [disabled]="addressInput" [(ngModel)]="label" (keyup.enter)="updateLabel(getUnusedAddress().address)">
             <!-- TODO: default: -->
-            <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="addressInput = !addressInput"></mat-icon>
+            <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="changeLabel()"></mat-icon>
             <!-- TODO: show in edit mode: -->
             <mat-icon matTooltip="Save label" *ngIf="!addressInput" fontSet="partIcon" fontIcon="part-circle-check" (click)="updateLabel(getUnusedAddress().address)"></mat-icon>
           </mat-form-field>

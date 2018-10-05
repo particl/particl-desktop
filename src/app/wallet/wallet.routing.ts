@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { OverviewComponent } from './overview/overview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { HelpComponent } from './help/help.component';
-
 import { AddProposalComponent } from './proposals/add-proposal/add-proposal.component';
 import { ProposalsComponent } from './proposals/proposals.component';
 import { ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
