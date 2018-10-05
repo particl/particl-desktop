@@ -16,7 +16,7 @@
       (optionSelected)="onSelectionChanged($event)"
       [displayWith]="displayFn.bind(this)">
       <mat-option *ngIf="defaultOption">{{defaultOption}}</mat-option>
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option" matTooltip="{{showValueOf ? option[showValueOf] : option}}">
         {{showValueOf ? option[showValueOf] : option}}
       </mat-option>
       <mat-option *ngIf="!((filteredOptions | async).length || defaultOption)" disabled>Not found</mat-option>
