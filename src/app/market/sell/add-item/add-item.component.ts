@@ -30,7 +30,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
-
   // template id
   templateId: number;
   preloadedTemplate: Template;
@@ -317,8 +316,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   numericValidator(event: any) {
     // Special character validation
-    console.log(event);
-    if (this.keys.includes(event.key)) {
+    const pasted = String(event.clipboardData ? event.clipboardData.getData('text') : '' );
+    if (this.keys.includes(event.key) || pasted.split('').find((c) =>  this.keys.includes(c))) {
       return false;
     }
   }
