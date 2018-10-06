@@ -384,7 +384,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
           this.snackbar.open(error)
         },
         () => this.isInProcess = false)
-      });
+      }, (err) => this.isInProcess = false);
     }, err => {
       this.isInProcess = false;
       this.snackbar.open(err)

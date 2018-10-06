@@ -60,13 +60,16 @@ export class ModalsHelperService implements OnDestroy {
     * @param {UnlockModalConfig} data       Optional - data to pass through to the modal.
     */
 
-  unlock(data: UnlockModalConfig, callback?: Function) {
+  unlock(data: UnlockModalConfig, callback?: Function, cancelcallback?: Function) {
     if (this._rpcState.get('locked')) {
       const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
       if (data || callback) {
         dialogRef.componentInstance.setData(data, callback);
       }
       dialogRef.afterClosed().subscribe(() => {
+        if (cancelcallback) {
+          cancelcallback();
+        }
         this.log.d('unlock modal closed');
       });
     } else if (callback) {
