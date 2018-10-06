@@ -138,6 +138,10 @@
 
   <!-- =========== SHIPPING DETAILS =========== -->
   <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
+    <button mat-raised-button color="primary" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0" (click)="clearForm()">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+      New Shipping Profile
+    </button>
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
       <div fxLayout="row" fxLayoutGap="30px">
