@@ -12,8 +12,9 @@ Customizations and modifiers for default Material components
       1.1. Buttons
       1.2. Icons
       1.3. Progress bars
-      1.4. Paginator
-      1.5. Tooltips
+      1.4. Sliders (range)
+      1.5. Paginator
+      1.6. Tooltips
 
     2. Layout
       2.1. Cards
@@ -85,7 +86,15 @@ button,
 }
 
 
-// ------ 1.4. PAGINATOR ------ //
+// ------ 1.4. SLIDERS (RANGE) ------ //
+
+.mat-slider-thumb-label-text {
+  font-weight: 700 !important;
+  font-family: $font !important;
+}
+
+
+// ------ 1.5. PAGINATOR ------ //
 
 .mat-paginator {
   margin-top: 40px;
@@ -119,7 +128,7 @@ button,
 }
 
 
-// ------ 1.5. TOOLTIPS ------ //
+// ------ 1.6. TOOLTIPS ------ //
 
 mat-tooltip-component .mat-tooltip {
   font-family: $font;

@@ -3,6 +3,7 @@
     <input
       type="text"
       (focus)="_selectAllContent($event)"
+      (blur)="onBlur($event)"
       placeholder="{{placeHolder}}"
       aria-label="placeHolder"
       matInput

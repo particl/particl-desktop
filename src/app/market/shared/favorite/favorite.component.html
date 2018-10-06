@@ -1,12 +1,12 @@
 <!-- Fav button in Listing's card in Listings -->
-<mat-icon *ngIf="detail === false" class="fav icon" fontSet="partIcon"
+<mat-icon *ngIf="!listing?.isMine && detail === false" class="fav icon" fontSet="partIcon"
           [fontIcon]="(isFavorited)? 'part-heart-outline-remove' : 'part-heart-outline-add'"
           [ngClass]="{ 'active': isFavorited }"
           [matTooltip]="(isFavorited)? 'Remove from Favorites' : 'Add to Favorites'"
           matTooltipPosition="above" (click)="toggle()"></mat-icon>
 
 <!-- Fav button on Listing's detail modal -->
-<button *ngIf="detail === true" class="favorite small" mat-button color="warn" 
+<button *ngIf="!listing?.isMine && detail === true" class="favorite small" mat-button color="warn" 
         [color]="(isFavorited)? 'warn' : 'basic'" (click)="toggle()"
         [matTooltip]="(isFavorited)? 'Remove from Favorites' : 'Add to Favorites'" matTooltipPosition="above"> 
   <mat-icon class="fav icon" fontSet="partIcon" 
