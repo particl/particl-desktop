@@ -81,6 +81,10 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   }
 
   onBlur($event: any): void {
+    if ($event.target.value === this.defaultOption) {
+      return;
+    }
+
     if (this._filter($event.target.value, 'blur').length === 0) {
       this.textInput.nativeElement.value = '';
     }

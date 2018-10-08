@@ -97,6 +97,10 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   }
 
   onBlur($event: any): void {
+    if ($event.target.value === this.defaultOption) {
+      return;
+    }
+
     if (this._filterGroup($event.target.value, 'blur').length === 0) {
       this.textInput.nativeElement.value = '';
     }
