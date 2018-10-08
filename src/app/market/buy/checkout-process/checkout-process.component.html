@@ -138,10 +138,7 @@
 
   <!-- =========== SHIPPING DETAILS =========== -->
   <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
-    <button mat-raised-button color="primary" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0 || !addressNotSelected" (click)="clearForm()">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-      Clear Shipping Address form
-    </button>
+    
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
       <div fxLayout="row" fxLayoutGap="30px">
@@ -162,12 +159,14 @@
               </mat-select>
             </mat-form-field>
             <p class="widget-help">
-              To save time, you can save your frequently used shipping addresses as your personal shipping profiles.
-              You can create as many profiles as you need (e.g. home address, office address, etc.).
-            </p>
-            <p class="widget-help">
+              To save time, you can save your frequently used shipping addresses as your personal shipping profiles. You can create as many profiles as you need (e.g. home address, office address, etc.).
+              <br><br>
               To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
             </p>
+            <button mat-button color="basic" class="small" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0 || !addressNotSelected" (click)="clearForm()" matTooltip="When you want to enter shipping details manually instead">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+              Unselect Shipping profile
+            </button>
           </mat-card>
         </div>
         <!-- .shipping-profile -->
