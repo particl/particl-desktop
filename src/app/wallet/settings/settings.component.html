@@ -41,7 +41,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.autostart">
+            <mat-checkbox [value]="settings.window.autostart" class="checkbox align-top wrap" [(ngModel)]="settings.window.autostart">
               <h4 class="option">Start Particl on system login</h4>
               <p class="desc">Start Particl wallet automatically?</p>
             </mat-checkbox>
@@ -55,7 +55,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.tray">
+            <mat-checkbox [value]="settings.window.tray" class="checkbox align-top wrap" [(ngModel)]="settings.window.tray">
               <h4 class="option">Minimize to the tray</h4>
               <p class="desc">Minimizes the client window to tray instead of the taskbar</p>
             </mat-checkbox>
@@ -64,7 +64,7 @@
           <hr class="divider">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.window.minimize">
+            <mat-checkbox [value]="settings.window.minimize" class="checkbox align-top wrap" [(ngModel)]="settings.window.minimize">
               <h4 class="option">Minimize on close</h4>
               <p class="desc">Don't close the client, keep it running minimized</p>
             </mat-checkbox>
@@ -95,40 +95,6 @@
 
         </div>
       </mat-card>
-
-      <!-- <div class="subtitle">Privacy</div>
-      <mat-card class="card">
-        <div class="list section">
-
-          <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.autoRing">
-              <h4 class="option">Automatically select ring size</h4>
-              <p class="desc">Anon transactions: ???</p>
-            </mat-checkbox>
-          </div>
-
-          <hr class="divider">
-
-          <div class="row" fxLayout="row">
-            <div class="item" fxFlex="50">
-              <h4 class="option">Minimum ring size</h4>
-              <p class="desc">Anon transactions: ??? (default: 3)</p>
-              <mat-form-field>
-                <input matInput type="text" [(ngModel)]="settings.main.minRing" [disabled]="settings.main.autoRing">
-              </mat-form-field>
-            </div>
-            <div class="item" fxFlex="50">
-              <h4 class="option">Maximum ring size</h4>
-              <p class="desc">Anon transactions: ??? (default: 100)</p>
-              <mat-form-field>
-                <input matInput type="text" [(ngModel)]="settings.main.maxRing" [disabled]="settings.main.autoRing">
-              </mat-form-field>
-            </div>
-          </div>
-
-        </div>
-      </mat-card> -->
-
     </div>
     <div>
       <div class="subtitle">Staking</div>
@@ -136,7 +102,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.stake">
+            <mat-checkbox [value]="settings.main.stake" class="checkbox align-top wrap" [(ngModel)]="settings.main.stake">
               <h4 class="option">Enable staking</h4>
               <p class="desc">Get staking rewards by securing the network</p>
             </mat-checkbox>
@@ -165,7 +131,7 @@
           <hr class="divider">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.main.rewardAddressEnabled">
+            <mat-checkbox [value]="settings.main.rewardAddressEnabled" class="checkbox align-top wrap" [(ngModel)]="settings.main.rewardAddressEnabled">
               <h4 class="option">Custom reward address</h4>
               <p class="desc">Choose address that will receive all of your staking rewards</p>
             </mat-checkbox>
@@ -203,7 +169,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.market.enabled">
+            <mat-checkbox [value]="settings.market.enabled" class="checkbox align-top wrap" [(ngModel)]="settings.market.enabled">
               <h4 class="option">Enable Marketplace</h4>
               <p class="desc">Enable/disable Marketplace dApp in Particl Desktop</p>
             </mat-checkbox>
@@ -330,7 +296,7 @@
           <hr class="divider">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.advanced">
+            <mat-checkbox [value]="settings.display.advanced" class="checkbox align-top wrap" [(ngModel)]="settings.display.advanced">
               <h4 class="option">Advanced options by default</h4>
               <p class="desc">Always display advanced options (coin control and narrations)</p>
             </mat-checkbox>
@@ -349,12 +315,12 @@
             <hr class="divider transparent">
             <div class="row" fxLayout>
               <div class="item" fxFlex="50">
-                <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.navigation.marketExpanded">
+                <mat-checkbox [value]="settings.navigation.marketExpanded" class="checkbox align-top wrap" [(ngModel)]="settings.navigation.marketExpanded">
                   <h4 class="option">Market</h4>
                 </mat-checkbox>
               </div>
               <div class="item" fxFlex="50">
-                <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.navigation.walletExpanded">
+                <mat-checkbox [value]="settings.navigation.walletExpanded" class="checkbox align-top wrap" [(ngModel)]="settings.navigation.walletExpanded">
                   <h4 class="option">Wallet</h4>
                 </mat-checkbox>
               </div>
@@ -404,7 +370,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyPayments">
+            <mat-checkbox [value]="settings.display.notifyPayments" class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyPayments">
               <h4 class="option">Received payments</h4>
               <p class="desc">Show notification for incoming payments</p>
             </mat-checkbox>
@@ -413,7 +379,7 @@
           <hr class="divider">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyStakes">
+            <mat-checkbox [value]="settings.display.notifyStakes" class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyStakes">
               <h4 class="option">Staking rewards</h4>
               <p class="desc">Show notification for new staking rewards</p>
             </mat-checkbox>
@@ -422,7 +388,7 @@
           <hr class="divider">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyOrders">
+            <mat-checkbox [value]="settings.display.notifyOrders" class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyOrders">
               <h4 class="option">Order changes <span class="tag">Marketplace</span></h4>
               <p class="desc">Show notifications for order updates that need your attention</p>
             </mat-checkbox>
@@ -431,7 +397,7 @@
           <hr class="divider">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyProposals">
+            <mat-checkbox [value]="settings.display.notifyProposals" class="checkbox align-top wrap" [(ngModel)]="settings.display.notifyProposals">
               <h4 class="option">Active Proposals</h4>
               <p class="desc">Show notification for Proposals that are ready for voting</p>
             </mat-checkbox>
@@ -454,7 +420,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.network.upnp">
+            <mat-checkbox [value]="settings.network.upnp" class="checkbox align-top wrap" [(ngModel)]="settings.network.upnp">
               <h4 class="option">Map port using UPnP</h4>
               <p class="desc">UPnP is a set of networking protocols that permits networked devices to seamlessly
                 discover each other's presence on the network without the need for port forwarding. (???)</p>
@@ -493,7 +459,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox class="checkbox align-top wrap" [(ngModel)]="settings.network.proxy">
+            <mat-checkbox [value]="settings.network.proxy" class="checkbox align-top wrap" [(ngModel)]="settings.network.proxy">
               <h4 class="option">Connect through Socks proxy</h4>
               <p class="desc">???</p>
             </mat-checkbox>
