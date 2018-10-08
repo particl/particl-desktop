@@ -9,7 +9,7 @@ import { SettingStateService } from 'app/core/settings/setting-state/setting-sta
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { Settings } from 'app/wallet/settings/models/settings.model';
 
-import { DEFAULT_GUI_SETTINGS } from 'app/core/util/utils';
+import { DEFAULT_GUI_SETTINGS, _GET_CHANGED_KEYS } from 'app/core/util/utils';
 
 @Injectable()
 export class SettingsService {
@@ -18,6 +18,16 @@ export class SettingsService {
   defaultSettings: Settings = new Settings(DEFAULT_GUI_SETTINGS);
   profileId: number;
   currentSettings: Settings;
+  oldSettings: Settings;
+  coreSettings: string[] = [
+    'network.upnp',
+    'network.proxy',
+    'network.proxyIP',
+    'network.proxyPort',
+    'window.tray',
+    'window.minimize',
+    'window.autostart'
+  ];
 
   constructor(
     private settingStateService: SettingStateService,
@@ -68,6 +78,17 @@ export class SettingsService {
     this.updateSettings(this.defaultSettings);
   }
 
+  isSettingKeyUpdated(): boolean {
+
+    const changedKeys = _GET_CHANGED_KEYS(this.oldSettings, this.currentSettings);
+    for (let iteration = 0; iteration < this.coreSettings.length; iteration++) {
+      if (changedKeys.indexOf(this.coreSettings[iteration]) !== -1) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   /**
     * @param {Settings} settings
@@ -76,16 +97,33 @@ export class SettingsService {
 
   updateSettings(settings: Settings): void {
 
-    // update settings in web storage.
-    localStorage.setItem('gui-settings', JSON.stringify(settings));
-
-    // update core settings.
-    this._settingsGUIService.updateSettings(settings);
+    if (this.currentSettings) {
+      this.oldSettings = new Settings(this.currentSettings)
+    }
 
     // update current settings
     this.currentSettings = new Settings(settings);
+
+    // update settings in web storage.
+    localStorage.setItem('gui-settings', JSON.stringify(settings));
+
+    /**
+     * update core settings.
+     * if any of the setting option is change related with core in the condition.
+     */
+
+    if (!this.oldSettings || this.isSettingKeyUpdated()) {
+      this.updateCoreSetting(settings);
+    }
+
     // set currentGUISettings state.
     this.settingStateService.set('currentGUISettings', new Settings(settings));
+  }
+
+
+
+  updateCoreSetting(settings: Settings): void {
+    this._settingsGUIService.updateSettings(settings);
   }
 
   /**
