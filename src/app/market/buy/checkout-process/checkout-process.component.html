@@ -138,9 +138,9 @@
 
   <!-- =========== SHIPPING DETAILS =========== -->
   <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
-    <button mat-raised-button color="primary" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0" (click)="clearForm()">
+    <button mat-raised-button color="primary" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0 || !addressNotSelected" (click)="clearForm()">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-      New Shipping Profile
+      Clear Shipping Address form
     </button>
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>

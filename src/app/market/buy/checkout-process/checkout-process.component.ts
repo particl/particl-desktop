@@ -219,10 +219,13 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   clearForm(): void {
-    if (Object.keys(this.selectedAddress).length > 0) {
-      this.selectedCountry = undefined;
-      this.shippingFormGroup.reset();
-    }
+    this.selectedCountry = undefined;
+    this.selectedAddress = new Address();
+    this.shippingFormGroup.reset();
+  }
+
+  get addressNotSelected(): boolean {
+    return Object.keys(this.selectedAddress).length > 0
   }
 
   getProfile(): void {
