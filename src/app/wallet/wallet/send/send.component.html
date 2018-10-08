@@ -91,6 +91,7 @@
             thumbLabel
             color="primary"
             [min]="3"
+            (change)="onSlide($event)"
             [max]="32"
             [value]="send.ringsize">
           </mat-slider>
