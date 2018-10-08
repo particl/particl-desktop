@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSliderChange } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
@@ -300,6 +300,10 @@ export class SendComponent implements OnInit {
 
   setPrivacy(level: number): void {
     this.send.ringsize = level;
+  }
+
+  onSlide(option: MatSliderChange): void {
+    this.setPrivacy(option.value);
   }
 
   pasteAddress(): void {
