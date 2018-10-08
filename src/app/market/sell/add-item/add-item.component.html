@@ -185,5 +185,18 @@
       </button>
     </div>
   </div>
-
+    <!-- .loading-container -->
+  <div class="loading-container" *ngIf="isInProcess">
+    <div class="loading-info">
+      <div class="loading-image">
+        <img src="./assets/particl-logo-symbol.svg">
+      </div>
+      <p class="title">
+        We're processing your listing
+      </p>
+      <p class="widget-help">
+        This might take a sec
+      </p>
+    </div>
+  </div><!-- .loading-container -->
 </div>
