@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export class Amount {
 
   constructor(private amount: number, private maxRoundingDigits: number = 8) {
@@ -353,7 +355,7 @@ export const Messages = {
 export const DEFAULT_GUI_SETTINGS  = {
     main: {
         feeAmount: 1,
-        feeCurrency: 1,
+        feeCurrency: 'part',
         stake: 1,
         reserveAmount: 1,
         reserveCurrency: 1,
@@ -368,7 +370,6 @@ export const DEFAULT_GUI_SETTINGS  = {
         proxy: false,
         proxyIP: '127.0.0.1',
         proxyPort: 9050,
-        socketVersion: 5
     },
     window: {
         tray: false,
@@ -397,4 +398,57 @@ export const DEFAULT_GUI_SETTINGS  = {
         defaultCountry: undefined,
         listingExpiration: 4
     }
+}
+
+/**
+ *
+ * @param firstObj: first object to compare
+ * @param secondObj: second object to compare
+ * @param path: hierarchy path (if you want then you can add the addtion path).
+ *
+ *  Suppose we two Objects:
+ * first:- OBJ1 = {
+ *    key1: 'value-1',
+ *    key2: {
+ *      key21: 'value-2'
+ *    }
+ *    key3: 'value-3'
+ *  }
+ *
+ * second:-   OBJ1 = {
+ *    key1: 'value-1',
+ *    key2: {
+ *      key21: 'value-5'
+ *    },
+ *    key3: 'value-6'
+ *  }
+ *
+ * if path = '' || undefined;
+ * const output = _GET_CHANGED_KEYS(OBJ1, OBJ2);
+ *
+ * output will be:- ['key3', 'key2.key21'];
+ *
+ *
+ * if path = 'some-path';
+ *
+ * const output = _GET_CHANGED_KEYS(OBJ1, OBJ2);
+ *
+ * output will be:- ['some-path.key3', 'some-path.key2.key21'];
+ */
+
+
+export const _GET_CHANGED_KEYS  = (firstObj, secondObj, path?) => {
+  firstObj = firstObj || {};
+  secondObj = secondObj || {};
+
+  return (
+    _.reduce(firstObj, (result: any, value: any, key: string) => {
+      const p = path ? path + '.' + key : key;
+      if (_.isObject(value)) {
+        const d = _GET_CHANGED_KEYS(value, secondObj[key], p);
+        return d.length ? result.concat(d) : result;
+      }
+      return _.isEqual(value, secondObj[key]) ? result : result.concat(p);
+    }, []) || []
+  );
 }
