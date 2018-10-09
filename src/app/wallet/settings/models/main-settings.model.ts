@@ -5,7 +5,7 @@ export class MainSettings {
     reserveAmount: number;
     reserveCurrency: number;
     rewardAddressEnabled: number;
-    rewardAddress: number;
+    rewardAddress: string;
     foundationDonation: number;
     secureMessaging: boolean;
     stakeInterval: number

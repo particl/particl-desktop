@@ -360,7 +360,7 @@ export const DEFAULT_GUI_SETTINGS  = {
         reserveAmount: 1,
         reserveCurrency: 'part',
         rewardAddressEnabled: 1,
-        rewardAddress: 1,
+        rewardAddress: '',
         foundationDonation: 10, // minimum percentage amount.
         secureMessaging: false,
         stakeInterval: 30

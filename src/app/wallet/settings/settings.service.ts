@@ -19,6 +19,7 @@ export class SettingsService {
   profileId: number;
   currentSettings: Settings;
   oldSettings: Settings;
+  updatedKeys: string[] = [];
   coreSettings: string[] = [
     'network.upnp',
     'network.proxy',
@@ -78,16 +79,32 @@ export class SettingsService {
     this.updateSettings(this.defaultSettings);
   }
 
-  isSettingKeyUpdated(): boolean {
+  isSettingKeysUpdated(options: string[]): boolean {
+    if (!this.oldSettings) {
+      return true;
+    }
 
-    const changedKeys = _GET_CHANGED_KEYS(this.oldSettings, this.currentSettings);
-    for (let iteration = 0; iteration < this.coreSettings.length; iteration++) {
-      if (changedKeys.indexOf(this.coreSettings[iteration]) !== -1) {
+    const changedKeys = this.getChangedKeys();
+
+    for (let iteration = 0; iteration < options.length; iteration++) {
+      if (changedKeys.indexOf(options[iteration]) !== -1) {
         return true;
       }
     }
 
     return false;
+  }
+
+  getChangedKeys(): string[] {
+    return this.updatedKeys;
+  }
+
+  setChangedKeys() {
+    if (this.currentSettings) {
+      this.oldSettings = new Settings(this.currentSettings)
+    }
+
+    this.updatedKeys = _GET_CHANGED_KEYS(this.oldSettings, this.currentSettings);
   }
 
   /**
@@ -96,10 +113,6 @@ export class SettingsService {
     */
 
   updateSettings(settings: Settings): void {
-
-    if (this.currentSettings) {
-      this.oldSettings = new Settings(this.currentSettings)
-    }
 
     // update current settings
     this.currentSettings = new Settings(settings);
@@ -112,7 +125,7 @@ export class SettingsService {
      * if any of the setting option is change related with core in the condition.
      */
 
-    if (!this.oldSettings || this.isSettingKeyUpdated()) {
+    if (!this.oldSettings || this.isSettingKeysUpdated(this.coreSettings)) {
       this.updateCoreSetting(settings);
     }
 

@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from 'app/core/core.module';
 import { SettingsService } from './settings.service';
 import { SharedModule } from 'app/wallet/shared/shared.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 describe('SettingsService', () => {
   beforeEach(() => {
@@ -11,7 +12,8 @@ describe('SettingsService', () => {
       imports: [
         HttpClientModule,
         SharedModule,
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        ModalsModule.forRoot()
       ],
       providers: [
         SettingsService

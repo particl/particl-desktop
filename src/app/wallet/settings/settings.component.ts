@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { SettingsService } from './settings.service';
@@ -7,7 +8,8 @@ import { Log } from 'ng2-logger';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { Settings } from 'app/wallet/settings/models/settings.model';
-import { AddressHelper } from '../../core/util/utils';
+import { AddressHelper, DEFAULT_GUI_SETTINGS } from '../../core/util/utils';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Component({
   selector: 'app-settings',
@@ -26,6 +28,7 @@ export class SettingsComponent implements OnInit {
   constructor(
     private _settingsService: SettingsService,
     private countryList: CountryListService,
+    private _modals: ModalsHelperService,
     private snackbar: SnackbarService,
     private _rpc: RpcService
   ) { }
@@ -45,31 +48,70 @@ export class SettingsComponent implements OnInit {
 
   save() {
     this.log.d(this.settings);
+
+    /**
+     * update the changedKeys
+     * which is responsible to load the all changed keys in the setting object.
+     */
+
+    this._settingsService.setChangedKeys();
+
+
+    // call update reserveAmount if reserveAmount updated?
+    if (this._settingsService.isSettingKeysUpdated(['main.reserveAmount'])) {
+      this._modals.unlock({timeout: 30}, (status) => this.reserveBalanceCall());
+    }
+
+    if (
+      this._settingsService.isSettingKeysUpdated([
+        'main.stake', 'main.foundationDonation', 'main.rewardAddress'
+      ])
+    ) {
+
+      this.updateStakingOptions();
+    }
+
     this._settingsService.applySettings(this.settings);
-    this.callRpc()
+
     // @TODO move in save () subscription once cmd are available for settings.
     this.snackbar.open(
-      'Settings saved sucessfully.',
+      'Settings updated sucessfully.',
       'info'
     );
-
   }
 
-  callRpc(): void {
-    const rpcSetting = this.settings.main;
-    this._rpc.call('reservebalance', [rpcSetting.reserveAmount])
-      .subscribe(
-        response => console.log(response),
-        error => console.log(error));
+  updateStakingOptions(): void {
+    let stakeParams = Object.assign({}, { enabled: this.settings.main.stake });
+    if (!this.settings.main.stake) {
 
-    this._rpc.call('walletsettings', ['stakingoptions', {
-      enabled: rpcSetting.stake,
-      foundationdonationpercent: rpcSetting.foundationDonation,
-      rewardAddress: rpcSetting.rewardAddress
-    }])
-    .subscribe(
-      response => console.log(response),
-      error => console.log(error));
+      if (this._settingsService.isSettingKeysUpdated(['main.foundationDonation'])) {
+        stakeParams = Object.assign(
+          stakeParams, {
+            foundationdonationpercent: this.settings.main.foundationDonation
+          }
+        );
+      }
+
+      if (
+        this.settings.main.rewardAddressEnabled &&
+        this._settingsService.isSettingKeysUpdated(['main.rewardAddress'])
+      ) {
+        stakeParams = Object.assign(
+          stakeParams, {
+            rewardAddress: this.settings.main.rewardAddress
+          }
+        );
+      }
+    }
+    this._rpc.call('walletsettings', ['stakingoptions', stakeParams]).subscribe(
+      (response) => this.log.d(response),
+      (error) => this.log.e(error));
+  }
+
+  reserveBalanceCall() {
+    this._rpc.call('reservebalance', [this.settings.main.reserveAmount]).subscribe(
+      (response) => this.log.d(response),
+      (error) => this.log.d(error));
   }
 
   changeTab(index: number): void {
@@ -79,17 +121,12 @@ export class SettingsComponent implements OnInit {
   onCountryChange(country: Country): void {
     this.log.d('selectedCountry', country);
     this.settings.market.defaultCountry = country || undefined
-    // @TODO set and use the selected Country Code and set defaut selected country by cmd?.
   }
 
   // set all settings as defaults.
   resetAll(): void {
-    this._settingsService.applyDefaultSettings();
-    // @TODO move in apply() subscription once cmd are available for settings.
-    this.snackbar.open(
-      'Default settings applied sucessfully.',
-      'info'
-    );
+    this.settings = new Settings(DEFAULT_GUI_SETTINGS);
+    this.save();
   }
 
 }
