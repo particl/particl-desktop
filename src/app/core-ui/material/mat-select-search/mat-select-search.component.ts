@@ -24,6 +24,7 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   @Input() public placeHolder: string = '';
   @Input() public options: any[] = [];
   @Input() public defaultOption: string = '';
+  @Input() pageFrom: string = '';
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() isRequired: boolean = false;
   @Input() defaultSelectedValue: any;
@@ -81,12 +82,13 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   }
 
   onBlur($event: any): void {
-    if ($event.target.value === this.defaultOption) {
+    if ($event.target.value === this.defaultOption || this.pageFrom === 'listing') {
       return;
     }
 
     if (this._filter($event.target.value, 'blur').length === 0) {
-      this.textInput.nativeElement.value = '';
+      this.formControl.reset();
+      this.onChange.emit();
     }
   }
 

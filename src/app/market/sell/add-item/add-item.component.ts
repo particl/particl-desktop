@@ -362,6 +362,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   onCountryChange(country: Country): void {
+    console.log(country);
     this.itemFormGroup.patchValue({ country: country ? country.name : '' })
   }
 
