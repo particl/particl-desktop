@@ -54,7 +54,7 @@ export class SettingsComponent implements OnInit {
      * which is responsible to load the all changed keys in the setting object.
      */
 
-    this._settingsService.setChangedKeys();
+    this._settingsService.setChangedKeys(this.settings);
 
 
     // call update reserveAmount if reserveAmount updated?
@@ -64,7 +64,7 @@ export class SettingsComponent implements OnInit {
 
     if (
       this._settingsService.isSettingKeysUpdated([
-        'main.stake', 'main.foundationDonation', 'main.rewardAddress'
+        'main.stake', 'main.foundationDonation', 'main.rewardAddress', 'main.rewardAddressEnabled'
       ])
     ) {
 
@@ -82,15 +82,13 @@ export class SettingsComponent implements OnInit {
 
   updateStakingOptions(): void {
     let stakeParams = Object.assign({}, { enabled: this.settings.main.stake });
-    if (!this.settings.main.stake) {
+    if (this.settings.main.stake) {
 
-      if (this._settingsService.isSettingKeysUpdated(['main.foundationDonation'])) {
-        stakeParams = Object.assign(
-          stakeParams, {
-            foundationdonationpercent: this.settings.main.foundationDonation
-          }
-        );
-      }
+      stakeParams = Object.assign(
+        stakeParams, {
+          foundationdonationpercent: this.settings.main.foundationDonation
+        }
+      );
 
       if (
         this.settings.main.rewardAddressEnabled &&
@@ -103,13 +101,14 @@ export class SettingsComponent implements OnInit {
         );
       }
     }
+
     this._rpc.call('walletsettings', ['stakingoptions', stakeParams]).subscribe(
       (response) => this.log.d(response),
-      (error) => this.log.e(error));
+      (error) => this.log.d(error));
   }
 
   reserveBalanceCall() {
-    this._rpc.call('reservebalance', [this.settings.main.reserveAmount]).subscribe(
+    this._rpc.call('reservebalance', [this.settings.main.rewardAddressEnabled, this.settings.main.reserveAmount]).subscribe(
       (response) => this.log.d(response),
       (error) => this.log.d(error));
   }

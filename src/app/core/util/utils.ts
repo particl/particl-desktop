@@ -356,10 +356,10 @@ export const DEFAULT_GUI_SETTINGS  = {
     main: {
         feeAmount: 1,
         feeCurrency: 'part',
-        stake: 1,
+        stake: true,
         reserveAmount: 1,
         reserveCurrency: 'part',
-        rewardAddressEnabled: 1,
+        rewardAddressEnabled: false,
         rewardAddress: '',
         foundationDonation: 10, // minimum percentage amount.
         secureMessaging: false,

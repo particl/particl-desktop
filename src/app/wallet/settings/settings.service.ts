@@ -69,7 +69,6 @@ export class SettingsService {
   applySettings(settings: Settings): void {
     const oldSettings: string = localStorage.getItem('gui-settings');
     const newSettings: string = JSON.stringify(settings);
-
     if (oldSettings !== newSettings) {
       this.updateSettings(settings);
     }
@@ -80,12 +79,12 @@ export class SettingsService {
   }
 
   isSettingKeysUpdated(options: string[]): boolean {
+
     if (!this.oldSettings) {
       return true;
     }
 
     const changedKeys = this.getChangedKeys();
-
     for (let iteration = 0; iteration < options.length; iteration++) {
       if (changedKeys.indexOf(options[iteration]) !== -1) {
         return true;
@@ -99,12 +98,12 @@ export class SettingsService {
     return this.updatedKeys;
   }
 
-  setChangedKeys() {
+  setChangedKeys(settings: Settings): void {
     if (this.currentSettings) {
       this.oldSettings = new Settings(this.currentSettings)
     }
 
-    this.updatedKeys = _GET_CHANGED_KEYS(this.oldSettings, this.currentSettings);
+    this.updatedKeys = _GET_CHANGED_KEYS(this.oldSettings, settings);
   }
 
   /**
