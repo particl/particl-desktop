@@ -364,12 +364,14 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  showAddresses(): void {
+  toggleAddresses(): void {
     this.showOldAddress = !this.showOldAddress;
-    // Should be removed ?
-    setTimeout(() => {
-      this.scrollContainer.nativeElement.scrollIntoView(true);
-    }, 0)
+    if (this.showOldAddress) {
+      // Should be removed ?
+      setTimeout(() => {
+        this.scrollContainer.nativeElement.scrollIntoView(true);
+      }, 0)
+    }
   }
 
   updateLabel(address: string) {
