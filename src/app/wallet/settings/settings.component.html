@@ -136,7 +136,12 @@
               <p class="desc">Choose address that will receive all of your staking rewards</p>
             </mat-checkbox>
             <mat-form-field class="full-width" floatLabel="never">
-              <input matInput type="text" placeholder="Enter address" [(ngModel)]="settings.main.rewardAddress" [disabled]="!settings.main.rewardAddressEnabled">
+              <input matInput type="text" placeholder="Enter address"
+                [disabled]="!settings.main.rewardAddressEnabled"
+                [(ngModel)]="settings.main.rewardAddress"
+                (input)="verifyAddress()"
+                [ngClass]="{'verify-sucess': checkAddress() === true, 'verify-error': checkAddress() === false }"
+                >
             </mat-form-field>
             <p class="desc">Warning: this will reduce your privacy as all your addresses will be linked together</p>
           </div>
@@ -504,7 +509,12 @@
       </button>
     </div>
     <div class="right">
-      <button mat-raised-button (click)="save()" color="primary" class="validate">
+      <button
+        mat-raised-button
+        [disabled]="!(
+          !settings.main.rewardAddressEnabled ||
+          (settings.main.rewardAddressEnabled && checkAddress() !== false)
+        )" (click)="save()" color="primary" class="validate">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock"></mat-icon>
         Save changes
       </button>

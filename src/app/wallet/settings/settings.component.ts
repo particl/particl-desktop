@@ -21,6 +21,8 @@ export class SettingsComponent implements OnInit {
   log: any = Log.create('settings.component');
   tab: string = 'main';
   settings: Settings;
+  validRewardAddress: boolean;
+  isMineAddress: boolean;
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['main', 'dapps', 'display', 'network'];
@@ -118,6 +120,37 @@ export class SettingsComponent implements OnInit {
   resetAll(): void {
     this.settings = new Settings(DEFAULT_GUI_SETTINGS);
     this.save();
+  }
+
+  /** checkAddres: returns boolean, so it can be private later. */
+  checkAddress(): boolean {
+    return (
+        this.validRewardAddress &&
+        this.addressHelper.testAddress(this.settings.main.rewardAddress, 'public')
+      );
+  }
+
+  /** verifyAddress: calls RPC to validate it. */
+  verifyAddress() {
+    if (!this.settings.main.rewardAddress) {
+      this.validRewardAddress = undefined;
+      this.isMineAddress = undefined;
+      return;
+    }
+
+    const validateAddressCB = (response) => {
+      this.validRewardAddress = response.isvalid;
+
+      if (!!response.ismine) {
+        this.isMineAddress = response.ismine;
+      }
+    };
+
+    this._rpc.call('validateaddress', [this.settings.main.rewardAddress])
+      .take(1)
+      .subscribe(
+        response => validateAddressCB(response),
+        error => this.log.er('verifyAddress: validateAddressCB failed'));
   }
 
 }
