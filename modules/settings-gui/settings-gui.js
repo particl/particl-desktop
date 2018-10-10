@@ -1,11 +1,11 @@
 /* electron */
-const electron      = require('electron').app;
-const AutoLaunch = require('auto-launch');
-const rxIpc = require('rx-ipc-electron/lib/main').default;
-const log = require('electron-log');
-const market = require('./../market/market');
-
-const Observable = require('rxjs/Observable').Observable;
+const electron            = require('electron').app;
+const AutoLaunch          = require('auto-launch');
+const rxIpc               = require('rx-ipc-electron/lib/main').default;
+const log                 = require('electron-log');
+const market              = require('./../market/market');
+const networkConfig       = require('./../config/particl-config');
+const Observable          = require('rxjs/Observable').Observable;
 
 /*
   Register and IPC listener and execute settings.
@@ -25,6 +25,7 @@ let marketRunningState;
 exports.init = function () {
   rxIpc.registerListener('settings-gui', function (options) {
     settings = options;
+    networkConfig.saveFile(settings.network)
     // autolaunch if setting says autostart
     if (settings.window.autostart) {
       autoLauncher.isEnabled()
