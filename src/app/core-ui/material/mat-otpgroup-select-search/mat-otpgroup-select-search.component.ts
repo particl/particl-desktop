@@ -26,7 +26,7 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
     stateGroup: [],
   });
   @Input() defaultOption: any;
-  @Input() pageFrom: string = '';
+  @Input() pageFrom: boolean = false;
   @Input() options: any[] = [];
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
   @Input() placeHolder: string = '';
@@ -98,12 +98,13 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   }
 
   onBlur($event: any): void {
-    if ($event.target.value === this.defaultOption || this.pageFrom === 'listing') {
+    if ($event.target.value === this.defaultOption || this.pageFrom) {
       return;
     }
 
     if (this._filterGroup($event.target.value, 'blur').length === 0) {
-      this.textInput.nativeElement.value = '';
+      this.stateForm.reset();
+      this.change.emit();
     }
   }
 

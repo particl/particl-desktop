@@ -19,7 +19,7 @@
       class="filter-by seller-country"
       [options]="countryList?.countries"
       [defaultOption]="'All seller countries'"
-      [pageFrom]="'listing'"
+      [pageFrom]="true"
       [showValueOf]="'name'"
       (onChange)="onCountryChange($event)">
     </mat-select-search>
@@ -29,7 +29,7 @@
       class="filter-by category"
       [options]="_rootCategoryList?.subCategoryList"
       [defaultOption]="'All categories'"
-      [pageFrom]="'listing'"
+      [pageFrom]="true"
       (change)="onCategoryChange($event)">
     </mat-otpgroup-select-search>
 
@@ -41,7 +41,7 @@
       class="filter-by buyer-country"
       [options]="countryList?.countries"
       [defaultOption]="'Your country'"
-      [pageFrom]="'listing'"
+      [pageFrom]="true"
       [showValueOf]="'name'"
       [defaultSelectedValue]="this.selectedCountry"
       (onChange)="changeLocation($event)">
