@@ -35,7 +35,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.addressHelper = new AddressHelper();
-    this.settings = this._settingsService.currentSettings;
+    this.settings = new Settings(this._settingsService.currentSettings);
   }
 
   settingsTab(tab: string) {
@@ -62,13 +62,10 @@ export class SettingsComponent implements OnInit {
       this._modals.unlock({timeout: 30}, (status) => this.reserveBalanceCall());
     }
 
-    if (
-      this._settingsService.isSettingKeysUpdated([
-        'main.stake', 'main.foundationDonation', 'main.rewardAddress', 'main.rewardAddressEnabled'
-      ])
-    ) {
-
-      this.updateStakingOptions();
+    if (this._settingsService.isSettingKeysUpdated(
+      ['main.stake', 'main.foundationDonation', 'main.rewardAddress', 'main.rewardAddressEnabled']
+    )) {
+      this._modals.unlock({timeout: 30}, (status) => this.updateStakingOptions());
     }
 
     this._settingsService.applySettings(this.settings);
@@ -81,25 +78,20 @@ export class SettingsComponent implements OnInit {
   }
 
   updateStakingOptions(): void {
-    let stakeParams = Object.assign({}, { enabled: this.settings.main.stake });
-    if (this.settings.main.stake) {
+    let stakeParams = Object.assign({}, {
+      enabled: this.settings.main.stake,
+      foundationdonationpercent: this.settings.main.foundationDonation
+    });
 
+    if (
+      this.settings.main.rewardAddressEnabled &&
+      this._settingsService.isSettingKeysUpdated(['main.rewardAddress'])
+    ) {
       stakeParams = Object.assign(
         stakeParams, {
-          foundationdonationpercent: this.settings.main.foundationDonation
+          rewardAddress: this.settings.main.rewardAddress
         }
       );
-
-      if (
-        this.settings.main.rewardAddressEnabled &&
-        this._settingsService.isSettingKeysUpdated(['main.rewardAddress'])
-      ) {
-        stakeParams = Object.assign(
-          stakeParams, {
-            rewardAddress: this.settings.main.rewardAddress
-          }
-        );
-      }
     }
 
     this._rpc.call('walletsettings', ['stakingoptions', stakeParams]).subscribe(
