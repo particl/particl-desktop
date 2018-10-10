@@ -125,9 +125,9 @@ export class SettingsComponent implements OnInit {
   /** checkAddres: returns boolean, so it can be private later. */
   checkAddress(): boolean {
     return (
-        this.validRewardAddress &&
-        this.addressHelper.testAddress(this.settings.main.rewardAddress, 'public')
-      );
+      this.validRewardAddress &&
+      this.addressHelper.testAddress(this.settings.main.rewardAddress, 'public')
+    );
   }
 
   /** verifyAddress: calls RPC to validate it. */
