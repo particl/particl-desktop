@@ -22,7 +22,7 @@ export class SettingsService {
   updatedKeys: string[] = [];
   coreSettings: string[] = [
     'network.upnp',
-    'network.proxy',
+    'network.enabledProxy',
     'network.proxyIP',
     'network.proxyPort',
     'window.tray',
@@ -135,11 +135,11 @@ export class SettingsService {
   updateCoreSetting(settings: Settings): void {
 
     // set default proxy settings, if proxy is disabled.
-    if (this.isSettingKeysUpdated(['network.proxy']) && !settings.network.proxy) {
+    if (this.isSettingKeysUpdated(['network.proxy']) && !settings.network.enabledProxy) {
       settings.network.proxyIP = '127.0.0.1';
       settings.network.proxyPort = 9050;
     }
-    this._settingsGUIService.updateSettings(settings);
+    this._settingsGUIService.updateSettings(new Settings(settings));
   }
 
 

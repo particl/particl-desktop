@@ -181,10 +181,10 @@ export class SettingsComponent implements OnInit {
         !this.settings.main.rewardAddressEnabled ||
         (this.settings.main.rewardAddressEnabled && this.checkAddress() !== false)
       ) && (
-        !this.settings.network.proxy ||
+        !this.settings.network.enabledProxy ||
         (
-          (this.settings.network.proxy && this.checkIpAddress() !== false) &&
-          (this.settings.network.proxy && this.checkPort() !== false)
+          (this.settings.network.enabledProxy && this.checkIpAddress() !== false) &&
+          (this.settings.network.enabledProxy && this.checkPort() !== false)
         )
       )
     )

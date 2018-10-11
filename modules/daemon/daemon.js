@@ -10,7 +10,6 @@ const rpc = require('../rpc/rpc');
 const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
 const multiwallet = require('../multiwallet');
-const networkConfig       = require('../config/particl-config');
 
 let daemon = undefined;
 let chosenWallets = [];
@@ -80,17 +79,7 @@ exports.start = function (wallets) {
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
-      const conf = networkConfig.readFile();
-      const argumemts = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets];
-
-      if (conf.upnp) {
-        argumemts.push(`-upnp`);
-      }
-      if (conf.proxy) {
-        argumemts.push( `-proxy=${conf.proxyIP}:${conf.proxyPort}`);
-      }
-      log.info(`starting daemon ${argumemts}`);
-      const child = spawn(daemonPath, argumemts)
+      const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
         .on('close', code => {
           log.info('daemon exited - setting to undefined.');
           daemon = undefined;

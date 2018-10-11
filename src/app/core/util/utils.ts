@@ -367,7 +367,8 @@ export const DEFAULT_GUI_SETTINGS  = {
     },
     network: {
         upnp: false,
-        proxy: false,
+        enabledProxy: false,
+        proxy: '127.0.0.1: 9050',
         proxyIP: '127.0.0.1',
         proxyPort: 9050,
     },

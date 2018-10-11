@@ -464,7 +464,7 @@
         <div class="list section">
 
           <div class="item">
-            <mat-checkbox [value]="settings.network.proxy" class="checkbox align-top wrap" [(ngModel)]="settings.network.proxy">
+            <mat-checkbox [value]="settings.network.enabledProxy" class="checkbox align-top wrap" [(ngModel)]="settings.network.enabledProxy">
               <h4 class="option">Connect through Socks proxy</h4>
               <p class="desc">???</p>
             </mat-checkbox>
@@ -480,7 +480,7 @@
               <mat-form-field>
                 <input matInput type="text" id="ip"
                   [(ngModel)]="settings.network.proxyIP"
-                  [disabled]="!settings.network.proxy"
+                  [disabled]="!settings.network.enabledProxy"
                   [value]="settings.network.proxyIP"
                   (input)="verifyIpAddress()"
                   [ngClass]="{'verify-sucess': checkIpAddress() === true, 'verify-error': checkIpAddress() === false }">
@@ -493,7 +493,7 @@
                 <input matInput type="text" id="port"
                   [(ngModel)]="settings.network.proxyPort"
                   [value]="settings.network.proxyPort"
-                  [disabled]="!settings.network.proxy"
+                  [disabled]="!settings.network.enabledProxy"
                   (input)="verifyPort()"
                   [ngClass]="{'verify-sucess': checkPort() === true, 'verify-error': checkPort() === false }"
                   >
