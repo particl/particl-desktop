@@ -112,4 +112,9 @@ function getAuth(options) {
   return (auth)
 }
 
+function getParticlConfPath(options) {
+  return options.datadir ? options.datadir : findCookiePath();
+}
+
 exports.getAuth = getAuth;
+exports.getParticlConfPath = getParticlConfPath;
