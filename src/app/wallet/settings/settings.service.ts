@@ -132,11 +132,16 @@ export class SettingsService {
     this.settingStateService.set('currentGUISettings', new Settings(settings));
   }
 
-
-
   updateCoreSetting(settings: Settings): void {
+
+    // set default proxy settings, if proxy is disabled.
+    if (this.isSettingKeysUpdated(['network.proxy']) && !settings.network.proxy) {
+      settings.network.proxyIP = '127.0.0.1';
+      settings.network.proxyPort = 9050;
+    }
     this._settingsGUIService.updateSettings(settings);
   }
+
 
   /**
    * Marketplace setting related method.

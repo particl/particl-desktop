@@ -452,3 +452,23 @@ export const _GET_CHANGED_KEYS  = (firstObj, secondObj, path?) => {
     }, []) || []
   );
 }
+
+export class NetworkHelper {
+
+  validateIp(input: string): boolean {
+    const ip = input.split('.');
+    const valid = ip.every((segment) => {
+      return this.validateNum(Number(segment), 0, 255);
+    })
+    return ip.length === 4 && valid
+  }
+
+  validatePort(input: number): boolean {
+    // @TODO need to improve the port range?
+    return this.validateNum(input, 1, 65535)
+  }
+
+  validateNum = (num: number, min: number, max: number) => {
+    return num >= min && num <= max;
+  }
+}

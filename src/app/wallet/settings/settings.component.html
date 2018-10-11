@@ -475,16 +475,28 @@
           <div class="row" fxLayout="row">
             <div class="item" fxFlex="50">
               <h4 class="option">Proxy IP</h4>
-              <p class="desc">??? (default: 127.0.0.1)</p>
+              <p class="desc">??? (default: 127.0.0.1)
+              </p>
               <mat-form-field>
-                <input matInput type="text" id="ip" [(ngModel)]="settings.network.proxyIP" [disabled]="!settings.network.proxy">
+                <input matInput type="text" id="ip"
+                  [(ngModel)]="settings.network.proxyIP"
+                  [disabled]="!settings.network.proxy"
+                  [value]="settings.network.proxyIP"
+                  (input)="verifyIpAddress()"
+                  [ngClass]="{'verify-sucess': checkIpAddress() === true, 'verify-error': checkIpAddress() === false }">
               </mat-form-field>
             </div>
             <div class="item" fxFlex="50">
               <h4 class="option">Port</h4>
               <p class="desc">??? (default: 9050)</p>
               <mat-form-field>
-                <input matInput type="text" id="port" [(ngModel)]="settings.network.proxyPort" [disabled]="!settings.network.proxy">
+                <input matInput type="text" id="port"
+                  [(ngModel)]="settings.network.proxyPort"
+                  [value]="settings.network.proxyPort"
+                  [disabled]="!settings.network.proxy"
+                  (input)="verifyPort()"
+                  [ngClass]="{'verify-sucess': checkPort() === true, 'verify-error': checkPort() === false }"
+                  >
               </mat-form-field>
             </div>
           </div>
@@ -511,10 +523,7 @@
     <div class="right">
       <button
         mat-raised-button
-        [disabled]="!(
-          !settings.main.rewardAddressEnabled ||
-          (settings.main.rewardAddressEnabled && checkAddress() !== false)
-        )" (click)="save()" color="primary" class="validate">
+        [disabled]="!settingsValidator()" (click)="save()" color="primary" class="validate">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock"></mat-icon>
         Save changes
       </button>

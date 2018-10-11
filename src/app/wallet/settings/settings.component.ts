@@ -8,7 +8,7 @@ import { Log } from 'ng2-logger';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { Settings } from 'app/wallet/settings/models/settings.model';
-import { AddressHelper, DEFAULT_GUI_SETTINGS } from '../../core/util/utils';
+import { AddressHelper, DEFAULT_GUI_SETTINGS, NetworkHelper } from '../../core/util/utils';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Component({
@@ -23,10 +23,13 @@ export class SettingsComponent implements OnInit {
   settings: Settings;
   validRewardAddress: boolean;
   isMineAddress: boolean;
-
+  isValidIp: boolean;
+  isValidPort: boolean;
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['main', 'dapps', 'display', 'network'];
   private addressHelper: AddressHelper;
+  private networkHelper: NetworkHelper;
+
   constructor(
     private _settingsService: SettingsService,
     private countryList: CountryListService,
@@ -37,6 +40,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.addressHelper = new AddressHelper();
+    this.networkHelper = new NetworkHelper();
     this.settings = new Settings(this._settingsService.currentSettings);
   }
 
@@ -153,4 +157,36 @@ export class SettingsComponent implements OnInit {
         error => this.log.er('verifyAddress: validateAddressCB failed'));
   }
 
+  verifyIpAddress(): boolean {
+    this.isValidIp = this.networkHelper.validateIp(this.settings.network.proxyIP);
+    return this.isValidIp;
+  }
+
+  checkIpAddress(): boolean {
+    return this.isValidIp;
+  }
+
+  verifyPort(): boolean {
+    this.isValidPort = this.networkHelper.validatePort(this.settings.network.proxyPort);
+    return this.isValidPort;
+  }
+
+  checkPort(): boolean {
+    return this.isValidPort;
+  }
+
+  settingsValidator(): boolean {
+    return  (
+      (
+        !this.settings.main.rewardAddressEnabled ||
+        (this.settings.main.rewardAddressEnabled && this.checkAddress() !== false)
+      ) && (
+        !this.settings.network.proxy ||
+        (
+          (this.settings.network.proxy && this.checkIpAddress() !== false) &&
+          (this.settings.network.proxy && this.checkPort() !== false)
+        )
+      )
+    )
+  }
 }
