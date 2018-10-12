@@ -19,6 +19,7 @@ import { CheckoutProcessComponent } from './buy/checkout-process/checkout-proces
 import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
 import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
 import { ShippingAddressComponent } from './shared/shipping-address/shipping-address.component';
+import { PrivateMarketsComponent } from './private-markets/private-markets.component';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { ShippingAddressComponent } from './shared/shipping-address/shipping-add
     OrderItemComponent,
     AddToCartComponent,
     ShippingAddressComponent,
-    ReportComponent
+    ReportComponent,
+    PrivateMarketsComponent
   ],
   entryComponents: [
     PreviewListingComponent

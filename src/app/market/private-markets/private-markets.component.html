@@ -1,0 +1,33 @@
+<app-header>
+  <div class="tab-bar">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
+          Connected Markets
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bag"></mat-icon>
+          My Markets
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+
+<div class="container-block with-tab-bar">
+
+  <mat-card *ngIf="tabLabels[selectedTab] == 'connected-markets'">
+    Connected markets
+  </mat-card>
+
+  <mat-card *ngIf="tabLabels[selectedTab] == 'my-markets'">
+    My markets
+  </mat-card>
+
+</div><!-- .container-block -->
+
+

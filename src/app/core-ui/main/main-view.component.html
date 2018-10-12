@@ -34,7 +34,16 @@
                   <mat-list-item class="sidebar-item">
                     <mat-icon class="icon" fontSet="partIcon"
                       fontIcon="part-listings"></mat-icon>
-                    <span class="text">Listings</span>
+                    <span class="text">Public Market</span>
+                  </mat-list-item>
+                </a>
+
+                <a class="sidebar-item-link"
+                  routerLinkActive="active" [routerLink]="'/market/private'">
+                  <mat-list-item class="sidebar-item">
+                    <mat-icon class="icon" fontSet="partIcon"
+                      fontIcon="part-archive"></mat-icon>
+                    <span class="text">Private Markets</span>
                   </mat-list-item>
                 </a>
 
