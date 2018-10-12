@@ -3,6 +3,7 @@
     <input
       type="text"
       (focus)="_selectAllContent($event)"
+      (blur)="onBlur($event)"
       matInput placeholder="{{placeHolder}}"
       formControlName="stateGroup"
       [matAutocomplete]="autoGroup"
@@ -14,7 +15,7 @@
     [displayWith]="displayFn.bind(this)">
       <mat-option *ngIf="defaultOption">{{defaultOption}}</mat-option>
       <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.name">
-        <mat-option *ngFor="let option of group.list" [value]="option">
+        <mat-option *ngFor="let option of group.list" [value]="option" matTooltip="{{option.name}}">
           {{option.name}}
         </mat-option>
       </mat-optgroup>

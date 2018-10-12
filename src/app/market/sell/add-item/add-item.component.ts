@@ -34,11 +34,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
-
   // template id
   templateId: number;
   preloadedTemplate: Template;
-
+  keys: string[] = ['-', 'e', 'E', '+'];
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
@@ -326,6 +325,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     return this.itemFormGroup.valid || this.snackbar.open('Invalid Listing');
   }
 
+  numericValidator(event: any) {
+    // Special character validation
+    const pasted = String(event.clipboardData ? event.clipboardData.getData('text') : '' );
+    if (this.keys.includes(event.key) || pasted.split('').find((c) =>  this.keys.includes(c))) {
+      return false;
+    }
+  }
+
   public async upsert() {
     if (!this.validate()) {
       return;
@@ -388,8 +395,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
           this.snackbar.open(error)
         },
         () => this.isInProcess = false)
-      });
-    }, err => this.snackbar.open(err));
+      }, (err) => this.isInProcess = false);
+    }, err => {
+      this.isInProcess = false;
+      this.snackbar.open(err)
+    });
   }
 
   loadTransactionFee() {

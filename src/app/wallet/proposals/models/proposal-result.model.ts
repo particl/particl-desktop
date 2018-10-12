@@ -75,4 +75,8 @@ export class ProposalResult {
     get totalVotes(): number {
         return this.totalVoteCounts || 0;
     }
+
+    get totalVotesText(): string {
+        return this.totalVotes >= 1 ? 'Votes' : 'Vote';
+    }
 }
