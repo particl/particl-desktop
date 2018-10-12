@@ -81,7 +81,7 @@
             <h4 class="option">Transaction fees</h4>
             <p class="desc">Optional transaction fee per kB that helps makes sure your transactions are processed quickly (recommended: 0.01 PART)</p>
             <mat-form-field>
-              <input matInput type="text" [(ngModel)]="settings.main.feeAmount">
+              <input matInput type="number" min="0" [(ngModel)]="settings.main.feeAmount">
             </mat-form-field>
 
             <mat-form-field>

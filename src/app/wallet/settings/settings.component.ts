@@ -42,6 +42,13 @@ export class SettingsComponent implements OnInit {
     this.addressHelper = new AddressHelper();
     this.networkHelper = new NetworkHelper();
     this.settings = new Settings(this._settingsService.currentSettings);
+    this.getTransactionFee();
+  }
+
+  getTransactionFee() {
+    this._rpc.call('getwalletinfo').take(1).subscribe(
+      (response) => this.settings.main.feeAmount = response.paytxfee,
+      (error) => this.log.d(error));
   }
 
   settingsTab(tab: string) {
@@ -74,6 +81,9 @@ export class SettingsComponent implements OnInit {
       this._modals.unlock({timeout: 30}, (status) => this.updateStakingOptions());
     }
 
+    if (this._settingsService.isSettingKeysUpdated(['main.feeAmount'])) {
+      this.setTransactionFee();
+    }
     this._settingsService.applySettings(this.settings);
 
     // @TODO move in save () subscription once cmd are available for settings.
@@ -107,6 +117,12 @@ export class SettingsComponent implements OnInit {
 
   reserveBalanceCall() {
     this._rpc.call('reservebalance', [this.settings.main.rewardAddressEnabled, this.settings.main.reserveAmount]).subscribe(
+      (response) => this.log.d(response),
+      (error) => this.log.d(error));
+  }
+
+  setTransactionFee() {
+    this._rpc.call('settxfee', [this.settings.main.feeAmount]).subscribe(
       (response) => this.log.d(response),
       (error) => this.log.d(error));
   }
@@ -186,6 +202,9 @@ export class SettingsComponent implements OnInit {
           (this.settings.network.enabledProxy && this.checkIpAddress() !== false) &&
           (this.settings.network.enabledProxy && this.checkPort() !== false)
         )
+      ) && (
+        // In case of the black input we get null in the "this.settings.main.feeAmount".
+        typeof this.settings.main.feeAmount === 'number' && this.settings.main.feeAmount >= 0
       )
     )
   }
