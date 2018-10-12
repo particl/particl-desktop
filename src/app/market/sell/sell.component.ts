@@ -66,6 +66,11 @@ export class SellComponent implements OnInit {
     });
   }
 
+  gotoPrivateMarkets() {
+    this.router.navigate(['/market/private']
+    );
+  }
+
   clear(): void {
     this.filters = {
       search:   undefined,

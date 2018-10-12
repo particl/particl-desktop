@@ -75,10 +75,21 @@
       </mat-card>
     </div--><!-- .filter-by-type -->
 
-    <button mat-button color="basic" class="clear-filters" (click)="clear()">
+    <!--button mat-button color="basic" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
       Clear all filters
-    </button>
+    </button-->
+
+    <p class="widget-help">
+      Here you can sell your items and publish them to Particl's Marketplace publicly.
+    </p>
+    <p class="widget-help">
+      You can also create your own, private Marketplace (invite-only):
+      <button mat-button class="small" (click)="gotoPrivateMarkets()">
+        <mat-icon fontSet="partIcon" fontIcon="part-archive"></mat-icon>
+        Open Private Markets
+      </button>
+    </p>
 
   </div><!-- .filter -->
 

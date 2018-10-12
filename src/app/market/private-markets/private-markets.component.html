@@ -17,16 +17,54 @@
   </div>
 </app-header>
 
+<!-- FIXME: needs implementation -->
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
+
+<!--
+*ngIf="tabLabels[selectedTab] == 'connected-markets'"
+*ngIf="tabLabels[selectedTab] == 'my-markets'"
+-->
 
 <div class="container-block with-tab-bar">
 
-  <mat-card *ngIf="tabLabels[selectedTab] == 'connected-markets'">
-    Connected markets
-  </mat-card>
+  <!-- Listings > Filter -->
+  <div class="filter">
 
-  <mat-card *ngIf="tabLabels[selectedTab] == 'my-markets'">
-    My markets
-  </mat-card>
+    <div class="sell-item">
+      <button mat-raised-button *ngIf="tabLabels[selectedTab] == 'connected-markets'"
+              color="primary" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width"
+              matTooltip="xxxxxxxxxxxxxxxxxxx" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
+        Connect new Market
+      </button>
+      <button mat-raised-button *ngIf="tabLabels[selectedTab] == 'my-markets'"
+              color="primary" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width"
+              matTooltip="xxxxxxxxxxxxxxxxxxx" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Create my Market
+      </button>
+    </div>
+
+    <div class="section search-sorting">
+      <div class="subtitle">Search &amp; sort</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+          <input matInput type="text" class="header-input" placeholder="Search Markets" [(ngModel)]="filters.search"
+                  (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()">
+          <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
+                    (click)="filters.search=''; clearAndLoadPage()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
+                    (click)="clearAndLoadPage()"></mat-icon>
+        </mat-form-field>
+      </mat-card>
+    </div>
+
+    <button mat-button color="basic" class="clear-filters" (click)="clear()">
+      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter -->
 
 </div><!-- .container-block -->
 

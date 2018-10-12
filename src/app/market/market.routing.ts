@@ -9,7 +9,7 @@ import { AddItemComponent } from './sell/add-item/add-item.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
-  { path: 'overview', component: ListingsComponent, data: { title: 'Public Market' } },
+  { path: 'overview', component: ListingsComponent, data: { title: 'Particl Market' } },
   { path: 'private', component: PrivateMarketsComponent, data: { title: 'Private Markets' } },
   { path: 'buy', component: BuyComponent, data: { title: 'Buy' } },
   { path: 'sell', component: SellComponent, data: { title: 'Sell' } },

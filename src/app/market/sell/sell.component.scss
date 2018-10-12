@@ -8,6 +8,7 @@
   font-size: 14px;
 }
 
+
 // ------ LAYOUT ------ //
 
 .loading-container {
@@ -18,5 +19,16 @@
     $padding-l: 50px;
     left: ($sidebar-width + $filter-width + (2 * $padding-l));
     right: $padding-l;
+  }
+}
+
+.filter {
+  .widget-help {
+    .mat-button {
+      margin-top: 12px;
+    }
+    & + .widget-help {
+      margin-top: -16px;
+    }
   }
 }
