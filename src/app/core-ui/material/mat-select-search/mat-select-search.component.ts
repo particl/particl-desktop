@@ -28,6 +28,7 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() isRequired: boolean = false;
   @Input() defaultSelectedValue: any;
+  oldCountryValue: any;
   public formControl: FormControl = new FormControl();
   public filteredOptions: Observable<any[]>;
 
@@ -78,11 +79,19 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
    onSelectionChanged($event: any): void {
     // omit selected value.
     this.onChange.emit($event.option.value);
+    this.oldCountryValue = $event.option.value;
     this.textInput.nativeElement.blur();
   }
 
   onBlur($event: any): void {
-    if ($event.target.value === this.defaultOption || this.pageFrom) {
+    if ($event.target.value === this.defaultOption) {
+      return;
+    }
+
+    if (this.pageFrom) {
+      this.textInput.nativeElement.value =  this.oldCountryValue ?
+        this.oldCountryValue.name : this.defaultOption;
+      this.onChange.emit(this.oldCountryValue);
       return;
     }
 

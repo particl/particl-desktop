@@ -34,7 +34,7 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   @Input() defaultSelectedValue: number;
 
   stateGroupOptions: Observable<any[]>;
-
+  oldCategoryValue: any;
   constructor(
     private fb: FormBuilder
   ) { }
@@ -94,11 +94,19 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   onSelectionChanged($event: any): void {
     // omit selected value.
     this.change.emit($event.option.value);
+    this.oldCategoryValue = $event.option.value;
     this.textInput.nativeElement.blur();
   }
 
   onBlur($event: any): void {
-    if ($event.target.value === this.defaultOption || this.pageFrom) {
+    if ($event.target.value === this.defaultOption) {
+      return;
+    }
+
+    if (this.pageFrom) {
+      this.textInput.nativeElement.value =  this.oldCategoryValue ?
+        this.oldCategoryValue.name : this.defaultOption;
+      this.change.emit(this.oldCategoryValue);
       return;
     }
 
