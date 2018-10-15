@@ -53,17 +53,16 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
         .subscribe((vote: any) => {
           this.data.listing.VoteDetails = vote;
         }, (err: any) => {
-          if (this.data.listing.flaggedItem && this.data.listing.flaggedItem.Proposal && this.data.listing.flaggedItem.Proposal.submitter) {
-            const submitter: string = String(this.data.listing.flaggedItem.Proposal.submitter);
+          if (this.data.listing.submitterAddress) {
             this.profileService.default().take(1).subscribe(
               (profile: any) => {
                 const profileAddress: string = (profile.object || {}).address || '';
-                if (profileAddress && (profileAddress === submitter) ) {
+                if (profileAddress && (profileAddress === this.data.listing.submitterAddress) ) {
                   this.data.listing.VoteDetails = new VoteDetails({
-                    ProposalOption: new VoteOption({}),
-                    isReported: true,
-                    voter: submitter
-                  });
+                    ProposalOption: {
+                      description: 'REMOVE'
+                    }
+                  })
                 }
               });
           }
