@@ -33,7 +33,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     private modals: ModalsHelperService,
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -58,7 +58,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
             this.profileService.default().take(1).subscribe(
               (profile: any) => {
                 const profileAddress: string = (profile.object || {}).address || '';
-                if (profileAddress === submitter) {
+                if (profileAddress && (profileAddress === submitter) ) {
                   this.data.listing.VoteDetails = new VoteDetails({
                     ProposalOption: new VoteOption({}),
                     isReported: true,
