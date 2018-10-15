@@ -9,6 +9,7 @@ import { PostListingCacheService } from 'app/core/market/market-cache/post-listi
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
 
 @Component({
   selector: 'app-preview-listing',
@@ -32,6 +33,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     private modals: ModalsHelperService,
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService,
+    private profileService: ProfileService
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -51,6 +53,20 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
         .subscribe((vote: any) => {
           this.data.listing.VoteDetails = vote;
         }, (err: any) => {
+          if (this.data.listing.flaggedItem && this.data.listing.flaggedItem.Proposal && this.data.listing.flaggedItem.Proposal.submitter) {
+            const submitter: string = String(this.data.listing.flaggedItem.Proposal.submitter);
+            this.profileService.default().take(1).subscribe(
+              (profile: any) => {
+                const profileAddress: string = (profile.object || {}).address || '';
+                if (profileAddress === submitter) {
+                  this.data.listing.VoteDetails = new VoteDetails({
+                    ProposalOption: new VoteOption({}),
+                    isReported: true,
+                    voter: submitter
+                  });
+                }
+              });
+          }
           // Handle unknown user vote here (log it perhaps, or do nothing)
         })
     }
