@@ -59,10 +59,12 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
                 const profileAddress: string = (profile.object || {}).address || '';
                 if (profileAddress && (profileAddress === this.data.listing.submitterAddress) ) {
                   this.data.listing.VoteDetails = new VoteDetails({
-                    ProposalOption: {
+                    ProposalOption: new VoteOption({
                       description: 'REMOVE'
-                    }
-                  })
+                    }),
+                    isReported: true,
+                    voter: this.data.listing.submitterAddress
+                  });
                 }
               });
           }
