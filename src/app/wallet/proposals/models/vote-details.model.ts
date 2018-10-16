@@ -23,4 +23,3 @@ export class VoteDetails {
     return this.ProposalOption.description === 'REMOVE';
   }
 }
-
