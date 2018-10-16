@@ -62,7 +62,6 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
                     ProposalOption: new VoteOption({
                       description: 'REMOVE'
                     }),
-                    isReported: true,
                     voter: this.data.listing.submitterAddress
                   });
                 }
