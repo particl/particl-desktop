@@ -49,7 +49,7 @@
       <p>
         Choose a name for your wallet (e.g. Personal wallet, Shop income, Savings, &hellip;)
       </p>
-      <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)"
+      <p class="warning" *ngIf="validation.errors && validation.dirty"
       [@slideDown]>
         <span [hidden]="!validation.errors.required">
           Wallet name is required
