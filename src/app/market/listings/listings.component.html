@@ -20,6 +20,7 @@
       [options]="countryList?.countries"
       [defaultOption]="'All seller countries'"
       [pageFrom]="true"
+      [isLexigraphicalOrder]="true"
       [showValueOf]="'name'"
       (onChange)="onCountryChange($event)">
     </mat-select-search>
@@ -42,6 +43,7 @@
       [options]="countryList?.countries"
       [defaultOption]="'Your country'"
       [pageFrom]="true"
+      [isLexigraphicalOrder]="true"
       [showValueOf]="'name'"
       [defaultSelectedValue]="this.selectedCountry"
       (onChange)="changeLocation($event)">

@@ -28,9 +28,10 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() isRequired: boolean = false;
   @Input() defaultSelectedValue: any;
-  oldCountryValue: any;
+  @Input() isLexigraphicalOrder: boolean = false;
   public formControl: FormControl = new FormControl();
   public filteredOptions: Observable<any[]>;
+  oldCountryValue: any;
 
   /* set default values when options and defaultValue both available.
    * Or if any update.
@@ -68,6 +69,9 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
     if (from) {
       return this.options.filter(option => option[this.showValueOf].toLowerCase() === filterValue);
     }
+    if (this.isLexigraphicalOrder) {
+      return this.options.filter(option => option[this.showValueOf].toLowerCase().startsWith(filterValue));
+    }
     return this.options.filter(option => option[this.showValueOf].toLowerCase().includes(filterValue));
   }
 
@@ -84,7 +88,7 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   }
 
   onBlur($event: any): void {
-    if ($event.target.value === this.defaultOption) {
+    if (this.defaultOption && $event.target.value === this.defaultOption) {
       return;
     }
 

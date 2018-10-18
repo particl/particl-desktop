@@ -117,17 +117,17 @@ export class SendComponent implements OnInit {
 
   verifyAmount(): void {
 
-    if (this.send.amount === undefined || +this.send.amount === 0 || this.send.amount === null) {
-      this.send.validAmount = undefined;
-      return;
-    }
-
-    if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
+    if ( +(this.send.amount || 0) === 0 ) {
       this.send.validAmount = false;
       return;
     }
 
-    if (this.send.amount === 1e-8) {
+    // if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
+    //   this.send.validAmount = false;
+    //   return;
+    // }
+
+    if (+this.send.amount <= 1e-8) {
       this.send.validAmount = false;
       return;
     }
@@ -192,6 +192,13 @@ export class SendComponent implements OnInit {
 
     dialogRef.componentInstance.dialogContent = txt;
     dialogRef.componentInstance.send = this.send;
+
+    dialogRef.componentInstance.onCancel.subscribe(() => {
+      dialogRef.close();
+      if (this.type === 'balanceTransfer') {
+        this.send.toAddress = '';
+      }
+    });
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       dialogRef.close();

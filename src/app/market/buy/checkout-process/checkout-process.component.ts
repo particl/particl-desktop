@@ -164,22 +164,17 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.shippingFormGroup.value.newShipping === true) {
-      this.log.d('Creating new address for profile!');
-    } else {
-      this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
-    }
-
     let upsert: Function;
     if (this.profile.shippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
+      this.log.d('Creating new address for profile!');
       upsert = this.profileService.address.add.bind(this);
     } else {
+      this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
       this.shippingFormGroup.value.id = this.selectedAddress.id;
       upsert = this.profileService.address.update.bind(this);
     }
 
     this.country = this.shippingFormGroup.value.country || '';
-    console.log(this.country);
     const address = this.shippingFormGroup.value as Address;
     upsert(address).take(1).subscribe(addressWithId => {
       // update the cache

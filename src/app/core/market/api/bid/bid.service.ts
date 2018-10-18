@@ -48,8 +48,8 @@ export class BidService {
     return this.market.call('bid', params).map(o => new BidCollection(o, address, type, additionalFilter))
   }
 
-  acceptBidCommand(hash: string, id: number): Observable<any> {
-    const params = ['accept', hash, id];
+  acceptBidCommand(id: number): Observable<any> {
+    const params = ['accept', id];
     return this.market.call('bid', params).catch((error) => {
       if (error) {
         error = this.errorHandle(error);
@@ -58,8 +58,8 @@ export class BidService {
     });
   }
 
-  rejectBidCommand(hash: string, id: number): Observable<any> {
-    const params = ['reject', hash, id];
+  rejectBidCommand(id: number): Observable<any> {
+    const params = ['reject', id];
     return this.market.call('bid', params);
   }
 

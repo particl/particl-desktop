@@ -75,6 +75,7 @@
         @extend %enable-select;
         color: $text-muted;
         white-space: pre-line;
+        word-break: break-all;
       }
       .authors {
         text-align: left;
