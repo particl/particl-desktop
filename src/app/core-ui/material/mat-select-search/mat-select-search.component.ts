@@ -44,9 +44,13 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.loadOptions('');
+  }
+
+  loadOptions(optVal: string) {
     this.filteredOptions = this.formControl.valueChanges
       .pipe(
-        startWith(''),
+        startWith(optVal),
         map(value => {
           if (!value) {
             return;
@@ -92,16 +96,18 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (this.pageFrom) {
-      this.textInput.nativeElement.value =  this.oldCountryValue ?
-        this.oldCountryValue.name : this.defaultOption;
-      this.onChange.emit(this.oldCountryValue);
-      return;
-    }
+    if (this._filter($event.target.value).length === 0) {
+      if (this.pageFrom) {
+        this.textInput.nativeElement.value =  this.oldCountryValue ?
+          this.oldCountryValue.name : this.defaultOption;
+        this.onChange.emit(this.oldCountryValue);
+        this.loadOptions(this.oldCountryValue === this.defaultOption ? '' : this.oldCountryValue);
+      }
 
-    if (this._filter($event.target.value, 'blur').length === 0) {
-      this.formControl.reset();
-      this.onChange.emit();
+      if (this._filter($event.target.value, 'blur').length === 0) {
+        this.formControl.reset();
+        this.onChange.emit();
+      }
     }
   }
 

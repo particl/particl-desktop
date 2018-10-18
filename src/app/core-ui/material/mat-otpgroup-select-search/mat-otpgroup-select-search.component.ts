@@ -50,9 +50,13 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.loadOptions('');
+  }
+
+  loadOptions(optVal: string) {
     this.stateGroupOptions = this.stateForm.get('stateGroup')!.valueChanges
       .pipe(
-        startWith(''),
+        startWith(optVal),
         map(value => {
           return this._filterGroup(value)
         })
@@ -103,16 +107,18 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (this.pageFrom) {
-      this.textInput.nativeElement.value =  this.oldCategoryValue ?
-        this.oldCategoryValue.name : this.defaultOption;
-      this.change.emit(this.oldCategoryValue);
-      return;
-    }
+    if (this._filterGroup($event.target.value).length === 0) {
+      if (this.pageFrom) {
+        this.textInput.nativeElement.value =  this.oldCategoryValue ?
+          this.oldCategoryValue.name : this.defaultOption;
+        this.change.emit(this.oldCategoryValue);
+        this.loadOptions(this.oldCategoryValue === this.defaultOption ? '' : this.oldCategoryValue);
+      }
 
-    if (this._filterGroup($event.target.value, 'blur').length === 0) {
-      this.stateForm.reset();
-      this.change.emit();
+      if (this._filterGroup($event.target.value, 'blur').length === 0) {
+        this.stateForm.reset();
+        this.change.emit();
+      }
     }
   }
 
