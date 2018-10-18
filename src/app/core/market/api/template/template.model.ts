@@ -69,6 +69,10 @@ export class Template {
     return this.object.ListingItems && this.object.ListingItems.length > 0;
   }
 
+  get isUnpublished(): boolean {
+    return this.status === 'unpublished';
+  }
+
   get country(): any {
     const itemlocation = this.object.ItemInformation.ItemLocation;
     if (itemlocation) {
