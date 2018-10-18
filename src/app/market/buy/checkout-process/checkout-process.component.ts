@@ -165,10 +165,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     let upsert: Function;
-    if (this.profile.shippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
+    if (this.profile.shippingAddresses.length === 0 || (this.shippingFormGroup.value.newShipping === true && !this.selectedAddress.id)) {
       this.log.d('Creating new address for profile!');
       upsert = this.profileService.address.add.bind(this);
-    } else {
+    }
+
+    if (this.selectedAddress.id) {
       this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
       this.shippingFormGroup.value.id = this.selectedAddress.id;
       upsert = this.profileService.address.update.bind(this);
