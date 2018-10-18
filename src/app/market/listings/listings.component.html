@@ -19,7 +19,7 @@
       class="filter-by seller-country"
       [options]="countryList?.countries"
       [defaultOption]="'All seller countries'"
-      [isLexicographicalOrder]="true"
+      [isLexigraphicalOrder]="true"
       [showValueOf]="'name'"
       (onChange)="onCountryChange($event)">
     </mat-select-search>
@@ -40,7 +40,7 @@
       class="filter-by buyer-country"
       [options]="countryList?.countries"
       [defaultOption]="'Your country'"
-      [isLexicographicalOrder]="true"
+      [isLexigraphicalOrder]="true"
       [showValueOf]="'name'"
       [defaultSelectedValue]="this.selectedCountry"
       (onChange)="changeLocation($event)">
