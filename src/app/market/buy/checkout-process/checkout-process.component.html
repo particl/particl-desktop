@@ -138,7 +138,7 @@
 
   <!-- =========== SHIPPING DETAILS =========== -->
   <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
-    
+
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
       <div fxLayout="row" fxLayoutGap="30px">
@@ -222,7 +222,7 @@
 
             <!--Hide shipping profile -->
             <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
-              <mat-checkbox formControlName="newShipping" fxFlex>Save as shipping profile
+              <mat-checkbox formControlName="newShipping" fxFlex>{{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile
               </mat-checkbox>
               <mat-form-field class="full-width" fxFlex>
                 <input matInput formControlName="title" placeholder="Shipping profile name">
