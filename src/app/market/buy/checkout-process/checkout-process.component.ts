@@ -170,13 +170,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     if (this.shippingFormGroup.value.newShipping === true) {
       // Add or update saved shipping address
-
       if (this.selectedAddress && this.selectedAddress.id) {
         // Update currently selected shiping profile
         this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
         this.shippingFormGroup.value.id = this.selectedAddress.id;
         upsert = this.profileService.address.update.bind(this);
-      } else if (!this.selectedAddress) {
+      } else if (!this.selectedAddress || !this.selectedAddress.id) {
         // Add new shipping profile
         this.log.d('Creating new address for profile!');
         upsert = this.profileService.address.add.bind(this);
