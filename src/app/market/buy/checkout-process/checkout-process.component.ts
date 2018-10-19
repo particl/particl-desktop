@@ -164,28 +164,39 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.country = this.shippingFormGroup.value.country || '';
+
     let upsert: Function;
-    if (this.profile.shippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
-      this.log.d('Creating new address for profile!');
-      upsert = this.profileService.address.add.bind(this);
-    } else {
-      this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
-      this.shippingFormGroup.value.id = this.selectedAddress.id;
-      upsert = this.profileService.address.update.bind(this);
+
+    if (this.shippingFormGroup.value.newShipping === true) {
+      // Add or update saved shipping address
+      if (this.selectedAddress && this.selectedAddress.id) {
+        // Update currently selected shiping profile
+        this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
+        this.shippingFormGroup.value.id = this.selectedAddress.id;
+        upsert = this.profileService.address.update.bind(this);
+      } else if (!this.selectedAddress || !this.selectedAddress.id) {
+        // Add new shipping profile
+        this.log.d('Creating new address for profile!');
+        upsert = this.profileService.address.add.bind(this);
+      }
     }
 
-    this.country = this.shippingFormGroup.value.country || '';
-    const address = this.shippingFormGroup.value as Address;
-    upsert(address).take(1).subscribe(addressWithId => {
-      // update the cache
+    if (upsert !== undefined) {
+      const address = this.shippingFormGroup.value as Address;
+      upsert(address).take(1).subscribe(addressWithId => {
+        // update the cache
+        this.allowGoingBack();
+        this.storeCache();
+
+        // we need to retrieve the id of  address we added (new)
+        this.select(addressWithId);
+
+      });
+    } else {
       this.allowGoingBack();
       this.storeCache();
-
-      // we need to retrieve the id of  address we added (new)
-      this.select(addressWithId);
-
-    });
-
+    }
   }
 
   setDefaultCountry(countryCode: string) {
@@ -252,8 +263,29 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   bidOrder() {
-    const addressId = this.selectedAddress.id;
-    this.bid.order(this.cart, this.profile, addressId).then((res) => {
+    const addressId: number = this.selectedAddress && this.selectedAddress.id ? +this.selectedAddress.id : -1;
+
+    // Extract the shipping address details here (always use the address entered by the user in this.shippingFormGroup)
+    const shippingInfo: any = {
+      'shippingAddress.firstName': '',
+      'shippingAddress.lastName': '',
+      'shippingAddress.addressLine1': '',
+      'shippingAddress.addressLine2': '',
+      'shippingAddress.city': '',
+      'shippingAddress.state': '',
+      'shippingAddress.zipCode': '',
+      'shippingAddress.country': '',
+    };
+
+    const sourceObject = this.shippingFormGroup.value;
+    for (const key of Object.keys(shippingInfo)) {
+      const existingValue = sourceObject[key.replace('shippingAddress.', '')];
+      if (existingValue) {
+        shippingInfo[key] = existingValue;
+      }
+    }
+
+    this.bid.order(this.cart, this.profile, shippingInfo).then((res) => {
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
