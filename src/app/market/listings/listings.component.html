@@ -10,6 +10,14 @@
       <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
     </div>
 
+    <div class="icon-input" fxFlex="0 0 215px">
+      <button mat-raised-button color="primary"  matTooltip="show reported listings only" (click)="loadPage(0, true); btnActivate === !btnActivate" [ngClass]="{ 'active': btnActivate }">
+      <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+      Reported Listings
+    </button>
+      
+    </div>
+
     <!-- Filtering -->
     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
 
