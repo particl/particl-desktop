@@ -26,7 +26,7 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
     stateGroup: [],
   });
   @Input() defaultOption: any;
-  @Input() pageFrom: boolean = false;
+  @Input() invalidReturnsToPrevious: boolean = false;
   @Input() options: any[] = [];
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
   @Input() placeHolder: string = '';
@@ -34,7 +34,7 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   @Input() defaultSelectedValue: number;
 
   stateGroupOptions: Observable<any[]>;
-  oldCategoryValue: any;
+  selectedOption: any;
   constructor(
     private fb: FormBuilder
   ) { }
@@ -50,13 +50,9 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.loadOptions('');
-  }
-
-  loadOptions(optVal: string) {
     this.stateGroupOptions = this.stateForm.get('stateGroup')!.valueChanges
       .pipe(
-        startWith(optVal),
+        startWith(''),
         map(value => {
           return this._filterGroup(value)
         })
@@ -96,30 +92,28 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
    */
 
   onSelectionChanged($event: any): void {
-    // omit selected value.
+    // emit selected value.
+    this.selectedOption = $event.option.value;
     this.change.emit($event.option.value);
-    this.oldCategoryValue = $event.option.value;
-    this.textInput.nativeElement.blur();
   }
 
   onBlur($event: any): void {
-    if ($event.target.value === this.defaultOption) {
-      return;
-    }
-
-    if (this._filterGroup($event.target.value).length === 0) {
-      if (this.pageFrom) {
-        this.textInput.nativeElement.value =  this.oldCategoryValue ?
-          this.oldCategoryValue.name : this.defaultOption;
-        this.change.emit(this.oldCategoryValue);
-        this.loadOptions(this.oldCategoryValue === this.defaultOption ? '' : this.oldCategoryValue);
+    //  TODO: remove this nasty use of setTimeout()
+    //    This is not the ideal way to do this, but its the current best interim option
+    //    (remove when updating to angular >= 6 or changing this component.)
+    setTimeout( () => {
+      const currentValidValue = (this.selectedOption ? this.selectedOption.name : this.defaultSelectedValue) || this.defaultSelectedValue;
+      if (this.invalidReturnsToPrevious) {
+        if ($event.target.value !== currentValidValue) {
+          this.stateForm.patchValue({ stateGroup: this.selectedOption || this.defaultSelectedValue });
+        }
+      } else {
+        if ($event.target.value !== currentValidValue) {
+          this.stateForm.reset();
+          this.change.emit();
+        }
       }
-
-      if (this._filterGroup($event.target.value, 'blur').length === 0) {
-        this.stateForm.reset();
-        this.change.emit();
-      }
-    }
+    }, 300);
   }
 
   public _selectAllContent($event: any): void {
