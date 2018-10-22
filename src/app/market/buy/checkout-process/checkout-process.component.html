@@ -163,7 +163,7 @@
               <br><br>
               To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
             </p>
-            <button mat-button color="basic" class="small" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0 || !addressNotSelected" (click)="clearForm()" matTooltip="When you want to enter shipping details manually instead">
+            <button mat-button color="basic" class="small" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0 || (!selectedAddress?.id)" (click)="clearForm()" matTooltip="When you want to enter shipping details manually instead">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
               Unselect Shipping profile
             </button>
@@ -216,6 +216,7 @@
               [placeHolder]="'Select Country'"
               [isRequired]="'true'"
               [defaultSelectedValue]="selectedCountry"
+              [isLexigraphicalOrder]="true"
               (onChange)="onCountryChange($event)">
             </mat-select-search>
             <!-- mat-select-search -->
