@@ -38,13 +38,22 @@
 
     <div class="product-gallery" fxFlex="0 1 350px">
       <div class="featured image">
-        <img src="{{data?.listing?.imageCollection?.previewImage?.medium}}">
-      </div>
-      <div class="gallery" fxLayout="row" fxLayoutGap="24px">
-        <!-- TODO: s/small/medium -->
-        <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
-          <img src="{{img.thumbnail}}">
-        </div>
+        <img *ngIf="imageSources?.length <= 1" [src]="data?.listing?.imageCollection?.previewImage?.medium">
+        <div *ngIf="imageSources?.length > 1">
+            <!-- follow the slideshow config if needed? -->
+            <!-- https://www.npmjs.com/package/ng-simple-slideshow -->
+            <slideshow
+              [minHeight]="'200px'"
+              [autoPlay]="true"
+              [arrowSize]="'10px'"
+              [imageUrls]="imageSources"
+              [lazyLoad]="imageSources?.length > 1"
+              (onSlideRight)="onSlideRight($event)"
+              (onSlideLeft)="onSlideLeft($event)"
+              [autoPlayWaitForLazyLoad]="true">
+            </slideshow>
+            <span class="image-count" *ngIf="imageSources?.length > 1">{{currentSlideIndex + 1}}/{{imageSources?.length}}</span>
+          </div>
       </div>
     </div>
 

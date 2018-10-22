@@ -26,6 +26,8 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   public date: string;
   public profileAddress: string = '';
   private currencyprice: number = 0;
+  imageSources: string[] = [];
+  currentSlideIndex: number = 0;
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
     private marketState: MarketStateService,
@@ -44,6 +46,16 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
         this.currencyprice = price[0].price;
       });
     this.getVoteOfListing();
+
+    this.imageSources = this.data.listing.imageCollection.imageUrls;
+  }
+
+  onSlideRight(index: number): void {
+    this.currentSlideIndex = index;
+  }
+
+  onSlideLeft(index: number) {
+    this.currentSlideIndex = index;
   }
 
   getVoteOfListing(): void {
