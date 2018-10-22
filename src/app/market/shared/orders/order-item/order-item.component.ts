@@ -111,7 +111,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   acceptBid() {
-    this.bid.acceptBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(() => {
+    this.bid.acceptBidCommand(this.order.id).take(1).subscribe(() => {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
       // Reload same order without calling api
       this.order.OrderItem.status = 'AWAITING_ESCROW';
@@ -122,7 +122,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   rejectBid() {
-    this.bid.rejectBidCommand(this.order.listing.hash, this.order.id).take(1).subscribe(res => {
+    this.bid.rejectBidCommand(this.order.id).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
       this.order = new Bid(this.order, this.order.type)

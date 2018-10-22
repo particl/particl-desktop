@@ -300,7 +300,7 @@ p.info {
 }
 p.warning {
   &::before {
-    content: "\ea03"; // part-alert icon
+    content: "\ea02"; // part-alert icon
     color: $color-alert;
   }
   a {
@@ -313,7 +313,7 @@ p.warning {
 }
 p.info {
   &::before {
-    content: "\ea32"; // part-info icon
+    content: "\ea19"; // part-info icon
     color: $color-info;
   }
   a {

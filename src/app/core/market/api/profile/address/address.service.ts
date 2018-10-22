@@ -31,9 +31,9 @@ export class AddressService {
     return this.market.call('profile', [
       'address', 'update',
       address.id,
+      address.title,
       address.firstName,
       address.lastName,
-      address.title,
       address.addressLine1,
       address.addressLine2,
       address.city,

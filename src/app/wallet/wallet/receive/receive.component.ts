@@ -18,6 +18,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 export class ReceiveComponent implements OnInit {
 
   @ViewChild('paginator') paginator: any;
+  @ViewChild('scroll') scrollContainer: any;
 
   log: any = Log.create('receive.component');
 
@@ -34,6 +35,7 @@ export class ReceiveComponent implements OnInit {
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
   selected: any;
   page: number = 1;
+  showOldAddress: boolean = false;
 
   /* UI Pagination */
   addresses: any = {
@@ -359,6 +361,16 @@ export class ReceiveComponent implements OnInit {
         this.rpc_update();
       },
       error => this.log.er('error'));
+    }
+  }
+
+  toggleAddresses(): void {
+    this.showOldAddress = !this.showOldAddress;
+    if (this.showOldAddress) {
+      // Should be removed ?
+      setTimeout(() => {
+        this.scrollContainer.nativeElement.scrollIntoView(true);
+      }, 0)
     }
   }
 

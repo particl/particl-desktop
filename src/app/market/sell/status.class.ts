@@ -24,9 +24,9 @@ export class Status {
         }, {
             status: 'awaiting',
             class: 'pending',
-            status_info: 'Awaiting publishment!',
+            status_info: 'Awaiting publication!',
             action_icon: 'part-check',
-            action_button: 'Awaiting publishment',
+            action_button: 'Awaiting publication',
             action_tooltip: 'Waiting for listing to become active on the network!',
             action_color: 'primary',
             action_disabled: true
