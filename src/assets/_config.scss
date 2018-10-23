@@ -70,14 +70,12 @@ $break-xhd: 2200px;
 \* ------------------------------- */
 
 %subtitle { // section titles / H2's
-  font-size: 15px;
+  font-size: 14px;
   font-family: $font;
   font-weight: normal;
   text-transform: uppercase;
   color: $text-muted;
-  border-bottom: 1px solid $bg-shadow;
-  padding: 0 0 8px;
-  margin: 30px 0 25px;
+  margin: 30px 0 16px;
 }
 
 %box-title { // box's main title (bold, all-caps)

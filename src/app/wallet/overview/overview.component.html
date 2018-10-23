@@ -56,17 +56,15 @@
       </mat-card>
     </div>.seller-overview -->
 
-    <div class="recent-transactions">
-      <app-header>
-        <ul class="header-nav">
-          <li>Recent Transactions</li>
-          <!-- TODO: uncomment when widget management is ready -->
-          <!--li class="buttons">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
-            <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
-          </li-->
-        </ul>
-      </app-header>
+    <div class="recent-transactions section">
+      <header>
+        <div class="subtitle">Recent Transactions</div>
+        <!-- TODO: uncomment when widget management is ready -->
+        <!--div class="buttons">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
+          <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
+        </div-->
+      </header>
       <transaction-table
         [display]="{'txDisplayAmount': 5, 'header': false, 'internalHeader': true, 'category': true, 'confirmations': true}">
       </transaction-table>
