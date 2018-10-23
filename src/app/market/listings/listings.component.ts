@@ -39,7 +39,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // filters
   // countries: FormControl = new FormControl();
   search: string;
-  btnActivate: boolean = false;
   listingServiceSubcription: any;
   // categories: FormControl = new FormControl();
 

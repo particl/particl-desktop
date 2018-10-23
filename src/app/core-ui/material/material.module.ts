@@ -12,6 +12,7 @@ import {
   MatSelectModule, MatPaginatorModule, MatProgressSpinnerModule, MatDialogModule,
   MatStepperModule, MatSlideToggleModule, MatAutocompleteModule
 } from '@angular/material';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import {A11yModule} from '@angular/cdk/a11y';
 
@@ -52,7 +53,8 @@ import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/m
     MatProgressSpinnerModule,
     MatStepperModule,
     MatSlideToggleModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatButtonToggleModule
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -83,6 +85,7 @@ import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/m
     MatStepperModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
+    MatButtonToggleModule,
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent
   ],

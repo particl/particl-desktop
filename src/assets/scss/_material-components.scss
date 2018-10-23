@@ -32,6 +32,7 @@ Customizations and modifiers for default Material components
       3.4. Select/Autocomplete
       3.5. Radios
       3.6. Checkboxes
+      3.7. Toggle Buttons
 
 */
 
@@ -547,4 +548,16 @@ input {
 
 .mat-checkbox {
   font-family: $font !important;
+}
+
+
+// ------ 3.7. TOGGLE BUTTONS ------ //
+
+.mat-button-toggle-group,
+.mat-button-toggle-standalone {
+  @extend %tfx;
+  box-shadow: none !important;
+  &:hover, &:focus {
+    background: darken($bg, 10%) !important;
+  }
 }

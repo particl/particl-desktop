@@ -21,10 +21,10 @@
 // ------ CONTROL BAR (top) ------ //
 
 .control-bar {
+  padding: 0 16px 0 35px; // offset filtering of reported items
   // search
   .search-listings {
     padding-right: 24px;
-    border-right: 1px solid $bg-shadow;
     position: relative;
     input {
       padding: 17px 26px 17px 0;
@@ -42,28 +42,22 @@
   .icon {
     color: $text-muted;
   }
-  /*
-  // filtering
-  .filtering {
-    .filter-by {
-      margin-right: 18px;
-      float: left;
+  .filter-by {
+    display: flex;
+    align-items: center;
+    border-left: 1px solid $bg-shadow;
+    padding: 0 18px;
+    .icon {
+      margin-right: 12px;
+    }
+    &.reported {
+      height: 50px;
+      padding-left: 8px;
+      padding-right: 0;
+      display: flex;
+      align-items: center;
     }
   }
-  // sorting
-  .sorting {
-    width: 120px;
-  }
-  // display
-  .display {
-    .mat-icon {
-      cursor: pointer;
-      &.active {
-        color: $color;
-      }
-    }
-  }
-  */
 }
 
 
