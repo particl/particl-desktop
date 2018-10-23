@@ -46,8 +46,9 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
         this.currencyprice = price[0].price;
       });
     this.getVoteOfListing();
-
-    this.imageSources = this.data.listing.imageCollection.imageUrls;
+    if (this.data.listing) {
+      this.imageSources = this.data.listing.imageCollection.imageUrls;
+    }
   }
 
   onSlideRight(index: number): void {

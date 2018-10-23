@@ -19,7 +19,6 @@ import { CheckoutProcessComponent } from './buy/checkout-process/checkout-proces
 import { OrderItemComponent } from './shared/orders/order-item/order-item.component';
 import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
 import { ShippingAddressComponent } from './shared/shipping-address/shipping-address.component';
-import {SlideshowModule} from 'ng-simple-slideshow';
 
 @NgModule({
   imports: [
@@ -27,7 +26,6 @@ import {SlideshowModule} from 'ng-simple-slideshow';
     routing,
     CoreUiModule.forRoot(),
     WalletModule.forRoot(),
-    SlideshowModule
   ],
   declarations: [
     ListingItemComponent,

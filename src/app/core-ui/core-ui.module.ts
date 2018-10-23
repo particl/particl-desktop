@@ -12,6 +12,7 @@ import 'nvd3';
 
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { SlideshowModule } from 'ng-simple-slideshow';
 import { PaginatorComponent } from './paginator/paginator.component';
 
 
@@ -25,14 +26,16 @@ import { PaginatorComponent } from './paginator/paginator.component';
     MainViewModule,
     MatDialogModule, // todo move
     InfiniteScrollModule,
-    NvD3Module
+    NvD3Module,
+    SlideshowModule
   ],
   exports: [
     MaterialModule,
     MainViewModule,
     PaginatorComponent,
     InfiniteScrollModule,
-    NvD3Module
+    NvD3Module,
+    SlideshowModule
   ]
 })
 export class CoreUiModule {
