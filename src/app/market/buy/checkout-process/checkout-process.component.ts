@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
+  FormControl,
   Validators
 } from '@angular/forms';
 import { Log } from 'ng2-logger';
@@ -132,7 +133,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       country: ['', Validators.required],
       zipCode: ['', Validators.required],
       newShipping: [''],
-      title: ['', Validators.required]
+      title: ['']
+    }, {
+      validator: (formGroup: FormGroup) => {
+        return this.validateShippingProfileTitle(formGroup);
+      }
     });
   }
 
@@ -230,10 +235,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.shippingFormGroup.reset();
   }
 
-  get addressNotSelected(): boolean {
-    return Object.keys(this.selectedAddress).length > 0
-  }
-
   getProfile(): void {
     this.profileService.default().take(1).subscribe(
       (profile: any) => {
@@ -295,7 +296,24 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     });
   }
 
+  private validateShippingProfileTitle(formGroup: FormGroup): any | null {
+    let isValid = true;
+    const newShippingControl: FormControl = <FormControl>formGroup.controls.newShipping;
+    if (newShippingControl.value) {
+      const titleControl: FormControl = <FormControl>formGroup.controls.title;
+      isValid = titleControl.value && titleControl.value.length > 0;
+    }
 
+    if (isValid) {
+      return null;
+    }
+
+    return {
+      validateShippingProfileTitle: {
+        valid: isValid
+      }
+    }
+  }
 
 
   /*

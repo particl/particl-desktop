@@ -210,8 +210,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   onCategoryChange(category: any): void {
-    this.filters.category = category ? category.id : undefined;
-    this.clearAndLoadPage();
+    if (!category || category.id) {
+      this.filters.category = category ? category.id : undefined;
+      this.clearAndLoadPage();
+    }
 
   }
 
