@@ -15,17 +15,8 @@
   margin-bottom: 20px;
 }
 
-.title { // box titles
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 13px;
-  margin: -4px 0 16px !important;
-  .advanced-options {
-    float: right;
-    position: relative;
-    top: -5px;
-    right: -13px;
-  }
+.section-title { // "Pay from/to, Convert" etc.
+  @extend %subtitle;
 }
 
 .subtitle { // subtitles (eg. "privacy level" in anon
@@ -89,7 +80,18 @@
 
 // ------ LAYOUT ------ //
 
-.from-box {
+.container-block {
+  padding-top: 0; // offset subtitles
+}
+
+.from-box { // "pay from.."
+  .sticky {
+    position: sticky;
+    top: $header-main-height + $tab-bar-height + 30px;
+  }
+  mat-card {
+    padding-top: 14px;
+  }
   .advanced {
     background: mix($bg, $color-white);
     border-top: 1px dashed darken($bg, 7%);
@@ -126,7 +128,10 @@
   .widget-help {
     margin-top: 0;
   }
+}
 
+mat-card.to-balance-type { // "convert to.."
+  padding-top: 14px;
 }
 
 .actions {

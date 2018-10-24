@@ -89,16 +89,23 @@ body {
   position: fixed;
   top: $header-main-height;
   z-index: 100;
-  width: 100%;
+  left: $sidebar-width;
+  right: 6px;
   background: rgba($bg, 0.95);
+  .buttons {
+    flex: 1 0 100px;
+    padding: 0 20px 0 20px; // offset side padding
+    //border-left: 1px solid $bg-shadow;
+    border-bottom: 1px solid $bg-shadow;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 }
 
 // sticky control bars (eg. on Listings page)
 .control-bar {
   @extend .tab-bar;
-  left: $sidebar-width;
-  right: 6px;
-  width: auto;
   padding: 0 28px 0 $padding;
   border-bottom: 1px solid $bg-shadow;
 }
@@ -272,7 +279,8 @@ body {
 // Help descriptions
 .widget-help {
   color: $text-muted;
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.45;
   margin-bottom: 25px;
   cursor: help;
 }
