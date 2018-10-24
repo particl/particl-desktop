@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
@@ -26,6 +25,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   public date: string;
   public profileAddress: string = '';
   private currencyprice: number = 0;
+
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
     private marketState: MarketStateService,

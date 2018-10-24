@@ -38,14 +38,13 @@
 
     <div class="product-gallery" fxFlex="0 1 350px">
       <div class="featured image">
-        <img src="{{data?.listing?.imageCollection?.previewImage?.medium}}">
+        <gallery gallerize [items]="data?.listing?.imageCollection?.imageUrls"></gallery>
       </div>
-      <div class="gallery" fxLayout="row" fxLayoutGap="24px">
-        <!-- TODO: s/small/medium -->
+      <!-- <div class="gallery" fxLayout="row" fxLayoutGap="24px">
         <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
           <img src="{{img.thumbnail}}">
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="product-info" fxFlex="1 1 100%">

@@ -13,6 +13,10 @@ import 'nvd3';
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
+import { GalleryModule } from '@ngx-gallery/core';
+import { LightboxModule } from '@ngx-gallery/lightbox';
+import { GallerizeModule } from '@ngx-gallery/gallerize';
+import 'hammerjs';
 
 
 @NgModule({
@@ -25,14 +29,22 @@ import { PaginatorComponent } from './paginator/paginator.component';
     MainViewModule,
     MatDialogModule, // todo move
     InfiniteScrollModule,
-    NvD3Module
+    NvD3Module,
+
+    // also can add a config options
+    GalleryModule.forRoot(), // GalleryModule.forRoot(galleryConfig?),
+    LightboxModule.forRoot(), // GalleryLightbox.forRoot(lightboxConfig?),
+    GallerizeModule
   ],
   exports: [
     MaterialModule,
     MainViewModule,
     PaginatorComponent,
     InfiniteScrollModule,
-    NvD3Module
+    NvD3Module,
+    GalleryModule,
+    LightboxModule,
+    GallerizeModule
   ]
 })
 export class CoreUiModule {
