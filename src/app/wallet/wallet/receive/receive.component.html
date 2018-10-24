@@ -109,10 +109,9 @@
 
 
   <div class="show-old">
-    <!-- <mat-icon fontSet="partIcon" fontIcon="part-triangle-down"></mat-icon>
-    Show older addresses -->
     <button mat-button class="small" (click)="toggleAddresses()" matTooltip="Display and filter your previously used addresses">
-      <mat-icon fontSet="partIcon" fontIcon="part-triangle-down"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-triangle-down" *ngIf="!showOldAddress"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-triangle-up" *ngIf="showOldAddress"></mat-icon>
       {{ showOldAddress? "Hide older addresses" : "Show older addresses" }}
     </button>
   </div>
@@ -155,7 +154,7 @@
     </div>
 
     <div *ngIf="getSinglePage().length" class="list-data">
-      <div mat-subheader class="address-title">Used addresses</div>
+      <div class="address-title">Used addresses</div>
       <div *ngFor="let address of getSinglePage()">
 
         <mat-card class="address-info">
