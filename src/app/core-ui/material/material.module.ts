@@ -10,9 +10,9 @@ import {
   MatSnackBarModule, MatTabsModule, MatToolbarModule, MatRadioModule, MatInputModule,
   MatTooltipModule,
   MatSelectModule, MatPaginatorModule, MatProgressSpinnerModule, MatDialogModule,
-  MatStepperModule, MatSlideToggleModule, MatAutocompleteModule
+  MatStepperModule, MatSlideToggleModule, MatAutocompleteModule, MatButtonToggleModule
 } from '@angular/material';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 
 import {A11yModule} from '@angular/cdk/a11y';
 

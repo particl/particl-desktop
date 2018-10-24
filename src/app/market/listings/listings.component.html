@@ -46,7 +46,7 @@
 
     <div class="filter-by reported" fxFlex="0 0 56px">
       <!-- FIXME: Ripple effect not working? https://material.angular.io/components/button-toggle/overview -->
-      <mat-button-toggle value="reported-only" class="reported-only" matTooltip="Show reported listings only" (click)="loadPage(0, true)">
+      <mat-button-toggle type="checkbox" value="reported-only" class="reported-only" matTooltip="Show reported listings only" (change)="toggleFlag(event)">
         <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
       </mat-button-toggle>
     </div>

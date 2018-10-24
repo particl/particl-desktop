@@ -217,6 +217,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   }
 
+  toggleFlag(event: any): void {
+    // Needs to check whether checkbox is checked or not
+    this.loadPage(0);
+  }
+
   ngOnDestroy() {
     this.destroyed = true;
   }
