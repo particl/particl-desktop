@@ -1,4 +1,4 @@
-<div mat-dialog-title class="text-center">{{singleAddress.label}}</div>
+<div mat-dialog-title>Address details</div>
 
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
@@ -6,23 +6,64 @@
 
 <div mat-dialog-content class="dialog-content">
 
-  <div class="qr-code">
-    <div #qrCode class="card qr">
-      <qrcode [level]="'H'" size="150" qrdata="particl:{{ singleAddress.address }}"></qrcode>
-    </div>
-  </div>
+  <div class="row" fxLayout>
 
-  <div class="address-string">
-    <div class="details-address enable-select" fxLayoutWrap layout-padding>
-      <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
-        {{ word }}
+    <div class="qr-code" fxFlex="1 0 200px">
+      <div #qrCode class="card qr">
+        <qrcode [level]="'H'" size="150" qrdata="particl:{{ singleAddress.address }}"></qrcode>
       </div>
     </div>
-  </div>
 
-  <div class="actions">
-    <button mat-button class="copy" ngxClipboard [cbContent]="singleAddress.address" (click)="copyToClipBoard()">
-      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>Copy to clipboard
-    </button>
-  </div>
+    <div class="address-details" fxFlex="1 1 100%">
+      
+      <!-- Address type (public/private)-->
+      <div class="address-type">
+        <mat-icon *ngIf="addressType === 'public'" fontSet="partIcon" fontIcon="part-public"></mat-icon>
+        <mat-icon *ngIf="addressType === 'private'" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
+        {{ addressType }} address
+      </div>
+
+      <div class="label">{{ singleAddress.label }}</div>
+
+      <div class="address-string">
+        <div class="details-address enable-select" fxLayoutWrap layout-padding>
+          <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
+            {{ word }}
+          </div>
+        </div>
+      </div>
+
+      <p class="widget-help">
+        Some info..
+      </p>
+
+    </div><!-- .address-details -->
+  </div><!-- .row -->
 </div><!-- .dialog-content -->
+
+
+<mat-dialog-actions fxLayout fxLayoutAlign="space-between center">
+  <div class="left">
+
+    <!-- FIXME: implement functionality: -->
+    <button mat-button class="explorer">
+      <mat-icon fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
+      Sign/verify
+    </button>
+
+  </div>
+  <div class="right">
+
+    <!-- FIXME: implement functionality: -->
+    <button mat-button class="explorer">
+      <mat-icon fontSet="partIcon" fontIcon="part-info"></mat-icon>
+      Show on Explorer
+    </button>
+
+    <button mat-raised-button color="primary" ngxClipboard [cbContent]="singleAddress.address" (click)="copyToClipBoard()">
+      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+      Copy address
+    </button>
+
+  </div>
+</mat-dialog-actions>

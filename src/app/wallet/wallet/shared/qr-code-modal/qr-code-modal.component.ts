@@ -17,6 +17,8 @@ export class QrCodeModalComponent {
     address: 'Empty address',
     owned: false
   };
+  // FIXME: implement detecting of public/private addresses
+  public addressType: string = 'public';
 
   constructor(
     private snackbar: SnackbarService,
@@ -32,7 +34,7 @@ export class QrCodeModalComponent {
   }
 
   copyToClipBoard(): void {
-    this.snackbar.open('Address copied to clipboard.', '');
+    this.snackbar.open('Address copied to clipboard', '');
   }
 
   dialogClose(): void {
