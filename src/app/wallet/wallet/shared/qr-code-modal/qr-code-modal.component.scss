@@ -1,13 +1,25 @@
 @import "./src/assets/_config"; // import shared colors etc.
 
-[mat-dialog-title] {
-  word-wrap: break-word;
-}
+// ------ Modal ------ //
 
 .dialog-content {
-  min-width: 250px;
+  width: 670px;
   padding: 24px;
   margin: 24px -24px !important;
+}
+
+mat-dialog-actions {
+  border-top: 1px dashed $bg-shadow;
+  .right {
+    text-align: right;
+  }
+}
+
+
+// ------ Address details ------ //
+
+.address-details { // content block (type, label, string)
+  margin-left: 35px;
 }
 
 .address-type {
@@ -22,30 +34,17 @@
 }
 
 .address-string {
-  width: 170px;
-  margin: 20px auto 10px;
-  .details-address {
-    margin-bottom: 15px;    
-    .address-word {
-      font-family: monospace;
-      font-size: 13px;
-      color: $text-muted;
-    }
-  }
+  @extend %enable-select;
+  font-size: 15px;
+  font-family: monospace;
+  line-height: 1.45;
+  color: darken($color, 7%);
+  background: rgba($color, 0.04);
+  padding: 7px 0 7px 14px; // offset flex-wrap margin
+  margin-bottom: 18px;
+  cursor: pointer;
 }
 
-.actions {
-  .mat-icon {
-    margin-right: 7px;
-    font-size: 14px;
-    position: relative;
-    top: -1px;
-  }
-}
-
-mat-dialog-actions {
-  border-top: 1px dashed $bg-shadow;
-  .right {
-    text-align: right;
-  }
+.widget-help {
+  margin-bottom: 0;
 }

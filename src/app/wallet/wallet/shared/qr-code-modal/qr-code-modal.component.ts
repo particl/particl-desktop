@@ -12,13 +12,17 @@ export class QrCodeModalComponent {
 
   @ViewChild('qrCode') qrElementView: ElementRef;
 
+  /* UI State */
   public singleAddress: any = {
     label: 'Empty label',
     address: 'Empty address',
     owned: false
   };
   // FIXME: implement detecting of public/private addresses
-  public addressType: string = 'public';
+  public type: string = 'public';
+  public label: string = '';
+  public address: string = '';
+  public addressInput: boolean = true;
 
   constructor(
     private snackbar: SnackbarService,

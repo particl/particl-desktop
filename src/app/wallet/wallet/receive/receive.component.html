@@ -44,7 +44,6 @@
   
         <!-- Address label -->
         <div class="address-label">
-
           <!--
             FIXME/TODO:
               1. default state: disabled input + "edit label" icon (pen-1)
@@ -54,20 +53,12 @@
               4. remove `add-address-label` component/modal
               5. new addresses will be created with default label as "address #51" (according to their {{ address.id }})
           -->
-
           <mat-form-field class="icon-input label-input full-width">
             <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === '(No label)'}" [disabled]="addressInput" [(ngModel)]="label" (keyup.enter)="updateLabel(getUnusedAddress().address)">
-            <!-- TODO: default: -->
             <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="changeLabel()"></mat-icon>
-            <!-- TODO: show in edit mode: -->
             <mat-icon matTooltip="Save label" *ngIf="!addressInput" fontSet="partIcon" fontIcon="part-circle-check" (click)="updateLabel(getUnusedAddress().address)"></mat-icon>
           </mat-form-field>
-
-          <!--span class="label">{{ selected?.label }}</span>
-          <button mat-button class="small" (click)="openNewAddress(getUnusedAddress().address)" matTooltip="Edit address label" matTooltipPosition="after">
-            <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
-          </button-->
-        </div>
+        </div><!-- .address-label -->
   
         <!-- Address string -->
         <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
