@@ -283,7 +283,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private async update() {
     const item = this.itemFormGroup.value;
-
     // update information
     /*
      this.information.update(
@@ -293,20 +292,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
      item.longDescription,
      item.category
      ).subscribe();*/
-
-    // update images
-    await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
-
+     
     // update location
     const country = this.countryList.getCountryByName(item.country);
     await this.location.execute('update', this.templateId, country, null, null).toPromise();
+     // update escrow
     await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
-    // update shipping
-
-    // update messaging
-    // update payment
-    // update escrow
-
+    if (this.picturesToUpload.length > 0) {
+      // update images
+      await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
+    }
      return this.template.get(this.preloadedTemplate.id).toPromise();
   }
 
