@@ -1,4 +1,5 @@
 import { Image, DefaultImage } from './image.model';
+import { ImageItem } from '@ngx-gallery/core';
 
 export class ImageCollection {
   private default: Image = new DefaultImage();
@@ -20,7 +21,7 @@ export class ImageCollection {
   }
 
   setImageUrls(): void {
-    this.imageUrls = this.images.map((img) => ({src: img.medium, thumbSrc: img.thumbnail}))
+    this.imageUrls = this.images.map((img) => (new ImageItem(img.medium, img.thumbnail)))
   }
 
   setImages() {

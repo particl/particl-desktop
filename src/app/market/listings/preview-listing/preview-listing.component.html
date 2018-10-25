@@ -38,7 +38,22 @@
 
     <div class="product-gallery" fxFlex="0 1 350px">
       <div class="featured image">
-        <gallery gallerize [items]="data?.listing?.imageCollection?.imageUrls"></gallery>
+        <img
+          *ngIf="images && images.length <= 1"
+          [style.height.px]="300"
+          [style.width.px]="300"
+          [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail">
+
+        <gallery
+          *ngIf="images && images.length > 1"
+          gallerize
+          [style.height.px]="300"
+          [style.width.px]="300"
+          [thumbWidth]= "80"
+          [thumbHeight]="80"
+          [thumb]="images && images.length > 1"
+          [items]="images">
+        </gallery>
       </div>
       <!-- <div class="gallery" fxLayout="row" fxLayoutGap="24px">
         <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
