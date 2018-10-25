@@ -26,6 +26,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   public date: string;
   public profileAddress: string = '';
   private currencyprice: number = 0;
+  images: ImageItem[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
@@ -45,6 +46,9 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
         this.currencyprice = price[0].price;
       });
     this.getVoteOfListing();
+    if (this.data.listing) {
+      this.images = this.data.listing.imageCollection.imageUrls;
+    }
   }
 
   getVoteOfListing(): void {
