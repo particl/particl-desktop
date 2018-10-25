@@ -292,7 +292,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
      item.longDescription,
      item.category
      ).subscribe();*/
-     
+
     // update location
     const country = this.countryList.getCountryByName(item.country);
     await this.location.execute('update', this.templateId, country, null, null).toPromise();
