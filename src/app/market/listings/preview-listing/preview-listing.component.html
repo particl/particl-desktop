@@ -39,20 +39,20 @@
     <div class="product-gallery" fxFlex="0 1 350px">
       <div class="featured image">
         <img
-          *ngIf="images && images.length <= 1"
+          *ngIf="data?.listing?.imageCollection?.imageItems?.length === 0"
           [style.height.px]="300"
           [style.width.px]="300"
           [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail">
 
         <gallery
-          *ngIf="images && images.length > 1"
+          *ngIf="data?.listing?.imageCollection?.imageItems?.length"
           gallerize
+          [thumb]="data?.listing?.imageCollection?.imageItems?.length > 1"
           [style.height.px]="300"
           [style.width.px]="300"
           [thumbWidth]= "80"
           [thumbHeight]="80"
-          [thumb]="images && images.length > 1"
-          [items]="images">
+          [items]="data?.listing?.imageCollection?.imageItems">
         </gallery>
       </div>
       <!-- <div class="gallery" fxLayout="row" fxLayoutGap="24px">
