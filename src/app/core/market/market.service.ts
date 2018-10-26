@@ -46,7 +46,7 @@ export class MarketService {
           if (error.error) {
             if (typeof error.error.message === 'string') {
               error = error.error.message;
-            } else if (typeof error.error.message === 'object') {
+            } else if (Object.prototype.toString.call(error.error.message) === '[object Object]') {
               error = error.error.message.message;
             }
           }
