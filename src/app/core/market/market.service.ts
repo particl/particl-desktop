@@ -43,7 +43,13 @@ export class MarketService {
         .catch((error: any) => {
           this.log.d('Market threw an error!');
           console.log(error);
-          error = error.error ? error.error.message : error;
+          if (error.error) {
+            if (typeof error.error.message === 'string') {
+              error = error.error.message;
+            } else if (typeof error.error.message === 'object') {
+              error = error.error.message.message;
+            }
+          }
           return Observable.throw(error);
         })
   }
