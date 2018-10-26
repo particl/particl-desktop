@@ -1,6 +1,6 @@
 <div>
   <div mat-dialog-title class="title">Terms &amp; Conditions</div>
-  <mat-dialog-content class="modal-content" fxLayout (scroll)="onScroll($event)">
+  <mat-dialog-content #terms class="modal-content" fxLayout (scroll)="onScroll($event)">
     <div [innerHTML]="text"></div>
   </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="space-between center">
