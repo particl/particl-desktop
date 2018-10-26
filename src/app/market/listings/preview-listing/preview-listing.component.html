@@ -34,33 +34,26 @@
   </div><!-- .report-voting -->
 
 
-  <div class="product" fxLayout="row" fxLayoutGap="40px">
+  <div class="product" fxLayout="row">
 
-    <div class="product-gallery" fxFlex="0 1 350px">
-      <div class="featured image">
+    <div class="product-gallery" fxFlex="1 1 450px">
+      <div class="gallery-carousel">
         <img
           *ngIf="images && images.length <= 1"
-          [style.height.px]="300"
-          [style.width.px]="300"
           [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail">
 
         <gallery
           *ngIf="images && images.length > 1"
           gallerize
-          [style.height.px]="300"
-          [style.width.px]="300"
+          [style.height.px]="435"
+          [style.width.px]="450"
           [thumbWidth]= "80"
           [thumbHeight]="80"
           [thumb]="images && images.length > 1"
           [items]="images">
         </gallery>
       </div>
-      <!-- <div class="gallery" fxLayout="row" fxLayoutGap="24px">
-        <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
-          <img src="{{img.thumbnail}}">
-        </div>
-      </div> -->
-    </div>
+    </div><!-- .product-gallery -->
 
     <div class="product-info" fxFlex="1 1 100%">
 
@@ -87,10 +80,6 @@
         </tr>
       </table>
 
-      <p class="info message" *ngIf="data?.listing?.isMine">
-        <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        This is your own listing
-      </p>
       <div class="summary description">
         <p>
           {{ data?.listing?.shortDescription }}
@@ -106,15 +95,25 @@
   </div><!-- .product -->
 </div><!-- .dialog-content -->
 
+
 <mat-dialog-actions fxLayoutAlign="space-between center">
+
   <div class="left">
     <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'"></app-report>
     <div class="date">
       <strong>Date added</strong> {{ data?.listing?.createdAt }}
     </div>
   </div>
+
   <div class="right" fxLayout fxLayoutAlign="end center">
     <app-favorite [listing]="data?.listing" [detail]="true"></app-favorite>
     <app-add-to-cart [listing]="data?.listing" [detail]="true" (onAdded)="dialogClose()"></app-add-to-cart>
+
+    <!-- if mine, show message instead of "add to cart" button -->
+    <button mat-button disabled *ngIf="data?.listing?.isMine">
+      <mat-icon fontSet="partIcon" fontIcon="part-circle-info"></mat-icon>
+      This is your own listing
+    </button>
   </div>
+
 </mat-dialog-actions>

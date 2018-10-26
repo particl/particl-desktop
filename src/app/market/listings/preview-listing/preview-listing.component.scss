@@ -51,6 +51,7 @@ button.small .mat-icon {
 
 .dialog-content {
   margin: 0 -24px !important;
+  width: 950px;
 }
 
 [mat-dialog-title] {
@@ -85,34 +86,51 @@ button.small .mat-icon {
 }
 
 .product-gallery {
-  .featured.image {
-    margin-bottom: 24px;
+  .gallery-carousel {
+    position: sticky;
+    top: 0;
+    img { // single product image
+      width: 100%;
+      height: auto;
+    }
   }
-  .gallery {
-    overflow-x: auto;
-    padding-bottom: 18px;
+  gallery { // multiple product images in gallery
+    background: none;
   }
 }
 
 .product-info {
   color: $text-muted;
   line-height: 1.7;
+  margin-right: -24px;
   .description {
     margin: 18px 0;
-    &.summary {
+    &.summary { // bolder, product summary description
       font-weight: 600;
       color: $text;
       font-size: 14px;
+      margin: 0;
+      padding: 2px 40px;
+      background: $bg;
     }
     &.detailed {
+      margin: 24px 40px 80px;
       p {
         white-space: pre-line;
         margin-top: -20px;
       }
     }
   }
+  // Price info
   .pricing {
-    margin: 8px 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: $color-white;
+    //box-shadow: 0 16px 26px -24px;
+    border-bottom: 1px solid $bg-shadow;
+    width: 100%;
+    padding: 0 40px 20px;
     .price {
       &.item { // main price
         font-size: 18px;
