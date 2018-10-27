@@ -9,6 +9,10 @@ export class Bid extends Product {
     this.setActiveOrders();
   }
 
+  get hash(): string {
+    return "TODO"
+  }
+
   get id(): number {
     return this.order.id;
   }

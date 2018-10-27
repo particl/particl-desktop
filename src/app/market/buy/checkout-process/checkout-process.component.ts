@@ -73,7 +73,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     public countryList: CountryListService,
     public cache: CheckoutProcessCacheService,
     private bid: BidService,
-    private listCache: PostListingCacheService,
+    public listCache: PostListingCacheService,
     public dialog: MatDialog) {
   }
 

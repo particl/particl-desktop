@@ -15,9 +15,9 @@ import { PercentageBarComponent } from '../../modals/shared/percentage-bar/perce
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
 
-import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
 import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-badge.component';
+import { CartComponent } from 'app/core-ui/main/cart/cart.component';
 // import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 @NgModule({

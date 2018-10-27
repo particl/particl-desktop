@@ -8,6 +8,7 @@ interface NodeModule {
 
 interface Window {
   electron: boolean;
+  sendNotification: Function;
   require: any;
   ipc: {
     on: (channel: string, listener: Function) => void;

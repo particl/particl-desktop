@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { Log } from 'ng2-logger';
-import * as _ from 'lodash';
 
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 

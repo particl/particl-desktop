@@ -28,37 +28,38 @@
       <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" 
                        fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
         <mat-radio-button class="balance" value="part" checked="checked" color="primary"
-                          (click)="send.output = (type === 'sendPayment')? 'part': 'blind'" fxFlex>
+                          (click)="send.output = (type === 'sendPayment')? TxType.PUBLIC: TxType.BLIND" fxFlex>
           <div class="name">Public</div>
-          <div class="desc">Available balance:<span class="amount">{{ getBalance('part') }}</span></div>
+          <div class="desc">Available balance:<span class="amount">{{ getBalance(TxType.PUBLIC) }}</span></div>
         </mat-radio-button>
-        <mat-radio-button class="balance" value="blind" fxFlex color="primary" (click)="send.output = 'part'">
+        <mat-radio-button class="balance" value="blind" fxFlex color="primary" (click)="send.output = TxType.PUBLIC">
           <div class="name">Blind</div>
-          <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')" class="amount">{{ getBalance('blind') }}</span>
-            <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
+          <div class="desc">Available balance:<span *ngIf="!checkBalance(TxType.BLIND)" class="amount">{{ getBalance(TxType.BLIND) }}</span>
+            <mat-icon *ngIf="checkBalance(TxType.BLIND)" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
                       matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
           </div>
         </mat-radio-button>
-        <mat-radio-button *ngIf="testnet" class="balance" value="anon" color="primary" (click)="send.output = 'part'" fxFlex>
+        <mat-radio-button *ngIf="testnet" class="balance" value="anon" color="primary" (click)="send.output = TxType.PUBLIC" fxFlex>
           <div class="name">Anon</div>
-          <div class="desc">Available balance:<span class="amount">{{ getBalance('anon') }}</span></div>
+          <div class="desc">Available balance:<span class="amount">{{ getBalance(TxType.ANON) }}</span></div>
         </mat-radio-button>
       </mat-radio-group><!-- .from-balance-type -->
 
       <!-- TX info help -->
-      <p class="widget-help" *ngIf="send.input === 'part'">
+      <p class="widget-help" *ngIf="send.input === TxType.PUBLIC">
         In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver addresses.
+        addresses.
       </p>
-      <p class="widget-help" *ngIf="send.input === 'blind'">
+      <p class="widget-help" *ngIf="send.input === TxType.BLIND">
         Blinded transactions hide transaction amounts, but the sender and receiver addresses are still visible.
       </p>
-      <p class="widget-help" *ngIf="send.input === 'anon'">
+      <p class="widget-help" *ngIf="send.input === TxType.ANON">
         Anon transaction offer the highest privacy &ndash; transaction amounts and not even sender and receiver
         addresses are publicly visible. The higher privacy level is, the larger fee needs to be paid. Advanced users can further adjust the number of ring signatures.
       </p>
 
       <!-- Show privacy slider if anonymous TX -->
-      <div *ngIf="send.input === 'anon' && advanced" class="advanced">
+      <div *ngIf="send.input === TxType.ANON && advanced" class="advanced">
         <div class="subtitle">Privacy level <small>(no. of ring sigs)</small></div>
         <div class="privacy-level">
           <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
@@ -126,22 +127,22 @@
         </div>
         <mat-radio-group class="to-balance-type block-radio" name="sendOutput" [(ngModel)]="send.output"
                          fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
-          <mat-radio-button class="balance" value="part" color="primary" (click)="send.input = 'blind'" checked="checked" fxFlex>
+          <mat-radio-button class="balance" value="part" color="primary" (click)="send.input = TxType.BLIND" checked="checked" fxFlex>
             <div class="name">Public</div>
-            <div class="desc">Available balance:<span class="amount">{{ getBalance('part') }}</span></div>
+            <div class="desc">Available balance:<span class="amount">{{ getBalance(TxType.PUBLIC) }}</span></div>
           </mat-radio-button>
-          <mat-radio-button class="balance" value="blind" color="primary" (click)="send.input = 'part'" fxFlex>
+          <mat-radio-button class="balance" value="blind" color="primary" (click)="send.input = TxType.PUBLIC" fxFlex>
             <div class="name">Blind</div>
-            <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')"
-                                            class="amount">{{ getBalance('blind') }}</span>
-              <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question"
+            <div class="desc">Available balance:<span *ngIf="!checkBalance(TxType.BLIND)"
+                                            class="amount">{{ getBalance(TxType.BLIND) }}</span>
+              <mat-icon *ngIf="checkBalance(TxType.BLIND)" fontSet="partIcon" fontIcon="part-circle-question"
                         class="help-icon"
                         matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
             </div>
           </mat-radio-button>
-          <mat-radio-button *ngIf="testnet" class="balance" value="anon" color="primary" (click)="send.input = 'part'" fxFlex>
+          <mat-radio-button *ngIf="testnet" class="balance" value="anon" color="primary" (click)="send.input = TxType.PUBLIC" fxFlex>
             <div class="name">Anon</div>
-            <div class="desc">Available balance:<span class="amount">{{ getBalance('anon') }}</span></div>
+            <div class="desc">Available balance:<span class="amount">{{ getBalance(TxType.ANON) }}</span></div>
           </mat-radio-button>
         </mat-radio-group><!-- .from-balance-type -->
         <p class="widget-help">

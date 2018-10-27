@@ -8,7 +8,8 @@
         <div class="name">{{ order?.listing?.title }}</div>
         <div class="date">
           <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
-          <span class="hash {{ order?.hash_bg }}" matTooltip="Order hash">{{ order?.hash }}</span>
+          <!-- {{ order?.hash_bg }} -->
+          <span class="hash" matTooltip="Order hash">{{ order?.hash }}</span>
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
       </div>
@@ -94,7 +95,8 @@
         Edit
       </button-->
       <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-      <button mat-button matTooltip="Escrow TX details" *ngIf="order?.show_escrow_txdetails" class="small">
+      <!-- *ngIf="order?.show_escrow_txdetails" -->
+      <button mat-button matTooltip="Escrow TX details" *ngIf="false" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
         View payment
       </button>

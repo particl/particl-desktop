@@ -240,7 +240,7 @@ body {
 // ------ 3.6. QR-CODE ------ //
 
 .qr-code {
-  img {
+  canvas {
     display: inline !important;
   }
 }

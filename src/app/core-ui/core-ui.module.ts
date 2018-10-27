@@ -14,7 +14,6 @@ import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PaginatorComponent } from './paginator/paginator.component';
 
-
 @NgModule({
   declarations: [
     PaginatorComponent

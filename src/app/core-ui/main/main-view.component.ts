@@ -40,7 +40,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
-  marketVersion: string = environment.marketVersion;
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
@@ -57,7 +56,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
-    private proposalsNotificationsService: ProposalsNotificationsService
+    // private proposalsNotificationsService: ProposalsNotificationsService
   ) { }
 
   ngOnInit() {
@@ -171,10 +170,4 @@ export class MainViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-  // Sample code for open modal box
-  openDemonConnectionModal() {
-    const dialogRef = this.dialog.open(DaemonConnectionComponent);
-    dialogRef.componentInstance.text = "Test";
-  }*/
 }

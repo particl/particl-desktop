@@ -11,7 +11,6 @@ import { Log } from 'ng2-logger';
 
 import { DateFormatter } from '../../../../../core/util/utils';
 import { RpcService, RpcStateService } from '../../../../../core/core.module';
-import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 
@@ -36,7 +35,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
-              private market: MarketService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
   }

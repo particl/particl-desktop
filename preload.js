@@ -54,7 +54,6 @@ window.ipc = new SafeIpcRenderer([
   'front-choosewallet',
   'front-walletready',
 
-  'notification',
   'daemon',
   'close-gui',
 

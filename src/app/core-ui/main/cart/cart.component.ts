@@ -21,7 +21,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   constructor(
     private cartService: CartService,
-    private listCache: PostListingCacheService
+    public listCache: PostListingCacheService
   ) { }
 
   ngOnInit() {

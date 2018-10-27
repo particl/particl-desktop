@@ -37,6 +37,8 @@ export class SendComponent implements OnInit {
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
 
+  TxType: any = TxType;
+
   constructor(
     private sendService: SendService,
     private _rpc: RpcService,
@@ -154,7 +156,7 @@ export class SendComponent implements OnInit {
     }
 
     const validateAddressCB = (response) => {
-      this.send.validAddress = response.isvalid;
+      this.send.validAddress = true;
 
       if (!!response.account) {
         this.send.toLabel = response.account;
@@ -165,10 +167,13 @@ export class SendComponent implements OnInit {
       }
     };
 
-    this._rpc.call('validateaddress', [this.send.toAddress])
+    this._rpc.call('getaddressinfo', [this.send.toAddress])
       .subscribe(
         response => validateAddressCB(response),
-        error => this.log.er('verifyAddress: validateAddressCB failed'));
+        error => {
+          this.send.validAddress = false;
+          this.log.er('verifyAddress: validateAddressCB failed')
+      });
   }
 
   clearReceiver(): void {

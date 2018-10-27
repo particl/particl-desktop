@@ -9,7 +9,7 @@
   <div class="tx-confirmation">
     <div class="tx-info">
       <!-- if public -->
-      <div class="public" *ngIf="transactionType === 'part'">
+      <div class="public" *ngIf="transactionType === TxType.PUBLIC">
         <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-public"></mat-icon>
         <div class="title">Public transaction</div>
         <p class="help-text">
@@ -17,14 +17,14 @@
         </p>
       </div>
       <!-- if blind / anon-->
-      <div class="blind" *ngIf="transactionType === 'blind'">
+      <div class="blind" *ngIf="transactionType === TxType.BLIND">
         <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-blind"></mat-icon>
         <div class="title">Blind transaction</div>
         <p class="help-text">
           Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
         </p>
       </div>
-      <div class="anon" *ngIf="transactionType === 'anon'">
+      <div class="anon" *ngIf="transactionType === TxType.ANON">
         <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
         <div class="title">Anon transaction</div>
         <p class="help-text">

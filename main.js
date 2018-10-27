@@ -42,6 +42,8 @@ app.on('ready', () => {
   log.debug('argv', process.argv);
   log.debug('options', options);
   
+  app.setAppUserModelId("io.particl.desktop");
+  
   // initialize the authentication filter
   _auth.init();
   

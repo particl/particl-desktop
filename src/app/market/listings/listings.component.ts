@@ -76,7 +76,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private category: CategoryService,
     private listingService: ListingService,
     private favoritesService: FavoritesService,
-    private countryList: CountryListService
+    public countryList: CountryListService
   ) {
     this.log.d('overview created');
     if (this.listingService.cache.selectedCountry) {

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
 import { RpcModule } from './rpc/rpc.module';
-import { MarketModule } from './market/market.module';
 
 import { IpcService } from './ipc/ipc.service';
 import { RpcService } from './rpc/rpc.service';
@@ -21,7 +20,7 @@ import { UpdaterComponent } from './updater/modal/updater.component';
 
 // This is seriously the only UI import.
 import { MatDialogModule } from '@angular/material';
-import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
+import { MarketModule } from './market/market.module';
 
   /*
     Loading the core library will intialize IPC & RPC
@@ -50,7 +49,7 @@ export class CoreModule {
         SnackbarService,
         NotificationService,
         CloseGuiService,
-        ProposalsNotificationsService
+        // ProposalsNotificationsService
       ]
     };
   }

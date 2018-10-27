@@ -13,6 +13,7 @@ import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.modu
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
+import { MarketModule } from './core/market/market.module';
 
 @NgModule({
   declarations: [

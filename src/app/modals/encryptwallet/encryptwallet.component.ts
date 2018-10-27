@@ -20,6 +20,8 @@ export class EncryptwalletComponent {
   log: any = Log.create('encryptwallet.component');
   public password: string;
 
+  public pleaseWait: boolean = false;
+
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
 
   constructor(
@@ -44,30 +46,30 @@ export class EncryptwalletComponent {
     // already had password, check equality
     this.log.d(`check password equality: ${password.password === this.password}`);
     if (this.password !== password.password) {
-      this._rpcState.set('ui:spinner', false);
       this.flashNotification.open('The passwords do not match!', 'err');
       return;
     }
 
     // passwords match, encrypt wallet
 
-    this._rpcState.set('ui:spinner', true);
-
     if (window.electron) {
       this._daemon.restart().then(res => {
         this.log.d('restart was trigger, open create wallet again');
-        this._rpcState.set('ui:spinner', false);
         if (!this._modals.initializedWallet) {
-          this._modals.createWallet();
+          this._rpcState.observe('getwalletinfo').skip(1).take(1).subscribe(wallet => {
+            this.pleaseWait = false;
+            this._modals.createWallet();
+            this._dialogRef.close();
+          });
+
         }
-        this._dialogRef.close();
       });
     }
 
     this._rpc.call('encryptwallet', [password.password]).toPromise()
+      .then((s) => this.pleaseWait = true)
       .catch(error => {
         // Handle error appropriately
-        this._rpcState.set('ui:spinner', false);
         this.flashNotification.open('Wallet failed to encrypt properly!', 'err');
         this.log.er('error encrypting wallet', error)
       });

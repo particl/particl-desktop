@@ -29,7 +29,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
     private marketState: MarketStateService,
-    private listingServiceCache: PostListingCacheService,
+    public listingServiceCache: PostListingCacheService,
     private modals: ModalsHelperService,
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService,

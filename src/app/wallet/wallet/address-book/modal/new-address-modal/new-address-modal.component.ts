@@ -146,10 +146,10 @@ export class NewAddressModalComponent implements OnInit {
       return;
     }
 
-    this._rpc.call('validateaddress', [this.address])
+    this._rpc.call('getaddressinfo', [this.address])
       .subscribe(
         response => {
-          this.validAddress = response.isvalid;
+          this.validAddress = true;
           this.isMine = response.ismine;
           if (response.account !== undefined) {
             this.label = response.account;
@@ -160,7 +160,10 @@ export class NewAddressModalComponent implements OnInit {
             .open('This is your own address - can not be added to Address book!', 'err');
           }
         },
-        error => this.log.er('rpc_validateaddress_failed'));
+        error => {
+          this.validAddress = false;
+          this.log.er('getaddressinfo failed')
+        });
     return;
   }
 

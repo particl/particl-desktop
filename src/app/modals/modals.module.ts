@@ -12,12 +12,10 @@ import { TermsService } from 'app/modals/terms/terms.service';
 /* modals */
 import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
-import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
 import { UnlockwalletComponent } from './unlockwallet/unlockwallet.component';
 import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component';
 import { AlertComponent } from './shared/alert/alert.component';
-import { DeleteListingComponent } from './delete-listing/delete-listing.component';
 
 /* shared in modals */
 import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
@@ -26,7 +24,6 @@ import { PasswordComponent } from './shared/password/password.component';
 import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
 import { SnackbarService } from '../core/snackbar/snackbar.service';
-import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 
 import { ReportModalComponent } from './report-modal/report-modal.component';
@@ -44,6 +41,7 @@ import {
 } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
+import { DeleteListingComponent } from './delete-listing/delete-listing.component';
 
 @NgModule({
   imports: [
@@ -59,15 +57,12 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     PassphraseComponent,
     PasswordComponent,
     CreateWalletComponent,
-    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
     MultiwalletComponent,
-    DaemonConnectionComponent,
-    DeleteListingComponent,
     ManageWidgetsComponent,
     PlaceOrderComponent,
     ReportModalComponent,
@@ -76,7 +71,8 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     SendConfirmationModalComponent,
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
-    BidConfirmationModalComponent
+    BidConfirmationModalComponent,
+    DeleteListingComponent
   ],
   exports: [
     ClipboardModule
@@ -89,13 +85,10 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     TermsService
   ],
   entryComponents: [
-    DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
-    DaemonConnectionComponent,
-    DeleteListingComponent,
     ManageWidgetsComponent,
     PlaceOrderComponent,
     ReportModalComponent,
@@ -106,7 +99,8 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     SendConfirmationModalComponent,
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
-    BidConfirmationModalComponent
+    BidConfirmationModalComponent,
+    DeleteListingComponent
   ],
 })
 export class ModalsModule {

@@ -2,7 +2,11 @@ curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
 -d "{\"body\": \"A build has started for this pull request! \"}" \
 "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
 
-yarn run build:electron:prod
+if [[ $TRUE_COMMIT_MESSAGES == *"+mainnet"* ]]; then 
+    yarn run build:electron:prod
+else
+    yarn run build:electron:dev
+fi
 
 # Linux
 if [[ $TRUE_COMMIT_MESSAGES != *"-linux"* ]]
