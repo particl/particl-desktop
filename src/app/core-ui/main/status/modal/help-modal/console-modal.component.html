@@ -5,9 +5,8 @@
 
   <div mat-dialog-container>
     <mat-tab-group (selectChange)="selectTab($event.index)">
-      <mat-tab label="Core console">
-        
-      </mat-tab>
+      <mat-tab label="Core console"></mat-tab>
+      <mat-tab label="Market console"></mat-tab>
     </mat-tab-group>
   </div>
   <div #debug class="console-modal-form" (scroll)="onScroll()">

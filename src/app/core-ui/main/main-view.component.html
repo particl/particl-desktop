@@ -224,6 +224,9 @@
         <div class="client item">
           Client <span class="version">{{ clientVersion }}</span>
         </div>
+        <div class="client item">
+            Market <span class="version">{{ marketVersion }}</span>
+        </div>
         <div class="daemon item">
           Core <span class="version">{{ daemonVersion }}</span>
         </div>
@@ -254,6 +257,7 @@
       </div>
     </div><!-- .left -->
     <div class="right" fxFlex="1 1 60%">
+      <app-cart></app-cart>
       <app-status></app-status>
     </div><!-- .right -->
 
