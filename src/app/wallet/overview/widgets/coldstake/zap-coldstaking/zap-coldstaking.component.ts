@@ -47,7 +47,7 @@ export class ZapColdstakingComponent {
       }
 
       // If not a pool stake address
-      if(pkey.length > 43) {
+      if (pkey.length > 43) {
         this._rpc.call('deriverangekeys', [1, 1, pkey]).subscribe(derived => {
           this.log.d('coldstaking address', derived);
           if (!derived || derived.length !== 1) {
@@ -65,7 +65,7 @@ export class ZapColdstakingComponent {
     });
   }
 
-  initializeZapForAddress(coldstakingAddress: string) { 
+  initializeZapForAddress(coldstakingAddress: string) {
     this._rpc.call('listunspent').subscribe(unspent => {
       // TODO: Must process amounts as integers
       unspent.map(utxo => {
