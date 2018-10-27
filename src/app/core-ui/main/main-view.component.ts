@@ -40,6 +40,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   /* version */
   daemonVersion: string;
   clientVersion: string = environment.version;
+  marketVersion: string = environment.marketVersion;
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
