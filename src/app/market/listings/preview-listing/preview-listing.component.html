@@ -39,18 +39,18 @@
     <div class="product-gallery" fxFlex="1 1 450px">
       <div class="gallery-carousel">
         <img
-          *ngIf="images && images.length <= 1"
+          *ngIf="data?.listing?.imageCollection?.imageItems?.length === 0"
           [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail">
 
         <gallery
-          *ngIf="images && images.length > 1"
+          *ngIf="data?.listing?.imageCollection?.imageItems?.length"
           gallerize
           [style.height.px]="435"
           [style.width.px]="450"
           [thumbWidth]= "80"
           [thumbHeight]="80"
-          [thumb]="images && images.length > 1"
-          [items]="images">
+          [thumb]="data?.listing?.imageCollection?.imageItems?.length > 1"
+          [items]="data?.listing?.imageCollection?.imageItems">
         </gallery>
       </div>
     </div><!-- .product-gallery -->
