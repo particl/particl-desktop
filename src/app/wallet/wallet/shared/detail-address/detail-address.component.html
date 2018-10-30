@@ -18,15 +18,6 @@
 
     <!-- Address label -->
     <div class="address-label">
-      <!--
-        FIXME/TODO:
-          1. default state: disabled input + "edit label" icon (pen-1)
-          2. when user clicks on "edit label" icon, input gets enabled + icon switches to "save label"
-          3. when user saves label, input value gets updated, input becomes disabled again + icon switches back to "edit label"
-        =====
-          4. remove `add-address-label` component/modal
-          5. new addresses will be created with default label as "address #51" (according to their {{ address.id }})
-      -->
       <mat-form-field class="icon-input label-input full-width">
         <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === '(No label)'}" [disabled]="isEditableMode" [(ngModel)]="label" (keyup.enter)="updateLabel(unUsedAddress?.address)">
         <mat-icon matTooltip="Edit label" *ngIf="isEditableMode" fontSet="partIcon" fontIcon="part-pen-1" (click)="changeLabel()"></mat-icon>

@@ -49,7 +49,8 @@ export class AddressTableComponent implements OnInit, OnChanges {
   public singleAddress: any = {
     label: 'Empty label',
     address: 'Empty address',
-    owned: false
+    owned: false,
+    readable: '',
   };
   // Pagination
   currentPage: number = 1;
@@ -169,10 +170,24 @@ export class AddressTableComponent implements OnInit, OnChanges {
   }
 
   /** Open QR Code Modal */
-  openQrCodeModal(address: Object): void {
+  openQrCodeModal(address: any): void {
     const dialogRef = this.dialog.open(QrCodeModalComponent);
-    dialogRef.componentInstance.singleAddress = address;
+    this.singleAddress = address;
+    // creating readable property to ensure that it has proper address in readable format
+    this.singleAddress.readable = address.address.match(/.{1,4}/g);
+    dialogRef.componentInstance.singleAddress = this.singleAddress;
+    // getting the type of address
+    dialogRef.componentInstance.type = address.address.length < 35 ? 'public' : 'private';
     this.log.d(`qrcode, address: ${JSON.stringify(address)}`);
+
+    dialogRef.componentInstance.onConfirm.subscribe((msg: string) => {
+      if (msg) {
+        this.flashNotification.open(msg);
+        this._addressService.updateAddressList();
+      } else {
+        this.openSignatureModal(address.address);
+      }
+    });
   }
 
   showAddress(address: string) {

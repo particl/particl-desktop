@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
 import { SnackbarService } from '../../../../core/core.module';
@@ -11,30 +11,23 @@ import { SnackbarService } from '../../../../core/core.module';
 export class QrCodeModalComponent {
 
   @ViewChild('qrCode') qrElementView: ElementRef;
+  @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
 
   /* UI State */
-  public singleAddress: any = {
-    label: 'Empty label',
-    address: 'Empty address',
-    owned: false
-  };
+  public singleAddress: any;
   // FIXME: implement detecting of public/private addresses
   public type: string = 'public';
-  public label: string = '';
-  public address: string = '';
-  public addressInput: boolean = true;
-
   constructor(
     private snackbar: SnackbarService,
     public dialogRef: MatDialogRef<QrCodeModalComponent>
-  ) { }
+  ) {}
 
   getQrSize(): number {
     return this.qrElementView.nativeElement.offsetWidth;
   }
 
-  showAddress(address: string) {
-    return address.match(/.{1,4}/g);
+  get unUsedAddress(): string {
+    return this.singleAddress;
   }
 
   copyToClipBoard(): void {
@@ -45,4 +38,8 @@ export class QrCodeModalComponent {
     this.dialogRef.close();
   }
 
+  rpcLabelUpdate(msg: string) {
+    this.onConfirm.emit(msg);
+    this.dialogRef.close();
+  }
 }

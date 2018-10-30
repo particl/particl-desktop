@@ -10,62 +10,7 @@
 
 <div mat-dialog-content class="dialog-content">
 
-  <div class="row" fxLayout>
-
-    <div class="qr-code" fxFlex="1 0 180px">
-      <div #qrCode class="card qr">
-        <qrcode [level]="'H'" size="180" qrdata="particl:{{ singleAddress.address }}"></qrcode>
-      </div>
-    </div>
-
-    <div class="address-details" fxFlex="1 1 100%">
-      
-      <!-- Address type (public/private)-->
-      <div class="address-type">
-        <mat-icon *ngIf="type === 'public'" fontSet="partIcon" fontIcon="part-public"></mat-icon>
-        <mat-icon *ngIf="type === 'private'" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
-        {{ type }} address
-      </div>
-
-      <!-- Address label -->
-      <div class="address-label">
-
-        <!-- FIXME: implement displaying/editing of address label -->
-        <mat-form-field class="icon-input label-input full-width">
-          <input matInput class="label" type="text" value="{{ singleAddress.label }}" [ngClass]="{'no-label': singleAddress.label === '(No label)'}" [disabled]="addressInput" [(ngModel)]="label" (keyup.enter)="updateLabel(getUnusedAddress().address)">
-          <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="changeLabel()"></mat-icon>
-          <mat-icon matTooltip="Save label" *ngIf="!addressInput" fontSet="partIcon" fontIcon="part-circle-check" (click)="updateLabel(getUnusedAddress().address)"></mat-icon>
-        </mat-form-field>
-
-      </div><!-- .address-label -->
-
-      <!-- TODO: implement "click to copy to clipboard" -->
-      <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
-        <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="11.111">
-          {{ word }}
-        </div>
-      </div>
-
-      <!-- TODO: if PUBLIC + MY address: -->
-      <p class="widget-help" *ngIf="type === 'public'">
-        This is your public address &ndash; its balance and transaction history is publicly visible on blockchain. If you would like to increase your privacy, use Private address instead.
-      </p>
-      <!-- TODO: if PRIVATE + MY address: -->
-      <p class="widget-help" *ngIf="type === 'private'">
-        This is your private address &ndash; its balance and transaction history is hidden for public on blockchain. For auditable addresses, use Public addresses instead.
-      </p>
-
-      <!-- TODO: if PUBLIC + SAVED 3rd-PARTY (not mine) address: -->
-      <p class="widget-help" *ngIf="type === 'public' && xxxx">
-        3rd-party's Public address (not yours) &ndash; any payments made to this address will be publicly visible on the blockchain. For increased privacy, you should ask the recipient for their Private address instead.
-      </p>
-      <!-- TODO: if PRIVATE + SAVED 3rd-PARTY (not mine) address: -->
-      <p class="widget-help" *ngIf="type === 'private' && xxxx">
-        3rd-party's Private address (not yours) &ndash; any payments made to this address will be hidden for public on the blockchain.
-      </p>
-
-    </div><!-- .address-details -->
-  </div><!-- .row -->
+  <detail-address [selected]="singleAddress" [type]="type" [unUsedAddress]="unUsedAddress" (rpcLabelUpdate)="rpcLabelUpdate($event)"></detail-address>
 </div><!-- .dialog-content -->
 
 
@@ -73,7 +18,7 @@
   <div class="left">
 
     <!-- FIXME: implement functionality: -->
-    <button mat-button class="explorer">
+    <button mat-button class="explorer" (click)="rpcLabelUpdate()">
       <mat-icon fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
       Sign/verify
     </button>

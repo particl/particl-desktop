@@ -15,10 +15,10 @@ export class DetailAddressComponent {
   @Input() selected: any;
   @Input() type: string = 'public';
   @Input() unUsedAddress: any;
-  @Output() rpcLabelUpdate: EventEmitter = new EventEmitter();
+  @Output() rpcLabelUpdate: EventEmitter<any> = new EventEmitter();
 
-  public label: string = '';
   isEditableMode: boolean = true;
+  label: string;
   log: any = Log.create('detail-address.component');
 
   constructor( private modals: ModalsHelperService, private rpc: RpcService) {
