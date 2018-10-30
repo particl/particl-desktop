@@ -57,29 +57,6 @@
 
     <div class="product-info" fxFlex="1 1 100%">
 
-      <!--table class="pricing">
-        <tr>
-          <th class="item price">Price</th>
-          <td class="item price">
-            <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
-            <span class="currency">PART</span>
-            <span class="fiat">&asymp; {{price?.usd}} USD</span>
-          </td>
-        </tr>
-        <tr>
-          <th class="shipping price">Shipping</th>
-          <td class="shipping price">
-            International &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} PART<br>
-            Local in {{ data?.listing?.country }} &ndash; {{ data?.listing?.domesticShippingPrice.getAmount() }} PART
-          </td>
-        </tr>
-
-        <tr *ngIf="listingServiceCache?.selectedCountry">
-          <th class="escrow price">Escrow</th>
-          <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART</td>
-        </tr>
-      </table-->
-
       <div class="pricing" fxLayout fxLayoutAlign="space-between flex-start">
 
         <div class="item price">
@@ -93,29 +70,21 @@
           </div>
         </div>
 
-        <!--div class="item shipping">
-          <div class="title">Shipping</div>
-          <table class="shipping-list">
-            <tr>
-              <th>Worldwide</th>
-              <td>{{ data?.listing?.internationalShippingPrice.getAmount() }} PART <span class="fiat">~ 0.41 EUR</span></td>
-            </tr>
-            <tr>
-              <th>Local in {{ data?.listing?.country }}</th>
-              <td>{{ data?.listing?.domesticShippingPrice.getAmount() }} PART <span class="fiat">~ 0.41 EUR</span></td>
-            </tr>
-          </table>
-        </div-->
+        <div class="item category">
+          <div class="title">Category</div>
+          <div class="value">
+            <mat-icon fontSet="partIcon" fontIcon="part-label"></mat-icon>
+            {{ data?.listing?.category.name }}
+          </div>
+        </div>
 
-        <!--div class="item escrow">
-          <div class="title">Escrow</div>
-          <div class="value part">
-            {{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART
+        <div class="item seller-country">
+          <div class="title">Sold from</div>
+          <div class="value">
+            <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+            {{ data?.listing?.country }}
           </div>
-          <div class="value fiat">
-            ~ xx EUR
-          </div>
-        </div-->
+        </div>
 
       </div><!-- .pricing -->
 
@@ -175,7 +144,7 @@
             <td>
               <!-- FIXME: "escrow for local (not international)" needs to be implemented: -->
               <span class="part price">
-                <strong>{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong class="TO_DO">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -190,7 +159,7 @@
             <!-- TODO: price + shipping + escrow -->
             <td>
               <span class="part price">
-                <strong>1351.64</strong> <small class="currency">PART</small>
+                <strong class="TO_DO">1351.64</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -198,7 +167,7 @@
             </td>
             <td>
               <span class="part price">
-                <strong>1123.15</strong> <small class="currency">PART</small>
+                <strong class="TO_DO">1123.15</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
