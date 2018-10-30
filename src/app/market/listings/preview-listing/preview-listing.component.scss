@@ -69,27 +69,6 @@ button.small .mat-icon {
   }
 }
 
-// Listing governance voting
-.report-voting {
-  background: $bg;
-  padding: 20px 24px 10px;
-  margin: 0 -24px;
-  text-align: center;
-  .title {
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 13px;
-  }
-  p {
-    color: $text-muted;
-  }
-  .mat-button {
-    .mat-icon {
-      margin-right: 5px;
-    }
-  }
-}
-
 .product-gallery {
   .gallery-carousel {
     position: sticky;
@@ -229,15 +208,38 @@ button.small .mat-icon {
 }
 
 mat-dialog-actions {
-  app-favorite { // add/remove from favs icon
-    margin-right: 6px;
-  }
   .date {
     color: $text-muted;
     display: inline-block;
     margin-left: 8px;
     strong {
-      font-weight: 600;
+      font-weight: 500;
     }
+  }
+
+  // Listing governance
+  .reporting {
+    color: $text-muted;
+    display: inline-block;
+    .title {
+      margin-right: 6px;
+    }
+    .voted-icon {
+      margin-right: 4px;
+      position: relative;
+      top: 2px;
+      font-size: 14px;
+      line-height: 0;
+    }
+    button {
+      margin: 0;
+      .mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  app-favorite { // add/remove from favs icon
+    margin-right: 6px;
   }
 }
