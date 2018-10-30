@@ -23,60 +23,7 @@
 <div  class="container-flex with-tab-bar">
 
   <mat-card class="receive-address">
-    <div class="address-info" fxLayout>
-
-      <div class="sidebar" fxFlex="0 0 180px">
-        <!-- QR code -->
-        <div #qrCode class="qrcode">
-          <qrcode size="180" [level]="'H'" qrdata="particl:{{ selected?.address }}">
-          </qrcode>
-        </div><!-- qrcode -->
-      </div>
-  
-      <div class="main" fxFlex="1 1 480px">
-  
-        <!-- Address type (public/private)-->
-        <div class="address-type">
-          <mat-icon *ngIf="getAddressType() === 'public'" fontSet="partIcon" fontIcon="part-public"></mat-icon>
-          <mat-icon *ngIf="getAddressType() === 'private'" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
-          {{ getAddressType() }} address #{{ selected?.id }}
-        </div>
-  
-        <!-- Address label -->
-        <div class="address-label">
-          <!--
-            FIXME/TODO:
-              1. default state: disabled input + "edit label" icon (pen-1)
-              2. when user clicks on "edit label" icon, input gets enabled + icon switches to "save label"
-              3. when user saves label, input value gets updated, input becomes disabled again + icon switches back to "edit label"
-            =====
-              4. remove `add-address-label` component/modal
-              5. new addresses will be created with default label as "address #51" (according to their {{ address.id }})
-          -->
-          <mat-form-field class="icon-input label-input full-width">
-            <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === '(No label)'}" [disabled]="addressInput" [(ngModel)]="label" (keyup.enter)="updateLabel(getUnusedAddress().address)">
-            <mat-icon matTooltip="Edit label" *ngIf="addressInput" fontSet="partIcon" fontIcon="part-pen-1" (click)="changeLabel()"></mat-icon>
-            <mat-icon matTooltip="Save label" *ngIf="!addressInput" fontSet="partIcon" fontIcon="part-circle-check" (click)="updateLabel(getUnusedAddress().address)"></mat-icon>
-          </mat-form-field>
-        </div><!-- .address-label -->
-  
-        <!-- Address string -->
-        <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
-          <div *ngFor="let word of selected?.readable" class="address-word" fxFlex="11.111">
-            {{ word }}
-          </div>
-        </div>
-  
-        <p class="widget-help" *ngIf="getAddressType() === 'public'">
-          This is your public address &ndash; its balance and transaction history is publicly visible on blockchain. If you would like to increase your privacy, use Private address instead.
-        </p>
-        <p class="widget-help" *ngIf="getAddressType() === 'private'">
-          This is your private address &ndash; its balance and transaction history is hidden for public on blockchain. For auditable addresses, use Public addresses instead.
-        </p>
-  
-      </div><!-- .main -->
-    </div><!-- .address-info -->
-
+    <detail-address [selected]="selected" [type]="type" [unUsedAddress]="unUsedAddress" (rpcLabelUpdate)="rpcLabelUpdate($event)"></detail-address>
     <div class="buttons" fxLayout fxLayoutAlign="space-between center">
       <div class="left" fxFlex="30%">
         <button mat-button color="primary" matTooltip="Generate fresh address" (click)="generateAddress()">
@@ -138,7 +85,7 @@
 
 
   <!-- Address list -->
-  <div class="with-filter" *ngIf="getUnusedAddress()">
+  <div class="with-filter" *ngIf="unUsedAddress">
 
     <div class="no-results" *ngIf="(getSinglePage().length === 0) && (inSearchMode() === true)">
       No addresses found

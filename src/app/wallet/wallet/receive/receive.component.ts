@@ -28,8 +28,6 @@ export class ReceiveComponent implements OnInit {
   /* UI State */
   public type: string = 'public';
   public query: string = '';
-  public addressInput: boolean = true;
-  public label: string = '';
   public address: string = '';
   testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
@@ -102,7 +100,7 @@ export class ReceiveComponent implements OnInit {
   }
 
   /** Returns the unused addresses to display in the UI. */
-  getUnusedAddress(): Object {
+  get unUsedAddress(): Object {
     return this.addresses[this.type][0];
   }
 
@@ -374,11 +372,6 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  updateLabel(address: string) {
-    this.address = address
-    this.modals.unlock({timeout: 3}, (status) => this.editLabel());
-  }
-
   generateAddress(): void {
     this.modals.unlock({timeout: 3}, (status) => this.newAddress());
   }
@@ -390,30 +383,20 @@ export class ReceiveComponent implements OnInit {
     this.rpcCallAndNotify(call, callParams, msg);
   }
 
-  editLabel(): void {
-    const call = 'manageaddressbook';
-    const callParams = ['newsend', this.address, this.label];
-    const msg = `Label for ${this.address} updated`;
-    this.rpcCallAndNotify(call, callParams, msg);
-  }
-
-  changeLabel(): void {
-    this.addressInput = !this.addressInput
-    if (this.selected.label === '(No label)') {
-      this.selected.label = '';
-    }
-  }
-
   rpcCallAndNotify(call: string, callParams: any, msg: string): void {
     if (call) {
       this.rpc.call(call, callParams)
         .subscribe(response => {
           this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
           this.flashNotificationService.open(msg)
-          this.addressInput = true;
           this.rpc_update();
         });
     }
+  }
+
+  rpcLabelUpdate(msg: string): void {
+    this.flashNotificationService.open(msg)
+    this.rpc_update();
   }
 
 }

@@ -20,18 +20,17 @@
     <div class="no-results" *ngIf="getSinglePage().length === 0">
       No matching addresses found
     </div>
-    <div *ngFor="let address of getSinglePage()">
+    <div *ngFor="let address of getSinglePage()" (click)="openQrCodeModal(address)">
 
       <mat-card class="address-entry">
 
         <!-- Label -->
-        <div class="label cursor-pointer" *ngIf="displayLabel" (click)="editLabel(address.address)" matTooltip="Edit Address label" matTooltipPosition="before">
+        <div class="label cursor-pointer" *ngIf="displayLabel" matTooltip="Edit Address label" matTooltipPosition="before">
           {{ address.label }}
         </div>
 
         <!-- Address -->
-        <div class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)"
-              matTooltip="Show Address" matTooltipPosition="above">
+        <div class="address" *ngIf="displayAddress" matTooltip="Show Address" matTooltipPosition="above">
           <!--mat-icon *ngIf="!displayQrMenu" class="qr-icon" fontSet="partIcon" fontIcon="part-qr"></mat-icon-->
           <span class="address-string enable-select">{{ address.address }}</span>
         </div>
