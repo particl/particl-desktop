@@ -68,7 +68,7 @@ button.small .mat-icon {
 .report-voting {
   background: $bg;
   padding: 20px 24px 10px;
-  margin: 0 -24px 24px;
+  margin: 0 -24px;
   text-align: center;
   .title {
     font-weight: 700;
@@ -99,28 +99,28 @@ button.small .mat-icon {
   }
 }
 
+:host {
+  ::ng-deep {
+    image-item {
+      & > div {
+        background-size: contain; // so all images fit whole
+        background-repeat: no-repeat;
+      }
+    }
+    gallery-nav { // recolor the nav arrows to grey
+      .g-nav-next,
+      .g-nav-prev {
+        filter: invert(10%);
+      }
+    }
+  }
+}
+
 .product-info {
   color: $text-muted;
   line-height: 1.7;
   margin-right: -24px;
-  .description {
-    margin: 18px 0;
-    &.summary { // bolder, product summary description
-      font-weight: 600;
-      color: $text;
-      font-size: 14px;
-      margin: 0;
-      padding: 2px 40px;
-      background: $bg;
-    }
-    &.detailed {
-      margin: 24px 40px 80px;
-      p {
-        white-space: pre-line;
-        margin-top: -20px;
-      }
-    }
-  }
+
   // Price info
   .pricing {
     position: sticky;
@@ -131,23 +131,100 @@ button.small .mat-icon {
     border-bottom: 1px solid $bg-shadow;
     width: 100%;
     padding: 0 40px 20px;
-    .price {
-      &.item { // main price
-        font-size: 18px;
-        color: $text;
+    .item {
+      .title {
+        @extend %subtitle;
+        margin: 0;
+        padding-bottom: 4px;
+        border-bottom: 0;
       }
-      .small {
-        font-size: 14px;
+      &.price {
+        .value {
+          &.part {
+            font-size: 16px;
+            font-weight: 500;
+            color: $text;
+          }
+        }
       }
       .currency {
-        font-size: 14px;
+        font-size: 80%;
+        font-weight: 400;
       }
-      .fiat {
-        font-size: 12px;
-        color: $text-muted;
+      &.shipping {
+        th {
+          font-weight: 400;
+        }
       }
     }
   }
+
+  // Text description
+  .description {
+    margin: 18px 0;
+    &.summary {
+      font-weight: 600;
+      color: $text;
+      font-size: 14px;
+      margin: 0;
+      padding: 2px 40px;
+      background: $bg;
+    }
+    &.detailed {
+      margin: 24px 40px 40px;
+      p {
+        white-space: pre-line;
+        margin-top: -20px;
+      }
+    }
+  }
+
+  // Shipping & escrow
+  table.shipping-escrow {
+    width: 100%;
+    padding-left: 28px;
+    thead {
+      th {
+        font-size: 11px;
+        font-weight: 400;
+        text-transform: uppercase;
+        padding: 6px 12px;
+      }
+    }
+    tbody {
+      tr {
+        th {
+          font-weight: 400;
+        }
+        th, td {
+          @extend %tfx;
+          border-top: 1px solid $bg-shadow;
+          padding: 6px 12px;
+        }
+        &:hover {
+          th, td {
+            background: mix($bg, $color-white);
+          }
+        }
+      }
+    }
+    strong {
+      color: $text;
+      font-weight: 500;
+    }
+    .price {
+      &.part {
+        display: block;
+      }
+      &.fiat {
+        //display: none;
+      }
+    }
+    small.currency {
+      font-size: 90%;
+    }
+  }
+
 }
 
 mat-dialog-actions {
