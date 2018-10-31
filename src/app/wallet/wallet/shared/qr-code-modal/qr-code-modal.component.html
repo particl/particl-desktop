@@ -27,12 +27,12 @@
   <div class="right">
 
     <!-- FIXME: testnet condition doesn't work: -->
-    <a mat-button matTooltip="Display address' public information on Block Explorer" href="https://explorer{{testnet ? '-testnet' : ''}}.particl.io/address/{{singleAddress.address}}" target="_blank">
+    <a mat-button matTooltip="Display address' public information on Block Explorer" href="https://explorer{{testnet ? '-testnet' : ''}}.particl.io/address/{{singleAddress?.address}}" target="_blank">
       <mat-icon fontSet="partIcon" fontIcon="part-info"></mat-icon>
       Show on Explorer
     </a>
 
-    <button mat-raised-button color="primary" ngxClipboard [cbContent]="singleAddress.address" (click)="copyToClipBoard()">
+    <button mat-raised-button color="primary" ngxClipboard [cbContent]="singleAddress?.address" (click)="copyToClipBoard()">
       <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
       Copy address
     </button>

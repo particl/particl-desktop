@@ -10,7 +10,7 @@ import { RpcService } from '../../../../core/core.module';
   templateUrl: './detail-address.component.html',
   styleUrls: ['./detail-address.component.scss']
 })
-export class DetailAddressComponent {
+export class DetailAddressComponent implements OnInit {
 
   @Input() selected: any;
   @Input() type: string = 'public';
@@ -22,6 +22,13 @@ export class DetailAddressComponent {
   log: any = Log.create('detail-address.component');
 
   constructor( private modals: ModalsHelperService, private rpc: RpcService) {
+  }
+
+  ngOnInit(): void {
+    // Setting label forcefully
+    if (this.selected) {
+      this.label = this.selected.label;
+    }
   }
 
   changeLabel(): void {

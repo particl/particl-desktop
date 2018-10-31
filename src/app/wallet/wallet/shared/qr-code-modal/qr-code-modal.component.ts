@@ -15,7 +15,6 @@ export class QrCodeModalComponent {
 
   /* UI State */
   public singleAddress: any;
-  // FIXME: implement detecting of public/private addresses
   public type: string = 'public';
   constructor(
     private snackbar: SnackbarService,
