@@ -111,29 +111,45 @@ mat-card.receive-address {
   margin-top: 0;
 }
 
-.address-info { // address "card"
+mat-card.address-info { // address "card"
   margin-bottom: 12px;
+  padding: 0 24px 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   .address-id {
     color: $text-muted;
+    margin-top: 24px;
   }
-  .address-label {
-    text-transform: uppercase;
-    font-weight: 700;
-    white-space: nowrap;
+  .address-name { // label + string
     text-overflow: ellipsis;
     overflow: hidden;
-    &.no-label { // unlabeled address
-      font-style: italic;
+    padding: 24px 0;
+    .address-label {
+      font-size: 14px;
       font-weight: 500;
-      opacity: 0.75;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      margin: 0 0 4px 0;
+      display: block;
+      &.no-label { // unlabeled address
+        font-style: italic;
+        font-weight: 500;
+        opacity: 0.75;
+      }
+    }
+    .address { // address string
+      @extend %tfx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: monospace;
+      color: $text-muted;
+      background: transparent;
+      transition: background .3s;
     }
   }
-  .address {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: monospace;
-    color: $text-muted;
-    background: transparent;
-    transition: background .3s;
+  .address-actions {
+    margin-left: 24px;
   }
 }
