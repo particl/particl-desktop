@@ -3,9 +3,9 @@
 // ------ Modal ------ //
 
 .dialog-content {
-  width: 670px;
+  width: 700px;
   padding: 24px;
-  margin: 24px -24px !important;
+  margin: 10px -24px !important;
 }
 
 mat-dialog-actions {
@@ -13,38 +13,4 @@ mat-dialog-actions {
   .right {
     text-align: right;
   }
-}
-
-
-// ------ Address details ------ //
-
-.address-details { // content block (type, label, string)
-  margin-left: 35px;
-}
-
-.address-type {
-  text-transform: uppercase;
-  color: $text-muted;
-  .mat-icon {
-    margin-right: 4px;
-    position: relative;
-    top: 3px;
-    color: lighten($text-muted, 20%);
-  }
-}
-
-.address-string {
-  @extend %enable-select;
-  font-size: 15px;
-  font-family: monospace;
-  line-height: 1.45;
-  color: darken($color, 7%);
-  background: rgba($color, 0.04);
-  padding: 7px 0 7px 14px; // offset flex-wrap margin
-  margin-bottom: 18px;
-  cursor: pointer;
-}
-
-.widget-help {
-  margin-bottom: 0;
 }

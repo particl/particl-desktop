@@ -9,7 +9,6 @@
 </button>
 
 <div mat-dialog-content class="dialog-content">
-
   <detail-address [selected]="singleAddress" [type]="type" (rpcLabelUpdate)="rpcLabelUpdate($event)"></detail-address>
 </div><!-- .dialog-content -->
 
@@ -17,7 +16,6 @@
 <mat-dialog-actions fxLayout fxLayoutAlign="space-between center">
   <div class="left">
 
-    <!-- FIXME: implement functionality: -->
     <button mat-button class="explorer" (click)="rpcLabelUpdate()">
       <mat-icon fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
       Sign/verify

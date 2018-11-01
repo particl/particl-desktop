@@ -23,7 +23,9 @@
 <div  class="container-flex with-tab-bar">
 
   <mat-card class="receive-address">
-    <detail-address [selected]="selected" [type]="type" (rpcLabelUpdate)="rpcLabelUpdate($event)"></detail-address>
+    <div class="address-details">
+      <detail-address [selected]="selected" [type]="type" (rpcLabelUpdate)="rpcLabelUpdate($event)"></detail-address>
+    </div>
     <div class="buttons" fxLayout fxLayoutAlign="space-between center">
       <div class="left" fxFlex="30%">
         <button mat-button color="primary" matTooltip="Generate fresh address" (click)="generateAddress()">
