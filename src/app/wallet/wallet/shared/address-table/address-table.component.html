@@ -71,7 +71,6 @@
 <app-paginator
   *ngIf="(
     displayPagination &&
-    getSinglePage().length > 0 &&
     getTotalAddressCount() > PAGE_SIZE_OPTIONS[0]
   )"
   #paginator
