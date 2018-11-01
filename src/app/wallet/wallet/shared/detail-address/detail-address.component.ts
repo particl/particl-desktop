@@ -14,7 +14,6 @@ export class DetailAddressComponent implements OnInit {
 
   @Input() selected: any;
   @Input() type: string = 'public';
-  @Input() unUsedAddress: any;
   @Output() rpcLabelUpdate: EventEmitter<any> = new EventEmitter();
 
   isEditableMode: boolean = true;

@@ -25,10 +25,6 @@ export class QrCodeModalComponent {
     return this.qrElementView.nativeElement.offsetWidth;
   }
 
-  get unUsedAddress(): string {
-    return this.singleAddress;
-  }
-
   copyToClipBoard(): void {
     this.snackbar.open('Address copied to clipboard', '');
   }

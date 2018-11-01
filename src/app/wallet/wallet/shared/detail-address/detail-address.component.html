@@ -19,9 +19,9 @@
     <!-- Address label -->
     <div class="address-label">
       <mat-form-field class="icon-input label-input full-width">
-        <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === '(No label)'}" [disabled]="isEditableMode" [(ngModel)]="label" (keyup.enter)="updateLabel(unUsedAddress?.address)">
+        <input matInput class="label" type="text" value="{{ selected?.label }}" [ngClass]="{'no-label': selected?.label === '(No label)'}" [disabled]="isEditableMode" [(ngModel)]="label" (keyup.enter)="updateLabel(selected?.address)">
         <mat-icon matTooltip="Edit label" *ngIf="isEditableMode" fontSet="partIcon" fontIcon="part-pen-1" (click)="changeLabel()"></mat-icon>
-        <mat-icon matTooltip="Save label" *ngIf="!isEditableMode" fontSet="partIcon" fontIcon="part-circle-check" (click)="updateLabel(unUsedAddress?.address)"></mat-icon>
+        <mat-icon matTooltip="Save label" *ngIf="!isEditableMode" fontSet="partIcon" fontIcon="part-circle-check" (click)="updateLabel(selected?.address)"></mat-icon>
       </mat-form-field>
     </div><!-- .address-label -->
 
