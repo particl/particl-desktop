@@ -29,6 +29,10 @@ export class SettingsComponent implements OnInit {
   public tabLabels: Array<string> = ['main', 'dapps', 'display', 'network'];
   private addressHelper: AddressHelper;
   private networkHelper: NetworkHelper;
+  foundationConfig: any = {
+    min: 10,
+    max: 100
+  };
 
   constructor(
     private _settingsService: SettingsService,
@@ -187,6 +191,13 @@ export class SettingsComponent implements OnInit {
     return this.isValidPort;
   }
 
+  checkFoundationDonation(): boolean {
+    return (
+      this.settings.main.foundationDonation >= this.foundationConfig.min &&
+      this.settings.main.foundationDonation <= this.foundationConfig.max
+    );
+  }
+
   settingsValidator(): boolean {
     return  (
       (
@@ -201,6 +212,8 @@ export class SettingsComponent implements OnInit {
       ) && (
         // In case of the black input we get null in the "this.settings.main.feeAmount".
         typeof this.settings.main.feeAmount === 'number' && this.settings.main.feeAmount >= 0
+      ) && (
+        this.checkFoundationDonation()
       )
     )
   }
