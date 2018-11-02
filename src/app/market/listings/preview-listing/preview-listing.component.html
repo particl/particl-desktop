@@ -112,7 +112,7 @@
             </th>
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -121,7 +121,7 @@
             <td>
               <!-- FIXME: "escrow for local (not international)" needs to be implemented: -->
               <span class="part price">
-                <strong class="TO_DO">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmount() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -136,7 +136,7 @@
             <!-- TODO: price + shipping + escrow -->
             <td>
               <span class="part price">
-                <strong class="TO_DO">1351.64</strong> <small class="currency">PART</small>
+                <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -144,7 +144,7 @@
             </td>
             <td>
               <span class="part price">
-                <strong class="TO_DO">1123.15</strong> <small class="currency">PART</small>
+                <strong>{{data?.listing?.totalAmountDomestic?.getAmount()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
