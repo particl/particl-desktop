@@ -5,39 +5,31 @@
 }
 
 mat-card.address-entry {
-  margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 12px;
+  padding-left: 0;
   & > div {
     margin: 0 20px 0 0;
   }
-  .label {
-    text-transform: uppercase;
-    font-weight: bold;
-    overflow: hidden;
+  .address-name {
+    flex: 1 0 calc(100% - 180px);
+    padding-left: 24px;
     text-overflow: ellipsis;
-    flex: 0 0 200px;
-    @include break(l) {
-      flex: 0 0 300px;
+    overflow: hidden;
+    cursor: pointer;
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0 0 4px 0;
+      display: block;
     }
-  }
-  
-  .address {
-    flex: 1 1 200px;
-    /*.qr-icon {
-      position: relative;
-      top: 3px;
-      margin-right: 8px;
-      cursor: pointer;
-    }*/
     .address-string {
-      @extend %tfx;
       font-family: monospace;
       color: $text-muted;
-      cursor: pointer;
-      &:hover {
-        color: darken($color, 3%);
-      }
     }
   }
   
@@ -46,6 +38,7 @@ mat-card.address-entry {
     flex: 0 0 86px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 }
 
