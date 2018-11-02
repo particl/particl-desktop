@@ -57,7 +57,7 @@
 
         <div class="item seller-country">
           <div class="title">Sold from</div>
-          <div class="value">
+          <div class="value" [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
             <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
             {{ data?.listing?.country }}
           </div>
@@ -82,7 +82,9 @@
           <tr>
             <th></th>
             <th>Worldwide</th>
-            <th>Local in {{ data?.listing?.country }}</th>
+            <th [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
+              Local in {{ data?.listing?.country }}
+            </th>
           </tr>
         </thead>
         <tbody>
