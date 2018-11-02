@@ -98,19 +98,19 @@
       <div *ngFor="let address of getSinglePage()">
 
         <mat-card class="address-info">
-          <div fxFlex="1 1 calc(100% - 79px)">
-            <div fxFlex="0 0 55px" class="address-id">
+
+          <div class="address-name cursor-pointer" (click)="openNewAddress(address)">
+            <div class="address-id">
               /{{ address.id }}
             </div>
-            <div fxFlex="1 1 90%" class="address-name cursor-pointer" (click)="openNewAddress(address)">
-              <span class="address-label" [ngClass]="{'no-label': address.label === '(No label)'}">
-                {{ address.label }}
-              </span>
-              <span class="address">
-                {{ address.address }}
-              </span>
-            </div>
-          </div>
+            <span class="address-label" [ngClass]="{'no-label': address.label === '(No label)'}">
+              {{ address.label }}
+            </span>
+            <span class="address">
+              {{ address.address }}
+            </span>
+          </div><!-- .address-name -->
+
           <div class="address-actions" fxFlex="0 0 50px" fxLayoutAlign="end center">
             <!-- Copy address -->
             <span fxFlex="50%">
@@ -124,8 +124,8 @@
                         (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></mat-icon>
             </span>
           </div><!-- .address-actions -->
-        </mat-card>
 
+        </mat-card>
       </div>
     </div><!-- .list-data -->
 

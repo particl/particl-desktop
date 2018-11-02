@@ -113,26 +113,31 @@ mat-card.receive-address {
 
 mat-card.address-info { // address "card"
   margin-bottom: 12px;
-  padding: 0 24px 0 32px;
+  padding: 0 24px 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  .address-id {
-    color: $text-muted;
-    margin-top: 24px;
-  }
   .address-name { // label + string
+    @extend %tfx;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding: 24px 0;
+    padding: 24px 0 24px 32px;
+    display: flex;
+    width: 100%;
+    &:hover {
+      box-shadow: 4px 0 $color inset;
+    }
+    .address-id {
+      color: $text-muted;
+      flex: 0 0 50px;
+    }
     .address-label {
       font-size: 14px;
       font-weight: 500;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      margin: 0 0 4px 0;
-      display: block;
+      margin: -1px 12px 0 0;
       &.no-label { // unlabeled address
         font-style: italic;
         font-weight: 500;
@@ -145,8 +150,11 @@ mat-card.address-info { // address "card"
       text-overflow: ellipsis;
       font-family: monospace;
       color: $text-muted;
-      background: transparent;
-      transition: background .3s;
+      max-width: 350px;
+      margin: 1px 0 0 0;
+      @include break(l) {
+        max-width: 450px;
+      }
     }
   }
   .address-actions {

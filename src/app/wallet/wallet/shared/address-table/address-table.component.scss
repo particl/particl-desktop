@@ -8,28 +8,41 @@ mat-card.address-entry {
   display: flex;
   justify-content: space-between;
   margin-bottom: 12px;
-  padding-left: 0;
+  padding: 0 24px 0 0;
   & > div {
     margin: 0 20px 0 0;
   }
   .address-name {
+    @extend %tfx;
     flex: 1 0 calc(100% - 180px);
-    padding-left: 24px;
+    padding: 24px 0 24px 24px;
     text-overflow: ellipsis;
     overflow: hidden;
+    display: flex;
+    width: 100%;
     cursor: pointer;
+    &:hover {
+      box-shadow: 4px 0 $color inset;
+    }
     .label {
       font-size: 14px;
       font-weight: 500;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin: 0 0 4px 0;
+      margin: -1px 12px 0 0;
       display: block;
     }
     .address-string {
       font-family: monospace;
       color: $text-muted;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 350px;
+      margin: 1px 0 0 0;
+      @include break(l) {
+        max-width: 450px;
+      }
     }
   }
   
