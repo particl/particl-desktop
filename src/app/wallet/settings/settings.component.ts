@@ -55,10 +55,6 @@ export class SettingsComponent implements OnInit {
     this.tab = tab;
   }
 
-  cancel() {
-    this.settings = this._settingsService.loadSettings();
-  }
-
   save() {
     this.log.d(this.settings);
 
