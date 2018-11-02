@@ -148,7 +148,7 @@
           <mat-card>
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
-              <mat-select [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
+              <mat-select matNativeControl [(value)]="selectedAddress" [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
                           (change)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
                           [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0">
@@ -320,7 +320,7 @@
       </div><!-- .order-detail -->
 
       <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
-        <button mat-button matStepperPrevious>
+        <button mat-button matStepperPrevious >
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back to shipping
         </button>

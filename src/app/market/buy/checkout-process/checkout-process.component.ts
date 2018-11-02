@@ -195,7 +195,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         this.storeCache();
 
         // we need to retrieve the id of  address we added (new)
-        this.select(addressWithId);
+        this.select(addressWithId, this.shippingFormGroup.value.newShipping);
 
       });
     } else {
@@ -214,8 +214,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     })
   }
 
-  select(address: Address) {
+  select(address: Address, isNewProfile?: boolean) {
     this.log.d('Selecting address with id: ' + address.id);
+    if (isNewProfile) {
+      this.profile.shippingAddresses = [address];
+    }
     this.selectedAddress = address;
     this.shippingFormGroup.value.id = address.id;
     this.setDefaultCountry(address.country);
