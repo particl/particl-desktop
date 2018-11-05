@@ -191,12 +191,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     if (upsert !== undefined) {
       const address = this.shippingFormGroup.value as Address;
       upsert(address).take(1).subscribe(addressWithId => {
+        // we need to retrieve the id of  address we added (new)
+        this.select(addressWithId);
+
         // update the cache
         this.allowGoingBack();
         this.storeCache();
-
-        // we need to retrieve the id of  address we added (new)
-        this.select(addressWithId, this.shippingFormGroup.value.newShipping);
 
       });
     } else {
@@ -215,12 +215,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     })
   }
 
-  select(address: Address, isNewProfile?: boolean) {
+  select(address: Address) {
     this.log.d('Selecting address with id: ' + address.id);
     // check for the new profile and then add.
-    if (isNewProfile) {
-      this.profile.shippingAddresses.push(address);
-    }
     this.selectedAddress = address;
     this.shippingFormGroup.value.id = address.id;
     this.setDefaultCountry(address.country);
@@ -243,14 +240,23 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   getProfile(): void {
     this.profileService.default().take(1).subscribe(
       (profile: any) => {
-        this.log.d('checkout got profile:')
         this.profile = profile;
-        console.log(this.profile);
+        this.log.d('checkout got profile:', this.profile);
         const addresses = profile.shippingAddresses;
         if (addresses.length > 0) {
-          this.select(this.cache.address || addresses[0]);
+          if (this.shippingFormGroup.value && this.shippingFormGroup.value.id) {
+            const address = addresses.find( addr => addr.id === this.shippingFormGroup.value.id);
+            if (address) {
+              this.selectedAddress = address;
+              this.shippingFormGroup.value.id = address.id;
+            }
+          }
         }
       });
+  }
+
+  backToShippingDetails(): void {
+    this.getProfile();
   }
 
 
