@@ -193,6 +193,7 @@
             <h4 class="option">Default shipping country <span class="tag">Buyer</span></h4>
             <p class="desc">Select your country for exact shipping and escrow prices calculation</p>
             <mat-select-search
+              [disabled]="!settings.market.enabled"
               [options]="countryList?.countries"
               [defaultSelectedValue]="settings.market.defaultCountry"
               [showValueOf]="'name'"

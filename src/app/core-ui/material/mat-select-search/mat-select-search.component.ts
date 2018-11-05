@@ -24,6 +24,7 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   @Input() public placeHolder: string = '';
   @Input() public options: any[] = [];
   @Input() public defaultOption: string = '';
+  @Input() public disabled: boolean
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() isRequired: boolean = false;
   @Input() defaultSelectedValue: any;
@@ -35,6 +36,18 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
    */
 
   ngOnChanges (change: any) {
+
+    // check for detected change for disabled var
+    if (change.disabled) {
+
+      if (this.disabled) {
+        this.formControl.disable()
+      } else {
+        this.formControl.enable();
+      }
+
+    }
+
     if (this.defaultSelectedValue || this.options) {
       this.formControl.patchValue(this.defaultSelectedValue)
     }
