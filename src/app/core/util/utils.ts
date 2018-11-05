@@ -84,8 +84,9 @@ export class Amount {
    * 25.9 with dec=8 -> '25.9'
    */
   truncateToDecimals(int: number, dec: number) {
-    const calcDec = Math.pow(10, dec);
-    return Math.trunc(int * calcDec) / calcDec;
+    return +int.toFixed(dec);
+    // const calcDec = Math.pow(10, dec);
+    // return Math.trunc(int * calcDec) / calcDec;
   }
 
 }
