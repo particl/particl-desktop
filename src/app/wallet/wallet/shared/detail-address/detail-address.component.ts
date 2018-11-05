@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
-import { RpcService } from '../../../../core/core.module';
+import { RpcService, SnackbarService } from '../../../../core/core.module';
 @Component({
   selector: 'detail-address',
   templateUrl: './detail-address.component.html',
@@ -20,8 +20,10 @@ export class DetailAddressComponent implements OnInit {
   label: string;
   log: any = Log.create('detail-address.component');
 
-  constructor( private modals: ModalsHelperService, private rpc: RpcService) {
-  }
+  constructor( private modals: ModalsHelperService,
+    private rpc: RpcService,
+    private snackbar: SnackbarService
+  ) {}
 
   ngOnInit(): void {
     // Setting label forcefully
@@ -46,6 +48,10 @@ export class DetailAddressComponent implements OnInit {
     const callParams = ['newsend', address, this.label];
     const msg = `Label for ${address} updated`;
     this.rpcCallAndNotify(call, callParams, msg);
+  }
+
+  copyToClipBoard(): void {
+    this.snackbar.open('Address copied to clipboard', '');
   }
 
   rpcCallAndNotify(call: string, callParams: any, msg: string): void {

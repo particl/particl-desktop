@@ -1,14 +1,14 @@
-import { Component, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
-import { SnackbarService } from '../../../../core/core.module';
+import { RpcStateService, SnackbarService } from '../../../../core/core.module';
 
 @Component({
   selector: 'app-qr-code-modal',
   templateUrl: './qr-code-modal.component.html',
   styleUrls: ['./qr-code-modal.component.scss']
 })
-export class QrCodeModalComponent {
+export class QrCodeModalComponent implements OnInit {
 
   @ViewChild('qrCode') qrElementView: ElementRef;
   @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
@@ -16,10 +16,17 @@ export class QrCodeModalComponent {
   /* UI State */
   public singleAddress: any;
   public type: string = 'public';
+  testnet: boolean = false;
   constructor(
     private snackbar: SnackbarService,
-    public dialogRef: MatDialogRef<QrCodeModalComponent>
+    public dialogRef: MatDialogRef<QrCodeModalComponent>,
+    public rpcState: RpcStateService
   ) {}
+
+  ngOnInit(): void {
+    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
+     .subscribe(chain => this.testnet = chain === 'test');
+  }
 
   getQrSize(): number {
     return this.qrElementView.nativeElement.offsetWidth;

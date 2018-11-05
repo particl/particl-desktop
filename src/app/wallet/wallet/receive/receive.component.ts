@@ -289,7 +289,8 @@ export class ReceiveComponent implements OnInit {
       label: '(No label)',
       address: 'Empty address',
       balance: 0,
-      readable: ['Empty']
+      readable: ['Empty'],
+      owned: false
     };
 
     tempAddress.address = response.address;
@@ -298,6 +299,7 @@ export class ReceiveComponent implements OnInit {
     }
 
     tempAddress.readable = tempAddress.address.match(/.{1,4}/g);
+    tempAddress.owned = response.owned;
 
     if (type === 'public') {
 

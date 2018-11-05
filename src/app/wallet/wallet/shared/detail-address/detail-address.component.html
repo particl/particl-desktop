@@ -15,7 +15,7 @@
       <mat-icon *ngIf="type === 'private'" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
       {{ type }} address
       <!-- FIXME: show ID only when MY address: -->
-      #{{ selected?.id }}
+      {{ selected?.owned === 'true' ? '#' + selected?.id : "" }}
     </div>
 
     <!-- Address label -->
@@ -35,19 +35,19 @@
     </div>
 
     <!-- if PUBLIC + MY address: -->
-    <p class="widget-help" *ngIf="type === 'public'">
+    <p class="widget-help" *ngIf="type === 'public' && selected?.owned === 'true' ">
       This is your public address &ndash; its balance and transaction history is publicly visible on blockchain. If you would like to increase your privacy, use Private address instead.
     </p>
     <!-- if PRIVATE + MY address: -->
-    <p class="widget-help" *ngIf="type === 'private'">
+    <p class="widget-help" *ngIf="type === 'private' && selected?.owned === 'true' ">
       This is your private address &ndash; its balance and transaction history is hidden for public on blockchain. For auditable addresses, use Public addresses instead.
     </p>
     <!-- TODO: if PUBLIC + SAVED 3rd-PARTY (not mine) address: -->
-    <p class="widget-help" *ngIf="type === 'public' && xxxx">
+    <p class="widget-help" *ngIf="type === 'public' && selected?.owned === 'false'">
       3rd-party's Public address (not yours) &ndash; any payments made to this address will be publicly visible on the blockchain. For increased privacy, you should ask the recipient for their Private address instead.
     </p>
     <!-- TODO: if PRIVATE + SAVED 3rd-PARTY (not mine) address: -->
-    <p class="widget-help" *ngIf="type === 'private' && xxxx">
+    <p class="widget-help" *ngIf="type === 'private' && selected?.owned === 'false'">
       3rd-party's Private address (not yours) &ndash; any payments made to this address will be hidden for public on the blockchain.
     </p>
 

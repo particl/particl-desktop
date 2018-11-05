@@ -1,7 +1,6 @@
-<!-- TODO: if SAVED 3rd-PARTY (not mine) address: -->
-<div mat-dialog-title>Saved address details</div>
-<!-- TODO: if MY address: -->
-<div mat-dialog-title *ngIf="">Your used address details</div>
+
+<div mat-dialog-title *ngIf="singleAddress?.owned === 'false'">Saved address details</div>
+<div mat-dialog-title *ngIf="singleAddress?.owned === 'true'">Your used address details</div>
 
 
 <button class="small-close_button pull-right" (click)="dialogClose()">
