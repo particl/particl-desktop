@@ -131,6 +131,9 @@
     ]
   },
   "dependencies": {
+    "@ngx-gallery/core": "2.2.0",
+    "@ngx-gallery/gallerize": "2.2.0",
+    "@ngx-gallery/lightbox": "2.2.0",
     "auto-launch": "^5.0.5",
     "bluebird": "^3.4.7",
     "buffered-spawn": "^3.3.2",
