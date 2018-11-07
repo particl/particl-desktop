@@ -106,6 +106,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    this.clear();
     this.storeCache();
   }
 
@@ -190,12 +191,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     if (upsert !== undefined) {
       const address = this.shippingFormGroup.value as Address;
       upsert(address).take(1).subscribe(addressWithId => {
+        // we need to retrieve the id of  address we added (new)
+        this.select(addressWithId);
+
         // update the cache
         this.allowGoingBack();
         this.storeCache();
-
-        // we need to retrieve the id of  address we added (new)
-        this.select(addressWithId);
 
       });
     } else {
@@ -216,6 +217,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   select(address: Address) {
     this.log.d('Selecting address with id: ' + address.id);
+    // check for the new profile and then add.
     this.selectedAddress = address;
     this.shippingFormGroup.value.id = address.id;
     this.setDefaultCountry(address.country);
@@ -238,14 +240,23 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   getProfile(): void {
     this.profileService.default().take(1).subscribe(
       (profile: any) => {
-        this.log.d('checkout got profile:')
         this.profile = profile;
-        console.log(this.profile);
+        this.log.d('checkout got profile:', this.profile);
         const addresses = profile.shippingAddresses;
         if (addresses.length > 0) {
-          this.select(this.cache.address || addresses[0]);
+          if (this.shippingFormGroup.value && this.shippingFormGroup.value.id) {
+            const address = addresses.find( addr => addr.id === this.shippingFormGroup.value.id);
+            if (address) {
+              this.selectedAddress = address;
+              this.shippingFormGroup.value.id = address.id;
+            }
+          }
         }
       });
+  }
+
+  backToShippingDetails(): void {
+    this.getProfile();
   }
 
 
@@ -321,11 +332,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   */
 
   getCache(): void {
-    // set stepper to values of cache
-    this.stepper.selectedIndex = this.cache.selectedIndex;
-    this.stepper.linear = this.cache.linear;
+    // Make it linear so if user comes back on page again then it will show the initial step
+    this.cache.selectedIndex = 0;
+    this.stepper.linear = true;
   }
 
+  // Needs to refactor if there is no use of caching?
   storeCache(): void {
     this.cache.selectedIndex = this.stepper.selectedIndex;
     this.cache.linear = this.stepper.linear;

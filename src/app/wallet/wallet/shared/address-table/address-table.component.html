@@ -52,7 +52,10 @@
 </div><!-- .address-table -->
 
 <app-paginator
-  *ngIf="displayPagination && getSinglePage().length>0"
+  *ngIf="(
+    displayPagination &&
+    getTotalAddressCount() > PAGE_SIZE_OPTIONS[0]
+  )"
   #paginator
   [length]="getTotalAddressCount()"
   [pageSize]="getMaxAddressesPerPage()"

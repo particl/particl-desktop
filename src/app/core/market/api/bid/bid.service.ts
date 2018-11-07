@@ -38,7 +38,7 @@ export class BidService {
         await this.market.call('bid', ['send', listing.hash, profile.id, false, ...shippingParams]).toPromise()
           .catch((error) => {
             if (error) {
-              error = this.errorHandle(error);
+              error = this.errorHandle(error.toString());
             }
             throw error;
           });
@@ -58,7 +58,7 @@ export class BidService {
     const params = ['accept', id];
     return this.market.call('bid', params).catch((error) => {
       if (error) {
-        error = this.errorHandle(error);
+        error = this.errorHandle(error.toString());
       }
       throw error;
     });

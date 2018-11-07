@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
@@ -10,6 +9,8 @@ import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { ImageItem } from '@ngx-gallery/core';
+import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 
 @Component({
   selector: 'app-preview-listing',
@@ -26,6 +27,8 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   public date: string;
   public profileAddress: string = '';
   private currencyprice: number = 0;
+  images: ImageItem[] = [];
+
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
     private marketState: MarketStateService,
@@ -34,6 +37,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService,
     private profileService: ProfileService,
+    private countryListService: CountryListService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -44,6 +48,9 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
         this.currencyprice = price[0].price;
       });
     this.getVoteOfListing();
+    if (this.data.listing) {
+      this.images = this.data.listing.imageCollection.imageUrls;
+    }
   }
 
   getVoteOfListing(): void {
