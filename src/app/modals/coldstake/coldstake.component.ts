@@ -100,8 +100,8 @@ export class ColdstakeComponent {
   setColdStakingAddress(): void {
     if (this.prevColdStakeAddress === this.coldStakeAddress) {
       if (this.step === 2) {
-        this.finalMessage = 'Cold staking address is the same - no changes required.';
-        this._flashNotificationService.open('Cold staking key is exactly the same as before!', 'warn');
+        this.finalMessage = 'Cold staking address is the same - no changes required';
+        this._flashNotificationService.open('Cold staking key has not changed', 'warn');
       }
       return;
     }
@@ -110,7 +110,7 @@ export class ColdstakeComponent {
       .subscribe(
         success => {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
-          this._flashNotificationService.open('Successfully activated cold staking!', 'info');
+          this._flashNotificationService.open('Cold staking successfully activated', 'info');
           this._rpcState.set('ui:coldstaking', true);
           this.close();
         },
@@ -125,7 +125,7 @@ export class ColdstakeComponent {
       .subscribe(
         success => {
           this.log.d(`resetColdStakeAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
-          this._flashNotificationService.open('Successfully deactivated cold staking!', 'info');
+          this._flashNotificationService.open('Cold staking successfully deactivated', 'info');
           this.close();
         },
         error => {
