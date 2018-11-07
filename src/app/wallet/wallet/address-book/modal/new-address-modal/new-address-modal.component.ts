@@ -140,7 +140,7 @@ export class NewAddressModalComponent implements OnInit {
    * Verify if address is valid through RPC call and set state to validAddress..
    */
   verifyAddress() {
-    if (this.address === undefined || this.address === '') {
+    if (!this.address) {
       this.validAddress = undefined;
       this.isMine = undefined;
       return;
