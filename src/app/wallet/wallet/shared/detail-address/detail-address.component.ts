@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChanges} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
@@ -10,7 +10,7 @@ import { RpcService, SnackbarService } from '../../../../core/core.module';
   templateUrl: './detail-address.component.html',
   styleUrls: ['./detail-address.component.scss']
 })
-export class DetailAddressComponent implements OnInit {
+export class DetailAddressComponent implements OnInit, OnChanges {
 
   @Input() selected: any;
   @Input() type: string = 'public';
@@ -31,6 +31,11 @@ export class DetailAddressComponent implements OnInit {
       this.label = this.selected.label;
     }
   }
+  
+  ngOnChanges(changes: SimpleChanges) {
+    this.isEditableMode = true;
+  }
+
 
   changeLabel(): void {
     this.isEditableMode = !this.isEditableMode;
