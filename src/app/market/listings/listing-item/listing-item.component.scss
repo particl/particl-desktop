@@ -16,6 +16,9 @@
     width: 100%;
     height: auto;
     cursor: pointer;
+    height: 259px;
+    object-fit: contain;
+    object-position: center;
   }
   .icons {
     @extend %tfx;
