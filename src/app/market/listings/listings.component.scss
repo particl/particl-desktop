@@ -97,7 +97,7 @@
 .content {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: stretch;
 
   .listing { // item
     margin: 0 0 25px 25px;

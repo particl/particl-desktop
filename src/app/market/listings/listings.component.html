@@ -124,11 +124,14 @@
         Sorry, no matching listings found
       </p>
     </div>
+
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let item of page.listings">
+
         <mat-card class="listing">
           <app-listing-item [listing]="item"></app-listing-item>
         </mat-card>
+
       </ng-container>
     </ng-container>
 
