@@ -148,7 +148,7 @@
     "cli-progress": "^1.7.0",
     "core-js": "^2.4.1",
     "electron-log": "^2.2.14",
-    "got": "^8.1.0",
+    "got": "^9.3.2",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.5",
     "node-unzip-2": "^0.2.1",
