@@ -22,6 +22,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    // Prevent dropped files, links replacing the contents of the application.
+    document.addEventListener('dragover', event => event.preventDefault());
+    document.addEventListener('drop', event => event.preventDefault());
   }
 }
