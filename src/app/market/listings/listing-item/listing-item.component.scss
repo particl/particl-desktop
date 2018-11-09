@@ -8,6 +8,8 @@
   }
 }
 
+
+// preview photo
 .image {
   margin: -24px -16px 16px;
   position: relative;
@@ -16,6 +18,9 @@
     width: 100%;
     height: auto;
     cursor: pointer;
+    height: 218px;
+    object-fit: cover;
+    object-position: center;
   }
   .icons {
     @extend %tfx;
@@ -47,11 +52,13 @@
   }
 }
 
+// item name & category
 .info {
   margin-bottom: 10px;
   .title {
-    font-weight: bold;
-    margin-bottom: 2px;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 5px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -62,9 +69,20 @@
   }
 }
 
+
+// price & cart button
 .price-cart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   .price {
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 13px;
+    .mat-icon {
+      font-size: 11px;
+      position: relative;
+      top: 1px;
+    }
   }
   button.to-cart {
     padding: 0;

@@ -15,20 +15,23 @@
     <div class="category">{{listing?.category?.name}}</div>
   </div>
 
-  <div class="price-cart" fxLayout="row" fxLayoutAlign="space-between center">
+  
+  <div class="price-cart">
 
     <!-- price section with shipping and total price  -->
     <div *ngIf="listingCacheService?.selectedCountry" class="price" fxFlex>
-      {{ listing?.total(listingCacheService.selectedCountry?.iso)?.getAmount().toFixed(8) }}
+      {{ listing?.total(listingCacheService.selectedCountry?.iso)?.getAmount() }}
+      <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
     </div>
-    <!-- price section with shipping and total price  -->
 
     <!-- price section without shipping and total price  -->
     <div *ngIf="!listingCacheService?.selectedCountry" class="price" fxFlex>
-      {{ listing?.basePrice?.getAmount()?.toFixed(8) }}
+      {{ listing?.basePrice?.getAmount() }}
+      <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
     </div>
-    <!-- price section without shipping and total price  -->
 
     <app-add-to-cart [listing]="listing" [detail]="false"></app-add-to-cart>
-  </div>
+
+  </div><!-- .price-cart -->
+
 </div>
