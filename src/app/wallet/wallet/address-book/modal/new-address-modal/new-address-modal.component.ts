@@ -48,7 +48,7 @@ export class NewAddressModalComponent implements OnInit {
       this.verifyAddress();
       this.modalTitle = 'Edit address';
     } else {
-      this.modalTitle = 'Add new address to Address book';
+      this.modalTitle = 'Add new address';
     }
     this.buildForm();
   }
@@ -81,12 +81,12 @@ export class NewAddressModalComponent implements OnInit {
    */
   onSubmitForm(): void {
     if (!this.validAddress) {
-      this.flashNotificationService.open('Please enter a valid address!');
+      this.flashNotificationService.open('Please enter a valid address');
       return;
     }
 
     if (this.isMine) {
-      this.flashNotificationService.open('This is your own address - can not be added to Address book!');
+      this.flashNotificationService.open('Your own address can not be saved to Address Book');
       return;
     }
 
@@ -109,8 +109,8 @@ export class NewAddressModalComponent implements OnInit {
   rpc_addAddressToBook_success(json: any): void {
     if (json.result === 'success') {
       this.closeModal();
-      const message: string = (this.isEdit) ? 'Address successfully updated to the Address book'
-        : 'Address successfully added to the Address book';
+      const message: string = (this.isEdit) ? 'Address successfully updated'
+        : 'Address successfully added';
 
       this.flashNotificationService.open(message);
       // TODO: remove specialPoll! (updates the address table)
@@ -140,7 +140,7 @@ export class NewAddressModalComponent implements OnInit {
    * Verify if address is valid through RPC call and set state to validAddress..
    */
   verifyAddress() {
-    if (this.address === undefined || this.address === '') {
+    if (!this.address) {
       this.validAddress = undefined;
       this.isMine = undefined;
       return;
@@ -157,7 +157,7 @@ export class NewAddressModalComponent implements OnInit {
 
           if (this.isMine) {
             this.flashNotificationService
-            .open('This is your own address - can not be added to Address book!', 'err');
+            .open('Your own address can not be saved to Address Book', 'err');
           }
         },
         error => this.log.er('rpc_validateaddress_failed'));

@@ -17,36 +17,19 @@
   </div>
 
   <mat-list class="list-data">
+
     <div class="no-results" *ngIf="getSinglePage().length === 0">
       No matching addresses found
     </div>
-    <div *ngFor="let address of getSinglePage()">
 
+    <div *ngFor="let address of getSinglePage()">
       <mat-card class="address-entry">
 
-        <!-- Label -->
-        <div class="label cursor-pointer" *ngIf="displayLabel" (click)="editLabel(address.address)" matTooltip="Edit Address label" matTooltipPosition="before">
-          {{ address.label }}
+        <!-- label & address string -->
+        <div class="address-name" (click)="openQrCodeModal(address)">
+          <span class="label" *ngIf="displayLabel">{{ address.label }}</span>
+          <span class="address-string" *ngIf="displayAddress">{{ address.address }}</span>
         </div>
-
-        <!-- Address -->
-        <div class="address" *ngIf="displayAddress" (click)="openQrCodeModal(address)"
-              matTooltip="Show Address" matTooltipPosition="above">
-          <!--mat-icon *ngIf="!displayQrMenu" class="qr-icon" fontSet="partIcon" fontIcon="part-qr"></mat-icon-->
-          <span class="address-string enable-select">{{ address.address }}</span>
-        </div>
-
-        <!-- Pubkey -->
-        <!--div fxFlex="25" class="grid-cell" *ngIf="displayPublicKey">
-          <span class="title">Public Key</span>
-          <span class="pubkey enable-select">{{ address.publicKey }}</span>
-        </div-->
-
-        <!-- Type -->
-        <!--div fxFlex="25" clas="grid-cell" *ngIf="displayType">
-          <span class="title">Type</span>
-          <span class="type">{{ address.type }}</span>
-        </div-->
 
         <!-- Actions/controls -->
         <div *ngIf="displayToolsMenu" class="address-actions">

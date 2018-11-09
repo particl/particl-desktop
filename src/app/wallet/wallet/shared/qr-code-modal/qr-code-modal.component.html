@@ -1,28 +1,37 @@
-<div mat-dialog-title class="text-center">{{singleAddress.label}}</div>
+
+<div mat-dialog-title *ngIf="singleAddress?.owned === 'false'">Saved address details</div>
+<div mat-dialog-title *ngIf="singleAddress?.owned === 'true'">Your used address details</div>
+
 
 <button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">
-
-  <div class="qr-code">
-    <div #qrCode class="card qr">
-      <qrcode [level]="'H'" size="150" qrdata="particl:{{ singleAddress.address }}"></qrcode>
-    </div>
-  </div>
-
-  <div class="address-string">
-    <div class="details-address enable-select" fxLayoutWrap layout-padding>
-      <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
-        {{ word }}
-      </div>
-    </div>
-  </div>
-
-  <div class="actions">
-    <button mat-button class="copy" ngxClipboard [cbContent]="singleAddress.address" (click)="copyToClipBoard()">
-      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>Copy to clipboard
-    </button>
-  </div>
+  <detail-address [selected]="singleAddress" [type]="type" (rpcLabelUpdate)="rpcLabelUpdate($event)"></detail-address>
 </div><!-- .dialog-content -->
+
+
+<mat-dialog-actions fxLayout fxLayoutAlign="space-between center">
+  <div class="left">
+
+    <button mat-button class="explorer">
+      <mat-icon fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
+      Sign/verify
+    </button>
+
+  </div>
+  <div class="right">
+
+    <a mat-button matTooltip="Display address' public information on Block Explorer" href="https://explorer{{testnet ? '-testnet' : ''}}.particl.io/address/{{singleAddress?.address}}" target="_blank">
+      <mat-icon fontSet="partIcon" fontIcon="part-info"></mat-icon>
+      Show on Explorer
+    </a>
+
+    <button mat-raised-button color="primary" ngxClipboard [cbContent]="singleAddress?.address" (click)="copyToClipBoard()">
+      <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+      Copy address
+    </button>
+
+  </div>
+</mat-dialog-actions>

@@ -9,6 +9,7 @@ import { ModalsModule } from '../../../modals/modals.module';
 import { SharedModule } from '../../shared/shared.module';  // is this even needed?
 
 import { ReceiveComponent } from './receive.component';
+import { DetailAddressComponent } from './../shared/detail-address/detail-address.component';
 
 describe('ReceiveComponent', () => {
   let component: ReceiveComponent;
@@ -16,7 +17,7 @@ describe('ReceiveComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReceiveComponent ],
+      declarations: [ ReceiveComponent, DetailAddressComponent ],
       imports: [
         /* deps */
         QRCodeModule,
