@@ -31,7 +31,7 @@ export class DetailAddressComponent implements OnInit, OnChanges {
       this.label = this.selected.label;
     }
   }
-  
+
   ngOnChanges(changes: SimpleChanges) {
     this.isEditableMode = true;
   }
