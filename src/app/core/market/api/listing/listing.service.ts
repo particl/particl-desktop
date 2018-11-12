@@ -17,7 +17,7 @@ export class ListingService {
 
   }
   search(page: number, pageLimit: number, profileId: number | string,
-         search: string, catId: number, country: any): Observable<Array<Listing>> {
+         search: string, catId: number, country: any, flag: boolean): Observable<Array<Listing>> {
 
     const params = [
       'search',
@@ -32,7 +32,7 @@ export class ListingService {
       country ? country.toUpperCase() : null, // country
       null, // shippingDestination
       search || null, // search
-      true // withRelated
+      flag // withRelated
     ];
 
     return this.market.call('item', params)
@@ -46,7 +46,7 @@ export class ListingService {
   }
 
   searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, '*', null, null, null); // OWN
+    return this.search(page, pageLimit, '*', null, null, null, false); // OWN
   }
 
   get(id: number) {

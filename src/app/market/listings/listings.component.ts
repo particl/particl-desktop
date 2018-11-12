@@ -39,7 +39,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // filters
   // countries: FormControl = new FormControl();
   search: string;
-
+  flagged: boolean = false;
   listingServiceSubcription: any;
   // categories: FormControl = new FormControl();
 
@@ -120,7 +120,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       this.listingServiceSubcription.unsubscribe();
     }
 
-    this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country)
+    this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country, this.flagged)
       .take(1).subscribe((listings: Array<Listing>) => {
       this.isLoading = false;
       this.isLoadingBig = false;
@@ -216,6 +216,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
       this.clearAndLoadPage();
     }
 
+  }
+
+  toggleFlag(event: any): void {
+    this.flagged = event.source.checked;
+    this.loadPage(0, true);
   }
 
   ngOnDestroy() {
