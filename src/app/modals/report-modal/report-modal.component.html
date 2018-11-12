@@ -1,23 +1,29 @@
-<div>
-  <div mat-dialog-title class="title">Report Listing</div>
-  <mat-dialog-content class="modal-content" fxLayout>
-    <div class="text" fxFlex="1 1 350px">
-      <p class="lead" *ngIf="!option">
-        Are you sure you want to report {{title}} as an inappropriate listing ?
-      </p>
-      <!-- <p class="lead" *ngIf="option">
-        You are about to change your vote on {{title}}, are you sure the listing is market appropriate?
-      </p> -->
-    </div>
-  </mat-dialog-content>
-  <mat-dialog-actions fxLayoutAlign="end center">
-    <button type="button" mat-button mat-dialog-close>
-      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-      No, cancel
-    </button>
-    <button mat-raised-button color="primary" (click)="flag()">
-      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-      Yes
-    </button>
-  </mat-dialog-actions>
-</div>
+<div mat-dialog-title class="title">Report Listing</div>
+
+
+<mat-dialog-content class="modal-content">
+  <p class="lead">
+    Are you sure you want to report this Listing as inappropriate?
+  </p>
+  <p class="listing-name">
+    {{ title }}
+  </p>
+  <p class="widget-help">
+    Users have the ability to self-govern the Marketplace and remove illegal and other inappropriate Listings. By reporting this Listing, you vote (with the weight of your coins) to take it down from the Marketplace.
+  </p>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+
+  <button mat-raised-button color="warn" (click)="flag()">
+    <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+    Yes, Report
+  </button>
+
+</mat-dialog-actions>
