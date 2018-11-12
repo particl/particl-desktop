@@ -9,3 +9,14 @@
 }
 
 // ------ LAYOUT ------ //
+
+.loading-container {
+  $padding: 35px;
+  left: ($sidebar-width + $filter-width + (2 * $padding));
+  right: $padding;
+  @include break(l) {
+    $padding-l: 50px;
+    left: ($sidebar-width + $filter-width + (2 * $padding-l));
+    right: $padding-l;
+  }
+}
