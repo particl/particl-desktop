@@ -559,5 +559,9 @@ input {
   box-shadow: none !important;
   &:hover, &:focus {
     background: darken($bg, 10%) !important;
+    color: $text;
+  }
+  .mat-button-toggle-focus-overlay {
+    opacity: 0 !important; // fixes weird behaviour of overlay layer
   }
 }
