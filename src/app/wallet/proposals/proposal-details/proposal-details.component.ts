@@ -99,11 +99,13 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     this.proposalService.result(this.proposal.hash)
       .takeWhile(() => !this.destroyed)
       .subscribe((result: ProposalResult) => {
-        this.proposalResult = result;
+        if (result) {
+          this.proposalResult = result;
 
-        // No need to call this.getVoteDetails() until proposal doesn't have any vote!!
-        if (this.proposalResult.totalVotes) {
-          this.getVoteDetails();
+          // No need to call this.getVoteDetails() until proposal doesn't have any vote!!
+          if (this.proposalResult.totalVotes) {
+            this.getVoteDetails();
+          }
         }
       });
   }
