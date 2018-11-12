@@ -32,6 +32,8 @@ export class AddProposalComponent implements OnInit {
   public proposalFormGroup: FormGroup;
   private startBlockCount: number = 0;
   private endBlockCount: number = 0;
+  expireIn: number = 7; // days.
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -95,20 +97,7 @@ export class AddProposalComponent implements OnInit {
     this.router.navigate(['/wallet/proposals']);
   }
 
-  submitProposal() {
-    // get current block count.
-    this.peerService.getBlockCount().take(1).subscribe((blockCount: number) => {
-      /**
-       *  endBlockCount calculated based on formula <startBlockCount>.
-       *  endBlockCount = startBlockCount + 7 Days * 720 (particl block generate in a day).
-       */
-      this.startBlockCount = blockCount;
-      this.endBlockCount = blockCount + 7 * 720;
-      this.proposalTransactionFee();
-    })
-  }
-
-  proposalTransactionFee(): void {
+  submitProposal(): void {
 
     // check wallet status (unlock if locked ?).
     this.modalService.unlock({timeout: 30}, () => this.proposalTransactionFeeCallback())
@@ -119,8 +108,7 @@ export class AddProposalComponent implements OnInit {
     const params = [
       this.proposalFormGroup.value.title,
       this.proposalFormGroup.value.description,
-      this.startBlockCount,
-      this.endBlockCount,
+      this.expireIn,
       true,
       ... proposalOptions
     ];
@@ -152,8 +140,7 @@ export class AddProposalComponent implements OnInit {
       this.proposalsService.post([
         this.proposalFormGroup.value.title,
         this.proposalFormGroup.value.description,
-        this.startBlockCount,
-        this.endBlockCount,
+        this.expireIn,
         false,
         ... proposalOptions
       ]).subscribe((response) => {

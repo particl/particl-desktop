@@ -1,4 +1,5 @@
 import { VoteOption } from './vote-option.model';
+import { Duration } from 'app/core/util/utils';
 
 export class Proposal {
   public title: string;
@@ -10,6 +11,8 @@ export class Proposal {
   public type: string;
   public hash: string;
   public id: number;
+  createdAt: number;
+  expiredAt: number;
 
   constructor(object: any) {
     this.title = object.title;
@@ -21,8 +24,17 @@ export class Proposal {
     this.type = object.type;
     this.hash = object.hash;
     this.id = object.id;
+    this.createdAt = object.createdAt;
+    this.expiredAt = object.expiredAt;
   }
 
+  getTimeStamp(type: string): String {
+    if (type === 'left') {
+      return new Duration((this.expiredAt - Date.now()) / 1000).getReadableDuration()
+    } else {
+      return new Duration((Date.now() - this.expiredAt) / 1000).getReadableDuration()
+    }
+  }
   public leftVotingEndBlockCount(currentBlockCount: number): number {
     /*
      * i.e.
