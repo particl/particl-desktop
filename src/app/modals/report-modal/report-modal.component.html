@@ -1,20 +1,42 @@
-<div mat-dialog-title class="title">Report Listing</div>
+<div mat-dialog-title>Report Listing</div>
+<button class="small-close_button pull-right"><!-- FIXME: (click)="dialogClose()" -->
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
 
 
-<mat-dialog-content class="modal-content">
-  <p class="lead">
-    Are you sure you want to report this Listing as inappropriate?
-  </p>
-  <p class="listing-name">
-    {{ title }}
-  </p>
-  <p class="widget-help">
-    Users have the ability to self-govern the Marketplace and remove illegal and other inappropriate Listings. By reporting this Listing, you vote (with the weight of your coins) to take it down from the Marketplace.
-  </p>
-</mat-dialog-content>
+<div mat-dialog-content class="dialog-content">
+  <div class="tx-confirmation">
+
+    <div class="tx-info">
+      <div class="public">
+        <mat-icon class="icon report" fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+        <div class="title">Reporting Listing</div>
+        <p class="widget-help">
+          Users have the ability to self-govern the Marketplace and remove illegal and other inappropriate Listings. By reporting this Listing, you vote (with the weight of your coins) to take it down from the Marketplace.
+        </p>
+      </div>
+    </div><!-- .tx-info -->
+
+    <div class="tx-amount">
+      <span class="big">{{ title }}</span>
+    </div>
+
+    <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
+
+    <div class="receiver-info">
+      <div class="label">Inappropriate, take down!</div>
+    </div>
+
+    <p class="fee-info">
+      <!-- FIXME: implement fee info -->
+      Transaction fee:<span class="amount TO_DO">xx PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+    </p>
+
+  </div><!-- TX confirmation -->
+</div><!-- .dialog-content -->
 
 
-<mat-dialog-actions>
+<mat-dialog-actions fxLayoutAlign="space-between center">
 
   <button type="button" mat-button mat-dialog-close>
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>

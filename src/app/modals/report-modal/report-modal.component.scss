@@ -1,19 +1,12 @@
 @import "./src/assets/_config"; // import shared colors etc.
+@import "./src/app/modals/_confirmations-shared"; // shared stuff for confirmation modals
 
-.modal-content {
-  max-width: 500px;
 
-  .listing-name { // name of reported listing
-    background: $bg;
-    margin: 24px 0;
-    padding: 16px 24px;
-    font-size: 15px;
-    font-weight: 500;
+// ------ LAYOUT ------ //
+
+.tx-info {
+  .icon.report {
+    font-size: 26px;
+    color: $color-alert;
   }
-}
-
-mat-dialog-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
