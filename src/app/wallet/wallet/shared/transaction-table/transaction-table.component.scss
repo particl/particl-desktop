@@ -6,12 +6,18 @@
   // TX date/time
   .history_date {
     color: $text-muted;
-    border-right: 1px solid lighten($text-muted, 35%);
+    //border-right: 1px solid lighten($text-muted, 35%);
   }
 
   // confirmations
   .history_confirmation {
     color: $text-muted;
+    .confirmation-tag {
+      border-radius: $radius;
+      font-size: 12px;
+      display: inline-block;
+      padding: 5px 10px;
+    }
     .confirmations { // icon
       margin-right: 3px;
       font-size: 12px;
@@ -20,15 +26,27 @@
     }
     &.confirm-none { // unconfirmed TXs
       color: mix($color-alert, $color-warning, 100%);
+      .confirmation-tag {
+        background: rgba(mix($color-alert, $color-warning, 100%), 0.15);
+      }
     }
     &.confirm-1 { // 1-4 confirmations
       color: mix($color-alert, $color-warning, 66%);
+      .confirmation-tag {
+        background: rgba(mix($color-alert, $color-warning, 66%), 0.15);
+      }
     }
     &.confirm-2 { // 5-8 conf.
       color: mix($color-alert, $color-warning, 33%);
+      .confirmation-tag {
+        background: rgba(mix($color-alert, $color-warning, 33%), 0.15);
+      }
     }
     &.confirm-3 { // 9-12 conf.
       color: mix($color-alert, $color-warning, 0%);
+      .confirmation-tag {
+        background: rgba(mix($color-alert, $color-warning, 0%), 0.15);
+      }
     }
     &.confirm-ok {
       color: lighten($text-muted, 20%);
