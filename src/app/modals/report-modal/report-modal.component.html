@@ -1,5 +1,5 @@
 <div mat-dialog-title>Report Listing</div>
-<button class="small-close_button pull-right"><!-- FIXME: (click)="dialogClose()" -->
+<button class="small-close_button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
@@ -26,11 +26,6 @@
     <div class="receiver-info">
       <div class="label">Inappropriate, take down!</div>
     </div>
-
-    <p class="fee-info">
-      <!-- FIXME: implement fee info -->
-      Transaction fee:<span class="amount TO_DO">xx PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-    </p>
 
   </div><!-- TX confirmation -->
 </div><!-- .dialog-content -->
