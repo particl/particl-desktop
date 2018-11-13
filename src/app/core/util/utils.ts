@@ -354,21 +354,21 @@ export const Messages = {
 
 export const DEFAULT_GUI_SETTINGS  = {
     main: {
-        feeAmount: 1,
+        feeAmount: 0.01,
         feeCurrency: 'part',
         stake: true,
-        reserveAmount: 1,
+        reserveAmount: 0,
         reserveCurrency: 'part',
         rewardAddressEnabled: false,
         rewardAddress: '',
         foundationDonation: 10, // minimum percentage amount.
-        secureMessaging: false,
-        stakeInterval: 30
+        secureMessaging: false, // not used?
+        stakeInterval: 30 // not used?
     },
     network: {
         upnp: false,
         enabledProxy: false,
-        proxy: '127.0.0.1: 9050',
+        proxy: '127.0.0.1: 9050', // not used?
         proxyIP: '127.0.0.1',
         proxyPort: 9050,
     },
@@ -382,12 +382,12 @@ export const DEFAULT_GUI_SETTINGS  = {
         units: 'part',
         theme: 'light',
         rows: 10,
-        addresses: true,
+        addresses: true, // not used?
         advanced: false,
-        notifyPayments: false,
-        notifyStakes: false,
-        notifyOrders: false,
-        notifyProposals: false
+        notifyPayments: true,
+        notifyStakes: true,
+        notifyOrders: true,
+        notifyProposals: true
     },
     navigation: {
         marketExpanded: true,
