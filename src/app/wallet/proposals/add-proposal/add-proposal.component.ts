@@ -30,8 +30,6 @@ export class AddProposalComponent implements OnInit {
   public isTnCAccepted: boolean = false;
   // form controls
   public proposalFormGroup: FormGroup;
-  private startBlockCount: number = 0;
-  private endBlockCount: number = 0;
   expireIn: number = 7; // days.
 
   constructor(

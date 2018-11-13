@@ -15,6 +15,8 @@ import { PeerService } from 'app/core/rpc/peer/peer.service';
 import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
+import { Observable } from 'rxjs/Observable';
+import { time } from 'd3';
 
 
 @Component({
@@ -51,7 +53,6 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['active', 'past'];
   // ['active', 'planned', 'past']
-  public currentBlockCount: number;
   public proposals: Proposal[] = [];
   public activeProposals: Proposal[] = [];
   public pastProposals: Proposal[] = [];
@@ -69,16 +70,13 @@ export class ProposalsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    // get current BlockCounts
-    this.peerService.getBlockCount()
-      .takeWhile(() => !this.destroyed)
-      .subscribe((count: number) => {
-        this.currentBlockCount = count;
-        this.loadProposals();
-      })
+    // load proposal in every second
+    const timer = Observable.interval(1000)
+    timer.subscribe(() => this.loadProposals())
   }
 
   loadProposals(): void {
+    console.log('--------79---', Date.now())
     this.isLoading = true;
     if (this.tabLabels[this.selectedTab] === 'active') {
 
@@ -92,15 +90,8 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   getActiveProposalsListing(): void {
-    /*
-     * In the case of active proposals fetching.
-     * startBlockCount  = currentBlockCount.
-     * endBlockCount = '*';
-     */
-    const startBlock = this.currentBlockCount;
-    const endBlock = '*';
 
-    this.proposalsService.list(startBlock, endBlock)
+    this.proposalsService.list(Date.now(), '*')
       .take(1)
       .subscribe((activeProposal: Proposal[]) => {
         this.isLoading = false;
@@ -115,15 +106,8 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   getPastProposalsListing(): void {
-    /*
-     * In the case of past proposals fetching.
-     * startBlockCount  = '*'.
-     * endBlockCount = this.currentBlockCount;
-     */
-    const startBlock = '*';
-    const endBlock = this.currentBlockCount;
 
-    this.proposalsService.list(startBlock, endBlock)
+    this.proposalsService.list('*', Date.now())
       .take(1)
       .subscribe((pastProposal: Proposal[]) => {
         this.isLoading = false;
