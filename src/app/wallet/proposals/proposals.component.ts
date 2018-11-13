@@ -1,22 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Log } from 'ng2-logger';
 import * as _ from 'lodash';
-import { ProfileService } from 'app/core/market/api/profile/profile.service';
-import { Profile } from 'app/core/market/api/profile/profile.model';
-import { RpcService } from 'app/core/rpc/rpc.service';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
-import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { Observable } from 'rxjs/Observable';
-import { time } from 'd3';
 
 
 @Component({
@@ -65,9 +55,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private profileService: ProfileService,
     private peerService: PeerService,
-    private blockStatusService: BlockStatusService,
     private proposalsService: ProposalsService
   ) { }
 

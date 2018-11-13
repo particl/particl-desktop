@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs/Observable';
 
 import { FormArray } from '@angular/forms/src/model';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
@@ -15,7 +14,6 @@ import {
   ProposalConfirmationComponent
 } from 'app/modals/proposal-confirmation/proposal-confirmation.component';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
-import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { Amount } from 'app/core/util/utils';
 
 @Component({
