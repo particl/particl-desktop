@@ -7,10 +7,9 @@
         (click)="toggle()"></mat-icon>
 
 <button *ngIf="from === 'preview'" mat-button class="small" 
-        [color]="listing?.isFlagged ? 'warn' : 'basic'" 
+        [color]="listing?.isFlagged ? 'warn' : 'basic'" (click)="toggle()"
         [matTooltip]="listing?.isFlagged ? 'Item has been reported' : 'Report'"
         matTooltipPosition="above">
   <mat-icon fontSet="partIcon" fontIcon="part-flag"
-      [ngClass]="{ 'active': listing?.isFlagged }"
-      (click)="toggle()"></mat-icon>
+      [ngClass]="{ 'active': listing?.isFlagged }"></mat-icon>
 </button>
