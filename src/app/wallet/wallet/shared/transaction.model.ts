@@ -178,7 +178,7 @@ export class Transaction {
 
   /* Date stuff */
   public getDate(): string {
-    return new DateFormatter(new Date(this.time * 1000)).dateFormatter();
+    return new DateFormatter(new Date(this.time * 1000)).dateFormatter(false);
   }
 
   /* Narration */

@@ -185,15 +185,19 @@ export class ReceiveComponent implements OnInit {
   /**
    * Opens a dialog when creating a new address.
    */
-  openNewAddress(address?: object): void {
+  openNewAddress(address?: any): void {
     const dialogRef = this.dialog.open(QrCodeModalComponent);
     dialogRef.componentInstance.type = this.type;
     dialogRef.componentInstance.singleAddress = address;
 
     // update receive page after adding address
     dialogRef.componentInstance.onConfirm.subscribe((msg: string) => {
-      this.flashNotificationService.open(msg);
-      this.rpc_update();
+      if (msg) {
+        this.flashNotificationService.open(msg);
+        this.rpc_update();
+      } else {
+        this.openSignatureModal(address.address);
+      }
     });
   }
 

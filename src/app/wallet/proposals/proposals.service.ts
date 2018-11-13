@@ -45,7 +45,12 @@ export class ProposalsService {
   // proposal result.
   result(proposalHash: string) {
     const params = ['result', proposalHash]
-    return this.marketService.call('proposal', params).map((r) => new ProposalResult(r));
+    return this.marketService.call('proposal', params).map((r) => {
+      if (r) {
+        return new ProposalResult(r);
+      }
+      return null;
+    });
   }
 
   // vote post.
