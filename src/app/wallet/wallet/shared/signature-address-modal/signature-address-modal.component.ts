@@ -27,7 +27,6 @@ export class SignatureAddressModalComponent implements OnInit {
   public addressForm: FormGroup;
   public isDisabled: boolean = true;
   public isAddressLookup: boolean = false;
-  public tabIndex: number = 1;
 
   log: any = Log.create('SignatureAddressModalComponent.component');
 
@@ -47,10 +46,8 @@ export class SignatureAddressModalComponent implements OnInit {
 
   ngOnInit() {
     if (this.type === 'verify') {
-      this.tabIndex = 1;
       this.isDisabled = false;
     } else {
-      this.tabIndex = 0;
       this.type = 'sign';
     }
     this.buildForm();
@@ -62,12 +59,6 @@ export class SignatureAddressModalComponent implements OnInit {
       signature: this.formBuilder.control({value: null, disabled: this.isDisabled}, [Validators.required]),
       message: this.formBuilder.control(null),
     });
-  }
-
-  selectTab(index: number): void {
-    this.type = (index) ? 'verify' : 'sign';
-    this.isDisabled = (this.type !== 'verify');
-    this.buildForm();
   }
 
   openLookup(): void {
