@@ -28,13 +28,14 @@ export class Proposal {
     this.expiredAt = object.expiredAt;
   }
 
-  getTimeStamp(type: string): String {
-    if (type === 'left') {
+  get timeStamp(): String {
+    if (this.expiredAt > Date.now()) {
       return new Duration((this.expiredAt - Date.now()) / 1000).getReadableDuration()
     } else {
       return new Duration((Date.now() - this.expiredAt) / 1000).getReadableDuration()
     }
   }
+
   public leftVotingEndBlockCount(currentBlockCount: number): number {
     /*
      * i.e.

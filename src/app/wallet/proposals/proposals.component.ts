@@ -1,20 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Log } from 'ng2-logger';
 import * as _ from 'lodash';
-import { ProfileService } from 'app/core/market/api/profile/profile.service';
-import { Profile } from 'app/core/market/api/profile/profile.model';
-import { RpcService } from 'app/core/rpc/rpc.service';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
-import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
+import { Observable } from 'rxjs/Observable';
 
 
 @Component({
@@ -51,62 +43,55 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['active', 'past'];
   // ['active', 'planned', 'past']
-  public currentBlockCount: number;
   public proposals: Proposal[] = [];
   public activeProposals: Proposal[] = [];
   public pastProposals: Proposal[] = [];
+  public sortedProposalByExpiryTime: Proposal[] = [];
+  expiredProposalIds: number[];
   public isLoading: boolean = false;
   private destroyed: boolean;
+  timer: any;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private profileService: ProfileService,
     private peerService: PeerService,
-    private blockStatusService: BlockStatusService,
     private proposalsService: ProposalsService
   ) { }
 
   ngOnInit() {
-
-    // get current BlockCounts
     this.peerService.getBlockCount()
-      .takeWhile(() => !this.destroyed)
-      .subscribe((count: number) => {
-        this.currentBlockCount = count;
-        this.loadProposals();
-      })
+    .takeWhile(() => !this.destroyed)
+    .subscribe((count: number) => {
+
+      if (this.tabLabels[this.selectedTab] === 'active') {
+        this.loadActiveProposalsListing();
+      }
+    })
   }
 
   loadProposals(): void {
-    this.isLoading = true;
     if (this.tabLabels[this.selectedTab] === 'active') {
 
       // get active proposal list
-      this.getActiveProposalsListing();
+      this.loadActiveProposalsListing();
     } else {
 
       // get past proposal list
-      this.getPastProposalsListing();
+      this.loadPastProposalsListing();
     }
   }
 
-  getActiveProposalsListing(): void {
-    /*
-     * In the case of active proposals fetching.
-     * startBlockCount  = currentBlockCount.
-     * endBlockCount = '*';
-     */
-    const startBlock = this.currentBlockCount;
-    const endBlock = '*';
-
-    this.proposalsService.list(startBlock, endBlock)
+  loadActiveProposalsListing(): void {
+    this.isLoading = true;
+    this.proposalsService.list(Date.now(), '*')
       .take(1)
       .subscribe((activeProposal: Proposal[]) => {
         this.isLoading = false;
         if (this.isNewProposalArrived(this.activeProposals, activeProposal)) {
-          activeProposal.reverse()
+          this.sortedProposalByExpiryTime = this.getSortedProposalByExpiryTime(activeProposal)
           this.activeProposals = activeProposal;
+          this.setExpiryCheckTimer();
         }
       }, (error) => {
         this.isLoading = false;
@@ -114,23 +99,64 @@ export class ProposalsComponent implements OnInit, OnDestroy {
       })
   }
 
-  getPastProposalsListing(): void {
-    /*
-     * In the case of past proposals fetching.
-     * startBlockCount  = '*'.
-     * endBlockCount = this.currentBlockCount;
-     */
-    const startBlock = '*';
-    const endBlock = this.currentBlockCount;
+  setExpiryCheckTimer(): void {
 
-    this.proposalsService.list(startBlock, endBlock)
+    // unsubscribe if timer already exist.
+    if (this.timer) {
+      this.timer.unsubscribe();
+    }
+
+    this.timer = Observable.interval(1000);
+    this.timer
+      .takeWhile(() => !this.destroyed)
+      .subscribe(() => {
+        this.removeExpiredProposals()
+      }
+    )
+  }
+
+  getSortedProposalByExpiryTime(proposals: Proposal[]): Proposal[] {
+
+    // pick specific keys from the array of proposal for saving the memory consumption
+    return _.map(
+      _.orderBy(proposals, ['expiredAt'], ['desc']), (proposal) => _.pick(proposal, ['id', 'expiredAt'])
+    ) ;
+  }
+
+  removeExpiredProposals(): void {
+    if (
+      this.sortedProposalByExpiryTime &&
+      this.sortedProposalByExpiryTime.length
+    ) {
+
+      this.expiredProposalIds = [];
+      for (let index = 0; index < this.sortedProposalByExpiryTime.length; index++) {
+
+        if (this.sortedProposalByExpiryTime[index].expiredAt <= Date.now()) {
+
+          this.expiredProposalIds.push(this.sortedProposalByExpiryTime[index].id)
+        } else {
+          break;
+        }
+      }
+
+      if (this.expiredProposalIds.length) {
+        this.activeProposals = _.filter(this.activeProposals, (proposal) => {
+          return this.expiredProposalIds.indexOf(proposal.id) === -1;
+        })
+      }
+
+    }
+
+  }
+
+  loadPastProposalsListing(): void {
+    this.isLoading = true;
+    this.proposalsService.list('*', Date.now())
       .take(1)
       .subscribe((pastProposal: Proposal[]) => {
         this.isLoading = false;
-        if (this.isNewProposalArrived(this.pastProposals, pastProposal)) {
-          pastProposal.reverse()
-          this.pastProposals = pastProposal;
-        }
+        this.pastProposals = pastProposal;
       }, (error) => {
         this.isLoading = false;
         this.log.d(error);
