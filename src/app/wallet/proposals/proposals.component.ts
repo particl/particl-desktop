@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
 import { Log } from 'ng2-logger';
 import * as _ from 'lodash';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { Observable } from 'rxjs/Observable';
-
 
 @Component({
   selector: 'app-proposals',
@@ -46,15 +44,13 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   public proposals: Proposal[] = [];
   public activeProposals: Proposal[] = [];
   public pastProposals: Proposal[] = [];
-  public sortedProposalByExpiryTime: Proposal[] = [];
-  expiredProposalIds: number[];
   public isLoading: boolean = false;
   private destroyed: boolean;
-  timer: any;
+  private timer: any;
+  private sortedProposalByExpiryTime: any[] = [];
 
   constructor(
     private router: Router,
-    private formBuilder: FormBuilder,
     private peerService: PeerService,
     private proposalsService: ProposalsService
   ) { }
@@ -71,12 +67,11 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   loadProposals(): void {
+    this.clearStores();
     if (this.tabLabels[this.selectedTab] === 'active') {
-
       // get active proposal list
       this.loadActiveProposalsListing();
     } else {
-
       // get past proposal list
       this.loadPastProposalsListing();
     }
@@ -86,11 +81,11 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.proposalsService.list(Date.now(), '*')
       .take(1)
-      .subscribe((activeProposal: Proposal[]) => {
+      .subscribe((activeProposalList: Proposal[]) => {
         this.isLoading = false;
-        if (this.isNewProposalArrived(this.activeProposals, activeProposal)) {
-          this.sortedProposalByExpiryTime = this.getSortedProposalByExpiryTime(activeProposal)
-          this.activeProposals = activeProposal;
+        if (this.isNewProposalArrived(this.activeProposals, activeProposalList)) {
+          this.activeProposals = activeProposalList.reverse();
+          this.sortedProposalByExpiryTime = this.getSortedProposalByExpiryTime(this.activeProposals);
           this.setExpiryCheckTimer();
         }
       }, (error) => {
@@ -101,51 +96,49 @@ export class ProposalsComponent implements OnInit, OnDestroy {
 
   setExpiryCheckTimer(): void {
 
-    // unsubscribe if timer already exist.
-    if (this.timer) {
-      this.timer.unsubscribe();
-    }
+    this.stopTimer();
 
-    this.timer = Observable.interval(1000);
-    this.timer
+    this.timer = Observable.timer(1000, 1000)
       .takeWhile(() => !this.destroyed)
       .subscribe(() => {
-        this.removeExpiredProposals()
-      }
-    )
+        this.removeExpiredProposals();
+        }
+      )
   }
 
-  getSortedProposalByExpiryTime(proposals: Proposal[]): Proposal[] {
+  getSortedProposalByExpiryTime(proposals: Proposal[]): any[] {
 
     // pick specific keys from the array of proposal for saving the memory consumption
-    return _.map(
-      _.orderBy(proposals, ['expiredAt'], ['desc']), (proposal) => _.pick(proposal, ['id', 'expiredAt'])
-    ) ;
+    const sortedProposals = proposals.map((proposal: Proposal, pIdx: number) => {
+        return { 'idx': pIdx, expiredAt: proposal.expiredAt };
+      });
+
+    return _.orderBy(sortedProposals, ['expiredAt'], ['asc']);
   }
 
   removeExpiredProposals(): void {
-    if (
-      this.sortedProposalByExpiryTime &&
-      this.sortedProposalByExpiryTime.length
-    ) {
+    if (this.sortedProposalByExpiryTime.length) {
+      const now = Date.now();
 
-      this.expiredProposalIds = [];
-      for (let index = 0; index < this.sortedProposalByExpiryTime.length; index++) {
+      let index = 0;
+      for (; index < this.sortedProposalByExpiryTime.length; index++) {
+        if (this.isLoading) {
+          break;
+        }
 
-        if (this.sortedProposalByExpiryTime[index].expiredAt <= Date.now()) {
-
-          this.expiredProposalIds.push(this.sortedProposalByExpiryTime[index].id)
+        if (this.sortedProposalByExpiryTime[index].expiredAt <= now) {
+          const idx = this.sortedProposalByExpiryTime[index].idx;
+          if (typeof idx === 'number' && this.activeProposals[idx]) {
+            this.activeProposals.splice(idx, 1);
+          }
         } else {
           break;
         }
       }
 
-      if (this.expiredProposalIds.length) {
-        this.activeProposals = _.filter(this.activeProposals, (proposal) => {
-          return this.expiredProposalIds.indexOf(proposal.id) === -1;
-        })
+      if (index > 0) {
+        this.sortedProposalByExpiryTime.splice(0, index+1);
       }
-
     }
 
   }
@@ -160,7 +153,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
       }, (error) => {
         this.isLoading = false;
         this.log.d(error);
-      })
+      });
   }
 
   isNewProposalArrived(oldProposals: Proposal[], newProposals: Proposal[]): boolean {
@@ -173,10 +166,29 @@ export class ProposalsComponent implements OnInit, OnDestroy {
 
   changeTab(index: number): void {
     this.selectedTab = index;
+    this.stopTimer();
     this.loadProposals();
   }
 
   ngOnDestroy() {
     this.destroyed = true;
   }
+
+  private stopTimer() {
+    try {
+      if (this.timer !== undefined) {
+        this.timer.unsubscribe();
+      }
+    } catch (e) {
+      this.log.e('Failed to stop the expiry timer: ', e);
+    }
+  }
+
+  private clearStores() {
+    this.proposals = [];
+    this.activeProposals = [];
+    this.pastProposals = [];
+    this.sortedProposalByExpiryTime = [];
+  }
+
 }

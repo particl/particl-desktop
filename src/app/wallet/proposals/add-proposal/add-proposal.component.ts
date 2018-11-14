@@ -7,8 +7,6 @@ import { Log } from 'ng2-logger';
 import { FormArray } from '@angular/forms/src/model';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
-import { Profile } from 'app/core/market/api/profile/profile.model';
-import { PeerService } from 'app/core/rpc/peer/peer.service';
 
 import {
   ProposalConfirmationComponent
@@ -35,7 +33,6 @@ export class AddProposalComponent implements OnInit {
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private modalService: ModalsHelperService,
-    private peerService: PeerService,
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService
   ) { }

@@ -12,18 +12,18 @@
     </div>
     <!-- TODO: only show "blocks-left" on ACTIVE proposals -->
     <div class="blocks-left" *ngIf="selectedTab == 'active'">
-      <mat-progress-bar mode="determinate" value="{{proposal?.votingProgressPercentage()}}" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
-      <div class="text">{{proposal?.timeStamp}} left</div>
+      <mat-progress-bar mode="determinate" value="{{proposal?.votingProgressPercentage()}}" matTooltip="Time left for voting" matTooltipPosition="before"></mat-progress-bar>
+      <div class="text">{{proposal?.expiryTimeStamp}} left</div>
     </div>
     <!-- TODO: only show "blocks-left" on PLANNED/future proposals -->
     <div class="blocks-left" *ngIf="selectedTab == 'planned'">
       <mat-progress-bar mode="determinate" value="0" matTooltip="Blocks left until voting starts" matTooltipPosition="before"></mat-progress-bar>
-      <div class="text">{{proposal?.timeStamp}} left until voting starts</div>
+      <div class="text">{{proposal?.expiryTimeStamp}} left until voting starts</div>
     </div>
     <!-- TODO: only show "blocks-left.results" on PAST proposals -->
     <div class="blocks-left results" *ngIf="selectedTab == 'past'">
       <mat-progress-bar mode="determinate" value="100"></mat-progress-bar>
-      <div class="text">voting finished {{proposal?.timeStamp}} ago</div>
+      <div class="text">voting finished {{proposal?.expiryTimeStamp}} ago</div>
     </div>
   </div>
 
@@ -35,7 +35,7 @@
           <p [innerHtml]="proposal?.description">
         </p>
       </div>
-      
+
       <!-- <table class="authors TO_DO">
         <tr>
           <th>Author</th>
@@ -80,7 +80,7 @@
             [data]="proposalResult?.graphData">
           </nvd3>
         </div>
-        
+
         <!-- if no votes yet, show placeholder: -->
         <div *ngIf="!proposalResult?.totalVotes" class="graph-placeholder">
           <div class="title">No<br>votes<br>{{selectedTab === 'active' ? "yet" : "received"}}</div>

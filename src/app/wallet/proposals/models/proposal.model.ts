@@ -13,7 +13,6 @@ export class Proposal {
   expiredAt: number;
 
   constructor(object: any) {
-    console.log('object', object);
     this.title = object.title;
     this.options = object.ProposalOptions.map(v => new VoteOption(v));
     this.submitter = object.submitter;
@@ -25,7 +24,7 @@ export class Proposal {
     this.expiredAt = object.expiredAt;
   }
 
-  get timeStamp(): String {
+  get expiryTimeStamp(): String {
     if (this.expiredAt > Date.now()) {
       return new Duration((this.expiredAt - Date.now()) / 1000).getReadableDuration()
     } else {
