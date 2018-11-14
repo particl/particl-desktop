@@ -12,7 +12,7 @@
     </div>
     <!-- TODO: only show "blocks-left" on ACTIVE proposals -->
     <div class="blocks-left" *ngIf="selectedTab == 'active'">
-      <mat-progress-bar mode="determinate" value="{{proposal?.votingProgressPercentage(currentBlockCount)}}" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
+      <mat-progress-bar mode="determinate" value="{{proposal?.votingProgressPercentage()}}" matTooltip="Blocks left for voting" matTooltipPosition="before"></mat-progress-bar>
       <div class="text">{{proposal?.timeStamp}} left</div>
     </div>
     <!-- TODO: only show "blocks-left" on PLANNED/future proposals -->
