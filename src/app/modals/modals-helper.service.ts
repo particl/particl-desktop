@@ -55,7 +55,7 @@ export class ModalsHelperService implements OnDestroy {
     });
 
     /* Hook for checking the accept & terms modal */
-    // this.checkForNewVersion();
+    this.checkForNewVersion();
   }
 
   /**
