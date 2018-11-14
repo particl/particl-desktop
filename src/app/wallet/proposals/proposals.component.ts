@@ -137,7 +137,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
       }
 
       if (index > 0) {
-        this.sortedProposalByExpiryTime.splice(0, index+1);
+        this.sortedProposalByExpiryTime.splice(0, index + 1);
       }
     }
 
