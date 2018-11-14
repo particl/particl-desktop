@@ -146,7 +146,9 @@ export class Duration {
     } else if (hours > 0) {
       return  hours + ' hours' + (minutes > 0 ? ' and ' + Math.ceil(minutes) + ' minutes' : '');
     } else if (minutes > 0) {
-      return  minutes + ' minutes';
+      return  minutes + (minutes > 1 ? ' minutes' : ' minute');
+    } else {
+      return 'less than a minute'
     }
   }
 

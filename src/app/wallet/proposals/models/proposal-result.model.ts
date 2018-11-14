@@ -7,7 +7,6 @@ export class ProposalResult {
     id: number;
     Proposal: Proposal
     ProposalOptionResults: ProposalOptionResult[];
-    block: number
     createdAt: Date;
     proposalId: number;
     updatedAt: Date;
@@ -18,7 +17,6 @@ export class ProposalResult {
         this.id = object.id;
         this.Proposal = object.Proposal;
         this.ProposalOptionResults = object.ProposalOptionResults.map((v) => new ProposalOptionResult(v));
-        this.block = object.block;
         this.createdAt = object.createdAt;
         this.proposalId = object.proposalId;
         this.updatedAt = object.updatedAt;
