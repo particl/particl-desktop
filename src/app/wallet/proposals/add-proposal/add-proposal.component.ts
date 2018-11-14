@@ -1,21 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs/Observable';
 
 import { FormArray } from '@angular/forms/src/model';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
-import { Profile } from 'app/core/market/api/profile/profile.model';
-import { PeerService } from 'app/core/rpc/peer/peer.service';
 
 import {
   ProposalConfirmationComponent
 } from 'app/modals/proposal-confirmation/proposal-confirmation.component';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
-import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { Amount } from 'app/core/util/utils';
 
 @Component({
@@ -30,14 +26,13 @@ export class AddProposalComponent implements OnInit {
   public isTnCAccepted: boolean = false;
   // form controls
   public proposalFormGroup: FormGroup;
-  private startBlockCount: number = 0;
-  private endBlockCount: number = 0;
+  expireIn: number = 7; // days.
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private modalService: ModalsHelperService,
-    private peerService: PeerService,
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService
   ) { }
@@ -95,20 +90,7 @@ export class AddProposalComponent implements OnInit {
     this.router.navigate(['/wallet/proposals']);
   }
 
-  submitProposal() {
-    // get current block count.
-    this.peerService.getBlockCount().take(1).subscribe((blockCount: number) => {
-      /**
-       *  endBlockCount calculated based on formula <startBlockCount>.
-       *  endBlockCount = startBlockCount + 7 Days * 720 (particl block generate in a day).
-       */
-      this.startBlockCount = blockCount;
-      this.endBlockCount = blockCount + 7 * 720;
-      this.proposalTransactionFee();
-    })
-  }
-
-  proposalTransactionFee(): void {
+  submitProposal(): void {
 
     // check wallet status (unlock if locked ?).
     this.modalService.unlock({timeout: 30}, () => this.proposalTransactionFeeCallback())
@@ -119,8 +101,7 @@ export class AddProposalComponent implements OnInit {
     const params = [
       this.proposalFormGroup.value.title,
       this.proposalFormGroup.value.description,
-      this.startBlockCount,
-      this.endBlockCount,
+      this.expireIn,
       true,
       ... proposalOptions
     ];
@@ -152,8 +133,7 @@ export class AddProposalComponent implements OnInit {
       this.proposalsService.post([
         this.proposalFormGroup.value.title,
         this.proposalFormGroup.value.description,
-        this.startBlockCount,
-        this.endBlockCount,
+        this.expireIn,
         false,
         ... proposalOptions
       ]).subscribe((response) => {
