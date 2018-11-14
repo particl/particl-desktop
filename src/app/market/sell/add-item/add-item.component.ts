@@ -292,14 +292,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const item = this.itemFormGroup.value;
 
     // update information
-    /*
-     this.information.update(
-     this.templateId,
-     item.title,
-     item.shortDescription,
-     item.longDescription,
-     item.category
-     ).subscribe();*/
+    await this.information.update(
+      this.templateId,
+      item.title,
+      item.shortDescription,
+      item.longDescription,
+      item.category
+     ).toPromise();
 
     // update images
     await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
