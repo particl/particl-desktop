@@ -213,7 +213,7 @@
                  [disabled]="send.subtractFeeFromAmount">
         </mat-form-field>
         <mat-checkbox name="send_all" [(ngModel)]="send.subtractFeeFromAmount" (click)="sendAllBalance()"
-                      class="send-all">
+                      class="send-all" color="warn">
           Send All
         </mat-checkbox>
         <!-- Choose currency -->

@@ -8,6 +8,7 @@ Angular Material's custom theme styles
 Global styles have been moved to `/srv/http/particl-desktop/src/styles.scss`
 
 - Material color system: https://material.io/design/color/#tools-for-picking-colors
+- Angular Material theming: https://material.angular.io/guide/theming
 - Theming (& dark themes): https://coursetro.com/posts/code/116/Create-your-own-Angular-5-Material-Theme
 
 */
@@ -131,7 +132,7 @@ $part-default-theme: mat-light-theme($part-default-color, $part-default-accent, 
 
 // ------ Dark theme ------ //
 
-$part-dark-color: mat-palette($default-color); // TODO: switch to new $dark-color
+$part-dark-color: mat-palette($mat-cyan, 300); // TODO: switch to new $dark-color
 $part-dark-accent: mat-palette($default-accent, 600); // TODO: switch to new $dark-accent
 
 $part-dark-theme: mat-dark-theme($part-dark-color, $part-dark-accent);
