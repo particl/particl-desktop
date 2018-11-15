@@ -63,7 +63,7 @@
         <div class="title">Listing expiration &amp; fees</div>
         <div class="row" fxLayout fxLayoutAlign="center center">
           <mat-form-field class="full-width" fxFlex="1 1 100%">
-            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration" (change)="loadTransactionFee()">
+            <mat-select placeholder="Listing expiration" [disabled]="isExistingTemplate()" [(ngModel)]="expiration" (change)="loadTransactionFee()">
               <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
                 {{ expire.title }}
               </mat-option>

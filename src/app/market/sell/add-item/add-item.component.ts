@@ -20,6 +20,7 @@ import { LocationService } from 'app/core/market/api/template/location/location.
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
 
 @Component({
   selector: 'app-add-item',
@@ -73,7 +74,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     private countryList: CountryListService,
-    private escrow: EscrowService
+    private escrow: EscrowService,
+    private payment: PaymentService
   ) { }
 
   ngOnInit() {
@@ -306,12 +308,20 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update location
     const country = this.countryList.getCountryByName(item.country);
     await this.location.execute('update', this.templateId, country, null, null).toPromise();
+
+    // update escrow
     await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
     // update shipping
 
     // update messaging
+
     // update payment
-    // update escrow
+    await this.payment.update(
+      this.templateId,
+      item.basePrice,
+      item.domesticShippingPrice,
+      item.internationalShippingPrice
+    ).toPromise();
 
      return this.template.get(this.preloadedTemplate.id).toPromise();
   }
