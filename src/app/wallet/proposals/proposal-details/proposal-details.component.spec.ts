@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from 'app/wallet/shared/shared.module';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { ModalsModule } from 'app/modals/modals.module';
+
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
@@ -18,7 +20,8 @@ describe('ProposalDetailsComponent', () => {
         BrowserAnimationsModule,
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        ModalsModule.forRoot()
       ],
       providers: [ ProposalsService, ModalsHelperService ],
       declarations: [ ProposalDetailsComponent ]
