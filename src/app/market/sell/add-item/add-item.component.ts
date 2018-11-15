@@ -294,6 +294,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const item = this.itemFormGroup.value;
 
     // update information
+    if (this.isTemplateInfoUpdated(item)) {
     await this.information.update(
       this.templateId,
       item.title,
@@ -301,6 +302,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       item.longDescription,
       item.category
      ).toPromise();
+    }
 
     // update images
     await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
@@ -310,20 +312,43 @@ export class AddItemComponent implements OnInit, OnDestroy {
     await this.location.execute('update', this.templateId, country, null, null).toPromise();
 
     // update escrow
+    // @TODO EscrowType will change in future?
     await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
-    // update shipping
 
-    // update messaging
 
-    // update payment
-    await this.payment.update(
-      this.templateId,
-      item.basePrice,
-      item.domesticShippingPrice,
-      item.internationalShippingPrice
-    ).toPromise();
+    // update shipping?
+    // update messaging?
 
-     return this.template.get(this.preloadedTemplate.id).toPromise();
+    if (this.isPaymentInfoUpdated(item)) {
+
+      // update payment
+      await this.payment.update(
+        this.templateId,
+        item.basePrice,
+        item.domesticShippingPrice,
+        item.internationalShippingPrice
+      ).toPromise();
+    }
+
+    return this.template.get(this.preloadedTemplate.id).toPromise();
+  }
+
+  isPaymentInfoUpdated(item: any): boolean {
+    return (
+      this.preloadedTemplate.basePrice.getAmount() !== item.basePrice ||
+      this.preloadedTemplate.domesticShippingPrice.getAmount() !== item.domesticShippingPrice ||
+      this.preloadedTemplate.internationalShippingPrice.getAmount() !== item.internationalShippingPrice
+    )
+  }
+
+  isTemplateInfoUpdated(item: any): boolean {
+    console.log('this.preloadedTemplate------', this.preloadedTemplate)
+    return (
+      this.preloadedTemplate.title !== item.title ||
+      this.preloadedTemplate.shortDescription !== item.shortDescription ||
+      this.preloadedTemplate.longDescription !== item.longDescription ||
+      this.category !== item.category
+    );
   }
 
   validate() {
@@ -383,6 +408,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
 
   onCategoryChange(category: Category): void {
+    this.log.d('category', category);
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
