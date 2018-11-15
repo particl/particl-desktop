@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketModule } from '../../../core/market/market.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 import { CategoryService } from '../../../core/market/api/category/category.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
@@ -23,6 +24,7 @@ describe('AddItemComponent', () => {
       imports: [
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
+        ModalsModule.forRoot(),
         BrowserAnimationsModule,
         RouterTestingModule,
         MarketModule.forRoot()

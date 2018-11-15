@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
-import { ModalsHelperService, TermsService } from 'app/modals/modals.module';
+import { ModalsHelperService } from 'app/modals/modals.module';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 
 /*
@@ -50,7 +50,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _rpc: RpcService,
     private _updater: UpdaterService,
-    private _terms: TermsService,
     private _rpcState: RpcStateService,
     private _modalsService: ModalsHelperService,
     private dialog: MatDialog,
