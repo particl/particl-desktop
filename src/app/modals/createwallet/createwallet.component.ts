@@ -200,7 +200,7 @@ export class CreateWalletComponent implements OnDestroy {
           this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
-          // Assuming that every error message have different code 
+          // Assuming that every error message have different code
           if (error.code === -4) {
             this.errorString = 'Wallet is currently being updated (rescanning)';
           }
