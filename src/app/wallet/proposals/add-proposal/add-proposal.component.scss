@@ -2,14 +2,9 @@
 
 // ------ LAYOUT ------ //
 
-.container-block {
+.row {
   position: relative;
-  //margin-top: $header-main-height;
-  padding: $padding;
   display: flex;
-  @include break(l) {
-    padding: 45px $padding-l;
-  }
 }
 
 .column {
