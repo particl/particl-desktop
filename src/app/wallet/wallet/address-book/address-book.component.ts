@@ -22,6 +22,9 @@ export class AddressBookComponent {
     this.addressHelper = new AddressHelper();
   }
 
+  // UI logic
+  introDisplayed: boolean = true; // display full page title with description
+
   openNewAddress(): void {
     const dialogRef = this.dialog.open(NewAddressModalComponent);
   }

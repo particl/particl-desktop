@@ -1,18 +1,21 @@
 <div class="address-book container-block without-tab-bar">
 
-  <div class="page-intro">
-    <button mat-button class="intro-toggle small">
-      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-      <mat-icon fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
+  <div class="page-intro" [ngClass]="{ 'inactive': !introDisplayed }">
+    <button mat-button class="intro-toggle small"
+            (click)="introDisplayed = !introDisplayed"
+            matTooltip="{{ (introDisplayed) ? 'Hide intro': 'Show help' }}" matTooltipPosition="before">
+      <mat-icon fontSet="partIcon" fontIcon="part-{{ (introDisplayed) ? 'cross': 'circle-question' }}"></mat-icon>
     </button>
     <h1>Address Book</h1>
-    <p>
-      Address Book is your personal collection of saved addresses belonging to other parties.
-    </p>
-    <p class="widget-help">
-      Note that it is recommended that you mostly save Private addresses (if possible).<br>
-      Re-using the same Public addresses increases transaction traceability, which results in loss of privacy both for you and the other party.
-    </p>
+    <div class="content" *ngIf="introDisplayed">
+      <p>
+        Address Book is your personal collection of saved addresses belonging to other parties.
+      </p>
+      <p class="widget-help">
+        Note that it is recommended that you mostly save Private addresses (if possible).<br>
+        Re-using the same Public addresses increases transaction traceability, which results in loss of privacy both for you and the other party.
+      </p>
+    </div>
   </div><!-- .page-intro -->
 
   <div class="filter">
