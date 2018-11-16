@@ -1,5 +1,20 @@
 <div class="address-book container-block without-tab-bar">
 
+  <div class="page-intro">
+    <button mat-button class="intro-toggle small">
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      <mat-icon fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
+    </button>
+    <h1>Address Book</h1>
+    <p>
+      Address Book is your personal collection of saved addresses belonging to other parties.
+    </p>
+    <p class="widget-help">
+      Note that it is recommended that you mostly save Private addresses (if possible).<br>
+      Re-using the same Public addresses increases transaction traceability, which results in loss of privacy both for you and the other party.
+    </p>
+  </div><!-- .page-intro -->
+
   <div class="filter">
 
     <div class="add-address">
@@ -32,10 +47,6 @@
         </mat-select>
       </mat-card>
     </div><!-- .search-sorting -->
-
-    <p class="widget-help">
-      Address Book is your personal collection of saved addresses belonging to other parties. Kindly note that as re-using the same address for more than one transaction increases traceability &ndash; it is recommended that you mostly save private addresses (if possible) so that both parties’ identities remain private.
-    </p>
 
   </div><!-- .filter -->
 

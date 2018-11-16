@@ -69,6 +69,12 @@ $break-xhd: 2200px;
     http://thesassway.com/intermediate/understanding-placeholder-selectors
 \* ------------------------------- */
 
+// ------ 3.1. TYPOGRAPHY ------ //
+
+%lighter { // "grey" text, formerly "help descriptions"
+  opacity: 0.55;
+}
+
 %subtitle { // section titles / H2's
   font-size: 14px;
   font-family: $font;
@@ -83,6 +89,9 @@ $break-xhd: 2200px;
   font-weight: 700;
   font-size: 15px;
 }
+
+
+// ------ 3.2. UI ELEMENTS ------ //
 
 %tag { // notification tags - e.g. in tabs: Orders [3]
   @extend %tfx;
@@ -101,6 +110,9 @@ $break-xhd: 2200px;
   border-top: 1px solid #15191A;
   box-shadow: 0 1px 0 #333 inset;
 }
+
+
+// ------ 3.3. HELPER & MISC ------ //
 
 // enable/disable text selection
 %disable-select {
