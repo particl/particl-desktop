@@ -9,9 +9,6 @@ import { Component, OnInit } from '@angular/core';
 export class PrivateMarketsComponent implements OnInit {
   public isLoading: boolean = false;
 
-  public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['connected-markets', 'my-markets'];
-
   public search: string = '';
 
   filters: any = {
@@ -19,15 +16,17 @@ export class PrivateMarketsComponent implements OnInit {
     sort:     undefined
   };
 
+  sortings: any = [
+    { value: 'by-name', viewValue: 'By name' },
+    { value: 'by-id', viewValue: 'By Market ID '},
+    { value: 'by-updated', viewValue: 'By updated date' },
+  ];
+
   constructor(
     //private router: Router,
   ) {}
 
   ngOnInit() {
-  }
-
-  changeTab(index: number): void {
-    this.selectedTab = index;
   }
 
   clear(): void {

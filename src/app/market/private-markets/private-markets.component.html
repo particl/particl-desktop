@@ -1,44 +1,15 @@
-<app-header>
-  <div class="tab-bar">
-    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
-          Connected Markets
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bag"></mat-icon>
-          My Markets
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-</app-header>
-
-<!-- FIXME: needs implementation -->
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
-
-<!--
-*ngIf="tabLabels[selectedTab] == 'connected-markets'"
-*ngIf="tabLabels[selectedTab] == 'my-markets'"
--->
-
-<div class="container-block with-tab-bar">
+<div class="container-block without-tab-bar">
 
   <!-- Listings > Filter -->
   <div class="filter">
 
-    <div class="sell-item">
-      <button mat-raised-button *ngIf="tabLabels[selectedTab] == 'connected-markets'"
-              color="primary" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width"
+    <div class="main-actions">
+      <button mat-raised-button color="primary" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width"
               matTooltip="xxxxxxxxxxxxxxxxxxx" matTooltipPosition="above">
         <mat-icon fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
         Connect new Market
       </button>
-      <button mat-raised-button *ngIf="tabLabels[selectedTab] == 'my-markets'"
-              color="primary" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width"
+      <button mat-raised-button color="accent" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width"
               matTooltip="xxxxxxxxxxxxxxxxxxx" matTooltipPosition="above">
         <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
         Create my Market
@@ -48,6 +19,7 @@
     <div class="section search-sorting">
       <div class="subtitle">Search &amp; sort</div>
       <mat-card class="filter-card">
+
         <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
           <input matInput type="text" class="header-input" placeholder="Search Markets" [(ngModel)]="filters.search"
                   (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()">
@@ -56,6 +28,15 @@
           <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                     (click)="clearAndLoadPage()"></mat-icon>
         </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-select placeholder="Sorting">
+            <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
+              {{ sorting.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
       </mat-card>
     </div>
 
@@ -64,8 +45,41 @@
       Clear all filters
     </button>
 
+    <p class="widget-help">
+      Here you can create and connect to different Private Markets offered by the Community. Each Private Market (and its Listings) is only accessible to its members.
+    </p>
+
   </div><!-- .filter -->
+
+
+  <div class="markets section with-filter">
+
+    <!-- TODO: if no Markets connected: -->
+    <div class="no-results">
+      <p>
+        You haven't connected to any Private Markets yet
+        <button mat-button color="primary">
+          <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+          Connect new Private Market
+        </button>
+      </p>
+    </div><!-- .no-results -->
+
+    <!-- TODO: if no search/filtering results: -->
+    <div class="no-results">
+      <p>
+        No Markets found
+      </p>
+      <p class="widget-help">
+        Try a different search&hellip;
+      </p>
+    </div><!-- .no-results -->
+
+  </div><!-- .markets -->
+
 
 </div><!-- .container-block -->
 
 
+<!-- FIXME: needs implementation -->
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>

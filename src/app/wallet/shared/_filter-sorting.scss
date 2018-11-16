@@ -11,6 +11,13 @@
     }
   }
 }
+
+.main-actions { // primary button actions in sidebar
+  margin-bottom: 32px;
+  button + button {
+    margin-top: 12px;
+  }
+}
  
 .filter-card {
   padding: 0;
