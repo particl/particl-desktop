@@ -292,7 +292,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private async update() {
     const item = this.itemFormGroup.value;
-
+    this.isInProcess = true;
     // update information
     if (this.isTemplateInfoUpdated(item)) {
       await this.information.update(
@@ -392,9 +392,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.upsert()
     .then(t => {
+      this.isInProcess = false;
       this.snackbar.open('Succesfully updated template!')
     })
     .catch(err => {
+      this.isInProcess = false;
       this.snackbar.open('Failed to save template!')
     });
   }
