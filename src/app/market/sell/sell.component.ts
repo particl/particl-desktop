@@ -31,6 +31,15 @@ export class SellComponent implements OnInit {
     status:   undefined
   };
 
+  listing_sortings: Array<any> = [
+    { title: 'By creation date',   value: 'date-created'    },
+    { title: 'By expiration date', value: 'date-expiration' },
+    { title: 'By item name',       value: 'item-name'       },
+    { title: 'By category',        value: 'category'        },
+    { title: 'By quantity',        value: 'quantity'        },
+    { title: 'By price',           value: 'price'           }
+  ];
+
   templateSearchSubcription: any;
 
   // public listings: Array<any>;

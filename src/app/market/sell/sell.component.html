@@ -53,13 +53,13 @@
           <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                     (click)="clearAndLoadPage()"></mat-icon>
         </mat-form-field>
-        <!--mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
           <mat-select placeholder="Sort listings">
             <mat-option *ngFor="let sorting of listing_sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>
           </mat-select>
-        </mat-form-field -->
+        </mat-form-field>
       </mat-card>
     </div>
 
