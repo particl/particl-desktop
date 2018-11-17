@@ -295,21 +295,28 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     // update information
     if (this.isTemplateInfoUpdated(item)) {
-    await this.information.update(
-      this.templateId,
-      item.title,
-      item.shortDescription,
-      item.longDescription,
-      item.category
-     ).toPromise();
+      await this.information.update(
+        this.templateId,
+        item.title,
+        item.shortDescription,
+        item.longDescription,
+        item.category
+      ).toPromise();
     }
 
     // update images
-    await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
+    if (this.picturesToUpload.length) {
+      await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
+
+    }
+
+    const country = this.countryList.getCountryByName(item.country);
 
     // update location
-    const country = this.countryList.getCountryByName(item.country);
-    await this.location.execute('update', this.templateId, country, null, null).toPromise();
+    if (this.preloadedTemplate.country !== country.iso) {
+
+      await this.location.execute('update', this.templateId, country, null, null).toPromise();
+    }
 
     // update escrow
     // @TODO EscrowType will change in future?
@@ -342,7 +349,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   isTemplateInfoUpdated(item: any): boolean {
-    console.log('this.preloadedTemplate------', this.preloadedTemplate)
     return (
       this.preloadedTemplate.title !== item.title ||
       this.preloadedTemplate.shortDescription !== item.shortDescription ||
