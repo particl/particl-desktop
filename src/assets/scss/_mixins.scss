@@ -10,14 +10,11 @@
 @mixin break($media) {
   @if $media == l { 
     @media only screen and (min-width: $break-l) { @content; }
-  }
-  @else if $media == xl {
+  } @else if $media == xl {
     @media only screen and (min-width: $break-xl) { @content; }
-  }
-  @else if $media == hd {
+  } @else if $media == hd {
     @media only screen and (min-width: $break-hd) { @content; }
-  }
-  @else if $media == xhd {
+  } @else if $media == xhd {
     @media only screen and (min-width: $break-xhd) { @content; }
   }
 }
@@ -28,5 +25,5 @@
 // Usage: @include break-from(741px) { .. }
 
 @mixin break-from($size) {
-   @media only screen and (min-width: $size) { @content; }
+  @media only screen and (min-width: $size) { @content; }
 }

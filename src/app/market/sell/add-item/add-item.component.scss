@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 // ------ GENERAL ------ //
 
@@ -42,7 +42,7 @@
     color: $bg-shadow;
   }
   p {
-    margin: 6px 0 0 0;
+    margin: 6px 0 0;
     color: $text-muted;
   }
 }
@@ -54,10 +54,7 @@
 .photo-wrapper {
   position: relative;
   margin: 10px;
-  background: repeating-linear-gradient(
-    45deg, $bg, $bg 5px,
-    mix($bg-shadow, $bg) 5px, mix($bg-shadow, $bg) 7px
-  );
+  background: repeating-linear-gradient(45deg, $bg, $bg 5px, mix($bg-shadow, $bg) 5px, mix($bg-shadow, $bg) 7px);
   height: 123px;
   overflow: hidden;
   &:hover .icons {
@@ -79,9 +76,9 @@
     opacity: 0;
     .mat-icon {
       @extend %tfx;
-      background: white;
+      background: $color-white;
       border-radius: 50%;
-      box-shadow: 0 0 6px rgba(black, 0.25);
+      box-shadow: 0 0 6px rgba($bg-black, 0.25);
       padding: 6px;
       cursor: pointer;
       &:hover {

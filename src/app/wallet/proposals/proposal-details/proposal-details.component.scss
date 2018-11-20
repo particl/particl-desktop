@@ -1,5 +1,5 @@
-@import "./src/assets/_config"; // import shared colors etc.
-@import "./src/app/wallet/shared/_filter-sorting"; // filtering & sorting
+@import './src/assets/_config'; // import shared colors etc.
+@import './src/app/wallet/shared/_filter-sorting'; // filtering & sorting
 
 // ------ SPECIFIC ------ //
 
@@ -34,7 +34,7 @@
           font-weight: 400;
           text-transform: uppercase;
           margin: 0 0 0 7px;
-          padding: 0px 4px;
+          padding: 0 4px;
           position: relative;
           top: -1px;
           border: 1px solid $color;

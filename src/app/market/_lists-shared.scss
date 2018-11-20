@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 // ------ LISTS (shared for listings & orders) ------ //
 
@@ -146,7 +146,7 @@
     // + in Listing statuses..
     &.expired {
       .dot::after {
-        content: "";
+        content: '';
         animation: pulse-fade 1s infinite;
         width: 7px;
         height: 7px;
