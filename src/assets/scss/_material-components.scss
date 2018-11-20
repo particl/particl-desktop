@@ -339,7 +339,7 @@ mat-card.mat-card {
       }
     }
 
-    .small-close_button {
+    .small-close-button {
       position: absolute;
       right: 10px; // align with modal's content padding
       top: 22px;
@@ -364,7 +364,7 @@ mat-card.mat-card {
         }
       }
     }
-    .close_button {
+    .close-button {
       position: absolute;
       right: 0;
       top: 0;
@@ -502,7 +502,7 @@ input {
   background: $color-white;
 }
 
-.underliningSelect {
+.underlining-select {
   border-bottom: 0.2px solid rgba(0, 0, 0, 0.507);
   line-height: 1.6em;
 }

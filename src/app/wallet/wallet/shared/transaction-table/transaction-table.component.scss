@@ -4,12 +4,12 @@
   min-height: 67px !important;
 
   // TX date/time
-  .history_date {
+  .date {
     color: $text-muted;
   }
 
   // confirmations
-  .history_confirmation {
+  .confirmations {
     color: $text-muted;
     .confirmation-tag {
       border-radius: $radius;
@@ -53,7 +53,7 @@
   }
 
   // TX icon
-  .history_cat_icon {
+  .type {
     .mat-icon {
       font-size: 14px;
       position: absolute;
@@ -95,7 +95,7 @@
   }
 
   // TX amount
-  .history_amount {
+  .tx-value {
     text-align: right;
     display: block;
     .amount {

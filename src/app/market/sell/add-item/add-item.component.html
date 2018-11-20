@@ -6,7 +6,7 @@
 
       <mat-card class="photos">
         <div class="title">Upload photos</div>
-        <div id="drag-n-drop">
+        <div id="drag-n-drop" class="drag-n-drop">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
 
           <!--hide input -->
@@ -16,8 +16,7 @@
           <button mat-button color="primary" (click)="uploadPicture()">
             Upload a photo
           </button>
-          <!-- TODO: drag n drop -->
-          <!-- <p>or drag'n'drop it here</p> -->
+          <p>or drag'n'drop it here</p>
         </div>
         <p class="widget-help">
           Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible.
