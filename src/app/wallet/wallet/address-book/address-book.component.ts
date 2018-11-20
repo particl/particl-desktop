@@ -13,6 +13,8 @@ import { AddressHelper } from '../../../core/util/utils';
 export class AddressBookComponent {
 
   log: any = Log.create('address-book.component');
+  // UI logic
+  introDisplayed: boolean = true; // display full page title with description
 
   public query: string;
   public filter: RegExp;
@@ -21,9 +23,6 @@ export class AddressBookComponent {
     private dialog: MatDialog) {
     this.addressHelper = new AddressHelper();
   }
-
-  // UI logic
-  introDisplayed: boolean = true; // display full page title with description
 
   openNewAddress(): void {
     const dialogRef = this.dialog.open(NewAddressModalComponent);
