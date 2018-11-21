@@ -64,9 +64,7 @@ export class ProposalsNotificationsService implements OnDestroy {
         } else if (this.storedProposals.length && this.storedProposals.length !== proposals.length
         ) {
           // get the count of the newly arrivied proposals.
-          this.proposalsCountRequiredVoteActions = _.differenceWith(proposals, this.storedProposals, (p1, p2) => {
-            return p1.id === p2.id;
-          }).length;
+          this.proposalsCountRequiredVoteActions = this.getNewProposals(proposals, this.storedProposals).length
         }
         this.proposals = proposals;
       });
@@ -102,17 +100,11 @@ export class ProposalsNotificationsService implements OnDestroy {
   }
 
   checkProposals(proposals: Proposal[]): void {
-    this.getProposalsToNotifyFor(proposals).filter((proposal) => {
+    this.getNewProposals(proposals, this.proposals).filter((proposal) => {
       return proposal.submitter !== this.profile.address;
     }).forEach(proposal => {
       this.notifyNewProposal(proposal);
     })
-  }
-
-  getProposalsToNotifyFor(newProposals: Proposal[]): Proposal[] {
-    return _.differenceWith(newProposals, this.proposals, (p1, p2) => {
-      return p1.id === p2.id;
-    });
   }
 
   notifyNewProposal(proposal: Proposal): void {
@@ -124,6 +116,12 @@ export class ProposalsNotificationsService implements OnDestroy {
     if (this.proposalsCountRequiredVoteActions) {
       this.proposalsCountRequiredVoteActions -= 1
     }
+  }
+
+  getNewProposals(newProposals: Proposal[], oldProposals: Proposal[]): Proposal[] {
+    return _.differenceWith(newProposals, oldProposals, (p1, p2) => {
+      return p1.id === p2.id;
+    })
   }
 
   ngOnDestroy() {
