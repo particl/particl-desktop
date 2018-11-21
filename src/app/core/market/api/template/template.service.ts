@@ -53,8 +53,9 @@ export class TemplateService {
       return this.market.call('template', params);
   }
 
-  search(page: number, pageLimit: number, profileId: number, category: string, searchString: string): Observable<Array<Template>> {
-    const params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
+  search(page: number, pageLimit: number, sort: string, profileId: number, category: string,
+    searchString: string, hashItems: boolean): Observable<Array<Template>> {
+    const params = ['search', page, pageLimit, 'ASC', sort,  profileId, searchString, category, hashItems];
     return this.market.call('template', params)
     .map(
       (templates: any) => {

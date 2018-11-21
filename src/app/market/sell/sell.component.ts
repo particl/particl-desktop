@@ -28,16 +28,22 @@ export class SellComponent implements OnInit {
   filters: any = {
     search:   undefined,
     sort:     undefined,
-    status:   undefined
+    hashItems: undefined
   };
 
+  // listing_sortings: Array<any> = [
+  //   { title: 'By creation date',   value: 'date-created'    },
+  //   { title: 'By expiration date', value: 'date-expiration' },
+  //   { title: 'By item name',       value: 'item-name'       },
+  //   { title: 'By category',        value: 'category'        },
+  //   { title: 'By quantity',        value: 'quantity'        },
+  //   { title: 'By price',           value: 'price'           }
+  // ];
+
   listing_sortings: Array<any> = [
-    { title: 'By creation date',   value: 'date-created'    },
-    { title: 'By expiration date', value: 'date-expiration' },
-    { title: 'By item name',       value: 'item-name'       },
-    { title: 'By category',        value: 'category'        },
-    { title: 'By quantity',        value: 'quantity'        },
-    { title: 'By price',           value: 'price'           }
+    { title: 'By updated date',   value: 'DATE' },
+    { title: 'By title',          value: 'TITLE' },
+    { title: 'By state',          value: 'STATE' }
   ];
 
   templateSearchSubcription: any;
@@ -79,7 +85,7 @@ export class SellComponent implements OnInit {
     this.filters = {
       search:   undefined,
       sort:     undefined,
-      status:   undefined
+      hashItems:   undefined
     };
     this.loadPage(0, true);
   }
@@ -96,6 +102,9 @@ export class SellComponent implements OnInit {
     this.isLoading = true;
     const category = this.filters.category ? this.filters.category : null;
     const search = this.filters.search ? this.filters.search : null;
+    const sort = this.filters.sort ? this.filters.sort : null;
+    // Sorting published and unpublished listing what will be the ui for it ?
+    const hashItems = this.filters.hashItems ? this.filters.hashItems : null;
     const max = this.pagination.maxPerPage;
 
     /*
@@ -109,7 +118,7 @@ export class SellComponent implements OnInit {
       this.templateSearchSubcription.unsubscribe();
     }
 
-    this.templateSearchSubcription = this.template.search(pageNumber, max, 1, category, search)
+    this.templateSearchSubcription = this.template.search(pageNumber, max, sort, 1, category, search, hashItems)
       .take(1).subscribe((listings: Array<Listing>) => {
         listings = listings.map((t) => {
         if (this.listingService.cache.isAwaiting(t)) {

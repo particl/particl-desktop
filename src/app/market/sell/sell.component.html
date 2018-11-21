@@ -54,7 +54,7 @@
                     (click)="clearAndLoadPage()"></mat-icon>
         </mat-form-field>
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
-          <mat-select placeholder="Sort listings">
+          <mat-select placeholder="Sort listings" [(ngModel)]="filters.sort" (change)="clearAndLoadPage()">
             <mat-option *ngFor="let sorting of listing_sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>
