@@ -44,14 +44,14 @@ export class ProposalsNotificationsService implements OnDestroy {
           .takeWhile(() => !this.destroyed)
           .subscribe((blockCount: number) => {
             // loadProposal() call in every 1 sec as BlockCount update every second in peer service.
-            this.loadProposals(blockCount);
+            this.loadProposals();
           });
       });
   }
 
-  loadProposals(startBlockCount: number): void {
+  loadProposals(): void {
     this.proposalsService
-      .list(startBlockCount, '*')
+      .list(Date.now(), '*')
       .take(1)
       .subscribe((proposals: Proposal[]) => {
         proposals.reverse();
@@ -61,8 +61,12 @@ export class ProposalsNotificationsService implements OnDestroy {
 
         if (!this.storedProposals.length) {
           this.checkProposalsRequiredVoteActions(proposals);
-        } else if (this.storedProposals.length !== proposals.length) {
-          this.proposalsCountRequiredVoteActions = proposals.length - this.storedProposals.length;
+        } else if (this.storedProposals.length && this.storedProposals.length !== proposals.length
+        ) {
+          // get the count of the newly arrivied proposals.
+          this.proposalsCountRequiredVoteActions = _.differenceWith(proposals, this.storedProposals, (p1, p2) => {
+            return p1.id === p2.id;
+          }).length;
         }
         this.proposals = proposals;
       });
