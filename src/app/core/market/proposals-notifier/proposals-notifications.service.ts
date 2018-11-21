@@ -14,6 +14,7 @@ export class ProposalsNotificationsService implements OnDestroy {
 
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
   public proposals: Proposal[] = [];
+  public storedProposals: Proposal[] = [];
   public destroyed: boolean = false;
   private proposalsCountRequiredVoteActions: number = 0;
   private profile: Profile;
@@ -28,6 +29,10 @@ export class ProposalsNotificationsService implements OnDestroy {
     private _notification: NotificationService,
     private profileService: ProfileService
   ) {
+
+    // load stored proposal.
+    this.loadstoredProposals();
+
     this.profileService.default()
       .takeWhile(() => !this.destroyed)
       .subscribe((profile: Profile) => {
@@ -40,25 +45,41 @@ export class ProposalsNotificationsService implements OnDestroy {
           .subscribe((blockCount: number) => {
             // loadProposal() call in every 1 sec as BlockCount update every second in peer service.
             this.loadProposals(blockCount);
-        });
+          });
       });
   }
 
   loadProposals(startBlockCount: number): void {
     this.proposalsService
-    .list(startBlockCount, '*')
-    .take(1)
-    .subscribe((proposals: Proposal[]) => {
-      proposals.reverse();
-      if (this.proposals.length && this.proposals.length !== proposals.length) {
-        this.checkProposals(proposals);
-      }
+      .list(startBlockCount, '*')
+      .take(1)
+      .subscribe((proposals: Proposal[]) => {
+        proposals.reverse();
+        if (this.proposals.length && this.proposals.length !== proposals.length) {
+          this.checkProposals(proposals);
+        }
 
-      if (this.proposals.length !== proposals.length) {
-        this.checkProposalsRequiredVoteActions(proposals);
-      }
-      this.proposals = proposals;
-    });
+        if (!this.storedProposals.length) {
+          this.checkProposalsRequiredVoteActions(proposals);
+        } else if (this.storedProposals.length !== proposals.length) {
+          this.proposalsCountRequiredVoteActions = proposals.length - this.storedProposals.length;
+        }
+        this.proposals = proposals;
+      });
+  }
+
+  // @TODO remove once functionality done from the MP side.
+  loadstoredProposals(): void {
+    this.storedProposals = JSON.parse(localStorage.getItem('proposals')) || [];
+  }
+
+  // @TODO remove once functionality done from the MP side.
+  storeProposals(): void {
+    if (this.proposals.length) {
+      this.proposalsCountRequiredVoteActions = 0;
+      this.storedProposals = this.proposals;
+      localStorage.setItem('proposals', JSON.stringify(this.proposals));
+    }
   }
 
   checkProposalsRequiredVoteActions(proposals: Proposal[]): void {
@@ -67,21 +88,21 @@ export class ProposalsNotificationsService implements OnDestroy {
       // get user vote status.
 
       this.proposalsService.get(proposal.hash)
-      .take(1).subscribe((result) => {}, (message) => {
-        // proposal has no vote count yet.
-        if (message === 'User has not voted for that Proposal yet.') {
-          this.proposalsCountRequiredVoteActions += 1;
-        }
-      })
+        .take(1).subscribe((result) => { }, (message) => {
+          // proposal has no vote count yet.
+          if (message === 'User has not voted for that Proposal yet.') {
+            this.proposalsCountRequiredVoteActions += 1;
+          }
+        })
     })
   }
 
   checkProposals(proposals: Proposal[]): void {
     this.getProposalsToNotifyFor(proposals).filter((proposal) => {
-        return proposal.submitter !== this.profile.address;
-      }).forEach(proposal => {
-        this.notifyNewProposal(proposal);
-      })
+      return proposal.submitter !== this.profile.address;
+    }).forEach(proposal => {
+      this.notifyNewProposal(proposal);
+    })
   }
 
   getProposalsToNotifyFor(newProposals: Proposal[]): Proposal[] {
