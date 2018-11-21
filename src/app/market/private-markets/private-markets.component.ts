@@ -11,9 +11,18 @@ export class PrivateMarketsComponent implements OnInit {
 
   public search: string = '';
 
+  // UI logic
+  introDisplayed: boolean = true; // full page title with description visible
+  connectMarketDisplayed: boolean = false; // show "connect new market" section
+
   filters: any = {
     search:   undefined,
     sort:     undefined
+  };
+
+  connectTo: any = { // Connect to new Private Market
+    marketName:   undefined,
+    marketID:     undefined
   };
 
   sortings: any = [

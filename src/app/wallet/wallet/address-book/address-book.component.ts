@@ -14,7 +14,7 @@ export class AddressBookComponent {
 
   log: any = Log.create('address-book.component');
   // UI logic
-  introDisplayed: boolean = true; // display full page title with description
+  introDisplayed: boolean = true; // full page title with description visible
 
   public query: string;
   public filter: RegExp;

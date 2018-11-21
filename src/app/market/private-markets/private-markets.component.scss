@@ -3,10 +3,28 @@
 
 // ------ GENERAL ------ //
 
-
+h3 {
+  @extend %box-title;
+  margin-top: 0;
+}
 
 // ------ LAYOUT ------ //
 
-
+// Connect new Market
+.connect-market {
+  margin: 0 0 24px;
+  /*
+  position: sticky;
+  top: $header-main-height + $padding;
+  z-index: 10;
+  */
+  .subtitle {
+    margin-top: 0;
+  }
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+}
 
 

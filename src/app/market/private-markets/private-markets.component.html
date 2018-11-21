@@ -1,16 +1,32 @@
 <div class="container-block without-tab-bar">
 
+  <div class="page-intro" [ngClass]="{ 'inactive': !introDisplayed }">
+    <button mat-button class="intro-toggle small"
+      (click)="introDisplayed = !introDisplayed"
+      matTooltip="{{ (introDisplayed) ? 'Hide intro': 'Show help' }}" matTooltipPosition="before">
+      <mat-icon fontSet="partIcon" fontIcon="part-{{ (introDisplayed) ? 'cross': 'circle-question' }}"></mat-icon>
+    </button>
+    <h1>Private Markets</h1>
+    <div class="content" *ngIf="introDisplayed">
+      <p class="lead">
+        This is the admin interface for Private Markets. Here you can create and connect to different Private Markets.
+      </p>
+      <p class="widget-help">
+        Bear in mind that Listings on Private Markets are visible only to those, who are invited (they won't be publicly available to all Particl users).
+      </p>
+    </div>
+  </div><!-- .page-intro -->
+
   <!-- Listings > Filter -->
   <div class="filter">
 
     <div class="main-actions">
-      <button mat-raised-button color="primary" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width"
-              matTooltip="xxxxxxxxxxxxxxxxxxx" matTooltipPosition="above">
+      <!-- TODO: scroll to top of page when clicked: -->
+      <button mat-raised-button color="primary" (click)="connectMarketDisplayed = !connectMarketDisplayed" class="full-width">
         <mat-icon fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
         Connect new Market
       </button>
-      <button mat-raised-button color="accent" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width"
-              matTooltip="xxxxxxxxxxxxxxxxxxx" matTooltipPosition="above">
+      <button mat-raised-button color="accent" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width">
         <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
         Create my Market
       </button>
@@ -45,20 +61,57 @@
       Clear all filters
     </button>
 
-    <p class="widget-help">
-      Here you can create and connect to different Private Markets offered by the Community. Each Private Market (and its Listings) is only accessible to its members.
-    </p>
-
   </div><!-- .filter -->
 
 
   <div class="markets section with-filter">
 
+    <div class="connect-market" *ngIf="connectMarketDisplayed">
+      <h2 class="subtitle">Connect new Private Market</h2>
+      <mat-card>
+
+        <div class="fields" fxLayout fxLayoutGap="24px">
+          <div class="half" fxFlex="50">
+            <h3 class="box-title">Market name</h3>
+            <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
+              <input matInput #name maxlength="256" placeholder="Choose Market name" [(ngModel)]="connectTo.marketName">
+              <mat-hint align="end">{{ name.value.length }} / 32</mat-hint>
+            </mat-form-field>
+            <p class="widget-help">
+              Choose your own personal name for this Private Market.
+            </p>
+          </div>
+          <div class="half" fxFlex="50">
+            <h3 class="box-title">Private Market ID</h3>
+            <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
+              <input matInput placeholder="Enter Private Market ID" [(ngModel)]="connectTo.marketID">
+            </mat-form-field>
+            <p class="widget-help">
+              Market ID is the key to Private Markets. This ID is shared between Private Market's members.
+            </p>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button mat-button color="basic" (click)="connectMarketDisplayed = !connectMarketDisplayed">
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Cancel & Close
+          </button>
+          <!-- TODO: implement connecting to PM: -->
+          <button mat-raised-button color="primary">
+            <mat-icon fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
+            Connect
+          </button>
+        </div><!-- .buttons -->
+
+      </mat-card>
+    </div><!-- .connect-market -->
+
     <!-- TODO: if no Markets connected: -->
     <div class="no-results">
       <p>
         You haven't connected to any Private Markets yet
-        <button mat-button color="primary">
+        <button mat-button color="primary" (click)="connectMarketDisplayed = !connectMarketDisplayed">
           <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
           Connect new Private Market
         </button>
