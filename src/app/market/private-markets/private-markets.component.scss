@@ -8,23 +8,31 @@ h3 {
   margin-top: 0;
 }
 
+
 // ------ LAYOUT ------ //
 
-// Connect new Market
-.connect-market {
-  margin: 0 0 24px;
-  /*
-  position: sticky;
-  top: $header-main-height + $padding;
-  z-index: 10;
-  */
+// connect to Market & create Market
+.connect-create {
+  margin: 0 0 35px;
   .subtitle {
     margin-top: 0;
+  }
+  .input {
+    display: flex;
+    align-items: flex-start;
+    .mat-form-field {
+      flex: 1 1 100%;
+    }
+    button {
+      margin-left: 8px;
+      .mat-icon {
+        margin: 0;
+      }
+    }
   }
   .buttons {
     display: flex;
     justify-content: space-between;
   }
 }
-
 

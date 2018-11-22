@@ -14,6 +14,7 @@ export class PrivateMarketsComponent implements OnInit {
   // UI logic
   introDisplayed: boolean = true; // full page title with description visible
   connectMarketDisplayed: boolean = false; // show "connect new market" section
+  createMarketDisplayed: boolean = false; // show "create new market" section
 
   filters: any = {
     search:   undefined,
@@ -23,6 +24,11 @@ export class PrivateMarketsComponent implements OnInit {
   connectTo: any = { // Connect to new Private Market
     marketName:   undefined,
     marketID:     undefined
+  };
+
+  createMarket: any = { // Create new Private Market
+    marketName:   undefined,
+    marketID:     '3127907a7623734f830e8c69ccee03b693bf993e' // TODO: just a placeholder, replace with live ID
   };
 
   sortings: any = [

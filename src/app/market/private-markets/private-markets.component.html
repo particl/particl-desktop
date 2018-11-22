@@ -31,7 +31,7 @@
         <mat-icon fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
         Connect new Market
       </button>
-      <button mat-raised-button color="accent" (click)="xxxxxxxxxxxxxxxxxxx()" class="full-width">
+      <button mat-raised-button color="accent" (click)="createMarketDisplayed = !createMarketDisplayed" class="full-width">
         <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
         Create my Market
       </button>
@@ -71,27 +71,33 @@
 
   <div class="markets section with-filter">
 
-    <div class="connect-market" *ngIf="connectMarketDisplayed">
+    <div class="connect-create" *ngIf="connectMarketDisplayed">
       <h2 class="subtitle">Connect new Private Market</h2>
       <mat-card>
 
         <div class="fields" fxLayout fxLayoutGap="24px">
-          <div class="half" fxFlex="50">
+          <div fxFlex="50">
             <h3 class="box-title">Market name</h3>
             <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
-              <input matInput #name maxlength="32" placeholder="Choose Market name" [(ngModel)]="connectTo.marketName">
-              <mat-hint align="end">{{ name.value.length }} / 32</mat-hint>
+              <input matInput #connectName maxlength="32" placeholder="Choose Market name" [(ngModel)]="connectTo.marketName">
+              <mat-hint align="end">{{ connectName.value.length }} / 32</mat-hint>
             </mat-form-field>
             <p class="widget-help">
               Choose your own personal name for this Private Market.
             </p>
           </div>
-          <div class="half" fxFlex="50">
+          <div fxFlex="50">
             <h3 class="box-title">Private Market ID</h3>
-            <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
-              <input matInput #marketID maxlength="32" placeholder="Enter Private Market ID" [(ngModel)]="connectTo.marketID">
-              <mat-hint align="end">{{ marketID.value.length }} / 32</mat-hint>
-            </mat-form-field>
+            <div class="input">
+              <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
+                <input matInput #connectID maxlength="40" placeholder="Enter Private Market ID" [(ngModel)]="connectTo.marketID">
+                <mat-hint align="end">{{ connectID.value.length }} / 40</mat-hint>
+              </mat-form-field>
+              <!-- TODO: implement copy/paste: -->
+              <button mat-button class="small" matTooltip="Paste" matTooltipPosition="above">
+                <mat-icon fontSet="partIcon" fontIcon="part-past"></mat-icon>
+              </button>
+            </div>
             <p class="widget-help">
               Market ID is the key to Private Markets. This ID is shared between Private Market's members.
             </p>
@@ -111,7 +117,55 @@
         </div><!-- .buttons -->
 
       </mat-card>
-    </div><!-- .connect-market -->
+    </div><!-- .connect-create -->
+
+    <div class="connect-create" *ngIf="createMarketDisplayed">
+      <h2 class="subtitle">Create new Private Market</h2>
+      <mat-card>
+
+        <div class="fields" fxLayout fxLayoutGap="24px">
+          <div fxFlex="50">
+            <h3 class="box-title">Market name</h3>
+            <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
+              <input matInput #createName maxlength="32" placeholder="Choose Market name" [(ngModel)]="createMarket.marketName">
+              <mat-hint align="end">{{ createName.value.length }} / 32</mat-hint>
+            </mat-form-field>
+            <p class="widget-help">
+              Choose your own personal name for this Private Market.
+            </p>
+          </div>
+          <div fxFlex="50">
+            <h3 class="box-title">Private Market ID</h3>
+            <div class="input">
+              <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
+                <input matInput #createID maxlength="40" disabled [(ngModel)]="createMarket.marketID">
+                <mat-hint align="end">{{ createID.value.length }} / 40</mat-hint>
+              </mat-form-field>
+              <!-- TODO: implement copy/paste: -->
+              <button mat-button class="small" matTooltip="Copy Market ID" matTooltipPosition="above">
+                <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+              </button>
+            </div>
+            <p class="widget-help">
+              Market ID is the key to Private Markets. Share this ID to invite new members to your Private Market.
+            </p>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button mat-button color="basic" (click)="createMarketDisplayed = !createMarketDisplayed">
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Cancel
+          </button>
+          <!-- TODO: implement connecting to PM: -->
+          <button mat-raised-button color="accent">
+            <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+            Create Market
+          </button>
+        </div><!-- .buttons -->
+
+      </mat-card>
+    </div><!-- .connect-create -->
 
     <!-- TODO: if no Markets connected: -->
     <div class="no-results">
