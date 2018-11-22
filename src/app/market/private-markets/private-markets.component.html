@@ -112,7 +112,7 @@
           <!-- TODO: implement connecting to PM: -->
           <button mat-raised-button color="primary">
             <mat-icon fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
-            Connect
+            Connect to Market
           </button>
         </div><!-- .buttons -->
 
@@ -166,6 +166,31 @@
 
       </mat-card>
     </div><!-- .connect-create -->
+
+    <!-- TODO: don't show subtitle if no Markets are displayed: -->
+    <h2 class="subtitle">Connected Private Markets</h2>
+
+    <mat-card class="market-entry">
+      <div class="avatar">
+        <!-- TODO: use first 2 letters of Market's name: -->
+        <span class="initials">Al</span>
+      </div>
+      <div class="text">
+        <div class="name">Allien's Exclusive Deals</div>
+        <div class="info">
+          <span class="tag">ID</span>
+          <span class="id">3127907a7623734f830e8c69ccee03b693bf993e</span>
+        </div>
+      </div>
+      <div class="buttons">
+        <button mat-button class="small" matTooltip="Copy Market's ID">
+          <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+        </button>
+        <button mat-button class="small" color="warn" matTooltip="Disconnect from Market">
+          <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+        </button>
+      </div>
+    </mat-card><!-- .market-entry -->
 
     <!-- TODO: if no Markets connected: -->
     <div class="no-results">

@@ -11,6 +11,14 @@ h3 {
 
 // ------ LAYOUT ------ //
 
+.markets {
+  h2 {
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+}
+
 // connect to Market & create Market
 .connect-create {
   margin: 0 0 35px;
@@ -33,6 +41,71 @@ h3 {
   .buttons {
     display: flex;
     justify-content: space-between;
+  }
+}
+
+// Market entry card
+mat-card.market-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px 0 0;
+  margin-bottom: 6px;
+  cursor: pointer;
+  &:hover {
+    .avatar {
+      background: darken($bg, 7%);
+    }
+  }
+  .avatar {
+    @extend %tfx;
+    flex: 0 0 90px;
+    height: 90px;
+    background: darken($bg, 5%);
+    text-align: center;
+    display: flex;
+    .initials {
+      width: 70px;
+      margin: auto;
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 1;
+      color: $color-white;
+      text-transform: uppercase;
+    }
+  }
+  .text {
+    flex: 1 1 100%;
+    margin: 0 14px 0 32px;
+    .name {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .tag {
+      @extend %lightest;
+      line-height: 1.4;
+      font-size: 80%;
+      border: 1px solid;
+      border-radius: 4px;
+      display: inline-block;
+      padding: 0 6px;
+      margin-right: 6px;
+    }
+    .id {
+      @extend %lighter;
+      font-family: monospace;
+    }
+  }
+  .buttons {
+    flex: 0 0 90px;
+    text-align: right;
+    button {
+      margin-left: -2px;
+      .mat-icon {
+        margin: 0;
+      }
+    }
   }
 }
 
