@@ -153,6 +153,9 @@ body {
   }
   .content {
     margin-top: 16px;
+    p {
+      @extend %lighter;
+    }
   }
   .widget-help {
     margin-bottom: 0;
@@ -230,20 +233,21 @@ body {
 
 .no-results {
   font-size: 18px;
-  color: darken($bg-shadow, 15%);
   text-transform: uppercase;
   text-align: center;
   padding: 170px 0;
   border: 2px dashed $bg-shadow;
   background: rgba(white, 0.5);
+  p {
+    @extend %lightest;
+  }
   button {
-    margin-top: 12px;
+    @extend %lighter;
   }
   .widget-help {
     margin: 0;
     text-transform: none;
     font-size: 12px;
-    color: darken($bg-shadow, 17%);
     .mat-icon {
       font-size: 13px;
       margin: 0 4px;
@@ -313,8 +317,11 @@ h1 {
 // ------ 4.2. PARAGRAPH STYLES ------ //
 
 // Highlighted "lead" paragraphs
-.lead {
-  font-size: 15px;
+p {
+  line-height: 1.5;
+  &.lead {
+    font-size: 15px;
+  }
 }
 
 // Help descriptions

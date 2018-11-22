@@ -11,9 +11,14 @@
       <p class="lead">
         This is the admin interface for Private Markets. Here you can create and connect to different Private Markets.
       </p>
-      <p class="widget-help">
-        Bear in mind that Listings on Private Markets are visible only to those, who are invited (they won't be publicly available to all Particl users).
+      <p>
+        Private Markets are not publicly accessible &ndash; they're available only to invited members. Any member of Private Market can post Listings and buy Listings for sale. To invite others, share the Market ID.
       </p>
+      <!-- TODO: create a page on Wiki & link to it -->
+      <button mat-button color="basic" class="small">
+        <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
+        Learn more about Private Markets
+      </button>
     </div>
   </div><!-- .page-intro -->
 
@@ -74,7 +79,7 @@
           <div class="half" fxFlex="50">
             <h3 class="box-title">Market name</h3>
             <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
-              <input matInput #name maxlength="256" placeholder="Choose Market name" [(ngModel)]="connectTo.marketName">
+              <input matInput #name maxlength="32" placeholder="Choose Market name" [(ngModel)]="connectTo.marketName">
               <mat-hint align="end">{{ name.value.length }} / 32</mat-hint>
             </mat-form-field>
             <p class="widget-help">
@@ -84,7 +89,8 @@
           <div class="half" fxFlex="50">
             <h3 class="box-title">Private Market ID</h3>
             <mat-form-field class="full-width no-top-padding" floatPlaceholder="never">
-              <input matInput placeholder="Enter Private Market ID" [(ngModel)]="connectTo.marketID">
+              <input matInput #marketID maxlength="32" placeholder="Enter Private Market ID" [(ngModel)]="connectTo.marketID">
+              <mat-hint align="end">{{ marketID.value.length }} / 32</mat-hint>
             </mat-form-field>
             <p class="widget-help">
               Market ID is the key to Private Markets. This ID is shared between Private Market's members.
@@ -111,11 +117,11 @@
     <div class="no-results">
       <p>
         You haven't connected to any Private Markets yet
-        <button mat-button color="primary" (click)="connectMarketDisplayed = !connectMarketDisplayed">
-          <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-          Connect new Private Market
-        </button>
       </p>
+      <button mat-button color="basic" (click)="connectMarketDisplayed = !connectMarketDisplayed">
+        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Connect new Private Market
+      </button>
     </div><!-- .no-results -->
 
     <!-- TODO: if no search/filtering results: -->

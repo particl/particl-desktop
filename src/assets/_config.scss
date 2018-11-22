@@ -74,6 +74,9 @@ $break-xhd: 2200px;
 %lighter { // "grey" text, formerly "help descriptions"
   opacity: 0.55;
 }
+%lightest {
+  opacity: 0.36;
+}
 
 %subtitle { // section titles / H2's
   font-size: 14px;
