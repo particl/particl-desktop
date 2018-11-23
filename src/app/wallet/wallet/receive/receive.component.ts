@@ -163,6 +163,9 @@ export class ReceiveComponent implements OnInit {
 
   changeTab(tab: number): void {
     this.page = 1;
+
+    // clear the search query.
+    this.query = '';
     this.showOldAddress = false;
     if (tab) {
       this.setAddressType('private');
