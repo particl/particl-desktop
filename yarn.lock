@@ -6987,11 +6987,6 @@ nan@^2.10.0, nan@^2.9.2:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
   integrity sha512-iji6k87OSXa0CcrLl9z+ZiYSuR2o+c0bGuNmXdrhTQTakxytAFsC56SArGYoiHlJlFoHSnvmhpceZJaXkVuOtA==
 
-nan@~2.10.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.10.0.tgz#96d0cd610ebd58d4b4de9cc0c6828cda99c7548f"
-  integrity sha512-bAdJv7fBLhWC+/Bls0Oza+mvTaNQtP+1RyhhhvD95pgUJz6XM5IzgmxOkItJ9tkoCiplvAnXI1tNmmUD/eScyA==
-
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -7164,7 +7159,7 @@ node-modules-path@^1.0.0:
   resolved "https://registry.yarnpkg.com/node-modules-path/-/node-modules-path-1.0.2.tgz#e3acede9b7baf4bc336e3496b58e5b40d517056e"
   integrity sha512-6Gbjq+d7uhkO7epaKi5DNgUJn7H0gEyA4Jg0Mo1uQOi3Rk50G83LtmhhFyw0LxnAFhtlspkiiw52ISP13qzcBg==
 
-node-pre-gyp@^0.10.0, node-pre-gyp@^0.10.3:
+node-pre-gyp@^0.10.0:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.10.3.tgz#3070040716afdc778747b61b6887bf78880b80fc"
   integrity sha512-d1xFs+C/IPS8Id0qPTZ4bUT8wWryfR/OzzAFxweG+uLN85oPzyo2Iw6bVlLQ/JOdgNonXLCoRyqDzDWq4iw72A==
@@ -7830,10 +7825,10 @@ parseurl@~1.3.1, parseurl@~1.3.2:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@^0.0.47:
-  version "0.0.47"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.47.tgz#edd78f7ae6121451613f88f958628b083f03190b"
-  integrity sha512-ZpHwA1ONlLQvRVDRI//B4dx3F2OIoEIX0nnOSGzbX2sUjq5kBo99zrD1SnLTk6P1jePtCdZ24ayfPi78gvbfCQ==
+particl-marketplace@0.0.49:
+  version "0.0.49"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.49.tgz#46b8b036cc9a95fde7e72f5ddd19a5f3a3fa6e96"
+  integrity sha512-0PfBGKNlu0A4lcdBzmhEDXpJ4NphN84JhOeeu3V6EFt3lfuXBOG3hemsmgF1A0yN5Y80l29F8OLHHUYAGjHChQ==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -7878,7 +7873,7 @@ particl-marketplace@^0.0.47:
     request-promise "^4.2.1"
     serve-favicon "^2.4.3"
     socket.io "^2.0.4"
-    sqlite3 "4.0.4"
+    sqlite3 "https://github.com/particl/sqlite3-offline.git"
     swagger-jsdoc "^1.9.6"
     swagger-ui-express "^2.0.1"
     sync-fs "^1.0.1"
@@ -9922,14 +9917,9 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-sqlite3@4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.0.4.tgz#1f75e3ededad6e26f7dd819929460ce44a49dfcd"
-  integrity sha512-CO8vZMyUXBPC+E3iXOCc7Tz2pAdq5BWfLcQmOokCOZW5S5sZ/paijiPOCdvzpdP83RroWHYa5xYlVqCxSqpnQg==
-  dependencies:
-    nan "~2.10.0"
-    node-pre-gyp "^0.10.3"
-    request "^2.87.0"
+"sqlite3@https://github.com/particl/sqlite3-offline.git":
+  version "3.2.0"
+  resolved "https://github.com/particl/sqlite3-offline.git#598a8b881fdda14760c160aecddc3df225868f87"
 
 sshpk@^1.7.0:
   version "1.15.2"
