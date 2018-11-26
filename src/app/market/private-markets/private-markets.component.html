@@ -1,13 +1,14 @@
 <div class="container-block without-tab-bar">
 
-  <div class="page-intro" [ngClass]="{ 'inactive': !introDisplayed }">
-    <button mat-button class="intro-toggle small"
-      (click)="introDisplayed = !introDisplayed"
-      matTooltip="{{ (introDisplayed) ? 'Hide intro': 'Show help' }}" matTooltipPosition="before">
+  <!-- PR #1267 | PD-483: implement toggle-able page title description: -->
+  <div class="page-intro"><!-- [ngClass]="{ 'inactive': !introDisplayed }" -->
+    <!--button mat-button class="intro-toggle small"
+            (click)="introDisplayed = !introDisplayed"
+            matTooltip="{{ (introDisplayed) ? 'Hide intro': 'Show help' }}" matTooltipPosition="before">
       <mat-icon fontSet="partIcon" fontIcon="part-{{ (introDisplayed) ? 'cross': 'circle-question' }}"></mat-icon>
-    </button>
+    </button-->
     <h1>Private Markets</h1>
-    <div class="content" *ngIf="introDisplayed">
+    <div class="content"><!-- *ngIf="introDisplayed" -->
       <p class="lead">
         This is the admin interface for Private Markets. Here you can create and connect to different Private Markets.
       </p>

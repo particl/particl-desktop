@@ -12,7 +12,7 @@ export class PrivateMarketsComponent implements OnInit {
   public search: string = '';
 
   // UI logic
-  introDisplayed: boolean = true; // full page title with description visible
+  // introDisplayed: boolean = true; // PR #1267 | PD-483: display full page title with description
   connectMarketDisplayed: boolean = false; // show "connect new market" section
   createMarketDisplayed: boolean = false; // show "create new market" section
 
