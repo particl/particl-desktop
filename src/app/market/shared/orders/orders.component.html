@@ -30,7 +30,6 @@
         <mat-checkbox [(ngModel)]="additionalFilter.requiredAttention" (change)="loadOrders()" color="primary">Orders requiring attention</mat-checkbox>
       </div>
       <div class="checkbox">
-        <!-- TODO: checked by default -->
         <mat-checkbox [(ngModel)]="additionalFilter.hideCompleted" (change)="loadOrders()" color="primary">Hide completed</mat-checkbox>
       </div>
       <!-- <div class="checkbox">
@@ -43,7 +42,6 @@
     <div class="subtitle">Filter by status</div>
     <mat-card class="filter-card">
       <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.status" (change)="loadOrders()">
-        <!-- TODO: "All orders" checked by default -->
         <mat-radio-button class="filter-option" *ngFor="let status of order_filters?.order_filtering" value="{{ status.value }}" [disabled]="status.amount === 0" color="primary">
           {{ status.title }}
           <!-- FIXME: show amount (below) only if higher than 1 -->

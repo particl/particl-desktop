@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 @import '../shared/shared.scss';
 
 .mat-card {
@@ -7,13 +7,15 @@
 
 .staking-overview { // listing of staking stats
   width: 100%;
-  td, th {
+  td,
+  th {
     padding: 10px 20px;
     border-bottom: 1px solid rgba($bg-shadow, 0.4);
   }
   tr:last-of-type {
-    td, th {
-      border: none;
+    td,
+    th {
+      border: 0;
     }
   }
   th {
