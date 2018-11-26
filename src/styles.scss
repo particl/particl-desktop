@@ -1,7 +1,7 @@
-@import "./src/assets/config"; // import shared colors etc.
-@import "./src/assets/scss/fonts"; // fonts and iconfonts
-@import "./src/assets/scss/material-components"; // tweaks to Material components
-@import "./src/assets/scss/helper"; // helper & misc classes
+@import './src/assets/config'; // import shared colors etc.
+@import './src/assets/scss/fonts'; // fonts and iconfonts
+@import './src/assets/scss/material-components'; // tweaks to Material components
+@import './src/assets/scss/helper'; // helper & misc classes
 
 @import '~@ngx-gallery/core/styles/gallery.css';
 
@@ -75,6 +75,7 @@ body {
 .with-tab-bar {
   margin-top: ($header-main-height + $tab-bar-height);
 }
+
 .without-tab-bar {
   margin-top: $header-main-height;
 }
@@ -100,7 +101,7 @@ body {
   background: rgba($bg, 0.95);
   .buttons {
     flex: 1 0 100px;
-    padding: 0 20px 0 20px; // offset side padding
+    padding: 0 20px; // offset side padding
     //border-left: 1px solid $bg-shadow;
     border-bottom: 1px solid $bg-shadow;
     display: flex;
@@ -135,10 +136,10 @@ body {
 // descriptive page titles
 .page-intro {
   @include gradient(rgba($color-white, 0.7), $bg);
-  margin: (-$padding) (-$padding) 0 (-$padding);
+  margin: (-$padding) (-$padding) 0;
   padding: $padding;
   @include break(l) {
-    margin: (-$padding-l) (-$padding-l) 0 (-$padding-l);
+    margin: (-$padding-l) (-$padding-l) 0;
     padding: $padding-l;
   }
   .intro-toggle {
@@ -178,11 +179,12 @@ body {
 
 // ------ 3.2. ADDRESSES ------ //
 
-.address, .address-label {
+.address,
+.address-label {
   overflow: hidden;
   text-overflow: ellipsis;
   background: transparent;
-  transition: background .3s;
+  transition: background 0.3s;
   white-space: nowrap;
 }
 
@@ -208,8 +210,8 @@ body {
       padding: 14px;
       margin: 0 auto 24px;
       border-radius: 50%;
-      background: white;
-      box-shadow: 0 0 20px rgba(black, 0.07);
+      background: $color-white;
+      box-shadow: 0 0 20px rgba($bg-black, 0.07);
       & > img {
         animation: rotate 4s infinite;
         display: inline-block;
@@ -237,7 +239,7 @@ body {
   text-align: center;
   padding: 170px 0;
   border: 2px dashed $bg-shadow;
-  background: rgba(white, 0.5);
+  background: rgba($color-white, 0.5);
   p {
     @extend %lightest;
   }
@@ -268,8 +270,10 @@ body {
 // ------ 3.5. INPUT WITH ICON (eg. Search) ------ //
 
 .icon-input {
-  input.mat-input-element {
-    height: 20px;
+  input {
+    .mat-input-element {
+      height: 20px;
+    }
   }
   .mat-icon {
     position: absolute;
@@ -304,12 +308,16 @@ h1 {
 
 // ------ 4.1. PAGE SUBTITLES ------ //
 
-.mat-list.list-data .mat-subheader { // "H2" subtitles in pages (e.g. "(un)used addresses" in Receive
-  @extend %subtitle;
-  height: auto;
-  margin: 10px 0 25px !important;
-  &.first {
-    margin-top: -10px !important;
+.mat-list { // 'H2' subtitles in pages (e.g. '(un)used addresses' in Receive
+  &.list-data {
+    .mat-subheader {
+      @extend %subtitle;
+      height: auto;
+      margin: 10px 0 25px !important;
+      &.first {
+        margin-top: -10px !important;
+      }
+    }
   }
 }
 
@@ -345,7 +353,7 @@ p.info {
     margin: 24px -24px;
   }
   &::before {
-    font-family: "part";
+    font-family: 'part';
     font-size: 1.4em;
     line-height: 0;
     position: absolute;
@@ -354,9 +362,10 @@ p.info {
     margin-right: 8px;
   }
 }
+
 p.warning {
   &::before {
-    content: "\ea02"; // part-alert icon
+    content: '\ea02'; // part-alert icon
     color: $color-alert;
   }
   a {
@@ -367,9 +376,10 @@ p.warning {
     }
   }
 }
+
 p.info {
   &::before {
-    content: "\ea19"; // part-info icon
+    content: '\ea19'; // part-info icon
     color: $color-info;
   }
   a {
@@ -387,9 +397,9 @@ kbd {
   font-size: 95%;
   line-height: 1.3;
   font-family: inherit;
-  border: 1px solid silver;
+  border: 1px solid darken($bg-hover, 7%);
   border-radius: 2px;
-  background: #fafafa;
+  background: $bg;
   display: inline-block;
   padding: 2px 5px;
   margin: 0 2px;
@@ -412,6 +422,7 @@ kbd {
     fill: $text;
   }
 }
+
 .nvtooltip { // tooltips
   z-index: 1000;
   font-family: $font;

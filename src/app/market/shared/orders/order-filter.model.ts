@@ -2,13 +2,13 @@ import { Bid } from 'app/core/market/api/bid/bid.model';
 
 export class OrderFilter {
   order_filtering: Array<any> = [
-    { title: 'All orders', value: '*',     amount: 0 },
-    { title: 'Bidding',    value: 'MPA_BID', amount: 0 },
+    { title: 'All orders', value: '*',               amount: 0 },
+    { title: 'Bidding',    value: 'MPA_BID',         amount: 0 },
     { title: 'Awaiting',   value: 'AWAITING_ESCROW', amount: 0 },
-    { title: 'In escrow',  value: 'ESCROW_LOCKED',  amount: 0 },
-    { title: 'Shipped',    value: 'SHIPPING', amount: 0 },
-    { title: 'Completed',  value: 'COMPLETE',    amount: 0 },
-    { title: 'Rejected',   value: 'MPA_REJECT',    amount: 0 }
+    { title: 'In escrow',  value: 'ESCROW_LOCKED',   amount: 0 },
+    { title: 'Shipped',    value: 'SHIPPING',        amount: 0 },
+    { title: 'Completed',  value: 'COMPLETE',        amount: 0 },
+    { title: 'Rejected',   value: 'MPA_REJECT',      amount: 0 }
   ];
   constructor() {
   }
@@ -52,27 +52,27 @@ export class OrderFilter {
     orders.map(ord => {
       switch (ord.status) {
 
-        case 'Bidding':
+        case 'bidding':
           this.increaseBiddingCount();
           break;
 
-        case 'Awaiting':
+        case 'awaiting':
           this.increaseAwaitingCount();
           break;
 
-        case 'Escrow':
+        case 'escrow':
           this.increaseEscrowCount();
           break;
 
-        case 'Shipping':
+        case 'shipping':
           this.increaseShippedCount();
           break;
 
-        case 'Complete':
+        case 'complete':
           this.increaseSoldCount();
           break;
 
-        case 'Rejected':
+        case 'rejected':
           this.increaseRejectedCount();
           break;
       }
@@ -141,5 +141,3 @@ export class OrderFilter {
   }
 
 }
-
-

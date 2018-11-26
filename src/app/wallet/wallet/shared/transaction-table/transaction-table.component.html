@@ -20,12 +20,12 @@
       <mat-panel-title class="tx-overview" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
 
         <!-- Date -->
-        <div fxFlex="0 0 135px" *ngIf="display.date" class="history_date">
+        <div fxFlex="0 0 135px" *ngIf="display.date" class="date">
           {{ tx.getDate() }}
         </div>
 
         <!-- Confirmations -->
-        <div fxFlex="0 0 70px" *ngIf="display.confirmations && tx.getConfirmationCount() <= 12" class="history_confirmation" [ngClass]="styleConfimations(tx.getConfirmationCount())">
+        <div fxFlex="0 0 70px" *ngIf="display.confirmations && tx.getConfirmationCount() <= 12" class="confirmations" [ngClass]="styleConfimations(tx.getConfirmationCount())">
           <div class="confirmation-tag" matTooltip="Unconfirmed transaction" matTooltipPosition="before">
             <mat-icon fontSet="partIcon" fontIcon="part-date" class="confirmations"></mat-icon>
             {{ tx.getConfirmationCount() }}/12
@@ -33,7 +33,7 @@
         </div>
 
         <!-- Category icon -->
-        <div fxFlex="1 0 175px" *ngIf="display.category" class="history_cat_icon"
+        <div fxFlex="1 0 175px" *ngIf="display.category" class="type"
                           [ngSwitch]="tx.getCategory()">
           <span *ngSwitchCase="'stake'" class="tx-type staked">
             <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
@@ -71,7 +71,7 @@
           </span>
         </div>
 
-        <div fxFlex="20" *ngIf="display.txid" class="history_txt">
+        <!--div fxFlex="20" *ngIf="display.txid" class="history_txt">
           <span mat-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row">
             <span fxFlex="10"><b>TxId</b></span>
             <span fxFlex="80">{{ tx.txid }} </span>
@@ -80,10 +80,10 @@
 
         <div fxFlex="20" *ngIf="display.blockIndex" class="history_blockIndex">
           <span mat-line>Blockindex {{ tx.blockindex }}</span>
-        </div>
+        </div-->
 
         <!-- Amount -->
-        <div fxFlex="1 0 155px" *ngIf="display.amount" class="history_amount">
+        <div fxFlex="1 0 155px" *ngIf="display.amount" class="tx-value">
           <span mat-line>
             <span class="amount"
                   [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }">
@@ -99,7 +99,7 @@
     </mat-expansion-panel-header>
 
 
-    <div class="container history_container" fxLayoutWrap layout-padding>
+    <div class="container history-container" fxLayoutWrap layout-padding>
 
       <div fxFlex="1 1 calc(100% - 260px)" fxLayout="column">
         <!-- To/from (detail) -->

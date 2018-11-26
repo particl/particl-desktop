@@ -53,20 +53,20 @@ $default-color: (
 
 // Material's Blue
 $default-accent: (
-  50: #E3F2FD,
-  100: #BBDEFB,
-  200: #90CAF9,
-  300: #64B5F6,
-  400: #42A5F5,
-  500: #2196F3,
-  600: #1E88E5,
-  700: #1976D2,
-  800: #1565C0,
-  900: #0D47A1,
-  A100: #82B1FF,
-  A200: #448AFF,
-  A400: #2979FF,
-  A700: #2962FF,
+  50: #e3f2fd,
+  100: #bbdefb,
+  200: #90caf9,
+  300: #64b5f6,
+  400: #42a5f5,
+  500: #2196f3,
+  600: #1e88e5,
+  700: #1976d2,
+  800: #1565c0,
+  900: #0d47a1,
+  A100: #82b1ff,
+  A200: #448aff,
+  A400: #2979ff,
+  A700: #2962ff,
   contrast: (
     50: $black-87-opacity,
     100: $black-87-opacity,
@@ -138,5 +138,5 @@ $part-dark-accent: mat-palette($default-accent, 600); // TODO: switch to new $da
 $part-dark-theme: mat-dark-theme($part-dark-color, $part-dark-accent);
 
 .dark-theme {
-   @include angular-material-theme($part-dark-theme);
+  @include angular-material-theme($part-dark-theme);
 }
