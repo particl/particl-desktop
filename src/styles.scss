@@ -136,10 +136,10 @@ body {
 // descriptive page titles
 .page-intro {
   @include gradient(rgba($color-white, 0.7), $bg);
-  margin: (-$padding) (-$padding) 0 (-$padding);
+  margin: (-$padding) (-$padding) 0;
   padding: $padding;
   @include break(l) {
-    margin: (-$padding-l) (-$padding-l) 0 (-$padding-l);
+    margin: (-$padding-l) (-$padding-l) 0;
     padding: $padding-l;
   }
   .intro-toggle {
