@@ -54,6 +54,10 @@ export class SendComponent implements OnInit {
 
   setFormDefaultValue() {
     this.send = new TransactionBuilder();
+    // it should reset output on the basis of type
+    if (this.type === 'balanceTransfer') {
+      this.send.output = TxType.BLIND;
+    }
   }
 
   ngOnInit() {
