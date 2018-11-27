@@ -58,6 +58,12 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+
+    // update last proposal timestamp.
+    if (this.proposalsNotificationsService.proposalsCountRequiredVoteAction) {
+      this.proposalsNotificationsService.storeProposals();
+    }
+
     this.peerService.getBlockCount()
     .takeWhile(() => !this.destroyed)
     .subscribe((count: number) => {
@@ -173,7 +179,11 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.proposalsNotificationsService.storeProposals();
+    // update last proposal timestamp.
+    if (this.proposalsNotificationsService.proposalsCountRequiredVoteAction) {
+      this.proposalsNotificationsService.storeProposals();
+    }
+
     this.destroyed = true;
   }
 

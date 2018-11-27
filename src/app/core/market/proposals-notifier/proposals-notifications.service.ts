@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy, Inject, forwardRef } from '@angular/core';
 import { Log } from 'ng2-logger';
+import { Router } from '@angular/router';
 import * as _ from 'lodash';
 
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
@@ -14,10 +15,10 @@ export class ProposalsNotificationsService implements OnDestroy {
 
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
   public proposals: Proposal[] = [];
-  public storedProposals: Proposal[] = [];
   public destroyed: boolean = false;
   private proposalsCountRequiredVoteActions: number = 0;
   private profile: Profile;
+  private lastProposalTimeStamp: Number;
 
   get proposalsCountRequiredVoteAction(): number {
     return this.proposalsCountRequiredVoteActions;
@@ -27,11 +28,12 @@ export class ProposalsNotificationsService implements OnDestroy {
     private proposalsService: ProposalsService,
     private peerService: PeerService,
     private _notification: NotificationService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private router: Router
   ) {
 
     // load stored proposal.
-    this.loadstoredProposals();
+    this.loadLastProposalTimeStamp();
 
     this.profileService.default()
       .takeWhile(() => !this.destroyed)
@@ -50,37 +52,60 @@ export class ProposalsNotificationsService implements OnDestroy {
   }
 
   loadProposals(): void {
+    console.log('route', this.router.url);
     this.proposalsService
       .list(Date.now(), '*')
       .take(1)
       .subscribe((proposals: Proposal[]) => {
         proposals.reverse();
+
         if (this.proposals.length && this.proposals.length !== proposals.length) {
           this.checkProposals(proposals);
         }
 
-        if (!this.storedProposals.length) {
-          this.checkProposalsRequiredVoteActions(proposals);
-        } else if (this.storedProposals.length && this.storedProposals.length !== proposals.length
-        ) {
-          // get the count of the newly arrivied proposals.
-          this.proposalsCountRequiredVoteActions = this.getNewProposals(proposals, this.storedProposals).length
+        proposals = this.getSortedProposalsByTime(proposals);
+
+
+        // No need to update the notification count if user on the proposal page?
+        if (this.router.url !== '/wallet/proposals') {
+
+          if (this.lastProposalTimeStamp && proposals.length && proposals[0].createdAt !== this.lastProposalTimeStamp) {
+            this.proposalsCountRequiredVoteActions = 0;
+            for (const proposal of proposals) {
+              if (proposal.createdAt !== this.lastProposalTimeStamp) {
+                this.proposalsCountRequiredVoteActions += 1;
+              } else {
+                break;
+              }
+            }
+          } else if (!this.lastProposalTimeStamp) {
+            this.checkProposalsRequiredVoteActions(proposals);
+          }
         }
+
+        if (!this.lastProposalTimeStamp) {
+          this.lastProposalTimeStamp = proposals[0].createdAt;
+        }
+
         this.proposals = proposals;
       });
   }
 
+  getSortedProposalsByTime(proposals: Proposal[]): Proposal[] {
+    return _.orderBy(proposals, ['createdAt'], ['desc']);
+  }
+
   // @TODO remove once functionality done from the MP side.
-  loadstoredProposals(): void {
-    this.storedProposals = JSON.parse(localStorage.getItem('proposals')) || [];
+  loadLastProposalTimeStamp(): void {
+    this.lastProposalTimeStamp = JSON.parse(localStorage.getItem('lastProposalTimeStamp'));
   }
 
   // @TODO remove once functionality done from the MP side.
   storeProposals(): void {
     if (this.proposals.length) {
       this.proposalsCountRequiredVoteActions = 0;
-      this.storedProposals = this.proposals;
-      localStorage.setItem('proposals', JSON.stringify(this.proposals));
+      this.lastProposalTimeStamp = this.proposals[0].createdAt;
+      localStorage.setItem('lastProposalTimeStamp', JSON.stringify(this.proposals[0].createdAt));
     }
   }
 
