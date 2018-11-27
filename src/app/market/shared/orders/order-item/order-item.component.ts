@@ -35,7 +35,7 @@ export class OrderItemComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getItemDetails()
+    this.getItemDetails();
   }
 
   getItemDetails() {
