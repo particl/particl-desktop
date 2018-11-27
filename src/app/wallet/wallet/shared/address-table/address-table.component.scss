@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 .mat-list {
   padding-top: 0;
@@ -39,7 +39,7 @@ mat-card.address-entry {
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 350px;
-      margin: 1px 0 0 0;
+      margin: 1px 0 0;
       @include break(l) {
         max-width: 450px;
       }
@@ -54,4 +54,3 @@ mat-card.address-entry {
     align-items: center;
   }
 }
-
