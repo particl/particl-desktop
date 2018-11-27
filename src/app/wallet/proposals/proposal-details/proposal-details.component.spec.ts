@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProposalDetailsComponent } from './proposal-details.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from 'app/wallet/shared/shared.module';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
@@ -19,6 +20,7 @@ describe('ProposalDetailsComponent', () => {
       imports: [
         BrowserAnimationsModule,
         SharedModule,
+        RouterTestingModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot()

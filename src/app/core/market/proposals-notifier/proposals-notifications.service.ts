@@ -57,7 +57,6 @@ export class ProposalsNotificationsService implements OnDestroy {
       .list(Date.now(), '*')
       .take(1)
       .subscribe((proposals: Proposal[]) => {
-        proposals.reverse();
 
         if (this.proposals.length && this.proposals.length !== proposals.length) {
           this.checkProposals(proposals);
@@ -125,10 +124,16 @@ export class ProposalsNotificationsService implements OnDestroy {
   }
 
   checkProposals(proposals: Proposal[]): void {
-    this.getNewProposals(proposals, this.proposals).filter((proposal) => {
+    this.getProposalsToNotifyFor(proposals, this.proposals).filter((proposal) => {
       return proposal.submitter !== this.profile.address;
     }).forEach(proposal => {
       this.notifyNewProposal(proposal);
+    })
+  }
+
+  getProposalsToNotifyFor(newProposals: Proposal[], oldProposals: Proposal[]): Proposal[] {
+    return _.differenceWith(newProposals, oldProposals, (p1, p2) => {
+      return p1.id === p2.id;
     })
   }
 
@@ -143,11 +148,6 @@ export class ProposalsNotificationsService implements OnDestroy {
     }
   }
 
-  getNewProposals(newProposals: Proposal[], oldProposals: Proposal[]): Proposal[] {
-    return _.differenceWith(newProposals, oldProposals, (p1, p2) => {
-      return p1.id === p2.id;
-    })
-  }
 
   ngOnDestroy() {
     this.destroyed = true;

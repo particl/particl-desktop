@@ -1,4 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { MarketService } from 'app/core/market/market.service';
 import { CoreModule } from 'app/core/core.module';
@@ -11,6 +12,7 @@ describe('ProposalsNotificationsService', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
+        RouterTestingModule,
         CoreModule.forRoot()
       ],
       providers: [
