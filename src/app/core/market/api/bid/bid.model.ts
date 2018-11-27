@@ -34,7 +34,7 @@ export class Bid extends Product {
   }
 
   get updated(): string {
-    return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
+    return new DateFormatter(new Date(this.updatedAt)).dateFormatter(false);
   }
 
   get messages(): any {
