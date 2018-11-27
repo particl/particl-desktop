@@ -43,5 +43,5 @@
 // @include gradient (<top-color>, <bottom-color>);
 
 @mixin gradient($top, $bottom) {
-  background: linear-gradient(to bottom, $top 0%,$bottom 100%);
+  background: linear-gradient(to bottom, $top 0%, $bottom 100%);
 }
