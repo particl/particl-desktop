@@ -176,7 +176,7 @@ export class Template {
   }
 
   get expiredAt(): any {
-    return new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(true);
+    return new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false);
   }
 
   setExpiryTime(): void {
