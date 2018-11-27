@@ -27,3 +27,12 @@
 @mixin break-from($size) {
   @media only screen and (min-width: $size) { @content; }
 }
+
+
+// ------ GRADIENTS ------ //
+
+// @include gradient (<top-color>, <bottom-color>);
+
+@mixin gradient($top, $bottom) {
+  background: linear-gradient(to bottom, $top 0%, $bottom 100%);
+}

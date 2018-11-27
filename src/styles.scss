@@ -21,6 +21,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       2.2. Modifiers
       2.3. Tab/control bars
       2.4. Filters (sidebars)
+      2.5. Page intros (help titles)
     3. UI elements
       3.1. Buttons
       3.2. Addresses
@@ -45,7 +46,10 @@ body {
   @extend %disable-select;
   font-family: $font;
   background-color: $bg;
-  font-size: 12px;
+  font-size: 13px;
+  @include break(l) {
+    font-size: 14px;
+  }
 }
 
 
@@ -123,6 +127,36 @@ body {
   float: left;
   .without-tab-bar & {
     top: ($header-main-height + $padding);
+  }
+}
+
+
+// ------ 2.5. PAGE INTROS ------ //
+
+// descriptive page titles
+.page-intro {
+  @include gradient(rgba($color-white, 0.7), $bg);
+  margin: (-$padding) (-$padding) 0;
+  padding: $padding;
+  @include break(l) {
+    margin: (-$padding-l) (-$padding-l) 0;
+    padding: $padding-l;
+  }
+  .intro-toggle {
+    @extend %lighter;
+    float: right;
+    .mat-icon {
+      margin: 0;
+    }
+  }
+  h1 {
+    margin: 0;
+  }
+  .content {
+    margin-top: 16px;
+  }
+  .widget-help {
+    margin-bottom: 0;
   }
 }
 
@@ -263,6 +297,11 @@ body {
     4. TYPOGRAPHY
 \* ------------------------------- */
 
+h1 {
+  font-weight: 500;
+}
+
+
 // ------ 4.1. PAGE SUBTITLES ------ //
 
 .mat-list { // 'H2' subtitles in pages (e.g. '(un)used addresses' in Receive
@@ -288,9 +327,9 @@ body {
 
 // Help descriptions
 .widget-help {
-  color: $text-muted;
-  font-size: 12px;
-  line-height: 1.45;
+  @extend %lighter;
+  font-size: 93%;
+  line-height: 1.5;
   margin-bottom: 25px;
   cursor: help;
 }
