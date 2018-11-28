@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 .modal-content {
   overflow: visible; // gets rid of vertical scrollbars (not needed here)
@@ -62,7 +62,7 @@
     font-family: monospace;
     color: $text-muted;
     background: transparent;
-    transition: background .3s;
+    transition: background 0.3s;
   }
 }
 

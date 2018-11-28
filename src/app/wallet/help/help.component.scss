@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 // ------ UI ------ //
 
@@ -38,7 +38,7 @@
       border-top: 1px dashed mix($bg, $bg-shadow);
       padding: 20px 26px 20px 6px;
       &:first-of-type {
-        border: none;
+        border: 0;
       }
       .icon {
         flex: 0 0 75px;
@@ -61,10 +61,13 @@
       border-right: 1px dashed mix($bg, $bg-shadow);
       border-bottom: 1px dashed mix($bg, $bg-shadow);
       &:nth-of-type(4n) {
-        border-right: none;
+        border-right: 0;
       }
-      &:nth-last-of-type(1), &:nth-last-of-type(2), &:nth-last-of-type(3), &:nth-last-of-type(4) {
-        border-bottom: none;
+      &:nth-last-of-type(1),
+      &:nth-last-of-type(2),
+      &:nth-last-of-type(3),
+      &:nth-last-of-type(4) {
+        border-bottom: 0;
       }
       .text .title {
         font-size: 11px;
@@ -83,7 +86,8 @@
     @extend %tfx;
     text-decoration: none;
     color: $text;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background: rgba($color, 0.015);
       .icon .mat-icon {
         color: $color;

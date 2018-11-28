@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 // ------ LISTS (shared for listings & orders) ------ //
 
@@ -114,39 +114,39 @@
       background: $color-alert;
     }
     // orders
-    &.Bidding .dot {
+    &.bidding .dot {
       background: $color-warning;
     }
-    &.Awaiting .dot {
+    &.awaiting .dot {
       background: mix($color-warning, $color-alert, 60%);
     }
-    &.Escrow .dot {
+    &.escrow .dot {
       background: $color-alert;
     }
-    &.Shipping .dot {
+    &.shipping .dot {
       background: mix($color, $color-success);
     }
-    &.Complete {
+    &.complete {
       color: rgba($text, 0.5);
       .dot {
         background: rgba($color-info, 0.5);
       }
     }
-    &.Rejected {
+    &.rejected {
       color: rgba($text, 0.5);
       .dot {
         background: $bg-shadow;
       }
     }
     // animated notifications in Order statuses
-    &.sell.Bidding,
-    &.buy.Awaiting,
-    &.sell.Escrow,
-    &.buy.Shipping,
+    &.sell.bidding,
+    &.buy.awaiting,
+    &.sell.escrow,
+    &.buy.shipping,
     // + in Listing statuses..
     &.expired {
       .dot::after {
-        content: "";
+        content: '';
         animation: pulse-fade 1s infinite;
         width: 7px;
         height: 7px;
@@ -158,16 +158,16 @@
         left: -2px;
       }
     }
-    &.sell.Bidding .dot::after {
+    &.sell.bidding .dot::after {
       border-color: $color-warning;
     }
-    &.buy.Awaiting .dot::after {
+    &.buy.awaiting .dot::after {
       border-color: mix($color-warning, $color-alert, 60%);
     }
-    &.sell.Escrow .dot::after {
+    &.sell.escrow .dot::after {
       border-color: $color-alert;
     }
-    &.buy.Shipping .dot::after {
+    &.buy.shipping .dot::after {
       border-color: mix($color, $color-success);
     }
     &.expired .dot::after {

@@ -1,12 +1,12 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 // ------ UI ------ //
 
 .section {
-  &.advanced { // "advanced options" fields
+  &.advanced { // 'advanced options' fields
     background: mix($color-white, $bg);
     border-top: 1px dashed darken($bg, 7%);
-    margin: 0 -24px 0 !important;
+    margin: 0 -24px !important;
     padding: 8px 24px;
   }
 }
@@ -15,11 +15,11 @@
   margin-bottom: 20px;
 }
 
-.section-title { // "Pay from/to, Convert" etc.
+.section-title { // 'Pay from/to, Convert' etc.
   @extend %subtitle;
 }
 
-.subtitle { // subtitles (eg. "privacy level" in anon
+.subtitle { // subtitles (eg. 'privacy level' in anon
   text-transform: uppercase;
   margin: 20px 0 16px;
   color: $text;
@@ -66,7 +66,7 @@
       font-weight: 600;
       margin-left: 5px;
     }
-    .help-icon { // explanation of "1e-8" at blind balances (after sending all blind)
+    .help-icon { // explanation of '1e-8' at blind balances (after sending all blind)
       margin-left: 3px;
       font-size: 14px;
       color: $color-info;
@@ -84,7 +84,7 @@
   padding-top: 0; // offset subtitles
 }
 
-.from-box { // "pay from.."
+.from-box { // 'pay from..'
   .sticky {
     position: sticky;
     top: $header-main-height + $tab-bar-height + 30px;
@@ -119,7 +119,7 @@
   }
 }
 
-.pay-to { // whole "pay to" card
+.pay-to { // whole 'pay to' card
   padding-bottom: 1px;
 
   .receiver-address { // recipient's addy & label
@@ -130,7 +130,7 @@
   }
 }
 
-mat-card.to-balance-type { // "convert to.."
+mat-card.to-balance-type { // 'convert to..'
   padding-top: 14px;
 }
 
@@ -151,6 +151,6 @@ mat-form-field {
   }
 }
 
-.underliningSelect {
+.underlining-select {
   position: relative;
 }

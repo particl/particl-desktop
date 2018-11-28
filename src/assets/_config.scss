@@ -18,19 +18,20 @@ Global SCSS config file defining app-wide settings (included in every page)
     1. Variables
 \* ------------------------------- */
 
-$font: "Inter_UI", sans-serif;
+$font: 'Inter_UI', sans-serif;
 
 // main colors
-$color: #02E8B0; // primary green-ish color
+$color: #02e8b0; // primary green-ish color
 $color-success: #4f8a10;
 $color-alert: #ec4b50;
 $color-warning: #f1cc00; // yellow-ish
 $color-info: #108cda; // blue-ish (e.g. status cold staking icon)
 $color-white: #fff;
+$color-ugly: #ff69b4;
 
 // text colors
 $text: #232728; // default text color
-$text-muted: #7E8790; // grey (for section titles, descriptions etc.)
+$text-muted: #7e8790; // grey (for section titles, descriptions etc.)
 
 // bg/element colors
 $bg: #fafafa; // light grey bg color
@@ -61,13 +62,19 @@ $break-xhd: 2200px;
     2. Global imports
 \* ------------------------------- */
 
-@import "scss/mixins";
+@import 'scss/mixins';
 
 
 /* ------------------------------- *\
     3. Templates
     http://thesassway.com/intermediate/understanding-placeholder-selectors
 \* ------------------------------- */
+
+// ------ 3.1. TYPOGRAPHY ------ //
+
+%lighter { // "grey" text, formerly "help descriptions"
+  opacity: 0.55;
+}
 
 %subtitle { // section titles / H2's
   font-size: 14px;
@@ -84,10 +91,13 @@ $break-xhd: 2200px;
   font-size: 15px;
 }
 
+
+// ------ 3.2. UI ELEMENTS ------ //
+
 %tag { // notification tags - e.g. in tabs: Orders [3]
   @extend %tfx;
   font-size: 80%;
-  color: white;
+  color: $color-white;
   font-weight: 600;
   line-height: 1.6;
   background-color: $color;
@@ -98,15 +108,19 @@ $break-xhd: 2200px;
 }
 
 %menu-divider { // diviers in sidebar menu
-  border-top: 1px solid #15191A;
+  border-top: 1px solid #15191a;
   box-shadow: 0 1px 0 #333 inset;
 }
+
+
+// ------ 3.3. HELPER & MISC ------ //
 
 // enable/disable text selection
 %disable-select {
   user-select: none;
   cursor: default;
 }
+
 %enable-select,
 .enable-select {
   user-select: auto;
@@ -114,8 +128,14 @@ $break-xhd: 2200px;
 }
 
 %clearfix {
-  &::before, &::after { content: ""; display: table; }
-  &::after { clear: both; }
+  &::before,
+  &::after {
+    content: '';
+    display: table;
+  }
+  &::after {
+    clear: both;
+  }
 }
 
 // Transition effects
