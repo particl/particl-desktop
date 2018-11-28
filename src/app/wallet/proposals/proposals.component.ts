@@ -60,9 +60,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     // update last proposal timestamp.
-    if (this.proposalsNotificationsService.proposalsCountRequiredVoteAction) {
-      this.proposalsNotificationsService.storeProposals();
-    }
+    this.proposalsNotificationsService.viewingProposals(false);
 
     this.peerService.getBlockCount()
     .takeWhile(() => !this.destroyed)
@@ -179,11 +177,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // update last proposal timestamp.
-    if (this.proposalsNotificationsService.proposalsCountRequiredVoteAction) {
-      this.proposalsNotificationsService.storeProposals();
-    }
-
+    this.proposalsNotificationsService.viewingProposals(true);
     this.destroyed = true;
   }
 
