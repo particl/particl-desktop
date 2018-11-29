@@ -176,12 +176,8 @@ export class Template {
   }
 
   get expiredAt(): any {
-    if (this.object.ListingItems[0] !== null || this.object.ListingItems[0] !== 0) {
-      const expire = 'Expires ' + new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16);
-      return expire
-    } else {
-      return ''
-    }
+    return Object.prototype.toString.call(this.object.ListingItems) === '[object Array]' && this.object.ListingItems.length ?
+    'Expires ' + new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16) : '';
   }
 
   setExpiryTime(): void {
