@@ -10,7 +10,7 @@
 
   // confirmations
   .confirmations {
-    color: $text-muted;
+    // color: $text-muted;
     .confirmation-tag {
       border-radius: $radius;
       font-size: 12px;
@@ -100,7 +100,7 @@
     display: block;
     .amount {
       .big {
-        font-weight: bold;        
+        font-weight: bold;
       }
       .point,
       .small {
@@ -137,7 +137,7 @@
   // to/from address
   .to-from-address {
     width: 100%;
-    font-family: monospace;   
+    font-family: monospace;
     color: lighten($text, 10%);
     background: lighten($bg-shadow, 10%);
     border-radius: 4px;
