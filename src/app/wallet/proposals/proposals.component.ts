@@ -55,12 +55,12 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     private peerService: PeerService,
     private proposalsService: ProposalsService,
     private proposalsNotificationsService: ProposalsNotificationsService
-  ) { }
-
-  ngOnInit() {
-
+  ) {
     // update last proposal timestamp.
     this.proposalsNotificationsService.viewingProposals(false);
+  }
+
+  ngOnInit() {
 
     this.peerService.getBlockCount()
     .takeWhile(() => !this.destroyed)
