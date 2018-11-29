@@ -176,8 +176,12 @@ export class Template {
   }
 
   get expiredAt(): any {
-    const expire = new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16);
-    return expire
+    if (this.object.ListingItems[0] !== null || this.object.ListingItems[0] !== 0) {
+      const expire = new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16);
+      return expire
+    } else {
+      return 'NaN'
+    }
   }
 
   setExpiryTime(): void {
