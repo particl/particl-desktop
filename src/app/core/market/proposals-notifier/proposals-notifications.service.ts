@@ -17,7 +17,10 @@ export class ProposalsNotificationsService implements OnDestroy {
   private notifcationTimestamp: number = 0;
   private lastKnownBlockCount: number = 0;
   private canUpdateProposalCount: boolean = true;
-  private storageKey: string = 'timestamp_view_proposals';
+  private storageKeys: any = {
+    timestamp_view_proposals: 'timestamp_view_proposals',
+    timestamp_notifcation: 'timestamp_notifcation'
+  };
 
   constructor(
     private proposalsService: ProposalsService,
@@ -59,7 +62,7 @@ export class ProposalsNotificationsService implements OnDestroy {
           }
           if (tempCount > 0) {
             let needUpdating = false;
-            for (let idx = proposals.length - tempCount - 1; idx < proposals.length; idx++) {
+            for (let idx = proposals.length - tempCount; idx < proposals.length; idx++) {
               const proposal: Proposal = proposals[idx];
               if (proposal && +proposal.createdAt > this.notifcationTimestamp) {
                 needUpdating = true;
@@ -68,6 +71,9 @@ export class ProposalsNotificationsService implements OnDestroy {
             }
             if (needUpdating) {
               this.notifcationTimestamp = Date.now();
+
+              // restrict the notification for the unseen proposal at time time of GUI started.
+              localStorage.setItem(this.storageKeys.timestamp_notifcation, String(this.notifcationTimestamp));
             }
           }
         }
@@ -83,11 +89,13 @@ export class ProposalsNotificationsService implements OnDestroy {
   }
 
   loadLastViewedProposalTimestamp(): void {
-    this.lastUpdatedTimeStamp = +(localStorage.getItem(this.storageKey) || 0);
+
+    this.lastUpdatedTimeStamp = +(localStorage.getItem(this.storageKeys.timestamp_view_proposals) || 0);
+    this.notifcationTimestamp = +(localStorage.getItem(this.storageKeys.timestamp_notifcation) || 0);
   }
 
   storeLastViewedProposalTimestamp(): void {
-    localStorage.setItem(this.storageKey, String(this.lastUpdatedTimeStamp));
+    localStorage.setItem(this.storageKeys.timestamp_view_proposals, String(this.lastUpdatedTimeStamp));
   }
 
   notifyNewProposal(proposal: Proposal): void {
