@@ -97,6 +97,17 @@ button.small .mat-icon {
         filter: invert(10%);
       }
     }
+    .listing-tabs {
+      .mat-tab-header {
+        background: rgba($color-white, 0.92);
+        position: sticky;
+        top: 70px;
+        z-index: 20;
+      }
+      .mat-tab-label {
+        width: (100% / 3);
+      }
+    }
   }
 }
 
