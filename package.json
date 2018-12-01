@@ -200,7 +200,7 @@
     "sass-lint": "^1.10.2",
     "ts-node": "^5.0.0",
     "tslint": "^5.9.0",
-    "tslint-microsoft-contrib": "^5.0.3",
+    "tslint-microsoft-contrib": "^6.0.0",
     "typescript": ">=2.4.2 <2.6.0"
   }
 }
