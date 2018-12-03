@@ -69,9 +69,10 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <div class="est-fee" fxFlex="0 0 210px">
-            Approximate listing fee:<br>
-            {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
+          <div class="est-fee" fxFlex="0 0 210px" >
+            <span *ngIf="expiration" >Approximate listing fee:<br>
+              {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
+            </span>
           </div>
         </div>
         <p class="widget-help">
@@ -176,11 +177,11 @@
       </button>
     </div>
     <div class="right">
-      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
+      <button [disabled]="isInProcess || !itemFormGroup?.valid || !expiration" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
-      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+      <button [disabled]="isInProcess || !itemFormGroup?.valid || !expiration" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
         {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
