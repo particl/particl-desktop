@@ -57,6 +57,8 @@ button.small .mat-icon {
 .dialog-content {
   margin: 0 -24px !important;
   width: 950px;
+  height: 65vh;
+  max-height: none;
 }
 
 [mat-dialog-title] {
@@ -98,14 +100,8 @@ button.small .mat-icon {
       }
     }
     .listing-tabs {
-      .mat-tab-header {
-        background: rgba($color-white, 0.92);
-        position: sticky;
-        top: 70px;
-        z-index: 20;
-      }
       .mat-tab-label {
-        width: (100% / 3);
+        width: (100% / 2);
       }
     }
   }
@@ -115,6 +111,22 @@ button.small .mat-icon {
   color: $text-muted;
   line-height: 1.7;
   margin-right: -24px;
+
+  // Tabs
+  .listing-tabs { // tabs in Listing desc (details / comments / ratings etc.)
+    position: sticky;
+    top: 70px;
+    z-index: 20;
+    background: rgba($color-white, 0.92);
+  }
+
+  // Tabs' content
+  .tab-content {
+    padding: 16px 40px;
+    &.details {
+      padding: 0;
+    }
+  }
 
   // Price info
   .pricing {
