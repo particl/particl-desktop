@@ -28,7 +28,7 @@ export class Transaction {
     comment: string;
     n0: string;
     n1: string;
-
+    requires_unlock: boolean;
     outputs: any[];
 
     /* conflicting txs */
@@ -56,7 +56,7 @@ export class Transaction {
     this.comment = json.comment;
     this.n0 = json.n0;
     this.n1 = json.n1;
-
+    this.requires_unlock = json.requires_unlock ? json.requires_unlock : false;
     this.outputs = json.outputs;
 
     /* conflicting txs */
