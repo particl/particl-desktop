@@ -227,6 +227,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.category = template.category.id;
       t.country = country ? country.name : '';
 
+      // set expiry time.
+      this.expiration = template.expireTime;
+      this.loadTransactionFee();
+
       // set default value as selected.
       this.setDefaultCountry(country);
       this.setDefaultCategory(template.category);
