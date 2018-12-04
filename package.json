@@ -192,7 +192,7 @@
     "karma-coverage-istanbul-reporter": "^1.4.1",
     "karma-jasmine": "^1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "ng2-logger": "^1.0.11",
+    "ng2-logger": "^2.0.38",
     "ngx-clipboard": "^10.0.0",
     "ngx-infinite-scroll": "^0.8.3",
     "node-sass": "^4.7.2",
