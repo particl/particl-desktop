@@ -1,16 +1,16 @@
-<div mat-dialog-title>
+<!--div mat-dialog-title>
   {{data?.listing?.title}}
   <span class="category">
     in {{data?.listing?.category.name}}
   </span>
-</div>
+</div-->
 
 <button class="small-close-button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">
-  <div class="product" fxLayout="row">
+  <div class="product-summary" fxLayout="row">
 
     <div class="product-gallery" fxFlex="1 1 450px">
       <div class="gallery-carousel">
@@ -34,7 +34,9 @@
 
     <div class="product-info" fxFlex="1 1 100%">
 
-      <div class="pricing" fxLayout fxLayoutAlign="space-between flex-start">
+      <h1>{{ data?.listing?.title }}</h1>
+
+      <div class="pricing">
 
         <div class="item price">
           <div class="title">Price</div>
@@ -45,6 +47,12 @@
           <div class="value fiat">
             <span class="fiat">~ {{price?.usd}} xx EUR</span>
           </div>
+        </div>
+
+        <div class="summary description">
+          <p>
+            {{ data?.listing?.shortDescription }}
+          </p>
         </div>
 
         <div class="item category">
@@ -65,108 +73,108 @@
 
       </div><!-- .pricing -->
 
-      <mat-tab-group class="listing-tabs" (selectChange)="changeTab($event.index)">
-        <mat-tab label="Details"></mat-tab>
-        <mat-tab label="Comments"></mat-tab>
-      </mat-tab-group><!-- .listing-tabs -->
-
-      <div class="tab-content details" *ngIf="tabLabels[selectedTab] == 'details'">
-        <div class="summary description">
-          <p>
-            {{ data?.listing?.shortDescription }}
-          </p>
-        </div>
-        <div class="detailed description">
-          <p>
-            {{ data?.listing?.longDescription }}
-          </p>
-        </div>
-        <table class="shipping-escrow">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Worldwide</th>
-              <th [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
-                Local in {{ data?.listing?.country }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th><strong>Shipping</strong></th>
-              <td>
-                <span class="part price">
-                  <strong>{{ data?.listing?.internationalShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
-                </span>
-                <span class="fiat price">
-                  &asymp; 0.41 <small class="currency">EUR</small>
-                </span>
-              </td>
-              <td>
-                <span class="part price">
-                  <strong>{{ data?.listing?.domesticShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
-                </span>
-                <span class="fiat price">
-                  &asymp; 0.41 <small class="currency">EUR</small>
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <strong>Escrow</strong><br>
-                (refunded upon delivery)
-              </th>
-              <td>
-                <span class="part price">
-                  <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
-                </span>
-                <span class="fiat price">
-                  &asymp; 0.41 <small class="currency">EUR</small>
-                </span>
-              </td>
-              <td>
-                <!-- FIXME: "escrow for local (not international)" needs to be implemented: -->
-                <span class="part price">
-                  <strong>{{ data?.listing?.escrowPriceDomestic?.getAmount() }}</strong> <small class="currency">PART</small>
-                </span>
-                <span class="fiat price">
-                  &asymp; 0.41 <small class="currency">EUR</small>
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <strong>Total needed for order</strong><br>
-                (incl. refundable Escrow)
-              </th>
-              <!-- TODO: price + shipping + escrow -->
-              <td>
-                <span class="part price">
-                  <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
-                </span>
-                <span class="fiat price">
-                  &asymp; 0.41 <small class="currency">EUR</small>
-                </span>
-              </td>
-              <td>
-                <span class="part price">
-                  <strong>{{data?.listing?.totalAmountDomestic?.getAmount()}}</strong> <small class="currency">PART</small>
-                </span>
-                <span class="fiat price">
-                  &asymp; 0.41 <small class="currency">EUR</small>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table><!-- .shipping-escrow -->
-      </div><!-- .tab-content.details -->
-      
-      <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
-        Comments
-      </div>
-
     </div><!-- .product-info -->
-  </div><!-- .product -->
+  </div><!-- .product-summary -->
+
+  <div class="product-details">
+    <mat-tab-group class="listing-tabs" (selectChange)="changeTab($event.index)">
+      <mat-tab label="Details"></mat-tab>
+      <mat-tab label="Shipping &amp; Escrow"></mat-tab>
+      <mat-tab label="Comments"></mat-tab>
+    </mat-tab-group><!-- .listing-tabs -->
+
+    <div class="tab-content details" *ngIf="tabLabels[selectedTab] == 'details'">
+      <div class="detailed description">
+        <p>{{ data?.listing?.longDescription }}</p>
+      </div>
+    </div><!-- .tab-content.details -->
+    
+    <div class="tab-content shipping" *ngIf="tabLabels[selectedTab] == 'shipping'">
+      <table class="shipping-escrow">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Worldwide</th>
+            <th [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
+              Local in {{ data?.listing?.country }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><strong>Shipping</strong></th>
+            <td>
+              <span class="part price">
+                <strong>{{ data?.listing?.internationalShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <td>
+              <span class="part price">
+                <strong>{{ data?.listing?.domesticShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              <strong>Escrow</strong><br>
+              (refunded upon delivery)
+            </th>
+            <td>
+              <span class="part price">
+                <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <td>
+              <!-- FIXME: "escrow for local (not international)" needs to be implemented: -->
+              <span class="part price">
+                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              <strong>Total needed for order</strong><br>
+              (incl. refundable Escrow)
+            </th>
+            <!-- TODO: price + shipping + escrow -->
+            <td>
+              <span class="part price">
+                <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <td>
+              <span class="part price">
+                <strong>{{data?.listing?.totalAmountDomestic?.getAmount()}}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table><!-- .shipping-escrow -->
+    </div>
+    
+    <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
+      Comments
+    </div>
+  </div><!-- .product-details -->
+
 </div><!-- .dialog-content -->
 
 
