@@ -1,0 +1,46 @@
+<div mat-dialog-title>Confirm transaction</div>
+<button class="small-close_button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+<div mat-dialog-content class="dialog-content">
+
+  <!--TX confirmation-->
+  <div class="tx-confirmation">
+    <div class="tx-info">
+      <div class="fees-expiration">
+        <div class="title">Listing expiration &amp; fees</div>
+        <div class="row" fxLayout fxLayoutAlign="center center">
+          <mat-form-field class="full-width" fxFlex="1 1 100%">
+            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration" (change)="loadTransactionFee()">
+              <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
+                {{ expire.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="est-fee" fxFlex="0 0 210px">
+            <span *ngIf="expiration">Approximate listing fee:
+              <br> {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
+            </span>
+          </div>
+        </div>
+        <p class="widget-help">
+          Choose for how long should your listing be published. Longer expiration results in higher fees.
+        </p>
+      </div>
+      <!-- .fees-expiration -->
+    </div>
+  </div>
+</div>
+<!-- .dialog-content -->
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button [disabled]="!expiration" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Confirm &amp; Publish
+  </button>
+</mat-dialog-actions>

@@ -14,6 +14,7 @@ import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
 import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
+import { ListingExipryComponent } from 'app/modals/market-listing-exipry/listing-exipry.component';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -139,6 +140,14 @@ export class ModalsHelperService implements OnDestroy {
       || status.networkBH - status.internalBH > 50)) {
         this.syncing();
     }
+  }
+
+  openListingExpiryModal(callback: Function): void {
+    const dialogRef = this._dialog.open(ListingExipryComponent, this.modelSettings);
+    dialogRef.componentInstance.setData(callback);
+    dialogRef.afterClosed().subscribe(() => {
+      this.log.d('encrypt modal closed');
+    });
   }
 
   /** Get progress set by block status */

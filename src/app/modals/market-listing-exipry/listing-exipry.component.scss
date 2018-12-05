@@ -1,0 +1,16 @@
+.mat-card {
+  & > .title {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+}
+
+.fees-expiration {
+  margin-top: 30px;
+  .est-fee {
+    margin-left: 20px;
+    line-height: 1.45;
+  }
+}
