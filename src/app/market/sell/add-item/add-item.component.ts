@@ -46,19 +46,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
   picturesToUpload: string[];
   featuredPicture: number = 0;
   expiration: number = 0;
-  txFee: Amount = new Amount(0)
   selectedCountry: Country;
   selectedCategory: Category;
   isInProcess: boolean = false;
 
-  expiredList: Array<any> = [
-    { title: 'Select expiry time',    value: 0  },
-    { title: '4 day',                 value: 4  },
-    { title: '1 week',                value: 7  },
-    { title: '2 weeks',               value: 14 },
-    { title: '3 weeks',               value: 21 },
-    { title: '4 weeks',               value: 28 }
-  ];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -114,7 +105,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.loadTransactionFee();
   }
 
   isExistingTemplate() {
@@ -227,10 +217,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.category = template.category.id;
       t.country = country ? country.name : '';
 
-      // set expiry time.
-      this.expiration = template.expireTime;
-      this.loadTransactionFee();
-
       // set default value as selected.
       this.setDefaultCountry(country);
       this.setDefaultCategory(template.category);
@@ -251,6 +237,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.selectedCountry = country;
   }
 
+  openListingExpiryModal(): void {
+    this.modals.openListingExpiryModal((expiryTime: number) => this.callPublish(expiryTime));
+  }
+
+  callPublish(expiryTime: number): void {
+    this.expiration = expiryTime;
+    this.isInProcess = true;
+    this.log.d('Saving and publishing the listing.');
+    this.publish();
+  }
 
   setDefaultCategory(category: Category) {
     this.selectedCategory = category;
@@ -410,9 +406,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     if (!this.validate()) {
       return;
     };
-    this.isInProcess = true;
-    this.log.d('Saving and publishing the listing.');
-    this.publish();
+
+    this.openListingExpiryModal();
   }
 
   onCountryChange(country: Country): void {
@@ -446,12 +441,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadTransactionFee() {
-    /* @TODO transaction fee will be calculated from backend
-     * currently we have assumed days_retention=1 costs 0.26362200
-     */
-    this.txFee = new Amount(0.26362200 * this.expiration)
-  }
+
 
   private initDragDropEl(elementID: string) {
     this.dropArea = document.getElementById(elementID);

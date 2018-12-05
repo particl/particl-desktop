@@ -59,7 +59,7 @@
         </div><!-- .gallery -->
       </mat-card><!-- .photos -->
 
-      <mat-card class="fees-expiration">
+      <!-- <mat-card class="fees-expiration">
         <div class="title">Listing expiration &amp; fees</div>
         <div class="row" fxLayout fxLayoutAlign="center center">
           <mat-form-field class="full-width" fxFlex="1 1 100%">
@@ -78,7 +78,8 @@
         <p class="widget-help">
           Choose for how long should your listing be published. Longer expiration results in higher fees.
         </p>
-      </mat-card><!-- .fees-expiration -->
+      </mat-card> -->
+      <!-- .fees-expiration -->
 
     </div><!-- .left -->
 
@@ -177,11 +178,11 @@
       </button>
     </div>
     <div class="right">
-      <button [disabled]="isInProcess || !itemFormGroup?.valid || !expiration" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
+      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
-      <button [disabled]="isInProcess || !itemFormGroup?.valid || !expiration" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
         {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
