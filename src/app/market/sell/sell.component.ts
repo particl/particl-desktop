@@ -26,9 +26,10 @@ export class SellComponent implements OnInit {
   public tabLabels: Array<string> = ['listings', 'orders', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
 
   filters: any = {
-    search:   undefined,
-    sort:     undefined,
-    hashItems: undefined
+    search:   '',
+    sort:     'DATE',
+    category: '*',
+    hashItems: ''
   };
 
   // listing_sortings: Array<any> = [
@@ -41,9 +42,14 @@ export class SellComponent implements OnInit {
   // ];
 
   listing_sortings: Array<any> = [
-    { title: 'By updated date',   value: 'DATE' },
-    { title: 'By title',          value: 'TITLE' },
-    { title: 'By state',          value: 'STATE' }
+    { title: 'By title', value: 'TITLE' },
+    { title: 'By state', value: 'STATE' }
+  ];
+
+  listing_filtering: Array<any> = [
+    { title: 'All Listings',        value: '' },
+    { title: 'Published Listing',   value: true },
+    { title: 'UnPublished Listing', value: false }
   ];
 
   templateSearchSubcription: any;
@@ -83,9 +89,10 @@ export class SellComponent implements OnInit {
 
   clear(): void {
     this.filters = {
-      search:   undefined,
-      sort:     undefined,
-      hashItems:   undefined
+      search:   '',
+      sort:     'DATE',
+      category: '*',
+      hashItems: ''
     };
     this.loadPage(0, true);
   }
@@ -100,11 +107,8 @@ export class SellComponent implements OnInit {
 
   loadPage(pageNumber: number, clear?: boolean) {
     this.isLoading = true;
-    const category = this.filters.category ? this.filters.category : null;
-    const search = this.filters.search ? this.filters.search : null;
-    const sort = this.filters.sort ? this.filters.sort : null;
-    // Sorting published and unpublished listing what will be the ui for it ?
-    const hashItems = this.filters.hashItems ? this.filters.hashItems : null;
+    const search = this.filters.search ? this.filters.search : '*';
+    const hashItems = this.filters.hashItems ? this.filters.hashItems : undefined;
     const max = this.pagination.maxPerPage;
 
     /*
@@ -118,7 +122,7 @@ export class SellComponent implements OnInit {
       this.templateSearchSubcription.unsubscribe();
     }
 
-    this.templateSearchSubcription = this.template.search(pageNumber, max, sort, 1, category, search, hashItems)
+    this.templateSearchSubcription = this.template.search(pageNumber, max, this.filters.sort, 1, this.filters.category, search, hashItems)
       .take(1).subscribe((listings: Array<Listing>) => {
         listings = listings.map((t) => {
         if (this.listingService.cache.isAwaiting(t)) {
@@ -126,7 +130,6 @@ export class SellComponent implements OnInit {
         }
         return t;
       });
-      console.log(listings);
       this.isLoading = false;
       // new page
       const page = {
