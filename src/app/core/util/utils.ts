@@ -253,7 +253,7 @@ export const Messages = {
       'allow_reject_order': true,
       'status_info': 'Buyer wants to purchase this item - approve or reject this order to continue'
     },
-    'status' : 'Bidding'
+    'status' : 'bidding'
   },
   'REJECTED': {
     'buy': {
@@ -272,7 +272,7 @@ export const Messages = {
       'allow_reject_order': false,
       'status_info': 'You have rejected this bid, order has been cancelled'
     },
-    'status' : 'Rejected'
+    'status' : 'rejected'
   },
   'AWAITING_ESCROW': {
     'buy': {
@@ -291,7 +291,7 @@ export const Messages = {
       'allow_reject_order': false,
       'status_info': 'Waiting for Buyer to lock the payment into escrow'
     },
-    'status' : 'Awaiting'
+    'status' : 'awaiting'
   },
   'ESCROW_LOCKED': {
     'buy': {
@@ -310,7 +310,7 @@ export const Messages = {
       'allow_reject_order': false,
       'status_info': `Buyer\'s funds are locked in escrow, order is ready to ship - when sent, Mark order as shipped and await its delivery`
     },
-    'status' : 'Escrow'
+    'status' : 'escrow'
   },
   'SHIPPING': {
     'buy': {
@@ -329,7 +329,7 @@ export const Messages = {
       'allow_reject_order': false,
       'status_info': 'Order sent to Buyer, waiting for Buyer to confirm the delivery'
     },
-    'status' : 'Shipping'
+    'status' : 'shipping'
   },
   'COMPLETE': {
     'buy': {
@@ -348,7 +348,7 @@ export const Messages = {
       'allow_reject_order': false,
       'status_info': 'Order delivery confirmed by Buyer - order successfully finalized'
     },
-    'status' : 'Complete'
+    'status' : 'complete'
   }
 }
 

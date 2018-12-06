@@ -9,8 +9,10 @@
         <div class="categories">{{ listing?.category.name }}</div>
         <div class="date">
           <!--span class="hash" matTooltip="Order hash">AGR</span-->
-          Added {{ listing?.createdAt }} 
-          <!-- &bull; <span class="TO_DO">Expires 2018-02-13</span> -->
+          Added {{ listing?.createdAt }}
+          <br>
+          {{ listing?.expiredAt }} 
+          <!-- &bull; <span class="to-do">Expires 2018-02-13</span> -->
         </div>
       </div>
       <div *ngFor="let status of getStatus(listing?.status)">

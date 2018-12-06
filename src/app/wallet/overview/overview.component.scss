@@ -1,5 +1,5 @@
-@import "./src/assets/_config"; // import shared colors etc.
-@import "widgets/shared/shared.scss";
+@import './src/assets/_config'; // import shared colors etc.
+@import 'widgets/shared/shared.scss';
 
 .balance-overview { // list of balances
   display: flex;
@@ -13,7 +13,7 @@
     margin-right: 3%;
     flex: 0 1 200px;
     &:last-of-type {
-      border: none;
+      border: 0;
       margin: none;
       margin-right: 0;
     }

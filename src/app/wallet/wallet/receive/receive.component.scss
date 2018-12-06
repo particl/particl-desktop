@@ -1,17 +1,17 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 // ------ LAYOUT ------ //
 
 .container-flex {
   display: flex;
   $padding: 35px;
-  $padding-bottom: $padding + 45px; // offset "show older addys" button from bottom
+  $padding-bottom: $padding + 45px; // offset 'show older addys' button from bottom
   padding: $padding $padding $padding-bottom;
   height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - #{$padding} - #{$padding-bottom});
   position: relative;
   @include break(l) {
     $padding: 45px;
-    $padding-bottom: $padding + 45px; // offset "show older addys" button from bottom
+    $padding-bottom: $padding + 45px; // offset 'show older addys' button from bottom
     padding: $padding 50px $padding-bottom;
     height: calc(100vh - #{$header-main-height} - #{$tab-bar-height} - #{$padding} - #{$padding-bottom});
   }
@@ -111,7 +111,7 @@ mat-card.receive-address {
   margin-top: 0;
 }
 
-mat-card.address-info { // address "card"
+mat-card.address-info { // address 'card'
   margin-bottom: 12px;
   padding: 0 24px 0 0;
   display: flex;
@@ -151,7 +151,7 @@ mat-card.address-info { // address "card"
       font-family: monospace;
       color: $text-muted;
       max-width: 350px;
-      margin: 1px 0 0 0;
+      margin: 1px 0 0;
       @include break(l) {
         max-width: 450px;
       }
