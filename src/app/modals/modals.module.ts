@@ -43,7 +43,7 @@ import {
 } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
-import { ListingExipryComponent } from './market-listing-exipry/listing-exipry.component';
+import { ListingExpirationComponent } from './market-listing-expiration/listing-expiration.component';
 
 @NgModule({
   imports: [
@@ -77,7 +77,7 @@ import { ListingExipryComponent } from './market-listing-exipry/listing-exipry.c
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
-    ListingExipryComponent
+    ListingExpirationComponent
   ],
   exports: [
     ClipboardModule
@@ -107,7 +107,7 @@ import { ListingExipryComponent } from './market-listing-exipry/listing-exipry.c
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
-    ListingExipryComponent
+    ListingExpirationComponent
   ],
 })
 export class ModalsModule {

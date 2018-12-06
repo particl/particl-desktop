@@ -6,11 +6,11 @@ import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MatDialogRef } from '@angular/material';
 
-import { ListingExipryComponent } from './listing-exipry.component';
+import { ListingExpirationComponent } from './listing-expiration.component';
 
-describe('ListingExipryComponent', () => {
-  let component: ListingExipryComponent;
-  let fixture: ComponentFixture<ListingExipryComponent>;
+describe('ListingExpirationComponent', () => {
+  let component: ListingExpirationComponent;
+  let fixture: ComponentFixture<ListingExpirationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -28,7 +28,7 @@ describe('ListingExipryComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ListingExipryComponent);
+    fixture = TestBed.createComponent(ListingExpirationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

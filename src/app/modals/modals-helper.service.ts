@@ -14,7 +14,7 @@ import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
 import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
-import { ListingExipryComponent } from 'app/modals/market-listing-exipry/listing-exipry.component';
+import { ListingExpirationComponent } from 'app/modals/market-listing-expiration/listing-expiration.component';
 import { TermsComponent } from 'app/modals/terms/terms.component';
 import { termsObj } from 'app/modals/terms/terms-txt';
 
@@ -146,7 +146,7 @@ export class ModalsHelperService implements OnDestroy {
   }
 
   openListingExpiryModal(callback: Function): void {
-    const dialogRef = this._dialog.open(ListingExipryComponent, this.modelSettings);
+    const dialogRef = this._dialog.open(ListingExpirationComponent, this.modelSettings);
     dialogRef.componentInstance.setData(callback);
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('encrypt modal closed');

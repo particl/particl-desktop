@@ -3,11 +3,11 @@ import { MatDialogRef } from '@angular/material';
 import { Amount } from 'app/core/util/utils';
 
 @Component({
-  selector: 'app-listing-exipry',
-  templateUrl: './listing-exipry.component.html',
-  styleUrls: ['./listing-exipry.component.scss']
+  selector: 'app-listing-expiration',
+  templateUrl: './listing-expiration.component.html',
+  styleUrls: ['./listing-expiration.component.scss']
 })
-export class ListingExipryComponent {
+export class ListingExpirationComponent {
 
   @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
   @Output() onCancel: EventEmitter<string> = new EventEmitter<string>();
@@ -25,7 +25,7 @@ export class ListingExipryComponent {
   callback: Function;
 
   constructor(
-    private dialogRef: MatDialogRef<ListingExipryComponent>
+    private dialogRef: MatDialogRef<ListingExpirationComponent>
   ) { }
 
   confirm(): void {
