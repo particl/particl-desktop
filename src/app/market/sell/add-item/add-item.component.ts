@@ -80,7 +80,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.subToCategories();
 
     this.itemFormGroup = this.formBuilder.group({
-      title:                      ['', [Validators.required]],
+      title:                      ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
       shortDescription:           ['', [Validators.required,
                                         Validators.maxLength(200)]],
       longDescription:            ['', [Validators.required,

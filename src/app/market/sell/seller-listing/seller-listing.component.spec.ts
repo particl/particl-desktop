@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketModule } from '../../../core/market/market.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { SellerListingComponent } from './seller-listing.component';
@@ -22,7 +23,8 @@ describe('SellerListingComponent', () => {
         CoreModule.forRoot(),
         BrowserAnimationsModule,
         RouterTestingModule,
-        MarketModule.forRoot()
+        MarketModule.forRoot(),
+        ModalsModule.forRoot()
       ],
       providers: [ ModalsHelperService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]

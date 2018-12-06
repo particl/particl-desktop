@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 .subtitle {
   font-weight: 700;
@@ -9,7 +9,8 @@
 
 table.sync-progress {
   margin: 10px 0 30px;
-  th, td {
+  th,
+  td {
     padding: 3px 20px 3px 0;
     font-size: 13px;
   }

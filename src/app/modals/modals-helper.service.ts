@@ -15,6 +15,8 @@ import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
 import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
 import { ListingExipryComponent } from 'app/modals/market-listing-exipry/listing-exipry.component';
+import { TermsComponent } from 'app/modals/terms/terms.component';
+import { termsObj } from 'app/modals/terms/terms-txt';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -44,7 +46,8 @@ export class ModalsHelperService implements OnDestroy {
 
     /* Hook BlockStatus -> open syncing modal only once */
     this._blockStatusService.statusUpdates.asObservable().take(1).subscribe(status => {
-      this.openSyncModal(status);
+      // Hiding the sync modal initially
+      // this.openSyncModal(status);
     });
 
     /* Hook BlockStatus -> update % `progress` */
@@ -52,8 +55,8 @@ export class ModalsHelperService implements OnDestroy {
       this.progress.next(status.syncPercentage);
     });
 
-    /* Hook wallet initialized -> open createwallet modal */
-    this.openInitialCreateWallet();
+    /* Hook for checking the accept & terms modal */
+    this.checkForNewVersion();
   }
 
   /**
@@ -148,6 +151,32 @@ export class ModalsHelperService implements OnDestroy {
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('encrypt modal closed');
     });
+  }
+
+  /**
+    * Open the accept & terms modal if it wasn't accepted before
+    */
+  checkForNewVersion() {
+    if (!this.getVersion() || (this.getVersion() && this.getVersion().createdAt !== termsObj.createdAt
+      && this.getVersion().text !== termsObj.text)) {
+      const dialogRef = this._dialog.open(TermsComponent, this.modelSettings)
+      dialogRef.componentInstance.text = termsObj.text;
+      dialogRef.afterClosed().subscribe(() => {
+        this.setVersion();
+        /* Hook wallet initialized -> open createwallet modal */
+        this.openInitialCreateWallet();
+      });
+    } else {
+      this.openInitialCreateWallet();
+    }
+  }
+
+  getVersion(): any {
+    return JSON.parse(localStorage.getItem('terms'));
+  }
+
+  setVersion() {
+    localStorage.setItem('terms', JSON.stringify(termsObj));
   }
 
   /** Get progress set by block status */

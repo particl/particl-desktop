@@ -6,6 +6,7 @@ import { PeerService } from 'app/core/rpc/peer/peer.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { Observable } from 'rxjs/Observable';
+import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 
 @Component({
   selector: 'app-proposals',
@@ -52,10 +53,15 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private peerService: PeerService,
-    private proposalsService: ProposalsService
-  ) { }
+    private proposalsService: ProposalsService,
+    private proposalsNotificationsService: ProposalsNotificationsService
+  ) {
+    // update last proposal timestamp.
+    this.proposalsNotificationsService.viewingProposals(false);
+  }
 
   ngOnInit() {
+
     this.peerService.getBlockCount()
     .takeWhile(() => !this.destroyed)
     .subscribe((count: number) => {
@@ -171,6 +177,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.proposalsNotificationsService.viewingProposals(true);
     this.destroyed = true;
   }
 

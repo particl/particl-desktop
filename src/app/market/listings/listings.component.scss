@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 
 // ------ UI ELEMENTS ------ //
@@ -59,7 +59,7 @@
       mat-button-toggle.reported-only {
         &.mat-button-toggle-checked {
           color: $color-alert;
-          background: rgba($color-alert, 0.10) !important;
+          background: rgba($color-alert, 0.1) !important;
           &:hover {
             background: rgba($color-alert, 0.15) !important;
           }

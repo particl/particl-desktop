@@ -175,6 +175,11 @@ export class Template {
     return this.object.FlaggedItem;
   }
 
+  get expiredAt(): any {
+    return Object.prototype.toString.call(this.object.ListingItems) === '[object Array]' && this.object.ListingItems.length ?
+    'Expires ' + new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16) : '';
+  }
+
   setExpiryTime(): void {
     if (this.object.ListingItems && this.object.ListingItems.length > 0) {
       this.expireTime = this.object.ListingItems[0].expiryTime;

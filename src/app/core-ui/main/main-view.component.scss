@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 /* ------------------------------- *\
     UI Elements
@@ -60,7 +60,7 @@
     font-family: $font;
     font-size: 11.5px;
     font-weight: 600;
-    color: white;
+    color: $color-white;
   }
   .tag { // order notifications
     @extend %tfx;
@@ -157,7 +157,7 @@ a.sidebar-item-link {
 .sidebar { // AKA .mat-sidenav
   width: $sidebar-width;
   background-color: $bg-black;
-  color: white;
+  color: $color-white;
   display: flex;
   flex-direction: column;
 
