@@ -108,7 +108,7 @@ export class SellComponent implements OnInit {
   loadPage(pageNumber: number, clear?: boolean) {
     this.isLoading = true;
     const search = this.filters.search ? this.filters.search : '*';
-    const hashItems = this.filters.hashItems ? this.filters.hashItems : undefined;
+    const hashItems = this.filters.hashItems ? this.filters.hashItems === 'true' : undefined;
     const max = this.pagination.maxPerPage;
 
     /*
