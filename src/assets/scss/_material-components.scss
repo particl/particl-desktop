@@ -32,6 +32,7 @@ Customizations and modifiers for default Material components
       3.4. Select/Autocomplete
       3.5. Radios
       3.6. Checkboxes
+      3.7. Toggle Buttons
 
 */
 
@@ -114,7 +115,7 @@ button.mat-raised-button {
       border-radius: 50%;
       .mat-paginator-increment,
       .mat-paginator-decrement {
-        border-color: white;
+        border-color: $color-white;
       }
     }
     &[disabled] {
@@ -231,7 +232,7 @@ mat-card.mat-card {
     }
     // when expanded..
     &.mat-expanded {
-      //background: darken($bg-black, 2%); // darken "submenu" background to more visually separate from the rest
+      //background: darken($bg-black, 2%); // darken 'submenu' background to more visually separate from the rest
       .mat-expansion-indicator::after {
         color: $color;
       }
@@ -302,7 +303,7 @@ mat-card.mat-card {
 .cdk-overlay-container {
   .mat-dialog-container {
     position: relative;
-    max-width: 800px;
+    max-width: 1000px;
 
     // Dialogs (small)
     .dialog-content {
@@ -329,8 +330,8 @@ mat-card.mat-card {
         left: calc((100% - 100px) / 2);
         top: calc((100% - 100px) / 2);
         z-index: 10;
-        background: rgba(white, 0.9);
-        box-shadow: 0 0 70px silver;
+        background: rgba($color-white, 0.9);
+        box-shadow: 0 0 70px darken($bg-hover, 7%);
         border-radius: 50%;
         svg {
           width: 70px !important;
@@ -340,7 +341,7 @@ mat-card.mat-card {
       }
     }
 
-    .small-close_button {
+    .small-close-button {
       position: absolute;
       right: 10px; // align with modal's content padding
       top: 22px;
@@ -349,7 +350,7 @@ mat-card.mat-card {
       color: $text-muted;
       min-width: 50px;
       padding: 0;
-      border: none;
+      border: 0;
       outline: none;
       cursor: pointer;
       .mat-icon {
@@ -365,7 +366,7 @@ mat-card.mat-card {
         }
       }
     }
-    .close_button {
+    .close-button {
       position: absolute;
       right: 0;
       top: 0;
@@ -467,7 +468,7 @@ mat-card.mat-card {
   }
   &.no-top-padding { // remove top space reserved for floating placeholders (if disabled)
     .mat-input-infix {
-      border-top: none;
+      border-top: 0;
     }
   }
 }
@@ -476,8 +477,8 @@ mat-card.mat-card {
 // ------ 3.2. VERIFICATION ------ //
 
 input {
-  &[type="text"] {
-    border: none;
+  &[type='text'] {
+    border: 0;
   }
   // visual verification
   &.verify-sucess {
@@ -500,11 +501,11 @@ input {
   }
 }
 .mat-select-panel {
-  background: white;
+  background: $color-white;
 }
 
-.underliningSelect {
-  border-bottom: .2px solid rgba(0, 0, 0, 0.507);
+.underlining-select {
+  border-bottom: 0.2px solid rgba(0, 0, 0, 0.507);
   line-height: 1.6em;
 }
 
@@ -559,5 +560,22 @@ input {
     .mat-checkbox-layout {
       white-space: normal;
     }
+  }
+}
+
+
+// ------ 3.7. TOGGLE BUTTONS ------ //
+
+.mat-button-toggle-group,
+.mat-button-toggle-standalone {
+  @extend %tfx;
+  box-shadow: none !important;
+  &:hover,
+  &:focus {
+    background: darken($bg, 10%) !important;
+    color: $text;
+  }
+  .mat-button-toggle-focus-overlay {
+    opacity: 0 !important; // fixes weird behaviour of overlay layer
   }
 }

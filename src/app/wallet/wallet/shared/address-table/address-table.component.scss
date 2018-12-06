@@ -1,42 +1,47 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 .mat-list {
   padding-top: 0;
 }
 
 mat-card.address-entry {
-  margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 24px 0 0;
   & > div {
     margin: 0 20px 0 0;
   }
-  .label {
-    text-transform: uppercase;
-    font-weight: bold;
-    overflow: hidden;
+  .address-name {
+    @extend %tfx;
+    flex: 1 0 calc(100% - 180px);
+    padding: 24px 0 24px 24px;
     text-overflow: ellipsis;
-    flex: 0 0 200px;
-    @include break(l) {
-      flex: 0 0 300px;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 4px 0 $color inset;
     }
-  }
-  
-  .address {
-    flex: 1 1 200px;
-    /*.qr-icon {
-      position: relative;
-      top: 3px;
-      margin-right: 8px;
-      cursor: pointer;
-    }*/
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: -1px 12px 0 0;
+      display: block;
+    }
     .address-string {
-      @extend %tfx;
       font-family: monospace;
       color: $text-muted;
-      cursor: pointer;
-      &:hover {
-        color: darken($color, 3%);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 350px;
+      margin: 1px 0 0;
+      @include break(l) {
+        max-width: 450px;
       }
     }
   }
@@ -46,6 +51,6 @@ mat-card.address-entry {
     flex: 0 0 86px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 }
-

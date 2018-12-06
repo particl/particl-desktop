@@ -1,5 +1,5 @@
-@import "./src/assets/_config"; // import shared colors etc.
-@import "./src/app/market/_lists-shared"; // shared stuff for listings & orders
+@import './src/assets/_config'; // import shared colors etc.
+@import './src/app/market/_lists-shared'; // shared stuff for listings & orders
 
 // ------ LISTINGS ------ //
 
@@ -16,6 +16,7 @@
     .photo { // crop listing's image to square
       min-height: 110px;
       max-height: 110px;
+      height: 110px;
     }
     .meta .name {
       font-size: 16px;

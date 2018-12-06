@@ -13,7 +13,7 @@ import { ColdstakeService } from '../overview/widgets/coldstake/coldstake.servic
 
 import { TransactionsTableComponent } from './shared/transaction-table/transaction-table.component';
 import { AddressTableComponent } from './shared/address-table/address-table.component';
-
+import { DetailAddressComponent } from './shared/detail-address/detail-address.component';
 import { AddressBookComponent } from './address-book/address-book.component';
 import { ReceiveComponent } from './receive/receive.component';
 import { SendComponent } from './send/send.component';
@@ -48,6 +48,7 @@ import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet
     BalanceComponent,
     AddressLookupComponent,
     AddAddressLabelComponent,
+    DetailAddressComponent,
     NewAddressModalComponent,
     QrCodeModalComponent,
     SignatureAddressModalComponent,
@@ -70,6 +71,7 @@ import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet
     NewAddressModalComponent,
     QrCodeModalComponent,
     AddressLookupComponent,
+    DetailAddressComponent,
     SignatureAddressModalComponent,
     /* modals for wallet fix */
     FixWalletModalComponent,

@@ -42,8 +42,8 @@ export class MarketService {
         .map((response: any) => response.result)
         .catch((error: any) => {
           this.log.d('Market threw an error!');
-          console.log(error);
-          error = error.error ? error.error.message : error;
+          this.log.d('Market error:', error);
+          error = this.extractMPErrorMessage(error.error);
           return Observable.throw(error);
         })
   }
@@ -79,5 +79,14 @@ export class MarketService {
           }
           return Observable.throw(err);
         })
+  }
+
+  private extractMPErrorMessage(errorObj: any): string {
+    if (errorObj && typeof errorObj.message === 'string') {
+      return errorObj.message;
+    } else if (errorObj && Object.prototype.toString.call(errorObj.error) === '[object Object]') {
+      return this.extractMPErrorMessage(errorObj.error);
+    }
+    return 'Invalid marketplace request';
   }
 }

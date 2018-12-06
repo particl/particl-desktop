@@ -109,9 +109,9 @@
           ]
         }
       ],
+      "executableName": "Particl Desktop",
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
-        "Exec": "/opt/particl/particl %U",
         "Icon": "particl",
         "Name": "Particl",
         "Path": "/opt/particl/",
@@ -146,7 +146,7 @@
     "lodash": "^4.17.5",
     "ng2-nvd3": "^2.0.0",
     "node-unzip-2": "^0.2.1",
-    "particl-marketplace": "^0.0.45",
+    "particl-marketplace": "0.0.49",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.5.6",
     "tmp": "^0.0.33",
@@ -168,8 +168,8 @@
     "@angular/platform-browser-dynamic": "^5.2.5",
     "@angular/platform-server": "^5.2.5",
     "@angular/router": "^5.2.5",
-    "@compodoc/compodoc": "^1.0.7",
-    "@types/jasmine": "^2.8.6",
+    "@compodoc/compodoc": "^1.1.6",
+    "@types/jasmine": "2.8.9",
     "@types/node": "^9.4.6",
     "angularx-qrcode": "^1.0.1",
     "checksum": "^0.1.1",
@@ -177,16 +177,16 @@
     "coveralls": "^3.0.0",
     "electron": "1.7.13",
     "electron-builder": "^20.28.2",
-    "htmlhint": "^0.9.13",
+    "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",
-    "jasmine-core": "^2.99.1",
+    "jasmine-core": "^3.3.0",
     "jasmine-spec-reporter": "^4.2.0",
-    "karma": "^2.0.0",
+    "karma": "^3.1.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
     "karma-coverage-istanbul-reporter": "^1.4.1",
-    "karma-jasmine": "^1.1.0",
-    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-jasmine": "^1.1.2",
+    "karma-jasmine-html-reporter": "^1.4.0",
     "ng2-logger": "^1.0.11",
     "ngx-clipboard": "^10.0.0",
     "ngx-infinite-scroll": "^0.8.3",
@@ -196,6 +196,6 @@
     "ts-node": "^5.0.0",
     "tslint": "^5.9.0",
     "tslint-microsoft-contrib": "^5.0.3",
-    "typescript": ">=2.4.2 <2.6.0"
+    "typescript": ">=2.4.2 <2.7.0"
   }
 }

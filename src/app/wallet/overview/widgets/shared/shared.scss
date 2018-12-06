@@ -1,31 +1,12 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 /*
   Values shared among widgets
 */
 
-.header-nav { // overview section titles
-  @extend %subtitle;
-  list-style-type: none;
-  li {
-    display: inline-block;
-  }
-  .buttons { // widget control buttons
-    float: right;
-    margin-top: 2px;
-    .mat-icon {
-      @extend %tfx;
-      margin-left: 6px;
-      font-size: 14px;
-      color: $text-muted;
-      opacity: 0.5;
-      cursor: pointer;
-      &:hover {
-        opacity: 1;
-        color: $text;
-      }
-      &.move {
-        cursor: move;
-      }
+.section { // overview section titles
+  header {
+    .subtitle {
+      @extend %subtitle;
     }
   }
 }

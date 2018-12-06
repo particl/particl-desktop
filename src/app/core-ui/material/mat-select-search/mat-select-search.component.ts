@@ -10,7 +10,6 @@ import {
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 
 
 @Component({
@@ -28,8 +27,12 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() isRequired: boolean = false;
   @Input() defaultSelectedValue: any;
+  @Input() isLexigraphicalOrder: boolean = false;
+  @Input() invalidReturnsToPrevious: boolean = false;
   public formControl: FormControl = new FormControl();
   public filteredOptions: Observable<any[]>;
+
+  selectedOption: any;
 
   /* set default values when options and defaultValue both available.
    * Or if any update.
@@ -79,6 +82,9 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
     if (from) {
       return this.options.filter(option => option[this.showValueOf].toLowerCase() === filterValue);
     }
+    if (this.isLexigraphicalOrder) {
+      return this.options.filter(option => option[this.showValueOf].toLowerCase().startsWith(filterValue));
+    }
     return this.options.filter(option => option[this.showValueOf].toLowerCase().includes(filterValue));
   }
 
@@ -88,19 +94,26 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
    */
 
    onSelectionChanged($event: any): void {
-    // omit selected value.
+    // emit selected value.
+    this.selectedOption = $event.option.value;
     this.onChange.emit($event.option.value);
-    this.textInput.nativeElement.blur();
   }
 
   onBlur($event: any): void {
-    if ($event.target.value === this.defaultOption) {
-      return;
-    }
-
-    if (this._filter($event.target.value, 'blur').length === 0) {
-      this.textInput.nativeElement.value = '';
-    }
+    //  TODO: remove this nasty use of setTimeout()
+    //    This is not the ideal way to do this, but its the current best interim option
+    //    (remove when updating to angular >= 6 or changing this component.)
+    setTimeout( () => {
+      const currentValidValue = (this.selectedOption ? this.selectedOption.name : this.defaultSelectedValue) || this.defaultSelectedValue;
+      if (this.invalidReturnsToPrevious) {
+        this.formControl.patchValue(this.selectedOption || this.defaultSelectedValue);
+      } else {
+        if ($event.target.value !== currentValidValue) {
+          this.formControl.reset();
+          this.onChange.emit();
+        }
+      }
+    }, 300);
   }
 
   public _selectAllContent($event: any): void {

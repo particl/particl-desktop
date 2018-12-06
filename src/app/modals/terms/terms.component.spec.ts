@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material';
 import { TermsComponent } from './terms.component';
-import { CoreUiModule } from '../../core-ui/core-ui.module';
 import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 describe('TermsComponent', () => {
   let component: TermsComponent;
@@ -10,7 +11,11 @@ describe('TermsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatDialogModule, CoreUiModule.forRoot(), CoreModule.forRoot() ],
+      imports: [
+        SharedModule,
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot()
+       ],
       declarations: [ TermsComponent ],
       providers: [
         /* deps */

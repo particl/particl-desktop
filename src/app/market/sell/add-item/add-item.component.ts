@@ -82,9 +82,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
-    // TODO: drag and drop
-    this.dropArea = document.getElementById('drag-n-drop');
+    this.initDragDropEl('drag-n-drop');
 
     this.fileInput = document.getElementById('fileInput');
     this.fileInput.onchange = this.processPictures.bind(this);
@@ -93,7 +91,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.subToCategories();
 
     this.itemFormGroup = this.formBuilder.group({
-      title:                      ['', [Validators.required]],
+      title:                      ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
       shortDescription:           ['', [Validators.required,
                                         Validators.maxLength(200)]],
       longDescription:            ['', [Validators.required,
@@ -136,8 +134,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   // @TODO : remove type any
-  processPictures(event: any) {
-    Array.from(event.target.files).map((file: File) => {
+  processPictures(event: any, dnd: boolean = false) {
+    let sourceFiles: File[] = [];
+    if (dnd) {
+      for (const f of event.dataTransfer.files) {
+        sourceFiles.push(f as File);
+      }
+    } else {
+      sourceFiles = Array.from(event.target.files);
+    }
+
+    sourceFiles.map((file: File) => {
       const reader = new FileReader();
       reader.onload = _event => {
         this.picturesToUpload.push(reader.result);
@@ -407,6 +414,23 @@ export class AddItemComponent implements OnInit, OnDestroy {
      * currently we have assumed days_retention=1 costs 0.26362200
      */
     this.txFee = new Amount(0.26362200 * this.expiration)
+  }
+
+  private initDragDropEl(elementID: string) {
+    this.dropArea = document.getElementById(elementID);
+    if (!this.dropArea) {
+      return;
+    }
+    this.dropArea.ondragover = () => false;
+    this.dropArea.ondragleave = () => false;
+    this.dropArea.ondragend = () => false;
+
+    this.dropArea.ondrop = (e) => {
+        e.preventDefault();
+
+        this.processPictures(e, true);
+        return false;
+    };
   }
 
 }

@@ -37,7 +37,7 @@ export class BidCollection {
 
       if (this.additionalFilter.hideCompleted) {
         return (this.type === 'sell' ? this.sellOrders : this.buyOrders).filter((o) => {
-          return o.status !== 'Complete'
+          return o.status !== 'complete'
         });
       }
     }

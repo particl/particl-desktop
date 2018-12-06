@@ -70,7 +70,7 @@
             <!--<td class="quantity cell">1 &times;</td>-->
 
             <!-- @TODO if quantity required then we can uncomment the code   -->
-            <!--  <td class="quantity cell TO_DO">
+            <!--  <td class="quantity cell to-do">
                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
                  <button mat-button class="small">-</button>
                  <mat-form-field class="auto-width">
@@ -116,9 +116,9 @@
                 {{cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry?.iso)?.amount}} PART
               </td>
             </tr>
-            <!--tr><td class="desc TO_DO">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
-            <tr><td class="desc TO_DO">Escrow (?)</td><td class="value">170 PART</td></tr>
-            <tr><td class="desc total TO_DO">Total</td><td class="value total">342.<small>153</small> PART</td></tr-->
+            <!--tr><td class="desc to-do">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
+            <tr><td class="desc to-do">Escrow (?)</td><td class="value">170 PART</td></tr>
+            <tr><td class="desc total to-do">Total</td><td class="value total">342.<small>153</small> PART</td></tr-->
           </table>
         </div><!-- .order-detail -->
 
@@ -138,7 +138,7 @@
 
   <!-- =========== SHIPPING DETAILS =========== -->
   <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
-    
+
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
       <div fxLayout="row" fxLayoutGap="30px">
@@ -148,7 +148,7 @@
           <mat-card>
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
-              <mat-select [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
+              <mat-select matNativeControl [(value)]="selectedAddress" [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
                           (change)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
                           [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0">
@@ -163,7 +163,7 @@
               <br><br>
               To create a new shipping profile, fill out the form on the right and check "Save shipping profile".
             </p>
-            <button mat-button color="basic" class="small" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0 || !addressNotSelected" (click)="clearForm()" matTooltip="When you want to enter shipping details manually instead">
+            <button mat-button color="basic" class="small" [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0 || (!selectedAddress?.id)" (click)="clearForm()" matTooltip="When you want to enter shipping details manually instead">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
               Unselect Shipping profile
             </button>
@@ -216,13 +216,14 @@
               [placeHolder]="'Select Country'"
               [isRequired]="'true'"
               [defaultSelectedValue]="selectedCountry"
+              [isLexigraphicalOrder]="true"
               (onChange)="onCountryChange($event)">
             </mat-select-search>
             <!-- mat-select-search -->
 
             <!--Hide shipping profile -->
             <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
-              <mat-checkbox formControlName="newShipping" fxFlex>Save as shipping profile
+              <mat-checkbox formControlName="newShipping" fxFlex>{{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile
               </mat-checkbox>
               <mat-form-field class="full-width" fxFlex>
                 <input matInput formControlName="title" placeholder="Shipping profile name">
@@ -319,7 +320,7 @@
       </div><!-- .order-detail -->
 
       <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
-        <button mat-button matStepperPrevious>
+        <button mat-button matStepperPrevious (click)="backToShippingDetails()">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back to shipping
         </button>

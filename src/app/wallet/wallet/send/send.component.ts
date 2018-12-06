@@ -59,6 +59,10 @@ export class SendComponent implements OnInit {
 
   setFormDefaultValue() {
     this.send = new TransactionBuilder();
+    // it should reset output on the basis of type
+    if (this.type === 'balanceTransfer') {
+      this.send.output = TxType.BLIND;
+    }
   }
 
   ngOnInit() {
@@ -191,6 +195,28 @@ export class SendComponent implements OnInit {
     this.modals.unlock({timeout: 30}, (status) => this.openSendConfirmationModal());
   }
 
+  setInputOutput(txType: string, payType: string ): void {
+    if (this.type === 'balanceTransfer') {
+      switch (txType) {
+        case TxType.BLIND:
+          if (TxType.BLIND === this.send[payType]) {
+            this.send[payType] = TxType.PUBLIC;
+          }
+          break;
+        case TxType.ANON:
+          if (TxType.ANON === this.send[payType]) {
+            this.send[payType] = TxType.PUBLIC;
+          }
+          break;
+        default:
+          if (TxType.PUBLIC === this.send[payType]) {
+            this.send[payType] = TxType.BLIND;
+          }
+          break;
+      }
+    }
+  }
+
   /** Open Send Confirmation Modal */
   openSendConfirmationModal() {
     const dialogRef = this.dialog.open(SendConfirmationModalComponent);
@@ -234,22 +260,6 @@ export class SendComponent implements OnInit {
         this.flashNotification.open('Stealth address required for private transactions!');
         return;
       }
-
-      // Balance transfer - validation
-    } else if (this.type === 'balanceTransfer') {
-
-      if (!this.send.output) {
-        this.flashNotification.open('You need to select an output type (public, blind or anon)!');
-        return;
-      }
-
-      if (this.send.input === this.send.output) {
-        this.flashNotification.open(`You have selected ${this.send.input}
-          twice!\n Balance transfers can only happen between two different types.`);
-
-        return;
-      }
-
     }
     this.modals.unlock({ timeout: 30 }, (status) => this.sendTransaction());
   }

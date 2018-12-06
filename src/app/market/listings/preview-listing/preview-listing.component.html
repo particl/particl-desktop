@@ -5,102 +5,209 @@
   </span>
 </div>
 
-<button class="small-close_button pull-right" (click)="dialogClose()">
+<button class="small-close-button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">
+  <div class="product" fxLayout="row">
 
-  <div class="report-voting" *ngIf="data?.listing?.isFlagged">
-    <div class="text">
-      <div class="title">This item has been flagged</div>
-      <div *ngIf="data?.listing?.VoteDetails"> 
-        <p *ngIf="data?.listing?.VoteDetails?.isReported">You have reported this listing as inappropriate. Voting is enabled for other Particl users for whether to keep it or remove it from the Marketplace.</p>
-        <p *ngIf="!data?.listing?.VoteDetails?.isReported">You have already voted on this item &ndash; thanks for participating in community governance!</p>
+    <div class="product-gallery" fxFlex="1 1 450px">
+      <div class="gallery-carousel">
+        <img
+          *ngIf="data?.listing?.imageCollection?.imageItems?.length === 0"
+          [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail">
+
+        <gallery
+          *ngIf="data?.listing?.imageCollection?.imageItems?.length"
+          gallerize
+          [gestures]="false"
+          [style.height.px]="417"
+          [style.width.px]="450"
+          [thumbWidth]= "80"
+          [thumbHeight]="80"
+          [thumb]="data?.listing?.imageCollection?.imageItems?.length > 1"
+          [items]="data?.listing?.imageCollection?.imageItems">
+        </gallery>
       </div>
-      <div *ngIf="!data?.listing?.VoteDetails">
-        <p>A Particl user thinks this item is inappropriate. Please vote on whether this item should be kept online or taken down:</p>
-
-        <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)">
-          <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
-          It's OK, keep it
-        </button>
-        <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)">
-          <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
-          Remove item
-        </button>
-      </div>
-    </div>
-  </div><!-- .report-voting -->
-
-
-  <div class="product" fxLayout="row" fxLayoutGap="40px">
-
-    <div class="product-gallery" fxFlex="0 1 350px">
-      <div class="featured image">
-        <img src="{{data?.listing?.imageCollection?.previewImage?.medium}}">
-      </div>
-      <div class="gallery" fxLayout="row" fxLayoutGap="24px">
-        <!-- TODO: s/small/medium -->
-        <div class="small image" fxFlex="1 1 100px" *ngFor="let img of data?.listing?.imageCollection?.images" (click)="data?.listing?.imageCollection.setPreviewImage(img)">
-          <img src="{{img.thumbnail}}">
-        </div>
-      </div>
-    </div>
+    </div><!-- .product-gallery -->
 
     <div class="product-info" fxFlex="1 1 100%">
 
-      <table class="pricing">
-        <tr>
-          <th class="item price">Price</th>
-          <td class="item price">
+      <div class="pricing" fxLayout fxLayoutAlign="space-between flex-start">
+
+        <div class="item price">
+          <div class="title">Price</div>
+          <div class="value part">
             <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
             <span class="currency">PART</span>
-            <!--span class="fiat">&asymp; {{price?.usd}} USD</span-->
-          </td>
-        </tr>
-        <tr>
-          <th class="shipping price">Shipping</th>
-          <td class="shipping price">
-            International &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} PART<br>
-            Local in {{ data?.listing?.country }} &ndash; {{ data?.listing?.domesticShippingPrice.getAmount() }} PART
-          </td>
-        </tr>
+          </div>
+          <div class="value fiat">
+            <span class="fiat">~ {{price?.usd}} xx EUR</span>
+          </div>
+        </div>
 
-        <tr *ngIf="listingServiceCache?.selectedCountry">
-          <th class="escrow price">Escrow</th>
-          <td class="escrow price">{{ data?.listing?.escrowAmount(listingServiceCache.selectedCountry?.iso)?.getAmount() }} PART</td>
-        </tr>
-      </table>
+        <div class="item category">
+          <div class="title">Category</div>
+          <div class="value">
+            <mat-icon fontSet="partIcon" fontIcon="part-label"></mat-icon>
+            {{ data?.listing?.category.name }}
+          </div>
+        </div>
 
-      <p class="info message" *ngIf="data?.listing?.isMine">
-        <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        This is your own listing
-      </p>
+        <div class="item seller-country">
+          <div class="title">Sold from</div>
+          <div class="value" [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
+            <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+            {{ data?.listing?.country }}
+          </div>
+        </div>
+
+      </div><!-- .pricing -->
+
       <div class="summary description">
         <p>
           {{ data?.listing?.shortDescription }}
         </p>
       </div>
+      
       <div class="detailed description">
         <p>
           {{ data?.listing?.longDescription }}
         </p>
       </div>
 
+      <table class="shipping-escrow">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Worldwide</th>
+            <th [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
+              Local in {{ data?.listing?.country }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><strong>Shipping</strong></th>
+            <td>
+              <span class="part price">
+                <strong>{{ data?.listing?.internationalShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <td>
+              <span class="part price">
+                <strong>{{ data?.listing?.domesticShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              <strong>Escrow</strong><br>
+              (refunded upon delivery)
+            </th>
+            <td>
+              <span class="part price">
+                <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <td>
+              <!-- FIXME: "escrow for local (not international)" needs to be implemented: -->
+              <span class="part price">
+                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              <strong>Total needed for order</strong><br>
+              (incl. refundable Escrow)
+            </th>
+            <!-- TODO: price + shipping + escrow -->
+            <td>
+              <span class="part price">
+                <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <td>
+              <span class="part price">
+                <strong>{{data?.listing?.totalAmountDomestic?.getAmount()}}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table><!-- .shipping-escrow -->
+
     </div><!-- .product-info -->
   </div><!-- .product -->
 </div><!-- .dialog-content -->
 
+
 <mat-dialog-actions fxLayoutAlign="space-between center">
+
   <div class="left">
     <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'"></app-report>
     <div class="date">
-      <strong>Date added</strong> {{ data?.listing?.createdAt }}
+      <strong class="title">Date added</strong> {{ data?.listing?.createdAt }}
     </div>
   </div>
+
+  <div class="center" *ngIf="data?.listing?.isFlagged">
+    <div class="reporting">
+
+      <!-- Reported, not voted yet by user -->
+      <div *ngIf="!data?.listing?.VoteDetails">
+        <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
+        <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)" matTooltip="Item is fine and should stay on Market">
+          <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
+        </button>
+        <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)" matTooltip="Item is inappropriate/illegal and should be removed from Market">
+          <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
+        </button>
+      </div>
+
+      <!-- Reported & voted already -->
+      <div *ngIf="data?.listing?.VoteDetails">
+        <p *ngIf="data?.listing?.VoteDetails?.isReported">
+          <mat-icon fontSet="partIcon" fontIcon="part-flag" class="voted-icon"></mat-icon>
+          Thanks for flagging this item as inappropriate
+        </p>
+        <p *ngIf="!data?.listing?.VoteDetails?.isReported">
+          <mat-icon fontSet="partIcon" fontIcon="part-check-in-a-box" class="voted-icon"></mat-icon>
+          Thanks for voting on this item
+        </p>
+      </div>
+
+    </div><!-- .reporting -->
+  </div>
+
   <div class="right" fxLayout fxLayoutAlign="end center">
     <app-favorite [listing]="data?.listing" [detail]="true"></app-favorite>
     <app-add-to-cart [listing]="data?.listing" [detail]="true" (onAdded)="dialogClose()"></app-add-to-cart>
+
+    <!-- if mine, show message instead of "add to cart" button -->
+    <button mat-button disabled *ngIf="data?.listing?.isMine">
+      <mat-icon fontSet="partIcon" fontIcon="part-circle-info"></mat-icon>
+      This is your own listing
+    </button>
   </div>
+
 </mat-dialog-actions>

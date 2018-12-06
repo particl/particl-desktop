@@ -9,8 +9,10 @@
         <div class="categories">{{ listing?.category.name }}</div>
         <div class="date">
           <!--span class="hash" matTooltip="Order hash">AGR</span-->
-          Added {{ listing?.createdAt }} 
-          <!-- &bull; <span class="TO_DO">Expires 2018-02-13</span> -->
+          Added {{ listing?.createdAt }}
+          <br>
+          {{ listing?.expiredAt }} 
+          <!-- &bull; <span class="to-do">Expires 2018-02-13</span> -->
         </div>
       </div>
       <div *ngFor="let status of getStatus(listing?.status)">
@@ -48,14 +50,14 @@
 
   <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
-      <button mat-button color="warn" matTooltip="Delete listing" [disabled]="listing?.isPublished" (click)="confirmDeleteListing(listing)"
+      <button mat-button color="warn" matTooltip="Delete listing" *ngIf="listing?.isUnpublished" (click)="confirmDeleteListing(listing)"
               class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       </button>
       <button mat-button matTooltip="Clone listing" (click)="addItem(listing?.id, true)" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
       </button>
-      <button mat-button matTooltip="Edit listing details" [disabled]="listing?.isPublished" (click)="addItem(listing?.id)" class="small">
+      <button mat-button matTooltip="Edit listing details" *ngIf="listing?.isUnpublished" (click)="addItem(listing?.id)" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
         Edit listing
       </button>

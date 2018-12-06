@@ -1,21 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
 import { Log } from 'ng2-logger';
 import * as _ from 'lodash';
-import { ProfileService } from 'app/core/market/api/profile/profile.service';
-import { Profile } from 'app/core/market/api/profile/profile.model';
-import { RpcService } from 'app/core/rpc/rpc.service';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
-import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
-
+import { Observable } from 'rxjs/Observable';
+import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 
 @Component({
   selector: 'app-proposals',
@@ -51,62 +42,57 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['active', 'past'];
   // ['active', 'planned', 'past']
-  public currentBlockCount: number;
   public proposals: Proposal[] = [];
   public activeProposals: Proposal[] = [];
   public pastProposals: Proposal[] = [];
   public isLoading: boolean = false;
   private destroyed: boolean;
+  private timer: any;
+  private sortedProposalByExpiryTime: any[] = [];
 
   constructor(
     private router: Router,
-    private formBuilder: FormBuilder,
-    private profileService: ProfileService,
     private peerService: PeerService,
-    private blockStatusService: BlockStatusService,
-    private proposalsService: ProposalsService
-  ) { }
+    private proposalsService: ProposalsService,
+    private proposalsNotificationsService: ProposalsNotificationsService
+  ) {
+    // update last proposal timestamp.
+    this.proposalsNotificationsService.viewingProposals(false);
+  }
 
   ngOnInit() {
 
-    // get current BlockCounts
     this.peerService.getBlockCount()
-      .takeWhile(() => !this.destroyed)
-      .subscribe((count: number) => {
-        this.currentBlockCount = count;
-        this.loadProposals();
-      })
+    .takeWhile(() => !this.destroyed)
+    .subscribe((count: number) => {
+
+      if (this.tabLabels[this.selectedTab] === 'active') {
+        this.loadActiveProposalsListing();
+      }
+    })
   }
 
   loadProposals(): void {
-    this.isLoading = true;
+    this.clearStores();
     if (this.tabLabels[this.selectedTab] === 'active') {
-
       // get active proposal list
-      this.getActiveProposalsListing();
+      this.loadActiveProposalsListing();
     } else {
-
       // get past proposal list
-      this.getPastProposalsListing();
+      this.loadPastProposalsListing();
     }
   }
 
-  getActiveProposalsListing(): void {
-    /*
-     * In the case of active proposals fetching.
-     * startBlockCount  = currentBlockCount.
-     * endBlockCount = '*';
-     */
-    const startBlock = this.currentBlockCount;
-    const endBlock = '*';
-
-    this.proposalsService.list(startBlock, endBlock)
+  loadActiveProposalsListing(): void {
+    this.isLoading = true;
+    this.proposalsService.list(Date.now(), '*')
       .take(1)
-      .subscribe((activeProposal: Proposal[]) => {
+      .subscribe((activeProposalList: Proposal[]) => {
         this.isLoading = false;
-        if (this.isNewProposalArrived(this.activeProposals, activeProposal)) {
-          activeProposal.reverse()
-          this.activeProposals = activeProposal;
+        if (this.isNewProposalArrived(this.activeProposals, activeProposalList)) {
+          this.activeProposals = activeProposalList.reverse();
+          this.sortedProposalByExpiryTime = this.getSortedProposalByExpiryTime(this.activeProposals);
+          this.setExpiryCheckTimer();
         }
       }, (error) => {
         this.isLoading = false;
@@ -114,27 +100,66 @@ export class ProposalsComponent implements OnInit, OnDestroy {
       })
   }
 
-  getPastProposalsListing(): void {
-    /*
-     * In the case of past proposals fetching.
-     * startBlockCount  = '*'.
-     * endBlockCount = this.currentBlockCount;
-     */
-    const startBlock = '*';
-    const endBlock = this.currentBlockCount;
+  setExpiryCheckTimer(): void {
 
-    this.proposalsService.list(startBlock, endBlock)
+    this.stopTimer();
+
+    this.timer = Observable.timer(1000, 1000)
+      .takeWhile(() => !this.destroyed)
+      .subscribe(() => {
+        this.removeExpiredProposals();
+        }
+      )
+  }
+
+  getSortedProposalByExpiryTime(proposals: Proposal[]): any[] {
+
+    // pick specific keys from the array of proposal for saving the memory consumption
+    const sortedProposals = proposals.map((proposal: Proposal, pIdx: number) => {
+        return { 'idx': pIdx, expiredAt: proposal.expiredAt };
+      });
+
+    return _.orderBy(sortedProposals, ['expiredAt'], ['asc']);
+  }
+
+  removeExpiredProposals(): void {
+    if (this.sortedProposalByExpiryTime.length) {
+      const now = Date.now();
+
+      let index = 0;
+      for (; index < this.sortedProposalByExpiryTime.length; index++) {
+        if (this.isLoading) {
+          break;
+        }
+
+        if (this.sortedProposalByExpiryTime[index].expiredAt <= now) {
+          const idx = this.sortedProposalByExpiryTime[index].idx;
+          if (typeof idx === 'number' && this.activeProposals[idx]) {
+            this.activeProposals.splice(idx, 1);
+          }
+        } else {
+          break;
+        }
+      }
+
+      if (index > 0) {
+        this.sortedProposalByExpiryTime.splice(0, index + 1);
+      }
+    }
+
+  }
+
+  loadPastProposalsListing(): void {
+    this.isLoading = true;
+    this.proposalsService.list('*', Date.now())
       .take(1)
       .subscribe((pastProposal: Proposal[]) => {
         this.isLoading = false;
-        if (this.isNewProposalArrived(this.pastProposals, pastProposal)) {
-          pastProposal.reverse()
-          this.pastProposals = pastProposal;
-        }
+        this.pastProposals = pastProposal;
       }, (error) => {
         this.isLoading = false;
         this.log.d(error);
-      })
+      });
   }
 
   isNewProposalArrived(oldProposals: Proposal[], newProposals: Proposal[]): boolean {
@@ -147,10 +172,30 @@ export class ProposalsComponent implements OnInit, OnDestroy {
 
   changeTab(index: number): void {
     this.selectedTab = index;
+    this.stopTimer();
     this.loadProposals();
   }
 
   ngOnDestroy() {
+    this.proposalsNotificationsService.viewingProposals(true);
     this.destroyed = true;
   }
+
+  private stopTimer() {
+    try {
+      if (this.timer !== undefined) {
+        this.timer.unsubscribe();
+      }
+    } catch (e) {
+      this.log.e('Failed to stop the expiry timer: ', e);
+    }
+  }
+
+  private clearStores() {
+    this.proposals = [];
+    this.activeProposals = [];
+    this.pastProposals = [];
+    this.sortedProposalByExpiryTime = [];
+  }
+
 }

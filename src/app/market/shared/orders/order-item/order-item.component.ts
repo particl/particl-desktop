@@ -35,7 +35,7 @@ export class OrderItemComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getItemDetails()
+    this.getItemDetails();
   }
 
   getItemDetails() {
@@ -52,14 +52,14 @@ export class OrderItemComponent implements OnInit {
   // Testing of all the scenarios
   order_action() {
     switch (this.order.status) {
-      case 'Bidding':
+      case 'bidding':
         // run accept command for seller
         if (this.order.type === 'sell') {
           this.callBid('accept')
         }
         break;
 
-      case 'Awaiting':
+      case 'awaiting':
         // Escrow lock call with popup
         if (this.order.type === 'buy') {
           this.openPaymentConfirmationModal();
@@ -67,13 +67,13 @@ export class OrderItemComponent implements OnInit {
         }
         break;
 
-      case 'Escrow':
+      case 'escrow':
         if (this.order.type === 'sell') {
           this.callBid('shipping');
         }
         break;
 
-      case 'Shipping':
+      case 'shipping':
         // escrow release call with popup
         if (this.order.type === 'buy') {
           this.callBid('escrow');

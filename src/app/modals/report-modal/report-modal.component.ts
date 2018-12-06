@@ -18,4 +18,9 @@ export class ReportModalComponent implements OnInit {
     this._dialogRef.close();
     this.isConfirmed.emit();
   }
+
+  dialogClose(): void {
+    this._dialogRef.close();
+  }
+
 }

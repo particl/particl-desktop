@@ -25,6 +25,7 @@ export class Template {
   public proposalHash: string = '';
   public keepItem: VoteOption;
   public removeItem: VoteOption;
+  public submitterAddress: string = '';
   // @TODO: remove type any
   constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
@@ -66,6 +67,10 @@ export class Template {
   // TODO: check if expired.
   get isPublished(): boolean {
     return this.object.ListingItems && this.object.ListingItems.length > 0;
+  }
+
+  get isUnpublished(): boolean {
+    return this.status === 'unpublished';
   }
 
   get country(): any {
@@ -155,6 +160,7 @@ export class Template {
 
   setProposalOptions(): void {
     if (this.flaggedItem && this.flaggedItem.Proposal) {
+      this.submitterAddress = this.flaggedItem.Proposal.submitter;
       this.flaggedItem.Proposal.ProposalOptions.forEach(opt => {
         if (opt.description === 'KEEP') {
           this.keepItem = opt;
@@ -167,6 +173,11 @@ export class Template {
 
   get flaggedItem(): any {
     return this.object.FlaggedItem;
+  }
+
+  get expiredAt(): any {
+    return Object.prototype.toString.call(this.object.ListingItems) === '[object Array]' && this.object.ListingItems.length ?
+    'Expires ' + new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16) : '';
   }
 
   setExpiryTime(): void {

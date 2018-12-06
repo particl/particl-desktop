@@ -1,4 +1,4 @@
-@import "./src/assets/config"; // import shared colors etc.
+@import './src/assets/config'; // import shared colors etc.
 
 .fiat {
   display: none; // hide until implemented (TODO)
@@ -8,18 +8,8 @@
 // ------ UI ------ //
 
 .title {
-  // FIXME: swith to @extend %box-title;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 13px;
-}
-
-.help-text {
-  // FIXME: switch to: @extend %help-text;
-  color: $text-muted;
-  font-size: 11px;
-  margin-bottom: 25px;
-  cursor: help;
+  @extend %box-title;
+  margin: 6px 0;
 }
 
 
@@ -91,7 +81,7 @@
 .fee-info {
   // FIXME: switch to: @extend %help-text;
   color: $text-muted;
-  font-size: 11px;
+  font-size: 12px;
   margin: 30px 0 0;
   & > .amount {
     margin: 0 0 0 10px;

@@ -145,7 +145,6 @@ export class TransactionService implements OnDestroy {
         });
 
         this.txs = newTxs;
-
         this.loading = false;
         this.alreadyRetryingLoadTx = false;
         this.log.d(`loadTransactions, txs array: ${this.txs.length}`);

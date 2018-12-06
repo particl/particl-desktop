@@ -22,21 +22,27 @@ export class BidService {
   constructor(private market: MarketService, private cartService: CartService) {
   }
 
-  public async order(cart: Cart, profile: any, addressId: number): Promise<string> {
+  public async order(cart: Cart, profile: any, shippingAddress: any): Promise<string> {
+
+    const shippingParams = [];
+    for (const key of Object.keys(shippingAddress)) {
+      shippingParams.push(key);
+      shippingParams.push(shippingAddress[key]);
+    }
 
     for (let i = 0; i < cart.listings.length; i++) {
       const listing: Listing = cart.listings[i];
       if (listing.hash) {
         this.log.d(`Placing bid for hash=${listing.hash}`);
         // bid for item
-        await this.market.call('bid', ['send', listing.hash, profile.id, addressId]).toPromise()
+        await this.market.call('bid', ['send', listing.hash, profile.id, false, ...shippingParams]).toPromise()
           .catch((error) => {
             if (error) {
-              error = this.errorHandle(error);
+              error = this.errorHandle(error.toString());
             }
             throw error;
           });
-        this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${addressId}`);
+        this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${shippingAddress}`);
         this.cartService.removeItem(listing.id).take(1).subscribe();
       }
     }
@@ -52,7 +58,7 @@ export class BidService {
     const params = ['accept', id];
     return this.market.call('bid', params).catch((error) => {
       if (error) {
-        error = this.errorHandle(error);
+        error = this.errorHandle(error.toString());
       }
       throw error;
     });

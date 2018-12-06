@@ -5,6 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { CoreModule } from 'app/core/core.module';
 import { MarketModule } from '../../../core/market/market.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { CartService } from '../../../core/market/api/cart/cart.service';
@@ -23,7 +24,8 @@ describe('PreviewListingComponent', () => {
       imports: [
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
-        MarketModule.forRoot()
+        MarketModule.forRoot(),
+        ModalsModule.forRoot()
       ],
       providers: [
         { provide: MatDialogRef},

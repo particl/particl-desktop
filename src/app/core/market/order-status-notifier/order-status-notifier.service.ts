@@ -100,7 +100,7 @@ export class OrderStatusNotifierService implements OnDestroy {
 
   public getOrdersToNotifyFor(newOrders: Bid[]): Bid[] {
     return  _.differenceWith(newOrders, this.oldOrders, (o1, o2) => {
-      return o1.id === o2.id && o1.messages.action_button === o2.messages.action_button
+      return o1.id === o2.id && (o1.messages || {}).action_button === (o2.messages || {}).action_button;
     });
   }
 

@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { ModalsModule } from 'app/modals/modals.module';
 
 import { AddProposalComponent } from './add-proposal.component';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
@@ -20,6 +21,7 @@ describe('AddProposalComponent', () => {
       imports: [
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
+        ModalsModule.forRoot(),
         BrowserAnimationsModule,
         RouterTestingModule,
       ],

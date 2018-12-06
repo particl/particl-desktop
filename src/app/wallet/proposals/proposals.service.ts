@@ -20,8 +20,8 @@ export class ProposalsService {
   }
 
   // proposal list.
-  list(startBlock: any, endBlock: any) {
-    const params = ['list', startBlock, endBlock];
+  list(startTime: any, expireTime: any) {
+    const params = ['list', startTime, expireTime];
     return this.marketService.call('proposal', params)
       .map((v) => v.map(p => new Proposal(p)));
   }
@@ -31,8 +31,8 @@ export class ProposalsService {
     /*
      * get poposal fee by passing the estimatedFee = true.
      // tslint:disable-next-line
-     * cmd ['proposal', ['post', submitterId, ttitle<string>, desc<string>, startBlockCount<number>,
-        endBlockCount<number>, estimationFee<boolean>, option-1<string> ,..... option-N<string>
+     * cmd ['proposal', ['post', submitterId, ttitle<string>, desc<string>, daysretention<number> (in days),
+        expireTimeCount<number>, estimationFee<boolean>, option-1<string> ,..... option-N<string>
      * i.e.:
      * estimationFee = true to get proposal fee.
      * estimationFee = false to post proposal.
@@ -45,7 +45,12 @@ export class ProposalsService {
   // proposal result.
   result(proposalHash: string) {
     const params = ['result', proposalHash]
-    return this.marketService.call('proposal', params).map((r) => new ProposalResult(r));
+    return this.marketService.call('proposal', params).map((r) => {
+      if (r) {
+        return new ProposalResult(r);
+      }
+      return null;
+    });
   }
 
   // vote post.

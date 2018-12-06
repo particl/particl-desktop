@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
+  FormControl,
   Validators
 } from '@angular/forms';
 import { Log } from 'ng2-logger';
@@ -105,6 +106,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    this.clear();
     this.storeCache();
   }
 
@@ -132,7 +134,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       country: ['', Validators.required],
       zipCode: ['', Validators.required],
       newShipping: [''],
-      title: ['', Validators.required]
+      title: ['']
+    }, {
+      validator: (formGroup: FormGroup) => {
+        return this.validateShippingProfileTitle(formGroup);
+      }
     });
   }
 
@@ -164,33 +170,39 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.shippingFormGroup.value.newShipping === true) {
-      this.log.d('Creating new address for profile!');
-    } else {
-      this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
-    }
+    this.country = this.shippingFormGroup.value.country || '';
 
     let upsert: Function;
-    if (this.profile.shippingAddresses.length === 0 || this.shippingFormGroup.value.newShipping === true) {
-      upsert = this.profileService.address.add.bind(this);
-    } else {
-      this.shippingFormGroup.value.id = this.selectedAddress.id;
-      upsert = this.profileService.address.update.bind(this);
+
+    if (this.shippingFormGroup.value.newShipping === true) {
+      // Add or update saved shipping address
+      if (this.selectedAddress && this.selectedAddress.id) {
+        // Update currently selected shiping profile
+        this.log.d('Updating address with id: ' + this.selectedAddress.id + ' for profile!');
+        this.shippingFormGroup.value.id = this.selectedAddress.id;
+        upsert = this.profileService.address.update.bind(this);
+      } else if (!this.selectedAddress || !this.selectedAddress.id) {
+        // Add new shipping profile
+        this.log.d('Creating new address for profile!');
+        upsert = this.profileService.address.add.bind(this);
+      }
     }
 
-    this.country = this.shippingFormGroup.value.country || '';
-    console.log(this.country);
-    const address = this.shippingFormGroup.value as Address;
-    upsert(address).take(1).subscribe(addressWithId => {
-      // update the cache
+    if (upsert !== undefined) {
+      const address = this.shippingFormGroup.value as Address;
+      upsert(address).take(1).subscribe(addressWithId => {
+        // we need to retrieve the id of  address we added (new)
+        this.select(addressWithId);
+
+        // update the cache
+        this.allowGoingBack();
+        this.storeCache();
+
+      });
+    } else {
       this.allowGoingBack();
       this.storeCache();
-
-      // we need to retrieve the id of  address we added (new)
-      this.select(addressWithId);
-
-    });
-
+    }
   }
 
   setDefaultCountry(countryCode: string) {
@@ -205,6 +217,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   select(address: Address) {
     this.log.d('Selecting address with id: ' + address.id);
+    // check for the new profile and then add.
     this.selectedAddress = address;
     this.shippingFormGroup.value.id = address.id;
     this.setDefaultCountry(address.country);
@@ -224,21 +237,26 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.shippingFormGroup.reset();
   }
 
-  get addressNotSelected(): boolean {
-    return Object.keys(this.selectedAddress).length > 0
-  }
-
   getProfile(): void {
     this.profileService.default().take(1).subscribe(
       (profile: any) => {
-        this.log.d('checkout got profile:')
         this.profile = profile;
-        console.log(this.profile);
+        this.log.d('checkout got profile:', this.profile);
         const addresses = profile.shippingAddresses;
         if (addresses.length > 0) {
-          this.select(this.cache.address || addresses[0]);
+          if (this.shippingFormGroup.value && this.shippingFormGroup.value.id) {
+            const address = addresses.find( addr => addr.id === this.shippingFormGroup.value.id);
+            if (address) {
+              this.selectedAddress = address;
+              this.shippingFormGroup.value.id = address.id;
+            }
+          }
         }
       });
+  }
+
+  backToShippingDetails(): void {
+    this.getProfile();
   }
 
 
@@ -257,8 +275,29 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   bidOrder() {
-    const addressId = this.selectedAddress.id;
-    this.bid.order(this.cart, this.profile, addressId).then((res) => {
+    const addressId: number = this.selectedAddress && this.selectedAddress.id ? +this.selectedAddress.id : -1;
+
+    // Extract the shipping address details here (always use the address entered by the user in this.shippingFormGroup)
+    const shippingInfo: any = {
+      'shippingAddress.firstName': '',
+      'shippingAddress.lastName': '',
+      'shippingAddress.addressLine1': '',
+      'shippingAddress.addressLine2': '',
+      'shippingAddress.city': '',
+      'shippingAddress.state': '',
+      'shippingAddress.zipCode': '',
+      'shippingAddress.country': '',
+    };
+
+    const sourceObject = this.shippingFormGroup.value;
+    for (const key of Object.keys(shippingInfo)) {
+      const existingValue = sourceObject[key.replace('shippingAddress.', '')];
+      if (existingValue) {
+        shippingInfo[key] = existingValue;
+      }
+    }
+
+    this.bid.order(this.cart, this.profile, shippingInfo).then((res) => {
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
@@ -268,7 +307,24 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     });
   }
 
+  private validateShippingProfileTitle(formGroup: FormGroup): any | null {
+    let isValid = true;
+    const newShippingControl: FormControl = <FormControl>formGroup.controls.newShipping;
+    if (newShippingControl.value) {
+      const titleControl: FormControl = <FormControl>formGroup.controls.title;
+      isValid = titleControl.value && titleControl.value.length > 0;
+    }
 
+    if (isValid) {
+      return null;
+    }
+
+    return {
+      validateShippingProfileTitle: {
+        valid: isValid
+      }
+    }
+  }
 
 
   /*
@@ -276,11 +332,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   */
 
   getCache(): void {
-    // set stepper to values of cache
-    this.stepper.selectedIndex = this.cache.selectedIndex;
-    this.stepper.linear = this.cache.linear;
+    // Make it linear so if user comes back on page again then it will show the initial step
+    this.cache.selectedIndex = 0;
+    this.stepper.linear = true;
   }
 
+  // Needs to refactor if there is no use of caching?
   storeCache(): void {
     this.cache.selectedIndex = this.stepper.selectedIndex;
     this.cache.linear = this.stepper.linear;

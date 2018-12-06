@@ -14,7 +14,6 @@ import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 import { GraphOption } from 'app/wallet/proposals/models/proposal-result-graph-option.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
-import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 
 @Component({
   selector: 'app-proposal-details',
@@ -74,8 +73,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private proposalService: ProposalsService,
     private snackbarService: SnackbarService,
-    private modelsService: ModalsHelperService,
-    private proposalsNotificationsService: ProposalsNotificationsService
+    private modelsService: ModalsHelperService
   ) { }
 
   ngOnInit() {
@@ -99,11 +97,13 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     this.proposalService.result(this.proposal.hash)
       .takeWhile(() => !this.destroyed)
       .subscribe((result: ProposalResult) => {
-        this.proposalResult = result;
+        if (result) {
+          this.proposalResult = result;
 
-        // No need to call this.getVoteDetails() until proposal doesn't have any vote!!
-        if (this.proposalResult.totalVotes) {
-          this.getVoteDetails();
+          // No need to call this.getVoteDetails() until proposal doesn't have any vote!!
+          if (this.proposalResult.totalVotes) {
+            this.getVoteDetails();
+          }
         }
       });
   }
@@ -135,11 +135,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       this.selectedOption.optionId
     ];
     this.proposalService.vote(params).subscribe((response) => {
-
-      // call votedForProposal() only if user voted for first time to any proposal.
-      if (!this.voteDetails) {
-        this.proposalsNotificationsService.votedForProposal();
-      }
 
       this.aleradyVoted = true;
       // update graph data.

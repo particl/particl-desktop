@@ -7,6 +7,7 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 
 import { AddAddressLabelComponent } from './modals/add-address-label/add-address-label.component';
 import { SignatureAddressModalComponent } from '../shared/signature-address-modal/signature-address-modal.component';
+import { QrCodeModalComponent} from '../shared/qr-code-modal/qr-code-modal.component';
 
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
@@ -30,8 +31,6 @@ export class ReceiveComponent implements OnInit, OnDestroy {
   /* UI State */
   public type: string = 'public';
   public query: string = '';
-  public addressInput: boolean = true;
-  public label: string = '';
   public address: string = '';
   testnet: boolean = false;
   initialized: boolean = false; /* true => checkUnusedAddress is already looping */
@@ -115,7 +114,7 @@ export class ReceiveComponent implements OnInit, OnDestroy {
   }
 
   /** Returns the unused addresses to display in the UI. */
-  getUnusedAddress(): Object {
+  get unUsedAddress(): Object {
     return this.addresses[this.type][0];
   }
 
@@ -177,6 +176,10 @@ export class ReceiveComponent implements OnInit, OnDestroy {
 
   changeTab(tab: number): void {
     this.page = 1;
+
+    // clear the search query.
+    this.query = '';
+    this.showOldAddress = false;
     if (tab) {
       this.setAddressType('private');
     } else {
@@ -198,13 +201,20 @@ export class ReceiveComponent implements OnInit, OnDestroy {
   /**
    * Opens a dialog when creating a new address.
    */
-  openNewAddress(address?: string): void {
-    const dialogRef = this.dialog.open(AddAddressLabelComponent);
+  openNewAddress(address?: any): void {
+    const dialogRef = this.dialog.open(QrCodeModalComponent);
     dialogRef.componentInstance.type = this.type;
-    dialogRef.componentInstance.address = address ? address : '';
+    dialogRef.componentInstance.singleAddress = address;
 
     // update receive page after adding address
-    dialogRef.componentInstance.onAddressAdd.subscribe(result => this.rpc_update());
+    dialogRef.componentInstance.onConfirm.subscribe((msg: string) => {
+      if (msg) {
+        this.flashNotificationService.open(msg);
+        this.rpc_update();
+      } else {
+        this.openSignatureModal(address.address);
+      }
+    });
   }
 
   selectInput(): void {
@@ -299,7 +309,8 @@ export class ReceiveComponent implements OnInit, OnDestroy {
       label: '(No label)',
       address: 'Empty address',
       balance: 0,
-      readable: ['Empty']
+      readable: ['Empty'],
+      owned: false
     };
 
     tempAddress.address = response.address;
@@ -308,6 +319,7 @@ export class ReceiveComponent implements OnInit, OnDestroy {
     }
 
     tempAddress.readable = tempAddress.address.match(/.{1,4}/g);
+    tempAddress.owned = response.owned;
 
     if (type === 'public') {
 
@@ -387,11 +399,6 @@ export class ReceiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateLabel(address: string) {
-    this.address = address
-    this.modals.unlock({timeout: 3}, (status) => this.editLabel());
-  }
-
   generateAddress(): void {
     this.modals.unlock({timeout: 3}, (status) => this.newAddress());
   }
@@ -403,30 +410,20 @@ export class ReceiveComponent implements OnInit, OnDestroy {
     this.rpcCallAndNotify(call, callParams, msg);
   }
 
-  editLabel(): void {
-    const call = 'manageaddressbook';
-    const callParams = ['newsend', this.address, this.label];
-    const msg = `Label for ${this.address} updated`;
-    this.rpcCallAndNotify(call, callParams, msg);
-  }
-
-  changeLabel(): void {
-    this.addressInput = !this.addressInput
-    if (this.selected.label === '(No label)') {
-      this.selected.label = '';
-    }
-  }
-
   rpcCallAndNotify(call: string, callParams: any, msg: string): void {
     if (call) {
       this.rpc.call(call, callParams)
         .subscribe(response => {
           this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
           this.flashNotificationService.open(msg)
-          this.addressInput = true;
           this.rpc_update();
         });
     }
+  }
+
+  rpcLabelUpdate(msg: string): void {
+    this.flashNotificationService.open(msg)
+    this.rpc_update();
   }
 
 }

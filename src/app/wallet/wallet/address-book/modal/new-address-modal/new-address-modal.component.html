@@ -1,27 +1,41 @@
-<div mat-dialog-title>{{modalTitle}}</div>
-<button class="small-close_button pull-right" tabindex="-1" (click)="closeModal()">
+<div mat-dialog-title>{{ modalTitle }}</div>
+<button class="small-close-button pull-right" tabindex="-1" (click)="closeModal()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <form [formGroup]="addAddressBookForm" (ngSubmit)="onSubmitForm()" novalidate>
-  <div mat-dialog-content>
-    <mat-form-field>
-      <input matInput type="text" formControlName="address"
-             [(ngModel)]="address" (ngModelChange)="verifyAddress()"
-             placeholder="Enter Address"
-             [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
-             #addressInput
-             required>
+  <div mat-dialog-content class="dialog-content">
+
+    <p class="lead">
+      Save 3rd-party's address (e.g. your friend's) for later use.
+    </p>
+    <p class="widget-help">
+      Keep in mind that re-using same Public addresses for multiple transactions decreases privacy. It is recommended to use Private addresses or ask the other party for a fresh Public address for each transaction.
+    </p>
+
+    <div class="address">
+      <mat-form-field class="address-field full-width larger">
+        <input matInput type="text" formControlName="address"
+               [(ngModel)]="address" (ngModelChange)="verifyAddress()"
+               placeholder="Enter Address"
+               [ngClass]="{'verify-sucess': checkAddress() == true, 'verify-error': checkAddress() == false }"
+               #addressInput
+               required>
+      </mat-form-field>
+      <button mat-button class="paste small" (click)="pasteAddress()">
+        <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
+        Paste
+      </button>
+    </div>
+
+
+    <mat-form-field class="full-width larger">
+      <input matInput type="text" placeholder="Address label (e.g. owner's name)" name="label" formControlName="label" [(ngModel)]="label" required>
     </mat-form-field>
-    <!-- @TODO: CRZ please replace copy icon to paste icon-->
-    <span matTooltip="Paste" (click)="pasteAddress()">
-      <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-copy"></mat-icon>
-    </span>
-    <mat-form-field>
-      <input matInput type="text" placeholder="Enter Label" name="label" formControlName="label" [(ngModel)]="label"
-             required />
-    </mat-form-field>
-  </div>
+
+  </div><!-- mat-dialog-content -->
+
+
   <mat-dialog-actions fxLayoutAlign="end center">
     <button type="button" mat-button mat-dialog-close (click)="closeModal()">
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
@@ -32,4 +46,5 @@
       Add Address
     </button>
   </mat-dialog-actions>
+
 </form>

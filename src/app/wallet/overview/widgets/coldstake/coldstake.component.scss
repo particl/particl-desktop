@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 @import '../shared/shared.scss';
 
 .cold-staking {
@@ -38,12 +38,12 @@
       margin: 5px 0 15px;
     }
     .buttons { // Zap/revert buttons
-      margin: -12px 0;
+      margin: 0 0 24px;
       button {
         margin: 0;
         .tag {
           background: $text-muted;
-          color: white;
+          color: $color-white;
           display: inline-block;
           padding: 1px 6px;
           border-radius: 4px;

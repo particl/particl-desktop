@@ -1,9 +1,9 @@
 <!-- Do not remove the below class it is using for test case -->
 <app-header class="test-case-container">
-  <div class="control-bar" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <div class="control-bar" fxLayout="row" fxLayoutAlign="space-between center">
 
     <!-- Search-->
-    <div class="icon-input search-listings" fxFlex="0 0 215px">
+    <div class="icon-input search-listings" fxFlex="1 1 25%">
       <input type="text" class="header-input" id="searchbar" placeholder="Search items for sale.."
              [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
              (keyup.escape)="filters.search = ''; clearAndLoadPage()">
@@ -11,54 +11,45 @@
     </div>
 
     <!-- Filtering -->
-    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
+    <div class="filter-by seller-country" fxFlex="1 1 25%">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
+      <mat-select-search
+        [options]="countryList?.countries"
+        [defaultOption]="'All seller countries'"
+        [isLexigraphicalOrder]="true"
+        [showValueOf]="'name'"
+        (onChange)="onCountryChange($event)">
+      </mat-select-search>
+    </div>
 
-    <!-- mat-select-search -->
-    <mat-select-search
-      fxFlex="0 0 150px"
-      class="filter-by seller-country"
-      [options]="countryList?.countries"
-      [defaultOption]="'All seller countries'"
-      [showValueOf]="'name'"
-      (onChange)="onCountryChange($event)">
-    </mat-select-search>
+    <div class="filter-by category" fxFlex="1 1 25%">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
+      <mat-otpgroup-select-search
+        [options]="_rootCategoryList?.subCategoryList"
+        [defaultOption]="'All categories'"
+        (change)="onCategoryChange($event)">
+      </mat-otpgroup-select-search>
+    </div>
 
-    <mat-otpgroup-select-search
-      fxFlex="0 0 180px"
-      class="filter-by category"
-      [options]="_rootCategoryList?.subCategoryList"
-      [defaultOption]="'All categories'"
-      (change)="onCategoryChange($event)">
-    </mat-otpgroup-select-search>
+    <div class="filter-by buyer-country" fxFlex="1 1 25%">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-globe" fxFlex="0 0 16px" matTooltip="Select your country to calculate exact shipping & escrow prices" matTooltipPosition="below"></mat-icon>
+      <mat-select-search
+        fxFlex="1 1 100%"
+        [options]="countryList?.countries"
+        [defaultOption]="'Your country'"
+        [isLexigraphicalOrder]="true"
+        [showValueOf]="'name'"
+        [defaultSelectedValue]="this.selectedCountry"
+        (onChange)="changeLocation($event)">
+      </mat-select-search>
+    </div>
 
-    <div class="spacer" fxFlex="1 1 100%"></div>
-
-    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-globe" fxFlex="0 0 16px" matTooltip="Select your country to calculate exact shipping & escrow prices" matTooltipPosition="below"></mat-icon>
-    <mat-select-search
-      fxFlex="0 0 150px"
-      class="filter-by buyer-country"
-      [options]="countryList?.countries"
-      [defaultOption]="'Your country'"
-      [showValueOf]="'name'"
-      [defaultSelectedValue]="this.selectedCountry"
-      (onChange)="changeLocation($event)">
-    </mat-select-search>
-
-    <!-- Sorting -->
-    <!--mat-select placeholder="Sort by" class="filter sorting TO_DO" fxFlex="0 1 300px">
-      <mat-option>Default</mat-option>
-      <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
-        {{ sorting.viewValue }}
-      </mat-option>
-    </mat-select-->
-
-    <!-- Sorting -->
-    <!--div class="display" fxFlex="0 1 80px" fxLayout="row" fxLayoutGap="15px">
-      FIXME: add ".active" class to currently selected view + needs to implement functionality
-      <mat-icon class="icon active" fontSet="partIcon" fontIcon="part-overview" matTooltip="Grid view"></mat-icon>
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="List view"></mat-icon>
-    </div-->
-
+    <div class="filter-by reported" fxFlex="0 0 56px">
+      <!-- FIXME: Ripple effect not working? https://material.angular.io/components/button-toggle/overview -->
+      <mat-button-toggle type="checkbox" value="reported-only" class="reported-only" matTooltip="Show reported listings only" (change)="toggleFlag($event)">
+        <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+      </mat-button-toggle>
+    </div>
   </div><!-- .control-bar -->
 </app-header>
 
@@ -120,11 +111,14 @@
         Sorry, no matching listings found
       </p>
     </div>
+
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let item of page.listings">
+
         <mat-card class="listing">
           <app-listing-item [listing]="item"></app-listing-item>
         </mat-card>
+
       </ng-container>
     </ng-container>
 

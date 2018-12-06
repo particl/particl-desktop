@@ -1,5 +1,5 @@
 <div mat-dialog-title>Confirm transaction</div>
-<button class="small-close_button pull-right" (click)="dialogClose()">
+<button class="small-close-button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
@@ -12,7 +12,7 @@
       <div class="public" *ngIf="transactionType === 'part'">
         <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-public"></mat-icon>
         <div class="title">Public transaction</div>
-        <p class="help-text">
+        <p class="widget-help">
           Sender, Receiver & transaction amount will be publicly visible on the blockchain
         </p>
       </div>
@@ -20,14 +20,14 @@
       <div class="blind" *ngIf="transactionType === 'blind'">
         <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-blind"></mat-icon>
         <div class="title">Blind transaction</div>
-        <p class="help-text">
+        <p class="widget-help">
           Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
         </p>
       </div>
       <div class="anon" *ngIf="transactionType === 'anon'">
         <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
         <div class="title">Anon transaction</div>
-        <p class="help-text">
+        <p class="widget-help">
           Sender, Receiver & transaction amount will be hidden on the blockchain for highest privacy
         </p>
       </div>
