@@ -31,10 +31,12 @@
   </div>
 
   <div class="detail" fxLayout="row" fxLayoutGap="30px">
-    <div class="buyer-info" fxFlex="27%">
+
+    <div class="buyer-info" fxFlex="65%">
       <div class="title">Shipping address</div>
       <app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address>
     </div><!-- .buyer-info -->
+
     <div class="info" fxFlex="35%">
       <div class="title">Price<!-- & Qty--></div>
       <table class="prices">
@@ -64,23 +66,9 @@
           </td>
         </tr>
       </table>
-    </div>
-<!--     <div class="order-history" fxFlex="32%">
-      <div class="title">Order history</div>
-      <table class="to-do">
-        <tr><td class="date">2018-02-24</td><td class="status shipped">Sold</td></tr>
-        <tr><td class="date">2018-02-14</td><td class="status shipped">Shipped</td></tr>
-        <tr>
-          <td class="date">2018-02-11</td>
-          <td class="status escrow">In escrow</td>
-        </tr>
-        <tr>
-          <td class="date">2018-02-10</td>
-          <td class="status bidding">Bidding</td>
-        </tr>
-      </table>
-    </div> -->
-  </div>
+    </div><!-- .info -->
+
+  </div><!-- .detail -->
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
