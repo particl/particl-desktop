@@ -1,38 +1,33 @@
 <div mat-dialog-title>Choose Listing expiration</div>
-<button class="small-close_button pull-right" (click)="dialogClose()">
+<button class="small-close-button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">
 
-  <!--TX confirmation-->
-  <div class="tx-confirmation">
-    <div class="tx-info">
-      <div class="fees-expiration">
-        <div class="title">Listing expiration &amp; fees</div>
-        <div class="row" fxLayout fxLayoutAlign="center center">
-          <mat-form-field class="full-width" fxFlex="1 1 100%">
-            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration" (change)="loadTransactionFee()">
-              <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
-                {{ expire.title }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="est-fee" fxFlex="0 0 210px">
-            <span *ngIf="expiration">Approximate listing fee:
-              <br> {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
-            </span>
-          </div>
-        </div>
-        <p class="widget-help">
-          Choose for how long should your listing be published. Longer expiration results in higher fees.
-        </p>
-      </div>
-      <!-- .fees-expiration -->
+  <p class="lead">
+    For how long would you like to publish your Listing?
+  </p>
+
+  <div class="row" fxLayout fxLayoutAlign="center center">
+    <mat-form-field class="full-width" fxFlex="50%">
+      <mat-select [(ngModel)]="expiration" (change)="loadTransactionFee()">
+        <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
+          {{ expire.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="est-fee" fxFlex="50%">
+      <span *ngIf="expiration">Approximate listing fee:
+        <br> {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
+      </span>
     </div>
   </div>
-</div>
-<!-- .dialog-content -->
+  <p class="widget-help">
+    Each Listing is published to Market for a limited time. This helps fight spam and outdated Listings. Fees are proportional to duration.
+  </p>
+
+</div><!-- .dialog-content -->
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <button mat-button mat-dialog-close (click)="dialogClose()">
