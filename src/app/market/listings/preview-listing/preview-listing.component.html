@@ -22,7 +22,7 @@
           *ngIf="data?.listing?.imageCollection?.imageItems?.length"
           gallerize
           [gestures]="false"
-          [style.height.px]="417"
+          [style.height.px]="380"
           [style.width.px]="450"
           [thumbWidth]= "80"
           [thumbHeight]="80"
@@ -55,21 +55,45 @@
           </p>
         </div>
 
-        <div class="item category">
-          <div class="title">Category</div>
-          <div class="value">
-            <mat-icon fontSet="partIcon" fontIcon="part-label"></mat-icon>
-            {{ data?.listing?.category.name }}
-          </div>
-        </div>
-
-        <div class="item seller-country">
-          <div class="title">Sold from</div>
-          <div class="value" [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
-            <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
-            {{ data?.listing?.country }}
-          </div>
-        </div>
+        <table class="meta">
+          <tr>
+            <th class="title">
+              <mat-icon fontSet="partIcon" fontIcon="part-truck"></mat-icon>
+              Shipping
+            </th>
+            <td class="value">
+              {{ data?.listing?.domesticShippingPrice.getAmount() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} <small>PART</small>
+            </td>
+          </tr>
+          <tr>
+            <th class="title">
+              <mat-icon fontSet="partIcon" fontIcon="part-label"></mat-icon>
+              Category
+            </th>
+            <td class="value">
+              {{ data?.listing?.category.name }}
+            </td>
+          </tr>
+          <tr>
+            <th class="title">
+              <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+              Sold from
+            </th>
+            <td class="value">
+              {{ countryListService?.getCountryByRegion(data?.listing?.country)?.name }}
+              ({{ data?.listing?.country }})
+            </td>
+          </tr>
+          <tr>
+            <th class="title">
+              <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
+              Date added
+            </th>
+            <td class="value">
+              {{ data?.listing?.createdAt }}
+            </td>
+          </tr>
+        </table>
 
       </div><!-- .pricing -->
 
@@ -88,7 +112,7 @@
         <p>{{ data?.listing?.longDescription }}</p>
       </div>
     </div><!-- .tab-content.details -->
-    
+
     <div class="tab-content shipping" *ngIf="tabLabels[selectedTab] == 'shipping'">
       <table class="shipping-escrow">
         <thead>

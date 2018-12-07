@@ -54,37 +54,6 @@ button.small .mat-icon {
 
 // ------ LAYOUT ------ //
 
-.dialog-content {
-  margin: 0 -24px !important;
-  width: 950px;
-  height: 65vh;
-  max-height: none;
-}
-
-/*
-[mat-dialog-title] {
-  color: $text;
-  .category {
-    font-size: 12px;
-    font-weight: normal;
-    color: $text-muted;
-    margin-left: 10px;
-  }
-}
-*/
-
-.product-gallery {
-  .gallery-carousel {
-    img { // single product image
-      width: 100%;
-      height: auto;
-    }
-  }
-  gallery { // multiple product images in gallery
-    background: none;
-  }
-}
-
 :host {
   ::ng-deep {
     image-item {
@@ -107,16 +76,40 @@ button.small .mat-icon {
   }
 }
 
+.dialog-content {
+  margin: 0 -24px !important;
+  width: 950px;
+  height: 65vh;
+  max-height: none;
+}
+
+.product-gallery {
+  margin-right: 35px;
+  .gallery-carousel {
+    img { // single product image
+      width: 100%;
+      height: auto;
+    }
+  }
+  gallery { // multiple product images in gallery
+    background: none;
+  }
+}
+
+.product-summary { // container for upper part (gallery, name, meta)
+  margin-bottom: 24px;
+}
+
 .product-info {
-  color: $text-muted;
   line-height: 1.7;
   margin-right: -24px;
 
+  h1 { // product name
+    font-size: 1.7em;
+  }
+
   // Price info
   .pricing {
-    background: $color-white;
-    border-bottom: 1px solid $bg-shadow;
-    width: 100%;
     .item {
       .title {
         @extend %subtitle;
@@ -126,13 +119,14 @@ button.small .mat-icon {
       }
       .value {
         &.part {
-          font-size: 16px;
+          font-size: 2em;
           font-weight: 500;
           color: $text;
           line-height: 1.2;
+          margin: 0;
         }
         .currency {
-          font-size: 80%;
+          font-size: 60%;
           font-weight: 400;
         }
         .mat-icon {
@@ -151,19 +145,20 @@ button.small .mat-icon {
   margin: 18px 0;
   word-wrap: break-word;
   &.summary {
-    font-weight: 600;
+    font-weight: 500;
     color: $text;
-    font-size: 14px;
-    margin: 0;
-    padding: 2px 40px;
+    font-size: 110%;
+    margin: 24px 0 24px -30px;
+    padding: 2px 40px 2px 30px;
     background: $bg;
   }
   &.detailed {
+    @extend %enable-select;
     margin: 24px 8px;
     p {
       white-space: pre-line;
-      column-gap: 30px;
       column-count: 2;
+      column-gap: 30px;
     }
   }
 }
