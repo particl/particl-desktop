@@ -8,7 +8,7 @@
     <td>
       {{ shippingAddress?.addressLine1 || '' }}
       <div *ngIf="shippingAddress?.addressLine2">
-        {{ addressLine2 }}
+        {{ shippingAddress?.addressLine2 }}
       </div>
     </td>
   </tr>
@@ -18,7 +18,7 @@
   </tr>
   <tr *ngIf="shippingAddress?.state">
     <th>State</th>
-    <td>{{ state }}</td>
+    <td>{{ shippingAddress?.state }}</td>
   </tr>
   <tr>
     <th>ZIP</th>
