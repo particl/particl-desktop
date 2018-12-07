@@ -1,5 +1,31 @@
-<p class="address">
-  {{ shippingAddress?.firstName || '' }} {{ shippingAddress?.lastName || '' }} <br>
-  {{ shippingAddress?.addressLine1 || '' }}, {{ addressLine2 }} {{shippingAddress?.city || '' }}{{ state }}<br>
-  {{ shippingAddress?.zipCode || '' }}, {{ country }}
-</p>
+<table class="shipping-address">
+  <tr>
+    <th>Name</th>
+    <td>{{ shippingAddress?.firstName || '' }} {{ shippingAddress?.lastName || '' }}</td>
+  </tr>
+  <tr>
+    <th>Address</th>
+    <td>
+      {{ shippingAddress?.addressLine1 || '' }}
+      <div *ngIf="shippingAddress?.addressLine2">
+        {{ addressLine2 }}
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <th>City</th>
+    <td>{{shippingAddress?.city || '' }}</td>
+  </tr>
+  <tr *ngIf="shippingAddress?.state">
+    <th>State</th>
+    <td>{{ state }}</td>
+  </tr>
+  <tr>
+    <th>ZIP</th>
+    <td>{{ shippingAddress?.zipCode || '' }}</td>
+  </tr>
+  <tr>
+    <th>Coutry</th>
+    <td>{{ country }}</td>
+  </tr>
+</table>

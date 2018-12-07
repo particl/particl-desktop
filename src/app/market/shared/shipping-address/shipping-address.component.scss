@@ -1,1 +1,12 @@
 @import './src/assets/_config'; // import shared colors etc.
+
+table.shipping-address {
+  th {
+    text-align: right;
+    vertical-align: top;
+    padding-right: 7px;
+  }
+  td {
+    word-break: break-word;
+  }
+}

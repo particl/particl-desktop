@@ -20,14 +20,14 @@ export class ShippingAddressComponent {
   // May be move to shipping model ?
   get addressLine2(): string {
     if (this.shippingAddress) {
-      return this.shippingAddress.addressLine2 ? this.shippingAddress.addressLine2 + ',' : ''
+      return this.shippingAddress.addressLine2 ? this.shippingAddress.addressLine2 + '' : '' // FIXME: "," removed, do we still need this?
     }
     return '';
   }
 
   get state(): string {
     if (this.shippingAddress) {
-      return this.shippingAddress.state ? ', ' + this.shippingAddress.state : ''
+      return this.shippingAddress.state ? '' + this.shippingAddress.state : '' // FIXME: "," removed, do we still need this?
     }
     return '';
   }
