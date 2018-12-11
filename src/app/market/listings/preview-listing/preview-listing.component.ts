@@ -29,6 +29,9 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   private currencyprice: number = 0;
   images: ImageItem[] = [];
 
+  public selectedTab: number = 0;
+  public tabLabels: Array<string> = ['details', 'shipping', 'comments'];
+
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
     private marketState: MarketStateService,
@@ -105,4 +108,9 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed = true;
   }
+
+  changeTab(index: number): void {
+    this.selectedTab = index;
+  }
+
 }
