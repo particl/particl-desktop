@@ -205,15 +205,10 @@
 <mat-dialog-actions fxLayoutAlign="space-between center">
 
   <div class="left">
+
     <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'"></app-report>
-    <div class="date">
-      <strong class="title">Date added</strong> {{ data?.listing?.createdAt }}
-    </div>
-  </div>
 
-  <div class="center" *ngIf="data?.listing?.isFlagged">
-    <div class="reporting">
-
+    <div class="reporting" *ngIf="data?.listing?.isFlagged">
       <!-- Reported, not voted yet by user -->
       <div *ngIf="!data?.listing?.VoteDetails">
         <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
@@ -224,9 +219,8 @@
           <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
         </button>
       </div>
-
       <!-- Reported & voted already -->
-      <div *ngIf="data?.listing?.VoteDetails">
+      <div *ngIf="data?.listing?.VoteDetails" class="voted">
         <p *ngIf="data?.listing?.VoteDetails?.isReported">
           <mat-icon fontSet="partIcon" fontIcon="part-flag" class="voted-icon"></mat-icon>
           Thanks for flagging this item as inappropriate
@@ -236,8 +230,8 @@
           Thanks for voting on this item
         </p>
       </div>
-
     </div><!-- .reporting -->
+
   </div>
 
   <div class="right" fxLayout fxLayoutAlign="end center">
