@@ -136,6 +136,25 @@ button.small .mat-icon {
       }
     }
   }
+
+  // meta table (shipping, category, sold from & date added)
+  table.meta {
+    th.title {
+      @extend %lighter;
+      font-weight: 500;
+      padding: 4px 24px 0 0;
+    }
+    td {
+      padding: 4px 0 0;
+    }
+    .mat-icon {
+      @extend %lighter;
+      font-size: 14px;
+      margin-right: 6px;
+      position: relative;
+      top: 2px;
+    }
+  }
 }
 
 // Text description
