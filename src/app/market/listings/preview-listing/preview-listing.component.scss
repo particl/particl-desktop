@@ -119,7 +119,6 @@ button.small .mat-icon {
         &.part {
           font-size: 2em;
           font-weight: 500;
-          color: $text;
           line-height: 1.2;
           margin: 0;
         }
@@ -158,26 +157,21 @@ button.small .mat-icon {
 }
 
 // Text description
-.description {
-  margin: 18px 0;
+p.description {
   word-wrap: break-word;
   &.summary {
     font-weight: 500;
     color: $text;
     font-size: 110%;
     margin: 24px 0 24px -30px;
-    padding: 2px 40px 2px 30px;
+    padding: 18px 40px 18px 30px;
     background: $bg;
   }
   &.detailed {
     @extend %enable-select;
-    margin: 24px 8px;
-    p {
-      white-space: pre-line;
-      line-height: 1.55;
-      column-count: 2;
-      column-gap: 30px;
-    }
+    white-space: pre-line;
+    column-count: 2;
+    column-gap: 30px;
   }
 }
 
@@ -185,50 +179,69 @@ button.small .mat-icon {
 
   // Tabs' content
   .tab-content {
-    padding: 16px 40px;
-    &.details {
-      padding: 0;
+    min-height: 230px; // bigger by default (prevents tabs from jumping with little content)
+    margin: 24px 8px;
+    line-height: 1.55;
+    &.shipping {
+      margin: 24px 0; // make shipping table full-width
     }
   }
 
   // Shipping & escrow
   table.shipping-escrow {
     width: 100%;
-    padding-left: 28px;
+    font-size: 110%;
     thead {
       th {
-        font-size: 11px;
-        font-weight: 400;
-        text-transform: uppercase;
-        padding: 6px 12px;
+        @extend %lighter;
+        font-weight: 500;
+        padding: 0 12px 12px;
+        vertical-align: bottom;
       }
     }
     tbody {
       tr {
         th {
-          font-weight: 400;
+          font-weight: 700;
+          small {
+            @extend %lighter;
+            font-size: 90%;
+            font-weight: 400;
+            display: block;
+          }
         }
         th,
         td {
           @extend %tfx;
           border-top: 1px solid $bg-shadow;
-          padding: 6px 12px;
+          padding: 12px;
+          max-width: 150px; // space out cells ~evenly
         }
-        &:hover {
+        &:hover:not(.help-text) {
           th,
           td {
-            background: mix($bg, $color-white);
+            background: rgba($color, 0.03);
+          }
+        }
+        &.help-text {
+          td {
+            vertical-align: top;
+            small {
+              @extend %lighter;
+            }
           }
         }
       }
     }
     strong {
-      color: $text;
       font-weight: 500;
     }
     .price {
       &.part {
         display: block;
+        strong {
+          font-size: 110%;
+        }
       }
     }
     small.currency {

@@ -49,11 +49,9 @@
         </div>
       </div><!-- .pricing -->
 
-      <div class="summary description">
-        <p>
-          {{ data?.listing?.shortDescription }}
-        </p>
-      </div>
+      <p class="summary description">
+        {{ data?.listing?.shortDescription }}
+      </p>
 
       <table class="meta">
         <tr>
@@ -106,33 +104,26 @@
     </mat-tab-group><!-- .listing-tabs -->
 
     <div class="tab-content details" *ngIf="tabLabels[selectedTab] == 'details'">
-      <div class="detailed description">
-        <p>{{ data?.listing?.longDescription }}</p>
-      </div>
+      <p class="detailed description">{{ data?.listing?.longDescription }}</p>
     </div><!-- .tab-content.details -->
 
     <div class="tab-content shipping" *ngIf="tabLabels[selectedTab] == 'shipping'">
       <table class="shipping-escrow">
         <thead>
           <tr>
-            <th></th>
-            <th>Worldwide</th>
-            <th [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
-              Local in {{ data?.listing?.country }}
-            </th>
+            <th>Shipping to</th>
+            <th>Shipping</th>
+            <th>Escrow</th>
+            <th>Total needed for order</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th><strong>Shipping</strong></th>
-            <td>
-              <span class="part price">
-                <strong>{{ data?.listing?.internationalShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
+            <th>
+              {{ countryListService?.getCountryByRegion(data?.listing?.country)?.name }}
+              <small>Shipping carrier</small>
+            </th>
+            <!-- domestic shipping -->
             <td>
               <span class="part price">
                 <strong>{{ data?.listing?.domesticShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
@@ -141,22 +132,8 @@
                 &asymp; 0.41 <small class="currency">EUR</small>
               </span>
             </td>
-          </tr>
-          <tr>
-            <th>
-              <strong>Escrow</strong><br>
-              (refunded upon delivery)
-            </th>
+            <!-- domestic escrow -->
             <td>
-              <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
-            <td>
-              <!-- FIXME: "escrow for local (not international)" needs to be implemented: -->
               <span class="part price">
                 <strong>{{ data?.listing?.escrowPriceDomestic?.getAmount() }}</strong> <small class="currency">PART</small>
               </span>
@@ -164,21 +141,7 @@
                 &asymp; 0.41 <small class="currency">EUR</small>
               </span>
             </td>
-          </tr>
-          <tr>
-            <th>
-              <strong>Total needed for order</strong><br>
-              (incl. refundable Escrow)
-            </th>
-            <!-- TODO: price + shipping + escrow -->
-            <td>
-              <span class="part price">
-                <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
+            <!-- domestic total -->
             <td>
               <span class="part price">
                 <strong>{{data?.listing?.totalAmountDomestic?.getAmount()}}</strong> <small class="currency">PART</small>
@@ -188,12 +151,59 @@
               </span>
             </td>
           </tr>
+          <tr>
+            <th>
+              Worldwide 
+              <small>Shipping carrier</small>
+            </th>
+            <!-- international shipping -->
+            <td>
+              <span class="part price">
+                <strong>{{ data?.listing?.internationalShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <!-- international escrow -->
+            <td>
+              <span class="part price">
+                <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <!-- international total -->
+            <td>
+              <span class="part price">
+                <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+          </tr>
+          <tr class="help-text">
+            <td></td>
+            <td>
+              <small>Shipping price for 1 item</small>
+            </td>
+            <td>
+              <small>Security deposit (100% of order value) needed for this trade &ndash; it will be refunded after order is completed and delivered</small>
+            </td>
+            <td>
+              <small>Amount of funds needed in total for this trade (incl. the refundable escrow)</small>
+            </td>
+          </tr>
         </tbody>
       </table><!-- .shipping-escrow -->
-    </div>
+    </div><!-- .tab-content.shipping-->
     
     <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
-      Comments
+      <div class="no-results">
+        Comments coming soon™
+      </div>
     </div>
   </div><!-- .product-details -->
 
