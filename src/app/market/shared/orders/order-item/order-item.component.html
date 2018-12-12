@@ -18,7 +18,7 @@
 
   <div class="status-info">
     <p>{{ order?.messages.status_info }}</p>
-    <div *ngIf="order?.type === 'buy' && order?.status === 'Shipping'" class="additional-shipping-info">
+    <div *ngIf="order?.type === 'buy' && order?.status === 'shipping'" class="additional-shipping-info">
       <p *ngIf="order?.listing?.memo">
         <span class="title">Shipping info from Seller</span>
         <code class="more-info">{{ order?.listing?.memo}}</code>
