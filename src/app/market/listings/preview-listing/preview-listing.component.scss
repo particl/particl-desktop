@@ -54,7 +54,7 @@ button.small .mat-icon {
 .dialog-content {
   margin: -24px -24px 0 !important;
   width: 950px;
-  height: 75vh;
+  height: 72vh;
   max-height: none;
   background: $bg;
 }
@@ -167,13 +167,20 @@ p.description {
       margin-top: 0;
     }
 
+    /*
     // Shipping & Escrow info
     &.shipping {
-      padding: 24px; // make shipping table full-width
     }
+    */
 
     // Questions & answers
     &.comments {
+      .tag {
+        @extend %tag;
+        position: relative;
+        top: -2px;
+        background: mix($text-muted, $bg-shadow);
+      }
     }
   }
 
