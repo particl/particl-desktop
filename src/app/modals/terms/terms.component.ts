@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { CloseGuiService } from 'app/core/close-gui/close-gui.service';
 @Component({
@@ -8,6 +8,7 @@ import { CloseGuiService } from 'app/core/close-gui/close-gui.service';
 })
 export class TermsComponent implements AfterViewInit {
   isScrolled: boolean = false;
+
   @ViewChild('terms') terms: any;
   public text: string;
   constructor(
@@ -37,4 +38,20 @@ export class TermsComponent implements AfterViewInit {
       this.isScrolled = true;
     }
   }
+
+  scrollbarVisible() {
+    if (this.terms.nativeElement.scrollHeight > this.terms.nativeElement.clientHeight) {
+      this.isScrolled = false;
+      return false;
+    } else {
+      this.isScrolled = true;
+      return true;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+    onResize() {
+      this.scrollbarVisible();
+  }
+
 }
