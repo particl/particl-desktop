@@ -50,6 +50,11 @@
         <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
       </mat-button-toggle>
     </div>
+    <div class="filter-by refresh" fxFlex="0 0 56px">
+      <button mat-button (click)="clearAndLoadPage()">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+      </button>
+    </div>
   </div><!-- .control-bar -->
 </app-header>
 
