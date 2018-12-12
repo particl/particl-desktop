@@ -50,12 +50,21 @@
     .icon {
       margin-right: 12px;
     }
-    &.reported {
-      height: 50px;
-      padding-left: 8px;
-      padding-right: 0;
+    // buttons only (filter Reported, Refresh listings)
+    &.buttons {
+      height: 53px;
+      padding: 0 0 0 12px;
       display: flex;
       align-items: center;
+      border-bottom: none;
+      button {
+        min-width: 0;
+        padding: 0 12px;
+        .mat-icon {
+          margin: 0;
+        }
+      }
+      // Reported toggle
       mat-button-toggle.reported-only {
         &.mat-button-toggle-checked {
           color: $color-alert;
