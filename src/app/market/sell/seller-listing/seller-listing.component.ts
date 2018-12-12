@@ -24,7 +24,8 @@ export class SellerListingComponent {
 
   public status: Status = new Status();
   log: any = Log.create('seller-listing.component');
-
+  selectedTemplate: Template;
+  expirationTime: number;
   @Input() listing: Listing;
 
   constructor(
@@ -33,7 +34,7 @@ export class SellerListingComponent {
     private rpcState: RpcStateService,
     private modals: ModalsHelperService,
     private template: TemplateService
-  ) {}
+  ) { }
 
   getStatus(status: string) {
     return [this.status.get(status)];
@@ -60,17 +61,29 @@ export class SellerListingComponent {
   }
 
   postTemplate(template: Template) {
-    this.modals.unlock({timeout: 30}, (status) => this.callTemplate(template));
+    this.selectedTemplate = template;
+    this.openListingExpiryModal();
   }
 
-  async callTemplate(template: Template) {
-    this.log.d('template', template)
-    await this.template.post(template, 1, template.expireTime).toPromise();
+  openListingExpiryModal(): void {
+    this.modals.openListingExpiryModal((expirationTime) => {
+      this.expirationTime = expirationTime;
+      this.openUnlockWalletModal()
+    });
+  }
+
+  openUnlockWalletModal(): void {
+    this.modals.unlock({ timeout: 30 }, (status) => this.callTemplate());
+  }
+
+  async callTemplate() {
+    this.log.d('template', this.selectedTemplate)
+    await this.template.post(this.selectedTemplate, 1, this.expirationTime).toPromise();
   }
   // @TODO create a shared compoment
   addItem(id?: number, clone?: boolean) {
     this.router.navigate(['/market/template'], {
-      queryParams: {'id': id, 'clone': clone }
+      queryParams: { 'id': id, 'clone': clone }
     });
   }
 
