@@ -66,7 +66,13 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     .takeWhile(() => !this.destroyed)
     .subscribe((count: number) => {
 
+      /**
+       * Fetch the active proposal list in perticular time interval.
+       * As peers get block count method trigged in perticular interval.
+       */
+
       if (this.tabLabels[this.selectedTab] === 'active') {
+        this.log.d('active proposal loads');
         this.loadActiveProposalsListing();
       }
     })
