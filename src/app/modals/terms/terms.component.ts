@@ -18,7 +18,7 @@ export class TermsComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this.isScrolled = this.terms.nativeElement.clientHeight === this.terms.nativeElement.scrollHeight;
+    this.isScrolled = this.terms.nativeElement.clientHeight > (this.terms.nativeElement.scrollHeight - 10);
     // Fixing the change detection for test cases
     this.cd.detectChanges();
   }
