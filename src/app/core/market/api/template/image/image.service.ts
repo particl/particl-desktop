@@ -35,22 +35,26 @@ export class ImageService {
      */
     let totalnPicturesAdded = images.length;
     return new Promise((resolve, reject) => {
-      images.map(picture => {
-        this.log.d('Uploading pictures to templateId=', template.id);
-        this.add(template.id, picture).take(1).subscribe(res => {
-          this.log.d(`image uploaded`, nPicturesAdded)
-          if (++nPicturesAdded === totalnPicturesAdded) {
-            this.log.d('All images uploaded!');
-            resolve(template);
-          }
-        }, error => {
-          // at least we have some images uploaded and we are assuming it as resolving it as a success
-          --totalnPicturesAdded;
+      if (images.length) {
+        images.map(picture => {
+          this.log.d('Uploading pictures to templateId=', template.id);
+          this.add(template.id, picture).take(1).subscribe(res => {
+            this.log.d(`image uploaded`, nPicturesAdded)
+            if (++nPicturesAdded === totalnPicturesAdded) {
+              this.log.d('All images uploaded!');
+              resolve(template);
+            }
+          }, error => {
+            // at least we have some images uploaded and we are assuming it as resolving it as a success
+            --totalnPicturesAdded;
 
-          this.log.d(`error in image upload ${template.id}`, nPicturesAdded)
+            this.log.d(`error in image upload ${template.id}`, nPicturesAdded)
+          });
+
         });
-
-      });
+      } else {
+        resolve();
+      }
     });
   }
 
