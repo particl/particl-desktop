@@ -97,15 +97,18 @@
   </div><!-- .product-summary -->
 
   <div class="product-details">
+
     <mat-tab-group class="listing-tabs" (selectChange)="changeTab($event.index)">
       <mat-tab label="Details"></mat-tab>
       <mat-tab label="Shipping &amp; Escrow"></mat-tab>
       <mat-tab label="Comments"></mat-tab>
     </mat-tab-group><!-- .listing-tabs -->
 
+
     <div class="tab-content details" *ngIf="tabLabels[selectedTab] == 'details'">
       <p class="detailed description">{{ data?.listing?.longDescription }}</p>
     </div><!-- .tab-content.details -->
+
 
     <div class="tab-content shipping" *ngIf="tabLabels[selectedTab] == 'shipping'">
       <table class="shipping-escrow">
@@ -199,12 +202,31 @@
         </tbody>
       </table><!-- .shipping-escrow -->
     </div><!-- .tab-content.shipping-->
-    
-    <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
-      <div class="no-results">
-        Comments coming soon™
-      </div>
-    </div>
+
+
+    <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'" fxLayoutGap="35px">
+
+      <div class="write-comment" fxFlex="1 1 250px">
+        <h2 class="subtitle">Write new</h2>
+        <mat-card>
+          <p>
+            Write here
+          </p>
+          <button mat-raised-button color="primary">
+            <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>
+            Send comment
+          </button>
+        </mat-card>
+      </div><!-- .write-comment -->
+
+      <div class="comments-list" fxFlex="1 1 100%">
+        <h2 class="subtitle">All comments <span class="tag">3</span></h2>
+        <div class="no-results">
+          Comments coming soon™
+        </div>
+      </div><!-- .comments-list -->
+
+    </div><!-- .tab-content.comments -->
   </div><!-- .product-details -->
 
 </div><!-- .dialog-content -->
