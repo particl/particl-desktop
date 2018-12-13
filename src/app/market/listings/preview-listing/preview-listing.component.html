@@ -210,7 +210,7 @@
 </div><!-- .dialog-content -->
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
+<mat-dialog-actions fxLayoutAlign="space-between center" *ngIf="!data.buyPage">
 
   <div class="left">
 
@@ -242,7 +242,7 @@
 
   </div>
 
-  <div class="right" fxLayout fxLayoutAlign="end center" *ngIf="!data.buyPage">
+  <div class="right" fxLayout fxLayoutAlign="end center">
     <app-favorite [listing]="data?.listing" [detail]="true"></app-favorite>
     <app-add-to-cart [listing]="data?.listing" [detail]="true" (onAdded)="dialogClose()"></app-add-to-cart>
 
