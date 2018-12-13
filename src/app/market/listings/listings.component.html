@@ -44,12 +44,18 @@
       </mat-select-search>
     </div>
 
-    <div class="filter-by reported" fxFlex="0 0 56px">
-      <!-- FIXME: Ripple effect not working? https://material.angular.io/components/button-toggle/overview -->
+    <div class="filter-by buttons" fxFlex="0 1 120px">
+
+      <button mat-button (click)="clearAndLoadPage()" matTooltip="Refresh listings">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+      </button>
+
       <mat-button-toggle type="checkbox" value="reported-only" class="reported-only" matTooltip="Show reported listings only" (change)="toggleFlag($event)">
         <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
       </mat-button-toggle>
-    </div>
+
+    </div><!-- .buttons -->
+
   </div><!-- .control-bar -->
 </app-header>
 

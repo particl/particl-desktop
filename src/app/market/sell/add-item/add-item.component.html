@@ -58,26 +58,6 @@
         </div><!-- .gallery -->
       </mat-card><!-- .photos -->
 
-      <mat-card class="fees-expiration">
-        <div class="title">Listing expiration &amp; fees</div>
-        <div class="row" fxLayout fxLayoutAlign="center center">
-          <mat-form-field class="full-width" fxFlex="1 1 100%">
-            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration" (change)="loadTransactionFee()">
-              <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
-                {{ expire.title }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="est-fee" fxFlex="0 0 210px">
-            Approximate listing fee:<br>
-            {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
-          </div>
-        </div>
-        <p class="widget-help">
-          Choose for how long should your listing be published. Longer expiration results in higher fees.
-        </p>
-      </mat-card><!-- .fees-expiration -->
-
     </div><!-- .left -->
 
 
@@ -100,16 +80,6 @@
         <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
       </mat-form-field>
 
-      <!-- <mat-form-field class="full-width">
-        <mat-select placeholder="Select category" formControlName="category">
-          <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
-            <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.id" [selected]="true">
-              {{ subcategory.name }}
-            </mat-option>
-          </mat-optgroup>
-        </mat-select>
-      </mat-form-field> -->
-      <!--mat-otpgroup-select-search -->
       <mat-otpgroup-select-search
         [options]="_rootCategoryList?.subCategoryList"
         [placeHolder]="'Select category'"
@@ -117,16 +87,7 @@
         [defaultSelectedValue]="selectedCategory"
         (change)="onCategoryChange($event)">
       </mat-otpgroup-select-search>
-      <!--mat-otpgroup-select-search -->
 
-      <!-- <mat-form-field class="full-width">
-        <mat-select placeholder="Country" formControlName="country">
-          <mat-option *ngFor="let country of countryList.getList()" value="{{country.name}}">{{country.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field> -->
-
-      <!-- mat-select-search -->
       <mat-select-search
         class="full-width"
         [options]="countryList.getList()"
@@ -137,7 +98,6 @@
         [isLexigraphicalOrder]="true"
         (onChange)="onCountryChange($event)">
       </mat-select-search>
-      <!-- mat-select-search -->
 
       <!-- TODO: add another input for fiat value and inter-connect the two: -->
       <mat-form-field class="full-width">

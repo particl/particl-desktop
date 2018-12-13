@@ -22,6 +22,8 @@ import { EscrowService } from './api/template/escrow/escrow.service';
 import { BidService } from './api/bid/bid.service';
 import { OrderStatusNotifierService } from './order-status-notifier/order-status-notifier.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
+import { ShippingService } from 'app/core/market/api/template/shipping/shipping.service';
 
 @NgModule({
   imports: [
@@ -54,7 +56,9 @@ export class MarketModule {
         EscrowService,
         BidService,
         OrderStatusNotifierService,
-        ProposalsService
+        ProposalsService,
+        PaymentService,
+        ShippingService
       ]
     };
   }
