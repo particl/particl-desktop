@@ -5,6 +5,7 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 export class Listing extends Template {
   public favorite: boolean;
   public VoteDetails: VoteDetails;
+  public errorMessage: string;
   constructor(private listing: any) {
       super(listing);
   }

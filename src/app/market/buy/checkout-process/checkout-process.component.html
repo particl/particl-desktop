@@ -45,7 +45,8 @@
 
           <tbody>
           <!-- TODO: make component -->
-          <tr *ngFor="let listing of cart?.listings">
+          <tr *ngFor="let listing of cart?.listings"
+                [ngClass]="{exItems: checkExpired(listing)}">
             <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
               <div class="image" fxFlex="0 0 115px">
                 <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
@@ -53,6 +54,9 @@
               <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                 <div class="title">
                   {{listing.title}}
+                </div>
+                <div *ngIf="listing.errorMessage">
+                  <b>{{listing.errorMessage}}</b>
                 </div>
                 <div class="category">
                   {{listing.name}}
@@ -127,7 +131,7 @@
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
             Clear cart
           </button>
-          <button mat-raised-button color="primary" matStepperNext>
+          <button mat-raised-button color="primary" matStepperNext [disabled]="!cartFormGroup.valid">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Continue to shipping
           </button>
@@ -137,7 +141,7 @@
   </mat-step>
 
   <!-- =========== SHIPPING DETAILS =========== -->
-  <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
+  <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup" [disabled]="!cartFormGroup.valid">
 
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
@@ -251,7 +255,7 @@
 
   <!-- =========== CONFIRM & PLACE ORDER =========== -->
 
-  <mat-step [stepControl]="confirmation">
+  <mat-step [stepControl]="confirmation" [disabled]="!shippingFormGroup.valid">
     <form class="confirmation">
       <ng-template matStepLabel>Confirm & Place order</ng-template>
       <table class="cart-items summary">
