@@ -190,7 +190,7 @@ mat-card.mat-card {
   overflow: hidden;
   .mat-expansion-panel-header {
     font-family: $font;
-    font-size: 13px;
+    font-size: 100%;
     &:hover {
       background: inherit !important; // disable darker bg on hover by default
     }

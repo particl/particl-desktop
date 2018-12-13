@@ -181,6 +181,11 @@ p.description {
         top: -2px;
         background: mix($text-muted, $bg-shadow);
       }
+      .question {
+        .mat-panel.title {
+          text-transform: none;
+        }
+      }
     }
   }
 
