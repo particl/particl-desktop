@@ -234,21 +234,20 @@
         </div-->
 
         <!-- FIXME: list all questions for this product (sorted by newest first): -->
-        <mat-expansion-panel class="question">
+        <mat-expansion-panel class="question-box">
           <mat-expansion-panel-header>
             <mat-panel-title fxLayout fxLayoutGap="10px">
-              <div class="no" fxFlex="0 0 30px">#3</div>
-              <div class="summary" fxFlex="0 1 100%">
+              <div class="no">#3</div>
+              <div class="summary">
                 How much does this weight? My floors can hold just 3 kg of stuff..
               </div>
-              <!-- FIXME: calculate amount of answers to this question: -->
-              <div class="answers-no" fxFlex="0 0 70px" matTooltip="3 answers">
-                <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>
-                <span class="tag">3</span>
-              </div>
-              <div class="seller-responded" fxFlex="0 0 170px">
+              <div class="seller-responded">
                 <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
                 Seller responded
+              </div>
+              <!-- FIXME: calculate amount of answers to this question: -->
+              <div class="answers-no">
+                <span class="tag" matTooltip="3 answers">3</span>
               </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -258,16 +257,23 @@
           </h3>
           <!-- FIXME: list all answers to this question (sorted by oldest first): -->
           <mat-divider></mat-divider>
-          <div class="answer">
-            <span class="tag seller">Seller</span>
+          <!-- FIXME: add `by-seller` class if answered by Seller: -->
+          <div class="answer by-seller">
+            <div class="author">
+              <span class="tag seller">Seller</span>
+            </div>
             <span class="message">
               I have no idea
             </span>
+            <!-- FIXME: date in format year-month-day hours-minutes: -->
             <span class="date">2018-12-13 19:24</span>
           </div>
           <mat-divider></mat-divider>
-          <div class="answer">
-            <span class="tag user">User</span>
+          <!-- FIXME: add `by-user` class if answered by non-seller (normal user): -->
+          <div class="answer by-user">
+            <div class="author">
+              <span class="tag user">User</span>
+            </div>
             <span class="message">
               It's like 3.2 kg, sorry mate. Your floors have no chance. What are you doing on Particl Market with those floors anyways?!
             </span>

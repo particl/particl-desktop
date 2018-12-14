@@ -180,10 +180,61 @@ p.description {
         position: relative;
         top: -2px;
         background: mix($text-muted, $bg-shadow);
+        margin: 0;
+        &.seller {
+          background: $color;
+        }
       }
-      .question {
-        .mat-panel.title {
+      // Single question box
+      .question-box {
+        // header (trigger)
+        .no {
+          flex: 0 0 30px;
+        }
+        .summary {
           text-transform: none;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .seller-responded {
+          flex: 0 0 150px;
+          text-transform: none;
+        }
+        .answers-no {
+          flex: 0 0 45px;
+          text-align: right;
+        }
+        // content
+        .question {
+          font-weight: 500;
+        }
+        .mat-divider {
+          margin: 0 -24px;
+        }
+        .answer { // Single answer line
+          padding: 12px 0;
+          display: flex;
+          &.by-user {
+            .message {
+              @extend %lighter;
+            }
+          }
+          .author {
+            flex: 1 0 60px;
+            padding-right: 8px;
+            text-align: right;
+          }
+          .message {
+            flex: 1 1 100%;
+            margin-left: 8px;
+          }
+          .date {
+            @extend %lighter;
+            flex: 0 0 120px;
+            font-size: 80%;
+            text-align: right;
+          }
         }
       }
     }
