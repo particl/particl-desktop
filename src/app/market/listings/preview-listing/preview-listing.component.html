@@ -227,7 +227,7 @@
 
       <div class="comments-list" fxFlex="0 1 100%">
         <!-- FIXME: count number of all questions, output the amount in tag: -->
-        <h2 class="subtitle">All questions &amp; answers <span class="tag">3</span></h2>
+        <h2 class="subtitle">All questions &amp; answers <span class="tag">2</span></h2>
         <!-- FIXME: if no questions asked yet: -->
         <!--div class="no-results">
           No questions asked about this product yet
@@ -236,14 +236,14 @@
         <!-- FIXME: list all questions for this product (sorted by newest first): -->
         <mat-expansion-panel class="question-box">
           <mat-expansion-panel-header>
-            <mat-panel-title fxLayout fxLayoutGap="10px">
-              <div class="no">#3</div>
+            <mat-panel-title fxLayout>
+              <div class="no">#2</div>
               <div class="summary">
-                How much does this weight? My floors can hold just 3 kg of stuff..
+                How much does this product weight? I have a problem that my floors can hold just about 3 kg of stuff..
               </div>
+              <!-- FIXME: display if seller answered the question: -->
               <div class="seller-responded">
-                <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-                Seller responded
+                <mat-icon fontSet="partIcon" fontIcon="part-check" matTooltip="Seller responded"></mat-icon>
               </div>
               <!-- FIXME: calculate amount of answers to this question: -->
               <div class="answers-no">
@@ -253,7 +253,7 @@
           </mat-expansion-panel-header>
 
           <h3 class="question">
-            How much does this weight? My floors can hold just 3 kg of stuff..
+            How much does this product weight? I have a problem that my floors can hold just about 3 kg of stuff..
           </h3>
           <!-- FIXME: list all answers to this question (sorted by oldest first): -->
           <mat-divider></mat-divider>
@@ -285,10 +285,10 @@
             Write a reply:
             <button mat-raised-button color="primary">
               <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>
-              Send
+              Answer this
             </button>
           </mat-action-row>
-        </mat-expansion-panel>
+        </mat-expansion-panel><!-- .question-box -->
 
       </div><!-- .comments-list -->
 

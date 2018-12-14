@@ -187,27 +187,49 @@ p.description {
       }
       // Single question box
       .question-box {
+        &.mat-expanded {
+          .summary {
+            @extend %lighter;
+            font-weight: 400;
+          }
+        }
         // header (trigger)
+        .mat-expansion-panel-header {
+          min-height: 48px;
+          max-height: 48px;
+        }
         .no {
-          flex: 0 0 30px;
+          @extend %lighter;
+          flex: 0 0 45px;
         }
         .summary {
+          @extend %tfx;
           text-transform: none;
+          font-weight: 500;
+          max-width: 460px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         .seller-responded {
-          flex: 0 0 150px;
-          text-transform: none;
+          flex: 0 0 30px;
+          text-align: center;
+          margin-left: 16px;
+          .mat-icon {
+            color: $color;
+            font-size: 100%;
+            position: relative;
+            top: 1px;
+          }
         }
         .answers-no {
           flex: 0 0 45px;
           text-align: right;
         }
         // content
-        .question {
+        h3.question {
           font-weight: 500;
+          line-height: 1.5;
         }
         .mat-divider {
           margin: 0 -24px;
@@ -234,6 +256,7 @@ p.description {
             flex: 0 0 120px;
             font-size: 80%;
             text-align: right;
+            margin-top: 1px;
           }
         }
       }
