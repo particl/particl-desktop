@@ -165,7 +165,7 @@
     "@angular/compiler": "^5.2.5",
     "@angular/compiler-cli": "^5.2.5",
     "@angular/core": "^5.2.5",
-    "@angular/flex-layout": "2.0.0-beta.12",
+    "@angular/flex-layout": "7.0.0-beta.20",
     "@angular/forms": "^5.2.5",
     "@angular/http": "^5.2.5",
     "@angular/material": "^5.2.1",
