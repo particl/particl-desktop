@@ -48,11 +48,11 @@
           <tr *ngFor="let listing of cart?.listings">
             <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
               <div class="image" fxFlex="0 0 115px">
-                <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}" (click)="openListing(listing)" style=cursor:pointer;
+                <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}" (click)="openListing(listing)"
                   matTooltip="Click for more info" matTooltipPosition="above">
               </div>
               <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
-                <div class="title" (click)="openListing(listing)" style=cursor:pointer;
+                <div class="title" (click)="openListing(listing)"
                   matTooltip="Click for more info" matTooltipPosition="above">
                   {{listing.title}}
                 </div>
