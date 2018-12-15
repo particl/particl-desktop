@@ -98,7 +98,6 @@ export class TransactionService implements OnDestroy {
   }
 
   filter(filters: any): void {
-    console.log(filters);
     this.loading = true;
     this.filters = filters;
     this.log.d('--- update by filter ---');
