@@ -2,8 +2,6 @@ import { TestBed, inject, async } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 
 import { ProposalsService } from './proposals.service';
-import { RpcService } from 'app/core/rpc/rpc.service';
-import { CoreModule } from 'app/core/core.module';
 import { MarketService } from 'app/core/market/market.service';
 import { MockMarketService } from 'app/core/market/market.mockservice';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
@@ -34,14 +32,6 @@ describe('ProposalsService', async () => {
   it('should be created', inject([ProposalsService], (service: ProposalsService) => {
     expect(service).toBeTruthy();
   }));
-
-  // it('should submitterId contain the profile Id', inject([ProposalsService], async (service: ProposalsService) => {
-  //   // @TODO remove sleep time once profile mock service created.
-  //   sleep(2000).then(() => {
-
-  //     expect(service.submitterId).not.toBeUndefined()
-  //   });
-  // }));
 
   it('should list method return the proposals list', inject([ProposalsService], async (service: ProposalsService) => {
     const startTime = new Date();
