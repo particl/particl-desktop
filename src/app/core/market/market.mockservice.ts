@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Responses } from 'app/core/market/mock-data/mock-market.responses';
-import { MarketService } from 'app/core/market/market.service';
 
 /*
   This is a fake mock service used for the MarketService.
@@ -9,10 +8,17 @@ import { MarketService } from 'app/core/market/market.service';
 */
 
 @Injectable()
-export class MockMarketService extends MarketService {
+export class MockMarketService {
 
   call(method: string, params?: Array<any> | null): Observable<any> {
     let response = {}
+
+    // @TODO once all the methods are covered replace with the switch case.
+
+    // if (method && params && params[0]) {
+    //   response = Responses[method][params[0]];
+    // }
+
     switch (method) {
       case 'proposal':
         response = Responses[method][params[0]];
