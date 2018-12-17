@@ -46,7 +46,7 @@
           <tbody>
           <!-- TODO: make component -->
           <tr *ngFor="let listing of cart?.listings"
-                [ngClass]="{exItems: checkExpired(listing)}">
+                [ngClass]="{expired: checkExpired(listing)}">
             <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
               <div class="image" fxFlex="0 0 115px">
                 <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
@@ -55,8 +55,9 @@
                 <div class="title">
                   {{listing.title}}
                 </div>
-                <div *ngIf="listing.errorMessage">
-                  <b>{{listing.errorMessage}}</b>
+                <div class="error" *ngIf="listing.errorMessage"><!-- e.g. expired items in cart -->
+                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                  {{listing.errorMessage}}
                 </div>
                 <div class="category">
                   {{listing.name}}

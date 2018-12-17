@@ -376,7 +376,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   checkExpired(listing: any) {
       if (new Date().getTime() > listing.listing.expiredAt) {
-        listing.errorMessage = 'Listing Expired';
+        listing.errorMessage = 'Listing expired – remove item from cart';
         return true;
       } else {
         return false;

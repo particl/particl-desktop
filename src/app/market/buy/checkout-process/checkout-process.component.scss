@@ -105,6 +105,23 @@ table.cart-items {
     min-width: 20px;
     max-width: 20px;
   }
+  // Expired listing warning
+  .expired {
+    background-image: linear-gradient(135deg, rgba($bg-shadow, 0.6) 11.11%, $bg 11.11%, $bg 50%, rgba($bg-shadow, 0.6) 50%, rgba($bg-shadow, 0.6) 61.11%, $bg 61.11%, $bg 100%);
+    background-size: 12px 12px;
+    .title {
+      text-decoration: line-through;
+    }
+    .error {
+      margin-top: 3px;
+    }
+    .icon.part-alert {
+      color: $color-alert;
+      margin-right: 4px;
+      position: relative;
+      top: 2px;
+    }
+  }
 }
 
 .order-detail { // subtotals & more below the cart table
@@ -155,9 +172,5 @@ table.summary {
   .total {
     padding-right: 25px;
   }
-}
-
-.exItems {
-  background-color: red; 
 }
 
