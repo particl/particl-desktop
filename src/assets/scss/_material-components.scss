@@ -469,6 +469,11 @@ mat-card.mat-card {
       border-top: 0;
     }
   }
+  &.no-bottom-padding {
+    .mat-form-field-wrapper {
+      margin-bottom: -1.25em; // offset bottom padding
+    }
+  }
 }
 
 
