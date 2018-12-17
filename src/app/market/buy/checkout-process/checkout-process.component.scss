@@ -65,6 +65,8 @@ table.cart-items {
     background: $color-white;
     td {
       border-top: 1px solid lighten($bg-shadow, 7%);
+      padding-top: 0;
+      padding-bottom: 0;
     }
   }
   .cell {
@@ -73,14 +75,16 @@ table.cart-items {
     color: $text-muted;
   }
   .image {
-    padding: 14px;
     img {
-      width: 100%;
-      height: auto;
+      display: block;
+      width: 75px;
+      height: 75px;
+      object-fit: cover;
+      object-position: center;
     }
   }
   .info {
-    padding-right: 30px;
+    padding: 0 30px 0 14px;
     .title {
       font-weight: 500;
       font-size: 14px;
@@ -104,6 +108,9 @@ table.cart-items {
     padding: 14px;
     min-width: 20px;
     max-width: 20px;
+    .mat-icon {
+      margin: 0;
+    }
   }
   // Expired listing warning
   .expired {
@@ -113,13 +120,13 @@ table.cart-items {
       text-decoration: line-through;
     }
     .error {
-      margin-top: 3px;
+      margin: 2px 0 4px;
     }
     .icon.part-alert {
       color: $color-alert;
       margin-right: 4px;
       position: relative;
-      top: 2px;
+      top: 3px;
     }
   }
 }

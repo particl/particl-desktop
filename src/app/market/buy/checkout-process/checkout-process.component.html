@@ -46,9 +46,9 @@
           <tbody>
           <!-- TODO: make component -->
           <tr *ngFor="let listing of cart?.listings"
-                [ngClass]="{expired: checkExpired(listing)}">
+              [ngClass]="{expired: checkExpired(listing)}">
             <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
-              <div class="image" fxFlex="0 0 115px">
+              <div class="image" fxFlex="0 0 75px">
                 <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
               </div>
               <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
@@ -60,7 +60,7 @@
                   {{listing.errorMessage}}
                 </div>
                 <div class="category">
-                  {{listing.name}}
+                  {{listing.category.name}}
                 </div>
               </div>
             </td>
@@ -271,7 +271,7 @@
         <tbody>
         <tr *ngFor="let listing of cart?.listings">
           <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
-            <div class="image" fxFlex="0 0 115px">
+            <div class="image" fxFlex="0 0 75px">
               <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
             </div>
             <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
