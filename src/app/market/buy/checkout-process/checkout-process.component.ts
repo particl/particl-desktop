@@ -43,7 +43,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   @Output() onOrderPlaced: EventEmitter<number> = new EventEmitter<number>();
 
-
   public selectedAddress: Address;
 
   public profile: Profile;
@@ -123,6 +122,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.cartFormGroup = this.formBuilder.group({
       firstCtrl: [''],
       itemsInCart: [0, Validators.min(1)]
+    }, {
+      validator: (formGroup: FormGroup) => {
+        return this.validateExpiredItems(this.cart);
+      }
     });
 
     this.shippingFormGroup = this.formBuilder.group({
@@ -327,6 +330,25 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
   }
 
+  validateExpiredItems(cart: any): any | null {
+    let isExpired = false;
+    for (const listing of ((cart || {}).listings || [])) {
+      isExpired = this.checkExpired(listing);
+      if (isExpired) {
+        break
+      }
+    }
+    if (!isExpired) {
+      return null;
+    }
+
+    return {
+      validateExpiredItems: {
+        expiredItem: isExpired
+      }
+    }
+  }
+
 
   /*
     Cache functions
@@ -354,7 +376,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   openListing(listing: any) {
-<<<<<<< HEAD
     if (new Date().getTime() < listing.listing.expiredAt) {
       const dialog = this.dialog.open(PreviewListingComponent, {
         data: {
@@ -363,14 +384,15 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         },
       });
     }
-=======
-    const dialog = this.dialog.open(PreviewListingComponent, {
-      data: {
-        listing: listing,
-        buyPage: true,
-      },
-    });
->>>>>>> add-listing-details-buyTab
+  }
+
+  checkExpired(listing: any) {
+      if (new Date().getTime() > listing.listing.expiredAt) {
+        listing.errorMessage = 'Listing expired – remove item from cart';
+        return true;
+      } else {
+        return false;
+      }
   }
 
 }
