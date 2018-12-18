@@ -59,7 +59,7 @@
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
                   {{listing.errorMessage}}
                 </div>
-                <div class="category">
+                <div class="category" *ngIf="!listing.errorMessage">
                   {{listing.category.name}}
                 </div>
               </div>
