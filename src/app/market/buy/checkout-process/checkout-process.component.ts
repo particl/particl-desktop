@@ -354,6 +354,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   openListing(listing: any) {
+<<<<<<< HEAD
     if (new Date().getTime() < listing.listing.expiredAt) {
       const dialog = this.dialog.open(PreviewListingComponent, {
         data: {
@@ -362,6 +363,14 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         },
       });
     }
+=======
+    const dialog = this.dialog.open(PreviewListingComponent, {
+      data: {
+        listing: listing,
+        buyPage: true,
+      },
+    });
+>>>>>>> add-listing-details-buyTab
   }
 
 }
