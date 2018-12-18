@@ -47,15 +47,13 @@
           <!-- TODO: make component -->
           <tr *ngFor="let listing of cart?.listings"
               [ngClass]="{expired: checkExpired(listing)}">
-            <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
-              <div class="image" fxFlex="0 0 115px" [matTooltipDisabled]="listing.errorMessage"
-              matTooltip="Click for more info" matTooltipPosition="above">
-                <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}" (click)="openListing(listing)">
+            <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
+                (click)="openListing(listing)">
+              <div class="image" fxFlex="0 0 75px">
+                <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
               </div>
               <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
-                <div class="title" (click)="openListing(listing)"
-                  [matTooltipDisabled]="listing.errorMessage"
-                  matTooltip="Click for more info" matTooltipPosition="above">
+                <div class="title">
                   {{listing.title}}
                 </div>
                 <div class="error" *ngIf="listing.errorMessage"><!-- e.g. expired items in cart -->
@@ -273,7 +271,8 @@
         </thead>
         <tbody>
         <tr *ngFor="let listing of cart?.listings">
-          <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
+          <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
+              (click)="openListing(listing)">
             <div class="image" fxFlex="0 0 75px">
               <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
             </div>
