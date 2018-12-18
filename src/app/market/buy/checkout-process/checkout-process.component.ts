@@ -376,7 +376,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   openListing(listing: any) {
-    if (new Date().getTime() < listing.listing.expiredAt) {
+    if (!this.checkExpired(listing)) {
       const dialog = this.dialog.open(PreviewListingComponent, {
         data: {
           listing: listing,
@@ -389,8 +389,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   checkExpired(listing: any) {
       if (new Date().getTime() > listing.listing.expiredAt) {
         listing.errorMessage = 'Listing expired – remove item from cart';
+        listing.showToolTip = false;
         return true;
       } else {
+        listing.showToolTip = true;
         return false;
       }
   }
