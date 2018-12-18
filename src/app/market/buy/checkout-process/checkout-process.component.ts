@@ -354,13 +354,14 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   openListing(listing: any) {
-    const dialog = this.dialog.open(PreviewListingComponent, {
-      data: {
-        listing: listing,
-        buyPage: true,
-      },
-    });
-    console.log('LISTING ID:', listing);
+    if (new Date().getTime() < listing.listing.expiredAt) {
+      const dialog = this.dialog.open(PreviewListingComponent, {
+        data: {
+          listing: listing,
+          buyPage: true,
+        },
+      });
+    }
   }
 
 }
