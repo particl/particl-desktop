@@ -360,7 +360,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         buyPage: true,
       },
     });
-    console.log('LISTING ID:', listing);
   }
 
 }
