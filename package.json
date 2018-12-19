@@ -159,7 +159,7 @@
   },
   "devDependencies": {
     "@angular/animations": "^5.2.5",
-    "@angular/cdk": "^5.2.1",
+    "@angular/cdk": "^7.2.0",
     "@angular/cli": "^1.6.8",
     "@angular/common": "^5.2.5",
     "@angular/compiler": "^5.2.5",
