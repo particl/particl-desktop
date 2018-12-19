@@ -6,6 +6,8 @@ import { CoreModule } from '../../../../core/core.module';
 import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../../modals/modals.module';
 
+import { AddressService } from '../address.service';
+import { MockAddressService } from '../address.mockservice';
 import { AddressTableComponent } from './address-table.component';
 
 describe('AddressTableComponent', () => {
@@ -21,6 +23,12 @@ describe('AddressTableComponent', () => {
         CoreUiModule.forRoot(),
         ModalsModule.forRoot()
       ],
+      providers: [
+        {
+          provide: AddressService,
+          useClass: MockAddressService
+        }
+        ],
     })
       .compileComponents();
   }));
