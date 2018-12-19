@@ -9,7 +9,7 @@ import { ModalsModule } from '../../../../../modals/modals.module';
 import { CoreUiModule } from '../../../../../core-ui/core-ui.module';
 
 import { AddressService } from '../../../shared/address.service';
-
+import { MockAddressService } from '../../../shared/address.mockservice';
 import { NewAddressModalComponent } from './new-address-modal.component';
 
 describe('NewAddressModalComponent', () => {
@@ -28,9 +28,12 @@ describe('NewAddressModalComponent', () => {
       providers: [
         /* deps */
         { provide: MatDialogRef},
-        /* own */
-        AddressService
-        ]
+        {
+          provide: AddressService,
+          useClass: MockAddressService
+        }
+        ],
+
     })
     .compileComponents();
   }));

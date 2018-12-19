@@ -15,6 +15,13 @@ export class MockRpcService {
       case 'filtertransactions':
         json = Result[method];
         break;
+      case 'filteraddresses':
+        if (params.length > 1) {
+          json = Result[method]['addresses'];
+        } else {
+          json = Result[method]['addresscount'];
+        }
+        break;
       default:
         break;
     }

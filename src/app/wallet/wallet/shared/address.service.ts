@@ -10,7 +10,7 @@ import { RpcService } from '../../../core/core.module';
 export class AddressService {
   private log: any = Log.create('address.service');
 
-  private typeOfAddresses: string = 'send'; // "receive","send", "total"
+  public typeOfAddresses: string = 'send'; // "receive","send", "total"
 
   // Stores address objects.
   public _addresses: Observable<Array<Address>>;
@@ -35,9 +35,12 @@ export class AddressService {
   totalPageCount: number = 0;
 
   constructor(private _rpc: RpcService) {
-    this._addresses = Observable.create(observer => this._observerAddresses = observer).publishReplay(1).refCount();
-
-    this.updateAddressList();
+    this._addresses = Observable.create(observer => {
+      this._observerAddresses = observer;
+      // To fix the test case using rpc mock.
+      this.updateAddressList();
+      return this._observerAddresses;
+    }).publishReplay(1).refCount();
   }
 
   updateAddressList() {
@@ -73,7 +76,7 @@ export class AddressService {
     }
   }
 
-  private rpc_getParams() {
+  rpc_getParams() {
     if (this.typeOfAddresses === 'send') {
       return [0, this.addressCount, '0', '',  '2'];
     }  else if (this.typeOfAddresses === 'receive') {
