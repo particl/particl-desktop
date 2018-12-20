@@ -34,7 +34,13 @@ export class MockProposalsService {
   }
 
   get(proposalHash: string) {
-    const response = (Responses['vote']['get'][proposalHash] || Responses['vote']['get'][404]);
+    let response = {}
+    response = Responses['vote']['get'][proposalHash];
+
+    if (!response) {
+      response = Responses['vote']['get'][404];
+    }
+
     return Observable.of(response);
   }
 };

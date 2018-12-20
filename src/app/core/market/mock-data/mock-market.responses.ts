@@ -2,24 +2,6 @@ const Responses = {
   'proposal': {
     'list': [
       {
-        'id': 82,
-        'submitter': 'poW7E7XSu39KRNEkzvoLLFY7WraKJTWtAf',
-        'hash': '6b118025c9730d0b8374b9b57623162a07dd14334f93e7566f60235dc908610b',
-        'item': null,
-        'type': 'PUBLIC_VOTE',
-        'title': 'Particl gambling dapp',
-        'description': 'What are your thoughts?',
-        'timeStart': 1544355300000,
-        'postedAt': 1544355300000,
-        'receivedAt': 1544597162000,
-        'expiredAt': 1544960100000,
-        'updatedAt': 1544597188873,
-        'createdAt': 1544597188873,
-        'FlaggedItem': {},
-        'ProposalResults': [],
-        'ProposalOptions': []
-      },
-      {
         'id': 85,
         'submitter': 'pkvG58g7aZYdvECVgfVc2QHzqmpTqcn5h4',
         'hash': '8237fe3f87a27f68077eba1e069f5635137a8cb0c56e95cdd0d33cdfdadf719e',
