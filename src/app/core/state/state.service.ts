@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable, Observer } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 
 
 export interface InternalStateType {
@@ -77,7 +77,7 @@ export class StateService {
 
       this._observerPairs[prop].observable = Observable.create(
           _observer => this._observerPairs[prop].observer = _observer
-      ).shareReplay(1);
+      ).pipe(shareReplay(1));
     }
 
     return this._observerPairs[prop];

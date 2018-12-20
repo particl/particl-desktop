@@ -25,7 +25,7 @@ export class ProposalsService {
     const params = ['list', startTime, expireTime];
     return this.marketService.call('proposal', params)
       .pipe(map((v) =>
-        v.pipe(map(p => new Proposal(p)))));
+        v.map(p => new Proposal(p))));
   }
 
   // proposal post.
