@@ -59,7 +59,12 @@
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
                   {{listing.errorMessage}}
                 </div>
+                <!-- @TODO add the condition after styling -->
+                <!-- *ngIf="listing.isAboutToExpire" -->
                 <div class="category" *ngIf="!listing.errorMessage">
+                  {{listing.expireIn}}
+                </div>
+                <div class="category" *ngIf="!listing.errorMessage && !listing?.isAboutToExpire">
                   {{listing.category.name}}
                 </div>
               </div>

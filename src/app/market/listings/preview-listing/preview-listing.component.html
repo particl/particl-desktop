@@ -33,6 +33,12 @@
     </div><!-- .product-gallery -->
 
     <div class="product-info" fxFlex="1 1 100%">
+      <!-- @TODO add the condition after styling -->
+      <!-- *ngIf="data?.listing?.isAboutToExpire" -->
+      <div class="expiry-time">
+        <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
+        Expired in: {{ data?.listing?.expireIn }}
+      </div>
 
       <h1>{{ data?.listing?.title }}</h1>
 
@@ -89,6 +95,15 @@
           </th>
           <td class="value">
             {{ data?.listing?.createdAt }}
+          </td>
+        </tr>
+        <tr>
+          <th class="title">
+            <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
+            Expiry date
+          </th>
+          <td class="value">
+            {{ data?.listing?.expiredTime }}
           </td>
         </tr>
       </table>
