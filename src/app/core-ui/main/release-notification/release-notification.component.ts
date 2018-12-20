@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { interval } from 'rxjs/observable/interval';
+import { interval } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ReleaseNotification } from './release-notification.model';

@@ -2,7 +2,7 @@ import {
   Component, EventEmitter, OnDestroy, OnInit, Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   FormBuilder,

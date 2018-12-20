@@ -1,8 +1,8 @@
+
+import {throwError as observableThrowError,  Subject ,  Observable } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
 import { map, catchError } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
@@ -111,7 +111,7 @@ export class RpcService implements OnDestroy {
               err = error.error && error.error.error ? error.error.error : error.message;
             }
 
-            return Observable.throw(err)
+            return observableThrowError(err)
           })
     }
   }

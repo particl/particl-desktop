@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { NotificationService } from 'app/core/notification/notification.service';
 import { RpcService } from 'app/core/rpc/rpc.service';

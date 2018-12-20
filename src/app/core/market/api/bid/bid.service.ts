@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 
 @Component({

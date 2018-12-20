@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject ,  Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';

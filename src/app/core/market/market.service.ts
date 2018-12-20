@@ -1,6 +1,7 @@
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { dataURItoBlob } from 'app/core/util/utils';
@@ -44,7 +45,7 @@ export class MarketService {
           this.log.d('Market threw an error!');
           this.log.d('Market error:', error);
           error = this.extractMPErrorMessage(error.error);
-          return Observable.throw(error);
+          return observableThrowError(error);
         })
   }
 
@@ -77,7 +78,7 @@ export class MarketService {
           } else {
             err = error;
           }
-          return Observable.throw(err);
+          return observableThrowError(err);
         })
   }
 
