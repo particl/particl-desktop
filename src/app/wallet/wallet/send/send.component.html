@@ -1,7 +1,7 @@
 <app-header>
   <div class="tab-bar" fxLayout fxLayoutAlign="space-between stretch">
 
-    <mat-tab-group (selectChange)="selectTab($event.index)" fxFlex="1 1 100%">
+    <mat-tab-group (selectedTabChange)="selectTab($event.index)" fxFlex="1 1 100%">
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontSet="partIcon" fontIcon="part-send"></mat-icon>
