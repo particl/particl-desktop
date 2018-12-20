@@ -133,16 +133,6 @@
     <div class="receive-pagination">
       <app-paginator
         #paginator
-        *ngIf="type == 'private' && getSinglePage().length > 0"
-        [length]="getTotalCountForPagination()"
-        [pageSize]="MAX_ADDRESSES_PER_PAGE"
-        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
-        (page)="pageChanged($event)">
-      </app-paginator>
-
-      <app-paginator
-        *ngIf="type == 'public' && getSinglePage().length > 0"
-        #paginator
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
         [pageSizeOptions]="PAGE_SIZE_OPTIONS"
