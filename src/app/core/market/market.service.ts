@@ -6,6 +6,7 @@ import { Log } from 'ng2-logger';
 
 import { dataURItoBlob } from 'app/core/util/utils';
 import { environment } from '../../../environments/environment';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MarketService {
@@ -40,13 +41,13 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.url, postData, { headers: headers })
-        .map((response: any) => response.result)
-        .catch((error: any) => {
+        .pipe(map((response: any) => response.result))
+        .pipe(catchError((error: any) => {
           this.log.d('Market threw an error!');
           this.log.d('Market error:', error);
           error = this.extractMPErrorMessage(error.error);
           return observableThrowError(error);
-        })
+        }))
   }
 
   public uploadImage(templateId: number, base64DataURI: any) {
@@ -71,7 +72,7 @@ export class MarketService {
 
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
 //        .map((response: any) => response.result)
-        .catch((error: any) => {
+        .pipe(catchError((error: any) => {
           let err = '';
           if (error.status === 404) {
             err = error.error.error;
@@ -79,7 +80,7 @@ export class MarketService {
             err = error;
           }
           return observableThrowError(err);
-        })
+        }))
   }
 
   private extractMPErrorMessage(errorObj: any): string {

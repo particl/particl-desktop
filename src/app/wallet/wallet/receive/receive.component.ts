@@ -10,6 +10,7 @@ import { SignatureAddressModalComponent } from '../shared/signature-address-moda
 import { QrCodeModalComponent} from '../shared/qr-code-modal/qr-code-modal.component';
 
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-receive',
@@ -52,7 +53,7 @@ export class ReceiveComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this.rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
      .subscribe(chain => this.testnet = chain === 'test');
 
     // start rpc

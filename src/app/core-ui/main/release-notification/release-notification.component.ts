@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ReleaseNotification } from './release-notification.model';
 
 import { ClientVersionService } from '../../../core/http/client-version.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-release-notification',
@@ -23,7 +24,7 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // check new update in every 30 minute
     const versionInterval = interval(1800000);
-    versionInterval.takeWhile(() => !this.destroyed).subscribe(val => this.getCurrentClientVersion());
+    versionInterval.pipe(takeWhile(() => !this.destroyed)).subscribe(val => this.getCurrentClientVersion());
   }
 
   // no need to destroy.

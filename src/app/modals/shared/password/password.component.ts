@@ -5,6 +5,7 @@ import { IPassword } from './password.interface';
 
 import { RpcService, RpcStateService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+import { skip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-password',
@@ -108,7 +109,7 @@ export class PasswordComponent implements OnDestroy {
           // update state
           this._rpcState.stateCall('getwalletinfo');
 
-          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus').skip(1)
+          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus').pipe(skip(1))
             .subscribe(
               encryptionstatus => {
                 this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);

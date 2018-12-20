@@ -3,6 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
 import { Template } from 'app/core/market/api/template/template.model';
+import { take } from 'rxjs/operators';
 
 @Injectable()
 export class ImageService {
@@ -38,7 +39,7 @@ export class ImageService {
       if (images.length) {
         images.map(picture => {
           this.log.d('Uploading pictures to templateId=', template.id);
-          this.add(template.id, picture).take(1).subscribe(res => {
+          this.add(template.id, picture).pipe(take(1)).subscribe(res => {
             this.log.d(`image uploaded`, nPicturesAdded)
             if (++nPicturesAdded === totalnPicturesAdded) {
               this.log.d('All images uploaded!');

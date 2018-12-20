@@ -78,7 +78,7 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
       return opt || []
     }
 
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value['name'].toLowerCase();
+    const filterValue = value.toString().toLowerCase();
 
     if (from) {
       return opt.filter(item => item.name.toLowerCase() === filterValue);

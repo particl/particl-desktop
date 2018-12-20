@@ -7,6 +7,7 @@ import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Template } from 'app/core/market/api/template/template.model';
+import { take } from 'rxjs/operators';
 
 interface IPage {
   pageNumber: number,
@@ -101,7 +102,7 @@ export class SellComponent implements OnInit {
     }
 
     this.templateSearchSubcription = this.template.search(pageNumber, max, 1, category, search)
-      .take(1).subscribe((listings: Array<Listing>) => {
+      .pipe(take(1)).subscribe((listings: Array<Listing>) => {
         listings = listings.map((t) => {
         if (this.listingService.cache.isAwaiting(t)) {
           t.status = 'awaiting';

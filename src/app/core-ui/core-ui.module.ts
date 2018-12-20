@@ -32,8 +32,8 @@ import 'hammerjs';
     NvD3Module,
 
     // also can add a config options
-    GalleryModule.forRoot(), // GalleryModule.forRoot(galleryConfig?),
-    LightboxModule.forRoot(), // GalleryLightbox.forRoot(lightboxConfig?),
+    GalleryModule, // GalleryModule.forRoot(galleryConfig?),
+    LightboxModule, // GalleryLightbox.forRoot(lightboxConfig?),
     GallerizeModule
   ],
   exports: [

@@ -4,6 +4,7 @@ import { RpcStateService } from '../../core/core.module';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { ManageWidgetsComponent } from '../../modals/manage-widgets/manage-widgets.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-overview',
@@ -20,7 +21,7 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit() {
     // check if testnet -> Show/Hide Anon Balance
-    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this.rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
      .subscribe(chain => this.testnet = chain === 'test');
   }
 

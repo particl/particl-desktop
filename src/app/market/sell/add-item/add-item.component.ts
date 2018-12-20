@@ -21,6 +21,7 @@ import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/e
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
+import { take, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-item',
@@ -92,7 +93,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]
     });
 
-    this.route.queryParams.take(1).subscribe(params => {
+    this.route.queryParams.pipe(take(1)).subscribe(params => {
       const id = params['id'];
       const clone: boolean = params['clone'];
       if (id) {
@@ -129,7 +130,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     sourceFiles.map((file: File) => {
       const reader = new FileReader();
       reader.onload = _event => {
-        this.picturesToUpload.push(reader.result);
+        this.picturesToUpload.push(reader.result.toString());
         this.log.d('added picture', file.name);
       };
       reader.readAsDataURL(file);
@@ -172,7 +173,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   subToCategories() {
     this.category.list()
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(list => this.updateCategories(list));
   }
 

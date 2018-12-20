@@ -18,6 +18,7 @@ import { TransactionBuilder, TxType } from './transaction-builder.model';
 import {
   SendConfirmationModalComponent
 } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-send',
@@ -62,7 +63,7 @@ export class SendComponent implements OnInit {
 
   ngOnInit() {
     /* check if testnet -> Show/Hide Anon Balance */
-    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
       .subscribe(chain => this.testnet = chain === 'test');
   }
   /** Select tab */

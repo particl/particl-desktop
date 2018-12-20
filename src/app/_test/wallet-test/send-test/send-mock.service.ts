@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 const SendService_OBJECT: any = {file: {}};
@@ -9,7 +9,7 @@ export class SendMockService {
   constructor() { }
 
   public getTransactionFee(): Observable<any> {
-    return Observable.of(SendService_OBJECT);
+    return of(SendService_OBJECT);
   }
 
 }

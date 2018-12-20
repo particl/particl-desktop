@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Observable ,  Observer } from 'rxjs/Rx';
+import { Observable, Observer } from 'rxjs';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 
 
 export interface InternalStateType {
@@ -56,9 +57,9 @@ export class StateService {
     if (subkey) {
       // TODO: maybe check if subkey exists?
       // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
-      observable = observable.map(key => key[subkey]);
+      observable = observable.pipe(map(key => key[subkey]));
     }
-    return observable.distinctUntilChanged();
+    return observable.pipe(distinctUntilChanged());
   }
 
 

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 
 import { StateService } from 'app/core/state/state.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class RpcStateService extends StateService implements OnDestroy {
@@ -125,7 +126,7 @@ export class RpcStateService extends StateService implements OnDestroy {
 
   private walletLockedState() {
     this.observe('getwalletinfo', 'encryptionstatus')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => {
         this.log.d(' [rm] updating locked state maybe');
         this.set('locked', ['Locked', 'Unlocked, staking only'].includes(status));

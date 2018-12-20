@@ -29,6 +29,7 @@ import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checko
 import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
+import { takeWhile, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout-process',
@@ -83,7 +84,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.getProfile();
 
     this.cartService.list()
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe((cart: Cart) => {
         /** If we add an item to cart and move the checkout process and complete first two steps,
          * then we are on the third step.
@@ -152,7 +153,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
+    this.cartService.removeItem(shoppingCartId).pipe(take(1)).subscribe(res => {
       this.snackbarService.open('Item successfully removed from cart');
     }, error => this.snackbarService.open(error));
   }
@@ -241,7 +242,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   getProfile(): void {
-    this.profileService.default().take(1).subscribe(
+    this.profileService.default().pipe(take(1)).subscribe(
       (profile: any) => {
         this.profile = profile;
         this.log.d('checkout got profile:', this.profile);

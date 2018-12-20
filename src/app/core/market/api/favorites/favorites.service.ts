@@ -11,6 +11,7 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 import { Favorite } from './favorite.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { tap, takeWhile, take } from 'rxjs/operators';
 
 
 
@@ -29,7 +30,7 @@ export class FavoritesService implements OnDestroy {
     public cache: FavoriteCacheService,
     private snackbar: SnackbarService
   ) {
-    this.profile.default().takeWhile(() => !this.destroyed).subscribe((prof: any) => {
+    this.profile.default().pipe(takeWhile(() => !this.destroyed)).subscribe((prof: any) => {
       this.defaultProfileId = prof.id;
       this.marketState.register('favorite', 60 * 1000, ['list', prof.id]);
     });
@@ -37,25 +38,25 @@ export class FavoritesService implements OnDestroy {
 
   add(listing: Listing) {
     return this.market.call('favorite', ['add', this.defaultProfileId, listing.id])
-    .do((data) => {
+    .pipe(tap(((data) => {
       this.cache.update();
-    });
+    })));
   }
 
   remove(listing: Listing) {
     return this.market.call('favorite', ['remove', this.defaultProfileId, listing.id])
-      .do((data) => {
+      .pipe(tap(((data) => {
         this.cache.update();
-      });
+      })));
   }
 
   toggle(listing: Listing): void {
     if (this.cache.isFavorited(listing) === true) {
-      this.remove(listing).take(1).subscribe(res => {
+      this.remove(listing).pipe(take(1)).subscribe(res => {
         this.snackbar.open(`${listing.title} removed from Favorites`);
       });
     } else {
-      this.add(listing).take(1).subscribe(res => {
+      this.add(listing).pipe(take(1)).subscribe(res => {
         this.snackbar.open(`${listing.title} added to Favorites`);
       });
     }

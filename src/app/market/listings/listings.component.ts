@@ -9,6 +9,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { take, takeWhile } from 'rxjs/operators';
 
 
 interface ISorting {
@@ -92,7 +93,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   loadCategories() {
     this.category.list()
-    .takeWhile(() => !this.destroyed)
+    .pipe(takeWhile(() => !this.destroyed))
     .subscribe(
       list => {
         this._rootCategoryList = list;
@@ -121,7 +122,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
 
     this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country, this.flagged)
-      .take(1).subscribe((listings: Array<Listing>) => {
+      .pipe(take(1)).subscribe((listings: Array<Listing>) => {
       this.isLoading = false;
       this.isLoadingBig = false;
 

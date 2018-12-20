@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/';
 import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
@@ -8,6 +8,7 @@ import { CartService } from 'app/core/market/api/cart/cart.service';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
+import { take, map, catchError } from 'rxjs/operators';
 
 export enum errorType {
   unspent = 'Zero unspent outputs - insufficient funds to place the order.',
@@ -43,7 +44,7 @@ export class BidService {
             throw error;
           });
         this.log.d(`Bid placed for hash=${listing.hash} shipping to addressId=${shippingAddress}`);
-        this.cartService.removeItem(listing.id).take(1).subscribe();
+        this.cartService.removeItem(listing.id).pipe(take(1)).subscribe();
       }
     }
     return 'Placed all orders!';
@@ -51,17 +52,18 @@ export class BidService {
 
   search(address: string, type?: any, status?: string, search?: string, additionalFilter?: any): Observable<BidCollection> {
     const params = ['search', 0, 99999, 'ASC', '*', status, search ];
-    return this.market.call('bid', params).map(o => new BidCollection(o, address, type, additionalFilter))
+    return this.market.call('bid', params)
+    .pipe(map(o => new BidCollection(o, address, type, additionalFilter)))
   }
 
   acceptBidCommand(id: number): Observable<any> {
     const params = ['accept', id];
-    return this.market.call('bid', params).catch((error) => {
+    return this.market.call('bid', params).pipe(catchError((error) => {
       if (error) {
         error = this.errorHandle(error.toString());
       }
       throw error;
-    });
+    }));
   }
 
   rejectBidCommand(id: number): Observable<any> {

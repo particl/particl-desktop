@@ -3,6 +3,7 @@ import { Log } from 'ng2-logger';
 
 import { StateService } from 'app/core/state/state.service';
 import { MarketService } from 'app/core/market/market.service';
+import { finalize } from 'rxjs/operators';
 
 @Injectable()
 export class MarketStateService extends StateService implements OnDestroy {
@@ -38,13 +39,13 @@ export class MarketStateService extends StateService implements OnDestroy {
         return;
       }
       this.market.call(method, params)
-        .finally(() => {
+        .pipe(finalize(() => {
           // re-start loop
           if (timeout) {
             const restartAfter = this.determineTimeoutDuration(errors, timeout);
             setTimeout(_call, restartAfter);
           }
-        })
+        }))
         .subscribe(
         success => {
           this.set(method, success);

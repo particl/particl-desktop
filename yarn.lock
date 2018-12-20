@@ -195,10 +195,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/flex-layout@2.0.0-beta.12":
-  version "2.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-2.0.0-beta.12.tgz#80970dc1d60f27fa41537659926f3238f759f343"
-  integrity sha512-QTOKZxehYTh8fj64V/pNVWNbfNtebSbssyMIXiGJuHTzfyF7GYdRmtjoR2pNpllycz3rE5NYX77EB140Y6BCnw==
+"@angular/flex-layout@7.0.0-beta.21":
+  version "7.0.0-beta.21"
+  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-7.0.0-beta.21.tgz#02db5908479448bd457da0ac4d2180584fee3e13"
+  integrity sha512-oHcc2zUgbq9VkojF4QlwTwzyCdP9BrElUbCypD3Md6gdbJylNu7AeIbO3Vf7Ql84VNgA0dAJ9HlNTuJkBCOaUQ==
   dependencies:
     tslib "^1.7.1"
 
@@ -330,26 +330,26 @@
     tree-kill "1.2.0"
     webpack-sources "1.2.0"
 
-"@ngx-gallery/core@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@ngx-gallery/core/-/core-2.2.0.tgz#93f8baa938cd4b58cca30edecbf075fe3e7a3f30"
-  integrity sha512-lkrrBTr/gHQLltkJYj8AexEQ8WllI8FLgTHfrG6VzRxycvsUW3XBb4Xe75JD5/y2EqAOT6PHq7VOVSUutFv+dw==
+"@ngx-gallery/core@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@ngx-gallery/core/-/core-4.0.1.tgz#a1c44576d70774642fe2decc03d2876d3ec2a3cf"
+  integrity sha512-Gjz2UMJHovbhFteSeFtpBU8nEpekU1JLHcmfrPNzLgvnqwmS0+OJ0HtpIMERTtWVeGiBstQsfnWHKZ+oxudazg==
   dependencies:
-    tslib "^1.7.1"
+    tslib "^1.9.0"
 
-"@ngx-gallery/gallerize@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@ngx-gallery/gallerize/-/gallerize-2.2.0.tgz#bb00f9c29f498fbfdca9881f8c75b1ce7fd09a77"
-  integrity sha512-OuYYur8mnUp5c0jpUb9Ysa3talkmUCMzhZUDt6uZVXWL8dSn4mGQYJy46vzQxIOveKwSR4rl8lXfwy8lfomx3g==
+"@ngx-gallery/gallerize@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@ngx-gallery/gallerize/-/gallerize-4.0.1.tgz#7debb03c6290f84e43b7bc4e0762e8be769fd7ba"
+  integrity sha512-18s2LNSn8qIRGKd8+KJ1L8ApN4DUr8VPDHBbeYhAG/TBJ9kQ6V2lBK0Jwjg/T6NTTJlEzyz7sBH43G3/0rzZAA==
   dependencies:
-    tslib "^1.7.1"
+    tslib "^1.9.0"
 
-"@ngx-gallery/lightbox@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@ngx-gallery/lightbox/-/lightbox-2.2.0.tgz#292aed381ef53981d64755a191cd8cbf11cd7227"
-  integrity sha512-kQxAoaSzCq02LhkTUU9HFItNnPuES8YxZ9MloE++ltfxuYrjE85nDQDLIvmhvcwd7PWUc7hBGRF/cLAguLVhzA==
+"@ngx-gallery/lightbox@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@ngx-gallery/lightbox/-/lightbox-4.0.1.tgz#c9cdd4813f4e9096a2a3f738884a17a7e848cf2e"
+  integrity sha512-YHMijos+GCHx9fX/UOzRmFOFakz+LcNUrVecvAwTnvmbYQy8VghwiRfeK3OixLdU5+jjSkApWTpfFqq8OKXYvQ==
   dependencies:
-    tslib "^1.7.1"
+    tslib "^1.9.0"
 
 "@nodelib/fs.stat@^1.1.2":
   version "1.1.3"
@@ -2375,12 +2375,12 @@ copyfiles@^2.0.0:
     through2 "^2.0.1"
     yargs "^11.0.0"
 
-core-js@^2.2.0, core-js@^2.4.0, core-js@^2.5.7:
+core-js@^2.2.0, core-js@^2.5.7:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
   integrity sha512-RszJCAxg/PP6uzXVXL6BsxSXx/B05oJAQ2vkJRjyjrEcNVycaqOmNb5OTxZPE3xa5gwZduqza6L9JOCenh/Ecw==
 
-core-js@^2.4.1:
+core-js@^2.4.0, core-js@^2.4.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.1.tgz#87416ae817de957a3f249b3b5ca475d4aaed6042"
   integrity sha512-L72mmmEayPJBejKIWe2pYtGis5r0tQ5NaJekdhyXgeMQTpJoBsH0NL4ElY2LfSoV15xeQWKQ+XTTOZdyero5Xg==
@@ -7218,10 +7218,10 @@ ngx-clipboard@^10.0.0:
   dependencies:
     ngx-window-token "0.0.4"
 
-ngx-infinite-scroll@^0.8.3:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-0.8.4.tgz#0162b406f63b05412b4d47e3201b371e4f2f96d8"
-  integrity sha512-pXNYQiOKONOEQZeHAbUoyB0cru7e57B6fEW1hRd+pUKSNpzj3jM67Xww7rMEIl+ESgJvW7dJ72iR8S7F7YludQ==
+ngx-infinite-scroll@6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-6.0.1.tgz#571e54860ce32839451569bcf6e7a63cfae327bd"
+  integrity sha512-20WcD+3Qh3O0IEFyIjt55JPTKw5W1hAxERXMUDgGDRveS3IBpBxv2DuX5vuHG/bNGC+WoTDlNR/XXScNNicRpw==
   dependencies:
     opencollective "^1.0.3"
 

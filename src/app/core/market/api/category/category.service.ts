@@ -5,6 +5,7 @@ import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 import { Category } from 'app/core/market/api/category/category.model';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Injectable()
 export class CategoryService {
@@ -15,8 +16,8 @@ export class CategoryService {
 
   list() {
     return this.marketState.observe('category')
-      .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b))
-      .map(v => new Category(v));
+      .pipe(distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b)))
+      .pipe(map((v => new Category(v))));
   }
 
   add(categoryName: string, description: string, parent: string | number): Observable<any> {

@@ -14,6 +14,7 @@ import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 import { GraphOption } from 'app/wallet/proposals/models/proposal-result-graph-option.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-proposal-details',
@@ -84,7 +85,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   getVoteDetails(): void {
     this.proposalService.get(this.proposal.hash)
-    .takeWhile(() => !this.destroyed)
+    .pipe(takeWhile(() => !this.destroyed))
     .subscribe((voteDetail: VoteDetails) => {
       this.voteDetails = voteDetail;
       this.aleradyVoted = true;
@@ -95,7 +96,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   getProposalResult(): void {
     this.proposalService.result(this.proposal.hash)
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe((result: ProposalResult) => {
         if (result) {
           this.proposalResult = result;
