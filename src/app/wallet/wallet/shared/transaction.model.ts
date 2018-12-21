@@ -132,13 +132,10 @@ export class Transaction {
       const blindStealthOutputCount = this.outputs.reduce(function (a: any, b: any) {
         return a + (b.vout !== 65535 ? (b.stealth_address !== undefined ? 1 : 0) : 0);
       }, 0);
-      console.log("blind_stealth_address count: " + blindStealthOutputCount);
 
       // blind -> blind (own)
       if(blindStealthOutputCount === 1) {
-        console.log("length should equal 2 =" + this.outputs.length);
         const add = function (a: any, b: any) { return a + (b.stealth_address !== undefined ? b.amount : 0); }
-        console.log("returning shoud be 0.5 =  " + this.outputs.reduce(add, 0));
         return this.outputs.reduce(add, 0);
       } */
 

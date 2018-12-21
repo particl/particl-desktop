@@ -236,7 +236,6 @@ export class ReceiveComponent implements OnInit {
     const count = response.num_receive;
     /*
     if (count ===) {
-      console.log('openNewAddress()')
       this.updateLabel();
       return;
     }

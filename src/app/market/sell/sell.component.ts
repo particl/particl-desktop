@@ -109,7 +109,6 @@ export class SellComponent implements OnInit {
         }
         return t;
       });
-      console.log(listings);
       this.isLoading = false;
       // new page
       const page = {
@@ -139,11 +138,9 @@ export class SellComponent implements OnInit {
 
     // previous page
     if (this.pages[0] && this.pages[0].pageNumber > newPageNumber) {
-      console.log('adding page to top');
       this.pages.unshift(page);
       goingDown = false;
     } else { // next page
-      console.log('adding page to bottom');
       this.pages.push(page);
     }
 
@@ -158,10 +155,8 @@ export class SellComponent implements OnInit {
   }
   // TODO: fix scroll up!
   loadPreviousPage() {
-    console.log('prev page trigered');
     let previousPage = this.getFirstPageCurrentlyLoaded();
     previousPage--;
-    console.log('loading prev page' + previousPage);
     if (previousPage > -1) {
       this.loadPage(previousPage);
     }
@@ -169,7 +164,6 @@ export class SellComponent implements OnInit {
 
   loadNextPage() {
     let nextPage = this.getLastPageCurrentlyLoaded(); nextPage++;
-    console.log('loading next page: ' + nextPage);
     this.loadPage(nextPage);
   }
 
