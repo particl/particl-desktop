@@ -58,6 +58,12 @@
         <div class="title">
           {{ finalMessage }}
         </div>
+        <div *ngIf="failed">
+          <button type="button" mat-button mat-dialog-close>
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Cancel
+          </button>
+        </div>
       </div><!-- .content -->
     </div><!-- .container -->
   </ng-template><!-- Step 3 -->
