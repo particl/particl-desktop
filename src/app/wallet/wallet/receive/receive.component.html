@@ -132,6 +132,7 @@
     <!-- use two paginator for reset pagination after tab change. -->
     <div class="receive-pagination">
       <app-paginator
+        *ngIf="getSinglePage().length > 0"
         #paginator
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"
