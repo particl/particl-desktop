@@ -53,8 +53,7 @@
       </p>
       
       <table class="meta">
-        <!-- @TODO add the condition after styling -->
-        <tr class="expires-soon"><!-- *ngIf="data?.listing?.isAboutToExpire" -->
+        <tr class="expires-soon" *ngIf="data?.listing?.isAboutToExpire">
           <th class="title">
             <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
             Expires soon
