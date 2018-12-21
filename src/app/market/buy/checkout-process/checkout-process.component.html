@@ -55,14 +55,16 @@
                 <div class="title">
                   {{listing.title}}
                 </div>
-                <div class="error" *ngIf="listing.errorMessage"><!-- e.g. expired items in cart -->
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                <!-- errors, e.g. expired items in cart -->
+                <div class="error message" *ngIf="listing.errorMessage">
+                  <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
                   {{listing.errorMessage}}
                 </div>
+                <!-- expires soon warning -->
                 <!-- @TODO add the condition after styling -->
-                <!-- *ngIf="listing.isAboutToExpire" -->
-                <div class="category" *ngIf="!listing.errorMessage">
-                  {{listing.expireIn}}
+                <div class="warning message"><!-- *ngIf="listing.isAboutToExpire" -->
+                  <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
+                  Listing expires in {{listing.expireIn}}
                 </div>
                 <div class="category" *ngIf="!listing.errorMessage && !listing?.isAboutToExpire">
                   {{listing.category.name}}
