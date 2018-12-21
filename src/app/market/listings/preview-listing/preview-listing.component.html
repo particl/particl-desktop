@@ -100,7 +100,7 @@
     <mat-tab-group class="listing-tabs" (selectedTabChange)="changeTab($event.index)">
       <mat-tab label="Details"></mat-tab>
       <mat-tab label="Shipping &amp; Escrow"></mat-tab>
-      <mat-tab label="Comments"></mat-tab>
+      <mat-tab label="Comments" *ngIf="!data.buyPage"></mat-tab>
     </mat-tab-group><!-- .listing-tabs -->
 
     <div class="tab-content details" *ngIf="tabLabels[selectedTab] == 'details'">
@@ -210,7 +210,7 @@
 </div><!-- .dialog-content -->
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
+<mat-dialog-actions fxLayoutAlign="space-between center" *ngIf="!data.buyPage">
 
   <div class="left">
 

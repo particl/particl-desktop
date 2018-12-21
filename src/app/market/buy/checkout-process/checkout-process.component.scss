@@ -74,6 +74,14 @@ table.cart-items {
     min-width: 90px;
     color: $text-muted;
   }
+  .item {
+    cursor: pointer;
+    &:hover {
+      .category {
+        color: darken($color, 5%);
+      }
+    }
+  }
   .image {
     img {
       display: block;
@@ -90,6 +98,7 @@ table.cart-items {
       font-size: 14px;
     }
     .category {
+      @extend %tfx;
       margin-top: 5px;
       font-size: 11px;
       color: $text-muted;
@@ -116,6 +125,14 @@ table.cart-items {
   .expired {
     background-image: linear-gradient(135deg, rgba($bg-shadow, 0.6) 11.11%, $bg 11.11%, $bg 50%, rgba($bg-shadow, 0.6) 50%, rgba($bg-shadow, 0.6) 61.11%, $bg 61.11%, $bg 100%);
     background-size: 12px 12px;
+    .item {
+      cursor: not-allowed;
+      &:hover {
+        .category {
+          color: $text-muted;
+        }
+      }
+    }
     .title {
       text-decoration: line-through;
     }
