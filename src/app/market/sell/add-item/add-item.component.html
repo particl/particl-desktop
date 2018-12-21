@@ -96,7 +96,7 @@
         [isRequired]="'true'"
         [defaultSelectedValue]="selectedCountry"
         [isLexigraphicalOrder]="true"
-        (onChange)="onCountryChange($event)">
+        (selectionChange)="onCountryChange($event)">
       </mat-select-search>
 
       <!-- TODO: add another input for fiat value and inter-connect the two: -->

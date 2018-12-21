@@ -34,7 +34,7 @@
         </mat-form-field-->
 
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
-          <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (change)="filter()">
+          <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (selectionChange)="filter()">
             <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>

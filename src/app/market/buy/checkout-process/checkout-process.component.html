@@ -154,7 +154,7 @@
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
               <mat-select matNativeControl [(value)]="selectedAddress" [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
-                          (change)="select(selectedAddress)"
+                          (selectionChange)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
                           [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0">
                 <mat-option *ngFor="let address of profile?.shippingAddresses"
@@ -222,7 +222,7 @@
               [isRequired]="'true'"
               [defaultSelectedValue]="selectedCountry"
               [isLexigraphicalOrder]="true"
-              (onChange)="onCountryChange($event)">
+              (selectionChange)="onCountryChange($event)">
             </mat-select-search>
             <!-- mat-select-search -->
 
