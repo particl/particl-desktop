@@ -118,7 +118,7 @@ export class ColdstakeComponent {
         },
         error => {
           this.log.er('setColdStakingAddress: ', error);
-          this.finalMessage = 'Failed to activate cold staking.. ' + error.message;
+          this.finalMessage = 'Failed to activate cold staking: ' + error.message;
           this.failed = true;
         });
   }
