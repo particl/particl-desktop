@@ -56,16 +56,13 @@
     <div mat-dialog-title class="title">Cold staking setup</div>
 
     <mat-dialog-content class="modal-content">
-      <p *ngIf="!failed">
-        {{ finalMessage }}
-      </p>
-      <p class="warning" *ngIf="failed">
+      <p [ngClass]="{'warning': failed}">
         {{ finalMessage }}
       </p>
     </mat-dialog-content>
 
     <mat-dialog-actions fxLayoutAlign="flex-end center">
-      <button type="button" mat-button mat-dialog-close *ngIf="failed">
+      <button type="button" mat-button mat-dialog-close>
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
         Close
       </button>
