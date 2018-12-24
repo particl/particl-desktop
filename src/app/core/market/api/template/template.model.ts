@@ -185,8 +185,8 @@ export class Template {
 
   get isAboutToExpire(): any {
 
-    // 86400000 m seconds in one.
-    if (this.expiredAt > +new Date() && ((this.expiredAt - +new Date()) >= 86400000)) {
+    // 86400000 m seconds in one day.
+    if (this.object.expiredAt > +new Date() && ((this.object.expiredAt - +new Date()) <= 86400000)) {
       return true;
     }
     return false;
