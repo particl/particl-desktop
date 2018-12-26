@@ -29,6 +29,7 @@ import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checko
 import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
+import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
 
 @Component({
   selector: 'app-checkout-process',
@@ -374,13 +375,25 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.stepper.linear = false;
   }
 
+  openListing(listing: any) {
+    if (!this.checkExpired(listing)) {
+      const dialog = this.dialog.open(PreviewListingComponent, {
+        data: {
+          listing: listing,
+          buyPage: true,
+        },
+      });
+    }
+  }
+
   checkExpired(listing: any) {
-      if (new Date().getTime() > listing.listing.expiredAt) {
+    if (new Date().getTime() > listing.listing.expiredAt) {
+      if (!listing.errorMessage) {
         listing.errorMessage = 'Listing expired – remove item from cart';
-        return true;
-      } else {
-        return false;
       }
+      return true;
+    }
+    return false;
   }
 
 }
