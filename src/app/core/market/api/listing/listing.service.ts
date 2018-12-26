@@ -38,6 +38,7 @@ export class ListingService {
     return this.market.call('item', params)
     .map(
       (listings: Array<Listing>) => {
+        console.log('listings.map(t => new Listing(t))----', listings.map(t => new Listing(t)));
         return listings.map(t => new Listing(t));
       }
     ).do(
