@@ -24,7 +24,7 @@
     "generate:versions": "node modules/clientBinaries/generateVersions.js",
     "generate:documentation": "",
     "checksum": "cd packages && checksum -a sha256 *.*",
-    "build:electron:prod": "ng build --base-href=./ --env=prod",
+    "build:electron:prod": "ng build --base-href=./ --prod --configuration=production",
     "build:electron:fast": "ng build --base-href=./ --sourcemap=false",
     "build:electron": "ng build --base-href=./",
     "start:electron:dev": "electron . --dev",
