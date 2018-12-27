@@ -54,7 +54,6 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     if (this.data.listing) {
       this.images = this.data.listing.imageCollection.imageUrls;
     }
-    console.log('this.data', this.data);
   }
 
   getVoteOfListing(): void {

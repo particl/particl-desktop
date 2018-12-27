@@ -183,16 +183,13 @@ export class Template {
     'Expires ' + new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16) : '';
   }
 
-  get isAboutToExpire(): any {
+  get isAboutToExpire(): Boolean {
 
     // 86400000 m seconds in one day.
-    if (this.object.expiredAt > +new Date() && ((this.object.expiredAt - +new Date()) <= 86400000)) {
-      return true;
-    }
-    return false;
+    return (this.object.expiredAt > +new Date() && ((this.object.expiredAt - +new Date()) <= 86400000));
   }
 
-  get expireIn(): any {
+  get expireIn(): String {
     return new Duration((this.object.expiredAt - Date.now()) / 1000).getReadableDuration();
   }
 
