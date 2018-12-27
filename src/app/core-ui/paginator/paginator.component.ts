@@ -24,7 +24,7 @@ export class PaginatorComponent implements OnInit {
 
   @HostBinding('class.mat-paginator')
 
-  public _intl: {
+  public _intl: object = {
     itemsPerPageLabel: 'Items per page:',
     nextPageLabel: 'Next page',
     previousPageLabel: 'Previous page',
