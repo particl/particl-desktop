@@ -8,7 +8,8 @@
         <div class="name">{{ order?.listing?.title }}</div>
         <div class="date">
           <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
-          <!-- <span class="hash {{ order?.hash_bg }}" matTooltip="Order hash">{{ order?.hash }}</span> -->
+          <span matTooltip="Order hash">{{ order?.ListingItem.hash }}</span>
+          <br>
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
       </div>
