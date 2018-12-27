@@ -32,6 +32,14 @@ export class PaginatorComponent implements OnInit {
     lastPageLable: 'Last Page'
   };
 
+  public labels: string[] = [
+    'Items per page:',
+    'Next page',
+    'Previous page',
+    'Fist Page',
+    'Last Page'
+  ];
+
   constructor() { }
 
   ngOnInit() {}
