@@ -36,6 +36,7 @@ export class OrderItemComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('here, status:', this.order[0].status);
     this.getItemDetails();
   }
 

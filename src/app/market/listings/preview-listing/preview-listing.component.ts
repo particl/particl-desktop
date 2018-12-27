@@ -41,7 +41,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService,
     private profileService: ProfileService,
-    private countryListService: CountryListService,
+    public countryListService: CountryListService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 

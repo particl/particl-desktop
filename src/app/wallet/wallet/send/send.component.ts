@@ -37,6 +37,9 @@ export class SendComponent implements OnInit {
   advanced: boolean = false;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
+  part: TxType.PUBLIC;
+  blind: TxType.BLIND;
+  anon: TxType.ANON;
 
   constructor(
     private sendService: SendService,

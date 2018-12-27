@@ -20,7 +20,7 @@ export class ListingItemComponent {
   constructor(private dialog: MatDialog,
               private favoritesService: FavoritesService,
               private snackbar: SnackbarService,
-              private listingCacheService: PostListingCacheService,
+              public listingCacheService: PostListingCacheService,
               private marketState: MarketStateService) {
   }
 

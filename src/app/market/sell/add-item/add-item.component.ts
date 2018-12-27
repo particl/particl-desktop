@@ -66,7 +66,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
-    private countryList: CountryListService,
+    public countryList: CountryListService,
     private escrow: EscrowService,
     private payment: PaymentService
   ) { }

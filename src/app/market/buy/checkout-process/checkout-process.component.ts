@@ -57,6 +57,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   // stepper form data
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
+  public confirmation: FormGroup;
   public country: string = '';
 
   constructor(// 3rd party
@@ -75,7 +76,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     public countryList: CountryListService,
     public cache: CheckoutProcessCacheService,
     private bid: BidService,
-    private listCache: PostListingCacheService,
+    public listCache: PostListingCacheService,
     public dialog: MatDialog) {
   }
 

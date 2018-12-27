@@ -28,7 +28,7 @@ export class ColdstakeComponent {
     private _modals: ModalsHelperService,
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-    private _coldstake: ColdstakeService
+    public _coldstake: ColdstakeService
   ) { }
 
   zap() {
