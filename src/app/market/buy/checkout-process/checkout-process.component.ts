@@ -57,6 +57,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
   public country: string = '';
+  processingStatus: string;
 
   constructor(// 3rd party
     private formBuilder: FormBuilder,
@@ -275,7 +276,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   placeOrder() {
-    this.modals.unlock({timeout: 30}, (status) => this.bidOrder());
+    this.modals.unlock({timeout: 30}, (status) => {
+      this.processingStatus = 'PROCESSING';
+      this.bidOrder()
+    });
   }
 
   bidOrder() {
@@ -304,9 +308,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.bid.order(this.cart, this.profile, shippingInfo).then((res) => {
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
+      this.processingStatus = 'SUCCESSFUL';
       this.onOrderPlaced.emit(1);
     }, (error) => {
       this.snackbarService.open(error, 'warn');
+      this.processingStatus = 'UNSUCCESSFUL';
       this.log.d(`Error while placing an order`);
     });
   }
