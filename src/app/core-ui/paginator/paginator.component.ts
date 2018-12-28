@@ -7,6 +7,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import { Intl } from './intl-model';
 
 @Component({
   selector: 'app-paginator',
@@ -24,23 +25,7 @@ export class PaginatorComponent implements OnInit {
 
   @HostBinding('class.mat-paginator')
 
-  /*
-  public _intl: object = {
-    itemsPerPageLabel: 'Items per page:',
-    nextPageLabel: 'Next page',
-    previousPageLabel: 'Previous page',
-    firstPageLable: 'Fist Page',
-    lastPageLable: 'Last Page'
-  };
-  */
-
-  public labels: string[] = [
-    'Items per page:',
-    'Next page',
-    'Previous page',
-    'Fist Page',
-    'Last Page'
-  ];
+  intl: any = Intl;
 
   constructor() { }
 
