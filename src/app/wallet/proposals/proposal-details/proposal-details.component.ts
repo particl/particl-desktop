@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import * as d3 from 'd3';
 import { Log } from 'ng2-logger';
 
+import { RpcStateService } from 'app/core/core.module';
 import {
   ProposalVoteConfirmationComponent
 } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
@@ -36,7 +37,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       height: 250,
       width: 250,
       x: (d) => { return d.description; },
-      y: (d) => { return d.voters; },
+      y: (d) => { return d.weight; },
       showLabels: false,
       donut: true,
       legend: {
@@ -68,8 +69,9 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   public voteDetails: VoteDetails;
   public aleradyVoted: boolean = false
   destroyed: boolean = false;
-
+  private _balance: number;
   constructor(
+    private _rpcState: RpcStateService,
     private dialog: MatDialog,
     private proposalService: ProposalsService,
     private snackbarService: SnackbarService,
@@ -97,6 +99,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     this.proposalService.result(this.proposal.hash)
       .takeWhile(() => !this.destroyed)
       .subscribe((result: ProposalResult) => {
+        console.log(result);
         if (result) {
           this.proposalResult = result;
 
@@ -109,10 +112,19 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   vote(): void {
+    this._balance = this._rpcState.get('getwalletinfo').total_balance;
     const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
     if (previousVote && previousVote.optionId === this.selectedOption.optionId) {
       this.snackbarService.open(
         `You already voted with option "${this.selectedOption.description}" for this proposal: ${this.proposal.title}.`,
+        'info'
+      );
+      return;
+    }
+
+    if (!this._balance) {
+      this.snackbarService.open(
+        `You don't have sufficient balance in your wallet.`,
         'info'
       );
       return;
@@ -148,7 +160,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   updateGraphData(): void {
 
     const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
-    this.proposalResult.updateVote(this.selectedOption, previousVote);
+    this.proposalResult.updateVote(this.selectedOption, previousVote, this._balance);
     this.voteDetails = new VoteDetails({
       ProposalOption: this.selectedOption
     });

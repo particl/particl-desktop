@@ -139,7 +139,7 @@ export class AddProposalComponent implements OnInit {
       ]).subscribe((response) => {
         console.log('response', response)
         this.snackbarService.open(
-          'Proposal posted successfully. Your proposal will get published shortly!',
+          'Proposal posted successfully!',
           'info'
         )
 
