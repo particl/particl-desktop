@@ -66,11 +66,10 @@ export class Bid extends Product {
   }
 
   get hash(): string {
-    if (this.order && this.order.ListingItem && this.order.ListingItem.hash) {
+    if (this.order.ListingItem && this.order.ListingItem.hash) {
       return this.order.ListingItem.hash;
-    } else {
-      return 'No hash available';
     }
+    return undefined;
   }
 
   get listing(): Listing {
