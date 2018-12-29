@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import * as _ from 'lodash';
 
 import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
 import { TemplateService } from 'app/core/market/api/template/template.service';
@@ -131,6 +132,12 @@ export class SellComponent implements OnInit {
         return t;
       });
       this.isLoading = false;
+      if (this.filters.sort === 'TITLE') {
+       listings = _.orderBy(listings, [listing => listing.title.toLowerCase()], ['asc'])
+      }
+      if (!hashItems) {
+       listings = _.orderBy(listings, [listing => !listing.isUnpublished], ['asc'])
+      }
       // new page
       const page = {
         pageNumber: pageNumber,
