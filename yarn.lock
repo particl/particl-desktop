@@ -5621,9 +5621,10 @@ ngx-clipboard@^10.0.0:
   dependencies:
     ngx-window-token "0.0.4"
 
-ngx-infinite-scroll@^0.8.3:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-0.8.4.tgz#0162b406f63b05412b4d47e3201b371e4f2f96d8"
+ngx-infinite-scroll@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-7.0.0.tgz#a59f8e1b9a69ef1f43adc745c96cb3a7672a4512"
+  integrity sha512-wUgQyT7ziY6Z52PNDbqSxG2NkreCL/fN6CgJf9EIwregEY+3idFeMIYZRfq4HoUWgxwhhbhx9F8yohhGwgmdTQ==
   dependencies:
     opencollective "^1.0.3"
 
