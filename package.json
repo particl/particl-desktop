@@ -194,7 +194,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "ng2-logger": "^1.0.11",
     "ngx-clipboard": "^10.0.0",
-    "ngx-infinite-scroll": "^0.8.3",
+    "ngx-infinite-scroll": "^7.0.0",
     "node-sass": "^4.7.2",
     "protractor": "^5.3.0",
     "sass-lint": "^1.10.2",
