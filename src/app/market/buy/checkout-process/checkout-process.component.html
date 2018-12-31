@@ -325,17 +325,17 @@
         </table>
 
       </div><!-- .order-detail -->
-      <div *ngIf="processingStatus === 'PROCESSING'">
+      <div *ngIf="processingStatus === true">
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         <h3>YOUR REQUEST IS BEING PROCESSED</h3>
       </div>
       <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
-        <button [disabled]="processingStatus === 'PROCESSING'"
+        <button [disabled]="processingStatus === true"
             mat-button matStepperPrevious (click)="backToShippingDetails()">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back to shipping
         </button>
-        <button [disabled]="processingStatus === 'PROCESSING'"
+        <button [disabled]="processingStatus === true"
             mat-raised-button color="primary" (click)="placeOrderModal()"><!-- placeOrder() moved to the modal -->
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Place order
