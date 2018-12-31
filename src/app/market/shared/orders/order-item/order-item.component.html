@@ -71,10 +71,6 @@
   </div><!-- .detail -->
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
-    <div *ngIf="processingStatus === 'PROCESSING'">
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      <h3>YOUR REQUEST IS BEING PROCESSED</h3>
-    </div>
     <div class="left">
       <button mat-button color="warn"
               [disabled]="processingStatus === 'PROCESSING'"
@@ -110,4 +106,8 @@
       </button>
     </div>
   </mat-action-row>
+  <div *ngIf="processingStatus === 'PROCESSING'">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <h3>YOUR REQUEST IS BEING PROCESSED</h3>
+  </div>
 </mat-expansion-panel>
