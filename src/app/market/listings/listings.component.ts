@@ -94,7 +94,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.log.d('overview created');
     this.loadCategories();
     this.loadPage(0);
-    this.checkInterval = setInterval(this.NewListingsCheck.bind(this), 30000);
+    this.checkInterval = setInterval(() => this.newListingsCheck(), 5000);
   }
 
   loadCategories() {
@@ -137,7 +137,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
         pageNumber: pageNumber,
         listings: listings
       };
-      this.currentListings = listings[0].hash;
+      if (listings && listings[0]) {
+        this.currentListings = listings[0].hash;
+      }
 
       // should we clear all existing pages? e.g search
       if (clear === true) {
@@ -236,7 +238,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     clearInterval(this.checkInterval);
   }
 
-  NewListingsCheck() {
+  newListingsCheck() {
     const max = this.pagination.maxPerPage;
     const search = this.filters.search;
     const category = this.filters.category;
@@ -244,8 +246,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     this.listingService.search(0, max, null, search, category, country, this.flagged)
       .subscribe((listings: Array<Listing>) => {
-        this.newListings = listings[0].hash;
-        this.currentListings !== this.newListings ? this.showIndicator = true : this.showIndicator = false;
+        if (listings && listings[0]) {
+          this.newListings = listings[0].hash;
+          this.showIndicator = this.currentListings !== this.newListings;
+        } else {
+          this.showIndicator = false;
+        }
       });
   }
 }
