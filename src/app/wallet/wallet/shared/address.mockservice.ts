@@ -3,7 +3,7 @@ import { Observable, Observer } from 'rxjs';
 
 import { AddressService } from './address.service';
 import { Address, deserialize } from './address.model';
-import { Result } from 'app/core/rpc/rpc.responses';
+import { filterAddress } from 'app/_test/core-test/rpc-test/mock-data/filteraddress.mock';
 /*
     This is a fake mock service used for the AddressMockService.
 */
@@ -21,7 +21,7 @@ export class MockAddressService {
   }
 
   updateAddressList() {
-    const json = Result['filteraddresses']['addresses'];
+    const json = filterAddress['addresses'];
     let addresses: Address[] = [];
     json.forEach((resp) => addresses = this.addAddress(addresses, resp));
     this._observerAddresses.next(addresses);
