@@ -132,12 +132,11 @@ export class SellComponent implements OnInit {
         return t;
       });
       this.isLoading = false;
+
       if (this.filters.sort === 'TITLE') {
-       listings = _.orderBy(listings, [listing => listing.title.toLowerCase()], ['asc'])
+        listings.reverse();
       }
-      if (!hashItems) {
-       listings = _.orderBy(listings, [listing => !listing.isUnpublished], ['asc'])
-      }
+
       // new page
       const page = {
         pageNumber: pageNumber,
