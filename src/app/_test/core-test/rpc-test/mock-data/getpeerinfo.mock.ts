@@ -569,4 +569,6 @@ const mockgetpeerinfo: any = [
     }
   ]
 
-  export default mockgetpeerinfo;
+export {
+  mockgetpeerinfo
+}

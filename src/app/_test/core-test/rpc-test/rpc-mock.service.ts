@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import mockgetpeerinfo from './mock-data/getpeerinfo.mock';
+import { mockgetpeerinfo } from './mock-data/getpeerinfo.mock';
+import { filterAddress } from './mock-data/filteraddress.mock';
+import { filterTxs } from './mock-data/transactions.mock';
 
 // TODO: create & move into the testing module
 // TODO: add more calls, currently only used in SendComponent
@@ -12,16 +14,26 @@ export class RpcMockService {
   constructor() { }
 
   call(method: string, params?: Array<any> | null): Observable<any> {
-    return Observable.create(observer => {
-
-      if (method === 'getpeerinfo') {
-        observer.next(mockgetpeerinfo);
-      } else {
-        observer.next(true)
-      }
-
-      observer.complete();
-    });
+    // Switching for different methods and return response accordngly.
+    let json = {};
+    switch (method) {
+      case 'filtertransactions':
+        json = filterTxs;
+        break;
+      case 'filteraddresses':
+        if (params.length > 1) {
+          json = filterAddress['addresses'];
+        } else {
+          json = filterAddress['addresscount'];
+        }
+        break;
+      case 'getpeerinfo':
+        json = mockgetpeerinfo;
+        break;
+      default:
+        break;
+    }
+    return Observable.of(json);
   }
 
 }

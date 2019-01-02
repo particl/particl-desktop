@@ -3,7 +3,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { SharedModule } from '../../shared/shared.module';
 import { RpcService, RpcStateService } from '../../../core/rpc/rpc.module';
 import { CoreModule } from '../../../core/core.module';
-import { MockRpcService } from 'app/core/rpc/rpc.mockservice';
+import { RpcMockService } from 'app/_test/core-test/rpc-test/rpc-mock.service';
 import { TransactionService } from './transaction.service';
 
 describe('TransactionService', () => {
@@ -16,7 +16,7 @@ describe('TransactionService', () => {
       providers: [
         RpcStateService,
         TransactionService,
-        { provide: RpcService, useClass: MockRpcService }
+        { provide: RpcService, useClass: RpcMockService }
       ]
     });
   });

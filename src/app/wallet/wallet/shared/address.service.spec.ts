@@ -5,7 +5,7 @@ import { SharedModule } from '../../shared/shared.module';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { AddressService } from './address.service';
-import { MockRpcService } from 'app/core/rpc/rpc.mockservice';
+import { RpcMockService } from 'app/_test/core-test/rpc-test/rpc-mock.service';
 
 describe('AddressService', () => {
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('AddressService', () => {
       ],
       providers: [
       AddressService,
-      { provide: RpcService, useClass: MockRpcService }
+      { provide: RpcService, useClass: RpcMockService }
       ]
     });
   });
