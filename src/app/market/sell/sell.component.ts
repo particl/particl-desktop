@@ -48,9 +48,9 @@ export class SellComponent implements OnInit {
   ];
 
   listing_filtering: Array<any> = [
-    { title: 'All Listings',        value: '' },
-    { title: 'Published Listing',   value: true },
-    { title: 'UnPublished Listing', value: false }
+    { title: 'All listings',  value: '' },
+    { title: 'Published',     value: true },
+    { title: 'Unpublished',   value: false }
   ];
 
   templateSearchSubcription: any;

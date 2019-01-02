@@ -67,7 +67,7 @@
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
         <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()">
-          <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering" value="{{ status.value }}">
+          <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering" value="{{ status.value }}" color="primary">
             {{ status.title }}
             <!-- <span class="amount">{{ status.amount }}</span>  -->
           </mat-radio-button>
