@@ -1,0 +1,33 @@
+<div mat-dialog-title>Choose reason for rejecting bid</div>
+<button class="small-close-button pull-right" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+<div mat-dialog-content class="dialog-content">
+
+  <p class="lead">
+    Please indicate a reason for rejecting this bid.
+  </p>
+
+  <div class="row" fxLayout fxLayoutAlign="center center">
+    <mat-form-field class="full-width" fxFlex="50%">
+      <mat-select [(value)]="data.selectedMessage" placeholder="Reason For Rejection">
+        <mat-option *ngFor="let rMsg of rejectMessages" [value]="rMsg.value">
+          {{rMsg.value}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+</div><!-- .dialog-content -->
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button [disabled]="!data.selectedMessage" mat-raised-button color="primary" [mat-dialog-close]="data.selectedMessage">
+    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    Reject Bid
+  </button>
+</mat-dialog-actions>

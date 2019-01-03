@@ -10,6 +10,7 @@
           <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
           <span class="hash {{ order?.hash_bg }}" matTooltip="Order hash">{{ order?.hash }}</span>
           Added {{order?.added}} &bull; Updated {{order?.updated}}
+          <span> MEMO: {{order?.listing?.memo}}</span>
         </div>
       </div>
       <div class="status {{ order?.status }} {{ order?.type }}" fxFlex="0 0 120px"><span class="dot"></span>{{ order?.status }}</div>
@@ -72,7 +73,7 @@
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
-      <button mat-button color="warn" (click)="callBid('reject')" *ngIf="order?.messages?.allow_reject_order"
+      <button mat-button color="warn" (click)="openRejectBidModal()" *ngIf="order?.messages?.allow_reject_order"
               class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
         Reject bid &amp; cancel order

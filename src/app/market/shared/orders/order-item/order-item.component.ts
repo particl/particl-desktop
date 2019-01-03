@@ -12,6 +12,8 @@ import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 import { PlaceOrderComponent } from '../../../../modals/market-place-order/place-order.component';
 import { ShippingComponent } from '../../../../modals/market-shipping/shipping.component';
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
+import { RejectBidComponent } from 'app/modals/reject-bid/reject-bid.component';
+
 
 @Component({
   selector: 'app-order-item',
@@ -23,6 +25,8 @@ export class OrderItemComponent implements OnInit {
   @Input() order: Bid;
   trackNumber: string;
   country: string = '';
+  selectedMessage: string;
+
   constructor(
     private listingService: ListingService,
     private bid: BidService,
@@ -125,6 +129,11 @@ export class OrderItemComponent implements OnInit {
     this.bid.rejectBidCommand(this.order.id).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
+      if (this.selectedMessage) {
+        this.order.listing.memo = this.selectedMessage;
+        console.log('herehrehrehrehr:', this.order);
+      }
+      console.log('REJECT:', this.order.listing.memo)
       this.order = new Bid(this.order, this.order.type)
     }, (error) => {
       this.snackbarService.open(`${error}`);
@@ -163,6 +172,17 @@ export class OrderItemComponent implements OnInit {
     }, (error) => {
       console.log(error);
       this.snackbarService.open(`${error}`);
+    });
+  }
+
+  openRejectBidModal(): void {
+    const dialogRef = this.dialog.open(RejectBidComponent, {
+      disableClose: true,
+      data: {selectedMessage: this.selectedMessage}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectedMessage = result;
+      this.callAction('reject');
     });
   }
 
