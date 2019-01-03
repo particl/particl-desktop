@@ -47,7 +47,8 @@
           <!-- TODO: make component -->
           <tr *ngFor="let listing of cart?.listings"
               [ngClass]="{expired: checkExpired(listing)}">
-            <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
+            <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
+                (click)="openListing(listing)">
               <div class="image" fxFlex="0 0 75px">
                 <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
               </div>
@@ -55,11 +56,17 @@
                 <div class="title">
                   {{listing.title}}
                 </div>
-                <div class="error" *ngIf="listing.errorMessage"><!-- e.g. expired items in cart -->
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                <!-- errors, e.g. expired items in cart -->
+                <div class="error message" *ngIf="listing.errorMessage">
+                  <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
                   {{listing.errorMessage}}
                 </div>
-                <div class="category" *ngIf="!listing.errorMessage">
+                <!-- expires soon warning -->
+                <div class="warning message" *ngIf="listing.isAboutToExpire">
+                  <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
+                  Listing expires in {{listing.expireIn}}
+                </div>
+                <div class="category" *ngIf="!listing.errorMessage && !listing?.isAboutToExpire">
                   {{listing.category.name}}
                 </div>
               </div>
@@ -270,7 +277,8 @@
         </thead>
         <tbody>
         <tr *ngFor="let listing of cart?.listings">
-          <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
+          <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
+              (click)="openListing(listing)">
             <div class="image" fxFlex="0 0 75px">
               <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
             </div>

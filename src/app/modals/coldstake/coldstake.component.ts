@@ -29,6 +29,7 @@ export class ColdstakeComponent {
 
   // Cold wallet (step 3)
   finalMessage: string = '';
+  failed: boolean = false;
 
   constructor(
     private _rpc: RpcService,
@@ -112,11 +113,13 @@ export class ColdstakeComponent {
           this.log.d(`setColdStakingAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
           this._flashNotificationService.open('Cold staking successfully activated', 'info');
           this._rpcState.set('ui:coldstaking', true);
+          this.failed = false;
           this.close();
         },
         error => {
           this.log.er('setColdStakingAddress: ', error);
-          this.finalMessage = 'Failed to activate cold staking.. ' + error.message;
+          this.finalMessage = 'Failed to activate cold staking: ' + error.message;
+          this.failed = true;
         });
   }
 
@@ -126,11 +129,13 @@ export class ColdstakeComponent {
         success => {
           this.log.d(`resetColdStakeAddress: set changeaddress: ${success.changeaddress.coldstakingaddress}`);
           this._flashNotificationService.open('Cold staking successfully deactivated', 'info');
+          this.failed = false;
           this.close();
         },
         error => {
           this.log.er('resetColdStakeAddress: ', error);
           this.finalMessage = 'Failed to deactivate cold staking.. ' + error.message;
+          this.failed = true;
         });
   }
 
