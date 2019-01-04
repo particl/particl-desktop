@@ -169,9 +169,7 @@ mat-card.mat-card {
     .mat-icon {
       @extend %tfx;
       font-size: 14px;
-      margin-right: 6px;
-      position: relative;
-      top: 2px;
+      margin-right: 9px;
       opacity: 0.5;
     }
   }
@@ -200,20 +198,13 @@ mat-card.mat-card {
     }
   }
   .mat-expansion-indicator {
+    @extend %tfx;
     position: relative;
-    top: -4px;
-    transform: none !important;
-    &::after {
-      transition: none !important;
-    }
+    top: -3px;
   }
   &.mat-expanded { // while expanded..
     .mat-expansion-indicator {
-      top: 0;
-      &::after {
-        position: relative;
-        transform: rotate(-135deg);
-      }
+      top: 3px;
     }
   }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
