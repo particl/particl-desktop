@@ -28,7 +28,7 @@
   border-bottom: 1px solid darken($bg-black, 5%);
   box-shadow: 0 1px 0 lighten($bg-black, 5%) !important;
   background: $bg-black;
-  margin: 8px 0 0 !important;
+  margin: 8px 0 1px !important;
   // submenu toggle
   .mat-expansion-panel-header {
     @extend %tfx;
@@ -38,7 +38,7 @@
     text-transform: uppercase;
     min-height: 32px !important;
     max-height: 32px !important;
-    padding: 0 32px;
+    padding: 0 24px;
     &:hover {
       color: lighten($text-muted, 20%);
     }
@@ -65,7 +65,7 @@
   .tag { // order notifications
     @extend %tfx;
     position: absolute;
-    right: 0;
+    right: 24px;
     top: 10px;
     opacity: 0.6;
   }
@@ -152,14 +152,12 @@ a.sidebar-item-link {
     LAYOUT
 \* ------------------------------- */
 
-// ------ SIDEBAR ------ //
+// ------ SIDEBAR (main menu) ------ //
 
 .sidebar { // AKA .mat-sidenav
   width: $sidebar-width;
   background-color: $bg-black;
   color: $color-white;
-  display: flex;
-  flex-direction: column;
 
   .logo {
     flex: 0 0 60px;

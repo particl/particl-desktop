@@ -16,7 +16,7 @@
   }
   .mat-icon {
     @extend %tfx;
-    margin-right: 4px;
+    margin-right: 8px;
     position: relative;
     top: 2px;
   }
@@ -27,6 +27,6 @@
     color: $text-muted;
     font-size: 13px;
     font-weight: 400;
-    margin-left: 4px;
+    margin-left: 8px;
   }
 }
