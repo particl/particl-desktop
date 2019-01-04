@@ -94,7 +94,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.log.d('overview created');
     this.loadCategories();
     this.loadPage(0);
-    this.checkInterval = setInterval(() => this.newListingsCheck(), 5000);
+    this.checkInterval = setInterval(() => this.loadPage(0, false, false), 5000);
   }
 
   loadCategories() {
@@ -106,9 +106,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadPage(pageNumber: number, clear?: boolean) {
+  loadPage(pageNumber: number, clear?: boolean, refreshListing: boolean = true) {
     // set loading aninmation
-    this.isLoading = true;
+    this.isLoading = refreshListing;
 
     // params
     const max = this.pagination.maxPerPage;
@@ -129,27 +129,43 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country, this.flagged)
       .take(1).subscribe((listings: Array<Listing>) => {
+
       this.isLoading = false;
       this.isLoadingBig = false;
 
-      // new page
-      const page = {
-        pageNumber: pageNumber,
-        listings: listings
-      };
-      if (listings && listings[0]) {
-        this.currentListings = listings[0].hash;
+      // check for listing indicator.
+      if (!refreshListing && listings && listings[0]) {
+
+        this.newListings = listings[0].hash;
+
+        if (this.currentListings !== this.newListings) {
+
+          // Should indicator or whatever once confirm via allien.
+          console.log('New listing appear');
+
+          this.currentListings = this.newListings
+        }
       }
 
-      // should we clear all existing pages? e.g search
-      if (clear === true) {
-        this.pages = [page];
-        this.noMoreListings = false;
-      } else { // infinite scroll
-        if (listings.length > 0) {
-          this.pushNewPage(page);
-        } else {
-          this.noMoreListings = true;
+
+      // update the listing data.
+      if (refreshListing) {
+        // new page
+        const page = {
+          pageNumber: pageNumber,
+          listings: listings
+        };
+
+        // should we clear all existing pages? e.g search
+        if (clear === true) {
+          this.pages = [page];
+          this.noMoreListings = false;
+        } else { // infinite scroll
+          if (listings.length > 0) {
+            this.pushNewPage(page);
+          } else {
+            this.noMoreListings = true;
+          }
         }
       }
     })
@@ -236,22 +252,5 @@ export class ListingsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed = true;
     clearInterval(this.checkInterval);
-  }
-
-  newListingsCheck() {
-    const max = this.pagination.maxPerPage;
-    const search = this.filters.search;
-    const category = this.filters.category;
-    const country = this.filters.country;
-
-    this.listingService.search(0, max, null, search, category, country, this.flagged)
-      .subscribe((listings: Array<Listing>) => {
-        if (listings && listings[0]) {
-          this.newListings = listings[0].hash;
-          this.showIndicator = this.currentListings !== this.newListings;
-        } else {
-          this.showIndicator = false;
-        }
-      });
   }
 }
