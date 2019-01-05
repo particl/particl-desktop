@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { mockgetpeerinfo } from './mock-data/getpeerinfo.mock';
 import { filterAddress } from './mock-data/filteraddress.mock';
 import { filterTxs } from './mock-data/transactions.mock';
+import { mockSendInfo, listStealth } from './mock-data/send.mock';
 
 // TODO: create & move into the testing module
 // TODO: add more calls, currently only used in SendComponent
@@ -29,6 +30,12 @@ export class RpcMockService {
         break;
       case 'getpeerinfo':
         json = mockgetpeerinfo;
+        break;
+      case 'sendtypeto':
+        json = mockSendInfo;
+        break;
+      case 'liststealthaddresses':
+        json = listStealth;
         break;
       default:
         break;

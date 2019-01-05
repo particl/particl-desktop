@@ -88,6 +88,7 @@ export class SendService {
    * Estimates if estimateFeeOnly === true.
    */
   private send(tx: TransactionBuilder): Observable<any> {
+    console.log(tx);
     return this._rpc.call('sendtypeto', [tx.input, tx.output, [{
       address: tx.toAddress,
       amount: tx.amount,
@@ -98,7 +99,6 @@ export class SendService {
 
   private rpc_send_success(json: any, address: string, amount: number) {
     this.log.d(`rpc_send_success, succesfully executed transaction with txid ${json}`);
-
     // Truncate the address to 16 characters only
     const trimAddress = address.substring(0, 16) + '...';
     const txsId = json.substring(0, 45) + '...';
