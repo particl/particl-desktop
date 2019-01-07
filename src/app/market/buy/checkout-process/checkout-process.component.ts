@@ -31,11 +31,17 @@ import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
 
+enum errorType {
+  itemExpired = 'An item in your basket has expired!'
+}
+
+
 @Component({
   selector: 'app-checkout-process',
   templateUrl: './checkout-process.component.html',
   styleUrls: ['./checkout-process.component.scss']
 })
+
 export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create('buy.component: ' + Math.floor((Math.random() * 1000) + 1));
@@ -306,8 +312,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
-      const errorExpired = errorType.itemExpired;
-    if (error === errorExpired) {
+    if (error === errorType.itemExpired) {
       this.resetStepper();
       this.snackbarService.open(error, 'warn');
     } else {
@@ -402,8 +407,4 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     return false;
   }
 
-}
-
-export enum errorType {
-  itemExpired = 'An item in your basket has expired!'
 }
