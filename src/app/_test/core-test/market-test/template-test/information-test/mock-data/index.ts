@@ -1,0 +1,1 @@
+export { updateData } from './update';
