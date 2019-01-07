@@ -306,7 +306,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
-    if (error === 'An item in your basket has expired!') {
+    if (error === errorType.itemExpired) {
       this.resetStepper();
       this.snackbarService.open(error, 'warn');
     } else {
@@ -401,4 +401,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     return false;
   }
 
+}
+
+export enum errorType {
+  itemExpired = 'An item in your basket has expired!'
 }
