@@ -88,7 +88,7 @@ export class SendService {
    * Estimates if estimateFeeOnly === true.
    */
   private send(tx: TransactionBuilder): Observable<any> {
-    console.log(tx);
+    this.log.d('transaction' + tx);
     return this._rpc.call('sendtypeto', [tx.input, tx.output, [{
       address: tx.toAddress,
       amount: tx.amount,
