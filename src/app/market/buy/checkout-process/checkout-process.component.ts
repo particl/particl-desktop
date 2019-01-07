@@ -306,8 +306,13 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
+    if (error === 'An item in your basket has expired!') {
+      this.resetStepper();
+      this.snackbarService.open(error, 'warn');
+    } else {
       this.snackbarService.open(error, 'warn');
       this.log.d(`Error while placing an order`);
+    }
     });
   }
 
