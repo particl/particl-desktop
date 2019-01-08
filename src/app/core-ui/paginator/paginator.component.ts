@@ -7,7 +7,14 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Intl } from './intl-model';
+
+enum Intl {
+  itemsPerPageLabel = 'Items per page',
+  nextPageLabel = 'Next page',
+  previousPageLabel = 'Previous page',
+  firstPageLable = 'Fist Page',
+  lastPageLable = 'Last Page',
+}
 
 @Component({
   selector: 'app-paginator',
