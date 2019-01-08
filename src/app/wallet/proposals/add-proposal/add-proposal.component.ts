@@ -149,14 +149,4 @@ export class AddProposalComponent implements OnInit {
         this.snackbarService.open(error, 'warn')
       })
   }
-
-  checkProposalItems() {
-    if (this.proposalFormGroup.controls.options.value.length >= 5) {
-      this.numControls = this.proposalFormGroup.controls.options;
-      return true;
-    } else {
-      this.numControls = this.proposalFormGroup.controls.options;
-      return false;
-    }
-  }
 }
