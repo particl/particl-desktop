@@ -11,7 +11,8 @@ import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
 
 export enum errorType {
   unspent = 'Zero unspent outputs - insufficient funds to place the order.',
-  broke = 'Insufficient funds to place the order.'
+  broke = 'Insufficient funds to place the order.',
+  itemExpired = 'An item in your basket has expired!'
 }
 
 @Injectable()
@@ -23,7 +24,15 @@ export class BidService {
   }
 
   public async order(cart: Cart, profile: any, shippingAddress: any): Promise<string> {
-
+    let isValid = true;
+    let validDate = new Date().getTime() + 20000;
+    for (let i = 0; i < cart.listings.length; i++) {
+        const listing: Listing = cart.listings[i];
+        isValid = validDate > listing.expiredAt;
+        if (!isValid) break;
+    }
+    if (!isValid) throw errorType.itemExpired;
+  
     const shippingParams = [];
     for (const key of Object.keys(shippingAddress)) {
       shippingParams.push(key);
@@ -32,6 +41,9 @@ export class BidService {
 
     for (let i = 0; i < cart.listings.length; i++) {
       const listing: Listing = cart.listings[i];
+      if (new Date().getTime() > listing.expiredAt) {
+        throw errorType.itemExpired;
+      }
       if (listing.hash) {
         this.log.d(`Placing bid for hash=${listing.hash}`);
         // bid for item
