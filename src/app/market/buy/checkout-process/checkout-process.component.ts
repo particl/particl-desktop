@@ -315,10 +315,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     if (error === errorType.itemExpired) {
       this.resetStepper();
       this.snackbarService.open(error, 'warn');
-    } else {
+    }
       this.snackbarService.open(error, 'warn');
       this.log.d(`Error while placing an order`);
-    }
     });
   }
 
