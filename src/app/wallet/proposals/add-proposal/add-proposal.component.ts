@@ -27,7 +27,6 @@ export class AddProposalComponent implements OnInit {
   // form controls
   public proposalFormGroup: FormGroup;
   expireIn: number = 7; // days.
-  numControls: any;
 
   constructor(
     private router: Router,
@@ -41,9 +40,9 @@ export class AddProposalComponent implements OnInit {
   ngOnInit() {
 
     this.proposalFormGroup = this.formBuilder.group({
-      'title': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
-      'description': ['', Validators.compose([Validators.required, Validators.maxLength(2000)])],
-      'options': this.formBuilder.array([
+      title: ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+      description: ['', Validators.compose([Validators.required, Validators.maxLength(2000)])],
+      options: this.formBuilder.array([
         this.initOptionFields(),
         this.initOptionFields()
       ]),
@@ -57,7 +56,7 @@ export class AddProposalComponent implements OnInit {
 
   initOptionFields(): FormGroup {
     return this.formBuilder.group({
-      'option': ['', Validators.compose([Validators.required, Validators.maxLength(50)])]
+      option: ['', Validators.compose([Validators.required, Validators.maxLength(50)])]
     });
   }
 
