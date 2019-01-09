@@ -25,14 +25,18 @@ export class BidService {
 
   public async order(cart: Cart, profile: any, shippingAddress: any): Promise<string> {
     let isValid = true;
-    let validDate = new Date().getTime() + 20000;
+    const validDate = new Date().getTime() + 20000;
     for (let i = 0; i < cart.listings.length; i++) {
-        const listing: Listing = cart.listings[i];
-        isValid = validDate > listing.expiredAt;
-        if (!isValid) break;
+      const listing: Listing = cart.listings[i];
+      isValid = validDate > listing.expiredAt;
+      if (!isValid) {
+        break;
+      }
     }
-    if (!isValid) throw errorType.itemExpired;
-  
+    if (!isValid) {
+      throw errorType.itemExpired;
+    }
+
     const shippingParams = [];
     for (const key of Object.keys(shippingAddress)) {
       shippingParams.push(key);
