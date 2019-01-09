@@ -64,8 +64,9 @@ export class BidService {
     });
   }
 
-  rejectBidCommand(id: number): Observable<any> {
-    const params = ['reject', id];
+  rejectBidCommand(id: number, rejectReason: string): Observable<any> {
+    rejectReason = 'OUT_OF_STOCK';
+    const params = ['reject', id, rejectReason];
     return this.market.call('bid', params);
   }
 

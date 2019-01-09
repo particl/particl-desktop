@@ -126,7 +126,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   rejectBid() {
-    this.bid.rejectBidCommand(this.order.id).take(1).subscribe(res => {
+    this.bid.rejectBidCommand(this.order.id, this.selectedMessage).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
       if (this.selectedMessage) {
