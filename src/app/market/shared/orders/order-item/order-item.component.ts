@@ -184,12 +184,13 @@ export class OrderItemComponent implements OnInit {
   }
 
   checkRejectMessage() {
-    if (this.order.status === 'REJECTED') {
-      for (let k = this.order.BidDatas.length; k >= 0; k--) {
+    if (this.order.status === 'rejected') {
+      for (let k = this.order.BidDatas.length - 1; k >= 0; k--) {
         if (rejectMessages[this.order.BidDatas[k].dataValue]) {
           return rejectMessages[this.order.BidDatas[k].dataValue];
         }
       }
+      return 'No information provided'
     }
   }
 }

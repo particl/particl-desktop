@@ -98,6 +98,25 @@
       border-radius: $radius;
     }
   }
+
+  .reject-message-info {
+    margin-top: 8px;
+    .title {
+      font-size: 13px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: $text;
+    }
+    .more-info {
+      @extend %enable-select;
+      margin-left: 10px;
+      color: darken($color, 7%);
+      background: rgba($color-alert, 0.1);
+      padding: 3px 8px;
+      border-radius: $radius;
+    }
+  }
+
   .action-buttons {
     .single .mat-icon {
       margin: 0;
