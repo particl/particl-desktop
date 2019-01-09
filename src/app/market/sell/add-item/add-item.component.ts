@@ -97,11 +97,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       const clone: boolean = params['clone'];
       if (id) {
         this.templateId = +id;
-        this.preload();
-      }
-      if (clone) {
-        this.log.d('Cloning listing!');
-        this.templateId = undefined;
+        this.preload(clone);
       }
     });
 
@@ -189,7 +185,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.destroyed = true;
   }
 
-  preload() {
+  preload(isCloned: boolean) {
     this.log.d(`preloading for id=${this.templateId}`);
     this.template.get(this.templateId).subscribe((template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
@@ -226,10 +222,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
       this.itemFormGroup.patchValue(t);
 
-      this.images = template.imageCollection.images;
-
-      this.preloadedTemplate = template;
-      // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
+      if (isCloned) {
+        this.picturesToUpload = template.imageCollection.images.map(img => img.originalEncoding).filter(img => img.length);
+        this.templateId = undefined;
+      } else {
+        this.images = template.imageCollection.images;
+        this.preloadedTemplate = template;
+      }
     });
   }
 
