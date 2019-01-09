@@ -12,7 +12,7 @@ const addData = {
         'updatedAt': 1546680317956,
         'createdAt': 1546680317956
     }
-}
+};
 
 export {
     addData
