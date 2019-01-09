@@ -10,7 +10,7 @@
           <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
           <span class="hash {{ order?.hash_bg }}" matTooltip="Order hash">{{ order?.hash }}</span>
           Added {{order?.added}} &bull; Updated {{order?.updated}}
-          <span> MEMO: {{order?.listing?.memo}}</span>
+          <span *ngIf="order?.status === 'REJECTED'"> MEMO: {{order?.listing?.memo}}</span>
         </div>
       </div>
       <div class="status {{ order?.status }} {{ order?.type }}" fxFlex="0 0 120px"><span class="dot"></span>{{ order?.status }}</div>
@@ -26,6 +26,20 @@
       </p>
       <p *ngIf="!order?.listing?.memo">
         <span class="title">Shipping info from Seller</span>
+        <em>No information provided</em>
+      </p>
+    </div>
+  </div>
+
+  <div class="status-info" *ngIf="order?.status === 'REJECTED'">
+    <p>{{ order?.messages.status_info }}</p>
+    <div class="additional-shipping-info">
+      <p *ngIf="order?.BidDatas?.dataId === 'reason'">
+        <span class="title">Reason for rejection</span>
+        <code class="more-info">{{ order?.BidDatas?.dataValue}}</code>
+      </p>
+      <p *ngIf="order?.BidDatas?.dataId !== 'reason'">
+        <span class="title">Reason for rejection</span>
         <em>No information provided</em>
       </p>
     </div>

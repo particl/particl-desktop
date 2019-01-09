@@ -13,7 +13,7 @@
     <mat-form-field class="full-width" fxFlex="50%">
       <mat-select [(value)]="data.selectedMessage" placeholder="Reason For Rejection">
         <mat-option *ngFor="let rMsg of rejectMessages" [value]="rMsg.value">
-          {{rMsg.value}}
+          {{rMsg.viewValue}}
         </mat-option>
       </mat-select>
     </mat-form-field>

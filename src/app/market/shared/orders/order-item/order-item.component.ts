@@ -13,7 +13,7 @@ import { PlaceOrderComponent } from '../../../../modals/market-place-order/place
 import { ShippingComponent } from '../../../../modals/market-shipping/shipping.component';
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 import { RejectBidComponent } from 'app/modals/reject-bid/reject-bid.component';
-
+import { rejectMessages } from '../../../../core/util/utils';
 
 @Component({
   selector: 'app-order-item',
@@ -129,11 +129,6 @@ export class OrderItemComponent implements OnInit {
     this.bid.rejectBidCommand(this.order.id, this.selectedMessage).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
-      if (this.selectedMessage) {
-        this.order.listing.memo = this.selectedMessage;
-        console.log('herehrehrehrehr:', this.order);
-      }
-      console.log('REJECT:', this.order.listing.memo)
       this.order = new Bid(this.order, this.order.type)
     }, (error) => {
       this.snackbarService.open(`${error}`);
@@ -182,8 +177,19 @@ export class OrderItemComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.selectedMessage = result;
-      this.callAction('reject');
+      if (result !== 'CANCEL') {
+        this.callAction('reject');
+      }
     });
   }
 
+  checkRejectMessage() {
+    if (this.order.status === 'REJECTED') {
+      for (let k = this.order.BidDatas.length; k >= 0; k--) {
+        if (rejectMessages[this.order.BidDatas[k].dataValue]) {
+          return rejectMessages[this.order.BidDatas[k].dataValue];
+        }
+      }
+    }
+  }
 }

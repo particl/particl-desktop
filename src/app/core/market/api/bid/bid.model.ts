@@ -69,6 +69,10 @@ export class Bid extends Product {
     return this.order.listing;
   }
 
+  get BidDatas(): any {
+    return this.order.BidDatas;
+  }
+
   setActiveOrders() {
     this.activeBuySell = ['Accept bid', 'Mark as shipped', 'Mark as delivered', 'Make payment']
                           .includes(this.messages.action_button);

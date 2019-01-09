@@ -352,3 +352,7 @@ export const Messages = {
   }
 }
 
+export const rejectMessages = {
+  OUT_OF_STOCK: 'Item not currently in stock.'
+}
+
