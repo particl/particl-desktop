@@ -1,7 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../wallet/shared/shared.module';
+import { CoreUiModule } from '../../core-ui/core-ui.module';
 import { RejectBidComponent } from './reject-bid.component';
-import { MaterialModule } from '../../core-ui/material/material.module';
 
 describe('RejectBidComponent', () => {
   let component: RejectBidComponent;
@@ -11,7 +14,14 @@ describe('RejectBidComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ RejectBidComponent ],
       imports: [
-        MaterialModule
+        BrowserAnimationsModule,
+        SharedModule,
+        CoreModule.forRoot(),
+        CoreUiModule.forRoot(),
+      ],
+      providers: [
+        { provide: MatDialogRef },
+        { provide: MAT_DIALOG_DATA }
       ]
     })
     .compileComponents();
