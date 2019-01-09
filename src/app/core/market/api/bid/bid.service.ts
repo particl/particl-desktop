@@ -45,9 +45,6 @@ export class BidService {
 
     for (let i = 0; i < cart.listings.length; i++) {
       const listing: Listing = cart.listings[i];
-      if (new Date().getTime() > listing.expiredAt) {
-        throw errorType.itemExpired;
-      }
       if (listing.hash) {
         this.log.d(`Placing bid for hash=${listing.hash}`);
         // bid for item
