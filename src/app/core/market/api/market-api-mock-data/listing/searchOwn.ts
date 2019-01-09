@@ -1,4 +1,0 @@
-const searchOwnListings = [{}];
-export {
-    searchOwnListings
-}

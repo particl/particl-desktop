@@ -1,4 +1,4 @@
-const getListing = {
+const getData = {
   'object': {
     'id': 92,
     'hash': '6181b7b6c941946ec8be5226f7fd5187a659f3edd7a5ae8e96e91201fad440bc',
@@ -15,6 +15,7 @@ const getListing = {
       'id': 94,
       'title': 'Dry Gin',
       'shortDescription': 'homemade gin for sale',
+      // tslint:disable-next-line
       'longDescription': 'gin that has been made in the native lands of america, with an alcohol percentage of 100% this will surley get any party started, but bewarned the next morning!',
       'itemCategoryId': 52,
       'listingItemId': 92,
@@ -409,6 +410,7 @@ const getListing = {
       'id': 94,
       'title': 'Dry Gin',
       'shortDescription': 'homemade gin for sale',
+      // tslint:disable-next-line
       'longDescription': 'gin that has been made in the native lands of america, with an alcohol percentage of  100 % this will surley get any party started, but bewarned the next morning!',
       'itemCategoryId': 52,
       'listingItemId': 92,
@@ -595,5 +597,5 @@ const getListing = {
 };
 
 export {
-  getListing
+  getData
 }

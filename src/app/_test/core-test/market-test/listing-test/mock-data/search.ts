@@ -1,6 +1,6 @@
-const searchListings = [{}];
+const searchData = [{}];
 export {
-    searchListings
+    searchData
 }
 // const list = [
 //     {

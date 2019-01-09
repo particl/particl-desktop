@@ -1,0 +1,4 @@
+const searchOwnData = [{}];
+export {
+    searchOwnData
+}
