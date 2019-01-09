@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RejectBidComponent } from './reject-bid.component';
+import { MaterialModule } from '../../core-ui/material/material.module';
 
 describe('RejectBidComponent', () => {
   let component: RejectBidComponent;
@@ -8,7 +9,10 @@ describe('RejectBidComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RejectBidComponent ]
+      declarations: [ RejectBidComponent ],
+      imports: [
+        MaterialModule
+      ]
     })
     .compileComponents();
   }));
