@@ -1844,6 +1844,7 @@ const searchData = [
       'id': 10,
       'title': 'Collection of spicy peppers *** (1 kg)',
       'shortDescription': 'Jalapeno & Habanero get you where you need to be',
+      // tslint:disable-next-line
       'longDescription': 'Jalapeño\n\nThe jalapeño is a medium-sized chili pepper pod type cultivar of the species Capsicum annuum. A mature jalapeño fruit is long and hangs down with a round, firm, smooth flesh of wide. It can have a range of pungency, with Scoville heat units of 3,500 to 8,000.\n\nHabanero\n\nThe habanero is rated as a hot variety of chili pepper. Unripe habaneros are green, and they color as they mature. The most common color variants are orange and red, but the fruit may also be white, brown, yellow, green, or purple. Typically, a ripe habanero chili is long.',
       'itemCategoryId': 52,
       'listingItemId': 9,
