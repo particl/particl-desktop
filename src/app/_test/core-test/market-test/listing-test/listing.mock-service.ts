@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
-import { searchOwnData, searchData, getData } from 'app/_test/core-test/market-test/listing-test/mock-data';
+import { searchData, getData } from 'app/_test/core-test/market-test/listing-test/mock-data';
 
 /*
     This is a fake mock service used for the RpcService.
@@ -9,17 +9,12 @@ import { searchOwnData, searchData, getData } from 'app/_test/core-test/market-t
 @Injectable()
 export class MockListingService {
 
-  searchOwn(page: number, pageLimit: number, profileId: number | string,
-    search: string, catId: number, country: any, flag: boolean): Observable<Array<any>> {
-    return of(searchOwnData)
-  }
-
   search(page: number, pageLimit: number, profileId: number | string,
     search: string, catId: number, country: any, flag: boolean): Observable<Array<any>> {
-    return of(searchData)
+    return of(searchData);
   }
 
   get(id: number): Observable<any> {
-    return of(getData)
+    return of(getData);
   }
 };
