@@ -106,8 +106,24 @@
       </button>
     </div>
   </mat-action-row>
-  <div *ngIf="processingStatus">
+
+  <div class="loading-container" *ngIf="processingStatus">
+    <div class="loading-info">
+      <div class="loading-image">
+        <img src="./assets/particl-logo-symbol.svg">
+      </div>
+      <p class="title">
+        Hang on, we're busy processing your request
+      </p>
+      <p class="widget-help">
+        This might take a while
+      </p>
+    </div>
+  </div><!-- .loading-container -->
+
+
+  <!-- <div *ngIf="processingStatus">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <h3>YOUR REQUEST IS BEING PROCESSED</h3>
-  </div>
+  </div> -->
 </mat-expansion-panel>
