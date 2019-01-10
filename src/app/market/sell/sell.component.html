@@ -12,19 +12,11 @@
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
           Orders
-          <!--app-order-count [type]="'sell'" class="tag"></app-order-count-->
         </ng-template>
       </mat-tab>
-      <!--mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-          Sell item
-        </ng-template>
-      </mat-tab-->
     </mat-tab-group>
   </div>
 </app-header>
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== LISTINGS =========== -->
@@ -125,6 +117,8 @@
 
   </div><!-- .listings-list -->
 </div><!-- .container-block -->
+
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 <mat-progress-bar mode="indeterminate" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading" class="loading-bar"></mat-progress-bar>
 
 
