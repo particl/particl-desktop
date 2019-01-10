@@ -73,7 +73,7 @@
         <div class="subtitle">Voting {{selectedTab !== 'planned' ? 'progress' : 'finished'}}</div>
 
         <!-- if someone already voted, show graph: -->
-        <div class="graph" *ngIf="proposalResult?.totalVotes">
+        <div class="graph" *ngIf="proposalResult?.totalWeight">
           <nvd3
             *ngIf="proposalResult?.graphData && proposalResult?.graphData.length"
             [options]="graphOptions"
@@ -82,13 +82,13 @@
         </div>
 
         <!-- if no votes yet, show placeholder: -->
-        <div *ngIf="!proposalResult?.totalVotes" class="graph-placeholder">
+        <div *ngIf="!proposalResult?.totalWeight" class="graph-placeholder">
           <div class="title">No<br>votes<br>{{selectedTab === 'active' ? "yet" : "received"}}</div>
         </div>
 
         <div class="percentage-voted">
           <!-- @TODO may be total vote count replaced with  % of coins voted ? -->
-          <span class="value">{{proposalResult?.totalVotes }}</span>&ensp;{{proposalResult?.totalVotesText}}
+          <span class="value">{{ proposalResult?.totalCoins }}</span>&ensp;{{proposalResult?.totalPercentageText}}
         </div>
         <!-- <div class="percentage-voted">
           <!- TODO: implement % of coins voted in total for this proposal ->

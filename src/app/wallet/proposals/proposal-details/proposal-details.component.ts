@@ -99,12 +99,11 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     this.proposalService.result(this.proposal.hash)
       .takeWhile(() => !this.destroyed)
       .subscribe((result: ProposalResult) => {
-        console.log(result);
         if (result) {
           this.proposalResult = result;
 
           // No need to call this.getVoteDetails() until proposal doesn't have any vote!!
-          if (this.proposalResult.totalVotes) {
+          if (this.proposalResult.totalWeight) {
             this.getVoteDetails();
           }
         }
@@ -138,7 +137,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   vateConfirmed(): void {
-    this.modelsService.unlock({timeout: 10}, (status) => this.callVote())
+    this.modelsService.unlock({timeout: 60}, (status) => this.callVote())
   }
 
   callVote(): void {
@@ -149,21 +148,12 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     this.proposalService.vote(params).subscribe((response) => {
 
       this.aleradyVoted = true;
-      // update graph data.
-      this.updateGraphData();
+      // Update graph data as votes are now saving locally
+      this.getProposalResult();
       this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
     }, (error) => {
       this.snackbarService.open(error, 'warn');
     })
-  }
-
-  updateGraphData(): void {
-
-    const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
-    this.proposalResult.updateVote(this.selectedOption, previousVote, this._balance);
-    this.voteDetails = new VoteDetails({
-      ProposalOption: this.selectedOption
-    });
   }
 
   ngOnDestroy() {

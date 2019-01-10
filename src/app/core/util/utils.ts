@@ -88,6 +88,11 @@ export class Amount {
     return Math.trunc(int * calcDec) / calcDec;
   }
 
+  // Convert satoshi coins to original Part coins
+  public getPartCoins() {
+    return (this.amount)/100000000;
+  }
+
 }
 
 export class Fee {
