@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Responses } from 'app/core/market/mock-data/mock-market.responses';
+import { Responses } from 'app/_test/core-test/market-test/proposal-test/mock-data/mock-market.responses';
 
 /*
   This is a fake mock service used for the MarketService.
@@ -13,20 +13,20 @@ export class MockMarketService {
   call(method: string, params?: Array<any> | null): Observable<any> {
     let response = {}
 
-    // @TODO once all the methods are covered replace with the switch case.
-
-    // if (method && params && params[0]) {
-    //   response = Responses[method][params[0]];
-    // }
-
     switch (method) {
       case 'proposal':
+
+        response = Responses[method][params[0]] || Responses[method][404];
+        break;
+
+      case 'vote':
+
         response = Responses[method][params[0]];
         break;
+
       default:
         response = []
     }
-
     return Observable.of(response);
   }
 };

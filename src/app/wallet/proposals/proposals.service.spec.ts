@@ -3,19 +3,20 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { ProposalsService } from './proposals.service';
 import { MarketService } from 'app/core/market/market.service';
-import { MockMarketService } from 'app/core/market/market.mockservice';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { AddressService } from 'app/core/market/api/profile/address/address.service';
-import { Sleep } from 'app/core/util/utils';
-import { Responses } from 'app/core/market/mock-data/mock-market.responses';
-import { MockProposalsService } from 'app/wallet/proposals/proposals.mockservice';
+import { MockMarketService } from 'app/_test/core-test/market-test/market.mockservice';
+import { Responses } from 'app/_test/core-test/market-test/proposal-test/mock-data/mock-market.responses';
+import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
+import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 
 describe('ProposalsService', async () => {
-  let sleep, proposalHash;
+  let proposalHash;
   beforeEach(() => {
-    sleep = new Sleep().sleep;
+
     proposalHash = '8237fe3f87a27f68077eba1e069f5635137a8cb0c56e95cdd0d33cdfdadf719e';
+
     TestBed.configureTestingModule({
       imports: [
         HttpClientModule
@@ -24,9 +25,7 @@ describe('ProposalsService', async () => {
         {
           provide: MarketService, useClass: MockMarketService
         },
-        {
-          provide: ProposalsService, useClass: MockProposalsService
-        },
+        ProposalsService,
         MarketStateService,
         AddressService,
         ProfileService,
@@ -49,25 +48,13 @@ describe('ProposalsService', async () => {
   it('should result method return the proposals result', inject([ProposalsService], async (service: ProposalsService) => {
     const proposalResult = await service.result(proposalHash).toPromise();
     expect(proposalResult).not.toBe(undefined);
-    expect(proposalResult).toEqual(Responses.vote.result[proposalHash])
+    expect(proposalResult).toEqual(new ProposalResult(Responses.proposal.result))
   }));
 
   it('should vote method return the proposals votes', inject([ProposalsService], async (service: ProposalsService) => {
     const params = [1, proposalHash];
     const proposalVotes = await service.get(proposalHash).toPromise();
     expect(proposalVotes).not.toBe(undefined);
-    expect(proposalVotes).toEqual(Responses.vote.get[proposalHash])
+    expect(proposalVotes).toEqual(new VoteDetails(Responses.vote.get))
   }));
-
-  it('should vote method return not voted for other hash', inject([ProposalsService], async (service: ProposalsService) => {
-    const invalidHash = `invailid-hash-8237fe3f87a27f68077eba1e069f5635137a8cb0c56e95cdd0d33cdfdadf719e`;
-    const proposalResult = await service.get(invalidHash).toPromise();
-    expect(proposalResult).not.toBe(undefined);
-
-    const expectedResponse = Responses.vote.get[404];
-    expect(proposalResult['success']).toEqual(expectedResponse.success)
-    expect(proposalResult['message']).toEqual(expectedResponse.message)
-    expect(proposalResult['error']).toEqual(expectedResponse.error)
-  }));
-
 });
