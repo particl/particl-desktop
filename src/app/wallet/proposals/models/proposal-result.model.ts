@@ -38,7 +38,7 @@ export class ProposalResult {
         description: optionResult.weight ? this.getWeightInPercentage(optionResult.weight) : '0%',
         voters: optionResult.voters,
         optionId: optionResult.ProposalOption.optionId,
-        weight: optionResult.weight
+        weight: this.getPartCoins(optionResult.weight)
       });
       this.addGraphOption(option);
     })
@@ -53,12 +53,18 @@ export class ProposalResult {
     return ((weight / this.totalWeight) * 100) + '%';
   }
 
+  // Converting the satishi to part coin
+  private  getPartCoins(weight: number): number {
+    const part = (weight) / 100000000;
+    return (new Amount(part, 4).getAmount());
+  }
+
   get graphData(): GraphOption[] {
     return this.graphOptions;
   }
 
   get totalCoins(): number {
-    return (new Amount(this.totalWeight, 8)).getPartCoins();
+    return this.getPartCoins(this.totalWeight);
   }
 
   get totalPercentageText(): string {

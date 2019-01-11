@@ -90,7 +90,7 @@ export class Amount {
 
   // Convert satoshi coins to original Part coins
   public getPartCoins() {
-    return (this.amount)/100000000;
+    return (this.amount) / 100000000;
   }
 
 }
