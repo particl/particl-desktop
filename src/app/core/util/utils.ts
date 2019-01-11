@@ -352,3 +352,15 @@ export const Messages = {
   }
 }
 
+export class Sleep {
+
+  // sleep for s second.
+  sleep(s: number) {
+    return new Promise(resolve => setTimeout(resolve, s * 1000))
+  }
+
+  // sleep for ms second.
+  msleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+}
