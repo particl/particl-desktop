@@ -114,7 +114,7 @@
       </mat-form-field>
     </div>
 
-    <button mat-raised-button color="primary" [disabled]="!selectedOption" class="vote-button item" (click)="vote()">
+    <button mat-raised-button color="primary" [disabled]="!selectedOption || btnValidate" class="vote-button item" (click)="vote()">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Vote
     </button>

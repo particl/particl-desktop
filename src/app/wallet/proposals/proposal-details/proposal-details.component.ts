@@ -69,6 +69,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   public voteDetails: VoteDetails;
   public aleradyVoted: boolean = false
   destroyed: boolean = false;
+  btnValidate: boolean = false;
   private _balance: number;
   constructor(
     private _rpcState: RpcStateService,
@@ -141,17 +142,19 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   callVote(): void {
+    this.btnValidate = true;
     const params = [
       this.proposal.hash,
       this.selectedOption.optionId
     ];
     this.proposalService.vote(params).subscribe((response) => {
-
+      this.btnValidate = false;
       this.aleradyVoted = true;
       // Update graph data as votes are now saving locally
       this.getProposalResult();
       this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
     }, (error) => {
+      this.btnValidate = false;
       this.snackbarService.open(error, 'warn');
     })
   }
