@@ -29,8 +29,8 @@ export class BidService {
     const validDate = new Date().getTime() + timeBuffer;
     for (let i = 0; i < cart.listings.length; i++) {
       const listing: Listing = cart.listings[i];
-      isValid = validDate < listing.object.expiredAt;
-      if (!isValid) {
+      if (!(validDate < listing.object.expiredAt)) {
+        isValid = false;
         break;
       }
     }
