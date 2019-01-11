@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Log } from 'ng2-logger';
-
 import { MarketService } from 'app/core/market/market.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 
@@ -29,8 +28,8 @@ export class BidService {
     const validDate = new Date().getTime() + timeBuffer;
     for (let i = 0; i < cart.listings.length; i++) {
       const listing: Listing = cart.listings[i];
-      isValid = validDate < listing.expiredAt;
-      if (!isValid) {
+      if (!(validDate < listing.object.expiredAt)) {
+        isValid = false;
         break;
       }
     }
