@@ -24,7 +24,7 @@ export class TemplateMockService {
         paymentAddress?: string // TODO: class
     ) {
 
-        return of(new Template(addData));
+        return of(addData);
     }
 
     search(page: number, pageLimit: number, profileId: number, category: string, searchString: string): Observable<Array<Template>> {
@@ -37,7 +37,7 @@ export class TemplateMockService {
         // @TODO trigger the listingCache.posting method.
 
         // this.listingCache.posting(template)
-        return of(new Template(postData));
+        return of(postData);
     }
 
     remove(listingTemplateId: number) {

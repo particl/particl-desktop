@@ -50,9 +50,9 @@ const addData = {
     ],
     'ItemInformation': {
         'id': 212,
-        'title': 'listing for Jason testing',
-        'shortDescription': 'listing for Jason testing ',
-        'longDescription': 'listing for Jason testing',
+        'title': 'listing title',
+        'shortDescription': 'listing shortDescription',
+        'longDescription': 'listing longDescription',
         'itemCategoryId': 3,
         'listingItemId': null,
         'listingItemTemplateId': 9,
