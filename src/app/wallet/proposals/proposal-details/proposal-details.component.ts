@@ -88,7 +88,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     this.proposalService.get(this.proposal.hash)
     .takeWhile(() => !this.destroyed)
     .subscribe((voteDetail: VoteDetails) => {
-      console.log('votes', voteDetail);
       this.voteDetails = voteDetail;
       this.aleradyVoted = true;
     }, (error) => {
@@ -100,7 +99,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     this.proposalService.result(this.proposal.hash)
       .takeWhile(() => !this.destroyed)
       .subscribe((result: ProposalResult) => {
-        console.log('votes', result);
         if (result) {
           this.proposalResult = result;
 
