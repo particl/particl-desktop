@@ -30,6 +30,7 @@ import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
 @Component({
   selector: 'app-checkout-process',
@@ -278,6 +279,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   placeOrder() {
     this.modals.unlock({timeout: 30}, (status) => {
       this.processingStatus = true;
+      this.openProcessingModal();
       this.bidOrder()
     });
   }
@@ -309,10 +311,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
       this.processingStatus = false;
+      this.dialog.closeAll();
       this.onOrderPlaced.emit(1);
     }, (error) => {
       this.snackbarService.open(error, 'warn');
       this.processingStatus = false;
+      this.dialog.closeAll();
       this.log.d(`Error while placing an order`);
     });
   }
@@ -402,4 +406,14 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  openProcessingModal() {
+    if (this.processingStatus) {
+      const dialog = this.dialog.open(ProcessingModalComponent, {
+        disableClose: true,
+        data: {
+          message: 'Hang on, we are busy processing your cart.'
+        }
+      });
+    }
+  }
 }

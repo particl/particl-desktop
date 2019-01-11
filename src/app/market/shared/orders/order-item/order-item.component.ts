@@ -12,6 +12,7 @@ import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 import { PlaceOrderComponent } from '../../../../modals/market-place-order/place-order.component';
 import { ShippingComponent } from '../../../../modals/market-shipping/shipping.component';
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
 @Component({
   selector: 'app-order-item',
@@ -99,6 +100,7 @@ export class OrderItemComponent implements OnInit {
   checkForWallet(type: string) {
     this.modals.unlock({timeout: 30}, (status) => {
       this.processingStatus = true;
+      this.openProcessingModal();
       this.callAction(type)
     });
   }
@@ -121,8 +123,10 @@ export class OrderItemComponent implements OnInit {
       this.order.OrderItem.status = 'AWAITING_ESCROW';
       this.order = new Bid(this.order, this.order.type);
       this.processingStatus = false;
+      this.dialog.closeAll();
     }, (error) => {
       this.processingStatus = false;
+      this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
   }
@@ -133,8 +137,10 @@ export class OrderItemComponent implements OnInit {
       this.order.OrderItem.status = 'REJECTED';
       this.order = new Bid(this.order, this.order.type);
       this.processingStatus = false;
+      this.dialog.closeAll();
     }, (error) => {
       this.processingStatus = false;
+      this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
 
@@ -146,8 +152,10 @@ export class OrderItemComponent implements OnInit {
       this.order.OrderItem.status = ordStatus === 'shipping' ? 'SHIPPING' : 'COMPLETE';
       this.order = new Bid(this.order, this.order.type)
       this.processingStatus = false;
+      this.dialog.closeAll();
     }, (error) => {
       this.processingStatus = false;
+      this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
 
@@ -162,6 +170,7 @@ export class OrderItemComponent implements OnInit {
       // do other action after confirm
       this.modals.unlock({timeout: 30}, (status) => {
         this.processingStatus = true;
+        this.openProcessingModal();
         this.escrowLock()
       });
     });
@@ -179,6 +188,17 @@ export class OrderItemComponent implements OnInit {
       console.log(error);
       this.snackbarService.open(`${error}`);
     });
+  }
+
+  openProcessingModal() {
+    if (this.processingStatus) {
+      const dialog = this.dialog.open(ProcessingModalComponent, {
+        disableClose: true,
+        data: {
+          message: 'Hang on, we are busy processing your action.'
+        }
+      });
+    }
   }
 
 }

@@ -326,20 +326,6 @@
 
       </div><!-- .order-detail -->
 
-      <div class="loading-container" *ngIf="processingStatus">
-        <div class="loading-info">
-          <div class="loading-image">
-            <img src="./assets/particl-logo-symbol.svg">
-          </div>
-          <p class="title">
-            Hang on, we're busy processing your action
-          </p>
-          <p class="widget-help">
-            This might take a while
-          </p>
-        </div>
-      </div><!-- .loading-container -->
-
       <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
         <button [disabled]="processingStatus"
             mat-button matStepperPrevious (click)="backToShippingDetails()">
