@@ -1,1 +1,1 @@
-export { executeData } from './execute';
+export { locationExecute } from './execute';

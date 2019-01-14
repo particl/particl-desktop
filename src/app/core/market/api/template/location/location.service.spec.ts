@@ -3,9 +3,10 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MarketModule } from '../../../market.module';
 
 import { LocationService } from './location.service';
-import { LocationMockService } from 'app/_test/core-test/market-test/template-test/location-test/location-mock.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-import { executeData } from 'app/_test/core-test/market-test/template-test/location-test/mock-data/execute';
+import { locationExecute } from 'app/_test/core-test/market-test/template-test/location-test/mock-data';
+import { MarketService } from 'app/core/market/market.service';
+import { MockMarketService } from 'app/_test/core-test/market-test/market.mockservice';
 
 describe('LocationService', () => {
   const templateId = 1;
@@ -17,7 +18,7 @@ describe('LocationService', () => {
         MarketModule.forRoot()
       ],
       providers: [
-        { provide: LocationService, useClass: LocationMockService }
+        { provide: MarketService, useClass: MockMarketService }
       ]
     });
   });
@@ -38,6 +39,6 @@ describe('LocationService', () => {
       expect(country).not.toBe(null);
 
       const response = await service.execute('add', templateId, country, null, null).toPromise()
-      expect(response).toEqual(executeData);
+      expect(response).toEqual(locationExecute);
     }));
 });
