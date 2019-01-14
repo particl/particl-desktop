@@ -1,4 +1,4 @@
-const updateData = {
+const escrowUpdate = {
     'id': 5,
     'type': 'MAD',
     'paymentInformationId': 5,
@@ -15,5 +15,5 @@ const updateData = {
 }
 
 export {
-    updateData
+    escrowUpdate
 }

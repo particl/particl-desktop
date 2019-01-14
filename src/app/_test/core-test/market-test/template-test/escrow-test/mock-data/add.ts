@@ -1,4 +1,4 @@
-const addData = {
+const escrowAdd = {
     'id': 5,
     'type': 'MAD',
     'paymentInformationId': 5,
@@ -15,5 +15,5 @@ const addData = {
 };
 
 export {
-    addData
+    escrowAdd
 };
