@@ -30,6 +30,7 @@ import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
+import { select } from 'd3';
 
 enum errorType {
   itemExpired = 'An item in your basket has expired!'
@@ -63,6 +64,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
   public country: string = '';
+  addyPrevSelected: Address;
 
   constructor(// 3rd party
     private formBuilder: FormBuilder,
@@ -85,6 +87,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    
     this.formBuild();
 
     this.getProfile();
@@ -226,6 +230,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   select(address: Address) {
+    this.addyPrevSelected = address;
+    console.log('here:', this.addyPrevSelected);
     this.log.d('Selecting address with id: ' + address.id);
     // check for the new profile and then add.
     this.selectedAddress = address;
@@ -314,6 +320,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }, (error) => {
     if (error === errorType.itemExpired) {
       this.resetStepper();
+      this.toShippingStep();
     }
       this.snackbarService.open(error, 'warn');
       this.log.d(`Error while placing an order`);
@@ -405,4 +412,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  toShippingStep() {
+    if (this.addyPrevSelected) {
+      this.stepper.next();
+      this.select(this.addyPrevSelected);
+    } else {
+      this.stepper.next();
+    }
+  }
 }
