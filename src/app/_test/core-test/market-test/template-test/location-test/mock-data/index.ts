@@ -1,1 +1,3 @@
-export { locationExecute } from './execute';
+export { locationAdd } from './add';
+export { locationUpdate } from './update';
+

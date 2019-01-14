@@ -1,4 +1,4 @@
-const locationExecute = {
+const locationAdd = {
   'id': 5,
   'region': 'IN',
   'address': 'a',
@@ -9,5 +9,5 @@ const locationExecute = {
 }
 
 export {
-  locationExecute
+  locationAdd
 }
