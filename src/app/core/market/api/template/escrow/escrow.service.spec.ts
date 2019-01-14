@@ -3,7 +3,6 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MarketModule } from '../../../market.module';
 import { EscrowService, EscrowType } from './escrow.service';
 import { escrowAdd, escrowUpdate } from 'app/_test/core-test/market-test/template-test/escrow-test/mock-data';
-import { EscrowMockService } from 'app/_test/core-test/market-test/template-test/escrow-test/escrow-mock.service';
 import { MockMarketService } from 'app/_test/core-test/market-test/market.mockservice';
 import { MarketService } from 'app/core/market/market.service';
 
