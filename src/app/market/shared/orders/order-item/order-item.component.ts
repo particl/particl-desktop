@@ -195,7 +195,7 @@ export class OrderItemComponent implements OnInit {
       const dialog = this.dialog.open(ProcessingModalComponent, {
         disableClose: true,
         data: {
-          message: 'Hang on, we are busy processing your action.'
+          message: 'Hang on, we are busy processing your action'
         }
       });
     }
