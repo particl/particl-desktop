@@ -253,6 +253,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   private async save(): Promise<Template> {
+    this.isInProcess = true;
+
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
 
