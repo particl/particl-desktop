@@ -24,6 +24,16 @@ export class MockMarketService {
         response = Responses[method][params[0]];
         break;
 
+        case 'template':
+
+          // for sub cmds
+          if (params && params[0] && params[1]) {
+            response = Responses[method][params[0]][params[1]];
+          } else if (params && params[0]) {
+            response = Responses[method][params[0]];
+          }
+          break;
+
       default:
         response = []
     }

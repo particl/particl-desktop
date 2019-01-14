@@ -1,1 +1,1 @@
-export { updateData } from './update';
+export { informationUpdate } from './update';

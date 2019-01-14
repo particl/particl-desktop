@@ -1,4 +1,4 @@
-const updateData = {
+const informationUpdate = {
   'id': 1,
   'jsonrpc': '2.0',
   'result': {
@@ -35,5 +35,5 @@ const updateData = {
 }
 
 export {
-  updateData
+  informationUpdate
 }
