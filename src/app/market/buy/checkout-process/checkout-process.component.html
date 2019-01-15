@@ -56,11 +56,17 @@
                 <div class="title">
                   {{listing.title}}
                 </div>
-                <div class="error" *ngIf="listing.errorMessage"><!-- e.g. expired items in cart -->
-                  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                <!-- errors, e.g. expired items in cart -->
+                <div class="error message" *ngIf="listing.errorMessage">
+                  <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
                   {{listing.errorMessage}}
                 </div>
-                <div class="category" *ngIf="!listing.errorMessage">
+                <!-- expires soon warning -->
+                <div class="warning message" *ngIf="listing.isAboutToExpire">
+                  <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
+                  Listing expires in {{listing.expireIn}}
+                </div>
+                <div class="category" *ngIf="!listing.errorMessage && !listing?.isAboutToExpire">
                   {{listing.category.name}}
                 </div>
               </div>
@@ -246,7 +252,7 @@
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back to cart
         </button>
-        <button mat-raised-button color="primary" [disabled]="!shippingFormGroup.valid" matStepperNext (click)="updateShippingAddress()">
+        <button mat-raised-button color="primary" [disabled]="!shippingFormGroup.valid" matStepperNext (click)="moveToConfirmation()">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Continue to confirmation
         </button>
