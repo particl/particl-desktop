@@ -139,7 +139,7 @@
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
             Clear cart
           </button>
-          <button mat-raised-button color="primary" (click)="toShippingStep()" [disabled]="!cartFormGroup.valid">
+          <button mat-raised-button color="primary" matStepperNext [disabled]="!cartFormGroup.valid">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Continue to shipping
           </button>
@@ -252,7 +252,7 @@
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back to cart
         </button>
-        <button mat-raised-button color="primary" [disabled]="!shippingFormGroup.valid" matStepperNext (click)="updateShippingAddress()">
+        <button mat-raised-button color="primary" [disabled]="!shippingFormGroup.valid" matStepperNext (click)="moveToConfirmation()">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Continue to confirmation
         </button>
