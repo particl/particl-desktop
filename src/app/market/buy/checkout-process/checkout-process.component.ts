@@ -30,6 +30,7 @@ import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
+import { select } from 'd3';
 
 enum errorType {
   itemExpired = 'An item in your basket has expired!'
@@ -63,6 +64,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
   public country: string = '';
+  addyPrevSelected: Address;
 
   constructor(// 3rd party
     private formBuilder: FormBuilder,
@@ -86,6 +88,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    
     this.formBuild();
 
     this.getProfile();
@@ -175,17 +178,14 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   /* shipping */
 
-  moveToConfirmation(): void {
+  updateShippingAddress(): void {
     if (!this.profile) {
       this.snackbarService.open('Profile was not fetched!');
       return;
     }
-    this.country = this.shippingFormGroup.value.country || '';
-    this.allowGoingBack();
-    this.storeCache();
-  }
 
-  updateShippingAddress(): void {
+    this.country = this.shippingFormGroup.value.country || '';
+
     let upsert: Function;
 
     if (this.shippingFormGroup.value.newShipping === true) {
@@ -207,7 +207,15 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       upsert(address).take(1).subscribe(addressWithId => {
         // we need to retrieve the id of  address we added (new)
         this.select(addressWithId);
+
+        // update the cache
+        this.allowGoingBack();
+        this.storeCache();
+
       });
+    } else {
+      this.allowGoingBack();
+      this.storeCache();
     }
   }
 
@@ -222,6 +230,8 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   select(address: Address) {
+    this.addyPrevSelected = address;
+    console.log('here:', this.addyPrevSelected);
     this.log.d('Selecting address with id: ' + address.id);
     // check for the new profile and then add.
     this.selectedAddress = address;
@@ -304,16 +314,13 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     this.bid.order(this.cart, this.profile, shippingInfo).then((res) => {
-      this.updateShippingAddress();
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
       this.onOrderPlaced.emit(1);
     }, (error) => {
     if (error === errorType.itemExpired) {
       this.resetStepper();
-      this.shippingFormGroup.value.id = this.cache.address.id;
-      this.setDefaultCountry(this.cache.address.country);
-      this.shippingFormGroup.patchValue(this.cache.address);
+      this.toShippingStep();
     }
       this.snackbarService.open(error, 'warn');
       this.log.d(`Error while placing an order`);
@@ -403,5 +410,14 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  toShippingStep() {
+    if (this.addyPrevSelected) {
+      this.stepper.next();
+      this.select(this.addyPrevSelected);
+    } else {
+      this.stepper.next();
+    }
   }
 }
