@@ -14,20 +14,13 @@ export class ProposalsService {
     private marketService: MarketService,
     private profileService: ProfileService
   ) {
-
-    this.loadSubmitterId();
-  }
-
-  loadSubmitterId(): void {
     this.profileService.default().subscribe((profile: Profile) => {
-      if (profile) {
-        this.submitterId = profile.id;
-      }
+      this.submitterId = profile.id;
     })
   }
 
   // proposal list.
-  list(startTime: any = 0, expireTime: any = '*') {
+  list(startTime: any, expireTime: any) {
     const params = ['list', startTime, expireTime];
     return this.marketService.call('proposal', params)
       .map((v) => v.map(p => new Proposal(p)));

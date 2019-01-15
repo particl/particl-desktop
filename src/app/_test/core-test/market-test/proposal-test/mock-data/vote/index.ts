@@ -1,1 +1,0 @@
-export { voteGet } from './get';
