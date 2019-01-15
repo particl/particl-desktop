@@ -8,6 +8,11 @@ mat-card.notification {
   box-shadow: 0 1px $bg-shadow !important;
   border-left: 6px solid transparent;
   border-radius: 0;
+  position: fixed;
+  top: 0;
+  left: $sidebar-width;
+  right: $scrollbar-width;
+  z-index: 20;
   &.info {
     border-left: 6px solid $color;
     .title .tag {

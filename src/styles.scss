@@ -34,6 +34,8 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       4.2. Paragraph styles
     5. Plug-ins
       5.1. Charts
+    6. Misc.
+      6.1. Info/warning messages (releases etc.)
 
 */
 
@@ -442,5 +444,62 @@ kbd {
     color: lighten($bg-black, 50%);
     position: relative;
     top: 1px;
+  }
+}
+
+
+/* ------------------------------- *\
+    6. MISC
+\* ------------------------------- */
+
+// ------ 6.1. Info/warning messages (releases etc.) ------ //
+
+.mat-sidenav-container {
+  // when top notification present (new release/announcement), push status bar etc. below
+  &.with-top-notification {
+    .header-main { // status bar
+      top: 61px;
+    }
+    .balance-overview { // Overview
+      margin-top: 125px;
+    }
+    .tab-bar,
+    .control-bar {
+      top: 125px;
+    }
+    .with-tab-bar { // content containers
+      margin-top: 175px;
+      .filter {
+        top: 210px;
+      }
+    }
+    .without-tab-bar { // content containers w/o tabs
+      margin-top: 125px;
+      .filter {
+        top: 160px;
+      }
+    }
+    app-send {
+      .from-box {
+        .sticky {
+          top: 205px;
+        }
+      }
+    }
+    app-receive {
+      .container-flex {
+        &.with-tab-bar {
+          height: calc(100vh - 290px);
+          @include break(l) {
+            height: calc(100vh - 310px);
+          }
+        }
+      }
+    }
+    app-help {
+      .container-block {
+        margin-top: 125px;
+      }
+    }
   }
 }

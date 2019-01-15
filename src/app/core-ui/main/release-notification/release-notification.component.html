@@ -8,6 +8,7 @@
   </mat-card-title>
 </mat-card><!-- .notification -->
 
+
 <mat-card class="notification alert" *ngIf="false">
   <mat-card-title class="title">
     New security update available <span class="tag">1.1.2</span> &ndash; please upgrade:
@@ -15,5 +16,18 @@
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lightning"></mat-icon>
       Upgrade now
     </button>
+  </mat-card-title>
+</mat-card><!-- .notification -->
+
+
+<!-- Alpha mainnet warning -->
+<mat-card class="notification alert"><!-- *ngIf="" -->
+  <mat-card-title class="title">
+    The Particl Marketplace alpha is still in development and not 100% private yet.
+    <button class="button" mat-button color="warn">
+      <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+      Read these details first!
+    </button>
+    and use it at your own risk!
   </mat-card-title>
 </mat-card><!-- .notification -->
