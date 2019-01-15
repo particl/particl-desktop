@@ -4,13 +4,15 @@ import * as d3 from 'd3';
 import { Log } from 'ng2-logger';
 
 import { RpcStateService } from 'app/core/core.module';
+
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import {
   ProposalVoteConfirmationComponent
 } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
-import { ProposalsService } from 'app/wallet/proposals/proposals.service';
-import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
-import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 import { GraphOption } from 'app/wallet/proposals/models/proposal-result-graph-option.model';
@@ -143,6 +145,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   callVote(): void {
     this.btnValidate = true;
+    this.openProcessingModal();
     const params = [
       this.proposal.hash,
       this.selectedOption.optionId
@@ -150,13 +153,24 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     this.proposalService.vote(params).subscribe((response) => {
       this.btnValidate = false;
       this.aleradyVoted = true;
+      this.dialog.closeAll();
       // Update graph data as votes are now saving locally
       this.getProposalResult();
       this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
     }, (error) => {
       this.btnValidate = false;
+      this.dialog.closeAll();
       this.snackbarService.open(error, 'warn');
     })
+  }
+
+  openProcessingModal() {
+      const dialog = this.dialog.open(ProcessingModalComponent, {
+        disableClose: true,
+        data: {
+          message: 'Hang on, we are busy processing your vote'
+        }
+      });
   }
 
   ngOnDestroy() {
