@@ -30,6 +30,7 @@ import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
 enum errorType {
   itemExpired = 'An item in your basket has expired!'
@@ -277,7 +278,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   placeOrder() {
-    this.modals.unlock({timeout: 30}, (status) => this.bidOrder());
+    this.modals.unlock({timeout: 30}, (status) => {
+      this.openProcessingModal();
+      this.bidOrder()
+    });
   }
 
   bidOrder() {
@@ -307,6 +311,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.updateShippingAddress();
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
+      this.dialog.closeAll();
       this.onOrderPlaced.emit(1);
     }, (error) => {
     if (error === errorType.itemExpired) {
@@ -316,6 +321,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.shippingFormGroup.patchValue(this.cache.address);
     }
       this.snackbarService.open(error, 'warn');
+      this.dialog.closeAll();
       this.log.d(`Error while placing an order`);
     });
   }
@@ -403,5 +409,14 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  openProcessingModal() {
+      const dialog = this.dialog.open(ProcessingModalComponent, {
+        disableClose: true,
+        data: {
+          message: 'Hang on, we are busy processing your cart'
+        }
+      });
   }
 }
