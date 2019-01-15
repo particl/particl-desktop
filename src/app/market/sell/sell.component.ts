@@ -99,6 +99,7 @@ export class SellComponent implements OnInit {
   }
 
   changeTab(index: number): void {
+    this.clear();
     this.selectedTab = index;
   }
 
@@ -132,7 +133,6 @@ export class SellComponent implements OnInit {
         return t;
       });
       this.isLoading = false;
-
       if (this.filters.sort === 'TITLE') {
         listings.reverse();
       }
