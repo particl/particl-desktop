@@ -24,7 +24,6 @@ export class OrderItemComponent implements OnInit {
   @Input() order: Bid;
   trackNumber: string;
   country: string = '';
-  processingStatus: boolean;
   constructor(
     private listingService: ListingService,
     private bid: BidService,
@@ -99,7 +98,6 @@ export class OrderItemComponent implements OnInit {
 
   checkForWallet(type: string) {
     this.modals.unlock({timeout: 30}, (status) => {
-      this.processingStatus = true;
       this.openProcessingModal();
       this.callAction(type)
     });
@@ -122,10 +120,8 @@ export class OrderItemComponent implements OnInit {
       // Reload same order without calling api
       this.order.OrderItem.status = 'AWAITING_ESCROW';
       this.order = new Bid(this.order, this.order.type);
-      this.processingStatus = false;
       this.dialog.closeAll();
     }, (error) => {
-      this.processingStatus = false;
       this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
@@ -136,10 +132,8 @@ export class OrderItemComponent implements OnInit {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
       this.order = new Bid(this.order, this.order.type);
-      this.processingStatus = false;
       this.dialog.closeAll();
     }, (error) => {
-      this.processingStatus = false;
       this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
@@ -151,10 +145,8 @@ export class OrderItemComponent implements OnInit {
       this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
       this.order.OrderItem.status = ordStatus === 'shipping' ? 'SHIPPING' : 'COMPLETE';
       this.order = new Bid(this.order, this.order.type)
-      this.processingStatus = false;
       this.dialog.closeAll();
     }, (error) => {
-      this.processingStatus = false;
       this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
@@ -169,7 +161,6 @@ export class OrderItemComponent implements OnInit {
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       // do other action after confirm
       this.modals.unlock({timeout: 30}, (status) => {
-        this.processingStatus = true;
         this.openProcessingModal();
         this.escrowLock()
       });
@@ -181,24 +172,20 @@ export class OrderItemComponent implements OnInit {
     this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').take(1).subscribe(res => {
       this.snackbarService.open(`Payment done for order ${this.order.listing.title}`);
       this.order.OrderItem.status = 'ESCROW_LOCKED';
-      this.order = new Bid(this.order, this.order.type)
-      this.processingStatus = false;
+      this.order = new Bid(this.order, this.order.type);
+      this.dialog.closeAll();
     }, (error) => {
-      this.processingStatus = false;
-      console.log(error);
       this.snackbarService.open(`${error}`);
     });
   }
 
   openProcessingModal() {
-    if (this.processingStatus) {
       const dialog = this.dialog.open(ProcessingModalComponent, {
         disableClose: true,
         data: {
           message: 'Hang on, we are busy processing your action'
         }
       });
-    }
   }
 
 }
