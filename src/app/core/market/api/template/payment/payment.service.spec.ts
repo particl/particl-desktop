@@ -2,8 +2,9 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { PaymentService } from './payment.service';
 import { MarketModule } from 'app/core/market/market.module';
-import { PaymentMockService } from 'app/_test/core-test/market-test/template-test/payment-test/payment-mock.service';
-import { updateData } from 'app/_test/core-test/market-test/template-test/payment-test/mock-data/update';
+import { paymentUpdate } from 'app/_test/core-test/market-test/template-test/payment-test/mock-data/update';
+import { MarketService } from 'app/core/market/market.service';
+import { MockMarketService } from 'app/_test/core-test/market-test/market.mockservice';
 
 describe('PaymentService', () => {
   const templateId = 1;
@@ -13,7 +14,7 @@ describe('PaymentService', () => {
         MarketModule.forRoot()
       ],
       providers: [
-        { provide: PaymentService, useClass: PaymentMockService }
+        { provide: MarketService, useClass: MockMarketService }
       ]
     });
   });
@@ -25,6 +26,6 @@ describe('PaymentService', () => {
   it('should update method return the success response with response data', inject([PaymentService], async (service: PaymentService) => {
     expect(service).toBeTruthy();
     const response = await service.update(templateId, 10, 1 , 1).toPromise();
-    expect(response).toEqual(updateData)
+    expect(response).toEqual(paymentUpdate)
   }));
 });

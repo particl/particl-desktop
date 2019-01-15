@@ -1,1 +1,1 @@
-export { updateData } from './update';
+export { paymentUpdate } from './update';

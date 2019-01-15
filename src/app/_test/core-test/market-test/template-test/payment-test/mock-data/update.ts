@@ -1,4 +1,4 @@
-const updateData = {
+const paymentUpdate = {
   'id': 5,
   'type': 'SALE',
   'listingItemId': null,
@@ -40,5 +40,5 @@ const updateData = {
 }
 
 export {
-  updateData
+  paymentUpdate
 }
