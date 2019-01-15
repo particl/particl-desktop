@@ -24,11 +24,11 @@ export class BidService {
 
   public async order(cart: Cart, profile: any, shippingAddress: any): Promise<string> {
     let isValid = true;
-    const timeBuffer = 20000;
+    const timeBuffer = 5000;
     const validDate = new Date().getTime() + timeBuffer;
     for (let i = 0; i < cart.listings.length; i++) {
       const listing: Listing = cart.listings[i];
-      if (!(validDate < listing.object.expiredAt)) {
+      if (!( (validDate + (i * 2000) ) < listing.object.expiredAt)) {
         isValid = false;
         break;
       }
