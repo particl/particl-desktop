@@ -24,7 +24,7 @@
 <mat-card class="notification alert"><!-- *ngIf="" -->
   <mat-card-title class="title">
     The Particl Marketplace alpha is still in development and not 100% private yet.
-    <button class="button" mat-button color="warn">
+    <button class="button" mat-button color="warn" (click)="readFullWarning()">
       <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
       Read these details first!
     </button>

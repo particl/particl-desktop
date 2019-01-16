@@ -6,6 +6,9 @@ import { ReleaseNotification } from './release-notification.model';
 
 import { ClientVersionService } from '../../../core/http/client-version.service';
 
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { AlphaMainnetWarningComponent } from '../../../modals/alpha-mainnet-warning/alpha-mainnet-warning.component';
+
 @Component({
   selector: 'app-release-notification',
   templateUrl: './release-notification.component.html',
@@ -18,7 +21,10 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
   public releaseUrl: string;
   private destroyed: boolean = false;
 
-  constructor(private clientVersionService: ClientVersionService) { }
+  constructor(
+    private clientVersionService: ClientVersionService,
+    public dialog: MatDialog // Alpha mainnet warning
+  ) { }
 
   ngOnInit() {
     // check new update in every 30 minute
@@ -44,6 +50,11 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
 
   isNewUpdateAvailable(): boolean {
     return (parseFloat(this.currentClientVersion) < parseFloat(this.latestClientVersion));
+  }
+
+  // Alpha mainnet warning
+  readFullWarning(): void {
+    let dialogRef = this.dialog.open(AlphaMainnetWarningComponent);
   }
 
 }
