@@ -54,7 +54,7 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
 
   // Alpha mainnet warning
   readFullWarning(): void {
-    let dialogRef = this.dialog.open(AlphaMainnetWarningComponent);
+    const dialogRef = this.dialog.open(AlphaMainnetWarningComponent);
   }
 
 }
