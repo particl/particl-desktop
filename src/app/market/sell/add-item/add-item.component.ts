@@ -135,6 +135,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       };
       reader.readAsDataURL(file);
     });
+    this.fileInput.value = '';
   }
 
   removeExistingImage(image: Image) {
