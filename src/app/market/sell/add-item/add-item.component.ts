@@ -125,8 +125,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
     sourceFiles.map((file: File) => {
       const reader = new FileReader();
       reader.onload = _event => {
-        this.picturesToUpload.push(reader.result);
-        this.log.d('added picture', file.name);
+        const imgExists = this.picturesToUpload.includes(reader.result);
+        if (imgExists) {
+          this.snackbar.open('Image has already been added!');
+        } else {
+          this.picturesToUpload.push(reader.result);
+          this.log.d('added picture', file.name);
+        }
       };
       reader.readAsDataURL(file);
     });
