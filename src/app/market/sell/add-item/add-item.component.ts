@@ -130,6 +130,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       };
       reader.readAsDataURL(file);
     });
+    this.fileInput.value = '';
   }
 
   removeExistingImage(image: Image) {
@@ -252,6 +253,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   private async save(): Promise<Template> {
+
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
 
