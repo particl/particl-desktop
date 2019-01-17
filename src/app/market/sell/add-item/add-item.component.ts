@@ -257,7 +257,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
 
-    const template: Template = await this.template.add(
+    const template: any = await this.template.add(
       item.title,
       item.shortDescription,
       item.longDescription,
@@ -269,20 +269,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
       +item.internationalShippingPrice
     ).toPromise();
 
+    this.preloadedTemplate = new Template(template);
 
     this.templateId = template.id;
-    this.preloadedTemplate = template;
-
     await this.location.execute('add', this.templateId, country, null, null).toPromise();
     await this.escrow.add(template.id, EscrowType.MAD).toPromise();
-
-    if (this.picturesToUpload.length === 0) {
-      return template;
-    } else {
-      await this.image.upload(template, this.picturesToUpload);
+    if (this.picturesToUpload.length) {
+      await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
     }
 
-    return this.template.get(this.preloadedTemplate.id).toPromise();
+    return this.template.get(template.id).toPromise();
     /*
 
 
@@ -322,7 +318,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update escrow
     // @TODO EscrowType will change in future?
     await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
-
 
     // update shipping?
     // update messaging?
