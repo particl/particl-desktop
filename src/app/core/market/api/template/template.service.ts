@@ -69,6 +69,10 @@ export class TemplateService {
     .do(t => this.listingCache.posting(template));
   }
 
+  size(listingTemplateId: number) {
+    return this.market.call('template', ['size', listingTemplateId]);
+  }
+
   remove(listingTemplateId: number) {
     return this.market.call('template', ['remove', listingTemplateId]);
   }

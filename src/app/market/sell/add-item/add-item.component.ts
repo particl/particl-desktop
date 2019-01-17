@@ -379,8 +379,18 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private async publish() {
     this.upsert().then(t => {
-      this.modals.unlock({timeout: 30}, (status) => {
-        this.template.post(t, 1, this.expiration)
+      this.checkTemplateSize(t);
+    }, err => {
+      this.isInProcess = false;
+      this.snackbar.open(err)
+    });
+  }
+
+  checkTemplateSize(template: Template): void {
+    this.template.size(template.id).subscribe(res => {
+      if (res.fits) {
+        this.modals.unlock({timeout: 30}, (status) => {
+        this.template.post(template, 1, this.expiration)
         .subscribe(listing => {
           this.snackbar.open('Succesfully added Listing!')
           this.log.d(listing);
@@ -391,11 +401,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
           this.snackbar.open(error)
         },
         () => this.isInProcess = false)
-      }, (err) => this.isInProcess = false);
-    }, err => {
-      this.isInProcess = false;
-      this.snackbar.open(err)
-    });
+        }, (err) => this.isInProcess = false);
+      } else {
+        this.snackbar.open(`Upload Limit Exceeded ${res.imageData + res.spaceLeft}`);
+      }
+    }, error => {
+      this.snackbar.open(error)
+    })
   }
 
   loadTransactionFee() {
