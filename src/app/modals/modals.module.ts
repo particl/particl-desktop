@@ -43,6 +43,8 @@ import {
 } from 'app/modals/proposal-vote-confirmation/proposal-vote-confirmation.component';
 
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
+import { ListingExpirationComponent } from './market-listing-expiration/listing-expiration.component';
+import { ProcessingModalComponent } from './processing-modal/processing-modal.component';
 
 @NgModule({
   imports: [
@@ -75,7 +77,9 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     SendConfirmationModalComponent,
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
-    BidConfirmationModalComponent
+    BidConfirmationModalComponent,
+    ListingExpirationComponent,
+    ProcessingModalComponent
   ],
   exports: [
     ClipboardModule
@@ -104,7 +108,9 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
     SendConfirmationModalComponent,
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
-    BidConfirmationModalComponent
+    BidConfirmationModalComponent,
+    ListingExpirationComponent,
+    ProcessingModalComponent
   ],
 })
 export class ModalsModule {

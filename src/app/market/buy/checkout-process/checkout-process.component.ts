@@ -29,19 +29,26 @@ import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checko
 import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
+import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+
+enum errorType {
+  itemExpired = 'An item in your basket has expired!'
+}
+
 
 @Component({
   selector: 'app-checkout-process',
   templateUrl: './checkout-process.component.html',
   styleUrls: ['./checkout-process.component.scss']
 })
+
 export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create('buy.component: ' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
 
   @Output() onOrderPlaced: EventEmitter<number> = new EventEmitter<number>();
-
 
   public selectedAddress: Address;
 
@@ -79,6 +86,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
     this.formBuild();
 
     this.getProfile();
@@ -122,6 +130,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.cartFormGroup = this.formBuilder.group({
       firstCtrl: [''],
       itemsInCart: [0, Validators.min(1)]
+    }, {
+      validator: (formGroup: FormGroup) => {
+        return this.validateExpiredItems(this.cart);
+      }
     });
 
     this.shippingFormGroup = this.formBuilder.group({
@@ -164,14 +176,17 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   /* shipping */
 
-  updateShippingAddress(): void {
+  moveToConfirmation(): void {
     if (!this.profile) {
       this.snackbarService.open('Profile was not fetched!');
       return;
     }
-
     this.country = this.shippingFormGroup.value.country || '';
+    this.allowGoingBack();
+    this.storeCache();
+  }
 
+  updateShippingAddress(): void {
     let upsert: Function;
 
     if (this.shippingFormGroup.value.newShipping === true) {
@@ -193,15 +208,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       upsert(address).take(1).subscribe(addressWithId => {
         // we need to retrieve the id of  address we added (new)
         this.select(addressWithId);
-
-        // update the cache
-        this.allowGoingBack();
-        this.storeCache();
-
       });
-    } else {
-      this.allowGoingBack();
-      this.storeCache();
     }
   }
 
@@ -271,7 +278,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   placeOrder() {
-    this.modals.unlock({timeout: 30}, (status) => this.bidOrder());
+    this.modals.unlock({timeout: 30}, (status) => {
+      this.openProcessingModal();
+      this.bidOrder()
+    });
   }
 
   bidOrder() {
@@ -298,11 +308,20 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     this.bid.order(this.cart, this.profile, shippingInfo).then((res) => {
+      this.updateShippingAddress();
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
+      this.dialog.closeAll();
       this.onOrderPlaced.emit(1);
     }, (error) => {
+    if (error === errorType.itemExpired) {
+      this.resetStepper();
+      this.shippingFormGroup.value.id = this.cache.address.id;
+      this.setDefaultCountry(this.cache.address.country);
+      this.shippingFormGroup.patchValue(this.cache.address);
+    }
       this.snackbarService.open(error, 'warn');
+      this.dialog.closeAll();
       this.log.d(`Error while placing an order`);
     });
   }
@@ -322,6 +341,25 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     return {
       validateShippingProfileTitle: {
         valid: isValid
+      }
+    }
+  }
+
+  validateExpiredItems(cart: any): any | null {
+    let isExpired = false;
+    for (const listing of ((cart || {}).listings || [])) {
+      isExpired = this.checkExpired(listing);
+      if (isExpired) {
+        break
+      }
+    }
+    if (!isExpired) {
+      return null;
+    }
+
+    return {
+      validateExpiredItems: {
+        expiredItem: isExpired
       }
     }
   }
@@ -352,4 +390,33 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.stepper.linear = false;
   }
 
+  openListing(listing: any) {
+    if (!this.checkExpired(listing)) {
+      const dialog = this.dialog.open(PreviewListingComponent, {
+        data: {
+          listing: listing,
+          buyPage: true,
+        },
+      });
+    }
+  }
+
+  checkExpired(listing: any) {
+    if (new Date().getTime() > listing.listing.expiredAt) {
+      if (!listing.errorMessage) {
+        listing.errorMessage = 'Listing expired – remove item from cart';
+      }
+      return true;
+    }
+    return false;
+  }
+
+  openProcessingModal() {
+      const dialog = this.dialog.open(ProcessingModalComponent, {
+        disableClose: true,
+        data: {
+          message: 'Hang on, we are busy processing your cart'
+        }
+      });
+  }
 }

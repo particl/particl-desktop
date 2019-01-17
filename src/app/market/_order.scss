@@ -98,20 +98,6 @@
       border-radius: $radius;
     }
   }
-  .detail {
-    .order-history {
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      .status {
-        font-size: 11px;
-        padding: 0;
-        background: none;
-        text-align: left;
-      }
-    }
-  }
   .action-buttons {
     .single .mat-icon {
       margin: 0;

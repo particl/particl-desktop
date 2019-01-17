@@ -20,6 +20,7 @@ import { LocationService } from 'app/core/market/api/template/location/location.
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
 
 @Component({
   selector: 'app-add-item',
@@ -44,19 +45,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
   fileInput: any;
   picturesToUpload: string[];
   featuredPicture: number = 0;
-  expiration: number = 4;
-  txFee: Amount = new Amount(0)
+  expiration: number = 0;
   selectedCountry: Country;
   selectedCategory: Category;
   isInProcess: boolean = false;
 
-  expiredList: Array<any> = [
-    { title: '4 day',     value: 4  },
-    { title: '1 week',    value: 7  },
-    { title: '2 weeks',   value: 14 },
-    { title: '3 weeks',   value: 21 },
-    { title: '4 weeks',   value: 28 }
-  ];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -73,7 +66,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     private countryList: CountryListService,
-    private escrow: EscrowService
+    private escrow: EscrowService,
+    private payment: PaymentService
   ) { }
 
   ngOnInit() {
@@ -103,15 +97,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
       const clone: boolean = params['clone'];
       if (id) {
         this.templateId = +id;
-        this.preload();
-      }
-      if (clone) {
-        this.log.d('Cloning listing!');
-        this.templateId = undefined;
+        this.preload(clone);
       }
     });
 
-    this.loadTransactionFee();
   }
 
   isExistingTemplate() {
@@ -141,6 +130,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       };
       reader.readAsDataURL(file);
     });
+    this.fileInput.value = '';
   }
 
   removeExistingImage(image: Image) {
@@ -196,7 +186,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.destroyed = true;
   }
 
-  preload() {
+  preload(isCloned: boolean) {
     this.log.d(`preloading for id=${this.templateId}`);
     this.template.get(this.templateId).subscribe((template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
@@ -233,10 +223,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
       t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
       this.itemFormGroup.patchValue(t);
 
-      this.images = template.imageCollection.images;
-
-      this.preloadedTemplate = template;
-      // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
+      if (isCloned) {
+        this.picturesToUpload = template.imageCollection.images.map(img => img.originalEncoding).filter(img => img.length);
+        this.templateId = undefined;
+      } else {
+        this.images = template.imageCollection.images;
+        this.preloadedTemplate = template;
+      }
     });
   }
 
@@ -244,16 +237,27 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.selectedCountry = country;
   }
 
+  openListingExpiryModal(): void {
+    this.modals.openListingExpiryModal((expiryTime: number) => this.callPublish(expiryTime));
+  }
+
+  callPublish(expiryTime: number): void {
+    this.expiration = expiryTime;
+    this.isInProcess = true;
+    this.log.d('Saving and publishing the listing.');
+    this.publish();
+  }
 
   setDefaultCategory(category: Category) {
     this.selectedCategory = category;
   }
 
   private async save(): Promise<Template> {
+
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
 
-    const template: Template = await this.template.add(
+    const template: any = await this.template.add(
       item.title,
       item.shortDescription,
       item.longDescription,
@@ -265,20 +269,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
       +item.internationalShippingPrice
     ).toPromise();
 
+    this.preloadedTemplate = new Template(template);
 
     this.templateId = template.id;
-    this.preloadedTemplate = template;
-
     await this.location.execute('add', this.templateId, country, null, null).toPromise();
     await this.escrow.add(template.id, EscrowType.MAD).toPromise();
-
-    if (this.picturesToUpload.length === 0) {
-      return template;
-    } else {
-      await this.image.upload(template, this.picturesToUpload);
+    if (this.picturesToUpload.length) {
+      await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
     }
 
-    return this.template.get(this.preloadedTemplate.id).toPromise();
+    return this.template.get(template.id).toPromise();
     /*
 
 
@@ -290,31 +290,67 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private async update() {
     const item = this.itemFormGroup.value;
-
     // update information
-    /*
-     this.information.update(
-     this.templateId,
-     item.title,
-     item.shortDescription,
-     item.longDescription,
-     item.category
-     ).subscribe();*/
+    if (this.isTemplateInfoUpdated(item)) {
+      await this.information.update(
+        this.templateId,
+        item.title,
+        item.shortDescription,
+        item.longDescription,
+        item.category
+      ).toPromise();
+    }
 
     // update images
-    await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
+    if (this.picturesToUpload.length) {
+      await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
+
+    }
+
+    const country = this.countryList.getCountryByName(item.country);
 
     // update location
-    const country = this.countryList.getCountryByName(item.country);
-    await this.location.execute('update', this.templateId, country, null, null).toPromise();
-    await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
-    // update shipping
+    if (this.preloadedTemplate.country !== country.iso) {
 
-    // update messaging
-    // update payment
+      await this.location.execute('update', this.templateId, country, null, null).toPromise();
+    }
+
     // update escrow
+    // @TODO EscrowType will change in future?
+    await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
 
-     return this.template.get(this.preloadedTemplate.id).toPromise();
+    // update shipping?
+    // update messaging?
+
+    if (this.isPaymentInfoUpdated(item)) {
+
+      // update payment
+      await this.payment.update(
+        this.templateId,
+        item.basePrice,
+        item.domesticShippingPrice,
+        item.internationalShippingPrice
+      ).toPromise();
+    }
+
+    return this.template.get(this.preloadedTemplate.id).toPromise();
+  }
+
+  isPaymentInfoUpdated(item: any): boolean {
+    return (
+      this.preloadedTemplate.basePrice.getAmount() !== item.basePrice ||
+      this.preloadedTemplate.domesticShippingPrice.getAmount() !== item.domesticShippingPrice ||
+      this.preloadedTemplate.internationalShippingPrice.getAmount() !== item.internationalShippingPrice
+    )
+  }
+
+  isTemplateInfoUpdated(item: any): boolean {
+    return (
+      this.preloadedTemplate.title !== item.title ||
+      this.preloadedTemplate.shortDescription !== item.shortDescription ||
+      this.preloadedTemplate.longDescription !== item.longDescription ||
+      this.category !== item.category
+    );
   }
 
   validate() {
@@ -350,11 +386,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.isInProcess = true;
+
     this.upsert()
     .then(t => {
+      this.isInProcess = false;
       this.snackbar.open('Succesfully updated template!')
     })
     .catch(err => {
+      this.isInProcess = false;
       this.snackbar.open('Failed to save template!')
     });
   }
@@ -363,9 +403,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     if (!this.validate()) {
       return;
     };
-    this.isInProcess = true;
-    this.log.d('Saving and publishing the listing.');
-    this.publish();
+
+    this.openListingExpiryModal();
   }
 
   onCountryChange(country: Country): void {
@@ -374,6 +413,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
 
   onCategoryChange(category: Category): void {
+    this.log.d('category', category);
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
@@ -410,12 +450,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     })
   }
 
-  loadTransactionFee() {
-    /* @TODO transaction fee will be calculated from backend
-     * currently we have assumed days_retention=1 costs 0.26362200
-     */
-    this.txFee = new Amount(0.26362200 * this.expiration)
-  }
+
 
   private initDragDropEl(elementID: string) {
     this.dropArea = document.getElementById(elementID);

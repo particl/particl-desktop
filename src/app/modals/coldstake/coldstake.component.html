@@ -53,11 +53,19 @@
 
   <!-- Step 3 -->
   <ng-template [ngIf]="step === 3">
-    <div class="container">
-      <div class="content">
-        <div class="title">
-          {{ finalMessage }}
-        </div>
-      </div><!-- .content -->
-    </div><!-- .container -->
+    <div mat-dialog-title class="title">Cold staking setup</div>
+
+    <mat-dialog-content class="modal-content">
+      <p [ngClass]="{'warning': failed}">
+        {{ finalMessage }}
+      </p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayoutAlign="flex-end center">
+      <button type="button" mat-button mat-dialog-close>
+        <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+        Close
+      </button>
+    </mat-dialog-actions>
+
   </ng-template><!-- Step 3 -->
