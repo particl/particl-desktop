@@ -3,7 +3,7 @@ import { interval } from 'rxjs/observable/interval';
 
 import { environment } from '../../../../environments/environment';
 import { ReleaseNotification } from './release-notification.model';
-
+import { RpcStateService } from '../../../core/core.module';
 import { ClientVersionService } from '../../../core/http/client-version.service';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
@@ -22,6 +22,7 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
   private destroyed: boolean = false;
 
   constructor(
+    private _rpcState: RpcStateService,
     private clientVersionService: ClientVersionService,
     public dialog: MatDialog // Alpha mainnet warning
   ) { }
@@ -42,6 +43,7 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
       .subscribe((response: ReleaseNotification) => {
         if (response.tag_name) {
           this.latestClientVersion = response.tag_name.substring(1);
+          this._rpcState.set('latest', this.latestClientVersion)
         }
 
         this.releaseUrl = response.html_url;

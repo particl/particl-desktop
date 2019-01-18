@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CoreModule } from '../../../core/core.module';
 import { ReleaseNotificationComponent } from './release-notification.component';
 import { MainViewModule } from '../main-view.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -11,6 +12,7 @@ describe('ReleaseNotificationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        CoreModule.forRoot(),
         MainViewModule,
         HttpClientModule
       ]
