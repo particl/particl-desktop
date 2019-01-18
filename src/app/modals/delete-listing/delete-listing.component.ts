@@ -25,7 +25,6 @@ export class DeleteListingComponent implements OnInit {
   }
 
   remove() {
-    console.log('removign tempalte')
     this.template.remove(this.templateToRemove.id).take(1).subscribe(
       success => this.snackbar.open('Successfully removed listing!'),
       error => this.snackbar.open(error),
