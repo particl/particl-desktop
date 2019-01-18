@@ -353,7 +353,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  public async upsert() {
+  public async upsert(): Promise<Template> {
     if (!this.validate()) {
       return;
     };
@@ -373,6 +373,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.preloadedTemplate = templ;
       this.templateId = templ.id;
       this.images = templ.imageCollection.images;
+      return templ;
     });
   }
 
