@@ -443,9 +443,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
         () => this.isInProcess = false)
         }, (err) => this.isInProcess = false);
       } else {
+        this.isInProcess = false
         this.snackbar.open(`Upload Limit Exceeded ${res.imageData + res.spaceLeft}`);
       }
     }, error => {
+      this.isInProcess = false
       this.snackbar.open(error)
     })
   }
