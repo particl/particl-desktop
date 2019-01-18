@@ -3,7 +3,8 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MarketModule } from '../../market.module';
 
 import { ListingService } from './listing.service';
-import { MockListingService } from 'app/_test/core-test/market-test/listing-test/listing.mock-service';
+import { MarketService } from 'app/core/market/market.service';
+import { MockMarketService } from 'app/_test/core-test/market-test/market.mockservice';
 
 describe('ListingService', () => {
 
@@ -17,8 +18,7 @@ describe('ListingService', () => {
         MarketModule.forRoot()
       ],
       providers: [{
-        // remove mock listing service when listing service use the mock rpc method.
-        provide: ListingService, useClass: MockListingService
+        provide: MarketService, useClass: MockMarketService
       }]
     });
   });

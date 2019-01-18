@@ -1,2 +1,2 @@
-export { getData } from './get';
-export { searchData } from './search';
+export { listingGet } from './get';
+export { listingSearch } from './search';

@@ -1,4 +1,4 @@
-const getData = {
+const listingGet = {
   'object': {
     'id': 1,
     'hash': '6181b7b6c941946ec8be5226f7fd5187a659f3edd7a5ae8e96e91201fad440bc',
@@ -597,5 +597,5 @@ const getData = {
 };
 
 export {
-  getData
+  listingGet
 }

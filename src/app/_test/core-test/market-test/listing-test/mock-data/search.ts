@@ -1,4 +1,4 @@
-const searchData = [
+const listingSearch = [
   {
     'id': 16,
     'hash': 'db15467a0a830e4a19e81fd1349a9217a0a70b8e9c7efacd1435cf84403b4178',
@@ -2667,5 +2667,5 @@ const searchData = [
 ]
 
 export {
-  searchData
+  listingSearch
 }
