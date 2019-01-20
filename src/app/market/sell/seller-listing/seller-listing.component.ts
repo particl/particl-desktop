@@ -25,7 +25,6 @@ export class SellerListingComponent {
 
   public status: Status = new Status();
   log: any = Log.create('seller-listing.component');
-  selectedTemplate: Template;
   expirationTime: number;
   @Input() listing: Listing;
 
@@ -54,8 +53,7 @@ export class SellerListingComponent {
   action(listing: Listing) {
     switch (listing.status) {
       case 'unpublished':
-        this.checkTemplateSize(listing);
-        // this.postTemplate(listing);
+        this.postTemplate(listing);
         break;
       case 'awaiting':
       case 'published':
@@ -63,39 +61,25 @@ export class SellerListingComponent {
     }
   }
 
-  checkTemplateSize(template: Template): void {
+  private postTemplate(template: Template) {
+
     this.template.size(template.id).subscribe(res => {
       if (res.fits) {
-        this.postTemplate(template);
+        this.modals.openListingExpiryModal((expirationTime) => {
+          this.expirationTime = expirationTime;
+          this.modals.unlock({ timeout: 30 }, async (status) => {
+            this.log.d('posting template id: ', template.id);
+            await this.template.post(template, 1, this.expirationTime).toPromise();
+          });
+        });
       } else {
-        this.snackbar.open(`Upload Limit Exceeded ${res.imageData + res.spaceLeft}`);
+        this.snackbar.open(`Upload Size Exceeded - Please reduce listing template size`);
       }
     }, error => {
       this.snackbar.open(error);
     })
   }
 
-  postTemplate(template: Template) {
-    this.selectedTemplate = template;
-    this.openListingExpiryModal();
-  }
-
-  openListingExpiryModal(): void {
-    this.modals.openListingExpiryModal((expirationTime) => {
-      this.expirationTime = expirationTime;
-      this.openUnlockWalletModal()
-    });
-  }
-
-  openUnlockWalletModal(): void {
-    this.modals.unlock({ timeout: 30 }, (status) => this.callTemplate());
-  }
-
-  async callTemplate() {
-    this.log.d('template', this.selectedTemplate)
-    await this.template.post(this.selectedTemplate, 1, this.expirationTime).toPromise();
-  }
-  // @TODO create a shared compoment
   addItem(id?: number, clone?: boolean) {
     this.router.navigate(['/market/template'], {
       queryParams: { 'id': id, 'clone': clone }
