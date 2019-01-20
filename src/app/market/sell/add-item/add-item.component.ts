@@ -414,7 +414,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   public saveTemplate() {
     if (this.preloadedTemplate && this.preloadedTemplate.status === 'published') {
-      this.snackbar.open('You can not update modify once they have been published!');
+      this.snackbar.open('You can not modify templates once they have been published!');
       return;
     }
 
