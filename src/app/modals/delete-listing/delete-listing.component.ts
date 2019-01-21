@@ -26,7 +26,11 @@ export class DeleteListingComponent implements OnInit {
   }
 
   remove() {
+<<<<<<< HEAD
     this.template.remove(this.templateToRemove.id).pipe(take(1)).subscribe(
+=======
+    this.template.remove(this.templateToRemove.id).take(1).subscribe(
+>>>>>>> market
       success => this.snackbar.open('Successfully removed listing!'),
       error => this.snackbar.open(error),
       () => this.dialogRef.close()

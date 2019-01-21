@@ -50,7 +50,7 @@ export class MarketService {
         }))
   }
 
-  public uploadImage(templateId: number, base64DataURI: any) {
+  public uploadImage(templateId: number, base64DataURIArray: any[]) {
     // Running in browser, delete?
     const form: FormData = new FormData();
     /*
@@ -61,9 +61,11 @@ export class MarketService {
       },
       value: new Buffer(base64)
     }*/
-    const blob: Blob = dataURItoBlob(base64DataURI);
-    form.append('image', blob, 'image.jpg');
+    for (let idx = 0; idx < base64DataURIArray.length; idx++) {
+      const blob = dataURItoBlob(base64DataURIArray[idx]);
 
+      form.append(`image-${idx}`, blob, 'image.jpg');
+    }
 
     const headerJson = {
       // 'Content-Type': 'multipart/form-data'
@@ -71,16 +73,9 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
-//        .map((response: any) => response.result)
-        .pipe(catchError((error: any) => {
-          let err = '';
-          if (error.status === 404) {
-            err = error.error.error;
-          } else {
-            err = error;
-          }
-          return observableThrowError(err);
-        }))
+        .catch((error: any) => {
+          return Observable.throw(this.extractMPErrorMessage(error.error));
+        })
   }
 
   private extractMPErrorMessage(errorObj: any): string {

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
-
 import { MarketService } from 'app/core/market/market.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 
@@ -12,7 +11,8 @@ import { take, map, catchError } from 'rxjs/operators';
 
 export enum errorType {
   unspent = 'Zero unspent outputs - insufficient funds to place the order.',
-  broke = 'Insufficient funds to place the order.'
+  broke = 'Insufficient funds to place the order.',
+  itemExpired = 'An item in your basket has expired!'
 }
 
 @Injectable()
@@ -24,6 +24,19 @@ export class BidService {
   }
 
   public async order(cart: Cart, profile: any, shippingAddress: any): Promise<string> {
+    let isValid = true;
+    const timeBuffer = 5000;
+    const validDate = new Date().getTime() + timeBuffer;
+    for (let i = 0; i < cart.listings.length; i++) {
+      const listing: Listing = cart.listings[i];
+      if (!( (validDate + (i * 2000) ) < listing.object.expiredAt)) {
+        isValid = false;
+        break;
+      }
+    }
+    if (!isValid) {
+      throw errorType.itemExpired;
+    }
 
     const shippingParams = [];
     for (const key of Object.keys(shippingAddress)) {
