@@ -131,8 +131,17 @@ table.cart-items {
     }
   }
   .quantity {
-    min-width: 30px;
-    max-width: 30px;
+    min-width: 36px;
+    max-width: 36px;
+    input {
+      font-family: $font;
+      line-height: 2;
+      text-align: center;
+      border-radius: 4px;
+      border: 1px solid $bg-shadow;
+      padding: 0;
+      outline: none;
+    }
   }
   .total {
     min-width: 90px;

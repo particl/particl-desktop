@@ -412,11 +412,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   openProcessingModal() {
-      const dialog = this.dialog.open(ProcessingModalComponent, {
-        disableClose: true,
-        data: {
-          message: 'Hang on, we are busy processing your cart'
-        }
-      });
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your cart'
+      }
+    });
   }
 }

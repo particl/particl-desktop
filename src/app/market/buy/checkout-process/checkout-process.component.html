@@ -32,12 +32,11 @@
         <table class="cart-items">
 
           <thead>
-          <!-- @TODO if quantity required then add this label before total  -->
-          <!-- <th>Quantity</th> -->
           <tr>
             <th>Items</th>
-            <th>Price</th>
+            <th>Price per item</th>
             <th *ngIf="listCache?.selectedCountry">Shipping Price</th>
+            <th>Quantity</th>
             <th class="text-right">Total</th>
             <th></th>
           </tr>
@@ -79,18 +78,14 @@
               {{ listing.shippingAmount(listCache?.selectedCountry?.iso)?.getIntegerPart()}}{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.dot()}}<small>{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.getFractionalPart()}}</small>
               PART
             </td>
-            <!--<td class="quantity cell">1 &times;</td>-->
 
-            <!-- @TODO if quantity required then we can uncomment the code   -->
-            <!--  <td class="quantity cell to-do">
-               <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                 <button mat-button class="small">-</button>
-                 <mat-form-field class="auto-width">
-                   <input matInput type="number" value="1" min="1" formControlName="firstCtrl">
-                 </mat-form-field>
-                 <button mat-button class="small">+</button>
-               </div>
-             </td> -->
+            <!-- TODO: implement quantity: -->
+            <td class="quantity cell">
+              <!-- TODO: "max" value = the amount of items in stock by seller-->
+              <input type="number" value="1" min="1" max="10"><!-- formControlName="firstCtrl" -->
+            </td>
+
+            <!-- TODO: recalculate Total price (price per item × quantity) -->
             <td *ngIf="!listCache?.selectedCountry" class="total cell">
               {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
               PART
@@ -99,12 +94,14 @@
               {{ listing.total(listCache?.selectedCountry?.iso)?.getIntegerPart()}}{{listing.total(listCache?.selectedCountry?.iso)?.dot()}}<small>{{listing.total(listCache?.selectedCountry?.iso)?.getFractionalPart()}}</small>
               PART
             </td>
+
             <td class="remove">
               <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above"
                       (click)="removeFromCart(listing?.id)">
                 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
               </button>
             </td>
+
           </tr>
           </tbody>
         </table>
@@ -271,7 +268,8 @@
         <tr>
           <th>Items</th>
           <th>Price</th>
-          <th>Shipping</th><!--<th>Quantity</th>-->
+          <th>Quantity</th>
+          <th>Shipping</th>
           <th class="text-right">Total</th>
         </tr>
         </thead>
@@ -295,10 +293,13 @@
             {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
             PART
           </td>
+          <!-- TODO: implement quantity: -->
+          <td class="quantity cell">
+            1 &times;
+          </td>
           <td class="shipping cell">{{listing?.shippingAmount(country)?.getIntegerPart()}}{{listing?.shippingAmount(country)?.dot()}}<small>{{listing?.shippingAmount(country)?.getFractionalPart()}}</small>
             PART
           </td>
-          <!--<td class="quantity cell">1 &times;</td>-->
           <td class="total cell">{{listing?.total(country)?.getIntegerPart()}}{{listing?.total(country)?.dot()}}<small>{{listing?.total(country)?.getFractionalPart()}}</small>
             PART
           </td>
