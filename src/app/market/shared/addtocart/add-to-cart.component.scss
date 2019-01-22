@@ -1,1 +1,24 @@
 @import './src/assets/_config'; // import shared colors etc.
+
+// Listing preview: "Add to cart" button with Quantity input
+.to-cart-with-qty {
+  background: darken($bg, 5%);
+  padding: 0 0 0 8px;
+  margin: 0 0 0 6px;
+  border-top-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+  span {
+    @extend %lighter;
+  }
+  .quantity {
+    width: 46px;
+    font-family: $font;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 2.3;
+    text-align: center;
+    border: 0;
+    background: none;
+    outline: none;
+  }
+}

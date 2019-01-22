@@ -1,10 +1,18 @@
 <!-- "Add to cart" button in Listings overview -->
 <button class="to-cart small" mat-button color="primary" *ngIf="!listing?.isMine && !bidded && detail == false" fxFlex (click)="addToCart(listing?.id)">
-    Add to cart
+  Add to cart
 </button>
 
+
 <!-- "Add to cart" button in Listing's detail -->
-<button class="to-cart" mat-raised-button color="primary" *ngIf="!listing?.isMine && !bidded && detail == true" fxFlex (click)="addToCart(listing?.id)">
+<div *ngIf="!listing?.isMine && !bidded && detail == true" class="to-cart-with-qty">
+  <span>&times;</span>
+  <!-- TODO: implement quantity functionality: -->
+  <!-- TODO: implement "max" value = the amount of items in stock by seller -->
+  <input class="quantity" type="number" placeholder="pcs" value="1" min="1" max="10">
+
+  <button class="to-cart" mat-raised-button color="primary" (click)="addToCart(listing?.id)">
     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
     Add to cart
-</button>
+  </button>
+</div>
