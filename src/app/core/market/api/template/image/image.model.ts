@@ -29,11 +29,12 @@ export class Image {
   }
 
   get originalEncoding(): string {
+    console.log(this.image);
     const image = this.image.ItemImageDatas.find(o => o.imageVersion === 'ORIGINAL');
     let data = '';
     if (image) {
-      if (image.originalMime && (image.encoding === 'BASE64') && image.ItemImageDataContent && image.ItemImageDataContent.data) {
-        data += `data:${image.originalMime};${image.encoding.toLowerCase()},${image.ItemImageDataContent.data}`
+      if (image.originalMime && (image.encoding === 'BASE64') && this.image.OriginalRawImage) {
+        data += `data:${image.originalMime};${image.encoding.toLowerCase()},${this.image.OriginalRawImage}`
       }
     }
     return data;
