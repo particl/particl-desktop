@@ -29,7 +29,6 @@ export class Image {
   }
 
   get originalEncoding(): string {
-    console.log(this.image);
     const image = this.image.ItemImageDatas.find(o => o.imageVersion === 'ORIGINAL');
     let data = '';
     if (image) {
