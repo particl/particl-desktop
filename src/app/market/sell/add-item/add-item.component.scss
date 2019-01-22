@@ -2,11 +2,22 @@
 
 // ------ GENERAL ------ //
 
+.subtitle {
+  @extend %subtitle;
+}
 
 // ------ LAYOUT ------ //
 
 .container-block {
   margin-top: $header-main-height;
+}
+
+.column {
+  .subtitle {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 }
 
 .mat-card {
