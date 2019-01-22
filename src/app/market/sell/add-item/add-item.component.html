@@ -136,11 +136,11 @@
       </button>
     </div>
     <div class="right">
-      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
+      <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
-      <button [disabled]="isInProcess || !itemFormGroup?.valid || !canPublish"
+      <button [disabled]="!itemFormGroup?.valid || !canPublish"
               mat-raised-button color="primary"
               matTooltip="{{ canPublish ? 'Save and put up for sale' : 'Maximum template size exceeded - try reduce image or text sizes'}}"
               (click)="saveAndPublish()"
@@ -150,18 +150,4 @@
       </button>
     </div>
   </div>
-    <!-- .loading-container -->
-  <div class="loading-container" *ngIf="isInProcess">
-    <div class="loading-info">
-      <div class="loading-image">
-        <img src="./assets/particl-logo-symbol.svg">
-      </div>
-      <p class="title">
-        We're processing your listing
-      </p>
-      <p class="widget-help">
-        This might take a sec
-      </p>
-    </div>
-  </div><!-- .loading-container -->
 </div>
