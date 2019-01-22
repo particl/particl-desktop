@@ -38,16 +38,17 @@
     </div><!-- .buyer-info -->
 
     <div class="info" fxFlex="35%">
-      <div class="title">Price<!-- & Qty--></div>
+      <div class="title">Pricing</div>
       <table class="prices">
-        <!--tr>
-          <th>Quantity</th>
-          <td>2</td>
-        </tr-->
         <tr>
-          <th>Listing price</th>
+          <th>Price per item</th>
           <td>{{order?.listing?.basePrice?.getIntegerPart()}}{{order?.listing?.basePrice?.dot()}}<small>{{order?.listing?.basePrice?.getFractionalPart()}}</small> PART
           </td>
+        </tr>
+        <!-- TODO: implement quantity:-->
+        <tr>
+          <th>Quantity</th>
+          <td>2 &times;</td>
         </tr>
         <tr>
           <th>Shipping</th>

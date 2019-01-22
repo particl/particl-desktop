@@ -18,8 +18,18 @@
       max-height: 110px;
       height: 110px;
     }
-    .meta .name {
-      font-size: 16px;
+    .meta {
+      .name {
+        font-size: 16px;
+      }
+    }
+  }
+  .detail {
+    table.prices {
+      margin-bottom: 24px;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
     }
   }
 }

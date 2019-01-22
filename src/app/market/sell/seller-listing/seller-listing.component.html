@@ -1,4 +1,5 @@
 <mat-expansion-panel class="listing list-item no-padding">
+
   <mat-expansion-panel-header class="header">
     <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
       <div class="photo" fxFlex="0 0 110px">
@@ -14,26 +15,26 @@
         </div>
       </div>
       <div *ngFor="let status of getStatus(listing?.status)">
-        <div class="status {{ status?.class }}" fxFlex="0 0 140px"><span class="dot"></span>{{ status?.status }}</div>
+        <div class="status {{ status?.class }}" fxFlex="0 0 140px">
+          <span class="dot"></span>{{ status?.status }}
+        </div>
       </div>
     </div>
   </mat-expansion-panel-header>
 
-  <!--div class="status-info">
-    <p>{{ listing.status_info }}</p>
-  </div-->
 
   <div class="detail" fxLayout="row" fxLayoutGap="30px">
+
     <div class="description" fxFlex="65%">
       <div class="title">Listing description</div>
       <p>
         {{ listing?.longDescription }}
       </p>
     </div><!-- .description -->
+
     <div class="info" fxFlex="35%">
-      <div class="title">Price</div>
+      <div class="title">Pricing</div>
       <table class="prices">
-        <!--tr><th>Quantity</th><td>2</td></tr-->
         <tr>
           <th>Price per item</th>
           <td>
@@ -41,15 +42,25 @@
             PART
           </td>
         </tr>
-        <!--tr><th>Total price</th><td>46.<small>257</small> PART</td></tr-->
       </table>
-    </div>
-  </div>
+
+      <div class="title">Inventory</div>
+      <table class="prices">
+        <tr>
+          <!-- TODO: implement quantity in stock -->
+          <th>In stock</th>
+          <td>2</td>
+        </tr>
+      </table>
+    </div><!-- .info -->
+
+  </div><!-- .detail -->
+
 
   <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+
     <div class="left">
-      <button mat-button color="warn" matTooltip="Delete listing" *ngIf="listing?.isUnpublished" (click)="confirmDeleteListing(listing)"
-              class="small">
+      <button mat-button color="warn" matTooltip="Delete listing" *ngIf="listing?.isUnpublished" (click)="confirmDeleteListing(listing)" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       </button>
       <button mat-button matTooltip="Clone listing" (click)="addItem(listing?.id, true)" class="small">
@@ -60,6 +71,7 @@
         Edit listing
       </button>
     </div>
+
     <div class="right" *ngFor="let status of getStatus(listing?.status)">
       <button mat-raised-button color="{{ status?.action_color }}" matTooltip="{{ status?.action_tooltip }}" (click)="action(listing)" [disabled]="status?.action_disabled">
         <!-- listing.action_disabled -->
@@ -67,5 +79,6 @@
         {{ status?.action_button }}
       </button>
     </div>
+
   </mat-action-row>
 </mat-expansion-panel><!-- .listing -->
