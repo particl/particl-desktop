@@ -23,7 +23,7 @@
         </p>
         <div class="gallery" fxLayoutWrap>
 
-          <div *ngFor="let image of images"
+          <div *ngFor="let image of images ; index as i"
               class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
             <div class="photo" fxFLex>
               <img src="{{image.thumbnail}}">
@@ -31,9 +31,9 @@
                 <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
                           matTooltip="Remove image" (click)="removeExistingImage(image)">
                 </mat-icon>
-                <!--mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
-                          matTooltip="Set as featured" (click)="featurePicture(i)">
-                </mat-icon-->
+                <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                          matTooltip="Set as featured" (click)="featurePicture(i, true)">
+                </mat-icon>
               </div>
             </div>
           </div>
@@ -48,10 +48,9 @@
                 <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
                           matTooltip="Remove image" (click)="removePicture(i)">
                 </mat-icon>
-                <!-- TODO: Fix set as featured img -->
-                <!-- <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
-                          matTooltip="Set as featured" (click)="featurePicture(i)">
-                </mat-icon> -->
+                <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                          matTooltip="Set as featured" (click)="featurePicture(i, false)">
+                </mat-icon>
               </div>
             </div>
           </div>

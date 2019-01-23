@@ -159,11 +159,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
         if (indexToRemove >= 0) {
           this.log.d('Removing existing image from UI with index', indexToRemove);
           this.images.splice(indexToRemove, 1);
+          
         }
         this.canPublish = await this.templateHasValidSize().catch(err => {
           this.snackbar.open('Failed to recalculate template size');
           return this.canPublish;
         });
+        if (indexToRemove < this.featuredPicture) {
+          this.featuredPicture -= 1;
+        }
         this.snackbar.open('Removed image successfully!');
       },
       error => this.snackbar.open(error)
@@ -172,13 +176,24 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   removePicture(index: number) {
     this.picturesToUpload.splice(index, 1);
-    if (this.featuredPicture > index) {
+    if (this.images && this.featuredPicture < this.images.length + index) {
+    }
+    if (!this.images && this.featuredPicture > index) {
       this.featuredPicture -= 1;
     }
+
   }
 
-  featurePicture(index: number) {
-    this.featuredPicture = index;
+  featurePicture(index: number, existing: boolean) {
+    if (existing) {
+      this.featuredPicture = index;
+    } else {
+      if (this.images) {
+        this.featuredPicture = this.images.length + index;
+      } else {
+        this.featuredPicture = index;
+      }
+    }
   }
 
   private subToCategories() {
@@ -408,6 +423,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.preloadedTemplate = templ;
       this.templateId = templ.id;
       this.images = templ.imageCollection.images;
+      this.setFeaturedImage(templ, this.featuredPicture);
     }).then(
       async () => {
         this.canPublish = await this.templateHasValidSize();
@@ -497,6 +513,25 @@ export class AddItemComponent implements OnInit, OnDestroy {
         message: 'Hang on, we are busy processing your listing'
       }
     });
+  }
+
+  async setFeaturedImage(template: Template, featuredIndex: number) {
+    let templateID: number;
+    let imageID: number;
+    if (!featuredIndex) {
+      featuredIndex = 0;
+    }
+    if (template && template.object.ItemInformation) {
+      templateID = template.id;
+      imageID = template.object.ItemInformation.ItemImages[featuredIndex].id
+      
+      this.template.featured(templateID, imageID)
+      .subscribe( (res) => {
+        this.log.d('Successfully set featured image');
+      }, (err) => {
+        this.log.d('Could not set featured image');
+      });
+    }
   }
 
 }

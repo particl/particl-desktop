@@ -77,4 +77,8 @@ export class TemplateService {
     return this.market.call('template', ['remove', listingTemplateId]);
   }
 
+  featured(listingTemplateId: number, imageID: number): Observable<void> {
+    return this.market.call('image', ['featured', listingTemplateId, imageID]);
+  }
+
 }
