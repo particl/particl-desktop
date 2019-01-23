@@ -41,7 +41,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
-  images: Image[];
+  images: Image[] = [];
 
   // file upload
   dropArea: any;
