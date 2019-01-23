@@ -193,6 +193,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   backToSell() {
+    this.dialog.closeAll()
     this.router.navigate(['/market/sell']);
   }
 
@@ -275,8 +276,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
             });
         });
       }
-    ).then(
-      () => this.dialog.closeAll()
     ).catch(err => {
       this.dialog.closeAll();
       this.snackbar.open(err);
