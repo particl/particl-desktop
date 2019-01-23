@@ -94,11 +94,10 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
 
   onSelectionChanged($event: any): void {
     // emit selected value.
-    const event = Object.assign({}, $event);
-    if (event.option && event.option.value && event.option.value.id) {
+    if ($event.option && $event.option.value && $event.option.value.id) {
 
-      this.selectedOption = event.option.value;
-      this.change.emit(event.option.value);
+      this.selectedOption = $event.option.value;
+      this.change.emit($event.option.value);
     }
   }
 
