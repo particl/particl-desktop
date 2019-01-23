@@ -104,7 +104,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   isExistingTemplate() {
-    return this.preloadedTemplate || (this.templateId !== undefined && this.templateId > 0);
+    return this.preloadedTemplate || +this.templateId > 0;
   }
 
   uploadPicture() {
@@ -169,7 +169,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   subToCategories() {
     this.category.list()
-      .takeWhile(() => !this.destroyed)
+      .take(1)
       .subscribe(list => this.updateCategories(list));
   }
 
@@ -257,7 +257,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
 
-    const template: Template = await this.template.add(
+    const template: any = await this.template.add(
       item.title,
       item.shortDescription,
       item.longDescription,
@@ -269,27 +269,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
       +item.internationalShippingPrice
     ).toPromise();
 
+    this.preloadedTemplate = new Template(template);
 
     this.templateId = template.id;
-    this.preloadedTemplate = template;
-
     await this.location.execute('add', this.templateId, country, null, null).toPromise();
     await this.escrow.add(template.id, EscrowType.MAD).toPromise();
+    await this.uploadImages();
 
-    if (this.picturesToUpload.length === 0) {
-      return template;
-    } else {
-      await this.image.upload(template, this.picturesToUpload);
-    }
-
-    return this.template.get(this.preloadedTemplate.id).toPromise();
-    /*
-
-
-      }, error => error.error ? this.snackbar.open(error.error.message) : this.snackbar.open(error));
-          });
-      */
-
+    return this.template.get(template.id).toPromise();
   }
 
   private async update() {
@@ -305,12 +292,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       ).toPromise();
     }
 
-    // update images
-    if (this.picturesToUpload.length) {
-      await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
-
-    }
-
     const country = this.countryList.getCountryByName(item.country);
 
     // update location
@@ -322,7 +303,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update escrow
     // @TODO EscrowType will change in future?
     await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
-
 
     // update shipping?
     // update messaging?
@@ -338,7 +318,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
       ).toPromise();
     }
 
-    return this.template.get(this.preloadedTemplate.id).toPromise();
+    // update images
+    await this.uploadImages();
+
+    return this.template.get(this.templateId).toPromise();
   }
 
   isPaymentInfoUpdated(item: any): boolean {
@@ -370,19 +353,28 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  public async upsert() {
+  public async upsert(): Promise<Template> {
     if (!this.validate()) {
       return;
     };
-    this.log.d('Saving as a template.');
+    this.log.d('Processing template (upsert)');
+
+    let resp: Promise<Template>;
 
     if (this.preloadedTemplate && this.preloadedTemplate.id) {
       this.log.d(`Updating existing template ${this.preloadedTemplate.id}`);
-      return this.update();
+      resp = this.update();
     } else {
       this.log.d(`Creating new template`);
-      return this.save();
+      resp = this.save();
     }
+
+    return resp.then((templ) => {
+      this.preloadedTemplate = templ;
+      this.templateId = templ.id;
+      this.images = templ.imageCollection.images;
+      return templ;
+    });
   }
 
   public saveTemplate() {
@@ -460,6 +452,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.processPictures(e, true);
         return false;
     };
+  }
+
+
+  private async uploadImages(): Promise<void> {
+    if (this.picturesToUpload.length && this.preloadedTemplate) {
+      const success = await this.image.upload(this.preloadedTemplate, this.picturesToUpload).then((t: Template) => {
+        this.picturesToUpload = [];
+        return true;
+      }).catch(err => false);
+    }
   }
 
 }
