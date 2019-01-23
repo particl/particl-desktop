@@ -21,6 +21,9 @@ import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/e
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+import { MatDialog } from '@angular/material';
+
 
 @Component({
   selector: 'app-add-item',
@@ -48,7 +51,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   expiration: number = 0;
   selectedCountry: Country;
   selectedCategory: Category;
-  isInProcess: boolean = false;
   canPublish: boolean = false;
 
   constructor(
@@ -68,7 +70,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private modals: ModalsHelperService,
     private countryList: CountryListService,
     private escrow: EscrowService,
-    private payment: PaymentService
+    private payment: PaymentService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -254,8 +257,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   private async callPublish(expiryTime: number): Promise<void> {
+    this.openProcessingModal();
     this.expiration = expiryTime;
-    this.isInProcess = true;
     this.log.d('Saving and publishing the listing.');
     await this.upsert().then(
       () => {
@@ -273,9 +276,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
         });
       }
     ).then(
-      () => this.isInProcess = false
+      () => this.dialog.closeAll()
     ).catch(err => {
-      this.isInProcess = false;
+      this.dialog.closeAll();
       this.snackbar.open(err);
     });
   }
@@ -417,16 +420,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.snackbar.open('You can not modify templates once they have been published!');
       return;
     }
-
-    this.isInProcess = true;
+    this.openProcessingModal();
 
     this.upsert()
     .then(() => {
-      this.isInProcess = false;
+      this.dialog.closeAll();
       this.snackbar.open('Succesfully updated template!')
     })
     .catch(err => {
-      this.isInProcess = false;
+      this.dialog.closeAll();
       this.snackbar.open('Failed to save template!')
     });
   }
@@ -486,6 +488,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }).catch(err => false);
     }
     return success;
+  }
+
+  openProcessingModal() {
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your listing'
+      }
+    });
   }
 
 }
