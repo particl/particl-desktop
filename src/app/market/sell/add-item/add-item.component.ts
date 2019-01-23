@@ -270,6 +270,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   private async callPublish(expiryTime: number): Promise<void> {
+    this.openProcessingModal();
     this.expiration = expiryTime;
     this.log.d('Saving and publishing the listing.');
     await this.upsert().then(
@@ -279,7 +280,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
         }
 
         this.modals.unlock({timeout: 30}, (status) => {
-          this.openProcessingModal();
           this.template.post(this.preloadedTemplate, 1, this.expiration)
             .subscribe(listing => {
               this.snackbar.open('Succesfully added Listing!');
@@ -288,7 +288,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
             });
         });
       }
-    ).then(
     ).catch(err => {
       this.dialog.closeAll();
       this.snackbar.open(err);

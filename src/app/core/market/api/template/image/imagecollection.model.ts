@@ -12,10 +12,6 @@ export class ImageCollection {
     this.preview = this.images[0]
   }
 
-  get featuredImage(): Image {
-    return this.images[0] || this.default;
-  }
-
   get previewImage(): Image {
     return this.preview || this.default;
   }
@@ -32,4 +28,12 @@ export class ImageCollection {
     this.preview = image;
   }
 
+  get featuredImage(): Image {
+    for (const img of this.images) {
+      if (img.image.featured === 1) {
+        return img;
+      }
+    }
+    return this.images[0] || this.default;
+  }
 }
