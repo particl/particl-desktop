@@ -24,7 +24,7 @@
         <div class="gallery" fxLayoutWrap>
 
           <div *ngFor="let image of images ; index as i"
-              class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+              class="photo-wrapper  {{i === featuredPicture ? 'featured' : ''}}" fxFlex="0 0 123px" fxLayoutAlign="center center">
             <div class="photo" fxFLex>
               <img src="{{image.thumbnail}}">
               <div class="icons">
@@ -39,7 +39,7 @@
           </div>
 
           <div *ngFor="let picture of picturesToUpload ; index as i"
-              class="photo-wrapper" fxFlex="0 0 123px"
+              class="photo-wrapper {{i + images.length === featuredPicture ? 'featured' : ''}}" fxFlex="0 0 123px"
               fxLayoutAlign="center center">
             <!-- TODO: maybe not gif, but removing is 'unsafe' -->
             <div class="photo" fxFLex>
