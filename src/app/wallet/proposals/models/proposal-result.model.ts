@@ -50,7 +50,8 @@ export class ProposalResult {
 
   // Calculating percentage of each vote.
   getWeightInPercentage(weight: number): string {
-    return ((weight / this.totalWeight) * 100) + '%';
+    const perWeight = (weight / this.totalWeight) * 100;
+    return (new Amount(perWeight, 2).getAmount()) + '%';
   }
 
   // Converting the satishi to part coin
