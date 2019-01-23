@@ -21,7 +21,7 @@
 
 
 <!-- Alpha mainnet warning -->
-<mat-card class="notification alert"><!-- *ngIf="" -->
+<mat-card class="notification alert" *ngIf="mainNet && isBeta()"><!-- *ngIf="" -->
   <mat-card-title class="title">
     The Particl Marketplace alpha is still in development and not 100% private yet &ndash; use it at your own risk!
     <button class="button" mat-button color="warn" (click)="readFullWarning()">

@@ -121,7 +121,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
 
-    // Check for latest version 
+    // Check for latest version
     this._rpcState.observe('latest')
       .takeWhile(() => !this.destroyed)
       .subscribe(latest => this.latestClientVersion = latest);

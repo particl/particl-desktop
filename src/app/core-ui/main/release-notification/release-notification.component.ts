@@ -20,7 +20,7 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
   public latestClientVersion: string;
   public releaseUrl: string;
   private destroyed: boolean = false;
-
+  private mainNet: boolean = false;
   constructor(
     private _rpcState: RpcStateService,
     private clientVersionService: ClientVersionService,
@@ -31,6 +31,8 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
     // check new update in every 30 minute
     const versionInterval = interval(1800000);
     versionInterval.takeWhile(() => !this.destroyed).subscribe(val => this.getCurrentClientVersion());
+    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+      .subscribe(chain => this.mainNet = chain !== 'test');
   }
 
   // no need to destroy.
@@ -52,6 +54,11 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
 
   isNewUpdateAvailable(): boolean {
     return (parseFloat(this.currentClientVersion) < parseFloat(this.latestClientVersion));
+  }
+
+  // check for beta version
+  isBeta(): boolean {
+    return (this.currentClientVersion).includes('beta');
   }
 
   // Alpha mainnet warning
