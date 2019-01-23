@@ -1,4 +1,4 @@
-<div class="container-block">
+<div class="container-block" [formGroup]="itemFormGroup">
 
   <div class="page-intro">
     <h1>Add new Product for sale</h1>
@@ -17,7 +17,7 @@
     <div class="left column" fxFlex="50">
 
       <h2 class="subtitle">Product details</h2>
-      <mat-card class="details" [formGroup]="itemFormGroup">
+      <mat-card class="details">
 
         <mat-form-field class="full-width">
           <input matInput placeholder="Product name" #title formControlName="title">
@@ -70,7 +70,7 @@
           <div class="half" fxFlex="50">
             <!-- FIXME: implement quantity functionality: -->
             <mat-form-field class="auto-width">
-              <input matInput type="number" placeholder="Quantity in stock">
+              <input matInput type="number" placeholder="Quantity in stock" formControlName="quantity">
             </mat-form-field>
           </div>
           <div class="half" fxFlex="50">
