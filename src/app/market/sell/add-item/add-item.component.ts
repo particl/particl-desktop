@@ -526,8 +526,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }, (err) => {
         this.log.d('Could not set featured image');
       });
+    } else {
+      this.log.d('No image to set as featured');
     }
-    this.log.d('No image to set as featured');
   }
 
 }
