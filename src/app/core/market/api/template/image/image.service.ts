@@ -33,7 +33,7 @@ export class ImageService {
           resolve(template);
         }, error => {
 
-          this.log.d(`error in image upload ${template.id}`)
+          this.log.d(`error in image upload of template: ${template.id}`)
           reject(error);
         });
 
