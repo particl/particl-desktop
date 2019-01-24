@@ -205,7 +205,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   backToSell() {
-    this.dialog.closeAll();
+    this.dialog.closeAll()
     this.router.navigate(['/market/sell']);
   }
 
