@@ -25,7 +25,6 @@ export class MockMarketService {
         break;
 
       case 'item':
-      console.log('method', method, 'Responses[method]----', Responses[method]);
         response = Responses[method][params[0]];
         break;
 

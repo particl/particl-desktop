@@ -1,600 +1,283 @@
 const listingGet = {
-  'object': {
+  'id': 1,
+  'hash': 'd4f840af84a4dffb25c932e019986ce89cfc60f090ecedc18594604ad14533ac',
+  'seller': 'pa3bnwLnW3Rdg25PjrEvWrZvFJsCAT6DLQ',
+  'marketId': 1,
+  'listingItemTemplateId': null,
+  'expiryTime': 4,
+  'receivedAt': 1548238487000,
+  'postedAt': 1548238316000,
+  'expiredAt': 1548583916000,
+  'updatedAt': 1548238512733,
+  'createdAt': 1548238512733,
+  'ItemInformation': {
     'id': 1,
-    'hash': '6181b7b6c941946ec8be5226f7fd5187a659f3edd7a5ae8e96e91201fad440bc',
-    'seller': 'peLw36VwoKL8GWbg3A5rKGtrze5tX68Kxv',
-    'marketId': 1,
+    'title': 'Test Listing 05 - 23/01',
+    'shortDescription': 'Test Listing 05 - 23/01',
+    'longDescription': 'Test Listing 05 - 23/01',
+    'itemCategoryId': 13,
+    'listingItemId': 1,
     'listingItemTemplateId': null,
-    'expiryTime': 28,
-    'receivedAt': 1544175367000,
-    'postedAt': 1544175298000,
-    'expiredAt': 1546594498000,
-    'updatedAt': 1544175388305,
-    'createdAt': 1544175388305,
-    'ItemInformation': {
-      'id': 94,
-      'title': 'Dry Gin',
-      'shortDescription': 'homemade gin for sale',
-      // tslint:disable-next-line
-      'longDescription': 'gin that has been made in the native lands of america, with an alcohol percentage of 100% this will surley get any party started, but bewarned the next morning!',
-      'itemCategoryId': 52,
-      'listingItemId': 1,
-      'listingItemTemplateId': null,
-      'updatedAt': 1544175388331,
-      'createdAt': 1544175388331,
-      'ItemCategory': {
-        'id': 52,
-        'key': 'cat_health_diet_nutrition',
-        'name': 'Diet & Nutrition',
-        'description': '',
-        'parentItemCategoryId': 51,
-        'updatedAt': 1545807545962,
-        'createdAt': 1543920717237,
-        'ParentItemCategory': {
-          'id': 51,
-          'key': 'cat_health_beauty_personal',
-          'name': 'Health / Beauty and Personal Care',
-          'description': '',
-          'parentItemCategoryId': 1,
-          'updatedAt': 1545807545948,
-          'createdAt': 1543920717225,
-          'ParentItemCategory': {
-            'id': 1,
-            'key': 'cat_ROOT',
-            'name': 'ROOT',
-            'description': 'root item category',
-            'parentItemCategoryId': null,
-            'updatedAt': 1545807545055,
-            'createdAt': 1543920716188
-          }
-        }
-      },
-      'ItemLocation': {
-        'id': 93,
-        'region': 'CR',
-        'address': 'a',
-        'itemInformationId': 94,
-        'updatedAt': 1544175388343,
-        'createdAt': 1544175388343,
-        'LocationMarker': {}
-      },
-      'ItemImages': [{
-        'id': 76,
-        'hash': 'a04e5cb4bd04f7ed6a987138de295604f741f7b88dc624551ebdb1ca339c44a6',
-        'itemInformationId': 94,
-        'updatedAt': 1544175388458,
-        'createdAt': 1544175388458,
-        'ItemImageDatas': [{
-          'id': 294,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'ORIGINAL',
-          'dataId': 'http://localhost:3000/api/item-images/76/ORIGINAL',
-          'itemImageId': 76,
-          'updatedAt': 1544175391268,
-          'createdAt': 1544175391268,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 295,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'LARGE',
-          'dataId': 'http://localhost:3000/api/item-images/76/LARGE',
-          'itemImageId': 76,
-          'updatedAt': 1544175391470,
-          'createdAt': 1544175391470,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 296,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'MEDIUM',
-          'dataId': 'http://localhost:3000/api/item-images/76/MEDIUM',
-          'itemImageId': 76,
-          'updatedAt': 1544175391677,
-          'createdAt': 1544175391677,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 297,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'THUMBNAIL',
-          'dataId': 'http://localhost:3000/api/item-images/76/THUMBNAIL',
-          'itemImageId': 76,
-          'updatedAt': 1544175391846,
-          'createdAt': 1544175391846,
-          'originalMime': null,
-          'originalName': null
-        }]
-      }],
-      'ShippingDestinations': []
-    },
-    'PaymentInformation': {
-      'id': 88,
-      'type': 'SALE',
-      'listingItemId': 1,
-      'listingItemTemplateId': null,
-      'updatedAt': 1544175392130,
-      'createdAt': 1544175392130,
-      'Escrow': {
-        'id': 88,
-        'type': 'MAD',
-        'paymentInformationId': 88,
-        'updatedAt': 1544175392144,
-        'createdAt': 1544175392144,
-        'Ratio': {
-          'id': 88,
-          'buyer': 100,
-          'seller': 100,
-          'escrowId': 88,
-          'updatedAt': 1544175392151,
-          'createdAt': 1544175392151
-        }
-      },
-      'ItemPrice': {
-        'id': 87,
-        'currency': 'PARTICL',
-        'basePrice': 1,
-        'paymentInformationId': 88,
-        'cryptocurrencyAddressId': null,
-        'updatedAt': 1544175392160,
-        'createdAt': 1544175392160,
-        'ShippingPrice': {
-          'id': 87,
-          'domestic': 1,
-          'international': 1,
-          'itemPriceId': 87,
-          'updatedAt': 1544175392167,
-          'createdAt': 1544175392167
-        }
-      }
-    },
-    'MessagingInformation': [],
-    'ListingItemObjects': [],
-    'ActionMessages': [{
-      'id': 84,
-      'action': 'MP_ITEM_ADD',
-      'nonce': null,
-      'accepted': null,
-      'listingItemId': 1,
-      'updatedAt': 1544175392240,
-      'createdAt': 1544175392240,
-      'MessageObjects': [{
-        'id': 84,
-        'actionMessageId': 84,
-        'dataId': 'seller',
-        'dataValue': 'peLw36VwoKL8GWbg3A5rKGtrze5tX68Kxv',
-        'updatedAt': 1544175392286,
-        'createdAt': 1544175392286
-      }],
-      'MessageInfo': {},
-      'MessageEscrow': {},
-      'MessageData': {
-        'id': 84,
-        'actionMessageId': 84,
-        'msgid': '000000005c0a3ec222d606bccdf21346b1d7b5483361890d97267bbb',
-        'version': '0300',
-        'received': '2018-12-07T09:36:07.000Z',
-        'sent': '2018-12-07T09:34:58.000Z',
-        'from': 'peLw36VwoKL8GWbg3A5rKGtrze5tX68Kxv',
-        'to': 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA',
-        'updatedAt': 1544175392268,
-        'createdAt': 1544175392268
-      }
-    }],
-    'Bids': [],
-    'Market': {
-      'id': 1,
-      'name': 'DEFAULT',
-      'privateKey': '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek',
-      'address': 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA',
-      'updatedAt': 1545807544987,
-      'createdAt': 1543920716143
-    },
-    'FlaggedItem': {}
-  },
-  'category': {
-    'category': {
-      'id': 52,
-      'key': 'cat_health_diet_nutrition',
-      'name': 'Diet & Nutrition',
+    'updatedAt': 1548238512752,
+    'createdAt': 1548238512752,
+    'ItemCategory': {
+      'id': 13,
+      'key': 'cat_housing_apartments_rental_housing',
+      'name': 'Apartments / Rental Housing',
       'description': '',
-      'parentItemCategoryId': 51,
-      'updatedAt': 1545807545962,
-      'createdAt': 1543920717237,
+      'parentItemCategoryId': 10,
+      'updatedAt': 1548319596139,
+      'createdAt': 1548057532636,
       'ParentItemCategory': {
-        'id': 51,
-        'key': 'cat_health_beauty_personal',
-        'name': 'Health / Beauty and Personal Care',
+        'id': 10,
+        'key': 'cat_housing_travel_vacation',
+        'name': 'Housing / Travel & Vacation',
         'description': '',
         'parentItemCategoryId': 1,
-        'updatedAt': 1545807545948,
-        'createdAt': 1543920717225,
+        'updatedAt': 1548319596052,
+        'createdAt': 1548057532577,
         'ParentItemCategory': {
           'id': 1,
           'key': 'cat_ROOT',
           'name': 'ROOT',
           'description': 'root item category',
           'parentItemCategoryId': null,
-          'updatedAt': 1545807545055,
-          'createdAt': 1543920716188
+          'updatedAt': 1548319595829,
+          'createdAt': 1548057532300
         }
       }
-    }
-  },
-  'createdAt': '07-12-2018',
-  'status': 'unpublished',
-  'basePrice': {
-    'amount': 1,
-    'maxRoundingDigits': 8
-  },
-  'domesticShippingPrice': {
-    'amount': 1,
-    'maxRoundingDigits': 8
-  },
-  'internationalShippingPrice': {
-    'amount': 1,
-    'maxRoundingDigits': 8
-  },
-  'escrowPriceInternational': {
-    'amount': 2,
-    'maxRoundingDigits': 8
-  },
-  'escrowPriceDomestic': {
-    'amount': 2,
-    'maxRoundingDigits': 8
-  },
-  'domesticTotal': {
-    'amount': 2,
-    'maxRoundingDigits': 8
-  },
-  'internationalTotal': {
-    'amount': 2,
-    'maxRoundingDigits': 8
-  },
-  'totalAmountInternaltional': {
-    'amount': 4,
-    'maxRoundingDigits': 8
-  },
-  'totalAmountDomestic': {
-    'amount': 4,
-    'maxRoundingDigits': 8
-  },
-  'memo': '',
-  'expireTime': 4,
-  'isFlagged': false,
-  'proposalHash': '',
-  'submitterAddress': '',
-  'imageCollection': {
-    'images': [{
-      'image': {
-        'id': 76,
-        'hash': 'a04e5cb4bd04f7ed6a987138de295604f741f7b88dc624551ebdb1ca339c44a6',
-        'itemInformationId': 94,
-        'updatedAt': 1544175388458,
-        'createdAt': 1544175388458,
-        'ItemImageDatas': [{
-          'id': 294,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'ORIGINAL',
-          'dataId': 'http://localhost:3000/api/item-images/76/ORIGINAL',
-          'itemImageId': 76,
-          'updatedAt': 1544175391268,
-          'createdAt': 1544175391268,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 295,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'LARGE',
-          'dataId': 'http://localhost:3000/api/item-images/76/LARGE',
-          'itemImageId': 76,
-          'updatedAt': 1544175391470,
-          'createdAt': 1544175391470,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 296,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'MEDIUM',
-          'dataId': 'http://localhost:3000/api/item-images/76/MEDIUM',
-          'itemImageId': 76,
-          'updatedAt': 1544175391677,
-          'createdAt': 1544175391677,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 297,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'THUMBNAIL',
-          'dataId': 'http://localhost:3000/api/item-images/76/THUMBNAIL',
-          'itemImageId': 76,
-          'updatedAt': 1544175391846,
-          'createdAt': 1544175391846,
-          'originalMime': null,
-          'originalName': null
-        }]
+    },
+    'ItemLocation': {
+      'id': 1,
+      'region': 'ZA',
+      'address': 'a',
+      'itemInformationId': 1,
+      'updatedAt': 1548238512762,
+      'createdAt': 1548238512762,
+      'LocationMarker': {
+
       }
-    }],
-    'default': { 'image': { 'ItemImageDatas': [] } },
-    'imageItems': [{
-      'data': {
-        'src': 'http://localhost:3000/api/item-images/76/MEDIUM',
-        'thumb': 'http://localhost:3000/api/item-images/76/THUMBNAIL'
-      }
-    }],
-    'preview': {
-      'image': {
-        'id': 76,
-        'hash': 'a04e5cb4bd04f7ed6a987138de295604f741f7b88dc624551ebdb1ca339c44a6',
-        'itemInformationId': 94,
-        'updatedAt': 1544175388458,
-        'createdAt': 1544175388458,
-        'ItemImageDatas': [{
-          'id': 294,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'ORIGINAL',
-          'dataId': 'http://localhost:3000/api/item-images/76/ORIGINAL',
-          'itemImageId': 76,
-          'updatedAt': 1544175391268,
-          'createdAt': 1544175391268,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 295,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'LARGE',
-          'dataId': 'http://localhost:3000/api/item-images/76/LARGE',
-          'itemImageId': 76,
-          'updatedAt': 1544175391470,
-          'createdAt': 1544175391470,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 296,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'MEDIUM',
-          'dataId': 'http://localhost:3000/api/item-images/76/MEDIUM',
-          'itemImageId': 76,
-          'updatedAt': 1544175391677,
-          'createdAt': 1544175391677,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 297,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'THUMBNAIL',
-          'dataId': 'http://localhost:3000/api/item-images/76/THUMBNAIL',
-          'itemImageId': 76,
-          'updatedAt': 1544175391846,
-          'createdAt': 1544175391846,
-          'originalMime': null,
-          'originalName': null
-        }]
-      }
-    }
-  },
-  'listing': {
-    'id': 1,
-    'hash': '6181b7b6c941946ec8be5226f7fd5187a659f3edd7a5ae8e96e91201fad440bc',
-    'seller': 'peLw36VwoKL8GWbg3A5rKGtrze5tX68Kxv',
-    'marketId': 1,
-    'listingItemTemplateId': null,
-    'expiryTime': 28,
-    'receivedAt': 1544175367000,
-    'postedAt': 1544175298000,
-    'expiredAt': 1546594498000,
-    'updatedAt': 1544175388305,
-    'createdAt': 1544175388305,
-    'ItemInformation': {
-      'id': 94,
-      'title': 'Dry Gin',
-      'shortDescription': 'homemade gin for sale',
-      // tslint:disable-next-line
-      'longDescription': 'gin that has been made in the native lands of america, with an alcohol percentage of  100 % this will surley get any party started, but bewarned the next morning!',
-      'itemCategoryId': 52,
-      'listingItemId': 1,
-      'listingItemTemplateId': null,
-      'updatedAt': 1544175388331,
-      'createdAt': 1544175388331,
-      'ItemCategory': {
-        'id': 52,
-        'key': 'cat_health_diet_nutrition',
-        'name': 'Diet & Nutrition',
-        'description': '',
-        'parentItemCategoryId': 51,
-        'updatedAt': 1545807545962,
-        'createdAt': 1543920717237,
-        'ParentItemCategory': {
-          'id': 51,
-          'key': 'cat_health_beauty_personal',
-          'name': 'Health / Beauty and Personal Care',
-          'description': '',
-          'parentItemCategoryId': 1,
-          'updatedAt': 1545807545948,
-          'createdAt': 1543920717225,
-          'ParentItemCategory': {
-            'id': 1,
-            'key': 'cat_ROOT',
-            'name': 'ROOT',
-            'description': 'root item category',
-            'parentItemCategoryId': null,
-            'updatedAt': 1545807545055,
-            'createdAt': 1543920716188
+    },
+    'ItemImages': [
+      {
+        'id': 40,
+        'hash': '4a35ecaf5fc7d8ce4287bb231a5360b8fd0a293dc46a6031f000f3c3eab12a81',
+        'itemInformationId': 1,
+        'updatedAt': 1548238512801,
+        'createdAt': 1548238512801,
+        'ItemImageDatas': [
+          {
+            'id': 157,
+            'protocol': 'LOCAL',
+            'encoding': 'BASE64',
+            'imageVersion': 'ORIGINAL',
+            'dataId': 'http://localhost:3000/api/item-images/40/ORIGINAL',
+            'itemImageId': 40,
+            'updatedAt': 1548238528870,
+            'createdAt': 1548238528870,
+            'originalMime': null,
+            'originalName': null
+          },
+          {
+            'id': 158,
+            'protocol': 'LOCAL',
+            'encoding': 'BASE64',
+            'imageVersion': 'LARGE',
+            'dataId': 'http://localhost:3000/api/item-images/40/LARGE',
+            'itemImageId': 40,
+            'updatedAt': 1548238529053,
+            'createdAt': 1548238529053,
+            'originalMime': null,
+            'originalName': null
+          },
+          {
+            'id': 159,
+            'protocol': 'LOCAL',
+            'encoding': 'BASE64',
+            'imageVersion': 'MEDIUM',
+            'dataId': 'http://localhost:3000/api/item-images/40/MEDIUM',
+            'itemImageId': 40,
+            'updatedAt': 1548238529176,
+            'createdAt': 1548238529176,
+            'originalMime': null,
+            'originalName': null
+          },
+          {
+            'id': 160,
+            'protocol': 'LOCAL',
+            'encoding': 'BASE64',
+            'imageVersion': 'THUMBNAIL',
+            'dataId': 'http://localhost:3000/api/item-images/40/THUMBNAIL',
+            'itemImageId': 40,
+            'updatedAt': 1548238529287,
+            'createdAt': 1548238529287,
+            'originalMime': null,
+            'originalName': null
           }
-        }
+        ]
       },
-      'ItemLocation': {
-        'id': 93,
-        'region': 'CR',
-        'address': 'a',
-        'itemInformationId': 94,
-        'updatedAt': 1544175388343,
-        'createdAt': 1544175388343,
-        'LocationMarker': {}
-      },
-      'ItemImages': [{
-        'id': 76,
-        'hash': 'a04e5cb4bd04f7ed6a987138de295604f741f7b88dc624551ebdb1ca339c44a6',
-        'itemInformationId': 94,
-        'updatedAt': 1544175388458,
-        'createdAt': 1544175388458,
-        'ItemImageDatas': [{
-          'id': 294,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'ORIGINAL',
-          'dataId': 'http://localhost:3000/api/item-images/76/ORIGINAL',
-          'itemImageId': 76,
-          'updatedAt': 1544175391268,
-          'createdAt': 1544175391268,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 295,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'LARGE',
-          'dataId': 'http://localhost:3000/api/item-images/76/LARGE',
-          'itemImageId': 76,
-          'updatedAt': 1544175391470,
-          'createdAt': 1544175391470,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 296,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'MEDIUM',
-          'dataId': 'http://localhost:3000/api/item-images/76/MEDIUM',
-          'itemImageId': 76,
-          'updatedAt': 1544175391677,
-          'createdAt': 1544175391677,
-          'originalMime': null,
-          'originalName': null
-        },
-        {
-          'id': 297,
-          'protocol': 'LOCAL',
-          'encoding': 'BASE64',
-          'imageVersion': 'THUMBNAIL',
-          'dataId': 'http://localhost:3000/api/item-images/76/THUMBNAIL',
-          'itemImageId': 76,
-          'updatedAt': 1544175391846,
-          'createdAt': 1544175391846,
-          'originalMime': null,
-          'originalName': null
-        }]
-      }],
-      'ShippingDestinations': []
-    },
-    'PaymentInformation': {
-      'id': 88,
-      'type': 'SALE',
-      'listingItemId': 1,
-      'listingItemTemplateId': null,
-      'updatedAt': 1544175392130,
-      'createdAt': 1544175392130,
-      'Escrow': {
-        'id': 88,
-        'type': 'MAD',
-        'paymentInformationId': 88,
-        'updatedAt': 1544175392144,
-        'createdAt': 1544175392144,
-        'Ratio': {
-          'id': 88,
-          'buyer': 100,
-          'seller': 100,
-          'escrowId': 88,
-          'updatedAt': 1544175392151,
-          'createdAt': 1544175392151
-        }
-      },
-      'ItemPrice': {
-        'id': 87,
-        'currency': 'PARTICL',
-        'basePrice': 1,
-        'paymentInformationId': 88,
-        'cryptocurrencyAddressId': null,
-        'updatedAt': 1544175392160,
-        'createdAt': 1544175392160,
-        'ShippingPrice': {
-          'id': 87,
-          'domestic': 1,
-          'international': 1,
-          'itemPriceId': 87,
-          'updatedAt': 1544175392167,
-          'createdAt': 1544175392167
-        }
+      {
+        'id': 41,
+        'hash': 'b932cbd701a017d8ef294552159cdae92ebf66d360752a722e59410f9daab788',
+        'itemInformationId': 1,
+        'updatedAt': 1548238529458,
+        'createdAt': 1548238529458,
+        'ItemImageDatas': [
+          {
+            'id': 161,
+            'protocol': 'LOCAL',
+            'encoding': 'BASE64',
+            'imageVersion': 'ORIGINAL',
+            'dataId': 'http://localhost:3000/api/item-images/41/ORIGINAL',
+            'itemImageId': 41,
+            'updatedAt': 1548238547125,
+            'createdAt': 1548238547125,
+            'originalMime': null,
+            'originalName': null
+          },
+          {
+            'id': 162,
+            'protocol': 'LOCAL',
+            'encoding': 'BASE64',
+            'imageVersion': 'LARGE',
+            'dataId': 'http://localhost:3000/api/item-images/41/LARGE',
+            'itemImageId': 41,
+            'updatedAt': 1548238547269,
+            'createdAt': 1548238547269,
+            'originalMime': null,
+            'originalName': null
+          },
+          {
+            'id': 163,
+            'protocol': 'LOCAL',
+            'encoding': 'BASE64',
+            'imageVersion': 'MEDIUM',
+            'dataId': 'http://localhost:3000/api/item-images/41/MEDIUM',
+            'itemImageId': 41,
+            'updatedAt': 1548238547394,
+            'createdAt': 1548238547394,
+            'originalMime': null,
+            'originalName': null
+          },
+          {
+            'id': 164,
+            'protocol': 'LOCAL',
+            'encoding': 'BASE64',
+            'imageVersion': 'THUMBNAIL',
+            'dataId': 'http://localhost:3000/api/item-images/41/THUMBNAIL',
+            'itemImageId': 41,
+            'updatedAt': 1548238547486,
+            'createdAt': 1548238547486,
+            'originalMime': null,
+            'originalName': null
+          }
+        ]
+      }
+    ],
+    'ShippingDestinations': [
+
+    ]
+  },
+  'PaymentInformation': {
+    'id': 1,
+    'type': 'SALE',
+    'listingItemId': 1,
+    'listingItemTemplateId': null,
+    'updatedAt': 1548238547627,
+    'createdAt': 1548238547627,
+    'Escrow': {
+      'id': 1,
+      'type': 'MAD',
+      'paymentInformationId': 1,
+      'updatedAt': 1548238547638,
+      'createdAt': 1548238547638,
+      'Ratio': {
+        'id': 1,
+        'buyer': 100,
+        'seller': 100,
+        'escrowId': 1,
+        'updatedAt': 1548238547646,
+        'createdAt': 1548238547646
       }
     },
-    'MessagingInformation': [],
-    'ListingItemObjects': [],
-    'ActionMessages': [{
-      'id': 84,
+    'ItemPrice': {
+      'id': 1,
+      'currency': 'PARTICL',
+      'basePrice': 0.25,
+      'paymentInformationId': 1,
+      'cryptocurrencyAddressId': null,
+      'updatedAt': 1548238547658,
+      'createdAt': 1548238547658,
+      'ShippingPrice': {
+        'id': 1,
+        'domestic': 0.001,
+        'international': 0.002,
+        'itemPriceId': 1,
+        'updatedAt': 1548238547668,
+        'createdAt': 1548238547668
+      }
+    }
+  },
+  'MessagingInformation': [
+
+  ],
+  'ListingItemObjects': [
+
+  ],
+  'ActionMessages': [
+    {
+      'id': 1,
       'action': 'MP_ITEM_ADD',
       'nonce': null,
       'accepted': null,
       'listingItemId': 1,
-      'updatedAt': 1544175392240,
-      'createdAt': 1544175392240,
-      'MessageObjects': [{
-        'id': 84,
-        'actionMessageId': 84,
-        'dataId': 'seller',
-        'dataValue': 'peLw36VwoKL8GWbg3A5rKGtrze5tX68Kxv',
-        'updatedAt': 1544175392286,
-        'createdAt': 1544175392286
-      }],
-      'MessageInfo': {},
-      'MessageEscrow': {},
+      'updatedAt': 154823854771,
+      'createdAt': 154823854771,
+      'MessageObjects': [
+        {
+          'id': 1,
+          'actionMessageId': 1,
+          'dataId': 'seller',
+          'dataValue': 'pa3bnwLnW3Rdg25PjrEvWrZvFJsCAT6DLQ',
+          'updatedAt': 1548238547747,
+          'createdAt': 1548238547747
+        }
+      ],
+      'MessageInfo': {
+
+      },
+      'MessageEscrow': {
+
+      },
       'MessageData': {
-        'id': 84,
-        'actionMessageId': 84,
-        'msgid': '000000005c0a3ec222d606bccdf21346b1d7b5483361890d97267bbb',
+        'id': 1,
+        'actionMessageId': 1,
+        'msgid': '000000005c483dec6b41366351a1d5b7a7bbae6654aa3383cbf852e3',
         'version': '0300',
-        'received': '2018-12-07T09:36:07.000Z',
-        'sent': '2018-12-07T09:34:58.000Z',
-        'from': 'peLw36VwoKL8GWbg3A5rKGtrze5tX68Kxv',
+        'received': '2019-01-23T10:14:47.000Z',
+        'sent': '2019-01-23T10:11:56.000Z',
+        'from': 'pa3bnwLnW3Rdg25PjrEvWrZvFJsCAT6DLQ',
         'to': 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA',
-        'updatedAt': 1544175392268,
-        'createdAt': 1544175392268
+        'updatedAt': 1548238547738,
+        'createdAt': 1548238547738
       }
-    }],
-    'Bids': [],
-    'Market': {
-      'id': 1,
-      'name': 'DEFAULT',
-      'privateKey': '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek',
-      'address': 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA',
-      'updatedAt': 1545807544987,
-      'createdAt': 1543920716143
-    },
-    'FlaggedItem': {}
+    }
+  ],
+  'Bids': [
+  ],
+  'Market': {
+    'id': 1,
+    'name': 'DEFAULT',
+    'privateKey': '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek',
+    'address': 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA',
+    'updatedAt': 1548319595763,
+    'createdAt': 1548057532254
+  },
+  'FlaggedItem': {
+
   }
-};
+}
+
 
 export {
   listingGet
