@@ -28,6 +28,17 @@ export class Image {
     return (image && image.dataId) || './assets/images/placeholder_1-1.jpg'
   }
 
+  get originalEncoding(): string {
+    const image = this.image.ItemImageDatas.find(o => o.imageVersion === 'ORIGINAL');
+    let data = '';
+    if (image) {
+      if (image.originalMime && (image.encoding === 'BASE64') && image.ItemImageDataContent && image.ItemImageDataContent.data) {
+        data += `data:${image.originalMime};${image.encoding.toLowerCase()},${image.ItemImageDataContent.data}`
+      }
+    }
+    return data;
+  }
+
 }
 
 export class DefaultImage extends Image {
