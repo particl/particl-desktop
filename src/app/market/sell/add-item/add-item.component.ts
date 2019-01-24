@@ -159,7 +159,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
         if (indexToRemove >= 0) {
           this.log.d('Removing existing image from UI with index', indexToRemove);
           this.images.splice(indexToRemove, 1);
-          
         }
         this.canPublish = await this.templateHasValidSize().catch(err => {
           this.snackbar.open('Failed to recalculate template size');
@@ -519,8 +518,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
     if (template && template.object.ItemInformation) {
       templateID = template.id;
-      imageID = template.object.ItemInformation.ItemImages[featuredIndex].id
-      
+      imageID = template.object.ItemInformation.ItemImages[featuredIndex].id;
+
       this.template.featured(templateID, imageID)
       .subscribe( (res) => {
         this.log.d('Successfully set featured image');
