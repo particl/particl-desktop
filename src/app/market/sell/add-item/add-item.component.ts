@@ -199,7 +199,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   preload(isCloned: boolean) {
     this.log.d(`preloading for id=${this.templateId}`);
-    this.template.get(this.templateId).subscribe(async (template: Template) => {
+    this.template.get(this.templateId, true).subscribe(async (template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
 
       if (this.listing.cache.isAwaiting(template)) {
