@@ -1,6 +1,6 @@
 
 export class Image {
-  constructor(private image: any) {
+  constructor(public image: any) {
   }
 
   get id(): number {
