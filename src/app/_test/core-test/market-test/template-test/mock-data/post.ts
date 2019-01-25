@@ -1,4 +1,4 @@
-const postData = {
+const templatePost = {
     'object': {
         'id': 9,
         'hash': '299598afd9813aa83a7cc85ac00dd1783f375570d531c3de793d26ddfc9baea8',
@@ -207,5 +207,5 @@ const postData = {
 };
 
 export {
-    postData
+    templatePost
 };

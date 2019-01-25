@@ -3,9 +3,11 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MarketModule } from '../../market.module';
 
 import { TemplateService } from './template.service';
-import { TemplateMockService } from 'app/_test/core-test/market-test/template-test/template-mock.service';
-import { getData, postData, searchData, addData } from 'app/_test/core-test/market-test/mock-data/template-mock-data';
+// import { getData, postData, searchData, addData } from 'app/_test/core-test/market-test/template-mock-data/mock-data';
 import { Template } from 'app/core/market/api/template/template.model';
+import { MarketService } from 'app/core/market/market.service';
+import { MockMarketService } from 'app/_test/core-test/market-test/market.mockservice';
+import { templateAdd, templateGet, templatePost, templateSearch } from 'app/_test/core-test/market-test/template-test/mock-data';
 
 describe('TemplateService', () => {
   const templateId = 1;
@@ -16,7 +18,7 @@ describe('TemplateService', () => {
         MarketModule.forRoot()
       ],
       providers: [{
-        provide: TemplateService, useClass: TemplateMockService
+        provide: MarketService, useClass: MockMarketService
       }]
     });
   });
@@ -31,7 +33,7 @@ describe('TemplateService', () => {
     expect(service).toBeTruthy();
     const response = await service.get(templateId).toPromise();
     expect(response).not.toBe(null);
-    expect(response).toEqual(new Template(getData));
+    expect(response).toEqual(new Template(templateGet));
     expect(response.id).toBe(templateId)
   }));
 
@@ -52,20 +54,21 @@ describe('TemplateService', () => {
     ).toPromise();
 
     expect(template).not.toBe(null);
-    expect(template).toEqual(addData);
+    expect(template).toEqual(templateAdd);
 
   }));
 
   it('should post method return the success and reponse data', inject([TemplateService], async (service: TemplateService) => {
     expect(service).toBeTruthy();
     const response = await service.post(
-      template,
+      new Template(templateGet),
       1,
       4  // listing expiry time.
     ).toPromise();
 
     expect(response).not.toBe(null);
-    expect(response).toEqual(postData);
+    expect(response).toEqual(templatePost);
+
 
   }));
 

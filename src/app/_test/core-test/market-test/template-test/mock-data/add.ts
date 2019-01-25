@@ -1,4 +1,4 @@
-const addData = {
+const templateAdd = {
     'id': 9,
     'hash': '299598afd9813aa83a7cc85ac00dd1783f375570d531c3de793d26ddfc9baea8',
     'profileId': 1,
@@ -98,5 +98,5 @@ const addData = {
 };
 
 export {
-    addData
+    templateAdd
 };

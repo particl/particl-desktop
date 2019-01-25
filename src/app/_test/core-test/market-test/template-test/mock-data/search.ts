@@ -1,4 +1,4 @@
-const searchData = {
+const templateSearch = {
     0: [
     {
         'object': {
@@ -1337,5 +1337,5 @@ const searchData = {
 }
 
 export {
-    searchData
+    templateSearch
 }

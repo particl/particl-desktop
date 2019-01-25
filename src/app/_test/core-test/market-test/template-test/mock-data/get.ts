@@ -1,4 +1,4 @@
-const getData = {
+const templateGet = {
     'id': 1,
     'hash': '8e9b5ed1dc57d4e4824647f844603d1ff10cfbd31516e9e645ba3adb632309d4',
     'profileId': 1,
@@ -231,5 +231,5 @@ const getData = {
 }
 
 export {
-    getData
+    templateGet
 };
