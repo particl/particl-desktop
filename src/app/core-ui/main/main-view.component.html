@@ -223,13 +223,28 @@
       <!-- Versions | TODO: move to separate component? -->
       <mat-content class="client-version">
         <div class="client item">
-          Client <span class="version">{{ clientVersion }}</span>
+          Client
+          <!-- TODO: example of up-to-date version (add class `current`): -->
+          <span class="version current">
+            <span class="dot"></span>
+            {{ clientVersion }}
+          </span>
         </div>
         <div class="client item">
-          Market <span class="version">{{ marketVersion }}</span>
+          Market
+          <!-- TODO: example of outdated version (add class `outdated`) + matTooltip: -->
+          <span class="version outdated" matTooltip="Newer version available, please update!" matTooltipPosition="right">
+            <span class="dot"></span>
+            {{ marketVersion }}
+          </span>
         </div>
         <div class="daemon item">
-          Core <span class="version">{{ daemonVersion }}</span>
+          Core
+          <!-- TODO: example of "unable to check if version is up-to-date" case (add class `unknown`) + matTooltip: -->
+          <span class="version unknown" matTooltip="Unable to check for latest available version" matTooltipPosition="right">
+            <span class="dot"></span>
+            {{ daemonVersion }}
+          </span>
         </div>
       </mat-content>
 
