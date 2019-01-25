@@ -3,7 +3,6 @@ import { interval } from 'rxjs/observable/interval';
 
 import { environment } from '../../../../environments/environment';
 import { ReleaseNotification } from './release-notification.model';
-import { RpcStateService } from '../../../core/core.module';
 import { ClientVersionService } from '../../../core/http/client-version.service';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
@@ -22,7 +21,6 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
   private destroyed: boolean = false;
   private mainNet: boolean = false;
   constructor(
-    private _rpcState: RpcStateService,
     private clientVersionService: ClientVersionService,
     public dialog: MatDialog // Alpha mainnet warning
   ) { }
@@ -31,8 +29,6 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
     // check new update in every 30 minute
     const versionInterval = interval(1800000);
     versionInterval.takeWhile(() => !this.destroyed).subscribe(val => this.getCurrentClientVersion());
-    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
-      .subscribe(chain => this.mainNet = chain !== 'test');
   }
 
   // no need to destroy.
@@ -45,7 +41,6 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
       .subscribe((response: ReleaseNotification) => {
         if (response.tag_name) {
           this.latestClientVersion = response.tag_name.substring(1);
-          this._rpcState.set('latest', this.latestClientVersion)
         }
 
         this.releaseUrl = response.html_url;
@@ -57,8 +52,8 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
   }
 
   // check for beta version
-  isBeta(): boolean {
-    return (this.currentClientVersion).includes('beta');
+  isAlpha(): boolean {
+    return (this.currentClientVersion).includes('alpha');
   }
 
   // Alpha mainnet warning

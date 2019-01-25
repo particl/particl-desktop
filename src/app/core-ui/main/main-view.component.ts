@@ -41,7 +41,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   daemonVersion: string;
   clientVersion: string = environment.version;
   marketVersion: string = environment.marketVersion;
-  latestClientVersion: string;
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;
@@ -121,10 +120,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
 
-    // Check for latest version
-    this._rpcState.observe('latest')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(latest => this.latestClientVersion = latest);
   }
 
   ngOnDestroy() {
@@ -138,11 +133,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
   syncScreen() {
     this._modalsService.syncing();
-  }
-
-  // Check for latest version and add the class to the component dynamically
-  isNewUpdateAvailable(): boolean {
-    return (parseFloat(this.clientVersion) < parseFloat(this.latestClientVersion));
   }
 
   checkTimeDiff(time: number) {
@@ -170,6 +160,11 @@ export class MainViewComponent implements OnInit, OnDestroy {
   checkSecond(sec: number): number {
     sec = sec > 0 ? (sec - 1) : 59;
     return sec;
+  }
+
+  // check for beta version
+  isAlpha(): boolean {
+    return (this.clientVersion).includes('alpha');
   }
 
   // Paste Event Handle

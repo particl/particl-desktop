@@ -21,9 +21,12 @@
 
 
 <!-- Alpha mainnet warning -->
-<mat-card class="notification alert" *ngIf="mainNet && isBeta()"><!-- *ngIf="" -->
+<mat-card class="notification alert" *ngIf="isAlpha()"><!-- *ngIf="" -->
   <mat-card-title class="title">
     The Particl Marketplace alpha is still in development and not 100% private yet &ndash; use it at your own risk!
+    <p *ngIf="latestClientVersion === currentClientVersion">You are on the latest version</p>
+
+    <p *ngIf="isNewUpdateAvailable()">You are on an outdated version, please click to update</p>
     <button class="button" mat-button color="warn" (click)="readFullWarning()">
       <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
       Click here to read all the details first!
