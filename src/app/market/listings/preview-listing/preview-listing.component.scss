@@ -131,6 +131,21 @@ button.small .mat-icon {
       position: relative;
       top: 2px;
     }
+    tr {
+      // "Expires soon" warning
+      &.expires-soon {
+        .mat-icon {
+          @extend %reset;
+          color: $color-alert;
+        }
+        .title {
+          @extend %reset;
+        }
+        .value {
+          font-weight: 500;
+        }
+      }
+    }
   }
 }
 
@@ -351,8 +366,8 @@ mat-dialog-actions {
   .reporting {
     display: inline-block;
     .title {
-      margin-right: 6px;
       @extend %lighter;
+      margin-right: 6px;
     }
     .voted {
       @extend %lighter;

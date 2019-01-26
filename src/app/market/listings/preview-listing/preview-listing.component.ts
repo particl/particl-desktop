@@ -67,7 +67,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
             this.profileService.default().take(1).subscribe(
               (profile: any) => {
                 const profileAddress: string = (profile.object || {}).address || '';
-                if (profileAddress && (profileAddress === this.data.listing.submitterAddress) ) {
+                if (profileAddress && (profileAddress === this.data.listing.submitterAddress)) {
                   this.data.listing.VoteDetails = new VoteDetails({
                     ProposalOption: new VoteOption({
                       description: 'REMOVE'
@@ -83,7 +83,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   }
 
   voteForListing(option: VoteOption): void {
-    this.modals.unlock({timeout: 30}, (status) => this.postVote(option));
+    this.modals.unlock({ timeout: 30 }, (status) => this.postVote(option));
   }
 
   postVote(option: VoteOption): void {
