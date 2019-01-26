@@ -53,7 +53,7 @@ exports.parse = function() {
     } else if (nDashes === 1) { /* single-dash: core argument */
       
       // MacOS / OSX likes to add a Process Serial Numbers
-      // filter these out before they hit particl-core.
+      // filter it out before they hit particl-core.
       if (arg.startsWith("-psn_")) {
         process.argv.splice(argIndex, 1);
       }
