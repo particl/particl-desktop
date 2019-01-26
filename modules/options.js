@@ -58,6 +58,7 @@ exports.parse = function() {
         process.argv.splice(argIndex, 1);
       }
       
+      
       if (arg.includes('=')) {
         arg = arg.split('=');
         options[arg[0]] = arg[1];
