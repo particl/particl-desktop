@@ -1,5 +1,5 @@
 
-export class ReleaseNotification {
+export class AnnounceMentNotification {
   tag_name: string;
   prerelease: string;
   html_url: string;

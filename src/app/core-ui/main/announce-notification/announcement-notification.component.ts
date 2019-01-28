@@ -2,18 +2,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { interval } from 'rxjs/observable/interval';
 
 import { environment } from '../../../../environments/environment';
-import { ReleaseNotification } from './release-notification.model';
+import { AnnounceMentNotification } from './announcement-notification.model';
 import { ClientVersionService } from '../../../core/http/client-version.service';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AlphaMainnetWarningComponent } from '../../../modals/alpha-mainnet-warning/alpha-mainnet-warning.component';
 
 @Component({
-  selector: 'app-release-notification',
-  templateUrl: './release-notification.component.html',
-  styleUrls: ['./release-notification.component.scss']
+  selector: 'app-announcement-notification',
+  templateUrl: './announcement-notification.component.html',
+  styleUrls: ['./announcement-notification.component.scss']
 })
-export class ReleaseNotificationComponent implements OnInit, OnDestroy {
+export class AnnounceMentNotificationComponent implements OnInit, OnDestroy {
 
   public currentClientVersion: string = environment.version;
   public latestClientVersion: string;
@@ -38,7 +38,7 @@ export class ReleaseNotificationComponent implements OnInit, OnDestroy {
 
   getCurrentClientVersion() {
     this.clientVersionService.getCurrentVersion()
-      .subscribe((response: ReleaseNotification) => {
+      .subscribe((response: AnnounceMentNotification) => {
         if (response.tag_name) {
           this.latestClientVersion = response.tag_name.substring(1);
         }
