@@ -130,14 +130,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       sourceFiles = Array.from(event.target.files);
     }
 
-    sourceFiles.map((file: File) => {
-      const reader = new FileReader();
-      reader.onload = _event => {
-        this.picturesToUpload.push(reader.result.toString());
-        this.log.d('added picture', file.name);
-      };
-      reader.readAsDataURL(file);
-
     const MAX_IMAGE_SIZE = 1024 * 1024 * 2; // (2MB)
     let failedImgs = false;
     sourceFiles.forEach((file: File) => {
@@ -146,7 +138,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       } else {
         const reader = new FileReader();
         reader.onload = _event => {
-          this.picturesToUpload.push(reader.result);
+          this.picturesToUpload.push(reader.result.toString());
           this.log.d('added picture', file.name);
         };
         reader.readAsDataURL(file);
@@ -192,7 +184,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private subToCategories() {
     this.category.list()
-      .take(1)
+      .pipe(take(1))
       .subscribe(list => this.updateCategories(list));
   }
 

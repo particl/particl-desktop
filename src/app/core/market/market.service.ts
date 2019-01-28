@@ -73,9 +73,10 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
-        .catch((error: any) => {
+      .pipe(catchError((error: any) => {
           return Observable.throw(this.extractMPErrorMessage(error.error));
         })
+      )
   }
 
   private extractMPErrorMessage(errorObj: any): string {

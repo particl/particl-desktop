@@ -30,7 +30,7 @@ export class ImageService {
   public upload(template: Template, images: Array<any>): Promise<Template> {
     return new Promise((resolve, reject) => {
       if (images.length) {
-        this.add(template.id, images).take(1).subscribe(res => {
+        this.add(template.id, images).pipe(take(1)).subscribe(res => {
           resolve(template);
         }, error => {
 
