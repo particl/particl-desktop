@@ -353,7 +353,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update images
     await this.uploadImages();
 
-    return this.template.get(this.templateId).toPromise();
+    return this.template.get(this.templateId, false).toPromise();
   }
 
   isPaymentInfoUpdated(item: any): boolean {
