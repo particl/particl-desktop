@@ -61,11 +61,15 @@ exports.restart = function (alreadyStopping) {
 }
 
 exports.start = function (wallets) {
+  let options = _options.get();
   let doReindex = false;
-  const daemonSettings = daemonConfig.getSettings();
-  if (!(daemonSettings.global && daemonSettings.global.addressindex === 1)) {
-    daemonConfig.saveSettings({addressindex: true});
-    doReindex = true;
+
+  if (+options.addressindex !== 1) {
+    const daemonSettings = daemonConfig.getSettings();
+    if (!(daemonSettings.global && daemonSettings.global.addressindex === 1)) {
+      daemonConfig.saveSettings({addressindex: true});
+      doReindex = true;
+    }
   }
 
   return (new Promise((resolve, reject) => {
@@ -78,7 +82,6 @@ exports.start = function (wallets) {
 
     }).catch(() => {
 
-      let options = _options.get();
       const daemonPath = options.customdaemon
         ? options.customdaemon
         : daemonManager.getPath();
