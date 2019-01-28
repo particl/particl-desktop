@@ -1,15 +1,17 @@
-import { TestBed, inject, async } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { TestBed, inject } from '@angular/core/testing';
+import { CoreModule } from 'app/core/core.module';
 
 import { ProposalsService } from './proposals.service';
+
 import { MarketService } from 'app/core/market/market.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { AddressService } from 'app/core/market/api/profile/address/address.service';
 import { MockMarketService } from 'app/_test/core-test/market-test/market.mockservice';
-import { Responses } from 'app/_test/core-test/market-test/proposal-test/mock-data/mock-market.responses';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+
+import { Responses } from 'app/_test/core-test/market-test/mock-data/mock-market.responses';
 
 describe('ProposalsService', async () => {
   let proposalHash;
@@ -18,9 +20,6 @@ describe('ProposalsService', async () => {
     proposalHash = '8237fe3f87a27f68077eba1e069f5635137a8cb0c56e95cdd0d33cdfdadf719e';
 
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientModule
-      ],
       providers: [
         {
           provide: MarketService, useClass: MockMarketService
