@@ -131,6 +131,7 @@
     ]
   },
   "dependencies": {
+    "@jedmao/ini-parser": "^0.2.1",
     "@ngx-gallery/core": "2.2.0",
     "@ngx-gallery/gallerize": "2.2.0",
     "@ngx-gallery/lightbox": "2.2.0",
