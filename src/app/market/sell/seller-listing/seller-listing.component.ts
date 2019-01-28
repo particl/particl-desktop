@@ -6,6 +6,7 @@ import { Log } from 'ng2-logger';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
+import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 import { DeleteListingComponent } from '../../../modals/delete-listing/delete-listing.component';
 
@@ -24,7 +25,6 @@ export class SellerListingComponent {
 
   public status: Status = new Status();
   log: any = Log.create('seller-listing.component');
-  selectedTemplate: Template;
   expirationTime: number;
   @Input() listing: Listing;
 
@@ -33,8 +33,9 @@ export class SellerListingComponent {
     private router: Router,
     private rpcState: RpcStateService,
     private modals: ModalsHelperService,
-    private template: TemplateService
-  ) { }
+    private template: TemplateService,
+    private snackbar: SnackbarService,
+  ) {}
 
   getStatus(status: string) {
     return [this.status.get(status)];
@@ -60,27 +61,25 @@ export class SellerListingComponent {
     }
   }
 
-  postTemplate(template: Template) {
-    this.selectedTemplate = template;
-    this.openListingExpiryModal();
+  private postTemplate(template: Template) {
+
+    this.template.size(template.id).subscribe(res => {
+      if (res.fits) {
+        this.modals.openListingExpiryModal((expirationTime) => {
+          this.expirationTime = expirationTime;
+          this.modals.unlock({ timeout: 30 }, async (status) => {
+            this.log.d('posting template id: ', template.id);
+            await this.template.post(template, 1, this.expirationTime).toPromise();
+          });
+        });
+      } else {
+        this.snackbar.open(`Upload Size Exceeded - Please reduce listing template size`);
+      }
+    }, error => {
+      this.snackbar.open(error);
+    })
   }
 
-  openListingExpiryModal(): void {
-    this.modals.openListingExpiryModal((expirationTime) => {
-      this.expirationTime = expirationTime;
-      this.openUnlockWalletModal()
-    });
-  }
-
-  openUnlockWalletModal(): void {
-    this.modals.unlock({ timeout: 30 }, (status) => this.callTemplate());
-  }
-
-  async callTemplate() {
-    this.log.d('template', this.selectedTemplate)
-    await this.template.post(this.selectedTemplate, 1, this.expirationTime).toPromise();
-  }
-  // @TODO create a shared compoment
   addItem(id?: number, clone?: boolean) {
     this.router.navigate(['/market/template'], {
       queryParams: { 'id': id, 'clone': clone }

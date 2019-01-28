@@ -21,6 +21,9 @@ import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/e
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+import { MatDialog } from '@angular/material';
+
 
 @Component({
   selector: 'app-add-item',
@@ -48,7 +51,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   expiration: number = 0;
   selectedCountry: Country;
   selectedCategory: Category;
-  isInProcess: boolean = false;
+  canPublish: boolean = false;
 
   constructor(
     private router: Router,
@@ -67,14 +70,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private modals: ModalsHelperService,
     private countryList: CountryListService,
     private escrow: EscrowService,
-    private payment: PaymentService
+    private payment: PaymentService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    this.initDragDropEl('drag-n-drop');
-
-    this.fileInput = document.getElementById('fileInput');
-    this.fileInput.onchange = this.processPictures.bind(this);
     this.picturesToUpload = new Array();
 
     this.subToCategories();
@@ -93,14 +93,21 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
 
     this.route.queryParams.take(1).subscribe(params => {
+      // Initialize drag-n-drop
+      this.initDragDropEl('drag-n-drop');
+      this.fileInput = document.getElementById('fileInput');
+      this.fileInput.onchange = this.processPictures.bind(this);
       const id = params['id'];
+
+      // Determine whether template is a clone or not
       const clone: boolean = params['clone'];
-      if (id) {
+      if (+id) {
         this.templateId = +id;
         this.preload(clone);
+      } else {
+        this.canPublish = true;
       }
     });
-
   }
 
   isExistingTemplate() {
@@ -122,35 +129,42 @@ export class AddItemComponent implements OnInit, OnDestroy {
       sourceFiles = Array.from(event.target.files);
     }
 
-    sourceFiles.map((file: File) => {
-      const reader = new FileReader();
-      reader.onload = _event => {
-        this.picturesToUpload.push(reader.result);
-        this.log.d('added picture', file.name);
-      };
-      reader.readAsDataURL(file);
+    const MAX_IMAGE_SIZE = 1024 * 1024 * 2; // (2MB)
+    let failedImgs = false;
+    sourceFiles.forEach((file: File) => {
+      if (file.size > MAX_IMAGE_SIZE) {
+        failedImgs = true;
+      } else {
+        const reader = new FileReader();
+        reader.onload = _event => {
+          this.picturesToUpload.push(reader.result);
+          this.log.d('added picture', file.name);
+        };
+        reader.readAsDataURL(file);
+      }
     });
+    if (failedImgs) {
+      this.snackbar.open('1 or more images failed: max image size is 2MB');
+    }
     this.fileInput.value = '';
   }
 
   removeExistingImage(image: Image) {
     this.image.remove(image.id).subscribe(
-      success => {
-        this.snackbar.open('Removed image successfully!')
-
+      async (success) => {
         // find image in array and remove it.
-        let indexToRemove: number;
-        this.images.find((element: Image, index: number) => {
-          if (element.id === image.id) {
-            indexToRemove = index;
-            return true;
-          }
-          return false;
+        const indexToRemove: number = this.images.findIndex((element: Image) => {
+          return element.id === image.id
         });
         if (indexToRemove >= 0) {
-          this.log.d('Removing image from UI with index', indexToRemove);
+          this.log.d('Removing existing image from UI with index', indexToRemove);
           this.images.splice(indexToRemove, 1);
         }
+        this.canPublish = await this.templateHasValidSize().catch(err => {
+          this.snackbar.open('Failed to recalculate template size');
+          return this.canPublish;
+        });
+        this.snackbar.open('Removed image successfully!');
       },
       error => this.snackbar.open(error)
     );
@@ -167,7 +181,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.featuredPicture = index;
   }
 
-  subToCategories() {
+  private subToCategories() {
     this.category.list()
       .take(1)
       .subscribe(list => this.updateCategories(list));
@@ -179,6 +193,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   backToSell() {
+    this.dialog.closeAll()
     this.router.navigate(['/market/sell']);
   }
 
@@ -188,7 +203,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   preload(isCloned: boolean) {
     this.log.d(`preloading for id=${this.templateId}`);
-    this.template.get(this.templateId).subscribe((template: Template) => {
+    this.template.get(this.templateId).subscribe(async (template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
 
       if (this.listing.cache.isAwaiting(template)) {
@@ -226,9 +241,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
       if (isCloned) {
         this.picturesToUpload = template.imageCollection.images.map(img => img.originalEncoding).filter(img => img.length);
         this.templateId = undefined;
+        this.canPublish = true;
       } else {
         this.images = template.imageCollection.images;
         this.preloadedTemplate = template;
+        this.canPublish = await this.templateHasValidSize().catch(err => {
+          this.snackbar.open('Failed to recalculate template size');
+          return this.canPublish;
+        });
       }
     });
   }
@@ -237,15 +257,31 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.selectedCountry = country;
   }
 
-  openListingExpiryModal(): void {
-    this.modals.openListingExpiryModal((expiryTime: number) => this.callPublish(expiryTime));
-  }
-
-  callPublish(expiryTime: number): void {
+  private async callPublish(expiryTime: number): Promise<void> {
+    this.openProcessingModal();
     this.expiration = expiryTime;
-    this.isInProcess = true;
     this.log.d('Saving and publishing the listing.');
-    this.publish();
+    await this.upsert().then(
+      () => {
+        if (!this.canPublish) {
+          throw new Error('Message upload size exceeded');
+        }
+
+        this.modals.unlock({timeout: 30}, (status) => {
+          this.template.post(this.preloadedTemplate, 1, this.expiration)
+            .subscribe(listing => {
+              this.snackbar.open('Succesfully added Listing!');
+              this.log.d('Sucecssfully added listing: ', listing);
+              this.backToSell();
+            });
+        }, (res) => {
+          this.dialog.closeAll()
+        });
+      }
+    ).catch(err => {
+      this.dialog.closeAll();
+      this.snackbar.open(err);
+    });
   }
 
   setDefaultCategory(category: Category) {
@@ -353,7 +389,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  public async upsert(): Promise<Template> {
+  public async upsert(): Promise<void> {
     if (!this.validate()) {
       return;
     };
@@ -373,25 +409,27 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.preloadedTemplate = templ;
       this.templateId = templ.id;
       this.images = templ.imageCollection.images;
-      return templ;
-    });
+    }).then(
+      async () => {
+        this.canPublish = await this.templateHasValidSize();
+      }
+    );
   }
 
   public saveTemplate() {
     if (this.preloadedTemplate && this.preloadedTemplate.status === 'published') {
-      this.snackbar.open('You can not update templates whilst they are published!');
+      this.snackbar.open('You can not modify templates once they have been published!');
       return;
     }
-
-    this.isInProcess = true;
+    this.openProcessingModal();
 
     this.upsert()
-    .then(t => {
-      this.isInProcess = false;
+    .then(() => {
+      this.dialog.closeAll();
       this.snackbar.open('Succesfully updated template!')
     })
     .catch(err => {
-      this.isInProcess = false;
+      this.dialog.closeAll();
       this.snackbar.open('Failed to save template!')
     });
   }
@@ -401,7 +439,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       return;
     };
 
-    this.openListingExpiryModal();
+    this.modals.openListingExpiryModal(async (expiryTime: number) => await this.callPublish(expiryTime));
   }
 
   onCountryChange(country: Country): void {
@@ -414,25 +452,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
-  private async publish() {
-    this.upsert().then(t => {
-      this.modals.unlock({timeout: 30}, (status) => {
-        this.template.post(t, 1, this.expiration)
-        .subscribe(listing => {
-          this.snackbar.open('Succesfully added Listing!')
-          this.log.d(listing);
-          this.backToSell();
-        },
-        (error) => {
-          this.isInProcess = false;
-          this.snackbar.open(error)
-        },
-        () => this.isInProcess = false)
-      }, (err) => this.isInProcess = false);
-    }, err => {
-      this.isInProcess = false;
-      this.snackbar.open(err)
-    });
+  private async templateHasValidSize(): Promise<boolean> {
+    return this.template.size(this.templateId).toPromise().then(
+      (resp) => {
+        return resp.fits;
+      }
+    );
   }
 
 
@@ -455,13 +480,24 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
 
-  private async uploadImages(): Promise<void> {
+  private async uploadImages(): Promise<boolean> {
+    let success = false;
     if (this.picturesToUpload.length && this.preloadedTemplate) {
-      const success = await this.image.upload(this.preloadedTemplate, this.picturesToUpload).then((t: Template) => {
+      success = await this.image.upload(this.preloadedTemplate, this.picturesToUpload).then((t: Template) => {
         this.picturesToUpload = [];
         return true;
       }).catch(err => false);
     }
+    return success;
+  }
+
+  openProcessingModal() {
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your listing'
+      }
+    });
   }
 
 }
