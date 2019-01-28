@@ -45,10 +45,6 @@ export class ListingService {
     );
   }
 
-  searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, '*', null, null, null, false); // OWN
-  }
-
   get(id: number) {
     return this.market.call('item', ['get', id]).map(listing => new Listing(listing));
   }

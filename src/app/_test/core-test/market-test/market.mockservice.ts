@@ -33,7 +33,10 @@ export class MockMarketService {
         } else if (params && params[0]) {
           response = Responses[method][params[0]];
         }
+        break;
 
+      case 'item':
+        response = Responses[method][params[0]];
         break;
 
       default:
