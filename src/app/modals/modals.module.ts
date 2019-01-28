@@ -81,8 +81,7 @@ import { ProcessingModalComponent } from './processing-modal/processing-modal.co
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    reject-messages
-    RejectBidComponent
+    RejectBidComponent,
     ProcessingModalComponent
   ],
   exports: [
@@ -114,10 +113,8 @@ import { ProcessingModalComponent } from './processing-modal/processing-modal.co
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    reject-messages
-    RejectBidComponent
+    RejectBidComponent,
     ProcessingModalComponent
-    market
   ],
 })
 export class ModalsModule {
