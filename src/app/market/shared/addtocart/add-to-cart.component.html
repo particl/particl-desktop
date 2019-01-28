@@ -1,10 +1,10 @@
 <!-- "Add to cart" button in Listings overview -->
-<button class="to-cart small" mat-button color="primary" *ngIf="!listing?.isMine && !bidded && detail == false" fxFlex (click)="addToCart(listing.id)">
+<button class="to-cart small" mat-button color="primary" *ngIf="!listing?.isMine && !bidded && detail == false" fxFlex (click)="addToCart(listing?.id)">
     Add to cart
 </button>
 
 <!-- "Add to cart" button in Listing's detail -->
-<button class="to-cart" mat-raised-button color="primary" *ngIf="!listing?.isMine && !bidded && detail == true" fxFlex (click)="addToCart(listing.id)">
+<button class="to-cart" mat-raised-button color="primary" *ngIf="!listing?.isMine && !bidded && detail == true" fxFlex (click)="addToCart(listing?.id)">
     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
     Add to cart
 </button>
