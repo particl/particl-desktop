@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Responses } from 'app/_test/core-test/market-test/proposal-test/mock-data/mock-market.responses';
+import { Responses } from 'app/_test/core-test/market-test/mock-data/mock-market.responses';
 
 /*
   This is a fake mock service used for the MarketService.

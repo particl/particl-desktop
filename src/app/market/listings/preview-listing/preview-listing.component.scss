@@ -271,8 +271,8 @@ mat-dialog-actions {
   .reporting {
     display: inline-block;
     .title {
-      margin-right: 6px;
       @extend %lighter;
+      margin-right: 6px;
     }
     .voted {
       @extend %lighter;
