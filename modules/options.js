@@ -54,7 +54,7 @@ exports.parse = function() {
       
       // MacOS / OSX likes to add a Process Serial Numbers
       // filter it out before being passed to particl-core.
-      if (arg.startsWith("-psn_")) {
+      if (arg.startsWith("psn_")) {
         process.argv.splice(argIndex, 1);
       }
       
