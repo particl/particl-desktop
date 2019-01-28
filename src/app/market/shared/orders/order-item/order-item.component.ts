@@ -207,7 +207,7 @@ export class OrderItemComponent implements OnInit {
       return 'No information provided'
     }
   }
-  
+
   openProcessingModal() {
       const dialog = this.dialog.open(ProcessingModalComponent, {
         disableClose: true,
