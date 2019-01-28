@@ -12,19 +12,11 @@
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
           Orders
-          <!--app-order-count [type]="'sell'" class="tag"></app-order-count-->
         </ng-template>
       </mat-tab>
-      <!--mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-          Sell item
-        </ng-template>
-      </mat-tab-->
     </mat-tab-group>
   </div>
 </app-header>
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== LISTINGS =========== -->
@@ -53,27 +45,27 @@
           <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                     (click)="clearAndLoadPage()"></mat-icon>
         </mat-form-field>
-        <!--mat-form-field class="sort-by filter-input" floatPlaceholder="never">
-          <mat-select placeholder="Sort listings">
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+          <mat-select placeholder="Sort listings" [(ngModel)]="filters.sort" (change)="clearAndLoadPage()">
             <mat-option *ngFor="let sorting of listing_sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>
           </mat-select>
-        </mat-form-field -->
+        </mat-form-field>
       </mat-card>
     </div>
 
-    <!--div class="section filter-by-type to-do">
+    <div class="section filter-by-type">
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
-        <mat-radio-group class="radio-group block-radio">
-          <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering" value="{{ status.value }}">
+        <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()">
+          <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering" value="{{ status.value }}" color="primary">
             {{ status.title }}
-            <span class="amount">{{ status.amount }}</span>
+            <!-- <span class="amount">{{ status.amount }}</span>  -->
           </mat-radio-button>
         </mat-radio-group>
       </mat-card>
-    </div--><!-- .filter-by-type -->
+    </div>
 
     <button mat-button color="basic" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
@@ -125,6 +117,8 @@
 
   </div><!-- .listings-list -->
 </div><!-- .container-block -->
+
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 <mat-progress-bar mode="indeterminate" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading" class="loading-bar"></mat-progress-bar>
 
 

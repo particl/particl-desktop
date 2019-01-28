@@ -39,15 +39,12 @@ export class ListingService {
     return this.market.call('item', params)
     .pipe(map(
       (listings: Array<Listing>) => {
+        console.log('listings.map(t => new Listing(t))----', listings.map(t => new Listing(t)));
         return listings.map(t => new Listing(t));
       }
     )).pipe(tap(
       listings => this.log.d('Listings', listings)
     ));
-  }
-
-  searchOwn(page: number, pageLimit: number) {
-    return this.search(page, pageLimit, '*', null, null, null, false); // OWN
   }
 
   get(id: number) {

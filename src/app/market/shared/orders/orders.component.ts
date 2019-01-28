@@ -56,7 +56,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
     this.additionalFilter = {
       requiredAttention: false,
-      hideCompleted: true
+      hideCompleted: false
     }
   }
 
