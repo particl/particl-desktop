@@ -8,12 +8,29 @@ const _options    = require('../options');
 const conFilePath = path.join( cookie.getParticlPath(_options.get()), 'particl.conf');
 const SAFE_KEYS = ['addressindex'];
 
+const isArray = function(obj) {
+  return Object.prototype.toString.call(obj) === '[object Array]';
+}
+
+const isObject = function(obj) {
+  return Object.prototype.toString.call(obj) === '[object Object]';
+}
+
+deepClone = function(obj) {
+  let retVal;
+  try {
+    retVal = JSON.parse(JSON.stringify(obj))
+  } catch(err) {
+    retVal = undefined;
+  };
+  return retVal;
+}
 
 const formatSettingsOutput = function(rawConfig) {
   let formattedConfig = {};
 
     let sections = [];
-    if (Object.prototype.toString.call(rawConfig) === '[object Object]' && Object.prototype.toString.call(rawConfig.items) === '[object Array]') {
+    if (isObject(rawConfig) && isArray(rawConfig.items)) {
       sections = rawConfig.items;
     }
 
@@ -32,12 +49,12 @@ const formatSettingsOutput = function(rawConfig) {
         }
       }
 
-      const hasNodes = Object.prototype.toString.call(section.nodes) === '[object Array]' && section.nodes.length > 0;
+      const hasNodes = isArray(section.nodes) && section.nodes.length > 0;
 
       if (hasNodes) {
         for (let jj = 0; jj < section.nodes.length; jj++) {
           const node = section.nodes[jj];
-          if (Object.prototype.toString.call(node) === '[object Object]' && ('key' in node) && ('value' in node)) {
+          if (isObject(node) && ('key' in node) && ('value' in node)) {
             formattedConfig[sectionKey][String(node.key)] = node.value;
           }
         }
@@ -57,7 +74,7 @@ const readConfigFile = function () {
     try {
       const p = new iniParser();
       const result = p.parse(fs.readFileSync(conFilePath, 'utf-8'));
-      return JSON.parse(JSON.stringify(result));
+      return deepClone(result);
     } catch (err) {
       log.error(`particld config file parsing failed from ${conFilePath}`);
       log.error(`parsing error: ${err.message}`);
@@ -81,7 +98,7 @@ const saveSettings = function(networkOpt) {
   // TODO: Only accepts global config changes for now (no section config changes at the moment) - this should be changed.
 
   let items = [];
-  if (Object.prototype.toString.call(networkOpt) !== '[object Object]' ) {
+  if (!isObject(networkOpt)) {
     return;
   }
   let keys = Object.keys(networkOpt).filter(
@@ -90,7 +107,7 @@ const saveSettings = function(networkOpt) {
 
   // make certain that the latest config data has been obtained.
   const latest = getSettings(true);
-  if (Object.prototype.toString.call(latest.items) === '[object Array]' ) {
+  if (isArray(latest.items)) {
     items = latest.items;
   }
 
@@ -104,12 +121,12 @@ const saveSettings = function(networkOpt) {
 
   for (let ii = 0; ii < items.length; ii++) {
     const section = items[ii];
-    const hasNodes = Object.prototype.toString.call(section.nodes) === '[object Array]';
+    const hasNodes = isArray(section.nodes) && section.nodes.length;
 
     if ('name' in section) {
       // section delimiting (could be global config item or blank line as well)
       let name = section.name;
-      if (section.name.length && hasNodes && section.nodes.length) {
+      if (section.name.length && hasNodes) {
         // Start of a new section
 
         if (isGlobalConfig) {
