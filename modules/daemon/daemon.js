@@ -10,6 +10,7 @@ const rpc = require('../rpc/rpc');
 const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
 const multiwallet = require('../multiwallet');
+const daemonConfig = require('./daemonConfig');
 
 let daemon = undefined;
 let chosenWallets = [];
@@ -43,7 +44,6 @@ exports.restart = function (alreadyStopping) {
     daemon.once('close', code => {
       // clear authentication
       clearCookie();
-      
       // restart
       this.start(chosenWallets);
     });
@@ -61,6 +61,17 @@ exports.restart = function (alreadyStopping) {
 }
 
 exports.start = function (wallets) {
+  let options = _options.get();
+  let doReindex = false;
+
+  if (+options.addressindex !== 1) {
+    const daemonSettings = daemonConfig.getSettings();
+    if (!(daemonSettings.global && daemonSettings.global.addressindex === 1)) {
+      daemonConfig.saveSettings({addressindex: true});
+      doReindex = true;
+    }
+  }
+
   return (new Promise((resolve, reject) => {
 
     chosenWallets = wallets;
@@ -71,15 +82,21 @@ exports.start = function (wallets) {
 
     }).catch(() => {
 
-      let options = _options.get();
       const daemonPath = options.customdaemon
         ? options.customdaemon
         : daemonManager.getPath();
 
-      wallets = wallets.map(wallet => `-wallet=${wallet}`);
-      log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
-      const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
+      const addedArgs = [];
+
+      if (doReindex) {
+        addedArgs.push('-reindex-chainstate');
+      }
+      wallets = wallets.map(wallet => `-wallet=${wallet}`);
+      const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets, ...addedArgs];
+      log.info(`starting daemon: ${deamonArgs}`);
+
+      const child = spawn(daemonPath, deamonArgs)
         .on('close', code => {
           log.info('daemon exited - setting to undefined.');
           daemon = undefined;
