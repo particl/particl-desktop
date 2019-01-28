@@ -312,7 +312,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     await this.escrow.add(template.id, EscrowType.MAD).toPromise();
     await this.uploadImages();
 
-    return this.template.get(template.id).toPromise();
+    return this.template.get(template.id, false).toPromise();
   }
 
   private async update() {
