@@ -12,7 +12,7 @@ import { OrderCountComponent } from './order-count/order-count.component';
 import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.component';
 import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
 
-import { AnnounceMentNotificationComponent } from './announce-notification/announcement-notification.component';
+import { AnnouncementNotificationComponent } from './announce-notification/announcement-notification.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
 
 import { CartComponent } from './cart/cart.component';
@@ -39,14 +39,14 @@ import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-b
     OrderCountComponent,
     PercentageBarComponent,
     ConsoleModalComponent,
-    AnnounceMentNotificationComponent,
+    AnnouncementNotificationComponent,
     CartComponent,
     TimeoffsetComponent,
     CountBadgeComponent
   ],
   entryComponents: [
     ConsoleModalComponent,
-    AnnounceMentNotificationComponent
+    AnnouncementNotificationComponent
   ],
   providers: [
     ClientVersionService

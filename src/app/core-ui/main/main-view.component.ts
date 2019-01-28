@@ -43,6 +43,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   marketVersion: string = environment.marketVersion;
   unSubscribeTimer: any;
   time: string = '5:00';
+  mainNet: boolean = false;
   public unlocked_until: number = 0;
 
   constructor(
@@ -60,6 +61,8 @@ export class MainViewComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+
+    this.mainNet = (this.clientVersion).includes('alpha');
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events

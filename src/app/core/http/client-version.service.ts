@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Log } from 'ng2-logger';
 
-import { AnnounceMentNotification } from '../../core-ui/main/announce-notification/announcement-notification.model';
+import { AnnouncementNotification } from '../../core-ui/main/announce-notification/announcement-notification.model';
 import { environment } from '../../../environments/environment.prod';
 
 @Injectable()
@@ -17,10 +17,10 @@ export class ClientVersionService {
 
   constructor(private http: HttpClient) { }
 
-  getCurrentVersion(): Observable<AnnounceMentNotification> {
+  getCurrentVersion(): Observable<AnnouncementNotification> {
     return this.http.get(this.releasesUrl).pipe(
-      map(response => response as AnnounceMentNotification),
-      catchError(this.handleError<AnnounceMentNotification>('error while update'))
+      map(response => response as AnnouncementNotification),
+      catchError(this.handleError<AnnouncementNotification>('error while update'))
     );
   }
 

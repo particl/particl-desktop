@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CoreModule } from '../../../core/core.module';
-import { AnnounceMentNotificationComponent } from './announcement-notification.component';
+import { AnnouncementNotificationComponent } from './announcement-notification.component';
 import { MainViewModule } from '../main-view.module';
 import { HttpClientModule } from '@angular/common/http';
 
-describe('AnnounceMentNotificationComponent', () => {
-  let component: AnnounceMentNotificationComponent;
-  let fixture: ComponentFixture<AnnounceMentNotificationComponent>;
+describe('AnnouncementNotificationComponent', () => {
+  let component: AnnouncementNotificationComponent;
+  let fixture: ComponentFixture<AnnouncementNotificationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -21,7 +21,7 @@ describe('AnnounceMentNotificationComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AnnounceMentNotificationComponent);
+    fixture = TestBed.createComponent(AnnouncementNotificationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
