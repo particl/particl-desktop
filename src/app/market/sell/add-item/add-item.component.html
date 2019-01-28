@@ -126,39 +126,28 @@
         Prices are in PART.
       </p>
     </mat-card>
-
   </div>
 
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
       <button mat-button (click)="backToSell()" color="warn">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-        Cancel & Discard
+        Cancel (Discard changes)
       </button>
     </div>
     <div class="right">
-      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
+      <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
-      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+      <button [disabled]="!itemFormGroup?.valid || !canPublish"
+              mat-raised-button color="primary"
+              matTooltip="{{ canPublish ? 'Save and put up for sale' : 'Maximum template size exceeded - try reduce image or text sizes'}}"
+              (click)="saveAndPublish()"
+              *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
         {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
     </div>
   </div>
-    <!-- .loading-container -->
-  <div class="loading-container" *ngIf="isInProcess">
-    <div class="loading-info">
-      <div class="loading-image">
-        <img src="./assets/particl-logo-symbol.svg">
-      </div>
-      <p class="title">
-        We're processing your listing
-      </p>
-      <p class="widget-help">
-        This might take a sec
-      </p>
-    </div>
-  </div><!-- .loading-container -->
 </div>

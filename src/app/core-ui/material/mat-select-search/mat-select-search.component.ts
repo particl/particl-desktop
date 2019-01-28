@@ -6,7 +6,8 @@ import {
   OnChanges,
   ViewChild,
   ElementRef,
-  OnInit } from '@angular/core';
+  OnInit
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -37,7 +38,7 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
    * Or if any update.
    */
 
-  ngOnChanges (change: any) {
+  ngOnChanges(change: any) {
     if (this.defaultSelectedValue || this.options) {
       this.formControl.patchValue(this.defaultSelectedValue)
     }
@@ -46,14 +47,14 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.filteredOptions = this.formControl.valueChanges
       .pipe(
-        startWith(''),
-        map(value => {
-          if (!value) {
-            return;
-          }
-          return typeof value === 'string' ? value : value[this.showValueOf]
-        }),
-        map(val => val ? this._filter(val) : this.options.slice())
+      startWith(''),
+      map(value => {
+        if (!value) {
+          return;
+        }
+        return typeof value === 'string' ? value : value[this.showValueOf]
+      }),
+      map(val => val ? this._filter(val) : this.options.slice())
       );
   }
 
@@ -80,24 +81,29 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
    * and emit the selected country value.
    */
 
-   onSelectionChanged($event: any): void {
+  onSelectionChanged($event: any): void {
     // emit selected value.
-    this.selectedOption = $event.option.value;
-    this.onChange.emit($event.option.value);
+
+    if ($event.option && $event.option.value && $event.option.value.name) {
+      this.selectedOption = $event.option.value;
+      this.onChange.emit($event.option.value);
+    }
   }
 
   onBlur($event: any): void {
     //  TODO: remove this nasty use of setTimeout()
     //    This is not the ideal way to do this, but its the current best interim option
     //    (remove when updating to angular >= 6 or changing this component.)
-    setTimeout( () => {
+    setTimeout(() => {
       const currentValidValue = (this.selectedOption ? this.selectedOption.name : this.defaultSelectedValue) || this.defaultSelectedValue;
       if (this.invalidReturnsToPrevious) {
         this.formControl.patchValue(this.selectedOption || this.defaultSelectedValue);
       } else {
         if ($event.target.value !== currentValidValue) {
           this.formControl.reset();
-          this.onChange.emit();
+          this.onChange.emit(null);
+        } else {
+          this.onChange.emit(this.selectedOption);
         }
       }
     }, 300);

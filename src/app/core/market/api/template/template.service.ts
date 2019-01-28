@@ -53,8 +53,9 @@ export class TemplateService {
       return this.market.call('template', params);
   }
 
-  search(page: number, pageLimit: number, profileId: number, category: string, searchString: string): Observable<Array<Template>> {
-    const params = ['search', page, pageLimit, 'ASC', profileId, category, searchString];
+  search(page: number, pageLimit: number, sort: string, profileId: number, category: string,
+    searchString: string, hashItems: any): Observable<Array<Template>> {
+    const params = ['search', page, pageLimit, 'DESC', sort,  profileId, searchString, category, hashItems];
     return this.market.call('template', params)
     .map(
       (templates: any) => {
@@ -66,6 +67,10 @@ export class TemplateService {
   post(template: Template, marketId: number, expTime: number) {
     return this.market.call('template', ['post', template.id, expTime, marketId])
     .do(t => this.listingCache.posting(template));
+  }
+
+  size(listingTemplateId: number) {
+    return this.market.call('template', ['size', listingTemplateId]);
   }
 
   remove(listingTemplateId: number) {
