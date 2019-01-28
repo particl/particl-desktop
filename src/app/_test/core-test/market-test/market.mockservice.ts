@@ -34,6 +34,10 @@ export class MockMarketService {
         }
         break;
 
+      case 'item':
+        response = Responses[method][params[0]];
+        break;
+
       default:
         response = []
     }
