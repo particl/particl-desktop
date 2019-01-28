@@ -101,13 +101,13 @@
 
           <div class="address-name cursor-pointer" (click)="openNewAddress(address)">
             <div class="address-id">
-              /{{ address.id }}
+              /{{ address?.id || '' }}
             </div>
             <span class="address-label" [ngClass]="{'no-label': address.label === '(No label)'}">
-              {{ address.label }}
+              {{ address?.label || '' }}
             </span>
             <span class="address">
-              {{ address.address }}
+              {{ address?.address || '' }}
             </span>
           </div><!-- .address-name -->
 
