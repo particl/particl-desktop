@@ -262,6 +262,11 @@
     is-absolute "^1.0.0"
     is-negated-glob "^1.0.0"
 
+"@jedmao/ini-parser@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@jedmao/ini-parser/-/ini-parser-0.2.1.tgz#4b4ec9d2374a3edc5adc4956e85d476fe2f81ba2"
+  integrity sha512-jn6wJLQFye37xk6c0hDD7tiyffdqQGH5Ah9faFJjtKrTWXf2jlBLqZDL6uGIPD8HJ69ulBll1bILFg6O/bkcVA==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

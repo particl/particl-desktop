@@ -28,13 +28,7 @@ exports.start = function (mainWindow) {
   // zmq.test(); // loop, will send tests
 
   /* Initialize daemonWarner */
-  // warns GUI that daemon is downloading
   daemonWarner.init(mainWindow);
-  daemonManager.on('status', (status, msg) => {
-    if (status === "download") {
-      daemonWarner.send(msg);
-    }
-  });
 
   exports.startDaemonManager();
 }
@@ -53,6 +47,11 @@ exports.startDaemonManager = function() {
   Only happens _after_ daemonManager.init()
 */
 daemonManager.on('status', (status, msg) => {
+
+  // warns GUI that daemon is downloading
+  if (status === "download") {
+    daemonWarner.send(msg);
+  }
 
   // Done -> means we have a binary!
   if (status === 'done') {
