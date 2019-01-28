@@ -199,6 +199,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+
   }
 
   preload(isCloned: boolean) {
