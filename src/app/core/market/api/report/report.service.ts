@@ -23,8 +23,8 @@ export class ReportService implements OnDestroy {
     });
   }
 
-  post(listing: Listing) {
-    return this.market.call('item', ['flag', listing.hash, this.defaultProfileId])
+  post(listingHash: string) {
+    return this.market.call('item', ['flag', listingHash, this.defaultProfileId])
   }
 
   ngOnDestroy() {

@@ -48,7 +48,7 @@ export class ReportComponent {
   }
 
   reportItem(): void {
-    this.reportService.post(this.listing).subscribe(report => {
+    this.reportService.post(this.listing.hash).subscribe(report => {
       this.listing.isFlagged = !this.listing.isFlagged;
       this.listing.VoteDetails = this.defaultVoteDetails;
       this.snackbar.open(`${this.listing.title} has been reported successfully`);
