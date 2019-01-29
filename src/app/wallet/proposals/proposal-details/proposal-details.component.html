@@ -90,9 +90,8 @@
           <!-- @TODO may be total vote count replaced with  % of coins voted ? -->
           <span class="number big">{{proposalResult?.totalCoins.getIntegerPart()}}</span>
           <span class="point big">{{proposalResult?.totalCoins.dot()}}</span>
-           <span class="number small">{{proposalResult?.totalCoins.getFractionalPart() || ''}}</span>&ensp;
-           {{proposalResult?.totalPercentageText}}
-          <!-- <span class="value">{{ proposalResult?.totalCoins }}</span>&ensp; -->
+          <span class="number small">{{proposalResult?.totalCoins.getFractionalPart() || ''}}</span>&ensp;
+          {{proposalResult?.totalPercentageText}}
         </div>
         <!-- <div class="percentage-voted">
           <!- TODO: implement % of coins voted in total for this proposal ->
