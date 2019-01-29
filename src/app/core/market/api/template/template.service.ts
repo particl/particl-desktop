@@ -17,7 +17,7 @@ export class TemplateService {
     public listingCache: PostListingCacheService
   ) { }
 
-  get(templateId: number, returnImageData: boolean): Observable<Template> {
+  get(templateId: number, returnImageData: boolean = false): Observable<Template> {
     return this.market.call('template', ['get', templateId, returnImageData]).map(t => new Template(t));
   }
 
