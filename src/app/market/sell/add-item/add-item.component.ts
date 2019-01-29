@@ -203,7 +203,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   preload(isCloned: boolean) {
     this.log.d(`preloading for id=${this.templateId}`);
-    this.template.get(this.templateId).subscribe(async (template: Template) => {
+    this.template.get(this.templateId, true).subscribe(async (template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
 
       if (this.listing.cache.isAwaiting(template)) {
@@ -312,7 +312,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     await this.escrow.add(template.id, EscrowType.MAD).toPromise();
     await this.uploadImages();
 
-    return this.template.get(template.id).toPromise();
+    return this.template.get(template.id, false).toPromise();
   }
 
   private async update() {
@@ -357,7 +357,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // update images
     await this.uploadImages();
 
-    return this.template.get(this.templateId).toPromise();
+    return this.template.get(this.templateId, false).toPromise();
   }
 
   isPaymentInfoUpdated(item: any): boolean {
