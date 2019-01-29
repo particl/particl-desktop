@@ -273,8 +273,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
               this.snackbar.open('Succesfully added Listing!');
               this.log.d('Sucecssfully added listing: ', listing);
               this.backToSell();
+            },
+            (err) => {
+              this.snackbar.open(err);
             });
-        }, (res) => {
+        }, (err) => {
           this.dialog.closeAll()
         });
       }
