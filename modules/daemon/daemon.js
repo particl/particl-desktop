@@ -90,11 +90,12 @@ exports.start = function (wallets) {
       const addedArgs = [];
 
       if (doReindex) {
-        addedArgs.push('-reindex-chainstate');
+        log.info('Adding reindex flag to daemon startup');
+        addedArgs.push('-reindex');
       }
       wallets = wallets.map(wallet => `-wallet=${wallet}`);
       const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets, ...addedArgs];
-      log.info(`starting daemon: ${deamonArgs}`);
+      log.info(`starting daemon: ${deamonArgs.join(' ')}`);
 
       const child = spawn(daemonPath, deamonArgs)
         .on('close', code => {
