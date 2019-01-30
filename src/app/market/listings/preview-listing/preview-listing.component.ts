@@ -27,7 +27,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   public price: any;
   public date: string;
   public profileAddress: string = '';
-  private currencyprice: number = 0;
+  // private currencyprice: number = 0;
   images: ImageItem[] = [];
 
   public selectedTab: number = 0;
@@ -47,11 +47,11 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.marketState.observe('currencyprice')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(price => {
-        this.currencyprice = price[0].price;
-      });
+    // this.marketState.observe('currencyprice')
+    //   .takeWhile(() => !this.destroyed)
+    //   .subscribe(price => {
+    //     this.currencyprice = price[0].price;
+    //   });
     this.getVoteOfListing();
     if (this.data.listing) {
       this.images = this.data.listing.imageCollection.imageUrls;
