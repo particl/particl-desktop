@@ -140,7 +140,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   vateConfirmed(): void {
-    this.modelsService.unlock({timeout: 60}, (status) => this.callVote())
+    this.modelsService.unlock({timeout: 30}, (status) => this.callVote())
   }
 
   callVote(): void {
