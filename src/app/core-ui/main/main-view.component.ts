@@ -4,9 +4,6 @@ import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
-
-import { environment } from '../../../environments/environment';
-
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
@@ -39,8 +36,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   daemonError: any;
   /* version */
   daemonVersion: string;
-  clientVersion: string = environment.version;
-  marketVersion: string = environment.marketVersion;
   unSubscribeTimer: any;
   time: string = '5:00';
   public unlocked_until: number = 0;

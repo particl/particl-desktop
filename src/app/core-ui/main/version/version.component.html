@@ -1,0 +1,24 @@
+<!-- Versions | TODO: move to separate component? -->
+<mat-content class="client-version">
+  <div class="client item">
+    Client
+    <!-- TODO: example of up-to-date version (add class `current`): -->
+    <span class="version" [ngClass]="{'current': alreadyUptoDate(), 'outdated': isNewUpdateAvailable(), 'unknown': !latestClientVersion}" [matTooltip]="toolTipText()">
+      <span class="dot"></span>
+      {{ clientVersion }}
+    </span>
+  </div>
+  <div class="client item">
+    Market
+    <!-- TODO: example of outdated version (add class `outdated`) + matTooltip: -->
+    <span class="version" matTooltipPosition="right">
+      {{ marketVersion }}
+    </span>
+  </div>
+  <div class="daemon item">
+    Core
+    <span class="version" matTooltipPosition="right">
+      {{ daemonVersion }}
+    </span>
+  </div>
+</mat-content>

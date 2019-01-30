@@ -13,6 +13,7 @@ import { ConsoleModalComponent } from './status/modal/help-modal/console-modal.c
 import { PercentageBarComponent } from '../../modals/shared/percentage-bar/percentage-bar.component';
 
 import { ReleaseNotificationComponent } from './release-notification/release-notification.component';
+import { VersionComponent } from './version/version.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
 
 import { CartComponent } from './cart/cart.component';
@@ -40,13 +41,15 @@ import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-b
     PercentageBarComponent,
     ConsoleModalComponent,
     ReleaseNotificationComponent,
+    VersionComponent,
     CartComponent,
     TimeoffsetComponent,
     CountBadgeComponent
   ],
   entryComponents: [
     ConsoleModalComponent,
-    ReleaseNotificationComponent
+    ReleaseNotificationComponent,
+    VersionComponent
   ],
   providers: [
     ClientVersionService
