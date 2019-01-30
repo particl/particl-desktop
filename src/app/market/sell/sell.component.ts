@@ -103,6 +103,7 @@ export class SellComponent implements OnInit {
   }
 
   clearAndLoadPage() {
+    this.pages = [];
     this.loadPage(0, true);
   }
 
@@ -169,23 +170,6 @@ export class SellComponent implements OnInit {
       goingDown = false;
     } else { // next page
       this.pages.push(page);
-    }
-
-    // if exceeding max length, delete a page of the other direction
-    if (this.pages.length > this.pagination.maxPages) {
-      if (goingDown) {
-        this.pages.shift(); // delete first page
-      } else {
-        this.pages.pop(); // going up, delete last page
-      }
-    }
-  }
-  // TODO: fix scroll up!
-  loadPreviousPage() {
-    let previousPage = this.getFirstPageCurrentlyLoaded();
-    previousPage--;
-    if (previousPage > -1) {
-      this.loadPage(previousPage);
     }
   }
 
