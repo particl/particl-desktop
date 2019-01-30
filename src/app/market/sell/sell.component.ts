@@ -134,9 +134,7 @@ export class SellComponent implements OnInit {
       });
 
       this.isLoading = false;
-      if (this.filters.sort === 'TITLE') {
-        listings.reverse();
-      }
+
 
       // new page
       const page = {
