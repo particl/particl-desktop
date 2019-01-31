@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { Template } from 'app/core/market/api/template/template.model';
+import { HostListener } from "@angular/core";
 
 interface IPage {
   pageNumber: number,
@@ -68,13 +68,17 @@ export class SellComponent implements OnInit {
 
   public search: string = '';
   public category: string = '';
+  screenHeight: number;
+  screenWidth: number;
 
   constructor(
     private router: Router,
     public dialog: MatDialog,
     private template: TemplateService,
     private listingService: ListingService,
-  ) {}
+  ) {
+    this.getScreenSize();
+  }
 
   ngOnInit() {
     this.isPageLoading = true;
@@ -110,7 +114,8 @@ export class SellComponent implements OnInit {
     this.isLoading = true;
     const search = this.filters.search ? this.filters.search : '*';
     const hashItems = this.filters.hashItems ? this.filters.hashItems === 'true' : undefined;
-    const max = this.pagination.maxPerPage;
+    let max: number;
+    this.screenHeight > 1330 ? max = 20 : max = this.pagination.maxPerPage;
 
     /*
       We store the subscription each time, due to API delays.
@@ -207,6 +212,15 @@ export class SellComponent implements OnInit {
   // Delete the listing using index
   deleteListing(pageIndex: number, listingIndex: number) {
     this.pages[pageIndex].listings.splice(listingIndex, 1);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    if (this.screenHeight > 1330) {
+      this.loadPage(0, true);
+    }
   }
 
 }
