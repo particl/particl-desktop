@@ -113,11 +113,7 @@ describe('Fee', () => {
 
   it('should amount with fee calculate amount correctly', () => {
     expect(fee).toBeTruthy();
-<<<<<<< Updated upstream
-    const feeAmountWithDecimals = fee.truncateToDecimals(1.22222222222222, 2);
-=======
     const feeAmountWithDecimals = fee.truncateToDecimals(1.22222, 2);
->>>>>>> Stashed changes
     expect(feeAmountWithDecimals).toBe(1.22);
 
   });
