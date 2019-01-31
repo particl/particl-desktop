@@ -29,6 +29,8 @@ export class VersionComponent implements OnInit, OnDestroy {
   constructor(private clientVersionService: ClientVersionService) { }
 
   ngOnInit() {
+    // Initially need to call to verify the client version
+    this.getCurrentClientVersion()
     // check new update in every 30 minute
     const versionInterval = interval(1800000);
     versionInterval.takeWhile(() => !this.destroyed).subscribe(val => this.getCurrentClientVersion());
@@ -42,8 +44,9 @@ export class VersionComponent implements OnInit, OnDestroy {
   getCurrentClientVersion() {
     this.clientVersionService.getCurrentVersion()
       .subscribe((response: VersionModel) => {
+        console.log('response', response);
         if (response.tag_name) {
-          this.latestClientVersion = response.tag_name.substring(1);
+          this.latestClientVersion = response.tag_name;
         }
 
         this.releaseUrl = response.html_url;
@@ -69,7 +72,7 @@ export class VersionComponent implements OnInit, OnDestroy {
       return VersionText.unknown;
     }
 
-    return;
+    return '';
   }
 
 }
