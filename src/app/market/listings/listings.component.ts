@@ -185,9 +185,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   loadNextPage() {
-    let nextPage = this.getLastPageCurrentlyLoaded(); nextPage++;
-    this.log.d('loading next page: ' + nextPage);
-    this.loadPage(nextPage);
+    if (this.pages.length > 0) {
+      let nextPage = this.getLastPageCurrentlyLoaded(); nextPage++;
+      this.log.d('loading next page: ' + nextPage);
+      this.loadPage(nextPage);
+    }
   }
 
   // Returns the pageNumber of the last page that is currently visible
