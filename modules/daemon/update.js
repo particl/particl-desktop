@@ -9,7 +9,7 @@ const UPDATE_CHANNEL = 'daemon';
 let mainReference = null;
 
 exports.init = function (mainWindow) {
-    /* 
+    /*
         Store a reference of the main window (electron),
         which we need for rx-ipc-electron (need to get webContents).
     */
