@@ -78,7 +78,6 @@ export class SellComponent implements OnInit {
 
   ngOnInit() {
     this.isPageLoading = true;
-
     this.loadPage(0);
   }
 
