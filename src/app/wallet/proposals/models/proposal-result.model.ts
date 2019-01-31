@@ -40,12 +40,8 @@ export class ProposalResult {
         optionId: optionResult.ProposalOption.optionId,
         weight: this.getPartCoins(optionResult.weight).getAmount()
       });
-      this.addGraphOption(option);
+      this.graphOptions.push(option);
     })
-  }
-
-  addGraphOption(option: GraphOption): void {
-    this.graphOptions.push(option)
   }
 
   // Calculating percentage of each vote.

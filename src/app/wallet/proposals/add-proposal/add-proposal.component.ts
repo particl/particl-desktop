@@ -137,11 +137,10 @@ export class AddProposalComponent implements OnInit {
         false,
         ... proposalOptions
       ]).subscribe((response) => {
-        console.log('response', response)
         this.snackbarService.open(
           'Proposal posted successfully!',
           'info'
-        )
+        );
 
         // redirect to proposals page.
         this.backToProposals();
