@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { HostListener } from "@angular/core";
+import { HostListener } from '@angular/core';
 
 interface IPage {
   pageNumber: number,
@@ -215,7 +215,7 @@ export class SellComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  getScreenSize(event?) {
+  getScreenSize(event: any) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     if (this.screenHeight > 1330) {
