@@ -204,5 +204,4 @@ export class SellComponent implements OnInit {
       this.loadPage(0, true);
     }
   }
-
 }
