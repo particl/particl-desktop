@@ -55,6 +55,7 @@ export class TemplateService {
 
   search(page: number, pageLimit: number, sort: string, profileId: number, category: string,
     searchString: string, hashItems: any): Observable<Array<Template>> {
+    // TODO: Place radio buttons on gui to determine sorting action directions
       let direction;
       if (sort === 'TITLE') {
         direction = 'ASC';
