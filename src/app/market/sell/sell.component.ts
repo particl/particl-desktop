@@ -215,7 +215,7 @@ export class SellComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  getScreenSize(event?) {
+  getScreenSize(event: any) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     if (this.screenHeight > 1330) {
