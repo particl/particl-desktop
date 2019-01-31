@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { AddressHelper, Amount, Duration, DateFormatter } from './utils';
+import { AddressHelper, Amount, Duration, DateFormatter, Fee } from './utils';
 
 describe('AddressHelper', () => {
   beforeEach(() => {
@@ -91,6 +91,49 @@ describe('DateFormatter', () => {
   const dateFormat = new DateFormatter(mockDate);
   it('should be created', () => {
     expect(dateFormat).toBeTruthy();
+  });
+
+});
+
+describe('Fee', () => {
+  const amount = 10;
+  const feeAmount = 1.2;
+  let fee;
+
+  beforeEach(() => {
+    fee = new Fee(feeAmount);
+    TestBed.configureTestingModule({
+      providers: [Fee]
+    });
+  });
+
+  it('should be created', () => {
+    expect(fee).toBeTruthy();
+  });
+
+  it('should amount with fee calculate amount correctly', () => {
+    expect(fee).toBeTruthy();
+<<<<<<< Updated upstream
+    const feeAmountWithDecimals = fee.truncateToDecimals(1.22222222222222, 2);
+=======
+    const feeAmountWithDecimals = fee.truncateToDecimals(1.22222, 2);
+>>>>>>> Stashed changes
+    expect(feeAmountWithDecimals).toBe(1.22);
+
+  });
+
+  it(`should getFee method return true value of fee: ${feeAmount}`, () => {
+    expect(fee).toBeTruthy();
+    const fees = fee.getFee();
+    expect(fees).toEqual(feeAmount);
+
+  });
+
+  it(`should feeWithAmount method return true calculated amount`, () => {
+    expect(fee).toBeTruthy();
+    const amountWithFee = fee.getAmountWithFee(amount);
+    expect(amountWithFee).toEqual(feeAmount + amount);
+
   });
 
 });
