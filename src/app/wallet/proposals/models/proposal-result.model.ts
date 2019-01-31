@@ -2,79 +2,70 @@ import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalOptionResult } from 'app/wallet/proposals/models/proposal-option-result.model';
 import { GraphOption } from 'app/wallet/proposals/models/proposal-result-graph-option.model';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
+import { Amount } from 'app/core/util/utils';
 
 export class ProposalResult {
-    id: number;
-    Proposal: Proposal
-    ProposalOptionResults: ProposalOptionResult[];
-    createdAt: Date;
-    proposalId: number;
-    updatedAt: Date;
-    private graphOptions: GraphOption[] = [];
-    private totalVoteCounts: number = 0;
+  id: number;
+  Proposal: Proposal
+  ProposalOptionResults: ProposalOptionResult[];
+  createdAt: Date;
+  proposalId: number;
+  updatedAt: Date;
+  totalWeight: number = 0;
+  private graphOptions: GraphOption[] = [];
 
-    constructor(object: any) {
-        this.id = object.id;
-        this.Proposal = object.Proposal;
-        this.ProposalOptionResults = object.ProposalOptionResults.map((v) => new ProposalOptionResult(v));
-        this.createdAt = object.createdAt;
-        this.proposalId = object.proposalId;
-        this.updatedAt = object.updatedAt;
-        this.setGraphInformation()
-    }
+  constructor(object: any) {
+    this.id = object.id;
+    this.Proposal = object.Proposal;
+    this.ProposalOptionResults = object.ProposalOptionResults.map((v) => new ProposalOptionResult(v));
+    this.createdAt = object.createdAt;
+    this.proposalId = object.proposalId;
+    this.updatedAt = object.updatedAt;
+    this.setTotalWeight();
+    this.setGraphInformation()
+  }
 
-    setGraphInformation(): void {
-        this.ProposalOptionResults.map((optionResult: ProposalOptionResult) => {
-            const option = new GraphOption({
-                description: optionResult.ProposalOption.description,
-                voters: optionResult.voters,
-                optionId: optionResult.ProposalOption.optionId
-            });
-            this.addGraphOption(option);
-        })
-    }
+  // Total weight of all the votes
+  private setTotalWeight(): void {
+    this.ProposalOptionResults.map((optionResult: ProposalOptionResult) => {
+      this.totalWeight += optionResult.weight;
+    })
+  }
 
-    addGraphOption(option: GraphOption): void {
-        this.addVoteCount(option.voters);
-        this.graphOptions.push(option)
-    }
+  private setGraphInformation(): void {
+    this.ProposalOptionResults.map((optionResult: ProposalOptionResult) => {
+      const option = new GraphOption({
+        description:
+          `${optionResult.ProposalOption.description} (${optionResult.weight ? this.getWeightInPercentage(optionResult.weight) : 0}%)`,
+        voters: optionResult.voters,
+        optionId: optionResult.ProposalOption.optionId,
+        weight: this.getPartCoins(optionResult.weight).getAmount()
+      });
+      this.graphOptions.push(option);
+    })
+  }
 
-    /*
-     * updatevote method is responsive to maintain the vote option.
-     * If already vote to any option the reduce that option count by ``--option.voters``
-     * and increate the selected option count ``++option.voters``.
-     */
+  // Calculating percentage of each vote.
+  private getWeightInPercentage(weight: number): number {
+    const perWeight = (weight / this.totalWeight) * 100;
+    return new Amount(perWeight, 2).getAmount();
+  }
 
-    updateVote(selectedOption: VoteOption, previousOption: VoteOption): void {
-        this.graphOptions = this.graphOptions.map((option: GraphOption) => {
-            if (previousOption && previousOption.optionId === option.optionId) {
-                --option.voters
-            }
-            if (selectedOption.optionId === option.optionId) {
-                ++option.voters
-            }
-            return new GraphOption(option);
-        })
+  // Converting the satishi to part coin
+  private  getPartCoins(weight: number): Amount {
+    const part = (weight) / 100000000;
+    return (new Amount(part, 4));
+  }
 
-        // increase vote count if new vote.
-        if (!previousOption) {
-            this.addVoteCount(1);
-        }
-    }
+  get graphData(): GraphOption[] {
+    return this.graphOptions;
+  }
 
-    addVoteCount(counts: number): void {
-        this.totalVoteCounts += counts;
-    }
+  get totalCoins(): Amount {
+    return this.getPartCoins(this.totalWeight);
+  }
 
-    get graphData(): GraphOption[] {
-        return this.graphOptions;
-    }
-
-    get totalVotes(): number {
-        return this.totalVoteCounts || 0;
-    }
-
-    get totalVotesText(): string {
-        return this.totalVotes >= 1 ? 'Votes' : 'Vote';
-    }
+  get totalPercentageText(): string {
+    return this.totalWeight >= 1 ? 'coins' : 'coin';
+  }
 }
