@@ -21,15 +21,14 @@ exports.init = function () {
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
         // clone it
         const url = new URL(details.url);
-        const u = url.hostname + ":" + url.port;
+        const u = url.hostname + ":" + (url.port || 80);
 
         if (isWhitelisted(u)) {
             let headers = Object.assign({}, details.requestHeaders);
 
             // get authentication
             let auth = getAuthentication(u);
-
-            if(auth === undefined && u === "localhost:4200") {
+            if(auth === undefined && u === "localhost:4200" || (u.indexOf("api.github.com") > -1)) {
                 auth = false;
             }
 
