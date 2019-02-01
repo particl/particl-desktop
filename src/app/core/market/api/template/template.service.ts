@@ -19,7 +19,7 @@ export class TemplateService {
   ) { }
 
   get(templateId: number, returnImageData: boolean = false): Observable<Template> {
-    return this.market.call('template', ['get', templateId, returnImageData]).map(t => new Template(t));
+    return this.market.call('template', ['get', templateId, returnImageData]).pipe(map(t => new Template(t)));
   }
 
   // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
