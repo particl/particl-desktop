@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { Category } from 'app/core/market/api/category/category.model';
@@ -71,6 +71,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   };
 
   selectedCountry: Country;
+  stopScreenResize: boolean = false;
 
   constructor(
     private category: CategoryService,
@@ -82,6 +83,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     if (this.listingService.cache.selectedCountry) {
       this.selectedCountry = this.listingService.cache.selectedCountry
     }
+    this.getScreenSize();
   }
 
   ngOnInit() {
@@ -221,6 +223,15 @@ export class ListingsComponent implements OnInit, OnDestroy {
   toggleFlag(event: any): void {
     this.flagged = event.source.checked;
     this.loadPage(0, true);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  getScreenSize() {
+    this.pagination.maxPerPage = window.innerWidth > 1330 ? 34 : 24;
+    if (window.innerWidth > 1330 && !stop) {
+      this.loadNextPage();
+      this.stopScreenResize = true;
+    }
   }
 
   ngOnDestroy() {
