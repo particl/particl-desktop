@@ -132,15 +132,19 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const MAX_IMAGE_SIZE = 1024 * 1024 * 2; // (2MB)
     let failedImgs = false;
     sourceFiles.forEach((file: File) => {
-      if (file.size > MAX_IMAGE_SIZE) {
-        failedImgs = true;
+      if (file.type === "image/jpeg" || file.type === "image/png") {
+        if (file.size > MAX_IMAGE_SIZE) {
+          failedImgs = true;
+        } else {
+          const reader = new FileReader();
+          reader.onload = _event => {
+            this.picturesToUpload.push(reader.result);
+            this.log.d('added picture', file.name);
+          };
+          reader.readAsDataURL(file);
+        }
       } else {
-        const reader = new FileReader();
-        reader.onload = _event => {
-          this.picturesToUpload.push(reader.result);
-          this.log.d('added picture', file.name);
-        };
-        reader.readAsDataURL(file);
+        this.snackbar.open('File uploaded is not a valid Image!');
       }
     });
     if (failedImgs) {
