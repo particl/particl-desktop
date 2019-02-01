@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, HostListener, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import * as d3 from 'd3';
 import { Log } from 'ng2-logger';
@@ -28,6 +28,7 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 })
 export class ProposalDetailsComponent implements OnInit, OnDestroy {
   log: any = Log.create('proposal.component');
+  @ViewChild('chart') chart: any;
   @Input() proposal: Proposal;
   @Input() selectedTab: string;
   @Input() currentBlockCount: number;
@@ -79,7 +80,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     private proposalService: ProposalsService,
     private snackbarService: SnackbarService,
     private modelsService: ModalsHelperService
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.proposal) {
@@ -175,5 +176,12 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    if (this.chart) {
+      this.chart.chart.resizeHandler.clear();
+    }
   }
 }
