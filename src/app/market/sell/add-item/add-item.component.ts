@@ -275,6 +275,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
               this.log.d('Sucecssfully added listing: ', listing);
               this.backToSell();
             });
+        }, (res) => {
+          this.dialog.closeAll()
         });
       }
     ).catch(err => {

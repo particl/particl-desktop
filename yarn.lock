@@ -311,6 +311,11 @@
     is-absolute "^1.0.0"
     is-negated-glob "^1.0.0"
 
+"@jedmao/ini-parser@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@jedmao/ini-parser/-/ini-parser-0.2.1.tgz#4b4ec9d2374a3edc5adc4956e85d476fe2f81ba2"
+  integrity sha512-jn6wJLQFye37xk6c0hDD7tiyffdqQGH5Ah9faFJjtKrTWXf2jlBLqZDL6uGIPD8HJ69ulBll1bILFg6O/bkcVA==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -405,9 +410,9 @@
   integrity sha512-8dPZwjosElZOGGYw1nwTvOEMof4gjwAWNFS93nBI091BoEfd5drnHOLRMiRF/LOPuMTn5LgEdv0bTUO8QFVuHQ==
 
 "@types/node@*", "@types/node@^10.3.5":
-  version "10.12.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
-  integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
+  version "10.12.19"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.19.tgz#ca1018c26be01f07e66ac7fefbeb6407e4490c61"
+  integrity sha512-2NVovndCjJQj6fUUn9jCgpP4WSqr+u1SoUZMZyJkhGeBFsm6dE46l31S7lPUYt9uQ28XI+ibrJA1f5XyH5HNtA==
 
 "@types/node@^7.0.18":
   version "7.10.2"
@@ -744,9 +749,9 @@ amdefine@>=0.0.4:
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
 
 angularx-qrcode@^1.0.1:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/angularx-qrcode/-/angularx-qrcode-1.5.2.tgz#548ed8f9b02362a60942afe1316d3b8791c3b402"
-  integrity sha512-mjMGxmUeYQNcr3YhNzaOBQ8nufZQbLA3UfFS1rtOOQVEX7bYjslTpwalkKLZcCwmZGk2WXoH/PE4RMmy6YU8Pg==
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/angularx-qrcode/-/angularx-qrcode-1.5.3.tgz#4ce9a4e8f4c5b00e87c329c563d8f4389c07cfd9"
+  integrity sha512-9WTsnOGNv3IvSriVSHOc7k6PIBcqqjivAQXhEF9SjDYgcio63zCkcsAC627vSaTqUoDkgE5MRoT4PO2UMROk2w==
   dependencies:
     qrcodejs2 "0.0.2"
 
@@ -2700,7 +2705,7 @@ debug@*, debug@4, debug@^4.1.1, debug@~4.1.0:
   dependencies:
     ms "^2.1.1"
 
-debug@2, debug@2.6.9, debug@^2.1.1, debug@^2.1.2, debug@^2.1.3, debug@^2.2.0, debug@^2.3.3, debug@^2.6.8:
+debug@2, debug@2.6.9, debug@^2.1.1, debug@^2.1.2, debug@^2.1.3, debug@^2.2.0, debug@^2.3.3, debug@^2.6.6, debug@^2.6.8:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   integrity sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
@@ -3860,7 +3865,7 @@ extend-shallow@^3.0.0, extend-shallow@^3.0.2:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
 
-extend@3, extend@^3.0.0, extend@~3.0.2:
+extend@3, extend@^3.0.0, extend@~3.0.0, extend@~3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
@@ -12067,9 +12072,9 @@ yn@^2.0.0:
   integrity sha1-5a2ryKz0CPY4X8dklWhMiOavaJo=
 
 z-schema@^3.16.1:
-  version "3.25.0"
-  resolved "https://registry.yarnpkg.com/z-schema/-/z-schema-3.25.0.tgz#724dd9de3d57ba41114958ef3362b0b69cf3dc1e"
-  integrity sha512-AeSlnl8fHfsTZnKZIT87HMXQodqal379eAHncNWCJfyEul9pE0+/whKjhxmZ98/jfvCAU4wdB5q+FvVQEA/G0w==
+  version "3.25.1"
+  resolved "https://registry.yarnpkg.com/z-schema/-/z-schema-3.25.1.tgz#7e14663be2b96003d938a56f644fb8561643fb7e"
+  integrity sha512-7tDlwhrBG+oYFdXNOjILSurpfQyuVgkRe3hB2q8TEssamDHB7BbLWYkYO98nTn0FibfdFroFKDjndbgufAgS/Q==
   dependencies:
     core-js "^2.5.7"
     lodash.get "^4.0.0"
