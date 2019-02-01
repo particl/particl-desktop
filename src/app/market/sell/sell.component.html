@@ -96,7 +96,6 @@
     [fromRoot]="true"
     [infiniteScrollDistance]="2"
     [infiniteScrollThrottle]="50"
-    (scrolledUp)="loadPreviousPage()"
     (scrolled)="loadNextPage()">
     <!--div class="subtitle first">Published listings</div-->
     <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
@@ -104,11 +103,7 @@
         Sorry, no matching listings found
       </p>
     </div>
-    <button [disabled]="isLoading" mat-button class="previous-page" (click)="loadPreviousPage()"
-    *ngIf="pages[0] && pages[0].pageNumber !== 0">
-      <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
-      Load previous page
-    </button>
+
     <mat-accordion *ngFor="let page of pages;let pageIndex = index;">
       <app-seller-listing *ngFor="let listing of page.listings; let listingIndex = index" [listing]="listing" (onDelete)="deleteListing(pageIndex, listingIndex)"></app-seller-listing>
     </mat-accordion>
