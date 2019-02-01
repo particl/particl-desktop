@@ -41,6 +41,24 @@
       font-weight: 700;
       color: $color-white;
       .dot {
+        background: $color-warning;
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 6px;
+          height: 6px;
+          display: block;
+          border-radius: 50%;
+          border: 1.5px solid $color-warning;
+          position: absolute;
+          top: -2px;
+          left: -2px;
+        }
+      }
+    }
+    &.unknown {
+      color: $color-white;
+      .dot {
         background: $color-alert;
         &::after {
           content: '';
@@ -54,12 +72,6 @@
           top: -2px;
           left: -2px;
         }
-      }
-    }
-    &.unknown {
-      color: $color-white;
-      .dot {
-        background: $color-warning;
       }
     }
   }
