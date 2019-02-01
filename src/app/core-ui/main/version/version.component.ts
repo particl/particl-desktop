@@ -44,7 +44,7 @@ export class VersionComponent implements OnInit, OnDestroy {
     this.destroyed = true;
   }
 
-  getCurrentClientVersion() {
+  private getCurrentClientVersion() {
     this.clientUpdateText = VersionText.updateCheck;
     this.isUpdateProcessing = true;
     this.log.i('Checking for new client version...');
@@ -52,7 +52,7 @@ export class VersionComponent implements OnInit, OnDestroy {
       .subscribe((response: VersionModel) => {
         this.log.i('version check response: ', response);
         if (response.tag_name) {
-          this.isClientLatest = parseFloat(this.clientVersion) >= parseFloat(response.tag_name);
+          this.isClientLatest = !this.isNewerVersion(this.clientVersion, response.tag_name);
           this.clientUpdateText = this.isClientLatest ? VersionText.latest : VersionText.outdated;
         }
         this.isUpdateProcessing = false;
@@ -60,5 +60,47 @@ export class VersionComponent implements OnInit, OnDestroy {
         this.clientUpdateText = VersionText.unknown;
         this.log.e('client version checking error: ', error);
     })
+  }
+
+  private isNewerVersion(sourceVersion: string, targetVersion: string): boolean {
+    const averParts = sourceVersion.split('-');
+    const bverParts = targetVersion.split('-');
+
+    const aVerNums = String(averParts[0] || '').split('.');
+    const bVerNums = String(bverParts[0] || '').split('.');
+
+    let isBNewer = false;
+    for (let ii = 0; ii < aVerNums.length; ii++) {
+      const aNum = aVerNums[ii] === undefined ? 0 : +aVerNums[ii];
+      const bNum = bVerNums[ii] === undefined ? 0 : +bVerNums[ii];
+
+      if (aNum === bNum) {
+        continue;
+      }
+
+      isBNewer = bNum > aNum;
+      break;
+    }
+
+    if (isBNewer) {
+      // Ensure that the targetVersion is not a pre-release version if currentVersion is not a pre-release version
+      if (!this.isPrerelease(sourceVersion) && this.isPrerelease(targetVersion)) {
+        isBNewer = false;
+      }
+    }
+    return isBNewer;
+  }
+
+  private isPrerelease(release: string): boolean {
+    const preParts = ['alpha', 'beta', 'RC'];
+
+    let found = false;
+    for (const part of preParts) {
+      if (release.includes(part)) {
+        found = true;
+        break;
+      }
+    }
+    return found;
   }
 }
