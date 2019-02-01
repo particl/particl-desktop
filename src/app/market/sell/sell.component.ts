@@ -68,6 +68,7 @@ export class SellComponent implements OnInit {
 
   public search: string = '';
   public category: string = '';
+  stopScreenResize: boolean = false;
 
   constructor(
     private router: Router,
@@ -214,8 +215,9 @@ export class SellComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   getScreenSize() {
     this.pagination.maxPerPage = window.innerWidth > 1330 ? 20 : 10;
-    if (window.innerWidth > 1330) {
+    if (window.innerWidth > 1330 && !stop) {
       this.loadNextPage();
+      this.stopScreenResize = true;
     }
   }
 }
