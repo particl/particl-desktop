@@ -1,8 +1,6 @@
-<!-- Versions | TODO: move to separate component? -->
 <mat-content class="client-version">
   <div class="client item">
     Client
-    <!-- TODO: example of up-to-date version (add class `current`): -->
     <span class="version" [ngClass]="isUpdateProcessing ? 'unknown' : (isClientLatest ? 'current' : 'outdated')" [matTooltip]=" clientUpdateText " matTooltipPosition="right">
       <span class="dot"></span>
       {{ clientVersion }}
