@@ -132,13 +132,13 @@
     <div class="left">
       <button mat-button (click)="backToSell()" color="warn">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-        Cancel (Discard changes)
+        Back to Listings
       </button>
     </div>
     <div class="right">
       <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-        {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
+        {{ isExistingTemplate() ? 'Update' : 'Save'}}
       </button>
       <button [disabled]="!itemFormGroup?.valid || !canPublish"
               mat-raised-button color="primary"
