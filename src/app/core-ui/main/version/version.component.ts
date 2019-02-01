@@ -53,12 +53,7 @@ export class VersionComponent implements OnInit, OnDestroy {
         this.log.i('version check response: ', response);
         if (response.tag_name) {
           this.isClientLatest = parseFloat(this.clientVersion) >= parseFloat(response.tag_name);
-
-          if (this.isClientLatest) {
-            this.clientUpdateText = VersionText.latest;
-          } else {
-            this.clientUpdateText = VersionText.outdated;
-          }
+          this.clientUpdateText = this.isClientLatest ? VersionText.latest : VersionText.outdated;
         }
         this.isUpdateProcessing = false;
       }, (error) => {
