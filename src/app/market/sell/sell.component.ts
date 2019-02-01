@@ -68,8 +68,6 @@ export class SellComponent implements OnInit {
 
   public search: string = '';
   public category: string = '';
-  screenHeight: number;
-  screenWidth: number;
 
   constructor(
     private router: Router,
@@ -114,8 +112,7 @@ export class SellComponent implements OnInit {
     this.isLoading = true;
     const search = this.filters.search ? this.filters.search : '*';
     const hashItems = this.filters.hashItems ? this.filters.hashItems === 'true' : undefined;
-    let max: number;
-    this.screenHeight > 1330 ? max = 20 : max = this.pagination.maxPerPage;
+    const max = this.pagination.maxPerPage;
 
     /*
       We store the subscription each time, due to API delays.
@@ -216,10 +213,9 @@ export class SellComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   getScreenSize() {
-    this.screenHeight = window.innerHeight;
-    this.screenWidth = window.innerWidth;
-    if (this.screenHeight > 1330) {
-      this.loadPage(0, true);
+    this.pagination.maxPerPage = window.innerWidth > 1330 ? 20 : 10;
+    if (window.innerWidth > 1330) {
+      this.loadNextPage();
     }
   }
 }
