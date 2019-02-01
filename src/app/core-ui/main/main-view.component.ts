@@ -51,7 +51,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
-    private proposalsNotificationsService: ProposalsNotificationsService
+    public proposalsNotificationsService: ProposalsNotificationsService
   ) { }
 
   ngOnInit() {
