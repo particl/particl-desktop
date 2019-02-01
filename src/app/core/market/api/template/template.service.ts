@@ -18,8 +18,8 @@ export class TemplateService {
     public listingCache: PostListingCacheService
   ) { }
 
-  get(templateId: number): Observable<Template> {
-    return this.market.call('template', ['get', templateId]).pipe(map(t => new Template(t)));
+  get(templateId: number, returnImageData: boolean = false): Observable<Template> {
+    return this.market.call('template', ['get', templateId, returnImageData]).map(t => new Template(t));
   }
 
   // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
@@ -56,7 +56,14 @@ export class TemplateService {
 
   search(page: number, pageLimit: number, sort: string, profileId: number, category: string,
     searchString: string, hashItems: any): Observable<Array<Template>> {
-    const params = ['search', page, pageLimit, 'DESC', sort,  profileId, searchString, category, hashItems];
+    // TODO: Place radio buttons on gui to determine sorting action directions
+      let direction;
+      if (sort === 'TITLE') {
+        direction = 'ASC';
+      } else {
+        direction = 'DESC';
+      }
+    const params = ['search', page, pageLimit, direction, sort,  profileId, searchString, category, hashItems];
     return this.market.call('template', params)
     .pipe(map(
       (templates: any) => {
