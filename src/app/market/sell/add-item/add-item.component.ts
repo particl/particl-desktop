@@ -53,6 +53,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
   selectedCategory: Category;
   canPublish: boolean = false;
 
+  validImageTypes = {
+    jpeg: 'image/jpeg',
+    png: 'image/png'
+  };
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -132,7 +137,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const MAX_IMAGE_SIZE = 1024 * 1024 * 2; // (2MB)
     let failedImgs = false;
     sourceFiles.forEach((file: File) => {
-      if (file.type === "image/jpeg" || file.type === "image/png") {
+      if (file.type === this.validImageTypes.jpeg || file.type === this.validImageTypes.png) {
         if (file.size > MAX_IMAGE_SIZE) {
           failedImgs = true;
         } else {
