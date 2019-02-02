@@ -71,7 +71,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   };
 
   selectedCountry: Country;
-  stopScreenResize: boolean = false;
 
   constructor(
     private category: CategoryService,
@@ -227,10 +226,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   getScreenSize() {
-    this.pagination.maxPerPage = window.innerWidth > 1330 ? 34 : 24;
-    if (window.innerWidth > 1330 && !stop) {
+    const currentMaxPerPage = this.pagination.maxPerPage;
+    const newMaxPerPage = window.innerWidth > 1330 ? 20 : 10;
+    const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;
+    
+    if (isLarger) {
+      // Load more pages to fill the screen
+      // maxPages 2 -> 3, ensure no pages are deleted when loading
+      // the next page.
+      this.pagination.maxPages = 3;
+      this.pagination.maxPerPage = newMaxPerPage;
       this.loadNextPage();
-      this.stopScreenResize = true;
     }
   }
 
