@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReleaseNotificationComponent } from './release-notification.component';
+import { VersionComponent } from './version.component';
 import { MainViewModule } from '../main-view.module';
 import { HttpClientModule } from '@angular/common/http';
 
-describe('ReleaseNotificationComponent', () => {
-  let component: ReleaseNotificationComponent;
-  let fixture: ComponentFixture<ReleaseNotificationComponent>;
+describe('VersionComponent', () => {
+  let component: VersionComponent;
+  let fixture: ComponentFixture<VersionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -19,7 +19,7 @@ describe('ReleaseNotificationComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReleaseNotificationComponent);
+    fixture = TestBed.createComponent(VersionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
