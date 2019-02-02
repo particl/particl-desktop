@@ -176,30 +176,23 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // TODO: fix scroll up!
   loadPreviousPage() {
     this.log.d('prev page trigered');
-    let previousPage = this.getFirstPageCurrentlyLoaded();
-    previousPage--;
-    this.log.d('loading prev page' + previousPage);
-    if (previousPage > -1) {
-      this.loadPage(previousPage);
+    if (this.pages.length) {
+      let previousPage = this.pages[0].pageNumber;
+      previousPage--;
+      this.log.d('loading prev page' + previousPage);
+      if (previousPage > -1) {
+        this.loadPage(previousPage);
+      }
     }
   }
 
   loadNextPage() {
-    let nextPage = this.getLastPageCurrentlyLoaded(); nextPage++;
-    this.log.d('loading next page: ' + nextPage);
-    this.loadPage(nextPage);
+    if (this.pages.length) {
+      let nextPage = this.pages[this.pages.length - 1].pageNumber; nextPage++;
+      this.log.d('loading next page: ' + nextPage);
+      this.loadPage(nextPage);
+    }
   }
-
-  // Returns the pageNumber of the last page that is currently visible
-  getLastPageCurrentlyLoaded() {
-    return this.pages[this.pages.length - 1].pageNumber;
-  }
-
-  // Returns the pageNumber if the first page that is currently visible
-  getFirstPageCurrentlyLoaded() {
-    return this.pages[0].pageNumber;
-  }
-
 
   changeLocation(country: Country) {
     this.listingService.cache.selectedCountry = country || undefined;

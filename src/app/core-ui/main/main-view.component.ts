@@ -3,9 +3,7 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-
-
-import { environment } from '../../../environments/environment';
+import { environment } from 'environments/environment.prod';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
@@ -39,8 +37,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   daemonError: any;
   /* version */
   daemonVersion: string;
-  clientVersion: string = environment.version;
-  marketVersion: string = environment.marketVersion;
   unSubscribeTimer: any;
   time: string = '5:00';
   mainNet: boolean = false;
@@ -57,12 +53,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
-    private proposalsNotificationsService: ProposalsNotificationsService
+    public proposalsNotificationsService: ProposalsNotificationsService
   ) { }
 
   ngOnInit() {
 
-    this.mainNet = (this.clientVersion).includes('alpha');
+    this.mainNet = (environment.version).includes('alpha');
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
@@ -163,11 +159,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   checkSecond(sec: number): number {
     sec = sec > 0 ? (sec - 1) : 59;
     return sec;
-  }
-
-  // check for beta version
-  isAlpha(): boolean {
-    return (this.clientVersion).includes('alpha');
   }
 
   // Paste Event Handle
