@@ -98,7 +98,7 @@
     [infiniteScrollThrottle]="50"
     (scrolled)="loadNextPage()">
     <!--div class="subtitle first">Published listings</div-->
-    <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
+    <div class="no-results" [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)">
       <p>
         Sorry, no matching listings found
       </p>
