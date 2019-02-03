@@ -215,7 +215,7 @@ export class SellComponent implements OnInit {
     const currentMaxPerPage = this.pagination.maxPerPage;
     const newMaxPerPage = window.innerWidth > 1330 ? 20 : 10;
     const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;
-    
+
     if (isLarger) {
       // Load more pages to fill the screen
       // maxPages 2 -> 3, ensure no pages are deleted when loading
