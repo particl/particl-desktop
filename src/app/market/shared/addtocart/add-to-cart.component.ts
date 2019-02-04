@@ -4,6 +4,8 @@ import { Log } from 'ng2-logger';
 import { Listing } from '../../../core/market/api/listing/listing.model';
 import { CartService } from '../../../core/market/api/cart/cart.service'
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import * as _ from "lodash";
+
 
 @Component({
   selector: 'app-add-to-cart',
@@ -14,17 +16,19 @@ export class AddToCartComponent implements OnInit {
   @Output() onAdded: EventEmitter<any> = new EventEmitter();
   private log: any = Log.create('add-to-cart.component id:' + Math.floor((Math.random() * 1000) + 1));
 
-  @Input() inCart: boolean;
-  @Input() bidding: boolean;
+  @Input() stateData: any;
   @Input() listing: Listing;
   @Input() detail: boolean = true; // is button on Listing's detail or on Listings overview?
+  showMessages: boolean;
 
   constructor(
     private cartService: CartService,
     private snackbar: SnackbarService
   ) {}
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.displayMessages();
+  }
 
   addToCart() {
     this.cartService.add(this.listing).subscribe(res => {
@@ -38,15 +42,25 @@ export class AddToCartComponent implements OnInit {
   }
 
   checkState() {
-    if (this.inCart) {
+    if (this.stateData.inCart) {
       return 'Item in cart'
-    } else if (this.bidding) {
+    } else if (this.stateData.bidding) {
       return 'Bidding on item'
     } else if (this.listing.isMine) {
       return 'This is your item'
+    } else if (this.stateData.completed) {
+      return 'Successfully purchased'
     } else if (this.bidded) {
       return 'Being processed'
+    } else if (this.stateData.rejected) {
+      return 'REJECTED'
     }
+  }
+
+  displayMessages() {
+    this.listing.isMine ? this.stateData.isMine = true : this.stateData.isMine = false;
+    this.stateData.bidded = this.bidded;
+    this.showMessages = _.find(this.stateData, (o) => o === true) || false;
   }
 
 }

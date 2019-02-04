@@ -20,9 +20,13 @@ import { OrderStatusNotifierService } from 'app/core/market/order-status-notifie
 })
 export class ListingItemComponent implements OnInit, OnDestroy {
   @Input() listing: Listing;
-  inCart: boolean = false;
-  bidding: boolean = false;
   destroyed: boolean = false;
+  stateData = {
+    inCart: false,
+    bidding: false,
+    completed: false,
+    rejected: false
+  }
   constructor(private dialog: MatDialog,
               private favoritesService: FavoritesService,
               private snackbar: SnackbarService,
@@ -40,8 +44,7 @@ export class ListingItemComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(PreviewListingComponent, {
       data: {
         listing: this.listing,
-        inCart: this.inCart,
-        bidding: this.bidding
+        stateData: this.stateData
       },
     });
   }
@@ -52,7 +55,7 @@ export class ListingItemComponent implements OnInit, OnDestroy {
     .subscribe(cart => {
       for (let k = 0; k < cart.listings.length; k++) {
         if ((cart && this.listing) && (cart.listings[k].id === this.listing.id)) {
-          this.inCart = true;
+          this.stateData.inCart = true;
         }
       }
     });
@@ -64,7 +67,13 @@ export class ListingItemComponent implements OnInit, OnDestroy {
     .subscribe(bids => {
       for (let k = 0; k < bids.length; k++) {
         if ((bids && this.listing) && (bids[k].action === 'MPA_BID') && (bids[k].listingItemId === this.listing.id)) {
-          this.bidding = true;
+          this.stateData.bidding = true;
+        }
+        if ((bids && this.listing) && (bids[k].OrderItem.status === 'COMPLETE') && (bids[k].listingItemId === this.listing.id)) {
+          this.stateData.completed = true;
+        }
+        if ((bids && this.listing) && (bids[k].action === 'MPA_REJECT') && (bids[k].listingItemId === this.listing.id)) {
+          this.stateData.rejected = true;
         }
       }
     })
