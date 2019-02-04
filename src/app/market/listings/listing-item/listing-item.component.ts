@@ -64,7 +64,6 @@ export class ListingItemComponent implements OnInit, OnDestroy {
     .subscribe(bids => {
       for (let k = 0; k < bids.length; k++) {
         if ((bids && this.listing) && (bids[k].action === 'MPA_BID') && (bids[k].listingItemId === this.listing.id)) {
-          console.log('YESSSSS')
           this.bidding = true;
         }
       }
