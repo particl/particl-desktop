@@ -252,7 +252,7 @@
 
   <div class="right" fxLayout fxLayoutAlign="end center">
     <app-favorite [listing]="data?.listing" [detail]="true"></app-favorite>
-    <app-add-to-cart [listing]="data?.listing" [detail]="true" (onAdded)="dialogClose()"></app-add-to-cart>
+    <app-add-to-cart [listing]="data?.listing" [detail]="true" [inCart]=data.inCart [bidding]=data.bidding (onAdded)="dialogClose()"></app-add-to-cart>
 
     <!-- if mine, show message instead of "add to cart" button -->
     <button mat-button disabled *ngIf="data?.listing?.isMine">

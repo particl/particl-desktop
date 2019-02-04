@@ -14,6 +14,8 @@ export class AddToCartComponent implements OnInit {
   @Output() onAdded: EventEmitter<any> = new EventEmitter();
   private log: any = Log.create('add-to-cart.component id:' + Math.floor((Math.random() * 1000) + 1));
 
+  @Input() inCart: boolean;
+  @Input() bidding: boolean;
   @Input() listing: Listing;
   @Input() detail: boolean = true; // is button on Listing's detail or on Listings overview?
 
