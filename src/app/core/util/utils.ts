@@ -1,3 +1,5 @@
+import { environment } from '../../../environments/environment';
+
 export class Amount {
 
   constructor(private amount: number, private maxRoundingDigits: number = 8) {
@@ -355,5 +357,19 @@ export const Messages = {
     },
     'status' : 'complete'
   }
+}
+
+
+export const isPrerelease = (release: string): boolean => {
+  const preParts = ['alpha', 'beta', 'RC'];
+
+    let found = false;
+    for (const part of preParts) {
+      if (release.includes(part)) {
+        found = true;
+        break;
+      }
+    }
+    return found;
 }
 

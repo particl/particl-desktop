@@ -3,13 +3,17 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
+import { UserMessageService } from 'app/core/market/user-messages/user-message.service';
+import { AlphaMainnetWarningComponent } from 'app/modals/alpha-mainnet-warning/alpha-mainnet-warning.component';
+import { UserMessage, UserMessageType } from 'app/core/market/user-messages/user-message.model'
+import { isPrerelease } from 'app/core/util/utils';
 
 /*
  * The MainView is basically:
@@ -39,7 +43,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   daemonVersion: string;
   unSubscribeTimer: any;
   time: string = '5:00';
-  mainNet: boolean = false;
+  showAnnouncements: boolean = false;
   public unlocked_until: number = 0;
 
   constructor(
@@ -50,6 +54,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _rpcState: RpcStateService,
     private _modalsService: ModalsHelperService,
     private dialog: MatDialog,
+    private messagesService: UserMessageService,
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
@@ -57,8 +62,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
-    this.mainNet = (environment.version).includes('alpha');
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
@@ -118,6 +121,25 @@ export class MainViewComponent implements OnInit, OnDestroy {
     /* check if testnet -> block explorer url */
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
+
+    this.messagesService.message.subscribe((message) => {
+      if (message) {
+        this.showAnnouncements = true;
+      }
+    });
+
+    // TODO - find better location to perform this check...
+    if (isPrerelease(environment.version)) {
+      const alphaMessage = {
+        text: 'The Particl Marketplace alpha is still in development and not 100% private yet - use it at your own risk!',
+        dismissable: false,
+        timeout: 0,
+        messageType: UserMessageType.ALERT,
+        action: () => { this.dialog.open(AlphaMainnetWarningComponent); },
+        actionLabel: 'Click here to read all the details first!'
+      } as UserMessage;
+      this.messagesService.addMessage(alphaMessage);
+    }
 
   }
 

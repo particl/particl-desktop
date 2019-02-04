@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { interval } from 'rxjs/observable/interval';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { VersionModel } from './version.model';
 import { ClientVersionService } from 'app/core/http/client-version.service';
+import { isPrerelease } from 'app/core/util/utils';
 import { Log } from 'ng2-logger';
 
 enum VersionText {
@@ -84,23 +85,10 @@ export class VersionComponent implements OnInit, OnDestroy {
 
     if (isBNewer) {
       // Ensure that the targetVersion is not a pre-release version if currentVersion is not a pre-release version
-      if (!this.isPrerelease(sourceVersion) && this.isPrerelease(targetVersion)) {
+      if (!isPrerelease(sourceVersion) && isPrerelease(targetVersion)) {
         isBNewer = false;
       }
     }
     return isBNewer;
-  }
-
-  private isPrerelease(release: string): boolean {
-    const preParts = ['alpha', 'beta', 'RC'];
-
-    let found = false;
-    for (const part of preParts) {
-      if (release.includes(part)) {
-        found = true;
-        break;
-      }
-    }
-    return found;
   }
 }
