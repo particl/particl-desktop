@@ -98,6 +98,7 @@ function initMainWindow() {
     darkTheme: true,
 
     webPreferences: {
+      backgroundThrottling: false,
       webviewTag: false,
       nodeIntegration: false,
       sandbox: true,
