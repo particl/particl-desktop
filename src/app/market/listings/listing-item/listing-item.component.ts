@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { FavoritesService } from '../../../core/market/api/favorites/favorites.service';
@@ -18,7 +18,7 @@ import { OrderStatusNotifierService } from 'app/core/market/order-status-notifie
   templateUrl: './listing-item.component.html',
   styleUrls: ['./listing-item.component.scss']
 })
-export class ListingItemComponent {
+export class ListingItemComponent implements OnInit, OnDestroy {
   @Input() listing: Listing;
   inCart: boolean = false;
   bidding: boolean = false;
@@ -31,7 +31,7 @@ export class ListingItemComponent {
               private cartService: CartService) {
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getBids();
     this.getCart();
   }
