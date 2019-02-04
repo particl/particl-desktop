@@ -37,4 +37,16 @@ export class AddToCartComponent implements OnInit {
     return this.cartService.cache.isBidded(this.listing);
   }
 
+  checkState() {
+    if (this.inCart) {
+      return 'Item in cart'
+    } else if (this.bidding) {
+      return 'Bidding on item'
+    } else if (this.listing.isMine) {
+      return 'This is your item'
+    } else if (this.bidded) {
+      return 'Being processed'
+    }
+  }
+
 }

@@ -8,3 +8,14 @@
     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
     Add to cart
 </button>
+
+<!-- "Add to cart" button in Listings overview -->
+<button [disabled]=true class="to-cart small" mat-button color="primary" *ngIf="(listing?.isMine || bidded || inCart || bidding) && detail == false" fxFlex (click)="addToCart(listing?.id)">
+    {{ checkState() }}
+</button>
+
+<!-- "Add to cart" button in Listing's detail -->
+<button [disabled]=true class="to-cart" mat-raised-button color="primary" *ngIf="(listing?.isMine || bidded || inCart || bidding) && detail == true" fxFlex (click)="addToCart(listing?.id)">
+    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
+    {{ checkState() }}
+</button>
