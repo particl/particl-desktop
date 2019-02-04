@@ -92,7 +92,7 @@ function initMainWindow() {
     minHeight: 675,
     icon:      path.join(__dirname, 'resources/icon.png'),
 
-    frame: false,
+    frame: true,
     darkTheme: true,
 
     webPreferences: {
