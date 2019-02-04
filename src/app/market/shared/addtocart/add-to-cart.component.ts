@@ -1,10 +1,11 @@
-import {Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
+import {Component, Input, OnInit, EventEmitter, Output, state} from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { Listing } from '../../../core/market/api/listing/listing.model';
 import { CartService } from '../../../core/market/api/cart/cart.service'
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import * as _ from 'lodash';
+import { StateDataI } from '../listing-state.model';
 
 @Component({
   selector: 'app-add-to-cart',
@@ -15,7 +16,7 @@ export class AddToCartComponent implements OnInit {
   @Output() onAdded: EventEmitter<any> = new EventEmitter();
   private log: any = Log.create('add-to-cart.component id:' + Math.floor((Math.random() * 1000) + 1));
 
-  @Input() stateData: any;
+  @Input() stateData: StateDataI;
   @Input() listing: Listing;
   @Input() detail: boolean = true; // is button on Listing's detail or on Listings overview?
   showMessages: boolean;
@@ -57,9 +58,9 @@ export class AddToCartComponent implements OnInit {
   }
 
   displayMessages() {
+    console.log(this.stateData);
     this.listing.isMine ? this.stateData.isMine = true : this.stateData.isMine = false;
     this.stateData.bidded = this.bidded;
     this.showMessages = _.find(this.stateData, (o) => o === true) || false;
   }
-
 }

@@ -10,8 +10,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { PreviewListingComponent } from '../preview-listing/preview-listing.component';
 import { CartService } from 'app/core/market/api/cart/cart.service';
-import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
-import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
+import { StateDataI } from 'app/market/shared/listing-state.model';
 
 @Component({
   selector: 'app-listing-item',
@@ -21,12 +20,14 @@ import { OrderStatusNotifierService } from 'app/core/market/order-status-notifie
 export class ListingItemComponent implements OnInit, OnDestroy {
   @Input() listing: Listing;
   destroyed: boolean = false;
-  stateData: object = {
+  stateData: StateDataI = {
     inCart: false,
     bidding: false,
     completed: false,
-    rejected: false
-  }
+    rejected: false,
+    isMine: false,
+    bidded: false
+  };
   constructor(private dialog: MatDialog,
               private favoritesService: FavoritesService,
               private snackbar: SnackbarService,
