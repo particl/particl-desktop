@@ -4,8 +4,7 @@ import { Log } from 'ng2-logger';
 import { Listing } from '../../../core/market/api/listing/listing.model';
 import { CartService } from '../../../core/market/api/cart/cart.service'
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
-import * as _ from "lodash";
-
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-add-to-cart',

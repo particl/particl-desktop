@@ -21,7 +21,7 @@ import { OrderStatusNotifierService } from 'app/core/market/order-status-notifie
 export class ListingItemComponent implements OnInit, OnDestroy {
   @Input() listing: Listing;
   destroyed: boolean = false;
-  stateData = {
+  stateData: object = {
     inCart: false,
     bidding: false,
     completed: false,
