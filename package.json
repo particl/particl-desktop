@@ -154,7 +154,6 @@
     "node-unzip-2": "^0.2.1",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.5.6",
-    "tmp": "^0.0.33",
     "zone.js": "^0.8.20"
   },
   "devDependencies": {
@@ -181,7 +180,7 @@
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
     "electron": "4.0.3",
-    "electron-builder": "^20.0.4",
+    "electron-builder": "^20.38.5",
     "htmlhint": "^0.9.13",
     "iso3166-2-db": "^2.2.1",
     "jasmine-core": "^2.99.1",
