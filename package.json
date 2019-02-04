@@ -126,7 +126,6 @@
       ],
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
-        "Exec": "particl-desktop %U",
         "Icon": "particl-desktop",
         "Name": "Particl Desktop",
         "Path": "/opt/particl-desktop",
