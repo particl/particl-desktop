@@ -135,7 +135,7 @@
           </mat-expansion-panel>
         </mat-accordion>
       </mat-content><!-- .sidebar-section -->
-      
+
       <mat-content class="sidebar-section" *ngIf="walletInitialized">
         <mat-list class="sidebar-item-group">
           <a class="sidebar-item-link"
@@ -148,7 +148,7 @@
           </a>
         </mat-list><!-- .sidebar-item-group -->
       </mat-content><!-- .sidebar-section -->
-    
+
       <!--mat-content class="sidebar-section">
         <mat-list class="sidebar-item-group">
           <a class="sidebar-item-link" routerLinkActive="active" routerLink="/wallet/settings">
@@ -218,20 +218,7 @@
 
         </mat-list>
       </mat-content>
-
-
-      <!-- Versions | TODO: move to separate component? -->
-      <mat-content class="client-version">
-        <div class="client item">
-          Client <span class="version">{{ clientVersion }}</span>
-        </div>
-        <div class="client item">
-          Market <span class="version">{{ marketVersion }}</span>
-        </div>
-        <div class="daemon item">
-          Core <span class="version">{{ daemonVersion }}</span>
-        </div>
-      </mat-content>
+      <app-version [daemonVersion]="daemonVersion"></app-version>
 
       <!-- Sync progress -->
       <app-percentage-bar #progress (click)="syncScreen()"></app-percentage-bar>
@@ -243,9 +230,6 @@
 
 
   <!-- ======= Page Header ======= -->
-
-  <!-- info/warning notification -->
-  <app-release-notification></app-release-notification>
 
   <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
 
