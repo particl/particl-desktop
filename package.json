@@ -48,7 +48,7 @@
   },
   "productName": "Particl Desktop",
   "build": {
-    "electronVersion": "1.7.13",
+    "electronVersion": "4.0.3",
     "appId": "io.particl.desktop",
     "npmRebuild": true,
     "directories": {
@@ -175,7 +175,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "1.7.13",
+    "electron": "4.0.3",
     "electron-builder": "^20.28.2",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",
