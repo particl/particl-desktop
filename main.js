@@ -99,7 +99,8 @@ function initMainWindow() {
       nodeIntegration: false,
       sandbox: true,
       contextIsolation: false,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      show:      false, // Workaround for osx stuck at startup
     },
   });
 
@@ -118,6 +119,10 @@ function initMainWindow() {
   if (options.devtools) {
     mainWindow.webContents.openDevTools()
   }
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   // handle external URIs
   mainWindow.webContents.on('new-window', (event, url) => {
