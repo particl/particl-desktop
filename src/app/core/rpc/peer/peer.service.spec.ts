@@ -7,7 +7,7 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { PeerService } from './peer.service';
 import { RpcMockService } from 'app/_test/core-test/rpc-test/rpc-mock.service';
 
-fdescribe('PeerService', () => {
+describe('PeerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
