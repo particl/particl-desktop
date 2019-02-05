@@ -20,6 +20,7 @@ export class AddToCartComponent implements OnInit {
   @Input() listing: Listing;
   @Input() detail: boolean = true; // is button on Listing's detail or on Listings overview?
   showMessages: boolean;
+  buttonMessage: string;
 
   constructor(
     private cartService: CartService,
@@ -28,6 +29,7 @@ export class AddToCartComponent implements OnInit {
 
   ngOnInit() {
     this.displayMessages();
+    this.buttonMessage = this.checkState();
   }
 
   addToCart() {
@@ -59,8 +61,9 @@ export class AddToCartComponent implements OnInit {
 
   displayMessages() {
     console.log(this.stateData);
-    this.listing.isMine ? this.stateData.isMine = true : this.stateData.isMine = false;
+    this.stateData.isMine = (this.listing.isMine ? true : false);
     this.stateData.bidded = this.bidded;
-    this.showMessages = _.find(this.stateData, (o) => o === true) || false;
+    this.showMessages = _.find(_.values(this.stateData), (o) => o === true) || false;
+    console.log('THIS IS SHOW MESSAGES:', this.showMessages);
   }
 }

@@ -11,11 +11,11 @@
 
 <!-- "Add to cart" button in Listings overview -->
 <button [disabled]="true" class="to-cart small" mat-button color="primary" *ngIf="showMessages && detail == false" fxFlex (click)="addToCart(listing?.id)">
-    {{ checkState() }}
+    {{ buttonMessage }}
 </button>
 
 <!-- "Add to cart" button in Listing's detail -->
 <button [disabled]="true" class="to-cart" mat-raised-button color="primary" *ngIf="showMessages && detail == true" fxFlex (click)="addToCart(listing?.id)">
     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
-    {{ checkState() }}
+    {{ buttonMessage }}
 </button>
