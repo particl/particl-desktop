@@ -29,7 +29,6 @@ export class AddToCartComponent implements OnInit {
 
   ngOnInit() {
     this.displayMessages();
-    this.buttonMessage = this.checkState();
   }
 
   addToCart() {
@@ -60,10 +59,9 @@ export class AddToCartComponent implements OnInit {
   }
 
   displayMessages() {
-    console.log(this.stateData);
     this.stateData.isMine = (this.listing.isMine ? true : false);
     this.stateData.bidded = this.bidded;
     this.showMessages = _.find(_.values(this.stateData), (o) => o === true) || false;
-    console.log('THIS IS SHOW MESSAGES:', this.showMessages);
+    this.buttonMessage = this.checkState();
   }
 }
