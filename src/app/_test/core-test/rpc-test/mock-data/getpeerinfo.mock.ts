@@ -569,6 +569,9 @@ const mockgetpeerinfo: any = [
     }
   ]
 
+const mockBlockCount = 336460;
+
 export {
-  mockgetpeerinfo
+  mockgetpeerinfo,
+  mockBlockCount
 }

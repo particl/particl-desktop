@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { mockgetpeerinfo } from './mock-data/getpeerinfo.mock';
+import { mockgetpeerinfo, mockBlockCount } from './mock-data/getpeerinfo.mock';
 import { filterAddress } from './mock-data/filteraddress.mock';
 import { filterTxs } from './mock-data/transactions.mock';
 import { mockSendInfo, listStealth } from './mock-data/send.mock';
@@ -30,6 +30,9 @@ export class RpcMockService {
         break;
       case 'getpeerinfo':
         json = mockgetpeerinfo;
+        break;
+      case 'getblockcount':
+        json = mockBlockCount;
         break;
       case 'sendtypeto':
         json = mockSendInfo;
