@@ -2,7 +2,6 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 import { isPrerelease } from 'app/core/util/utils';
-import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-bid-confirmation-modal',
@@ -22,7 +21,7 @@ export class BidConfirmationModalComponent implements OnInit {
 
   ngOnInit() {
     this.country = this.bidItem ? this.bidItem.ShippingAddress.country : '';
-    this.isPrerelease = isPrerelease(environment.version);
+    this.isPrerelease = isPrerelease();
   }
 
   confirm(): void {

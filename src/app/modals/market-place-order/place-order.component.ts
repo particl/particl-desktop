@@ -1,7 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { isPrerelease } from 'app/core/util/utils';
-import { environment } from 'environments/environment';
 @Component({
   selector: 'app-place-order',
   templateUrl: './place-order.component.html',
@@ -15,7 +14,7 @@ export class PlaceOrderComponent implements OnInit {
   constructor(public _dialogRef: MatDialogRef<PlaceOrderComponent>) { }
 
   ngOnInit() {
-    this.isPrerelease = isPrerelease(environment.version);
+    this.isPrerelease = isPrerelease();
   }
 
   placeOrder(): void {

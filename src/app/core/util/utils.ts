@@ -360,16 +360,19 @@ export const Messages = {
 }
 
 
-export const isPrerelease = (release: string): boolean => {
+export const isPrerelease = (release?: string): boolean => {
+  let version = release;
+  let found = false;
+  if (!release) {
+    version = environment.version;
+  }
   const preParts = ['alpha', 'beta', 'RC'];
 
-    let found = false;
-    for (const part of preParts) {
-      if (release.includes(part)) {
-        found = true;
-        break;
-      }
+  for (const part of preParts) {
+    if (version.includes(part)) {
+      found = true;
+      break;
     }
-    return found;
+  }
+  return found;
 }
-

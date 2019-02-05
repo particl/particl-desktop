@@ -3,7 +3,6 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { environment } from 'environments/environment';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
@@ -129,7 +128,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     });
 
     // TODO - find better location to perform this check...
-    if (isPrerelease(environment.version)) {
+    if (isPrerelease()) {
       const alphaMessage = {
         text: 'The Particl Marketplace alpha is still in development and not 100% private yet - use it at your own risk!',
         dismissable: false,
