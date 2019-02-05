@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { Category } from 'app/core/market/api/category/category.model';
@@ -9,6 +9,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { throttle } from 'lodash';
 
 
 interface ISorting {
@@ -41,6 +42,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   search: string;
   flagged: boolean = false;
   listingServiceSubcription: any;
+  private resizeEventer: any;
   // categories: FormControl = new FormControl();
 
   _rootCategoryList: Category = new Category({});
@@ -89,6 +91,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.log.d('overview created');
     this.loadCategories();
     this.loadPage(0);
+    this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
+    try {
+      window.addEventListener('resize', this.resizeEventer);
+    } catch (err) { }
   }
 
   loadCategories() {
@@ -217,10 +223,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.loadPage(0, true);
   }
 
-  @HostListener('window:resize', ['$event'])
   getScreenSize() {
     const currentMaxPerPage = this.pagination.maxPerPage;
-    const newMaxPerPage = window.innerWidth > 1330 ? 20 : 10;
+    const newMaxPerPage = window.innerHeight > 1330 ? 20 : 10;
     const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;
 
     if (isLarger) {
@@ -235,5 +240,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    try {
+      window.removeEventListener('resize', this.resizeEventer);
+    } catch (err) { }
   }
 }
