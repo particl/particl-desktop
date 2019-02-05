@@ -18,7 +18,7 @@ if (process.platform === 'linux') {
   app.getPath('userData') + '/testnet'
 ].map(path => !fs.existsSync(path) && fs.mkdirSync(path));
 
-if (app.getVersion().includes('RC'))
+if (app.getVersion().includes('testnet'))
   process.argv.push(...['-testnet']);
 
 const options = require('./modules/options').parse();
@@ -41,10 +41,10 @@ app.on('ready', () => {
   log.info('app ready')
   log.debug('argv', process.argv);
   log.debug('options', options);
-  
+
   // initialize the authentication filter
   _auth.init();
-  
+
   initMainWindow();
   init.start(mainWindow);
 });
