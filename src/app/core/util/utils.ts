@@ -376,3 +376,12 @@ export const isPrerelease = (release?: string): boolean => {
   }
   return found;
 }
+
+export const isMainnetRelease = (release?: string): boolean => {
+  let version = release;
+  if (!release) {
+    version = environment.version;
+  }
+
+  return !version.includes('testnet');
+}

@@ -12,7 +12,7 @@ import { ProposalsNotificationsService } from 'app/core/market/proposals-notifie
 import { UserMessageService } from 'app/core/market/user-messages/user-message.service';
 import { AlphaMainnetWarningComponent } from 'app/modals/alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { UserMessage, UserMessageType } from 'app/core/market/user-messages/user-message.model'
-import { isPrerelease } from 'app/core/util/utils';
+import { isPrerelease, isMainnetRelease } from 'app/core/util/utils';
 
 /*
  * The MainView is basically:
@@ -128,7 +128,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     });
 
     // TODO - find better location to perform this check...
-    if (isPrerelease()) {
+    if (isMainnetRelease() && isPrerelease()) {
       const alphaMessage = {
         text: 'The Particl Marketplace alpha is still in development and not 100% private yet - use it at your own risk!',
         dismissable: false,
