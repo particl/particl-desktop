@@ -5,7 +5,6 @@ const got  = require('got'),
         fs = require('fs'),
     crypto = require('crypto'),
       path = require('path'),
-       tmp = require('tmp'),
     mkdirp = require('mkdirp'),
      unzip = require('node-unzip-2'),
      spawn = require('buffered-spawn'),
@@ -188,7 +187,7 @@ class Manager extends EventEmitter {
       this._logger.debug('Generating download folder path ...');
 
       const downloadFolder = path.join(
-        options.downloadFolder || tmp.dirSync().name,
+        options.downloadFolder,
         client.id
       );
 
