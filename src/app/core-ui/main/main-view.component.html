@@ -1,4 +1,5 @@
-<mat-sidenav-container fullscreen>
+<!-- TODO: dynamically add `with-top-notification` class when message is shown (new release / alpha warning etc.): -->
+<mat-sidenav-container fullscreen [ngClass]="{'with-top-notification': showAnnouncements}">
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
 
     <div class="logo">
@@ -230,6 +231,9 @@
 
 
   <!-- ======= Page Header ======= -->
+
+  <!-- info/warning notification -->
+  <app-announcement-notification *ngIf="showAnnouncements"></app-announcement-notification>
 
   <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
 
