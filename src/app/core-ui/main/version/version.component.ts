@@ -58,7 +58,7 @@ export class VersionComponent implements OnInit, OnDestroy {
         this.isUpdateProcessing = false;
       }, (error) => {
         this.clientUpdateText = VersionText.unknown;
-        this.log.e('client version checking error: ', error);
+        this.log.er('client version checking error: ', error);
     })
   }
 
