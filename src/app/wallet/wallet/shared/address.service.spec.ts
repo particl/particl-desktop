@@ -28,19 +28,4 @@ describe('AddressService', () => {
     })
   }));
 
-  it('should get params when it is send.', inject([AddressService], (service: AddressService) => {
-    service.typeOfAddresses = 'send'
-    expect(service.rpc_getParams()[4]).toEqual('2');
-  }));
-
-  it('should get params when it is receive.', inject([AddressService], (service: AddressService) => {
-    service.typeOfAddresses = 'receive'
-    expect(service.rpc_getParams()[4]).toEqual('1');
-  }));
-
-  it('should get params when it is empty.', inject([AddressService], (service: AddressService) => {
-    service.typeOfAddresses = ''
-    expect(service.rpc_getParams()[4]).toBe(undefined);
-  }));
-
 });

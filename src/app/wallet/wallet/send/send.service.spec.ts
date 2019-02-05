@@ -39,12 +39,6 @@ describe('SendService', () => {
     expect(txs.estimateFeeOnly).toBe(false);
   }));
 
-  it('should transfer transaction', inject([SendService], (service: SendService) => {
-    txs.amount = 1;
-    service.transferBalance(txs)
-    expect(txs.toAddress).toEqual('rDkxgW9YuuU86ogFW3anyhSkVddH56PmVt');
-  }));
-
   it('should get fee', inject([SendService], (service: SendService) => {
     txs.toAddress = 'rDkxgW9YuuU86ogFW3anyhSkVddH56PmVt';
     service.getTransactionFee(txs).subscribe(fee => {

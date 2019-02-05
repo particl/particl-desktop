@@ -10,7 +10,7 @@ import { RpcService } from '../../../core/core.module';
 export class AddressService {
   private log: any = Log.create('address.service');
 
-  public typeOfAddresses: string = 'send'; // "receive","send", "total"
+  private typeOfAddresses: string = 'send'; // "receive","send", "total"
 
   // Stores address objects.
   public _addresses: Observable<Array<Address>>;
@@ -76,7 +76,7 @@ export class AddressService {
     }
   }
 
-  rpc_getParams() {
+  private rpc_getParams() {
     if (this.typeOfAddresses === 'send') {
       return [0, this.addressCount, '0', '',  '2'];
     }  else if (this.typeOfAddresses === 'receive') {
