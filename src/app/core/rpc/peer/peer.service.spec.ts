@@ -7,7 +7,7 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { PeerService } from './peer.service';
 import { RpcMockService } from 'app/_test/core-test/rpc-test/rpc-mock.service';
 
-describe('PeerService', () => {
+fdescribe('PeerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -26,7 +26,7 @@ describe('PeerService', () => {
   }));
 
   it('should return block count', inject([PeerService], (service: PeerService) => {
-    service.getPeerList().subscribe(block => {
+    service.getBlockCount().subscribe(block => {
       expect(block).toEqual(336460);
     })
   }));
