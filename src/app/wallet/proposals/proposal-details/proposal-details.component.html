@@ -74,7 +74,7 @@
 
         <!-- if someone already voted, show graph: -->
         <div class="graph" *ngIf="proposalResult?.totalWeight">
-          <nvd3 #chart
+          <nvd3
             *ngIf="proposalResult?.graphData && proposalResult?.graphData.length"
             [options]="graphOptions"
             [data]="proposalResult?.graphData">
