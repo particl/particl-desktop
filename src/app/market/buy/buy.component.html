@@ -55,11 +55,13 @@
     </p>
   </div>
 
-  <div *ngIf="favorites !== undefined && favorites.length != 0" fxLayout="row wrap" fxLayoutAlign="start start">
+  <div *ngIf="favorites !== undefined && favorites.length != 0" class="content">
     <ng-container *ngFor="let favorite of favorites">
-      <mat-card class="listing" fxFlex="0 0 calc(100% / 4 - 30px)">
+
+      <mat-card class="listing"><!-- fxFlex="0 0 calc(100% / 4 - 30px)" -->
         <app-listing-item [listing]="favorite"></app-listing-item>
       </mat-card>
+
     </ng-container>
   </div>
 
