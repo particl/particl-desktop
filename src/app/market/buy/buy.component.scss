@@ -20,11 +20,14 @@
 // ------ FAVOURITES ------ //
 
 .favourites {
-  padding: 30px 30px $padding 5px;
+  padding: $padding 30px $padding 5px;
+  .page-intro {
+    margin: -35px -30px 0 -5px;
+  }
   .no-results {
     margin: 0 0 35px 25px;
   }
-  .content {
+  .grid-container {
     display: flex;
     flex-wrap: wrap;
     align-items: stretch;

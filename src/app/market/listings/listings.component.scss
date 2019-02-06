@@ -111,7 +111,7 @@
   flex-wrap: wrap;
   align-items: stretch;
 
-  .listing { // item (same as .content.listing in buy.component.scss)
+  .listing { // item (same as .grid-content.listing in buy.component.scss)
     margin: 0 0 25px 25px;
     padding: 24px 16px 12px;
     flex: 0 0 calc((100% / 4) - 57px); // default screen: 4 per row

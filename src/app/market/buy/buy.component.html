@@ -37,6 +37,19 @@
 <!-- =========== ORDERS =========== -->
 
 <div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'orders'">
+
+  <div class="page-intro">
+    <h1>Buying orders</h1>
+    <div class="content">
+      <p>
+        This is where you manage your Orders, that you're buying on the Market from other Sellers.
+      </p>
+      <p class="widget-help">
+        Each Order advancement needs to be confirmed on this page, e.g. paying for items &amp; marking Orders as delivered.
+      </p>
+    </div>
+  </div><!-- .page-intro -->
+  
   <app-orders type="buy"></app-orders>
 </div><!-- "Orders" tab -->
 
@@ -45,6 +58,18 @@
 
 <div class="favourites container-block with-tab-bar"
      *ngIf="tabLabels[selectedTab] == 'favourites'">
+
+  <div class="page-intro">
+    <h1>Your favourites</h1>
+    <div class="content">
+      <p>
+        Save your favourite Listings for easy access later.
+      </p>
+      <p class="widget-help">
+        Note that all Listings on Market have a limited lifetime (they expire in time), so be sure to check back often as they might not be available on Market anymore.
+      </p>
+    </div>
+  </div><!-- .page-intro -->
 
   <div class="no-results" *ngIf="favorites === undefined || favorites?.length == 0">
     <p>
@@ -55,7 +80,7 @@
     </p>
   </div>
 
-  <div *ngIf="favorites !== undefined && favorites.length != 0" class="content">
+  <div *ngIf="favorites !== undefined && favorites.length != 0" class="grid-container">
     <ng-container *ngFor="let favorite of favorites">
 
       <mat-card class="listing"><!-- fxFlex="0 0 calc(100% / 4 - 30px)" -->

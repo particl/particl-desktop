@@ -23,6 +23,19 @@
 
 <div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'listings'">
 
+  <div class="page-intro">
+    <h1>Your Listings</h1>
+    <div class="content">
+      <p>
+        This is your starting point and administrative center for selling your Products on the Market.<br>
+        Create new Listings here and track their orders in Order tab.
+      </p>
+      <p class="widget-help">
+        Note: All Listings created here will be available publicly on Particl Open Market.
+      </p>
+    </div>
+  </div><!-- .page-intro -->
+
   <!-- Listings > Filter -->
   <div class="filter">
 
@@ -120,5 +133,18 @@
 <!-- =========== ORDERS =========== -->
 <!-- Do not remove the below class it is using for test case -->
 <div class="container-block with-tab-bar test-case-container" *ngIf="tabLabels[selectedTab] == 'orders'">
+
+  <div class="page-intro">
+    <h1>Selling orders</h1>
+    <div class="content">
+      <p>
+        This is where you manage your Selling orders (orders from Buyers on your published Listings).
+      </p>
+      <p class="widget-help">
+        Each Order advancement needs to be confirmed on this page, e.g. accepting/rejecting bids, locking funds to escrow &amp; marking Orders as shipped.
+      </p>
+    </div>
+  </div><!-- .page-intro -->
+
   <app-orders type="sell"></app-orders>
 </div><!-- "Orders" tab -->
