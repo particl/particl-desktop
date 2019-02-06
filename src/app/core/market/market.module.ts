@@ -24,6 +24,7 @@ import { OrderStatusNotifierService } from './order-status-notifier/order-status
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
 import { ShippingService } from 'app/core/market/api/template/shipping/shipping.service';
+import { UserMessageService } from './user-messages/user-message.service';
 
 @NgModule({
   imports: [
@@ -58,7 +59,8 @@ export class MarketModule {
         OrderStatusNotifierService,
         ProposalsService,
         PaymentService,
-        ShippingService
+        ShippingService,
+        UserMessageService
       ]
     };
   }

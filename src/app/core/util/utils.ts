@@ -1,3 +1,5 @@
+import { environment } from '../../../environments/environment';
+
 export class Amount {
 
   constructor(private amount: number, private maxRoundingDigits: number = 8) {
@@ -357,3 +359,29 @@ export const Messages = {
   }
 }
 
+
+export const isPrerelease = (release?: string): boolean => {
+  let version = release;
+  let found = false;
+  if (!release) {
+    version = environment.version;
+  }
+  const preParts = ['alpha', 'beta', 'RC'];
+
+  for (const part of preParts) {
+    if (version.includes(part)) {
+      found = true;
+      break;
+    }
+  }
+  return found;
+}
+
+export const isMainnetRelease = (release?: string): boolean => {
+  let version = release;
+  if (!release) {
+    version = environment.version;
+  }
+
+  return !version.includes('testnet');
+}

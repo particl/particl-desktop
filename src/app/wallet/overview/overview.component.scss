@@ -22,9 +22,9 @@
 
 .overview { // area with widgets
   display: flex;
-  padding: 0 35px;
+  padding: 0 35px 50px;
   @include break(l) {
-    padding: 10px 50px;
+    padding: 10px 50px 50px;
   }
 }
 
