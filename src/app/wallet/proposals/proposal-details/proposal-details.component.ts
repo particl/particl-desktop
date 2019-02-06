@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -15,6 +15,7 @@ import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+import { NvD3Component } from 'ng2-nvd3';
 
 @Component({
   selector: 'app-proposal-details',
@@ -26,6 +27,7 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 })
 export class ProposalDetailsComponent implements OnInit, OnDestroy {
   log: any = Log.create('proposal.component');
+  @ViewChild('chart') chart: NvD3Component;
   @Input() proposal: Proposal;
   @Input() selectedTab: string;
   @Input() currentBlockCount: number;
@@ -172,6 +174,12 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.chart) {
+      try {
+        // Fixes memory leak, re: https://github.com/krispo/ng2-nvd3/issues/80
+        this.chart.clearElement();
+      } catch (err) { }
+    }
     this.destroyed = true;
   }
 
