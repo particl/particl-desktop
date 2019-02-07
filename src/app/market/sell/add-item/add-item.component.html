@@ -135,14 +135,17 @@
         Back to Listings
       </button>
     </div>
+    <div class="center warning" *ngIf="!canPublish">
+      Maximum template size exceeded - try reduce image or text sizes
+    </div>
     <div class="right">
       <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save'}}
       </button>
-      <button [disabled]="!itemFormGroup?.valid || !canPublish"
+
+      <button [disabled]="!itemFormGroup?.valid"
               mat-raised-button color="primary"
-              matTooltip="{{ canPublish ? 'Save and put up for sale' : 'Maximum template size exceeded - try reduce image or text sizes'}}"
               (click)="saveAndPublish()"
               *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
