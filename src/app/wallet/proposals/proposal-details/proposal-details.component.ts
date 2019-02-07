@@ -1,6 +1,5 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import * as d3 from 'd3';
 import { Log } from 'ng2-logger';
 
 import { RpcStateService } from 'app/core/core.module';
@@ -15,8 +14,8 @@ import { ProcessingModalComponent } from 'app/modals/processing-modal/processing
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
-import { GraphOption } from 'app/wallet/proposals/models/proposal-result-graph-option.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+import { NvD3Component } from 'ng2-nvd3';
 
 @Component({
   selector: 'app-proposal-details',
@@ -28,6 +27,7 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 })
 export class ProposalDetailsComponent implements OnInit, OnDestroy {
   log: any = Log.create('proposal.component');
+  @ViewChild('chart') chart: NvD3Component;
   @Input() proposal: Proposal;
   @Input() selectedTab: string;
   @Input() currentBlockCount: number;
@@ -50,12 +50,12 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
           top: 5,
           bottom: 5
         },
-        padding: {
-          top: 0,
-          bottom: 0,
-          right: 5,
-          left: 5
-        }
+        // padding: {
+        //   top: 0,
+        //   bottom: 0,
+        //   right: 5,
+        //   left: 5
+        // }
       },
       color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
       tooltip: {
@@ -79,7 +79,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     private proposalService: ProposalsService,
     private snackbarService: SnackbarService,
     private modelsService: ModalsHelperService
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.proposal) {
@@ -174,6 +174,13 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.chart) {
+      try {
+        // Fixes memory leak, re: https://github.com/krispo/ng2-nvd3/issues/80
+        this.chart.clearElement();
+      } catch (err) { }
+    }
     this.destroyed = true;
   }
+
 }
