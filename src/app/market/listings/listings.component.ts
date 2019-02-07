@@ -9,6 +9,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { throttle } from 'lodash';
 
 
 interface ISorting {
@@ -41,6 +42,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   search: string;
   flagged: boolean = false;
   listingServiceSubcription: any;
+  private resizeEventer: any;
   // categories: FormControl = new FormControl();
 
   _rootCategoryList: Category = new Category({});
@@ -82,12 +84,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
     if (this.listingService.cache.selectedCountry) {
       this.selectedCountry = this.listingService.cache.selectedCountry
     }
+    this.getScreenSize();
   }
 
   ngOnInit() {
     this.log.d('overview created');
     this.loadCategories();
     this.loadPage(0);
+    this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
+    try {
+      window.addEventListener('resize', this.resizeEventer);
+    } catch (err) { }
   }
 
   loadCategories() {
@@ -176,30 +183,23 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // TODO: fix scroll up!
   loadPreviousPage() {
     this.log.d('prev page trigered');
-    let previousPage = this.getFirstPageCurrentlyLoaded();
-    previousPage--;
-    this.log.d('loading prev page' + previousPage);
-    if (previousPage > -1) {
-      this.loadPage(previousPage);
+    if (this.pages.length) {
+      let previousPage = this.pages[0].pageNumber;
+      previousPage--;
+      this.log.d('loading prev page' + previousPage);
+      if (previousPage > -1) {
+        this.loadPage(previousPage);
+      }
     }
   }
 
   loadNextPage() {
-    let nextPage = this.getLastPageCurrentlyLoaded(); nextPage++;
-    this.log.d('loading next page: ' + nextPage);
-    this.loadPage(nextPage);
+    if (this.pages.length) {
+      let nextPage = this.pages[this.pages.length - 1].pageNumber; nextPage++;
+      this.log.d('loading next page: ' + nextPage);
+      this.loadPage(nextPage);
+    }
   }
-
-  // Returns the pageNumber of the last page that is currently visible
-  getLastPageCurrentlyLoaded() {
-    return this.pages[this.pages.length - 1].pageNumber;
-  }
-
-  // Returns the pageNumber if the first page that is currently visible
-  getFirstPageCurrentlyLoaded() {
-    return this.pages[0].pageNumber;
-  }
-
 
   changeLocation(country: Country) {
     this.listingService.cache.selectedCountry = country || undefined;
@@ -223,7 +223,25 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.loadPage(0, true);
   }
 
+  getScreenSize() {
+    const currentMaxPerPage = this.pagination.maxPerPage;
+    const newMaxPerPage = window.innerHeight > 1330 ? 20 : 10;
+    const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;
+
+    if (isLarger) {
+      // Load more pages to fill the screen
+      // maxPages 2 -> 3, ensure no pages are deleted when loading
+      // the next page.
+      this.pagination.maxPages = 3;
+      this.pagination.maxPerPage = newMaxPerPage;
+      this.loadNextPage();
+    }
+  }
+
   ngOnDestroy() {
     this.destroyed = true;
+    try {
+      window.removeEventListener('resize', this.resizeEventer);
+    } catch (err) { }
   }
 }
