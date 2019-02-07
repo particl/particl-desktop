@@ -390,6 +390,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
     if (this.keys.includes(event.key) || pasted.split('').find((c) =>  this.keys.includes(c))) {
       return false;
     }
+
+  }
+
+  decimalValidator(event: any) {
+    // Decimal character validation
+
+    const price = event.target.value.split('.');
+    if (price && price.length > 1 && price[1].length > 8) {
+      event.target.value = `${price[0]}.${price[1].substr(0, 8)}`;
+    }
   }
 
   public async upsert(): Promise<void> {
