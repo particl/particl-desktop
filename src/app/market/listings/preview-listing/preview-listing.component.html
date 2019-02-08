@@ -68,7 +68,7 @@
             Shipping
           </th>
           <td class="value">
-            {{ data?.listing?.domesticShippingPrice.getAmount() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} <small>PART</small>
+            {{ data?.listing?.domesticShippingPrice.noExponentialAmount() }} &ndash; {{ data?.listing?.internationalShippingPrice.noExponentialAmount() }} <small>PART</small>
           </td>
         </tr>
         <tr>
