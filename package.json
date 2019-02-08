@@ -115,7 +115,6 @@
         "Comment": "Particl, P2P Privacy ecosystem",
         "Icon": "particl",
         "Name": "Particl",
-        "Path": "/opt/particl/",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
