@@ -1,6 +1,6 @@
 <div>
   <div mat-dialog-title class="title">Terms &amp; Conditions</div>
-  <mat-dialog-content #terms class="modal-content" fxLayout (scroll)="onScroll($event)">
+  <mat-dialog-content class="modal-content" fxLayout>
     <div [innerHTML]="text"></div>
   </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="space-between center">
@@ -9,9 +9,12 @@
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       Decline &amp; Close
     </button>
-    <button mat-raised-button color="primary" [disabled]="!isScrolled" (click)="acceptTerms()">
+    <mat-checkbox name="accept" matTooltip="Accept Terms" [(ngModel)]="isAccepted">
+      Accept Terms
+    </mat-checkbox>
+    <button mat-raised-button color="primary" [disabled]="!isAccepted" (click)="acceptTerms()">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
-      Accept terms
+      Continue
     </button>
   </mat-dialog-actions>
 </div>
