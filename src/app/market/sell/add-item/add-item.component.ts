@@ -398,7 +398,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     const price = event.target.value.split('.');
     if (price && price.length > 1 && price[1].length > 8) {
-      event.target.value = `${price[0]}.${price[1].substr(0, 8)}`;
+      event.target.value = parseFloat(event.target.value).toFixed(8);
     }
   }
 
