@@ -30,12 +30,11 @@ export class SendService {
   listUnSpent(): void {
     this.utxos.remainAmount = 0;
     this._rpc.call('listunspent', [0]).subscribe(unspent => {
-      unspent.map(utxo => {
-        // Skipped colstaking addresses to calculate amount ?
-        if (!utxo.coldstaking_address || utxo.address) {
-          this.utxos.remainAmount += utxo.amount;
+      for (let ut = 0; ut < unspent.length; ut++) {
+        if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+          this.utxos.remainAmount += unspent[ut].amount;
         };
-      });
+      }
     })
   }
 
