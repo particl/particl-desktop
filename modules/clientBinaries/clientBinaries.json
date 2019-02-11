@@ -1,7 +1,7 @@
 {
   "clients": {
     "particld": {
-      "version": "0.18.0.1alpha",
+      "version": "0.18.0.1",
       "platforms": {
         "linux": {
           "arm": {
