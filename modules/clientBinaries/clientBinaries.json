@@ -9,7 +9,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.1alpha/particl-0.18.0.1-arm-linux-gnueabihf.tar.gz",
               "type": "tar",
               "sha256": "e38f8c7b947f01e296f72d51c5cd9e63f0681b737f12bcd5515383bf78c6783a",
-              "bin": "particl-0.18.0.1alpha/bin/particld"
+              "bin": "particl-0.18.0.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -29,7 +29,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.1alpha/particl-0.18.0.1-i686-pc-linux-gnu_nousb.tar.gz",
               "type": "tar",
               "sha256": "ed7cf6148f79c17fd2e1b4f1b933786d291543a7322302c46002aaadc5142825",
-              "bin": "particl-0.18.0.1alpha/bin/particld"
+              "bin": "particl-0.18.0.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -49,7 +49,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.1alpha/particl-0.18.0.1-x86_64-linux-gnu_nousb.tar.gz",
               "type": "tar",
               "sha256": "074876ca98245eef07aea9e4ce0cfea63cef93df0522d970c7189bb39e833d7d",
-              "bin": "particl-0.18.0.1alpha/bin/particld"
+              "bin": "particl-0.18.0.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -71,7 +71,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.1alpha/particl-0.18.0.1-osx64.tar.gz",
               "type": "tar",
               "sha256": "03fef963efa4f53426dbbb7d7a7648da4ebf1f7db8c21931fb1b3cc8d4da1c42",
-              "bin": "particl-0.18.0.1alpha/bin/particld"
+              "bin": "particl-0.18.0.1/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -93,7 +93,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.1alpha/particl-0.18.0.1-win32.zip",
               "type": "zip",
               "sha256": "8fe57905ad58c5621ddc76e90b9387576cd84f2f5e10d683974754704c28d0de",
-              "bin": "particl-0.18.0.1alpha/bin/particld.exe"
+              "bin": "particl-0.18.0.1/bin/particld.exe"
             },
             "bin": "particld.exe",
             "commands": {
@@ -113,7 +113,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.1alpha/particl-0.18.0.1-win64.zip",
               "type": "zip",
               "sha256": "e175c420f8b325033f292d7b460e7612b4c27a2651dab48d5ce95bfac08f691d",
-              "bin": "particl-0.18.0.1alpha/bin/particld.exe"
+              "bin": "particl-0.18.0.1/bin/particld.exe"
             },
             "bin": "particld.exe",
             "commands": {
