@@ -237,16 +237,19 @@ body {
 
 .no-results {
   font-size: 18px;
-  color: darken($bg-shadow, 15%);
   text-transform: uppercase;
   text-align: center;
   padding: 170px 0;
   border: 2px dashed $bg-shadow;
   background: rgba($color-white, 0.5);
+  p {
+    @extend %lightest;
+  }
   button {
     margin-top: 12px;
   }
   .widget-help {
+    @extend %reset;
     margin: 0;
     text-transform: none;
     font-size: 12px;

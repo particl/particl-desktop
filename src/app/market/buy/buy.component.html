@@ -83,7 +83,7 @@
   <div *ngIf="favorites !== undefined && favorites.length != 0" class="grid-container">
     <ng-container *ngFor="let favorite of favorites">
 
-      <mat-card class="listing"><!-- fxFlex="0 0 calc(100% / 4 - 30px)" -->
+      <mat-card class="listing">
         <app-listing-item [listing]="favorite"></app-listing-item>
       </mat-card>
 
