@@ -19,11 +19,24 @@ import { TransactionBuilder } from './transaction-builder.model';
 export class SendService {
 
   log: any = Log.create('send.service');
-
+  public utxos: any = {
+    remainAmount: 0
+  };
   constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService,
               private dialog: MatDialog) {
+  }
 
+  listUnSpent(): void {
+    this.utxos.remainAmount = 0;
+    this._rpc.call('listunspent', [0]).subscribe(unspent => {
+      unspent.map(utxo => {
+        // Skipped colstaking addresses to calculate amount ?
+        if (!utxo.coldstaking_address || utxo.address) {
+          this.utxos.remainAmount += utxo.amount;
+        };
+      });
+    })
   }
 
   /* Sends a transaction */
@@ -102,6 +115,7 @@ export class SendService {
     // Truncate the address to 16 characters only
     const trimAddress = address.substring(0, 16) + '...';
     const txsId = json.substring(0, 45) + '...';
+    this.listUnSpent();
     this.flashNotification.open(`Succesfully sent ${amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
   }
 

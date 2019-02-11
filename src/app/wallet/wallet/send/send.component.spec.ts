@@ -15,7 +15,7 @@ import { SendService } from 'app/wallet/wallet/send/send.service';
 import { RpcService } from '../../../core/core.module';
 import { RpcMockService } from '../../../_test/core-test/rpc-test/rpc-mock.service';
 
-describe('SendComponent', () => {
+fdescribe('SendComponent', () => {
   let component: SendComponent;
   let fixture: ComponentFixture<SendComponent>;
 
