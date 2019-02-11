@@ -115,8 +115,7 @@ exports.start = function (wallets, doReindex = false) {
       child.stderr.on('data', data => {
         const err = data.toString('utf8');
         if (err.includes("-reindex") && attemptsToStart < maxAttempts) {
-          log.error('Corrupted block database detected, '
-          + 'restarting the daemon with the -reindex flag.');
+          log.error('Restarting the daemon with the -reindex flag.');
           attemptsToStart++;
           exports.start(wallets, true);
         }
