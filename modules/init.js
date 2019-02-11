@@ -59,7 +59,7 @@ daemonManager.on('status', (status, msg) => {
     multiwallet.get()
     // TODO: activate for prompting wallet
     // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
-    .then(chosenWallets => daemon.start(chosenWallets))
+    .then(chosenWallets => daemon.start(chosenWallets, true))
     .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
     // .then(()            => ipc.daemonReady(mainWindow.webContents))
