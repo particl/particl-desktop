@@ -102,6 +102,15 @@
 
 // ------ BUTTONS ------ //
 
+p.warning {
+  background: rgba($color-alert, 0.1);
+  margin: 24px -35px;
+  padding-left: 65px;
+  &::before {
+    left: 35px;
+  }
+}
+
 .action-buttons {
   margin-top: 24px;
   .left {
@@ -113,12 +122,6 @@
     button {
       margin-left: 8px;
     }
-  }
-  .warning {
-    color: #8a6d3b;
-    background-color: #fcf8e3;
-    border-color: #faebcc;
-    padding: 5px;
   }
 }
 

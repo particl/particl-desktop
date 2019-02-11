@@ -128,15 +128,16 @@
     </mat-card>
   </div>
 
+  <p class="warning" *ngIf="!canPublish">
+    <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
+  </p>
+
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
       <button mat-button (click)="backToSell()" color="warn">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
         Back to Listings
       </button>
-    </div>
-    <div class="center warning" *ngIf="!canPublish">
-      Maximum template size exceeded - try reduce image or text sizes
     </div>
     <div class="right">
       <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
