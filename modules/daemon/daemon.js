@@ -60,9 +60,10 @@ exports.restart = function (alreadyStopping) {
 
 }
 
-exports.start = function (wallets) {
+let attemptsToStart = 0;
+const maxAttempts = 10;
+exports.start = function (wallets, doReindex = false) {
   let options = _options.get();
-  let doReindex = false;
 
   if (+options.addressindex !== 1) {
     const daemonSettings = daemonConfig.getSettings();
@@ -112,6 +113,12 @@ exports.start = function (wallets) {
       // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
       child.stderr.on('data', data => {
+        const err = data.toString('utf8');
+        if (err.includes("-reindex") && attemptsToStart < maxAttempts) {
+          log.error('Restarting the daemon with the -reindex flag.');
+          attemptsToStart++;
+          exports.start(wallets, true);
+        }
         daemonData(data, console.log);
       });
 
