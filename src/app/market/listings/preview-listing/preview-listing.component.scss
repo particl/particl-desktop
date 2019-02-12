@@ -185,8 +185,6 @@ p.description {
   &.detailed {
     @extend %enable-select;
     white-space: pre-line;
-    column-count: 2;
-    column-gap: 30px;
   }
 }
 
