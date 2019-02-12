@@ -89,8 +89,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
       country:                    ['', [Validators.required]],
       basePrice:                  ['', [Validators.required, Validators.min(0)]],
       domesticShippingPrice:      ['', [Validators.required, Validators.min(0)]],
-      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]
-      quantity: ['', [Validators.required]]
+      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]],
+      quantity:                   ['', [Validators.required, Validators.min(1)]]
     });
 
     this.route.queryParams.take(1).subscribe(params => {
