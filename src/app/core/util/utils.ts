@@ -34,6 +34,14 @@ export class Amount {
   }
 
   /**
+   * Returns the integer part, with the correct signage;
+   * Similar to getIntegerPart() but preserves negative signage for number -1 < x < 1
+   */
+  public getIntegerPartAsString(): string {
+    return `${(this.amount < 0 ? '-' : '')}${Math.abs(Math.trunc(this.amount))}`;
+  }
+
+  /**
    * Returns fractional part.
    * e.g:
    * -25.9 -> '9'

@@ -163,10 +163,6 @@ function makeTray() {
       label: 'View',
       submenu: [
         {
-          label: 'Reload',
-          click() { mainWindow.webContents.reloadIgnoringCache(); }
-        },
-        {
           label: 'Open Dev Tools',
           click() { mainWindow.openDevTools(); }
         }

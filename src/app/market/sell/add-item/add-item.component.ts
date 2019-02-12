@@ -136,11 +136,30 @@ export class AddItemComponent implements OnInit, OnDestroy {
         failedImgs = true;
       } else {
         const reader = new FileReader();
-        reader.onload = _event => {
-          this.picturesToUpload.push(reader.result);
-          this.log.d('added picture', file.name);
-        };
-        reader.readAsDataURL(file);
+        reader.onloadend = (_event) => {
+          if (reader.readyState === 2) {
+            const res = <ArrayBuffer>reader.result;
+            const uint = new Uint8Array(res, 0, 4);
+            const bytes = [];
+            uint.forEach(byte => {
+              bytes.push(byte.toString(16));
+            })
+            const hex = bytes.join('').toUpperCase();
+            // TODO: add error message once all images processed indicating that 1 or more failed
+            //  Not added here, because this is is eventing on multiple objects
+            //  (using counters requires locks to ensure atomic counter updates)
+            if (this.isSupportedImageType(hex)) {
+              const dataReader = new FileReader();
+
+              dataReader.onload = _ev => {
+                this.picturesToUpload.push(<string>dataReader.result);
+                this.log.d('added picture', file.name);
+              }
+              dataReader.readAsDataURL(file);
+            }
+          }
+        }
+        reader.readAsArrayBuffer(file);
       }
     });
     if (failedImgs) {
@@ -503,6 +522,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
     return success;
   }
+
+  private isSupportedImageType(signature: string): boolean {
+    // 89504E47 === 'image/png'
+    // (FFD8) === 'image/jpeg'
+    return signature.startsWith('FFD8') || signature.startsWith('89504E47');
+  }
+
 
   openProcessingModal() {
     const dialog = this.dialog.open(ProcessingModalComponent, {

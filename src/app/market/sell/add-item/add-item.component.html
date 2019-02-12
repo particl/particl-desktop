@@ -128,6 +128,10 @@
     </mat-card>
   </div>
 
+  <p class="warning" *ngIf="!canPublish">
+    <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
+  </p>
+
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
       <button mat-button (click)="backToSell()" color="warn">
@@ -140,9 +144,9 @@
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save'}}
       </button>
-      <button [disabled]="!itemFormGroup?.valid || !canPublish"
+
+      <button [disabled]="!itemFormGroup?.valid"
               mat-raised-button color="primary"
-              matTooltip="{{ canPublish ? 'Save and put up for sale' : 'Maximum template size exceeded - try reduce image or text sizes'}}"
               (click)="saveAndPublish()"
               *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
