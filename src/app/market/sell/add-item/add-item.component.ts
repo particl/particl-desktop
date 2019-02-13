@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
@@ -23,6 +23,19 @@ import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { MatDialog } from '@angular/material';
+
+
+class CurrencyMinValidator {
+  static validValue(fc: FormControl){
+    const amount = +fc.value;
+    if (amount) {
+      if (amount < 1e-08) {
+        return ({validUsername: true});
+      }
+    }
+    return (null);
+  }
+}
 
 
 @Component({
@@ -87,9 +100,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(1000)]],
       category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required, Validators.min(0)]],
-      domesticShippingPrice:      ['', [Validators.required, Validators.min(0)]],
-      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]
+      basePrice:                  ['', [Validators.required, Validators.min(0), CurrencyMinValidator.validValue]],
+      domesticShippingPrice:      ['', [Validators.required, Validators.min(0), CurrencyMinValidator.validValue]],
+      internationalShippingPrice: ['', [Validators.required, Validators.min(0), CurrencyMinValidator.validValue]]
     });
 
     this.route.queryParams.take(1).subscribe(params => {
@@ -410,15 +423,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       return false;
     }
 
-  }
-
-  decimalValidator(event: any) {
-    // Decimal character validation
-
-    const price = event.target.value.split('.');
-    if (price && price.length > 1 && price[1].length > 8) {
-      event.target.value = parseFloat(event.target.value).toFixed(8);
-    }
   }
 
   public async upsert(): Promise<void> {
