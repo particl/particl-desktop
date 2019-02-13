@@ -85,8 +85,12 @@ export class SendComponent implements OnInit {
   }
 
   /** Get current account balance (Public / Blind / Anon) */
-  getBalance(account: TxType): number {
+  availableBalance(account: TxType): number {
     const balance = this.txTypeToBalanceType(account);
+
+    if (balance === 'balance') {
+      return new Amount(this.sendService.availableBalance, 8).getAmount();
+    }
     return this._rpcState.get('getwalletinfo')[balance] || 0;
   }
 
@@ -142,7 +146,7 @@ export class SendComponent implements OnInit {
       return;
     }
     // is amount in range of 0...CurrentBalance
-    this.send.validAmount = (this.send.amount <= this.remainAmount(this.send.input) && this.send.amount > 0);
+    this.send.validAmount = (this.send.amount <= this.availableBalance(this.send.input) && this.send.amount > 0);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
@@ -189,13 +193,6 @@ export class SendComponent implements OnInit {
 
   onSubmit(): void {
     this.modals.unlock({timeout: 30}, (status) => this.openSendConfirmationModal());
-  }
-  // Actual amount excluding escrow lock.
-  remainAmount(input: TxType): number {
-    if (input === 'part') {
-      return new Amount(this.sendService.utxos.remainAmount, 8).getAmount();
-    }
-    return this.getBalance(input)
   }
 
   setInputOutput(txType: string, payType: string ): void {
@@ -350,10 +347,10 @@ export class SendComponent implements OnInit {
   }
 
   sendAllBalance(): void {
-    this.send.amount = !this.send.subtractFeeFromAmount ? this.remainAmount(this.send.input) : null;
+    this.send.amount = !this.send.subtractFeeFromAmount ? this.availableBalance(this.send.input) : null;
   }
 
   updateAmount(): void {
-    this.send.amount = (this.send.subtractFeeFromAmount) ? this.remainAmount(this.send.input) : null;
+    this.send.amount = (this.send.subtractFeeFromAmount) ? this.availableBalance(this.send.input) : null;
   }
 }

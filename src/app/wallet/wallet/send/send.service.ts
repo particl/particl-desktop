@@ -19,20 +19,19 @@ import { TransactionBuilder } from './transaction-builder.model';
 export class SendService {
 
   log: any = Log.create('send.service');
-  public utxos: any = {
-    remainAmount: 0
-  };
+  public availableBalance: number = 0;
+
   constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService,
               private dialog: MatDialog) {
   }
 
   listUnSpent(): void {
-    this.utxos.remainAmount = 0;
+    this.availableBalance = 0;
     this._rpc.call('listunspent', [0]).subscribe(unspent => {
       for (let ut = 0; ut < unspent.length; ut++) {
         if (!unspent[ut].coldstaking_address || unspent[ut].address) {
-          this.utxos.remainAmount += unspent[ut].amount;
+          this.availableBalance += unspent[ut].amount;
         };
       }
     })
