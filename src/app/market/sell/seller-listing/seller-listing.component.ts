@@ -25,7 +25,6 @@ export class SellerListingComponent {
 
   public status: Status = new Status();
   log: any = Log.create('seller-listing.component');
-  expirationTime: number;
   @Input() listing: Listing;
 
   constructor(
@@ -65,11 +64,10 @@ export class SellerListingComponent {
 
     this.template.size(template.id).subscribe(res => {
       if (res.fits) {
-        this.modals.openListingExpiryModal((expirationTime) => {
-          this.expirationTime = expirationTime;
+        this.modals.openListingExpiryModal({template: template}, (expirationTime: number) => {
           this.modals.unlock({ timeout: 30 }, async (status) => {
             this.log.d('posting template id: ', template.id);
-            await this.template.post(template, 1, this.expirationTime).toPromise();
+            await this.template.post(template, 1, expirationTime).toPromise().catch(err => this.snackbar.open(err));
           });
         });
       } else {

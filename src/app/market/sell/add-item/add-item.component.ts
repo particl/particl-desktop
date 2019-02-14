@@ -48,7 +48,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   fileInput: any;
   picturesToUpload: string[];
   featuredPicture: number = 0;
-  expiration: number = 0;
   selectedCountry: Country;
   selectedCategory: Category;
   canPublish: boolean = false;
@@ -276,36 +275,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.selectedCountry = country;
   }
 
-  private async callPublish(expiryTime: number): Promise<void> {
-    this.openProcessingModal();
-    this.expiration = expiryTime;
-    this.log.d('Saving and publishing the listing.');
-    await this.upsert().then(
-      () => {
-        if (!this.canPublish) {
-          throw new Error('Message upload size exceeded');
-        }
-
-        this.modals.unlock({timeout: 30}, (status) => {
-          this.template.post(this.preloadedTemplate, 1, this.expiration)
-            .subscribe(listing => {
-              this.snackbar.open('Succesfully added Listing!');
-              this.log.d('Sucecssfully added listing: ', listing);
-              this.backToSell();
-            },
-            (err) => {
-              this.snackbar.open(err);
-            });
-        }, (err) => {
-          this.dialog.closeAll()
-        });
-      }
-    ).catch(err => {
-      this.dialog.closeAll();
-      this.snackbar.open(err);
-    });
-  }
-
   setDefaultCategory(category: Category) {
     this.selectedCategory = category;
   }
@@ -456,12 +425,49 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveAndPublish() {
+  async saveAndPublish() {
     if (!this.validate()) {
       return;
     };
 
-    this.modals.openListingExpiryModal(async (expiryTime: number) => await this.callPublish(expiryTime));
+    let success = true;
+
+    this.log.d('Saving and publishing the listing.');
+    // Oh look, what a mess ahead...
+    // @TODO refactor this so that the modal unlock can occur in the openListingModal() target component,
+    //    WITHOUT inducing circular dependencies.
+    this.openProcessingModal();
+    await this.upsert().then(
+      () => {
+        if (!this.canPublish) {
+          throw new Error('Message upload size exceeded');
+        }
+      }
+    ).then(
+      () => {
+        // Close the loading modal
+        this.dialog.closeAll();
+      }
+    ).then(
+      () => {
+        this.modals.unlock({timeout: 30},
+          (status) => {
+            this.modals.openListingExpiryModal({template: this.preloadedTemplate}, (expiration: number) => {
+              this.postTemplate(expiration);
+            });
+          },
+          (err) => {
+            this.dialog.closeAll();
+          },
+          false
+        );
+      }
+    ).catch(err => {
+      this.dialog.closeAll();
+      success = false;
+      this.snackbar.open(err);
+    });
+
   }
 
   onCountryChange(country: Country): void {
@@ -517,6 +523,29 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // 89504E47 === 'image/png'
     // (FFD8) === 'image/jpeg'
     return signature.startsWith('FFD8') || signature.startsWith('89504E47');
+  }
+
+  private postTemplate(expiryDays: number) {
+    this.modals.unlock({timeout: 30},
+      (status) => {
+        this.openProcessingModal();
+        this.template.post(this.preloadedTemplate, 1, expiryDays)
+          .subscribe(
+            (listing) => {
+              this.dialog.closeAll();
+              this.snackbar.open('Succesfully added Listing!');
+              this.log.d('Sucecssfully added listing: ', listing);
+              this.backToSell();
+            },
+            (err) => {
+              this.snackbar.open(err);
+            }
+          );
+      },
+      (err) => {
+        this.dialog.closeAll();
+      }
+    );
   }
 
 
