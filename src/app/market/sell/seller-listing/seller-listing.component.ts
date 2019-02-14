@@ -88,7 +88,7 @@ export class SellerListingComponent {
             (status) => {
               this.modals.openListingExpiryModal({template: template}, (expiration: number) => {
                 this.modals.unlock({timeout: 30},
-                  async (status) => {
+                  async () => {
                     this.openProcessingModal();
                     this.log.d('posting template id: ', template.id);
                     await this.template.post(template, 1, expiration)
