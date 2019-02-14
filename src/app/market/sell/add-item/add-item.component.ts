@@ -27,13 +27,14 @@ import { MatDialog } from '@angular/material';
 
 class CurrencyMinValidator {
   static validValue(fc: FormControl){
-    const amount = +fc.value;
-    if (amount) {
-      if (amount < 1e-08) {
-        return ({validUsername: true});
+    const amount: number = +fc.value;
+    if ( amount >= 0 ) {
+      if (amount > +amount.toFixed(8) ) {
+        return ({ validAmount: false });
       }
+      return (null);
     }
-    return (null);
+    return ({ validAmount: false });
   }
 }
 
@@ -100,9 +101,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(1000)]],
       category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required, Validators.min(0), CurrencyMinValidator.validValue]],
-      domesticShippingPrice:      ['', [Validators.required, Validators.min(0), CurrencyMinValidator.validValue]],
-      internationalShippingPrice: ['', [Validators.required, Validators.min(0), CurrencyMinValidator.validValue]]
+      basePrice:                  ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
+      domesticShippingPrice:      ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
+      internationalShippingPrice: ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]]
     });
 
     this.route.queryParams.take(1).subscribe(params => {
@@ -247,9 +248,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
         shortDescription: '',
         longDescription: '',
         category: 0,
-        basePrice: 0,
-        domesticShippingPrice: 0,
-        internationalShippingPrice: 0,
+        basePrice: '0',
+        domesticShippingPrice: '0',
+        internationalShippingPrice: '0',
         country: ''
       };
 
@@ -265,9 +266,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.setDefaultCountry(country);
       this.setDefaultCategory(template.category);
 
-      t.basePrice = template.basePrice.getAmount();
-      t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
-      t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
+      t.basePrice = template.basePrice.getAmountAsString();
+      t.domesticShippingPrice = template.domesticShippingPrice.getAmountAsString();
+      t.internationalShippingPrice = template.internationalShippingPrice.getAmountAsString();
       this.itemFormGroup.patchValue(t);
 
       if (isCloned) {
@@ -383,9 +384,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       // update payment
       await this.payment.update(
         this.templateId,
-        item.basePrice,
-        item.domesticShippingPrice,
-        item.internationalShippingPrice
+        +item.basePrice,
+        +item.domesticShippingPrice,
+        +item.internationalShippingPrice
       ).toPromise();
     }
 
@@ -397,9 +398,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   isPaymentInfoUpdated(item: any): boolean {
     return (
-      this.preloadedTemplate.basePrice.getAmount() !== item.basePrice ||
-      this.preloadedTemplate.domesticShippingPrice.getAmount() !== item.domesticShippingPrice ||
-      this.preloadedTemplate.internationalShippingPrice.getAmount() !== item.internationalShippingPrice
+      this.preloadedTemplate.basePrice.getAmount() !== +item.basePrice ||
+      this.preloadedTemplate.domesticShippingPrice.getAmount() !== +item.domesticShippingPrice ||
+      this.preloadedTemplate.internationalShippingPrice.getAmount() !== +item.internationalShippingPrice
     )
   }
 
@@ -417,12 +418,30 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   numericValidator(event: any) {
-    // Special character validation
     const pasted = String(event.clipboardData ? event.clipboardData.getData('text') : '' );
-    if (this.keys.includes(event.key) || pasted.split('').find((c) =>  this.keys.includes(c))) {
+    const key = String(event.key || '');
+
+    const value = `${pasted}${key}${String(event.target.value)}`;
+    let valid = true;
+    let sepFound = false;
+    for (let ii = 0; ii < value.length; ii++) {
+      if (value.charAt(ii) === '.') {
+        if (sepFound) {
+          valid = false;
+          break;
+        }
+        sepFound = true;
+        continue;
+      }
+      const charCode = value.charCodeAt(ii);
+      if ( (charCode < 48) || (charCode > 57)) {
+        valid = false;
+        break;
+      }
+    }
+    if (!valid) {
       return false;
     }
-
   }
 
   public async upsert(): Promise<void> {

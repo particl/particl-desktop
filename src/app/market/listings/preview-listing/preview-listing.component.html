@@ -51,7 +51,7 @@
       <p class="summary description">
         {{ data?.listing?.shortDescription }}
       </p>
-      
+
       <table class="meta">
         <tr class="expires-soon" *ngIf="data?.listing?.isAboutToExpire">
           <th class="title">
@@ -68,7 +68,7 @@
             Shipping
           </th>
           <td class="value">
-            {{ data?.listing?.domesticShippingPrice.noExponentialAmount() }} &ndash; {{ data?.listing?.internationalShippingPrice.noExponentialAmount() }} <small>PART</small>
+            {{ data?.listing?.domesticShippingPrice.getAmountAsString() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmountAsString() }} <small>PART</small>
           </td>
         </tr>
         <tr>
@@ -161,7 +161,7 @@
           </tr>
           <tr>
             <th>
-              Worldwide 
+              Worldwide
               <small>Shipping carrier</small>
             </th>
             <!-- international shipping -->
@@ -207,7 +207,7 @@
         </tbody>
       </table><!-- .shipping-escrow -->
     </div><!-- .tab-content.shipping-->
-    
+
     <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
       <div class="no-results">
         Comments coming soon™

@@ -10,10 +10,8 @@ export class Amount {
     return this.amount;
   }
 
-  public noExponentialAmount() {
+  public getAmountAsString() {
     const amount = this.amount.toFixed(this.maxRoundingDigits).replace(/0+$/, '');
-
-    // remove the doc if decimals chars are not exist.
     return amount[amount.length - 1] === '.' ? amount.replace('.', '') : amount;
   }
 
@@ -52,7 +50,7 @@ export class Amount {
    */
   public getFractionalPart(): string {
     if (this.ifDotExist()) {
-      return (this.noExponentialAmount()).split('.')[1];
+      return (this.getAmountAsString()).split('.')[1];
     }
     return '';
   }
@@ -89,7 +87,7 @@ export class Amount {
   }
 
   ifDotExist(): boolean {
-    return (this.noExponentialAmount().toString()).indexOf('.') !== -1;
+    return (this.getAmountAsString().toString()).indexOf('.') !== -1;
   }
 
 
