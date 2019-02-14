@@ -26,7 +26,7 @@ import { MatDialog } from '@angular/material';
 
 
 class CurrencyMinValidator {
-  static validValue(fc: FormControl){
+  static validValue(fc: FormControl) {
     const amount: number = +fc.value;
     if ( amount >= 0 ) {
       if (amount > +amount.toFixed(8) ) {
