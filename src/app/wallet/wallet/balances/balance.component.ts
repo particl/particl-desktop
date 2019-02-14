@@ -17,7 +17,7 @@ export class BalanceComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create(`balance.component ${this.type}`);
   private destroyed: boolean = false;
-
+  private availableBal: number = 0;
   private _balance: Amount = new Amount(0);
 
   get balance() {
@@ -27,11 +27,12 @@ export class BalanceComponent implements OnInit, OnDestroy {
   constructor(private _rpcState: RpcStateService) { }
 
   ngOnInit() {
+
     this._rpcState.observe('getwalletinfo', this.type)
-    .takeWhile(() => !this.destroyed)
-    .subscribe(
-      balance => this._balance = new Amount(balance || 0, 4),
-      error => this.log.error('Failed to get balance, ', error));
+      .takeWhile(() => !this.destroyed)
+      .subscribe(
+        balance => this.listUnSpent(balance),
+        error => this.log.error('Failed to get balance, ', error));
   }
 
   /* UI */
@@ -40,6 +41,8 @@ export class BalanceComponent implements OnInit, OnDestroy {
     switch (this.type) {
       case 'total_balance':
         return 'TOTAL BALANCE';
+      case 'actual_balance':
+        return 'ACTUAL BALANCE';
       case 'balance':
         return 'PUBLIC BALANCE';
       case 'anon_balance':
@@ -51,6 +54,21 @@ export class BalanceComponent implements OnInit, OnDestroy {
     }
 
     return this.type;
+  }
+
+  listUnSpent(balance: number): void {
+    this._rpcState.observe('listunspent')
+      .takeWhile(() => !this.destroyed)
+      .subscribe(unspent => {
+          this.availableBal = 0;
+          for (let ut = 0; ut < unspent.length; ut++) {
+            if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+              this.availableBal += unspent[ut].amount;
+            };
+          }
+          this._balance = new Amount((this.type === 'actual_balance' ? this.availableBal : balance) || 0, 4)
+        },
+        error => this.log.error('Failed to get balance, ', error));
   }
 
   ngOnDestroy() {

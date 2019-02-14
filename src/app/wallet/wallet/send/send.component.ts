@@ -38,6 +38,7 @@ export class SendComponent implements OnInit {
   advanced: boolean = false;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
+  private availableBal: number = 0;
 
   constructor(
     private sendService: SendService,
@@ -66,7 +67,17 @@ export class SendComponent implements OnInit {
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
 
-    this.sendService.listUnSpent();
+    this._rpcState.observe('listunspent')
+      .subscribe(
+        unspent => {
+          this.availableBal = 0;
+          for (let ut = 0; ut < unspent.length; ut++) {
+            if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+              this.availableBal += unspent[ut].amount;
+            };
+          }
+        },
+        error => this.log.error('Failed to get balance, ', error));
   }
 
 
@@ -89,7 +100,7 @@ export class SendComponent implements OnInit {
     const balance = this.txTypeToBalanceType(account);
 
     if (balance === 'balance') {
-      return new Amount(this.sendService.availableBalance, 8).getAmount();
+      return new Amount(this.availableBal, 8).getAmount();
     }
     return this._rpcState.get('getwalletinfo')[balance] || 0;
   }

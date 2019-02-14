@@ -19,22 +19,10 @@ import { TransactionBuilder } from './transaction-builder.model';
 export class SendService {
 
   log: any = Log.create('send.service');
-  public availableBalance: number = 0;
 
   constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService,
               private dialog: MatDialog) {
-  }
-
-  listUnSpent(): void {
-    this.availableBalance = 0;
-    this._rpc.call('listunspent', [0]).subscribe(unspent => {
-      for (let ut = 0; ut < unspent.length; ut++) {
-        if (!unspent[ut].coldstaking_address || unspent[ut].address) {
-          this.availableBalance += unspent[ut].amount;
-        };
-      }
-    })
   }
 
   /* Sends a transaction */
@@ -113,7 +101,6 @@ export class SendService {
     // Truncate the address to 16 characters only
     const trimAddress = address.substring(0, 16) + '...';
     const txsId = json.substring(0, 45) + '...';
-    this.listUnSpent();
     this.flashNotification.open(`Succesfully sent ${amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
   }
 
