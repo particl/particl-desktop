@@ -179,7 +179,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "4.0.3",
+    "electron": "4.0.5",
     "electron-builder": "^20.0.4",
     "htmlhint": "^0.9.13",
     "iso3166-2-db": "^2.2.1",
