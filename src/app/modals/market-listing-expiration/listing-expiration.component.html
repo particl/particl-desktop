@@ -19,8 +19,10 @@
     </mat-form-field>
     <div class="est-fee" fxFlex="50%">
       <span *ngIf="expiration">Approximate listing fee:
-        <br> {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
+        <br>
       </span>
+      <span *ngIf="expiration && txFee">{{ txFee }} PART</span>
+      <span *ngIf="expiration && !txFee">unknown</span>
     </div>
   </div>
   <p class="widget-help">
