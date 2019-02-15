@@ -10,6 +10,11 @@ export class Amount {
     return this.amount;
   }
 
+  public getAmountAsString() {
+    const amount = this.amount.toFixed(this.maxRoundingDigits).replace(/0+$/, '');
+    return amount[amount.length - 1] === '.' ? amount.replace('.', '') : amount;
+  }
+
   public getAmountWithFee(fee: number) {
     const total = this.amount + fee;
     return this.truncateToDecimals(total, 8);
@@ -45,7 +50,7 @@ export class Amount {
    */
   public getFractionalPart(): string {
     if (this.ifDotExist()) {
-      return (this.getAmount().toString()).split('.')[1];
+      return (this.getAmountAsString()).split('.')[1];
     }
     return '';
   }
@@ -82,7 +87,7 @@ export class Amount {
   }
 
   ifDotExist(): boolean {
-    return (this.getAmount().toString()).indexOf('.') !== -1;
+    return (this.getAmountAsString().toString()).indexOf('.') !== -1;
   }
 
 
