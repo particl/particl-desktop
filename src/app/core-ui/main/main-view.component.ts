@@ -10,6 +10,10 @@ import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
 import { UpdaterService } from 'app/core/updater/updater.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
+import { UserMessageService } from 'app/core/market/user-messages/user-message.service';
+import { AlphaMainnetWarningComponent } from 'app/modals/alpha-mainnet-warning/alpha-mainnet-warning.component';
+import { UserMessage, UserMessageType } from 'app/core/market/user-messages/user-message.model'
+import { isPrerelease, isMainnetRelease } from 'app/core/util/utils';
 
 /*
  * The MainView is basically:
@@ -39,6 +43,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   daemonVersion: string;
   unSubscribeTimer: any;
   time: string = '5:00';
+  showAnnouncements: boolean = false;
   public unlocked_until: number = 0;
 
   constructor(
@@ -49,6 +54,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private _rpcState: RpcStateService,
     private _modalsService: ModalsHelperService,
     private dialog: MatDialog,
+    private messagesService: UserMessageService,
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
@@ -115,6 +121,26 @@ export class MainViewComponent implements OnInit, OnDestroy {
     /* check if testnet -> block explorer url */
     this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
       .subscribe(chain => this.testnet = chain === 'test');
+
+    this.messagesService.message.subscribe((message) => {
+      if (message) {
+        this.showAnnouncements = true;
+      }
+    });
+
+    // TODO - find better location to perform this check...
+    if (isMainnetRelease() && isPrerelease()) {
+      const alphaMessage = {
+        text: 'The Particl Marketplace alpha is still in development and not 100% private yet - use it at your own risk!',
+        dismissable: false,
+        timeout: 0,
+        messageType: UserMessageType.ALERT,
+        action: () => { this.dialog.open(AlphaMainnetWarningComponent); },
+        actionLabel: 'Click here to read all the details first!'
+      } as UserMessage;
+      this.messagesService.addMessage(alphaMessage);
+    }
+
   }
 
   ngOnDestroy() {

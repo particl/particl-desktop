@@ -10,6 +10,7 @@ import { CountryListService } from 'app/core/market/api/countrylist/countrylist.
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { take, takeWhile } from 'rxjs/operators';
+import { throttle } from 'lodash';
 
 
 interface ISorting {
@@ -42,6 +43,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   search: string;
   flagged: boolean = false;
   listingServiceSubcription: any;
+  private resizeEventer: any;
   // categories: FormControl = new FormControl();
 
   _rootCategoryList: Category = new Category({});
@@ -83,12 +85,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
     if (this.listingService.cache.selectedCountry) {
       this.selectedCountry = this.listingService.cache.selectedCountry
     }
+    this.getScreenSize();
   }
 
   ngOnInit() {
     this.log.d('overview created');
     this.loadCategories();
     this.loadPage(0);
+    this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
+    try {
+      window.addEventListener('resize', this.resizeEventer);
+    } catch (err) { }
   }
 
   loadCategories() {
@@ -217,7 +224,25 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.loadPage(0, true);
   }
 
+  getScreenSize() {
+    const currentMaxPerPage = this.pagination.maxPerPage;
+    const newMaxPerPage = window.innerHeight > 1330 ? 20 : 10;
+    const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;
+
+    if (isLarger) {
+      // Load more pages to fill the screen
+      // maxPages 2 -> 3, ensure no pages are deleted when loading
+      // the next page.
+      this.pagination.maxPages = 3;
+      this.pagination.maxPerPage = newMaxPerPage;
+      this.loadNextPage();
+    }
+  }
+
   ngOnDestroy() {
     this.destroyed = true;
+    try {
+      window.removeEventListener('resize', this.resizeEventer);
+    } catch (err) { }
   }
 }

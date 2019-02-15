@@ -8,7 +8,6 @@
   &:hover {
     .mat-icon {
       color: darken($color, 1.5%);
-      transform: rotate(-10deg);
     }
   }
   @include break(l) {

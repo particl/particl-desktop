@@ -75,7 +75,7 @@
         @extend %enable-select;
         color: $text-muted;
         white-space: pre-line;
-        word-break: break-all;
+        word-break: break-word;
       }
       /*
       .authors {

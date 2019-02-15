@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import * as _ from 'lodash';
@@ -6,8 +6,8 @@ import * as _ from 'lodash';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { Template } from 'app/core/market/api/template/template.model';
 import { take } from 'rxjs/operators';
+import { throttle } from 'lodash';
 
 interface IPage {
   pageNumber: number,
@@ -19,12 +19,13 @@ interface IPage {
   templateUrl: './sell.component.html',
   styleUrls: ['./sell.component.scss']
 })
-export class SellComponent implements OnInit {
+export class SellComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
   public isPageLoading: boolean = false;
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['listings', 'orders', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
+  private resizeEventer: any;
 
   filters: any = {
     search:   '',
@@ -75,11 +76,17 @@ export class SellComponent implements OnInit {
     public dialog: MatDialog,
     private template: TemplateService,
     private listingService: ListingService,
-  ) {}
+  ) {
+    this.getScreenSize();
+  }
 
   ngOnInit() {
     this.isPageLoading = true;
     this.loadPage(0);
+    this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
+    try {
+      window.addEventListener('resize', this.resizeEventer);
+    } catch (err) { }
   }
 
   addItem(id?: number, clone?: boolean) {
@@ -192,4 +199,24 @@ export class SellComponent implements OnInit {
     this.pages[pageIndex].listings.splice(listingIndex, 1);
   }
 
+  getScreenSize() {
+    const currentMaxPerPage = this.pagination.maxPerPage;
+    const newMaxPerPage = window.innerHeight > 1330 ? 20 : 10;
+    const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;
+
+    if (isLarger) {
+      // Load more pages to fill the screen
+      // maxPages 2 -> 3, ensure no pages are deleted when loading
+      // the next page.
+      this.pagination.maxPages = 3;
+      this.pagination.maxPerPage = newMaxPerPage;
+      this.loadNextPage();
+    }
+  }
+
+  ngOnDestroy() {
+    try {
+      window.removeEventListener('resize', this.resizeEventer);
+    } catch (err) { }
+  }
 }

@@ -16,6 +16,7 @@ export class ClientVersionService {
 
   constructor(private http: HttpClient) { }
 
+
   getCurrentVersion(): Observable<ClientVersionRelease> {
     return this.http.get(this.releasesUrl).pipe(
       map(response => response as ClientVersionRelease)

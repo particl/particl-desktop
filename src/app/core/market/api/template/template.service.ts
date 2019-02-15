@@ -72,9 +72,14 @@ export class TemplateService {
     ));
   }
 
-  post(template: Template, marketId: number, expTime: number) {
-    return this.market.call('template', ['post', template.id, expTime, marketId])
-    .pipe(tap(t => this.listingCache.posting(template)));
+  post(template: Template, marketId: number, expTime: number, estimateFee: boolean = false) {
+    return this.market.call('template', ['post', template.id, expTime, marketId, estimateFee])
+    .pipe(tap(t => {
+      if (!estimateFee) {
+        this.listingCache.posting(template)
+      }
+      return t;
+    }));
   }
 
   size(listingTemplateId: number) {

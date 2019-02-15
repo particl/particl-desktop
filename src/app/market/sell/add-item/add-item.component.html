@@ -103,7 +103,7 @@
       <!-- TODO: add another input for fiat value and inter-connect the two: -->
       <mat-form-field class="full-width">
         <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" formControlName="basePrice" type="number">
+        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" formControlName="basePrice" type="text">
         <span matSuffix>PART</span>
       </mat-form-field>
 
@@ -112,12 +112,12 @@
           <input matInput placeholder="Quantity">
         </mat-form-field-->
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *" formControlName="domesticShippingPrice" type="number">
+          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *" formControlName="domesticShippingPrice" type="text">
           <span matSuffix>PART</span>
         </mat-form-field>
         <mat-form-field fxFlex="50%" class="auto-width">
           <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *" formControlName="internationalShippingPrice"
-                 type="number">
+                 type="text">
           <span matSuffix>PART</span>
         </mat-form-field>
       </div>
@@ -127,6 +127,10 @@
       </p>
     </mat-card>
   </div>
+
+  <p class="warning" *ngIf="!canPublish">
+    <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
+  </p>
 
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
@@ -140,9 +144,9 @@
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
         {{ isExistingTemplate() ? 'Update' : 'Save'}}
       </button>
-      <button [disabled]="!itemFormGroup?.valid || !canPublish"
+
+      <button [disabled]="!itemFormGroup?.valid"
               mat-raised-button color="primary"
-              matTooltip="{{ canPublish ? 'Save and put up for sale' : 'Maximum template size exceeded - try reduce image or text sizes'}}"
               (click)="saveAndPublish()"
               *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>

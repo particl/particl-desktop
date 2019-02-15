@@ -1,0 +1,13 @@
+<!-- Alpha mainnet warning -->
+<mat-card class="notification" [ngClass]="message?.messageType">
+  <mat-card-title class="title" *ngIf="message">
+    {{ message.text }}
+    <button *ngIf="message.action"
+            class="button"
+            mat-button color="{{message?.messageType === UserMessageType.INFO ? 'primary' : 'warn' }}"
+            (click)="message.action()">
+      <mat-icon fontSet="partIcon" fontIcon="part-alert" *ngIf="message.messageType === UserMessageType.ALERT"></mat-icon>
+      {{ message.actionLabel || 'Click here' }}
+    </button>
+  </mat-card-title>
+</mat-card><!-- .notification -->
