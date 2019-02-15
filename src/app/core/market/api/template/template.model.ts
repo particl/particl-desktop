@@ -187,7 +187,7 @@ export class Template {
   get isAboutToExpire(): Boolean {
 
     // 86400000 m seconds in one day.
-    return (this.object.expiredAt < +new Date() && ((this.object.expiredAt - +new Date()) <= 86400000));
+    return (this.object.expiredAt > +new Date() && ((this.object.expiredAt - +new Date()) <= 86400000));
   }
 
   get expireIn(): String {
