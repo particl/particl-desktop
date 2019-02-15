@@ -1,7 +1,7 @@
 {
   "clients": {
     "particld": {
-      "version": "0.18.0.2alpha",
+      "version": "0.18.0.2",
       "platforms": {
         "linux": {
           "arm": {
@@ -9,7 +9,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.2alpha/particl-0.18.0.2-arm-linux-gnueabihf.tar.gz",
               "type": "tar",
               "sha256": "e8d16e7c4dd76fb63406ad89d6dec02aa7617ca172b23821e5d27b267a59331d",
-              "bin": "particl-0.18.0.2alpha/bin/particld"
+              "bin": "particl-0.18.0.2/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -19,7 +19,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.18.0.2alpha"
+                  "0.18.0.2"
                 ]
               }
             }
@@ -29,7 +29,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.2alpha/particl-0.18.0.2-i686-pc-linux-gnu_nousb.tar.gz",
               "type": "tar",
               "sha256": "0754fb65c2b88d1bda1f25f7e8188e1a77b6c1f7e506ffb02b02e6c513ecb75d",
-              "bin": "particl-0.18.0.2alpha/bin/particld"
+              "bin": "particl-0.18.0.2/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -39,7 +39,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.18.0.2alpha"
+                  "0.18.0.2"
                 ]
               }
             }
@@ -49,7 +49,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.2alpha/particl-0.18.0.2-x86_64-linux-gnu_nousb.tar.gz",
               "type": "tar",
               "sha256": "94941f546236cf6df3c25923d84f7611be8169d52ad8a1a1622f7fa838aa733e",
-              "bin": "particl-0.18.0.2alpha/bin/particld"
+              "bin": "particl-0.18.0.2/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -59,7 +59,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.18.0.2alpha"
+                  "0.18.0.2"
                 ]
               }
             }
@@ -71,7 +71,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.2alpha/particl-0.18.0.2-osx64.tar.gz",
               "type": "tar",
               "sha256": "ac2465e76d14ec0c09efe277dce2b31c6f8d134bba1c3b31b59fd77256b06b60",
-              "bin": "particl-0.18.0.2alpha/bin/particld"
+              "bin": "particl-0.18.0.2/bin/particld"
             },
             "bin": "particld",
             "commands": {
@@ -81,7 +81,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.18.0.2alpha"
+                  "0.18.0.2"
                 ]
               }
             }
@@ -93,7 +93,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.2alpha/particl-0.18.0.2-win32.zip",
               "type": "zip",
               "sha256": "092cc4a82752a0a5702d3b042190619b5a7a7ea6743e632b948acb308711ad38",
-              "bin": "particl-0.18.0.2alpha/bin/particld.exe"
+              "bin": "particl-0.18.0.2/bin/particld.exe"
             },
             "bin": "particld.exe",
             "commands": {
@@ -103,7 +103,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.18.0.2alpha"
+                  "0.18.0.2"
                 ]
               }
             }
@@ -113,7 +113,7 @@
               "url": "https://github.com/particl/particl-core/releases/download/v0.18.0.2alpha/particl-0.18.0.2-win64.zip",
               "type": "zip",
               "sha256": "e9a7d15d902a922de331e1fb23f5aabce2abd7bd427192d54c663b9262ea91e1",
-              "bin": "particl-0.18.0.2alpha/bin/particld.exe"
+              "bin": "particl-0.18.0.2/bin/particld.exe"
             },
             "bin": "particld.exe",
             "commands": {
@@ -123,7 +123,7 @@
                 ],
                 "output": [
                   "Particl Core Daemon",
-                  "0.18.0.2alpha"
+                  "0.18.0.2"
                 ]
               }
             }
