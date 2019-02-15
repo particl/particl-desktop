@@ -571,6 +571,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
               this.backToSell();
             },
             (err) => {
+              this.dialog.closeAll();
               this.snackbar.open(err);
             }
           );
