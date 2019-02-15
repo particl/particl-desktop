@@ -29,7 +29,7 @@ class CurrencyMinValidator {
   static validValue(fc: FormControl) {
     const amount: number = +fc.value;
     if ( amount >= 0 ) {
-      if (fc.value.length > +amount.toFixed(8).length ) {
+      if ( (fc.value.length > +amount.toFixed(8).length) || (amount > 1e06) ) {
         return ({ validAmount: false });
       }
       return (null);
