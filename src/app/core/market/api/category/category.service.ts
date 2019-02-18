@@ -13,7 +13,12 @@ export class CategoryService {
   constructor(private market: MarketService) {
     this.market.call('category', ['list']).subscribe(
       resp => {
-        this.categories.next(new Category(resp))
+        if (resp && resp.name) {
+          this.categories.next(new Category(resp));
+        }
+      },
+      () => {
+        // Failed to fetch categories
       }
     )
   }

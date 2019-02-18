@@ -5,6 +5,7 @@ import { ProposalsService } from './proposals.service';
 
 import { MarketService } from 'app/core/market/market.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { AddressService } from 'app/core/market/api/profile/address/address.service';
 import { MockMarketService } from 'app/_test/core-test/market-test/market.mockservice';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
@@ -24,6 +25,7 @@ describe('ProposalsService', async () => {
           provide: MarketService, useClass: MockMarketService
         },
         ProposalsService,
+        MarketStateService,
         AddressService,
         ProfileService,
       ]
