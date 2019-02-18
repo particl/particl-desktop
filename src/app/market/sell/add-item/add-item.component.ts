@@ -215,7 +215,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private subToCategories() {
     this.category.list()
-      .take(1)
       .subscribe(list => this.updateCategories(list));
   }
 

@@ -43,7 +43,7 @@
     "travis:linux": "electron-builder -l && yarn run checksum",
     "travis:win64": "electron-builder --win --x64 && yarn run checksum",
     "travis:win32": "electron-builder --win --ia32 && yarn run checksum",
-    "travis:test": "ng test --single-run --code-coverage",
+    "travis:test": "ng test --single-run --code-coverage --prod",
     "start": "yarn run start:electron:fast"
   },
   "productName": "Particl Desktop",

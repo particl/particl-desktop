@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs'
 
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
@@ -9,14 +10,18 @@ import { Category } from 'app/core/market/api/category/category.model';
 @Injectable()
 export class CategoryService {
 
+  private categories: BehaviorSubject<Category> = new BehaviorSubject(null);
   constructor(private market: MarketService,
               private marketState: MarketStateService) {
+    this.market.call('category', ['list']).subscribe(
+      resp => {
+        this.categories.next(new Category(resp))
+      }
+    )
   }
 
   list() {
-    return this.marketState.observe('category')
-      .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b))
-      .map(v => new Category(v));
+    return this.categories;
   }
 
   add(categoryName: string, description: string, parent: string | number): Observable<any> {
