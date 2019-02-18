@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
@@ -13,7 +12,6 @@ export class TemplateService {
 
   constructor(
     private market: MarketService,
-    private marketState: MarketStateService,
     public listingCache: PostListingCacheService
   ) { }
 
