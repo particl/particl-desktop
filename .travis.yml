@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: bionic
 language: node_js
 node_js:
   - '9.2.0'
@@ -34,23 +34,23 @@ before_script:
   - yarn install
   - if [[ $TRUE_COMMIT_MESSAGES == *"+latest"* ]]; then yarn add https://github.com/particl/particl-market; fi;
 
-script: 
+script:
   - echo 'Build Dist' && echo -en 'travis_fold:start:script.build\\r'
   - yarn build --base-href="./"
   - echo -en 'travis_fold:end:script.build\\r'
-  
+
   - echo 'Lint Codebase' && echo -en 'travis_fold:start:script.lint\\r'
   - yarn run lint
   - echo -en 'travis_fold:end:script.lint\\r'
-  
+
   - echo 'Test Codebase' && echo -en 'travis_fold:start:script.test\\r'
   - yarn run travis:test
   - echo -en 'travis_fold:end:script.test\\r'
-  
+
   - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./nightly.sh; fi;
 
   - echo 'Done!'
-  
+
 # Disable coveralls for now
 after_script:
   - npm run coveralls
