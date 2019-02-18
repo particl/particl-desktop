@@ -3,7 +3,6 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs'
 
 import { MarketService } from 'app/core/market/market.service';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 import { Category } from 'app/core/market/api/category/category.model';
 
@@ -11,8 +10,7 @@ import { Category } from 'app/core/market/api/category/category.model';
 export class CategoryService {
 
   private categories: BehaviorSubject<Category> = new BehaviorSubject(null);
-  constructor(private market: MarketService,
-              private marketState: MarketStateService) {
+  constructor(private market: MarketService) {
     this.market.call('category', ['list']).subscribe(
       resp => {
         this.categories.next(new Category(resp))
