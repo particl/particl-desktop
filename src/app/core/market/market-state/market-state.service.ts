@@ -20,8 +20,8 @@ export class MarketStateService extends StateService implements OnDestroy {
      * Or Once improve-router branch got merged.
      */
 
-    this.register('profile', 0, ['list']);
-    this.register('bid', 0, ['search', 0, 99999, 'ASC', '*', '*', ''])
+    this.register('profile', 60 * 1000, ['list']);
+    this.register('bid', 15 * 1000, ['search', 0, 99999, 'ASC', '*', '*', ''])
   }
 
   /** Register a state call, executes every X seconds (timeout) */
