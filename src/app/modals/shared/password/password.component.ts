@@ -18,7 +18,7 @@ export class PasswordComponent implements OnDestroy {
   // UI State
   password: string;
   private destroyed: boolean = false;
-  public isProcessing = false;
+  public isProcessing: boolean = false;
 
   @Input() showPass: boolean = false;
   @Input() label: string = 'Your Wallet password';
