@@ -36,7 +36,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button [disabled]="!expiration || txError" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
+  <button [disabled]="!expiration || (txError.length > 0 )" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Publish
   </button>
