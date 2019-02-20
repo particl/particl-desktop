@@ -108,16 +108,19 @@ export class PasswordComponent implements OnDestroy {
           // update state
           this._rpcState.stateCall('getwalletinfo');
 
-          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus').skip(1)
+          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus')
             .subscribe(
               encryptionstatus => {
-                this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
+                this.log.d('rpc_unlock: success: Status value:', encryptionstatus);
+                if (String(encryptionstatus).toLocaleLowerCase() === 'unlocked') {
+                  this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
 
-                // hook for unlockEmitter, warn parent component that wallet is unlocked!
-                this.unlockEmitter.emit(encryptionstatus);
-                if (_subs) {
-                  _subs.unsubscribe();
-                  _subs = null;
+                  // hook for unlockEmitter, warn parent component that wallet is unlocked!
+                  this.unlockEmitter.emit(encryptionstatus);
+                  if (_subs) {
+                    _subs.unsubscribe();
+                    _subs = null;
+                  }
                 }
               });
         },
