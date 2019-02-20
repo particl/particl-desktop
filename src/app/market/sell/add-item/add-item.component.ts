@@ -51,7 +51,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   // template id
   templateId: number;
   preloadedTemplate: Template;
-  keys: string[] = ['-', 'e', 'E', '+'];
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
@@ -64,7 +63,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   featuredPicture: number = 0;
   selectedCountry: Country;
   selectedCategory: Category;
-  canPublish: boolean = false;
+  canPublish: boolean = true;
 
   constructor(
     private router: Router,
@@ -462,8 +461,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       return;
     };
 
-    let success = true;
-
     this.log.d('Saving and publishing the listing.');
     // Oh look, what a mess ahead...
     // @TODO refactor this so that the modal unlock can occur in the openListingModal() target component,
@@ -496,7 +493,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     ).catch(err => {
       this.dialog.closeAll();
-      success = false;
       this.snackbar.open(err);
     });
 
