@@ -5,6 +5,7 @@ import { IPassword } from './password.interface';
 
 import { RpcService, RpcStateService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
+import { debounce } from 'lodash';
 
 @Component({
   selector: 'app-password',
@@ -43,11 +44,14 @@ export class PasswordComponent implements OnDestroy {
   @Input() emitUnlock: boolean = false;
   @Output() unlockEmitter: EventEmitter<string> = new EventEmitter<string>();
 
+  private debouncedFunc: Function;
+
   log: any = Log.create('password.component');
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
               private flashNotification: SnackbarService) {
+    this.debouncedFunc = debounce(this.forceEmit, 200);
   }
 
   ngOnDestroy() {
@@ -62,10 +66,10 @@ export class PasswordComponent implements OnDestroy {
   // -- RPC logic starts here --
 
   unlock (): void {
-    this.forceEmit();
+    this.debouncedFunc();
   }
 
-  public forceEmit(): void {
+  private forceEmit(): void {
     if (this.emitPassword) {
       // emit password
       this.sendPassword();
@@ -108,16 +112,19 @@ export class PasswordComponent implements OnDestroy {
           // update state
           this._rpcState.stateCall('getwalletinfo');
 
-          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus').skip(1)
+          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus')
             .subscribe(
               encryptionstatus => {
-                this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
+                this.log.d('rpc_unlock: success: Status value:', encryptionstatus);
+                if (String(encryptionstatus).toLowerCase() === 'unlocked') {
+                  this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
 
-                // hook for unlockEmitter, warn parent component that wallet is unlocked!
-                this.unlockEmitter.emit(encryptionstatus);
-                if (_subs) {
-                  _subs.unsubscribe();
-                  _subs = null;
+                  // hook for unlockEmitter, warn parent component that wallet is unlocked!
+                  this.unlockEmitter.emit(encryptionstatus);
+                  if (_subs) {
+                    _subs.unsubscribe();
+                    _subs = null;
+                  }
                 }
               });
         },

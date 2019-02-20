@@ -18,11 +18,11 @@
       </mat-select>
     </mat-form-field>
     <div class="est-fee" fxFlex="50%">
-      <span *ngIf="expiration">Approximate listing fee:
+      <span *ngIf="expiration && !txError">Approximate listing fee:
         <br>
       </span>
-      <span *ngIf="expiration && txFee">{{ txFee }} PART</span>
-      <span *ngIf="expiration && !txFee">unknown</span>
+      <span *ngIf="expiration && !txError">{{ txFee }} PART</span>
+      <span class="small" *ngIf="expiration && txError"> {{ txError }}</span>
     </div>
   </div>
   <p class="widget-help">
@@ -36,7 +36,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button [disabled]="!expiration" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
+  <button [disabled]="!expiration || (txError.length > 0 )" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Publish
   </button>
