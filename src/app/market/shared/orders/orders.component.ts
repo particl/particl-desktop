@@ -81,7 +81,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.bid.search(this.profile.address, this.type, this.filters.status, this.filters.search, this.additionalFilter)
       .take(1)
       .subscribe(bids => {
-        console.log('called >>>>>>>>>>>>>>>>>', bids);
         // Only update if needed
         if (this.hasUpdatedOrders(bids.filterOrders)) {
           // Initialize model only when its fetching for all orders.
