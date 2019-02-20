@@ -87,7 +87,7 @@ export class ListingExpirationComponent {
     this.txFee = expiryItem ?
       `${expiryItem.estimateFee.getIntegerPart()}${expiryItem.estimateFee.dot()}${expiryItem.estimateFee.getFractionalPart()}` :
       '';
-    this.txError = expiryItem ? (expiryItem.error || '') : 'unknown';
+    this.txError = expiryItem ? (expiryItem.error || undefined) : 'unknown';
   }
 
 }
