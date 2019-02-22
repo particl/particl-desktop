@@ -9,7 +9,9 @@ exports.init = function() {
 
   if (!_options.skipmarket) {
     log.info('market process starting.');
-    child = market.start();
+    child = market.start({
+      ELECTRON_VERSION: process.versions.electron,
+    });
 
     child.on('close', code => {
       log.info('market process ended.');

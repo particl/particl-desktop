@@ -10,6 +10,7 @@ const rpc = require('../rpc/rpc');
 const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
 const multiwallet = require('../multiwallet');
+const daemonConfig = require('./daemonConfig');
 
 let daemon = undefined;
 let chosenWallets = [];
@@ -43,7 +44,6 @@ exports.restart = function (alreadyStopping) {
     daemon.once('close', code => {
       // clear authentication
       clearCookie();
-      
       // restart
       this.start(chosenWallets);
     });
@@ -60,7 +60,19 @@ exports.restart = function (alreadyStopping) {
 
 }
 
-exports.start = function (wallets) {
+let attemptsToStart = 0;
+const maxAttempts = 10;
+exports.start = function (wallets, doReindex = false) {
+  let options = _options.get();
+
+  if (+options.addressindex !== 1) {
+    const daemonSettings = daemonConfig.getSettings();
+    if (!(daemonSettings.global && daemonSettings.global.addressindex === 1)) {
+      daemonConfig.saveSettings({addressindex: true});
+      doReindex = true;
+    }
+  }
+
   return (new Promise((resolve, reject) => {
 
     chosenWallets = wallets;
@@ -71,15 +83,22 @@ exports.start = function (wallets) {
 
     }).catch(() => {
 
-      let options = _options.get();
       const daemonPath = options.customdaemon
         ? options.customdaemon
         : daemonManager.getPath();
 
-      wallets = wallets.map(wallet => `-wallet=${wallet}`);
-      log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
-      const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
+      const addedArgs = [];
+
+      if (doReindex) {
+        log.info('Adding reindex flag to daemon startup');
+        addedArgs.push('-reindex');
+      }
+      wallets = wallets.map(wallet => `-wallet=${wallet}`);
+      const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets, ...addedArgs];
+      log.info(`starting daemon: ${deamonArgs.join(' ')}`);
+
+      const child = spawn(daemonPath, deamonArgs)
         .on('close', code => {
           log.info('daemon exited - setting to undefined.');
           daemon = undefined;
@@ -94,6 +113,12 @@ exports.start = function (wallets) {
       // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
       child.stderr.on('data', data => {
+        const err = data.toString('utf8');
+        if (err.includes("-reindex") && attemptsToStart < maxAttempts) {
+          log.error('Restarting the daemon with the -reindex flag.');
+          attemptsToStart++;
+          exports.start(wallets, true);
+        }
         daemonData(data, console.log);
       });
 

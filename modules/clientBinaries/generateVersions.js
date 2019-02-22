@@ -139,7 +139,7 @@ var getHashesForPlatform = function (platform, path, hashes) {
  */
 got(`${releasesURL}`).then(response => {
   const body = JSON.parse(response.body);
-  let releaseIndex = 0;
+  let releaseIndex = 1;
   let release;
   const skipPrerelease = !(process.argv.includes('-prerelease'))
   while (body[releaseIndex].prerelease && skipPrerelease) {

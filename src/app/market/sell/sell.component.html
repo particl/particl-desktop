@@ -12,24 +12,29 @@
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
           Orders
-          <!--app-order-count [type]="'sell'" class="tag"></app-order-count-->
         </ng-template>
       </mat-tab>
-      <!--mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-          Sell item
-        </ng-template>
-      </mat-tab-->
     </mat-tab-group>
   </div>
 </app-header>
-<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== LISTINGS =========== -->
 
 <div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'listings'">
+
+  <div class="page-intro">
+    <h1>Your Listings</h1>
+    <div class="content">
+      <p>
+        This is your dashboard for selling your products on the marketplace and manage their listings.<br>
+        Create new listings and manage them here. Use the Orders tab to track and process orders from your customers.
+      </p>
+      <p class="widget-help">
+        Note: All listings created here will be publicly available on the marketplace.
+      </p>
+    </div>
+  </div><!-- .page-intro -->
 
   <!-- Listings > Filter -->
   <div class="filter">
@@ -53,27 +58,27 @@
           <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                     (click)="clearAndLoadPage()"></mat-icon>
         </mat-form-field>
-        <!--mat-form-field class="sort-by filter-input" floatPlaceholder="never">
-          <mat-select placeholder="Sort listings">
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+          <mat-select placeholder="Sort listings" [(ngModel)]="filters.sort" (change)="clearAndLoadPage()">
             <mat-option *ngFor="let sorting of listing_sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>
           </mat-select>
-        </mat-form-field -->
+        </mat-form-field>
       </mat-card>
     </div>
 
-    <!--div class="section filter-by-type to-do">
+    <div class="section filter-by-type">
       <div class="subtitle">Filter by status</div>
       <mat-card class="filter-card">
-        <mat-radio-group class="radio-group block-radio">
-          <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering" value="{{ status.value }}">
+        <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()">
+          <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering" value="{{ status.value }}" color="primary">
             {{ status.title }}
-            <span class="amount">{{ status.amount }}</span>
+            <!-- <span class="amount">{{ status.amount }}</span>  -->
           </mat-radio-button>
         </mat-radio-group>
       </mat-card>
-    </div--><!-- .filter-by-type -->
+    </div>
 
     <button mat-button color="basic" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
@@ -104,19 +109,14 @@
     [fromRoot]="true"
     [infiniteScrollDistance]="2"
     [infiniteScrollThrottle]="50"
-    (scrolledUp)="loadPreviousPage()"
     (scrolled)="loadNextPage()">
     <!--div class="subtitle first">Published listings</div-->
-    <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
+    <div class="no-results" [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)">
       <p>
         Sorry, no matching listings found
       </p>
     </div>
-    <button [disabled]="isLoading" mat-button class="previous-page" (click)="loadPreviousPage()"
-    *ngIf="pages[0] && pages[0].pageNumber !== 0">
-      <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
-      Load previous page
-    </button>
+
     <mat-accordion *ngFor="let page of pages;let pageIndex = index;">
       <app-seller-listing *ngFor="let listing of page.listings; let listingIndex = index" [listing]="listing" (onDelete)="deleteListing(pageIndex, listingIndex)"></app-seller-listing>
     </mat-accordion>
@@ -125,11 +125,26 @@
 
   </div><!-- .listings-list -->
 </div><!-- .container-block -->
+
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
 <mat-progress-bar mode="indeterminate" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading" class="loading-bar"></mat-progress-bar>
 
 
 <!-- =========== ORDERS =========== -->
 <!-- Do not remove the below class it is using for test case -->
 <div class="container-block with-tab-bar test-case-container" *ngIf="tabLabels[selectedTab] == 'orders'">
+
+  <div class="page-intro">
+    <h1>Sell Orders</h1>
+    <div class="content">
+      <p>
+        This is where you manage the orders you're in the process of selling to your customers.
+      </p>
+      <p class="widget-help">
+        Each step of the selling process needs to be confirmed in this page (i.e. marking an order as "Shipped").
+      </p>
+    </div>
+  </div><!-- .page-intro -->
+
   <app-orders type="sell"></app-orders>
 </div><!-- "Orders" tab -->

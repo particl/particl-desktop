@@ -129,7 +129,6 @@ export class TransactionService implements OnDestroy {
     this.rpc.call('filtertransactions', [options])
       .subscribe(
       (txResponse: Array<Object>) => {
-
         // The callback will send over an array of JSON transaction objects.
         this.log.d(`loadTransactions, supposedly tx per page: ${this.MAX_TXS_PER_PAGE}`);
         this.log.d(`loadTransactions, real tx per page: ${txResponse.length}`);
@@ -145,7 +144,6 @@ export class TransactionService implements OnDestroy {
         });
 
         this.txs = newTxs;
-
         this.loading = false;
         this.alreadyRetryingLoadTx = false;
         this.log.d(`loadTransactions, txs array: ${this.txs.length}`);

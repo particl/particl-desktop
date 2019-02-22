@@ -1,5 +1,5 @@
 import { Category } from 'app/core/market/api/category/category.model';
-import { DateFormatter, Amount } from 'app/core/util/utils';
+import { DateFormatter, Amount, Duration } from 'app/core/util/utils';
 import { ImageCollection } from 'app/core/market/api/template/image/imagecollection.model';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 export class Template {
@@ -26,11 +26,14 @@ export class Template {
   public keepItem: VoteOption;
   public removeItem: VoteOption;
   public submitterAddress: string = '';
+  public expiredTime: string = '';
+
   // @TODO: remove type any
   constructor(public object: any) {
     this.category = new Category(this.object.ItemInformation.ItemCategory);
     this.createdAt = new DateFormatter(new Date(this.object.createdAt)).dateFormatter(true);
     this.imageCollection = new ImageCollection(this.object.ItemInformation.ItemImages)
+    this.expiredTime = new DateFormatter(new Date(this.object.expiredAt)).dateFormatter(true);
 
     this.setStatus();
     this.setBasePrice();
@@ -82,7 +85,7 @@ export class Template {
   }
   setStatus(): void {
     if (this.isPublished) {
-      this.status = 'published';
+      this.status = !this.isTempExpired ? 'published' : 'expired';
     } else {
       this.status = 'unpublished';
     }
@@ -176,12 +179,34 @@ export class Template {
   }
 
   get expiredAt(): any {
-    return Object.prototype.toString.call(this.object.ListingItems) === '[object Array]' && this.object.ListingItems.length ?
-    'Expires ' + new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16) : '';
+    return  this.checkListingItems ? 'Expires ' + new DateFormatter(
+      new Date(this.object.ListingItems[0].expiredAt)
+      ).dateFormatter(false).substr(0, 16) : '';
+  }
+
+  get isAboutToExpire(): Boolean {
+
+    // 86400000 m seconds in one day.
+    return (this.object.expiredAt > +new Date() && ((this.object.expiredAt - +new Date()) <= 86400000));
+  }
+
+  get expireIn(): String {
+    return new Duration((this.object.expiredAt - Date.now()) / 1000).getReadableDuration();
+  }
+
+  get isTempExpired(): boolean {
+    if (this.checkListingItems) {
+      return this.object.ListingItems[0].expiredAt < +new Date()
+    }
+    return false;
+  }
+
+  get checkListingItems(): boolean {
+    return Object.prototype.toString.call(this.object.ListingItems) === '[object Array]' && this.object.ListingItems.length;
   }
 
   setExpiryTime(): void {
-    if (this.object.ListingItems && this.object.ListingItems.length > 0) {
+    if (this.checkListingItems) {
       this.expireTime = this.object.ListingItems[0].expiryTime;
     }
   }

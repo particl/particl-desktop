@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
@@ -20,6 +20,24 @@ import { LocationService } from 'app/core/market/api/template/location/location.
 import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+import { MatDialog } from '@angular/material';
+
+
+class CurrencyMinValidator {
+  static validValue(fc: FormControl) {
+    const amount: number = +fc.value;
+    if ( amount >= 0 ) {
+      if ( (fc.value.length > +amount.toFixed(8).length) || (amount > 1e06) ) {
+        return ({ validAmount: false });
+      }
+      return (null);
+    }
+    return ({ validAmount: false });
+  }
+}
+
 
 @Component({
   selector: 'app-add-item',
@@ -33,7 +51,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   // template id
   templateId: number;
   preloadedTemplate: Template;
-  keys: string[] = ['-', 'e', 'E', '+'];
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
@@ -44,19 +61,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
   fileInput: any;
   picturesToUpload: string[];
   featuredPicture: number = 0;
-  expiration: number = 4;
-  txFee: Amount = new Amount(0)
   selectedCountry: Country;
   selectedCategory: Category;
-  isInProcess: boolean = false;
+  canPublish: boolean = true;
 
-  expiredList: Array<any> = [
-    { title: '4 day',     value: 4  },
-    { title: '1 week',    value: 7  },
-    { title: '2 weeks',   value: 14 },
-    { title: '3 weeks',   value: 21 },
-    { title: '4 weeks',   value: 28 }
-  ];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -73,14 +81,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     private countryList: CountryListService,
-    private escrow: EscrowService
+    private escrow: EscrowService,
+    private payment: PaymentService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    this.initDragDropEl('drag-n-drop');
-
-    this.fileInput = document.getElementById('fileInput');
-    this.fileInput.onchange = this.processPictures.bind(this);
     this.picturesToUpload = new Array();
 
     this.subToCategories();
@@ -93,29 +99,31 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(1000)]],
       category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required, Validators.min(0)]],
-      domesticShippingPrice:      ['', [Validators.required, Validators.min(0)]],
-      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]
+      basePrice:                  ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
+      domesticShippingPrice:      ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
+      internationalShippingPrice: ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]]
     });
 
     this.route.queryParams.take(1).subscribe(params => {
+      // Initialize drag-n-drop
+      this.initDragDropEl('drag-n-drop');
+      this.fileInput = document.getElementById('fileInput');
+      this.fileInput.onchange = this.processPictures.bind(this);
       const id = params['id'];
+
+      // Determine whether template is a clone or not
       const clone: boolean = params['clone'];
-      if (id) {
+      if (+id) {
         this.templateId = +id;
-        this.preload();
-      }
-      if (clone) {
-        this.log.d('Cloning listing!');
-        this.templateId = undefined;
+        this.preload(clone);
+      } else {
+        this.canPublish = true;
       }
     });
-
-    this.loadTransactionFee();
   }
 
   isExistingTemplate() {
-    return this.preloadedTemplate || (this.templateId !== undefined && this.templateId > 0);
+    return this.preloadedTemplate || +this.templateId > 0;
   }
 
   uploadPicture() {
@@ -133,34 +141,61 @@ export class AddItemComponent implements OnInit, OnDestroy {
       sourceFiles = Array.from(event.target.files);
     }
 
-    sourceFiles.map((file: File) => {
-      const reader = new FileReader();
-      reader.onload = _event => {
-        this.picturesToUpload.push(reader.result);
-        this.log.d('added picture', file.name);
-      };
-      reader.readAsDataURL(file);
+    const MAX_IMAGE_SIZE = 1024 * 1024 * 2; // (2MB)
+    let failedImgs = false;
+    sourceFiles.forEach((file: File) => {
+      if (file.size > MAX_IMAGE_SIZE) {
+        failedImgs = true;
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = (_event) => {
+          if (reader.readyState === 2) {
+            const res = <ArrayBuffer>reader.result;
+            const uint = new Uint8Array(res, 0, 4);
+            const bytes = [];
+            uint.forEach(byte => {
+              bytes.push(byte.toString(16));
+            })
+            const hex = bytes.join('').toUpperCase();
+            // TODO: add error message once all images processed indicating that 1 or more failed
+            //  Not added here, because this is is eventing on multiple objects
+            //  (using counters requires locks to ensure atomic counter updates)
+            if (this.isSupportedImageType(hex)) {
+              const dataReader = new FileReader();
+
+              dataReader.onload = _ev => {
+                this.picturesToUpload.push(<string>dataReader.result);
+                this.log.d('added picture', file.name);
+              }
+              dataReader.readAsDataURL(file);
+            }
+          }
+        }
+        reader.readAsArrayBuffer(file);
+      }
     });
+    if (failedImgs) {
+      this.snackbar.open('1 or more images failed: max image size is 2MB');
+    }
+    this.fileInput.value = '';
   }
 
   removeExistingImage(image: Image) {
     this.image.remove(image.id).subscribe(
-      success => {
-        this.snackbar.open('Removed image successfully!')
-
+      async (success) => {
         // find image in array and remove it.
-        let indexToRemove: number;
-        this.images.find((element: Image, index: number) => {
-          if (element.id === image.id) {
-            indexToRemove = index;
-            return true;
-          }
-          return false;
+        const indexToRemove: number = this.images.findIndex((element: Image) => {
+          return element.id === image.id
         });
         if (indexToRemove >= 0) {
-          this.log.d('Removing image from UI with index', indexToRemove);
+          this.log.d('Removing existing image from UI with index', indexToRemove);
           this.images.splice(indexToRemove, 1);
         }
+        this.canPublish = await this.templateHasValidSize().catch(err => {
+          this.snackbar.open('Failed to recalculate template size');
+          return this.canPublish;
+        });
+        this.snackbar.open('Removed image successfully!');
       },
       error => this.snackbar.open(error)
     );
@@ -177,9 +212,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.featuredPicture = index;
   }
 
-  subToCategories() {
+  private subToCategories() {
     this.category.list()
-      .takeWhile(() => !this.destroyed)
       .subscribe(list => this.updateCategories(list));
   }
 
@@ -189,6 +223,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   backToSell() {
+    this.dialog.closeAll()
     this.router.navigate(['/market/sell']);
   }
 
@@ -196,9 +231,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.destroyed = true;
   }
 
-  preload() {
+  preload(isCloned: boolean) {
     this.log.d(`preloading for id=${this.templateId}`);
-    this.template.get(this.templateId).subscribe((template: Template) => {
+    this.template.get(this.templateId, true).subscribe(async (template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
 
       if (this.listing.cache.isAwaiting(template)) {
@@ -210,9 +245,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
         shortDescription: '',
         longDescription: '',
         category: 0,
-        basePrice: 0,
-        domesticShippingPrice: 0,
-        internationalShippingPrice: 0,
+        basePrice: '0',
+        domesticShippingPrice: '0',
+        internationalShippingPrice: '0',
         country: ''
       };
 
@@ -228,15 +263,23 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.setDefaultCountry(country);
       this.setDefaultCategory(template.category);
 
-      t.basePrice = template.basePrice.getAmount();
-      t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
-      t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
+      t.basePrice = template.basePrice.getAmountAsString();
+      t.domesticShippingPrice = template.domesticShippingPrice.getAmountAsString();
+      t.internationalShippingPrice = template.internationalShippingPrice.getAmountAsString();
       this.itemFormGroup.patchValue(t);
 
-      this.images = template.imageCollection.images;
-
-      this.preloadedTemplate = template;
-      // this.itemFormGroup.get('category').setValue(t.category, {emitEvent: true});
+      if (isCloned) {
+        this.picturesToUpload = template.imageCollection.images.map(img => img.originalEncoding).filter(img => img.length);
+        this.templateId = undefined;
+        this.canPublish = true;
+      } else {
+        this.images = template.imageCollection.images;
+        this.preloadedTemplate = template;
+        this.canPublish = await this.templateHasValidSize().catch(err => {
+          this.snackbar.open('Failed to recalculate template size');
+          return this.canPublish;
+        });
+      }
     });
   }
 
@@ -244,16 +287,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.selectedCountry = country;
   }
 
-
   setDefaultCategory(category: Category) {
     this.selectedCategory = category;
   }
 
   private async save(): Promise<Template> {
+
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
 
-    const template: Template = await this.template.add(
+    const template: any = await this.template.add(
       item.title,
       item.shortDescription,
       item.longDescription,
@@ -265,56 +308,76 @@ export class AddItemComponent implements OnInit, OnDestroy {
       +item.internationalShippingPrice
     ).toPromise();
 
+    this.preloadedTemplate = new Template(template);
 
     this.templateId = template.id;
-    this.preloadedTemplate = template;
-
     await this.location.execute('add', this.templateId, country, null, null).toPromise();
     await this.escrow.add(template.id, EscrowType.MAD).toPromise();
+    await this.uploadImages();
 
-    if (this.picturesToUpload.length === 0) {
-      return template;
-    } else {
-      await this.image.upload(template, this.picturesToUpload);
-    }
-
-    return this.template.get(this.preloadedTemplate.id).toPromise();
-    /*
-
-
-      }, error => error.error ? this.snackbar.open(error.error.message) : this.snackbar.open(error));
-          });
-      */
-
+    return this.template.get(template.id, false).toPromise();
   }
 
   private async update() {
     const item = this.itemFormGroup.value;
-
     // update information
-    /*
-     this.information.update(
-     this.templateId,
-     item.title,
-     item.shortDescription,
-     item.longDescription,
-     item.category
-     ).subscribe();*/
+    if (this.isTemplateInfoUpdated(item)) {
+      await this.information.update(
+        this.templateId,
+        item.title,
+        item.shortDescription,
+        item.longDescription,
+        item.category
+      ).toPromise();
+    }
 
-    // update images
-    await this.image.upload(this.preloadedTemplate, this.picturesToUpload);
+    const country = this.countryList.getCountryByName(item.country);
 
     // update location
-    const country = this.countryList.getCountryByName(item.country);
-    await this.location.execute('update', this.templateId, country, null, null).toPromise();
-    await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
-    // update shipping
+    if (this.preloadedTemplate.country !== country.iso) {
 
-    // update messaging
-    // update payment
+      await this.location.execute('update', this.templateId, country, null, null).toPromise();
+    }
+
     // update escrow
+    // @TODO EscrowType will change in future?
+    await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
 
-     return this.template.get(this.preloadedTemplate.id).toPromise();
+    // update shipping?
+    // update messaging?
+
+    if (this.isPaymentInfoUpdated(item)) {
+
+      // update payment
+      await this.payment.update(
+        this.templateId,
+        +item.basePrice,
+        +item.domesticShippingPrice,
+        +item.internationalShippingPrice
+      ).toPromise();
+    }
+
+    // update images
+    await this.uploadImages();
+
+    return this.template.get(this.templateId, false).toPromise();
+  }
+
+  isPaymentInfoUpdated(item: any): boolean {
+    return (
+      this.preloadedTemplate.basePrice.getAmount() !== +item.basePrice ||
+      this.preloadedTemplate.domesticShippingPrice.getAmount() !== +item.domesticShippingPrice ||
+      this.preloadedTemplate.internationalShippingPrice.getAmount() !== +item.internationalShippingPrice
+    )
+  }
+
+  isTemplateInfoUpdated(item: any): boolean {
+    return (
+      this.preloadedTemplate.title !== item.title ||
+      this.preloadedTemplate.shortDescription !== item.shortDescription ||
+      this.preloadedTemplate.longDescription !== item.longDescription ||
+      this.category !== item.category
+    );
   }
 
   validate() {
@@ -322,50 +385,117 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   numericValidator(event: any) {
-    // Special character validation
     const pasted = String(event.clipboardData ? event.clipboardData.getData('text') : '' );
-    if (this.keys.includes(event.key) || pasted.split('').find((c) =>  this.keys.includes(c))) {
+    const key = String(event.key || '');
+
+    const value = `${pasted}${key}${String(event.target.value)}`;
+    let valid = true;
+    let sepFound = false;
+    for (let ii = 0; ii < value.length; ii++) {
+      if (value.charAt(ii) === '.') {
+        if (sepFound) {
+          valid = false;
+          break;
+        }
+        sepFound = true;
+        continue;
+      }
+      const charCode = value.charCodeAt(ii);
+      if ( (charCode < 48) || (charCode > 57)) {
+        valid = false;
+        break;
+      }
+    }
+    if (!valid) {
       return false;
     }
   }
 
-  public async upsert() {
+  public async upsert(): Promise<void> {
     if (!this.validate()) {
       return;
     };
-    this.log.d('Saving as a template.');
+    this.log.d('Processing template (upsert)');
+
+    let resp: Promise<Template>;
 
     if (this.preloadedTemplate && this.preloadedTemplate.id) {
       this.log.d(`Updating existing template ${this.preloadedTemplate.id}`);
-      return this.update();
+      resp = this.update();
     } else {
       this.log.d(`Creating new template`);
-      return this.save();
+      resp = this.save();
     }
+
+    return resp.then((templ) => {
+      this.preloadedTemplate = templ;
+      this.templateId = templ.id;
+      this.images = templ.imageCollection.images;
+    }).then(
+      async () => {
+        this.canPublish = await this.templateHasValidSize();
+      }
+    );
   }
 
   public saveTemplate() {
     if (this.preloadedTemplate && this.preloadedTemplate.status === 'published') {
-      this.snackbar.open('You can not update templates whilst they are published!');
+      this.snackbar.open('You can not modify templates once they have been published!');
       return;
     }
+    this.openProcessingModal();
 
     this.upsert()
-    .then(t => {
+    .then(() => {
+      this.dialog.closeAll();
       this.snackbar.open('Succesfully updated template!')
     })
     .catch(err => {
+      this.dialog.closeAll();
       this.snackbar.open('Failed to save template!')
     });
   }
 
-  saveAndPublish() {
+  async saveAndPublish() {
     if (!this.validate()) {
       return;
     };
-    this.isInProcess = true;
+
     this.log.d('Saving and publishing the listing.');
-    this.publish();
+    // Oh look, what a mess ahead...
+    // @TODO refactor this so that the modal unlock can occur in the openListingModal() target component,
+    //    WITHOUT inducing circular dependencies.
+    this.openProcessingModal();
+    await this.upsert().then(
+      () => {
+        if (!this.canPublish) {
+          throw new Error('Message upload size exceeded');
+        }
+      }
+    ).then(
+      () => {
+        // Close the loading modal
+        this.dialog.closeAll();
+      }
+    ).then(
+      () => {
+        this.modals.unlock({timeout: 30},
+          (status) => {
+            this.modals.openListingExpiryModal({template: this.preloadedTemplate}, (expiration: number) => {
+              this.postTemplate(expiration);
+            });
+          },
+          (err) => {
+            this.dialog.closeAll();
+          },
+          false
+        );
+      }
+    ).catch(err => {
+      this.dialog.closeAll();
+      this.snackbar.open(err);
+    });
+
   }
 
   onCountryChange(country: Country): void {
@@ -374,36 +504,19 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
 
   onCategoryChange(category: Category): void {
+    this.log.d('category', category);
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
-  private async publish() {
-    this.upsert().then(t => {
-      this.modals.unlock({timeout: 30}, (status) => {
-        this.template.post(t, 1, this.expiration)
-        .subscribe(listing => {
-          this.snackbar.open('Succesfully added Listing!')
-          this.log.d(listing);
-          this.backToSell();
-        },
-        (error) => {
-          this.isInProcess = false;
-          this.snackbar.open(error)
-        },
-        () => this.isInProcess = false)
-      }, (err) => this.isInProcess = false);
-    }, err => {
-      this.isInProcess = false;
-      this.snackbar.open(err)
-    });
+  private async templateHasValidSize(): Promise<boolean> {
+    return this.template.size(this.templateId).toPromise().then(
+      (resp) => {
+        return resp.fits;
+      }
+    );
   }
 
-  loadTransactionFee() {
-    /* @TODO transaction fee will be calculated from backend
-     * currently we have assumed days_retention=1 costs 0.26362200
-     */
-    this.txFee = new Amount(0.26362200 * this.expiration)
-  }
+
 
   private initDragDropEl(elementID: string) {
     this.dropArea = document.getElementById(elementID);
@@ -420,6 +533,58 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.processPictures(e, true);
         return false;
     };
+  }
+
+
+  private async uploadImages(): Promise<boolean> {
+    let success = false;
+    if (this.picturesToUpload.length && this.preloadedTemplate) {
+      success = await this.image.upload(this.preloadedTemplate, this.picturesToUpload).then((t: Template) => {
+        this.picturesToUpload = [];
+        return true;
+      }).catch(err => false);
+    }
+    return success;
+  }
+
+  private isSupportedImageType(signature: string): boolean {
+    // 89504E47 === 'image/png'
+    // (FFD8) === 'image/jpeg'
+    return signature.startsWith('FFD8') || signature.startsWith('89504E47');
+  }
+
+  private postTemplate(expiryDays: number) {
+    this.modals.unlock({timeout: 30},
+      (status) => {
+        this.openProcessingModal();
+        this.template.post(this.preloadedTemplate, 1, expiryDays)
+          .subscribe(
+            (listing) => {
+              this.dialog.closeAll();
+              this.snackbar.open('Succesfully added Listing!');
+              this.log.d('Sucecssfully added listing: ', listing);
+              this.backToSell();
+            },
+            (err) => {
+              this.dialog.closeAll();
+              this.snackbar.open(err);
+            }
+          );
+      },
+      (err) => {
+        this.dialog.closeAll();
+      }
+    );
+  }
+
+
+  openProcessingModal() {
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your listing'
+      }
+    });
   }
 
 }

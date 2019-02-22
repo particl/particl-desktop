@@ -47,6 +47,12 @@ export class BuyComponent implements OnInit {
   load() {
     this.favoritesService.cache.getFavorites().subscribe(favorites => {
       const temp: Listing[] = [];
+      // intialize when there is no favorites and no need for map
+      if (favorites.length === 0 ) {
+        this.favorites = [];
+        return;
+      }
+
       favorites.forEach(favorite => {
         this.listingService.get(favorite.listingItemId).take(1).subscribe(listing => {
           temp.push(listing);

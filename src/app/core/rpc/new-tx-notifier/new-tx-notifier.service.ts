@@ -68,7 +68,8 @@ export class NewTxNotifierService implements OnDestroy {
   private notifyNewTransaction(tx: any) {
     this.log.d('notify new tx: ' + tx);
     if (tx.category === 'receive') {
-      this._notification.sendNotification('Incoming transaction', tx.amount + ' PART received');
+      this._notification.sendNotification(tx.requires_unlock ? 'Incoming private transaction' : 'Incoming transaction',
+        tx.requires_unlock ? 'unlock your wallet to see details' : (tx.amount + ' PART received'));
     } else if (tx.category === 'stake') {
       this._notification.sendNotification('New stake reward', tx.amount + ' PART received');
     }

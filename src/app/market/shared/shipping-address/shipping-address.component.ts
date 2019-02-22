@@ -17,21 +17,6 @@ export class ShippingAddressComponent {
     public countryList: CountryListService
   ) {}
 
-  // May be move to shipping model ?
-  get addressLine2(): string {
-    if (this.shippingAddress) {
-      return this.shippingAddress.addressLine2 ? this.shippingAddress.addressLine2 + ',' : ''
-    }
-    return '';
-  }
-
-  get state(): string {
-    if (this.shippingAddress) {
-      return this.shippingAddress.state ? ', ' + this.shippingAddress.state : ''
-    }
-    return '';
-  }
-
   get country(): string {
     if (this.shippingAddress) {
       const country = this.countryList.getCountryByRegion(this.shippingAddress.country)

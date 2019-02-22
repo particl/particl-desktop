@@ -18,13 +18,6 @@
   }
 }
 
-.fees-expiration {
-  margin-top: 30px;
-  .est-fee {
-    margin-left: 20px;
-    line-height: 1.45;
-  }
-}
 
 // ------ GALLERY ------ //
 
@@ -108,6 +101,15 @@
 
 
 // ------ BUTTONS ------ //
+
+p.warning {
+  background: rgba($color-alert, 0.1);
+  margin: 24px -35px;
+  padding-left: 65px;
+  &::before {
+    left: 35px;
+  }
+}
 
 .action-buttons {
   margin-top: 24px;

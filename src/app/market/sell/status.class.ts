@@ -27,7 +27,7 @@ export class Status {
             status_info: 'Awaiting publication!',
             action_icon: 'part-check',
             action_button: 'Awaiting publication',
-            action_tooltip: 'Waiting for listing to become active on the network!',
+            action_tooltip: 'Waiting for listing to become published',
             action_color: 'primary',
             action_disabled: true
         },
@@ -37,10 +37,21 @@ export class Status {
             status_info: 'Active, published listing template',
             action_icon: 'part-check',
             action_button: 'Published',
-            action_tooltip: 'Listing is active on the network!',
+            action_tooltip: 'Listing is published on the Market',
             action_color: 'primary',
             action_disabled: true
-        }];
+        },
+        {
+            status: 'expired',
+            class: 'expired',
+            status_info: 'Expired listing template, not published on Market anymore',
+            action_icon: 'part-errror',
+            action_button: 'Expired',
+            action_tooltip: 'Listing expired',
+            action_color: 'primary',
+            action_disabled: true
+        }
+        ];
     get(status: string): UiStatus {
         return this.states.find((state: UiStatus) => state.status === status);
     }

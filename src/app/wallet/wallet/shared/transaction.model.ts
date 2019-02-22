@@ -28,7 +28,7 @@ export class Transaction {
     comment: string;
     n0: string;
     n1: string;
-
+    requires_unlock: boolean;
     outputs: any[];
 
     /* conflicting txs */
@@ -56,7 +56,7 @@ export class Transaction {
     this.comment = json.comment;
     this.n0 = json.n0;
     this.n1 = json.n1;
-
+    this.requires_unlock = json.requires_unlock ? json.requires_unlock : false;
     this.outputs = json.outputs;
 
     /* conflicting txs */
@@ -145,9 +145,6 @@ export class Transaction {
       // only use fake output to determine internal transfer
       const fakeOutput = function (a: any, b: any) { return a - (b.vout === 65535 ? b.amount : 0); }
       return this.outputs.reduce(fakeOutput, 0);
-    } else if (this.getCategory() === 'multisig') {
-      const amount: number = this.outputs.find(output => output.address.startsWith('r')).amount;
-      return amount;
     } else {
       return +this.amount;
     }

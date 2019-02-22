@@ -29,7 +29,7 @@ module.exports = function (config) {
       fixWebpackSourcePaths: true
     },
     angularCli: {
-      environment: 'dev'
+      environment: 'test'
     },
     reporters: config.angularCli && config.angularCli.codeCoverage
               ? ['progress', 'coverage-istanbul']
@@ -39,9 +39,9 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: false,
+    singleRun: true,
     captureTimeout: 210000,
-    browserDisconnectTolerance: 3, 
+    browserDisconnectTolerance: 3,
     browserDisconnectTimeout : 210000,
     browserNoActivityTimeout : 210000,
   });

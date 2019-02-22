@@ -73,8 +73,8 @@
         <div class="subtitle">Voting {{selectedTab !== 'planned' ? 'progress' : 'finished'}}</div>
 
         <!-- if someone already voted, show graph: -->
-        <div class="graph" *ngIf="proposalResult?.totalVotes">
-          <nvd3
+        <div class="graph" *ngIf="proposalResult?.totalWeight">
+          <nvd3 #chart
             *ngIf="proposalResult?.graphData && proposalResult?.graphData.length"
             [options]="graphOptions"
             [data]="proposalResult?.graphData">
@@ -82,13 +82,16 @@
         </div>
 
         <!-- if no votes yet, show placeholder: -->
-        <div *ngIf="!proposalResult?.totalVotes" class="graph-placeholder">
+        <div *ngIf="!proposalResult?.totalWeight" class="graph-placeholder">
           <div class="title">No<br>votes<br>{{selectedTab === 'active' ? "yet" : "received"}}</div>
         </div>
 
         <div class="percentage-voted">
           <!-- @TODO may be total vote count replaced with  % of coins voted ? -->
-          <span class="value">{{proposalResult?.totalVotes }}</span>&ensp;{{proposalResult?.totalVotesText}}
+          <span class="number big">{{proposalResult?.totalCoins.getIntegerPart()}}</span><!--
+        --><span class="point big">{{proposalResult?.totalCoins.dot()}}</span><!--
+        --><small class="number small">{{proposalResult?.totalCoins.getFractionalPart() || ''}}</small>&ensp;
+          {{proposalResult?.totalPercentageText}}
         </div>
         <!-- <div class="percentage-voted">
           <!- TODO: implement % of coins voted in total for this proposal ->
@@ -114,7 +117,7 @@
       </mat-form-field>
     </div>
 
-    <button mat-raised-button color="primary" [disabled]="!selectedOption" class="vote-button item" (click)="vote()">
+    <button mat-raised-button color="primary" [disabled]="!selectedOption || btnValidate" class="vote-button item" (click)="vote()">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Vote
     </button>
