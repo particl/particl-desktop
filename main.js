@@ -94,7 +94,7 @@ function initMainWindow() {
     minHeight: 675,
     icon:      path.join(__dirname, 'resources/icon.png'),
 
-    frame: false,
+    frame: true,
     darkTheme: true,
 
     webPreferences: {
@@ -107,6 +107,11 @@ function initMainWindow() {
     },
   });
 
+  // Hide the menu bar, press ALT
+  // to show it again.
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.setAutoHideMenuBar(true);
+  
   // and load the index.html of the app.
   if (options.dev) {
     mainWindow.loadURL('http://localhost:4200');
