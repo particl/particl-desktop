@@ -11,6 +11,8 @@ export class Proposal {
   public id: number;
   createdAt: number;
   expiredAt: number;
+  MAX_SAFE_INTEGER: number = 9007199254740991;
+  isExpiredAtValid: boolean;
 
   constructor(object: any) {
     this.title = object.title;
@@ -22,6 +24,13 @@ export class Proposal {
     this.id = object.id;
     this.createdAt = object.createdAt;
     this.expiredAt = object.expiredAt;
+    /**
+     * object.expiredAt is equals MAX_SAFE_INTEGER = 9007199254740991. if the proposal is not publish.
+     * (once smsg message sent and recieveed) expiry time will be change as it is actual instead of
+     * MAX_SAFE_INTEGER = 9007199254740991.
+     */
+
+    this.isExpiredAtValid = object.expiredAt < this.MAX_SAFE_INTEGER;
   }
 
   get expiryTimeStamp(): String {
