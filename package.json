@@ -180,7 +180,7 @@
     "coveralls": "^3.0.0",
     "electron": "4.0.3",
     "electron-builder": "^20.38.5",
-    "htmlhint": "^0.9.13",
+    "htmlhint": "^0.10.2",
     "iso3166-2-db": "^2.2.1",
     "jasmine-core": "^2.99.1",
     "jasmine-spec-reporter": "^4.2.0",
