@@ -7,7 +7,8 @@ import { ListingExpiryConfig } from 'app/modals/models/listingExpiry.modal.confi
 interface ListingExpiryIface {
   title: string,
   value: number,
-  estimateFee: Amount
+  estimateFee: Amount,
+  error?: string
 }
 @Component({
   selector: 'app-listing-expiration',
@@ -19,6 +20,7 @@ export class ListingExpirationComponent {
   @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
   @Output() onCancel: EventEmitter<string> = new EventEmitter<string>();
   txFee: string = '';
+  txError: string = '';
   expiration: number = 0;
 
   expiredList: Array<ListingExpiryIface> = [
@@ -65,6 +67,8 @@ export class ListingExpirationComponent {
                   this.loadTransactionFee();
                 }
               }
+            }, err => {
+              expiredItem.error = 'Unable to obtain estimate';
             }
           ).catch(
             err => {
@@ -83,6 +87,7 @@ export class ListingExpirationComponent {
     this.txFee = expiryItem ?
       `${expiryItem.estimateFee.getIntegerPart()}${expiryItem.estimateFee.dot()}${expiryItem.estimateFee.getFractionalPart()}` :
       '';
+    this.txError = expiryItem ? (expiryItem.error || '') : 'unknown';
   }
 
 }
