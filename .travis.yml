@@ -21,6 +21,9 @@ cache:
   - $HOME/.cache/electron
   - $HOME/.cache/electron-builder
 
+services:
+  - xvfb
+
 before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
@@ -43,7 +46,7 @@ script:
   - echo -en 'travis_fold:end:script.lint\\r'
 
   - echo 'Test Codebase' && echo -en 'travis_fold:start:script.test\\r'
-  - yarn run travis:test --browsers=ChromeHeadless
+  - yarn run travis:test
   - echo -en 'travis_fold:end:script.test\\r'
 
   - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./nightly.sh; fi;
