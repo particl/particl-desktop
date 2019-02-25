@@ -13,6 +13,7 @@ apt:
     - google-chrome-beta
     - icnsutils
     - graphicsmagick
+    - chromium-browser
 
 cache:
   directories:
@@ -23,6 +24,9 @@ cache:
 
 services:
   - xvfb
+
+before_install:
+  - export CHROME_BIN=chromium-browser
 
 before_script:
   - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "+build")
