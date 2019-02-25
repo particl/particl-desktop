@@ -13,6 +13,7 @@ apt:
     - google-chrome-beta
     - icnsutils
     - graphicsmagick
+    - xvfb
 
 cache:
   directories:
