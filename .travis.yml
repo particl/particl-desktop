@@ -24,7 +24,6 @@ cache:
 before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
-  - google-chrome --headless
 
 before_script:
   - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "+build")
@@ -44,7 +43,7 @@ script:
   - echo -en 'travis_fold:end:script.lint\\r'
 
   - echo 'Test Codebase' && echo -en 'travis_fold:start:script.test\\r'
-  - yarn run travis:test
+  - yarn run travis:test --browsers=ChromeHeadless
   - echo -en 'travis_fold:end:script.test\\r'
 
   - if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./nightly.sh; fi;
