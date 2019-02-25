@@ -13,7 +13,6 @@ apt:
     - google-chrome-beta
     - icnsutils
     - graphicsmagick
-    - xvfb
 
 cache:
   directories:
@@ -25,7 +24,7 @@ cache:
 before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
-  - "Xvfb :1 -screen 0 1024x768x16"
+  - google-chrome --headless
 
 before_script:
   - export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "+build")
