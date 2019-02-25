@@ -21,7 +21,7 @@ import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/e
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
-import { take, takeWhile } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { MatDialog } from '@angular/material';
 
@@ -217,7 +217,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private subToCategories() {
     this.category.list()
-      .pipe(take(1))
       .subscribe(list => this.updateCategories(list));
   }
 
@@ -573,6 +572,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
               this.backToSell();
             },
             (err) => {
+              this.dialog.closeAll();
               this.snackbar.open(err);
             }
           );

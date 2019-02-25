@@ -15,7 +15,7 @@ describe('CategoryService', () => {
     });
   });
 
-  it('should be created', inject([CategoryService], (service: CategoryService) => {
+  it('should be created', inject([MarketService], (service: CategoryService) => {
     expect(service).toBeTruthy();
   }));
 });

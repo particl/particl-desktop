@@ -137,7 +137,7 @@ export class RpcStateService extends StateService implements OnDestroy {
   private initWalletState() {
     this.observe('getwalletinfo').subscribe(response => {
       // check if account is active
-      if (!!response.hdmasterkeyid) {
+      if (!!response.hdseedid) {
         this.set('ui:walletInitialized', true);
       } else {
         this.set('ui:walletInitialized', false);

@@ -100,7 +100,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   loadCategories() {
     this.category.list()
-    .pipe(takeWhile(() => !this.destroyed))
     .subscribe(
       list => {
         this._rootCategoryList = list;

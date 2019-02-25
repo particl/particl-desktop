@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject ,  Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
+import { environment } from 'environments/environment';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 
@@ -57,7 +58,9 @@ export class ModalsHelperService implements OnDestroy {
     });
 
     /* Hook for checking the accept & terms modal */
-    this.checkForNewVersion();
+    if (!environment.isTesting) {
+      this.checkForNewVersion();
+    }
   }
 
   /**

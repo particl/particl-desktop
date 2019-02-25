@@ -1,10 +1,7 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
-import { Listing } from 'app/core/market/api/listing/listing.model';
-import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
@@ -37,8 +34,6 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
     private dialog: MatDialog,
-    private marketState: MarketStateService,
-    private listingServiceCache: PostListingCacheService,
     private modals: ModalsHelperService,
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService,
