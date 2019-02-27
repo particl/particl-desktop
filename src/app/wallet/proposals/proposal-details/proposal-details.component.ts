@@ -43,10 +43,10 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       showLabels: false,
       donut: true,
       legend: {
-        maxKeyLength: 100,
+        maxKeyLength: 35,
         margin: {
           left: 200,
-          right: 100,
+          right: 112,
           top: 5,
           bottom: 5
         },
