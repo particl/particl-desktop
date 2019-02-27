@@ -45,41 +45,18 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       legend: {
         maxKeyLength: 100,
         margin: {
-          left: 0,
-          right: 0,
+          left: 200,
+          right: 100,
           top: 5,
           bottom: 5
         },
-        padding: {
-          top: 0,
-          bottom: 0,
-          right: 5,
-          left: 5
-        }
+        rightAlign: true
       },
       color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
       tooltip: {
         enabled: true,
         hideDelay: 0,
         useInteractiveGuideline: false
-      },
-      callback: function() {
-        d3.selectAll('.nv-series text').each(function() {
-          const text = d3.select(this);
-          let words = text.text();
-          const dy = 0;
-          text.text(null).append('tspan').text(words.substring(0, 30))
-          if (words.length > 30) {
-            words = words.substring(30, words.length);
-            d3.select(this.parentNode).append('text').text(null)
-              .attr('text-anchor', 'start')
-              .attr('class', 'nv-legend-text')
-              .attr('dy', (dy + 1) + 'em')
-              .attr('dx', '8')
-              .append('tspan')
-              .text(words)
-          }
-        });
       }
     }
   };
