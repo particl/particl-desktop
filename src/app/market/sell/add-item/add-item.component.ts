@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs/Observable';
@@ -25,6 +25,20 @@ import { ProcessingModalComponent } from 'app/modals/processing-modal/processing
 import { MatDialog } from '@angular/material';
 
 
+class CurrencyMinValidator {
+  static validValue(fc: FormControl) {
+    const amount: number = +fc.value;
+    if ( amount >= 0 ) {
+      if ( (fc.value.length > +amount.toFixed(8).length) || (amount > 1e06) ) {
+        return ({ validAmount: false });
+      }
+      return (null);
+    }
+    return ({ validAmount: false });
+  }
+}
+
+
 @Component({
   selector: 'app-add-item',
   templateUrl: './add-item.component.html',
@@ -37,7 +51,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   // template id
   templateId: number;
   preloadedTemplate: Template;
-  keys: string[] = ['-', 'e', 'E', '+'];
   itemFormGroup: FormGroup;
 
   _rootCategoryList: Category = new Category({});
@@ -48,10 +61,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
   fileInput: any;
   picturesToUpload: string[];
   featuredPicture: number = 0;
-  expiration: number = 0;
   selectedCountry: Country;
   selectedCategory: Category;
-  canPublish: boolean = false;
+  canPublish: boolean = true;
 
   constructor(
     private router: Router,
@@ -87,9 +99,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(1000)]],
       category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required, Validators.min(0)]],
-      domesticShippingPrice:      ['', [Validators.required, Validators.min(0)]],
-      internationalShippingPrice: ['', [Validators.required, Validators.min(0)]]
+      basePrice:                  ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
+      domesticShippingPrice:      ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
+      internationalShippingPrice: ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]]
     });
 
     this.route.queryParams.take(1).subscribe(params => {
@@ -202,7 +214,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private subToCategories() {
     this.category.list()
-      .take(1)
       .subscribe(list => this.updateCategories(list));
   }
 
@@ -234,9 +245,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
         shortDescription: '',
         longDescription: '',
         category: 0,
-        basePrice: 0,
-        domesticShippingPrice: 0,
-        internationalShippingPrice: 0,
+        basePrice: '0',
+        domesticShippingPrice: '0',
+        internationalShippingPrice: '0',
         country: ''
       };
 
@@ -252,9 +263,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.setDefaultCountry(country);
       this.setDefaultCategory(template.category);
 
-      t.basePrice = template.basePrice.getAmount();
-      t.domesticShippingPrice = template.domesticShippingPrice.getAmount();
-      t.internationalShippingPrice = template.internationalShippingPrice.getAmount();
+      t.basePrice = template.basePrice.getAmountAsString();
+      t.domesticShippingPrice = template.domesticShippingPrice.getAmountAsString();
+      t.internationalShippingPrice = template.internationalShippingPrice.getAmountAsString();
       this.itemFormGroup.patchValue(t);
 
       if (isCloned) {
@@ -274,36 +285,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   setDefaultCountry(country: Country) {
     this.selectedCountry = country;
-  }
-
-  private async callPublish(expiryTime: number): Promise<void> {
-    this.openProcessingModal();
-    this.expiration = expiryTime;
-    this.log.d('Saving and publishing the listing.');
-    await this.upsert().then(
-      () => {
-        if (!this.canPublish) {
-          throw new Error('Message upload size exceeded');
-        }
-
-        this.modals.unlock({timeout: 30}, (status) => {
-          this.template.post(this.preloadedTemplate, 1, this.expiration)
-            .subscribe(listing => {
-              this.snackbar.open('Succesfully added Listing!');
-              this.log.d('Sucecssfully added listing: ', listing);
-              this.backToSell();
-            },
-            (err) => {
-              this.snackbar.open(err);
-            });
-        }, (err) => {
-          this.dialog.closeAll()
-        });
-      }
-    ).catch(err => {
-      this.dialog.closeAll();
-      this.snackbar.open(err);
-    });
   }
 
   setDefaultCategory(category: Category) {
@@ -370,9 +351,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       // update payment
       await this.payment.update(
         this.templateId,
-        item.basePrice,
-        item.domesticShippingPrice,
-        item.internationalShippingPrice
+        +item.basePrice,
+        +item.domesticShippingPrice,
+        +item.internationalShippingPrice
       ).toPromise();
     }
 
@@ -384,9 +365,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   isPaymentInfoUpdated(item: any): boolean {
     return (
-      this.preloadedTemplate.basePrice.getAmount() !== item.basePrice ||
-      this.preloadedTemplate.domesticShippingPrice.getAmount() !== item.domesticShippingPrice ||
-      this.preloadedTemplate.internationalShippingPrice.getAmount() !== item.internationalShippingPrice
+      this.preloadedTemplate.basePrice.getAmount() !== +item.basePrice ||
+      this.preloadedTemplate.domesticShippingPrice.getAmount() !== +item.domesticShippingPrice ||
+      this.preloadedTemplate.internationalShippingPrice.getAmount() !== +item.internationalShippingPrice
     )
   }
 
@@ -404,9 +385,28 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   numericValidator(event: any) {
-    // Special character validation
     const pasted = String(event.clipboardData ? event.clipboardData.getData('text') : '' );
-    if (this.keys.includes(event.key) || pasted.split('').find((c) =>  this.keys.includes(c))) {
+    const key = String(event.key || '');
+
+    const value = `${pasted}${key}${String(event.target.value)}`;
+    let valid = true;
+    let sepFound = false;
+    for (let ii = 0; ii < value.length; ii++) {
+      if (value.charAt(ii) === '.') {
+        if (sepFound) {
+          valid = false;
+          break;
+        }
+        sepFound = true;
+        continue;
+      }
+      const charCode = value.charCodeAt(ii);
+      if ( (charCode < 48) || (charCode > 57)) {
+        valid = false;
+        break;
+      }
+    }
+    if (!valid) {
       return false;
     }
   }
@@ -456,12 +456,46 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveAndPublish() {
+  async saveAndPublish() {
     if (!this.validate()) {
       return;
     };
 
-    this.modals.openListingExpiryModal(async (expiryTime: number) => await this.callPublish(expiryTime));
+    this.log.d('Saving and publishing the listing.');
+    // Oh look, what a mess ahead...
+    // @TODO refactor this so that the modal unlock can occur in the openListingModal() target component,
+    //    WITHOUT inducing circular dependencies.
+    this.openProcessingModal();
+    await this.upsert().then(
+      () => {
+        if (!this.canPublish) {
+          throw new Error('Message upload size exceeded');
+        }
+      }
+    ).then(
+      () => {
+        // Close the loading modal
+        this.dialog.closeAll();
+      }
+    ).then(
+      () => {
+        this.modals.unlock({timeout: 30},
+          (status) => {
+            this.modals.openListingExpiryModal({template: this.preloadedTemplate}, (expiration: number) => {
+              this.postTemplate(expiration);
+            });
+          },
+          (err) => {
+            this.dialog.closeAll();
+          },
+          false
+        );
+      }
+    ).catch(err => {
+      this.dialog.closeAll();
+      this.snackbar.open(err);
+    });
+
   }
 
   onCountryChange(country: Country): void {
@@ -517,6 +551,30 @@ export class AddItemComponent implements OnInit, OnDestroy {
     // 89504E47 === 'image/png'
     // (FFD8) === 'image/jpeg'
     return signature.startsWith('FFD8') || signature.startsWith('89504E47');
+  }
+
+  private postTemplate(expiryDays: number) {
+    this.modals.unlock({timeout: 30},
+      (status) => {
+        this.openProcessingModal();
+        this.template.post(this.preloadedTemplate, 1, expiryDays)
+          .subscribe(
+            (listing) => {
+              this.dialog.closeAll();
+              this.snackbar.open('Succesfully added Listing!');
+              this.log.d('Sucecssfully added listing: ', listing);
+              this.backToSell();
+            },
+            (err) => {
+              this.dialog.closeAll();
+              this.snackbar.open(err);
+            }
+          );
+      },
+      (err) => {
+        this.dialog.closeAll();
+      }
+    );
   }
 
 
