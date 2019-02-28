@@ -11,7 +11,6 @@ export class Proposal {
   public id: number;
   createdAt: number;
   expiredAt: number;
-  MAX_SAFE_INTEGER: number = 9007199254740991;
   isExpiredAtValid: boolean;
 
   constructor(object: any) {
@@ -30,7 +29,7 @@ export class Proposal {
      * MAX_SAFE_INTEGER = 9007199254740991.
      */
 
-    this.isExpiredAtValid = object.expiredAt < this.MAX_SAFE_INTEGER;
+    this.isExpiredAtValid = Number.isSafeInteger(object.expiredAt);
   }
 
   get expiryTimeStamp(): String {
