@@ -50,6 +50,10 @@ class DaemonManager extends EventEmitter {
     return this._checkForNewConfig();
   }
 
+  shutdown() {
+    this.emit('close');
+  }
+
   getClient(clientId) {
     return this._availableClients[clientId.toLowerCase()];
   }
@@ -229,6 +233,10 @@ class DaemonManager extends EventEmitter {
 
         const available = _.filter(clients, c => !!c.state.available);
 
+        this.on('close', () => {
+          mgr.shutdown();
+        });
+
         if (!available.length) {
           if (_.isEmpty(clients)) {
             throw new Error('No client binaries available for this system!');
@@ -272,7 +280,9 @@ class DaemonManager extends EventEmitter {
     .catch((err) => {
       log.error(err);
 
-      this._emit('error', err.message);
+      const errMessage = err.message ? err.message : String(err);
+
+      this._emit('error', errMessage);
 
       // show error
       if (err.message.indexOf('Hash mismatch') !== -1) {
@@ -287,7 +297,9 @@ class DaemonManager extends EventEmitter {
         });
 
         // throw so the main.js can catch it
-        throw err;
+        if (!(err.status && err.status === 'cancel')) {
+          throw err;
+        }
       }
     });
   }

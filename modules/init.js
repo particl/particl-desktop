@@ -88,7 +88,11 @@ daemonManager.on('status', (status, msg) => {
 
 });
 
-electron.app.on('before-quit', function beforeQuit(event) {
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+electron.app.on('before-quit', async function beforeQuit(event) {
   log.info('received quit signal, cleaning up...');
 
   event.preventDefault();
@@ -96,13 +100,14 @@ electron.app.on('before-quit', function beforeQuit(event) {
 
   // destroy IPC listeners
   rpc.destroy();
+  daemonWarner.destroy();
   notification.destroy();
   closeGui.destroy();
 
-  market.stop();
-  daemon.stop().then(() => {
+  daemonManager.shutdown();
+  market.stop().then(() => sleep(2000)).then(() => daemon.stop()).then(() => {
     log.info('daemon.stop() resolved!');
-  })
+  });
 });
 
 electron.app.on('quit', (event, exitCode) => {
