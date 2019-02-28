@@ -91,7 +91,6 @@ export class AddProposalComponent implements OnInit {
   }
 
   submitProposal(): void {
-
     // check wallet status (unlock if locked ?).
     this.modalService.unlock({timeout: 10}, () => this.proposalTransactionFeeCallback())
   }
