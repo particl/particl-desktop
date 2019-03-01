@@ -14,6 +14,7 @@ import { Amount } from '../../../core/util/utils';
 export class BalanceComponent implements OnInit, OnDestroy {
 
   @Input() type: string; // "total_balance", "anon_balance", "balance", "staked_balance", "blind_balance"
+  @Input() isOverView: boolean = false;
 
   private log: any = Log.create(`balance.component ${this.type}`);
   private destroyed: boolean = false;
