@@ -29,7 +29,7 @@ export class Proposal {
      * MAX_SAFE_INTEGER = 9007199254740991.
      */
 
-    this.isExpiredAtValid = Number.isSafeInteger(object.expiredAt);
+    this.isExpiredAtValid = Number.isSafeInteger(object.expiredAt) && object.expiredAt < Number.MAX_SAFE_INTEGER;
   }
 
   get expiryTimeStamp(): String {

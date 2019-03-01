@@ -63,7 +63,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.peerService.getBlockCount()
-    .takeWhile(() => !this.destroyed)
+    .takeWhile(() => !this.destroyed).throttleTime(60000)
     .subscribe((count: number) => {
 
       if (this.tabLabels[this.selectedTab] === 'active') {
