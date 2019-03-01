@@ -81,7 +81,8 @@
             <span class="no">{{i+1}}</span>
             <div class="content">
               <mat-form-field class="full-width">
-                <input matInput placeholder="Option #{{i+1}}" formControlName="option">
+                <input matInput placeholder="Option #{{i+1}}" formControlName="option" maxlength="50">
+                 <mat-hint align="end">{{ option.value?.option?.length || 0 }} / 50</mat-hint>
               </mat-form-field>
             </div>
   
