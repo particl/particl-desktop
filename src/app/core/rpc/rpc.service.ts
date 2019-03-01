@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
 import { environment } from '../../../environments/environment';
+import { IWallet, MultiwalletService } from 'app/multiwallet/multiwallet.service';
 
 declare global {
   interface Window {
@@ -22,7 +23,7 @@ declare global {
 @Injectable()
 export class RpcService implements OnDestroy {
 
-  private log: any = Log.create('rpc.service');
+  private log: any = Log.create('rpc.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
   private isInitialized: boolean = false;
   private DAEMON_CHANNEL: string = 'rpc-configuration';
@@ -40,13 +41,9 @@ export class RpcService implements OnDestroy {
   // note: password basic64 equiv= dGVzdDp0ZXN0
   private authorization: string = btoa('test:test');
 
-  public isElectron: boolean = false;
-
   constructor(
-    private _http: HttpClient,
-    private _ipc: IpcService
+    private _http: HttpClient
   ) {
-    this.isElectron = false;  // window.electron
     if (environment.isTesting || !window.electron) {
       this.isInitialized = true;
     } else {
@@ -61,6 +58,18 @@ export class RpcService implements OnDestroy {
 
   get enabled(): boolean {
     return this.isInitialized;
+  }
+
+  /**
+   * Set the wallet to execute commands against.
+   * @param w the wallet filename .
+   */
+  set wallet(wallet: string) {
+    localStorage.setItem('wallet', wallet);
+  }
+
+  get wallet() {
+    return localStorage.getItem('wallet') || '';
   }
 
   /**
@@ -84,15 +93,6 @@ export class RpcService implements OnDestroy {
       return Observable.throw('Initializing...');
     }
 
-    if (this.isElectron) {
-      return this._ipc.runCommand('rpc-channel', null, method, params).pipe(
-        map(response => response && (response.result !== undefined)
-                      ? response.result
-                      : response
-        )
-      );
-    } else {
-      // Running in browser, delete?
       const postData = JSON.stringify({
         method: method,
         params: params,
@@ -106,8 +106,13 @@ export class RpcService implements OnDestroy {
       };
       const headers = new HttpHeaders(headerJson);
 
+      let url = `http://${this.hostname}:${this.port}`;
+      if (!['createwallet'].includes(method)) {
+        url += `/wallet/${this.wallet}`
+      }
+
       return this._http
-        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
+        .post(url, postData, { headers: headers })
           .map((response: any) => response.result)
           .catch(error => {
             let err: string;
@@ -121,7 +126,6 @@ export class RpcService implements OnDestroy {
 
             return Observable.throw(err)
           })
-    }
   }
 
   private daemonListener(config: any): Observable<any> {

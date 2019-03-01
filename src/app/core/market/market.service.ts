@@ -23,29 +23,31 @@ export class MarketService {
   constructor(private _http: HttpClient) { }
 
   public call(method: string, params?: Array<any> | null): Observable<any> {
+
+    return Observable.of(null);
     // Running in browser, delete?
-    const postData = JSON.stringify({
-      method: method,
-      params: params,
-      id: 1,
-      jsonrpc: '2.0'
-    });
+    // const postData = JSON.stringify({
+    //   method: method,
+    //   params: params,
+    //   id: 1,
+    //   jsonrpc: '2.0'
+    // });
 
-    const headerJson = {
-      'Content-Type': 'application/json',
-      // 'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`), // we hijack the http request in electron
-      'Accept': 'application/json',
-    };
-    const headers = new HttpHeaders(headerJson);
+    // const headerJson = {
+    //   'Content-Type': 'application/json',
+    //   // 'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`), // we hijack the http request in electron
+    //   'Accept': 'application/json',
+    // };
+    // const headers = new HttpHeaders(headerJson);
 
-    return this._http.post(this.url, postData, { headers: headers })
-        .map((response: any) => response.result)
-        .catch((error: any) => {
-          this.log.d('Market threw an error!');
-          this.log.d('Market error:', error);
-          error = this.extractMPErrorMessage(error.error);
-          return Observable.throw(error);
-        })
+    // return this._http.post(this.url, postData, { headers: headers })
+    //     .map((response: any) => response.result)
+    //     .catch((error: any) => {
+    //       this.log.d('Market threw an error!');
+    //       this.log.d('Market error:', error);
+    //       error = this.extractMPErrorMessage(error.error);
+    //       return Observable.throw(error);
+    //     })
   }
 
   public uploadImage(templateId: number, base64DataURIArray: any[]) {

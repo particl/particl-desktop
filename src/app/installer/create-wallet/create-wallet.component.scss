@@ -1,0 +1,287 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+$installer-sidebar-width: 260px;
+$installer-sidebar-padding: 30px;
+$installer-header-height: 96px;
+
+// ------ UI ELEMENTS ------ //
+
+.container-block {
+  padding: 35px 45px;
+}
+
+.subtitle {
+  @extend %subtitle;
+  &:first-child {
+    margin-top: 12px;
+  }
+}
+
+// TODO: move to %placeholders
+.box-title {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 5px 0 20px;
+}
+
+.action-card {
+  margin-top: 45px;
+  padding: 32px 42px;
+}
+
+.progress {
+  .step {
+    margin-bottom: 12px;
+    position: relative;
+    .number {
+      display: inline-block;
+      background: lighten($bg-black, 10%);
+      border: 4px solid $bg-black;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      position: relative;
+      top: -1px;
+      z-index: 10;
+    }
+    .desc {
+      display: inline-block;
+      font-size: 14px;
+      margin-left: 8px;
+      color: darken($bg, 50%);
+    }
+    &:not(.last):after { // lines connecting numbers
+      content: "";
+      display: block;
+      background: lighten($bg-black, 10%);
+      width: 2px;
+      position: absolute;
+      top: 12px;
+      bottom: -24px;
+      left: 15px;
+      z-index: 1;
+    }
+    &.active { // active steps
+      .number {
+        background: $color;
+        font-weight: 700;
+        color: $bg-black;
+      }
+      .desc {
+        font-weight: 500;
+        color: $bg;
+      }
+    }
+    &.done { // finished steps
+      &:after {
+        background: rgba($color, 0.2);
+      }
+      .number {
+        background: mix($color, $bg-black);
+        color: $bg-black;
+      }
+      .desc {
+        font-weight: 400;
+        color: rgba($bg, 0.8);
+      }
+    }
+  }
+}
+
+p {
+  font-size: 14px;
+  line-height: 1.45;
+  &.widget-help {
+    font-size: 13px;
+  }
+  &.info, &.warning {
+    padding: 24px 24px 24px 78px;
+    margin: 32px -45px;
+    &:before { // info icon
+      top: 32px;
+      left: 45px;
+    }
+    .action-card & { // messages in cards
+      margin: -32px -42px 24px;
+      padding: 20px 24px 20px 74px;
+      &.bottom {
+        margin: 24px -42px -32px;
+      }
+      &:before {
+        top: 29px;
+        left: 42px;
+      }
+    }
+  }
+  &.info {
+    background: rgba($color-info, 0.07);
+    .action-card & {
+      border-bottom: 1px solid rgba($color-info, 0.22);
+      &.bottom {
+        border-bottom: none;
+        border-top: 1px solid rgba($color-info, 0.22);
+      }
+    }
+  }
+  &.warning {
+    background: rgba($color-alert, 0.07);
+    .action-card & {
+      border-bottom: 1px solid rgba($color-alert, 0.22);
+      &.bottom {
+        border-bottom: none;
+        border-top: 1px solid rgba($color-alert, 0.22);
+      }
+    }
+  }
+}
+
+mat-hint.error {
+  color: $color-alert;
+}
+
+
+// ------ LAYOUT ------ //
+
+.installer {
+  @extend %disable-select;
+  display: flex;
+  height: 100vh;
+  .sidebar {
+    width: ($installer-sidebar-width - (2 * $installer-sidebar-padding));
+    padding: $installer-sidebar-padding;
+    background: $bg-black;
+    background-size: 300px;
+    color: $bg;
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    .logo {
+      display: block;
+      width: 100px;
+      margin: 20px auto 55px;
+    }
+    .title {
+      text-align: center;
+    }
+  }
+  .content {
+    background: $bg;
+    width: 100%;
+    margin-left: $installer-sidebar-width;
+    .title {
+      @extend %mat-card;
+      padding: 35px 45px;
+      font-size: 22px;
+      font-weight: 500;
+      height: ($installer-header-height - (2 * 35px));
+    }
+  }
+}
+
+.action-buttons {
+  margin: 6px 45px 45px;
+  &.huge {
+    margin: 46px 0 0;
+    display: flex;
+    align-items: stretch;
+    .half {
+      @extend %tfx;
+      flex: 1 1 50%;
+      text-align: center;
+      margin: 0;
+      padding: 36px 46px 46px;
+      .icon {
+        @extend %tfx;
+        font-size: 38px;
+        color: $bg-shadow;
+      }
+      .choice-title {
+        font-size: 15px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin: 14px 0 12px;
+      }
+      .choice-desc {
+        margin: 8px 0 26px;
+        color: $text-muted;
+      }
+      &:hover {
+        background: $color-white;
+        &.create {
+          .icon {
+            transform: scale(1.1);
+            color: $color;
+          }
+        }
+        &.restore {
+          .icon {
+            transform: rotate(45deg) scale(1.1);
+            color: $color-info;
+          }
+        }
+      }
+      &:last-of-type {
+        margin-left: 30px;
+      }
+    }
+  }
+}
+
+/* ------------------------------- *\
+    Name wallet
+\* ------------------------------- */
+
+.wallet-name {
+  @extend .action-card;
+  .mat-form-field {
+    width: 260px;
+  }
+}
+
+
+/* ------------------------------- *\
+    Recovery Password
+\* ------------------------------- */
+
+.recovery-password {
+  .mat-form-field {
+    width: 200px;
+    margin-right: 20px;
+  }
+}
+
+
+/* ------------------------------- *\
+    Recovery Phrase
+\* ------------------------------- */
+
+
+app-password > div {
+  margin-top: 20px;
+}
+
+input.recovery-word {
+  max-width: 100%;
+}
+
+
+/* ------------------------------- *\
+    Preparing wallet (~ Waiting)
+\* ------------------------------- */
+
+.preparing-wallet {
+  text-align: center;
+  display: flex;
+  padding: 0 45px;
+  height: calc(100% - #{$installer-header-height});
+  position: relative;
+  & > .center {
+    margin: auto;
+  }
+  p.lead {
+    font-size: 17px;
+  }
+}

@@ -62,6 +62,16 @@ export class StateService {
     return observable.distinctUntilChanged();
   }
 
+  clear() {
+    Object.keys(this._observerPairs).forEach((prop) => {
+      if (this._observerPairs[prop].observer) {
+        this._observerPairs[prop].observer.complete()
+      };
+    })
+
+    this._observerPairs = {};
+    this._state = {};
+  }
 
   private _clone(object: InternalStateType) {
     // simple object clone

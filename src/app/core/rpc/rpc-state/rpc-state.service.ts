@@ -9,26 +9,40 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 @Injectable()
 export class RpcStateService extends StateService implements OnDestroy {
 
-  private log: any = Log.create('rpc-state.class');
+  private log: any = Log.create('rpc-state.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
 
   private _enableState: boolean = true;
+  private _services: any[] = [];
+  private _timeouts: any[] = [];
 
   /** errors gets updated everytime the stateCall RPC requests return an error */
   public errorsStateCall: Subject<any> = new Subject<any>();
 
   constructor(private _rpc: RpcService) {
     super();
+  }
 
+  start(): void {
+    this._enableState = true;
     this.register('getwalletinfo', 5000);
     this.register('getblockchaininfo', 5000);
     this.register('getnetworkinfo', 10000);
     this.register('getstakinginfo', 10000);
+    this.register('getcoldstakinginfo', 10000);
 
     // TODO: get rid of these
     this.walletLockedState();
-    this.initWalletState();
+  }
 
+  stop() {
+    this._enableState = false;
+    console.log('########### STOPPING RPC STATE', this._enableState)
+    this._timeouts.forEach((timeout) => {
+      console.log(timeout);
+      clearTimeout(timeout;
+    })
+    this.clear();
   }
 
   /**
@@ -54,34 +68,77 @@ export class RpcStateService extends StateService implements OnDestroy {
     }
   }
 
+  refreshState(): Promise<any> {
+    const self = this;
+    return new Promise(function(resolve: any) {
+      if (self._enableState) {
+        const services = [];
+        self._services.forEach(service => {
+          services.push(self._makeServiceCall(service.method, service.params));
+        });
+        Promise.all(services).then(() => {
+          resolve();
+        });
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  private _makeServiceCall(method: string, params?: Array<any>): Promise<any> {
+    const self = this;
+    return new Promise(function(resolve: any, reject: any) {
+      self._rpc.call(method, params)
+        .subscribe(
+          success => {
+            self.stateCallSuccess(method, success);
+            resolve(success);
+          },
+          error => {
+            self.stateCallError(method, error, false);
+            reject(error);
+          });
+    });
+  }
+
   /** Register a state call, executes every X seconds (timeout) */
   register(method: string, timeout: number, params?: Array<any> | null): void {
+    // this._services.push({
+    //   method,
+    //   timeout,
+    //   params
+    // });
     if (timeout) {
       let firstError = true;
 
+      console.log('register', this);
       // loop procedure
       const _call = () => {
-        if (this.destroyed) {
+        console.log('_call', this);
+
+        if (this.destroyed || !this._enableState) {
           // RpcState service has been destroyed, stop.
           return;
         }
-        if (!this._enableState  || !this._rpc.enabled) {
-          // re-start loop after timeout - keep the loop going
-          setTimeout(_call, timeout);
+        console.log('################# CANCELLING STATE ', this._enableState);
+        if (!this._enableState) {
           return;
         }
+        console.log('## rpc call', method, params);
         this._rpc.call(method, params)
+          .takeWhile(() => this._enableState )
           .subscribe(
             success => {
               this.stateCallSuccess(method, success);
+              console.log('success', this);
 
               // re-start loop after timeout
-              setTimeout(_call, timeout);
+              this._timeouts.push(setTimeout(_call, timeout));
             },
             error => {
               this.stateCallError(method, error, firstError);
 
-              setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
+              this._timeouts.push(setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000));
               firstError = false;
             });
       };
@@ -95,8 +152,7 @@ export class RpcStateService extends StateService implements OnDestroy {
   private stateCallSuccess(method: string, response: any) {
     // no error
     this.errorsStateCall.next({
-      error: false,
-      electron: this._rpc.isElectron
+      error: false
     });
 
     this.set(method, response);
@@ -109,13 +165,13 @@ export class RpcStateService extends StateService implements OnDestroy {
     // if not first error, show modal
     if (!firstError) {
       this.errorsStateCall.next({
-        error: error.target ? error.target : error,
-        electron: this._rpc.isElectron
+        error: error.target ? error.target : error
       });
     }
   }
 
   ngOnDestroy() {
+    this.stop();
     this.destroyed = true;
   }
 
@@ -127,20 +183,9 @@ export class RpcStateService extends StateService implements OnDestroy {
     this.observe('getwalletinfo', 'encryptionstatus')
       .takeWhile(() => !this.destroyed)
       .subscribe(status => {
-        this.log.d(' [rm] updating locked state maybe');
+        this.log.d(' [rm] updating locked state maybe', status);
         this.set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
       });
   }
 
-  // TODO: get rid of this after improve-router
-  private initWalletState() {
-    this.observe('getwalletinfo').subscribe(response => {
-      // check if account is active
-      if (!!response.hdseedid) {
-        this.set('ui:walletInitialized', true);
-      } else {
-        this.set('ui:walletInitialized', false);
-      }
-    }, error => this.log.er('RPC Call returned an error', error));
-}
 }

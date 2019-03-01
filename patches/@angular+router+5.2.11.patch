@@ -1,0 +1,13 @@
+diff --git a/node_modules/@angular/router/esm5/router.js b/node_modules/@angular/router/esm5/router.js
+index 2ce0cd5..0cc3579 100644
+--- a/node_modules/@angular/router/esm5/router.js
++++ b/node_modules/@angular/router/esm5/router.js
+@@ -2053,7 +2053,7 @@ var ApplyRedirects = /** @class */ (function () {
+         }
+         if (route.loadChildren) {
+             // lazy children belong to the loaded module
+-            if (route._loadedConfig !== undefined) {
++            if (route._loadedConfig !== undefined && !route._loadedConfig.module._destroyed) {
+                 return of(route._loadedConfig);
+             }
+             return mergeMap.call(runCanLoadGuard(ngModule.injector, route), function (shouldLoad) {

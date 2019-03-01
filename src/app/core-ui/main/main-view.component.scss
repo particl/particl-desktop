@@ -159,8 +159,21 @@ a.sidebar-item-link {
   background-color: $bg-black;
   color: $color-white;
   display: flex;
-  flex-direction: column;
+  align-items: stretch;
+  multiwallet-sidebar {
+    flex: 0 0 30px;
+    display: flex;
+    text-align: center;
+  }
+  .sidebar-menu {
+    flex: 1 1 100%;
+  }
+}
 
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  
   .logo {
     flex: 0 0 50px;
     display: block;

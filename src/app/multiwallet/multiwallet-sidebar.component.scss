@@ -1,0 +1,45 @@
+@import "./src/assets/_config"; // import shared colors etc.
+
+// small sidebar for multiwallet, settings etc.
+.mini-sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    background: darken($bg-black, 5%);
+    padding: 12px 10px;
+    .multiwallet {
+      flex: 1 1 100%;
+      .mat-raised-button {
+        @extend %tfx;
+        min-width: auto;
+        margin: 0 auto 12px;
+        width: 34px;
+        padding: 0;
+        height: 32px;
+        line-height: 32px;
+        font-family: $font;
+        font-weight: 700;
+        &.mat-primary:not(.active) {
+          background: lighten($bg-black, 7%);
+          font-weight: 500;
+          &:hover {
+            background: lighten($bg-black, 15%);
+          }
+        }
+      }
+    }
+    .buttons {
+      flex: 1 1 10px;
+      .mat-button {
+        margin: 6px 10px 0;
+        opacity: 0.25;
+        padding: 0;
+        &:hover {
+          opacity: 1;
+          color: $color-white;
+        }
+        .mat-icon {
+          margin: 0;
+        }
+      }
+    }
+  }

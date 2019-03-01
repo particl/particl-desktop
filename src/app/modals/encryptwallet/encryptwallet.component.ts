@@ -58,7 +58,8 @@ export class EncryptwalletComponent {
         this.log.d('restart was trigger, open create wallet again');
         this._rpcState.set('ui:spinner', false);
         if (!this._modals.initializedWallet) {
-          this._modals.createWallet();
+          // TODO: FIx this
+          // this._modals.createWallet();
         }
         this._dialogRef.close();
       });

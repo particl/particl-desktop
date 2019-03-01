@@ -54,6 +54,14 @@ export class CoreModule {
       ]
     };
   }
+  static forChild(): ModuleWithProviders {
+    return {
+      ngModule: CoreModule,
+      providers: [
+
+      ]
+    };
+  }
 }
 
 export { IpcService } from './ipc/ipc.service';

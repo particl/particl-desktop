@@ -115,6 +115,11 @@ $break-xhd: 2200px;
   padding: 0 11px;
 }
 
+%mat-card {
+  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
+  background: $color-white;
+}
+
 %menu-divider { // diviers in sidebar menu
   border-top: 1px solid #15191a;
   box-shadow: 0 1px 0 #333 inset;

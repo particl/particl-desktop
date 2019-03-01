@@ -44,7 +44,8 @@
     "travis:win64": "electron-builder --win --x64 && yarn run checksum",
     "travis:win32": "electron-builder --win --ia32 && yarn run checksum",
     "travis:test": "ng test --single-run --code-coverage",
-    "start": "yarn run start:electron:fast"
+    "start": "yarn run start:electron:fast",
+    "postinstall": "patch-package"
   },
   "productName": "Particl Desktop Testnet",
   "build": {
@@ -176,6 +177,8 @@
     "ng2-nvd3": "^2.0.0",
     "node-unzip-2": "^0.2.1",
     "particl-marketplace": "^0.0.51",
+    "patch-package": "^6.0.5",
+    "postinstall-postinstall": "^2.0.0",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.20"

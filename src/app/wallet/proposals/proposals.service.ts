@@ -5,6 +5,7 @@ import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.mode
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ProposalsService {
@@ -21,6 +22,8 @@ export class ProposalsService {
 
   // proposal list.
   list(startTime: any, expireTime: any) {
+    // TODO: Fix
+    return Observable.of([]);
     const params = ['list', startTime, expireTime];
     return this.marketService.call('proposal', params)
       .map((v) => v.map(p => new Proposal(p)));

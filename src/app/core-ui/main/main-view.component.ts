@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, NgModuleRef } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import { MainViewModule } from 'app/core-ui/main/main-view.module';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
@@ -46,6 +47,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   public unlocked_until: number = 0;
 
   constructor(
+    private _main: NgModuleRef<MainViewModule>,
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpc: RpcService,
@@ -144,10 +146,17 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+
+    try {
+      this._main.destroy();
+    } catch (e) {
+      this.log.er('Main module was already destroyed!', e);
+    }
   }
   /** Open createwallet modal when clicking on error in sidenav */
   createWallet() {
-    this._modalsService.createWallet();
+    // TODO: Fix
+    // this._modalsService.createWallet();
   }
 
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
