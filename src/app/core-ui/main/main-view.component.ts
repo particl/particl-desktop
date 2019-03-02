@@ -14,6 +14,7 @@ import { UserMessageService } from 'app/core/market/user-messages/user-message.s
 import { AlphaMainnetWarningComponent } from 'app/modals/alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { UserMessage, UserMessageType } from 'app/core/market/user-messages/user-message.model'
 import { isPrerelease, isMainnetRelease } from 'app/core/util/utils';
+import { MarketService } from 'app/core/market/market.service';
 
 /*
  * The MainView is basically:
@@ -59,7 +60,8 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // the following imports are just 'hooks' to
     // get the singleton up and running
     private _newtxnotifier: NewTxNotifierService,
-    public proposalsNotificationsService: ProposalsNotificationsService
+    public proposalsNotificationsService: ProposalsNotificationsService,
+    public _market: MarketService
   ) { }
 
   ngOnInit() {

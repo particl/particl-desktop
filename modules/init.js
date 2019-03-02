@@ -20,6 +20,7 @@ exports.start = function (mainWindow) {
   notification.init();
   closeGui.init();
   daemon.init();
+  market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);

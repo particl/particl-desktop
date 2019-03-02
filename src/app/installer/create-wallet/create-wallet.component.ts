@@ -33,7 +33,7 @@ export enum Steps {
 @Component({
   templateUrl: './create-wallet.component.html',
   styleUrls: ['./create-wallet.component.scss'],
-  providers: [PassphraseService, RpcService, RpcStateService]
+  providers: [PassphraseService]
 })
 export class CreateWalletComponent implements OnInit, OnDestroy {
   public log: any = Log.create('createwallet.component');
@@ -103,6 +103,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._rpcState.stop();
   }
 
   initialize(type: number): void {
@@ -153,17 +154,13 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
             this.log.d('createwallet: ', wallet);
             this.errorString = '';
             this._rpc.wallet = this.walletname;
-            // TODO: remove refresh, the rpc state should be cleared
-            this._rpcState.refreshState().then(() => {
-              this.isExistingWallet = true;
+            this.isExistingWallet = true;
 
-              // Dont remember history for the name step
-              if (this.isCrypted) {
-                this.setCurrentStep(Steps.MNEMONIC_INITIAL, false);
-              } else {
-                this.setCurrentStep(Steps.ENCRYPT, false);
-              }
-            });
+            if (this.isCrypted) {
+              this.setCurrentStep(Steps.MNEMONIC_INITIAL, false);
+            } else {
+              this.setCurrentStep(Steps.ENCRYPT, false);
+            }
           },
           error => {
             if (error.code === -4) {
@@ -182,6 +179,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
           this._rpc.call('encryptwallet', [this.encrypt])
             .take(1)
             .subscribe(() => {
+              // Start the rpc state for wallet lock info
+              this._rpcState.start();
               this._daemon.restart().then(() => {
                 this.isCrypted = true;
                 // Dont remember history for the encypt step, once encrypted we done here

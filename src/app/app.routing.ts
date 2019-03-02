@@ -10,7 +10,7 @@ export const app_routes: Routes = [
   { path: '', redirectTo: 'loading', pathMatch: 'full' },
   { path: 'loading', component: LoadingComponent },
   installer_routing,
-  { path: ':wallet', loadChildren: './core-ui/main/main-view.module#MainViewModule' }
+  { path: 'wallet', loadChildren: './core-ui/main/main-view.module#MainViewModule' }
 ];
 
 export const app_routing: ModuleWithProviders = RouterModule.forRoot(

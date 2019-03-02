@@ -1,6 +1,8 @@
-const log         = require('electron-log');
-const config    = require('../daemon/daemonConfig');
-const market      = require('particl-marketplace');
+const log = require('electron-log');
+const _options = require('../options').get();
+const market = require('particl-marketplace');
+const rxIpc = require('rx-ipc-electron/lib/main').default;
+const Observable = require('rxjs/Observable').Observable;
 
 // Stores the child process
 let child = undefined;
@@ -8,14 +10,24 @@ let child = undefined;
 const _options = config.getConfiguration();
 
 exports.init = function() {
+  rxIpc.registerListener('start-market', function() {
+    return Observable.create(observer => {
+      exports.start();
+      observer.complete(true);
+    });
+  });
+  
+  rxIpc.registerListener('stop-market', function() {
+    return Observable.create(observer => {
+      exports.stop();
+      observer.complete(true);
+    });
+  });
+}
 
-  if (child !== undefined) {
-    return;
-  }
-
+exports.start = function() {
+  if (!_options.skipmarket && !child) {
   const isTestnet = Boolean(+_options.testnet);
-
-  if (!_options.skipmarket) {
     log.info('market process starting.');
     const marketOptions = {
       ELECTRON_VERSION: process.versions.electron,
@@ -52,7 +64,9 @@ exports.init = function() {
 
 exports.stop = async function() {
   if (!_options.skipmarket && child) {
+    log.info('market process stopping.');
     market.stop();
+    child = null;
   }
 }
 

@@ -17,17 +17,26 @@ export class ProfileService implements OnDestroy {
 
   private defaultProfileId: number;
   private destroyed: boolean = false;
+  private isEnabled: boolean = false;
 
   constructor(
     private market: MarketService,
     private marketState: MarketStateService,
     public address: AddressService
   ) {
+  }
+
+  start() {
+    this.isEnabled = true;
     // find default profile
-    this.defaultId().takeWhile(() => !this.destroyed).subscribe((id: number) => {
+    this.defaultId().takeWhile(() => !this.destroyed && this.isEnabled).subscribe((id: number) => {
       this.log.d('setting default profile id to ' + id);
       this.defaultProfileId = id;
     });
+  }
+
+  stop() {
+    this.isEnabled = false;
   }
 
   list() {

@@ -7,19 +7,16 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
 import { UpdaterService } from './updater.service';
 
-const DEFAULT_WALLET = '';
-
 @Component({
   selector: 'app-loading',
   encapsulation: ViewEncapsulation.None,
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
-  providers: [RpcService, ConnectionCheckerService, UpdaterService]
+  providers: [ConnectionCheckerService, UpdaterService]
 })
 export class LoadingComponent implements OnInit {
   log: any = Log.create('loading.component');
 
-  private walletToLoad: string;
   loadingMessage: string;
 
   constructor(
@@ -31,7 +28,6 @@ export class LoadingComponent implements OnInit {
     private updater: UpdaterService
   ) {
     this.log.i('loading component initialized');
-    this.walletToLoad = DEFAULT_WALLET;
   }
 
   ngOnInit() {
@@ -53,11 +49,11 @@ export class LoadingComponent implements OnInit {
         const switching = params.get('wallet');
         if (switching) {
           // one was specified
-          this.walletToLoad = switching;
-        } // else just load DEFAULT_WALLET
+          this.rpc.wallet =  switching;
+        }
 
-        // either load the switching wallet or the default
-        this.rpc.wallet = this.walletToLoad;
+        // Only start performing check once rpc wallet is set otherwise we return the wrong wallet
+        this.con.performCheck();
 
         // kick off the connection checker
         // only after we have a wallet or default
@@ -91,7 +87,7 @@ export class LoadingComponent implements OnInit {
   }
 
   goToWallet() {
-    this.log.d('MainModule: moving to new wallet', this.walletToLoad);
-    this.router.navigate([this.walletToLoad ? this.walletToLoad : '[default]', 'main', 'wallet', 'overview']);
+    this.log.d('MainModule: moving to new wallet', this.rpc.wallet);
+    this.router.navigate(['wallet', 'main', 'wallet', 'overview']);
   }
 }

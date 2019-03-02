@@ -29,7 +29,7 @@
           </mat-list><!-- .sidebar-item-group -->
         </mat-content><!-- .sidebar-section -->
 
-        <mat-content class="sidebar-section" *ngIf="false">
+        <mat-content class="sidebar-section" *ngIf="_market.isMarketStarted">
           <mat-accordion [multi]="'multi'">
             <mat-expansion-panel #panel2 expanded="true" class="no-padding arrow-colored">
               <mat-expansion-panel-header>Market</mat-expansion-panel-header>
@@ -120,7 +120,7 @@
           </mat-accordion>
         </mat-content><!-- .sidebar-section -->
 
-        <mat-content class="sidebar-section" *ngIf="false">
+        <mat-content class="sidebar-section" *ngIf="_market.isMarketStarted">
           <mat-list class="sidebar-item-group">
             <a class="sidebar-item-link"
               routerLinkActive="active" routerLink="wallet/proposals">

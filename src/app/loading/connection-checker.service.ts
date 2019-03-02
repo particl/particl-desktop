@@ -21,9 +21,6 @@ export class ConnectionCheckerService implements OnDestroy {
     this.check = Observable.create(observer => {
       this.observer = observer;
     }).shareReplay();
-
-    // start checking
-    this.performCheck();
   }
 
   /**
@@ -34,13 +31,19 @@ export class ConnectionCheckerService implements OnDestroy {
     return this.check;
   }
 
-  private performCheck() {
+  public performCheck() {
     if (!this.destroyed) {
       this.log.d('performing check');
       this.log.d(`connection-checker wallet:`, this.rpc.wallet);
+
       this.rpc.call('getwalletinfo', []).subscribe(
         (getwalletinfo: any) => this.RpcHasResponded(getwalletinfo),
-        (error: any) => this.log.d('performCheck on rpc (error is normal here) ', error)
+        (error: any) => {
+          if (error.code === -18) {
+            this.rpc.wallet = '';
+          }
+          this.log.d('performCheck on rpc (error is normal here) ', error)
+        }
       );
 
 

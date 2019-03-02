@@ -22,8 +22,6 @@ export class ProposalsService {
 
   // proposal list.
   list(startTime: any, expireTime: any) {
-    // TODO: Fix
-    return Observable.of([]);
     const params = ['list', startTime, expireTime];
     return this.marketService.call('proposal', params)
       .map((v) => v.map(p => new Proposal(p)));

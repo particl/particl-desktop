@@ -2,7 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes, Router, ActivationStart } from '@angular/router';
 
-import { CoreModule } from '../../core/core.module';
 import { MaterialModule } from '../material/material.module';
 import { DirectiveModule } from '../directive/directive.module';
 import { ModalsModule } from 'app/modals/modals.module';
@@ -19,10 +18,13 @@ import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
 import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-badge.component';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
-// import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { MarketService } from 'app/core/market/market.service';
+import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { ProfileService } from 'app/core/market/api/profile/profile.service';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { interval } from 'rxjs/observable/interval';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -41,7 +43,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    CoreModule.forChild(),
     ModalsModule,
     MaterialModule,
     DirectiveModule,
@@ -78,26 +79,39 @@ export class MainViewModule implements OnDestroy {
   constructor(
     private _router: Router,
     private _rpc: RpcService,
-    private _rpcState: RpcStateService
+    private _rpcState: RpcStateService,
+    private _market: MarketService,
+    private _marketState: MarketStateService,
+    private _profile: ProfileService
   ) {
-    console.log('MainViewModule launched!');
-    // Not the prettiest code, but it listens to all router events
-    // and if one includes the wallet parameter, it will grab it
-    // and set the rpc wallet.
-    this._router.events
-      .filter(e => e instanceof ActivationStart)
-      .take(1)
-      .subscribe((event: any) => {
-        const wallet = event.snapshot.params['wallet'];
-        this._rpc.wallet = wallet === '[default]' ? '' : wallet;
+    console.log('############## CREATING NEW MAIN MODULE');
+    this._rpcState.start();
+    this._rpc.call('smsgdisable').subscribe(
+      () => this._rpc.call('smsgenable', [this._rpc.wallet]).subscribe()
+    );
 
-        this._rpcState.start();
-      });
+    if (this._rpc.wallet === 'Market') {
+      this._market.startMarket();
+      interval(500)
+        .takeWhile(() => !this._market.isMarketStarted)
+        .subscribe(
+          () => {},
+          () => {},
+          () => {
+            this._marketState.start();
+            this._profile.start();
+          });
+    }
   }
 
   ngOnDestroy() {
-    console.log('Stoppping MainModule!');
+    console.log('############## MAIN MODULE DESTROYED');
     this._rpcState.stop();
-    console.log('MainModule destroyed!');
+
+    if (this._market.isMarketStarted) {
+      this._market.stopMarket();
+      this._profile.stop();
+      this._marketState.stop();
+    }
   }
  }

@@ -64,7 +64,10 @@ window.ipc = new SafeIpcRenderer([
   'request-configuration',
 
   'rx-ipc-check-reply',
-  'rx-ipc-check-listener'
+  'rx-ipc-check-listener',
+
+  'start-market',
+  'stop-market'
 ]);
 
 window.electron = true;

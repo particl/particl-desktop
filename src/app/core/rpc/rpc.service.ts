@@ -107,7 +107,7 @@ export class RpcService implements OnDestroy {
       const headers = new HttpHeaders(headerJson);
 
       let url = `http://${this.hostname}:${this.port}`;
-      if (!['createwallet'].includes(method)) {
+      if (!['createwallet', 'loadwallet', 'listwalletdir', 'listwallet'].includes(method)) {
         url += `/wallet/${this.wallet}`
       }
 

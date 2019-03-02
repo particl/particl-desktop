@@ -5,11 +5,15 @@ import { Log } from 'ng2-logger';
 
 import { dataURItoBlob } from 'app/core/util/utils';
 import { environment } from '../../../environments/environment';
+import { IpcService } from 'app/core/ipc/ipc.service';
+import { interval } from 'rxjs/observable/interval';
 
 @Injectable()
 export class MarketService {
 
   private log: any = Log.create('rpc-state.class');
+  public isMarketStarted: boolean = false;
+  public _checkMarket: any;
 
   // hostname: string = 'dev1.particl.xyz';
   // hostname: string = 'localhost';
@@ -20,34 +24,44 @@ export class MarketService {
   url: string = `http://${this.hostname}:${this.port}/api/rpc`;
   imageUrl: string = `http://${this.hostname}:${this.port}/api/item-images/template/`;
 
-  constructor(private _http: HttpClient) { }
+  constructor(
+    private _http: HttpClient,
+    private _ipc: IpcService
+  ) { }
 
-  public call(method: string, params?: Array<any> | null): Observable<any> {
+  public call(method: string, params?: Array<any> | null, ping?: boolean): Observable<any> {
+    // Better way to circuit break this?
+    if (!this.isMarketStarted && !ping) {
+      return Observable.of([]);
+    }
 
-    return Observable.of(null);
-    // Running in browser, delete?
-    // const postData = JSON.stringify({
-    //   method: method,
-    //   params: params,
-    //   id: 1,
-    //   jsonrpc: '2.0'
-    // });
+    const postData = JSON.stringify({
+      method: method,
+      params: params,
+      id: 1,
+      jsonrpc: '2.0'
+    });
 
-    // const headerJson = {
-    //   'Content-Type': 'application/json',
-    //   // 'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`), // we hijack the http request in electron
-    //   'Accept': 'application/json',
-    // };
-    // const headers = new HttpHeaders(headerJson);
+    const headerJson = {
+      'Content-Type': 'application/json',
+      // 'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`), // we hijack the http request in electron
+      'Accept': 'application/json',
+    };
+    const headers = new HttpHeaders(headerJson);
 
-    // return this._http.post(this.url, postData, { headers: headers })
-    //     .map((response: any) => response.result)
-    //     .catch((error: any) => {
-    //       this.log.d('Market threw an error!');
-    //       this.log.d('Market error:', error);
-    //       error = this.extractMPErrorMessage(error.error);
-    //       return Observable.throw(error);
-    //     })
+    return this._http.post(this.url, postData, { headers: headers })
+        .map((response: any) => response.result)
+        .catch((error: any) => {
+          if (!ping) {
+            this.log.d('Market threw an error!');
+            this.log.d('Market error:', error);
+            error = this.extractMPErrorMessage(error.error);
+            return Observable.throw(error);
+          } else {
+            error = [];
+          }
+          return Observable.throw(error);
+        })
   }
 
   public uploadImage(templateId: number, base64DataURIArray: any[]) {
@@ -85,5 +99,32 @@ export class MarketService {
       return this.extractMPErrorMessage(errorObj.error);
     }
     return 'Invalid marketplace request';
+  }
+
+  startMarket() {
+    if (window.electron) {
+      this._ipc.runCommand('start-market', null, null);
+      this._checkMarket = interval(1000)
+        .takeWhile(() => !this.isMarketStarted)
+        .subscribe(() => {
+          this.call('profile', ['list'], true)
+            .take(1)
+            .subscribe(
+              (profiles) => {
+                if (profiles.length > 0) {
+                  this.isMarketStarted = true;
+                }
+              }
+            )
+        });
+    }
+  }
+
+  stopMarket() {
+    if (window.electron) {
+      this._checkMarket.unsubscribe();
+      this._ipc.runCommand('stop-market', null, null);
+      this.isMarketStarted = false;
+    }
   }
 }

@@ -1,4 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
@@ -22,7 +24,9 @@ export class MultiwalletService implements OnDestroy {
   private timer: any = Observable.interval(1000);
   private _list: BehaviorSubject<Array<IWallet>> = new BehaviorSubject([]);
 
-  constructor(private _rpc: RpcService) {
+  constructor(
+    private _rpc: RpcService,
+    private _router: Router) {
     this.listen();
   }
 
@@ -34,10 +38,16 @@ export class MultiwalletService implements OnDestroy {
     this.timer.takeWhile(() => !this.destroyed).subscribe(() => {
       this._rpc.call('listwalletdir', [])
         .map((response: any) => {
+          // Detect deleting of wallet in directory
+          if (!_.some(response.wallets, { 'name': this._rpc.wallet })) {
+            this._router.navigate(['/loading'], {
+              queryParams: { wallet: '' }
+            });
+          }
           response.wallets.forEach(wallet => {
             wallet.displayname = !wallet.name ? 'Default Wallet' : wallet.name;
           });
-          return response.wallets;
+          return _.orderBy(response.wallets, 'name', 'asc');
         })
         .subscribe(
           (wallets: IWallet[]) => this._list.next(wallets),

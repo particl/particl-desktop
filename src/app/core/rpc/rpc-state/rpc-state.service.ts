@@ -13,8 +13,6 @@ export class RpcStateService extends StateService implements OnDestroy {
   private destroyed: boolean = false;
 
   private _enableState: boolean = true;
-  private _services: any[] = [];
-  private _timeouts: any[] = [];
 
   /** errors gets updated everytime the stateCall RPC requests return an error */
   public errorsStateCall: Subject<any> = new Subject<any>();
@@ -37,11 +35,6 @@ export class RpcStateService extends StateService implements OnDestroy {
 
   stop() {
     this._enableState = false;
-    console.log('########### STOPPING RPC STATE', this._enableState)
-    this._timeouts.forEach((timeout) => {
-      console.log(timeout);
-      clearTimeout(timeout;
-    })
     this.clear();
   }
 
@@ -68,77 +61,29 @@ export class RpcStateService extends StateService implements OnDestroy {
     }
   }
 
-  refreshState(): Promise<any> {
-    const self = this;
-    return new Promise(function(resolve: any) {
-      if (self._enableState) {
-        const services = [];
-        self._services.forEach(service => {
-          services.push(self._makeServiceCall(service.method, service.params));
-        });
-        Promise.all(services).then(() => {
-          resolve();
-        });
-      } else {
-        resolve();
-      }
-    });
-  }
-
-  private _makeServiceCall(method: string, params?: Array<any>): Promise<any> {
-    const self = this;
-    return new Promise(function(resolve: any, reject: any) {
-      self._rpc.call(method, params)
-        .subscribe(
-          success => {
-            self.stateCallSuccess(method, success);
-            resolve(success);
-          },
-          error => {
-            self.stateCallError(method, error, false);
-            reject(error);
-          });
-    });
-  }
-
   /** Register a state call, executes every X seconds (timeout) */
   register(method: string, timeout: number, params?: Array<any> | null): void {
-    // this._services.push({
-    //   method,
-    //   timeout,
-    //   params
-    // });
     if (timeout) {
       let firstError = true;
 
-      console.log('register', this);
       // loop procedure
       const _call = () => {
-        console.log('_call', this);
-
         if (this.destroyed || !this._enableState) {
-          // RpcState service has been destroyed, stop.
           return;
         }
-        console.log('################# CANCELLING STATE ', this._enableState);
-        if (!this._enableState) {
-          return;
-        }
-        console.log('## rpc call', method, params);
         this._rpc.call(method, params)
           .takeWhile(() => this._enableState )
           .subscribe(
             success => {
               this.stateCallSuccess(method, success);
-              console.log('success', this);
 
               // re-start loop after timeout
-              this._timeouts.push(setTimeout(_call, timeout));
+              setTimeout(_call, timeout);
             },
             error => {
               this.stateCallError(method, error, firstError);
 
-              this._timeouts.push(setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000));
+              setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
               firstError = false;
             });
       };
@@ -171,7 +116,6 @@ export class RpcStateService extends StateService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.stop();
     this.destroyed = true;
   }
 
