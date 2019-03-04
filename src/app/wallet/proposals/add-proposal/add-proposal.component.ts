@@ -26,7 +26,7 @@ export class AddProposalComponent implements OnInit {
   public isTnCAccepted: boolean = false;
   // form controls
   public proposalFormGroup: FormGroup;
-  expireIn: number = 7; // days.
+  expireIn: number = 2; // days.
 
   constructor(
     private router: Router,
