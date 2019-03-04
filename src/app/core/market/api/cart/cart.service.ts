@@ -16,18 +16,27 @@ export class CartService {
   private log: any = Log.create('cart.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   private defaultCartId: number;
+  private isEnabled: boolean = false;
 
   constructor(
     private market: MarketService,
     private marketState: MarketStateService,
     private profile: ProfileService,
     public cache: AddToCartCacheService
-  ) {
+  ) {}
+
+  start() {
+    this.isEnabled = true;
+
     this.default().subscribe((cart: any) => {
       this.log.d('Setting default cartId and registering listener= ' + cart.id);
       this.defaultCartId = cart.id;
       this.marketState.register('cartitem', 60 * 1000, ['list', cart.id, true]);
     });
+  }
+
+  stop() {
+    this.isEnabled = false;
   }
 
   add(listing: Listing): Observable<any> {

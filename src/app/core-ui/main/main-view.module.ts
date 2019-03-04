@@ -24,7 +24,7 @@ import { ProfileService } from 'app/core/market/api/profile/profile.service';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { interval } from 'rxjs/observable/interval';
+import { CartService } from 'app/core/market/api/cart/cart.service';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -82,7 +82,8 @@ export class MainViewModule implements OnDestroy {
     private _rpcState: RpcStateService,
     private _market: MarketService,
     private _marketState: MarketStateService,
-    private _profile: ProfileService
+    private _profile: ProfileService,
+    private _cart: CartService
   ) {
     console.log('############## CREATING NEW MAIN MODULE');
     this._rpcState.start();
@@ -91,16 +92,14 @@ export class MainViewModule implements OnDestroy {
     );
 
     if (this._rpc.wallet === 'Market') {
-      this._market.startMarket();
-      interval(500)
-        .takeWhile(() => !this._market.isMarketStarted)
-        .subscribe(
-          () => {},
-          () => {},
-          () => {
-            this._marketState.start();
-            this._profile.start();
-          });
+      // We recheck if the market is started here for live reload cases
+      this._market.startMarket().subscribe(
+        () => {
+          this._marketState.start();
+          this._profile.start();
+          this._cart.start();
+        }
+      );
     }
   }
 

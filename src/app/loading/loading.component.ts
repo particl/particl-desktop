@@ -6,6 +6,7 @@ import { ConnectionCheckerService } from './connection-checker.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
 import { UpdaterService } from './updater.service';
+import { MarketService } from 'app/core/market/market.service';
 
 @Component({
   selector: 'app-loading',
@@ -25,7 +26,8 @@ export class LoadingComponent implements OnInit {
     private rpc: RpcService,
     private multi: MultiwalletService,
     private con: ConnectionCheckerService,
-    private updater: UpdaterService
+    private updater: UpdaterService,
+    private _market: MarketService
   ) {
     this.log.i('loading component initialized');
   }
@@ -60,8 +62,18 @@ export class LoadingComponent implements OnInit {
         this.con
           .whenRpcIsResponding()
           .subscribe(
-            getwalletinfo => this.decideWhereToGoTo(getwalletinfo),
-            error => this.log.d('whenRpcIsResponding errored')
+            getwalletinfo => {
+              // If we dealing with the market wallet start the market while the loading screen shows
+              if (this.rpc.wallet === 'Market') {
+                this._market.startMarket().subscribe(
+                  () => this.decideWhereToGoTo(getwalletinfo),
+                  error => this.log.d('Starting market failed: ', error)
+                );
+              } else {
+                this.decideWhereToGoTo(getwalletinfo);
+              }
+            },
+            error => this.log.d('whenRpcIsResponding errored', error)
           );
       });
     });

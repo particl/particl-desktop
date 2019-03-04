@@ -11,7 +11,7 @@ import { interval } from 'rxjs/observable/interval';
 @Injectable()
 export class MarketService {
 
-  private log: any = Log.create('rpc-state.class');
+  private log: any = Log.create('market-state.class');
   public isMarketStarted: boolean = false;
   public _checkMarket: any;
 
@@ -29,11 +29,11 @@ export class MarketService {
     private _ipc: IpcService
   ) { }
 
-  public call(method: string, params?: Array<any> | null, ping?: boolean): Observable<any> {
+  public call(method: string, params?: Array<any> | null): Observable<any> {
     // Better way to circuit break this?
-    if (!this.isMarketStarted && !ping) {
-      return Observable.of([]);
-    }
+    // if (!this.isMarketStarted && !ping) {
+    //   return Observable.of([]);
+    // }
 
     const postData = JSON.stringify({
       method: method,
@@ -52,14 +52,9 @@ export class MarketService {
     return this._http.post(this.url, postData, { headers: headers })
         .map((response: any) => response.result)
         .catch((error: any) => {
-          if (!ping) {
-            this.log.d('Market threw an error!');
-            this.log.d('Market error:', error);
-            error = this.extractMPErrorMessage(error.error);
-            return Observable.throw(error);
-          } else {
-            error = [];
-          }
+          this.log.d('Market threw an error!');
+          this.log.d('Market error:', error);
+          error = this.extractMPErrorMessage(error.error);
           return Observable.throw(error);
         })
   }
@@ -101,23 +96,34 @@ export class MarketService {
     return 'Invalid marketplace request';
   }
 
-  startMarket() {
-    if (window.electron) {
-      this._ipc.runCommand('start-market', null, null);
-      this._checkMarket = interval(1000)
-        .takeWhile(() => !this.isMarketStarted)
-        .subscribe(() => {
-          this.call('profile', ['list'], true)
-            .take(1)
-            .subscribe(
-              (profiles) => {
-                if (profiles.length > 0) {
-                  this.isMarketStarted = true;
-                }
-              }
-            )
-        });
-    }
+  startMarket(): Observable<any> {
+    return new Observable((observer) => {
+
+      if (this.isMarketStarted) {
+        observer.next(this.isMarketStarted);
+        observer.complete();
+        return;
+      }
+      if (window.electron) {
+        this._ipc.runCommand('start-market', null, null);
+        this._checkMarket =
+          interval(1000)
+            .takeWhile(() => !this.isMarketStarted)
+            .subscribe(() => {
+              this.call('profile', ['list'])
+                .map((profiles) => profiles.length > 0)
+                .subscribe((started) => {
+                  if (started) {
+                    this.isMarketStarted = started;
+                    observer.next(started);
+                    observer.complete();
+                  }
+                });
+            });
+      } else {
+        observer.complete()
+      }
+    });
   }
 
   stopMarket() {
