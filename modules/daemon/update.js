@@ -43,3 +43,11 @@ exports.send = function(data) {
     }
 }
 
+exports.destroy = function() {
+  destroyIpcListener();
+}
+
+function destroyIpcListener() {
+  rxIpc.removeListeners(UPDATE_CHANNEL);
+}
+

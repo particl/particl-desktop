@@ -15,7 +15,7 @@ if (process.platform === 'linux') {
 
 /* check for paths existence and create */
 [ app.getPath('userData'),
-  app.getPath('userData') + '/testnet'
+  path.join(app.getPath('userData'), 'testnet')
 ].map(path => !fs.existsSync(path) && fs.mkdirSync(path));
 
 if (app.getVersion().includes('testnet'))
@@ -24,9 +24,7 @@ if (app.getVersion().includes('testnet'))
 const options = require('./modules/options').parse();
 const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
-const rpc     = require('./modules/rpc/rpc');
 const _auth = require('./modules/webrequest/http-auth');
-const daemon  = require('./modules/daemon/daemon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

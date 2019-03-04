@@ -22,7 +22,7 @@ exports.init = function() {
   }
 }
 
-exports.stop = function() {
+exports.stop = async function() {
   if (!_options.skipmarket && child) {
     market.stop();
   }
