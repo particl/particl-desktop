@@ -1,12 +1,16 @@
+const rxIpc       = require('rx-ipc-electron/lib/main').default;
+const Observable  = require('rxjs/Observable').Observable;
 const fs          = require('fs');
 const path        = require('path');
 const log         = require('electron-log');
 const iniParser   = require('@jedmao/ini-parser').default;
 const cookie      = require('../rpc/cookie');
-const _options    = require('../options');
+const _options    = require('../options').get();
 
-const conFilePath = path.join( cookie.getParticlPath(_options.get()), 'particl.conf');
+const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
 const SAFE_KEYS = ['addressindex'];
+
+let STORED_CONFIGURATION = {}
 
 const isArray = function(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
@@ -211,5 +215,42 @@ const saveSettings = function(networkOpt) {
   }
 }
 
+
+const initializeIpcListener = () => {
+
+  removeIpcListener();
+
+  rxIpc.registerListener('rpc-configuration', () => {
+    let settings;
+    if (Object.keys(STORED_CONFIGURATION).length > 0) {
+      settings = STORED_CONFIGURATION;
+    } else {
+      const config = getSettings();
+      settings = config.global || {};
+      settings.auth = cookie.getAuth(_options);
+
+      if ( settings.testnet || _options.testnet) {
+        settings = { ...settings, ...(config.test || {}) };
+      }
+
+      settings = { ...settings, ..._options};
+      STORED_CONFIGURATION = settings;
+    }
+
+    return Observable.create(observer => {
+      observer.next(settings);
+      observer.complete();
+    });
+  });
+}
+
+
+const removeIpcListener = () => {
+  rxIpc.removeListeners('rpc-configuration');
+}
+
+
+exports.init = initializeIpcListener;
+exports.destroy = removeIpcListener;
 exports.getSettings = getSettings;
 exports.saveSettings = saveSettings;

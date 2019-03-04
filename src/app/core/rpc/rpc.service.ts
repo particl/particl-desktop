@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
-import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { map, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
 import { environment } from '../../../environments/environment';
@@ -25,6 +24,7 @@ export class RpcService implements OnDestroy {
 
   private log: any = Log.create('rpc.service');
   private destroyed: boolean = false;
+  private isInitialized = false;
 
   /**
    * IP/URL for daemon (default = localhost)
@@ -36,9 +36,8 @@ export class RpcService implements OnDestroy {
    */
   private port: number = environment.particlPort;
 
-  // note: basic64 equiv= dGVzdDp0ZXN0
-  private username: string = 'test';
-  private password: string = 'test';
+  // note: password basic64 equiv= dGVzdDp0ZXN0
+  private authorization: string = btoa('test:test');
 
   public isElectron: boolean = false;
 
@@ -47,10 +46,15 @@ export class RpcService implements OnDestroy {
     private _ipc: IpcService
   ) {
     this.isElectron = false;  // window.electron
+    this.requestConfiguration();
   }
 
   ngOnDestroy() {
     this.destroyed = true;
+  }
+
+  get enabled(): boolean {
+    return this.isInitialized;
   }
 
   /**
@@ -69,6 +73,11 @@ export class RpcService implements OnDestroy {
    * ```
    */
   call(method: string, params?: Array<any> | null): Observable<any> {
+
+    if (!this.isInitialized) {
+      return Observable.throw('Initializing...');
+    }
+
     if (this.isElectron) {
       return this._ipc.runCommand('rpc-channel', null, method, params).pipe(
         map(response => response && (response.result !== undefined)
@@ -84,10 +93,12 @@ export class RpcService implements OnDestroy {
         id: 1
       });
 
+      console.log('@@@ REQUEST TO: ', `http://${this.hostname}:${this.port}`, '<<<');
+
 
       const headerJson = {
        'Content-Type': 'application/json',
-       'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`),
+       'Authorization': 'Basic ' + this.authorization,
        'Accept': 'application/json',
       };
       const headers = new HttpHeaders(headerJson);
@@ -108,6 +119,19 @@ export class RpcService implements OnDestroy {
             return Observable.throw(err)
           })
     }
+  }
+
+  private async requestConfiguration(): Promise<void> {
+    await this._ipc.runCommand('rpc-configuration', null).toPromise().then(resp => {
+      console.log('@@@@ RECIVED CONFIG: ', resp);
+      this.hostname = resp.rpcbind || 'localhost';
+      this.port = resp.rpcport ? resp.rpcport : (resp.port ? resp.port : this.port);
+      this.authorization = resp.auth ? resp.auth : this.authorization;
+      this.isInitialized = true;
+    }).catch(err => {
+      this.isInitialized = true;
+      // do nothing - let the default values then apply
+    });
   }
 
 }

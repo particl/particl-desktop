@@ -1,13 +1,13 @@
 const electron      = require('electron');
 const log           = require('electron-log');
 
-const ipc           = require('./ipc/ipc');
 const rpc           = require('./rpc/rpc');
 const zmq           = require('./zmq/zmq');
 
 const daemon        = require('./daemon/daemon');
 const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
+const daemonConfig  = require('./daemon/daemonConfig');
 const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
@@ -21,6 +21,7 @@ exports.start = function (mainWindow) {
   rpc.init();
   notification.init();
   closeGui.init();
+  daemonConfig.init();
   daemon.init();
   market.init();
 
@@ -59,11 +60,9 @@ daemonManager.on('status', (status, msg) => {
     log.debug('daemonManager returned successfully, starting daemon!');
     multiwallet.get()
     // TODO: activate for prompting wallet
-    // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
     .then(chosenWallets => daemon.start(chosenWallets))
     .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
-    // .then(()            => ipc.daemonReady(mainWindow.webContents))
 
 
   } else if (status === 'error') {
@@ -101,6 +100,7 @@ electron.app.on('before-quit', async function beforeQuit(event) {
   // destroy IPC listeners
   rpc.destroy();
   daemonWarner.destroy();
+  daemonConfig.destroy();
   notification.destroy();
   closeGui.destroy();
 
