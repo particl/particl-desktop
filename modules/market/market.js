@@ -3,6 +3,7 @@ const _options = require('../options').get();
 const market = require('particl-marketplace');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs/Observable').Observable;
+var settings = require('./config.json')
 
 // Stores the child process
 let child = undefined;
@@ -31,6 +32,7 @@ exports.start = function() {
     log.info('market process starting.');
     const marketOptions = {
       ELECTRON_VERSION: process.versions.electron,
+      WALLET: settings.marketWallet
       RPCHOSTNAME: _options.rpcbind || 'localhost',
       RPC_PORT: _options.port,
       TESTNET: isTestnet

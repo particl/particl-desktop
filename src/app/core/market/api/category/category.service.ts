@@ -10,7 +10,13 @@ import { Category } from 'app/core/market/api/category/category.model';
 export class CategoryService {
 
   private categories: BehaviorSubject<Category> = new BehaviorSubject(null);
-  constructor(private market: MarketService) {
+  private isEnabled: boolean = false;
+
+  constructor(private market: MarketService) {}
+
+  start() {
+    this.isEnabled = true;
+
     this.market.call('category', ['list']).subscribe(
       resp => {
         if (resp && resp.name) {
@@ -21,6 +27,10 @@ export class CategoryService {
         // Failed to fetch categories
       }
     )
+  }
+
+  stop() {
+    this.isEnabled = false;
   }
 
   list() {

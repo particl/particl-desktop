@@ -26,7 +26,6 @@ import 'hammerjs';
   imports: [
     CommonModule,
     MaterialModule,
-    MainViewModule,
     MatDialogModule, // todo move
     InfiniteScrollModule,
     NvD3Module,
@@ -38,7 +37,6 @@ import 'hammerjs';
   ],
   exports: [
     MaterialModule,
-    MainViewModule,
     PaginatorComponent,
     InfiniteScrollModule,
     NvD3Module,
@@ -59,4 +57,3 @@ export class CoreUiModule {
 }
 
 export { MaterialModule } from './material/material.module';
-export { MainViewModule } from './main/main-view.module';

@@ -31,6 +31,7 @@ export class PassphraseComponent implements  OnChanges {
 
   @Input() readOnly: boolean = false;
   @Input() isDisabled: boolean = false;
+  @Input() isRestore: boolean = false;
   @Input() partialDisable: boolean = false;
   @Input() generate: boolean = false;
 
@@ -78,6 +79,9 @@ export class PassphraseComponent implements  OnChanges {
   }
 
   validateWord(word: string, index: number): boolean {
+    if (this.isRestore) {
+      return true;
+    }
     if (index !== -1 && word === '' && this.canEdit(index)) {
       this.editable.unshift(index);
     }

@@ -224,7 +224,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   backToSell() {
     this.dialog.closeAll()
-    this.router.navigate(['/market/sell']);
+    this.router.navigate(['../sell'], {relativeTo: this.route});
   }
 
   ngOnDestroy() {

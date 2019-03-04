@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import * as _ from 'lodash';
 
@@ -71,6 +71,7 @@ export class SellComponent implements OnInit, OnDestroy {
   public category: string = '';
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
     private template: TemplateService,
@@ -89,7 +90,8 @@ export class SellComponent implements OnInit, OnDestroy {
   }
 
   addItem(id?: number, clone?: boolean) {
-    this.router.navigate(['/market/template'], {
+    this.router.navigate(['../template'], {
+      relativeTo: this.route,
       queryParams: {'id': id, 'clone': clone }
     });
   }

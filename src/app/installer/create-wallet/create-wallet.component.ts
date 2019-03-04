@@ -46,7 +46,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   public isCreate: boolean = false;
   public isExistingWallet: boolean = false;
   public isCrypted: boolean = false;
-  public isDefaultWallet: boolean = false;
   public isEncrypting: boolean = false;
   public errorString: string = '';
 
@@ -98,7 +97,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
       this.walletname = walletname;
       this.isExistingWallet = true;
       this.isCrypted = encryptionstatus !== 'Unencrypted';
-      this.isDefaultWallet = walletname === '';
     }
   }
 
@@ -126,24 +124,19 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   }
 
   nextStep(): void {
-    if (this.isCreate) {
-      this.nextCreateStep();
-    } else {
-      this.nextRestoreStep();
-    }
-  }
-
-  nextCreateStep() {
     switch (this.step) {
       case Steps.START:
         if (this.isExistingWallet) {
+          // Start the rpc state for wallet lock info
+          this._rpcState.start();
+
           if (this.isCrypted) {
-            this.setCurrentStep(Steps.MNEMONIC_INITIAL, false);
+            this.goToStep(Steps.MNEMONIC_INITIAL, false);
           } else {
-            this.setCurrentStep(Steps.ENCRYPT, false);
+            this.goToStep(Steps.ENCRYPT, false);
           }
         } else {
-          this.setCurrentStep(Steps.WALLET_NAME);
+          this.goToStep(Steps.WALLET_NAME);
           setTimeout(() => this.nameField.nativeElement.focus(this), 1);
         }
         break;
@@ -156,10 +149,13 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
             this._rpc.wallet = this.walletname;
             this.isExistingWallet = true;
 
+            // Start the rpc state for wallet lock info
+            this._rpcState.start();
+
             if (this.isCrypted) {
-              this.setCurrentStep(Steps.MNEMONIC_INITIAL, false);
+              this.goToStep(Steps.MNEMONIC_INITIAL, false);
             } else {
-              this.setCurrentStep(Steps.ENCRYPT, false);
+              this.goToStep(Steps.ENCRYPT, false);
             }
           },
           error => {
@@ -179,12 +175,10 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
           this._rpc.call('encryptwallet', [this.encrypt])
             .take(1)
             .subscribe(() => {
-              // Start the rpc state for wallet lock info
-              this._rpcState.start();
               this._daemon.restart().then(() => {
                 this.isCrypted = true;
                 // Dont remember history for the encypt step, once encrypted we done here
-                this.setCurrentStep(Steps.MNEMONIC_INITIAL, false);
+                this.goToStep(Steps.MNEMONIC_INITIAL, false);
               });
             },
             (err) => {
@@ -192,32 +186,36 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
               this.log.er('error encrypting wallet', err);
             },
             () => this.isEncrypting = false);
-          } else {
-            this.setCurrentStep(Steps.MNEMONIC_INITIAL);
-          }
+        } else {
+          this.goToStep(Steps.MNEMONIC_INITIAL);
+        }
         break;
 
       case Steps.MNEMONIC_INITIAL:
-        this.setCurrentStep(Steps.MNEMONIC_VERIFY);
+        if (this.isCreate) {
+          this.goToStep(Steps.MNEMONIC_VERIFY);
 
-        while (
-          this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5
-        ) {
-          const k = Math.floor(Math.random() * 23);
-          this.words[k] = '';
+          while (
+            this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5
+          ) {
+            const k = Math.floor(Math.random() * 23);
+            this.words[k] = '';
+          }
+          this.flashNotification.open(
+            'Did you record your password at the previous step?',
+            'warning'
+          );
+        } else {
+          this.goToStep(Steps.WAITING);
         }
-        this.flashNotification.open(
-          'Did you record your password at the previous step?',
-          'warning'
-        );
         break;
 
       case Steps.MNEMONIC_VERIFY:
-        this.setCurrentStep(Steps.PASSWORD);
+        this.goToStep(Steps.PASSWORD);
         break;
 
       case Steps.PASSWORD:
-        this.setCurrentStep(Steps.WAITING);
+        this.goToStep(Steps.WAITING);
         break;
 
       case Steps.WAITING:
@@ -234,15 +232,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     }
   }
 
-  nextRestoreStep() {
-    switch (this.step) {
-      case Steps.START:
-        break;
-
-    }
-  }
-
-  setCurrentStep(nextStep: number, rememberHistory: boolean = true) {
+  goToStep(nextStep: number, rememberHistory: boolean = true) {
     if (rememberHistory) {
       this.stepHistory.push(this.step);
     }
@@ -268,6 +258,14 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
         this.errorString = !valid ? 'Passwords do not match!' : '';
         break;
 
+      case Steps.MNEMONIC_INITIAL:
+        if (!this.isCreate) {
+          // when restoring, count must be 12, 15, 18 or 24
+          const count = this.words.filter((value: string) => value).length;
+          valid = [12, 15, 18, 24].indexOf(count) !== -1;
+        }
+        break;
+
       case Steps.MNEMONIC_VERIFY:
         if (this.isCreate) {
           // get all non-matching words
@@ -277,10 +275,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
           // only valid if there are 0 unmatching words!
           valid = unmatched.length === 0;
           this.errorString = !valid ? 'You have entered an invalid Recovery Phrase' : '';
-        } else {
-          // when restoring, count must be 12, 15, 18 or 24
-          const count = this.words.filter((value: string) => value).length;
-          valid = [12, 15, 18, 24].indexOf(count) !== -1;
         }
         break;
 
@@ -314,7 +308,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     this._passphraseService.importMnemonic(this.words, this.password).subscribe(
       () => {
         this.log.i('Mnemonic imported successfully');
-        this.setCurrentStep(Steps.COMPLETED);
+        this.goToStep(Steps.COMPLETED);
       },
       error => {
         this.prevStep();

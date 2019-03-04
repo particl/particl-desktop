@@ -25,6 +25,13 @@ import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
+import { CategoryService } from 'app/core/market/api/category/category.service';
+import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
+import { ReportService } from 'app/core/market/api/report/report.service';
+import { ProposalsService } from 'app/wallet/proposals/proposals.service';
+import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
+
+import * as marketConfig from '../../../../modules/market/config.json';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -83,34 +90,49 @@ export class MainViewModule implements OnDestroy {
     private _market: MarketService,
     private _marketState: MarketStateService,
     private _profile: ProfileService,
-    private _cart: CartService
+    private _cart: CartService,
+    private _category: CategoryService,
+    private _favorite: FavoritesService,
+    private _report: ReportService,
+    private _proposal: ProposalsService,
+    private _addToCart: AddToCartCacheService
   ) {
-    console.log('############## CREATING NEW MAIN MODULE');
     this._rpcState.start();
+
     this._rpc.call('smsgdisable').subscribe(
       () => this._rpc.call('smsgenable', [this._rpc.wallet]).subscribe()
     );
 
-    if (this._rpc.wallet === 'Market') {
+    if (this._rpc.wallet === marketConfig.marketWallet) {
       // We recheck if the market is started here for live reload cases
       this._market.startMarket().subscribe(
         () => {
           this._marketState.start();
           this._profile.start();
           this._cart.start();
+          this._category.start();
+          this._favorite.start();
+          this._report.start();
+          this._proposal.start();
+          this._addToCart.start();
         }
       );
     }
   }
 
   ngOnDestroy() {
-    console.log('############## MAIN MODULE DESTROYED');
     this._rpcState.stop();
 
     if (this._market.isMarketStarted) {
       this._market.stopMarket();
       this._profile.stop();
       this._marketState.stop();
+      this._cart.stop();
+      this._category.stop();
+      this._favorite.stop();
+      this._report.stop();
+      this._proposal.stop();
+      this._addToCart.stop();
     }
   }
  }

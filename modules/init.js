@@ -8,7 +8,6 @@ const daemon        = require('./daemon/daemon');
 const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
 const daemonConfig  = require('./daemon/daemonConfig');
-const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
@@ -56,16 +55,7 @@ daemonManager.on('status', (status, msg) => {
   if (status === 'done') {
     log.debug('daemonManager returned successfully, starting daemon!');
     daemonManager.shutdown();
-    multiwallet.get()
-    // TODO: activate for prompting wallet
-    .then(chosenWallets => {
-      daemon.start(chosenWallets);
-    })
-    .then(() => {
-      market.init();
-      daemonConfig.send();
-    })
-    .catch(err          => log.error(err));
+    daemon.start();
     // TODO: activate for daemon ready IPC message to RPCService
 
 

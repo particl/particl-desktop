@@ -12,15 +12,23 @@ export class ReportService implements OnDestroy {
   private log: any = Log.create('report.service id:' + Math.floor((Math.random() * 1000) + 1));
   private defaultProfileId: number;
   private destroyed: boolean = false;
+  private isEnabled: boolean = false;
 
   constructor(
     private market: MarketService,
     private profile: ProfileService
-  ) {
+  ) {}
 
-    this.profile.default().takeWhile(() => !this.destroyed).subscribe((prof: any) => {
+  start() {
+    this.isEnabled = true;
+
+    this.profile.default().takeWhile(() => !this.destroyed && this.isEnabled).subscribe((prof: any) => {
       this.defaultProfileId = prof.id;
     });
+  }
+
+  stop() {
+    this.isEnabled = false;
   }
 
   post(listing: Listing) {

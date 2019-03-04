@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
@@ -30,6 +30,7 @@ export class SellerListingComponent {
 
   constructor(
     public dialog: MatDialog,
+    private route: ActivatedRoute,
     private router: Router,
     private rpcState: RpcStateService,
     private modals: ModalsHelperService,
@@ -112,7 +113,8 @@ export class SellerListingComponent {
   }
 
   addItem(id?: number, clone?: boolean) {
-    this.router.navigate(['/market/template'], {
+    this.router.navigate(['../template'], {
+      relativeTo: this.route,
       queryParams: { 'id': id, 'clone': clone }
     });
   }

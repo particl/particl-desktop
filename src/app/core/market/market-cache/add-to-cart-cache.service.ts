@@ -11,15 +11,25 @@ export class AddToCartCacheService implements OnDestroy {
   private log: any = Log.create('add-to-cart-cache.service id:' + Math.floor((Math.random() * 1000) + 1));
   public orders: Array<any> = new Array();
   private destroyed: boolean = false;
+  private isEnabled: boolean = false;
+
   constructor(
     private marketState: MarketStateService
-  ) {
+  ) {}
+
+  start() {
+    this.isEnabled = true;
+
     this.update();
     // subscribe to changes
-    this.getBids().takeWhile(() => !this.destroyed).subscribe(orders => {
+    this.getBids().takeWhile(() => !this.destroyed && this.isEnabled).subscribe(orders => {
       this.orders = orders;
     });
-   }
+  }
+
+  stop() {
+    this.isEnabled = false;
+  }
 
   isBidded(listing: Listing): boolean {
     if (listing) {

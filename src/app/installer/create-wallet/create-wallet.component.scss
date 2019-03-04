@@ -280,6 +280,10 @@ input.recovery-word {
   position: relative;
   & > .center {
     margin: auto;
+
+    .loading-spinner {
+      margin: auto;
+    }
   }
   p.lead {
     font-size: 17px;

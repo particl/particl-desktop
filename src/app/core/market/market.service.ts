@@ -30,11 +30,6 @@ export class MarketService {
   ) { }
 
   public call(method: string, params?: Array<any> | null): Observable<any> {
-    // Better way to circuit break this?
-    // if (!this.isMarketStarted && !ping) {
-    //   return Observable.of([]);
-    // }
-
     const postData = JSON.stringify({
       method: method,
       params: params,

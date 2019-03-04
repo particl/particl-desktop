@@ -21,6 +21,7 @@ export class FavoritesService implements OnDestroy {
   private log: any = Log.create('favorite.service id:' + Math.floor((Math.random() * 1000) + 1));
   private defaultProfileId: number;
   private destroyed: boolean = false;
+  private isEnabled: boolean = false;
 
   constructor(
     private market: MarketService,
@@ -28,11 +29,19 @@ export class FavoritesService implements OnDestroy {
     private profile: ProfileService,
     public cache: FavoriteCacheService,
     private snackbar: SnackbarService
-  ) {
-    this.profile.default().takeWhile(() => !this.destroyed).subscribe((prof: any) => {
+  ) {}
+
+  start() {
+    this.isEnabled = true;
+
+    this.profile.default().takeWhile(() => !this.destroyed && this.isEnabled).subscribe((prof: any) => {
       this.defaultProfileId = prof.id;
       this.marketState.register('favorite', 60 * 1000, ['list', prof.id]);
     });
+  }
+
+  stop() {
+    this.isEnabled = false;
   }
 
   add(listing: Listing) {

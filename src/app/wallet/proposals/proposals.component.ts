@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Log } from 'ng2-logger';
 import * as _ from 'lodash';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
@@ -51,6 +51,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   private sortedProposalByExpiryTime: any[] = [];
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private peerService: PeerService,
     private proposalsService: ProposalsService,
@@ -175,7 +176,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   addProposal(): void {
-    this.router.navigate(['/wallet/proposal']);
+    this.router.navigate(['../proposal'], {relativeTo: this.route});
   }
 
   changeTab(index: number): void {

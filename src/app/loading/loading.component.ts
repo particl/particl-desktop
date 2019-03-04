@@ -8,6 +8,8 @@ import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
 import { UpdaterService } from './updater.service';
 import { MarketService } from 'app/core/market/market.service';
 
+import * as marketConfig from '../../../modules/market/config.json';
+
 @Component({
   selector: 'app-loading',
   encapsulation: ViewEncapsulation.None,
@@ -49,7 +51,7 @@ export class LoadingComponent implements OnInit {
         this.log.d('loading params', params);
         // we can only pass strings through
         const switching = params.get('wallet');
-        if (switching) {
+        if (switching !== null && switching !== undefined) {
           // one was specified
           this.rpc.wallet =  switching;
         }
@@ -64,7 +66,7 @@ export class LoadingComponent implements OnInit {
           .subscribe(
             getwalletinfo => {
               // If we dealing with the market wallet start the market while the loading screen shows
-              if (this.rpc.wallet === 'Market') {
+              if (this.rpc.wallet === marketConfig.marketWallet) {
                 this._market.startMarket().subscribe(
                   () => this.decideWhereToGoTo(getwalletinfo),
                   error => this.log.d('Starting market failed: ', error)

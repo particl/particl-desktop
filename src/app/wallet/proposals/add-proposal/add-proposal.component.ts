@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { FormArray } from '@angular/forms/src/model';
@@ -29,6 +29,7 @@ export class AddProposalComponent implements OnInit {
   expireIn: number = 2; // days.
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
@@ -87,7 +88,7 @@ export class AddProposalComponent implements OnInit {
   }
 
   backToProposals(): void {
-    this.router.navigate(['/wallet/proposals']);
+    this.router.navigate(['../proposals'], {relativeTo: this.route});
   }
 
   submitProposal(): void {

@@ -173,7 +173,7 @@
       </div>
       <!-- .container-block -->
 
-      <div *ngIf="isEncrypting" class="container-block">
+      <div *ngIf="isEncrypting" class="container-block preparing-wallet">
         <div class="center">
           <mat-spinner class="loading-spinner"></mat-spinner>
           <p class="lead">
@@ -295,7 +295,7 @@
 
 
     <!-- STEP 2-4 (Restore) -->
-    <ng-template [ngIf]="step === Steps.MNEMONIC_INITIAL && isRestore">
+    <ng-template [ngIf]="step === Steps.MNEMONIC_INITIAL && !isCreate">
       <div class="title">Restore existing wallet</div>
       <div class="container-block">
 
@@ -310,7 +310,7 @@
 
         <mat-card class="action-card">
           <div class="recovery-phrase">
-            <app-passphrase #passphraseComponent [words]="words" [generate]="false">
+            <app-passphrase #passphraseComponent [words]="words" [isRestore]="!isCreate" [generate]="false">
             </app-passphrase>
             <p *ngIf="!!errorString" class="warning bottom">
               {{ errorString }}

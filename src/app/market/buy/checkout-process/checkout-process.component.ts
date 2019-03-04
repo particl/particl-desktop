@@ -3,7 +3,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -67,6 +67,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   constructor(// 3rd party
     private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     // core
     private snackbarService: SnackbarService,
@@ -157,7 +158,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   /* cart */
 
   goToListings(): void {
-    this.router.navigate(['/market/overview']);
+    this.router.navigate(['../overview'], {relativeTo: this.route});
   }
 
   removeFromCart(shoppingCartId: number): void {
