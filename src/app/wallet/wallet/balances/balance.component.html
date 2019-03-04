@@ -1,4 +1,4 @@
-<div class="balance" *ngIf="!isOverView" [ngClass]="{'in-top-bar': !isOverview}">
+<div class="balance" *ngIf="!isOverView" [ngClass]="{'in-top-bar': inTopBar}">
   <span class="number big">{{balance.getIntegerPart()}}</span><!--
   --><span class="point big">{{balance.dot()}}</span><!--
   --><span class="number small">{{balance.getFractionalPart() || ''}}</span>
