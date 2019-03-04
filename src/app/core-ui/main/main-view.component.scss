@@ -233,5 +233,8 @@ a.sidebar-item-link {
   }
   .right {
     text-align: right;
+    app-balance {
+      display: inline-block;
+    }
   }
 }
