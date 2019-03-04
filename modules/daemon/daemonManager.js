@@ -28,6 +28,8 @@ class DaemonManager extends EventEmitter {
   constructor() {
     super();
     this._availableClients = {};
+    this.isTestnet = false;
+    this.localPath = app.getPath('userData');
   }
 
   getPath() {
@@ -37,11 +39,19 @@ class DaemonManager extends EventEmitter {
   init(_options) {
     log.info('Initializing...');
     options = _options;
+    const isTestnet = options.testnet || app.getVersion().includes('testnet');
+    if (isTestnet) {
+      this.localPath = path.join(this.localPath, 'testnet');
+    }
     // TODO: reactivate when prompt user in GUI works
     // check every hour
     // setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
     this._resolveBinPath();
     return this._checkForNewConfig();
+  }
+
+  shutdown() {
+    this.emit('close');
   }
 
   getClient(clientId) {
@@ -52,7 +62,7 @@ class DaemonManager extends EventEmitter {
     log.info('Write new client binaries local config to disk ...');
 
     fs.writeFileSync(
-      path.join(app.getPath('userData'), 'clientBinaries.json'),
+      path.join(this.localPath, 'clientBinaries.json'),
       JSON.stringify(json, null, 2)
     );
   }
@@ -97,7 +107,7 @@ class DaemonManager extends EventEmitter {
       // load the local json
       try {
         localConfig = JSON.parse(
-          fs.readFileSync(path.join(app.getPath('userData'), 'clientBinaries.json')).toString()
+          fs.readFileSync(path.join(this.localPath, 'clientBinaries.json')).toString()
         );
       } catch (err) {
         log.warn(`Error loading local config - assuming this is a first run: ${err}`);
@@ -112,7 +122,7 @@ class DaemonManager extends EventEmitter {
       }
 
       try {
-        skipedVersion = fs.readFileSync(path.join(app.getPath('userData'), 'skippedNodeVersion.json')).toString();
+        skipedVersion = fs.readFileSync(path.join(this.localPath, 'skippedNodeVersion.json')).toString();
       } catch (err) {
         log.info('No "skippedNodeVersion.json" found.');
       }
@@ -201,8 +211,7 @@ class DaemonManager extends EventEmitter {
 
       if (!localConfig) {
         log.info('No config for the ClientBinariesManager could be loaded, using local clientBinaries.json.');
-
-        const localConfigPath = path.join(app.getPath('userData'), 'clientBinaries.json');
+        const localConfigPath = path.join(this.localPath, 'clientBinaries.json');
         localConfig = (fs.existsSync(localConfigPath))
           ? require(localConfigPath)
           : require('../clientBinaries/clientBinaries.json');
@@ -215,7 +224,7 @@ class DaemonManager extends EventEmitter {
       this._emit('scanning', 'Scanning for binaries');
 
       return mgr.init({
-        folders: [ path.join(app.getPath('userData'), 'particld', 'unpacked') ]
+        folders: [ path.join(this.localPath, 'particld', 'unpacked') ]
       })
       .then(() => {
         const clients = mgr.clients;
@@ -223,6 +232,10 @@ class DaemonManager extends EventEmitter {
         this._availableClients = {};
 
         const available = _.filter(clients, c => !!c.state.available);
+
+        this.on('close', () => {
+          mgr.shutdown();
+        });
 
         if (!available.length) {
           if (_.isEmpty(clients)) {
@@ -239,7 +252,7 @@ class DaemonManager extends EventEmitter {
             binariesDownloaded = true;
 
             return mgr.download(c.id, {
-              downloadFolder: path.join(app.getPath('userData'))
+              downloadFolder: this.localPath
               //urlRegex: ALLOWED_DOWNLOAD_URLS_REGEX,
             });
           });
@@ -260,23 +273,16 @@ class DaemonManager extends EventEmitter {
           }
         });
 
-
-        // restart if it downloaded while running
-        // if (restart && binariesDownloaded) {
-        //   log.info('Restarting app ...');
-        //   app.relaunch();
-        //   app.quit();
-        // }
-
         this._emit('done');
 
-        // return this.startDaemon();
       });
     })
     .catch((err) => {
       log.error(err);
 
-      this._emit('error', err.message);
+      const errMessage = err.message ? err.message : String(err);
+
+      this._emit('error', errMessage);
 
       // show error
       if (err.message.indexOf('Hash mismatch') !== -1) {
@@ -291,7 +297,9 @@ class DaemonManager extends EventEmitter {
         });
 
         // throw so the main.js can catch it
-        throw err;
+        if (!(err.status && err.status === 'cancel')) {
+          throw err;
+        }
       }
     });
   }
@@ -318,7 +326,7 @@ class DaemonManager extends EventEmitter {
 
     log.debug(`Platform: ${platform}`);
 
-    let binPath = path.join(app.getPath('userData'), 'particld', 'unpacked', 'particld');
+    let binPath = path.join(this.localPath, 'particld', 'unpacked', 'particld');
 
     if (platform === 'win') {
       binPath += '.exe';
