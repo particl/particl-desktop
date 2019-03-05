@@ -98,7 +98,7 @@ export class RpcService implements OnDestroy {
 
       const headerJson = {
        'Content-Type': 'application/json',
-       'Authorization': 'Basic ' + this.authorization,
+       //  'Authorization': 'Basic ' + this.authorization,
        'Accept': 'application/json',
       };
       const headers = new HttpHeaders(headerJson);
@@ -125,7 +125,7 @@ export class RpcService implements OnDestroy {
     await this._ipc.runCommand('rpc-configuration', null).toPromise().then(resp => {
       console.log('@@@@ RECIVED CONFIG: ', resp);
       this.hostname = resp.rpcbind || 'localhost';
-      this.port = resp.rpcport ? resp.rpcport : (resp.port ? resp.port : this.port);
+      this.port = resp.port ? resp.port : this.port;
       this.authorization = resp.auth ? resp.auth : this.authorization;
       this.isInitialized = true;
     }).catch(err => {

@@ -1,26 +1,33 @@
-const rxIpc       = require('rx-ipc-electron/lib/main').default;
-const Observable  = require('rxjs/Observable').Observable;
-const fs          = require('fs');
-const path        = require('path');
-const log         = require('electron-log');
-const iniParser   = require('@jedmao/ini-parser').default;
-const cookie      = require('../rpc/cookie');
-const _options    = require('../options').get();
+const rxIpc         = require('rx-ipc-electron/lib/main').default;
+const Observable    = require('rxjs/Observable').Observable;
+const fs            = require('fs');
+const path          = require('path');
+const log           = require('electron-log');
+const iniParser     = require('@jedmao/ini-parser').default;
+const cookie        = require('../rpc/cookie');
+const _processOpts  = require('../options');
+
+let _options = _processOpts.get();
+
+if (isEmptyObject(_options)) {
+  console.log('@@@@@@ OPTIONS IS EMPTY');
+  _options = _processOpts.parse();
+}
 
 const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
 const SAFE_KEYS = ['addressindex'];
 
-let STORED_CONFIGURATION = {}
+let STORED_CONFIGURATION = {};
 
-const isArray = function(obj) {
+function isArray(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
 }
 
-const isObject = function(obj) {
+function isObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]';
 }
 
-deepClone = function(obj) {
+function deepClone(obj) {
   let retVal;
   try {
     retVal = JSON.parse(JSON.stringify(obj))
@@ -28,6 +35,11 @@ deepClone = function(obj) {
     retVal = undefined;
   };
   return retVal;
+}
+
+function isEmptyObject(obj) {
+  for (let x in obj) { if (obj.hasOwnProperty(x))  return false; }
+  return true;
 }
 
 const formatSettingsOutput = function(rawConfig) {
@@ -216,27 +228,41 @@ const saveSettings = function(networkOpt) {
 }
 
 
+const getConfiguration = () => {
+  let settings;
+  if (Object.keys(STORED_CONFIGURATION).length > 0) {
+    settings = STORED_CONFIGURATION;
+  } else {
+    const config = getSettings();
+    settings = config.global || {};
+
+    if ( settings.testnet || _options.testnet) {
+      settings = { ...settings, ...(config.test || {}) };
+    }
+
+    settings = { ...settings, ..._options};
+    settings.port = +(settings.rpcport ? settings.rpcport : settings.port);
+    STORED_CONFIGURATION = settings;
+  }
+
+  if (!settings.auth) {
+    const cookieAuth = cookie.getAuth(_options);
+    if (cookieAuth) {
+      settings.auth = cookieAuth;
+      STORED_CONFIGURATION = settings;
+    }
+  }
+
+  return settings;
+}
+
+
 const initializeIpcListener = () => {
 
   removeIpcListener();
 
   rxIpc.registerListener('rpc-configuration', () => {
-    let settings;
-    if (Object.keys(STORED_CONFIGURATION).length > 0) {
-      settings = STORED_CONFIGURATION;
-    } else {
-      const config = getSettings();
-      settings = config.global || {};
-      settings.auth = cookie.getAuth(_options);
-
-      if ( settings.testnet || _options.testnet) {
-        settings = { ...settings, ...(config.test || {}) };
-      }
-
-      settings = { ...settings, ..._options};
-      STORED_CONFIGURATION = settings;
-    }
-
+    let settings = getConfiguration();
     return Observable.create(observer => {
       observer.next(settings);
       observer.complete();
@@ -250,6 +276,7 @@ const removeIpcListener = () => {
 }
 
 
+exports.getConfiguration = getConfiguration;
 exports.init = initializeIpcListener;
 exports.destroy = removeIpcListener;
 exports.getSettings = getSettings;

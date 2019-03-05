@@ -12,8 +12,6 @@ const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
-const _options      = require('./options');
-
 
 
 exports.start = function (mainWindow) {
@@ -38,7 +36,7 @@ exports.start = function (mainWindow) {
 exports.startDaemonManager = function() {
   daemon.check()
     .then(()            => log.info('daemon already started'))
-    .catch(()           => daemonManager.init(_options))
+    .catch(()           => daemonManager.init(daemonConfig.getConfiguration()))
     .catch((error)      => log.error(error));
 }
 

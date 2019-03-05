@@ -1,10 +1,11 @@
 const log         = require('electron-log');
-const _options    = require('../options').get();
+const config    = require('../daemon/daemonConfig');
 const market      = require('particl-marketplace');
-const app         = require('electron').app;
 
 // Stores the child process
 let child = undefined;
+
+const _options = config.getConfiguration();
 
 exports.init = function() {
 
@@ -13,8 +14,8 @@ exports.init = function() {
     const marketOptions = {
       ELECTRON_VERSION: process.versions.electron,
       RPCHOSTNAME: _options.rpcbind || 'localhost',
-      RPC_PORT: _options.rpcport,
-      TESTNET: _options.testnet || app.getVersion().includes('testnet')
+      RPC_PORT: _options.port,
+      TESTNET: Boolean(+_options.testnet)
     };
     child = market.start(marketOptions);
 
