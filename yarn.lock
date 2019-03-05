@@ -8329,9 +8329,10 @@ tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
-tslint-microsoft-contrib@^5.0.3:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/tslint-microsoft-contrib/-/tslint-microsoft-contrib-5.2.1.tgz#a6286839f800e2591d041ea2800c77487844ad81"
+tslint-microsoft-contrib@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/tslint-microsoft-contrib/-/tslint-microsoft-contrib-6.1.0.tgz#cc487575f2cdb8fe3774bf3f2ba61ff61dc7856e"
+  integrity sha512-8DgmiPTgNQSYTjrKKv/h1aHnDd7EkGAjTxatrjfSDp5jUXENGI7Qj7qi7T8xBdTZN9Z3nb80u0NhdBBOMcQFHg==
   dependencies:
     tsutils "^2.27.2 <2.29.0"
 
