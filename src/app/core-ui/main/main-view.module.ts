@@ -31,7 +31,7 @@ import { ReportService } from 'app/core/market/api/report/report.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
 
-import * as marketConfig from '../../../../modules/market/config.json';
+// import * as marketConfig from '../../../../modules/market/config.json';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -103,7 +103,7 @@ export class MainViewModule implements OnDestroy {
       () => this._rpc.call('smsgenable', [this._rpc.wallet]).subscribe()
     );
 
-    if (this._rpc.wallet === marketConfig.marketWallet) {
+    if (this._rpc.wallet === 'Market') { // marketConfig.marketWallet
       // We recheck if the market is started here for live reload cases
       this._market.startMarket().subscribe(
         () => {

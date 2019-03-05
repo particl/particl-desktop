@@ -8,7 +8,7 @@ import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
 import { UpdaterService } from './updater.service';
 import { MarketService } from 'app/core/market/market.service';
 
-import * as marketConfig from '../../../modules/market/config.json';
+// import * as marketConfig from '../../../modules/market/config.json';
 
 @Component({
   selector: 'app-loading',
@@ -65,8 +65,9 @@ export class LoadingComponent implements OnInit {
           .whenRpcIsResponding()
           .subscribe(
             getwalletinfo => {
+              //console.log(marketConfig);
               // If we dealing with the market wallet start the market while the loading screen shows
-              if (this.rpc.wallet === marketConfig.marketWallet) {
+              if (this.rpc.wallet === 'Market') { // marketConfig.marketWallet
                 this._market.startMarket().subscribe(
                   () => this.decideWhereToGoTo(getwalletinfo),
                   error => this.log.d('Starting market failed: ', error)
