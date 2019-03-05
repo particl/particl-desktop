@@ -44,7 +44,7 @@ export class RpcStateService extends StateService implements OnDestroy {
    * ```
    */
   stateCall(method: string): void {
-    if (!this._enableState && !this._rpc.enabled) {
+    if (!this._enableState || !this._rpc.enabled) {
       return;
     } else {
       this._rpc.call(method)
@@ -65,7 +65,7 @@ export class RpcStateService extends StateService implements OnDestroy {
           // RpcState service has been destroyed, stop.
           return;
         }
-        if (!this._enableState  && !this._rpc.enabled) {
+        if (!this._enableState  || !this._rpc.enabled) {
           // re-start loop after timeout - keep the loop going
           setTimeout(_call, timeout);
           return;
