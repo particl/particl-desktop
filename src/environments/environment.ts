@@ -10,8 +10,8 @@ export const environment = {
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
   version: require('../../package.json').version,
   marketVersion: require('../../node_modules/particl-marketplace/package.json').version,
-  particlHost: '',
-  particlPort: 0,
+  particlHost: 'localhost',
+  particlPort: 51935,
   marketHost: 'localhost',
   marketPort: 3000,
   isTesting: false

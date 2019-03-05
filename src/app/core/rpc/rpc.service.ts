@@ -33,7 +33,7 @@ export class RpcService implements OnDestroy {
   private hostname: String = environment.particlHost;
 
   /**
-   * Port number of of daemon (default = 51935)
+   * Port number of default daemon
    */
   private port: number = environment.particlPort;
 
@@ -47,7 +47,11 @@ export class RpcService implements OnDestroy {
     private _ipc: IpcService
   ) {
     this.isElectron = false;  // window.electron
-    this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
+    if (environment.isTesting) {
+      this.isInitialized = true;
+    } else {
+      this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
+    }
   }
 
   ngOnDestroy() {
