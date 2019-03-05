@@ -19,9 +19,8 @@ exports.start = function (mainWindow) {
   rpc.init();
   notification.init();
   closeGui.init();
-  daemonConfig.init();
+  daemonConfig.init(mainWindow);
   daemon.init();
-  market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);
@@ -58,7 +57,13 @@ daemonManager.on('status', (status, msg) => {
     log.debug('daemonManager returned successfully, starting daemon!');
     multiwallet.get()
     // TODO: activate for prompting wallet
-    .then(chosenWallets => daemon.start(chosenWallets))
+    .then(chosenWallets => {
+      daemon.start(chosenWallets);
+    })
+    .then(() => {
+      market.init();
+      daemonConfig.send();
+    })
     .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
 
@@ -103,7 +108,10 @@ electron.app.on('before-quit', async function beforeQuit(event) {
   closeGui.destroy();
 
   daemonManager.shutdown();
-  market.stop().then(() => sleep(2000)).then(() => daemon.stop()).then(() => {
+  market.stop()
+  .then(() => sleep(2000))
+  .then(() => daemon.stop())
+  .then(() => {
     log.info('daemon.stop() resolved!');
   });
 });

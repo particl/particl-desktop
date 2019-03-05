@@ -24,7 +24,8 @@ export class RpcService implements OnDestroy {
 
   private log: any = Log.create('rpc.service');
   private destroyed: boolean = false;
-  private isInitialized = false;
+  private isInitialized: boolean = false;
+  private DAEMON_CHANNEL: string = 'rpc-configuration';
 
   /**
    * IP/URL for daemon (default = localhost)
@@ -46,7 +47,7 @@ export class RpcService implements OnDestroy {
     private _ipc: IpcService
   ) {
     this.isElectron = false;  // window.electron
-    this.requestConfiguration();
+    this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
   }
 
   ngOnDestroy() {
@@ -93,9 +94,6 @@ export class RpcService implements OnDestroy {
         id: 1
       });
 
-      console.log('@@@ REQUEST TO: ', `http://${this.hostname}:${this.port}`, '<<<');
-
-
       const headerJson = {
        'Content-Type': 'application/json',
        //  'Authorization': 'Basic ' + this.authorization,
@@ -121,16 +119,17 @@ export class RpcService implements OnDestroy {
     }
   }
 
-  private async requestConfiguration(): Promise<void> {
-    await this._ipc.runCommand('rpc-configuration', null).toPromise().then(resp => {
-      console.log('@@@@ RECIVED CONFIG: ', resp);
-      this.hostname = resp.rpcbind || 'localhost';
-      this.port = resp.port ? resp.port : this.port;
-      this.authorization = resp.auth ? resp.auth : this.authorization;
-      this.isInitialized = true;
-    }).catch(err => {
-      this.isInitialized = true;
-      // do nothing - let the default values then apply
+  private daemonListener(config: any): Observable<any> {
+    return Observable.create(observer => {
+      if (config.auth && (config.auth !== this.authorization)) {
+        this.hostname = config.rpcbind || 'localhost';
+        this.port = config.port ? config.port : this.port;
+        this.authorization = config.auth ? config.auth : this.authorization;
+        this.isInitialized = true;
+      }
+
+      // complete
+      observer.complete();
     });
   }
 

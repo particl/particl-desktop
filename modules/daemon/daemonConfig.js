@@ -10,14 +10,15 @@ const _processOpts  = require('../options');
 let _options = _processOpts.get();
 
 if (isEmptyObject(_options)) {
-  console.log('@@@@@@ OPTIONS IS EMPTY');
   _options = _processOpts.parse();
 }
 
 const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
+const IPC_CHANNEL = 'rpc-configuration';
 const SAFE_KEYS = ['addressindex'];
 
 let STORED_CONFIGURATION = {};
+let mainWindowRef = null;
 
 function isArray(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
@@ -257,11 +258,13 @@ const getConfiguration = () => {
 }
 
 
-const initializeIpcListener = () => {
-
+const initializeIpcListener = (mainWindow) => {
+  if (mainWindowRef === null) {
+    mainWindowRef = mainWindow;
+  }
   removeIpcListener();
 
-  rxIpc.registerListener('rpc-configuration', () => {
+  rxIpc.registerListener(IPC_CHANNEL, () => {
     let settings = getConfiguration();
     return Observable.create(observer => {
       observer.next(settings);
@@ -272,7 +275,33 @@ const initializeIpcListener = () => {
 
 
 const removeIpcListener = () => {
-  rxIpc.removeListeners('rpc-configuration');
+  rxIpc.removeListeners(IPC_CHANNEL);
+}
+
+
+const emitConfiguration = () => {
+  let settings = getConfiguration();
+
+  if (!settings.auth) {
+    setTimeout(emitConfiguration, 1000);
+    return;
+  }
+  try {
+    rxIpc.runCommand(IPC_CHANNEL, mainWindowRef.webContents, settings)
+      .subscribe(
+        (returnData) => {
+            // no return data
+        },
+        (error) => {
+          log.error("configuration emit error: error: " + error);
+        },
+        () => {
+            // no logging
+        }
+      );
+  } catch (error) {
+    log.error("configuration emit error: failed to run command (maybe window closed): " + error);
+  }
 }
 
 
@@ -281,3 +310,4 @@ exports.init = initializeIpcListener;
 exports.destroy = removeIpcListener;
 exports.getSettings = getSettings;
 exports.saveSettings = saveSettings;
+exports.send = emitConfiguration;

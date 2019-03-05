@@ -9,14 +9,36 @@ const _options = config.getConfiguration();
 
 exports.init = function() {
 
+  if (child !== undefined) {
+    return;
+  }
+
+  const isTestnet = Boolean(+_options.testnet);
+
   if (!_options.skipmarket) {
     log.info('market process starting.');
     const marketOptions = {
       ELECTRON_VERSION: process.versions.electron,
       RPCHOSTNAME: _options.rpcbind || 'localhost',
       RPC_PORT: _options.port,
-      TESTNET: Boolean(+_options.testnet)
+      TESTNET: isTestnet
     };
+
+    if (isTestnet) {
+      marketOptions.TESTNET_PORT = _options.port;
+    } else {
+      marketOptions.MAINNET_PORT = _options.port;
+      marketOptions.NODE_ENV = 'PRODUCTION';
+      marketOptions.SWAGGER_ENABLED = false;
+    }
+
+    if (_options.rpcuser) {
+      marketOptions.RPCUSER = _options.rpcuser;
+    }
+    if (_options.rpcpassword) {
+      marketOptions.RPCPASSWORD = _options.rpcpassword;
+    }
+
     child = market.start(marketOptions);
 
     child.on('close', code => {
