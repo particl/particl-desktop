@@ -11,6 +11,7 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 import { Favorite } from './favorite.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Subscription } from 'rxjs';
 
 
 
@@ -21,7 +22,7 @@ export class FavoritesService implements OnDestroy {
   private log: any = Log.create('favorite.service id:' + Math.floor((Math.random() * 1000) + 1));
   private defaultProfileId: number;
   private destroyed: boolean = false;
-  private isEnabled: boolean = false;
+  private profile$: Subscription;
 
   constructor(
     private market: MarketService,
@@ -32,16 +33,14 @@ export class FavoritesService implements OnDestroy {
   ) {}
 
   start() {
-    this.isEnabled = true;
-
-    this.profile.default().takeWhile(() => !this.destroyed && this.isEnabled).subscribe((prof: any) => {
+    this.profile$ = this.profile.default().takeWhile(() => !this.destroyed).subscribe((prof: any) => {
       this.defaultProfileId = prof.id;
       this.marketState.register('favorite', 60 * 1000, ['list', prof.id]);
     });
   }
 
   stop() {
-    this.isEnabled = false;
+    this.profile$.unsubscribe();
   }
 
   add(listing: Listing) {

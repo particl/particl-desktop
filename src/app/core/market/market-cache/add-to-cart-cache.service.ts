@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { Bid } from '../api/bid/bid.model';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Subscription } from 'rxjs';
 
 @Injectable()
 export class AddToCartCacheService implements OnDestroy {
@@ -11,24 +12,22 @@ export class AddToCartCacheService implements OnDestroy {
   private log: any = Log.create('add-to-cart-cache.service id:' + Math.floor((Math.random() * 1000) + 1));
   public orders: Array<any> = new Array();
   private destroyed: boolean = false;
-  private isEnabled: boolean = false;
+  private profile$: Subscription;
 
   constructor(
     private marketState: MarketStateService
   ) {}
 
   start() {
-    this.isEnabled = true;
-
     this.update();
     // subscribe to changes
-    this.getBids().takeWhile(() => !this.destroyed && this.isEnabled).subscribe(orders => {
+    this.profile$ = this.getBids().takeWhile(() => !this.destroyed).subscribe(orders => {
       this.orders = orders;
     });
   }
 
   stop() {
-    this.isEnabled = false;
+    this.profile$.unsubscribe();
   }
 
   isBidded(listing: Listing): boolean {

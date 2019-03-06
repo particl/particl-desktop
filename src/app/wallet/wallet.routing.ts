@@ -9,7 +9,7 @@ import { ProposalsComponent } from './proposals/proposals.component';
 import { ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
 
 //   { path: '', redirectTo: '/wallet/overview', pathMatch: 'full' },
-export const wallet_routes: Routes = [
+export const routes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
   { path: 'receive', component: ReceiveComponent, data: { title: 'Receive' } },
@@ -22,4 +22,4 @@ export const wallet_routes: Routes = [
   { path: 'proposal', component: AddProposalComponent, data: { title: 'Proposals › Submit new' } }
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forChild(wallet_routes);
+export const routing: ModuleWithProviders = RouterModule.forChild(routes);

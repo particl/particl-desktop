@@ -155,11 +155,6 @@ export class MainViewComponent implements OnInit, OnDestroy {
       this.log.er('Main module was already destroyed!', e);
     }
   }
-  /** Open createwallet modal when clicking on error in sidenav */
-  createWallet() {
-    // TODO: Fix
-    // this._modalsService.createWallet();
-  }
 
   /** Open syncingdialog modal when clicking on progresbar in sidenav */
   syncScreen() {

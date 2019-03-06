@@ -8,6 +8,7 @@ import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
 import { Cart } from './cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Subscription } from 'rxjs';
 
 
 @Injectable()
@@ -16,7 +17,7 @@ export class CartService {
   private log: any = Log.create('cart.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   private defaultCartId: number;
-  private isEnabled: boolean = false;
+  private profile$: Subscription;
 
   constructor(
     private market: MarketService,
@@ -26,9 +27,7 @@ export class CartService {
   ) {}
 
   start() {
-    this.isEnabled = true;
-
-    this.default().subscribe((cart: any) => {
+    this.profile$ = this.default().subscribe((cart: any) => {
       this.log.d('Setting default cartId and registering listener= ' + cart.id);
       this.defaultCartId = cart.id;
       this.marketState.register('cartitem', 60 * 1000, ['list', cart.id, true]);
@@ -36,7 +35,7 @@ export class CartService {
   }
 
   stop() {
-    this.isEnabled = false;
+    this.profile$.unsubscribe();
   }
 
   add(listing: Listing): Observable<any> {

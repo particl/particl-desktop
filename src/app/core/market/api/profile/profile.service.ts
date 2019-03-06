@@ -8,6 +8,7 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 
 import { AddressService } from './address/address.service';
 import { Profile } from './profile.model';
+import { Subscription } from 'rxjs';
 
 // TODO: addresses & favourites!
 @Injectable()
@@ -17,7 +18,7 @@ export class ProfileService implements OnDestroy {
 
   private defaultProfileId: number;
   private destroyed: boolean = false;
-  private isEnabled: boolean = false;
+  private profile$: Subscription;
 
   constructor(
     private market: MarketService,
@@ -27,16 +28,15 @@ export class ProfileService implements OnDestroy {
   }
 
   start() {
-    this.isEnabled = true;
     // find default profile
-    this.defaultId().takeWhile(() => !this.destroyed && this.isEnabled).subscribe((id: number) => {
+    this.profile$ = this.defaultId().takeWhile(() => !this.destroyed).subscribe((id: number) => {
       this.log.d('setting default profile id to ' + id);
       this.defaultProfileId = id;
     });
   }
 
   stop() {
-    this.isEnabled = false;
+    this.profile$.unsubscribe();
   }
 
   list() {

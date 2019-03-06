@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { MarketService } from 'app/core/market/market.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Subscription } from 'rxjs';
 
 
 @Injectable()
@@ -12,7 +13,7 @@ export class ReportService implements OnDestroy {
   private log: any = Log.create('report.service id:' + Math.floor((Math.random() * 1000) + 1));
   private defaultProfileId: number;
   private destroyed: boolean = false;
-  private isEnabled: boolean = false;
+  private profile$: Subscription;
 
   constructor(
     private market: MarketService,
@@ -20,15 +21,13 @@ export class ReportService implements OnDestroy {
   ) {}
 
   start() {
-    this.isEnabled = true;
-
-    this.profile.default().takeWhile(() => !this.destroyed && this.isEnabled).subscribe((prof: any) => {
+    this.profile$ = this.profile.default().takeWhile(() => !this.destroyed).subscribe((prof: any) => {
       this.defaultProfileId = prof.id;
     });
   }
 
   stop() {
-    this.isEnabled = false;
+    this.profile$.unsubscribe();
   }
 
   post(listing: Listing) {

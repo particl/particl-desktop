@@ -5,7 +5,7 @@ import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.mode
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 @Injectable()
@@ -13,6 +13,7 @@ export class ProposalsService {
   private log: any = Log.create('proposals.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   public submitterId: number;
+  private profile$: Subscription;
   private isEnabled: boolean = false;
 
   constructor(
@@ -22,14 +23,14 @@ export class ProposalsService {
 
   start() {
     this.isEnabled = true;
-
-    this.profileService.default().subscribe((profile: Profile) => {
+    this.profile$ = this.profileService.default().subscribe((profile: Profile) => {
       this.submitterId = profile.id;
     });
   }
 
   stop() {
     this.isEnabled = false;
+    this.profile$.unsubscribe();
   }
 
   // proposal list.
