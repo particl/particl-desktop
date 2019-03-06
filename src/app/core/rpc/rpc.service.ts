@@ -100,7 +100,7 @@ export class RpcService implements OnDestroy {
 
       const headerJson = {
        'Content-Type': 'application/json',
-       //  'Authorization': 'Basic ' + this.authorization,
+       'Authorization': 'Basic ' + this.authorization,
        'Accept': 'application/json',
       };
       const headers = new HttpHeaders(headerJson);
