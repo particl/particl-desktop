@@ -90,7 +90,20 @@
     "win": {
       "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
       "target": [
-        "zip"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ]
     },
     "linux": {
