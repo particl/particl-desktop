@@ -27,6 +27,9 @@ export class RpcModule {
       ]
     };
   }
+  static forTest(): ModuleWithProviders {
+    return this.forRoot();
+  }
 }
 
 

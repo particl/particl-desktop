@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 $installer-sidebar-width: 260px;
 $installer-sidebar-padding: 30px;
@@ -54,7 +54,7 @@ $installer-header-height: 96px;
       color: darken($bg, 50%);
     }
     &:not(.last):after { // lines connecting numbers
-      content: "";
+      content: '';
       display: block;
       background: lighten($bg-black, 10%);
       width: 2px;
@@ -97,7 +97,8 @@ p {
   &.widget-help {
     font-size: 13px;
   }
-  &.info, &.warning {
+  &.info, 
+  &.warning {
     padding: 24px 24px 24px 78px;
     margin: 32px -45px;
     &:before { // info icon
@@ -121,7 +122,7 @@ p {
     .action-card & {
       border-bottom: 1px solid rgba($color-info, 0.22);
       &.bottom {
-        border-bottom: none;
+        border-bottom: 0;
         border-top: 1px solid rgba($color-info, 0.22);
       }
     }
@@ -131,7 +132,7 @@ p {
     .action-card & {
       border-bottom: 1px solid rgba($color-alert, 0.22);
       &.bottom {
-        border-bottom: none;
+        border-bottom: 0;
         border-top: 1px solid rgba($color-alert, 0.22);
       }
     }
