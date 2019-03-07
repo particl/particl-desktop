@@ -55,6 +55,7 @@ daemonManager.on('status', (status, msg) => {
   // Done -> means we have a binary!
   if (status === 'done') {
     log.debug('daemonManager returned successfully, starting daemon!');
+    daemonManager.shutdown();
     multiwallet.get()
     // TODO: activate for prompting wallet
     .then(chosenWallets => {
