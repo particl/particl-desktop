@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from 'app/wallet/shared/shared.module';
 import { ModalsModule } from 'app/modals/modals.module';
@@ -15,6 +16,7 @@ describe('ListingExpirationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         SharedModule,
         ModalsModule,
         CoreModule.forRoot(),

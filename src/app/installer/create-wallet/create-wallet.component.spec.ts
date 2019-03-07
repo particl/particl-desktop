@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material';
 
@@ -7,6 +9,7 @@ import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { CreateWalletComponent } from './create-wallet.component';
+import { ModalsModule } from 'app/modals/modals.module';
 
 
 describe('CreateWalletComponent', () => {
@@ -17,14 +20,18 @@ describe('CreateWalletComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
+        RouterTestingModule,
         BrowserAnimationsModule,
         SharedModule,
-        CoreModule.forChild(),
-        CoreUiModule.forRoot()
+        CoreModule.forTest(),
+        CoreUiModule.forRoot(),
+        ModalsModule.forRoot()
       ],
       providers: [
         { provide: MatDialogRef}
-      ]
+      ],
+      declarations: [CreateWalletComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

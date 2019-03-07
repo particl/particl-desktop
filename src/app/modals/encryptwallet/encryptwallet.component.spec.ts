@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material';
 
 import { CoreModule } from '../../core/core.module';
@@ -16,6 +17,7 @@ describe('EncryptwalletComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         SharedModule,
         ModalsModule,
         CoreModule.forRoot(),

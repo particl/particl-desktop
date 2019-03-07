@@ -12,6 +12,7 @@ import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 /* components & directives (own) */
 import { PassphraseComponent } from './passphrase.component';
+import { DirectiveModule } from 'app/core-ui/directive/directive.module';
 
 /* delete any unused imports! */
 
@@ -26,6 +27,7 @@ describe('PassphraseComponent', () => {
         SharedModule,
         CoreModule.forTest(),
         CoreUiModule.forRoot(),
+        DirectiveModule,
         /* deps */
         BrowserAnimationsModule,
         MatIconModule,
@@ -33,7 +35,8 @@ describe('PassphraseComponent', () => {
       providers: [
         /* own */
         PassphraseService
-      ]
+      ],
+      declarations: [PassphraseComponent]
     })
     .compileComponents();
   }));

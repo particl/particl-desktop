@@ -18,7 +18,8 @@ describe('OrderCountComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      declarations: [OrderCountComponent]
     })
     .compileComponents();
   }));

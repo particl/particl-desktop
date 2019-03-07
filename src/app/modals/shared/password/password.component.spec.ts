@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ModalsModule } from '../../modals.module';
 import { CoreModule } from '../../../core/core.module';
@@ -15,6 +16,7 @@ describe('PasswordComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,

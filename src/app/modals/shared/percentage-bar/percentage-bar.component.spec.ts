@@ -16,7 +16,8 @@ describe('PercentageBarComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
-      ]
+      ],
+      declarations: [PercentageBarComponent]
     })
     .compileComponents();
   }));

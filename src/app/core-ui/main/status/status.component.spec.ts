@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { CoreModule } from '../../../core/core.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
@@ -18,7 +19,9 @@ describe('StatusComponent', () => {
         CoreModule.forRoot(),
         ModalsModule,
         CoreUiModule.forRoot()
-      ]
+      ],
+      declarations: [StatusComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

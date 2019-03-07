@@ -5,12 +5,14 @@ import { MarketModule } from '../../market.module';
 import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 
 import { ReportService } from './report.service';
+import { CoreModule } from 'app/core/core.module';
 
 
 describe('ReportService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        CoreModule.forTest(),
         CoreUiModule,
         MarketModule.forRoot()
       ],

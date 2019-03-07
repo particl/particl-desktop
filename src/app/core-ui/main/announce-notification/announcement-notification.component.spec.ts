@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { CoreModule } from '../../../core/core.module';
 import { AnnouncementNotificationComponent } from './announcement-notification.component';
@@ -12,6 +13,7 @@ describe('AnnouncementNotificationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterTestingModule,
         CoreModule.forRoot(),
         MainViewModule,
         HttpClientModule

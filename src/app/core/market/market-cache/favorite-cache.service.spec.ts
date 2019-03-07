@@ -4,6 +4,7 @@ import { MarketModule } from 'app/core/market/market.module';
 import { MarketCacheModule } from 'app/core/market/market-cache/market-cache.module';
 
 import { FavoriteCacheService } from './favorite-cache.service';
+import { CoreModule } from 'app/core/core.module';
 
 
 
@@ -11,6 +12,7 @@ describe('FavoriteCacheService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        CoreModule.forTest(),
         MarketModule.forRoot(),
         MarketCacheModule.forRoot()
       ],

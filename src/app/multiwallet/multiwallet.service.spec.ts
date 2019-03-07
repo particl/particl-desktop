@@ -1,4 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { MultiwalletService } from './multiwallet.service';
 
@@ -9,6 +10,7 @@ describe('MultiwalletService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterTestingModule,
         CoreModule.forTest(),
         MultiwalletModule.forTest()
       ]

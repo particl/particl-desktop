@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material';
 
 import { SharedModule } from '../../../../shared/shared.module';
@@ -15,6 +16,7 @@ describe('AddAddressLabelComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
