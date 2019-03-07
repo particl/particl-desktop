@@ -162,11 +162,13 @@ a.sidebar-item-link {
   flex-direction: column;
 
   .logo {
-    flex: 0 0 60px;
+    flex: 0 0 50px;
     display: block;
-    height: 60px;
-    width: 144px;
-    margin: 30px auto;
+    width: 130px;
+    margin: 35px auto;
+    img {
+      width: 100%;
+    }
   }
 
   .menu-links {
