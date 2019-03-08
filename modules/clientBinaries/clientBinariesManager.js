@@ -217,7 +217,7 @@ class Manager extends EventEmitter {
 
       stream.pipe(writeStream);
 
-      this.on('cancel', async () => {
+      this.once('cancel', async () => {
         this._logger.info('Stopping download of binary...');
         try {
           stream.unpipe(writeStream);

@@ -35,7 +35,7 @@ exports.parse = function() {
 
   // make a copy of process.argv, because we'll be changing it
   // which messes with the map operator
-  const args = process.argv.slice(0); 
+  const args = process.argv.slice(0);
 
   args.map((arg, index) => {
     let nDashes = arg.lastIndexOf('-') + 1;
