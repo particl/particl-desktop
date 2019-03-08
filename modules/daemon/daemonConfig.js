@@ -1,22 +1,34 @@
-const fs          = require('fs');
-const path        = require('path');
-const log         = require('electron-log');
-const iniParser   = require('@jedmao/ini-parser').default;
-const cookie      = require('../rpc/cookie');
-const _options    = require('../options');
+const rxIpc         = require('rx-ipc-electron/lib/main').default;
+const Observable    = require('rxjs/Observable').Observable;
+const fs            = require('fs');
+const path          = require('path');
+const log           = require('electron-log');
+const iniParser     = require('@jedmao/ini-parser').default;
+const cookie        = require('../rpc/cookie');
+const _processOpts  = require('../options');
 
-const conFilePath = path.join( cookie.getParticlPath(_options.get()), 'particl.conf');
+let _options = _processOpts.get();
+
+if (isEmptyObject(_options)) {
+  _options = _processOpts.parse();
+}
+
+const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
+const IPC_CHANNEL = 'rpc-configuration';
 const SAFE_KEYS = ['addressindex'];
 
-const isArray = function(obj) {
+let STORED_CONFIGURATION = {};
+let mainWindowRef = null;
+
+function isArray(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
 }
 
-const isObject = function(obj) {
+function isObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]';
 }
 
-deepClone = function(obj) {
+function deepClone(obj) {
   let retVal;
   try {
     retVal = JSON.parse(JSON.stringify(obj))
@@ -24,6 +36,11 @@ deepClone = function(obj) {
     retVal = undefined;
   };
   return retVal;
+}
+
+function isEmptyObject(obj) {
+  for (let x in obj) { if (obj.hasOwnProperty(x))  return false; }
+  return true;
 }
 
 const formatSettingsOutput = function(rawConfig) {
@@ -211,5 +228,86 @@ const saveSettings = function(networkOpt) {
   }
 }
 
+
+const getConfiguration = () => {
+  let settings;
+  if (Object.keys(STORED_CONFIGURATION).length > 0) {
+    settings = STORED_CONFIGURATION;
+  } else {
+    const config = getSettings();
+    settings = config.global || {};
+
+    if ( settings.testnet || _options.testnet) {
+      settings = { ...settings, ...(config.test || {}) };
+    }
+
+    settings = { ...settings, ..._options};
+    settings.port = +(settings.rpcport ? settings.rpcport : settings.port);
+    STORED_CONFIGURATION = settings;
+  }
+
+  if (!settings.auth) {
+    const cookieAuth = cookie.getAuth(_options);
+    if (cookieAuth) {
+      settings.auth = cookieAuth;
+      STORED_CONFIGURATION = settings;
+    }
+  }
+
+  return settings;
+}
+
+
+const initializeIpcListener = (mainWindow) => {
+  if (mainWindowRef === null) {
+    mainWindowRef = mainWindow;
+  }
+  removeIpcListener();
+
+  rxIpc.registerListener(IPC_CHANNEL, () => {
+    let settings = getConfiguration();
+    return Observable.create(observer => {
+      observer.next(settings);
+      observer.complete();
+    });
+  });
+}
+
+
+const removeIpcListener = () => {
+  rxIpc.removeListeners(IPC_CHANNEL);
+}
+
+
+const emitConfiguration = () => {
+  let settings = getConfiguration();
+
+  if (!settings.auth) {
+    setTimeout(emitConfiguration, 1000);
+    return;
+  }
+  try {
+    rxIpc.runCommand(IPC_CHANNEL, mainWindowRef.webContents, settings)
+      .subscribe(
+        (returnData) => {
+            // no return data
+        },
+        (error) => {
+          log.error("configuration emit error: error: " + error);
+        },
+        () => {
+            // no logging
+        }
+      );
+  } catch (error) {
+    log.error("configuration emit error: failed to run command (maybe window closed): " + error);
+  }
+}
+
+
+exports.getConfiguration = getConfiguration;
+exports.init = initializeIpcListener;
+exports.destroy = removeIpcListener;
 exports.getSettings = getSettings;
 exports.saveSettings = saveSettings;
+exports.send = emitConfiguration;

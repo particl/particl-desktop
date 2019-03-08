@@ -2,10 +2,10 @@ const log = require('electron-log');
 const { session } = require('electron')
 const { URL } = require('url')
 
-const _options = require('../options');
+const config = require('../daemon/daemonConfig');
 const cookie = require('../rpc/cookie');
 
-const OPTIONS = _options.get();
+const OPTIONS = config.getConfiguration();
 
 // Modify the user agent for all requests to the following urls.
 const filter = {

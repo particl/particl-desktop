@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
-import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { map, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
 import { environment } from '../../../environments/environment';
@@ -25,6 +24,8 @@ export class RpcService implements OnDestroy {
 
   private log: any = Log.create('rpc.service');
   private destroyed: boolean = false;
+  private isInitialized: boolean = false;
+  private DAEMON_CHANNEL: string = 'rpc-configuration';
 
   /**
    * IP/URL for daemon (default = localhost)
@@ -32,13 +33,12 @@ export class RpcService implements OnDestroy {
   private hostname: String = environment.particlHost;
 
   /**
-   * Port number of of daemon (default = 51935)
+   * Port number of default daemon
    */
   private port: number = environment.particlPort;
 
-  // note: basic64 equiv= dGVzdDp0ZXN0
-  private username: string = 'test';
-  private password: string = 'test';
+  // note: password basic64 equiv= dGVzdDp0ZXN0
+  private authorization: string = btoa('test:test');
 
   public isElectron: boolean = false;
 
@@ -47,10 +47,19 @@ export class RpcService implements OnDestroy {
     private _ipc: IpcService
   ) {
     this.isElectron = false;  // window.electron
+    if (environment.isTesting) {
+      this.isInitialized = true;
+    } else {
+      this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
+    }
   }
 
   ngOnDestroy() {
     this.destroyed = true;
+  }
+
+  get enabled(): boolean {
+    return this.isInitialized;
   }
 
   /**
@@ -69,6 +78,11 @@ export class RpcService implements OnDestroy {
    * ```
    */
   call(method: string, params?: Array<any> | null): Observable<any> {
+
+    if (!this.isInitialized) {
+      return Observable.throw('Initializing...');
+    }
+
     if (this.isElectron) {
       return this._ipc.runCommand('rpc-channel', null, method, params).pipe(
         map(response => response && (response.result !== undefined)
@@ -84,10 +98,9 @@ export class RpcService implements OnDestroy {
         id: 1
       });
 
-
       const headerJson = {
        'Content-Type': 'application/json',
-       'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`),
+       'Authorization': 'Basic ' + this.authorization,
        'Accept': 'application/json',
       };
       const headers = new HttpHeaders(headerJson);
@@ -108,6 +121,20 @@ export class RpcService implements OnDestroy {
             return Observable.throw(err)
           })
     }
+  }
+
+  private daemonListener(config: any): Observable<any> {
+    return Observable.create(observer => {
+      if (config.auth && (config.auth !== this.authorization)) {
+        this.hostname = config.rpcbind || 'localhost';
+        this.port = config.port ? config.port : this.port;
+        this.authorization = config.auth ? config.auth : this.authorization;
+        this.isInitialized = true;
+      }
+
+      // complete
+      observer.complete();
+    });
   }
 
 }
