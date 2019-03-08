@@ -21,7 +21,7 @@ if (process.platform === 'linux') {
 if (app.getVersion().includes('testnet'))
   process.argv.push(...['-testnet']);
 
-const options = require('./modules/options').parse();
+const options = require('./modules/daemon/daemonConfig').getConfiguration();
 const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
 const _auth = require('./modules/webrequest/http-auth');

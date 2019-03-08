@@ -1,4 +1,3 @@
-const Observable  = require('rxjs/Observable').Observable;
 const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const log         = require('electron-log');
 

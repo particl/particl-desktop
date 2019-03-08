@@ -12,8 +12,6 @@ const branch = require('../../package.json').branch;
 const ClientBinariesManager = require('../clientBinaries/clientBinariesManager').Manager;
 const rpc = require('../rpc/rpc');
 
-let options;
-
 // master
 // const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/master/modules/clientBinaries/clientBinaries.json';
 
@@ -36,10 +34,9 @@ class DaemonManager extends EventEmitter {
     return this._availableClients['particld'].binPath;
   }
 
-  init(_options) {
+  init(options) {
     log.info('Initializing...');
-    options = _options;
-    const isTestnet = options.testnet || app.getVersion().includes('testnet');
+    const isTestnet = Boolean(+options.testnet);
     if (isTestnet) {
       this.localPath = path.join(this.localPath, 'testnet');
     }
