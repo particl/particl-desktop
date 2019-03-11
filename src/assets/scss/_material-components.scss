@@ -563,18 +563,19 @@ input {
 // ------ 3.7. TOGGLE BUTTONS ------ //
 
 mat-button-toggle {
-  .mat-button-toggle-group,
-  .mat-button-toggle-standalone {
-    @extend %tfx;
-    box-shadow: none !important;
-    border: 0;
-    &:hover,
-    &:focus {
-      background: darken($bg, 10%) !important;
-      color: $text;
+  &.filter-button { // modified appearance to basic mat-buttons (used in Reported listing only filter)
+    &.mat-button-toggle-appearance-standard {
+      background: transparent;
+      border: none;
+      color: $text-muted;
+      .mat-button-toggle-label-content {
+        line-height: 36px;
+      }
     }
-    .mat-button-toggle-focus-overlay {
-      opacity: 0 !important; // fixes weird behaviour of overlay layer
+  }
+  &.icon-only {
+    .mat-icon {
+      margin: 0;
     }
   }
 }
