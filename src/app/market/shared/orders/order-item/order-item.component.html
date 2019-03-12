@@ -6,7 +6,7 @@
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ order?.listing?.title }}</div>
-        <div class="hash" matTooltip="Order hash" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hash }">{{ order?.hash }}</div>
+        <div class="hash" matTooltip="Order ID: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
         <div class="date">
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
