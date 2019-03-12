@@ -181,12 +181,12 @@ export class OrderItemComponent implements OnInit {
   }
 
   openProcessingModal() {
-      const dialog = this.dialog.open(ProcessingModalComponent, {
-        disableClose: true,
-        data: {
-          message: 'Hang on, we are busy processing your action'
-        }
-      });
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your action'
+      }
+    });
   }
 
 }
