@@ -173,6 +173,11 @@ exports.stop = function (restarting) {
       });
     } else {
       log.info('Daemon not managed by gui.');
+
+      if (!restarting) {
+        log.info('Daemon succesfully cleaned up - we can now quit electron safely! :)');
+        electron.app.quit();
+      }
       resolve();
     }
 

@@ -7,7 +7,7 @@ import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { Observable, timer } from 'rxjs';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
-import { takeWhile, take } from 'rxjs/operators';
+import { takeWhile, take, throttleTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-proposals',
@@ -64,7 +64,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.peerService.getBlockCount()
-    .pipe(takeWhile(() => !this.destroyed))
+    .pipe(takeWhile(() => !this.destroyed)).pipe(throttleTime(60000))
     .subscribe((count: number) => {
 
       if (this.tabLabels[this.selectedTab] === 'active') {
@@ -90,7 +90,10 @@ export class ProposalsComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((activeProposalList: Proposal[]) => {
         this.isLoading = false;
-        if (this.isNewProposalArrived(this.activeProposals, activeProposalList)) {
+        if (
+          this.isNewProposalArrived(this.activeProposals, activeProposalList) ||
+          this.isProposalExpiryAtArrived(this.activeProposals, activeProposalList)
+        ) {
           this.activeProposals = activeProposalList.reverse();
           this.sortedProposalByExpiryTime = this.getSortedProposalByExpiryTime(this.activeProposals);
           this.setExpiryCheckTimer();
@@ -161,6 +164,12 @@ export class ProposalsComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.log.d(error);
       });
+  }
+
+  isProposalExpiryAtArrived(oldProposals: Proposal[], newProposals: Proposal[]): boolean {
+    return _.differenceWith(oldProposals, newProposals, (o1: Proposal, o2: Proposal) => {
+      return (o1.id === o2.id) && (o1.isExpiredAtValid === o2.isExpiredAtValid)
+    }).length !== 0;
   }
 
   isNewProposalArrived(oldProposals: Proposal[], newProposals: Proposal[]): boolean {

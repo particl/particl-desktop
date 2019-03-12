@@ -46,17 +46,12 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       legend: {
         maxKeyLength: 35,
         margin: {
-          left: 0,
-          right: 0,
+          left: 200,
+          right: 112,
           top: 5,
           bottom: 5
         },
-        // padding: {
-        //   top: 0,
-        //   bottom: 0,
-        //   right: 5,
-        //   left: 5
-        // }
+        rightAlign: true
       },
       color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
       tooltip: {

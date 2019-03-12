@@ -44,7 +44,9 @@ export class ProfileService implements OnDestroy {
       .subscribe(defaultProfile => {
         // do a new get request to get the _full_ profile.
         // includes ShippingAddresses, CryptoAddresses etc
-        this.get(defaultProfile.id).subscribe(full => observer.next(full));
+        if (defaultProfile && defaultProfile.id) {
+          this.get(defaultProfile.id).subscribe(full => observer.next(full));
+        }
       })
     });
   }

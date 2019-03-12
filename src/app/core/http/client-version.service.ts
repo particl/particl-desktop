@@ -5,7 +5,7 @@ import { Observable ,  of } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { ClientVersionRelease } from './client-version.model';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ClientVersionService {
