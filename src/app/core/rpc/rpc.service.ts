@@ -81,7 +81,7 @@ export class RpcService implements OnDestroy {
   call(method: string, params?: Array<any> | null): Observable<any> {
 
     if (!this.isInitialized) {
-      return Observable.throw('Initializing...');
+      return observableThrowError('Initializing...');
     }
 
     if (this.isElectron) {

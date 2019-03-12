@@ -74,7 +74,7 @@ export class MarketService {
 
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
       .pipe(catchError((error: any) => {
-          return Observable.throw(this.extractMPErrorMessage(error.error));
+          return observableThrowError(this.extractMPErrorMessage(error.error));
         })
       )
   }
