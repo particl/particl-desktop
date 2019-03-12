@@ -34,6 +34,9 @@ Customizations and modifiers for default Material components
       3.5. Radios
       3.6. Checkboxes
       3.7. Toggle Buttons
+    
+    4. Plug-ins
+      4.1. Lightbox gallery
 
 */
 
@@ -577,5 +580,24 @@ mat-button-toggle {
     .mat-icon {
       margin: 0;
     }
+  }
+}
+
+
+
+/* ------------------------------- *\
+    4. PLUG-INS
+\* ------------------------------- */
+
+// ------ 4.1. LIGHTBOX GALLERY ------ //
+
+lightbox#lightbox-lightbox {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  border-radius: 0;
+  gallery {
+    background: rgba(darken($bg-black, 5%), 0.95);
   }
 }
