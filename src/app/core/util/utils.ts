@@ -374,7 +374,7 @@ export const Messages = {
 
 
 export const rejectMessages = {
-  OUT_OF_STOCK: 'Item not currently in stock.'
+  OUT_OF_STOCK: 'Item not in stock'
 }
 
 export const isPrerelease = (release?: string): boolean => {
