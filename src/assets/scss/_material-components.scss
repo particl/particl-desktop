@@ -569,7 +569,7 @@ mat-button-toggle {
   &.filter-button { // modified appearance to basic mat-buttons (used in Reported listing only filter)
     &.mat-button-toggle-appearance-standard {
       background: transparent;
-      border: none;
+      border: 0;
       color: $text-muted;
       .mat-button-toggle-label-content {
         line-height: 36px;
