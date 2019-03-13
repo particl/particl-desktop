@@ -102,6 +102,15 @@
 
 // ------ BUTTONS ------ //
 
+p.warning {
+  background: rgba($color-alert, 0.1);
+  margin: 24px -35px;
+  padding-left: 65px;
+  &::before {
+    left: 35px;
+  }
+}
+
 .action-buttons {
   margin-top: 24px;
   .left {

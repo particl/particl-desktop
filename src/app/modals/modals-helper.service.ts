@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Log } from 'ng2-logger';
+import { environment } from 'environments/environment';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
@@ -10,6 +11,7 @@ import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service
 // modals
 import { UnlockwalletComponent } from 'app/modals/unlockwallet/unlockwallet.component';
 import { UnlockModalConfig } from './models/unlock.modal.config.interface';
+import { ListingExpiryConfig } from './models/listingExpiry.modal.config.interface';
 import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
@@ -56,7 +58,9 @@ export class ModalsHelperService implements OnDestroy {
     });
 
     /* Hook for checking the accept & terms modal */
-    this.checkForNewVersion();
+    if (!environment.isTesting) {
+      this.checkForNewVersion();
+    }
   }
 
   /**
@@ -64,7 +68,7 @@ export class ModalsHelperService implements OnDestroy {
     * @param {UnlockModalConfig} data       Optional - data to pass through to the modal.
     */
 
-  unlock(data: UnlockModalConfig, callback?: Function, cancelcallback?: Function) {
+  unlock(data: UnlockModalConfig, callback?: Function, cancelcallback?: Function, cancelOnSuccess: boolean = true) {
     if (this._rpcState.get('locked')) {
       const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
       if (data || callback) {
@@ -72,7 +76,10 @@ export class ModalsHelperService implements OnDestroy {
       }
       dialogRef.afterClosed().subscribe(() => {
         if (cancelcallback) {
-          cancelcallback();
+          const isLocked = this._rpcState.get('locked');
+          if (isLocked || cancelOnSuccess) {
+            cancelcallback();
+          }
         }
         this.log.d('unlock modal closed');
       });
@@ -145,11 +152,11 @@ export class ModalsHelperService implements OnDestroy {
     }
   }
 
-  openListingExpiryModal(callback: Function): void {
+  openListingExpiryModal(data: ListingExpiryConfig, callback: Function): void {
     const dialogRef = this._dialog.open(ListingExpirationComponent, this.modelSettings);
-    dialogRef.componentInstance.setData(callback);
+    dialogRef.componentInstance.setData(data, callback);
     dialogRef.afterClosed().subscribe(() => {
-      this.log.d('encrypt modal closed');
+      this.log.d('listing exiry modal closed');
     });
   }
 

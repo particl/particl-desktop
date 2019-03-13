@@ -76,6 +76,10 @@ $break-xhd: 2200px;
   opacity: 0.55;
 }
 
+%lightest { // light "grey" text
+  opacity: 0.36;
+}
+
 %reset {
   opacity: 1;
 }

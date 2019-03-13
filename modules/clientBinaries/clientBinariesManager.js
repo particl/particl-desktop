@@ -5,7 +5,6 @@ const got  = require('got'),
         fs = require('fs'),
     crypto = require('crypto'),
       path = require('path'),
-       tmp = require('tmp'),
     mkdirp = require('mkdirp'),
      unzip = require('node-unzip-2'),
      spawn = require('buffered-spawn'),
@@ -118,6 +117,17 @@ class Manager extends EventEmitter {
   }
 
   /**
+   * Stops any ongoing download.
+   *
+   * Emits a 'close' event that is only necessarily detected when a download is ongoing.
+   *
+   * @return void
+   */
+  shutdown() {
+    this.emit('cancel');
+  }
+
+  /**
    * Download a particular client.
    *
    * If client supports this platform then
@@ -188,7 +198,7 @@ class Manager extends EventEmitter {
       this._logger.debug('Generating download folder path ...');
 
       const downloadFolder = path.join(
-        options.downloadFolder || tmp.dirSync().name,
+        options.downloadFolder,
         client.id
       );
 
@@ -206,6 +216,20 @@ class Manager extends EventEmitter {
       let progressBar = undefined;
 
       stream.pipe(writeStream);
+
+      this.once('cancel', async () => {
+        this._logger.info('Stopping download of binary...');
+        try {
+          stream.unpipe(writeStream);
+          writeStream.end();
+          stream.destroy();
+        } catch (err) { }
+        if (progressBar) {
+          progressBar.stop();
+        }
+
+        reject({message: 'Cancellation of download', status: 'cancel'});
+      });
 
       stream.on('downloadProgress', (info) => {
         if (progressBar) {
@@ -238,6 +262,12 @@ class Manager extends EventEmitter {
             status: 'error'
           });
         }
+
+        try {
+          // Attempt at cleanup
+          // (in case of situation such as noted by the caveat in https://nodejs.org/api/stream.html#stream_readable_pipe_destination_options )
+          writeStream.close();
+        } catch (err) { }
         this._logger.error(err);
         reject(new Error(`Error downloading package for ${clientId}: ${err.message}`));
       });
@@ -265,8 +295,6 @@ class Manager extends EventEmitter {
       return promise;
     })
     .then((dInfo) => {
-      const downloadFolder = dInfo.downloadFolder,
-        downloadFile = dInfo.downloadFile;
 
       // test checksum
       let value, algorithm, expectedHash;

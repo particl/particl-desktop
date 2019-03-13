@@ -46,6 +46,7 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
 import { ListingExpirationComponent } from './market-listing-expiration/listing-expiration.component';
 import { RejectBidComponent } from './reject-bid/reject-bid.component';
 import { ProcessingModalComponent } from './processing-modal/processing-modal.component';
+import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { ProcessingModalComponent } from './processing-modal/processing-modal.co
     BidConfirmationModalComponent,
     ListingExpirationComponent,
     RejectBidComponent,
-    ProcessingModalComponent
+    ProcessingModalComponent,
+    AlphaMainnetWarningComponent
   ],
   exports: [
     ClipboardModule
@@ -114,7 +116,8 @@ import { ProcessingModalComponent } from './processing-modal/processing-modal.co
     BidConfirmationModalComponent,
     ListingExpirationComponent,
     RejectBidComponent,
-    ProcessingModalComponent
+    ProcessingModalComponent,
+    AlphaMainnetWarningComponent
   ],
 })
 export class ModalsModule {
