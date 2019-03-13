@@ -18,7 +18,8 @@
 
   <div class="status-info">
     <p>{{ order?.messages.status_info }}</p>
-    <div *ngIf="order?.type === 'buy' && order?.status === 'shipping'" class="additional-shipping-info">
+    <!-- Shipping details -->
+    <div *ngIf="order?.type === 'buy' && order?.status === 'shipping'" class="additional-info">
       <p *ngIf="order?.listing?.memo">
         <span class="title">Shipping info from Seller</span>
         <code class="more-info">{{ order?.listing?.memo}}</code>
@@ -28,17 +29,15 @@
         <em>No information provided</em>
       </p>
     </div>
-  </div>
-
-  <div class="status-info" *ngIf="order?.status === 'rejected'">
-    <div class="reject-message-info">
+    <!-- Rejection message -->
+    <div *ngIf="order?.status === 'rejected'" class="additional-info">
       <p>
         <span class="title">Reason for rejection</span>
         <code class="more-info">{{ checkRejectMessage() }}</code>
       </p>
-
     </div>
-  </div>
+  </div><!-- .status-info -->
+
 
   <div class="detail" fxLayout="row" fxLayoutGap="30px">
 
