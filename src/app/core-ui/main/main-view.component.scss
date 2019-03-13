@@ -143,9 +143,12 @@ a.sidebar-item-link {
 
   .logo {
     display: block;
-    height: 60px;
-    width: 144px;
-    margin: 30px auto;
+    height: 50px;
+    width: 130px;
+    margin: 35px auto;
+    img {
+      width: 100%;
+    }
   }
 
   // widgets stuck to the bottom (sidebar's footer)
