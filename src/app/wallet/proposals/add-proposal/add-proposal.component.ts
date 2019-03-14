@@ -26,7 +26,7 @@ export class AddProposalComponent implements OnInit {
   public isTnCAccepted: boolean = false;
   // form controls
   public proposalFormGroup: FormGroup;
-  expireIn: number = 7; // days.
+  expireIn: number = 2; // days.
 
   constructor(
     private router: Router,
@@ -91,7 +91,6 @@ export class AddProposalComponent implements OnInit {
   }
 
   submitProposal(): void {
-
     // check wallet status (unlock if locked ?).
     this.modalService.unlock({timeout: 10}, () => this.proposalTransactionFeeCallback())
   }

@@ -43,7 +43,7 @@
       </p>
       <p class="widget-help">
         What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
-        <a mat-button href="https://particl.wiki/currency-types" class="small">
+        <a mat-button  target = "_blank" href="https://particl.wiki/currency-types" class="small">
           <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
           Currency &amp; transaction types
         </a>
@@ -63,18 +63,18 @@
             <mat-radio-button class="balance" value="part" checked="checked" color="primary"
                               (change)="setInputOutput('part', 'output')" fxFlex >
               <div class="name">Public</div>
-              <div class="desc">Available balance:<span class="amount">{{ getBalance('part') }}</span></div>
+              <div class="desc">Available balance:<span class="amount">{{ availableBalance('part') }}</span></div>
             </mat-radio-button>
             <mat-radio-button class="balance" value="blind" fxFlex color="primary" (change)="setInputOutput('blind', 'output')" >
               <div class="name">Blind</div>
-              <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')" class="amount">{{ getBalance('blind') }}</span>
+              <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')" class="amount">{{ availableBalance('blind') }}</span>
                 <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
                           matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
               </div>
             </mat-radio-button>
             <mat-radio-button *ngIf="testnet" class="balance" value="anon" color="primary" (change)="setInputOutput('anon', 'output')" fxFlex >
               <div class="name">Anon</div>
-              <div class="desc">Available balance:<span class="amount">{{ getBalance('anon') }}</span></div>
+              <div class="desc">Available balance:<span class="amount">{{ availableBalance('anon') }}</span></div>
             </mat-radio-button>
           </mat-radio-group><!-- .from-balance-type -->
     
@@ -156,12 +156,12 @@
                           fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
             <mat-radio-button class="balance" value="part" color="primary" (change)="setInputOutput('part', 'input')" checked="checked" fxFlex [disabled]="send.input === 'part'">
               <div class="name">Public</div>
-              <div class="desc">Available balance:<span class="amount">{{ getBalance('part') }}</span></div>
+              <div class="desc">Available balance:<span class="amount">{{ availableBalance('part') }}</span></div>
             </mat-radio-button>
             <mat-radio-button class="balance" value="blind" color="primary" (change)="setInputOutput('blind', 'input')" [disabled]="send.input === 'blind'" fxFlex>
               <div class="name">Blind</div>
               <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')"
-                                              class="amount">{{ getBalance('blind') }}</span>
+                                              class="amount">{{ availableBalance('blind') }}</span>
                 <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question"
                           class="help-icon"
                           matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
@@ -169,7 +169,7 @@
             </mat-radio-button>
             <mat-radio-button *ngIf="testnet" class="balance" value="anon" color="primary" (change)="setInputOutput('anon', 'input')" [disabled]="send.input === 'anon'" fxFlex>
               <div class="name">Anon</div>
-              <div class="desc">Available balance:<span class="amount">{{ getBalance('anon') }}</span></div>
+              <div class="desc">Available balance:<span class="amount">{{ availableBalance('anon') }}</span></div>
             </mat-radio-button>
           </mat-radio-group><!-- .from-balance-type -->
           <p class="widget-help">

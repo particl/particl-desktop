@@ -1,7 +1,7 @@
 <div class="item">
 
   <div class="image">
-    <img src="{{listing?.imageCollection?.featuredImage?.thumbnail}}" (click)="openListing()">
+    <img src="{{listing?.imageCollection?.featuredImage?.medium}}" (click)="openListing()">
     <div class="icons">
       <!--mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-zoom-in" matTooltip="Preview"
                 matTooltipPosition="above" (click)="openListing()"></mat-icon-->
@@ -15,18 +15,18 @@
     <div class="category">{{listing?.category?.name}}</div>
   </div>
 
-  
+
   <div class="price-cart">
 
     <!-- price section with shipping and total price  -->
     <div *ngIf="listingCacheService?.selectedCountry" class="price" fxFlex>
-      {{ listing?.total(listingCacheService.selectedCountry?.iso)?.getAmount() }}
+      {{ listing?.total(listingCacheService.selectedCountry?.iso)?.getAmountAsString() }}
       <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
     </div>
 
     <!-- price section without shipping and total price  -->
     <div *ngIf="!listingCacheService?.selectedCountry" class="price" fxFlex>
-      {{ listing?.basePrice?.getAmount() }}
+      {{ listing?.basePrice?.getAmountAsString() }}
       <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
     </div>
 

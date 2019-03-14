@@ -19,6 +19,8 @@ import {
   SendConfirmationModalComponent
 } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 
+import { Amount } from 'app/core/util/utils';
+
 @Component({
   selector: 'app-send',
   templateUrl: './send.component.html',
@@ -48,7 +50,6 @@ export class SendComponent implements OnInit {
     private flashNotification: SnackbarService
   ) {
     this.addressHelper = new AddressHelper();
-
     this.setFormDefaultValue();
   }
 
@@ -64,7 +65,12 @@ export class SendComponent implements OnInit {
     /* check if testnet -> Show/Hide Anon Balance */
     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
       .subscribe(chain => this.testnet = chain === 'test');
+
+    this.sendService.listUnSpent();
   }
+
+
+
   /** Select tab */
   selectTab(tabIndex: number): void {
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
@@ -79,8 +85,12 @@ export class SendComponent implements OnInit {
   }
 
   /** Get current account balance (Public / Blind / Anon) */
-  getBalance(account: TxType): number {
+  availableBalance(account: TxType): number {
     const balance = this.txTypeToBalanceType(account);
+
+    if (balance === 'balance') {
+      return new Amount(this.sendService.availableBalance, 8).getAmount();
+    }
     return this._rpcState.get('getwalletinfo')[balance] || 0;
   }
 
@@ -136,7 +146,7 @@ export class SendComponent implements OnInit {
       return;
     }
     // is amount in range of 0...CurrentBalance
-    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input) && this.send.amount > 0);
+    this.send.validAmount = (this.send.amount <= this.availableBalance(this.send.input) && this.send.amount > 0);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
@@ -337,10 +347,10 @@ export class SendComponent implements OnInit {
   }
 
   sendAllBalance(): void {
-    this.send.amount = (!this.send.subtractFeeFromAmount) ? this.getBalance(this.send.input) : null;
+    this.send.amount = !this.send.subtractFeeFromAmount ? this.availableBalance(this.send.input) : null;
   }
 
   updateAmount(): void {
-    this.send.amount = (this.send.subtractFeeFromAmount) ? this.getBalance(this.send.input) : null;
+    this.send.amount = (this.send.subtractFeeFromAmount) ? this.availableBalance(this.send.input) : null;
   }
 }

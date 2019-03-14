@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
@@ -13,7 +12,6 @@ export class TemplateService {
 
   constructor(
     private market: MarketService,
-    private marketState: MarketStateService,
     public listingCache: PostListingCacheService
   ) { }
 
@@ -71,9 +69,14 @@ export class TemplateService {
     );
   }
 
-  post(template: Template, marketId: number, expTime: number) {
-    return this.market.call('template', ['post', template.id, expTime, marketId])
-    .do(t => this.listingCache.posting(template));
+  post(template: Template, marketId: number, expTime: number, estimateFee: boolean = false) {
+    return this.market.call('template', ['post', template.id, expTime, marketId, estimateFee])
+    .do(t => {
+      if (!estimateFee) {
+        this.listingCache.posting(template)
+      }
+      return t;
+    });
   }
 
   size(listingTemplateId: number) {

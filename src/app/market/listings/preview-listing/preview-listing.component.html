@@ -51,7 +51,7 @@
       <p class="summary description">
         {{ data?.listing?.shortDescription }}
       </p>
-      
+
       <table class="meta">
         <tr class="expires-soon" *ngIf="data?.listing?.isAboutToExpire">
           <th class="title">
@@ -78,7 +78,7 @@
             Shipping
           </th>
           <td class="value">
-            {{ data?.listing?.domesticShippingPrice.getAmount() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} <small>PART</small>
+            {{ data?.listing?.domesticShippingPrice.getAmountAsString() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmountAsString() }} <small>PART</small>
           </td>
         </tr>
         <tr>
@@ -144,7 +144,7 @@
             <!-- domestic shipping -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.domesticShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.domesticShippingPrice.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -153,7 +153,7 @@
             <!-- domestic escrow -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -162,7 +162,7 @@
             <!-- domestic total -->
             <td>
               <span class="part price">
-                <strong>{{data?.listing?.totalAmountDomestic?.getAmount()}}</strong> <small class="currency">PART</small>
+                <strong>{{data?.listing?.totalAmountDomestic?.getAmountAsString()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -171,13 +171,13 @@
           </tr>
           <tr>
             <th>
-              Worldwide 
+              Worldwide
               <small>Shipping carrier</small>
             </th>
             <!-- international shipping -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.internationalShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.internationalShippingPrice.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -186,7 +186,7 @@
             <!-- international escrow -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceInternational?.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -195,7 +195,7 @@
             <!-- international total -->
             <td>
               <span class="part price">
-                <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
+                <strong>{{data?.listing?.totalAmountInternaltional?.getAmountAsString()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -217,7 +217,7 @@
         </tbody>
       </table><!-- .shipping-escrow -->
     </div><!-- .tab-content.shipping-->
-    
+
     <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
       <div class="no-results">
         Comments coming soon™
