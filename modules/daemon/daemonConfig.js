@@ -14,7 +14,9 @@ if (isEmptyObject(_options)) {
 }
 
 const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
-const IPC_CHANNEL = 'rpc-configuration';
+const IPC_CHANNEL_PUB = 'rpc-configuration';
+const IPC_CHANNEL_LISTEN = 'request-configuration';
+
 const SAFE_KEYS = ['addressindex'];
 
 let STORED_CONFIGURATION = {};
@@ -258,42 +260,17 @@ const getConfiguration = () => {
 }
 
 
-const initializeIpcListener = (mainWindow) => {
-  if (mainWindowRef === null) {
-    mainWindowRef = mainWindow;
-  }
-  removeIpcListener();
-
-  rxIpc.registerListener(IPC_CHANNEL, () => {
-    let settings = getConfiguration();
-    return Observable.create(observer => {
-      observer.next(settings);
-      observer.complete();
-    });
-  });
-}
-
-
-const removeIpcListener = () => {
-  rxIpc.removeListeners(IPC_CHANNEL);
-}
-
-
 const emitConfiguration = () => {
   let settings = getConfiguration();
 
-  if (!settings.auth) {
-    setTimeout(emitConfiguration, 1000);
-    return;
-  }
   try {
-    rxIpc.runCommand(IPC_CHANNEL, mainWindowRef.webContents, settings)
+    rxIpc.runCommand(IPC_CHANNEL_PUB, mainWindowRef.webContents, settings)
       .subscribe(
         (returnData) => {
             // no return data
         },
         (error) => {
-          log.error("configuration emit error: error: " + error);
+          log.error("configuration emit error: " + error);
         },
         () => {
             // no logging
@@ -305,9 +282,36 @@ const emitConfiguration = () => {
 }
 
 
+const destroyIpcChannels = () => {
+  rxIpc.removeListeners(IPC_CHANNEL_PUB);
+  rxIpc.removeListeners(IPC_CHANNEL_LISTEN);
+}
+
+
+const initializeIpcChannels = (mainWindow) => {
+  mainWindowRef = mainWindow;
+  destroyIpcChannels();
+
+  rxIpc.registerListener(IPC_CHANNEL_PUB, () => {
+    let settings = getConfiguration();
+    return Observable.create(observer => {
+      observer.next(settings);
+      observer.complete();
+    });
+  });
+
+  rxIpc.registerListener(IPC_CHANNEL_LISTEN, () => {
+    emitConfiguration();
+    return Observable.create(observer => {
+      observer.complete(true);
+    });
+  });
+}
+
+
 exports.getConfiguration = getConfiguration;
-exports.init = initializeIpcListener;
-exports.destroy = removeIpcListener;
+exports.init = initializeIpcChannels;
+exports.destroy = destroyIpcChannels;
 exports.getSettings = getSettings;
 exports.saveSettings = saveSettings;
 exports.send = emitConfiguration;
