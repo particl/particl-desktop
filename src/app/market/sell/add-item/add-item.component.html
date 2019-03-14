@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <div class="row TO_DO" fxLayout="row" fxLayoutGap="25px">
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
           <div class="half" fxFlex="50">
             <!-- FIXME: implement quantity functionality: -->
             <mat-form-field class="auto-width">
@@ -74,7 +74,7 @@
             </mat-form-field>
           </div>
           <div class="half" fxFlex="50">
-            <p class="widget-help">Enter amount of items in stock. This will help you manage your inventory. In other words: how much items are you selling?</p>
+            <p class="widget-help TO_DO">Enter amount of items in stock. This will help you manage your inventory. In other words: how many items are you selling?</p>
           </div>
         </div>
       </mat-card><!-- .pricing -->
@@ -86,38 +86,21 @@
 
       <h2 class="subtitle">Product gallery</h2>
       <mat-card class="photos">
-        <!--div class="title">Upload photos</div-->
         <div id="drag-n-drop" class="drag-n-drop">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
           <input class="hide-file" type="file" accept="image/*" multiple="true" id="fileInput">
           <button mat-button color="primary" (click)="uploadPicture()">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
             Upload a photo
           </button>
           <p>or drag'n'drop it here</p>
         </div>
         <p class="widget-help">
-          Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible. Max file size per image is 2MB.
+          Upload photos of your Product (first photo will be set as main, featured image). Be sure to upload high quality &amp; focused images in good lighting where possible. Max file size per image is 2 MB.
         </p>
         <div class="gallery" fxLayoutWrap>
 
-          <div *ngFor="let image of images"
-              class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
-            <div class="photo" fxFLex>
-              <img src="{{image.thumbnail}}">
-              <div class="icons">
-                <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
-                          matTooltip="Remove image" (click)="removeExistingImage(image)">
-                </mat-icon>
-                <!--mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
-                          matTooltip="Set as featured" (click)="featurePicture(i)">
-                </mat-icon-->
-              </div>
-            </div>
-          </div>
-
           <div *ngFor="let picture of picturesToUpload ; index as i"
-              class="photo-wrapper" fxFlex="0 0 123px"
-              fxLayoutAlign="center center">
+              class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
             <!-- TODO: maybe not gif, but removing is 'unsafe' -->
             <div class="photo" fxFLex>
               <img src="{{picture}}">

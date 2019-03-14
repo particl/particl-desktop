@@ -33,21 +33,15 @@
 // ------ GALLERY ------ //
 
 .drag-n-drop {
-  border: 1px dashed $bg-shadow;
+  border: 2px dashed $bg-shadow;
   border-radius: 4px;
   background: $bg;
   margin-bottom: 16px;
-  padding: 50px 24px 45px;
+  padding: 30px 24px;
   text-align: center;
-  .mat-icon {
-    display: block;
-    margin-bottom: 16px;
-    font-size: 42px;
-    color: $bg-shadow;
-  }
   p {
+    @extend %lighter;
     margin: 6px 0 0;
-    color: $text-muted;
   }
 }
 
@@ -68,8 +62,11 @@
     box-shadow: 0 0 0 2px $color;
   }
   img {
-    width: 100%;
+    width: 150px;
+    height: 150px;
     display: block;
+    object-fit: cover;
+    object-position: center center;
   }
   .icons {
     @extend %tfx;
