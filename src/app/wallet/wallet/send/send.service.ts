@@ -118,7 +118,15 @@ export class SendService {
   }
 
   private rpc_send_failed(message: string, address?: string, amount?: number) {
-    this.flashNotification.open(`Transaction Failed ${message}`, 'err');
+    const idx = message.indexOf(']'); // End brancket of string like '[wallet.dat] ...'
+    let msg = '';
+    if (idx > -1) {
+      msg = message.substring(idx + 1);
+    } else {
+      msg = message;
+    }
+
+    this.flashNotification.open(`Transaction failed: ${msg}`, 'err');
     this.log.er('rpc_send_failed, failed to execute transaction!');
     this.log.er(message);
 
