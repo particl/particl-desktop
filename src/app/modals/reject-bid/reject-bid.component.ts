@@ -1,4 +1,4 @@
-import { Component, Output, OnInit, Inject } from '@angular/core';
+import { Component, Output, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { rejectMessages } from '../../core/util/utils';
 
@@ -7,7 +7,7 @@ import { rejectMessages } from '../../core/util/utils';
   templateUrl: './reject-bid.component.html',
   styleUrls: ['./reject-bid.component.scss']
 })
-export class RejectBidComponent implements OnInit {
+export class RejectBidComponent {
 
   rejectMessages: RejectionMessages[] = [];
 
@@ -16,9 +16,6 @@ export class RejectBidComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
   ) {
     this.createMessages();
-  }
-
-  ngOnInit() {
   }
 
   createMessages () {
@@ -35,9 +32,6 @@ export class RejectBidComponent implements OnInit {
     this.dialogRef.close(this.data.selectedMessage);
   }
 
-  dialogClose(): void {
-    this.dialogRef.close('CANCEL');
-  }
 }
 
 export interface RejectionMessages {

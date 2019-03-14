@@ -1,5 +1,5 @@
 <div mat-dialog-title>Reject Bid</div>
-<button class="small-close-button pull-right" (click)="dialogClose()">
+<button class="small-close-button pull-right" mat-dialog-close>
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
@@ -14,7 +14,7 @@
         Are you sure you want to reject this bid?
       </p>
       <mat-form-field class="full-width">
-        <mat-select value="{{data?.selectedMessage}}" placeholder="Reason for rejection">
+        <mat-select [(ngModel)]="data.selectedMessage" value="{{data?.selectedMessage}}" placeholder="Reason for rejection">
           <mat-option *ngFor="let rMsg of rejectMessages" [value]="rMsg.value">
             {{rMsg.viewValue}}
           </mat-option>
@@ -29,7 +29,7 @@
 </div><!-- .dialog-content -->
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
-  <button mat-button mat-dialog-close (click)="dialogClose()">
+  <button mat-button mat-dialog-close>
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>

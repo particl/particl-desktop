@@ -190,9 +190,9 @@ export class OrderItemComponent implements OnInit {
       data: {selectedMessage: this.selectedMessage}
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.selectedMessage = result;
-      if (result !== 'CANCEL') {
-        this.callAction('reject');
+      if (result) {
+        this.selectedMessage = result;
+        this.checkForWallet('reject');
       }
     });
   }
