@@ -28,10 +28,6 @@ export class RejectBidComponent {
     }
   }
 
-  confirm(): void {
-    this.dialogRef.close(this.data.selectedMessage);
-  }
-
 }
 
 export interface RejectionMessages {
