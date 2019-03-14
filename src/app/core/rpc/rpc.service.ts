@@ -127,7 +127,7 @@ export class RpcService implements OnDestroy {
   private daemonListener(config: any): Observable<any> {
     return Observable.create(observer => {
       const isValid = config.auth && (config.auth !== this.authorization);
-      this.log.d(`Recieved RPC configuration: details are valid: ${isValid}`);
+      this.log.d(`Received RPC configuration: details are valid: ${isValid}`);
       if (isValid) {
         this.hostname = config.rpcbind || 'localhost';
         this.port = config.port ? config.port : this.port;

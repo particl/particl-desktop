@@ -270,7 +270,7 @@ const emitConfiguration = () => {
             // no return data
         },
         (error) => {
-          log.error("configuration emit error: error: " + error);
+          log.error("configuration emit error: " + error);
         },
         () => {
             // no logging

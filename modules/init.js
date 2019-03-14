@@ -19,7 +19,6 @@ exports.start = function (mainWindow) {
   rpc.init();
   notification.init();
   closeGui.init();
-  daemonConfig.init(mainWindow);
   daemon.init();
 
   /* Initialize ZMQ */

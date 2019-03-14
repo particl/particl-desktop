@@ -21,10 +21,12 @@ if (process.platform === 'linux') {
 if (app.getVersion().includes('testnet'))
   process.argv.push(...['-testnet']);
 
-const options = require('./modules/daemon/daemonConfig').getConfiguration();
+const daemonConfig = require('./modules/daemon/daemonConfig');
 const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
 const _auth = require('./modules/webrequest/http-auth');
+
+const options = daemonConfig.getConfiguration();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -137,6 +139,13 @@ function initMainWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   });
+
+  // Setup configuration listener
+  //    Needs to be included here because init.js is only created once (when the app is ready)
+  //    Since the config contains an emitter and a listener based on the browserWindow object,
+  //    it needs to be updated with a new BrowserWindow context when the main window is destroyed and re-created
+  //    (a la OSX, <sarcasm> thanks Apple for your unique behaviour </sarcasm> )
+  daemonConfig.init(mainWindow);
 }
 
 /*
