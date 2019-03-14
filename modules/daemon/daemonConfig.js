@@ -289,9 +289,7 @@ const destroyIpcChannels = () => {
 
 
 const initializeIpcChannels = (mainWindow) => {
-  if (mainWindowRef === null) {
-    mainWindowRef = mainWindow;
-  }
+  mainWindowRef = mainWindow;
   destroyIpcChannels();
 
   rxIpc.registerListener(IPC_CHANNEL_PUB, () => {
