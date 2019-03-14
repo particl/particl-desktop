@@ -110,6 +110,13 @@ function initMainWindow() {
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
 
+  // Setup configuration listener
+  //    Needs to be included here because init.js is only created once (when the app is ready)
+  //    Since the config contains an emitter and a listener based on the browserWindow object,
+  //    it needs to be updated with a new BrowserWindow context when the main window is destroyed and re-created
+  //    (a la OSX, <sarcasm> thanks Apple for your unique behaviour </sarcasm> )
+  daemonConfig.init(mainWindow);
+
   // and load the index.html of the app.
   if (options.dev) {
     mainWindow.loadURL('http://localhost:4200');
@@ -139,13 +146,6 @@ function initMainWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   });
-
-  // Setup configuration listener
-  //    Needs to be included here because init.js is only created once (when the app is ready)
-  //    Since the config contains an emitter and a listener based on the browserWindow object,
-  //    it needs to be updated with a new BrowserWindow context when the main window is destroyed and re-created
-  //    (a la OSX, <sarcasm> thanks Apple for your unique behaviour </sarcasm> )
-  daemonConfig.init(mainWindow);
 }
 
 /*
