@@ -48,10 +48,11 @@ export class RpcService implements OnDestroy {
     private _ipc: IpcService
   ) {
     this.isElectron = false;  // window.electron
-    if (environment.isTesting) {
+    if (environment.isTesting || !window.electron) {
       this.isInitialized = true;
     } else {
       this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
+      this.requestConfiguration();
     }
   }
 
@@ -126,7 +127,9 @@ export class RpcService implements OnDestroy {
 
   private daemonListener(config: any): Observable<any> {
     return Observable.create(observer => {
-      if (config.auth && (config.auth !== this.authorization)) {
+      const isValid = config.auth && (config.auth !== this.authorization);
+      this.log.d(`Received RPC configuration: details are valid: ${isValid}`);
+      if (isValid) {
         this.hostname = config.rpcbind || 'localhost';
         this.port = config.port ? config.port : this.port;
         this.authorization = config.auth ? config.auth : this.authorization;
@@ -136,6 +139,17 @@ export class RpcService implements OnDestroy {
       // complete
       observer.complete();
     });
+  }
+
+  private requestConfiguration(): void {
+    setTimeout(() => {
+      this.log.d('Checking if RPC configuration is valid');
+      if (!this.isInitialized) {
+        this.log.d('Requesting valid RPC configuration');
+        this._ipc.runCommand('request-configuration', null, null);
+        this.requestConfiguration();
+      }
+    }, 5000);
   }
 
 }

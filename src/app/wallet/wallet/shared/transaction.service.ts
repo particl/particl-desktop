@@ -166,11 +166,14 @@ export class TransactionService implements OnDestroy {
     Object.keys(this.filters).map(filter => options[filter] = this.filters[filter]);
 
     this.rpc.call('filtertransactions', [options])
-      .subscribe((txResponse: Array<Object>) => {
-        this.log.d(`countTransactions, number of transactions after filter: ${txResponse.length}`);
-        this.txCount = txResponse.length;
-        return;
-      });
+      .subscribe(
+        (txResponse: Array<Object>) => {
+          this.log.d(`countTransactions, number of transactions after filter: ${txResponse.length}`);
+          this.txCount = txResponse.length;
+          return;
+        },
+        (err) => this.log.d('filtertransactions call failed!')
+      );
   }
 
   // TODO: remove shitty hack
