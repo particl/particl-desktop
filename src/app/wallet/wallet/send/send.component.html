@@ -16,7 +16,7 @@
       </mat-tab>
     </mat-tab-group>
 
-    <div class="buttons">
+    <div class="buttons" *ngIf="send.input === 'anon' || type === 'sendPayment'">
       <button mat-button (click)="advanced = !advanced" class="small advanced-options">
         <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
         <span>Advanced options</span>
@@ -178,13 +178,13 @@
         </mat-card>
 
 
-        <div class="section-title" *ngIf="type === 'sendPayment' || advanced">
+        <div class="section-title" *ngIf="type === 'sendPayment'">
           Pay to
         </div>
-        <mat-card class="pay-to" *ngIf="type === 'sendPayment' || advanced">
+        <mat-card class="pay-to" *ngIf="type === 'sendPayment'">
 
           <!-- Receiver's address/label -->
-          <div class="section receiver-address">
+          <div class="section receiver-address"  *ngIf="type === 'sendPayment'">
             <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
               <mat-form-field fxFlex="1 1 100%" class="full-width larger">
                 <input #address name="toAddress" matInput
