@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { IpcService } from '../ipc/ipc.service';
 import { UpdaterComponent } from 'app/core/updater/modal/updater.component';

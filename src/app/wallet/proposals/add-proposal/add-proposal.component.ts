@@ -147,5 +147,4 @@ export class AddProposalComponent implements OnInit {
         this.snackbarService.open(error, 'warn')
       })
   }
-
 }

@@ -105,7 +105,7 @@
   </div><!-- .product-summary -->
 
   <div class="product-details">
-    <mat-tab-group class="listing-tabs" (selectChange)="changeTab($event.index)">
+    <mat-tab-group class="listing-tabs" (selectedTabChange)="changeTab($event.index)">
       <mat-tab label="Details"></mat-tab>
       <mat-tab label="Shipping &amp; Escrow"></mat-tab>
       <mat-tab label="Comments" *ngIf="!data.buyPage"></mat-tab>
@@ -210,7 +210,9 @@
 
     <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
       <div class="no-results">
-        Comments coming soon™
+        <p>
+          Comments coming soon™
+        </p>
       </div>
     </div>
   </div><!-- .product-details -->

@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '
 import { MatDialogRef } from '@angular/material';
 
 import { RpcStateService, SnackbarService } from '../../../../core/core.module';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-qr-code-modal',
@@ -24,7 +25,7 @@ export class QrCodeModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this.rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
      .subscribe(chain => this.testnet = chain === 'test');
   }
 

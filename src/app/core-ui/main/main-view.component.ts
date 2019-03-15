@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
+import { timer } from 'rxjs';
+import { filter, map, flatMap, distinctUntilChanged, takeWhile, take } from 'rxjs/operators';
 
 import { RpcService, RpcStateService } from '../../core/core.module';
 import { NewTxNotifierService } from 'app/core/rpc/rpc.module';
@@ -64,23 +65,23 @@ export class MainViewComponent implements OnInit, OnDestroy {
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
-      .filter(event => event instanceof NavigationEnd)
-      .map(() => this._route)
-      .map(route => {
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(map(() => this._route))
+      .pipe(map(route => {
         while (route.firstChild) {
           route = route.firstChild;
         }
         return route;
-      })
-      .filter(route => route.outlet === 'primary')
-      .flatMap(route => route.data)
+      }))
+      .pipe(filter(route => route.outlet === 'primary'))
+      .pipe(flatMap(route => route.data))
       .subscribe(data => this.title = data['title']);
 
 
     /* errors */
     // Updates the error box in the sidenav whenever a stateCall returns an error.
     this._rpcState.errorsStateCall.asObservable()
-      .distinctUntilChanged()
+      .pipe(distinctUntilChanged())
       .subscribe(update => {
         // if error exists & != false
         if (update.error) {
@@ -94,12 +95,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
     // Updates the error box in the sidenav if wallet is not initialized.
     this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => this.walletInitialized = status);
 
 
     this._rpcState.observe('getwalletinfo', 'unlocked_until')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => {
         this.unlocked_until = status;
         if (this.unlocked_until > 0) {
@@ -114,11 +115,11 @@ export class MainViewComponent implements OnInit, OnDestroy {
     /* versions */
     // Obtains the current daemon version
     this._rpcState.observe('getnetworkinfo', 'subversion')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(subversion => this.daemonVersion = subversion.match(/\d+\.\d+.\d+.\d+/)[0]);
 
     /* check if testnet -> block explorer url */
-    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
       .subscribe(chain => this.testnet = chain === 'test');
 
     this.messagesService.message.subscribe((message) => {
@@ -170,7 +171,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
     }
     if (min >= 0 && sec >= 0) {
       this.time = min + ':' + ('0' + sec).slice(-2);
-      this.unSubscribeTimer = Observable.timer(1000).
+      this.unSubscribeTimer = timer(1000).
         subscribe(() => this.startTimer(min, sec));
     } else {
       this.unSubscribeTimer.unsubscribe();

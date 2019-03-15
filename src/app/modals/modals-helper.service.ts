@@ -1,10 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject ,  Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
 import { environment } from 'environments/environment';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
@@ -19,6 +18,7 @@ import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.comp
 import { ListingExpirationComponent } from 'app/modals/market-listing-expiration/listing-expiration.component';
 import { TermsComponent } from 'app/modals/terms/terms.component';
 import { termsObj } from 'app/modals/terms/terms-txt';
+import { take, takeWhile } from 'rxjs/operators';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -47,7 +47,7 @@ export class ModalsHelperService implements OnDestroy {
   ) {
 
     /* Hook BlockStatus -> open syncing modal only once */
-    this._blockStatusService.statusUpdates.asObservable().take(1).subscribe(status => {
+    this._blockStatusService.statusUpdates.asObservable().pipe(take(1)).subscribe(status => {
       // Hiding the sync modal initially
       // this.openSyncModal(status);
     });
@@ -127,7 +127,7 @@ export class ModalsHelperService implements OnDestroy {
 
   openInitialCreateWallet(): void {
     this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(
         state => {
           this.initializedWallet = state;

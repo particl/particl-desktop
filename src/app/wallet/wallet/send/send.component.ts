@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { MatDialog, MatSliderChange } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -18,6 +18,7 @@ import { TransactionBuilder, TxType } from './transaction-builder.model';
 import {
   SendConfirmationModalComponent
 } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
+import { take } from 'rxjs/operators';
 
 import { Amount } from 'app/core/util/utils';
 
@@ -38,6 +39,7 @@ export class SendComponent implements OnInit {
   advanced: boolean = false;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
+  public TxType: typeof TxType = TxType;
 
   constructor(
     private sendService: SendService,
@@ -63,7 +65,7 @@ export class SendComponent implements OnInit {
 
   ngOnInit() {
     /* check if testnet -> Show/Hide Anon Balance */
-    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
       .subscribe(chain => this.testnet = chain === 'test');
 
     this.sendService.listUnSpent();

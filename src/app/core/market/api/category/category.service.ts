@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs'
 
 import { MarketService } from 'app/core/market/market.service';
 
 import { Category } from 'app/core/market/api/category/category.model';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Injectable()
 export class CategoryService {
