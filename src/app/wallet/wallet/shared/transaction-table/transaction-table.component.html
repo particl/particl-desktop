@@ -100,7 +100,7 @@
     </mat-expansion-panel-header>
 
 
-    <div class="container history-container" fxLayoutWrap layout-padding>
+    <div class="container history-container" fxLayout="row wrap" layout-padding>
 
       <div fxFlex="1 1 calc(100% - 260px)" fxLayout="column">
         <!-- To/from (detail) -->
@@ -122,12 +122,12 @@
         <!-- TX fee (detail) -->
         <div class="tx-detail-item text-right" fxFlex>
           <span>Fee:</span>
-          <span class="mat-right">{{tx.fee ? tx.fee : 0}} PART</span>
+          <span class="value">{{tx.fee ? tx.fee : 0}} PART</span>
         </div>
         <!-- Net amount (detail) -->
         <div class="tx-detail-item text-right" fxFlex>
           <span>Net amount:</span>
-          <span class="mat-right">{{ tx.getNetAmount()}} PART</span>
+          <span class="value">{{ tx.getNetAmount()}} PART</span>
         </div>
       </div>
 

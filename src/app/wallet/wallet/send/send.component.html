@@ -1,7 +1,7 @@
 <app-header>
   <div class="tab-bar" fxLayout fxLayoutAlign="space-between stretch">
 
-    <mat-tab-group (selectChange)="selectTab($event.index)" fxFlex="1 1 100%">
+    <mat-tab-group (selectedTabChange)="selectTab($event.index)" fxFlex="1 1 100%">
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontSet="partIcon" fontIcon="part-send"></mat-icon>
@@ -43,7 +43,7 @@
       </p>
       <p class="widget-help">
         What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
-        <a mat-button href="https://particl.wiki/currency-types" class="small">
+        <a mat-button  target = "_blank" href="https://particl.wiki/currency-types" class="small">
           <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
           Currency &amp; transaction types
         </a>
@@ -52,32 +52,32 @@
   </div><!-- .page-intro -->
 
   <div fxLayout="row" fxLayoutGap="35px">
-  
+
     <div class="from-box" fxFlex="0 0 320px">
       <div class="sticky">
         <div class="section-title">Pay from</div>
         <mat-card>
           <!-- Select "FROM" balance/account -->
-          <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input" 
+          <mat-radio-group class="from-balance-type block-radio" name="sendInput" [(ngModel)]="send.input"
                             fxLayout="column" fxLayoutGap="10px" (change)="updateAmount()">
             <mat-radio-button class="balance" value="part" checked="checked" color="primary"
                               (change)="setInputOutput('part', 'output')" fxFlex >
               <div class="name">Public</div>
-              <div class="desc">Available balance:<span class="amount">{{ availableBalance('part') }}</span></div>
+              <div class="desc">Available balance:<span class="amount">{{ availableBalance(TxType.PUBLIC) }}</span></div>
             </mat-radio-button>
             <mat-radio-button class="balance" value="blind" fxFlex color="primary" (change)="setInputOutput('blind', 'output')" >
               <div class="name">Blind</div>
-              <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')" class="amount">{{ availableBalance('blind') }}</span>
-                <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
+              <div class="desc">Available balance:<span *ngIf="!checkBalance(TxType.BLIND)" class="amount">{{ availableBalance(TxType.BLIND) }}</span>
+                <mat-icon *ngIf="checkBalance(TxType.BLIND)" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
                           matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
               </div>
             </mat-radio-button>
             <mat-radio-button *ngIf="testnet" class="balance" value="anon" color="primary" (change)="setInputOutput('anon', 'output')" fxFlex >
               <div class="name">Anon</div>
-              <div class="desc">Available balance:<span class="amount">{{ availableBalance('anon') }}</span></div>
+              <div class="desc">Available balance:<span class="amount">{{ availableBalance(TxType.ANON) }}</span></div>
             </mat-radio-button>
           </mat-radio-group><!-- .from-balance-type -->
-    
+
           <!-- TX info help -->
           <p class="widget-help" *ngIf="send.input === 'part'">
             In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver addresses.
@@ -89,7 +89,7 @@
             Anon transaction offer the highest privacy &ndash; transaction amounts and not even sender and receiver
             addresses are publicly visible. The higher privacy level is, the larger fee needs to be paid. Advanced users can further adjust the number of ring signatures.
           </p>
-    
+
           <!-- Show privacy slider if anonymous TX -->
           <div *ngIf="send.input === 'anon' && advanced" class="advanced">
             <div class="subtitle">Privacy level <small>(no. of ring sigs)</small></div>
@@ -117,7 +117,7 @@
                   matTooltipPosition="below">Highest
                 </span>
               </div><!-- .privacy-labels -->
-    
+
               <mat-slider
                 thumbLabel
                 color="primary"
@@ -126,7 +126,7 @@
                 [max]="32"
                 [value]="send.ringsize">
               </mat-slider>
-    
+
               <!-- set default value after clicking the button (8 signatures?) -->
               <button
                 (click)="setPrivacy(8)"

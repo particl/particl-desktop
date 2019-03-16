@@ -1,5 +1,6 @@
+
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { MatDialog, MatSliderChange } from '@angular/material';
 import { Log } from 'ng2-logger';
 
@@ -18,7 +19,7 @@ import { TransactionBuilder, TxType } from './transaction-builder.model';
 import {
   SendConfirmationModalComponent
 } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
-
+import { take, takeWhile } from 'rxjs/operators';
 import { Amount } from 'app/core/util/utils';
 
 @Component({
@@ -41,6 +42,8 @@ export class SendComponent implements OnInit, OnDestroy {
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
   private availableBal: number = 0;
+
+  public TxType: typeof TxType = TxType;
 
   constructor(
     private sendService: SendService,
@@ -66,12 +69,12 @@ export class SendComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     /* check if testnet -> Show/Hide Anon Balance */
-    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
       .subscribe(chain => this.testnet = chain === 'test');
 
     // Calculate Spendable balance
     this._rpcState.observe('listunspent')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(
         unspent => {
           this.availableBal = 0;

@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { take } from 'rxjs/operators';
 import { throttle } from 'lodash';
 
 interface IPage {
@@ -132,7 +133,7 @@ export class SellComponent implements OnInit, OnDestroy {
     }
 
     this.templateSearchSubcription = this.template.search(pageNumber, max, this.filters.sort, 1, this.filters.category, search, hashItems)
-      .take(1).subscribe((listings: Array<Listing>) => {
+      .pipe(take(1)).subscribe((listings: Array<Listing>) => {
         listings = listings.map((t) => {
         if (this.listingService.cache.isAwaiting(t)) {
           t.status = 'awaiting';
