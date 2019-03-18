@@ -26,7 +26,7 @@
     "generate:documentation": "",
     "checksum": "cd packages && checksum -a sha256 *.*",
     "build:electron:prod": "ng build --base-href=./ --prod --configuration=production",
-    "build:electron:fast": "ng build --base-href=./ --sourcemap=false",
+    "build:electron:fast": "ng build --base-href=./ --sourceMap=false",
     "build:electron": "ng build --base-href=./",
     "start:electron:dev": "electron . --dev",
     "start:electron:fast": "yarn run build:electron:fast && electron .",
