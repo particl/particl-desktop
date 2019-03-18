@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { RpcStateService } from '../../../core/core.module';
 
 import { Amount } from '../../../core/util/utils';
+import { takeWhile } from 'rxjs/operators';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class BalanceComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._rpcState.observe('getwalletinfo', this.type)
-    .takeWhile(() => !this.destroyed)
+    .pipe(takeWhile(() => !this.destroyed))
     .subscribe(
       balance => this._balance = new Amount(balance || 0, 4),
       error => this.log.error('Failed to get balance, ', error));

@@ -15,6 +15,7 @@ import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+import { takeWhile } from 'rxjs/operators';
 import { NvD3Component } from 'ng2-nvd3';
 
 @Component({
@@ -84,7 +85,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   getVoteDetails(): void {
     this.proposalService.get(this.proposal.hash)
-    .takeWhile(() => !this.destroyed)
+    .pipe(takeWhile(() => !this.destroyed))
     .subscribe((voteDetail: VoteDetails) => {
       this.voteDetails = voteDetail;
       this.aleradyVoted = true;
@@ -95,7 +96,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   getProposalResult(): void {
     this.proposalService.result(this.proposal.hash)
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe((result: ProposalResult) => {
         if (result) {
           this.proposalResult = result;

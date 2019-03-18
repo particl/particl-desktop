@@ -6,9 +6,8 @@
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ order?.listing?.title }}</div>
+        <div class="hash" matTooltip="Order ID: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
         <div class="date">
-          <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
-          <span class="hash {{ order?.hash_bg }}" matTooltip="Order hash">{{ order?.hash }}</span>
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
       </div>
@@ -84,11 +83,12 @@
         Edit
       </button-->
       <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-      <button mat-button matTooltip="Escrow TX details"
+      <!-- <button mat-button matTooltip="Escrow TX details"
               *ngIf="order?.show_escrow_txdetails" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
         View payment
       </button>
+      -->
       <!-- TODO: shortcut to e2e message to buyer -->
       <!--button mat-button class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>

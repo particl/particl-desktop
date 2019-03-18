@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
-import { interval } from 'rxjs/observable/interval';
+import { interval } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 import { environment } from 'environments/environment';
 import { VersionModel } from './version.model';
 import { ClientVersionService } from 'app/core/http/client-version.service';
@@ -37,7 +38,7 @@ export class VersionComponent implements OnInit, OnDestroy {
     this.getCurrentClientVersion()
     // check new update in every 30 minute
     const versionInterval = interval(1800000);
-    versionInterval.takeWhile(() => !this.destroyed).subscribe(val => this.getCurrentClientVersion());
+    versionInterval.pipe(takeWhile(() => !this.destroyed)).subscribe(val => this.getCurrentClientVersion());
   }
 
   // no need to destroy.

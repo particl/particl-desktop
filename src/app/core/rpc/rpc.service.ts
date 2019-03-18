@@ -1,8 +1,9 @@
+
+import {throwError as observableThrowError,  Subject ,  Observable } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
 import { environment } from '../../../environments/environment';
@@ -81,7 +82,7 @@ export class RpcService implements OnDestroy {
   call(method: string, params?: Array<any> | null): Observable<any> {
 
     if (!this.isInitialized) {
-      return Observable.throw('Initializing...');
+      return observableThrowError('Initializing...');
     }
 
     if (this.isElectron) {
@@ -108,8 +109,8 @@ export class RpcService implements OnDestroy {
 
       return this._http
         .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
-          .map((response: any) => response.result)
-          .catch(error => {
+          .pipe(map((response: any) => response.result))
+          .pipe(catchError((error => {
             let err: string;
             if (typeof error._body === 'object') {
               err =  error._body
@@ -119,8 +120,8 @@ export class RpcService implements OnDestroy {
               err = error.error && error.error.error ? error.error.error : error.message;
             }
 
-            return Observable.throw(err)
-          })
+            return observableThrowError(err)
+          })))
     }
   }
 
