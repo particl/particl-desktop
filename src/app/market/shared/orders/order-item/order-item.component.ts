@@ -15,6 +15,7 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
 
 import { RejectBidComponent } from 'app/modals/reject-bid/reject-bid.component';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-order-item',
@@ -119,7 +120,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   acceptBid() {
-    this.bid.acceptBidCommand(this.order.id).take(1).subscribe(() => {
+    this.bid.acceptBidCommand(this.order.id).pipe(take(1)).subscribe(() => {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
       // Reload same order without calling api
       this.order.OrderItem.status = 'AWAITING_ESCROW';
@@ -132,10 +133,10 @@ export class OrderItemComponent implements OnInit {
   }
 
   rejectBid() {
-    this.bid.rejectBidCommand(this.order.id, this.selectedMessage).take(1).subscribe(res => {
+
+    this.bid.rejectBidCommand(this.order.id, this.selectedMessage).pipe(take(1)).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
-      console.log('testestestest', this.selectedMessage);
       this.order.rejectMsg = this.selectedMessage;
       this.order = new Bid(this.order, this.order.type);
       this.dialog.closeAll();
@@ -147,7 +148,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   escrowRelease(ordStatus: string) {
-    this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).take(1).subscribe(res => {
+    this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).pipe(take(1)).subscribe(res => {
       this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
       this.order.OrderItem.status = ordStatus === 'shipping' ? 'SHIPPING' : 'COMPLETE';
       this.order = new Bid(this.order, this.order.type)
@@ -175,7 +176,7 @@ export class OrderItemComponent implements OnInit {
 
   escrowLock() {
     // <orderItemId> <nonce> <memo> , @TODO send nonce ?
-    this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').take(1).subscribe(res => {
+    this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').pipe(take(1)).subscribe(res => {
       this.snackbarService.open(`Payment done for order ${this.order.listing.title}`);
       this.order.OrderItem.status = 'ESCROW_LOCKED';
       this.order = new Bid(this.order, this.order.type);
@@ -199,11 +200,11 @@ export class OrderItemComponent implements OnInit {
   }
 
   openProcessingModal() {
-      const dialog = this.dialog.open(ProcessingModalComponent, {
-        disableClose: true,
-        data: {
-          message: 'Hang on, we are busy processing your action'
-        }
-      });
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your action'
+      }
+    });
   }
 }

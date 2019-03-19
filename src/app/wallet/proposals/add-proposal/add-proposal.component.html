@@ -67,7 +67,7 @@
       <mat-card>
         <div class="title">
           Voting options
-          <button [disabled]="proposalFormGroup.controls.options.length >= 5" (click)="addNewInputField()" mat-button color="basic" class="small">
+          <button [disabled]="proposalFormGroup.controls.options['length'] >= 5" (click)="addNewInputField()" mat-button color="basic" class="small">
             <!-- TODO: allow max of 5 options total -->
             <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
             Add new option
@@ -77,7 +77,7 @@
         <!-- voting options -->
         <div formArrayName="options">
           <div class="voting item" [formGroupName]="i"
-          *ngFor="let option of proposalFormGroup.controls.options.controls; let i = index">
+          *ngFor="let option of proposalFormGroup.controls.options['controls']; let i = index">
             <span class="no">{{i+1}}</span>
             <div class="content">
               <mat-form-field class="full-width">

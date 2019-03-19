@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
@@ -21,6 +21,7 @@ import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/e
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
+import { take } from 'rxjs/operators';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { MatDialog } from '@angular/material';
 
@@ -80,7 +81,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
-    private countryList: CountryListService,
+    public countryList: CountryListService,
     private escrow: EscrowService,
     private payment: PaymentService,
     private dialog: MatDialog
@@ -104,11 +105,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
       internationalShippingPrice: ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]]
     });
 
-    this.route.queryParams.take(1).subscribe(params => {
+    this.route.queryParams.pipe(take(1)).subscribe(params => {
       // Initialize drag-n-drop
       this.initDragDropEl('drag-n-drop');
       this.fileInput = document.getElementById('fileInput');
       this.fileInput.onchange = this.processPictures.bind(this);
+
       const id = params['id'];
 
       // Determine whether template is a clone or not

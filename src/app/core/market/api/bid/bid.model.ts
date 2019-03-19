@@ -67,6 +67,20 @@ export class Bid extends Product {
     this.order.listing = listing;
   }
 
+  get hash(): string {
+    if (this.order.ListingItem && this.order.ListingItem.hash) {
+      return this.order.ListingItem.hash.substring(0, 3);
+    }
+    return '';
+  }
+
+  get hashDetail(): string {
+    if (this.order.ListingItem && this.order.ListingItem.hash) {
+      return this.order.ListingItem.hash.substring(0, 6);
+    }
+    return '';
+  }
+
   get listing(): Listing {
     return this.order.listing;
   }

@@ -45,7 +45,7 @@ export class Status {
             status: 'expired',
             class: 'expired',
             status_info: 'Expired listing template, not published on Market anymore',
-            action_icon: 'part-errror',
+            action_icon: 'part-error',
             action_button: 'Expired',
             action_tooltip: 'Listing expired',
             action_color: 'primary',

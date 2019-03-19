@@ -9,6 +9,7 @@ import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { ImageItem } from '@ngx-gallery/core';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+import { take, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-preview-listing',
@@ -37,7 +38,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     private proposalsService: ProposalsService,
     private snackbarService: SnackbarService,
     private profileService: ProfileService,
-    private countryListService: CountryListService,
+    public countryListService: CountryListService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -56,12 +57,12 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   getVoteOfListing(): void {
     if (this.data && this.data.listing && this.data.listing.proposalHash) {
       this.proposalsService.get(this.data.listing.proposalHash)
-        .take(1)
+        .pipe(take(1))
         .subscribe((vote: any) => {
           this.data.listing.VoteDetails = vote;
         }, (err: any) => {
           if (this.data.listing.submitterAddress) {
-            this.profileService.default().take(1).subscribe(
+            this.profileService.default().pipe(take(1)).subscribe(
               (profile: any) => {
                 const profileAddress: string = (profile.object || {}).address || '';
                 if (profileAddress && (profileAddress === this.data.listing.submitterAddress)) {

@@ -6,7 +6,7 @@ declare const require: any;
 
 export const environment = {
   production: true,
-  envName: 'dev',
+  envName: 'test',
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
   version: require('../../package.json').version,
   marketVersion: require('../../node_modules/particl-marketplace/package.json').version,
