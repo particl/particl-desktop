@@ -160,11 +160,61 @@ a.sidebar-item-link {
 
   .logo {
     flex: 0 0 50px;
-    display: block;
-    width: 130px;
-    margin: 35px auto;
+    position: relative;
+    &:hover {
+      img {
+        opacity: 0;
+      }
+      .balances {
+        opacity: 1;
+      }
+    }
     img {
+      @extend %tfx;
+      width: 130px;
+      display: block;
+      margin: 35px auto;
+    }
+    .balances {
+      @extend %tfx;
+      opacity: 0;
       width: 100%;
+      margin: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      font-size: 12.5px;
+      tr {
+        &:hover {
+          th,
+          td {
+            background: darken($bg-black, 1.5%);
+          }
+          td {
+            color: $color;
+            small {
+              color: darken($color, 15%);
+            }
+          }
+        }
+      }
+      th {
+        @extend %tfx;
+        text-align: left;
+        font-weight: 400;
+        padding: 5px 10px 5px 30px;
+      }
+      td {
+        @extend %tfx;
+        text-align: right;
+        font-weight: 500;
+        padding: 5px 30px 5px 10px;
+        small {
+          color: $text-muted;
+        }
+      }
     }
   }
 

@@ -91,6 +91,7 @@ export class SendComponent implements OnInit, OnDestroy {
 
   /** Select tab */
   selectTab(tabIndex: number): void {
+    this.advanced = false;
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
     this.send.input = TxType.PUBLIC;
     this.send.output = TxType.PUBLIC;
@@ -109,18 +110,16 @@ export class SendComponent implements OnInit, OnDestroy {
     if (balance === 'balance') {
       return new Amount(this.availableBal, 8).getAmount();
     }
-    return this._rpcState.get('getwalletinfo')[balance] || 0;
+    return (this._rpcState.get('getwalletinfo') || {})[balance] || 0;
   }
 
-  getBalanceString(account: TxType): string {
-    const balance = this.txTypeToBalanceType(account);
-    return this._rpcState.get('getwalletinfo')[balance];
+  balanceDisplay(account: TxType): string {
+    return new Amount(this.availableBalance(account)).getAmountAsString();
   }
 
-  checkBalance(account: TxType): boolean {
-    if (account === TxType.BLIND) {
-      return parseFloat(this.getBalanceString(account)) < 0.0001 && parseFloat(this.getBalanceString(account)) > 0;
-    }
+  showBalanceHelp(account: TxType): boolean {
+    const amount = this.availableBalance(account);
+    return (amount < 0.0001) &&  (amount > 0);
   }
 
   private txTypeToBalanceType(type: TxType): string {

@@ -16,7 +16,7 @@
       </mat-tab>
     </mat-tab-group>
 
-    <div class="buttons">
+    <div class="buttons" *ngIf="send.input === 'anon' || type === 'sendPayment'">
       <button mat-button (click)="advanced = !advanced" class="small advanced-options">
         <mat-icon fontSet="partIcon" fontIcon="{{ (advanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
         <span>Advanced options</span>
@@ -67,8 +67,8 @@
             </mat-radio-button>
             <mat-radio-button class="balance" value="blind" fxFlex color="primary" (change)="setInputOutput('blind', 'output')" >
               <div class="name">Blind</div>
-              <div class="desc">Available balance:<span *ngIf="!checkBalance(TxType.BLIND)" class="amount">{{ availableBalance(TxType.BLIND) }}</span>
-                <mat-icon *ngIf="checkBalance(TxType.BLIND)" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
+              <div class="desc">Available balance:<span class="amount">{{ balanceDisplay('blind') }}</span>
+                <mat-icon *ngIf="showBalanceHelp('blind')" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
                           matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
               </div>
             </mat-radio-button>
@@ -160,9 +160,8 @@
             </mat-radio-button>
             <mat-radio-button class="balance" value="blind" color="primary" (change)="setInputOutput('blind', 'input')" [disabled]="send.input === 'blind'" fxFlex>
               <div class="name">Blind</div>
-              <div class="desc">Available balance:<span *ngIf="!checkBalance('blind')"
-                                              class="amount">{{ availableBalance('blind') }}</span>
-                <mat-icon *ngIf="checkBalance('blind')" fontSet="partIcon" fontIcon="part-circle-question"
+              <div class="desc">Available balance:<span class="amount">{{ balanceDisplay('blind') }}</span>
+                <mat-icon *ngIf="showBalanceHelp('blind')" fontSet="partIcon" fontIcon="part-circle-question"
                           class="help-icon"
                           matTooltip="It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform."></mat-icon>
               </div>
@@ -178,13 +177,13 @@
         </mat-card>
 
 
-        <div class="section-title" *ngIf="type === 'sendPayment' || advanced">
+        <div class="section-title" *ngIf="type === 'sendPayment'">
           Pay to
         </div>
-        <mat-card class="pay-to" *ngIf="type === 'sendPayment' || advanced">
+        <mat-card class="pay-to" *ngIf="type === 'sendPayment'">
 
           <!-- Receiver's address/label -->
-          <div class="section receiver-address">
+          <div class="section receiver-address"  *ngIf="type === 'sendPayment'">
             <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
               <mat-form-field fxFlex="1 1 100%" class="full-width larger">
                 <input #address name="toAddress" matInput
