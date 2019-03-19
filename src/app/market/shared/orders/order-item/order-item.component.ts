@@ -14,7 +14,6 @@ import { ShippingComponent } from '../../../../modals/market-shipping/shipping.c
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 
 import { RejectBidComponent } from 'app/modals/reject-bid/reject-bid.component';
-import { rejectMessages } from '../../../../core/util/utils';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
 @Component({
@@ -136,6 +135,8 @@ export class OrderItemComponent implements OnInit {
     this.bid.rejectBidCommand(this.order.id, this.selectedMessage).take(1).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
+      console.log('testestestest', this.selectedMessage);
+      this.order.rejectMsg = this.selectedMessage;
       this.order = new Bid(this.order, this.order.type);
       this.dialog.closeAll();
     }, (error) => {
@@ -195,17 +196,6 @@ export class OrderItemComponent implements OnInit {
         this.checkForWallet('reject');
       }
     });
-  }
-
-  checkRejectMessage() {
-    if (this.order.status === 'rejected') {
-      for (let k = this.order.BidDatas.length - 1; k >= 0; k--) {
-        if (rejectMessages[this.order.BidDatas[k].dataValue]) {
-          return rejectMessages[this.order.BidDatas[k].dataValue];
-        }
-      }
-      return 'No information provided'
-    }
   }
 
   openProcessingModal() {

@@ -33,7 +33,7 @@
     <div *ngIf="order?.status === 'rejected'" class="additional-info">
       <p>
         <span class="title">Reason for rejection</span>
-        <code class="more-info">{{ checkRejectMessage() }}</code>
+        <code class="more-info">{{ order?.rejectMsg }}</code>
       </p>
     </div>
   </div><!-- .status-info -->

@@ -1,12 +1,14 @@
-import { Messages, DateFormatter } from 'app/core/util/utils';
+import { Messages, DateFormatter, rejectMessages } from 'app/core/util/utils';
 import { Product } from './product.model';
 import { Listing } from '../listing/listing.model';
 
 export class Bid extends Product {
   activeBuySell: boolean;
+  rejectMsg: string = '';
   constructor(private order: any, public ordType: string ) {
     super();
     this.setActiveOrders();
+    this.setRejectionMessage();
   }
 
   get id(): number {
@@ -76,6 +78,20 @@ export class Bid extends Product {
   setActiveOrders() {
     this.activeBuySell = ['Accept bid', 'Mark as shipped', 'Mark as delivered', 'Make payment']
                           .includes(this.messages.action_button);
+  }
+
+  setRejectionMessage() {
+    if (this.status === 'rejected') {
+      this.rejectMsg = this.order.rejectMsg ? rejectMessages[this.order.rejectMsg] : this.getRejectMsg();
+    }
+  }
+
+  private getRejectMsg(): string {
+    for (let k = this.BidDatas.length - 1; k >= 0; k--) {
+      if (rejectMessages[this.BidDatas[k].dataValue]) {
+        return rejectMessages[this.BidDatas[k].dataValue];
+      }
+    }
   }
 
 }

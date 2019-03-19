@@ -72,9 +72,9 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.timer = Observable.interval(1000 * 10);
 
     // call loadOrders in every 10 sec.
-    this.timer.takeWhile(() => !this.destroyed).subscribe((t) => {
-      this.loadOrders()
-    });
+    // this.timer.takeWhile(() => !this.destroyed).subscribe((t) => {
+    //   this.loadOrders()
+    // });
   }
 
   loadOrders(): void {
