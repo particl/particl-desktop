@@ -42,7 +42,8 @@ export class RpcService implements OnDestroy {
   private authorization: string = btoa('test:test');
 
   constructor(
-    private _http: HttpClient
+    private _http: HttpClient,
+    private _ipc: IpcService
   ) {
     if (environment.isTesting || !window.electron) {
       this.isInitialized = true;
@@ -93,40 +94,40 @@ export class RpcService implements OnDestroy {
       return Observable.throw('Initializing...');
     }
 
-      const postData = JSON.stringify({
-        method: method,
-        params: params,
-        id: 1
-      });
+    const postData = JSON.stringify({
+      method: method,
+      params: params,
+      id: 1
+    });
 
-      const headerJson = {
-       'Content-Type': 'application/json',
-       'Authorization': 'Basic ' + this.authorization,
-       'Accept': 'application/json',
-      };
-      const headers = new HttpHeaders(headerJson);
+    const headerJson = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' + this.authorization,
+      'Accept': 'application/json',
+    };
+    const headers = new HttpHeaders(headerJson);
 
-      let url = `http://${this.hostname}:${this.port}`;
-      if (!['createwallet', 'loadwallet', 'listwalletdir',
-            'listwallet', 'smsgdisable', 'smsgenable'].includes(method)) {
-        url += `/wallet/${this.wallet}`
-      }
+    let url = `http://${this.hostname}:${this.port}`;
+    if (!['createwallet', 'loadwallet', 'listwalletdir',
+          'listwallet', 'smsgdisable', 'smsgenable'].includes(method)) {
+      url += `/wallet/${this.wallet}`
+    }
 
-      return this._http
-        .post(url, postData, { headers: headers })
-          .map((response: any) => response.result)
-          .catch(error => {
-            let err: string;
-            if (typeof error._body === 'object') {
-              err =  error._body
-            } else if (error._body) {
-              err = JSON.parse(error._body);
-            } else {
-              err = error.error && error.error.error ? error.error.error : error.message;
-            }
+    return this._http
+      .post(url, postData, { headers: headers })
+        .map((response: any) => response.result)
+        .catch(error => {
+          let err: string;
+          if (typeof error._body === 'object') {
+            err =  error._body
+          } else if (error._body) {
+            err = JSON.parse(error._body);
+          } else {
+            err = error.error && error.error.error ? error.error.error : error.message;
+          }
 
-            return Observable.throw(err)
-          })
+          return Observable.throw(err)
+        })
   }
 
   private daemonListener(config: any): Observable<any> {

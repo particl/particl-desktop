@@ -56,9 +56,6 @@ daemonManager.on('status', (status, msg) => {
     log.debug('daemonManager returned successfully, starting daemon!');
     daemonManager.shutdown();
     daemon.start();
-    // TODO: activate for daemon ready IPC message to RPCService
-
-
   } else if (status === 'error') {
     // Failed to get clientBinaries.json => connection issues?
     if (msg === 'Request timed out') {

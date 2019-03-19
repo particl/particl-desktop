@@ -28,11 +28,13 @@ exports.init = function() {
 
 exports.start = function() {
   if (!_options.skipmarket && !child) {
-  const isTestnet = Boolean(+_options.testnet);
     log.info('market process starting.');
+
+    const isTestnet = Boolean(+_options.testnet);
+    
     const marketOptions = {
       ELECTRON_VERSION: process.versions.electron,
-      WALLET: settings.marketWallet
+      WALLET: settings.marketWallet,
       RPCHOSTNAME: _options.rpcbind || 'localhost',
       RPC_PORT: _options.port,
       TESTNET: isTestnet
