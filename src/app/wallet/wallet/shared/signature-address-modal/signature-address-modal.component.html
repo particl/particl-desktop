@@ -6,7 +6,7 @@
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onFormSubmit()">
     <div mat-dialog-container>
-      <mat-tab-group (selectChange)="selectTab($event.index)" [(selectedIndex)]="tabIndex">
+      <mat-tab-group (selectedTabChange)="selectTab($event.index)" [(selectedIndex)]="tabIndex">
         <mat-tab label="Sign Message">
           <p>
             You can sign messages/agreements with your address to prove you can receive Particl sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.
