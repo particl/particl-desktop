@@ -10,6 +10,6 @@
 
 
 <!-- Balance info in sidebar (behind logo) -->
-<span *ngIf="inSidebar">
+<span *ngIf="inSidebar" class="balance in-sidebar">
   {{ balance.getIntegerPart() }}<small>{{ balance.dot() }}{{ balance.getFractionalPart() || '' }}</small>
 </span>
