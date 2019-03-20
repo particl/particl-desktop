@@ -4,9 +4,20 @@
 
     <div class="logo">
       <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
-      <app-balance type="total_balance" [inTopBar]="true"></app-balance>
-      <app-balance type="actual_balance" [inTopBar]="true"></app-balance>
-      <app-balance type="locked_balance" [inTopBar]="true"></app-balance>
+      <table class="balances" cellspacing="0">
+        <tr>
+          <th>Spendable</th>
+          <td><app-balance type="actual_balance" [inSidebar]="true"></app-balance></td>
+        </tr>
+        <tr>
+          <th>Locked</th>
+          <td><app-balance type="locked_balance" [inSidebar]="true"></app-balance></td>
+        </tr>
+        <tr>
+          <th>Total balance</th>
+          <td><app-balance type="total_balance" [inSidebar]="true"></app-balance></td>
+        </tr>
+      </table>
     </div>
 
     <mat-divider></mat-divider>

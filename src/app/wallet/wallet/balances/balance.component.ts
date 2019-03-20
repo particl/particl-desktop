@@ -16,7 +16,7 @@ export class BalanceComponent implements OnInit, OnDestroy {
 
   @Input() type: string; // "total_balance", "anon_balance", "balance", "staked_balance", "blind_balance"
   @Input() isOverView: boolean = false;
-  @Input() inTopBar: boolean = false; // located in top bar? then add custom CSS class
+  @Input() inSidebar: boolean = false; // located in sidebar?
 
   private log: any = Log.create(`balance.component ${this.type}`);
   private destroyed: boolean = false;
