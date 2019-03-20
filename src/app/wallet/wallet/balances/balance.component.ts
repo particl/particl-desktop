@@ -54,6 +54,8 @@ export class BalanceComponent implements OnInit, OnDestroy {
         return 'BLIND';
       case 'staked_balance':
         return 'STAKING';
+      case 'locked_balance':
+        return 'LOCKED';
     }
 
     return this.type;

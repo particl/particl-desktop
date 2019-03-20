@@ -4,20 +4,9 @@
 
     <div class="logo">
       <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
-      <table class="balances" cellspacing="0">
-        <tr>
-          <th>Spendable</th>
-          <td>23,516<small>.5114</small></td>
-        </tr>
-        <tr>
-          <th>Locked</th>
-          <td>7,842<small>.4491</small></td>
-        </tr>
-        <tr>
-          <th>Total balance</th>
-          <td>31,358<small>.3991</small></td>
-        </tr>
-      </table>
+      <app-balance type="total_balance" [inTopBar]="true"></app-balance>
+      <app-balance type="actual_balance" [inTopBar]="true"></app-balance>
+      <app-balance type="locked_balance" [inTopBar]="true"></app-balance>
     </div>
 
     <mat-divider></mat-divider>
@@ -261,7 +250,7 @@
     </div><!-- .left -->
     <div class="right" fxFlex="1 1 60%">
       <app-cart></app-cart>
-      <app-balance type="actual_balance" [isOverView]="title === 'Overview'" [inTopBar]="true"></app-balance>
+      <!-- <app-balance type="actual_balance" [isOverView]="title === 'Overview'" [inTopBar]="true"></app-balance> -->
       <app-status></app-status>
     </div><!-- .right -->
 
