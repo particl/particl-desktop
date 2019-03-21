@@ -21,8 +21,10 @@ Global SCSS config file defining app-wide settings (included in every page)
 $font: 'Inter_UI', sans-serif;
 
 // main colors
-$color: #02e8b0; // primary green-ish color
-$color-secondary: #1597dd; // new blue
+$color: #45d492; // primary green-ish color
+$secondary: #1597DD; // new blue
+$tertiary: #5949a7; // new purple
+
 $color-success: #4f8a10;
 $color-alert: #ec4b50;
 $color-warning: #f1a500; // yellow-ish
@@ -86,11 +88,11 @@ $break-xhd: 2200px;
 }
 
 %subtitle { // section titles / H2's
+  @extend %lighter;
   font-size: 14px;
   font-family: $font;
   font-weight: normal;
   text-transform: uppercase;
-  color: $text-muted;
   margin: 30px 0 16px;
 }
 

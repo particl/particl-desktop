@@ -10,89 +10,125 @@ Global styles have been moved to `/srv/http/particl-desktop/src/styles.scss`
 - Material color system: https://material.io/design/color/#tools-for-picking-colors
 - Angular Material theming: https://material.angular.io/guide/theming
 - Theming (& dark themes): https://coursetro.com/posts/code/116/Create-your-own-Angular-5-Material-Theme
+- Theme palette generator: http://mcg.mbitson.com
 
 */
 
+@import './src/assets/_config'; // import shared colors etc.
 @import '~@angular/material/theming';
 @include mat-core();
 
 
 // PART green
-$default-color: (
-  50: #e8fdf8,
-  100: #d1fbf1,
-  200: #a3f6e2,
-  300: #75f2d4,
-  400: #47edc5,
-  500: #03e8b0,
-  600: #03be91,
-  700: #029470,
-  800: #029471,
-  900: #006064,
-  A100: #8cf4db,
-  A200: #18ffff,
-  A400: #1aeab8,
-  A700: #03a981,
+$part-green: (
+  50 : #e9faf2,
+  100 : #c7f2de,
+  200 : #a2eac9,
+  300 : #7de1b3,
+  400 : #61daa2,
+  500 : $color,
+  600 : #3ecf8a,
+  700 : #36c97f,
+  800 : #2ec375,
+  900 : #1fb963,
+  A100 : #f1fff7,
+  A200 : #beffd9,
+  A400 : #8bffbb,
+  A700 : #72ffac,
   contrast: (
-    50: $black-87-opacity,
-    100: $black-87-opacity,
-    200: $black-87-opacity,
-    300: $black-87-opacity,
-    400: $black-87-opacity,
-    500: #fff,
-    600: #fff,
-    700: #fff,
-    800: #fff,
-    900: $white-87-opacity,
-    A100: $black-87-opacity,
-    A200: $black-87-opacity,
-    A400: $black-87-opacity,
-    A700: $black-87-opacity,
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
   )
 );
 
-// Material's Blue
-$default-accent: (
-  50: #e3f2fd,
-  100: #bbdefb,
-  200: #90caf9,
-  300: #64b5f6,
-  400: #42a5f5,
-  500: #2196f3,
-  600: #1e88e5,
-  700: #1976d2,
-  800: #1565c0,
-  900: #0d47a1,
-  A100: #82b1ff,
-  A200: #448aff,
-  A400: #2979ff,
-  A700: #2962ff,
+// PART blue
+$part-blue: (
+  50 : #e3f3fb,
+  100 : #b9e0f5,
+  200 : #8acbee,
+  300 : #5bb6e7,
+  400 : #38a7e2,
+  500 : $secondary,
+  600 : #128fd9,
+  700 : #0f84d4,
+  800 : #0c7acf,
+  900 : #0669c7,
+  A100 : #f0f7ff,
+  A200 : #bddbff,
+  A400 : #8ac0ff,
+  A700 : #70b2ff,
   contrast: (
-    50: $black-87-opacity,
-    100: $black-87-opacity,
-    200: $black-87-opacity,
-    300: $black-87-opacity,
-    400: $black-87-opacity,
-    500: $black-87-opacity,
-    600: #fff,
-    700: $white-87-opacity,
-    800: $white-87-opacity,
-    900: $white-87-opacity,
-    A100: $black-87-opacity,
-    A200: #fff,
-    A400: #fff,
-    A700: #fff,
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+// PART purple
+$part-purple: (
+  50 : #ebe9f4,
+  100 : #cdc8e5,
+  200 : #aca4d3,
+  300 : #8b80c1,
+  400 : #7264b4,
+  500 : $tertiary,
+  600 : #51429f,
+  700 : #483996,
+  800 : #3e318c,
+  900 : #2e217c,
+  A100 : #c3baff,
+  A200 : #9687ff,
+  A400 : #6954ff,
+  A700 : #533bff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #ffffff,
+    A700 : #ffffff,
   )
 );
 
 // red
-$default-warn: (
+$part-red: (
   50: #ffebee,
   100: #ffcdd2,
   200: #ef9a9a,
   300: #e57373,
   400: #ef5350,
-  500: #f44336,
+  500: $color-alert,
   600: #e53935,
   700: #d32f2f,
   800: #c62828,
@@ -102,29 +138,28 @@ $default-warn: (
   A400: #ff1744,
   A700: #d50000,
   contrast: (
-    50: $black-87-opacity,
-    100: $black-87-opacity,
-    200: $black-87-opacity,
-    300: $black-87-opacity,
-    400: $black-87-opacity,
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
     500: #fff,
     600: #fff,
     700: #fff,
-    800: $white-87-opacity,
-    900: $white-87-opacity,
-    A100: $black-87-opacity,
-    A200: #fff,
+    800: #fff,
+    900: #fff,
+    A100: #000000,
+    A200: #000000,
     A400: #fff,
     A700: #fff,
   )
 );
 
-
 // ------ Default, light theme ------ //
 
-$part-default-color: mat-palette($default-color);
-$part-default-accent: mat-palette($default-accent, 600);
-$part-default-warn: mat-palette($default-warn);
+$part-default-color: mat-palette($part-green, 500, 100, 900);
+$part-default-accent: mat-palette($part-blue, 500, 100, 900);
+$part-default-warn: mat-palette($part-red);
 
 $part-default-theme: mat-light-theme($part-default-color, $part-default-accent, $part-default-warn);
 @include angular-material-theme($part-default-theme);
@@ -132,8 +167,8 @@ $part-default-theme: mat-light-theme($part-default-color, $part-default-accent, 
 
 // ------ Dark theme ------ //
 
-$part-dark-color: mat-palette($mat-cyan, 300); // TODO: switch to new $dark-color
-$part-dark-accent: mat-palette($default-accent, 600); // TODO: switch to new $dark-accent
+$part-dark-color: mat-palette($part-green, 500, 100, 900); // TODO: switch to new $dark-color
+$part-dark-accent: mat-palette($part-blue, 500, 100, 900); // TODO: switch to new $dark-accent
 
 $part-dark-theme: mat-dark-theme($part-dark-color, $part-dark-accent);
 
