@@ -245,7 +245,7 @@ mat-card.mat-card {
   }
   // buy/cart-shipping: remove white background
   &.no-bg {
-    background: none;
+    background: none !important;
   }
 }
 

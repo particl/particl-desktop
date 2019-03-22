@@ -7,6 +7,12 @@ ___ _  _ ____ _  _ ____
 Angular Material's custom theme styles
 Global styles have been moved to `/srv/http/particl-desktop/src/styles.scss`
 
+  TOC:
+    1. Palette definitions
+    2. Default themes
+      2.1. Light theme
+      2.2. Dark theme
+
 - Material color system: https://material.io/design/color/#tools-for-picking-colors
 - Angular Material theming: https://material.angular.io/guide/theming
 - Theming (& dark themes): https://coursetro.com/posts/code/116/Create-your-own-Angular-5-Material-Theme
@@ -18,6 +24,10 @@ Global styles have been moved to `/srv/http/particl-desktop/src/styles.scss`
 @import '~@angular/material/theming';
 @include mat-core();
 
+
+/* ------------------------------- *\
+    1. Palette definitions
+\* ------------------------------- */
 
 // PART green
 $part-green: (
@@ -155,6 +165,7 @@ $part-red: (
   )
 );
 
+/*
 // ------ Default, light theme ------ //
 
 // Define the palettes
@@ -188,5 +199,134 @@ $part-dark-theme: map_merge($part-dark-theme, (background: $dark-background));
 
 // Include theme styles for core and each component used in app
 .dark-theme {
+  @include angular-material-theme($part-dark-theme);
+}
+*/
+
+
+/* ------------------------------- *\
+    2. Default themes
+\* ------------------------------- */
+
+// ------ 2.1 Light theme (default) ------ //
+
+// custom background and foreground palettes
+$part-light-background: (
+  status-bar:               $color-white,
+  app-bar:                  $color-white,
+  background:               $bg,
+  hover:                    rgba($bg-shadow, 0.25), 
+  card:                     $color-white,
+  dialog:                   $color-white,
+  disabled-button:          rgba(mix($text-muted, $bg-shadow), 0.2),
+  raised-button:            $color,
+  focused-button:           $white-6-opacity,
+  selected-button:          $color-alert,
+  selected-disabled-button: $color-warning,
+  disabled-button-toggle: black,
+  unselected-chip:          $color-info,
+  disabled-list-option:   black,
+);
+
+$part-light-foreground: (
+  base:              $text,
+  divider:           $bg-shadow,
+  dividers:          $bg-shadow,
+  disabled:          darken($bg-shadow, 10%), // disabled radio buttons
+  disabled-button:   mix($text-muted, $bg-shadow),
+  disabled-text:     $text-muted, // inactive steps in stepper
+  hint-text:         $text-muted,
+  secondary-text:    $text-muted,
+  icon:              $text,
+  icons:             $text,
+  text:              $text,
+  slider-min:        $color-alert,
+  slider-off:        $bg-shadow,
+  slider-off-active: rgba($color, 0.35),
+);
+
+// instead of creating a theme with mat-light-theme like a sane person, we will create our own theme-creating function that lets us apply our own foreground and background palettes.
+@function create-part-light-theme($primary, $accent, $warn: mat-palette($mat-red)) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: false,
+    foreground: $part-light-foreground,
+    background: $part-light-background,
+  );
+}
+
+// The rest of this is like a normal theme.scss file. The only difference being that we use create-part-dark-theme instead of mat-light-theme
+$part-light-primary: mat-palette($part-green, 500, 100, 900);
+$part-light-accent: mat-palette($part-blue, 500, 100, 900);
+$part-light-warn: mat-palette($part-red);
+
+$part-light-theme: create-part-light-theme($part-light-primary, $part-light-accent, $part-light-warn);
+
+// Include theme styles for core and each component used in app
+.part-light-theme {
+  @include angular-material-theme($part-light-theme);
+}
+
+
+// ------ 2.2 Dark theme ------ //
+
+// custom background and foreground palettes
+$part-dark-background: (
+  status-bar:             green,
+  app-bar:                  map_get($mat-blue, 900),
+  background:             orange,
+  hover:                    rgba(white, 0.04), 
+  card:                     map_get($mat-red, 800),
+  dialog:                   map_get($mat-grey, 800),
+  disabled-button:          $white-12-opacity,
+  raised-button:            map-get($mat-grey, 800),
+  focused-button:           $white-6-opacity,
+  selected-button:          map_get($mat-grey, 900),
+  selected-disabled-button: map_get($mat-grey, 800),
+  disabled-button-toggle: black,
+  unselected-chip:          map_get($mat-grey, 700),
+  disabled-list-option:   black,
+);
+
+$part-dark-foreground: (
+  base:              $text,
+  divider:           $white-12-opacity,
+  dividers:          $white-12-opacity,
+  disabled:          rgba(white, 0.3),
+  disabled-button:   rgba(white, 0.3),
+  disabled-text:     rgba(white, 0.3),
+  hint-text:         rgba(white, 0.3),
+  secondary-text:    rgba(white, 0.7),
+  icon:              white,
+  icons:             white,
+  text:              $text,
+  slider-min:        white,
+  slider-off:        rgba(white, 0.3),
+  slider-off-active: rgba(white, 0.3),
+);
+
+// instead of creating a theme with mat-light-theme like a sane person, we will create our own theme-creating function that lets us apply our own foreground and background palettes.
+@function create-part-dark-theme($primary, $accent, $warn: mat-palette($mat-red)) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: true,
+    foreground: $part-dark-foreground,
+    background: $part-dark-background,
+  );
+}
+
+// The rest of this is like a normal theme.scss file. The only difference being that we use create-part-dark-theme instead of mat-light-theme
+$part-dark-primary: mat-palette($part-green, 500, 100, 900);
+$part-dark-accent: mat-palette($part-blue, 500, 100, 900);
+$part-dark-warn: mat-palette($part-red);
+
+$part-dark-theme: create-part-dark-theme($part-dark-primary, $part-dark-accent, $part-dark-warn);
+
+// Include theme styles for core and each component used in app
+.part-dark-theme {
   @include angular-material-theme($part-dark-theme);
 }
