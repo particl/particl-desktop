@@ -157,21 +157,36 @@ $part-red: (
 
 // ------ Default, light theme ------ //
 
+// Define the palettes
 $part-default-color: mat-palette($part-green, 500, 100, 900);
 $part-default-accent: mat-palette($part-blue, 500, 100, 900);
 $part-default-warn: mat-palette($part-red);
 
+// Create the theme object
 $part-default-theme: mat-light-theme($part-default-color, $part-default-accent, $part-default-warn);
+
+// Include theme styles for core and each component used in app
 @include angular-material-theme($part-default-theme);
 
 
 // ------ Dark theme ------ //
 
+// Define the palettes
 $part-dark-color: mat-palette($part-green, 500, 100, 900); // TODO: switch to new $dark-color
 $part-dark-accent: mat-palette($part-blue, 500, 100, 900); // TODO: switch to new $dark-accent
+$part-default-warn: mat-palette($part-red);
+$part-dark-background: map_get($mat-grey, 900);
 
+// Create the theme object
 $part-dark-theme: mat-dark-theme($part-dark-color, $part-dark-accent);
 
+// Insert custom background color
+$dark-background: map-get($part-dark-theme, background);
+$dark-background: map_merge($dark-background, (background: $part-dark-background));
+$part-dark-theme: map_merge($part-dark-theme, (background: $dark-background));
+
+
+// Include theme styles for core and each component used in app
 .dark-theme {
   @include angular-material-theme($part-dark-theme);
 }
