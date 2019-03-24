@@ -2482,9 +2482,10 @@ electron-download@^4.1.0:
     semver "^5.4.1"
     sumchecker "^2.0.2"
 
-electron-log@^2.2.14:
-  version "2.2.17"
-  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-2.2.17.tgz#e71e2ebb949fc96ded7cdb99eeee7202e48981d2"
+electron-log@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-3.0.2.tgz#8194cda2373f2c66ec9278cc4d1e9ce0145357f1"
+  integrity sha512-ZraZBp3Og5Jj4kdz0UFh0ByYPwtZnpLUbPfELloyrVZbMuEXhf9AIPgTsWXuM9y3HYgiDZNbZZrlNhW5KlJvvQ==
 
 electron-osx-sign@0.4.11:
   version "0.4.11"
