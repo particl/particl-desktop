@@ -173,7 +173,7 @@
     "@angular/router": "^5.2.5",
     "@compodoc/compodoc": "^1.0.7",
     "@types/jasmine": "^2.8.6",
-    "@types/node": "^9.4.6",
+    "@types/node": "^11.11.7",
     "angularx-qrcode": "^1.0.1",
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
