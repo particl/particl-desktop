@@ -92,6 +92,11 @@
           color: $color;
         }
       }
+      &.listing-fee {
+        .mat-icon {
+          color: $color-secondary;
+        }
+      }
     }
   }
 
