@@ -75,6 +75,7 @@ export class SendComponent implements OnInit {
 
   /** Select tab */
   selectTab(tabIndex: number): void {
+    this.advanced = false;
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
     this.send.input = TxType.PUBLIC;
     this.send.output = TxType.PUBLIC;
