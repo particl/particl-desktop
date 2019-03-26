@@ -19,7 +19,6 @@ export class BalanceComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create(`balance.component ${this.type}`);
   private destroyed: boolean = false;
-  private availableBal: number = 0;
   private _balance: Amount = new Amount(0);
 
   get balance() {
@@ -64,13 +63,13 @@ export class BalanceComponent implements OnInit, OnDestroy {
     this._rpcState.observe('listunspent')
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(unspent => {
-          this.availableBal = 0;
+          let tempBal = 0;
           for (let ut = 0; ut < unspent.length; ut++) {
             if (!unspent[ut].coldstaking_address || unspent[ut].address) {
-              this.availableBal += unspent[ut].amount;
+              tempBal += unspent[ut].amount;
             };
           }
-          this._balance = new Amount((this.type === 'actual_balance' ? this.availableBal : balance) || 0, 4)
+          this._balance = new Amount((this.type === 'actual_balance' ? tempBal : balance) || 0, 8)
         },
         error => this.log.error('Failed to get balance, ', error));
   }

@@ -41,7 +41,7 @@ export class SendComponent implements OnInit, OnDestroy {
   advanced: boolean = false;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
-  private availableBal: number = 0;
+  private availableBal: Amount = new Amount(0);
 
   public TxType: typeof TxType = TxType;
 
@@ -77,12 +77,13 @@ export class SendComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(
         unspent => {
-          this.availableBal = 0;
+          let tempAmount = 0;
           for (let ut = 0; ut < unspent.length; ut++) {
             if (!unspent[ut].coldstaking_address || unspent[ut].address) {
-              this.availableBal += unspent[ut].amount;
+              tempAmount += unspent[ut].amount;
             };
           }
+          this.availableBal = new Amount(tempAmount, 8);
         },
         error => this.log.error('Failed to get balance, ', error));
   }
@@ -108,7 +109,7 @@ export class SendComponent implements OnInit, OnDestroy {
     const balance = this.txTypeToBalanceType(account);
 
     if (balance === 'balance') {
-      return new Amount(this.availableBal, 8).getAmount();
+      return this.availableBal.getAmount();
     }
     return (this._rpcState.get('getwalletinfo') || {})[balance] || 0;
   }
