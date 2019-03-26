@@ -28,7 +28,7 @@ export class BalanceComponent implements OnInit, OnDestroy {
   constructor(private _rpcState: RpcStateService) { }
 
   ngOnInit() {
-    const type = this.type === 'locked_balance' ? 'total_balance' : this.type;
+    const type = this.type === 'locked_balance' ? 'balance' : this.type;
 
     this._rpcState.observe('getwalletinfo', type)
       .pipe(takeWhile(() => !this.destroyed))
