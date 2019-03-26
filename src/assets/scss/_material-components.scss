@@ -22,6 +22,7 @@ Customizations and modifiers for default Material components
       2.5. Lists
       2.6. Modals
       2.7. Scrollbars
+      2.8. Sidenav (main menu)
 
     3. Forms
       3.1. Inputs
@@ -398,6 +399,18 @@ mat-card.mat-card {
 // scroll on by default, so the content doesn't jump on larger pages
 .mat-drawer-content {
   overflow-y: scroll !important;
+}
+
+
+// ------ 2.8. SIDENAV ------ //
+
+.mat-sidenav {
+  &.sidebar { // app's sidebar, dark main menu
+    .mat-drawer-inner-container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }
 
 
