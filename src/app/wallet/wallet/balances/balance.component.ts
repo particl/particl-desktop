@@ -28,8 +28,9 @@ export class BalanceComponent implements OnInit, OnDestroy {
   constructor(private _rpcState: RpcStateService) { }
 
   ngOnInit() {
+    const type = this.type === 'locked_balance' ? 'total_balance' : this.type;
 
-    this._rpcState.observe('getwalletinfo', this.type)
+    this._rpcState.observe('getwalletinfo', type)
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(
         balance => this.listUnSpent(balance),
@@ -69,7 +70,15 @@ export class BalanceComponent implements OnInit, OnDestroy {
               tempBal += unspent[ut].amount;
             };
           }
-          this._balance = new Amount((this.type === 'actual_balance' ? tempBal : balance) || 0, 8)
+
+          if (this.type === 'locked_balance') {
+            tempBal = balance - tempBal;
+          } else if (this.type !== 'actual_balance') {
+            tempBal = balance;
+          }
+          // else tempBal == 'actual balance'.
+
+          this._balance = new Amount((tempBal) || 0, 8)
         },
         error => this.log.error('Failed to get balance, ', error));
   }
