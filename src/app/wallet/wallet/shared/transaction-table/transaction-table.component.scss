@@ -39,7 +39,8 @@
   .history_cat_icon {
     .mat-icon {
       font-size: 14px;
-      position: absolute;
+      position: relative;
+      top: 2px;
       // narration icon
       &.narration {
         margin: 0 0 0 2px;
@@ -52,7 +53,7 @@
     .tx-type {
       .name {
         font-weight: 500;
-        margin-left: 26px;
+        margin-left: 12px;
       }
       &.staked {
         .mat-icon {
@@ -88,6 +89,9 @@
       .point,
       .small {
         color: $text-muted;
+      }
+      .currency {
+        margin-left: 4px;
       }
     }
     .negative {
@@ -139,5 +143,8 @@
     &:hover {
       color: $color;
     }
+  }
+  .value { // fee & total TX value
+    margin-left: 6px;
   }
 }

@@ -125,12 +125,12 @@
         <!-- TX fee (detail) -->
         <div class="tx-detail-item text-right" fxFlex>
           <span>Fee:</span>
-          <span class="mat-right">{{tx.fee ? tx.fee : 0}} PART</span>
+          <span class="value">{{tx.fee ? tx.fee : 0}} PART</span>
         </div>
         <!-- Net amount (detail) -->
         <div class="tx-detail-item text-right" fxFlex>
           <span>Net amount:</span>
-          <span class="mat-right">{{ tx.getNetAmount()}} PART</span>
+          <span class="value">{{ tx.getNetAmount()}} PART</span>
         </div>
       </div>
 
