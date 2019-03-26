@@ -473,10 +473,10 @@ input {
 // ------ 3.3. SELECTS ------ //
 
 .mat-select {
-  font-family: $font;
-  .mat-option {
-    font-family: $font;
-  }
+  font-family: $font !important;
+}
+.mat-option {
+  font-family: $font !important;
 }
 .mat-select-panel {
   background: white;
