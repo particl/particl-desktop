@@ -1,0 +1,156 @@
+/*
+
+ __   __        __   __      __             ___ ___ ___  ___  __  
+/  ` /  \ |    /  \ |__)    |__)  /\  |    |__   |   |  |__  /__` 
+\__, \__/ |___ \__/ |  \    |    /~~\ |___ |___  |   |  |___ .__/ 
+
+Definitions of color palettes for Material components
+
+  TOC:
+    1. Palette definitions
+
+- Material color system: https://material.io/design/color/#tools-for-picking-colors
+- Theme palette generator: http://mcg.mbitson.com
+
+*/
+
+
+/* ------------------------------- *\
+    1. Palette definitions
+\* ------------------------------- */
+
+// PART green
+$part-green: (
+  50 : #e9faf2,
+  100 : #c7f2de,
+  200 : #a2eac9,
+  300 : #7de1b3,
+  400 : #61daa2,
+  500 : $color,
+  600 : #3ecf8a,
+  700 : #36c97f,
+  800 : #2ec375,
+  900 : #1fb963,
+  A100 : #f1fff7,
+  A200 : #beffd9,
+  A400 : #8bffbb,
+  A700 : #72ffac,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+// PART blue
+$part-blue: (
+  50 : #e3f3fb,
+  100 : #b9e0f5,
+  200 : #8acbee,
+  300 : #5bb6e7,
+  400 : #38a7e2,
+  500 : $secondary,
+  600 : #128fd9,
+  700 : #0f84d4,
+  800 : #0c7acf,
+  900 : #0669c7,
+  A100 : #f0f7ff,
+  A200 : #bddbff,
+  A400 : #8ac0ff,
+  A700 : #70b2ff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+// PART purple
+$part-purple: (
+  50 : #ebe9f4,
+  100 : #cdc8e5,
+  200 : #aca4d3,
+  300 : #8b80c1,
+  400 : #7264b4,
+  500 : $tertiary,
+  600 : #51429f,
+  700 : #483996,
+  800 : #3e318c,
+  900 : #2e217c,
+  A100 : #c3baff,
+  A200 : #9687ff,
+  A400 : #6954ff,
+  A700 : #533bff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #ffffff,
+    A700 : #ffffff,
+  )
+);
+
+// red
+$part-red: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: $color-alert,
+  600: #e53935,
+  700: #d32f2f,
+  800: #c62828,
+  900: #b71c1c,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #fff,
+    600: #fff,
+    700: #fff,
+    800: #fff,
+    900: #fff,
+    A100: #000000,
+    A200: #000000,
+    A400: #fff,
+    A700: #fff,
+  )
+);

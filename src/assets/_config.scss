@@ -13,6 +13,8 @@ Global SCSS config file defining app-wide settings (included in every page)
 
 */
 
+@import '~@angular/material/theming';
+@include mat-core();
 
 /* ------------------------------- *\
     1. Variables
@@ -65,7 +67,13 @@ $break-xhd: 2200px;
     2. Global imports
 \* ------------------------------- */
 
+@import 'color-palettes'; // Material theming color palettes
 @import 'scss/mixins';
+
+// Import themes
+@import 'theme-light';
+@import 'theme-dark';
+
 
 
 /* ------------------------------- *\
