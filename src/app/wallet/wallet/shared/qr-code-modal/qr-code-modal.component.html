@@ -13,7 +13,7 @@
   </div>
 
   <div class="address-string">
-    <div class="details-address enable-select" fxLayoutWrap layout-padding>
+    <div class="details-address enable-select" fxLayout="row wrap">
       <div *ngFor="let word of showAddress(singleAddress.address)" class="address-word" fxFlex="33">
         {{ word }}
       </div>
@@ -26,3 +26,4 @@
     </button>
   </div>
 </div><!-- .dialog-content -->
+
