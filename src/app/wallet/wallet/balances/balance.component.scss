@@ -2,6 +2,7 @@
 
 .balance {
   @extend %enable-select;
+  display: inline-block;
   padding-top: 7px;
   & > .number {
     color: $text;
@@ -27,4 +28,13 @@
     text-transform: uppercase;
     margin-top: 6px;
   }
+
+  // Balance preview in sidebar
+  &.in-sidebar {
+    padding: 0;
+    small {
+      opacity: 0.7;
+    }
+  }
+
 }

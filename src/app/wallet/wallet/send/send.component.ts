@@ -1,4 +1,5 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatSliderChange } from '@angular/material';
 import { Log } from 'ng2-logger';
@@ -18,8 +19,7 @@ import { TransactionBuilder, TxType } from './transaction-builder.model';
 import {
   SendConfirmationModalComponent
 } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
-import { take } from 'rxjs/operators';
-
+import { take, takeWhile } from 'rxjs/operators';
 import { Amount } from 'app/core/util/utils';
 
 @Component({
@@ -27,11 +27,13 @@ import { Amount } from 'app/core/util/utils';
   templateUrl: './send.component.html',
   styleUrls: ['./send.component.scss']
 })
-export class SendComponent implements OnInit {
+export class SendComponent implements OnInit, OnDestroy {
 
   // General
   log: any = Log.create('send.component');
   private addressHelper: AddressHelper;
+  private destroyed: boolean = false;
+
   testnet: boolean = false;
   // UI logic
   @ViewChild('address') address: ElementRef;
@@ -39,6 +41,8 @@ export class SendComponent implements OnInit {
   advanced: boolean = false;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
+  private availableBal: Amount = new Amount(0);
+
   public TxType: typeof TxType = TxType;
 
   constructor(
@@ -68,7 +72,20 @@ export class SendComponent implements OnInit {
     this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
       .subscribe(chain => this.testnet = chain === 'test');
 
-    this.sendService.listUnSpent();
+    // Calculate Spendable balance
+    this._rpcState.observe('listunspent')
+      .pipe(takeWhile(() => !this.destroyed))
+      .subscribe(
+        unspent => {
+          let tempAmount = 0;
+          for (let ut = 0; ut < unspent.length; ut++) {
+            if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+              tempAmount += unspent[ut].amount;
+            };
+          }
+          this.availableBal = new Amount(tempAmount, 8);
+        },
+        error => this.log.error('Failed to get balance, ', error));
   }
 
 
@@ -92,7 +109,7 @@ export class SendComponent implements OnInit {
     const balance = this.txTypeToBalanceType(account);
 
     if (balance === 'balance') {
-      return new Amount(this.sendService.availableBalance, 8).getAmount();
+      return this.availableBal.getAmount();
     }
     return (this._rpcState.get('getwalletinfo') || {})[balance] || 0;
   }
@@ -353,5 +370,9 @@ export class SendComponent implements OnInit {
 
   updateAmount(): void {
     this.send.amount = (this.send.subtractFeeFromAmount) ? this.availableBalance(this.send.input) : null;
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }
