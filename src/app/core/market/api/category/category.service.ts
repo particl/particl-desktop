@@ -12,21 +12,28 @@ export class CategoryService {
 
   private categories: BehaviorSubject<Category> = new BehaviorSubject(null);
   constructor(private market: MarketService) {
+    console.log('testeetstes')
+    this.loadCategories();
+  }
+
+  list() {
+    return this.categories;  
+  }
+
+  loadCategories() {
     this.market.call('category', ['list']).subscribe(
       resp => {
         if (resp && resp.name) {
           this.categories.next(new Category(resp));
         }
       },
-      () => {
-        // Failed to fetch categories
+      (error) => {
+        this.log.d(`loadCatgories, failed with error `, error);
+        this.loadCategories();
       }
     )
   }
 
-  list() {
-    return this.categories;
-  }
 
   add(categoryName: string, description: string, parent: string | number): Observable<any> {
     return this.market.call('category', ['add', categoryName, description, parent]);
