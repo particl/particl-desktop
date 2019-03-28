@@ -16,12 +16,14 @@
   table.balances {
     flex: 1 0 200px;
     th {
-      font-weight: 500;
+      @extend %lighter;
+      font-weight: 400;
       text-align: left;
       line-height: 1.45;
     }
     td {
       text-align: right;
+      font-weight: 500;
     }
   }
 }
