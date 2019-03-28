@@ -14,7 +14,7 @@ Global SCSS config file defining app-wide settings (included in every page)
 */
 
 @import '~@angular/material/theming';
-@include mat-core();
+
 
 /* ------------------------------- *\
     1. Variables
@@ -28,7 +28,7 @@ $secondary: #1597DD; // new blue
 $tertiary: #5949a7; // new purple
 
 $color-success: #4f8a10;
-$color-alert: #ec4b50;
+$color-alert: #d4292e;
 $color-warning: #f1a500; // yellow-ish
 $color-info: #108cda; // blue-ish (e.g. status cold staking icon)
 $color-white: #fff;
@@ -36,12 +36,12 @@ $color-ugly: #ff69b4;
 
 // text colors
 $text: #232728; // default text color
-$text-muted: #7e8790; // grey (for section titles, descriptions etc.)
+$text-muted: #747c82; // grey (for section titles, descriptions etc.)
 
 // bg/element colors
 $bg: #fafafa; // light grey bg color
 $bg-hover: darken($bg, 2%);
-$bg-black: #222828; // sidebar
+$bg-black: $text; // sidebar
 $bg-shadow: #dcdcdc; // lines, box shadows etc.
 
 // UI
