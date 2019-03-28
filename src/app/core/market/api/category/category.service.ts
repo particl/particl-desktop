@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs'
-
 import { MarketService } from 'app/core/market/market.service';
 
 import { Category } from 'app/core/market/api/category/category.model';
@@ -9,14 +8,13 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Injectable()
 export class CategoryService {
-
   private categories: BehaviorSubject<Category> = new BehaviorSubject(null);
   constructor(private market: MarketService) {
     this.loadCategories();
   }
 
   list() {
-    return this.categories;  
+    return this.categories;
   }
 
   loadCategories() {
@@ -27,7 +25,6 @@ export class CategoryService {
         }
       },
       (error) => {
-        this.log.d(`loadCatgories, failed with error `, error);
         this.loadCategories();
       }
     )
