@@ -12,7 +12,6 @@ export class CategoryService {
 
   private categories: BehaviorSubject<Category> = new BehaviorSubject(null);
   constructor(private market: MarketService) {
-    console.log('testeetstes')
     this.loadCategories();
   }
 
