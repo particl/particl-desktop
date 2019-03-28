@@ -12,7 +12,8 @@ import { take, map, catchError } from 'rxjs/operators';
 export enum errorType {
   unspent = 'Zero unspent outputs - insufficient funds to place the order.',
   broke = 'Insufficient funds to place the order.',
-  itemExpired = 'An item in your basket has expired!'
+  itemExpired = 'An item in your basket has expired!',
+  enough = 'Not enough spendable funds'
 }
 
 @Injectable()
@@ -99,6 +100,8 @@ export class BidService {
       error = errorType.unspent;
     } else if (error.includes('broke')) {
       error = errorType.broke;
+    } else if (error.includes('enough')) {
+      error = errorType.enough;
     }
     return error;
   }
