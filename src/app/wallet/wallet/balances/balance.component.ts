@@ -66,7 +66,7 @@ export class BalanceComponent implements OnInit, OnDestroy {
       .subscribe(unspent => {
           let tempBal = 0;
           for (let ut = 0; ut < unspent.length; ut++) {
-            if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+            if ((!unspent[ut].coldstaking_address || unspent[ut].address) && unspent[ut].confirmations > 0) {
               tempBal += unspent[ut].amount;
             };
           }
