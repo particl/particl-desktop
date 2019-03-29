@@ -113,8 +113,12 @@ export class CreateWalletComponent implements OnDestroy {
 
     if (this.validate()) {
       this.validating = false;
-      this.step++;
-      this.doStep();
+      if ((this.step === 6) || (this.step === 7)) {
+        this.step = 7;
+      } else {
+        this.step++;
+        this.doStep();
+      }
     }
 
     this.log.d(`moving to step: ${this.step}`);
@@ -123,6 +127,9 @@ export class CreateWalletComponent implements OnDestroy {
   prevStep(): void {
     this.step--;
     this.errorString = '';
+    if (!this.isRestore) {
+      this.doStep();
+    }
   }
 
   doStep(): void {
@@ -138,7 +145,6 @@ export class CreateWalletComponent implements OnDestroy {
         this.passwordVerify = '';
         break;
       case 3:
-      this.log.d('step 3 execution, password=', this.password)
         this._passphraseService.generateMnemonic(
           this.mnemonicCallback.bind(this), this.password
         );
@@ -156,6 +162,7 @@ export class CreateWalletComponent implements OnDestroy {
           'warning');
         break;
       case 5:
+        this.step = 4;
         this.errorString = '';
         if (this.rpcState.get('locked')) {
           // unlock wallet
@@ -184,13 +191,12 @@ export class CreateWalletComponent implements OnDestroy {
 
   public importMnemonicSeed(): void {
     this.rpcState.set('ui:spinner', true);
-    this.step = 5;
 
     this._passphraseService.importMnemonic(this.words, this.password)
       .subscribe(
         success => {
           this._passphraseService.generateDefaultAddresses();
-          this.step = 7;
+          this.step = 5;
           this.rpcState.set('ui:walletInitialized', true);
           this.rpcState.set('ui:spinner', false);
           this.log.i('Mnemonic imported successfully');
@@ -200,6 +206,10 @@ export class CreateWalletComponent implements OnDestroy {
           this.step = 4;
           this.log.er(error);
           this.errorString = error.message;
+          // Assuming that every error message have different code
+          if (error.code === -4) {
+            this.errorString = 'Wallet is currently being updated (rescanning)';
+          }
           this.rpcState.set('ui:spinner', false);
           this.rpcState.set('modal:fullWidth:enableClose', true);
           this.log.er('Mnemonic import failed');
@@ -268,11 +278,19 @@ export class CreateWalletComponent implements OnDestroy {
       this.step++;
       this.doStep();
     }
+    this.passwordVerify = ''
+    this.password = '';
   }
 
   /** Triggered when the password is emitted from PassphraseComponent */
   wordsFromEmitter(words: string): void {
     this.words = words.split(',');
+  }
+
+  close(): void {
+    this.reset();
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   }
 
   public countWords (count: number): boolean {
@@ -286,10 +304,10 @@ export class CreateWalletComponent implements OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
     if (event.keyCode === 13) {
-      if (this.step < 7) {
+      if (this.step < 5) {
         this.nextStep();
-      } else {
-        this.dialogRef.close()
+      } else if (this.step === 5) {
+        this.dialogRef.close();
       }
 
     }

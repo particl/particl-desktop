@@ -5,7 +5,7 @@
   <mat-form-field *ngIf="pageSizeOptions.length> 1"
     class="mat-paginator-page-size-select">
     <mat-select [value]="pageSize" [aria-label]="_intl.itemsPerPageLabel"
-      (change)="_changePageSize($event.value)">
+      (selectionChange)="_changePageSize($event.value)">
       <mat-option *ngFor="let pageSizeOption of pageSizeOptions" [value]="pageSizeOption">
         {{pageSizeOption}}
       </mat-option>
