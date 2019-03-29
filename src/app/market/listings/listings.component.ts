@@ -11,7 +11,7 @@ import { FavoritesService } from '../../core/market/api/favorites/favorites.serv
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { take, takeWhile } from 'rxjs/operators';
 import { throttle } from 'lodash';
-
+import * as _ from 'lodash';
 
 interface ISorting {
   value: string;
@@ -190,6 +190,21 @@ export class ListingsComponent implements OnInit, OnDestroy {
       if (previousPage > -1) {
         this.loadPage(previousPage);
       }
+    }
+  }
+
+  afterItemFlag(listingId: number, pageNumber: number): void {
+
+    const listings = _.filter((this.pages[pageNumber].listings), (listing) => {
+      return listing.id !== listingId
+    })
+
+    // load the all pages if all items are flaged of the page.
+
+    if (listings.length) {
+      this.pages[pageNumber].listings = listings;
+    } else {
+      this.clearAndLoadPage();
     }
   }
 

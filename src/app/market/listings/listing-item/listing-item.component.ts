@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { Listing } from '../../../core/market/api/listing/listing.model';
@@ -11,6 +11,8 @@ import { PreviewListingComponent } from '../preview-listing/preview-listing.comp
 })
 export class ListingItemComponent {
   @Input() listing: Listing;
+  @Output() afterFlag: EventEmitter<number> = new EventEmitter();
+
   constructor(private dialog: MatDialog,
               public listingCacheService: PostListingCacheService) {
   }
@@ -21,4 +23,9 @@ export class ListingItemComponent {
     });
   }
 
+  afterItemFlag(listingId: number): void {
+    if (this.afterFlag) {
+      this.afterFlag.emit(listingId)
+    }
+  }
 }

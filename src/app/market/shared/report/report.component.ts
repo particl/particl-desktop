@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 
@@ -18,7 +18,7 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 export class ReportComponent {
 
   private log: any = Log.create('report.component id:' + Math.floor((Math.random() * 1000) + 1));
-
+  @Output() afterFlag: EventEmitter<number> = new EventEmitter();
   // setting dummy object rather calling api
   public defaultVoteDetails: VoteDetails = new VoteDetails({
     ProposalOption: {
@@ -32,7 +32,7 @@ export class ReportComponent {
     private modals: ModalsHelperService,
     private snackbar: SnackbarService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   toggle(): void | boolean {
 
@@ -44,7 +44,7 @@ export class ReportComponent {
     dialogRef.componentInstance.option = this.listing.isFlagged
 
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
-      this.modals.unlock({timeout: 30}, (status) => this.reportItem());
+      this.modals.unlock({ timeout: 30 }, (status) => this.reportItem());
     });
   }
 
@@ -55,6 +55,9 @@ export class ReportComponent {
       this.listing.isFlagged = !this.listing.isFlagged;
       this.listing.VoteDetails = this.defaultVoteDetails;
       this.snackbar.open(`${this.listing.title} has been reported successfully`);
+      if (this.afterFlag) {
+        this.afterFlag.emit(this.listing.id)
+      }
     }, err => {
       this.dialog.closeAll()
       this.snackbar.open(err);
