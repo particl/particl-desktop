@@ -21,7 +21,7 @@
       <div class="no-results" [hidden]="cart?.shoppingCartItems.length != 0">
         <p>
           Oh no, your cart is empty! Let's fix this:<br>
-          <button mat-button color="primary" (click)="goToListings()">
+          <button mat-button (click)="goToListings()">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-search"></mat-icon>
             Browse listings for sale
           </button>
@@ -45,17 +45,29 @@
 
           <tbody>
           <!-- TODO: make component -->
-          <tr *ngFor="let listing of cart?.listings">
-            <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
-              <div class="image" fxFlex="0 0 115px">
+          <tr *ngFor="let listing of cart?.listings"
+              [ngClass]="{expired: checkExpired(listing)}">
+            <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
+                (click)="openListing(listing)">
+              <div class="image" fxFlex="0 0 75px">
                 <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
               </div>
               <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
                 <div class="title">
                   {{listing.title}}
                 </div>
-                <div class="category">
-                  {{listing.name}}
+                <!-- errors, e.g. expired items in cart -->
+                <div class="error message" *ngIf="listing.errorMessage">
+                  <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                  {{listing.errorMessage}}
+                </div>
+                <!-- expires soon warning -->
+                <div class="warning message" *ngIf="listing.isAboutToExpire">
+                  <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
+                  Listing expires in {{listing.expireIn}}
+                </div>
+                <div class="category" *ngIf="!listing.errorMessage && !listing?.isAboutToExpire">
+                  {{listing.category.name}}
                 </div>
               </div>
             </td>
@@ -89,7 +101,7 @@
             </td>
             <td class="remove">
               <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above"
-                      (click)="removeFromCart(listing.id)">
+                      (click)="removeFromCart(listing?.id)">
                 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
               </button>
             </td>
@@ -127,7 +139,7 @@
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
             Clear cart
           </button>
-          <button mat-raised-button color="primary" matStepperNext>
+          <button mat-raised-button color="primary" matStepperNext [disabled]="!cartFormGroup.valid">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Continue to shipping
           </button>
@@ -137,7 +149,7 @@
   </mat-step>
 
   <!-- =========== SHIPPING DETAILS =========== -->
-  <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup">
+  <mat-step [completed]="cache.selectedIndex >=2" [stepControl]="shippingFormGroup" [disabled]="!cartFormGroup.valid">
 
     <form [formGroup]="shippingFormGroup" class="shipping">
       <ng-template matStepLabel>Shipping details</ng-template>
@@ -149,7 +161,7 @@
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
               <mat-select matNativeControl [(value)]="selectedAddress" [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
-                          (change)="select(selectedAddress)"
+                          (selectionChange)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
                           [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0">
                 <mat-option *ngFor="let address of profile?.shippingAddresses"
@@ -240,7 +252,7 @@
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back to cart
         </button>
-        <button mat-raised-button color="primary" [disabled]="!shippingFormGroup.valid" matStepperNext (click)="updateShippingAddress()">
+        <button mat-raised-button color="primary" [disabled]="!shippingFormGroup.valid" matStepperNext (click)="moveToConfirmation()">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Continue to confirmation
         </button>
@@ -251,7 +263,7 @@
 
   <!-- =========== CONFIRM & PLACE ORDER =========== -->
 
-  <mat-step [stepControl]="confirmation">
+  <mat-step [stepControl]="confirmation" [disabled]="!shippingFormGroup.valid">
     <form class="confirmation">
       <ng-template matStepLabel>Confirm & Place order</ng-template>
       <table class="cart-items summary">
@@ -265,8 +277,9 @@
         </thead>
         <tbody>
         <tr *ngFor="let listing of cart?.listings">
-          <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center">
-            <div class="image" fxFlex="0 0 115px">
+          <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
+              (click)="openListing(listing)">
+            <div class="image" fxFlex="0 0 75px">
               <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
             </div>
             <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
@@ -293,27 +306,27 @@
         </tbody>
       </table>
 
-      <div class="order-detail" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="20px">
-        <div class="shipping-overview" fxFlex="0 0 250px">
+      <div class="order-detail" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="35px">
+        <div class="shipping-overview" fxFlex="1 1 100%">
           <div class="title">Shipping address</div>
           <app-shipping-address [shippingAddress]="shippingFormGroup.value"></app-shipping-address>
         </div>
         <table class="subtotals" fxFlex="0 0 250px">
           <tr>
             <td class="desc">Subtotal</td>
-            <td class="value">{{cart?.subTotal.getAmount()}} PART</td>
+            <td class="value">{{cart?.subTotal.getAmountAsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Shipping total</td>
-            <td class="value">{{cart?.getShippingTotal(country).getAmount()}} PART</td>
+            <td class="value">{{cart?.getShippingTotal(country).getAmountAsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Escrow</td>
-            <td class="value">{{cart?.getEscrowTotal(country).getAmount()}} PART</td>
+            <td class="value">{{cart?.getEscrowTotal(country).getAmountAsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc total">Total</td>
-            <td class="value total">{{cart?.getTotal(country).getAmount()}} PART</td>
+            <td class="value total">{{cart?.getTotal(country).getAmountAsString()}} PART</td>
           </tr>
         </table>
 

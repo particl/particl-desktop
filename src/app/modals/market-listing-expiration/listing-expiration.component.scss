@@ -1,0 +1,28 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ UI ------ //
+
+.mat-card {
+  & > .title {
+    @extend %box-title;
+    margin-bottom: 24px;
+  }
+}
+
+
+// ------ LAYOUT ------ //
+
+.dialog-content {
+  max-width: 400px;
+}
+
+.est-fee {
+  margin-left: 20px;
+  line-height: 1.45;
+}
+
+.small {
+  @extend %lighter;
+  font-size: 80%;
+  font-weight: 400;
+}

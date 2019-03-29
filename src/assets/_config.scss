@@ -22,9 +22,10 @@ $font: 'Inter_UI', sans-serif;
 
 // main colors
 $color: #02e8b0; // primary green-ish color
+$color-secondary: #1597DD; // new blue
 $color-success: #4f8a10;
 $color-alert: #ec4b50;
-$color-warning: #f1cc00; // yellow-ish
+$color-warning: #f1a500; // yellow-ish
 $color-info: #108cda; // blue-ish (e.g. status cold staking icon)
 $color-white: #fff;
 $color-ugly: #ff69b4;
@@ -76,8 +77,12 @@ $break-xhd: 2200px;
   opacity: 0.55;
 }
 
-%lightest {
+%lightest { // light "grey" text
   opacity: 0.36;
+}
+
+%reset {
+  opacity: 1;
 }
 
 %subtitle { // section titles / H2's

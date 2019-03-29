@@ -8,6 +8,14 @@ import {
   Output
 } from '@angular/core';
 
+enum Intl {
+  itemsPerPageLabel = 'Items per page',
+  nextPageLabel = 'Next page',
+  previousPageLabel = 'Previous page',
+  firstPageLable = 'Fist Page',
+  lastPageLable = 'Last Page',
+}
+
 @Component({
   selector: 'app-paginator',
   templateUrl: './paginator.component.html',
@@ -24,13 +32,7 @@ export class PaginatorComponent implements OnInit {
 
   @HostBinding('class.mat-paginator')
 
-  public _intl: Object = {
-    itemsPerPageLabel: 'Items per page:',
-    nextPageLabel: 'Next page',
-    previousPageLabel: 'Previous page',
-    firstPageLable: 'Fist Page',
-    lastPageLable: 'Last Page'
-  };
+  intl: any = Intl;
 
   constructor() { }
 

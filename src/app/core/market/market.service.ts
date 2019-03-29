@@ -1,10 +1,12 @@
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { dataURItoBlob } from 'app/core/util/utils';
 import { environment } from '../../../environments/environment';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MarketService {
@@ -39,16 +41,16 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.url, postData, { headers: headers })
-        .map((response: any) => response.result)
-        .catch((error: any) => {
+        .pipe(map((response: any) => response.result))
+        .pipe(catchError((error: any) => {
           this.log.d('Market threw an error!');
           this.log.d('Market error:', error);
           error = this.extractMPErrorMessage(error.error);
-          return Observable.throw(error);
-        })
+          return observableThrowError(error);
+        }))
   }
 
-  public uploadImage(templateId: number, base64DataURI: any) {
+  public uploadImage(templateId: number, base64DataURIArray: any[]) {
     // Running in browser, delete?
     const form: FormData = new FormData();
     /*
@@ -59,9 +61,11 @@ export class MarketService {
       },
       value: new Buffer(base64)
     }*/
-    const blob: Blob = dataURItoBlob(base64DataURI);
-    form.append('image', blob, 'image.jpg');
+    for (let idx = 0; idx < base64DataURIArray.length; idx++) {
+      const blob = dataURItoBlob(base64DataURIArray[idx]);
 
+      form.append(`image-${idx}`, blob, 'image.jpg');
+    }
 
     const headerJson = {
       // 'Content-Type': 'multipart/form-data'
@@ -69,16 +73,10 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
-//        .map((response: any) => response.result)
-        .catch((error: any) => {
-          let err = '';
-          if (error.status === 404) {
-            err = error.error.error;
-          } else {
-            err = error;
-          }
-          return Observable.throw(err);
+      .pipe(catchError((error: any) => {
+          return observableThrowError(this.extractMPErrorMessage(error.error));
         })
+      )
   }
 
   private extractMPErrorMessage(errorObj: any): string {

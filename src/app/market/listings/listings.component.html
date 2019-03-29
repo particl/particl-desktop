@@ -44,13 +44,19 @@
       </mat-select-search>
     </div>
 
-    <div class="filter-by reported" fxFlex="0 0 56px">
-      <!-- FIXME: Ripple effect not working? https://material.angular.io/components/button-toggle/overview -->
-      <mat-button-toggle type="checkbox" value="reported-only" class="reported-only" matTooltip="Show reported listings only" (change)="toggleFlag($event)">
+    <div class="filter-by buttons" fxFlex="0 1 120px">
+
+      <button mat-button (click)="clearAndLoadPage()" matTooltip="Refresh listings">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+      </button>
+
+      <mat-button-toggle type="checkbox" value="reported-only" class="reported-only filter-button icon-only" matTooltip="Show reported listings only" (change)="toggleFlag($event)">
         <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
       </mat-button-toggle>
-    </div>
-  </div><!-- .control-bar -->
+
+    </div> <!-- .buttons -->
+
+  </div> <!-- .control-bar -->
 </app-header>
 
 
@@ -77,7 +83,7 @@
   </div--><!-- .sidebar -->
 
   <!-- Do not remove the below class it is using for test case -->
-  <div class="content test-case-container"
+  <div class="content grid-container test-case-container"
        infiniteScroll
        [infiniteScrollContainer]="pagination.infinityScrollSelector"
        [fromRoot]="true"
@@ -124,7 +130,7 @@
 
     <div class="no-results" [hidden]="!noMoreListings">
       <p>
-        Sorry, that's all folks!
+        That's all folks!
       </p>
     </div>
   </div><!-- .content -->

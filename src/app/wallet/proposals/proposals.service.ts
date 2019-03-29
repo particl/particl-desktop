@@ -5,6 +5,7 @@ import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.mode
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ProposalsService {
@@ -23,7 +24,8 @@ export class ProposalsService {
   list(startTime: any, expireTime: any) {
     const params = ['list', startTime, expireTime];
     return this.marketService.call('proposal', params)
-      .map((v) => v.map(p => new Proposal(p)));
+      .pipe(map((v) =>
+        v.map(p => new Proposal(p))));
   }
 
   // proposal post.
@@ -45,12 +47,13 @@ export class ProposalsService {
   // proposal result.
   result(proposalHash: string) {
     const params = ['result', proposalHash]
-    return this.marketService.call('proposal', params).map((r) => {
+    return this.marketService.call('proposal', params)
+    .pipe(map((r) => {
       if (r) {
         return new ProposalResult(r);
       }
       return null;
-    });
+    }));
   }
 
   // vote post.
@@ -62,6 +65,7 @@ export class ProposalsService {
   // get current vote details.
   get(proposalHash: string) {
     const params = ['get', this.submitterId, proposalHash];
-    return this.marketService.call('vote', params).map((v) => new VoteDetails(v));
+    return this.marketService.call('vote', params)
+    .pipe(map((v) => new VoteDetails(v)));
   }
 }

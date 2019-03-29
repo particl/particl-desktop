@@ -19,9 +19,9 @@
           <p>or drag'n'drop it here</p>
         </div>
         <p class="widget-help">
-          Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible.
+          Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible. Max file size per image is 2MB.
         </p>
-        <div class="gallery" fxLayoutWrap>
+        <div class="gallery" fxLayout="row wrap">
 
           <div *ngFor="let image of images"
               class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
@@ -39,7 +39,7 @@
           </div>
 
           <div *ngFor="let picture of picturesToUpload ; index as i"
-              class="photo-wrapper {{i === featuredPicture ? 'featured' : ''}}" fxFlex="0 0 123px"
+              class="photo-wrapper" fxFlex="0 0 123px"
               fxLayoutAlign="center center">
             <!-- TODO: maybe not gif, but removing is 'unsafe' -->
             <div class="photo" fxFLex>
@@ -48,35 +48,16 @@
                 <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
                           matTooltip="Remove image" (click)="removePicture(i)">
                 </mat-icon>
-                <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                <!-- TODO: Fix set as featured img -->
+                <!-- <mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
                           matTooltip="Set as featured" (click)="featurePicture(i)">
-                </mat-icon>
+                </mat-icon> -->
               </div>
             </div>
           </div>
 
         </div><!-- .gallery -->
       </mat-card><!-- .photos -->
-
-      <mat-card class="fees-expiration">
-        <div class="title">Listing expiration &amp; fees</div>
-        <div class="row" fxLayout fxLayoutAlign="center center">
-          <mat-form-field class="full-width" fxFlex="1 1 100%">
-            <mat-select placeholder="Listing expiration" [(ngModel)]="expiration" (change)="loadTransactionFee()">
-              <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
-                {{ expire.title }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="est-fee" fxFlex="0 0 210px">
-            Approximate listing fee:<br>
-            {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
-          </div>
-        </div>
-        <p class="widget-help">
-          Choose for how long should your listing be published. Longer expiration results in higher fees.
-        </p>
-      </mat-card><!-- .fees-expiration -->
 
     </div><!-- .left -->
 
@@ -100,16 +81,6 @@
         <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
       </mat-form-field>
 
-      <!-- <mat-form-field class="full-width">
-        <mat-select placeholder="Select category" formControlName="category">
-          <mat-optgroup *ngFor="let group of _rootCategoryList.subCategoryList" [label]="group.name">
-            <mat-option *ngFor="let subcategory of group.subCategoryList" [value]="subcategory.id" [selected]="true">
-              {{ subcategory.name }}
-            </mat-option>
-          </mat-optgroup>
-        </mat-select>
-      </mat-form-field> -->
-      <!--mat-otpgroup-select-search -->
       <mat-otpgroup-select-search
         [options]="_rootCategoryList?.subCategoryList"
         [placeHolder]="'Select category'"
@@ -117,16 +88,7 @@
         [defaultSelectedValue]="selectedCategory"
         (change)="onCategoryChange($event)">
       </mat-otpgroup-select-search>
-      <!--mat-otpgroup-select-search -->
 
-      <!-- <mat-form-field class="full-width">
-        <mat-select placeholder="Country" formControlName="country">
-          <mat-option *ngFor="let country of countryList.getList()" value="{{country.name}}">{{country.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field> -->
-
-      <!-- mat-select-search -->
       <mat-select-search
         class="full-width"
         [options]="countryList.getList()"
@@ -137,12 +99,11 @@
         [isLexigraphicalOrder]="true"
         (onChange)="onCountryChange($event)">
       </mat-select-search>
-      <!-- mat-select-search -->
 
       <!-- TODO: add another input for fiat value and inter-connect the two: -->
       <mat-form-field class="full-width">
         <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" formControlName="basePrice" type="number">
+        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" formControlName="basePrice" type="text">
         <span matSuffix>PART</span>
       </mat-form-field>
 
@@ -151,12 +112,12 @@
           <input matInput placeholder="Quantity">
         </mat-form-field-->
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *" formControlName="domesticShippingPrice" type="number">
+          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *" formControlName="domesticShippingPrice" type="text">
           <span matSuffix>PART</span>
         </mat-form-field>
         <mat-form-field fxFlex="50%" class="auto-width">
           <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *" formControlName="internationalShippingPrice"
-                 type="number">
+                 type="text">
           <span matSuffix>PART</span>
         </mat-form-field>
       </div>
@@ -165,39 +126,32 @@
         Prices are in PART.
       </p>
     </mat-card>
-
   </div>
+
+  <p class="warning" *ngIf="!canPublish">
+    <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
+  </p>
 
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
       <button mat-button (click)="backToSell()" color="warn">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-        Cancel & Discard
+        Back to Listings
       </button>
     </div>
     <div class="right">
-      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-button matTooltip="Save as unpublished template" (click)="saveTemplate()">
+      <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-        {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
+        {{ isExistingTemplate() ? 'Update' : 'Save'}}
       </button>
-      <button [disabled]="isInProcess || !itemFormGroup?.valid" mat-raised-button color="primary" matTooltip="Save and put up for sale" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+
+      <button [disabled]="!itemFormGroup?.valid"
+              mat-raised-button color="primary"
+              (click)="saveAndPublish()"
+              *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
         {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
       </button>
     </div>
   </div>
-    <!-- .loading-container -->
-  <div class="loading-container" *ngIf="isInProcess">
-    <div class="loading-info">
-      <div class="loading-image">
-        <img src="./assets/particl-logo-symbol.svg">
-      </div>
-      <p class="title">
-        We're processing your listing
-      </p>
-      <p class="widget-help">
-        This might take a sec
-      </p>
-    </div>
-  </div><!-- .loading-container -->
 </div>

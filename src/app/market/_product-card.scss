@@ -1,0 +1,57 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+/*
+    PRODUCT CARD
+    Listing thumbnail for Market & Favourites
+*/
+
+$card-margin: 25px;
+
+// item
+
+mat-card.listing {
+  margin: 0 $card-margin $card-margin 0;
+  padding: 24px 16px 12px;
+
+  // default: 4 columns
+  flex: calc((100% / 4) - 51px);
+  max-width: calc((100% / 4) - 51px);
+  &:nth-of-type(4n) {
+    margin-right: 0;
+    @include break-from(1650px) {
+      margin-right: $card-margin;
+    }
+  }
+
+  // larger: 6 columns
+  @include break-from(1650px) {
+    flex: calc((100% / 6) - 53px);
+    max-width: calc((100% / 6) - 53px);
+    &:nth-of-type(6n) {
+      margin-right: 0;
+    }
+  }
+
+  // largest: 8 columns
+  @include break-from(2300px) {
+    flex: calc((100% / 8) - 55px);
+    max-width: calc((100% / 8) - 55px);
+    &:nth-of-type(6n) {
+      margin-right: $card-margin;
+    }
+    &:nth-of-type(8n) {
+      margin-right: 0;
+    }
+  }
+
+}
+
+
+// container
+
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+

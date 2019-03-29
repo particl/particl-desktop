@@ -1,12 +1,13 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs';
+import { Observable, interval } from 'rxjs';
 import * as _ from 'lodash';
 
 import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 import { OrderFilter } from './order-filter.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
+import { take, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-orders',
@@ -55,12 +56,13 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
     this.additionalFilter = {
       requiredAttention: false,
-      hideCompleted: true
+      hideCompleted: false
     }
   }
 
   loadProfile(): void {
-    this.profileService.default().take(1).subscribe(
+    this.profileService.default()
+    .pipe(take(1)).subscribe(
       profile => {
         this.profile = profile;
         this.initLoopLoadOrders();
@@ -69,19 +71,18 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   initLoopLoadOrders() {
     this.loadOrders()
-    this.timer = Observable.interval(1000 * 10);
+    this.timer = interval(1000 * 10);
 
     // call loadOrders in every 10 sec.
-    this.timer.takeWhile(() => !this.destroyed).subscribe((t) => {
+    this.timer.pipe(takeWhile(() => !this.destroyed)).subscribe((t) => {
       this.loadOrders()
     });
   }
 
   loadOrders(): void {
     this.bid.search(this.profile.address, this.type, this.filters.status, this.filters.search, this.additionalFilter)
-      .take(1)
+      .pipe(take(1))
       .subscribe(bids => {
-        console.log('called >>>>>>>>>>>>>>>>>', bids);
         // Only update if needed
         if (this.hasUpdatedOrders(bids.filterOrders)) {
           // Initialize model only when its fetching for all orders.

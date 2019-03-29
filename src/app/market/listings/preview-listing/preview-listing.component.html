@@ -1,16 +1,16 @@
-<div mat-dialog-title>
+<!--div mat-dialog-title>
   {{data?.listing?.title}}
   <span class="category">
     in {{data?.listing?.category.name}}
   </span>
-</div>
+</div-->
 
 <button class="small-close-button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">
-  <div class="product" fxLayout="row">
+  <div class="product-summary" fxLayout="row">
 
     <div class="product-gallery" fxFlex="1 1 450px">
       <div class="gallery-carousel">
@@ -22,7 +22,7 @@
           *ngIf="data?.listing?.imageCollection?.imageItems?.length"
           gallerize
           [gestures]="false"
-          [style.height.px]="417"
+          [style.height.px]="380"
           [style.width.px]="450"
           [thumbWidth]= "80"
           [thumbHeight]="80"
@@ -33,74 +33,126 @@
     </div><!-- .product-gallery -->
 
     <div class="product-info" fxFlex="1 1 100%">
+      <h1>{{ data?.listing?.title }}</h1>
 
-      <div class="pricing" fxLayout fxLayoutAlign="space-between flex-start">
-
+      <div class="pricing">
         <div class="item price">
           <div class="title">Price</div>
           <div class="value part">
-            <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
+            <span class="number big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="point big">{{ data?.listing?.basePrice.dot() }}</span><span class="number small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
             <span class="currency">PART</span>
           </div>
           <div class="value fiat">
             <span class="fiat">~ {{price?.usd}} xx EUR</span>
           </div>
         </div>
-
-        <div class="item category">
-          <div class="title">Category</div>
-          <div class="value">
-            <mat-icon fontSet="partIcon" fontIcon="part-label"></mat-icon>
-            {{ data?.listing?.category.name }}
-          </div>
-        </div>
-
-        <div class="item seller-country">
-          <div class="title">Sold from</div>
-          <div class="value" [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
-            <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
-            {{ data?.listing?.country }}
-          </div>
-        </div>
-
       </div><!-- .pricing -->
 
-      <div class="summary description">
-        <p>
-          {{ data?.listing?.shortDescription }}
-        </p>
-      </div>
-      
-      <div class="detailed description">
-        <p>
-          {{ data?.listing?.longDescription }}
-        </p>
-      </div>
+      <p class="summary description">
+        {{ data?.listing?.shortDescription }}
+      </p>
 
+      <table class="meta">
+        <tr class="expires-soon" *ngIf="data?.listing?.isAboutToExpire">
+          <th class="title">
+            <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
+            Expires soon
+          </th>
+          <td class="value">
+            {{ data?.listing?.expireIn }}
+          </td>
+        </tr>
+        <tr>
+          <th class="title">
+            <mat-icon fontSet="partIcon" fontIcon="part-truck"></mat-icon>
+            Shipping
+          </th>
+          <td class="value">
+            {{ data?.listing?.domesticShippingPrice.getAmountAsString() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmountAsString() }} <small>PART</small>
+          </td>
+        </tr>
+        <tr>
+          <th class="title">
+            <mat-icon fontSet="partIcon" fontIcon="part-label"></mat-icon>
+            Category
+          </th>
+          <td class="value">
+            {{ data?.listing?.category.name }}
+          </td>
+        </tr>
+        <tr>
+          <th class="title">
+            <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+            Sold from
+          </th>
+          <td class="value">
+            {{ countryListService?.getCountryByRegion(data?.listing?.country)?.name }}
+            ({{ data?.listing?.country }})
+          </td>
+        </tr>
+        <tr>
+          <th class="title">
+            <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
+            Added / Expires
+          </th>
+          <td class="value">
+            {{ data?.listing?.createdAt }} / {{ data?.listing?.expiredTime }}
+          </td>
+        </tr>
+      </table>
+
+    </div><!-- .product-info -->
+  </div><!-- .product-summary -->
+
+  <div class="product-details">
+    <mat-tab-group class="listing-tabs" (selectedTabChange)="changeTab($event.index)">
+      <mat-tab label="Details"></mat-tab>
+      <mat-tab label="Shipping &amp; Escrow"></mat-tab>
+      <mat-tab label="Comments" *ngIf="!data.buyPage"></mat-tab>
+    </mat-tab-group><!-- .listing-tabs -->
+
+    <div class="tab-content details" *ngIf="tabLabels[selectedTab] == 'details'">
+      <p class="detailed description">{{ data?.listing?.longDescription }}</p>
+    </div><!-- .tab-content.details -->
+
+    <div class="tab-content shipping" *ngIf="tabLabels[selectedTab] == 'shipping'">
       <table class="shipping-escrow">
         <thead>
           <tr>
-            <th></th>
-            <th>Worldwide</th>
-            <th [matTooltip]="countryListService?.getCountryByRegion(data?.listing?.country)?.name">
-              Local in {{ data?.listing?.country }}
-            </th>
+            <th>Shipping to</th>
+            <th>Shipping</th>
+            <th>Escrow</th>
+            <th>Total needed for order</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th><strong>Shipping</strong></th>
+            <th>
+              {{ countryListService?.getCountryByRegion(data?.listing?.country)?.name }}
+              <small>Shipping carrier</small>
+            </th>
+            <!-- domestic shipping -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.internationalShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.domesticShippingPrice.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
               </span>
             </td>
+            <!-- domestic escrow -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.domesticShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmountAsString() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <!-- domestic total -->
+            <td>
+              <span class="part price">
+                <strong>{{data?.listing?.totalAmountDomestic?.getAmountAsString()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -109,70 +161,72 @@
           </tr>
           <tr>
             <th>
-              <strong>Escrow</strong><br>
-              (refunded upon delivery)
+              Worldwide
+              <small>Shipping carrier</small>
             </th>
+            <!-- international shipping -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.internationalShippingPrice.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
               </span>
             </td>
+            <!-- international escrow -->
             <td>
-              <!-- FIXME: "escrow for local (not international)" needs to be implemented: -->
               <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceInternational?.getAmountAsString() }}</strong> <small class="currency">PART</small>
+              </span>
+              <span class="fiat price">
+                &asymp; 0.41 <small class="currency">EUR</small>
+              </span>
+            </td>
+            <!-- international total -->
+            <td>
+              <span class="part price">
+                <strong>{{data?.listing?.totalAmountInternaltional?.getAmountAsString()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
               </span>
             </td>
           </tr>
-          <tr>
-            <th>
-              <strong>Total needed for order</strong><br>
-              (incl. refundable Escrow)
-            </th>
-            <!-- TODO: price + shipping + escrow -->
+          <tr class="help-text">
+            <td></td>
             <td>
-              <span class="part price">
-                <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
+              <small>Shipping price for 1 item</small>
             </td>
             <td>
-              <span class="part price">
-                <strong>{{data?.listing?.totalAmountDomestic?.getAmount()}}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
+              <small>Security deposit (100% of order value) needed for this trade &ndash; it will be refunded after order is completed and delivered</small>
+            </td>
+            <td>
+              <small>Amount of funds needed in total for this trade (incl. the refundable escrow)</small>
             </td>
           </tr>
         </tbody>
       </table><!-- .shipping-escrow -->
+    </div><!-- .tab-content.shipping-->
 
-    </div><!-- .product-info -->
-  </div><!-- .product -->
+    <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
+      <div class="no-results">
+        <p>
+          Comments coming soon™
+        </p>
+      </div>
+    </div>
+  </div><!-- .product-details -->
+
 </div><!-- .dialog-content -->
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
+<mat-dialog-actions fxLayoutAlign="space-between center" *ngIf="!data.buyPage">
 
   <div class="left">
+
     <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'"></app-report>
-    <div class="date">
-      <strong class="title">Date added</strong> {{ data?.listing?.createdAt }}
-    </div>
-  </div>
 
-  <div class="center" *ngIf="data?.listing?.isFlagged">
-    <div class="reporting">
-
+    <div class="reporting" *ngIf="data?.listing?.isFlagged">
       <!-- Reported, not voted yet by user -->
       <div *ngIf="!data?.listing?.VoteDetails">
         <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
@@ -183,9 +237,8 @@
           <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
         </button>
       </div>
-
       <!-- Reported & voted already -->
-      <div *ngIf="data?.listing?.VoteDetails">
+      <div *ngIf="data?.listing?.VoteDetails" class="voted">
         <p *ngIf="data?.listing?.VoteDetails?.isReported">
           <mat-icon fontSet="partIcon" fontIcon="part-flag" class="voted-icon"></mat-icon>
           Thanks for flagging this item as inappropriate
@@ -195,8 +248,8 @@
           Thanks for voting on this item
         </p>
       </div>
-
     </div><!-- .reporting -->
+
   </div>
 
   <div class="right" fxLayout fxLayoutAlign="end center">

@@ -5,6 +5,7 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Template } from 'app/core/market/api/template/template.model';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-delete-listing',
@@ -25,8 +26,7 @@ export class DeleteListingComponent implements OnInit {
   }
 
   remove() {
-    console.log('removign tempalte')
-    this.template.remove(this.templateToRemove.id).take(1).subscribe(
+    this.template.remove(this.templateToRemove.id).pipe(take(1)).subscribe(
       success => this.snackbar.open('Successfully removed listing!'),
       error => this.snackbar.open(error),
       () => this.dialogRef.close()

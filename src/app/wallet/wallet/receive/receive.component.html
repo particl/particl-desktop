@@ -1,6 +1,6 @@
 <app-header>
   <div class="tab-bar">
-    <mat-tab-group (selectChange)="changeTab($event.index)">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)">
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
@@ -101,13 +101,13 @@
 
           <div class="address-name cursor-pointer" (click)="openNewAddress(address)">
             <div class="address-id">
-              /{{ address.id }}
+              /{{ address?.id || '' }}
             </div>
             <span class="address-label" [ngClass]="{'no-label': address.label === '(No label)'}">
-              {{ address.label }}
+              {{ address?.label || '' }}
             </span>
             <span class="address">
-              {{ address.address }}
+              {{ address?.address || '' }}
             </span>
           </div><!-- .address-name -->
 
@@ -132,16 +132,7 @@
     <!-- use two paginator for reset pagination after tab change. -->
     <div class="receive-pagination">
       <app-paginator
-        #paginator
-        *ngIf="type == 'private' && getSinglePage().length > 0"
-        [length]="getTotalCountForPagination()"
-        [pageSize]="MAX_ADDRESSES_PER_PAGE"
-        [pageSizeOptions]="PAGE_SIZE_OPTIONS"
-        (page)="pageChanged($event)">
-      </app-paginator>
-
-      <app-paginator
-        *ngIf="type == 'public' && getSinglePage().length > 0"
+        *ngIf="getSinglePage().length > 0"
         #paginator
         [length]="getTotalCountForPagination()"
         [pageSize]="MAX_ADDRESSES_PER_PAGE"

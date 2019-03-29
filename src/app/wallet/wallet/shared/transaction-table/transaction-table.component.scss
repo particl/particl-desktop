@@ -56,7 +56,8 @@
   .type {
     .mat-icon {
       font-size: 14px;
-      position: absolute;
+      position: relative;
+      top: 2px;
       // narration icon
       &.narration {
         margin: 0 0 0 2px;
@@ -69,7 +70,7 @@
     .tx-type {
       .name {
         font-weight: 500;
-        margin-left: 26px;
+        margin-left: 12px;
       }
       &.staked {
         .mat-icon {
@@ -91,6 +92,11 @@
           color: $color;
         }
       }
+      &.listing-fee {
+        .mat-icon {
+          color: $color-secondary;
+        }
+      }
     }
   }
 
@@ -100,11 +106,14 @@
     display: block;
     .amount {
       .big {
-        font-weight: bold;        
+        font-weight: bold;
       }
       .point,
       .small {
         color: $text-muted;
+      }
+      .currency {
+        margin-left: 4px;
       }
     }
     .negative {
@@ -113,6 +122,12 @@
       .small {
         color: mix($color-white, $color-alert, 30%);
       }
+    }
+    .mat-icon { // icon hiding private TX's value when wallet is locked
+      color: $text-muted;
+      font-size: 14px;
+      position: relative;
+      top: 1px;
     }
   }
 }
@@ -137,7 +152,7 @@
   // to/from address
   .to-from-address {
     width: 100%;
-    font-family: monospace;   
+    font-family: monospace;
     color: lighten($text, 10%);
     background: lighten($bg-shadow, 10%);
     border-radius: 4px;
@@ -154,5 +169,8 @@
     &:hover {
       color: $color;
     }
+  }
+  .value { // fee & total TX value
+    margin-left: 6px;
   }
 }

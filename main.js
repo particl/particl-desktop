@@ -15,18 +15,18 @@ if (process.platform === 'linux') {
 
 /* check for paths existence and create */
 [ app.getPath('userData'),
-  app.getPath('userData') + '/testnet'
-].map(path => !fs.existsSync(path) && fs.mkdir(path));
+  path.join(app.getPath('userData'), 'testnet')
+].map(path => !fs.existsSync(path) && fs.mkdirSync(path));
 
-if (app.getVersion().includes('RC'))
+if (app.getVersion().includes('testnet'))
   process.argv.push(...['-testnet']);
 
-const options = require('./modules/options').parse();
+const daemonConfig = require('./modules/daemon/daemonConfig');
 const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
-const rpc     = require('./modules/rpc/rpc');
 const _auth = require('./modules/webrequest/http-auth');
-const daemon  = require('./modules/daemon/daemon');
+
+const options = daemonConfig.getConfiguration();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -41,10 +41,10 @@ app.on('ready', () => {
   log.info('app ready')
   log.debug('argv', process.argv);
   log.debug('options', options);
-  
+
   // initialize the authentication filter
   _auth.init();
-  
+
   initMainWindow();
   init.start(mainWindow);
 });
@@ -92,7 +92,11 @@ function initMainWindow() {
     minHeight: 675,
     icon:      path.join(__dirname, 'resources/icon.png'),
 
+    frame: true,
+    darkTheme: true,
+
     webPreferences: {
+      backgroundThrottling: false,
       webviewTag: false,
       nodeIntegration: false,
       sandbox: true,
@@ -100,6 +104,18 @@ function initMainWindow() {
       preload: path.join(__dirname, 'preload.js')
     },
   });
+
+  // Hide the menu bar, press ALT
+  // to show it again.
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.setAutoHideMenuBar(true);
+
+  // Setup configuration listener
+  //    Needs to be included here because init.js is only created once (when the app is ready)
+  //    Since the config contains an emitter and a listener based on the browserWindow object,
+  //    it needs to be updated with a new BrowserWindow context when the main window is destroyed and re-created
+  //    (a la OSX, <sarcasm> thanks Apple for your unique behaviour </sarcasm> )
+  daemonConfig.init(mainWindow);
 
   // and load the index.html of the app.
   if (options.dev) {
@@ -153,10 +169,6 @@ function makeTray() {
     {
       label: 'View',
       submenu: [
-        {
-          label: 'Reload',
-          click() { mainWindow.webContents.reloadIgnoringCache(); }
-        },
         {
           label: 'Open Dev Tools',
           click() { mainWindow.openDevTools(); }

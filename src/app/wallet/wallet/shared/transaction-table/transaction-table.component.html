@@ -65,9 +65,9 @@
             <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>
             <span class="name">Balance transfer</span>
           </span>
-          <span *ngSwitchCase="'listing_fee'" class="tx-type sent">
-            <mat-icon fontSet="partIcon" fontIcon="part-bag-buy" color="primary"></mat-icon>
-            <span class="name">Posted Listing</span>
+          <span *ngSwitchCase="'listing_fee'" class="tx-type listing-fee">
+            <mat-icon fontSet="partIcon" fontIcon="part-bag-buy"></mat-icon>
+            <span class="name">Publishing fee</span>
           </span>
         </div>
 
@@ -84,22 +84,23 @@
 
         <!-- Amount -->
         <div fxFlex="1 0 155px" *ngIf="display.amount" class="tx-value">
-          <span mat-line>
-            <span class="amount"
-                  [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }">
-              <span class="big number">{{ tx.getAmountObject().getIntegerPart() }}</span><!-- inline element comment hack
-              --><span class="point">{{ tx.getAmountObject().dot() }}</span><!--
-              --><small class="small number">{{ tx.getAmountObject().getFractionalPart() || '' }}</small>
-              <span class="currency">PART</span>
-            </span>
+          <span class="amount" *ngIf="!tx.requires_unlock"
+                [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }">
+            <span class="big number">{{ tx.getAmountObject().getIntegerPartAsString() }}</span><!-- inline element comment hack
+            --><span class="point">{{ tx.getAmountObject().dot() }}</span><!--
+            --><small class="small number">{{ tx.getAmountObject().getFractionalPart() || '' }}</small>
+            <span class="currency">PART</span>
           </span>
-        </div>
+          <span class="amount" *ngIf="tx.requires_unlock">
+            <mat-icon fontSet="partIcon" fontIcon="part-anon" matTooltip="Unlock wallet to see private transaction details" matTooltipPosition="before"></mat-icon>
+          </span>
+        </div><!-- .tx-value -->
 
       </mat-panel-title><!-- .tx-overview -->
     </mat-expansion-panel-header>
 
 
-    <div class="container history-container" fxLayoutWrap layout-padding>
+    <div class="container history-container" fxLayout="row wrap" layout-padding>
 
       <div fxFlex="1 1 calc(100% - 260px)" fxLayout="column">
         <!-- To/from (detail) -->
@@ -121,12 +122,12 @@
         <!-- TX fee (detail) -->
         <div class="tx-detail-item text-right" fxFlex>
           <span>Fee:</span>
-          <span class="mat-right">{{tx.fee ? tx.fee : 0}} PART</span>
+          <span class="value">{{tx.fee ? tx.fee : 0}} PART</span>
         </div>
         <!-- Net amount (detail) -->
         <div class="tx-detail-item text-right" fxFlex>
           <span>Net amount:</span>
-          <span class="mat-right">{{ tx.getNetAmount()}} PART</span>
+          <span class="value">{{ tx.getNetAmount()}} PART</span>
         </div>
       </div>
 

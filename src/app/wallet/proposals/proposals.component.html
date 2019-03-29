@@ -1,6 +1,6 @@
 <app-header>
   <div class="tab-bar">
-    <mat-tab-group (selectChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
@@ -24,7 +24,21 @@
 </app-header>
 
 
-<div class="container-block with-tab-bar">  
+<div class="container-block with-tab-bar">
+
+  <div class="page-intro">
+    <h1>Community Proposals</h1>
+    <div class="content">
+      <p>
+        As part of Particl's decentralized governance mechanism, you can submit and vote on any Particl-related proposal.<br>
+        Once a proposal is submitted, every PART holder can vote on it.
+      </p>
+      <p class="widget-help">
+        Anyone can submit and vote on proposals in a provably fair manner. The weight of your vote is equal to your PART balance.
+      </p>
+    </div>
+  </div><!-- .page-intro -->
+
   <div class="filter">
 
     <div class="new-proposal">
@@ -70,10 +84,6 @@
       </mat-card>
     </div> -->
     <!-- .search-sorting -->
-
-    <p class="widget-help">
-      As a part of our decentralized governance, Proposals let any user suggest changes to anything related to Particl. Once proposal is submitted, every Particl owner can vote on it.
-    </p>
 
   </div><!-- .sidebar -->
 

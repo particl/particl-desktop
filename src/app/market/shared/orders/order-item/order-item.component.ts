@@ -12,6 +12,8 @@ import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 import { PlaceOrderComponent } from '../../../../modals/market-place-order/place-order.component';
 import { ShippingComponent } from '../../../../modals/market-shipping/shipping.component';
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-order-item',
@@ -35,7 +37,7 @@ export class OrderItemComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getItemDetails()
+    this.getItemDetails();
   }
 
   getItemDetails() {
@@ -96,7 +98,10 @@ export class OrderItemComponent implements OnInit {
   }
 
   checkForWallet(type: string) {
-    this.modals.unlock({timeout: 30}, (status) => this.callAction(type));
+    this.modals.unlock({timeout: 30}, (status) => {
+      this.openProcessingModal();
+      this.callAction(type)
+    });
   }
 
   callAction(type: string) {
@@ -111,33 +116,39 @@ export class OrderItemComponent implements OnInit {
   }
 
   acceptBid() {
-    this.bid.acceptBidCommand(this.order.id).take(1).subscribe(() => {
+    this.bid.acceptBidCommand(this.order.id).pipe(take(1)).subscribe(() => {
       this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
       // Reload same order without calling api
       this.order.OrderItem.status = 'AWAITING_ESCROW';
       this.order = new Bid(this.order, this.order.type);
+      this.dialog.closeAll();
     }, (error) => {
+      this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
   }
 
   rejectBid() {
-    this.bid.rejectBidCommand(this.order.id).take(1).subscribe(res => {
+    this.bid.rejectBidCommand(this.order.id).pipe(take(1)).subscribe(res => {
       this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
       this.order.OrderItem.status = 'REJECTED';
-      this.order = new Bid(this.order, this.order.type)
+      this.order = new Bid(this.order, this.order.type);
+      this.dialog.closeAll();
     }, (error) => {
+      this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
 
   }
 
   escrowRelease(ordStatus: string) {
-    this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).take(1).subscribe(res => {
+    this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).pipe(take(1)).subscribe(res => {
       this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
       this.order.OrderItem.status = ordStatus === 'shipping' ? 'SHIPPING' : 'COMPLETE';
       this.order = new Bid(this.order, this.order.type)
+      this.dialog.closeAll();
     }, (error) => {
+      this.dialog.closeAll();
       this.snackbarService.open(`${error}`);
     });
 
@@ -150,19 +161,31 @@ export class OrderItemComponent implements OnInit {
     dialogRef.componentInstance.bidItem = this.order;
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       // do other action after confirm
-      this.modals.unlock({timeout: 30}, (status) => this.escrowLock());
+      this.modals.unlock({timeout: 30}, (status) => {
+        this.openProcessingModal();
+        this.escrowLock()
+      });
     });
   }
 
   escrowLock() {
     // <orderItemId> <nonce> <memo> , @TODO send nonce ?
-    this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').take(1).subscribe(res => {
+    this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').pipe(take(1)).subscribe(res => {
       this.snackbarService.open(`Payment done for order ${this.order.listing.title}`);
       this.order.OrderItem.status = 'ESCROW_LOCKED';
-      this.order = new Bid(this.order, this.order.type)
+      this.order = new Bid(this.order, this.order.type);
+      this.dialog.closeAll();
     }, (error) => {
-      console.log(error);
       this.snackbarService.open(`${error}`);
+    });
+  }
+
+  openProcessingModal() {
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your action'
+      }
     });
   }
 
