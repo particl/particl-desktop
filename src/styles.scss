@@ -3,8 +3,6 @@
 @import './src/assets/scss/material-components'; // tweaks to Material components
 @import './src/assets/scss/helper'; // helper & misc classes
 
-@import '~@ngx-gallery/core/styles/gallery.css';
-
 /*
 
 ___  ____ ____ ___     ___  ____ ____ _  _ ___ ____ ___  
@@ -34,6 +32,8 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       4.2. Paragraph styles
     5. Plug-ins
       5.1. Charts
+    6. Misc.
+      6.1. Info/warning messages (releases etc.)
 
 */
 
@@ -154,6 +154,9 @@ body {
   }
   .content {
     margin-top: 16px;
+    p {
+      line-height: 1.5;
+    }
   }
   .widget-help {
     margin-bottom: 0;
@@ -232,16 +235,19 @@ body {
 
 .no-results {
   font-size: 18px;
-  color: darken($bg-shadow, 15%);
   text-transform: uppercase;
   text-align: center;
   padding: 170px 0;
   border: 2px dashed $bg-shadow;
   background: rgba($color-white, 0.5);
+  p {
+    @extend %lightest;
+  }
   button {
     margin-top: 12px;
   }
   .widget-help {
+    @extend %reset;
     margin: 0;
     text-transform: none;
     font-size: 12px;
@@ -442,5 +448,63 @@ kbd {
     color: lighten($bg-black, 50%);
     position: relative;
     top: 1px;
+  }
+}
+
+
+/* ------------------------------- *\
+    6. MISC
+\* ------------------------------- */
+
+// ------ 6.1. Info/warning messages (releases etc.) ------ //
+
+.mat-sidenav-container {
+  // when top notification present (new release/announcement), push status bar etc. below
+  &.with-top-notification {
+    .header-main { // status bar
+      top: 61px;
+    }
+    .balance-overview { // Overview
+      margin-top: 125px;
+    }
+    .tab-bar,
+    .control-bar {
+      top: 125px;
+    }
+    .with-tab-bar { // content containers
+      margin-top: 175px;
+      .filter {
+        top: 210px;
+      }
+    }
+    .without-tab-bar { // content containers w/o tabs
+      margin-top: 125px;
+      .filter {
+        top: 160px;
+      }
+    }
+    app-send {
+      .from-box {
+        .sticky {
+          top: 205px;
+        }
+      }
+    }
+    app-receive {
+      .container-flex {
+        &.with-tab-bar {
+          height: calc(100vh - 290px);
+          @include break(l) {
+            height: calc(100vh - 310px);
+          }
+        }
+      }
+    }
+    app-add-item,
+    app-help {
+      .container-block {
+        margin-top: 125px;
+      }
+    }
   }
 }

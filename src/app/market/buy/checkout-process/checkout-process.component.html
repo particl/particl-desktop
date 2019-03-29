@@ -21,7 +21,7 @@
       <div class="no-results" [hidden]="cart?.shoppingCartItems.length != 0">
         <p>
           Oh no, your cart is empty! Let's fix this:<br>
-          <button mat-button color="primary" (click)="goToListings()">
+          <button mat-button (click)="goToListings()">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-search"></mat-icon>
             Browse listings for sale
           </button>
@@ -101,7 +101,7 @@
             </td>
             <td class="remove">
               <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above"
-                      (click)="removeFromCart(listing.id)">
+                      (click)="removeFromCart(listing?.id)">
                 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
               </button>
             </td>
@@ -161,7 +161,7 @@
             <div class="title">Choose shipping profile</div>
             <mat-form-field class="full-width">
               <mat-select matNativeControl [(value)]="selectedAddress" [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
-                          (change)="select(selectedAddress)"
+                          (selectionChange)="select(selectedAddress)"
                           placeholder="Select saved shipping address profile"
                           [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0">
                 <mat-option *ngFor="let address of profile?.shippingAddresses"
@@ -314,19 +314,19 @@
         <table class="subtotals" fxFlex="0 0 250px">
           <tr>
             <td class="desc">Subtotal</td>
-            <td class="value">{{cart?.subTotal.getAmount()}} PART</td>
+            <td class="value">{{cart?.subTotal.getAmountAsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Shipping total</td>
-            <td class="value">{{cart?.getShippingTotal(country).getAmount()}} PART</td>
+            <td class="value">{{cart?.getShippingTotal(country).getAmountAsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Escrow</td>
-            <td class="value">{{cart?.getEscrowTotal(country).getAmount()}} PART</td>
+            <td class="value">{{cart?.getEscrowTotal(country).getAmountAsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc total">Total</td>
-            <td class="value total">{{cart?.getTotal(country).getAmount()}} PART</td>
+            <td class="value total">{{cart?.getTotal(country).getAmountAsString()}} PART</td>
           </tr>
         </table>
 

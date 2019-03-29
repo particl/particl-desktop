@@ -11,16 +11,20 @@
 
   <div class="row" fxLayout fxLayoutAlign="center center">
     <mat-form-field class="full-width" fxFlex="50%">
-      <mat-select [(ngModel)]="expiration" (change)="loadTransactionFee()">
+      <mat-label>Select expiry time</mat-label>
+      <mat-select [(value)]="expiration" (selectionChange)="loadTransactionFee()">
+        <mat-option>None</mat-option>
         <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
           {{ expire.title }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <div class="est-fee" fxFlex="50%">
-      <span *ngIf="expiration">Approximate listing fee:
-        <br> {{ txFee.getIntegerPart() }}{{ txFee.dot() }}{{ txFee.getFractionalPart() }} PART
+      <span *ngIf="expiration && !txError">Approximate listing fee:
+        <br>
       </span>
+      <span *ngIf="expiration && !txError">{{ txFee }} PART</span>
+      <span class="small" *ngIf="expiration && txError"> {{ txError }}</span>
     </div>
   </div>
   <p class="widget-help">
@@ -34,7 +38,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button [disabled]="!expiration" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
+  <button [disabled]="!expiration || (txError.length > 0 )" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Publish
   </button>

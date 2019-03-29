@@ -4,6 +4,7 @@ import { Observable, Observer } from 'rxjs'; // use this for testing atm
 
 import { Address, deserialize } from './address.model';
 import { RpcService } from '../../../core/core.module';
+import { publishReplay } from 'rxjs/operators';
 
 
 @Injectable()
@@ -35,7 +36,7 @@ export class AddressService {
   totalPageCount: number = 0;
 
   constructor(private _rpc: RpcService) {
-    this._addresses = Observable.create(observer => this._observerAddresses = observer).publishReplay(1).refCount();
+    this._addresses = Observable.create(observer => this._observerAddresses = observer).pipe(publishReplay(1)).refCount();
 
     this.updateAddressList();
   }

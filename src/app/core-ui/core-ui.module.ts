@@ -16,6 +16,7 @@ import { PaginatorComponent } from './paginator/paginator.component';
 import { GalleryModule } from '@ngx-gallery/core';
 import { LightboxModule } from '@ngx-gallery/lightbox';
 import { GallerizeModule } from '@ngx-gallery/gallerize';
+import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
 import 'hammerjs';
 
 
@@ -32,8 +33,8 @@ import 'hammerjs';
     NvD3Module,
 
     // also can add a config options
-    GalleryModule.forRoot(), // GalleryModule.forRoot(galleryConfig?),
-    LightboxModule.forRoot(), // GalleryLightbox.forRoot(lightboxConfig?),
+    GalleryModule, // GalleryModule.forRoot(galleryConfig?),
+    LightboxModule, // GalleryLightbox.forRoot(lightboxConfig?),
     GallerizeModule
   ],
   exports: [
@@ -44,7 +45,8 @@ import 'hammerjs';
     NvD3Module,
     GalleryModule,
     LightboxModule,
-    GallerizeModule
+    GallerizeModule,
+    BalanceComponent
   ]
 })
 export class CoreUiModule {
