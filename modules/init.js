@@ -1,17 +1,18 @@
 const electron      = require('electron');
 const log           = require('electron-log');
 
+const ipc           = require('./ipc/ipc');
 const rpc           = require('./rpc/rpc');
 const zmq           = require('./zmq/zmq');
 
 const daemon        = require('./daemon/daemon');
 const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
-const daemonConfig  = require('./daemon/daemonConfig');
 const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
+
 
 
 exports.start = function (mainWindow) {
@@ -20,13 +21,20 @@ exports.start = function (mainWindow) {
   notification.init();
   closeGui.init();
   daemon.init();
+  market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);
   // zmq.test(); // loop, will send tests
 
   /* Initialize daemonWarner */
+  // warns GUI that daemon is downloading
   daemonWarner.init(mainWindow);
+  daemonManager.on('status', (status, msg) => {
+    if (status === "download") {
+      daemonWarner.send(msg);
+    }
+  });
 
   exports.startDaemonManager();
 }
@@ -34,7 +42,7 @@ exports.start = function (mainWindow) {
 exports.startDaemonManager = function() {
   daemon.check()
     .then(()            => log.info('daemon already started'))
-    .catch(()           => daemonManager.init(daemonConfig.getConfiguration()))
+    .catch(()           => daemonManager.init())
     .catch((error)      => log.error(error));
 }
 
@@ -46,26 +54,16 @@ exports.startDaemonManager = function() {
 */
 daemonManager.on('status', (status, msg) => {
 
-  // warns GUI that daemon is downloading
-  if (status === "download") {
-    daemonWarner.send(msg);
-  }
-
   // Done -> means we have a binary!
   if (status === 'done') {
     log.debug('daemonManager returned successfully, starting daemon!');
-    daemonManager.shutdown();
     multiwallet.get()
     // TODO: activate for prompting wallet
-    .then(chosenWallets => {
-      daemon.start(chosenWallets);
-    })
-    .then(() => {
-      market.init();
-      daemonConfig.send();
-    })
+    // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
+    .then(chosenWallets => daemon.start(chosenWallets))
     .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
+    // .then(()            => ipc.daemonReady(mainWindow.webContents))
 
 
   } else if (status === 'error') {
@@ -90,11 +88,7 @@ daemonManager.on('status', (status, msg) => {
 
 });
 
-const sleep = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
-
-electron.app.on('before-quit', async function beforeQuit(event) {
+electron.app.on('before-quit', function beforeQuit(event) {
   log.info('received quit signal, cleaning up...');
 
   event.preventDefault();
@@ -102,18 +96,13 @@ electron.app.on('before-quit', async function beforeQuit(event) {
 
   // destroy IPC listeners
   rpc.destroy();
-  daemonWarner.destroy();
-  daemonConfig.destroy();
   notification.destroy();
   closeGui.destroy();
 
-  daemonManager.shutdown();
-  market.stop()
-  .then(() => sleep(2000))
-  .then(() => daemon.stop())
-  .then(() => {
+  market.stop();
+  daemon.stop().then(() => {
     log.info('daemon.stop() resolved!');
-  });
+  })
 });
 
 electron.app.on('quit', (event, exitCode) => {

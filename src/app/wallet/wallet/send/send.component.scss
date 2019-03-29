@@ -17,7 +17,6 @@
 
 .section-title { // 'Pay from/to, Convert' etc.
   @extend %subtitle;
-  margin-top: 0;
 }
 
 .subtitle { // subtitles (eg. 'privacy level' in anon
@@ -80,6 +79,10 @@
 
 
 // ------ LAYOUT ------ //
+
+.container-block {
+  padding-top: 0; // offset subtitles
+}
 
 .from-box { // 'pay from..'
   .sticky {

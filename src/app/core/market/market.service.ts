@@ -1,12 +1,10 @@
-
-import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { dataURItoBlob } from 'app/core/util/utils';
 import { environment } from '../../../environments/environment';
-import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MarketService {
@@ -41,13 +39,13 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.url, postData, { headers: headers })
-        .pipe(map((response: any) => response.result))
-        .pipe(catchError((error: any) => {
+        .map((response: any) => response.result)
+        .catch((error: any) => {
           this.log.d('Market threw an error!');
           this.log.d('Market error:', error);
           error = this.extractMPErrorMessage(error.error);
-          return observableThrowError(error);
-        }))
+          return Observable.throw(error);
+        })
   }
 
   public uploadImage(templateId: number, base64DataURIArray: any[]) {
@@ -73,10 +71,9 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
-      .pipe(catchError((error: any) => {
-          return observableThrowError(this.extractMPErrorMessage(error.error));
+        .catch((error: any) => {
+          return Observable.throw(this.extractMPErrorMessage(error.error));
         })
-      )
   }
 
   private extractMPErrorMessage(errorObj: any): string {

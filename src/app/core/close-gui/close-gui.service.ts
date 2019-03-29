@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { Log } from 'ng2-logger'
 
 import { IpcService } from '../ipc/ipc.service';

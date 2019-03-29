@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 import { NotificationService } from 'app/core/notification/notification.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
-import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class NewTxNotifierService implements OnDestroy {
@@ -24,7 +23,7 @@ export class NewTxNotifierService implements OnDestroy {
 
     this.log.d('tx notifier service running!');
     this._rpcState.observe('getwalletinfo', 'txcount')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(txcount => {
         this.log.d(`--- update by txcount${txcount} ---`);
         this.checkForNewTransaction();

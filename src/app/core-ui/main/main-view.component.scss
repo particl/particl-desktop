@@ -28,7 +28,7 @@
   border-bottom: 1px solid darken($bg-black, 5%);
   box-shadow: 0 1px 0 lighten($bg-black, 5%) !important;
   background: $bg-black;
-  margin: 8px 0 1px !important;
+  margin: 8px 0 0 !important;
   // submenu toggle
   .mat-expansion-panel-header {
     @extend %tfx;
@@ -38,7 +38,7 @@
     text-transform: uppercase;
     min-height: 32px !important;
     max-height: 32px !important;
-    padding: 0 24px;
+    padding: 0 32px;
     &:hover {
       color: lighten($text-muted, 20%);
     }
@@ -65,7 +65,7 @@
   .tag { // order notifications
     @extend %tfx;
     position: absolute;
-    right: 24px;
+    right: 0;
     top: 10px;
     opacity: 0.6;
   }
@@ -99,6 +99,7 @@ a.sidebar-item-link {
   padding-top: 1px;
   .sidebar-item {
     @extend %tfx;
+    padding: 3px 14px 3px 16px;
     .icon {
       margin: 0 14px 0 0;
     }
@@ -151,68 +152,21 @@ a.sidebar-item-link {
     LAYOUT
 \* ------------------------------- */
 
-// ------ SIDEBAR (main menu) ------ //
+// ------ SIDEBAR ------ //
 
 .sidebar { // AKA .mat-sidenav
   width: $sidebar-width;
   background-color: $bg-black;
   color: $color-white;
+  display: flex;
+  flex-direction: column;
 
   .logo {
-    flex: 0 0 50px;
-    position: relative;
-    &:hover {
-      img {
-        opacity: 0;
-      }
-      .balances {
-        opacity: 1;
-      }
-    }
-    img {
-      @extend %tfx;
-      width: 130px;
-      display: block;
-      margin: 35px auto;
-    }
-    .balances {
-      @extend %tfx;
-      opacity: 0;
-      width: 100%;
-      margin: auto;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      font-size: 12.5px;
-      tr {
-        &:hover {
-          th,
-          td {
-            background: darken($bg-black, 1.5%);
-          }
-          td {
-            color: $color;
-            small {
-              color: darken($color, 15%);
-            }
-          }
-        }
-      }
-      th {
-        @extend %tfx;
-        text-align: left;
-        font-weight: 400;
-        padding: 5px 10px 5px 24px;
-      }
-      td {
-        @extend %tfx;
-        text-align: right;
-        font-weight: 500;
-        padding: 5px 24px 5px 10px;
-      }
-    }
+    flex: 0 0 60px;
+    display: block;
+    height: 60px;
+    width: 144px;
+    margin: 30px auto;
   }
 
   .menu-links {
@@ -237,9 +191,27 @@ a.sidebar-item-link {
       @extend %menu-divider;
       display: block;
     }
- 
+
+    // Versions
+    .client-version {
+      @extend %enable-select;
+      //@extend %menu-divider;
+      margin: 0 0 14px;
+      padding: 14px 24px 0;
+      display: block;
+      font-size: 11px;
+      line-height: 1.6;
+      color: $text-muted;
+      .version {
+        color: lighten($text-muted, 15%);
+        margin-left: 2px;
+      }
+    }
+
   }
+
 }
+
 
 // ------ SYNC PROGRESS BAR ------ //
 
@@ -279,8 +251,5 @@ a.sidebar-item-link {
   }
   .right {
     text-align: right;
-    app-balance {
-      display: inline-block;
-    }
   }
 }

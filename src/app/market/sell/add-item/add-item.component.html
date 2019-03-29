@@ -19,9 +19,9 @@
           <p>or drag'n'drop it here</p>
         </div>
         <p class="widget-help">
-          Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible. Max file size per image is 2MB.
+          Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be sure to upload high quality &amp; focused images in good lighting where possible.
         </p>
-        <div class="gallery" fxLayout="row wrap">
+        <div class="gallery" fxLayoutWrap>
 
           <div *ngFor="let image of images"
               class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
@@ -103,7 +103,7 @@
       <!-- TODO: add another input for fiat value and inter-connect the two: -->
       <mat-form-field class="full-width">
         <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" formControlName="basePrice" type="text">
+        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" formControlName="basePrice" type="number">
         <span matSuffix>PART</span>
       </mat-form-field>
 
@@ -112,12 +112,12 @@
           <input matInput placeholder="Quantity">
         </mat-form-field-->
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *" formControlName="domesticShippingPrice" type="text">
+          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *" formControlName="domesticShippingPrice" type="number">
           <span matSuffix>PART</span>
         </mat-form-field>
         <mat-form-field fxFlex="50%" class="auto-width">
           <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *" formControlName="internationalShippingPrice"
-                 type="text">
+                 type="number">
           <span matSuffix>PART</span>
         </mat-form-field>
       </div>
@@ -128,25 +128,21 @@
     </mat-card>
   </div>
 
-  <p class="warning" *ngIf="!canPublish">
-    <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
-  </p>
-
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
       <button mat-button (click)="backToSell()" color="warn">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-        Back to Listings
+        Cancel (Discard changes)
       </button>
     </div>
     <div class="right">
       <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
         <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-        {{ isExistingTemplate() ? 'Update' : 'Save'}}
+        {{ isExistingTemplate() ? 'Update' : 'Save for later'}}
       </button>
-
-      <button [disabled]="!itemFormGroup?.valid"
+      <button [disabled]="!itemFormGroup?.valid || !canPublish"
               mat-raised-button color="primary"
+              matTooltip="{{ canPublish ? 'Save and put up for sale' : 'Maximum template size exceeded - try reduce image or text sizes'}}"
               (click)="saveAndPublish()"
               *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
         <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>

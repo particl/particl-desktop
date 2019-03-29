@@ -6,7 +6,6 @@ import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
-import { take, takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class ProposalsNotificationsService implements OnDestroy {
@@ -33,7 +32,7 @@ export class ProposalsNotificationsService implements OnDestroy {
     this.loadLastViewedProposalTimestamp();
     this.peerService
       .getBlockCount()
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe((blockCount: number) => {
         if (blockCount !== this.lastKnownBlockCount) {
           this.lastKnownBlockCount = blockCount;
@@ -51,7 +50,7 @@ export class ProposalsNotificationsService implements OnDestroy {
   loadProposals(): void {
     this.proposalsService
       .list(this.lastUpdatedTimeStamp, '*')
-      .pipe(take(1))
+      .take(1)
       .subscribe((proposals: Proposal[]) => {
         let tempCount = 0;
         if (proposals.length) {

@@ -32,8 +32,8 @@ export class Image {
     const image = this.image.ItemImageDatas.find(o => o.imageVersion === 'ORIGINAL');
     let data = '';
     if (image) {
-      if (image.originalMime && (image.encoding === 'BASE64') && image.data) {
-        data += `data:${image.originalMime};${image.encoding.toLowerCase()},${image.data}`;
+      if (image.originalMime && (image.encoding === 'BASE64') && image.ItemImageDataContent && image.ItemImageDataContent.data) {
+        data += `data:${image.originalMime};${image.encoding.toLowerCase()},${image.ItemImageDataContent.data}`
       }
     }
     return data;

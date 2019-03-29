@@ -6,7 +6,6 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { ReportService } from '../../../core/market/api/report/report.service';
 import { Listing } from '../../../core/market/api/listing/listing.model';
-import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { ReportModalComponent } from '../../../modals/report-modal/report-modal.component';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 
@@ -26,7 +25,7 @@ export class ReportComponent {
     }
   })
   @Input() listing: Listing;
-  @Input() from: string;
+  @Input() from: boolean;
   constructor(
     public reportService: ReportService,
     private modals: ModalsHelperService,
@@ -49,25 +48,13 @@ export class ReportComponent {
   }
 
   reportItem(): void {
-    this.openProcessingModal();
     this.reportService.post(this.listing).subscribe(report => {
-      this.dialog.closeAll()
       this.listing.isFlagged = !this.listing.isFlagged;
       this.listing.VoteDetails = this.defaultVoteDetails;
       this.snackbar.open(`${this.listing.title} has been reported successfully`);
     }, err => {
-      this.dialog.closeAll()
       this.snackbar.open(err);
     })
-  }
-
-  openProcessingModal() {
-    const dialog = this.dialog.open(ProcessingModalComponent, {
-      disableClose: true,
-      data: {
-        message: 'Hang on, we are busy processing your vote'
-      }
-    });
   }
 
 }

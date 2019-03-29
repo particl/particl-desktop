@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
 import { RpcStateService } from '../../../../core/rpc/rpc-state/rpc-state.service';
-import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-timeoffset',
@@ -23,7 +22,7 @@ export class TimeoffsetComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._rpcState.observe('getnetworkinfo', 'timeoffset')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(offset => this.offset = offset);
   }
 

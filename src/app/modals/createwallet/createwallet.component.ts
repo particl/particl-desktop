@@ -16,7 +16,6 @@ import { PassphraseService } from './passphrase/passphrase.service';
 import { RpcStateService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
-import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'modal-createwallet',
@@ -79,7 +78,7 @@ export class CreateWalletComponent implements OnDestroy {
     this.errorString = '';
     this.step = 0;
     this.rpcState.observe('getwalletinfo', 'encryptionstatus')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.isCrypted = status !== 'Unencrypted');
   }
 

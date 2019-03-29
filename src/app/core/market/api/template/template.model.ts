@@ -85,7 +85,7 @@ export class Template {
   }
   setStatus(): void {
     if (this.isPublished) {
-      this.status = !this.isTempExpired ? 'published' : 'expired';
+      this.status = 'published';
     } else {
       this.status = 'unpublished';
     }
@@ -179,9 +179,8 @@ export class Template {
   }
 
   get expiredAt(): any {
-    return  this.checkListingItems ? 'Expires ' + new DateFormatter(
-      new Date(this.object.ListingItems[0].expiredAt)
-      ).dateFormatter(false).substr(0, 16) : '';
+    return Object.prototype.toString.call(this.object.ListingItems) === '[object Array]' && this.object.ListingItems.length ?
+    'Expires ' + new DateFormatter(new Date(this.object.ListingItems[0].expiredAt)).dateFormatter(false).substr(0, 16) : '';
   }
 
   get isAboutToExpire(): Boolean {
@@ -194,19 +193,8 @@ export class Template {
     return new Duration((this.object.expiredAt - Date.now()) / 1000).getReadableDuration();
   }
 
-  get isTempExpired(): boolean {
-    if (this.checkListingItems) {
-      return this.object.ListingItems[0].expiredAt < +new Date()
-    }
-    return false;
-  }
-
-  get checkListingItems(): boolean {
-    return Object.prototype.toString.call(this.object.ListingItems) === '[object Array]' && this.object.ListingItems.length;
-  }
-
   setExpiryTime(): void {
-    if (this.checkListingItems) {
+    if (this.object.ListingItems && this.object.ListingItems.length > 0) {
       this.expireTime = this.object.ListingItems[0].expiryTime;
     }
   }

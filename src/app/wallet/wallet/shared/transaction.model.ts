@@ -132,16 +132,22 @@ export class Transaction {
       const blindStealthOutputCount = this.outputs.reduce(function (a: any, b: any) {
         return a + (b.vout !== 65535 ? (b.stealth_address !== undefined ? 1 : 0) : 0);
       }, 0);
+      console.log("blind_stealth_address count: " + blindStealthOutputCount);
 
       // blind -> blind (own)
       if(blindStealthOutputCount === 1) {
+        console.log("length should equal 2 =" + this.outputs.length);
         const add = function (a: any, b: any) { return a + (b.stealth_address !== undefined ? b.amount : 0); }
+        console.log("returning shoud be 0.5 =  " + this.outputs.reduce(add, 0));
         return this.outputs.reduce(add, 0);
       } */
 
       // only use fake output to determine internal transfer
       const fakeOutput = function (a: any, b: any) { return a - (b.vout === 65535 ? b.amount : 0); }
       return this.outputs.reduce(fakeOutput, 0);
+    } else if (this.getCategory() === 'multisig') {
+      const amount: number = this.outputs.find(output => output.address.startsWith('r')).amount;
+      return amount;
     } else {
       return +this.amount;
     }

@@ -9,6 +9,5 @@ export const environment = {
   particlPort: 52935,
   marketVersion: 'UNKNOWN',
   marketHost: 'localhost',
-  marketPort: 3100,
-  isTesting: false
+  marketPort: 3100
 };

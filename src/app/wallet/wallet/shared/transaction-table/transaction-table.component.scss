@@ -56,8 +56,7 @@
   .type {
     .mat-icon {
       font-size: 14px;
-      position: relative;
-      top: 2px;
+      position: absolute;
       // narration icon
       &.narration {
         margin: 0 0 0 2px;
@@ -70,7 +69,7 @@
     .tx-type {
       .name {
         font-weight: 500;
-        margin-left: 12px;
+        margin-left: 26px;
       }
       &.staked {
         .mat-icon {
@@ -92,11 +91,6 @@
           color: $color;
         }
       }
-      &.listing-fee {
-        .mat-icon {
-          color: $color-secondary;
-        }
-      }
     }
   }
 
@@ -111,9 +105,6 @@
       .point,
       .small {
         color: $text-muted;
-      }
-      .currency {
-        margin-left: 4px;
       }
     }
     .negative {
@@ -169,8 +160,5 @@
     &:hover {
       color: $color;
     }
-  }
-  .value { // fee & total TX value
-    margin-left: 6px;
   }
 }

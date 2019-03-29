@@ -3,7 +3,6 @@ import { Log } from 'ng2-logger';
 
 import { StateService } from 'app/core/state/state.service';
 import { MarketService } from 'app/core/market/market.service';
-import { finalize } from 'rxjs/operators';
 
 @Injectable()
 export class MarketStateService extends StateService implements OnDestroy {
@@ -14,13 +13,15 @@ export class MarketStateService extends StateService implements OnDestroy {
   constructor(private market: MarketService) {
     super();
     this.log.d('MarketState: initialized');
-    // this.register('currencyprice', 30 * 1000, ['PART', 'USD']);
+    // fetch categories
+    this.register('currencyprice', 30 * 1000, ['PART', 'USD']);
 
     /*
      * @TODO change 'category' timmer '(3 * 1000)' as '(60 * 1000)' once category loading got fixed.
      * Or Once improve-router branch got merged.
      */
 
+    this.register('category', 3 * 1000, ['list']);
     this.register('profile', 60 * 1000, ['list']);
     this.register('bid', 15 * 1000, ['search', 0, 99999, 'ASC', '*', '*', ''])
   }
@@ -37,13 +38,13 @@ export class MarketStateService extends StateService implements OnDestroy {
         return;
       }
       this.market.call(method, params)
-        .pipe(finalize(() => {
+        .finally(() => {
           // re-start loop
           if (timeout) {
             const restartAfter = this.determineTimeoutDuration(errors, timeout);
             setTimeout(_call, restartAfter);
           }
-        }))
+        })
         .subscribe(
         success => {
           this.set(method, success);

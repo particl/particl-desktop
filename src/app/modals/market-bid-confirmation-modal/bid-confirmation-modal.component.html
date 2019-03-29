@@ -5,11 +5,6 @@
 
 <div mat-dialog-content class="dialog-content">
 
-  <!-- TODO: show on alpha mainnet only: -->
-  <p class="alpha warning" *ngIf="isPrerelease">
-    <strong>Warning:</strong> you are about to <strong>spend real PART coins</strong> in this order on development version of Particl Marketplace. Bugs may occur &amp; your payment might get lost &ndash; continue on your own risk!
-  </p>
-
   <!-- Bid confirmation-->
   <div class="tx-confirmation">
     <div class="tx-info">
@@ -63,6 +58,6 @@
   </button>
   <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-    Confirm &amp; Buy
+    Confirm &amp; Send
   </button>
 </mat-dialog-actions>

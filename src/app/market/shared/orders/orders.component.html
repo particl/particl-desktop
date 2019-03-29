@@ -63,9 +63,7 @@
 <div class="orders section with-filter">
 
   <div class="no-results" *ngIf="orders?.length === 0">
-    <p>
-      You don't have any market orders yet
-    </p>
+    You don't have any market orders yet
   </div>
 
   <app-order-item *ngFor="let order of orders" [order]="order"></app-order-item>

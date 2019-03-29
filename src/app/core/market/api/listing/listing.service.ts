@@ -6,7 +6,6 @@ import { MarketService } from 'app/core/market/market.service';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class ListingService {
@@ -37,17 +36,21 @@ export class ListingService {
     ];
 
     return this.market.call('item', params)
-    .pipe(map(
+    .map(
       (listings: Array<Listing>) => {
         return listings.map(t => new Listing(t));
       }
-    )).pipe(tap(
+    ).do(
       listings => this.log.d('Listings', listings)
-    ));
+    );
+  }
+
+  searchOwn(page: number, pageLimit: number) {
+    return this.search(page, pageLimit, '*', null, null, null, false); // OWN
   }
 
   get(id: number) {
-    return this.market.call('item', ['get', id]).pipe(map(listing => new Listing(listing)));
+    return this.market.call('item', ['get', id]).map(listing => new Listing(listing));
   }
 
 }

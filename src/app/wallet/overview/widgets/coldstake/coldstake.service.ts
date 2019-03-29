@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 import { Log } from 'ng2-logger';
 import { Amount } from '../../../../core/util/utils';
 
 import { RpcService, RpcStateService } from 'app/core/core.module';
-import { takeWhile, debounceTime } from 'rxjs/operators';
 
 @Injectable()
 export class ColdstakeService implements OnDestroy {
@@ -35,32 +34,32 @@ export class ColdstakeService implements OnDestroy {
   ) {
 
     this._rpcState.observe('getwalletinfo', 'encryptionstatus')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => {
         this.encryptionStatus = status;
         this.update();
       });
 
     this._rpcState.observe('getwalletinfo', 'txcount')
-      .pipe(takeWhile(() => !this.destroyed))
-      .pipe(debounceTime(1000/*ms*/))
+      .takeWhile(() => !this.destroyed)
+      .debounceTime(1000/*ms*/)
       .subscribe(txcount => {
         this.update();
       });
 
     this._rpcState.observe('getblockchaininfo', 'blocks')
-      .pipe(takeWhile(() => !this.destroyed))
-      .pipe(debounceTime(10 * 1000/*ms*/))
+      .takeWhile(() => !this.destroyed)
+      .debounceTime(10 * 1000/*ms*/)
       .subscribe(status => {
         this.update();
       });
 
     this._rpcState.observe('ui:coldstaking')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingEnabled = status);
 
     this._rpcState.observe('ui:walletInitialized')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.walletInitialized = status);
     this.update();
   }

@@ -5,7 +5,6 @@ import { Log } from 'ng2-logger';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
-import { takeWhile } from 'rxjs/operators';
 
 
 @Component({
@@ -22,13 +21,13 @@ export class CartComponent implements OnInit, OnDestroy {
 
   constructor(
     private cartService: CartService,
-    public listCache: PostListingCacheService
+    private listCache: PostListingCacheService
   ) { }
 
   ngOnInit() {
     // Obtain total cart items
     this.cartService.list()
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(cart => this.cart = cart);
   }
 

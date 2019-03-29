@@ -1,5 +1,3 @@
-import { environment } from '../../../environments/environment';
-
 export class Amount {
 
   constructor(private amount: number, private maxRoundingDigits: number = 8) {
@@ -8,11 +6,6 @@ export class Amount {
 
   public getAmount() {
     return this.amount;
-  }
-
-  public getAmountAsString() {
-    const amount = this.amount.toFixed(this.maxRoundingDigits).replace(/0+$/, '');
-    return amount[amount.length - 1] === '.' ? amount.replace('.', '') : amount;
   }
 
   public getAmountWithFee(fee: number) {
@@ -32,14 +25,6 @@ export class Amount {
   }
 
   /**
-   * Returns the integer part, with the correct signage;
-   * Similar to getIntegerPart() but preserves negative signage for number -1 < x < 1
-   */
-  public getIntegerPartAsString(): string {
-    return `${(this.amount < 0 ? '-' : '')}${Math.abs(Math.trunc(this.amount))}`;
-  }
-
-  /**
    * Returns fractional part.
    * e.g:
    * -25.9 -> '9'
@@ -50,7 +35,7 @@ export class Amount {
    */
   public getFractionalPart(): string {
     if (this.ifDotExist()) {
-      return (this.getAmountAsString()).split('.')[1];
+      return (this.getAmount().toString()).split('.')[1];
     }
     return '';
   }
@@ -87,7 +72,7 @@ export class Amount {
   }
 
   ifDotExist(): boolean {
-    return (this.getAmountAsString().toString()).indexOf('.') !== -1;
+    return (this.getAmount().toString()).indexOf('.') !== -1;
   }
 
 
@@ -101,11 +86,6 @@ export class Amount {
   truncateToDecimals(int: number, dec: number) {
     const calcDec = Math.pow(10, dec);
     return Math.trunc(int * calcDec) / calcDec;
-  }
-
-  // Convert satoshi coins to original Part coins
-  public getPartCoins() {
-    return (this.amount) / 100000000;
   }
 
 }
@@ -372,29 +352,3 @@ export const Messages = {
   }
 }
 
-
-export const isPrerelease = (release?: string): boolean => {
-  let version = release;
-  let found = false;
-  if (!release) {
-    version = environment.version;
-  }
-  const preParts = ['alpha', 'beta', 'RC'];
-
-  for (const part of preParts) {
-    if (version.includes(part)) {
-      found = true;
-      break;
-    }
-  }
-  return found;
-}
-
-export const isMainnetRelease = (release?: string): boolean => {
-  let version = release;
-  if (!release) {
-    version = environment.version;
-  }
-
-  return !version.includes('testnet');
-}

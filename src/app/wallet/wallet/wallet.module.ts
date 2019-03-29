@@ -17,6 +17,7 @@ import { DetailAddressComponent } from './shared/detail-address/detail-address.c
 import { AddressBookComponent } from './address-book/address-book.component';
 import { ReceiveComponent } from './receive/receive.component';
 import { SendComponent } from './send/send.component';
+import { BalanceComponent } from './balances/balance.component';
 import { HistoryComponent } from './history/history.component';
 
 import { AddressLookupComponent } from './addresslookup/addresslookup.component';
@@ -44,6 +45,7 @@ import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet
     SendComponent,
     HistoryComponent,
     AddressBookComponent,
+    BalanceComponent,
     AddressLookupComponent,
     AddAddressLabelComponent,
     DetailAddressComponent,
@@ -56,6 +58,7 @@ import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet
   exports: [
     TransactionsTableComponent,
     AddressTableComponent,
+    BalanceComponent,
     /* sidebar lazy load*/
     ReceiveComponent,
     SendComponent,
@@ -94,4 +97,5 @@ export class WalletModule {
 export { AddressBookComponent } from './address-book/address-book.component';
 export { ReceiveComponent } from './receive/receive.component';
 export { SendComponent } from './send/send.component';
+export { BalanceComponent } from './balances/balance.component';
 export { HistoryComponent } from './history/history.component';

@@ -4,7 +4,9 @@ const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const Observable  = require('rxjs/Observable').Observable;
 
 const cookie      = require('./cookie');
-const _options    = require('../daemon/daemonConfig');
+const _options    = require('../options');
+
+const daemon      = require('../daemon/daemon');
 
 /* spyOnRpc will output all RPC calls being made */
 const spyOnRpc = false;
@@ -16,11 +18,11 @@ let rpcOptions;
 let auth;
 
 exports.init = function() {
-  let options = _options.getConfiguration();
+  let options = _options.get();
 
   HOSTNAME = options.rpcbind || 'localhost';
   PORT     = options.port;
-  auth     = cookie.getAuth(options);
+  auth     = cookie.getAuth(_options.get());
 
   initIpcListener();
 }
@@ -47,7 +49,7 @@ exports.call = function(method, params, callback) {
     method: method,
     params: params
   });
-
+  
   if(spyOnRpc) {
     log.debug('rpc.call:', postData);
   }

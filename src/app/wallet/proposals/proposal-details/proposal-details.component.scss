@@ -75,9 +75,8 @@
         @extend %enable-select;
         color: $text-muted;
         white-space: pre-line;
-        word-break: break-word;
+        word-break: break-all;
       }
-      /*
       .authors {
         text-align: left;
         color: mix($text-muted, $text);
@@ -98,7 +97,6 @@
           top: -2px;
         }
       }
-      */
     }
 
     // Voting progress & graph
@@ -111,20 +109,11 @@
         border: 1px solid $bg-shadow;
         border-radius: 50px;
         padding: 3px 16px;
-        .big {
-          font-weight: bold;
-        }
-        .point,
-        .small {
-          color: $text-muted;
-        }
-        /*
         color: $text-muted;
         .value {
           color: $text;
           font-weight: 500;
         }
-        */
       }
       .graph-placeholder {
         display: flex;

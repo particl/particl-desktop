@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { Log } from 'ng2-logger';
 
 import { Address } from './address/address.model';
@@ -8,7 +8,6 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 
 import { AddressService } from './address/address.service';
 import { Profile } from './profile.model';
-import { tap, map, takeWhile, find, distinctUntilChanged } from 'rxjs/operators';
 
 // TODO: addresses & favourites!
 @Injectable()
@@ -25,7 +24,7 @@ export class ProfileService implements OnDestroy {
     public address: AddressService
   ) {
     // find default profile
-    this.defaultId().pipe(takeWhile(() => !this.destroyed)).subscribe((id: number) => {
+    this.defaultId().takeWhile(() => !this.destroyed).subscribe((id: number) => {
       this.log.d('setting default profile id to ' + id);
       this.defaultProfileId = id;
     });
@@ -33,32 +32,30 @@ export class ProfileService implements OnDestroy {
 
   list() {
     return this.marketState.observe('profile')
-    .pipe(distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b)));
+    .distinctUntilChanged((a: any, b: any) => JSON.stringify(a) === JSON.stringify(b));
   }
 
   // return the default profile
   default() {
     return new Observable((observer) => {
       this.list()
-      .pipe(map(profiles => profiles.find(profile => profile.name === 'DEFAULT')))
+      .map(profiles => profiles.find(profile => profile.name === 'DEFAULT'))
       .subscribe(defaultProfile => {
         // do a new get request to get the _full_ profile.
         // includes ShippingAddresses, CryptoAddresses etc
-        if (defaultProfile && defaultProfile.id) {
-          this.get(defaultProfile.id).subscribe(full => observer.next(full));
-        }
+        this.get(defaultProfile.id).subscribe(full => observer.next(full));
       })
     });
   }
 
   defaultId(): Observable<number> {
     return this.default()
-    .pipe(map((defaultProfile: any) => defaultProfile.id));
+    .map((defaultProfile: any) => defaultProfile.id);
   }
 
   get(profileIdOrName: number | string): Observable<any> {
     return this.market.call('profile', ['get', profileIdOrName])
-            .pipe(map((data) => new Profile(data)))
+            .map((data) => new Profile(data))
   }
 
   add(profileName: string, profileAddress?: string): Observable<any> {
@@ -67,9 +64,9 @@ export class ProfileService implements OnDestroy {
       params.pop(); // if null pop parent
     }
     return this.market.call('profile', params)
-    .pipe(tap(() => {
+    .do(() => {
       this.refresh();
-    }));
+    });
   }
 
   refresh(): void {

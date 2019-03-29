@@ -44,7 +44,7 @@
       <div class="subtitle">Filter by type</div>
       <mat-card class="filter-card">
         <!-- FIXME: needs connecting to pagination (so that number of results/pages gets updated on selecting some type filter) -->
-        <mat-select class="type-filter" name="type" (selectionChange)="filterType($event)" value="">
+        <mat-select class="type-filter" name="type" (change)="filterType($event)" value="">
           <mat-option value="">All types</mat-option>
           <mat-option value="public">Public</mat-option>
           <mat-option value="private">Private</mat-option>

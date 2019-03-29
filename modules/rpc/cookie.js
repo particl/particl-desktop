@@ -97,7 +97,7 @@ function getAuth(options) {
   }
 
   let auth;
-  var dataDir = getParticlPath(options);
+  var dataDir = options.datadir ? options.datadir : findCookiePath();
   const COOKIE_FILE = dataDir
                     + (options.testnet ? '/testnet' : '')
                     + '/.cookie';
@@ -112,9 +112,4 @@ function getAuth(options) {
   return (auth)
 }
 
-function getParticlPath(options) {
-  return options.datadir ? options.datadir : findCookiePath();
-}
-
 exports.getAuth = getAuth;
-exports.getParticlPath = getParticlPath;

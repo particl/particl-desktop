@@ -7,18 +7,19 @@ const fs   = require('fs');
 const got  = require('got');
 const path = require('path');
 const log  = require('electron-log');
-const branch = require('../../package.json').branch;
 
 const ClientBinariesManager = require('../clientBinaries/clientBinariesManager').Manager;
 const rpc = require('../rpc/rpc');
+
+let options;
 
 // master
 // const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/master/modules/clientBinaries/clientBinaries.json';
 
 // dev
 // const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/develop/modules/clientBinaries/clientBinaries.json';
-const branchName = (branch || 'develop').replace('-', '/');
-const BINARY_URL = `https://raw.githubusercontent.com/particl/particl-desktop/${branchName}/modules/clientBinaries/clientBinaries.json`;
+
+const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/market/modules/clientBinaries/clientBinaries.json';
 
 //const ALLOWED_DOWNLOAD_URLS_REGEX = new RegExp('*', 'i');
 
@@ -26,29 +27,20 @@ class DaemonManager extends EventEmitter {
   constructor() {
     super();
     this._availableClients = {};
-    this.isTestnet = false;
-    this.localPath = app.getPath('userData');
   }
 
   getPath() {
     return this._availableClients['particld'].binPath;
   }
 
-  init(options) {
+  init(_options) {
     log.info('Initializing...');
-    const isTestnet = Boolean(+options.testnet);
-    if (isTestnet) {
-      this.localPath = path.join(this.localPath, 'testnet');
-    }
+    options = _options;
     // TODO: reactivate when prompt user in GUI works
     // check every hour
     // setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
     this._resolveBinPath();
     return this._checkForNewConfig();
-  }
-
-  shutdown() {
-    this.emit('close');
   }
 
   getClient(clientId) {
@@ -59,7 +51,7 @@ class DaemonManager extends EventEmitter {
     log.info('Write new client binaries local config to disk ...');
 
     fs.writeFileSync(
-      path.join(this.localPath, 'clientBinaries.json'),
+      path.join(app.getPath('userData'), 'clientBinaries.json'),
       JSON.stringify(json, null, 2)
     );
   }
@@ -104,7 +96,7 @@ class DaemonManager extends EventEmitter {
       // load the local json
       try {
         localConfig = JSON.parse(
-          fs.readFileSync(path.join(this.localPath, 'clientBinaries.json')).toString()
+          fs.readFileSync(path.join(app.getPath('userData'), 'clientBinaries.json')).toString()
         );
       } catch (err) {
         log.warn(`Error loading local config - assuming this is a first run: ${err}`);
@@ -119,7 +111,7 @@ class DaemonManager extends EventEmitter {
       }
 
       try {
-        skipedVersion = fs.readFileSync(path.join(this.localPath, 'skippedNodeVersion.json')).toString();
+        skipedVersion = fs.readFileSync(path.join(app.getPath('userData'), 'skippedNodeVersion.json')).toString();
       } catch (err) {
         log.info('No "skippedNodeVersion.json" found.');
       }
@@ -208,7 +200,8 @@ class DaemonManager extends EventEmitter {
 
       if (!localConfig) {
         log.info('No config for the ClientBinariesManager could be loaded, using local clientBinaries.json.');
-        const localConfigPath = path.join(this.localPath, 'clientBinaries.json');
+
+        const localConfigPath = path.join(app.getPath('userData'), 'clientBinaries.json');
         localConfig = (fs.existsSync(localConfigPath))
           ? require(localConfigPath)
           : require('../clientBinaries/clientBinaries.json');
@@ -221,7 +214,7 @@ class DaemonManager extends EventEmitter {
       this._emit('scanning', 'Scanning for binaries');
 
       return mgr.init({
-        folders: [ path.join(this.localPath, 'particld', 'unpacked') ]
+        folders: [ path.join(app.getPath('userData'), 'particld', 'unpacked') ]
       })
       .then(() => {
         const clients = mgr.clients;
@@ -229,10 +222,6 @@ class DaemonManager extends EventEmitter {
         this._availableClients = {};
 
         const available = _.filter(clients, c => !!c.state.available);
-
-        this.on('close', () => {
-          mgr.shutdown();
-        });
 
         if (!available.length) {
           if (_.isEmpty(clients)) {
@@ -249,7 +238,7 @@ class DaemonManager extends EventEmitter {
             binariesDownloaded = true;
 
             return mgr.download(c.id, {
-              downloadFolder: this.localPath
+              downloadFolder: path.join(app.getPath('userData'))
               //urlRegex: ALLOWED_DOWNLOAD_URLS_REGEX,
             });
           });
@@ -270,16 +259,23 @@ class DaemonManager extends EventEmitter {
           }
         });
 
+
+        // restart if it downloaded while running
+        // if (restart && binariesDownloaded) {
+        //   log.info('Restarting app ...');
+        //   app.relaunch();
+        //   app.quit();
+        // }
+
         this._emit('done');
 
+        // return this.startDaemon();
       });
     })
     .catch((err) => {
       log.error(err);
 
-      const errMessage = err.message ? err.message : String(err);
-
-      this._emit('error', errMessage);
+      this._emit('error', err.message);
 
       // show error
       if (err.message.indexOf('Hash mismatch') !== -1) {
@@ -294,9 +290,7 @@ class DaemonManager extends EventEmitter {
         });
 
         // throw so the main.js can catch it
-        if (!(err.status && err.status === 'cancel')) {
-          throw err;
-        }
+        throw err;
       }
     });
   }
@@ -323,7 +317,7 @@ class DaemonManager extends EventEmitter {
 
     log.debug(`Platform: ${platform}`);
 
-    let binPath = path.join(this.localPath, 'particld', 'unpacked', 'particld');
+    let binPath = path.join(app.getPath('userData'), 'particld', 'unpacked', 'particld');
 
     if (platform === 'win') {
       binPath += '.exe';

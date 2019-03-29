@@ -2,10 +2,8 @@ const log = require('electron-log');
 const { session } = require('electron')
 const { URL } = require('url')
 
-const config = require('../daemon/daemonConfig');
+const _options = require('../options');
 const cookie = require('../rpc/cookie');
-
-const OPTIONS = config.getConfiguration();
 
 // Modify the user agent for all requests to the following urls.
 const filter = {
@@ -23,13 +21,17 @@ exports.init = function () {
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
         // clone it
         const url = new URL(details.url);
-        const u = url.hostname + ":" + (url.port || 80);
+        const u = url.hostname + ":" + url.port;
 
         if (isWhitelisted(u)) {
             let headers = Object.assign({}, details.requestHeaders);
 
             // get authentication
             let auth = getAuthentication(u);
+
+            if(auth === undefined && u === "localhost:4200") {
+                auth = false;
+            }
 
             if(auth !== undefined) {
                 if (auth === false) {
@@ -61,17 +63,20 @@ function isWhitelisted(url) {
 // Get the right authentication for the right hostname
 // e.g market vs rpc
 function getAuthentication(url) {
-  entry = whitelist.get(url);
-  if (isPlainObject(entry) && 'auth' in entry ) {
-    if (entry.name === 'wallet' && !entry.auth) {
-      // cookie might not be grabbed just yet, so try again..
-      loadWalletAuthentication();
+    entry = whitelist.get(url);
+    if (entry && entry.auth) {
+        return entry.auth;
+    } else {
+        // cookie might not be grabbed just yet, so try again..
+        if (entry.name === "wallet") {
+            loadWalletAuthentication();
+        }
+        return undefined;
     }
-    return entry.auth;
-  }
 }
 
 function loadMarketAuthentication() {
+    let options = _options.get();
     // let key = "dev1.particl.xyz:";
     let key = "localhost:3000";
     let value = {
@@ -83,11 +88,12 @@ function loadMarketAuthentication() {
 }
 
 function loadWalletAuthentication() {
-    let key = (OPTIONS.rpcbind || 'localhost') + ":" + OPTIONS.port;
+    let options = _options.get();
+    let key = (options.rpcbind || 'localhost') + ":" + options.port;
     console.log('adding key=' + key);
     let value = {
         name: "wallet",
-        auth: cookie.getAuth(OPTIONS)
+        auth: cookie.getAuth(options)
     }
 
     whitelist.set(key, value);
@@ -95,12 +101,13 @@ function loadWalletAuthentication() {
 
 // when restarting, delete authentication
 exports.removeWalletAuthentication = () => {
-    let key = (OPTIONS.rpcbind || 'localhost') + ":" + OPTIONS.port;
+    let options = _options.get();
+    let key = (options.rpcbind || 'localhost') + ":" + options.port;
     whitelist.get(key).auth = undefined;
 }
 
 function loadDev() {
-  if (OPTIONS.dev === true) {
+    let options = _options.get();
     let key = 'localhost:4200';
     let value = {
         name: "dev",
@@ -108,7 +115,6 @@ function loadDev() {
     }
 
     whitelist.set(key, value);
-  }
 }
 
 function loadGithub() {
@@ -119,8 +125,4 @@ function loadGithub() {
     }
 
     whitelist.set(key, value);
-}
-
-function isPlainObject(obj) {
-  return Object.prototype.toString.call(obj) === '[object Object]';
 }

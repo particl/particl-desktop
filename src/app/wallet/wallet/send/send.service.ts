@@ -9,7 +9,6 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 /* fix wallet */
 import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
 import { TransactionBuilder } from './transaction-builder.model';
-import { map, take } from 'rxjs/operators';
 
 /*
   Note: due to upcoming multiwallet, we should never ever store addresses in the GUI for transaction purposes.
@@ -24,6 +23,7 @@ export class SendService {
   constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService,
               private dialog: MatDialog) {
+
   }
 
   /* Sends a transaction */
@@ -40,7 +40,7 @@ export class SendService {
     tx.estimateFeeOnly = true;
     if (!tx.toAddress) {
       return new Observable((observer) => {
-        this.getDefaultStealthAddress().pipe(take(1)).subscribe(
+        this.getDefaultStealthAddress().take(1).subscribe(
           (stealthAddress: string) => {
             // set balance transfer stealth address
             tx.toAddress = stealthAddress;
@@ -51,8 +51,8 @@ export class SendService {
           });
       });
     } else {
-      return this.send(tx)
-      .pipe(map(fee => fee));
+      return this.send(tx).map(
+        fee => fee);
     }
   }
 
@@ -60,7 +60,7 @@ export class SendService {
     tx.estimateFeeOnly = false;
 
     // get default stealth address
-    this.getDefaultStealthAddress().pipe(take(1)).subscribe(
+    this.getDefaultStealthAddress().take(1).subscribe(
       (stealthAddress: string) => {
         this.log.d('got transferBalance, sx' + stealthAddress);
         tx.toAddress = stealthAddress;
@@ -79,8 +79,8 @@ export class SendService {
    * Retrieve the first stealth address.
    */
   private getDefaultStealthAddress(): Observable<string> {
-    return this._rpc.call('liststealthaddresses', null)
-    .pipe(map(list => list[0]['Stealth Addresses'][0]['Address']));
+    return this._rpc.call('liststealthaddresses', null).map(
+      list => list[0]['Stealth Addresses'][0]['Address']);
   }
 
   /**
@@ -106,15 +106,7 @@ export class SendService {
   }
 
   private rpc_send_failed(message: string, address?: string, amount?: number) {
-    const idx = message.indexOf(']'); // End brancket of string like '[wallet.dat] ...'
-    let msg = '';
-    if (idx > -1) {
-      msg = message.substring(idx + 1);
-    } else {
-      msg = message;
-    }
-
-    this.flashNotification.open(`Transaction failed: ${msg}`, 'err');
+    this.flashNotification.open(`Transaction Failed ${message}`, 'err');
     this.log.er('rpc_send_failed, failed to execute transaction!');
     this.log.er(message);
 

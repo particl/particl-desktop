@@ -77,16 +77,10 @@
   .price {
     font-weight: 500;
     font-size: 13px;
-    .point,
-    .small {
-      @extend %lighter;
-      font-size: 11px;
-    }
     .mat-icon {
       font-size: 11px;
       position: relative;
       top: 1px;
-      margin-left: 4px;
     }
   }
   button.to-cart {

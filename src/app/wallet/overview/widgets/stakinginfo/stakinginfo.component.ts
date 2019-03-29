@@ -3,7 +3,6 @@ import { Log } from 'ng2-logger';
 
 import { RpcStateService } from '../../../../core/core.module';
 import { Amount, Duration } from '../../../../core/util/utils';
-import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stakinginfo',
@@ -36,7 +35,7 @@ export class StakinginfoComponent implements OnDestroy {
 
     this.log.d(`constructor, started`);
     this.rpcState.observe('getstakinginfo', 'percentyearreward')
-    .pipe(takeWhile(() => !this.destroyed))
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting curStakeReward ${success}`);
@@ -46,7 +45,7 @@ export class StakinginfoComponent implements OnDestroy {
       error => this.log.er('Constructor, percentyearreward error:' + error));
 
     this.rpcState.observe('getstakinginfo', 'weight')
-    .pipe(takeWhile(() => !this.destroyed))
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting weight ${success}`);
@@ -57,7 +56,7 @@ export class StakinginfoComponent implements OnDestroy {
       () => this.log.d('state observe weight completed!'));
 
     this.rpcState.observe('getstakinginfo', 'netstakeweight')
-    .pipe(takeWhile(() => !this.destroyed))
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting netstakeweight ${success}`);
@@ -66,7 +65,7 @@ export class StakinginfoComponent implements OnDestroy {
       error => this.log.er('Constructor, netstakeweight error:' + error));
 
     this.rpcState.observe('getstakinginfo', 'moneysupply')
-    .pipe(takeWhile(() => !this.destroyed))
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting moneysupply ${success}`);
@@ -76,7 +75,7 @@ export class StakinginfoComponent implements OnDestroy {
       error => this.log.er('Constructor, moneysupply error:' + error));
 
     this.rpcState.observe('getstakinginfo', 'expectedtime')
-    .pipe(takeWhile(() => !this.destroyed))
+    .takeWhile(() => !this.destroyed)
     .subscribe(
       success => {
         this.log.d(`setting expectedtime ${success}`);

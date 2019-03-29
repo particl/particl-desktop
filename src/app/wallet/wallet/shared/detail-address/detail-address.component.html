@@ -28,7 +28,7 @@
     </div><!-- .address-label -->
 
     <!-- Address string -->
-    <div class="address address-string" fxLayout="row wrap" fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
+    <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
       <div *ngFor="let word of selected?.readable" class="address-word" fxFlex="11.111">
         {{ word }}
       </div>

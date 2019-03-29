@@ -13,27 +13,27 @@
   </div><!-- .page-intro -->
 
   <div class="row" [formGroup]="proposalFormGroup">
-
+  
     <div class="column">
-
+  
       <mat-card>
         <div class="title">Proposal details</div>
-
+  
         <mat-form-field class="full-width">
           <input matInput #title placeholder="Proposal's title" formControlName="title">
-          <mat-hint align="end">{{ title.value?.length || 0 }} / 50</mat-hint>
+          <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
         </mat-form-field>
-
+  
         <mat-form-field class="full-width">
           <textarea matInput #description rows="25" placeholder="Description" formControlName="description"></textarea>
-          <mat-hint align="end">{{ description.value?.length || 0 }} / 2000</mat-hint>
+          <mat-hint align="end">{{ description.value?.length || 0 }}/2000</mat-hint>
         </mat-form-field>
-
+  
         <p class="widget-help">
           Objectively describe your proposal in detail; explain what to change, how to do it and why.
         </p>
       </mat-card>
-
+      
       <!-- <mat-card>
         <div class="title TO_DO">Voting period</div>
         <p>
@@ -58,34 +58,33 @@
           Note: 1 day equals to approx. 670 blocks. Current block: <strong class="TO_DO">XXXXXX</strong>
         </p>
       </mat-card> -->
-
+  
     </div><!-- .column -->
-
-
+    
+  
     <div class="column">
-
+      
       <mat-card>
         <div class="title">
           Voting options
-          <button [disabled]="proposalFormGroup.controls.options['length'] >= 5" (click)="addNewInputField()" mat-button color="basic" class="small">
+          <button [disabled]="proposalFormGroup.controls.options.length >= 5" (click)="addNewInputField()" mat-button color="basic" class="small">
             <!-- TODO: allow max of 5 options total -->
             <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
             Add new option
           </button>
         </div>
-
+  
         <!-- voting options -->
         <div formArrayName="options">
           <div class="voting item" [formGroupName]="i"
-          *ngFor="let option of proposalFormGroup.controls.options['controls']; let i = index">
+          *ngFor="let option of proposalFormGroup.controls.options.controls; let i = index">
             <span class="no">{{i+1}}</span>
             <div class="content">
               <mat-form-field class="full-width">
-                <input matInput placeholder="Option #{{i+1}}" formControlName="option" maxlength="50">
-                <mat-hint align="end">{{ option.value?.option?.length || 0 }} / 50</mat-hint>
+                <input matInput placeholder="Option #{{i+1}}" formControlName="option">
               </mat-form-field>
             </div>
-
+  
             <!-- remove button only visible from 3rd option -->
             <div class="remove-option" *ngIf="i > 1">
               <button (click)="removeInputField(i)" mat-button class="small" color="warn" matTooltip="Remove option" matTooltipPosition="before">
@@ -95,12 +94,12 @@
           </div>
         </div>
         <!-- voting options -->
-
+  
         <p class="widget-help">
           Add a minimum of 2 voting options for your proposal. In this case, less is usually more. As such, we recommend a maximum of 5 voting options to be added.
         </p>
       </mat-card>
-
+  
       <!-- <mat-card [formGroup]="infoFormGroup">
         <div class="title">
           Contact information <small>(optional)</small>
@@ -109,7 +108,7 @@
             Add contributor
           </button>
         </div>
-
+  
         <div class="author item TO_DO">
           <span class="no">1</span>
           <div class="content">
@@ -121,7 +120,7 @@
             </mat-form-field>
           </div>
         </div>
-
+  
         <!- FIXME: when clicked on [Add countributor] button, add these: ->
         <!-div class="author item">
           <span class="no">2</span>
@@ -134,12 +133,12 @@
             </mat-form-field>
           </div>
         </div->
-
+  
         <p class="widget-help">
           Including your contact information is optional, but it can help when discussing submitted proposals. For example, users might have unanswered questions or improvements regarding your proposal.
         </p>
       </mat-card> -->
-
+  
       <mat-card class="terms">
         <div class="title">Terms &amp; Conditions</div>
         <ul>
@@ -151,10 +150,10 @@
         </ul>
         <mat-checkbox (change)="isTnCAccepted = !isTnCAccepted">Yes, I understand &amp; agree</mat-checkbox>
       </mat-card>
-
+  
     </div>
-
-
+  
+    
   </div><!-- .container-block -->
 
 </div><!-- .container-block -->

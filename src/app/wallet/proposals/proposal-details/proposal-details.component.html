@@ -13,14 +13,12 @@
     <!-- TODO: only show "blocks-left" on ACTIVE proposals -->
     <div class="blocks-left" *ngIf="selectedTab == 'active'">
       <mat-progress-bar mode="determinate" value="{{proposal?.votingProgressPercentage()}}" matTooltip="Time left for voting" matTooltipPosition="before"></mat-progress-bar>
-      <div *ngIf="proposal?.isExpiredAtValid" class="text">{{proposal?.expiryTimeStamp}} left</div>
-      <div *ngIf="!proposal?.isExpiredAtValid" class="text">Processing...</div>
+      <div class="text">{{proposal?.expiryTimeStamp}} left</div>
     </div>
     <!-- TODO: only show "blocks-left" on PLANNED/future proposals -->
     <div class="blocks-left" *ngIf="selectedTab == 'planned'">
       <mat-progress-bar mode="determinate" value="0" matTooltip="Blocks left until voting starts" matTooltipPosition="before"></mat-progress-bar>
-      <div *ngIf="proposal?.isExpiredAtValid" class="text">{{proposal?.expiryTimeStamp}} left until voting starts</div>
-      <div *ngIf="!proposal?.isExpiredAtValid" class="text">Processing...</div>
+      <div class="text">{{proposal?.expiryTimeStamp}} left until voting starts</div>
     </div>
     <!-- TODO: only show "blocks-left.results" on PAST proposals -->
     <div class="blocks-left results" *ngIf="selectedTab == 'past'">
@@ -75,8 +73,8 @@
         <div class="subtitle">Voting {{selectedTab !== 'planned' ? 'progress' : 'finished'}}</div>
 
         <!-- if someone already voted, show graph: -->
-        <div class="graph" *ngIf="proposalResult?.totalWeight">
-          <nvd3 #chart
+        <div class="graph" *ngIf="proposalResult?.totalVotes">
+          <nvd3
             *ngIf="proposalResult?.graphData && proposalResult?.graphData.length"
             [options]="graphOptions"
             [data]="proposalResult?.graphData">
@@ -84,16 +82,13 @@
         </div>
 
         <!-- if no votes yet, show placeholder: -->
-        <div *ngIf="!proposalResult?.totalWeight" class="graph-placeholder">
+        <div *ngIf="!proposalResult?.totalVotes" class="graph-placeholder">
           <div class="title">No<br>votes<br>{{selectedTab === 'active' ? "yet" : "received"}}</div>
         </div>
 
         <div class="percentage-voted">
           <!-- @TODO may be total vote count replaced with  % of coins voted ? -->
-          <span class="number big">{{proposalResult?.totalCoins.getIntegerPart()}}</span><!--
-        --><span class="point big">{{proposalResult?.totalCoins.dot()}}</span><!--
-        --><small class="number small">{{proposalResult?.totalCoins.getFractionalPart() || ''}}</small>&ensp;
-          {{proposalResult?.totalPercentageText}}
+          <span class="value">{{proposalResult?.totalVotes }}</span>&ensp;{{proposalResult?.totalVotesText}}
         </div>
         <!-- <div class="percentage-voted">
           <!- TODO: implement % of coins voted in total for this proposal ->
@@ -119,7 +114,7 @@
       </mat-form-field>
     </div>
 
-    <button mat-raised-button color="primary" [disabled]="!selectedOption || btnValidate" class="vote-button item" (click)="vote()">
+    <button mat-raised-button color="primary" [disabled]="!selectedOption" class="vote-button item" (click)="vote()">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Vote
     </button>

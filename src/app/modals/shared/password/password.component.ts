@@ -5,7 +5,6 @@ import { IPassword } from './password.interface';
 
 import { RpcService, RpcStateService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
-import { throttle } from 'lodash';
 
 @Component({
   selector: 'app-password',
@@ -18,7 +17,6 @@ export class PasswordComponent implements OnDestroy {
   // UI State
   password: string;
   private destroyed: boolean = false;
-  public isProcessing: boolean = false;
 
   @Input() showPass: boolean = false;
   @Input() label: string = 'Your Wallet password';
@@ -45,14 +43,11 @@ export class PasswordComponent implements OnDestroy {
   @Input() emitUnlock: boolean = false;
   @Output() unlockEmitter: EventEmitter<string> = new EventEmitter<string>();
 
-  private debouncedFunc: Function;
-
   log: any = Log.create('password.component');
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
               private flashNotification: SnackbarService) {
-    this.debouncedFunc = throttle(this.forceEmit, 200, {leading: false, trailing: true});
   }
 
   ngOnDestroy() {
@@ -67,13 +62,10 @@ export class PasswordComponent implements OnDestroy {
   // -- RPC logic starts here --
 
   unlock (): void {
-    if (!this.isProcessing) {
-      this.isProcessing = true;
-      this.debouncedFunc();
-    }
+    this.forceEmit();
   }
 
-  private forceEmit(): void {
+  public forceEmit(): void {
     if (this.emitPassword) {
       // emit password
       this.sendPassword();
@@ -82,8 +74,6 @@ export class PasswordComponent implements OnDestroy {
     if (this.emitUnlock) {
       // emit unlock
       this.rpc_unlock();
-    } else {
-      this.isProcessing = false;
     }
   }
 
@@ -118,30 +108,22 @@ export class PasswordComponent implements OnDestroy {
           // update state
           this._rpcState.stateCall('getwalletinfo');
 
-          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus')
+          let _subs = this._rpcState.observe('getwalletinfo', 'encryptionstatus').skip(1)
             .subscribe(
               encryptionstatus => {
-                this.log.d('rpc_unlock: success: Status value:', encryptionstatus);
-                if (String(encryptionstatus).toLowerCase().includes('unlocked')) {
-                  this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
+                this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
 
-                  // hook for unlockEmitter, warn parent component that wallet is unlocked!
-                  this.unlockEmitter.emit(encryptionstatus);
-                  if (_subs) {
-                    _subs.unsubscribe();
-                    _subs = null;
-                  }
+                // hook for unlockEmitter, warn parent component that wallet is unlocked!
+                this.unlockEmitter.emit(encryptionstatus);
+                if (_subs) {
+                  _subs.unsubscribe();
+                  _subs = null;
                 }
-                this.isProcessing = false;
               });
         },
         error => {
-          this.isProcessing = false;
           this.log.i('rpc_unlock_failed: unlock failed - wrong password?', error);
           this.flashNotification.open('Unlock failed - password was incorrect', 'err');
-        },
-        () => {
-          this.isProcessing = false;
         });
   }
 

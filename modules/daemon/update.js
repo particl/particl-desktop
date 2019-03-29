@@ -1,3 +1,4 @@
+const Observable  = require('rxjs/Observable').Observable;
 const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const log         = require('electron-log');
 
@@ -8,7 +9,7 @@ const UPDATE_CHANNEL = 'daemon';
 let mainReference = null;
 
 exports.init = function (mainWindow) {
-    /*
+    /* 
         Store a reference of the main window (electron),
         which we need for rx-ipc-electron (need to get webContents).
     */
@@ -40,13 +41,5 @@ exports.send = function(data) {
     } catch (error) {
       log.debug("update.send: failed to runCommand (maybe window closed): " + error);
     }
-}
-
-exports.destroy = function() {
-  destroyIpcListener();
-}
-
-function destroyIpcListener() {
-  rxIpc.removeListeners(UPDATE_CHANNEL);
 }
 

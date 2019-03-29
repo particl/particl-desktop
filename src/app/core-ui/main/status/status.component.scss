@@ -10,7 +10,10 @@
 }
 
 .icon {
-  padding: 1px 0 1px 4px;
+  padding: 1px;
+  @include break(l) {
+    padding: 1px 2px;
+  }
 
   // Encryption
   &.encryption {

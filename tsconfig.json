@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "baseUrl": "src",
     "sourceMap": true,
@@ -16,7 +15,6 @@
     "lib": [
       "es2016",
       "dom"
-    ],
-    "module": "es2015"
+    ]
   }
 }

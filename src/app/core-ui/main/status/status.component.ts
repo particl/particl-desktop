@@ -1,14 +1,13 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { Log } from 'ng2-logger';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { RpcService, RpcStateService } from '../../../core/core.module';
 
 import { ConsoleModalComponent } from './modal/help-modal/console-modal.component';
-import { takeWhile } from 'rxjs/operators';
 
 
 @Component({
@@ -39,21 +38,19 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._rpcState.observe('getnetworkinfo', 'connections')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(connections => this.peerListCount = connections);
 
     this._rpcState.observe('getwalletinfo', 'encryptionstatus')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.encryptionStatus = status);
 
     this._rpcState.observe('ui:coldstaking')
-      .pipe(takeWhile(() => !this.destroyed))
+      .takeWhile(() => !this.destroyed)
       .subscribe(status => this.coldStakingStatus = status);
 
     /* Bug: If you remove this line, then the state of 'txcount' doesn't update in the Transaction.service */
-    this._rpcState.observe('getwalletinfo', 'txcount')
-    .pipe(takeWhile(() => !this.destroyed))
-    .subscribe(txcount => { });
+    this._rpcState.observe('getwalletinfo', 'txcount').takeWhile(() => !this.destroyed).subscribe(txcount => { });
   }
 
   ngOnDestroy() {

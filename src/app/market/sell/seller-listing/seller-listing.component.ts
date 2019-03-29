@@ -9,7 +9,6 @@ import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 import { DeleteListingComponent } from '../../../modals/delete-listing/delete-listing.component';
-import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
 import { Template } from 'app/core/market/api/template/template.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
@@ -26,6 +25,7 @@ export class SellerListingComponent {
 
   public status: Status = new Status();
   log: any = Log.create('seller-listing.component');
+  expirationTime: number;
   @Input() listing: Listing;
 
   constructor(
@@ -62,53 +62,22 @@ export class SellerListingComponent {
   }
 
   private postTemplate(template: Template) {
-    this.openProcessingModal();
-    this.template.size(template.id).toPromise()
-      .then(
-        res => {
-          if (!res.fits) {
-            throw new Error('Upload Size Exceeded - Please reduce listing template size');
-          }
-          return true;
-        }
-      ).catch(
-        err => {
-          this.snackbar.open(err);
-          return false;
-        }
-      ).then(
-        success => {
-          this.dialog.closeAll();
 
-          if (!success) {
-            return;
-          }
-
-          this.modals.unlock({timeout: 30},
-            (status) => {
-              this.modals.openListingExpiryModal({template: template}, (expiration: number) => {
-                this.modals.unlock({timeout: 30},
-                  async () => {
-                    this.openProcessingModal();
-                    this.log.d('posting template id: ', template.id);
-                    await this.template.post(template, 1, expiration)
-                      .toPromise()
-                      .catch(err => this.snackbar.open(err))
-                      .then( () => this.dialog.closeAll());
-                  },
-                  () => {
-                    this.dialog.closeAll();
-                  }
-                );
-              });
-            },
-            () => {
-              this.dialog.closeAll();
-            },
-            false
-          );
-        }
-      )
+    this.template.size(template.id).subscribe(res => {
+      if (res.fits) {
+        this.modals.openListingExpiryModal((expirationTime) => {
+          this.expirationTime = expirationTime;
+          this.modals.unlock({ timeout: 30 }, async (status) => {
+            this.log.d('posting template id: ', template.id);
+            await this.template.post(template, 1, this.expirationTime).toPromise();
+          });
+        });
+      } else {
+        this.snackbar.open(`Upload Size Exceeded - Please reduce listing template size`);
+      }
+    }, error => {
+      this.snackbar.open(error);
+    })
   }
 
   addItem(id?: number, clone?: boolean) {
@@ -116,15 +85,5 @@ export class SellerListingComponent {
       queryParams: { 'id': id, 'clone': clone }
     });
   }
-
-  private openProcessingModal() {
-    const dialog = this.dialog.open(ProcessingModalComponent, {
-      disableClose: true,
-      data: {
-        message: 'Hang on, we are busy processing your listing'
-      }
-    });
-  }
-
 
 }

@@ -26,7 +26,7 @@ export class AddProposalComponent implements OnInit {
   public isTnCAccepted: boolean = false;
   // form controls
   public proposalFormGroup: FormGroup;
-  expireIn: number = 2; // days.
+  expireIn: number = 7; // days.
 
   constructor(
     private router: Router,
@@ -91,8 +91,9 @@ export class AddProposalComponent implements OnInit {
   }
 
   submitProposal(): void {
+
     // check wallet status (unlock if locked ?).
-    this.modalService.unlock({timeout: 10}, () => this.proposalTransactionFeeCallback())
+    this.modalService.unlock({timeout: 30}, () => this.proposalTransactionFeeCallback())
   }
 
   proposalTransactionFeeCallback(): void {
@@ -136,10 +137,11 @@ export class AddProposalComponent implements OnInit {
         false,
         ... proposalOptions
       ]).subscribe((response) => {
+        console.log('response', response)
         this.snackbarService.open(
-          'Proposal posted successfully!',
+          'Proposal posted successfully. Your proposal will get published shortly!',
           'info'
-        );
+        )
 
         // redirect to proposals page.
         this.backToProposals();
@@ -147,4 +149,5 @@ export class AddProposalComponent implements OnInit {
         this.snackbarService.open(error, 'warn')
       })
   }
+
 }

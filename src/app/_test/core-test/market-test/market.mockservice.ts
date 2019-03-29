@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { Responses } from 'app/_test/core-test/market-test/mock-data/mock-market.responses';
 
 /*
@@ -24,13 +24,9 @@ export class MockMarketService {
         response = Responses[method][params[0]];
         break;
 
-      case 'item':
-        response = Responses[method][params[0]];
-        break;
-
       default:
         response = []
     }
-    return of(response);
+    return Observable.of(response);
   }
 };

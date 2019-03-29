@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Observer } from 'rxjs';
-import { map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
+import { Observable } from 'rxjs/Rx';
+import { Observer } from 'rxjs/Rx';
 
 
 export interface InternalStateType {
@@ -57,9 +57,9 @@ export class StateService {
     if (subkey) {
       // TODO: maybe check if subkey exists?
       // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
-      observable = observable.pipe(map(key => key[subkey]));
+      observable = observable.map(key => key[subkey]);
     }
-    return observable.pipe(distinctUntilChanged());
+    return observable.distinctUntilChanged();
   }
 
 
@@ -77,7 +77,7 @@ export class StateService {
 
       this._observerPairs[prop].observable = Observable.create(
           _observer => this._observerPairs[prop].observer = _observer
-      ).pipe(shareReplay(1));
+      ).shareReplay(1);
     }
 
     return this._observerPairs[prop];
