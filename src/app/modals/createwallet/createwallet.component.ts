@@ -114,8 +114,12 @@ export class CreateWalletComponent implements OnDestroy {
 
     if (this.validate()) {
       this.validating = false;
-      this.step++;
-      this.doStep();
+      if ((this.step === 6) || (this.step === 7)) {
+        this.step = 7;
+      } else {
+        this.step++;
+        this.doStep();
+      }
     }
 
     this.log.d(`moving to step: ${this.step}`);
@@ -124,7 +128,9 @@ export class CreateWalletComponent implements OnDestroy {
   prevStep(): void {
     this.step--;
     this.errorString = '';
-    this.doStep();
+    if (!this.isRestore) {
+      this.doStep();
+    }
   }
 
   doStep(): void {
@@ -299,7 +305,12 @@ export class CreateWalletComponent implements OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: any) {
     if (event.keyCode === 13) {
-      this.nextStep();
+      if (this.step < 5) {
+        this.nextStep();
+      } else if (this.step === 5) {
+        this.dialogRef.close();
+      }
+
     }
   }
 }

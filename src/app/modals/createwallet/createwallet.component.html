@@ -57,9 +57,9 @@
       </p><!-- validation errors -->
       <mat-form-field>
         <input matInput #nameField #validation="ngModel" [(ngModel)]="name" name="name" placeholder="Wallet name" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)"/>
-      </mat-form-field>      
+      </mat-form-field>
     </mat-dialog-content>
-    
+
     <mat-dialog-actions fxLayoutAlign="space-between center">
       <button mat-button (click)="prevStep()">
         <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
@@ -70,7 +70,7 @@
         Continue
       </button>
     </mat-dialog-actions>
-    
+
   </form>
 </ng-template><!-- step 1 -->
 
@@ -187,6 +187,10 @@
 
     <div class="recovery-password">
       <div class="subtitle">Recovery Password</div>
+      <p class="warning">
+        Wallets created using particl-desktop 1.1.0 did not import with a password due to a bug.
+        Please leave the password field empty if you're restoring a recovery phrase dating from that release.
+      </p>
       <p>
         If you set up a Recovery Password during wallet creation as well, enter it below:
       </p>
@@ -215,20 +219,23 @@
 
 
 <!-- STEP 5: Gratz -->
-<ng-template [ngIf]="step === 5">
+<ng-template [ngIf]="[5, 7].indexOf(step) !== -1">
   <div mat-dialog-title class="title">Your wallet is ready</div>
   <mat-dialog-content class="modal-content">
-    <p>
+    <p *ngIf="step === 5">
       Congratulations &ndash; your new wallet was created successfully and set as the default wallet!
+    </p>
+    <p *ngIf="step === 7">
+      Please wait a moment while we're importing your wallet!
     </p>
     <p class="info">
       Please ensure that your Recovery Phrase (and Passphrase if you set it up) is written down and stored in a secure location!
     </p>
-    <p>
+    <p *ngIf="step === 5">
       You can now safely close this window and start experiencing Particl!
     </p>
   </mat-dialog-content>
-  <mat-dialog-actions fxLayoutAlign="end center">
+  <mat-dialog-actions fxLayoutAlign="end center" *ngIf="step === 5">
     <button mat-raised-button color="primary" mat-dialog-close>
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Close
