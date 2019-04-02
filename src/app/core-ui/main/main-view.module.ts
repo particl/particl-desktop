@@ -33,7 +33,8 @@ import { LoadingPlaceholderComponent } from './loading-placeholder/loading-place
     MainViewComponent,
     PercentageBarComponent,
     CountBadgeComponent,
-    BalanceComponent
+    BalanceComponent,
+    LoadingPlaceholderComponent
   ],
   declarations: [
     MainViewComponent,
