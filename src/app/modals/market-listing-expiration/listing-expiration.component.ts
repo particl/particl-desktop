@@ -25,7 +25,7 @@ export class ListingExpirationComponent {
   expiration: number = 0;
 
   expiredList: Array<ListingExpiryIface> = [
-    { title: '1 day', value: 0, estimateFee: new Amount(0), isDisabled: false },
+    { title: '1 day', value: 1, estimateFee: new Amount(0), isDisabled: false },
     { title: '2 days', value: 2, estimateFee: new Amount(0), isDisabled: false },
 
     /**
