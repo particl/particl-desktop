@@ -60,7 +60,7 @@
       top: 2px;
       // narration icon
       &.narration {
-        margin: 0 0 0 2px;
+        margin: 0 0 0 6px;
         font-size: 12px;
         color: lighten($text-muted, 20%) !important;
         padding: 3px;
@@ -132,6 +132,19 @@
   }
 }
 
+
+.tx-description {
+  @extend %lighter;
+  padding: 16px 24px;
+  font-size: 93%;
+  border-top: 1px solid $bg-shadow;
+  border-bottom: 1px dashed $bg-shadow;
+}
+
+.tx-details {
+  padding: 16px 24px;
+}
+
 // detail item of TX info
 .tx-detail-item {
   padding: 5px 0;
@@ -161,7 +174,6 @@
   .tx-detail-link {
     width: 100%;
     color: $text-muted;
-    font-family: monospace;
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;
