@@ -38,7 +38,7 @@ export class SellerListingComponent {
   ) {}
 
   getStatus(status: string) {
-    return [this.status.get(status)];
+    return [this.status.get('expired')];
   }
 
   confirmDeleteListing(template: Template): void {
