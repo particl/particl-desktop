@@ -1,7 +1,5 @@
 <!-- Placeholder for loading items -->
-<div class="loading transactions" *ngIf="!txService.txs.length && txService.loading">
-  <app-loading-placeholder></app-loading-placeholder>
-</div><!-- .loading.transactions -->
+<app-loading-placeholder *ngIf="!txService.txs.length && txService.loading"></app-loading-placeholder>
 
 <div class="no-results" *ngIf="txService.txs.length === 0 && !txService.loading">
   No transactions yet
