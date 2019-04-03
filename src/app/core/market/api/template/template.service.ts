@@ -6,6 +6,7 @@ import { MarketService } from 'app/core/market/market.service';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
 import { Template } from 'app/core/market/api/template/template.model';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class TemplateService {
@@ -16,7 +17,7 @@ export class TemplateService {
   ) { }
 
   get(templateId: number, returnImageData: boolean = false): Observable<Template> {
-    return this.market.call('template', ['get', templateId, returnImageData]).map(t => new Template(t));
+    return this.market.call('template', ['get', templateId, returnImageData]).pipe(map(t => new Template(t)));
   }
 
   // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
@@ -62,21 +63,21 @@ export class TemplateService {
       }
     const params = ['search', page, pageLimit, direction, sort,  profileId, searchString, category, hashItems];
     return this.market.call('template', params)
-    .map(
+    .pipe(map(
       (templates: any) => {
         return templates.map(t => new Template(t));
       }
-    );
+    ));
   }
 
   post(template: Template, marketId: number, expTime: number, estimateFee: boolean = false) {
     return this.market.call('template', ['post', template.id, expTime, marketId, estimateFee])
-    .do(t => {
+    .pipe(tap(t => {
       if (!estimateFee) {
         this.listingCache.posting(template)
       }
       return t;
-    });
+    }));
   }
 
   size(listingTemplateId: number) {

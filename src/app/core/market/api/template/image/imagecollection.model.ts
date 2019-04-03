@@ -4,7 +4,7 @@ import { ImageItem } from '@ngx-gallery/core';
 export class ImageCollection {
   private default: Image = new DefaultImage();
   private preview: Image;
-  imageItems: any [];
+  imageItems: ImageItem [];
 
   constructor(public images: Image[]) {
     this.setImages();
@@ -21,7 +21,7 @@ export class ImageCollection {
   }
 
   setImageItems(): void {
-    this.imageItems = this.images.map((img) => (new ImageItem(img.medium, img.thumbnail)))
+    this.imageItems = this.images.map((img) => (new ImageItem({src: img.medium, thumb: img.thumbnail})))
   }
 
   setImages() {

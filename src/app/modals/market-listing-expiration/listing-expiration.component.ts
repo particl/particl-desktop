@@ -24,12 +24,14 @@ export class ListingExpirationComponent {
   expiration: number = 0;
 
   expiredList: Array<ListingExpiryIface> = [
-    { title: 'Select expiry time', value: 0, estimateFee: new Amount(0) },
-    { title: '4 day', value: 4, estimateFee: new Amount(0) },
-    { title: '1 week', value: 7, estimateFee: new Amount(0) },
-    { title: '2 weeks', value: 14, estimateFee: new Amount(0) },
-    { title: '3 weeks', value: 21, estimateFee: new Amount(0) },
-    { title: '4 weeks', value: 28, estimateFee: new Amount(0) }
+    { title: '1 day', value: 1, estimateFee: new Amount(0) },
+    { title: '2 days', value: 2, estimateFee: new Amount(0) },
+    // @TODO uncomment the commented code once smsg issue goes fixed.
+    // { title: '4 days', value: 4, estimateFee: new Amount(0) },
+    // { title: '1 week', value: 7, estimateFee: new Amount(0) },
+    // { title: '2 weeks', value: 14, estimateFee: new Amount(0) },
+    // { title: '3 weeks', value: 21, estimateFee: new Amount(0) },
+    // { title: '4 weeks', value: 28, estimateFee: new Amount(0) }
   ];
   callback: Function;
 
@@ -80,9 +82,6 @@ export class ListingExpirationComponent {
   }
 
   loadTransactionFee() {
-    /* @TODO transaction fee will be calculated from backend
-     * currently we have assumed days_retention=1 costs 0.26362200
-     */
     const expiryItem = this.expiredList.find((val) => +val.value === this.expiration);
     this.txFee = expiryItem ?
       `${expiryItem.estimateFee.getIntegerPart()}${expiryItem.estimateFee.dot()}${expiryItem.estimateFee.getFractionalPart()}` :

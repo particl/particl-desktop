@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { RpcStateService } from '../rpc-state/rpc-state.service';

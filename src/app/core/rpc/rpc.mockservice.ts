@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { RpcService } from './rpc.service';
 import { Result } from './rpc.responses';
+import { of } from 'rxjs'
 /*
     This is a fake mock service used for the RpcService.
 */
@@ -18,6 +19,6 @@ export class MockRpcService {
       default:
         break;
     }
-    return Observable.of(json);
+    return of(json);
   }
 };

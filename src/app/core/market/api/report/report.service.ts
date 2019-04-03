@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { MarketService } from 'app/core/market/market.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { takeWhile } from 'rxjs/operators';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class ReportService implements OnDestroy {
     private profile: ProfileService
   ) {
 
-    this.profile.default().takeWhile(() => !this.destroyed).subscribe((prof: any) => {
+    this.profile.default().pipe(takeWhile(() => !this.destroyed)).subscribe((prof: any) => {
       this.defaultProfileId = prof.id;
     });
   }

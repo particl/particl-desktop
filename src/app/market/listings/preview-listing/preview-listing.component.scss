@@ -106,6 +106,7 @@ button.small .mat-icon {
 
   h1 { // product name
     font-size: 1.7em;
+    line-height: 1.4;
   }
 
   // Price info
@@ -125,6 +126,7 @@ button.small .mat-icon {
         .currency {
           font-size: 60%;
           font-weight: 400;
+          margin-left: 0.4rem;
         }
         .mat-icon {
           font-size: 14px;
@@ -185,6 +187,7 @@ p.description {
   &.detailed {
     @extend %enable-select;
     white-space: pre-line;
+    margin: -14px 0;
   }
 }
 
@@ -259,6 +262,7 @@ p.description {
     }
     small.currency {
       font-size: 90%;
+      margin-left: 0.3rem;
     }
   }
 
@@ -283,10 +287,7 @@ mat-dialog-actions {
       line-height: 0;
     }
     button {
-      margin: 0;
-      .mat-icon {
-        margin-right: 4px;
-      }
+      margin: 0 4px 0 0;
     }
   }
   app-favorite { // add/remove from favs icon

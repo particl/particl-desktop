@@ -2,7 +2,7 @@ import {
   Component, EventEmitter, OnDestroy, OnInit, Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -29,6 +29,7 @@ import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checko
 import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
+import { takeWhile, take } from 'rxjs/operators';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
@@ -63,6 +64,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   // stepper form data
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
+  public confirmation: FormGroup;
   public country: string = '';
 
   constructor(// 3rd party
@@ -81,7 +83,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     public countryList: CountryListService,
     public cache: CheckoutProcessCacheService,
     private bid: BidService,
-    private listCache: PostListingCacheService,
+    public listCache: PostListingCacheService,
     public dialog: MatDialog) {
   }
 
@@ -92,7 +94,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.getProfile();
 
     this.cartService.list()
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe((cart: Cart) => {
         /** If we add an item to cart and move the checkout process and complete first two steps,
          * then we are on the third step.
@@ -161,7 +163,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
+    this.cartService.removeItem(shoppingCartId).pipe(take(1)).subscribe(res => {
       this.snackbarService.open('Item successfully removed from cart');
     }, error => this.snackbarService.open(error));
   }
@@ -205,7 +207,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     if (upsert !== undefined) {
       const address = this.shippingFormGroup.value as Address;
-      upsert(address).take(1).subscribe(addressWithId => {
+      upsert(address).pipe(take(1)).subscribe(addressWithId => {
         // we need to retrieve the id of  address we added (new)
         this.select(addressWithId);
       });
@@ -245,7 +247,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   getProfile(): void {
-    this.profileService.default().take(1).subscribe(
+    this.profileService.default().pipe(take(1)).subscribe(
       (profile: any) => {
         this.profile = profile;
         this.log.d('checkout got profile:', this.profile);

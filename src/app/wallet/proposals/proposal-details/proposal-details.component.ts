@@ -15,6 +15,7 @@ import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+import { takeWhile } from 'rxjs/operators';
 import { NvD3Component } from 'ng2-nvd3';
 
 @Component({
@@ -45,17 +46,12 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       legend: {
         maxKeyLength: 35,
         margin: {
-          left: 0,
-          right: 0,
+          left: 200,
+          right: 112,
           top: 5,
           bottom: 5
         },
-        // padding: {
-        //   top: 0,
-        //   bottom: 0,
-        //   right: 5,
-        //   left: 5
-        // }
+        rightAlign: true
       },
       color: ['#02E8B0', '#ec4b50', '#108cda', '#f1cc00', '#7e6c95'], // green, red, blue, yellow, violet
       tooltip: {
@@ -89,7 +85,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   getVoteDetails(): void {
     this.proposalService.get(this.proposal.hash)
-    .takeWhile(() => !this.destroyed)
+    .pipe(takeWhile(() => !this.destroyed))
     .subscribe((voteDetail: VoteDetails) => {
       this.voteDetails = voteDetail;
       this.aleradyVoted = true;
@@ -100,7 +96,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
 
   getProposalResult(): void {
     this.proposalService.result(this.proposal.hash)
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe((result: ProposalResult) => {
         if (result) {
           this.proposalResult = result;

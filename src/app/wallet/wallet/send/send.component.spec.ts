@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { CoreModule } from '../../../core/core.module';
+import { CoreModule, RpcService, RpcStateService } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../modals/modals.module';
 
@@ -12,8 +12,8 @@ import { SharedModule } from '../../shared/shared.module'; // is this even neede
 import { SendComponent } from './send.component';
 import { SendService } from 'app/wallet/wallet/send/send.service';
 
-import { RpcService } from '../../../core/core.module';
 import { RpcMockService } from '../../../_test/core-test/rpc-test/rpc-mock.service';
+import { RpcStateServiceMock } from '../../../_test/core-test/rpc-test/rpc-state-mock.service';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -32,7 +32,8 @@ describe('SendComponent', () => {
       ],
       providers: [
         SendService,
-        {provide: RpcService, useClass: RpcMockService},
+        {provide: RpcStateService, useClass: RpcStateServiceMock },
+        {provide: RpcService, useClass: RpcMockService },
         { provide: MatDialogRef },
 
       ]
