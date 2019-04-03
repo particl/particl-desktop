@@ -65,7 +65,7 @@ export class ListingExpirationComponent {
   setData(data: ListingExpiryConfig, callback: Function): void {
     this.callback = callback;
     for (const expiredItem of this.expiredList) {
-      if (expiredItem.value > 0) {
+      if (!expiredItem.isDisabled && expiredItem.value > 0) {
         this.templateService
           .post(data.template, 1, expiredItem.value, true)
           .toPromise().then(
