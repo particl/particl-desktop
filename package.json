@@ -182,7 +182,7 @@
     "electron-builder": "^20.38.5",
     "htmlhint": "^0.9.13",
     "iso3166-2-db": "^2.2.1",
-    "jasmine-core": "^2.99.1",
+    "jasmine-core": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.0",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
