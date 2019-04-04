@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { Bid } from '../api/bid/bid.model';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class AddToCartCacheService implements OnDestroy {
@@ -16,7 +17,7 @@ export class AddToCartCacheService implements OnDestroy {
   ) {
     this.update();
     // subscribe to changes
-    this.getBids().takeWhile(() => !this.destroyed).subscribe(orders => {
+    this.getBids().pipe(takeWhile(() => !this.destroyed)).subscribe(orders => {
       this.orders = orders;
     });
    }

@@ -2,6 +2,7 @@
 
 .balance {
   @extend %enable-select;
+  display: inline-block;
   padding-top: 7px;
   & > .number {
     color: $text;
@@ -24,7 +25,16 @@
   }
   & > .description {
     color: $text-muted;
-    text-transform: uppercase;
     margin-top: 6px;
   }
+
+  // Balance preview in sidebar
+  &.in-sidebar {
+    padding: 0;
+    small {
+      @extend %lighter;
+      font-weight: 400;
+    }
+  }
+
 }

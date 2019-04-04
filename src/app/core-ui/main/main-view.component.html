@@ -4,6 +4,20 @@
 
     <div class="logo">
       <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
+      <table class="balances" cellspacing="0">
+        <tr>
+          <th>Spendable</th>
+          <td><app-balance type="actual_balance" [inSidebar]="true"></app-balance></td>
+        </tr>
+        <tr>
+          <th>Locked</th>
+          <td><app-balance type="locked_balance" [inSidebar]="true"></app-balance></td>
+        </tr>
+        <tr>
+          <th>Public balance</th>
+          <td><app-balance type="balance" [inSidebar]="true"></app-balance></td>
+        </tr>
+      </table>
     </div>
 
     <mat-divider></mat-divider>
@@ -238,9 +252,9 @@
   <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
 
     <div class="left" fxFlex="1 1 40%">
-      <button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
+      <!--button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
         <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-      </button>
+      </button-->
       <div class="title">
         {{ title }}
       </div>

@@ -6,6 +6,7 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+import { take } from 'rxjs/operators';
 
 
 
@@ -54,7 +55,7 @@ export class BuyComponent implements OnInit {
       }
 
       favorites.forEach(favorite => {
-        this.listingService.get(favorite.listingItemId).take(1).subscribe(listing => {
+        this.listingService.get(favorite.listingItemId).pipe(take(1)).subscribe(listing => {
           temp.push(listing);
           // little cheat here, because async behavior
           // we're setting the pointer to our new temp array every time we receive
