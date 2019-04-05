@@ -169,6 +169,8 @@ a.sidebar-item-link {
   }
   .sidebar-menu {
     flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .logo {

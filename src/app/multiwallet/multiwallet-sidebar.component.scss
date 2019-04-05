@@ -32,16 +32,22 @@
   .buttons {
     flex: 1 1 10px;
     .mat-button {
-      margin: 6px 10px 0;
-      opacity: 0.25;
+      width: 34px;
+      margin: 6px 0 0;
       padding: 0;
+      text-align: center;
+      opacity: 0.25;
       &:hover {
         opacity: 1;
         color: $color-white;
       }
-      .mat-icon {
-        margin: 0;
-      }
     }
+  }
+}
+
+.mat-button,
+.mat-raised-button {
+  .mat-icon {
+    margin: 0;
   }
 }
