@@ -2,7 +2,8 @@
 <mat-sidenav-container fullscreen [ngClass]="{'with-top-notification': showAnnouncements}">
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
 
-    <multiwallet-sidebar></multiwallet-sidebar>
+    <multiwallet-sidebar class="sidebar-multiwallet"></multiwallet-sidebar>
+
     <div class="sidebar-menu">
       <div class="logo">
         <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">

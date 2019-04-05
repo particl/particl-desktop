@@ -157,13 +157,19 @@ a.sidebar-item-link {
   width: $sidebar-width;
   background-color: $bg-black;
   color: $color-white;
-  // display: flex;
-
-  // multiwallet-sidebar {
-  //   flex: 0 0 30px;
-  //   // display: flex;
-  //   text-align: center;
-  // }
+  display: flex;
+  .mat-drawer-inner-container {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .sidebar-multiwallet {
+    flex: 0 0 30px;
+    position: sticky;
+    top: 0;
+  }
+  .sidebar-menu {
+    flex: 1 1 100%;
+  }
 
   .logo {
     flex: 0 0 50px;

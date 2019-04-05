@@ -440,7 +440,7 @@ mat-card.mat-card {
   &.sidebar { // app's sidebar, dark main menu
     .mat-drawer-inner-container {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
     }
   }
 }
