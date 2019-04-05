@@ -11,7 +11,9 @@
 
   <div class="row" fxLayout fxLayoutAlign="center center">
     <mat-form-field class="full-width" fxFlex="50%">
-      <mat-select [(ngModel)]="expiration" (change)="loadTransactionFee()">
+      <mat-label>Select expiry time</mat-label>
+      <mat-select [(value)]="expiration" (selectionChange)="loadTransactionFee()">
+        <mat-option>None</mat-option>
         <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
           {{ expire.title }}
         </mat-option>

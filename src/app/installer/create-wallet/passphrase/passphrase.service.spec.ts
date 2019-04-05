@@ -2,14 +2,15 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { SharedModule } from '../../../wallet/shared/shared.module';
 import { CoreModule} from '../../../core/core.module';
-import { PassphraseService } from './passphrase.service';
+import { ModalsModule, PassphraseService } from '../../modals.module';
 
 describe('PassphraseService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        CoreModule.forTest()
+        CoreModule.forRoot(),
+        ModalsModule.forRoot()
       ],
       providers: [PassphraseService]
     });

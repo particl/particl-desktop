@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { RpcService } from 'app/core/rpc/rpc.service';
+import { RpcService } from '../../../core/core.module';
 
 import { Log } from 'ng2-logger';
+import { catchError, tap } from 'rxjs/operators';
 
 
 @Injectable()
@@ -21,7 +22,7 @@ export class PassphraseService {
   */
   generateMnemonic() {
     return this._rpc.call('mnemonic', ['new'])
-      .catch(error => Array(24).fill('error'));
+      .pipe(catchError(error => Array(24).fill('error')));
   }
 
   validateWord(word: string): boolean {
@@ -43,8 +44,7 @@ export class PassphraseService {
     if (!password) {
       params.pop();
     }
-    return this._rpc.call('extkeygenesisimport', params)
-    .do(() => this.generateDefaultAddresses());
+    return this._rpc.call('extkeygenesisimport', params).pipe(tap(() => this.generateDefaultAddresses()));
   }
 
   generateDefaultAddresses() {

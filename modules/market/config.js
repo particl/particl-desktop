@@ -1,3 +1,3 @@
 module.exports = {
-  marketWallet: "Market"
+  allowedWallets: ["Market"]
 }

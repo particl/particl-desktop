@@ -1,9 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { CoreModule } from '../../../core/core.module';
 import { AnnouncementNotificationComponent } from './announcement-notification.component';
-import { MainViewModule } from '../main-view.module';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('AnnouncementNotificationComponent', () => {
@@ -13,9 +11,7 @@ describe('AnnouncementNotificationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         CoreModule.forRoot(),
-        MainViewModule,
         HttpClientModule
       ]
     })

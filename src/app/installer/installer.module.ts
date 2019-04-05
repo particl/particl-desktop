@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ClipboardModule } from 'ngx-clipboard/dist/src/ngx-clipboard';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { MaterialModule } from 'app/core-ui/material/material.module';
 import { DirectiveModule } from 'app/core-ui/directive/directive.module';

@@ -26,7 +26,7 @@ export class ReportComponent {
     }
   })
   @Input() listing: Listing;
-  @Input() from: boolean;
+  @Input() from: string;
   constructor(
     public reportService: ReportService,
     private modals: ModalsHelperService,

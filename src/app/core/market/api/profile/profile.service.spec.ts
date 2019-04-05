@@ -3,13 +3,11 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MarketModule } from '../../market.module';
 
 import { ProfileService } from './profile.service';
-import { CoreModule } from 'app/core/core.module';
 
 describe('ProfileService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        CoreModule.forTest(),
         MarketModule.forRoot()
       ],
       providers: [ProfileService]

@@ -15,14 +15,14 @@ import { ZapColdstakingComponent } from './overview/widgets/coldstake/zap-coldst
 import { RevertColdstakingComponent } from './overview/widgets/coldstake/revert-coldstaking/revert-coldstaking.component';
 import { HelpComponent } from './help/help.component';
 
-import 'hammerjs';
-
-import { routing } from './wallet.routing';
+import { wallet_routing } from './wallet.routing';
 import { ProposalDetailsComponent } from './proposals/proposal-details/proposal-details.component';
+import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
 
 
 @NgModule({
   declarations: [
+    BalanceComponent,
     OverviewComponent,
     SettingsComponent,
     ProposalsComponent,
@@ -36,10 +36,10 @@ import { ProposalDetailsComponent } from './proposals/proposal-details/proposal-
   ],
   imports: [
     CommonModule,
-    routing,
     SharedModule,
     WalletModule.forRoot(),
-    CoreUiModule
+    CoreUiModule,
+    wallet_routing
   ],
   entryComponents: [
     ZapColdstakingComponent,

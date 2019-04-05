@@ -20,7 +20,6 @@ import { DeleteListingComponent } from './delete-listing/delete-listing.componen
 /* shared in modals */
 import { PasswordComponent } from './shared/password/password.component';
 
-import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 
@@ -79,8 +78,7 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
   ],
   providers: [
     // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
-    ModalsHelperService,
-    SnackbarService
+    ModalsHelperService
   ],
   entryComponents: [
     DaemonComponent,
@@ -95,7 +93,7 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     PlaceOrderComponent,
     ReportModalComponent,
     ShippingComponent,
-    ColdstakeComponent,
+    // ColdstakeComponent,
     SendConfirmationModalComponent,
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
@@ -110,10 +108,11 @@ export class ModalsModule {
     return {
       ngModule: ModalsModule,
       providers: [
-        ModalsHelperService
+        // ModalsHelperService
       ]
     };
   }
 }
 
 export { ModalsHelperService } from './modals-helper.service';
+

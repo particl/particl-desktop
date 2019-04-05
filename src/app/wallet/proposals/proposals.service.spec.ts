@@ -39,7 +39,6 @@ describe('ProposalsService', async () => {
   it('should list method return the proposals list', inject([ProposalsService], async (service: ProposalsService) => {
     const startTime = new Date();
     const endTime = '*';
-    await service.start();
     const proposals = await service.list(startTime, endTime).toPromise();
     expect(proposals).not.toBe(undefined);
     expect(proposals.length).toEqual(5);

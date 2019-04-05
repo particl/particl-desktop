@@ -14,8 +14,7 @@ describe('TimeoffsetComponent', () => {
       imports: [
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
-      ],
-      declarations: [TimeoffsetComponent]
+      ]
     })
     .compileComponents();
   }));

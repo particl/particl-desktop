@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material';
 
 import { CoreModule } from '../../../../../core/core.module';
@@ -8,7 +7,6 @@ import { ModalsModule } from '../../../../../modals/modals.module';
 import { CoreUiModule } from '../../../../core-ui.module';
 
 import { ConsoleModalComponent } from './console-modal.component';
-import { DirectiveModule } from 'app/core-ui/directive/directive.module';
 
 describe('ConsoleModalComponent', () => {
   let component: ConsoleModalComponent;
@@ -24,18 +22,15 @@ describe('ConsoleModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        CoreUiModule.forRoot(),
-        DirectiveModule
+        CoreUiModule.forRoot()
       ],
       providers: [
         /* deps */
         { provide: MatDialogRef}
-      ],
-      declarations: [ConsoleModalComponent]
+        ]
     })
     .compileComponents();
   }));

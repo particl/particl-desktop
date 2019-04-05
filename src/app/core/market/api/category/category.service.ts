@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject, Subscription } from 'rxjs'
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
 
@@ -8,21 +7,25 @@ import { Category } from 'app/core/market/api/category/category.model';
 
 @Injectable()
 export class CategoryService {
-
   private categories: BehaviorSubject<Category> = new BehaviorSubject(null);
+
   private category$: Subscription;
 
   constructor(private market: MarketService) {}
 
   start() {
+    this.loadCategories();
+  }
+
+  loadCategories () {
     this.category$ = this.market.call('category', ['list']).subscribe(
       resp => {
         if (resp && resp.name) {
           this.categories.next(new Category(resp));
         }
       },
-      () => {
-        // Failed to fetch categories
+      (error) => {
+        this.loadCategories();
       }
     )
   }

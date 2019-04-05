@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ModalsModule } from '../../modals/modals.module';
 import { SharedModule } from '../shared/shared.module';
@@ -23,7 +22,6 @@ describe('OverviewComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
         SharedModule,
         WalletModule.forRoot(),
         CoreModule.forRoot(),

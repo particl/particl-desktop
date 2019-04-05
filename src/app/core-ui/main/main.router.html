@@ -2,14 +2,24 @@
 <mat-sidenav-container fullscreen [ngClass]="{'with-top-notification': showAnnouncements}">
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
 
-    <!-- Multiwallet sidebar for changing wallets & creating new ones. -->
     <multiwallet-sidebar></multiwallet-sidebar>
-
-    <!-- Main sidebar for menu, error/info messages and syncing -->
     <div class="sidebar-menu">
-
       <div class="logo">
         <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
+        <table class="balances" cellspacing="0">
+          <tr>
+            <th>Spendable</th>
+            <td><app-balance type="actual_balance" [inSidebar]="true"></app-balance></td>
+          </tr>
+          <tr>
+            <th>Locked</th>
+            <td><app-balance type="locked_balance" [inSidebar]="true"></app-balance></td>
+          </tr>
+          <tr>
+            <th>Public balance</th>
+            <td><app-balance type="balance" [inSidebar]="true"></app-balance></td>
+          </tr>
+        </table>
       </div>
 
       <mat-divider></mat-divider>
@@ -37,7 +47,7 @@
                 <mat-list class="sidebar-item-group">
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'market/overview'">
+                    routerLinkActive="active" routerLink="market/listings">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-listings"></mat-icon>
@@ -46,7 +56,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'market/buy'">
+                    routerLinkActive="active" routerLink="market/buy">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-bag-buy"></mat-icon>
@@ -56,7 +66,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'market/sell'">
+                    routerLinkActive="active" routerLink="market/sell">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-bag-sell"></mat-icon>
@@ -79,7 +89,7 @@
                 <mat-list class="sidebar-item-group">
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'wallet/send'">
+                    routerLinkActive="active" routerLink="wallet/send">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-send"></mat-icon>
@@ -88,7 +98,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'wallet/receive'">
+                    routerLinkActive="active" routerLink="wallet/receive">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-receive"></mat-icon>
@@ -97,7 +107,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'wallet/history'">
+                    routerLinkActive="active" routerLink="wallet/history">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon"
                         fontSet="partIcon" fontIcon="part-date"></mat-icon>
@@ -106,7 +116,7 @@
                   </a>
 
                   <a class="sidebar-item-link"
-                    routerLinkActive="active" [routerLink]="'wallet/address-book'">
+                    routerLinkActive="active" routerLink="wallet/address-book">
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-people"></mat-icon>
@@ -132,17 +142,6 @@
             </a>
           </mat-list><!-- .sidebar-item-group -->
         </mat-content><!-- .sidebar-section -->
-
-        <!--mat-content class="sidebar-section">
-          <mat-list class="sidebar-item-group">
-            <a class="sidebar-item-link" routerLinkActive="active" routerLink="wallet/settings">
-              <mat-list-item class="sidebar-item">
-                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
-                <span class="text">Settings</span>
-              </mat-list-item>
-            </a>
-          </mat-list>
-        </mat-content-->
 
         <mat-content class="sidebar-section">
           <mat-list class="sidebar-item-group">
@@ -200,10 +199,11 @@
         <app-version [daemonVersion]="daemonVersion"></app-version>
 
         <!-- Sync progress -->
-        <app-percentage-bar #progress (click)="syncScreen()"></app-percentage-bar>
+        <block-sync-bar #progress (click)="syncScreen()"></block-sync-bar>
 
       </footer><!-- .pin-to-bottom -->
-    </div><!-- .sidebar-menu -->
+    </div>
+
   </mat-sidenav><!-- .sidebar -->
 
 
@@ -216,9 +216,9 @@
   <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
 
     <div class="left" fxFlex="1 1 40%">
-      <button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
+      <!--button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
         <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-      </button>
+      </button-->
       <div class="title">
         {{ title }}
       </div>

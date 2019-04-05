@@ -1,15 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs';
+import { Observable, interval } from 'rxjs';
 import { Log } from 'ng2-logger';
-import { HttpClient } from '@angular/common/http';
 import * as _ from 'lodash';
+import { distinctUntilChanged, tap, map, takeWhile, take } from 'rxjs/operators';
 import { RpcService } from 'app/core/rpc/rpc.service';
+import { Router } from '@angular/router';
 
 export interface IWallet {
   name: string;
+  fakename: string;
   displayname: string;
   alreadyLoaded?: boolean;
 }
@@ -21,7 +21,7 @@ export class MultiwalletService implements OnDestroy {
   );
   private destroyed: boolean = false;
 
-  private timer: any = Observable.interval(1000);
+  private timer: any = interval(1000);
   private _list: BehaviorSubject<Array<IWallet>> = new BehaviorSubject([]);
 
   constructor(
@@ -35,23 +35,28 @@ export class MultiwalletService implements OnDestroy {
    * New ones added or deleted ones.
    */
   private listen() {
-    this.timer.takeWhile(() => !this.destroyed).subscribe(() => {
+    // http request
+    // subscribe to server side stream
+    // and load the wallets in _list.
+    this.timer.pipe(takeWhile(() => !this.destroyed)).subscribe(() => {
       this._rpc.call('listwalletdir', [])
-        .map((response: any) => {
-          // Detect deleting of wallet in directory
-          if (!_.some(response.wallets, { 'name': this._rpc.wallet })) {
-            this._router.navigate(['/loading'], {
-              queryParams: { wallet: '' }
+        .pipe(
+          map((response: any) => {
+            if (!_.some(response.wallets, { 'name': this._rpc.wallet })) {
+              this._router.navigate(['/loading'], {
+                queryParams: { wallet: '' }
+              });
+            }
+            response.wallets.forEach(wallet => {
+              wallet.displayname = !wallet.name ? 'Default Wallet' : wallet.name;
             });
-          }
-          response.wallets.forEach(wallet => {
-            wallet.displayname = !wallet.name ? 'Default Wallet' : wallet.name;
-          });
-          return _.orderBy(response.wallets, 'name', 'asc');
-        })
+            return _.orderBy(response.wallets, 'name', 'asc');
+          })
+        )
         .subscribe(
           (wallets: IWallet[]) => this._list.next(wallets),
-          error => this.log.er('listwalletdir: ', error))
+          (error) => this.log.er('listwalletdir: ', error)
+        );
     });
   }
 
@@ -61,7 +66,7 @@ export class MultiwalletService implements OnDestroy {
   get list(): Observable<Array<IWallet>> {
     return this._list
       .asObservable()
-      .distinctUntilChanged((x, y: any) => _.isEqual(x, y)); // deep compare
+      .pipe(distinctUntilChanged((x, y: any) => _.isEqual(x, y))); // deep compare
   }
 
   /**
@@ -69,8 +74,10 @@ export class MultiwalletService implements OnDestroy {
    */
   get(w: string): Observable<IWallet> {
     return this.list
-      .map(wallets => wallets.find(wallet => wallet.name === w))
-      .take(1);
+      .pipe(
+        map(wallets => wallets.find(wallet => wallet.name === w)),
+        take(1)
+      );
   }
 
   ngOnDestroy() {

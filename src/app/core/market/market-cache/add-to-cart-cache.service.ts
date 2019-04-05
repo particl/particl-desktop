@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 
-import { Bid } from '../api/bid/bid.model';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Subscription } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class AddToCartCacheService implements OnDestroy {
@@ -21,7 +21,7 @@ export class AddToCartCacheService implements OnDestroy {
   start() {
     this.update();
     // subscribe to changes
-    this.profile$ = this.getBids().takeWhile(() => !this.destroyed).subscribe(orders => {
+    this.profile$ = this.getBids().pipe(takeWhile(() => !this.destroyed)).subscribe(orders => {
       this.orders = orders;
     });
   }

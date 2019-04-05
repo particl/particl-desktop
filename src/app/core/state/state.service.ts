@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Rx';
-import { Observer } from 'rxjs/Rx';
+import { Observable, Observer } from 'rxjs';
+import { map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 
 
 export interface InternalStateType {
@@ -52,16 +52,6 @@ export class StateService {
     return state;
   }
 
-  observe(prop: string, subkey?: string) {
-    let observable = this._getObservablePair(prop).observable;
-    if (subkey) {
-      // TODO: maybe check if subkey exists?
-      // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
-      observable = observable.map(key => key[subkey]);
-    }
-    return observable.distinctUntilChanged();
-  }
-
   clear() {
     Object.keys(this._observerPairs).forEach((prop) => {
       if (this._observerPairs[prop].observer) {
@@ -72,6 +62,17 @@ export class StateService {
     this._observerPairs = {};
     this._state = {};
   }
+
+  observe(prop: string, subkey?: string) {
+    let observable = this._getObservablePair(prop).observable;
+    if (subkey) {
+      // TODO: maybe check if subkey exists?
+      // e.g observe('getblockchaininfo', 'blocks') will return only the 'blocks' key from the output.
+      observable = observable.pipe(map(key => key[subkey]));
+    }
+    return observable.pipe(distinctUntilChanged());
+  }
+
 
   private _clone(object: InternalStateType) {
     // simple object clone
@@ -87,7 +88,7 @@ export class StateService {
 
       this._observerPairs[prop].observable = Observable.create(
           _observer => this._observerPairs[prop].observer = _observer
-      ).shareReplay(1);
+      ).pipe(shareReplay(1));
     }
 
     return this._observerPairs[prop];

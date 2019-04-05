@@ -2,7 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Observer, Subscription } from 'rxjs'; // use this for testing atm
 import { Log } from 'ng2-logger';
 
-import { RpcService } from '../rpc.service';
+import { RpcService } from 'app/core/rpc/rpc.service';
+import { publishReplay } from 'rxjs/operators';
 
 @Injectable()
 export class PeerService implements OnDestroy {
@@ -25,19 +26,19 @@ export class PeerService implements OnDestroy {
 
     this._peerList = Observable.create(
       observer => this._observerPeerList = observer
-    ).publishReplay(1).refCount();
+    ).pipe(publishReplay(1)).refCount();
     this._peerList.subscribe().unsubscribe();
 
     // setup observable for internal block height
     this._highestBlockHeightInternal = Observable.create(
       observer => this._observerHighestBlockHeightInternal = observer
-    ).publishReplay(1).refCount();
+    ).pipe(publishReplay(1)).refCount();
     this._highestBlockHeightInternal.subscribe().unsubscribe();
 
     // setup observable for network block height
     this._highestBlockHeightNetwork = Observable.create(
       observer => this._observerHighestBlockHeightNetwork = observer
-    ).publishReplay(1).refCount();
+    ).pipe(publishReplay(1)).refCount();
 
     this._highestBlockHeightNetwork.subscribe().unsubscribe();
 

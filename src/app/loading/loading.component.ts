@@ -6,7 +6,8 @@ import { ConnectionCheckerService } from './connection-checker.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
 import { UpdaterService } from './updater.service';
-import { MarketService } from 'app/core/market/market.service';
+import { take } from 'rxjs/operators';
+import { MarketService } from 'app/core/market/market.module';
 
 import * as marketConfig from '../../../modules/market/config.js';
 
@@ -15,7 +16,7 @@ import * as marketConfig from '../../../modules/market/config.js';
   encapsulation: ViewEncapsulation.None,
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
-  providers: [ConnectionCheckerService, UpdaterService]
+  providers: [ConnectionCheckerService]
 })
 export class LoadingComponent implements OnInit {
   log: any = Log.create('loading.component');
@@ -44,19 +45,18 @@ export class LoadingComponent implements OnInit {
     });
 
     // we wait until the multiwallet has retrieved the wallets
-    this.multi.list.take(1).subscribe(wallets => {
+    this.multi.list.pipe(take(1)).subscribe(wallets => {
       // we also pass through the loading screen to switch wallets
       // check if a wallet was specified
-      this.route.queryParamMap.take(1).subscribe((params: ParamMap) => {
+      this.route.queryParamMap.pipe(take(1)).subscribe((params: ParamMap) => {
         this.log.d('loading params', params);
         // we can only pass strings through
         const switching = params.get('wallet');
         if (switching !== null && switching !== undefined) {
           // one was specified
-          this.rpc.wallet =  switching;
+          this.rpc.wallet = switching;
         }
 
-        // Only start performing check once rpc wallet is set otherwise we return the wrong wallet
         this.con.performCheck();
 
         // kick off the connection checker
@@ -70,19 +70,23 @@ export class LoadingComponent implements OnInit {
                 () => this.rpc.call('smsgenable', [this.rpc.wallet]).subscribe(
                   () => {
                     // If we dealing with the market wallet start the market while the loading screen shows
-                    if (this.rpc.wallet === marketConfig.marketWallet) {
-                      this._market.startMarket().subscribe(
-                        () => this.decideWhereToGoTo(getwalletinfo),
+                    if ((marketConfig.allowedWallets || []).includes(this.rpc.wallet)) {
+                      this._market.startMarket(this.rpc.wallet).subscribe(
+                        () => {
+                          this.rpc.call('smsgscanbuckets').subscribe();
+                          this.decideWhereToGoTo(getwalletinfo);
+                        },
                         error => this.log.d('Starting market failed: ', error)
                       );
                     } else {
                       this.decideWhereToGoTo(getwalletinfo);
                     }
                   }
-                )
+                ),
+                (err) => { this.log.er('smsgdisable failed: may already be stopped: ', err)}
               );
             },
-            error => this.log.d('whenRpcIsResponding errored', error)
+            error => this.log.d('whenRpcIsResponding errored')
           );
       });
     });
@@ -109,6 +113,6 @@ export class LoadingComponent implements OnInit {
 
   goToWallet() {
     this.log.d('MainModule: moving to new wallet', this.rpc.wallet);
-    this.router.navigate(['wallet', 'main', 'wallet', 'overview']);
+    this.router.navigate(['wallet', 'main', 'wallet']);
   }
 }

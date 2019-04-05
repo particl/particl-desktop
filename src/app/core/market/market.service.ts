@@ -1,17 +1,18 @@
+
+import {throwError as observableThrowError,  Observable, interval } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { dataURItoBlob } from 'app/core/util/utils';
 import { environment } from '../../../environments/environment';
+import { takeWhile, map, catchError } from 'rxjs/operators';
 import { IpcService } from 'app/core/ipc/ipc.service';
-import { interval } from 'rxjs/observable/interval';
 
 @Injectable()
 export class MarketService {
 
-  private log: any = Log.create('market-state.class');
+  private log: any = Log.create('market-service id: ' + Math.floor((Math.random() * 1000) + 1));
   public isMarketStarted: boolean = false;
   public _checkMarket: any;
 
@@ -30,6 +31,7 @@ export class MarketService {
   ) { }
 
   public call(method: string, params?: Array<any> | null): Observable<any> {
+    // Running in browser, delete?
     const postData = JSON.stringify({
       method: method,
       params: params,
@@ -45,13 +47,13 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.url, postData, { headers: headers })
-        .map((response: any) => response.result)
-        .catch((error: any) => {
+        .pipe(map((response: any) => response.result))
+        .pipe(catchError((error: any) => {
           this.log.d('Market threw an error!');
           this.log.d('Market error:', error);
           error = this.extractMPErrorMessage(error.error);
-          return Observable.throw(error);
-        })
+          return observableThrowError(error);
+        }))
   }
 
   public uploadImage(templateId: number, base64DataURIArray: any[]) {
@@ -77,9 +79,10 @@ export class MarketService {
     const headers = new HttpHeaders(headerJson);
 
     return this._http.post(this.imageUrl + templateId, form, { headers: headers })
-        .catch((error: any) => {
-          return Observable.throw(this.extractMPErrorMessage(error.error));
+      .pipe(catchError((error: any) => {
+          return observableThrowError(this.extractMPErrorMessage(error.error));
         })
+      )
   }
 
   private extractMPErrorMessage(errorObj: any): string {
@@ -91,7 +94,7 @@ export class MarketService {
     return 'Invalid marketplace request';
   }
 
-  startMarket(): Observable<any> {
+  startMarket(wallet: string): Observable<any> {
     return new Observable((observer) => {
 
       if (this.isMarketStarted) {
@@ -100,13 +103,13 @@ export class MarketService {
         return;
       }
       if (window.electron) {
-        this._ipc.runCommand('start-market', null, null);
+        this._ipc.runCommand('start-market', null, wallet);
         this._checkMarket =
           interval(1000)
-            .takeWhile(() => !this.isMarketStarted)
+            .pipe(takeWhile(() => !this.isMarketStarted))
             .subscribe(() => {
               this.call('profile', ['list'])
-                .map((profiles) => profiles.length > 0)
+                .pipe(map((profiles) => profiles.length > 0))
                 .subscribe((started) => {
                   if (started) {
                     this.isMarketStarted = started;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 // import { EncryptWalletComponent } from './encrypt-wallet/encrypt-wallet.component';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';

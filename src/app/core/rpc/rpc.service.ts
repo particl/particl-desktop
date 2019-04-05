@@ -1,12 +1,12 @@
+
+import {throwError as observableThrowError,  Subject ,  Observable } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 import { IpcService } from '../ipc/ipc.service';
 import { environment } from '../../../environments/environment';
-import { IWallet, MultiwalletService } from 'app/multiwallet/multiwallet.service';
 
 declare global {
   interface Window {
@@ -20,7 +20,9 @@ declare global {
  * It has two important functions: call and register.
  */
 
-@Injectable()
+@Injectable(
+  {providedIn: 'root'}
+)
 export class RpcService implements OnDestroy {
 
   private log: any = Log.create('rpc.service id:' + Math.floor((Math.random() * 1000) + 1));
@@ -50,11 +52,13 @@ export class RpcService implements OnDestroy {
     } else {
       this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
       this.requestConfiguration();
+      this.log.d('Creating service');
     }
   }
 
   ngOnDestroy() {
     this.destroyed = true;
+    this.log.d('Destroying service');
   }
 
   get enabled(): boolean {
@@ -65,11 +69,11 @@ export class RpcService implements OnDestroy {
    * Set the wallet to execute commands against.
    * @param w the wallet filename .
    */
-  set wallet(wallet: string) {
-    localStorage.setItem('wallet', wallet);
+  set wallet(w: string) {
+    localStorage.setItem('wallet', w);
   }
 
-  get wallet() {
+  get wallet(): string {
     return localStorage.getItem('wallet') || '';
   }
 
@@ -91,9 +95,10 @@ export class RpcService implements OnDestroy {
   call(method: string, params?: Array<any> | null): Observable<any> {
 
     if (!this.isInitialized) {
-      return Observable.throw('Initializing...');
+      return observableThrowError('Initializing...');
     }
 
+    // Running in browser, delete?
     const postData = JSON.stringify({
       method: method,
       params: params,
@@ -115,8 +120,8 @@ export class RpcService implements OnDestroy {
 
     return this._http
       .post(url, postData, { headers: headers })
-        .map((response: any) => response.result)
-        .catch(error => {
+        .pipe(map((response: any) => response.result))
+        .pipe(catchError((error => {
           let err: string;
           if (typeof error._body === 'object') {
             err =  error._body
@@ -125,9 +130,8 @@ export class RpcService implements OnDestroy {
           } else {
             err = error.error && error.error.error ? error.error.error : error.message;
           }
-
-          return Observable.throw(err)
-        })
+          return observableThrowError(err)
+        })))
   }
 
   private daemonListener(config: any): Observable<any> {

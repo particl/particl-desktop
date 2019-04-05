@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 
 import { StateService } from 'app/core/state/state.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class RpcStateService extends StateService implements OnDestroy {
@@ -13,6 +14,7 @@ export class RpcStateService extends StateService implements OnDestroy {
   private destroyed: boolean = false;
 
   private _enableState: boolean = true;
+  private stateTimeouts: any = {};
 
   /** errors gets updated everytime the stateCall RPC requests return an error */
   public errorsStateCall: Subject<any> = new Subject<any>();
@@ -22,19 +24,27 @@ export class RpcStateService extends StateService implements OnDestroy {
   }
 
   start(): void {
+    this.log.d('Rpc-State Service Started');
     this._enableState = true;
     this.register('getwalletinfo', 5000);
+    this.register('listunspent', 5000, [0]);
     this.register('getblockchaininfo', 5000);
     this.register('getnetworkinfo', 10000);
     this.register('getstakinginfo', 10000);
+    this.register('getcoldstakinginfo', 10000);
 
     // TODO: get rid of these
     this.walletLockedState();
   }
 
   stop() {
+    Object.keys(this.stateTimeouts).forEach(method => {
+      clearTimeout(this.stateTimeouts[method]);
+    });
+    this.stateTimeouts = {};
     this._enableState = false;
     this.clear();
+    this.log.d('Rpc-State Service stopped');
   }
 
   /**
@@ -70,19 +80,20 @@ export class RpcStateService extends StateService implements OnDestroy {
         if (this.destroyed || !this._enableState) {
           return;
         }
+        const preflightTimeout = this.stateTimeouts[method];
         this._rpc.call(method, params)
-          .takeWhile(() => this._enableState )
+          .pipe(takeWhile(() => this._enableState && preflightTimeout === this.stateTimeouts[method] ))
           .subscribe(
             success => {
               this.stateCallSuccess(method, success);
 
               // re-start loop after timeout
-              setTimeout(_call, timeout);
+              this.stateTimeouts[method] = setTimeout(_call, timeout);
             },
             error => {
               this.stateCallError(method, error, firstError);
 
-              setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
+              this.stateTimeouts[method] = setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
               firstError = false;
             });
       };
@@ -118,13 +129,11 @@ export class RpcStateService extends StateService implements OnDestroy {
     this.destroyed = true;
   }
 
-
-
   // TODO: get rid of these some day..
 
   private walletLockedState() {
     this.observe('getwalletinfo', 'encryptionstatus')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => {
         this.log.d(' [rm] updating locked state maybe', status);
         this.set('locked', ['Locked', 'Unlocked, staking only'].includes(status));

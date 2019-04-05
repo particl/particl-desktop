@@ -23,11 +23,6 @@
         <div class="number">5</div>
         <div class="desc">Recovery Password</div>
       </div>
-      <!-- 
-      <div class="step" [ngClass]="{'active': step === Steps.SETTINGS, 'done': step > Steps.SETTINGS}">
-        <div class="number">6</div>
-        <div class="desc">Basic settings</div>
-      </div> -->
       <div class="step last" [ngClass]="{'active': step === Steps.COMPLETED}">
         <div class="number">6</div>
         <div class="desc">Summary</div>
@@ -85,7 +80,7 @@
     <!-- step 0 -->
 
 
-    <!-- STEP 1: Create/restore wallet -->
+    <!-- STEP 1: Wallet Name (Both Create & Restore wallet flow) -->
     <ng-template [ngIf]="step === Steps.WALLET_NAME">
       <form #nameForm="ngForm" (ngSubmit)="nextStep()">
 
@@ -97,7 +92,7 @@
             <br> Short and descriptive names work the best!
           </p>
           <mat-card class="wallet-name">
-            <p class="warning" *ngIf="validation.errors && (validation.dirty || validation.touched)">
+            <p class="warning" *ngIf="validation.errors && validation.dirty">
               Wallet name is required
             </p>
             <!-- validation errors -->
@@ -137,14 +132,14 @@
 
     <!-- STEP 2: Encrypt wallet -->
     <ng-template [ngIf]="step === Steps.ENCRYPT">
-      <div class="title">Encrypt your wallet</div>
+      <div class="title">Encrypt your wallet: {{ walletname || 'Default Wallet' }}</div>
       <div *ngIf="!isEncrypting" class="container-block">
         <p>
           It is recommended to encrypt your wallet before creating or restoring a wallet,
           <br> in order to not leave any possible key fragments lying around.
         </p>
         <p class="widget-help">
-          Note that you can safely skip this step, but it is recommended to encrypt your wallet as 
+          Note that you can safely skip this step, but it is recommended to encrypt your wallet as
           <br> protects you from unauthorized access to your coins (e.g. if someone steals your computer).
           <br> It affects Particl wallet only on your current device.
         </p>
@@ -153,7 +148,7 @@
           <!-- Password -->
           <mat-form-field class="password-input largest">
             <input #passwordElem matInput placeholder="Enter Encryption Password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="encrypt">
-            <mat-hint class="error" *ngIf="!validate()">
+            <mat-hint class="error" *ngIf="!!errorString">
               {{ errorString }}
             </mat-hint>
           </mat-form-field>
@@ -183,12 +178,12 @@
       </div>
       <!-- .container-block -->
 
-      <div class="action-buttons" fxLayoutAlign="space-between center">
+      <div *ngIf="!isEncrypting" class="action-buttons" fxLayoutAlign="space-between center">
         <button mat-button (click)="prevStep()">
           <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back
         </button>
-        <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="!validate()">
+        <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="encrypt !== encryptVerify">
           <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Continue
         </button>
@@ -197,8 +192,8 @@
     <!-- step 2 -->
 
 
-    <!-- STEP 2-3 (Create): Recovery Phrase -->
-    <ng-template [ngIf]="[Steps.MNEMONIC_INITIAL,Steps.MNEMONIC_VERIFY,Steps.PASSWORD].indexOf(step) != -1 && isCreate">
+    <!-- STEP: Create Wallet Flow -->
+    <ng-template [ngIf]="isCreate && [Steps.MNEMONIC_INITIAL,Steps.MNEMONIC_VERIFY,Steps.PASSWORD].indexOf(step) != -1">
 
       <div class="title" *ngIf="step === Steps.MNEMONIC_INITIAL">Recovery Phrase</div>
       <div class="title" *ngIf="step === Steps.MNEMONIC_VERIFY">Confirm Recovery Phrase</div>
@@ -228,20 +223,20 @@
           </p>
         </div>
 
-        <!-- Passphrase (step 2-3) -->
+        <!-- Mnemonic -->
         <ng-template [ngIf]="[Steps.MNEMONIC_INITIAL,Steps.MNEMONIC_VERIFY].indexOf(step) != -1">
           <mat-card class="action-card">
             <app-passphrase #passphraseComponent [readOnly]="step === Steps.MNEMONIC_INITIAL" [words]="words" [partialDisable]="step === Steps.MNEMONIC_VERIFY"
               [generate]="true">
             </app-passphrase>
             <p class="warning bottom" *ngIf="step === Steps.MNEMONIC_INITIAL">
-              It's only up to you to keep these words safe! If you lose them (or someone steals them),
-              <br> nody can help you recover your funds! You have been warned.
+              Recovery Phrase is a backup key to your coins. With it you can easily recover your wallet on another PC.
+              <br/> You must write this Recovery Phrase down and keep it safe or you'll lose access to your coins!
             </p>
           </mat-card>
         </ng-template>
 
-        <!-- Recovery Password (step 4) -->
+        <!-- Recovery Password -->
         <div *ngIf="step === Steps.PASSWORD">
           <p>
             You can further increase your wallet protection by setting a Recovery Password.
@@ -272,7 +267,6 @@
               <br> If you forget any of these, you won't be able to access your coins!
             </p>
           </mat-card>
-          <!-- .action-card -->
         </div>
 
       </div>
@@ -283,20 +277,19 @@
           <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back
         </button>
-        <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="!validate()">
-          <!-- TODO: Move sendPassword to .ts   -->
+        <button mat-raised-button color="primary" (click)="nextStep()">
           <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Continue
         </button>
       </div>
 
     </ng-template>
-    <!-- Step 2,3 & 4 -->
+    <!-- End: Create Wallet flow -->
 
 
-    <!-- STEP 2-4 (Restore) -->
-    <ng-template [ngIf]="step === Steps.MNEMONIC_INITIAL && !isCreate">
-      <div class="title">Restore existing wallet</div>
+    <!-- STEP: Restore Wallet flow -->
+    <ng-template [ngIf]="step === Steps.MNEMONIC_VERIFY && !isCreate">
+      <div class="title">Restore existing wallet to: {{ walletname || 'Default Wallet' }}</div>
       <div class="container-block">
 
         <p>
@@ -345,14 +338,14 @@
           <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
           Back
         </button>
-        <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="!validate()">
+        <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="countWords()">
           <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
           Continue
         </button>
       </div>
 
     </ng-template>
-    <!-- Step 2,3 & 4 -->
+    <!-- End: Restore Wallet flow -->
 
 
     <!-- STEP 5: Waiting for import -->
@@ -394,13 +387,45 @@
       </div>
     </ng-template>
 
+    <!-- STEP: Unlock Wallet -->
+    <ng-template [ngIf]="step === Steps.UNLOCK">
+      <div class="title">Unlock wallet: {{ walletname || 'Default Wallet' }}</div>
+      <div class="container-block">
+        <p>
+          Please unlock your wallet in order to continue
+        </p>
+        <mat-card class="action-card recovery-password">
+          <div class="box-title">Confirm your Encryption Password</div>
+          <!-- Unlock Password -->
+          <mat-form-field class="password-input largest">
+            <input #unlockElem matInput placeholder="Enter Encryption Password" [type]="unlockElem.show ? 'text' : 'password'" [(ngModel)]="unlock">
+            <mat-hint class="error" *ngIf="!!errorString">
+              {{ errorString }}
+            </mat-hint>
+          </mat-form-field>
+          <!-- Unlock Password comfirmation -->
+          <mat-form-field class="password-input largest">
+            <input matInput placeholder="Confirm Encryption Password" [type]="unlockElem.show ? 'text' : 'password'" [(ngModel)]="unlockVerify">
+          </mat-form-field>
+          <button mat-button class="small show-password" (click)="unlockElem.show = !unlockElem.show">
+            <mat-icon fontSet="partIcon" fontIcon="{{unlockElem.show ? 'part-anon' : 'part-public'}}"></mat-icon>
+            {{ unlockElem.show ? 'Hide' : 'Show' }} password
+          </button>
+        </mat-card>
+      </div>
 
-    <!-- STEP 6 -->
-    <!--ng-template [ngIf]="step === 6">
-  <app-unlockwallet (unlockEmitter)="importMnemonicSeed($event)" [autoClose]="false">
-  </app-unlockwallet>
-</ng-template-->
-
+      <div class="action-buttons" fxLayoutAlign="space-between center">
+        <button mat-button (click)="prevStep()">
+          <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+          Back
+        </button>
+        <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="(unlock.length === 0) || (unlock !== unlockVerify)">
+          <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+          Continue
+        </button>
+      </div>
+    </ng-template>
+    <!-- End: Unlock Wallet -->
 
   </div>
   <!-- .content -->

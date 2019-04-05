@@ -2,7 +2,6 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material';
 
 import { MarketModule } from '../../market.module';
-import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 
 import { FavoritesService } from './favorites.service';
@@ -13,7 +12,6 @@ describe('FavoritesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        CoreModule.forTest(),
         CoreUiModule,
         MarketModule.forRoot()
       ],

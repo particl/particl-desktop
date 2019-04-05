@@ -9,6 +9,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
+import { take } from 'rxjs/operators';
 import { throttle } from 'lodash';
 
 
@@ -78,7 +79,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     private category: CategoryService,
     private listingService: ListingService,
     private favoritesService: FavoritesService,
-    private countryList: CountryListService
+    public countryList: CountryListService
   ) {
     this.log.d('overview created');
     if (this.listingService.cache.selectedCountry) {
@@ -88,7 +89,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.log.d('overview created');
     this.loadCategories();
     this.loadPage(0);
     this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
@@ -127,7 +127,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
 
     this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country, this.flagged)
-      .take(1).subscribe((listings: Array<Listing>) => {
+      .pipe(take(1)).subscribe((listings: Array<Listing>) => {
       this.isLoading = false;
       this.isLoadingBig = false;
 

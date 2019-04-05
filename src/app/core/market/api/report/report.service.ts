@@ -5,6 +5,7 @@ import { MarketService } from 'app/core/market/market.service';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Subscription } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 
 @Injectable()
@@ -21,7 +22,7 @@ export class ReportService implements OnDestroy {
   ) {}
 
   start() {
-    this.profile$ = this.profile.default().takeWhile(() => !this.destroyed).subscribe((prof: any) => {
+    this.profile$ = this.profile.default().pipe(takeWhile(() => !this.destroyed)).subscribe((prof: any) => {
       this.defaultProfileId = prof.id;
     });
   }
@@ -31,7 +32,7 @@ export class ReportService implements OnDestroy {
   }
 
   post(listing: Listing) {
-    return this.market.call('item', ['flag', listing.hash, this.defaultProfileId])
+    return this.market.call('item', ['flag', listing.hash, this.defaultProfileId]);
   }
 
   ngOnDestroy() {

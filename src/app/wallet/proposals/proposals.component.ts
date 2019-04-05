@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Log } from 'ng2-logger';
 import * as _ from 'lodash';
 import { PeerService } from 'app/core/rpc/peer/peer.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable, timer } from 'rxjs';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
+import { takeWhile, take, throttleTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-proposals',
@@ -51,7 +52,6 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   private sortedProposalByExpiryTime: any[] = [];
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private peerService: PeerService,
     private proposalsService: ProposalsService,
@@ -64,7 +64,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.peerService.getBlockCount()
-    .takeWhile(() => !this.destroyed).throttleTime(60000)
+    .pipe(takeWhile(() => !this.destroyed)).pipe(throttleTime(60000))
     .subscribe((count: number) => {
 
       if (this.tabLabels[this.selectedTab] === 'active') {
@@ -87,7 +87,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   loadActiveProposalsListing(): void {
     this.isLoading = true;
     this.proposalsService.list(Date.now(), '*')
-      .take(1)
+      .pipe(take(1))
       .subscribe((activeProposalList: Proposal[]) => {
         this.isLoading = false;
         if (
@@ -108,11 +108,12 @@ export class ProposalsComponent implements OnInit, OnDestroy {
 
     this.stopTimer();
 
-    this.timer = Observable.timer(1000, 1000)
-    .takeWhile(() => !this.destroyed)
-    .subscribe(() => {
-      this.removeExpiredProposals();
-    })
+    this.timer = timer(1000, 1000)
+      .pipe(takeWhile(() => !this.destroyed))
+      .subscribe(() => {
+        this.removeExpiredProposals();
+        }
+      )
   }
 
   getSortedProposalByExpiryTime(proposals: Proposal[]): any[] {
@@ -155,7 +156,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   loadPastProposalsListing(): void {
     this.isLoading = true;
     this.proposalsService.list('*', Date.now())
-      .take(1)
+      .pipe(take(1))
       .subscribe((pastProposal: Proposal[]) => {
         this.isLoading = false;
         this.pastProposals = pastProposal;
@@ -176,7 +177,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   addProposal(): void {
-    this.router.navigate(['../proposal'], {relativeTo: this.route});
+    this.router.navigate(['/wallet/proposal']);
   }
 
   changeTab(index: number): void {

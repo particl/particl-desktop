@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material';
 
 import { SharedModule } from '../../../shared/shared.module';
@@ -18,7 +17,6 @@ describe('QrCodeModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
         SharedModule,  // is this even needed?
         WalletModule.forRoot(),  // is this even needed?
         CoreModule.forRoot(),

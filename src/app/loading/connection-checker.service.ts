@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { Log } from 'ng2-logger';
+import { shareReplay } from 'rxjs/operators';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
 
@@ -20,7 +21,10 @@ export class ConnectionCheckerService implements OnDestroy {
     this.log.d(`connection-checker created`);
     this.check = Observable.create(observer => {
       this.observer = observer;
-    }).shareReplay();
+    }).pipe(shareReplay());
+
+    // start checking
+    // this.performCheck();
   }
 
   /**
@@ -35,7 +39,6 @@ export class ConnectionCheckerService implements OnDestroy {
     if (!this.destroyed) {
       this.log.d('performing check');
       this.log.d(`connection-checker wallet:`, this.rpc.wallet);
-
       this.rpc.call('getwalletinfo', []).subscribe(
         (getwalletinfo: any) => this.RpcHasResponded(getwalletinfo),
         (error: any) => {

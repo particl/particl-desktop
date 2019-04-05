@@ -1,5 +1,6 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DirectiveModule } from './directive/directive.module';
 
 import { MaterialModule } from './material/material.module';
 // TODO: move to material
@@ -30,19 +31,22 @@ import 'hammerjs';
     NvD3Module,
 
     // also can add a config options
-    GalleryModule.forRoot(), // GalleryModule.forRoot(galleryConfig?),
-    LightboxModule.forRoot(), // GalleryLightbox.forRoot(lightboxConfig?),
-    GallerizeModule
+    GalleryModule, // GalleryModule.forRoot(galleryConfig?),
+    LightboxModule, // GalleryLightbox.forRoot(lightboxConfig?),
+    GallerizeModule,
+    DirectiveModule
   ],
   exports: [
     MaterialModule,
     PaginatorComponent,
     InfiniteScrollModule,
     NvD3Module,
+    DirectiveModule,
     GalleryModule,
     LightboxModule,
-    GallerizeModule
-  ]
+    GallerizeModule,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CoreUiModule {
   static forRoot(): ModuleWithProviders {
@@ -56,3 +60,4 @@ export class CoreUiModule {
 }
 
 export { MaterialModule } from './material/material.module';
+

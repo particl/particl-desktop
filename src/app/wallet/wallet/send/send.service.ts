@@ -9,6 +9,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 /* fix wallet */
 import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
 import { TransactionBuilder } from './transaction-builder.model';
+import { map, take } from 'rxjs/operators';
 
 /*
   Note: due to upcoming multiwallet, we should never ever store addresses in the GUI for transaction purposes.
@@ -19,22 +20,10 @@ import { TransactionBuilder } from './transaction-builder.model';
 export class SendService {
 
   log: any = Log.create('send.service');
-  public availableBalance: number = 0;
 
   constructor(private _rpc: RpcService,
               private flashNotification: SnackbarService,
               private dialog: MatDialog) {
-  }
-
-  listUnSpent(): void {
-    this.availableBalance = 0;
-    this._rpc.call('listunspent', [0]).subscribe(unspent => {
-      for (let ut = 0; ut < unspent.length; ut++) {
-        if (!unspent[ut].coldstaking_address || unspent[ut].address) {
-          this.availableBalance += unspent[ut].amount;
-        };
-      }
-    })
   }
 
   /* Sends a transaction */
@@ -51,7 +40,7 @@ export class SendService {
     tx.estimateFeeOnly = true;
     if (!tx.toAddress) {
       return new Observable((observer) => {
-        this.getDefaultStealthAddress().take(1).subscribe(
+        this.getDefaultStealthAddress().pipe(take(1)).subscribe(
           (stealthAddress: string) => {
             // set balance transfer stealth address
             tx.toAddress = stealthAddress;
@@ -62,8 +51,8 @@ export class SendService {
           });
       });
     } else {
-      return this.send(tx).map(
-        fee => fee);
+      return this.send(tx)
+      .pipe(map(fee => fee));
     }
   }
 
@@ -71,7 +60,7 @@ export class SendService {
     tx.estimateFeeOnly = false;
 
     // get default stealth address
-    this.getDefaultStealthAddress().take(1).subscribe(
+    this.getDefaultStealthAddress().pipe(take(1)).subscribe(
       (stealthAddress: string) => {
         this.log.d('got transferBalance, sx' + stealthAddress);
         tx.toAddress = stealthAddress;
@@ -90,8 +79,8 @@ export class SendService {
    * Retrieve the first stealth address.
    */
   private getDefaultStealthAddress(): Observable<string> {
-    return this._rpc.call('liststealthaddresses', null).map(
-      list => list[0]['Stealth Addresses'][0]['Address']);
+    return this._rpc.call('liststealthaddresses', null)
+    .pipe(map(list => list[0]['Stealth Addresses'][0]['Address']));
   }
 
   /**
@@ -113,7 +102,6 @@ export class SendService {
     // Truncate the address to 16 characters only
     const trimAddress = address.substring(0, 16) + '...';
     const txsId = json.substring(0, 45) + '...';
-    this.listUnSpent();
     this.flashNotification.open(`Succesfully sent ${amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
   }
 

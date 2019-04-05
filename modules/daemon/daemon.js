@@ -7,7 +7,6 @@ const Observable = require('rxjs/Observable').Observable;
 const _options = require('../options');
 const clearCookie = require('../webrequest/http-auth').removeWalletAuthentication;
 const rpc = require('../rpc/rpc');
-const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
 const daemonConfig = require('./daemonConfig');
 
@@ -90,6 +89,7 @@ exports.start = function (doReindex = false) {
         log.info('Adding reindex flag to daemon startup');
         addedArgs.push('-reindex');
       }
+
       const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...addedArgs];
       log.info(`starting daemon: ${deamonArgs.join(' ')}`);
 
@@ -140,7 +140,7 @@ exports.check = function () {
   });
 }
 
-exports.stop = function (restarting) {
+exports.stop = function () {
   log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
@@ -148,12 +148,10 @@ exports.stop = function (restarting) {
 
       // attach event to stop electron when daemon closes.
       // do not close electron when restarting (e.g encrypting wallet)
-      if (!restarting) {
-        daemon.once('close', code => {
-          log.info('daemon exited successfully - we can now quit electron safely! :)');
-          electron.app.quit();
-        });
-      }
+      daemon.once('close', code => {
+        log.info('daemon exited successfully - we can now quit electron safely! :)');
+        electron.app.quit();
+      });
 
       log.info('Call RPC stop!');
       rpc.call('stop', null, (error, response) => {
@@ -163,7 +161,7 @@ exports.stop = function (restarting) {
           reject();
         } else {
           log.info('Daemon stopping gracefully...');
-          resolve();
+          // resolve();
         }
       });
     } else {

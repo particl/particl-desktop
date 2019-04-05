@@ -1,14 +1,12 @@
-import { Component, forwardRef, Inject, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { MatDialogRef } from '@angular/material';
 
 import { PasswordComponent } from '../shared/password/password.component';
 import { IPassword } from '../shared/password/password.interface';
 
-import { RpcService, RpcStateService } from '../../core/core.module';
+import { RpcService } from '../../core/core.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service'; // TODO; import from module
-import { UpdaterService } from 'app/core/updater/updater.service';
-import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 @Component({
   selector: 'app-encryptwallet',
@@ -23,12 +21,8 @@ export class EncryptwalletComponent {
   @ViewChild('passwordElement') passwordElement: PasswordComponent;
 
   constructor(
-    @Inject(forwardRef(() => ModalsHelperService))
-    private _modals: ModalsHelperService,
     private _rpc: RpcService,
-    private _rpcState: RpcStateService,
     private flashNotification: SnackbarService,
-    private _daemon: UpdaterService,
     public _dialogRef: MatDialogRef<EncryptwalletComponent>
   ) { }
 
@@ -44,27 +38,15 @@ export class EncryptwalletComponent {
     // already had password, check equality
     this.log.d(`check password equality: ${password.password === this.password}`);
     if (this.password !== password.password) {
-      this._rpcState.set('ui:spinner', false);
       this.flashNotification.open('The passwords do not match!', 'err');
       return;
     }
 
     // passwords match, encrypt wallet
 
-    this._rpcState.set('ui:spinner', true);
-
-    if (window.electron) {
-      this._daemon.restart().then(res => {
-        this.log.d('restart was trigger, open create wallet again');
-        this._rpcState.set('ui:spinner', false);
-        this._dialogRef.close();
-      });
-    }
-
     this._rpc.call('encryptwallet', [password.password]).toPromise()
       .catch(error => {
         // Handle error appropriately
-        this._rpcState.set('ui:spinner', false);
         this.flashNotification.open('Wallet failed to encrypt properly!', 'err');
         this.log.er('error encrypting wallet', error)
       });
