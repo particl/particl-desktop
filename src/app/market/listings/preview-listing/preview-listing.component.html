@@ -232,9 +232,11 @@
         <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
         <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)" matTooltip="Item is fine and should stay on Market">
           <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
+          Keep it
         </button>
         <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)" matTooltip="Item is inappropriate/illegal and should be removed from Market">
           <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
+          Remove it
         </button>
       </div>
       <!-- Reported & voted already -->

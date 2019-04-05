@@ -36,7 +36,7 @@ export class BlockSyncBarComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() : void {
+  ngOnDestroy(): void {
     this.destroyed = true;
   }
 

@@ -398,7 +398,7 @@ export class CreateWalletComponent implements OnInit {
   }
 
   public countWords (count: number = -1): boolean {
-    const value: number = count === -1 ? this.words.filter((value: string) => value).length : count;
+    const value: number = count === -1 ? this.words.filter((val: string) => val).length : count;
     if ([12, 15, 18, 24].indexOf(value) !== -1) {
       return false;
     }
