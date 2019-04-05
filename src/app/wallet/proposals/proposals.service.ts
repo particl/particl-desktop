@@ -23,6 +23,7 @@ export class ProposalsService {
   ) {}
 
   start() {
+    this.log.d('Starting service');
     this.isEnabled = true;
     this.profile$ = this.profileService.default().subscribe((profile: Profile) => {
       this.submitterId = profile.id;
@@ -30,6 +31,7 @@ export class ProposalsService {
   }
 
   stop() {
+    this.log.d('Stopping service');
     this.isEnabled = false;
     this.profile$.unsubscribe();
   }

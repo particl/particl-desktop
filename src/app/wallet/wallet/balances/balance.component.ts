@@ -33,9 +33,7 @@ export class BalanceComponent implements OnInit, OnDestroy {
     this._rpcState.observe('getwalletinfo', type)
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(
-        balance => {
-          this.listUnSpent(balance);
-        },
+        balance => this.listUnSpent(balance),
         error => this.log.error('Failed to get balance, ', error));
   }
 

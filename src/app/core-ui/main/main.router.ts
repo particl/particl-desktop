@@ -112,7 +112,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       .pipe(flatMap(route => route.data))
       .subscribe(data => (this.title = data['title']));
 
-
     /* errors */
     // Updates the error box in the sidenav whenever a stateCall returns an error.
     this._rpcState.errorsStateCall.asObservable()

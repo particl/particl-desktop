@@ -1,5 +1,5 @@
 
-import {throwError as observableThrowError,  Subject ,  Observable } from 'rxjs';
+import {throwError as observableThrowError, Observable } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
