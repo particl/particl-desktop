@@ -10,6 +10,11 @@ $installer-header-height: 96px;
   padding: 35px 45px;
 }
 
+.page-intro {
+  margin: -35px -45px 0;
+  padding: 50px 45px 35px;
+}
+
 .subtitle {
   @extend %subtitle;
   &:first-child {
@@ -150,15 +155,15 @@ mat-hint.error {
   @extend %disable-select;
   display: flex;
   height: 100vh;
-  .sidebar {
+  & > .sidebar {
     width: ($installer-sidebar-width - (2 * $installer-sidebar-padding));
     padding: $installer-sidebar-padding;
     background: $bg-black;
-    background-size: 300px;
     color: $bg;
     position: fixed;
-    bottom: 0;
     top: 0;
+    left: 0;
+    bottom: 0;
     .logo {
       display: block;
       width: 100px;
@@ -168,7 +173,7 @@ mat-hint.error {
       text-align: center;
     }
   }
-  .content {
+  & > .content {
     background: $bg;
     width: 100%;
     margin-left: $installer-sidebar-width;
@@ -185,7 +190,7 @@ mat-hint.error {
 .action-buttons {
   margin: 6px 45px 45px;
   &.huge {
-    margin: 46px 0 0;
+    margin: 15px 0 0;
     display: flex;
     align-items: stretch;
     .half {

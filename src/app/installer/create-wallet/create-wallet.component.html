@@ -35,13 +35,20 @@
 
     <!-- STEP 0: Choose action -->
     <ng-template [ngIf]="step === Steps.START">
-      <div class="title">Create or restore wallet</div>
       <div class="container-block">
-        <p>
-          In order to connect to Particl network, you need to have a wallet. If you're using Particl for the first time, create a new
-          wallet or restore existing wallet (using your Recovery Passphrase) if you have one already. You can create as many
-          wallets as you need.
-        </p>
+
+        <div class="page-intro">
+          <h1>Create or restore wallet</h1>
+          <div class="content">
+            <p>
+              In order to connect to Particl network, you need to have a wallet. If you're using Particl for the first time, create a new wallet or restore existing wallet (using your Recovery Passphrase) if you have one already.
+            </p>
+            <p class="widget-help">
+              You can create as many wallets as you need, for example to separate your funds.
+            </p>
+          </div>
+        </div><!-- .page-intro -->
+
         <div class="huge action-buttons">
           <mat-card class="create half">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
