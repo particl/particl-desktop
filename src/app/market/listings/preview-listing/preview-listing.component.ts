@@ -93,6 +93,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     this.proposalsService.vote(params).subscribe((response) => {
       this.processModal.close();
       this.snackbarService.open(`Successfully Vote for ${this.data.listing.title}`, 'info');
+      this.data.reportListingComplete.emit();
       this.data.listing.VoteDetails = new VoteDetails({
         ProposalOption: option
       })
@@ -100,6 +101,10 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       this.processModal.close();
       this.snackbarService.open(error);
     })
+  }
+
+  reportListingFinished() {
+    this.data.reportListingComplete.emit();
   }
 
   dialogClose(): void {

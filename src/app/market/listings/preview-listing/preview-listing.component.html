@@ -224,7 +224,7 @@
 
   <div class="left">
 
-    <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'"></app-report>
+    <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'" (complete)="reportListingFinished()"></app-report>
 
     <div class="reporting" *ngIf="data?.listing?.isFlagged">
       <!-- Reported, not voted yet by user -->
@@ -240,12 +240,18 @@
       <!-- Reported & voted already -->
       <div *ngIf="data?.listing?.VoteDetails" class="voted">
         <p *ngIf="data?.listing?.VoteDetails?.isReported">
-          <mat-icon fontSet="partIcon" fontIcon="part-flag" class="voted-icon"></mat-icon>
-          Thanks for flagging this item as inappropriate
+          <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)"
+            matTooltip="I've changed my mind, the item is fine and should stay on Market">
+            <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
+          </button>
+          I've changed my mind, the item is fine and should stay on Market
         </p>
         <p *ngIf="!data?.listing?.VoteDetails?.isReported">
-          <mat-icon fontSet="partIcon" fontIcon="part-check-in-a-box" class="voted-icon"></mat-icon>
-          Thanks for voting on this item
+          <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)"
+            matTooltip="I've changed my mind, the item is inappropriate/illegal and should be removed from Market">
+            <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
+          </button>
+          I've changed my mind, the item is inappropriate/illegal and should be removed from Market
         </p>
       </div>
     </div><!-- .reporting -->
