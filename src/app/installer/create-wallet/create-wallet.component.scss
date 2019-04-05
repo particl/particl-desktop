@@ -1,18 +1,13 @@
 @import './src/assets/_config'; // import shared colors etc.
 
-$installer-sidebar-width: 260px;
+$installer-sidebar-width: 270px;
 $installer-sidebar-padding: 30px;
 $installer-header-height: 96px;
 
 // ------ UI ELEMENTS ------ //
 
 .container-block {
-  padding: 35px 45px;
-}
-
-.page-intro {
-  margin: -35px -45px 0;
-  padding: 50px 45px 35px;
+  margin-top: $header-main-height;
 }
 
 .subtitle {
@@ -177,6 +172,7 @@ mat-hint.error {
     background: $bg;
     width: 100%;
     margin-left: $installer-sidebar-width;
+    /*
     .title {
       @extend %mat-card;
       padding: 35px 45px;
@@ -184,11 +180,26 @@ mat-hint.error {
       font-weight: 500;
       height: ($installer-header-height - (2 * 35px));
     }
+    */
+    .header-main {
+      border-bottom: 1px solid $bg-shadow;
+      background: $color-white;
+      padding-left: 35px;
+      padding-right: 26px;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      position: fixed;
+      top: 0;
+      left: $installer-sidebar-width;
+      right: 0;
+      z-index: 100;
+    }
   }
 }
 
 .action-buttons {
-  margin: 6px 45px 45px;
+  margin: 6px 35px 35px;
   &.huge {
     margin: 15px 0 0;
     display: flex;
