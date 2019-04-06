@@ -20,6 +20,7 @@ import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
 import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-badge.component';
 import { ClientVersionService } from '../../core/http/client-version.service';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
+import { CoreUiModule } from '../core-ui.module';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -42,7 +43,8 @@ const routes: Routes = [
     MaterialModule,
     MatIconModule,
     DirectiveModule,
-    MultiwalletModule
+    MultiwalletModule,
+    CoreUiModule
   ],
   exports: [
     RouterModule

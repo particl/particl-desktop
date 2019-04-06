@@ -17,11 +17,13 @@ import { GalleryModule } from '@ngx-gallery/core';
 import { LightboxModule } from '@ngx-gallery/lightbox';
 import { GallerizeModule } from '@ngx-gallery/gallerize';
 import 'hammerjs';
+import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
 
 
 @NgModule({
   declarations: [
-    PaginatorComponent
+    PaginatorComponent,
+    BalanceComponent
   ],
   imports: [
     CommonModule,
@@ -39,6 +41,7 @@ import 'hammerjs';
   exports: [
     MaterialModule,
     PaginatorComponent,
+    BalanceComponent,
     InfiniteScrollModule,
     NvD3Module,
     DirectiveModule,

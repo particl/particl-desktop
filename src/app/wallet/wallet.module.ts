@@ -17,12 +17,10 @@ import { HelpComponent } from './help/help.component';
 
 import { wallet_routing } from './wallet.routing';
 import { ProposalDetailsComponent } from './proposals/proposal-details/proposal-details.component';
-import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
 
 
 @NgModule({
   declarations: [
-    BalanceComponent,
     OverviewComponent,
     SettingsComponent,
     ProposalsComponent,
