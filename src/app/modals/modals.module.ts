@@ -93,7 +93,7 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     PlaceOrderComponent,
     ReportModalComponent,
     ShippingComponent,
-    // ColdstakeComponent,
+    ColdstakeComponent,
     SendConfirmationModalComponent,
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
