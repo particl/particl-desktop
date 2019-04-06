@@ -67,23 +67,13 @@ export class LoadingComponent implements OnInit {
             getwalletinfo => {
               // Swap smsg to the new wallet
               this.rpc.call('smsgdisable').subscribe(
-                () => this.rpc.call('smsgenable', [this.rpc.wallet]).subscribe(
-                  () => {
-                    // If we dealing with the market wallet start the market while the loading screen shows
-                    if ((marketConfig.allowedWallets || []).includes(this.rpc.wallet)) {
-                      this._market.startMarket(this.rpc.wallet).subscribe(
-                        () => {
-                          this.rpc.call('smsgscanbuckets').subscribe();
-                          this.decideWhereToGoTo(getwalletinfo);
-                        },
-                        error => this.log.d('Starting market failed: ', error)
-                      );
-                    } else {
-                      this.decideWhereToGoTo(getwalletinfo);
-                    }
-                  }
-                ),
-                (err) => { this.log.er('smsgdisable failed: may already be stopped: ', err)}
+                () => {
+                  this.activateWallet(getwalletinfo, true);
+                },
+                (err) => {
+                  this.log.er('smsgdisable failed: may already be stopped: ', err);
+                  this.activateWallet(getwalletinfo, false);
+                }
               );
             },
             error => this.log.d('whenRpcIsResponding errored')
@@ -95,6 +85,10 @@ export class LoadingComponent implements OnInit {
   decideWhereToGoTo(getwalletinfo: any) {
     this.log.d('Where are we going next?', getwalletinfo);
     if ('hdseedid' in getwalletinfo) {
+      const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
+      if (isMarketWallet) {
+        this.startMarketService(getwalletinfo);
+      }
       this.goToWallet();
     } else {
       this.goToInstaller(getwalletinfo);
@@ -114,5 +108,29 @@ export class LoadingComponent implements OnInit {
   goToWallet() {
     this.log.d('MainModule: moving to new wallet', this.rpc.wallet);
     this.router.navigate(['wallet', 'main', 'wallet']);
+  }
+
+  private startMarketService(getwalletinfo: any) {
+    this._market.startMarket(this.rpc.wallet).subscribe(
+      () => {
+        // TODO: Leaving this here for now, but it requires the wallet to be unlocked, so doesn't work as expected.
+        // It can help for first load after a Market wallet has been created though, so not removing it just yet.
+        this.rpc.call('smsgscanbuckets').subscribe();
+      },
+      (err) => this.log.er('Request to start market failed!')
+    )
+  }
+
+  private activateWallet(getwalletinfo: any, startSmsg: boolean = true) {
+    const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
+    if (startSmsg || isMarketWallet) {
+      this.rpc.call('smsgenable', [this.rpc.wallet]).subscribe(
+        () => {},
+        (err) => this.log.er('smsgenable failed: ', err),
+        () => this.decideWhereToGoTo(getwalletinfo)
+      )
+    } else {
+      this.decideWhereToGoTo(getwalletinfo);
+    }
   }
 }
