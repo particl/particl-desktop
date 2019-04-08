@@ -3,6 +3,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { RpcModule } from '../core/rpc/rpc.module';
 
 import { ConnectionCheckerService } from './connection-checker.service';
+import { CoreModule } from 'app/core/core.module';
 
 
 describe('ConnectionCheckerService', () => {
@@ -10,6 +11,7 @@ describe('ConnectionCheckerService', () => {
     TestBed.configureTestingModule({
       imports: [
         RpcModule.forTest(),
+        CoreModule.forRoot()
       ],
       providers: [ConnectionCheckerService]
     });

@@ -271,6 +271,24 @@ export class CreateWalletComponent implements OnInit {
 
   // Does some action when entering a step.
   private doStep(): void {
+    if (
+      (this.password.length || this.passwordVerify.length) &&
+      (this.isCreate ?
+        ![Steps.UNLOCK, Steps.WAITING].includes(this.step) :
+        ![Steps.MNEMONIC_VERIFY, Steps.UNLOCK, Steps.WAITING].includes(this.step)
+      )
+    ) {
+      this.password = '';
+      this.passwordVerify = '';
+    }
+
+    if ((this.unlock.length || this.unlockVerify.length) > 0 &&
+      ![Steps.WAITING].includes(this.step) ) {
+
+        this.unlock = '';
+        this.unlockVerify = '';
+    }
+
     switch (this.step) {
       case Steps.START:
         this.reset();
@@ -301,11 +319,6 @@ export class CreateWalletComponent implements OnInit {
             'warning'
           );
         }
-        break;
-
-      case Steps.UNLOCK:
-        this.unlock = ''
-        this.unlockVerify = '';
         break;
 
       case Steps.WAITING:
