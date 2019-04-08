@@ -1,10 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { MarketModule } from '../../market.module';
-
-import { ProfileService } from './profile.service';
 import { SharedModule } from 'app/wallet/shared/shared.module';
 import { CoreModule } from 'app/core/core.module';
+
+import { ProfileService } from './profile.service';
 
 describe('ProfileService', () => {
   beforeEach(() => {
