@@ -1,10 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreModule } from '../../../../../core/core.module';
 import { SharedModule } from '../../../../../wallet/shared/shared.module';
 import { ModalsModule } from '../../../../../modals/modals.module';
 import { CoreUiModule } from '../../../../core-ui.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { ConsoleModalComponent } from './console-modal.component';
 
@@ -22,15 +24,18 @@ describe('ConsoleModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [
         /* deps */
         { provide: MatDialogRef}
-        ]
+        ],
+      declarations: [ConsoleModalComponent]
     })
     .compileComponents();
   }));

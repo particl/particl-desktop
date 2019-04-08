@@ -1,7 +1,14 @@
 <div class="installer">
 
+  <div class="mini-sidebar"></div>
+
   <div class="sidebar">
-    <img class="logo" src="./assets/particl-logo-vertical.svg">
+    <div class="logo">
+      <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
+    </div>
+
+    <mat-divider></mat-divider>
+
     <div class="progress">
       <div class="step first" [ngClass]="{'active': step === Steps.START, 'done': step > Steps.START}">
         <div class="number">1</div>
