@@ -13,7 +13,7 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 
 import { Responses } from 'app/_test/core-test/market-test/mock-data/mock-market.responses';
 
-fdescribe('ProposalsService', async () => {
+describe('ProposalsService', async () => {
   let proposalHash;
   beforeEach(() => {
 
