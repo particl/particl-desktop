@@ -14,7 +14,6 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 import { AddItemComponent } from './add-item.component';
-import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('AddItemComponent', () => {
   let component: AddItemComponent;
