@@ -31,7 +31,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('chart') chart: NvD3Component;
   @Input() proposal: Proposal;
   @Input() selectedTab: string;
-  @Input() currentBlockCount: number;
 
   // pie chart config(s).
   public graphOptions: any = {

@@ -23,7 +23,7 @@ describe('CreateWalletComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         SharedModule,
-        CoreModule.forTest(),
+        CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot()
       ],

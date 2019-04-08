@@ -17,7 +17,7 @@ describe('LoadingComponent', () => {
       declarations: [ LoadingComponent ],
       imports: [
         RouterTestingModule,
-        CoreModule.forTest(),
+        CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         MultiwalletModule.forTest()
       ]

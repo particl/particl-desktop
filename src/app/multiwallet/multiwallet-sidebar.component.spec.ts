@@ -15,7 +15,7 @@ describe('MultiwalletSidebarComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        CoreModule.forTest(),
+        CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         MultiwalletModule.forTest()
       ]
