@@ -88,8 +88,9 @@ export class LoadingComponent implements OnInit {
       const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
       if (isMarketWallet) {
         this.startMarketService(getwalletinfo);
+      } else {
+        this.goToWallet();
       }
-      this.goToWallet();
     } else {
       this.goToInstaller(getwalletinfo);
     }
@@ -117,7 +118,8 @@ export class LoadingComponent implements OnInit {
         // It can help for first load after a Market wallet has been created though, so not removing it just yet.
         this.rpc.call('smsgscanbuckets').subscribe();
       },
-      (err) => this.log.er('Request to start market failed!')
+      (err) => this.log.er('Request to start market failed!'),
+      () => this.goToWallet()
     )
   }
 
