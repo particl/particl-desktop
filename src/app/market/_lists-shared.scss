@@ -143,7 +143,9 @@
     &.sell.escrow,
     &.buy.shipping,
     // + in Listing statuses..
-    &.expired {
+    // @TODO we can use blink animation for own expired listing in future.
+    // &.expired
+    {
       .dot::after {
         content: '';
         animation: pulse-fade 1s infinite;

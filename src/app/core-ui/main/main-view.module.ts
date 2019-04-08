@@ -18,6 +18,7 @@ import { CartComponent } from './cart/cart.component';
 import { TimeoffsetComponent } from './status/timeoffset/timeoffset.component';
 import { CountBadgeComponent } from 'app/core-ui/main/shared/count-badge/count-badge.component';
 import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
+import { LoadingPlaceholderComponent } from './loading-placeholder/loading-placeholder.component';
 // import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 @NgModule({
@@ -32,7 +33,8 @@ import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
     MainViewComponent,
     PercentageBarComponent,
     CountBadgeComponent,
-    BalanceComponent
+    BalanceComponent,
+    LoadingPlaceholderComponent
   ],
   declarations: [
     MainViewComponent,
@@ -45,7 +47,8 @@ import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
     CartComponent,
     TimeoffsetComponent,
     CountBadgeComponent,
-    BalanceComponent
+    BalanceComponent,
+    LoadingPlaceholderComponent
   ],
   entryComponents: [
     ConsoleModalComponent,
