@@ -13,7 +13,8 @@ describe('AnnouncementNotificationComponent', () => {
       imports: [
         CoreModule.forRoot(),
         HttpClientModule
-      ]
+      ],
+      declarations: [AnnouncementNotificationComponent]
     })
     .compileComponents();
   }));

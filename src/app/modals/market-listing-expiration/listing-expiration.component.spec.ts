@@ -6,7 +6,6 @@ import { ModalsModule } from 'app/modals/modals.module';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MatDialogRef } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ListingExpirationComponent } from './listing-expiration.component';
 

@@ -14,7 +14,8 @@ describe('TemplateService', () => {
         MarketModule.forRoot(),
         SharedModule,
         RpcWithStateModule.forRoot(),
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        CoreModule.forRoot()
       ],
       providers: [TemplateService]
     });

@@ -16,7 +16,8 @@ describe('CartComponent', () => {
         RouterTestingModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
-      ]
+      ],
+      declarations: [CartComponent]
     })
     .compileComponents();
   }));

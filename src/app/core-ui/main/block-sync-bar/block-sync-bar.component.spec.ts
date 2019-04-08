@@ -5,6 +5,8 @@ import { CoreUiModule } from '../../core-ui.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 
 import { BlockSyncBarComponent } from './block-sync-bar.component';
+import { MainModule } from '../main.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('BlockSyncBarComponent', () => {
   let component: BlockSyncBarComponent;
@@ -14,8 +16,10 @@ describe('BlockSyncBarComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
+        CoreUiModule.forRoot(),
+        MainModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        RpcWithStateModule.forRoot()
       ]
     })
     .compileComponents();

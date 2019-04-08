@@ -9,9 +9,11 @@ import { PassphraseService } from './passphrase.service';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
+import { MainModule } from 'app/core-ui/main/main.module';
 
 /* components & directives (own) */
 import { PassphraseComponent } from './passphrase.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 /* delete any unused imports! */
 
@@ -29,6 +31,9 @@ describe('PassphraseComponent', () => {
         /* deps */
         BrowserAnimationsModule,
         MatIconModule,
+        MainModule,
+        RpcWithStateModule.forRoot(),
+        MainModule
        ],
       providers: [
         /* own */
