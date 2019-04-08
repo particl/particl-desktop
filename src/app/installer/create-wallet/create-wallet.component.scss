@@ -156,20 +156,22 @@ mat-hint.error {
 
 .installer {
   @extend %disable-select;
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  height: 100vh;
   & > .mini-sidebar { // fake "multiwallet" placeholder
-    flex: 0 0 $installer-minisidebar-width;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: $installer-minisidebar-width;
     background: darken($bg-black, 5%);
   }
   & > .sidebar {
-    flex: 0 0 $installer-sidebar-width;
+    width: $installer-sidebar-width;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: $installer-minisidebar-width;
     background: $bg-black;
     color: $bg;
-    position: sticky;
-    top: 0;
     .logo {
       display: flex;
       height: 120px;
@@ -184,7 +186,7 @@ mat-hint.error {
   }
   & > .content {
     background: $bg;
-    flex: 1 1 100%;
+    margin-left: ($installer-sidebar-width + $installer-minisidebar-width);
     .header-main {
       border-bottom: 1px solid $bg-shadow;
       background: $color-white;
