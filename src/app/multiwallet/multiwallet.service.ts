@@ -5,7 +5,6 @@ import { Log } from 'ng2-logger';
 import * as _ from 'lodash';
 import { distinctUntilChanged, tap, map, takeWhile, take } from 'rxjs/operators';
 import { RpcService } from 'app/core/rpc/rpc.service';
-import { Router } from '@angular/router';
 
 export interface IWallet {
   name: string;
@@ -20,13 +19,13 @@ export class MultiwalletService implements OnDestroy {
     'multiwallet.service id:' + Math.floor(Math.random() * 1000 + 1)
   );
   private destroyed: boolean = false;
+  private hasList: boolean = false;
 
   private timer: any = interval(1000);
   private _list: BehaviorSubject<Array<IWallet>> = new BehaviorSubject([]);
 
   constructor(
-    private _rpc: RpcService,
-    private _router: Router) {
+    private _rpc: RpcService) {
     this.listen();
   }
 
@@ -38,15 +37,15 @@ export class MultiwalletService implements OnDestroy {
     // http request
     // subscribe to server side stream
     // and load the wallets in _list.
-    this.timer.pipe(takeWhile(() => !this.destroyed)).subscribe(() => {
+    this.timer.pipe(takeWhile(() => this.destroyed ? false : !this.hasList)).subscribe(() => {
       this._rpc.call('listwalletdir', [])
         .pipe(
           map((response: any) => {
-            if (!_.some(response.wallets, { 'name': this._rpc.wallet })) {
-              this._router.navigate(['/loading'], {
-                queryParams: { wallet: '' }
-              });
-            }
+            // if (!_.some(response.wallets, { 'name': this._rpc.wallet })) {
+            //   this._router.navigate(['/loading'], {
+            //     queryParams: { wallet: '' }
+            //   });
+            // }
             response.wallets.forEach(wallet => {
               wallet.displayname = !wallet.name ? 'Default Wallet' : wallet.name;
             });
@@ -54,7 +53,10 @@ export class MultiwalletService implements OnDestroy {
           })
         )
         .subscribe(
-          (wallets: IWallet[]) => this._list.next(wallets),
+          (wallets: IWallet[]) => {
+            this._list.next(wallets);
+            this.hasList = true;
+          },
           (error) => this.log.er('listwalletdir: ', error)
         );
     });

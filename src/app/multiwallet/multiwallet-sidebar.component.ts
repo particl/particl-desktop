@@ -5,6 +5,7 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { Log } from 'ng2-logger';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
+import { SnackbarService } from 'app/core/core.module';
 
 @Component({
   selector: 'multiwallet-sidebar',
@@ -23,7 +24,8 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
   constructor(
     private walletRpc: RpcService,
     private router: Router,
-    private multi: MultiwalletService
+    private multi: MultiwalletService,
+    private flashNotification: SnackbarService
   ) {
     // get wallet list
     this.multi.list.pipe(takeWhile(() => !this.destroyed)).subscribe(list => {
@@ -38,8 +40,6 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
   async switchToWallet(wallet: IWallet) {
     this.log.d('setting wallet to ', wallet);
 
-    this.walletRpc.wallet = wallet.name;
-
     await this.walletRpc.call('listwallets', []).subscribe(
       walletList => {
         if (walletList.includes(wallet.name)) {
@@ -47,9 +47,15 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
           this.navigateToLoading(wallet.name);
         } else {
           // load the wallet, even possible with the wrong active rpc.
-          this.walletRpc.call('loadwallet', [wallet.name]).subscribe(w => {
-            this.navigateToLoading(wallet.name);
-          });
+          this.walletRpc.call('loadwallet', [wallet.name]).subscribe(
+            w => {
+              this.navigateToLoading(wallet.name);
+            },
+            (err) => {
+              this.log.er('Switch to wallet failed: ', err);
+              this.flashNotification.open(`Error loading wallet ${wallet.name}`, 'warning');
+            }
+          )
         }
       },
       error => this.log.er('failed loading wallet', error)
@@ -57,6 +63,7 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
   }
 
   private navigateToLoading(walletName: string) {
+    this.walletRpc.wallet = walletName;
     this.router.navigate(['/loading'], {
       queryParams: { wallet: walletName }
     });

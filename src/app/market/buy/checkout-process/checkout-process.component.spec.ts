@@ -19,9 +19,9 @@ describe('CheckoutProcessComponent', () => {
     TestBed.configureTestingModule({
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       imports: [
+        BrowserAnimationsModule,
         RouterTestingModule,
         HttpClientTestingModule,
-        BrowserAnimationsModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
