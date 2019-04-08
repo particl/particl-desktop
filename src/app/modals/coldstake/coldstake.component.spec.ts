@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ModalsModule } from '../modals.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
@@ -7,6 +8,7 @@ import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
 
 import { ColdstakeComponent } from './coldstake.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 
 describe('ColdstakeComponent', () => {
@@ -19,7 +21,9 @@ describe('ColdstakeComponent', () => {
         SharedModule,
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
-        ModalsModule
+        ModalsModule,
+        RpcWithStateModule.forRoot(),
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: MatDialogRef }

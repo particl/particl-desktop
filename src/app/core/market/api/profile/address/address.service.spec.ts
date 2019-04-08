@@ -14,7 +14,9 @@ describe('AddressService', () => {
         CoreModule.forRoot(),
         MarketModule.forRoot()
       ],
-      providers: [AddressService]
+      providers: [
+        AddressService
+      ]
     });
   });
 

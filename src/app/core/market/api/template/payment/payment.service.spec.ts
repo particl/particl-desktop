@@ -13,7 +13,9 @@ describe('PaymentService', () => {
         CoreModule.forRoot(),
         MarketModule.forRoot()
       ],
-      providers: [PaymentService]
+      providers: [
+        PaymentService
+      ]
     });
   });
 

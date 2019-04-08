@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VersionComponent } from './version.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MainModule } from '../main.module';
 
 describe('VersionComponent', () => {
   let component: VersionComponent;
@@ -10,7 +11,8 @@ describe('VersionComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule
+        HttpClientModule,
+        MainModule
       ]
     })
     .compileComponents();

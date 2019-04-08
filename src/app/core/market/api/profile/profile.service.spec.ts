@@ -11,10 +11,12 @@ describe('ProfileService', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        CoreModule.forRoot(),
-        MarketModule.forRoot()
+        MarketModule.forRoot(),
+        CoreModule.forRoot()
       ],
-      providers: [ProfileService]
+      providers: [
+        ProfileService
+      ]
     });
   });
 

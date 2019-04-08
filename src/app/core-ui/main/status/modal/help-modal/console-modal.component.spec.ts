@@ -9,6 +9,7 @@ import { CoreUiModule } from '../../../../core-ui.module';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { ConsoleModalComponent } from './console-modal.component';
+import { MainModule } from 'app/core-ui/main/main.module';
 
 describe('ConsoleModalComponent', () => {
   let component: ConsoleModalComponent;
@@ -29,15 +30,16 @@ describe('ConsoleModalComponent', () => {
         CoreModule.forRoot(),
         ModalsModule,
         CoreUiModule.forRoot(),
-        RpcWithStateModule.forRoot()
+        RpcWithStateModule.forRoot(),
+        BrowserAnimationsModule,
+        MainModule
       ],
       providers: [
         /* deps */
-        { provide: MatDialogRef}
-        ],
-      declarations: [ConsoleModalComponent]
+        { provide: MatDialogRef }
+      ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
