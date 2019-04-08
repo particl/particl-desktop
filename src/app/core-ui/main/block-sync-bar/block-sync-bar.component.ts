@@ -28,8 +28,7 @@ export class BlockSyncBarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     /* Hook BlockStatus -> open syncing modal */
     this._blockStatusService.statusUpdates.asObservable().pipe(
-      takeWhile(() => !this.destroyed),
-      distinctUntilChanged()
+      takeWhile(() => !this.destroyed)
     ).subscribe(status => {
       this.log.d(`updating block-sync-bar`);
       this.updateProgress(status.syncPercentage);
