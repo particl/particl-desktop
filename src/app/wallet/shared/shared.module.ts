@@ -25,7 +25,9 @@ import {
     CommonModule,
     FormsModule,
     ClipboardModule,
-    HeaderComponent
+    HeaderComponent,
+
+    HttpClientModule
   ],
   entryComponents: [
     DeleteConfirmationModalComponent
