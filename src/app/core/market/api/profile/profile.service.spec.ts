@@ -4,17 +4,17 @@ import { MarketModule } from '../../market.module';
 
 import { ProfileService } from './profile.service';
 import { SharedModule } from 'app/wallet/shared/shared.module';
-import { IpcService } from 'app/core/ipc/ipc.service';
+import { CoreModule } from 'app/core/core.module';
 
 describe('ProfileService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        MarketModule.forRoot()
+        MarketModule.forRoot(),
+        CoreModule.forRoot()
       ],
       providers: [
-        IpcService,
         ProfileService
       ]
     });

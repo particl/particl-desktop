@@ -4,7 +4,7 @@ import { MarketModule } from '../../../market.module';
 import { EscrowService } from './escrow.service';
 import { SharedModule } from 'app/wallet/shared/shared.module';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
-import { IpcService } from 'app/core/ipc/ipc.service';
+import { CoreModule } from 'app/core/core.module';
 
 describe('EscrowService', () => {
   beforeEach(() => {
@@ -12,10 +12,10 @@ describe('EscrowService', () => {
       imports: [
         SharedModule,
         RpcWithStateModule.forRoot(),
-        MarketModule.forRoot()
+        MarketModule.forRoot(),
+        CoreModule.forRoot()
       ],
       providers: [
-        IpcService,
         EscrowService
       ]
     });

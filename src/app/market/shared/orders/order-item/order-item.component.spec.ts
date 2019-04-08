@@ -5,6 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ModalsModule } from 'app/modals/modals.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { OrderItemComponent } from './order-item.component';
 
@@ -19,7 +20,8 @@ describe('OrderItemComponent', () => {
         HttpClientTestingModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
