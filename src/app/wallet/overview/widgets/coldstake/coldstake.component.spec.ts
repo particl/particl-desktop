@@ -8,6 +8,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 
 import { ColdstakeComponent } from './coldstake.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 
 
@@ -23,7 +24,8 @@ describe('ColdstakeComponent', () => {
         ModalsModule.forRoot(),
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        WalletModule.forRoot()
+        WalletModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       declarations: [ ColdstakeComponent ]
     })
