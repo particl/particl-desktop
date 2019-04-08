@@ -101,13 +101,18 @@
     <ng-template [ngIf]="step === Steps.WALLET_NAME">
       <form #nameForm="ngForm" (ngSubmit)="nextStep()">
 
-        <div class="title">Name your wallet</div>
         <div class="container-block">
-          <p>
-            Naming your wallets is useful, when you want to use multiple wallets &ndash; this helps you to separate e.g. your personal
-            and market funds.
-            <br> Short and descriptive names work the best!
-          </p>
+          <div class="page-intro">
+            <h1>Name your wallet</h1>
+            <div class="content">
+              <p>
+                Naming your wallets is useful, when you want to use multiple wallets &ndash; this helps you to separate e.g. your personal and market funds.
+              </p>
+              <p class="widget-help">
+                Tip: Short and descriptive names work the best!
+              </p>
+            </div>
+          </div><!-- .page-intro -->
           <mat-card class="wallet-name">
             <p class="warning" *ngIf="validation.errors && validation.dirty">
               Wallet name is required
@@ -149,17 +154,21 @@
 
     <!-- STEP 2: Encrypt wallet -->
     <ng-template [ngIf]="step === Steps.ENCRYPT">
-      <div class="title">Encrypt your wallet: {{ walletname || 'Default Wallet' }}</div>
       <div *ngIf="!isEncrypting" class="container-block">
-        <p>
-          It is recommended to encrypt your wallet before creating or restoring a wallet,
-          <br> in order to not leave any possible key fragments lying around.
-        </p>
-        <p class="widget-help">
-          Note that you can safely skip this step, but it is recommended to encrypt your wallet as
-          <br> protects you from unauthorized access to your coins (e.g. if someone steals your computer).
-          <br> It affects Particl wallet only on your current device.
-        </p>
+        <div class="page-intro">
+          <h1>Encrypt your '{{ walletname || 'Default Wallet' }}' wallet</h1>
+          <div class="content">
+            <p>
+              It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.
+            </p>
+            <p>
+              Note that you can safely skip this step, but it is recommended to encrypt your wallet as it protects you from unauthorized access to your coins (e.g. if someone steals your computer).
+            </p>
+            <p class="widget-help">
+              This affects Particl wallet only on your current device.
+            </p>
+          </div>
+        </div><!-- .page-intro -->
         <mat-card class="action-card recovery-password">
           <div class="box-title">Choose Encryption Password</div>
           <!-- Password -->
@@ -211,34 +220,41 @@
 
     <!-- STEP: Create Wallet Flow -->
     <ng-template [ngIf]="isCreate && [Steps.MNEMONIC_INITIAL,Steps.MNEMONIC_VERIFY,Steps.PASSWORD].indexOf(step) != -1">
-
-      <div class="title" *ngIf="step === Steps.MNEMONIC_INITIAL">Recovery Phrase</div>
-      <div class="title" *ngIf="step === Steps.MNEMONIC_VERIFY">Confirm Recovery Phrase</div>
-      <div class="title" *ngIf="step === Steps.PASSWORD">Choose a Recovery Password
-        <small>(optional)</small>
-      </div>
       <div class="container-block">
 
-        <div *ngIf="step === Steps.MNEMONIC_INITIAL">
-          <div class="title">{{ walletname || 'Default Wallet' }}</div>
-          <p>
-            Recovery Phrase (sometimes also called "wallet seed") is a backup key to your coins. Anyone with access to these 24 words
-            can recover your wallet, so make sure they are safe and ideally backed-up on multiple locations.
-          </p>
-          <p class="widget-help">
-            You can further increase security of your Recovery Phrase in the next step.
-          </p>
-        </div>
+        <div class="page-intro">
+          <h1 *ngIf="step === Steps.MNEMONIC_INITIAL">Recovery Phrase for '{{ walletname || 'Default Wallet' }}' wallet</h1>
+          <h1 *ngIf="step === Steps.MNEMONIC_VERIFY">Confirm Recovery Phrase</h1>
+          <h1 *ngIf="step === Steps.PASSWORD">Choose a Recovery Password <small>(optional)</small></h1>
 
-        <div *ngIf="step === Steps.MNEMONIC_VERIFY">
-          <p>
-            Confirm that you backed up your Recovery Phrase by filling in the missing words:
-          </p>
-          <p class="widget-help">
-            If you're not absolutely sure, that you have all Recovery Passphrase words correctly saved, you can always go one step back
-            double check.
-          </p>
-        </div>
+          <div class="content" *ngIf="step === Steps.MNEMONIC_INITIAL">
+            <p>
+              Recovery Phrase (sometimes also called "wallet seed") is a backup key to your coins. Anyone with access to these 24 words can recover your wallet, so make sure they are safe and ideally backed-up on multiple locations.
+            </p>
+            <p class="widget-help">
+              You can further increase security of your Recovery Phrase in the next step.
+            </p>
+          </div>
+
+          <div class="content" *ngIf="step === Steps.MNEMONIC_VERIFY">
+            <p>
+              Confirm that you backed up your Recovery Phrase by filling in the missing words:
+            </p>
+            <p class="widget-help">
+              If you're not absolutely sure, that you have all Recovery Passphrase words correctly saved, you can always go one step back double check.
+            </p>
+          </div>
+
+          <div class="content" *ngIf="step === Steps.PASSWORD">
+            <p>
+              You can further increase your wallet protection by setting a Recovery Password.<br>
+              It will be needed together with Recovery Phrase to access your coins.
+            </p>
+            <p class="widget-help">
+              Note that you can safely skip this step, but it is recommended to choose a Recovery Password as it keeps your coins safer.
+            </p>
+          </div>
+        </div><!-- .page-intro -->
 
         <!-- Mnemonic -->
         <ng-template [ngIf]="[Steps.MNEMONIC_INITIAL,Steps.MNEMONIC_VERIFY].indexOf(step) != -1">
@@ -255,13 +271,6 @@
 
         <!-- Recovery Password -->
         <div *ngIf="step === Steps.PASSWORD">
-          <p>
-            You can further increase your wallet protection by setting a Recovery Password.
-            <br> It will be needed together with Recovery Phrase to access your coins.
-          </p>
-          <p class="widget-help">
-            Note that you can safely skip this step, but it is recommended to choose a Recovery Password as it keeps your coins safer.
-          </p>
           <mat-card class="action-card recovery-password">
             <div class="box-title">Choose Recovery Password</div>
             <!-- Password -->
