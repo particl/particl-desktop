@@ -7,7 +7,6 @@ import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { TimeoffsetComponent } from './timeoffset.component';
 
-
 describe('TimeoffsetComponent', () => {
   let component: TimeoffsetComponent;
   let fixture: ComponentFixture<TimeoffsetComponent>;

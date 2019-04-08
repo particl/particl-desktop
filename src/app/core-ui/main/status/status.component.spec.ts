@@ -9,7 +9,6 @@ import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { StatusComponent } from './status.component';
 
-
 describe('StatusComponent', () => {
   let component: StatusComponent;
   let fixture: ComponentFixture<StatusComponent>;

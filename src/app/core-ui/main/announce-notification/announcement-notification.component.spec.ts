@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CoreModule } from '../../../core/core.module';
 import { AnnouncementNotificationComponent } from './announcement-notification.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 describe('AnnouncementNotificationComponent', () => {
   let component: AnnouncementNotificationComponent;
@@ -12,7 +13,8 @@ describe('AnnouncementNotificationComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule.forRoot(),
-        HttpClientModule
+        HttpClientModule,
+        CoreUiModule.forRoot()
       ],
       declarations: [AnnouncementNotificationComponent]
     })

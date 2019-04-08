@@ -31,14 +31,13 @@ describe('PassphraseComponent', () => {
         /* deps */
         BrowserAnimationsModule,
         MatIconModule,
-        MainModule,
         RpcWithStateModule.forRoot(),
-        MainModule
        ],
       providers: [
         /* own */
         PassphraseService
-      ]
+      ],
+      declarations: [PassphraseComponent]
     })
     .compileComponents();
   }));
