@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { SharedModule } from 'app/wallet/shared/shared.module';
 
 import { MarketModule } from '../../market.module';
 import { CoreModule } from 'app/core/core.module';
@@ -10,7 +10,7 @@ describe('CategoryService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        SharedModule,
         CoreModule.forRoot(),
         MarketModule.forRoot()
       ],
