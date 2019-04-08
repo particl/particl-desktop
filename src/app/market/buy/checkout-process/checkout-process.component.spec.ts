@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ModalsModule } from 'app/modals/modals.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { CheckoutProcessComponent } from './checkout-process.component';
 
@@ -22,6 +23,7 @@ describe('CheckoutProcessComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       declarations: [ CheckoutProcessComponent ]
     })
