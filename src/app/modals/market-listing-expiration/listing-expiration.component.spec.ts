@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from 'app/wallet/shared/shared.module';
 import { ModalsModule } from 'app/modals/modals.module';
@@ -18,7 +19,8 @@ describe('ListingExpirationComponent', () => {
         SharedModule,
         ModalsModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: MatDialogRef }
