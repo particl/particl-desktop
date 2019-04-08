@@ -114,12 +114,12 @@ export class LoadingComponent implements OnInit {
   private startMarketService(getwalletinfo: any) {
     this._market.startMarket(this.rpc.wallet).subscribe(
       () => {
-        this.goToWallet();
         // TODO: Leaving this here for now, but it requires the wallet to be unlocked, so doesn't work as expected.
         // It can help for first load after a Market wallet has been created though, so not removing it just yet.
         this.rpc.call('smsgscanbuckets').subscribe();
       },
-      (err) => this.log.er('Request to start market failed!')
+      (err) => this.log.er('Request to start market failed!'),
+      () => this.goToWallet()
     )
   }
 
