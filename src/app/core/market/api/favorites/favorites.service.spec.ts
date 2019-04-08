@@ -6,6 +6,7 @@ import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 
 import { FavoritesService } from './favorites.service';
 import { SnackbarService } from '../../../snackbar/snackbar.service';
+import { CoreModule } from 'app/core/core.module';
 
 
 describe('FavoritesService', () => {
@@ -13,6 +14,7 @@ describe('FavoritesService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreUiModule,
+        CoreModule.forRoot(),
         MarketModule.forRoot()
       ],
       providers: [FavoritesService, SnackbarService, MatSnackBar]
