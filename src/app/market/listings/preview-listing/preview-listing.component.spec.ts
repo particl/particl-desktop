@@ -6,6 +6,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { CoreModule } from 'app/core/core.module';
 import { MarketModule } from '../../../core/market/market.module';
 import { ModalsModule } from 'app/modals/modals.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { CartService } from '../../../core/market/api/cart/cart.service';
@@ -25,7 +26,8 @@ describe('PreviewListingComponent', () => {
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
         MarketModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [
         { provide: MatDialogRef},
