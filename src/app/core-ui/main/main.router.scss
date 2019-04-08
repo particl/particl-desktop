@@ -194,38 +194,39 @@ a.sidebar-item-link {
       @extend %tfx;
       opacity: 0;
       width: 100%;
-      margin: auto;
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
       bottom: 0;
       font-size: 12.5px;
-      tr {
+      .balance {
+        display: flex;
+        padding: 13px 24px;
         &:hover {
-          th,
-          td {
-            background: darken($bg-black, 1.5%);
+          background: darken($bg-black, 1.5%);
+          .part-lock {
+            color: $color-alert;
           }
-          td {
-            color: $color;
-            small {
-              color: darken($color, 15%);
-            }
+          .part-cart {
+            color: $color-secondary;
           }
         }
-      }
-      th {
-        @extend %tfx;
-        text-align: left;
-        font-weight: 400;
-        padding: 5px 10px 5px 24px;
-      }
-      td {
-        @extend %tfx;
-        text-align: right;
-        font-weight: 500;
-        padding: 5px 24px 5px 10px;
+        .mat-icon {
+          @extend %tfx;
+          flex: 0 0 30px;
+          color: lighten($bg-black, 15%);
+        }
+        .text {
+          flex: 1 1 100%;
+          .key {
+            font-size: 11.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+          }
+          .value {
+            font-size: 105%;
+          }
+        }
       }
     }
   }
