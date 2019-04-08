@@ -1,6 +1,7 @@
 @import './src/assets/_config'; // import shared colors etc.
 
-$installer-sidebar-width: 270px;
+$installer-minisidebar-width: 54px;
+$installer-sidebar-width: (270px - $installer-minisidebar-width);
 $installer-sidebar-padding: 30px;
 $installer-header-height: 96px;
 
@@ -30,38 +31,45 @@ $installer-header-height: 96px;
   padding: 32px 42px;
 }
 
+.mat-divider { // section divider
+  border-bottom: 1px solid lighten($bg-black, 5%);
+  border-top: 1px solid darken($bg-black, 5%);
+}
+
 .progress {
+  margin-left: -15px;
+  padding: 30px 0;
   .step {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     position: relative;
     .number {
+      $size: 28px;
       display: inline-block;
       background: lighten($bg-black, 10%);
-      border: 4px solid $bg-black;
-      width: 24px;
-      height: 24px;
+      width: $size;
+      height: $size;
       border-radius: 50%;
       text-align: center;
-      line-height: 24px;
+      line-height: $size;
       position: relative;
-      top: -1px;
       z-index: 10;
     }
     .desc {
       display: inline-block;
-      font-size: 14px;
-      margin-left: 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      margin-left: 16px;
       color: darken($bg, 50%);
     }
     &:not(.last):after { // lines connecting numbers
       content: '';
       display: block;
-      background: lighten($bg-black, 10%);
+      background: lighten($bg-black, 5%);
       width: 2px;
       position: absolute;
       top: 12px;
       bottom: -24px;
-      left: 15px;
+      left: 13px;
       z-index: 1;
     }
     &.active { // active steps
@@ -71,8 +79,8 @@ $installer-header-height: 96px;
         color: $bg-black;
       }
       .desc {
-        font-weight: 500;
         color: $bg;
+        font-weight: 600;
       }
     }
     &.done { // finished steps
@@ -149,20 +157,26 @@ mat-hint.error {
 .installer {
   @extend %disable-select;
   display: flex;
+  flex-direction: row;
+  align-items: stretch;
   height: 100vh;
+  & > .mini-sidebar { // fake "multiwallet" placeholder
+    flex: 0 0 $installer-minisidebar-width;
+    background: darken($bg-black, 5%);
+  }
   & > .sidebar {
-    width: ($installer-sidebar-width - (2 * $installer-sidebar-padding));
-    padding: $installer-sidebar-padding;
+    flex: 0 0 $installer-sidebar-width;
     background: $bg-black;
     color: $bg;
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    bottom: 0;
     .logo {
-      display: block;
-      width: 100px;
-      margin: 20px auto 55px;
+      display: flex;
+      height: 120px;
+      img {
+        display: block;
+        margin: auto;
+      }
     }
     .title {
       text-align: center;
@@ -170,17 +184,7 @@ mat-hint.error {
   }
   & > .content {
     background: $bg;
-    width: 100%;
-    margin-left: $installer-sidebar-width;
-    /*
-    .title {
-      @extend %mat-card;
-      padding: 35px 45px;
-      font-size: 22px;
-      font-weight: 500;
-      height: ($installer-header-height - (2 * 35px));
-    }
-    */
+    flex: 1 1 100%;
     .header-main {
       border-bottom: 1px solid $bg-shadow;
       background: $color-white;
@@ -191,7 +195,7 @@ mat-hint.error {
       text-transform: uppercase;
       position: fixed;
       top: 0;
-      left: $installer-sidebar-width;
+      left: ($installer-minisidebar-width + $installer-sidebar-width);
       right: 0;
       z-index: 100;
     }
