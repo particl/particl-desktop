@@ -65,6 +65,9 @@ export class LoadingComponent implements OnInit {
           .whenRpcIsResponding()
           .subscribe(
             getwalletinfo => {
+              if (!wallets.map( (iwal) => iwal.name).includes(this.rpc.wallet)) {
+                this.multi.refreshWalletList();
+              }
               // Swap smsg to the new wallet
               this.rpc.call('smsgdisable').subscribe(
                 () => {
@@ -87,7 +90,7 @@ export class LoadingComponent implements OnInit {
     if ('hdseedid' in getwalletinfo) {
       const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
       if (isMarketWallet) {
-        this.startMarketService(getwalletinfo);
+        this.startMarketService();
       } else {
         this.goToWallet();
       }
@@ -111,7 +114,7 @@ export class LoadingComponent implements OnInit {
     this.router.navigate(['wallet', 'main', 'wallet']);
   }
 
-  private startMarketService(getwalletinfo: any) {
+  private startMarketService() {
     this._market.startMarket(this.rpc.wallet).subscribe(
       () => {
         // TODO: Leaving this here for now, but it requires the wallet to be unlocked, so doesn't work as expected.
