@@ -4,9 +4,11 @@ import { CoreModule } from '../../../core/core.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 import { ModalsModule } from '../../../modals/modals.module';
 import { CoreUiModule } from '../../core-ui.module';
+import { MainModule } from '../main.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { StatusComponent } from './status.component';
-import { MainModule } from '../main.module';
+
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
@@ -19,7 +21,8 @@ describe('StatusComponent', () => {
         CoreModule.forRoot(),
         ModalsModule,
         CoreUiModule.forRoot(),
-        MainModule
+        MainModule,
+        RpcWithStateModule.forRoot()
       ]
     })
     .compileComponents();

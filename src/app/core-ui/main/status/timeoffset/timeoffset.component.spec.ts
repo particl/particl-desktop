@@ -2,9 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CoreModule } from '../../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui.module';
+import { MainModule } from '../../main.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { TimeoffsetComponent } from './timeoffset.component';
-import { MainModule } from '../../main.module';
+
 
 describe('TimeoffsetComponent', () => {
   let component: TimeoffsetComponent;
@@ -15,7 +17,8 @@ describe('TimeoffsetComponent', () => {
       imports: [
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        MainModule
+        MainModule,
+        RpcWithStateModule.forRoot()
       ]
     })
     .compileComponents();
