@@ -27,8 +27,11 @@ $installer-header-height: 96px;
 }
 
 .action-card {
-  //margin-top: 45px;
-  padding: 32px 42px;
+  padding: 32px 35px;
+  margin: 0 0 35px;
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
 .mat-divider { // section divider
@@ -107,21 +110,21 @@ p {
   }
   &.info,
   &.warning {
-    padding: 24px 24px 24px 78px;
-    margin: 32px -45px;
+    padding: 24px 24px 24px 68px;
+    margin: 32px -35px;
     &:before { // info icon
       top: 32px;
-      left: 45px;
+      left: 35px;
     }
     .action-card & { // messages in cards
-      margin: -32px -42px 24px;
-      padding: 20px 24px 20px 74px;
+      margin: -32px -35px 32px;
+      padding: 20px 24px 20px 64px;
       &.bottom {
-        margin: 24px -42px -32px;
+        margin: 32px -35px -32px;
       }
       &:before {
         top: 29px;
-        left: 42px;
+        left: 32px;
       }
     }
   }
@@ -299,7 +302,7 @@ input.recovery-word {
   text-align: center;
   display: flex;
   padding: 0 45px;
-  height: calc(100% - #{$installer-header-height});
+  height: calc(100vh - #{$header-main-height});
   position: relative;
   & > .center {
     margin: auto;

@@ -391,8 +391,13 @@ p.info {
   }
 }
 
+code {
+  color: darken($color-secondary, 10%);
+  background: rgba($color-secondary, 0.15);
+  padding: 1px 3px;
+  border-radius: $radius;
+}
 
-// kbd
 kbd {
   font-size: 95%;
   line-height: 1.3;
