@@ -6,7 +6,7 @@ import { CoreModule } from 'app/core/core.module';
 import { CategoryService } from './category.service';
 import { MarketService } from '../../market.service';
 
-fdescribe('CategoryService', () => {
+describe('CategoryService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [

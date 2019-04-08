@@ -2,11 +2,15 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { MarketService } from './market.service';
 import { MarketModule } from './market.module';
+import { HttpClientModule } from '@angular/common/http';
+import { CoreModule } from 'app/core/core.module';
 
-describe('MarketService', () => {
+fdescribe('MarketService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        HttpClientModule,
+        CoreModule.forRoot(),
         MarketModule.forRoot()
       ],
       providers: [ MarketService ]
