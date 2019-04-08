@@ -6,7 +6,7 @@ import { CoreUiModule } from '../../core-ui.module';
 
 import { CartComponent } from './cart.component';
 
-xdescribe('CartComponent', () => {
+describe('CartComponent', () => {
   let component: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
 

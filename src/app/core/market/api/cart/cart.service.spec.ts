@@ -5,7 +5,7 @@ import { SharedModule } from 'app/wallet/shared/shared.module';
 import { CoreModule } from 'app/core/core.module';
 import { CartService } from './cart.service';
 
-fdescribe('CartService', () => {
+describe('CartService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
