@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, NgModuleRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';

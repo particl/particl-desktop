@@ -14,6 +14,7 @@ import { SnackbarService } from '../../core/snackbar/snackbar.service';
 import { PassphraseService } from './passphrase/passphrase.service';
 import { UpdaterService } from 'app/loading/updater.service';
 import { take } from 'rxjs/operators';
+import { isMainnetRelease } from 'app/core/util/utils';
 
 export enum Steps {
   START = 0,
@@ -57,6 +58,7 @@ export class CreateWalletComponent implements OnInit {
   // recovery passphrase
   public words: string[];
   private wordsVerification: string[];
+  public isTestnet: boolean = !isMainnetRelease();
 
   // recovery password
   password: string = '';
@@ -75,6 +77,10 @@ export class CreateWalletComponent implements OnInit {
     private _daemon: UpdaterService
   ) {
     this.reset();
+  }
+
+  get testnet(): boolean {
+    return this.isTestnet;
   }
 
   reset(): void {

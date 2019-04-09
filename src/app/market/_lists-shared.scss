@@ -141,11 +141,11 @@
     &.sell.bidding,
     &.buy.awaiting,
     &.sell.escrow,
-    &.buy.shipping,
-    // + in Listing statuses..
-    // @TODO we can use blink animation for own expired listing in future.
-    // &.expired
-    {
+    &.buy.shipping {
+      // + in Listing statuses..
+      // @TODO we can use blink animation for own expired listing in future.
+      // &.expired
+      // {
       .dot::after {
         content: '';
         animation: pulse-fade 1s infinite;
