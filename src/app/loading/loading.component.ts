@@ -65,9 +65,7 @@ export class LoadingComponent implements OnInit {
           .whenRpcIsResponding()
           .subscribe(
             getwalletinfo => {
-              if (!wallets.map( (iwal) => iwal.name).includes(this.rpc.wallet)) {
-                this.multi.refreshWalletList();
-              }
+              this.multi.refreshWalletList();
               // Swap smsg to the new wallet
               this.rpc.call('smsgdisable').subscribe(
                 () => {
