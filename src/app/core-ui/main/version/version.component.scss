@@ -18,6 +18,10 @@
       color: $color-white;
     }
 
+    .selectable {
+      @extend %enable-select;
+    }
+
     // version check indicator
     .dot {
       @extend %tfx;

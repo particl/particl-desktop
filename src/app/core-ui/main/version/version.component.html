@@ -3,7 +3,7 @@
     Client
     <span class="version" [ngClass]="isUpdateProcessing ? 'unknown' : (isClientLatest ? 'current' : 'outdated')" [matTooltip]=" clientUpdateText " matTooltipPosition="right">
       <span class="dot"></span>
-      <span class="version" style="user-select: text;">{{ clientVersion }}</span>
+      <span class="selectable">{{ clientVersion }}</span>
     </span>
   </div>
   <div class="client item">
