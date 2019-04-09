@@ -295,6 +295,10 @@ export class CreateWalletComponent implements OnInit {
         this.unlockVerify = '';
     }
 
+    if (!this.isExistingWallet && (this.walletname.length > 0) && [Steps.START || Steps.WALLET_NAME]) {
+      this.walletname = '';
+    }
+
     switch (this.step) {
       case Steps.START:
         this.reset();
@@ -403,15 +407,17 @@ export class CreateWalletComponent implements OnInit {
 
   close(): void {
     // move to the wallet
-    this._router.navigate(['/loading'], {
-      queryParams: { wallet: this.walletname }
-    });
-    this.reset();
+    this.closeAndReturn(this.walletname);
   }
 
   closeAndReturnToDefault(): void {
+    // move to the default wallet
+    this.closeAndReturn('');
+  }
+
+  private closeAndReturn(walletName: string): void {
     this._router.navigate(['/loading'], {
-      queryParams: { wallet: '' }
+      queryParams: { wallet: walletName }
     });
     this.reset();
   }
