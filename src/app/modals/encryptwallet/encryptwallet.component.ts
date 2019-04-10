@@ -44,12 +44,13 @@ export class EncryptwalletComponent {
 
     // passwords match, encrypt wallet
 
-    this._rpc.call('encryptwallet', [password.password]).toPromise()
-      .catch(error => {
+    this._rpc.call('encryptwallet', [password.password]).subscribe(() => {
+      this._dialogRef.close();
+      }, error => {
         // Handle error appropriately
         this.flashNotification.open('Wallet failed to encrypt properly!', 'err');
         this.log.er('error encrypting wallet', error)
-      });
+      })
 
 
   }
